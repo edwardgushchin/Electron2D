@@ -11,10 +11,11 @@ public sealed class CustomShape : Shape
     /// <summary>Gets or replaces immutable custom geometry while retaining the resource RID.</summary>
     /// <value>The complete custom geometry data. Replacement invalidates compilation and authored replay compatibility.</value>
     /// <exception cref="ArgumentException">Data is null or represents a built-in primitive.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
     public ShapeGeometry Geometry
     {
         get { ThrowIfDisposed(); return _data; }
-        set { ThrowIfDisposed(); Validate(value); if (ReferenceEquals(_data, value)) return; _data = value; EmitGeometryChanged(); }
+        set { ThrowIfDisposed(); Validate(value); EnsureGeometryChangeAccess(); if (ReferenceEquals(_data, value)) return; _data = value; EmitGeometryChanged(); }
     }
     private static void Validate(ShapeGeometry geometry)
     {

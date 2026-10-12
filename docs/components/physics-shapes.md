@@ -1,6 +1,6 @@
 # Collision shapes component
 
-Last updated: 2026-10-08
+Last updated: 2026-10-12
 
 ## Scope and owned types
 
@@ -135,3 +135,18 @@ Shape.GetGeometryCore now accepts exact immutable [ShapeGeometry](../classes/Sha
 Standalone special-pair rules, full-contour resource contacts, CPU compound metadata, directed-ray query policy and mass exclusions now dispatch on represented geometry kind. They do not require a concrete resource class. CPU/GPU rebuilds demand every live candidate's immutable data before retiring old fixtures; throwing or null construction hooks fail preparation before the solver tick and permit a later retry.
 
 [Custom geometry](physics-custom-geometry.md) now executes with an external annulus/circle implementation: canonical data, exact mass, standalone/selected queries, body contacts, Area observations, server mutation and private/portable replay. Generic custom format file codecs/editor authoring, unexercised extension operations, native/foreign acceptance and final performance remain open.
+
+Geometry edits now preflight all scene/raw borrowers before private data or convex
+compilation-cache mutation. This includes disabled slots and equal assignments.
+The protected Shape.EnsureGeometryChangeAccess authoring helper runs selected
+status hooks on the owner before commit without resource locks. Coordinated worker
+geometry writes remain valid in quiescent worlds and never call owner-bound status
+hooks; numerical/step borrowing rejects worker writes before mutation. EmitGeometryChanged publishes
+the edit with owner/phase checks and no repeated fallible status hook. Procedural
+subclasses must preflight before changing private fields; publication cannot undo
+such private writes. Ordinary post-solver edits remain available. The public-only
+--shape-geometry profile exercises 16 authoring paths across all eight built-ins,
+CustomShape and a procedural resource, with immutable data/RID preservation on
+rejection, actual point-query changes and observer failure. Warm frames measure
+stable geometry plus guard calls; array copies and accepted immutable geometry
+creation are authoring allocations. Full numerical-extension acceptance remains open.

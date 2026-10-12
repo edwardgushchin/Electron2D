@@ -148,6 +148,14 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (_stepping) throw new InvalidOperationException("A physics space cannot be queried while stepping.");
     }
 
+    internal bool IsOwnerThread => Environment.CurrentManagedThreadId == _ownerThreadID;
+    internal void EnsureResourceGeometryAccess()
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        if (Volatile.Read(ref _stepping) || Volatile.Read(ref _implementationCallbackDepth) != 0)
+            throw new InvalidOperationException("Resource geometry cannot change during physics stepping or a numerical implementation hook.");
+    }
+
     internal void EnsureQueryAccess()
     {
         EnsureReleaseAccess();

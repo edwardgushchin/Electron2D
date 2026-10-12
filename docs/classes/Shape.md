@@ -137,7 +137,22 @@ documents world settings, backend behavior and PhysicsContactPolicyTests.
 
 `protected abstract ShapeGeometry GetGeometryCore()` returns validated immutable data. It is called once on first demand after construction or a geometry edit. Recursive geometry demand, geometry invalidation and shape disposal inside this hook reject; a failed hook leaves the cache empty for a later retry.
 
-`protected internal void EmitGeometryChanged()` invalidates that cache, increments the resource geometry revision and notifies every borrower while retaining the RID. Commit valid authored state before calling it. ShapeGeometry contour factories copy input; reusing immutable data across resource duplicates is safe.
+<a id="ensuregeometrychangeaccess"></a>
+`protected void EnsureGeometryChangeAccess()` preflights all scene/raw borrowers
+before private authoring, including equal assignments and disabled slots. It rejects
+numerical/step, geometry supplier and recursive authoring hooks
+before data mutation. Selected status hooks run outside resource locks. Call it
+after input validation and before committing private fields. Coordinated worker
+geometry writes remain available while every borrowing world is quiescent; no
+owner-bound status hook runs on a worker. Concurrent authoring and use require
+caller coordination. CustomSolverBias retains its separate owner-thread rule.
+
+`protected internal void EmitGeometryChanged()` then invalidates that cache,
+increments the geometry revision and notifies borrowers while retaining the RID.
+Publication rechecks owner/phase without invoking fallible status hooks again;
+it cannot undo arbitrary private subclass writes. Every built-in geometric writer
+uses the preflight protocol. ShapeGeometry contour factories copy input; retained
+immutable data and independent duplicates remain safe.
 
 [The public-only consumer](../../tests/ShapeExtension.Consumer/ProceduralShape.cs) derives Shape without engine or solver internals. It exercises scene/raw bodies and Areas, a full 12-vertex contour, automatic mass/inertia, solved contacts, queries, representation changes, independent resource copying, retirement, private checkpoints and portable snapshots. Its draw profile verifies actual window pixels with both renderers. These checks do not implement registered custom solver algorithms.
 

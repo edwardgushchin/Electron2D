@@ -6,7 +6,7 @@ internal static partial class PhysicsBackendOwnershipTests
     private sealed class InputShape : Shape
     {
         internal Action? BuildHook;
-        internal void Invalidate() => EmitGeometryChanged();
+        internal void Invalidate() { EnsureGeometryChangeAccess(); EmitGeometryChanged(); }
         protected override ShapeGeometry GetGeometryCore() { BuildHook?.Invoke(); return ShapeGeometry.Circle(3); }
     }
     private static void ShapeInputs(PhysicsServer.Backend backend)

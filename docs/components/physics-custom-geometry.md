@@ -1,6 +1,6 @@
 # Custom collision geometry
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 `ShapeGeometry.Custom` describes a caller-defined collision format with copied canonical bytes, finite local bounds, exact unit-density mass/central inertia/center, copied diagnostic line pairs and a typed standalone collision algorithm. `CustomShape` retains that immutable value, emits revision changes on replacement and preserves its RID. `PhysicsServer.CustomShapeCreate` requires initialized data; ShapeGetData returns an independent wrapper, while ShapeSetData replaces the server-owned wrapper and rebuilds users.
 
@@ -15,3 +15,9 @@ Portable authoring compatibility hashes format, canonical bytes, bounds, mass an
 The separate public-only backend consumer exercises an analytic annulus with a real empty hole: standalone and selected point/ray/shape/motion queries, inner-wall momentum/contact data, Area observations, server mutation, exact mass, local/portable restore, error guards and warmed full frames. The bounded fixture supports annulus/circle numerical contacts; it is not a production generic solver. Diagnostic windows use both renderers and check actual pixels independently of physics. Missing file codecs/editor authoring for arbitrary custom formats, complete extension-operation acceptance, native/foreign platforms and final GPU performance remain open.
 
 Built-in authoring preflight borrows the world while invoking a procedural geometry supplier. Its hook cannot release the body being validated, and the supplier failure leaves the current body/checkpoint intact. Detached transfer preflight also borrows the collider identity, so supplier callbacks cannot release or recursively transfer it. Disposed disabled resources keep their existing nonparticipating semantics.
+
+[Geometric authoring preflight](physics-shapes.md) now protects all built-in setters,
+CustomShape and procedural authors before private data changes. Registered/CPU/GPU
+checks cover 16 paths, immutable data/RID preservation, ordinary callback/query
+edits and warmed full frames. Arbitrary private subclass writes require the
+protected authoring protocol; full numerical-extension acceptance remains open.

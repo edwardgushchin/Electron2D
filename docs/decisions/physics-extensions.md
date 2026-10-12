@@ -192,6 +192,16 @@ interception would leave scene behavior and direct queries outside the extension
   that same representation. This is procedural resource authoring, not approximation
   of an unsupported geometry algorithm. ShapeGetType reports its actual represented
   primitive.
+- Geometry authors validate input, call protected EnsureGeometryChangeAccess before
+  changing private resource data, then call EmitGeometryChanged to publish the edit.
+  The preflight checks all scene/raw borrowers, including disabled slots and equal
+  writes, and invokes selected status hooks on the owner before mutation without
+  resource locks. Coordinated worker geometry edits remain valid while all using
+  worlds are quiescent; workers never invoke owner-bound status hooks. A step or
+  numerical borrow rejects worker edits before private authoring.
+  Publication rechecks owner/phase access without repeating fallible status hooks.
+  It cannot roll back arbitrary private subclass writes; procedural subclasses must
+  follow the preflight protocol. Built-in geometry writers use that same boundary.
 - Custom geometry uses the same immutable ShapeGeometry value with an explicit
   format ID, bounded copied canonical bytes, finite bounds, copied diagnostic
   segment pairs and exact unit-density mass/center/polar inertia. These are

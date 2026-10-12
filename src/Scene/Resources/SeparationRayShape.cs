@@ -16,6 +16,7 @@ public sealed class SeparationRayShape : Shape
     /// <summary>Gets or sets the finite nonnegative local ray length in scene units.</summary>
     /// <value>Twenty by default; zero contributes no separation contact.</value>
     /// <exception cref="ArgumentOutOfRangeException">The value is negative, nonfinite or exceeds the squared backend geometry range.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
     public float Length
     {
         get { ThrowIfDisposed(); return _length; }
@@ -25,6 +26,7 @@ public sealed class SeparationRayShape : Shape
             var backendLength = value * PhysicsSpace.MetersPerUnit;
             if (!float.IsFinite(value) || value < 0 || !float.IsFinite(backendLength * backendLength))
                 throw new ArgumentOutOfRangeException(nameof(value));
+            EnsureGeometryChangeAccess();
             if (_length == value) return;
             _length = value;
             EmitGeometryChanged();
@@ -33,10 +35,11 @@ public sealed class SeparationRayShape : Shape
 
     /// <summary>Gets or sets whether separation follows the hit surface normal.</summary>
     /// <value>False by default, which separates opposite the ray direction.</value>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
     public bool SlideOnSlope
     {
         get { ThrowIfDisposed(); return _slideOnSlope; }
-        set { ThrowIfDisposed(); if (_slideOnSlope == value) return; _slideOnSlope = value; EmitGeometryChanged(); }
+        set { ThrowIfDisposed(); EnsureGeometryChangeAccess(); if (_slideOnSlope == value) return; _slideOnSlope = value; EmitGeometryChanged(); }
     }
 
     /// <summary>Gets the local drawing envelope of the directed ray.</summary>

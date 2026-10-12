@@ -1254,4 +1254,10 @@ including equal assignments, disabled slots and borrowed server geometry views.
 verifies owner/step/numerical/construction/reentry guards, ordinary callback edits,
 observer-failure recovery, geometry/RID identity and 128 active warm frames at zero
 owner/all-thread managed allocation. This shared resource policy guard does not
-close arbitrary numerical-extension, geometry-edit or final acceptance gates.
+close arbitrary numerical-extension or final acceptance gates.
+
+[Geometric authoring preflight](components/physics-registered-adapter.md) now protects all built-in setters,
+CustomShape and procedural authors before private data changes. Registered/CPU/GPU
+checks cover 16 paths, immutable data/RID preservation, ordinary callback/query
+edits and warmed full frames. Arbitrary private subclass writes require the
+protected authoring protocol; full numerical-extension acceptance remains open.

@@ -789,4 +789,19 @@ warmup cycles, 128 active complete scene/raw frames with two changing resource
 biases allocate zero owner/all-thread managed bytes. Existing contact-policy tests
 verify physical CPU/GPU correction. The two extension bias rows map to the actual
 common resource projection as Partial; arbitrary registered numerical correction,
-geometry mutation preflight and full extension acceptance remain open.
+full extension acceptance remain open; geometric writers now use the preflight protocol below.
+
+Geometry edits now preflight all scene/raw borrowers before private data or convex
+compilation-cache mutation. This includes disabled slots and equal assignments.
+The protected Shape.EnsureGeometryChangeAccess authoring helper runs selected
+status hooks on the owner before commit without resource locks. Coordinated worker
+geometry writes remain valid in quiescent worlds and never call owner-bound status
+hooks; numerical/step borrowing rejects worker writes before mutation. EmitGeometryChanged publishes
+the edit with owner/phase checks and no repeated fallible status hook. Procedural
+subclasses must preflight before changing private fields; publication cannot undo
+such private writes. Ordinary post-solver edits remain available. The public-only
+--shape-geometry profile exercises 16 authoring paths across all eight built-ins,
+CustomShape and a procedural resource, with immutable data/RID preservation on
+rejection, actual point-query changes and observer failure. Warm frames measure
+stable geometry plus guard calls; array copies and accepted immutable geometry
+creation are authoring allocations. Full numerical-extension acceptance remains open.

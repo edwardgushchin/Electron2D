@@ -154104,6 +154104,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Shape.EnsureGeometryChangeAccess()",
+    "kind": "method",
+    "declaringType": "Electron2D.Shape",
+    "name": "EnsureGeometryChangeAccess",
+    "signature": "protected System.Void EnsureGeometryChangeAccess()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Shape.GetGeometryCore()",
     "kind": "method",
     "declaringType": "Electron2D.Shape",

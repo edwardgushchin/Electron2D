@@ -1,4 +1,6 @@
-if (args.Contains("--shape-policy")) BackendChecks.RunShapePolicy(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+if (args.Contains("--shape-geometry")) BackendChecks.RunShapeGeometry(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
+else if (args.Contains("--shape-policy")) BackendChecks.RunShapePolicy(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
 else if (args.Contains("--factory-views")) BackendChecks.RunFactoryViews();
 else if (args.Contains("--debug-drawing")) BackendChecks.RunDebugDrawing();
