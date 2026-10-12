@@ -1,6 +1,6 @@
 # Scene animation
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 [ADR 0093](../decisions/scene-animation.md#adr-0093) owns reusable typed animation. The executable chain is [Animation](../classes/Animation.md) → [AnimationLibrary](../classes/AnimationLibrary.md) → [AnimationMixer](../classes/AnimationMixer.md) / [AnimationPlayer](../classes/AnimationPlayer.md) → an ordinary typed node property setter → the existing renderer.
 
@@ -174,3 +174,13 @@ Grouped machines require a direct machine parent. Ancestor slash requests contro
 Bindings absent from a weighted frame retire their controlled nested player/audio output. This applies after Stop or a departed clip and includes AudioTrackUseBlend=false. Deferred method callbacks already accepted still use their captured safe-point/lifetime policy. Native transports, authored clips/graphs/curves and scene targets retain their established borrowed lifetime.
 
 AnimationStateMachineTests verifies authoring/defaults/guards/aliases, route choice and fallback, fades/curves/boundaries, sync/end/loop policies, typed conditions/predicates, automatic cycles/priorities, multiple groups and events, independent shared trees, rename/removal, preparation/observer failures, callback reentry, method/nested effects and tested output. Warm checks measure 64 command/route cycles, 64 cached grouped descendant starts and 64 stopped idle frames with zero owner managed bytes. The separate native run uses SDL dummy and FAudio PCM capture to verify cue start/restart/stop and departed nonblended audio. Public Engine.Run hosts exercise actual GPU/compatibility pixels and borrowed-resource cleanup. Native allocator/driver internals, physical listening, other platforms, disk/editor workflows and human acceptance remain separate gates.
+
+## Key optimization
+
+`Animation.Optimize(allowedVelocityError: .01, allowedAngularError: .01, precision: 3)` reduces existing built-in float, double and Vector2 value curves in their typed key containers. The operation uses time-aware adjacent velocities, a relative speed ratio, normalized vector direction and absolute tolerance `10^-precision`. Both error inputs must be finite within 0–1; precision is 0–15. Nonconstant endpoints remain. A near-constant curve may retain only its first key. Angle curves unwrap adjacent values and retain a key when the combined turn reaches half a revolution.
+
+Linear, linear-angle and nearest interpolation participate; nearest only removes near-constant keys. Equal-speed vector corners still require the direction test. Discrete keys retain their crossed writes, including repeated equal values. Cubic curves, custom interpolators, eased segments and unsupported value families remain unchanged because their behavior cannot be established by these velocity tests. Nonfinite values and unrepresentable velocities do not authorize deletion. Tolerances are local adjacent-segment tests, not a global maximum positional-error bound. The operation is cold authoring work; repeated list removal can be quadratic for dense redundant clips.
+
+All tracks commit before one `Changed` notification; a no-op stays quiet. Observer failure does not restore removed keys. Reentrant no-op calls terminate, resource copies retain separate keys, and attached library/mixer caches rebuild through their existing change observers. Length, step, loop mode, path, markers and track metadata are retained. Author on the existing scene owner thread; this does not introduce cross-thread mutation synchronization.
+
+`AnimationOptimizeTests` checks dense scalar/Vector2 reduction, exact sampled poses, irregular times, angle wrap and half turns, velocity and direction thresholds, equal-speed right-angle corners, easing/discrete/custom/cubic preservation, invalid inputs, nonfinite values, copies, active playback, seeking, reverse, loop seams and committed/reentrant/failing notifications. `SceneAnimationTests.RunHost` reduces a 33-key position clip to two before the existing three-stage rendered check, through two complete Linux Wayland GPU and two compatibility lifecycles. These checks do not establish other platforms, native allocation or editor asset persistence.

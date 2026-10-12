@@ -19,6 +19,7 @@ Electron2D-authored code is licensed under the [MIT license](Electron2D-LICENSE.
 | Adapted PolyPartition algorithm | MIT | [PolyPartition-LICENSE](PolyPartition-LICENSE.txt) |
 | Flat canvas style geometry and default theme icons | MIT | [CanvasStyleGeometry-LICENSE](CanvasStyleGeometry-LICENSE.txt) |
 | Adapted text layout, justification and missing-character geometry | MIT | [runtime adaptation notice](CanvasStyleGeometry-LICENSE.txt) |
+| Adapted animation value-key velocity reduction | MIT | [runtime adaptation notice](CanvasStyleGeometry-LICENSE.txt) |
 | Adapted CPU particle timing, emission and scalar/color simulation | MIT | [runtime adaptation notice](CanvasStyleGeometry-LICENSE.txt) |
 | Avalonia Unicode algorithms and generated Unicode 17 data | MIT, Apache-2.0 and retained component terms | [Avalonia MIT](UnicodeText-MIT.txt), [Apache-2.0](UnicodeText-Apache-2.0.txt), [Unicode](UnicodeText-Unicode.txt), [.NET](UnicodeText-DotNet.txt), [line breaking](UnicodeText-foliojs-linebreak.txt), [Unicode trie](UnicodeText-foliojs-unicode-trie.txt) |
 | meshoptimizer 1.1.1 attribute-aware structural simplification | MIT | [Meshoptimizer-LICENSE](Meshoptimizer-LICENSE.txt) |

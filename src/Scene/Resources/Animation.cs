@@ -351,6 +351,7 @@ internal abstract class AnimationTrack
         }
         return found;
     }
+    internal virtual bool Optimize(double velocityError, double angularError, double precision) => false;
     internal abstract AnimationTrack Copy(bool deep = false, Func<Resource?, Resource?>? duplicate = null);
     internal abstract void MoveKey(int key, double time);
     internal abstract void RemoveKey(int key);
@@ -411,6 +412,7 @@ internal abstract class AnimationTypedTrack<T> : AnimationTrack
 internal sealed class AnimationValueTrack<TOwner, T>(PropertyDescriptor<TOwner, T> property, Func<T, T, double, T>? interpolate) : AnimationTypedTrack<T>(interpolate) where TOwner : Node
 {
     internal override string PropertyName => property.Name;
+    internal override bool Optimize(double velocityError, double angularError, double precision) => AnimationKeyOptimizer.Optimize(this, velocityError, angularError, precision);
     internal override AnimationTrack Copy(bool deep = false, Func<Resource?, Resource?>? duplicate = null) { var copy = new AnimationValueTrack<TOwner, T>(property, Interpolate); CopyTo(copy, deep, duplicate); return copy; }
     internal override AnimationBinding? Bind(Node root) { var target = string.IsNullOrEmpty(NodePath) ? root : root.GetNodeOrNull(NodePath); return target is TOwner owner ? new Binding(this, owner, property) : null; }
     private sealed class Binding(AnimationValueTrack<TOwner, T> track, TOwner owner, PropertyDescriptor<TOwner, T> descriptor) : AnimationBinding

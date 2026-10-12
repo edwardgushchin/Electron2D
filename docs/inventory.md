@@ -1,6 +1,6 @@
 # Engine inventory
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 Private native libraries are owned by the Linux/macOS/Windows native packages in ordinary desktop builds; [native delivery](native-packaging.md) records source production and target verification limits. Windows resolution/full-suite checks are connected with execution pending. No public runtime type or managed backend assembly is added; internal floating-point atomics preserve Engine/audio snapshots on 32-bit hosts.
 
@@ -1321,3 +1321,4 @@ PhysicsServerStateTests now runs its complete typed state family on explicitly s
 Window content rasterization introduces namespace-level ContentScaleMode, ContentScaleAspect and ContentScaleStretch enums and five stored Window properties. Viewport transforms/text raster scale, embedded windows and both canvas backends share the executable policy; see [Window](classes/Window.md#content-scale).
 
 The complete OneWayCollisionTests, CollisionPolygonTests and PhysicsCollisionExceptionTests now execute on explicitly selected public CPU/GPU worlds. They retain opposite approaches, local/parent rotations, live side changes and zero direction, dynamic/kinematic platforms, Area sensor bypass, solid/hollow/concave polygon geometry, warning-error recovery and restored scene geometry. Unilateral scene/raw exceptions suppress both motion directions and solved response; duplicate entries, server-only/null and freed-target slots, live edits and reentry keep their existing rules. Position/velocity bounds are unchanged. Sixty-four warmed active one-way, polygon and exception frames plus 64 changed raw-exception/step cycles require 0/0 owner/all-thread managed bytes. Internal GPU store probes remain diagnostics; broader inherited/extension, network/platform, native allocations and final performance acceptance remain open.
+Animation resources now execute built-in float/double/Vector2 key reduction through `Animation.Optimize`; existing library change observers invalidate player/mixer/graph bindings. The [key optimization contract](components/scene-animation.md#key-optimization) records preserved curve families, tolerances and verification limits.

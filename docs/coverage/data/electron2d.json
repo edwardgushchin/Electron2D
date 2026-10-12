@@ -55831,6 +55831,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Animation.Optimize(System.Double,System.Double,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "Optimize",
+    "signature": "public System.Void Optimize(System.Double allowedVelocityError = 0.01, System.Double allowedAngularError = 0.01, System.Int32 precision = 3)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "allowedVelocityError",
+        "type": "System.Double",
+        "default": "0.01"
+      },
+      {
+        "name": "allowedAngularError",
+        "type": "System.Double",
+        "default": "0.01"
+      },
+      {
+        "name": "precision",
+        "type": "System.Int32",
+        "default": "3"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Animation.RemoveMarker(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.Animation",

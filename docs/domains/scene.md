@@ -1,6 +1,6 @@
 # Scene domain
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 ## Tile grid and terrain integration
 
@@ -264,3 +264,5 @@ The executable [multiline editing component](../components/multiline-editing.md)
 [Scene collection tiles](../components/tiles.md#scene-collections) retain shared PackedScene graphs and compiled factory root validation, with deferred ordinary child placement and explicit editor/physics prerequisites.
 
 Window content policies now execute logical-size fitting, raster target selection and presentation through both native canvas backends, including embedded input and automatic glyph raster scale. [Window](../classes/Window.md#content-scale) records state and verification limits.
+
+[Animation key optimization](../components/scene-animation.md#key-optimization) reduces built-in scalar/Vector2 curves before existing player and graph execution, preserving discrete writes and non-linear curve contracts.

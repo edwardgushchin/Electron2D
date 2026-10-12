@@ -5,7 +5,7 @@ Last updated: 2026-10-08
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
 1. Close 1583 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 894 missing declarations in already represented type families; split each type by its documented dependency trigger.
+2. Complete 893 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -39,7 +39,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [Texture2D](classes/Texture.md#godot-texture2d) | 1 | 22 |
 | [Polygon2D](classes/Polygon2D.md) | 1 | 13 |
 | [ResourceLoader](classes/ResourceLoader.md) | 1 | 3 |
-| [Animation](classes/Animation.md) | 1 | 2 |
 | [Material](classes/Material.md) | 1 | 0 |
 | [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | 0 | 137 |
 | [CanvasItem](classes/CanvasItem.md) | 0 | 26 |
@@ -67,6 +66,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [AudioStreamOggVorbis](classes/AudioStreamOggVorbis.md) | 0 | 3 |
 | [ParallaxLayer](classes/ParallaxLayer.md) | 0 | 3 |
 | [ShaderMaterial](classes/ShaderMaterial.md) | 0 | 3 |
+| [Animation](classes/Animation.md) | 0 | 2 |
 | [AudioStreamPlayback](classes/AudioStreamPlayback.md) | 0 | 2 |
 | [Camera2D](classes/Camera2D.md) | 0 | 2 |
 | [GraphNode](classes/GraphNode.md) | 0 | 2 |

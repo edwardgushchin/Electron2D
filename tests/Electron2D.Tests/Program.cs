@@ -526,6 +526,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_BLEND") == "1") { 
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_ANIMATION_HOST") == "1") { SceneAnimationTests.RunHost(); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ANIMATION_OPTIMIZE") == "1") { AnimationOptimizeTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_ANIMATION") == "1") { SceneAnimationTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_OUTPUT") == "1") { AudioOutputTests.Run(); return; }
@@ -966,6 +968,7 @@ AudioSampleTests.Run();
 AudioPolyphonicTests.Run();
 AudioPlaylistTests.Run();
 SceneAnimationTests.Run();
+AnimationOptimizeTests.Run();
 SceneAnimationBlendTests.Run();
 AnimationGraphTests.Run();
 AnimationBlendSpaceTests.Run();

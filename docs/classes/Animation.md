@@ -1,6 +1,6 @@
 # Animation
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 **Inherits:** [Resource](Resource.md)
 
@@ -13,6 +13,8 @@ Last updated: 2026-10-04
 Reusable typed value/Bézier/method/nested-player timelines, key/container authoring and named markers.
 
 The complete timing, copy/borrowing, validation, callback error/reentry and verification contract is on [Scene animation](../components/scene-animation.md), including [special tracks](../components/scene-animation.md#bézier-and-method-tracks). Author/edit on the scene owner thread; target nodes and authored resources remain borrowed. [ADR 0093](../decisions/scene-animation.md#adr-0093) owns the current implementation.
+
+`Optimize` removes redundant built-in float/double/Vector2 keys using relative velocity/direction and absolute decimal tolerances. It preserves discrete writes, easing, cubic and custom interpolation. See [key optimization](../components/scene-animation.md#key-optimization) for boundaries and executable checks.
 
 ## Examples
 

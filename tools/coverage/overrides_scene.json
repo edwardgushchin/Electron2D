@@ -5363,6 +5363,11 @@
       "godot": "Window::property:content_scale_stretch",
       "electron2d": "property:Electron2D.Window.ContentScaleStretch()",
       "reason": "Executable content policy is stored by typed scene descriptors and shared by rendering, texture dimensions, layout, input and text rasterization."
+    },
+    {
+      "electron2d": "method:Electron2D.Animation.Optimize(System.Double,System.Double,System.Int32)",
+      "godot": "Animation::method:optimize(float:,float:,int:)",
+      "reason": "ADR 0093: typed float/double/Vector2 key reduction executes on existing player and graph curves; preserves equal-speed corners, discrete writes, custom interpolators, easing and cubic keys. Velocity/direction tolerances and decimal precision are validated; changes coalesce after commit."
     }
   ],
   "extras": [
@@ -10263,7 +10268,6 @@
       "state": "Unimplemented",
       "reason": "ADR 0093: value-property authoring/playback now executes. This applicable member remains unimplemented; it is not blocked on the first scene animation slice.",
       "godot": [
-        "Animation::method:optimize(float:,float:,int:)",
         "AnimationPlayer::enum:AnimationMethodCallMode",
         "AnimationPlayer::enum_value:AnimationMethodCallMode.ANIMATION_METHOD_CALL_DEFERRED",
         "AnimationPlayer::enum_value:AnimationMethodCallMode.ANIMATION_METHOD_CALL_IMMEDIATE",
@@ -10813,6 +10817,13 @@
         "Window::property:content_scale_stretch"
       ],
       "reason": "WindowContentScaleTests verifies all three raster modes, five aspects, fractional/integer fitting, factor flooring, small/zero content, validation rollback, scene packing, observer commit semantics, owner/disposal, logical input and zero warmed query allocations. WindowContentScaleNativeTests verifies real content/presentation pixels, different target resolutions, embedded target density/input and warmed active/idle frames on Linux Wayland GPU/compatibility. Rendering resources retain their existing explicit native dimension limits. Other targets and owner visual acceptance remain unverified."
+    },
+    {
+      "godot": [
+        "Animation::method:optimize(float:,float:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "Executable built-in scalar/Vector2 value-key optimization with relative speed, vector direction and absolute precision, angle wrap/half-turn protection, one committed notification, copy independence and playback binding invalidation. Discrete event keys, custom/eased/cubic/unsupported typed curves are retained to preserve behavior (ADR 0093). Managed and Linux Wayland GPU/compatibility playback verified; other platform/native allocation/editor gates remain separate."
     }
   ]
 }
