@@ -1,6 +1,6 @@
 # World
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 - Declaration: `public sealed class World : Resource`
 - Source: [World.cs](../../src/Scene/Resources/World.cs)
@@ -49,3 +49,5 @@ separates verified motion/lifetime/allocation cases from remaining physics cover
 Public [registered implementations](../components/physics-registered-adapter.md) now execute through PhysicsServerManager, World(string) and PhysicsServer.SpaceCreate(string). Requested/actual names retain the captured registration and startup fallback identity. The scoped PhysicsServerBackend/Extension family and immutable inputs/results have a public-only circle/spring consumer; custom geometry and full extension/performance/platform acceptance remain open.
 
 The complete PhysicsQueryTests now verifies explicit CPU/GPU resource ownership: duplicate/recreated World wrappers retain one space and view, SceneTree disposal removes scene colliders while caller-owned aliases still allow empty queries, and releasing the final aliases invalidates retained direct views. The implicit scene-owned world has its separate SceneTree retirement policy.
+
+WorldTests retains default CPU world lifetime and mixed default/explicit transfers, then separately verifies two explicitly selected CPU/GPU viewport worlds: actual backend, isolated scene point queries, preserved body RID and expired old attachment view on sharing, one complete public tick and 60-unit/s body travel of 1 +/- .02 scene units. This tolerance covers default damping and floating-point integration. Ninety-six warmup and 64 measured shared-world steps/lookups require 0/0 owner/all-thread managed bytes. The complete suite now runs on both backends in the ordinary full test entry and ELECTRON2D_TEST_SHARED_PHYSICS=cpu|gpu. Native allocations, wider inherited/extension, foreign platforms and final performance acceptance remain open.

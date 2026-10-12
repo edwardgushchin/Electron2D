@@ -169,6 +169,27 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHARED_PHYSICS") is { } sharedBackend)
+{
+    var backend = sharedBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for the shared physics suite.") };
+    AnimatableBodyTests.Run(backend);
+    CapsuleShapeTests.Run(backend);
+    CharacterBodyTests.Run(backend);
+    CollisionDisableModeTests.Run(backend);
+    ConcavePolygonShapeTests.Run(backend);
+    ConvexPolygonShapeTests.Run(backend);
+    DampedSpringJointTests.Run(backend);
+    GrooveJointTests.Run(backend);
+    PhysicsBodyParameterTests.Run(backend);
+    PhysicsServerJointTests.Run(backend);
+    PinJointTests.Run(backend);
+    RigidFreezeModeTests.Run(backend);
+    SegmentShapeTests.Run(backend);
+    SeparationRayShapeTests.Run(backend);
+    ShapeOwnerTests.Run(backend);
+    WorldTests.Run(backend);
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GEOMETRY_CONTRACT") is { } geometryBackend)
 {
     foreach (var backend in geometryBackend == "cpu" ? new[] { PhysicsServer.Backend.CPU } : new[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU })
@@ -896,10 +917,10 @@ PhysicsCheckpointTests.Run();
 PhysicsSnapshotTests.Run();
 PhysicsSpaceCheckpointTests.Run();
 CPUPhysicsCheckpointTests.Run();
-PinJointTests.Run();
-GrooveJointTests.Run();
-DampedSpringJointTests.Run();
-PhysicsServerJointTests.Run();
+PinJointTests.Run(); PinJointTests.Run(PhysicsServer.Backend.GPU);
+GrooveJointTests.Run(); GrooveJointTests.Run(PhysicsServer.Backend.GPU);
+DampedSpringJointTests.Run(); DampedSpringJointTests.Run(PhysicsServer.Backend.GPU);
+PhysicsServerJointTests.Run(); PhysicsServerJointTests.Run(PhysicsServer.Backend.GPU);
 PhysicsJointPolicyTests.Run();
 PhysicsServerShapeSlotTests.Run();
 PhysicsActivityTests.Run();
@@ -908,9 +929,9 @@ PhysicsSleepPolicyTests.Run();
 PhysicsContactPolicyTests.Run();
 PhysicsSolverIterationTests.Run();
 PhysicsContactPersistenceTests.Run(); PhysicsCollisionPriorityTests.Run();
-CapsuleShapeTests.Run();
-SegmentShapeTests.Run();
-SeparationRayShapeTests.Run();
+CapsuleShapeTests.Run(); CapsuleShapeTests.Run(PhysicsServer.Backend.GPU);
+SegmentShapeTests.Run(); SegmentShapeTests.Run(PhysicsServer.Backend.GPU);
+SeparationRayShapeTests.Run(); SeparationRayShapeTests.Run(PhysicsServer.Backend.GPU);
 WorldBoundaryTests.Run();
 ShapeCollisionTests.Run();
 OneWayCollisionTests.Run(); OneWayCollisionTests.Run(PhysicsServer.Backend.GPU);
@@ -940,12 +961,12 @@ PhysicsShapeQueryTests.Run(); PhysicsShapeQueryTests.Run(PhysicsServer.Backend.G
 PhysicsMotionTests.Run(); PhysicsMotionTests.Run(PhysicsServer.Backend.GPU);
 PhysicsCCDTests.Run();
 PhysicsCollisionExceptionTests.Run(); PhysicsCollisionExceptionTests.Run(PhysicsServer.Backend.GPU);
-CharacterBodyTests.Run();
+CharacterBodyTests.Run(); CharacterBodyTests.Run(PhysicsServer.Backend.GPU);
 RayCastTests.Run();
 ShapeCastTests.Run();
-ConvexPolygonShapeTests.Run();
-ConcavePolygonShapeTests.Run();
-AnimatableBodyTests.Run();
+ConvexPolygonShapeTests.Run(); ConvexPolygonShapeTests.Run(PhysicsServer.Backend.GPU);
+ConcavePolygonShapeTests.Run(); ConcavePolygonShapeTests.Run(PhysicsServer.Backend.GPU);
+AnimatableBodyTests.Run(); AnimatableBodyTests.Run(PhysicsServer.Backend.GPU);
 PhysicsMaterialTests.Run();
 PhysicsMaterialTests.Run(PhysicsServer.Backend.GPU);
 PhysicsSurfaceVelocityTests.Run(); PhysicsSurfaceVelocityTests.Run(PhysicsServer.Backend.GPU);
@@ -1023,7 +1044,7 @@ NavigationLinkTests.Run();
 NavigationQueryTests.Run();
 NavigationAgentTests.Run();
 NavigationAvoidanceTests.Run();
-WorldTests.Run();
+WorldTests.Run(); WorldTests.Run(PhysicsServer.Backend.GPU);
 PhysicsBodyTransformTests.Run(PhysicsServer.Backend.CPU);
 RenderingProgramTests.Run();
 MeshSkinTests.Run();
@@ -1069,14 +1090,14 @@ RigidBodyContactTests.Run();
 PhysicsBodyStateTests.Run(); PhysicsBodyStateTests.Run(PhysicsServer.Backend.GPU);
 PhysicsServerStateTests.Run(); PhysicsServerStateTests.Run(PhysicsServer.Backend.GPU);
 PhysicsContactImpulseTests.Run(); PhysicsContactImpulseTests.Run(PhysicsServer.Backend.GPU);
-ShapeOwnerTests.Run();
+ShapeOwnerTests.Run(); ShapeOwnerTests.Run(PhysicsServer.Backend.GPU);
 ShapePairEventTests.Run();
-CollisionDisableModeTests.Run();
+CollisionDisableModeTests.Run(); CollisionDisableModeTests.Run(PhysicsServer.Backend.GPU);
 PhysicsMassProfileTests.Run();
 PhysicsMassProfileTests.Run(PhysicsServer.Backend.GPU);
 PhysicsServerForceTests.Run(); PhysicsServerForceTests.Run(PhysicsServer.Backend.GPU);
-RigidFreezeModeTests.Run();
-PhysicsBodyParameterTests.Run();
+RigidFreezeModeTests.Run(); RigidFreezeModeTests.Run(PhysicsServer.Backend.GPU);
+PhysicsBodyParameterTests.Run(); PhysicsBodyParameterTests.Run(PhysicsServer.Backend.GPU);
 PhysicsAreaMonitorTests.Run(); PhysicsAreaMonitorTests.Run(PhysicsServer.Backend.GPU);
 AStarTests.Run();
 AStarGridTests.Run();

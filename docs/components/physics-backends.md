@@ -1,6 +1,6 @@
 # Physics backend selection and shared worlds
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 [Same-revision mass measurements](physics-current-performance.md) record complete
 CPU/GPU headless steps and real-window frames at 65,536 awake bodies on
@@ -1029,3 +1029,5 @@ extension and platform/performance acceptance remain open.
 
 
 [Registered factory-selected views](physics-registered-adapter.md#factory-selected-direct-views) now have a public-only check of body/query factory dispatch, cache identity, initially empty contact snapshots, immutable publication before callbacks, failed factories and retry, attachment retirement and zero warm managed allocations. Wider numerical-extension acceptance stays open.
+
+The ordinary full suite now executes both CPU and independent GPU variants of all sixteen previously parameterized default-CPU families: AnimatableBody, CapsuleShape, CharacterBody, CollisionDisableMode, ConcavePolygonShape, ConvexPolygonShape, DampedSpringJoint, GrooveJoint, PhysicsBodyParameter, PhysicsServerJoint, PinJoint, RigidFreezeMode, SegmentShape, SeparationRayShape (including its dynamics suite), ShapeOwner and World. ELECTRON2D_TEST_SHARED_PHYSICS=cpu|gpu runs the complete same set explicitly; existing numerical and lifecycle/error assertions are unchanged. WorldTests retains the default-CPU/mixed-world cases and adds two explicitly selected isolated worlds, query identity/isolation, attachment-view invalidation and a shared once-per-tick step. Its 96 warmup/64 measured complete frames with lookups require 0/0 owner/all-thread bytes; one-frame 60-unit/s travel stays within .02 scene units, covering default damping and floating-point integration. Individual existing suite allocation scopes remain their documented limits. This closes the full-suite call-site omission, not remaining inherited/extension, native/platform, network and final performance acceptance.

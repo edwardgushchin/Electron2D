@@ -1951,7 +1951,7 @@
       "godot": [
         "class:World2D"
       ],
-      "reason": "All four applicable public world properties now provide real borrowed canvas/physics/query/navigation identities with shared runtime lifetime. WorldTests and NavigationTests exercise independent/shared viewports, replacement and release (ADRs 0063/0097)."
+      "reason": "All four applicable public world properties now provide real borrowed canvas/physics/query/navigation identities with shared runtime lifetime. WorldTests and NavigationTests exercise independent/shared viewports, replacement and release (ADRs 0063/0097). The ordinary full suite now runs WorldTests with CPU and GPU selections. A separate two-selected-world fixture proves actual query isolation, attachment-view invalidation, shared public tick/body travel and 64 warmed complete frames/lookups at 0/0 owner/all-thread bytes; default CPU/mixed-world lifetime cases remain distinct. Wider inherited/extension/platform/performance acceptance stays open."
     },
     {
       "state": "Implemented",

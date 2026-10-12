@@ -1,6 +1,6 @@
 # Canvas and physics worlds
 
-Last updated: 2026-10-11
+Last updated: 2026-10-13
 
 A World combines one stable logical rendering canvas with one lazily created registered physics space. Viewport.World selects that runtime; CanvasItem.GetWorld resolves the nearest viewport's selection, or a SceneTree fallback in a viewport-free scene. FindWorld returns the live local world. Each ordinary viewport starts independently. Assigning another viewport's World shares scene canvas content and physics queries/simulation; null assignment creates a fresh independent default, matching the pinned viewport setter. CanvasLayer canvases keep their explicit viewport scope.
 
@@ -51,3 +51,5 @@ ELECTRON2D_TEST_WORLD_HOST=1 exercises actual Window/SubViewport targets with fa
 The GPU and hardware compatibility final captures were inspected and are byte-identical: SHA-256 `a9f4652bfae6dc386a3f3542f4e9c5dccc188c0f15bd0c6e865c5af3aa013a0e`. They show both source viewport contributions in the restored shared world. Captures remain local ignored verification artifacts.
 
 WorldRuntime also retains an optional immutable internal named selection before lazy space creation. Aliases keep the same registration even if registry default priorities change; factories run only on first physics access. Public construction still selects CPU/GPU through the existing enum. [Named selection checks and limits](physics-backends.md#named-implementation-selection) cover real scene/raw solver behavior.
+
+WorldTests retains default CPU world lifetime and mixed default/explicit transfers, then separately verifies two explicitly selected CPU/GPU viewport worlds: actual backend, isolated scene point queries, preserved body RID and expired old attachment view on sharing, one complete public tick and 60-unit/s body travel of 1 +/- .02 scene units. This tolerance covers default damping and floating-point integration. Ninety-six warmup and 64 measured shared-world steps/lookups require 0/0 owner/all-thread managed bytes. The complete suite now runs on both backends in the ordinary full test entry and ELECTRON2D_TEST_SHARED_PHYSICS=cpu|gpu. Native allocations, wider inherited/extension, foreign platforms and final performance acceptance remain open.

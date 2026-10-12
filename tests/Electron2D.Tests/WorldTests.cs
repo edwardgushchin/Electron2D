@@ -45,7 +45,36 @@ internal static class WorldTests
         var canvas = reopened.Canvas; var space = reopened.Space; using var borrowedDuplicate = (World)reopened.Duplicate(); tree.Dispose(); Check(RenderingCanvasRegistry.ResolveOrNull(canvas) is null, "Scene teardown expires default world canvas, including duplicate wrappers."); Reject<ArgumentException>(() => PhysicsServer.SpaceGetDirectState(space));
         Check(RenderingCanvasRegistry.ResolveOrNull(explicitWorld.Canvas) is not null && copy.Space == explicitWorld.Space, "Caller-owned world survives tree teardown.");
         var retryRoot = new SubViewport(); var retryBody = new StaticBody(); retryBody.AddChild(new CollisionShape { Shape = shape }); retryRoot.AddChild(retryBody); Action<Node> badReady = _ => throw new InvalidOperationException("ready observer"); retryBody.Ready += badReady; Reject<AggregateException>(() => new SceneTree(retryRoot)); retryBody.Ready -= badReady; using (var retry = new SceneTree(retryRoot)) Check(retryBody.GetWorld()!.Space.IsValid(), "Failed activation releases its world driver and permits retry.");
+        VerifySelectedSharing(backend);
         Console.WriteLine($"World identity/sharing/replacement, physics isolation/once-per-tick and teardown passed with {backend} explicit world.");
+    }
+    private static void VerifySelectedSharing(PhysicsServer.Backend backend)
+    {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
+        using var firstWorld = new World(backend); using var secondWorld = new World(backend);
+        using var root = new Node(); var a = new SubViewport { Name = "SelectedA", World = firstWorld }; var b = new SubViewport { Name = "SelectedB", World = secondWorld };
+        using var shape = new CircleShape { Radius = 3 };
+        var first = new StaticBody { Position = new(1000, 0) }; first.AddChild(new CollisionShape { Shape = shape }); a.AddChild(first);
+        var second = new RigidBody { GravityScale = 0, LinearVelocity = new(60, 0), CanSleep = false }; second.AddChild(new CollisionShape { Shape = shape }); b.AddChild(second);
+        root.AddChild(a); root.AddChild(b); using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(firstWorld.Space) == backend && PhysicsServer.SpaceGetBackend(secondWorld.Space) == backend,
+            "Both isolated viewport worlds use the explicitly selected implementation.");
+        using var point = new PhysicsPointQueryParameters { Position = new(1000, 0) };
+        Check(firstWorld.DirectSpaceState.IntersectPoint(point) is [var hit] && hit.ColliderRID == first.GetRID() && secondWorld.DirectSpaceState.IntersectPoint(point).Length == 0,
+            "Selected worlds isolate actual scene query membership.");
+        var rid = second.GetRID(); using var previous = PhysicsServer.BodyGetDirectState(rid)!;
+        b.World = firstWorld; Reject<ObjectDisposedException>(() => _ = previous.Transform);
+        Check(second.GetRID() == rid && second.GetWorld()!.Space == firstWorld.Space, "Sharing a selected world preserves body identity and invalidates the prior attachment view.");
+        var tick = PhysicsServer.SpaceGetTick(firstWorld.Space); var before = second.Position;
+        tree.PhysicsFrame(1d / 60);
+        Check(PhysicsServer.SpaceGetTick(firstWorld.Space) == tick + 1 && Math.Abs(second.Position.X - before.X - 1) < .02f,
+            "Two viewports share one complete selected physical interval per tree tick.");
+        for (var i = 0; i < 96; i++) Cycle();
+        var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var allBefore = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < 64; i++) Cycle();
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore; var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        Check(ownerBytes == 0 && allBytes == 0, $"Selected shared world steps/lookups allocated {ownerBytes}/{allBytes} owner/all-thread bytes.");
+        void Cycle() { tree.PhysicsFrame(1d / 60); _ = second.GetWorld()!.Canvas; _ = b.FindWorld(); }
     }
     private sealed class GuardBody : RigidBody { internal Action? Integration; internal int WorldChanges; protected override void IntegrateForces(PhysicsDirectBodyState state) => Integration?.Invoke(); protected override void OnNotification(int what) { base.OnNotification(what); if (what == NotificationWorldChanged) { Check(Space?.RID == GetWorld()!.Space, "Notification observes final physics membership."); WorldChanges++; } } }
     private sealed class Paint(Color color, Rect2 rect) : Entity { internal int WorldChanges; protected override void OnDraw() => DrawRect(rect, color); protected override void OnNotification(int what) { base.OnNotification(what); if (what == NotificationWorldChanged) WorldChanges++; } }
