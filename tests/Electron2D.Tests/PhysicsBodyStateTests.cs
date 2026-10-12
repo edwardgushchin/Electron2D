@@ -1,9 +1,12 @@
 using Electron2D;
 
-internal static class PhysicsBodyStateTests
+internal sealed class PhysicsBodyStateTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new PhysicsBodyStateTests(backend).RunCore();
+
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         VerifyLiveFieldsAndForces();
         VerifyBodyViewSynchronization();
         VerifyPoseNotificationWrites();
@@ -16,31 +19,32 @@ internal static class PhysicsBodyStateTests
         VerifyServerFieldsAndForces();
         VerifyCallbackFailureAndMutations();
         VerifyWarmAllocation();
-        Console.WriteLine("Direct body state, post-solver callbacks, custom integration and allocation checks passed.");
+        Console.WriteLine($"Direct body state, post-solver callbacks, custom integration and allocation checks passed on {backend}; warm gates use 0/0 owner/all B.");
     }
 
-    private static void VerifyBodyViewSynchronization()
+    private void VerifyBodyViewSynchronization()
     {
-        using var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var target = new RigidBody { Name = "Target", GravityScale = 0 };
         var other = new RigidBody { Name = "Other", GravityScale = 0 };
         root.AddChild(target); root.AddChild(other);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend.");
         target.Position = new(10, 20); other.Position = new(30, 40);
         var view = PhysicsServer.BodyGetDirectState(target.GetRID())!;
-        Check(view.Transform.Origin.IsEqualApprox(target.Position) &&
-            Box2D.NET.B2Bodies.b2Body_GetPosition(((CPUPhysicsColliderImplementation)other.Backend.Implementation!).BodyID) == default,
-            "A direct body view synchronizes its own pose without scanning unrelated bodies.");
+        Check(view.Transform.Origin.IsEqualApprox(target.Position), "A direct body view exposes its current authored pose.");
+        if (backend == PhysicsServer.Backend.CPU)
+            Check(Box2D.NET.B2Bodies.b2Body_GetPosition(((CPUPhysicsColliderImplementation)other.Backend.Implementation!).BodyID) == default,
+                "The CPU direct view diagnostic does not scan unrelated native bodies.");
         tree.PhysicsFrame(1d / 60);
         Check(other.Position.DistanceTo(new(30, 40)) < .001f, "The world step synchronizes the remaining body normally.");
     }
 
-    private static void VerifyPoseNotificationWrites()
+    private void VerifyPoseNotificationWrites()
     {
-        using var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var body = new RigidBody { GravityScale = 0, CanSleep = false, LinearVelocity = new(10, 0) };
         root.AddChild(body);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend.");
         var notifications = 0;
         body.NotifyLocalTransformChanges = true;
         body.LocalTransformChanged += _ =>
@@ -58,13 +62,13 @@ internal static class PhysicsBodyStateTests
             "Solver motion is sampled after pose notifications, retaining user velocity edits in both scene and direct state.");
     }
 
-    private static void VerifyLiveFieldsAndForces()
+    private void VerifyLiveFieldsAndForces()
     {
         using var circle = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld };
         var body = new RigidBody { Mass = 2, GravityScale = 0, Rotation = Mathf.Pi / 2, CanSleep = false };
         body.AddChild(new CollisionShape { Shape = circle, Position = new(20, 0) }); root.AddChild(body);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend.");
         var state = PhysicsServer.BodyGetDirectState(body.GetRID())!;
         Check(ReferenceEquals(state, PhysicsServer.BodyGetDirectState(body.GetRID())) && state.Step == 0,
             "The server caches an attached view before the first physics tick.");
@@ -108,12 +112,12 @@ internal static class PhysicsBodyStateTests
             "Caller disposal invalidates only the view; the server can recreate it.");
     }
 
-    private static void VerifyCustomIntegration()
+    private void VerifyCustomIntegration()
     {
-        var root = new Node();
+        using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld };
         var body = new ProbeBody { CustomIntegrator = true, CanSleep = false, ConstantForce = new(0, 1000), ConstantTorque = 100 };
         root.AddChild(body);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend.");
         body.ApplyCentralForce(new(0, 1000));
         tree.PhysicsFrame(1d / 60);
         Check(body.Calls == 1 && body.LastState is { TotalGravity.Y: > 979 } && body.GlobalPosition == Vector2.Zero &&
@@ -137,16 +141,16 @@ internal static class PhysicsBodyStateTests
         Check(copied.CustomIntegrator, "PackedScene preserves the custom-integration policy.");
     }
 
-    private static void VerifySolvedContacts()
+    private void VerifySolvedContacts()
     {
         using var circle = new CircleShape();
         using var floorShape = new RectangleShape { Size = new(200, 20) };
-        var root = new Node();
+        using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld };
         var body = new ProbeBody { MaxContactsReported = 4, CanSleep = false };
         body.AddChild(new CollisionShape { Shape = circle });
         var floor = new StaticBody { Position = new(0, 100) }; floor.AddChild(new CollisionShape { Shape = floorShape });
         root.AddChild(body); root.AddChild(floor);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend.");
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         var state = body.LastState!;
         Check(state.GetContactCount() > 0 && state.GetContactCount() == body.GetContactCount() &&
@@ -161,9 +165,9 @@ internal static class PhysicsBodyStateTests
         using var query = new PhysicsPointQueryParameters { Position = floor.GlobalPosition };
         Check(state.GetSpaceState().IntersectPoint(query).Length > 0, "The live state exposes the existing space query view.");
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var allBefore = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread();
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed solved-contact snapshots and callbacks allocate no managed bytes.");
+        Check(GC.GetAllocatedBytesForCurrentThread() == before && GC.GetTotalAllocatedBytes(true) == allBefore, "Warmed solved-contact snapshots and callbacks allocate no managed bytes.");
         body.ContactMonitor = true;
         body.MaxContactsReported = 1;
         tree.PhysicsFrame(1d / 60);
@@ -187,11 +191,11 @@ internal static class PhysicsBodyStateTests
         tree.PhysicsFrame(1d / 60);
     }
 
-    private static void VerifyServerContactLimit()
+    private void VerifyServerContactLimit()
     {
         using var circle = new CircleShape();
         using var floorShape = new RectangleShape { Size = new(200, 20) };
-        var space = PhysicsServer.SpaceCreate();
+        var space = PhysicsServer.SpaceCreate(backend);
         var body = PhysicsServer.BodyCreate(); var floor = PhysicsServer.BodyCreate();
         try
         {
@@ -206,17 +210,17 @@ internal static class PhysicsBodyStateTests
             PhysicsServer.BodySetMaxContactsReported(body, 0);
             PhysicsServer.SpaceStep(space, 1d / 60);
             Check(state.GetContactCount() == 0, "Removing the server contact cap clears the previous snapshot on the next step.");
-            var before = GC.GetAllocatedBytesForCurrentThread();
+            var allBefore = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread();
             for (var i = 0; i < 32; i++) { PhysicsServer.SpaceStep(space, 1d / 60); _ = state.Transform; }
-            Check(GC.GetAllocatedBytesForCurrentThread() == before, "A persistent zero-contact server view remains live without per-step allocations.");
+            Check(GC.GetAllocatedBytesForCurrentThread() == before && GC.GetTotalAllocatedBytes(true) == allBefore, "A persistent zero-contact server view remains live without per-step allocations.");
         }
         finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(floor); PhysicsServer.FreeRID(space); }
     }
 
-    private static void VerifyServerCallbacksAndLifetime()
+    private void VerifyServerCallbacksAndLifetime()
     {
         var server = PhysicsServer.Service;
-        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true); var body = PhysicsServer.BodyCreate();
+        var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true); var body = PhysicsServer.BodyCreate();
         Check(PhysicsServer.BodyGetDirectState(body) is null, "A detached server body has no direct view.");
         PhysicsServer.BodySetSpace(body, space); PhysicsServer.BodySetOmitForceIntegration(body, true);
         var sequence = new List<int>();
@@ -234,9 +238,9 @@ internal static class PhysicsBodyStateTests
         Check(sequence.SequenceEqual(new[] { 1, 2 }) && PhysicsServer.BodyIsOmittingForceIntegration(body), "Typed force data precedes sync without changing omission policy.");
         var state = PhysicsServer.BodyGetDirectState(body)!;
         var pose = state.Transform;
-        var viewBytes = GC.GetAllocatedBytesForCurrentThread();
+        var allViewBytes = GC.GetTotalAllocatedBytes(true); var viewBytes = GC.GetAllocatedBytesForCurrentThread();
         for (var i = 0; i < 32; i++) Check(state.Transform == pose, "An unchanged live pose retains its exact transform.");
-        Check(GC.GetAllocatedBytesForCurrentThread() == viewBytes, "Repeated live pose reads allocate no managed bytes.");
+        Check(GC.GetAllocatedBytesForCurrentThread() == viewBytes && GC.GetTotalAllocatedBytes(true) == allViewBytes, "Repeated live pose reads allocate no managed bytes.");
         state.Transform = new(.7f, pose.Origin + new Vector2(3, -4));
         Check(state.Transform == PhysicsServer.BodyGetTransform(body) && state.Transform != pose &&
             state.Transform.Origin.IsEqualApprox(pose.Origin + new Vector2(3, -4)),
@@ -258,13 +262,13 @@ internal static class PhysicsBodyStateTests
         PhysicsServer.FreeRID(body); Reject<ObjectDisposedException>(() => _ = fresh.Step); PhysicsServer.FreeRID(space);
     }
 
-    private static void VerifyReattachmentViews()
+    private void VerifyReattachmentViews()
     {
-        using var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var scene = new RigidBody { GravityScale = 0 };
         root.AddChild(scene);
-        using var tree = new SceneTree(root);
-        var space = PhysicsServer.SpaceCreate();
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend.");
+        var space = PhysicsServer.SpaceCreate(backend);
         var body = PhysicsServer.BodyCreate();
         try
         {
@@ -301,12 +305,12 @@ internal static class PhysicsBodyStateTests
         finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(space); }
     }
 
-    private static void VerifyReattachmentDuringDispatch()
+    private void VerifyReattachmentDuringDispatch()
     {
-        using var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var first = new ProbeBody { Name = "First", GravityScale = 0, CanSleep = false };
         var later = new ProbeBody { Name = "Later", GravityScale = 0, CanSleep = false };
-        root.AddChild(first); root.AddChild(later); using var tree = new SceneTree(root);
+        root.AddChild(first); root.AddChild(later); using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend.");
         var raw = PhysicsServer.BodyCreate(); var rawCalls = 0;
         try
         {
@@ -331,11 +335,11 @@ internal static class PhysicsBodyStateTests
         finally { PhysicsServer.FreeRID(raw); }
     }
 
-    private static void VerifyCallbackFailureAndMutations()
+    private void VerifyCallbackFailureAndMutations()
     {
-        var root = new Node(); var first = new ProbeBody { Name = "First", GravityScale = 0, CanSleep = false }; var second = new ProbeBody { Name = "Second", GravityScale = 0, CanSleep = false };
+        using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld }; var first = new ProbeBody { Name = "First", GravityScale = 0, CanSleep = false }; var second = new ProbeBody { Name = "Second", GravityScale = 0, CanSleep = false };
         root.AddChild(first); root.AddChild(second);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend.");
         first.Update = state => { state.LinearVelocity = new(20, 0); throw new InvalidOperationException("User callback failed."); };
         Check(Capture(() => tree.PhysicsFrame(1d / 60)) is AggregateException && second.Calls == 1 && MathF.Abs(first.LinearVelocity.X - 20) < 0.001f,
             "A failed callback retains committed edits and allows the next body callback and pose sync.");
@@ -350,10 +354,10 @@ internal static class PhysicsBodyStateTests
         Check(calls == 1, "An earlier integration callback can enable a later ordinary body's sync callback in the same frame.");
     }
 
-    private static void VerifyServerFieldsAndForces()
+    private void VerifyServerFieldsAndForces()
     {
         using var areaShape = new RectangleShape { Size = new(1000, 1000) };
-        var root = new Node();
+        using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld };
         var area = new Area
         {
             GravitySpaceOverride = Area.SpaceOverride.Replace,
@@ -365,7 +369,7 @@ internal static class PhysicsBodyStateTests
             AngularDamp = 2
         };
         area.AddChild(new CollisionShape { Shape = areaShape }); root.AddChild(area);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend.");
         var server = PhysicsServer.Service;
         var body = PhysicsServer.BodyCreate(); var circle = PhysicsServer.CircleShapeCreate();
         PhysicsServer.BodyAddShape(body, circle); PhysicsServer.BodySetSpace(body, area.GetWorld()!.Space);
@@ -394,15 +398,15 @@ internal static class PhysicsBodyStateTests
         PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(circle);
     }
 
-    private static void VerifyWarmAllocation()
+    private void VerifyWarmAllocation()
     {
-        var root = new Node(); var body = new ProbeBody { CustomIntegrator = true, CanSleep = false };
+        using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld }; var body = new ProbeBody { CustomIntegrator = true, CanSleep = false };
         body.Update = static state => state.LinearVelocity = new(10, 0); root.AddChild(body);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend.");
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var allBefore = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread();
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed active post-solver callbacks and live view access allocate no managed bytes.");
+        Check(GC.GetAllocatedBytesForCurrentThread() == before && GC.GetTotalAllocatedBytes(true) == allBefore, "Warmed active post-solver callbacks and live view access allocate no managed bytes.");
     }
 
     private sealed class ProbeBody : RigidBody

@@ -1,23 +1,26 @@
 using Electron2D;
 
-internal static class PhysicsServerForceTests
+internal sealed class PhysicsServerForceTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new PhysicsServerForceTests(backend).RunCore();
+
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         VerifyDetachedAndAttachedActions();
         VerifySceneRemoval();
         VerifyModesSleepAndOmission();
         VerifyDetachedGeometry();
         VerifyInvalidAndPhaseAccess();
         VerifyWarmPaths();
-        Console.WriteLine("Server force/impulse API, detached geometry, pending lifetime, modes and allocation checks passed.");
+        Console.WriteLine($"Server force/impulse API, detached geometry, pending lifetime, modes and allocation checks passed on {backend}; 64 warm edited frames use 0/0 owner/all B.");
     }
 
-    private static void VerifyDetachedAndAttachedActions()
+    private void VerifyDetachedAndAttachedActions()
     {
         using var region = new RectangleShape { Size = new(2000, 2000) };
-        var root = new Node(); var area = ZeroField(); area.AddChild(new CollisionShape { Shape = region }); root.AddChild(area);
-        using var tree = new SceneTree(root);
+        using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld }; var area = ZeroField(); area.AddChild(new CollisionShape { Shape = region }); root.AddChild(area);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend.");
         var server = PhysicsServer.Service; var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate();
         try
         {
@@ -53,9 +56,9 @@ internal static class PhysicsServerForceTests
         finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(shape); }
     }
 
-    private static void VerifySceneRemoval()
+    private void VerifySceneRemoval()
     {
-        using var circle = new CircleShape(); var root = new Node();
+        using var circle = new CircleShape(); using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld };
         var body = NewBody(4); body.Sleeping = true; Add(body, circle);
         var server = PhysicsServer.Service; var rid = body.GetRID();
         PhysicsServer.BodyApplyCentralImpulse(rid, new(4, 0));
@@ -63,7 +66,7 @@ internal static class PhysicsServerForceTests
         PhysicsServer.BodySetConstantForce(rid, new(5, 0)); body.ConstantTorque = 3;
         Check(body.ConstantForce == new Vector2(5, 0) && PhysicsServer.BodyGetConstantTorque(rid) == 3, "Scene and RID persistent configuration is bidirectional.");
         PhysicsServer.BodySetConstantForce(rid, Vector2.Zero); PhysicsServer.BodySetConstantTorque(rid, 0);
-        root.AddChild(body); using var tree = new SceneTree(root);
+        root.AddChild(body); using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend.");
         PhysicsServer.BodyApplyCentralImpulse(rid, new(4, 0)); PhysicsServer.BodyApplyCentralForce(rid, new(120, 0));
         body.ProcessMode = ProcessMode.Disabled;
         Check(body.LinearVelocity.IsEqualApprox(new(2, 0)), "Removal captures immediate native impulse state before destroying the attachment.");
@@ -73,10 +76,10 @@ internal static class PhysicsServerForceTests
         tree.PhysicsFrame(1d / 60); Check(Near(body.LinearVelocity.X, 3.5f), "Preserved transient force is consumed only once.");
     }
 
-    private static void VerifyModesSleepAndOmission()
+    private void VerifyModesSleepAndOmission()
     {
-        using var circle = new CircleShape(); var root = new Node(); var body = NewBody(); Add(body, circle); root.AddChild(body);
-        using var tree = new SceneTree(root); var server = PhysicsServer.Service; var rid = body.GetRID();
+        using var circle = new CircleShape(); using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld }; var body = NewBody(); Add(body, circle); root.AddChild(body);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend."); var server = PhysicsServer.Service; var rid = body.GetRID();
         var state = PhysicsServer.BodyGetDirectState(rid)!;
         PhysicsServer.BodyApplyCentralForce(rid, new(60, 0)); body.Sleeping = true; tree.PhysicsFrame(1d / 60);
         Check(state.Sleeping && state.LinearVelocity == Vector2.Zero, "A later explicit Sleeping assignment wins over force-call wakeup.");
@@ -95,7 +98,7 @@ internal static class PhysicsServerForceTests
         body.LockRotation = true; PhysicsServer.BodyApplyTorqueImpulse(rid, 100); Check(state.AngularVelocity == 0, "Rotation lock preserves angular impulse invariants.");
     }
 
-    private static void VerifyDetachedGeometry()
+    private void VerifyDetachedGeometry()
     {
         Shape[] shapes = [new CircleShape(), new RectangleShape { Size = new(30, 20) }, new CapsuleShape { Radius = 8, Height = 24 },
             new SegmentShape { A = new(-30, 0), B = new(30, 0) },
@@ -105,11 +108,11 @@ internal static class PhysicsServerForceTests
         {
             foreach (var shape in shapes)
             {
-                var root = new Node(); var body = NewBody(2); var owner = body.CreateShapeOwner(null); body.ShapeOwnerAddShape(owner, shape);
+                using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld }; var body = NewBody(2); var owner = body.CreateShapeOwner(null); body.ShapeOwnerAddShape(owner, shape);
                 body.ShapeOwnerSetTransform(owner, new(0.3f, Vector2.One, 0, new(5, 9))); root.AddChild(body);
                 var server = PhysicsServer.Service; PhysicsServer.BodyApplyCentralImpulse(body.GetRID(), new(2, 0));
                 var detached = server.BodyRuntime(body.GetRID()).MassProperties;
-                using var tree = new SceneTree(root);
+                using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend.");
                 var attached = server.BodyRuntime(body.GetRID()).MassProperties;
                 Check(Near(detached.Center.X, attached.Center.X) && Near(detached.Center.Y, attached.Center.Y) &&
                     Near(detached.Inertia, attached.Inertia), "Detached resource proxies match native fixture mass for " + shape.GetType().Name);
@@ -118,16 +121,16 @@ internal static class PhysicsServerForceTests
         finally { foreach (var shape in shapes) shape.Dispose(); }
     }
 
-    private static void VerifyInvalidAndPhaseAccess()
+    private void VerifyInvalidAndPhaseAccess()
     {
-        using var circle = new CircleShape(); var root = new Node(); var body = new ForceDuringPose
+        using var circle = new CircleShape(); using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld }; var body = new ForceDuringPose
         {
             GravityScale = 0,
             CanSleep = false,
             LinearVelocity = new(10, 0),
             NotifyLocalTransformChanges = true
         }; Add(body, circle); root.AddChild(body);
-        using var tree = new SceneTree(root); var server = PhysicsServer.Service; var rid = body.GetRID();
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend."); var server = PhysicsServer.Service; var rid = body.GetRID();
         PhysicsServer.BodySetConstantForce(rid, new(3, 4)); PhysicsServer.BodySetConstantTorque(rid, 5);
         Reject<ArgumentOutOfRangeException>(() => PhysicsServer.BodyAddConstantForce(rid, new(0, float.MaxValue), new(float.MaxValue, 0)));
         Check(PhysicsServer.BodyGetConstantForce(rid) == new Vector2(3, 4) && PhysicsServer.BodyGetConstantTorque(rid) == 5, "Invalid moment cannot partially change persistent totals.");
@@ -141,15 +144,15 @@ internal static class PhysicsServerForceTests
         var area = PhysicsServer.AreaCreate(); try { Reject<ArgumentException>(() => PhysicsServer.BodyApplyCentralImpulse(area, Vector2.Zero)); } finally { PhysicsServer.FreeRID(area); }
     }
 
-    private static void VerifyWarmPaths()
+    private void VerifyWarmPaths()
     {
-        using var circle = new CircleShape(); var root = new Node(); var body = NewBody(); body.CanSleep = false; Add(body, circle); root.AddChild(body);
-        using var detached = NewBody(); Add(detached, circle); using var tree = new SceneTree(root);
+        using var circle = new CircleShape(); using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld }; var body = NewBody(); body.CanSleep = false; Add(body, circle); root.AddChild(body);
+        using var detached = NewBody(); Add(detached, circle); using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend.");
         var server = PhysicsServer.Service; var rid = body.GetRID(); var detachedRID = detached.GetRID();
         for (var pass = 0; pass < 64; pass++) { Act(); tree.PhysicsFrame(1d / 60); }
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var allBefore = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread();
         for (var pass = 0; pass < 64; pass++) { Act(); tree.PhysicsFrame(1d / 60); }
-        Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed attached/detached force, impulse, getter and solver paths allocate zero managed bytes.");
+        Check(GC.GetAllocatedBytesForCurrentThread() == before && GC.GetTotalAllocatedBytes(true) == allBefore, "Warmed attached/detached force, impulse, getter and solver paths allocate zero managed bytes.");
         void Act()
         {
             PhysicsServer.BodyApplyCentralImpulse(rid, Vector2.Zero); PhysicsServer.BodyApplyForce(rid, new(0, 1), new(2, 0));

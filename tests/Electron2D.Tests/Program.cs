@@ -71,6 +71,13 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_CANVAS") == "1") 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_TRANSFERS") == "1") { RenderingDeviceTextureTransferTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_TEXTURES") == "1") { RenderingDeviceTextureTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REGISTERED_BACKEND") == "1") { PhysicsRegisteredBackendTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BODY_CONTRACT") is { } bodyContract)
+{
+    var backend = bodyContract == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
+    PhysicsBodyStateTests.Run(backend); PhysicsServerForceTests.Run(backend); PhysicsContactImpulseTests.Run(backend);
+    PhysicsReportOnlyTests.Run(backend);
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_QUERY_CONTRACT") is { } queryContract)
 {
     var backend = queryContract == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
@@ -239,10 +246,10 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_OBJECTS_GPU") ==
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_CANVAS") == "1") { PhysicsCanvasTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_CANVAS_GPU") == "1") { PhysicsCanvasTests.Run(true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_QUERIES") == "1") { GPUPhysicsQueryTests.Run(); PhysicsCanvasTests.Run(true); PhysicsCanvasTests.Run(); PhysicsQueryTests.Run(PhysicsServer.Backend.GPU); RayCastTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_REPORTS") == "1") { GPUPhysicsReportTests.Run(); PhysicsContactImpulseTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_REPORTS") == "1") { GPUPhysicsReportTests.Run(); PhysicsContactImpulseTests.Run(PhysicsServer.Backend.GPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_FIELDS") == "1") { GPUPhysicsFieldTests.Run(); PhysicsServerAreaFieldTests.Run(PhysicsServer.Backend.GPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_KINEMATIC") == "1") { GPUPhysicsKinematicTests.Run(); PhysicsSurfaceVelocityTests.Run(false); PhysicsServerStateTests.Run(false); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_TRANSIENT_FORCES") == "1") { GPUPhysicsTransientForceTests.Run(); PhysicsServerForceTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_TRANSIENT_FORCES") == "1") { GPUPhysicsTransientForceTests.Run(); PhysicsServerForceTests.Run(PhysicsServer.Backend.GPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_PARAMETERS") == "1") { GPUPhysicsBodyParameterTests.Run(); PhysicsBodyParameterTests.Run(); PhysicsBodyParameterTests.Run(PhysicsServer.Backend.GPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_ONE_WAY") == "1") { GPUPhysicsOneWayTests.Run(); OneWayCollisionTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_EXCEPTIONS") == "1") { GPUPhysicsExceptionStoreTests.Run(); PhysicsCollisionExceptionTests.Run(); return; }
@@ -1044,15 +1051,15 @@ ResourceArchiveTests.Run();
 AudioBusLayoutTests.Run();
 RigidBodyForceTests.Run();
 RigidBodyContactTests.Run();
-PhysicsBodyStateTests.Run();
+PhysicsBodyStateTests.Run(); PhysicsBodyStateTests.Run(PhysicsServer.Backend.GPU);
 PhysicsServerStateTests.Run();
-PhysicsContactImpulseTests.Run();
+PhysicsContactImpulseTests.Run(); PhysicsContactImpulseTests.Run(PhysicsServer.Backend.GPU);
 ShapeOwnerTests.Run();
 ShapePairEventTests.Run();
 CollisionDisableModeTests.Run();
 PhysicsMassProfileTests.Run();
 PhysicsMassProfileTests.Run(PhysicsServer.Backend.GPU);
-PhysicsServerForceTests.Run();
+PhysicsServerForceTests.Run(); PhysicsServerForceTests.Run(PhysicsServer.Backend.GPU);
 RigidFreezeModeTests.Run();
 PhysicsBodyParameterTests.Run();
 PhysicsAreaMonitorTests.Run(); PhysicsAreaMonitorTests.Run(PhysicsServer.Backend.GPU);

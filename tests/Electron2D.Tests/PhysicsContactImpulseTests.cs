@@ -1,26 +1,32 @@
 using Box2D.NET;
 using Electron2D;
 
-internal static class PhysicsContactImpulseTests
+internal sealed class PhysicsContactImpulseTests(bool stages, PhysicsServer.Backend backend)
 {
-    internal static void Run(bool gpu = false)
+    internal static void Run(bool gpu = false) => new PhysicsContactImpulseTests(gpu, PhysicsServer.Backend.CPU).RunCore();
+    internal static void Run(PhysicsServer.Backend backend) => new PhysicsContactImpulseTests(false, backend).RunCore();
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
+        var gpu = stages;
         using var lifetime = gpu ? new GPUPhysicsWorld() : null;
         VerifyLimits();
         foreach (var raw in new[] { false, true })
         {
             VerifyMomentum(gpu, raw, false);
             VerifyMomentum(gpu, raw, true);
-            VerifySelection(gpu, raw);
+            if (backend == PhysicsServer.Backend.CPU) VerifySelection(gpu, raw);
+            VerifyPublicSelection(raw, PhysicsServer.BodyMode.Rigid);
+            VerifyPublicSelection(raw, PhysicsServer.BodyMode.Kinematic);
         }
         VerifyPairAndSleep(gpu);
         VerifyTransient(gpu);
         VerifyRotatingNormal(gpu);
         VerifyWarm(gpu);
-        Console.WriteLine($"Contact impulses passed on {(gpu ? "GPU" : "CPU")}: momentum, subdivided/transient contacts, rotating normals, paired signs, sleep reset, depth caps and zero warmed bytes.");
+        Console.WriteLine($"Contact impulses passed on {backend} (legacy stages={stages}): momentum, subdivided/transient contacts, rotating normals, paired signs, sleep reset, depth caps and zero warmed bytes.");
     }
 
-    private static void VerifyLimits()
+    private void VerifyLimits()
     {
         using var body = new RigidBody(); var raw = PhysicsServer.BodyCreate();
         try
@@ -63,16 +69,16 @@ internal static class PhysicsContactImpulseTests
         return impulse;
     }
 
-    private static void VerifyMomentum(bool gpu, bool raw, bool subdivided)
+    private void VerifyMomentum(bool gpu, bool raw, bool subdivided)
     {
-        using var root = new Node(); using var floorShape = new RectangleShape { Size = new(1000, 20) };
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; using var floorShape = new RectangleShape { Size = new(1000, 20) };
         using var shape = new RectangleShape { Size = new(20, 20) };
         var floor = new StaticBody { Name = "Floor", Position = new(0, 100) }; floor.AddChild(new CollisionShape { Shape = floorShape }); root.AddChild(floor);
         var mover = Mover(root, shape);
         var body = new RigidBody { Name = "Body", Position = new(0, 80), LockRotation = true };
         body.AddChild(new CollisionShape { Shape = shape });
         if (!raw) root.AddChild(body);
-        using var tree = new SceneTree(root); if (gpu) floor.Space!.EnableGPUSolver();
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Impulse fixture uses the explicitly selected backend."); if (gpu) floor.Space!.EnableGPUSolver();
         var id = raw ? PhysicsServer.BodyCreate() : body.GetRID();
         try
         {
@@ -86,10 +92,13 @@ internal static class PhysicsContactImpulseTests
             using var state = PhysicsServer.BodyGetDirectState(id)!;
             var before = state.LinearVelocity;
             if (subdivided) mover.Position += new Vector2(20, 0);
-            var world = B2Worlds.b2GetWorldFromId(floor.Space!.WorldID); var step = world.stepIndex;
+            var nativeWorld = backend == PhysicsServer.Backend.CPU ? B2Worlds.b2GetWorldFromId(floor.Space!.WorldID) : null;
+            var step = nativeWorld?.stepIndex ?? 0; var tick = PhysicsServer.SpaceGetTick(selectedWorld.Space);
             tree.PhysicsFrame(1d / 60);
+            Check(PhysicsServer.SpaceGetTick(selectedWorld.Space) == tick + 1, "A complete physical interval commits one public tick.");
             Check(state.GetContactCount() > 0, "Impact retains real contact points.");
-            Check(subdivided ? world.stepIndex > step + 1 : world.stepIndex == step + 1, "The intended native interval count executes.");
+            if (nativeWorld is not null) Check(subdivided ? nativeWorld.stepIndex > step + 1 : nativeWorld.stepIndex == step + 1,
+                "The CPU scheduling diagnostic executes its intended native interval count.");
             var impulse = Impulse(state); var expected = (state.LinearVelocity - before) * 2;
             Near(impulse, expected, .08f, $"raw={raw}, subdivided={subdivided}");
             Check(impulse.X < -1 && impulse.Y < -1, "Both normal and friction impulses are observable.");
@@ -99,14 +108,14 @@ internal static class PhysicsContactImpulseTests
         finally { if (raw) { PhysicsServer.FreeRID(id); body.Dispose(); } }
     }
 
-    private static void VerifyPairAndSleep(bool gpu)
+    private void VerifyPairAndSleep(bool gpu)
     {
-        using var root = new Node(); using var shape = new RectangleShape { Size = new(20, 20) };
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; using var shape = new RectangleShape { Size = new(20, 20) };
         var a = new RigidBody { Name = "A", Position = new(-10, 0), LockRotation = true };
         var b = new RigidBody { Name = "B", Position = new(10, 0), LockRotation = true };
         a.AddChild(new CollisionShape { Shape = shape }); b.AddChild(new CollisionShape { Shape = shape });
         root.AddChild(a); root.AddChild(b); var mover = Mover(root, shape);
-        using var tree = new SceneTree(root); if (gpu) a.Space!.EnableGPUSolver();
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Impulse fixture uses the explicitly selected backend."); if (gpu) a.Space!.EnableGPUSolver();
         Configure(a.GetRID()); Configure(b.GetRID()); b.Mass = 3;
         a.LinearVelocity = new(100, 50); b.LinearVelocity = new(-80, 0);
         using var va = PhysicsServer.BodyGetDirectState(a.GetRID())!; using var vb = PhysicsServer.BodyGetDirectState(b.GetRID())!;
@@ -124,14 +133,14 @@ internal static class PhysicsContactImpulseTests
         Near(Impulse(vb), Vector2.Zero, .001f, "Sleeping single-interval frame cannot replay old impulses.");
     }
 
-    private static void VerifyTransient(bool gpu)
+    private void VerifyTransient(bool gpu)
     {
-        using var root = new Node(); using var shape = new RectangleShape { Size = new(20, 20) };
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; using var shape = new RectangleShape { Size = new(20, 20) };
         var a = new RigidBody { Name = "A", Position = new(-10, 0), LockRotation = true, ContactMonitor = true };
         var b = new RigidBody { Name = "B", Position = new(10, 0), LockRotation = true, ContactMonitor = true };
         a.AddChild(new CollisionShape { Shape = shape }); b.AddChild(new CollisionShape { Shape = shape });
         root.AddChild(a); root.AddChild(b); var mover = Mover(root, shape);
-        using var tree = new SceneTree(root); if (gpu) a.Space!.EnableGPUSolver();
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Impulse fixture uses the explicitly selected backend."); if (gpu) a.Space!.EnableGPUSolver();
         Configure(a.GetRID()); Configure(b.GetRID());
         PhysicsServer.BodySetBounce(a.GetRID(), 1); PhysicsServer.BodySetBounce(b.GetRID(), 1);
         PhysicsServer.BodySetFriction(a.GetRID(), 0); PhysicsServer.BodySetFriction(b.GetRID(), 0);
@@ -148,15 +157,15 @@ internal static class PhysicsContactImpulseTests
         Check(va.GetContactCount() == 0 && exited == 1, "A later frame does not replay a departed contact.");
     }
 
-    private static void VerifyRotatingNormal(bool gpu)
+    private void VerifyRotatingNormal(bool gpu)
     {
-        using var root = new Node(); using var floorShape = new RectangleShape { Size = new(200, 20) };
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; using var floorShape = new RectangleShape { Size = new(200, 20) };
         using var circle = new CircleShape { Radius = 10 }; using var moverShape = new RectangleShape { Size = new(20, 20) };
         var floor = new AnimatableBody { Name = "Floor", Position = new(0, 100) };
         var body = new RigidBody { Name = "Body", Position = new(40, 80), LockRotation = true };
         floor.AddChild(new CollisionShape { Shape = floorShape }); body.AddChild(new CollisionShape { Shape = circle });
         root.AddChild(floor); root.AddChild(body); var mover = Mover(root, moverShape);
-        using var tree = new SceneTree(root); if (gpu) floor.Space!.EnableGPUSolver(); Configure(body.GetRID());
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Impulse fixture uses the explicitly selected backend."); if (gpu) floor.Space!.EnableGPUSolver(); Configure(body.GetRID());
         body.LinearVelocity = new(0, 40); using var state = PhysicsServer.BodyGetDirectState(body.GetRID())!;
         var before = state.LinearVelocity; floor.Rotation = -.1f; mover.Position += new Vector2(40, 0);
         tree.PhysicsFrame(1d / 60);
@@ -164,9 +173,48 @@ internal static class PhysicsContactImpulseTests
         Near(Impulse(state), (state.LinearVelocity - before) * 2, .1f, "Rotating normal requires vector accumulation.");
     }
 
-    private static void VerifySelection(bool gpu, bool raw)
+    private void VerifyPublicSelection(bool raw, PhysicsServer.BodyMode mode)
     {
-        using var root = new Node(); using var shape = new CircleShape { Radius = 10 };
+        using var world = new World(backend); using var root = new SubViewport { World = world };
+        using var circle = new CircleShape { Radius = 10 };
+        var scene = new RigidBody { GravityScale = 0, CanSleep = false, MaxContactsReported = 8, ContactMonitor = true };
+        scene.AddChild(new CollisionShape { Shape = circle }); if (!raw) root.AddChild(scene);
+        for (var i = 0; i < 6; i++)
+        {
+            var obstacle = new StaticBody { Name = "Candidate" + i, Position = new(0, 15 + i * .1f) };
+            obstacle.AddChild(new CollisionShape { Shape = circle }); root.AddChild(obstacle);
+        }
+        using var tree = new SceneTree(root); var id = raw ? PhysicsServer.BodyCreate() : scene.GetRID();
+        try
+        {
+            if (raw) { PhysicsServer.BodyAddShape(id, circle.GetRID()); PhysicsServer.BodySetSpace(id, world.Space); }
+            Configure(id); PhysicsServer.BodySetMode(id, mode); tree.PhysicsFrame(1d / 60);
+            using var view = PhysicsServer.BodyGetDirectState(id)!;
+            Check(view.GetContactCount() == 6,
+                $"Uncapped scene/raw contacts expose six actual numerical candidates: backend={backend}, raw={raw}, mode={mode}, count={view.GetContactCount()}.");
+            var ranked = Enumerable.Range(0, view.GetContactCount()).Select(i =>
+                (RID: view.GetContactCollider(i), Depth: (view.GetContactColliderPosition(i) - view.GetContactLocalPosition(i)).Dot(view.GetContactLocalNormal(i))))
+                .OrderByDescending(hit => hit.Depth).ToArray();
+            Check(ranked[1].Depth - ranked[2].Depth > .01f, "The real contact geometry has an unambiguous deepest prefix.");
+            foreach (var cap in new[] { 2, 1, 0 })
+            {
+                PhysicsServer.BodySetMaxContactsReported(id, cap);
+                Check(view.GetContactCount() == 0, "Changing the reporting cap clears previously published contacts.");
+                PhysicsServer.BodySetTransform(id, Transform.Identity); PhysicsServer.BodySetLinearVelocity(id, Vector2.Zero);
+                tree.PhysicsFrame(1d / 60);
+                var selected = Enumerable.Range(0, view.GetContactCount()).Select(view.GetContactCollider).ToHashSet();
+                Check(view.GetContactCount() == cap && selected.SetEquals(ranked.Take(cap).Select(hit => hit.RID)),
+                    "Public scene/raw caps retain the deepest real contact candidates without requiring private encounter order.");
+                if (!raw) Check(scene.GetCollidingBodies().Cast<PhysicsBody>().Select(body => body.GetRID()).ToHashSet().SetEquals(selected),
+                    "The object monitor projects exactly the capped physical point set.");
+            }
+        }
+        finally { if (raw) { PhysicsServer.FreeRID(id); scene.Dispose(); } }
+    }
+
+    private void VerifySelection(bool gpu, bool raw)
+    {
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; using var shape = new CircleShape { Radius = 10 };
         var body = new RigidBody { Name = "Body", GravityScale = 0, MaxContactsReported = 2, ContactMonitor = true };
         body.AddChild(new CollisionShape { Shape = shape }); if (!raw) root.AddChild(body);
         var floors = new StaticBody[6];
@@ -175,7 +223,7 @@ internal static class PhysicsContactImpulseTests
             floors[i] = new StaticBody { Name = "Floor" + i, Position = new(0, 15 + i * .1f) };
             floors[i].AddChild(new CollisionShape { Shape = shape }); root.AddChild(floors[i]);
         }
-        using var tree = new SceneTree(root); if (gpu) floors[0].Space!.EnableGPUSolver();
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Impulse fixture uses the explicitly selected backend."); if (gpu) floors[0].Space!.EnableGPUSolver();
         var id = raw ? PhysicsServer.BodyCreate() : body.GetRID();
         try
         {
@@ -215,15 +263,15 @@ internal static class PhysicsContactImpulseTests
         finally { if (raw) { PhysicsServer.FreeRID(id); body.Dispose(); } }
     }
 
-    private static void VerifyWarm(bool gpu)
+    private void VerifyWarm(bool gpu)
     {
-        using var root = new Node(); using var floorShape = new RectangleShape { Size = new(10000, 20) };
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; using var floorShape = new RectangleShape { Size = new(10000, 20) };
         using var shape = new RectangleShape { Size = new(20, 20) };
         var floor = new StaticBody { Name = "Floor", Position = new(0, 100), ConstantLinearVelocity = new(120, 0) };
         var body = new RigidBody { Name = "Body", Position = new(0, 80), CanSleep = false, LockRotation = true, MaxContactsReported = 4, ContactMonitor = true };
         floor.AddChild(new CollisionShape { Shape = floorShape }); body.AddChild(new CollisionShape { Shape = shape });
         root.AddChild(floor); root.AddChild(body); var mover = Mover(root, shape);
-        using var tree = new SceneTree(root); if (gpu) floor.Space!.EnableGPUSolver();
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Impulse fixture uses the explicitly selected backend."); if (gpu) floor.Space!.EnableGPUSolver();
         using var state = PhysicsServer.BodyGetDirectState(body.GetRID())!;
         for (var i = 0; i < 96; i++) Tick();
         var before = GC.GetTotalAllocatedBytes(true);
