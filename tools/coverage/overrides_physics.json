@@ -6721,11 +6721,11 @@
         "PhysicsServer2D::enum_value:AreaBodyStatus.AREA_BODY_REMOVED"
       ],
       "state": "Implemented",
-      "reason": "ADR 0077: server receiver callbacks use Added=0/Removed=1, other RID/object ID and logical shape indices; directional masks and monitorable gating execute via existing exact overlap kernel. PhysicsAreaMonitorTests verifies scene/server payloads, bit 32, reset/reentry/free, callback failures/reentrant removal, owner/configuration guards and 64 warmed active pair cycles without managed allocation."
+      "reason": "ADR 0077: PhysicsAreaMonitorTests now executes the complete server/scene monitor suite on explicit CPU/GPU worlds: status/RID/object/logical slot payloads, directional masks/bit 32, monitorability, reset/reentry/free, callback failures/removal and recursive guards. Sixty-four warmed transition cycles (128 full frames) require zero owner/all-thread managed bytes; native/platform/final acceptance remains separate."
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0056: all ten typed Area parameter pairs execute for scene/server RIDs and space default fields. Existing Area.SpaceOverride supplies the five numeric modes. PhysicsServerAreaFieldTests verifies distinct defaults, scene bidirectionality, mixed priority, bit 32 and lifecycle, actual server gravity/signed damping, transformed point falloff, unbounded default fields, overflow recovery, callback/owner/solver guards and zero warmed allocations.",
+      "reason": "ADR 0056: complete PhysicsAreaFieldTests and PhysicsServerAreaFieldTests execute on explicit CPU/GPU worlds, preserving every typed pair/default shortcut, all five override modes in each channel, mixed priorities, point geometry/falloff, signed damping, masks/lifetime and callback guards. Initial unchanged child entry preserves sleep and changed fields wake. CPU validation failure recovers; started GPU reduction failure remains terminal without CPU replay. Sixty-four moving/sleeping/edited full frames require zero owner/all-thread managed bytes; full registered numerical/platform/performance acceptance stays open.",
       "godot": [
         "PhysicsServer2D::method:area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
         "PhysicsServer2D::method:area_set_param(RID:,int:PhysicsServer2D.AreaParameter,Variant:)",
@@ -7667,6 +7667,13 @@
       ],
       "state": "Partial",
       "reason": "ADR 0099/0103: retained CollisionObject.InputPickable projects scene eligibility through selected point-query geometry, with distinct Body/Area defaults, exact canvas routing and common callback/hover lifetime. Public-only CPU/GPU/registered checks exercise equal numerical-write rejection, ordinary pointer authoring and 128 changed-policy full frames at zero managed allocation; six native renderer/physics combinations verify SDL delivery and target pixels. Raw RIDs are not scene callback sources under ADR 0099. Complete registered geometry/numerical and platform/performance acceptance remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum:SpaceParameter"
+      ],
+      "state": "Excluded",
+      "reason": "ADRs 0001/0087/0089/0098: the untyped numeric selector representation is replaced by all nine concrete typed space parameter getter/setter pairs. Their capabilities execute; all nine selector values are already excluded with their exact typed projections."
     }
   ]
 }

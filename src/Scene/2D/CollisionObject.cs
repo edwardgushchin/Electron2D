@@ -1,6 +1,8 @@
 namespace Electron2D;
 
 /// <summary>A spatial scene object that owns collision filtering and motion-recovery priority for physics shapes.</summary>
+/// <remarks>Unchanged child geometry and policies retain their backend state on tree entry.
+/// Child entry clears server slot overrides and applies changed descriptors before the next interval.</remarks>
 public abstract partial class CollisionObject : Entity
 {
     private static readonly PropertyDescriptor[] CollisionProperties =

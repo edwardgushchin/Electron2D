@@ -338,6 +338,13 @@ public abstract partial class CollisionObject
     { if (ChildOwnerID(child) is { } id) ShapeOwnerSetOneWayCollisionDirection(id, child.OneWayCollisionDirection); }
     internal void SynchronizeChildOwner(ICollisionGeometry child)
     {
+        if (ChildOwnerID(child) is { } id)
+        {
+            var owner = _shapeOwners[id];
+            if (owner.Transform == child.Node.Transform && owner.Disabled == child.Disabled &&
+                (this is Area || owner.OneWay == child.OneWayCollision && owner.Margin == child.OneWayCollisionMargin && owner.Direction == child.OneWayCollisionDirection) &&
+                !owner.Shapes.Exists(static slot => slot.TransformOverride.HasValue || slot.DisabledOverride.HasValue || slot.OneWayOverride.HasValue)) return;
+        }
         ChildTransformChanged(child); ChildDisabledChanged(child); ChildOneWayChanged(child);
         ChildMarginChanged(child); ChildDirectionChanged(child);
     }

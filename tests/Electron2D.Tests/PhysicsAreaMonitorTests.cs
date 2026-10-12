@@ -1,20 +1,23 @@
 using Electron2D;
 
-internal static class PhysicsAreaMonitorTests
+internal sealed class PhysicsAreaMonitorTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new PhysicsAreaMonitorTests(backend).RunCore();
+
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         VerifyServerPairsAndFilters();
         VerifySceneObserversAndLifetime();
         VerifyResetAndCallbackFailures();
         VerifyRemovalDuringCallback();
         VerifyWarmTransitions();
-        Console.WriteLine("Server Area monitoring, directional masks, pair IDs, lifetime and allocation checks passed.");
+        Console.WriteLine($"Server Area monitoring, directional masks, pair IDs, lifetime and allocation checks passed on {backend}.");
     }
 
-    private static void VerifyServerPairsAndFilters()
+    private void VerifyServerPairsAndFilters()
     {
-        var server = PhysicsServer.Service; using var tree = SceneSpace(out var space);
+        var server = PhysicsServer.Service; using var world = new World(backend); using var tree = SceneSpace(world, out var space);
         var area = PhysicsServer.AreaCreate(); var body = PhysicsServer.BodyCreate(); var other = PhysicsServer.AreaCreate(); var shape = PhysicsServer.CircleShapeCreate();
         var events = new List<(PhysicsServer.AreaBodyStatus Status, RID Other, ulong ID, int Remote, int Local, bool Area)>();
         try
@@ -47,11 +50,11 @@ internal static class PhysicsAreaMonitorTests
         }
     }
 
-    private static void VerifySceneObserversAndLifetime()
+    private void VerifySceneObserversAndLifetime()
     {
-        using var circle = new CircleShape(); var root = new Node(); var sceneArea = new Area { Name = "receiver" };
+        using var circle = new CircleShape(); using var world = new World(backend); var root = new SubViewport { World = world }; var sceneArea = new Area { Name = "receiver" };
         var body = new StaticBody { Name = "body" }; Add(sceneArea, circle); Add(body, circle); root.AddChild(sceneArea); root.AddChild(body);
-        using var tree = new SceneTree(root); var server = PhysicsServer.Service;
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Scene monitor fixture uses its explicitly selected backend."); var server = PhysicsServer.Service;
         var bodyRID = body.GetRID(); var bodyID = body.InstanceID;
         var callbackEntries = 0; var callbackExits = 0; var typedEntries = 0;
         sceneArea.BodyEntered += _ => typedEntries++;
@@ -73,9 +76,9 @@ internal static class PhysicsAreaMonitorTests
             "Attached receiver writes enforce owner thread.");
     }
 
-    private static void VerifyResetAndCallbackFailures()
+    private void VerifyResetAndCallbackFailures()
     {
-        var server = PhysicsServer.Service; using var tree = SceneSpace(out var space); var area = PhysicsServer.AreaCreate();
+        var server = PhysicsServer.Service; using var world = new World(backend); using var tree = SceneSpace(world, out var space); var area = PhysicsServer.AreaCreate();
         var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate(); var added = 0; var removed = 0;
         try
         {
@@ -108,9 +111,9 @@ internal static class PhysicsAreaMonitorTests
         finally { if (body.IsValid()) PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(area); PhysicsServer.FreeRID(shape); }
     }
 
-    private static void VerifyRemovalDuringCallback()
+    private void VerifyRemovalDuringCallback()
     {
-        var server = PhysicsServer.Service; using var tree = SceneSpace(out var space);
+        var server = PhysicsServer.Service; using var world = new World(backend); using var tree = SceneSpace(world, out var space);
         var area = PhysicsServer.AreaCreate(); var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate();
         var entries = 0; var exits = 0; var freed = false;
         try
@@ -132,9 +135,9 @@ internal static class PhysicsAreaMonitorTests
         finally { if (!freed) PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(area); PhysicsServer.FreeRID(shape); }
     }
 
-    private static void VerifyWarmTransitions()
+    private void VerifyWarmTransitions()
     {
-        var server = PhysicsServer.Service; using var tree = SceneSpace(out var space); var area = PhysicsServer.AreaCreate(); var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate();
+        var server = PhysicsServer.Service; using var world = new World(backend); using var tree = SceneSpace(world, out var space); var area = PhysicsServer.AreaCreate(); var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate();
         var entries = 0; var exits = 0;
         try
         {
@@ -143,19 +146,21 @@ internal static class PhysicsAreaMonitorTests
             PhysicsServer.AreaSetMonitorCallback(area, (status, _, _, _, _) => { if (status == PhysicsServer.AreaBodyStatus.Added) entries++; else exits++; });
             var inside = Transform.Identity; var outside = new Transform(0, Vector2.One, 0, new(100, 0));
             for (var pass = 0; pass < 64; pass++) Transition();
-            var before = GC.GetAllocatedBytesForCurrentThread();
+            var allBefore = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread();
             for (var pass = 0; pass < 64; pass++) Transition();
-            Check(GC.GetAllocatedBytesForCurrentThread() == before && entries >= 128 && exits >= 128,
-                "Warmed active body pair entry/exit scans and callback delivery allocate zero managed bytes.");
+            var ownBytes = GC.GetAllocatedBytesForCurrentThread() - before; var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+            Check(ownBytes == 0 && allBytes == 0 && entries >= 128 && exits >= 128,
+                $"Warmed pair entry/exit and callback delivery allocate {ownBytes}/{allBytes} owner/all B.");
+            Console.WriteLine($"Area monitor transitions ({backend}): 64 cycles/128 frames, {ownBytes}/{allBytes} owner/all B.");
             void Transition() { PhysicsServer.BodySetTransform(body, inside); tree.PhysicsFrame(1d / 60); PhysicsServer.BodySetTransform(body, outside); tree.PhysicsFrame(1d / 60); }
         }
         finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(area); PhysicsServer.FreeRID(shape); }
     }
 
-    private static SceneTree SceneSpace(out RID space)
+    private SceneTree SceneSpace(World world, out RID space)
     {
-        var root = new Node(); var holder = new Area { CollisionLayer = 0, CollisionMask = 0, Monitoring = false, Monitorable = false };
-        root.AddChild(holder); var tree = new SceneTree(root); space = holder.GetWorld()!.Space; return tree;
+        var root = new SubViewport { World = world }; var holder = new Area { CollisionLayer = 0, CollisionMask = 0, Monitoring = false, Monitorable = false };
+        root.AddChild(holder); var tree = new SceneTree(root); space = holder.GetWorld()!.Space; Check(PhysicsServer.SpaceGetBackend(space) == backend, "Server monitor fixture uses its explicitly selected backend."); return tree;
     }
 
     private static void Add(CollisionObject collider, Shape shape) => collider.ShapeOwnerAddShape(collider.CreateShapeOwner(null), shape);

@@ -1,18 +1,21 @@
 using Electron2D;
 
-internal static class PhysicsServerAreaFieldTests
+internal sealed class PhysicsServerAreaFieldTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new PhysicsServerAreaFieldTests(backend).RunCore();
+
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         VerifyConfigurationAndSceneProjection();
         VerifyMixedPriorityAndFiltering();
         VerifyServerResponseAndSpaceDefaults();
         VerifyPointGravityAndFailures();
         VerifyCallbacksGuardsAndWarmFields();
-        Console.WriteLine("Typed server Area fields, mixed reduction, space defaults, lifetime and allocation checks passed.");
+        Console.WriteLine($"Typed server Area fields, mixed reduction, space defaults, lifetime and allocation checks passed on {backend}.");
     }
 
-    private static void VerifyConfigurationAndSceneProjection()
+    private void VerifyConfigurationAndSceneProjection()
     {
         var server = PhysicsServer.Service; var area = PhysicsServer.AreaCreate(); var body = PhysicsServer.BodyCreate();
         using var scene = new Area(); var rid = scene.GetRID();
@@ -54,14 +57,14 @@ internal static class PhysicsServerAreaFieldTests
         Reject<ArgumentException>(() => PhysicsServer.AreaGetGravity(area));
     }
 
-    private static void VerifyMixedPriorityAndFiltering()
+    private void VerifyMixedPriorityAndFiltering()
     {
         using var circle = new CircleShape(); using var region = new RectangleShape { Size = new(1000, 1000) };
-        var root = new Node(); var low = new Area { Gravity = 200, Priority = 5, GravitySpaceOverride = Area.SpaceOverride.Combine, Monitoring = false, Monitorable = false, CollisionMask = 1u << 31 };
+        using var world = new World(backend); var root = new SubViewport { World = world }; var low = new Area { Gravity = 200, Priority = 5, GravitySpaceOverride = Area.SpaceOverride.Combine, Monitoring = false, Monitorable = false, CollisionMask = 1u << 31 };
         Add(low, region); root.AddChild(low);
         var rigid = new RigidBody { CanSleep = false, CollisionLayer = 1u << 31, CollisionMask = 0 }; Add(rigid, circle); root.AddChild(rigid);
         var character = new CharacterBody { CollisionLayer = 1u << 31, CollisionMask = 0, Position = new(100, 0) }; Add(character, circle); root.AddChild(character);
-        using var tree = new SceneTree(root); var server = PhysicsServer.Service; var area = PhysicsServer.AreaCreate(); var shape = PhysicsServer.RectangleShapeCreate();
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Scene field fixture uses its explicitly selected backend."); var server = PhysicsServer.Service; var area = PhysicsServer.AreaCreate(); var shape = PhysicsServer.RectangleShapeCreate();
         try
         {
             PhysicsServer.ShapeSetData(shape, region);
@@ -88,9 +91,9 @@ internal static class PhysicsServerAreaFieldTests
         finally { if (area.IsValid()) PhysicsServer.FreeRID(area); PhysicsServer.FreeRID(shape); }
     }
 
-    private static void VerifyServerResponseAndSpaceDefaults()
+    private void VerifyServerResponseAndSpaceDefaults()
     {
-        var server = PhysicsServer.Service; var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true); var body = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate(); var shape = PhysicsServer.CircleShapeCreate();
+        var server = PhysicsServer.Service; var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true); Check(PhysicsServer.SpaceGetBackend(space) == backend, "Server field fixture uses its explicitly selected backend."); var body = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate(); var shape = PhysicsServer.CircleShapeCreate();
         try
         {
             PhysicsServer.BodyAddShape(body, shape); PhysicsServer.AreaAddShape(area, shape); PhysicsServer.BodySetSpace(body, space); PhysicsServer.AreaSetSpace(area, space);
@@ -119,9 +122,9 @@ internal static class PhysicsServerAreaFieldTests
         Reject<ArgumentException>(() => PhysicsServer.AreaGetGravity(space));
     }
 
-    private static void VerifyPointGravityAndFailures()
+    private void VerifyPointGravityAndFailures()
     {
-        var server = PhysicsServer.Service; var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true); var body = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate(); var shape = PhysicsServer.CircleShapeCreate();
+        var server = PhysicsServer.Service; var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true); Check(PhysicsServer.SpaceGetBackend(space) == backend, "Server field fixture uses its explicitly selected backend."); var body = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate(); var shape = PhysicsServer.CircleShapeCreate();
         try
         {
             PhysicsServer.AreaAddShape(area, shape); PhysicsServer.BodyAddShape(body, shape); PhysicsServer.AreaSetSpace(area, space); PhysicsServer.BodySetSpace(body, space);
@@ -137,23 +140,34 @@ internal static class PhysicsServerAreaFieldTests
             PhysicsServer.AreaSetTransform(area, new(MathF.PI / 2, Vector2.One, 0, Vector2.Zero));
             PhysicsServer.AreaSetGravityPoint(area, false); PhysicsServer.AreaSetGravityVector(area, new(2, 0)); PhysicsServer.SpaceStep(space, 1d / 60);
             Near(state.TotalGravity, new(200, 0), "Directional gravity ignores receiver rotation and is not normalized.");
-            var before = state.LinearVelocity; PhysicsServer.AreaSetGravity(area, float.MaxValue); PhysicsServer.AreaSetGravityVector(area, new(float.MaxValue, 0));
-            Check(Capture(() => PhysicsServer.SpaceStep(space, 1d / 60)) is AggregateException error &&
-                error.Flatten().InnerExceptions.Any(e => e is InvalidOperationException) && state.LinearVelocity == before,
-                "Nonfinite reduction reports a world-step failure before motion mutation.");
-            PhysicsServer.AreaSetGravity(area, 0); PhysicsServer.AreaSetGravityVector(area, Vector2.Zero); PhysicsServer.SpaceStep(space, 1d / 60);
             PhysicsServer.AreaSetCollisionMask(area, 0); PhysicsServer.AreaSetGravityPoint(space, true); PhysicsServer.AreaSetGravityVector(space, new(50, 0)); PhysicsServer.AreaSetGravity(space, 20);
             PhysicsServer.BodySetTransform(body, Transform.Identity); state.LinearVelocity = Vector2.Zero; PhysicsServer.SpaceStep(space, 1d / 60);
             Near(state.TotalGravity, new(20, 0), "Default Area point gravity applies without receiver geometry.");
+            PhysicsServer.AreaSetCollisionMask(area, 1); var before = state.LinearVelocity;
+            PhysicsServer.AreaSetGravity(area, float.MaxValue); PhysicsServer.AreaSetGravityVector(area, new(float.MaxValue, 0));
+            Check(Capture(() => PhysicsServer.SpaceStep(space, 1d / 60)) is AggregateException error &&
+                error.Flatten().InnerExceptions.Any(e => e is InvalidOperationException), "Nonfinite reduction reports a world-step failure.");
+            if (backend == PhysicsServer.Backend.GPU)
+            {
+                Reject<InvalidOperationException>(() => PhysicsServer.SpaceStep(space, 1d / 60));
+                Reject<InvalidOperationException>(() => PhysicsServer.AreaSetGravity(area, 0));
+                Reject<InvalidOperationException>(() => _ = state.LinearVelocity);
+                Check(PhysicsServer.SpaceGetBackend(space) == backend, "Failed GPU space retains its actual implementation without CPU replay.");
+            }
+            else
+            {
+                Check(state.LinearVelocity == before, "CPU reduction rejects before motion mutation.");
+                PhysicsServer.AreaSetGravity(area, 0); PhysicsServer.AreaSetGravityVector(area, Vector2.Zero); PhysicsServer.SpaceStep(space, 1d / 60);
+            }
         }
         finally { PhysicsServer.FreeRID(area); PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(shape); PhysicsServer.FreeRID(space); }
     }
 
-    private static void VerifyCallbacksGuardsAndWarmFields()
+    private void VerifyCallbacksGuardsAndWarmFields()
     {
-        using var circle = new CircleShape(); var root = new Node(); var scene = new Area { Monitoring = false, Monitorable = false }; Add(scene, circle); root.AddChild(scene);
+        using var circle = new CircleShape(); using var world = new World(backend); var root = new SubViewport { World = world }; var scene = new Area { Monitoring = false, Monitorable = false }; Add(scene, circle); root.AddChild(scene);
         var probe = new FieldDuringPose { Area = scene, CanSleep = false, NotifyLocalTransformChanges = true, CollisionMask = 0 }; Add(probe, circle); root.AddChild(probe);
-        using var tree = new SceneTree(root); var server = PhysicsServer.Service; var rid = scene.GetRID(); var space = scene.GetWorld()!.Space;
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Scene field fixture uses its explicitly selected backend."); var server = PhysicsServer.Service; var rid = scene.GetRID(); var space = scene.GetWorld()!.Space;
         PhysicsServer.AreaSetGravitySpaceOverride(rid, Area.SpaceOverride.Replace); PhysicsServer.AreaSetGravity(rid, 20); var entries = 0;
         PhysicsServer.AreaSetMonitorCallback(rid, (status, _, _, _, _) => { if (status == PhysicsServer.AreaBodyStatus.Added) { entries++; PhysicsServer.AreaSetGravity(rid, 30); } });
         tree.PhysicsFrame(1d / 60); Check(entries == 1 && probe.Rejected && PhysicsServer.AreaGetGravity(rid) == 30, "Receiver callback can change fields for next step; solver pose edits reject.");
@@ -169,9 +183,11 @@ internal static class PhysicsServerAreaFieldTests
             PhysicsServer.AreaAddShape(rawArea, rawShape); PhysicsServer.AreaSetSpace(rawArea, space);
             PhysicsServer.AreaSetGravitySpaceOverride(rawArea, Area.SpaceOverride.Combine); PhysicsServer.AreaSetGravity(rawArea, 0);
             for (var pass = 0; pass < 64; pass++) Change(pass);
-            var before = GC.GetAllocatedBytesForCurrentThread();
+            var allBefore = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread();
             for (var pass = 0; pass < 64; pass++) Change(pass);
-            Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed active scene/server fields, priority sort, reads and solver frames allocate zero managed bytes.");
+            var ownBytes = GC.GetAllocatedBytesForCurrentThread() - before; var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+            Check(ownBytes == 0 && allBytes == 0, $"Warmed edited scene/server fields allocate {ownBytes}/{allBytes} owner/all B.");
+            Console.WriteLine($"Area edited fields ({backend}): 64 frames, {ownBytes}/{allBytes} owner/all B.");
             void Change(int pass)
             {
                 PhysicsServer.AreaSetGravity(rid, pass % 2); PhysicsServer.AreaSetPriority(rid, pass % 2); PhysicsServer.AreaSetLinearDamp(rid, -1);

@@ -37,7 +37,7 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [PhysicsMaterial](classes/PhysicsMaterial.md) | [Resource](classes/Resource.md) | 5 | 0 | 0 | 0 | 0 |
 | [PhysicsPointQueryParameters2D](classes/PhysicsPointQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 7 | 0 | 0 | 0 | 0 |
 | [PhysicsRayQueryParameters2D](classes/PhysicsRayQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 9 | 0 | 0 | 0 | 0 |
-| [PhysicsServer2D](classes/PhysicsServer2D.md) | [Object](classes/Object.md) | 154 | 6 | 0 | 1 | 54 |
+| [PhysicsServer2D](classes/PhysicsServer2D.md) | [Object](classes/Object.md) | 154 | 6 | 0 | 0 | 55 |
 | [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | [PhysicsServer2D](classes/PhysicsServer2D.md) | 3 | 138 | 0 | 0 | 0 |
 | [PhysicsServer2DManager](classes/PhysicsServer2DManager.md) | [Object](classes/Object.md) | 3 | 0 | 0 | 0 | 0 |
 | [PhysicsShapeQueryParameters2D](classes/PhysicsShapeQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 10 | 0 | 0 | 0 | 0 |
@@ -56,7 +56,7 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [StaticBody2D](classes/StaticBody2D.md) | [PhysicsBody2D](classes/PhysicsBody2D.md) | 4 | 0 | 0 | 0 | 0 |
 | [World2D](classes/World2D.md) | [Resource](classes/Resource.md) | 5 | 0 | 0 | 0 | 0 |
 | [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) | [Shape2D](classes/Shape2D.md) | 3 | 0 | 0 | 0 | 0 |
-| **Total** | | 686 | 151 | 0 | 1 | 54 |
+| **Total** | | 686 | 151 | 0 | 0 | 55 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -69,7 +69,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`class:PhysicsDirectSpaceState2D`](classes/PhysicsDirectSpaceState2D.md) | Partial | All six query families, canvas filtering and weak scene/raw/tile identities execute on CPU/GPU. Selected internal owners now create validated cached views outside the registry lock for World/server/body-space consumers. Caller-created typed query/exclusion hooks execute; public registered implementations and their complete operation bridge remain open under ADR 0103. |
 | [`class:PhysicsDirectSpaceState2DExtension`](classes/PhysicsDirectSpaceState2DExtension.md) | Partial | ADR 0103: complete caller-created six-query/exclusion inheritance executes. The selected internal owner factory now supplies validated cached views to World/server/body-space consumers outside the registry lock, with real queries and lifecycle/failure guards. Public named registration and complete server operation dispatch remain open. |
 | [`class:PhysicsServer2D`](classes/PhysicsServer2D.md) | Partial | Space/body/Area/shape RID lifetime, selected typed state operations and direct ray/point access execute; other server operations retain family-specific backend and typed-result triggers (ADR 0063). The complete public scene pipeline now has paired CPU/GPU monitor/interpolation measurements and private capacity growth avoids new managed wrappers; full registration and native/platform/final window performance gates remain open. |
-| [`PhysicsServer2D::enum:SpaceParameter`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
 | [`PhysicsServer2D::method:area_add_shape(RID:,RID:,Transform2D:,bool:)`](classes/PhysicsServer2D.md) | Partial | Typed Shape resources and local transforms execute for circle, rectangle, capsule, segment, convex/concave polygons and directed separation rays. WorldBoundary executes as an analytic half-plane through public CPU/GPU worlds (WorldBoundaryTests); directed separation-ray impulses, materials, sleep, authored tip geometry and contact response execute on both backends (SeparationRayDynamicsTests, ELECTRON2D_TEST_GPU_CCD_CONTRACT). Backend extension geometry must preserve the same contract (ADRs 0004, 0054, 0063 and 0068). |
 | [`PhysicsServer2D::method:body_add_shape(RID:,RID:,Transform2D:,bool:)`](classes/PhysicsServer2D.md) | Partial | Typed Shape resources and local transforms execute for circle, rectangle, capsule, segment, convex/concave polygons and directed separation rays. WorldBoundary executes as an analytic half-plane through public CPU/GPU worlds (WorldBoundaryTests); directed separation-ray impulses, materials, sleep, authored tip geometry and contact response execute on both backends (SeparationRayDynamicsTests, ELECTRON2D_TEST_GPU_CCD_CONTRACT). Backend extension geometry must preserve the same contract (ADRs 0004, 0054, 0063 and 0068). |
 | [`PhysicsServer2D::method:free_rid(RID:)`](classes/PhysicsServer2D.md) | Partial | Scene-owned identities and explicit spaces/bodies/Areas/shapes/joints have tested lifetime (PhysicsQueryTests, PhysicsServerJointTests). WorldBoundary creation/data/free/lifetime now execute (WorldBoundaryTests); backend extension resources still require verification (ADRs 0054 and 0063). |

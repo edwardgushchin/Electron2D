@@ -1,4 +1,5 @@
 using Electron2D;
+using System.Diagnostics;
 
 internal static class NavigationIterationTests
 {
@@ -22,6 +23,18 @@ internal static class NavigationIterationTests
     }
     internal static void Run()
     {
+        if (WorkerThreadPool.Service.HasRuntime)
+        {
+            Check(Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_ITERATIONS") != "1", "Navigation scheduling checks require a fresh two-lane host.");
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true };
+            if (System.IO.Path.GetFileNameWithoutExtension(Environment.ProcessPath) == "dotnet") start.ArgumentList.Add(typeof(NavigationIterationTests).Assembly.Location);
+            start.Environment["ELECTRON2D_TEST_NAVIGATION_ITERATIONS"] = "1";
+            using var child = Process.Start(start)!;
+            var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync();
+            if (!child.WaitForExit(60000)) { child.Kill(entireProcessTree: true); throw new InvalidOperationException("Navigation scheduling checks timed out."); }
+            var message = output.GetAwaiter().GetResult() + error.GetAwaiter().GetResult();
+            Check(child.ExitCode == 0, message); Console.Write(message); return;
+        }
         if (!WorkerThreadPool.Service.HasRuntime) ProjectSettings.Set(ProjectSettings.WorkerPoolMaxThreads, 2);
         using var polygon = new NavigationPolygon(); polygon.SetVertices([new(0, 0), new(20, 0), new(20, 20), new(0, 20)]); polygon.AddPolygon([0, 1, 2, 3]);
         var map = NavigationServer.MapCreate(); var region = NavigationServer.RegionCreate(); var callbacks = 0; var callbackThread = 0; var owner = Environment.CurrentManagedThreadId;

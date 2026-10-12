@@ -44,6 +44,7 @@ def check_physics_report(pages):
     assert "PinJoint2D::property:softness" not in expected
     assert "RigidBody2D::property:continuous_cd" not in expected
     assert "PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)" not in expected
+    assert "PhysicsServer2D::enum:SpaceParameter" not in expected
     assert "StaticBody2D::property:constant_angular_velocity" not in expected
 
 
@@ -332,7 +333,7 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 154, "Partial": 6, "Unimplemented": 1, "Blocked": 0, "Excluded": 54}
+                "Implemented": 154, "Partial": 6, "Unimplemented": 0, "Blocked": 0, "Excluded": 55}
     for name in ("body_set_mode", "body_get_mode"):
         row = next(row for row in server_rows if f"method {name}(" in row)
         assert " | Implemented | " in row and "all five scene siblings" in row

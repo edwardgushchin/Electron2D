@@ -232,3 +232,5 @@ now checks actual space ownership/failure for tree-less scene attachments while
 retaining numerical authored reads and cleanup. The shared CPU/GPU/registered
 consumer exercises every collider role and 128 full scalar-read frames at 0/0
 managed bytes. Complete geometry/disable and final acceptance remain open.
+
+Child-owner entry compares the complete transform/disabled/one-way descriptors and all server slot overrides before synchronization. An unchanged entry keeps existing geometry and sleep state; real descriptor or slot overrides still resynchronize. Shared CPU/GPU Area conformance checks initial sleep and field-change wake, while ShapeOwnerTests checks CollisionShape/CollisionPolygon slot-override reset on reentry.

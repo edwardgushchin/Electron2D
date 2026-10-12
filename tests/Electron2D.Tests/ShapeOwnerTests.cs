@@ -7,9 +7,31 @@ internal static class ShapeOwnerTests
         VerifyRegistry();
         VerifyManualFixturesAndMotion(backend);
         VerifyChildBridgeAndPacking(backend);
+        VerifyChildSlotOverrideReentry(backend);
         VerifyAreaAndOneWay(backend);
         VerifyLifetimeAndAllocation(backend);
         Console.WriteLine($"Collision owner groups ({backend}), logical indices, manual fixtures and allocation checks passed.");
+    }
+
+    private static void VerifyChildSlotOverrideReentry(PhysicsServer.Backend backend)
+    {
+        foreach (var polygon in new[] { false, true })
+        {
+            using var shape = new CircleShape(); using var world = new World(backend);
+            var root = new SubViewport { World = world }; var body = new StaticBody();
+            body.AddChild(polygon ? new CollisionPolygon { Polygon = [new(-10, -10), new(10, -10), new(10, 10), new(-10, 10)] } :
+                new CollisionShape { Shape = shape });
+            root.AddChild(body); using var tree = new SceneTree(root); tree.PhysicsFrame(1d / 60);
+            root.RemoveChild(body);
+            PhysicsServer.BodySetShapeTransform(body.GetRID(), 0, At(100, 0));
+            PhysicsServer.BodySetShapeDisabled(body.GetRID(), 0, true);
+            PhysicsServer.BodySetShapeAsOneWayCollision(body.GetRID(), 0, true, 7, Vector2.Right);
+            root.AddChild(body); tree.PhysicsFrame(1d / 60);
+            using var point = new PhysicsPointQueryParameters(); var hits = new PhysicsPointResult[1];
+            Check(PhysicsServer.BodyGetShapeTransform(body.GetRID(), 0) == Transform.Identity &&
+                world.DirectSpaceState.IntersectPoint(point, hits) == 1 && hits[0].ColliderObject == body,
+                "Child reentry clears slot overrides even when group and child descriptors already match.");
+        }
     }
 
     private static Transform At(float x, float y, float rotation = 0) => new(rotation, Vector2.One, 0, new(x, y));

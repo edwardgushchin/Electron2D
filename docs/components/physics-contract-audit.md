@@ -627,3 +627,9 @@ now checks actual space ownership/failure for tree-less scene attachments while
 retaining numerical authored reads and cleanup. The shared CPU/GPU/registered
 consumer exercises every collider role and 128 full scalar-read frames at 0/0
 managed bytes. Complete geometry/disable and final acceptance remain open.
+
+The complete PhysicsAreaFieldTests, PhysicsServerAreaFieldTests and PhysicsAreaMonitorTests now execute on explicitly selected CPU/GPU worlds. They retain all five gravity/damping modes, priorities, point transforms/falloff, default-world shortcuts, signed damping, directional masks, logical pair identity, callback failure/removal and lifecycle assertions. Initial unchanged child registration preserves a sleeping body; changed fields still wake it. Sixty-four measured moving, sleeping and edited-field frames and 64 monitor transition cycles (128 frames) require zero owner/all-thread managed bytes. CPU field validation failure can be corrected; a started GPU field-reduction failure is terminal, preserves the selected backend and last published scene field snapshot, and permits resource retirement. Native allocations, other platforms, visual and final performance acceptance remain open.
+
+The former unimplemented SpaceParameter enum row is a representation exclusion under ADRs 0001/0087/0089/0098: all nine typed parameter pairs already execute. Its values remain excluded individually; no capability is removed by this ledger correction.
+
+The 2026-10-12 Area candidate first failed the public-only registered diagnostic fixture with 0/2304 owner/all-thread managed bytes. Its unchanged source/runtime repeat passed the complete consumer. This single other-thread observation is not diagnosed or claimed fixed; strict zero-byte assertions remain, and its rejected/rechecked evidence is retained under bin/physics-area-contract/2026-10-12/. The shared Area and child-owner profiles independently passed their own zero-byte contracts.

@@ -1,20 +1,23 @@
 using Electron2D;
 using System.Text.Json;
 
-internal static class PhysicsAreaFieldTests
+internal sealed class PhysicsAreaFieldTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new PhysicsAreaFieldTests(backend).RunCore();
+
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         VerifyDefaultsAndValidation();
         VerifyPriorityAndPointGravity();
         VerifyDampingAndWorldSettings();
         VerifyPackedFields();
         VerifySleepingBodyWakesOnFieldChange();
         VerifyWarmFieldAllocations();
-        Console.WriteLine("Physics area gravity, damping, priority and project-setting checks passed.");
+        Console.WriteLine($"Physics area gravity, damping, priority and project-setting checks passed on {backend}.");
     }
 
-    private static void VerifyDefaultsAndValidation()
+    private void VerifyDefaultsAndValidation()
     {
         using var area = new Area();
         using var body = new RigidBody();
@@ -72,11 +75,12 @@ internal static class PhysicsAreaFieldTests
             "Invalid project physics defaults reject before changing registry state.");
     }
 
-    private static void VerifyPriorityAndPointGravity()
+    private void VerifyPriorityAndPointGravity()
     {
         using var region = new RectangleShape { Size = new(400, 400) };
         using var circle = new CircleShape();
-        var root = new Node();
+        using var world = new World(backend);
+        var root = new SubViewport { World = world };
         var high = new Area
         {
             Name = "High",
@@ -101,6 +105,7 @@ internal static class PhysicsAreaFieldTests
         stationary.AddChild(new CollisionShape { Shape = circle });
         root.AddChild(high); root.AddChild(low); root.AddChild(body); root.AddChild(stationary);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Field fixture uses its explicitly selected backend.");
         tree.PhysicsFrame(1d / 60);
         Check(stationary.GetGravity() == Vector2.Zero,
             "An attached stationary body reports no integrated gravity.");
@@ -194,7 +199,17 @@ internal static class PhysicsAreaFieldTests
         high.GravityPointCenter = new(2, 0);
         high.GravityPointUnitDistance = float.MaxValue;
         body.GlobalPosition = Vector2.Zero;
+        var gravityBeforeFailure = body.GetGravity();
         Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
+        if (backend == PhysicsServer.Backend.GPU)
+        {
+            Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
+            Reject<InvalidOperationException>(() => high.GravityPointUnitDistance = 0);
+            Check(body.GetGravity() == gravityBeforeFailure, "Failed GPU reduction retains the last published scene field snapshot.");
+            Check(world.RequestedPhysicsBackend == PhysicsServer.Backend.GPU && world.PhysicsBackend == PhysicsServer.Backend.GPU,
+                "A started GPU field failure retains selected identity and never retries on CPU.");
+            return;
+        }
         high.GravityPointUnitDistance = 0;
         ResetBody();
         Check(body.GetGravity().IsEqualApprox(new Vector2(50, 0)),
@@ -208,7 +223,7 @@ internal static class PhysicsAreaFieldTests
         }
     }
 
-    private static void VerifyDampingAndWorldSettings()
+    private void VerifyDampingAndWorldSettings()
     {
         var settings = ProjectSettings.Service;
         var oldGravity = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DDefaultGravity);
@@ -223,7 +238,8 @@ internal static class PhysicsAreaFieldTests
             ProjectSettings.Set(ProjectSettings.Physics2DDefaultAngularDamp, 1f);
             using var region = new RectangleShape { Size = new(1000, 1000) };
             using var circle = new CircleShape();
-            var root = new Node();
+            using var world = new World(backend);
+            var root = new SubViewport { World = world };
             var area = new Area
             {
                 LinearDampSpaceOverride = Area.SpaceOverride.Replace,
@@ -244,6 +260,7 @@ internal static class PhysicsAreaFieldTests
             body.AddChild(new CollisionShape { Shape = circle });
             root.AddChild(area); root.AddChild(body);
             using var tree = new SceneTree(root);
+            Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Field fixture uses its explicitly selected backend.");
             tree.PhysicsFrame(0.1);
             Check(body.LinearVelocity.Length() < 0.01f && MathF.Abs(body.AngularVelocity - 0.4f) < 0.05f,
                 "Combined area and body damping uses zero-clamped per-step factors.");
@@ -323,11 +340,13 @@ internal static class PhysicsAreaFieldTests
             ProjectSettings.Set(ProjectSettings.Physics2DDefaultGravity, 400f);
             ProjectSettings.Set(ProjectSettings.Physics2DDefaultGravityVector, new Vector2(1, 0));
             using var anotherShape = new CircleShape();
-            var anotherRoot = new Node();
+            using var anotherWorld = new World(backend);
+            var anotherRoot = new SubViewport { World = anotherWorld };
             var anotherBody = new RigidBody { CanSleep = false };
             anotherBody.AddChild(new CollisionShape { Shape = anotherShape });
             anotherRoot.AddChild(anotherBody);
             using var anotherTree = new SceneTree(anotherRoot);
+            Check(PhysicsServer.SpaceGetBackend(anotherWorld.Space) == backend, "New world preserves explicit backend selection.");
             anotherTree.PhysicsFrame(1d / 60);
             Check(anotherBody.GetGravity().IsEqualApprox(new Vector2(400, 0)),
                 "A new world samples typed project gravity settings.");
@@ -350,7 +369,7 @@ internal static class PhysicsAreaFieldTests
         }
     }
 
-    private static void VerifyPackedFields()
+    private void VerifyPackedFields()
     {
         using var shape = new RectangleShape();
         using var root = new Node { Name = "Root" };
@@ -384,11 +403,12 @@ internal static class PhysicsAreaFieldTests
             "PackedScene restores area fields and shared direction/point state.");
     }
 
-    private static void VerifyWarmFieldAllocations()
+    private void VerifyWarmFieldAllocations()
     {
         using var region = new RectangleShape { Size = new(1000, 1000) };
         using var circle = new CircleShape();
-        var root = new Node();
+        using var world = new World(backend);
+        var root = new SubViewport { World = world };
         var area = new Area
         {
             GravitySpaceOverride = Area.SpaceOverride.Replace,
@@ -405,31 +425,39 @@ internal static class PhysicsAreaFieldTests
         body.AddChild(new CollisionShape { Shape = circle });
         root.AddChild(area); root.AddChild(body);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Field fixture uses its explicitly selected backend.");
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var allBefore = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread();
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
-            "Warmed moving-body field reduction and point gravity allocate no managed memory.");
+        var ownBytes = GC.GetAllocatedBytesForCurrentThread() - before; var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        Check(ownBytes == 0 && allBytes == 0,
+            $"Warmed moving-body field reduction and point gravity allocate no managed memory: {ownBytes}/{allBytes} owner/all B.");
+        Console.WriteLine($"Area moving fields ({backend}): 64 frames, {ownBytes}/{allBytes} owner/all B.");
     }
 
-    private static void VerifySleepingBodyWakesOnFieldChange()
+    private void VerifySleepingBodyWakesOnFieldChange()
     {
         using var region = new RectangleShape { Size = new(200, 200) };
         using var circle = new CircleShape();
-        var root = new Node();
+        using var world = new World(backend);
+        var root = new SubViewport { World = world };
         var area = new Area { GravitySpaceOverride = Area.SpaceOverride.Replace, Gravity = 0 };
         area.AddChild(new CollisionShape { Shape = region });
-        var body = new RigidBody { Sleeping = true };
+        var body = new RigidBody { Name = "FieldSleeper", Sleeping = true };
         body.AddChild(new CollisionShape { Shape = circle });
         root.AddChild(area); root.AddChild(body);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Field fixture uses its explicitly selected backend.");
+        Check(body.Sleeping, "Initial authored sleep survives scene attachment before the first interval.");
         tree.PhysicsFrame(1d / 60);
         Check(body.Sleeping, "An unchanged zero-gravity area preserves an initially sleeping body.");
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var allBefore = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread();
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
-            "Warmed sleeping-body field reduction allocates no managed memory.");
+        var ownBytes = GC.GetAllocatedBytesForCurrentThread() - before; var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        Check(ownBytes == 0 && allBytes == 0,
+            $"Warmed sleeping-body field reduction allocates no managed memory: {ownBytes}/{allBytes} owner/all B.");
+        Console.WriteLine($"Area sleeping fields ({backend}): 64 frames, {ownBytes}/{allBytes} owner/all B.");
         area.GravityDirection = new(1, 0);
         area.Gravity = 980;
         tree.PhysicsFrame(1d / 60);

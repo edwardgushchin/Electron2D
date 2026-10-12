@@ -298,3 +298,5 @@ consumer verifies scene/raw ownership, failures and 128 full active frames at ze
 owner/all-thread managed allocation. Complete numerical-extension acceptance stays open.
 
 RigidFreezeModeTests verifies packed freeze configuration in an explicitly assigned CPU/GPU World, queries public effective BodyGetMode, and measures 64 warmed moving frozen-kinematic full frames at zero owner/all-thread managed bytes. Viewport.World remains a live, nonserialized binding.
+
+Child-owner entry compares the complete transform/disabled/one-way descriptors and all server slot overrides before synchronization. An unchanged entry keeps existing geometry and sleep state; real descriptor or slot overrides still resynchronize. Shared CPU/GPU Area conformance checks initial sleep and field-change wake, while ShapeOwnerTests checks CollisionShape/CollisionPolygon slot-override reset on reentry.
