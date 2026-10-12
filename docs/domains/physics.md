@@ -656,3 +656,11 @@ exceptions and nested calls preserve the existing delivery/order/cleanup guarant
 CPU/GPU/registered owners, with immutable authored geometry reads, logical scene/raw
 and detached slots, atomic output and zero warm full-frame/query allocation.
 The mapped pair/data rows remain Partial until complete numerical acceptance.
+
+
+[Motion result receiver identity](../components/physics-registered-adapter.md#motion-result-receiver-identity)
+preserves the moving RID authored by SetCollision through selected-query validation.
+A same-world result for another moving body rejects before caller publication;
+no-result calls enforce the same rule. SetMotion misses retain normal requested-body
+binding, and rejection restores scope for the next valid query. The numerical
+motion/geometry acceptance remains broader than this identity guarantee.

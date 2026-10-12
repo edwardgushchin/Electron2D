@@ -65,3 +65,9 @@ scopes, errors and retirement, with zero warm full-frame allocations.
 immutable authored geometry, real custom-hole contacts, nested staging and atomic
 error/lifetime guards. Its 64 warm full frames execute 320 outer queries with zero
 managed allocation; the registered numerical fixture remains bounded.
+
+
+The `--motion-exclusions` registered checks also reject results constructed for a
+same-world surrogate moving body. All caller fields stay unchanged, queries without
+caller output reject too, and later valid results recover normally. CPU/GPU share
+the positive/miss and zero-allocation matrix.

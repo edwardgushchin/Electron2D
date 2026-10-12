@@ -795,6 +795,8 @@ public sealed partial class PhysicsServer
     /// <param name="parameters">Global starting pose, motion, margin and exclusions.</param>
     /// <param name="result">Optional caller-owned result updated after a successful test.</param>
     /// <returns>Whether motion or requested recovery reached a body contact.</returns>
+    /// <remarks>Selected collision output must belong to the requested moving body. Invalid implementation
+    /// results reject before replacing caller output, including when no caller result is supplied.</remarks>
     /// <remarks>The selected implementation's completed geometry, fractions, logical body/shape identities and exclusions
     /// are validated before replacement. Collider object identity is sampled by the engine; invalid output preserves the prior result.
     /// Motion implementation callbacks borrow their world and cannot release/transfer its attachments or recursively test its motion.</remarks>

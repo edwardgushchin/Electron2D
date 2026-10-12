@@ -598,3 +598,39 @@ not claim device acceleration for standalone resource pairs. The bounded externa
 fixture does not certify arbitrary geometry, moving-annulus contact boundaries
 or full extension numerical acceptance. The two pair rows and typed shape-data
 read are Partial; broader motion/solver acceptance remains open.
+
+
+## Motion result receiver identity
+
+Registered TestBodyMotion retains the moving RID supplied by SetCollision until
+common result validation compares it with the requested body. The adapter formerly
+retagged every result before validation, so a same-world surrogate with compatible
+shape indices could hide an invalid receiver. Only an unobstructed SetMotion value,
+which has no authored receiver, receives the requested RID from the adapter.
+
+The existing common validator rejects a mismatched receiver before publishing any
+caller output, including queries with no caller result. Error cleanup restores
+motion/exclusion scopes; the next valid query succeeds without failing the world.
+No new API, duplicate validator, callback ordering or numerical policy is added.
+
+[BackendChecks.MotionExclusions.cs](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.MotionExclusions.cs)
+adds both scene-to-raw and raw-to-scene same-world receiver substitutions. The
+surrogate constructor is otherwise valid; changed point/normal/travel expose any
+accidental publication. All thirteen public result values/identities remain exact
+on rejection, and no-result calls reject too. The original runtime failed this
+public-only check (process -6, Expected InvalidOperationException); the fixed
+runtime passes. Cold substitution/errors follow the unchanged 1024-query and
+64-full-frame warm bracket, retaining 0/0 owner/all-thread bytes on CPU/GPU and
+registered owners, including the GPU-unavailable registered control.
+
+Ignored red/final copied-runtime outcomes and fingerprints are under
+bin/physics-motion-result-identity/2026-10-12. The actual typed motion hook now maps
+as Partial. General custom geometry, complete recovery/separation-ray behavior in
+an arbitrary external solver and full numerical-extension acceptance remain open.
+
+
+The first broader full-suite run failed the CPU resting-material owner-allocation
+assertion; a fresh full run of the same unchanged copied runtime passed. Both logs
+are retained as final/full-suite.log and final/full-suite-repeat.log. The isolated
+failure's cause is unproven and remains a verification limit; the repeat does not
+establish that material-allocation intermittency is fixed.
