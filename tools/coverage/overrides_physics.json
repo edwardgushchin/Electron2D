@@ -6348,7 +6348,7 @@
         "class:CollisionObject2D"
       ],
       "state": "Partial",
-      "reason": "Scene/server ownership, filtering, shape owners, disable modes and pointer delivery execute. Pointer delivery is verified on public CPU/GPU worlds (ADR 0099); the complete existing shape-owner/disable suite still needs public cross-backend conformance. Inherited API gaps remain recorded on their declaring families."
+      "reason": "Scene/server ownership, filtering, shape owners, disable modes and pointer delivery execute. The complete existing ShapeOwnerTests and CollisionDisableModeTests now use explicitly selected CPU/GPU worlds and public mode/velocity/field assertions; pointer delivery also runs public CPU/GPU worlds (ADR 0099). Separate registered-owner read/lifecycle checks cover all Body siblings and Area. Inherited API gaps and broader solver/extension acceptance remain open on their declaring families."
     },
     {
       "godot": [
@@ -6575,7 +6575,7 @@
         "PhysicsBody2D::method:get_gravity()"
       ],
       "state": "Implemented",
-      "reason": "RigidBody and CharacterBody report resolved world/Area gravity after a fixed step; StaticBody and detached bodies return zero (ADRs 0056 and 0063, PhysicsAreaFieldTests and CharacterBodyTests)."
+      "reason": "RigidBody and CharacterBody report resolved scaled world/Area gravity after a fixed step, including MakeStatic and frozen participation without static force integration; StaticBody and detached bodies return zero. Explicit CPU/GPU CollisionDisableModeTests verifies scene/direct fields, removal and world fallback (ADRs 0056/0063/0072; existing PhysicsAreaFieldTests/CharacterBodyTests)."
     },
     {
       "godot": [
@@ -6622,7 +6622,7 @@
         "CollisionObject2D::property:disable_mode"
       ],
       "state": "Implemented",
-      "reason": "ADR 0072: typed Remove/MakeStatic/KeepActive integrate effective inherited ProcessMode.Disabled with scene-world membership and configured native body mode. CollisionDisableModeTests verifies values/defaults, disabled entry/reparent/reentry, RID/owner/view lifetime, real queries and contacts, sensor continuity, freeze/mass/locks/velocity restoration, callback failures, phase/thread guards, packing and 64 warmed allocation-free mixed solver frames. Pause alone does not disable physics."
+      "reason": "ADR 0072: Remove/MakeStatic/KeepActive integrate inherited ProcessMode.Disabled with selected-world membership and retained body roles. Shared CollisionDisableModeTests runs explicit CPU/GPU worlds through entry/reparent/reentry, RID/owner/view lifetime, real queries/contacts/sensors, scaled temporary-static/frozen scene/direct fields, Area removal/world fallback, freeze/mass/locks/velocity restoration, callback failures, phase/thread guards, packing and 64 warmed full frames with zero owner/all-thread managed bytes. Pause alone does not disable physics."
     },
     {
       "godot": [

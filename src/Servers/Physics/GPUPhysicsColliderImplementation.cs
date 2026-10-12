@@ -100,14 +100,15 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
         GPU!.SetConstantForce(GPUHandle, force, torque); _gpuConstantForce = force; _gpuConstantTorque = torque;
     }
     /// <summary>Reports whether cold or changed integration input needs numerical-owner preparation.</summary>
-    internal bool NeedsIntegrationPreparation(bool dirty, bool force) => force || !_gpuParametersPrepared || dirty;
+    internal bool NeedsIntegrationPreparation(bool dirty, bool force, bool resolveStaticFields) => force || !_gpuParametersPrepared || dirty ||
+        GPU.GetIntegrationPolicy(GPUHandle).ResolveStaticFields != resolveStaticFields;
     /// <summary>Consumes value-only integration policy, rebuilding after attachment, role changes or replay.</summary>
     /// <returns>True when ordinary successful preparation permits the binding layer to retire its dirty flags.</returns>
-    internal bool PrepareGPUParameters(in PhysicsBodyIntegrationConfiguration configuration, bool dirty, bool force = false)
+    internal bool PrepareGPUParameters(in PhysicsBodyIntegrationConfiguration configuration, bool dirty, bool force, bool resolveStaticFields)
     {
-        if (!force && _gpuParametersPrepared && !dirty) return false;
+        if (!NeedsIntegrationPreparation(dirty, force, resolveStaticFields)) return false;
         var policy = new GPUPhysicsBodyStore.IntegrationPolicy(configuration.GravityScale, configuration.LinearDamp, configuration.AngularDamp,
-            configuration.LockRotation, configuration.OmitForces, configuration.LinearDampMode, configuration.AngularDampMode);
+            configuration.LockRotation, configuration.OmitForces, configuration.LinearDampMode, configuration.AngularDampMode, resolveStaticFields);
         if (GPU!.GetIntegrationPolicy(GPUHandle) != policy) { GPU.SetIntegrationPolicy(GPUHandle, policy); Space!.InvalidateGPUStates(); }
         GPU.SetCCDMode(GPUHandle, configuration.CCDMode);
         SetGPUConstants(configuration.ConstantForce, configuration.ConstantTorque);

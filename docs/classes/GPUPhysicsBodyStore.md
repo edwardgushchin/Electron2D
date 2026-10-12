@@ -1,6 +1,6 @@
 # GPUPhysicsBodyStore
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable`
 
@@ -68,7 +68,7 @@ impulse checks are described in the [contact solver](../components/gpu-contact-s
 | `Remove(BodyHandle)` | Invalidate identity and remove all attached shapes, joints and live exception edges immediately; queue device removal. Reuse gets a fresh generation. |
 | `SetCollisionPriority`, `GetCollisionPriority` | Retain finite positive recovery weight in the spare surface lane; sparse edits preserve sleep/history and query spatial residency. |
 | `SetMode`, `GetMode` | Change/read the authored solver role without replacing handles or attachments. Nondynamic transitions clear motion, RigidLinear clears angular motion, and dynamic restoration retains configured mass/forces/CCD. |
-| `SetIntegrationPolicy`, `GetIntegrationPolicy` | Change/read scalar gravity, authored signed damping and its Combine/Replace modes, dynamic rotation lock and default-force omission. Coalesced edits preserve call order; see [resident body parameters](../components/gpu-resident-parameters.md). |
+| `SetIntegrationPolicy`, `GetIntegrationPolicy` | Change/read scalar gravity, authored signed damping and its Combine/Replace modes, dynamic rotation lock, default-force omission and retained scene field eligibility during static/frozen roles. Coalesced edits preserve call order; see [resident body parameters](../components/gpu-resident-parameters.md). |
 | `SetPose`, `SetVelocity`, `SetConstantForce`, `ApplyImpulse` | Coalesce edits per slot while preserving setter/impulse order. Velocity assignment supersedes earlier queued impulses; later impulses accumulate. |
 | `ApplyForce` | Accumulate resolved world-axis transient force and center torque until the next eligible outer tick. Static/sleeping entry retains it; kinematic or omitted integration consumes it. See [lifetime, traffic and error boundaries](../components/gpu-resident-forces.md). |
 | `SetKinematicTarget` | Replace the pending world destination for a kinematic body. Reads/zero-time work retain it; target derivation and continuous path response execute on device. See [kinematic targets](../components/gpu-resident-kinematic.md). |

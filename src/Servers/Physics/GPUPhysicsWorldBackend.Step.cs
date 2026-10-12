@@ -88,8 +88,11 @@ internal sealed partial class GPUPhysicsWorldBackend
     {
         var rigid = runtime.Owners.Scene as RigidBody;
         var dirty = runtime.GPUParametersDirty || rigid?.GPUParametersDirty == true;
-        if (!collider.NeedsIntegrationPreparation(dirty, force)) return;
-        if (collider.PrepareGPUParameters(runtime.CaptureIntegrationConfiguration(), dirty, force))
+        // Temporary static participation retains fields for scene roles that expose resolved gravity.
+        var scene = runtime.Owners.Scene;
+        var resolveStaticFields = scene is RigidBody or CharacterBody || scene?.HasServerMode == true;
+        if (!collider.NeedsIntegrationPreparation(dirty, force, resolveStaticFields)) return;
+        if (collider.PrepareGPUParameters(runtime.CaptureIntegrationConfiguration(), dirty, force, resolveStaticFields))
         {
             runtime.GPUParametersDirty = false;
             if (rigid is not null) rigid.GPUParametersDirty = false;

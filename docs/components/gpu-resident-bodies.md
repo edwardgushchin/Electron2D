@@ -1,6 +1,6 @@
 # Resident GPU physics stages
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 ## Implemented boundary
 
@@ -37,6 +37,16 @@ as window FPS. Full observable conformance and whole-world performance must be e
 the independent GPU objective is satisfied.
 
 ## Storage, transfers and waits
+
+Field eligibility is retained separately from the current solver mode for scene
+RigidBody, CharacterBody and direct scene server-mode profiles. Temporary
+MakeStatic and frozen roles still reduce directed Area/default fields on device
+and publish GetGravity/direct-state totals, without integrating static motion.
+Ordinary static scenery and Areas remain non-receivers. The extra policy bit
+uses the existing device flag word and sparse integration edit; it adds no buffer,
+state download or fence. CollisionDisableModeTests exercises the same public
+field, lifecycle and packed-scene checks on explicit CPU/GPU worlds; its 64
+warmed mixed frames measure zero owner/all-thread managed bytes on Linux/.NET 10.
 
 | Storage/transfer | Purpose and current cost |
 | --- | --- |

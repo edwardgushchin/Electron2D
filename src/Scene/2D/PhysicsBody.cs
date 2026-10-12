@@ -195,6 +195,7 @@ public abstract partial class PhysicsBody : CollisionObject
 
     /// <summary>Gets the gravity applied by the last fixed physics step in scene units per second squared.</summary>
     /// <returns>Zero for detached bodies and StaticBody; RigidBody and CharacterBody report resolved Area/world gravity.</returns>
+    /// <remarks>RigidBody and CharacterBody retain resolved fields while temporarily static or frozen; static participation does not apply gravity to motion.</remarks>
     /// <exception cref="InvalidOperationException">An attached body is read off its scene owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The body has been disposed.</exception>
     public Vector2 GetGravity()

@@ -76,3 +76,5 @@ The internal resource/resource and body-slot/resource bridge now executes throug
 
 
 [Selected diagnostic preparation](../components/physics-registered-adapter.md#diagnostic-capacity-and-publication) passes the contact-point cap to the numerical owner before solving, including registered implementations. Zero disables capture and remains available for failed-world cleanup; synchronized point/count reads retain the bounded shared snapshot. Full numerical and platform acceptance remain separate.
+
+Scene field eligibility survives temporary static/frozen solver roles through a retained integration-policy bit. Numerical Area/default reduction stays on the device; public scene/direct-state fields and zero-allocation full frames are checked by CollisionDisableModeTests on explicit CPU/GPU worlds. See [resident body field eligibility](../components/gpu-resident-bodies.md#storage-transfers-and-waits).

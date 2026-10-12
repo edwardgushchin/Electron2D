@@ -1,6 +1,6 @@
 # Resident GPU Area fields
 
-Last updated: 2026-10-09
+Last updated: 2026-10-12
 
 ## Implemented boundary
 
@@ -46,6 +46,16 @@ for nonpositive unit distance or inverse-square falloff otherwise. Exact zero
 distance gives zero gravity. Default point fields use identity pose and work for
 receivers with no geometry. Body gravity scale applies after Area/default reduction;
 body damping independently combines with or replaces selected damping.
+
+Scene RigidBody, CharacterBody and direct scene server-mode profiles retain field
+eligibility independently of their effective solver mode. MakeStatic and frozen
+static participation still resolve Area/default fields and publish scene/direct
+totals without applying dynamic forces; ordinary static scenery and Areas remain
+non-receivers. A retained integration-policy bit drives both contact membership
+and uniform/default reduction on device. It uses the existing flag word and
+coalesced policy edit, adding no buffer, result transfer or fence.
+CollisionDisableModeTests checks scaled fields, unchanged static poses, Area
+removal/world fallback and restoration on explicitly selected CPU/GPU worlds.
 
 Reduction happens once per outer tick, before damping and forces. Substeps and CCD
 reuse the selected values. Kinematic bodies report fields without automatic motion;
