@@ -1,6 +1,6 @@
 # Custom collision geometry
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 `ShapeGeometry.Custom` describes a caller-defined collision format with copied canonical bytes, finite local bounds, exact unit-density mass/central inertia/center, copied diagnostic line pairs and a typed standalone collision algorithm. `CustomShape` retains that immutable value, emits revision changes on replacement and preserves its RID. `PhysicsServer.CustomShapeCreate` requires initialized data; ShapeGetData returns an independent wrapper, while ShapeSetData replaces the server-owned wrapper and rebuilds users.
 
@@ -21,3 +21,23 @@ CustomShape and procedural authors before private data changes. Registered/CPU/G
 checks cover 16 paths, immutable data/RID preservation, ordinary callback/query
 edits and warmed full frames. Arbitrary private subclass writes require the
 protected authoring protocol; full numerical-extension acceptance remains open.
+
+The registered annulus/circle consumer now evaluates resource sweeps independently.
+For center segments A and B, collision truth requires their minimum separation
+at most outerRadius+circleRadius and their maximum endpoint separation at least
+innerRadius-circleRadius (clamped to zero). The continuous range between these
+extrema covers the available independent center pairs. The annulus sweep is the
+outer capsule minus the intersection of the endpoint inner disks; that lens is
+empty once the annulus displacement reaches twice its inner radius. Contacts use
+outer-capsule or inner-lens support boundaries and the circle's capsule boundary,
+with first/second ownership reversed by the adapter.
+
+The --custom profile verifies registered and CPU selection; ELECTRON2D_CUSTOM_GPU=1
+adds explicitly selected GPU resource pairs. Each variant verifies twelve exact cases (equal/perpendicular/reversed
+motion, retained/closed holes, outer/inner touching and misses), 512 cases seeded
+43127 for contact-boundary validation, and 128 warmed standalone/selected cycles
+at zero owner/all-thread managed bytes. Boundary checks allow .0001 scene units
+for float projection; truth in the twelve cases is exact. This fixes the consumer's
+synchronized-relative-path mismatch without changing the production API or solver.
+Arbitrary custom geometry, annulus/annulus contacts, complete numerical-extension
+and final performance/native/platform acceptance remain open.

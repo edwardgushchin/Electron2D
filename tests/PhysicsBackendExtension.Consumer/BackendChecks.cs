@@ -31,7 +31,7 @@ public static partial class BackendChecks
         BodyMutationChecks();
         ShapeMutationChecks();
         IdentityChecks();
-        CustomChecks();
+        RunCustom();
         PortableEpisodeChecks();
         RunConstruction();
         RunPicking();

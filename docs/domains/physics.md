@@ -772,3 +772,11 @@ host metadata boolean per attachment, not a simulation-state mirror or readback.
 PhysicsHostPreparationTests retains the CPU/GPU edit, freeze/role, checkpoint,
 reentry, CCD and callback assertions and now directly checks changed static-field
 demand plus dirty/forced preparation.
+
+The public-only --custom consumer verifies independent annulus/circle resource
+sweeps, retained inner holes and true boundary contacts in both argument orders
+through registered, CPU and explicitly enabled GPU spaces.
+Twelve exact cases, 512 seeded boundary cases and 128 warmed standalone/selected
+cycles retain the .0001 scene-unit boundary tolerance and 0/0 managed-byte gate.
+See [custom collision geometry](../components/physics-custom-geometry.md) for the
+analytic model and remaining numerical-extension limits.

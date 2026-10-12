@@ -706,11 +706,33 @@ own numerical implementation; the runtime bridge must expose and validate its
 complete capabilities. Shared inherited declarations remain on their declaring
 families, and final performance/network/native gates remain distinct.
 
-The remaining moving-custom-pair evidence has a concrete trigger: the annulus
-consumer currently sweeps the second center by secondMotion-firstMotion. That
-checks synchronized relative motion, whereas ADR 0069 resource pairs represent
-independent swept regions. For example, an annulus moving right and a circle moving
-up can have intersecting swept regions even when their same-time relative path
-misses. The next slice must exercise and correct this public-only custom algorithm,
-including both argument orders, inner-hole truth and returned boundary ownership.
-Current static annulus evidence does not close that moving-pair requirement.
+The registered annulus/circle consumer now evaluates resource sweeps independently.
+For center segments A and B, collision truth requires their minimum separation
+at most outerRadius+circleRadius and their maximum endpoint separation at least
+innerRadius-circleRadius (clamped to zero). The continuous range between these
+extrema covers the available independent center pairs. The annulus sweep is the
+outer capsule minus the intersection of the endpoint inner disks; that lens is
+empty once the annulus displacement reaches twice its inner radius. Contacts use
+outer-capsule or inner-lens support boundaries and the circle's capsule boundary,
+with first/second ownership reversed by the adapter.
+
+The --custom profile verifies registered and CPU selection; ELECTRON2D_CUSTOM_GPU=1
+adds explicitly selected GPU resource pairs. Each variant verifies twelve exact cases (equal/perpendicular/reversed
+motion, retained/closed holes, outer/inner touching and misses), 512 cases seeded
+43127 for contact-boundary validation, and 128 warmed standalone/selected cycles
+at zero owner/all-thread managed bytes. Boundary checks allow .0001 scene units
+for float projection; truth in the twelve cases is exact. This fixes the consumer's
+synchronized-relative-path mismatch without changing the production API or solver.
+Arbitrary custom geometry, annulus/annulus contacts, complete numerical-extension
+and final performance/native/platform acceptance remain open.
+
+The custom-sweep candidate's original full registered consumer again failed the
+unchanged diagnostic-contact allocation gate before entering custom geometry,
+with 0/2304 owner/all-thread bytes. The same frozen consumer passed under startup
+EventPipe tracing; sampled stacks again show finalizer-thread SharedArrayPool.Trim
+calling GC.GetGCMemoryInfo. They did not capture the failed interval, so the
+specific cause remains open. Its complete uninstrumented frozen consumer repeat
+also passed. Strict zero-byte assertions and operation counts are
+unchanged. Original and diagnostic logs are retained under
+bin/physics-custom-sweep/2026-10-13/; the custom/no-GPU and CPU/GPU pair profiles
+separately passed their own unchanged warm gates.

@@ -2,9 +2,11 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    private static void CustomChecks()
+    public static void RunCustom()
     {
         CustomDataGuards();
+        VerifyCustomSweeps(); VerifyCustomSweeps(PhysicsServer.Backend.CPU);
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_CUSTOM_GPU") == "1") VerifyCustomSweeps(PhysicsServer.Backend.GPU);
         var data = Annulus.Create(5, 10);
         using var ring = new CustomShape(data); using var circle = new CircleShape { Radius = 1 };
         Check(ring.GetRect() == new Rect2(-10, -10, 20, 20) && PhysicsServer.ShapeGetType(ring.GetRID()) == PhysicsServer.ShapeType.Custom, "Custom exact data and type preserve the ring hole");

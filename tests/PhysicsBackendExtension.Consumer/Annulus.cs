@@ -51,10 +51,91 @@ internal static class Annulus
         var a = Dimensions(first); var b = Dimensions(second);
         if (b.Inner != 0) throw new NotSupportedException("The fixture exercises annulus/circle pairs.");
         count = 0;
-        if (!Sweep(secondPose.Origin, secondMotion - firstMotion, firstPose.Origin, MathF.Max(0, a.Inner - b.Outer), a.Outer + b.Outer, out var fraction)) return false;
-        var center = secondPose.Origin + secondMotion * fraction;
-        Contact(firstPose.Origin + firstMotion * fraction, a.Inner, a.Outer, center, b.Outer, out var normal, out _, out var point);
-        if (contacts.Length >= 2) { contacts[0] = point; contacts[1] = center - normal * b.Outer; count = 1; }
+        var a0 = firstPose.Origin; var a1 = a0 + firstMotion;
+        var b0 = secondPose.Origin; var b1 = b0 + secondMotion;
+        Closest(a0, a1, b0, b1, out var nearA, out var nearB);
+        var outer = (double)a.Outer + b.Outer; var hole = Math.Max(0, (double)a.Inner - b.Outer);
+        var far = Math.Max(Math.Max(Distance(a0, b0), Distance(a0, b1)), Math.Max(Distance(a1, b0), Distance(a1, b1)));
+        if (Distance(nearA, nearB) > outer * outer || far < hole * hole) return false;
+        if (contacts.Length < 2) return true;
+        var best = double.PositiveInfinity; Vector2 firstPoint = default, secondPoint = default;
+        // The sweep is an outer capsule with the intersection of endpoint inner disks removed.
+        Span<Vector2> axes = stackalloc Vector2[7] { nearB - nearA, b0 - a0, b1 - a0, b0 - a1, b1 - a1,
+            new(-firstMotion.Y, firstMotion.X), new(-secondMotion.Y, secondMotion.X) };
+        foreach (var direction in axes)
+        {
+            var normal = direction.LengthSquared() == 0 ? Vector2.Right : direction.Normalized();
+            Outer(normal); Outer(-normal);
+            Inner(normal); Inner(-normal);
+        }
+        contacts[0] = firstPoint; contacts[1] = secondPoint; count = 1; return true;
+
+        void Candidate(Vector2 left, Vector2 right, Vector2 normal, bool inner)
+        {
+            if ((right - left).Dot(normal) * (inner ? 1 : -1) < -.00001f) return;
+            var depth = Distance(left, right);
+            if (depth >= best) return;
+            best = depth; firstPoint = left; secondPoint = right;
+        }
+        void Outer(Vector2 normal)
+        {
+            Support(a0, a1, normal, out var left0, out var left1);
+            Support(b0, b1, -normal, out var right0, out var right1);
+            Closest(left0 + normal * a.Outer, left1 + normal * a.Outer,
+                right0 - normal * b.Outer, right1 - normal * b.Outer, out var left, out var right);
+            Candidate(left, right, normal, false);
+        }
+        void Inner(Vector2 normal)
+        {
+            if (!HoleSupport(a0, a1, a.Inner, normal, out var left)) return;
+            Support(b0, b1, normal, out var right0, out var right1);
+            var right = Nearest(left, right0 + normal * b.Outer, right1 + normal * b.Outer);
+            Candidate(left, right, normal, true);
+        }
+    }
+    private static double Distance(Vector2 a, Vector2 b)
+    { var x = (double)a.X - b.X; var y = (double)a.Y - b.Y; return x * x + y * y; }
+    private static Vector2 Nearest(Vector2 point, Vector2 start, Vector2 end)
+    {
+        var motion = end - start; var length = Distance(start, end);
+        var fraction = length == 0 ? 0 : Math.Clamp(((double)(point.X - start.X) * motion.X + (double)(point.Y - start.Y) * motion.Y) / length, 0, 1);
+        return start + motion * (float)fraction;
+    }
+    private static void Closest(Vector2 a0, Vector2 a1, Vector2 b0, Vector2 b1, out Vector2 left, out Vector2 right)
+    {
+        var a = a1 - a0; var b = b1 - b0; var cross = (double)a.X * b.Y - (double)a.Y * b.X;
+        if (cross != 0)
+        {
+            var offset = b0 - a0;
+            var t = ((double)offset.X * b.Y - (double)offset.Y * b.X) / cross;
+            var u = ((double)offset.X * a.Y - (double)offset.Y * a.X) / cross;
+            if (t >= 0 && t <= 1 && u >= 0 && u <= 1) { left = right = a0 + a * (float)t; return; }
+        }
+        var bestLeft = a0; var bestRight = Nearest(a0, b0, b1); var best = Distance(bestLeft, bestRight);
+        Compare(a1, Nearest(a1, b0, b1)); Compare(Nearest(b0, a0, a1), b0); Compare(Nearest(b1, a0, a1), b1);
+        left = bestLeft; right = bestRight;
+        void Compare(Vector2 x, Vector2 y)
+        {
+            var distance = Distance(x, y);
+            if (distance < best) { best = distance; bestLeft = x; bestRight = y; }
+        }
+    }
+    private static void Support(Vector2 start, Vector2 end, Vector2 direction, out Vector2 first, out Vector2 last)
+    {
+        var projected = (end - start).Dot(direction);
+        first = projected > .000001f ? end : start; last = projected < -.000001f ? start : end;
+    }
+    private static bool HoleSupport(Vector2 start, Vector2 end, float radius, Vector2 normal, out Vector2 point)
+    {
+        var motion = end - start; var length = Math.Sqrt(Distance(start, end));
+        point = default;
+        if (length >= 2 * radius) return false;
+        var fromStart = start + normal * radius; var fromEnd = end + normal * radius;
+        if (Distance(fromStart, end) <= (double)radius * radius) { point = fromStart; return true; }
+        if (Distance(fromEnd, start) <= (double)radius * radius) { point = fromEnd; return true; }
+        var perpendicular = new Vector2(-motion.Y, motion.X) / (float)length;
+        var height = (float)Math.Sqrt((double)radius * radius - length * length / 4);
+        point = (start + end) * .5f + perpendicular * (perpendicular.Dot(normal) >= 0 ? height : -height);
         return true;
     }
 }

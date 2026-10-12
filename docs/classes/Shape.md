@@ -1,6 +1,6 @@
 # Shape
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Inherits:** [Resource](Resource.md) · **Inherited By:** [CircleShape](CircleShape.md), [CapsuleShape](CapsuleShape.md), [SegmentShape](SegmentShape.md), [SeparationRayShape](SeparationRayShape.md), [ConvexPolygonShape](ConvexPolygonShape.md), [ConcavePolygonShape](ConcavePolygonShape.md), [RectangleShape](RectangleShape.md), [WorldBoundaryShape](WorldBoundaryShape.md)
 
@@ -159,3 +159,11 @@ immutable data and independent duplicates remain safe.
 `public ShapeGeometry GetGeometryData()` returns the current cached immutable representation. Retained data survives later resource edits and disposal; requesting it from an already disposed resource rejects. The complete typed data accessors expose exact primitive parameters without solver handles.
 
 [Custom collision geometry](../components/physics-custom-geometry.md) now provides copied canonical data, exact mass/bounds, diagnostic segments and standalone pair callbacks to registered implementations. Built-in compilation rejects unsupported custom geometry before mutation. Portable schema covers the custom authoring payload; detached force preparation resolves exact custom mass while automatic getters retain cached-resolution semantics.
+
+The public-only --custom consumer verifies independent annulus/circle resource
+sweeps, retained inner holes and true boundary contacts in both argument orders
+through registered, CPU and explicitly enabled GPU spaces.
+Twelve exact cases, 512 seeded boundary cases and 128 warmed standalone/selected
+cycles retain the .0001 scene-unit boundary tolerance and 0/0 managed-byte gate.
+See [custom collision geometry](../components/physics-custom-geometry.md) for the
+analytic model and remaining numerical-extension limits.
