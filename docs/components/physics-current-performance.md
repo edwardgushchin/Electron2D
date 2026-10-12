@@ -1,6 +1,11 @@
 # Same-revision dense physics measurements
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
+
+The [16,384-body monitored scene refresh](physics-scene-performance.md#16384-body-refresh-at-f3983555-2026-10-12)
+uses an independent runtime copy at f3983555 for both headless and native-window
+pairs. Its complete scene costs and provenance remain separate from the raw-server
+workloads below; all historical numbers retain their measured revisions.
 
 ## Window checks at 567be307
 
@@ -151,11 +156,13 @@ for this raw-server circle workload. Joint, CCD, callback, scene synchronization
 network replay and small-world performance retain their own checks. The older
 4096-body GPU disadvantage remains recorded in the
 [publication report](gpu-demand-publication.md); this larger workload does not
-supersede it. Native allocation accounting, other devices/platforms, sustained
-60 Hz at this population, human visual acceptance and the complete registered
+supersede it. Native allocation accounting, other devices/platforms,
+human visual acceptance and the complete registered
 backend/custom-algorithm contract remain open under
 [ADR 0054](../decisions/physics-backends.md#adr-0054) and
 [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+The goal requires measured GPU advantage and separately reported real-window FPS;
+it does not impose a sustained 60 Hz threshold at this population.
 
 ## Reproduction and local evidence
 

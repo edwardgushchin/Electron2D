@@ -1,6 +1,10 @@
 # Complete scene physics measurements
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
+
+The [16,384-body refresh at f3983555](#16384-body-refresh-at-f3983555-2026-10-12)
+retains the complete monitored scene and its executable provenance. Older trials
+below keep their own revisions and workloads.
 
 ## Workload and provenance
 
@@ -314,3 +318,128 @@ GPU physical wait p50/p95/p99/max was 25.1897/59.7602/90.5693/112.2805 ms. Store
 | `GPU.json` | `8fb21cba48cfaa8a4fd90c44aa361bf2a5815d035fe57e77b74aa06da4f1b1e3` |
 
 The ignored directory bin/physics-scene-window/2026-10-11/scoped-16384 contains the exact provenance/command, full physical/lifecycle reports, PNG captures and terminal log. The earlier 3bc28190-refresh rejection is retained separately; it is not relabeled as a passing pair.
+
+## 16,384-body refresh at f3983555, 2026-10-12
+
+This trial retains the complete RigidBody/CollisionShape fixture above: 16,384
+awake bodies, four walls, radius 6, mass .2, the same materials/damping/gravity,
+eight-contact monitors, entry/exit handlers and interpolation. Each backend warms
+for 1600 ticks and measures 256 complete PhysicsFrame calls at 1/144 second,
+four substeps and sixteen solver iterations. Physics profiling stays enabled;
+publication control and native input injection are disabled. No physical capability,
+population or observer is removed to obtain the comparison.
+
+The clean source revision is main `f3983555575dd16ab31cbafaace697a363d80ccf`.
+After a fresh Release linux-x64 source-native build, all 71 executable/dependency
+files were copied to an independent ignored runtime directory, without hardlinks.
+The measurements execute that copy, with every file fingerprint retained in the
+manifest. This prevents another chat's build from replacing measured assemblies.
+The source fingerprint uses the sorted C# path/NUL/content/NUL protocol above;
+runtime fingerprints also cover embedded physics and graphics shader resources.
+The host remains Linux/Wayland x64, Ryzen 7 5700X, RTX 3090 Ti, driver 615.71.09
+and .NET SDK 10.0.101. These are sequential pairs on a shared desktop.
+
+| Evidence | SHA-256 |
+| --- | --- |
+| C# source | `10528540ff65aa4874d00b97a045c0b6ce6b37aa6cb32a59b3c6218d0260f154` |
+| Electron2D.Tests.dll | `4371780e96f143dc7017935ac7e2045d207270df403bcb524350b9e08df3eb57` |
+| Electron2D.dll | `641e8442e552ed10f2b24090b3fb08d0fc89a99fab721a1cc6cdb4d49b9b1dd1` |
+
+### Complete headless scene
+
+| Backend | Mean, ms | p50 / p95 / p99 / max, ms | Owner / all-thread managed bytes |
+| --- | ---: | --- | --- |
+| CPU | 91.1890 | 89.3855 / 104.3433 / 128.1832 / 138.1512 | 0 / 0 |
+| GPU | 67.6875 | 66.1131 / 82.3523 / 96.7675 / 104.8345 | 0 / 0 |
+
+GPU median is 26.0 percent lower and mean 25.8 percent lower in this pair.
+These are complete physics-frame costs, not FPS or isolated solver throughput.
+CPU/GPU solver means are 50.3323/22.3261 ms; result synchronization means
+.0012/5.2630 ms and scene/contact publication means 21.2535/25.9772 ms.
+The publication cost includes all observed bodies and selected contacts.
+
+GPU uploads/readbacks are 262424/11863146.6875 bytes per tick, uniforms
+63709.5 bytes and submissions 19.07421875. Summed wait p50/p95/p99/max is
+18.1057/34.6409/44.9031/52.8950 ms, already included in the step. Readback
+serves current poses, direct-state fields and contacts for every observed body;
+capacity-sized destinations remain part of its measured cost. These counters
+exclude renderer traffic, final validation and JSON generation.
+
+Both implementations pass the unchanged physical/publication gates. CPU/GPU
+penetration is .291941/.292492, escape .299999/.237793 against .601, speed
+.197081/.026373 and retained contacts 86019/88106. Unit-basis differences are
+0/2.38e-7 against 1e-6; final energies remain below 1.02 times initial energy.
+State/contact/event hashes remain diagnostic, without cross-backend equality gates.
+
+Cold scene setup CPU/GPU costs 4003.8716/3570.8523 ms; cleanup costs
+51604.8785/51596.0172 ms. Those separate lifecycle brackets are outside warmed
+physics timing and allocation. Their remaining cost is visible rather than folded
+into a warm-step claim.
+
+### Native window on the same frozen runtime
+
+| Backend | Physics mean, ms | Physics p50 / p95 / p99 / max, ms | Full frame p50 / p95 / p99 / max, ms | Window-loop FPS |
+| --- | ---: | --- | --- | ---: |
+| CPU | 97.4403 | 95.2527 / 113.2923 / 135.2082 / 178.2517 | 159.1198 / 188.5953 / 210.1101 / 252.4444 | 6.1883 |
+| GPU | 77.3591 | 72.6124 / 99.8078 / 109.7514 / 116.5524 | 133.6631 / 160.2246 / 177.5044 / 186.1306 | 7.3688 |
+
+GPU physics median is 23.8 percent lower and measured FPS 19.1 percent higher
+in this pair. Physics and entire window-loop owner/all-thread managed totals are
+0/0 on each backend; pump/publication/process/render owner counters are also zero.
+Both actual 1152-by-800 captures were visually inspected and show the dense pile;
+the fixture verifies one rendered instance for every physical body and all current
+pose records. Requested VSync is Disabled but reported VSync is Enabled on both.
+These are real-window measurements under the fixed-frame test host, not an
+uncapped claim or an Engine.Run catch-up-scheduler test.
+
+CPU/GPU pose-publication p50 is .9721/.7235 ms and render p50 is
+61.5951/56.3873 ms. GPU physics wait p50/p95/p99/max is
+22.7524/50.4636/58.6181/66.7947 ms; upload/readback is
+262424/11863144.4375 bytes per tick, uniforms 63607.75 bytes and submissions
+19.05859375. Those physics counters include their waits in complete step time
+and exclude graphics traffic and the final image capture. Physics/publication
+checks pass: CPU/GPU penetration is .291941/.282163, escape .299999/.240112
+against .601 and retained contacts 86019/88402. All motion/energy/basis checks
+retain the same tolerances; matching backend trajectories are not required.
+
+### Evidence, reproduction and scope
+
+The independent runtime, before/final manifests, per-backend physical/lifecycle
+JSON, native-window PNGs, exact process outcomes and logs are retained under the
+ignored directory bin/physics-performance-refresh/2026-10-12/frozen-f3983555.
+Reproduce from a fresh source-native Release build copied into its own runtime
+directory; do not overwrite a retained measured copy. The measured headless command
+is:
+
+```bash
+ELECTRON2D_TEST_PHYSICS_PERFORMANCE=1 ELECTRON2D_PHYSICS_PERFORMANCE_COUNT=16384 ELECTRON2D_PHYSICS_PERFORMANCE_WARMUP=1600 ELECTRON2D_PHYSICS_PERFORMANCE_SAMPLES=256 ELECTRON2D_PHYSICS_PERFORMANCE_BACKEND=both ELECTRON2D_PHYSICS_PERFORMANCE_OUTPUT=bin/physics-performance-refresh/2026-10-12/frozen-f3983555/headless dotnet bin/physics-performance-refresh/2026-10-12/frozen-f3983555/runtime/Electron2D.Tests.dll
+```
+
+Window mode adds ELECTRON2D_PHYSICS_PERFORMANCE_WINDOW=1 and changes the output
+directory to window. It retains the fixed-frame host, interpolation fraction zero
+and separate physics/frame/allocation/capture boundaries described above.
+
+An earlier headless pair at 368d29d3 had unchanged source/runtime/test fingerprints
+at its verification points and passed physical/managed gates: CPU/GPU p50 was
+92.1341/66.5457 ms, but p99 was 108.2136/263.1903 ms. Its later window pair
+was rejected for same-revision acceptance: another chat changed main to f3983555
+and replaced shared assemblies before that process completed. Those window
+numbers are excluded rather than relabeled as frozen-runtime evidence.
+The original artifacts and rejection reason remain in the parent directory.
+
+This mass-scene evidence changes no declaration coverage status. Single desktop
+pairs, including the earlier GPU tail regression, do not establish an isolated
+repeatability guarantee or explain scheduling/driver outliers. Native allocation,
+isolated renderer transfers/waits, real-time catch-up scheduling, other platforms,
+complete extension/numerical acceptance and human acceptance remain open. The
+goal requires measured GPU advantage and real-window FPS, without a sustained
+60 Hz threshold. The complete physics objective remains open under
+[ADR 0054](../decisions/physics-backends.md#adr-0054) and
+[ADR 0103](../decisions/physics-extensions.md#adr-0103).
+
+| Raw report under frozen-f3983555 | SHA-256 |
+| --- | --- |
+| headless/CPU.json | `e8490f128a9b76986e384574e52fc1657dcef04ae9e0f40efc796728638528e4` |
+| headless/GPU.json | `eb2a63af4b6f1ff9166c9f2d22b3bc7b78f886a6424d8f87306145670cccb16a` |
+| window/CPU.json | `ce8f8b1ba0655be75fc1764d8cf4a0b0195753d7af515e5c42c0dcd7e2d0bbea` |
+| window/GPU.json | `f103d348dc5191a41f299ad30715117d2b54f6804a6cd278086444c344b492e6` |

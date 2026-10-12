@@ -65,12 +65,16 @@ on CPU/GPU/no-device. Named registration and typed server-operation dispatch now
 numerical extension acceptance remains open. The stale tile-collider-object reason was reconciled against the
 existing CPU/GPU TileMapLayer contact and object-association tests.
 
-[Same-revision dense performance](physics-current-performance.md) records the
-current 16,384-body server-instance window advantage and its distinct 4096-body
-monitored scene trial, with zero warmed managed allocation and physical gates.
-The historical 65,536-body trials retain their revision and scope. These close no
-declaration gap: complete registered numerical-operation acceptance, repeatable
-scene advantage, native/foreign acceptance and sustained 60 Hz remain open.
+[Same-revision dense performance](physics-current-performance.md) retains the
+raw-server trials at their named revisions. The
+[frozen 16,384-body monitored scene](physics-scene-performance.md#16384-body-refresh-at-f3983555-2026-10-12)
+now passes headless/window physical gates and zero warm physics/frame managed
+allocation: GPU physics median is 26.0/23.8 percent lower and actual window FPS
+19.1 percent higher in the paired trials. Their manifests cover all 71 copied
+runtime files; the earlier window run with replaced shared binaries is rejected.
+These close no declaration gap: complete registered numerical-operation acceptance,
+isolated repeatability and native/foreign acceptance remain open. The goal requires
+measured GPU advantage and real-window FPS, without a sustained 60 Hz threshold.
 
 [Public joint conformance](physics-joint-policies.md#public-cpu-gpu-conformance) now runs
 pin/groove/spring, server identity/lifecycle and solver policies through explicitly
@@ -96,7 +100,7 @@ penetration through the full public CPU/GPU path and an actual native window.
 Device contact coloring fixes the observed 65,536-body Jacobi collapse without
 reducing population or iterations. Colored contact solving, including joint-world
 integration, remains GPU-resident. Overflow schedules use complete Jacobi; their
-convergence and the corrected dense-world 60 Hz/FPS target remain open.
+convergence and final dense-world performance acceptance remain open.
 
 Packed iterative GPU state now reduces repeated scattered contact/body reads without
 changing the solver equations or iteration count. Contact/joint coupling, reports,

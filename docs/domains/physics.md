@@ -10,6 +10,14 @@ bytes; deterministic mouse events retain their reported 320-byte pump cost.
 The fixed-frame host is separate from real-time catch-up scheduling; numerical,
 network and final performance acceptance retain their stated limits.
 
+The [frozen 16,384-body refresh](../components/physics-scene-performance.md#16384-body-refresh-at-f3983555-2026-10-12)
+measures CPU/GPU headless medians of 89.3855/66.1131 ms, native-window medians
+of 95.2527/72.6124 ms and actual FPS of 6.1883/7.3688. Complete physical,
+publication/instance/image and zero warm managed-byte gates pass. All 71 copied
+runtime files retain their fingerprints; the earlier shared-binary window run is
+excluded. Native allocation, isolated repeatability and complete API acceptance
+remain open.
+
 [Common space bindings](../components/physics-registered-adapter.md#common-space-bindings) now execute all four Body/Area space
 operations on scene and raw RIDs, including explicit target simulation, scene
 reclaim, partial-attachment restoration, source preflight and lifetime guards.
@@ -521,8 +529,8 @@ headless and native-window workloads now measure penetration and energy alongsid
 full-step latency, allocations and actual frame/tick rates.
 [The same-revision 65,536-body trial](../components/physics-current-performance.md)
 confirms complete GPU step and actual window FPS advantages with zero warmed
-managed allocation and passing physical gates. Sustained 60 Hz at that population,
-native allocation, other devices/platforms and complete backend extensions remain
+managed allocation and passing physical gates. Native allocation,
+other devices/platforms and complete backend extensions remain
 open; this circle workload does not establish whole-engine performance acceptance.
 
 The same colored solver now uses packed contact ranges and compact shared body
@@ -607,7 +615,7 @@ Registered [borrowed shape authoring](../components/physics-registered-adapter.m
 
 [Adaptive contact proposal batches](../components/gpu-contact-colors.md#device-schedule-and-response) reduce empty GPU scheduling work while device completion/conflict checks and complete fallback remain mandatory. The complete scene benchmark records schedule diagnostics; final GPU advantage and rendered acceptance remain open.
 
-[Current 16,384-body window checks](../components/physics-current-performance.md#window-checks-at-567be307) retain real CPU/GPU rendering, full physical gates and zero warmed physics/frame memory. NaN and finite-nonzero buffer sequences pass; first-use initialization now checks both patterns. Server-instance throughput is distinct from monitored scene throughput; sustained 60 Hz and the earlier uninstrumented failure cause remain open.
+[Current 16,384-body window checks](../components/physics-current-performance.md#window-checks-at-567be307) retain real CPU/GPU rendering, full physical gates and zero warmed physics/frame memory. NaN and finite-nonzero buffer sequences pass; first-use initialization now checks both patterns. Server-instance throughput is distinct from monitored scene throughput; final performance acceptance and the earlier uninstrumented failure cause remain open. The goal requires measured GPU advantage and real-window FPS, without a sustained 60 Hz threshold.
 
 [Registered force and axis operations](../components/physics-registered-adapter.md#force-impulse-and-axis-response) now have one public-only numeric/lifetime fixture shared by CPU, GPU and an independent solver. It checks rotated-center moments, pending and persistent cadence, invalid candidates and zero managed allocation for 128 edited full frames after collection. Fourteen extension rows remain Partial; this does not close the complete physics objective.
 
