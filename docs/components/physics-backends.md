@@ -1033,3 +1033,45 @@ extension and platform/performance acceptance remain open.
 The ordinary full suite now executes both CPU and independent GPU variants of all sixteen previously parameterized default-CPU families: AnimatableBody, CapsuleShape, CharacterBody, CollisionDisableMode, ConcavePolygonShape, ConvexPolygonShape, DampedSpringJoint, GrooveJoint, PhysicsBodyParameter, PhysicsServerJoint, PinJoint, RigidFreezeMode, SegmentShape, SeparationRayShape (including its dynamics suite), ShapeOwner and World. ELECTRON2D_TEST_SHARED_PHYSICS=cpu|gpu runs the complete same set explicitly; existing numerical and lifecycle/error assertions are unchanged. WorldTests retains the default-CPU/mixed-world cases and adds two explicitly selected isolated worlds, query identity/isolation, attachment-view invalidation and a shared once-per-tick step. Its 96 warmup/64 measured complete frames with lookups require 0/0 owner/all-thread bytes; one-frame 60-unit/s travel stays within .02 scene units, covering default damping and floating-point integration. Individual existing suite allocation scopes remain their documented limits. This closes the full-suite call-site omission, not remaining inherited/extension, native/platform, network and final performance acceptance.
 
 The complete PhysicalBoneTests now executes on explicitly selected public CPU/GPU worlds, including command/follow and custom integration fixtures and restored graphs in a separate fresh process. It retains motion/filter identity, strength/disable/follow/freeze behavior, binding/hierarchy recovery, actual pin constraints, named commands, modifier failure rollback, phase/owner guards and existing numerical bounds. The ordinary full suite runs both backends; ELECTRON2D_TEST_PHYSICAL_BONE=1 with ELECTRON2D_PHYSICAL_BONE_BACKEND=cpu|gpu selects one. After 128 warmup frames, 128 complete physics/pose/weighted Polygon cycles require 0/0 owner/all-thread managed bytes. Native hosts select physics independently from ELECTRON2D_PHYSICAL_BONE_RENDERER=gpu|compatibility, reject renderer fallback and assert both actual selections. All four CPU/GPU-physics by hardware-renderer combinations verify real changed skin pixels and matching Bone/body pose; 64 prepared draw/velocity-update intervals require zero owner-thread managed bytes. This rendering interval is separate from full physical allocation measurement. Native allocations, large rigs, foreign platforms, human acceptance and final network/massive GPU/window FPS gates remain open.
+
+Prepared integration now retains the ResolveStaticFields flag in its concrete
+GPU attachment. An unchanged step compares that local flag instead of reading a
+validated store policy for every collider. Fresh attachment, mode/lock/gravity
+edits and local replay still invalidate preparation; dirty/forced requests always
+prepare. Only successful ordinary preparation records the flag. This is one
+host metadata boolean per attachment, not a simulation-state mirror or readback.
+PhysicsHostPreparationTests retains the CPU/GPU edit, freeze/role, checkpoint,
+reentry, CCD and callback assertions and now directly checks changed static-field
+demand plus dirty/forced preparation.
+
+Prepared integration's attachment-local flag was measured in alternating baseline
+and candidate headless runs on Linux/Wayland, Vulkan RTX 3090 Ti. All runs keep
+65,536 awake circles plus three walls, dt=1/60, four substeps, 16 iterations,
+240 warmup and 64 samples. Baseline/candidate policy-motion preparation means
+were 12.0725/8.4108 ms, then 11.3485/8.1269 ms; full-step medians were
+52.7323/45.1421 ms, then 48.9022/46.0570 ms. Every run passed 0/0 owner/all-thread
+bytes, no escape and the existing energy/penetration limits. These A/B measurements
+have run variance and do not isolate every change in device/contact scheduling.
+The final source adds the preparation guard assertion and XML clarification;
+its independent CPU/GPU window comparison uses the same frozen source/runtime.
+
+| Final window backend | Physics p50/p95/p99 ms | Frame p50/p95/p99 ms | Actual FPS | Pose publication p50 ms |
+| --- | --- | --- | ---: | ---: |
+| CPU | 283.5741 / 637.8590 / 954.3179 | 305.9499 / 698.2644 / 1008.4203 | 2.6795 | 15.6415 |
+| GPU | 51.9073 / 53.4363 / 54.1009 | 74.4509 / 76.4854 / 76.8478 | 13.4481 | 16.4236 |
+
+The real 1152x800 window retains all 65,536 awake bodies; physics and whole measured
+frames both pass 0/0 owner/all-thread managed bytes. GPU physics reports 232 upload
+and 761 readback bytes per sample; whole-frame store traffic is 1,048,816 upload
+and 1,049,345 readback bytes per tick, dominated by the explicit complete visual
+pose batch. Mean physical GPU wait is 31.2324 ms. Contact-color fallbacks are zero;
+maximum CPU/GPU penetration is .27031/.29711 under the .601 limit, with no escape
+and bounded energy. Both captures were inspected and show the dense pile. Actual
+VSync remains Enabled despite the requested Disabled policy. CPU tail latency is
+noisy. This profile establishes a measured full GPU advantage on this dense scene,
+not 60 Hz, a general game speedup, native allocation or foreign-device acceptance.
+Evidence and full distributions are retained under
+bin/physics-mass-current/2026-10-13/; final/provenance-before.json identifies source
+7958bcf44c4472c947c1bcf7e2b713b0f3a734ef6a836c254ae3650034489fb0 and every frozen
+runtime file. Remaining inherited/extension, networking and full performance gates
+stay open.

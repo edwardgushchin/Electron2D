@@ -25,6 +25,14 @@ internal static class PhysicsHostPreparationTests
             PhysicsServer.BodyAddShape(raw, shape.GetRID()); PhysicsServer.BodySetTransform(raw, new(0, new(-100, 0))); PhysicsServer.BodySetSpace(raw, space);
             PhysicsServer.AreaSetGravity(space, 0); PhysicsServer.AreaSetLinearDamp(space, 0); PhysicsServer.AreaSetAngularDamp(space, 0);
             Step(); Step();
+            if (backend == PhysicsServer.Backend.GPU)
+            {
+                var attachment = PhysicsServer.Service.GetSceneSpace(space).GPUStore!.NativeCollider(scene.Backend);
+                Check(!attachment.NeedsIntegrationPreparation(false, false, true) &&
+                    attachment.NeedsIntegrationPreparation(false, false, false), "Prepared integration retains and rechecks static-field demand");
+                Check(attachment.NeedsIntegrationPreparation(true, false, true) &&
+                    attachment.NeedsIntegrationPreparation(false, true, true), "Dirty and forced integration cannot reuse prepared policy");
+            }
             using var sceneView = PhysicsServer.BodyGetDirectState(scene.GetRID())!;
             using var rawView = PhysicsServer.BodyGetDirectState(raw)!;
 

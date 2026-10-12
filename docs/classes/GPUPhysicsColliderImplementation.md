@@ -1,6 +1,6 @@
 # GPUPhysicsColliderImplementation
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Declaration:** `internal sealed partial class GPUPhysicsColliderImplementation : PhysicsColliderImplementation` · **Source:** [GPUPhysicsColliderImplementation.cs](../../src/Servers/Physics/GPUPhysicsColliderImplementation.cs) · **Component:** [Physics backends](../components/physics-backends.md#runtime-flow-and-ownership)
 
@@ -65,3 +65,13 @@ The internal resource/resource and body-slot/resource bridge now executes throug
 [Custom collision geometry](../components/physics-custom-geometry.md) now provides copied canonical data, exact mass/bounds, diagnostic segments and standalone pair callbacks to registered implementations. Built-in compilation rejects unsupported custom geometry before mutation. Portable schema covers the custom authoring payload; detached force preparation resolves exact custom mass while automatic getters retain cached-resolution semantics.
 
 Scene field eligibility survives temporary static/frozen solver roles through a retained integration-policy bit. Numerical Area/default reduction stays on the device; public scene/direct-state fields and zero-allocation full frames are checked by CollisionDisableModeTests on explicit CPU/GPU worlds. See [resident body field eligibility](../components/gpu-resident-bodies.md#storage-transfers-and-waits).
+
+Prepared integration now retains the ResolveStaticFields flag in its concrete
+GPU attachment. An unchanged step compares that local flag instead of reading a
+validated store policy for every collider. Fresh attachment, mode/lock/gravity
+edits and local replay still invalidate preparation; dirty/forced requests always
+prepare. Only successful ordinary preparation records the flag. This is one
+host metadata boolean per attachment, not a simulation-state mirror or readback.
+PhysicsHostPreparationTests retains the CPU/GPU edit, freeze/role, checkpoint,
+reentry, CCD and callback assertions and now directly checks changed static-field
+demand plus dirty/forced preparation.

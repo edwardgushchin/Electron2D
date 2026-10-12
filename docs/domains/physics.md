@@ -762,3 +762,13 @@ The complete PhysicalBoneTests now executes on explicitly selected public CPU/GP
 The complete PhysicsBodyTests, RigidBodyForceTests, RigidBodyContactTests and ShapePairEventTests now execute on explicitly selected public CPU/GPU worlds, with actual backend assertions in every numerical scene. The ordinary full suite runs both variants; ELECTRON2D_TEST_SCENE_PHYSICS=cpu|gpu selects the same complete set. Existing force/impulse/center units and numerical bounds, freeze/lock/mass/geometry recovery, persistent force packing, sleep/wake notification policy, contact caps/deduplication and object-before-shape entry/departure ordering are unchanged. Scene/raw nullable payloads, compound logical slots, handler mutation/errors and committed-event no-replay remain asserted. All existing 64-frame warm gates now require 0/0 owner/all-thread managed bytes for resting/active/moving bodies, forces, monitored/no-contact frames and steady/transitioning shape pairs. Box2D SIMD and worker scheduling probes remain CPU diagnostics; they do not establish independent GPU acceptance. Native allocations, wider inherited/extension, foreign platforms, full networking and final GPU/window performance acceptance remain open.
 
 The ordinary full suite runs PhysicsCCDTests, PhysicsJointPolicyTests and WorldBoundaryTests on both explicitly selected public CPU/GPU backends. ELECTRON2D_TEST_CONTINUOUS_PHYSICS=cpu|gpu selects this same complete set. Scene CCD/boundary fixtures and every raw boundary space assert the actual selection; existing numerical, lifecycle and error bounds are unchanged. CCD retains 64 warmup/128 reset-active steps and joint policy retains 128 warmup/128 edit-active frames, now requiring zero owner/all-thread managed bytes. Boundary retains its 128 warmup/128 active-step all-thread zero gate. Legacy CPU-host GPU stages and internal resident-store tests remain separate diagnostics. These bounded checks do not establish native allocations, foreign-platform acceptance, massive GPU advantage or window FPS.
+
+Prepared integration now retains the ResolveStaticFields flag in its concrete
+GPU attachment. An unchanged step compares that local flag instead of reading a
+validated store policy for every collider. Fresh attachment, mode/lock/gravity
+edits and local replay still invalidate preparation; dirty/forced requests always
+prepare. Only successful ordinary preparation records the flag. This is one
+host metadata boolean per attachment, not a simulation-state mirror or readback.
+PhysicsHostPreparationTests retains the CPU/GPU edit, freeze/role, checkpoint,
+reentry, CCD and callback assertions and now directly checks changed static-field
+demand plus dirty/forced preparation.
