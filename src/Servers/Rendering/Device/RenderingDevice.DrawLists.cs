@@ -140,13 +140,13 @@ public sealed unsafe partial class RenderingDevice
     public void DrawListDisableScissor(long drawList) { DrawList(drawList); SetScissor(new(0, 0, _drawTarget!.Size.X, _drawTarget.Size.Y)); }
     private void BindDrawResources()
     {
-        var program = Get(_graphicsPipeline!.Shader, Kind.Shader); RequirePush(program);
+        var program = PipelineProgram(_graphicsPipeline!); RequirePush(program);
         Span<SDL.GPUTextureSamplerBinding> samplerBinding = stackalloc SDL.GPUTextureSamplerBinding[1];
         Span<nint> storageBinding = stackalloc nint[1];
         foreach (var descriptor in program.Layout)
         {
-            if (!_sets.TryGetValue(descriptor.Set, out var set) || !ReferenceEquals(Get(set.Shader), program)) throw new InvalidOperationException("Bind every graphics resource set first.");
-            var ids = set.Bindings[descriptor.Slot]; var resource = Get(ids[0]); var fragment = descriptor.Stage == ShaderStage.Fragment;
+            if (!_sets.TryGetValue(descriptor.Set, out var set) || set.Shader != _graphicsPipeline!.Shader) throw new InvalidOperationException("Bind every graphics resource set first.");
+            var ids = set.Bindings[descriptor.Slot]; ValidateBinding(descriptor, ids); var resource = Get(ids[0]); var fragment = descriptor.Stage == ShaderStage.Fragment;
             if (descriptor.Type == UniformType.UniformBuffer)
             {
                 if (fragment) SDL.PushGPUFragmentUniformData(_command, (uint)descriptor.Native, resource.Data.AsSpan(), resource.Size);

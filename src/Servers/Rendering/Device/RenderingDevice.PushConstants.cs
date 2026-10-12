@@ -44,5 +44,5 @@ public sealed unsafe partial class RenderingDevice
     /// <exception cref="ArgumentException">The list, byte count or source capacity is invalid.</exception>
     /// <exception cref="InvalidOperationException">No pipeline is selected or the creating thread/device state is invalid.</exception>
     public void DrawListSetPushConstant(long drawList, ReadOnlySpan<byte> buffer, uint sizeBytes)
-    { DrawList(drawList); if (_graphicsPipeline is null) throw new InvalidOperationException("Bind a graphics pipeline first."); SetPush(Get(_graphicsPipeline.Shader, Kind.Shader), buffer, sizeBytes); }
+    { DrawList(drawList); if (_graphicsPipeline is null) throw new InvalidOperationException("Bind a graphics pipeline first."); SetPush(PipelineProgram(_graphicsPipeline), buffer, sizeBytes); }
 }

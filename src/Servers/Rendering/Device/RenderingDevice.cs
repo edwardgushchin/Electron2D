@@ -74,6 +74,8 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal uint Set;
         internal Binding[] Layout = [];
         internal PushStage[] Push = [];
+        internal byte[][] Sources = [];
+        internal Entry? Variant;
         internal Dictionary<int, RID[]> Bindings = [];
     }
     private readonly GPUPhysicsDevice _context = new();
@@ -201,43 +203,57 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <param name="spirvData">Copied stage modules with no compiler errors; either compute or both vertex and fragment.</param>
     /// <param name="name">Optional diagnostic label.</param>
     /// <returns>A shader identity owned by this device.</returns>
+    /// <remarks>Specialization modules retain copied symbolic templates. Pipeline creation applies typed values before native/layout validation; ordinary shaders retain their validated native program.</remarks>
     public RID ShaderCreateFromSPIRV(RDShaderSPIRV spirvData, string name = "")
     {
         IdleList(); ArgumentNullException.ThrowIfNull(spirvData); ArgumentNullException.ThrowIfNull(name);
-        var compute = spirvData.BytecodeCompute;
-        var vertex = spirvData.BytecodeVertex; var fragment = spirvData.BytecodeFragment;
-        if (compute.Length != 0)
-        {
-            if (vertex.Length != 0 || fragment.Length != 0) throw new ArgumentException("Compute and graphics modules cannot share a shader identity.", nameof(spirvData));
-            if (spirvData.CompileErrorCompute.Length != 0) throw new ArgumentException(spirvData.CompileErrorCompute, nameof(spirvData));
-            var (code, layout, push) = Remap(compute);
-            var handle = new RenderHandle(ShaderCompiler.CreateComputePipeline(Device, code), h => SDL.ReleaseGPUComputePipeline(Device, h), _context.Handle);
-            return Add(new Entry { Kind = Kind.Shader, Handle = handle, Layout = layout, Push = push, Name = name });
-        }
-        if (vertex.Length == 0 || fragment.Length == 0 || spirvData.CompileErrorVertex.Length != 0 || spirvData.CompileErrorFragment.Length != 0)
-            throw new ArgumentException("A graphics shader requires successful vertex and fragment modules.", nameof(spirvData));
-        var (vertexCode, vertexLayout, vertexPush) = Remap(vertex, ShaderStage.Vertex);
-        var (fragmentCode, fragmentLayout, fragmentPush) = Remap(fragment, ShaderStage.Fragment);
-        var layoutBoth = vertexLayout.Concat(fragmentLayout).ToArray();
-        foreach (var group in layoutBoth.GroupBy(b => (b.Set, b.Slot)))
-        {
-            var first = group.First();
-            if (group.Any(b => b.Type != first.Type || b.Array != first.Array || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType || b.Depth != first.Depth)) throw new ArgumentException("A shared graphics descriptor has inconsistent stage types.", nameof(spirvData));
-        }
-        var interfaces = ShaderCompiler.ValidateDeviceGraphics(vertexCode, fragmentCode);
-        var entry = new Entry { Kind = Kind.Shader, Stage = ShaderStage.Vertex, Layout = layoutBoth, Push = vertexPush.Concat(fragmentPush).ToArray(), Name = name, Inputs = interfaces.Inputs, Outputs = interfaces.Outputs };
+        var compute = spirvData.BytecodeCompute; var vertex = spirvData.BytecodeVertex; var fragment = spirvData.BytecodeFragment;
+        if (compute.Length != 0 && (vertex.Length != 0 || fragment.Length != 0)) throw new ArgumentException("Compute and graphics modules cannot share a shader identity.", nameof(spirvData));
+        if (compute.Length != 0 ? spirvData.CompileErrorCompute.Length != 0 : vertex.Length == 0 || fragment.Length == 0 || spirvData.CompileErrorVertex.Length != 0 || spirvData.CompileErrorFragment.Length != 0) throw new ArgumentException("Supply successful compute or paired graphics modules.", nameof(spirvData));
+        byte[][] sources = compute.Length != 0 ? [compute] : [vertex, fragment];
+        var symbolic = sources.Any(code => new SpecializationModule(code, [], []).HasSpecialization);
+        var program = CreateDeviceProgram(sources, name, [], symbolic); program.Sources = sources; return Add(program);
+    }
+    private Entry CreateDeviceProgram(byte[][] sources, string name, Dictionary<uint, Specialization> constants, bool template = false)
+    {
+        var used = new HashSet<uint>(); var modules = sources.Select(code => template ? code.ToArray() : new SpecializationModule(code, constants, used).Freeze()).ToArray();
+        if (!template && constants.Keys.Any(id => !used.Contains(id))) throw new ArgumentException("A specialization identifier is not declared by this shader.", nameof(constants));
+        var layouts = new Binding[modules.Length][]; var pushes = new PushStage[modules.Length][];
+        for (var i = 0; i < modules.Length; i++)
+        { var stage = modules.Length == 1 ? ShaderStage.Compute : i == 0 ? ShaderStage.Vertex : ShaderStage.Fragment; (modules[i], layouts[i], pushes[i]) = RemapCore(modules[i], stage, template); }
+        var layout = layouts.SelectMany(l => l).ToArray();
+        foreach (var group in layout.GroupBy(b => (b.Set, b.Slot)))
+        { var first = group.First(); if (group.Any(b => b.Type != first.Type || b.Array != first.Array || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType || b.Depth != first.Depth)) throw new ArgumentException("A shared descriptor has inconsistent stage types."); }
+        var interfaces = modules.Length == 2 ? ShaderCompiler.ValidateDeviceGraphics(modules[0], modules[1]) : default;
+        var entry = new Entry { Kind = Kind.Shader, Stage = modules.Length == 1 ? ShaderStage.Compute : ShaderStage.Vertex, Layout = layout, Push = pushes.SelectMany(p => p).ToArray(), Name = name, Inputs = interfaces.Inputs ?? [], Outputs = interfaces.Outputs ?? [] };
+        if (template) return entry;
         try
         {
-            entry.Handle = new(ShaderCompiler.CreateShader(Device, vertexCode, false), h => SDL.ReleaseGPUShader(Device, h), _context.Handle);
-            entry.FragmentHandle = new(ShaderCompiler.CreateShader(Device, fragmentCode, true), h => SDL.ReleaseGPUShader(Device, h), _context.Handle);
-            return Add(entry);
+            if (modules.Length == 1) entry.Handle = new(ShaderCompiler.CreateComputePipeline(Device, modules[0]), h => SDL.ReleaseGPUComputePipeline(Device, h), _context.Handle);
+            else { entry.Handle = new(ShaderCompiler.CreateShader(Device, modules[0], false), h => SDL.ReleaseGPUShader(Device, h), _context.Handle); entry.FragmentHandle = new(ShaderCompiler.CreateShader(Device, modules[1], true), h => SDL.ReleaseGPUShader(Device, h), _context.Handle); }
+            return entry;
         }
-        catch { entry.FragmentHandle?.Dispose(); entry.Handle?.Dispose(); throw; }
+        catch { ReleaseProgram(entry); throw; }
     }
-    /// <summary>Creates an executable pipeline borrowing a live compute shader.</summary>
-    /// <param name="shader">A shader on this device.</param>
-    /// <returns>A pipeline identity invalidated when its shader is freed.</returns>
-    public RID ComputePipelineCreate(RID shader) { if (Get(shader, Kind.Shader).Stage != ShaderStage.Compute) throw new ArgumentException("A compute shader is required.", nameof(shader)); return Add(new Entry { Kind = Kind.Pipeline, Shader = shader }); }
+    private static void ReleaseProgram(Entry? program) { program?.FragmentHandle?.Dispose(); program?.Handle?.Dispose(); }
+    private Entry PipelineProgram(Entry pipeline) { var source = Get(pipeline.Shader, Kind.Shader); return pipeline.Variant ?? source; }
+    private Entry? PipelineVariant(Entry source, ReadOnlySpan<RDPipelineSpecializationConstant> constants)
+    {
+        var values = CaptureSpecialization(constants); return values.Count == 0 && source.Handle is not null ? null : CreateDeviceProgram(source.Sources, source.Name, values);
+    }
+    /// <summary>Creates an executable compute pipeline with copied typed specialization values.</summary>
+    /// <param name="shader">A live compute shader on this device.</param>
+    /// <param name="specializationConstants">Distinct declared scalar identifiers and typed values; omitted values keep module defaults.</param>
+    /// <returns>A pipeline borrowing the shader identity and owning any specialized native program.</returns>
+    /// <exception cref="ArgumentException">An identifier/type is invalid or the resulting module/layout is invalid.</exception>
+    /// <exception cref="NotSupportedException">A specialized shader capability exceeds the native profile.</exception>
+    public RID ComputePipelineCreate(RID shader, ReadOnlySpan<RDPipelineSpecializationConstant> specializationConstants = default)
+    {
+        IdleList(); var source = Get(shader, Kind.Shader); if (source.Stage != ShaderStage.Compute) throw new ArgumentException("A compute shader is required.", nameof(shader));
+        var variant = PipelineVariant(source, specializationConstants);
+        try { return Add(new Entry { Kind = Kind.Pipeline, Shader = shader, Variant = variant }); }
+        catch { ReleaseProgram(variant); throw; }
+    }
     /// <summary>Reports whether a pipeline and its shader remain alive.</summary>
     /// <param name="pipeline">The identity to inspect.</param>
     /// <returns>True for a live executable pipeline of this device.</returns>
@@ -279,7 +295,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <summary>Selects a compute pipeline for subsequent dispatches.</summary>
     /// <param name="computeList">The active list.</param>
     /// <param name="computePipeline">A live executable pipeline.</param>
-    public void ComputeListBindComputePipeline(long computeList, RID computePipeline) { List(computeList); _pipeline = Get(Get(computePipeline, Kind.Pipeline).Shader, Kind.Shader); SelectPushPipeline(computePipeline); }
+    public void ComputeListBindComputePipeline(long computeList, RID computePipeline) { List(computeList); _pipeline = PipelineProgram(Get(computePipeline, Kind.Pipeline)); SelectPushPipeline(computePipeline); }
     /// <summary>Binds a resource set for subsequent dispatches.</summary>
     /// <param name="computeList">The active list.</param>
     /// <param name="uniformSet">A complete live uniform set.</param>
@@ -310,9 +326,9 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         var samplers = stackalloc SDL.GPUTextureSamplerBinding[16]; var samplerCount = 0;
         foreach (var descriptor in _pipeline.Layout)
         {
-            if (!_sets.TryGetValue(descriptor.Set, out var set) || !ReferenceEquals(Get(set.Shader), _pipeline)) throw new InvalidOperationException("Bind each pipeline resource set first.");
+            if (!_sets.TryGetValue(descriptor.Set, out var set) || set.Shader != Get(_pushPipeline).Shader) throw new InvalidOperationException("Bind each pipeline resource set first.");
             var ids = set.Bindings[descriptor.Slot];
-            var buffer = Get(ids[0]);
+            ValidateBinding(descriptor, ids); var buffer = Get(ids[0]);
             if (descriptor.Type == UniformType.Image) { images[descriptor.Native] = new() { Texture = buffer.Handle!.DangerousGetHandle() }; imageCount++; }
             else if (descriptor.Type == UniformType.SamplerWithTexture) { samplers[descriptor.Native] = new() { Sampler = buffer.Handle!.DangerousGetHandle(), Texture = Get(ids[1]).Handle!.DangerousGetHandle() }; samplerCount++; }
             else if (descriptor.Type == UniformType.StorageBuffer) { buffers[descriptor.Native] = new() { Buffer = buffer.Handle!.DangerousGetHandle() }; count++; }
@@ -376,7 +392,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     {
         IdleList(); var entry = Get(rid); CompleteSubmission();
         if (_command != 0 || _recordedReadbacks.Count != 0) { SubmitRecorded(); CompleteSubmission(); }
-        _entries.Remove(rid); entry.Handle?.Dispose(); entry.FragmentHandle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose();
+        _entries.Remove(rid); ReleaseProgram(entry.Variant); entry.Handle?.Dispose(); entry.FragmentHandle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose();
         DeliverReadbacks();
     }
     /// <inheritdoc />
@@ -389,7 +405,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (_drawPass != 0) { SDL.EndGPURenderPass(_drawPass); _drawPass = 0; }
             if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
-            foreach (var e in _entries.Values) { e.Handle?.Dispose(); e.FragmentHandle?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); }
+            foreach (var e in _entries.Values) { ReleaseProgram(e.Variant); e.Handle?.Dispose(); e.FragmentHandle?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); }
             _entries.Clear(); _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _activeList = 0; CancelReadbacks(); _context.Dispose();
         }
         base.Dispose(disposing);

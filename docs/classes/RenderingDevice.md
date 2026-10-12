@@ -52,7 +52,7 @@ byte[] result = device.BufferGetData(buffer);
 | `public System.Void ComputeListDispatchIndirect(System.Int64 computeList, Electron2D.RID buffer, System.UInt32 offset)` | Reads X/Y/Z group counts from a storage buffer created for indirect dispatch. |
 | [`public System.Void ComputeListSetPushConstant(System.Int64 computeList, System.ReadOnlySpan<System.Byte> buffer, System.UInt32 sizeBytes)`](#member-330889262253) | Copies binary push data for subsequent dispatches in the selected compute pipeline. |
 | `public System.Void ComputeListEnd()` | Ends the active list without submitting it. |
-| `public Electron2D.RID ComputePipelineCreate(Electron2D.RID shader)` | Creates an executable pipeline borrowing a live compute shader. |
+| [`public Electron2D.RID ComputePipelineCreate(Electron2D.RID shader, System.ReadOnlySpan<Electron2D.RDPipelineSpecializationConstant> specializationConstants = default)`](#member-d98c9dd7346a) | Creates an executable compute pipeline with copied typed specialization values. |
 | `public System.Boolean ComputePipelineIsValid(Electron2D.RID pipeline)` | Reports whether a pipeline and its shader remain alive. |
 | `protected override System.Void Dispose(System.Boolean disposing)` | Overrides the inherited typed lifetime, property-metadata or Resource-copy hook. |
 | `public System.Void FreeRID(Electron2D.RID rid)` | Frees a resource after completing pending work. |
@@ -207,19 +207,24 @@ public System.Void ComputeListEnd()
 
 Ends the active list without submitting it.
 
-<a id="member-7a5a76a8573d"></a>
-### ComputePipelineCreate(Electron2D.RID)
+<a id="member-d98c9dd7346a"></a>
+### ComputePipelineCreate(Electron2D.RID, System.ReadOnlySpan<Electron2D.RDPipelineSpecializationConstant>)
 
 ```csharp
-public Electron2D.RID ComputePipelineCreate(Electron2D.RID shader)
+public Electron2D.RID ComputePipelineCreate(Electron2D.RID shader, System.ReadOnlySpan<Electron2D.RDPipelineSpecializationConstant> specializationConstants = default)
 ```
 
-Creates an executable pipeline borrowing a live compute shader.
+Creates an executable compute pipeline with copied typed specialization values.
 
-A pipeline identity invalidated when its shader is freed.
+A pipeline borrowing the shader identity and owning any specialized native program.
 
-`shader`: A shader on this device.
+| Parameter | Contract |
+| --- | --- |
+| `shader` | A live compute shader on this device. |
+| `specializationConstants` | Distinct declared scalar identifiers and typed values; omitted values keep module defaults. |
 
+- `T:System.ArgumentException`: An identifier/type is invalid or the resulting module/layout is invalid.
+- `T:System.NotSupportedException`: A specialized shader capability exceeds the native profile.
 <a id="member-a0c6f69b98c1"></a>
 ### ComputePipelineIsValid(Electron2D.RID)
 
@@ -656,7 +661,7 @@ The [graphics component contract](../components/local-compute.md#color-graphics-
 | `public System.Boolean FramebufferIsValid(Electron2D.RID framebuffer)` | Reports whether a framebuffer and all its borrowed attachments remain alive. |
 | `public Electron2D.RID IndexArrayCreate(Electron2D.RID indexBuffer, System.UInt32 indexOffset, System.UInt32 indexCount)` | Creates a borrowed index range. |
 | `public Electron2D.RID IndexBufferCreate(System.UInt32 sizeIndices, Electron2D.RenderingDevice.IndexBufferFormat format, System.ReadOnlySpan<System.Byte> data = default, System.Boolean useRestartIndices = false, Electron2D.RenderingDevice.BufferCreationBits creationBits = 0)` | Creates a copied unsigned index buffer. |
-| [`public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0, Electron2D.RDPipelineDepthStencilState depthStencilState = null, Electron2D.RDPipelineMultisampleState multisampleState = null)`](#member-b08d32b0a035) | Creates an executable color and depth/stencil graphics pipeline with copied multisample state. |
+| [`public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0, Electron2D.RDPipelineDepthStencilState depthStencilState = null, Electron2D.RDPipelineMultisampleState multisampleState = null, System.ReadOnlySpan<Electron2D.RDPipelineSpecializationConstant> specializationConstants = default)`](#member-997ab2bef274) | Creates an executable color and depth/stencil graphics pipeline with copied multisample state. |
 | `public System.Boolean RenderPipelineIsValid(Electron2D.RID renderPipeline)` | Reports whether a graphics pipeline and its borrowed shader are alive. |
 | `public System.UInt64 ShaderGetVertexInputAttributeMask(Electron2D.RID shader)` | Returns the mask of vertex input locations declared by a graphics shader. |
 | `public Electron2D.RID VertexArrayCreate(System.UInt32 vertexCount, System.Int32 vertexFormat, System.ReadOnlySpan<Electron2D.RID> sourceBuffers, System.ReadOnlySpan<System.UInt32> offsets = default)` | Creates a borrowed vertex-buffer array. |
@@ -1002,18 +1007,18 @@ A device-owned index buffer identity.
 `creationBits`: Optional storage role.
 
 
-<a id="member-b08d32b0a035"></a>
-### RenderPipelineCreate(Electron2D.RID, System.Int32, System.Int32, Electron2D.RenderingDevice.RenderPrimitive, Electron2D.RDPipelineRasterizationState, Electron2D.RDPipelineColorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags, Electron2D.RDPipelineDepthStencilState, Electron2D.RDPipelineMultisampleState)
+<a id="member-997ab2bef274"></a>
+### RenderPipelineCreate(Electron2D.RID, System.Int32, System.Int32, Electron2D.RenderingDevice.RenderPrimitive, Electron2D.RDPipelineRasterizationState, Electron2D.RDPipelineColorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags, Electron2D.RDPipelineDepthStencilState, Electron2D.RDPipelineMultisampleState, System.ReadOnlySpan<Electron2D.RDPipelineSpecializationConstant>)
 
 ```csharp
-public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0, Electron2D.RDPipelineDepthStencilState depthStencilState = null, Electron2D.RDPipelineMultisampleState multisampleState = null)
+public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0, Electron2D.RDPipelineDepthStencilState depthStencilState = null, Electron2D.RDPipelineMultisampleState multisampleState = null, System.ReadOnlySpan<Electron2D.RDPipelineSpecializationConstant> specializationConstants = default)
 ```
 
 Creates an executable color and depth/stencil graphics pipeline with copied multisample state.
 
-Depth-bounds tests, sample shading, subpasses and pipeline specialization require additional attachment and shader interfaces.
+Depth-bounds tests, sample shading, subpasses require their additional attachment interfaces. Typed specialization freezes constants before native creation.
 
-A pipeline borrowing the shader identity.
+A pipeline borrowing the shader identity and owning specialized native stages when needed.
 
 | Parameter | Contract |
 | --- | --- |
@@ -1026,6 +1031,7 @@ A pipeline borrowing the shader identity.
 | `dynamicStateFlags` | Allows dynamic blend constants; other dynamic states require their native adapters. |
 | `depthStencilState` | Copied depth/stencil configuration; null disables both tests and depth writes. |
 | `multisampleState` | Copied sample count and alpha-to-coverage state; null selects one sample. |
+| `specializationConstants` | Copied scalar overrides shared by the paired stages; omitted values retain defaults. |
 
 - `T:System.ArgumentException`: Shader interfaces, layouts or configurations disagree.
 <a id="member-3196828dde59"></a>
@@ -1216,3 +1222,7 @@ Both stages consume the same source bytes through their own original SPIR-V layo
 ## Binary push recording
 
 [Binary push parameters](../components/local-compute.md#binary-push-parameters) preserve original 32-bit compact layouts through a private uniform block, including arrays, matrix orientation and nested structs. Select a pipeline, copy its exact reflected block size (at most 128 bytes), then issue draw/dispatch work. Pipeline changes and new lists require another setter. Source span mutation and later setters cannot replace prior recorded snapshots. Push storage uses one of four native uniform slots per used stage; logical RDUniform bindings stay independent. Wider precision and pointer address/arithmetic require their native shader adapters. See [the executable consumer](../../tests/Electron2D.Tests/RenderingDevicePushTests.cs) for paired language data, real pixels and verified allocation limits.
+
+## Pipeline specialization
+
+[Typed scalar descriptions](RDPipelineSpecializationConstant.Generic.md) select independent executable compute/graphics variants while preserving the source shader identity and public uniform sets. Values resolve before native workgroup/layout validation and push translation; pipelines copy descriptions and own private native programs. See [the complete specialization contract](../components/local-compute.md#typed-pipeline-specialization) for defaults, identifier/type checks, specialized array sizes, lifetime and native verification.

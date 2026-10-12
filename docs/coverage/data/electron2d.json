@@ -8293,6 +8293,36 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RDPipelineSpecializationConstant",
+    "kind": "type",
+    "declaringType": "Electron2D.RDPipelineSpecializationConstant",
+    "name": "RDPipelineSpecializationConstant",
+    "signature": "public abstract class Electron2D.RDPipelineSpecializationConstant",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RDPipelineSpecializationConstant\u003CT\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.RDPipelineSpecializationConstant\u003CT\u003E",
+    "name": "RDPipelineSpecializationConstant\u00601",
+    "signature": "public sealed class Electron2D.RDPipelineSpecializationConstant\u003CT\u003E",
+    "visibility": "public",
+    "baseType": "Electron2D.RDPipelineSpecializationConstant",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RDSamplerState",
     "kind": "type",
     "declaringType": "Electron2D.RDSamplerState",
@@ -19308,6 +19338,32 @@
     "declaringType": "Electron2D.RDPipelineRasterizationState",
     "name": ".ctor",
     "signature": "public RDPipelineRasterizationState()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RDPipelineSpecializationConstant..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RDPipelineSpecializationConstant",
+    "name": ".ctor",
+    "signature": "protected RDPipelineSpecializationConstant()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RDPipelineSpecializationConstant\u003CT\u003E..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RDPipelineSpecializationConstant\u003CT\u003E",
+    "name": ".ctor",
+    "signature": "public RDPipelineSpecializationConstant()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -135342,6 +135398,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RDPipelineSpecializationConstant.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RDPipelineSpecializationConstant",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RDPipelineSpecializationConstant\u003CT\u003E.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RDPipelineSpecializationConstant\u003CT\u003E",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RDSamplerState.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.RDSamplerState",
@@ -138221,11 +138303,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RenderingDevice.ComputePipelineCreate(Electron2D.RID)",
+    "id": "method:Electron2D.RenderingDevice.ComputePipelineCreate(Electron2D.RID,System.ReadOnlySpan\u003CElectron2D.RDPipelineSpecializationConstant\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
     "name": "ComputePipelineCreate",
-    "signature": "public Electron2D.RID ComputePipelineCreate(Electron2D.RID shader)",
+    "signature": "public Electron2D.RID ComputePipelineCreate(Electron2D.RID shader, System.ReadOnlySpan\u003CElectron2D.RDPipelineSpecializationConstant\u003E specializationConstants = default)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -138234,6 +138316,11 @@
         "name": "shader",
         "type": "Electron2D.RID",
         "default": null
+      },
+      {
+        "name": "specializationConstants",
+        "type": "System.ReadOnlySpan\u003CElectron2D.RDPipelineSpecializationConstant\u003E",
+        "default": "default"
       }
     ],
     "returnType": "Electron2D.RID",
@@ -138907,11 +138994,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RenderingDevice.RenderPipelineCreate(Electron2D.RID,System.Int32,System.Int32,Electron2D.RenderingDevice.RenderPrimitive,Electron2D.RDPipelineRasterizationState,Electron2D.RDPipelineColorBlendState,Electron2D.RenderingDevice.PipelineDynamicStateFlags,Electron2D.RDPipelineDepthStencilState,Electron2D.RDPipelineMultisampleState)",
+    "id": "method:Electron2D.RenderingDevice.RenderPipelineCreate(Electron2D.RID,System.Int32,System.Int32,Electron2D.RenderingDevice.RenderPrimitive,Electron2D.RDPipelineRasterizationState,Electron2D.RDPipelineColorBlendState,Electron2D.RenderingDevice.PipelineDynamicStateFlags,Electron2D.RDPipelineDepthStencilState,Electron2D.RDPipelineMultisampleState,System.ReadOnlySpan\u003CElectron2D.RDPipelineSpecializationConstant\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
     "name": "RenderPipelineCreate",
-    "signature": "public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0, Electron2D.RDPipelineDepthStencilState depthStencilState = null, Electron2D.RDPipelineMultisampleState multisampleState = null)",
+    "signature": "public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0, Electron2D.RDPipelineDepthStencilState depthStencilState = null, Electron2D.RDPipelineMultisampleState multisampleState = null, System.ReadOnlySpan\u003CElectron2D.RDPipelineSpecializationConstant\u003E specializationConstants = default)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -138960,6 +139047,11 @@
         "name": "multisampleState",
         "type": "Electron2D.RDPipelineMultisampleState",
         "default": "null"
+      },
+      {
+        "name": "specializationConstants",
+        "type": "System.ReadOnlySpan\u003CElectron2D.RDPipelineSpecializationConstant\u003E",
+        "default": "default"
       }
     ],
     "returnType": "Electron2D.RID",
@@ -215107,6 +215199,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineSpecializationConstant.ConstantID()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineSpecializationConstant",
+    "name": "ConstantID",
+    "signature": "public System.Int32 ConstantID { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineSpecializationConstant\u003CT\u003E.Value()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineSpecializationConstant\u003CT\u003E",
+    "name": "Value",
+    "signature": "public Nullable\u003CT\u003E Value { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Nullable\u003CT\u003E",
     "value": null
   },
   {

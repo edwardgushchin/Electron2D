@@ -289,6 +289,7 @@ public sealed partial class ThemeDB
         ["RDPipelineDepthStencilState"] = ["RDPipelineDepthStencilState", "ElectronObject"],
         ["RDPipelineMultisampleState"] = ["RDPipelineMultisampleState", "ElectronObject"],
         ["RDPipelineRasterizationState"] = ["RDPipelineRasterizationState", "ElectronObject"],
+        ["RDPipelineSpecializationConstant"] = ["RDPipelineSpecializationConstant", "ElectronObject"],
         ["RDSamplerState"] = ["RDSamplerState", "ElectronObject"],
         ["RDShaderSPIRV"] = ["RDShaderSPIRV", "Resource", "ElectronObject"],
         ["RDTextureFormat"] = ["RDTextureFormat", "ElectronObject"],

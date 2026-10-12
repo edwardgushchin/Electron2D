@@ -5,11 +5,12 @@ namespace Electron2D;
 public sealed unsafe partial class RenderingDevice
 {
     private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0, ShaderStage Stage = ShaderStage.Compute, uint MinimumSize = 0, bool Depth = false);
-    private static (byte[] Code, Binding[] Layout, PushStage[] Push) Remap(byte[] code, ShaderStage stage = ShaderStage.Compute)
+    private static (byte[] Code, Binding[] Layout, PushStage[] Push) Remap(byte[] code, ShaderStage stage = ShaderStage.Compute) => RemapCore(code, stage, false);
+    private static (byte[] Code, Binding[] Layout, PushStage[] Push) RemapCore(byte[] code, ShaderStage stage, bool template)
     {
         if (code.Length < 20 || code.Length > 16 * 1024 * 1024 || code.Length % 4 != 0) throw new ArgumentException("A compute module must contain aligned SPIR-V words.", nameof(code));
         (byte[] Code, uint Variable, uint Size) translated;
-        try { translated = new PushLowering(code).Translate(); }
+        try { translated = template ? (code, 0u, 0u) : new PushLowering(code).Translate(); }
         catch (OverflowException error) { throw new ArgumentException("The push layout exceeds module bounds.", nameof(code), error); }
         code = translated.Code;
         var push = translated.Variable == 0 ? null : new PushStage(translated.Variable, translated.Size, stage);
@@ -35,8 +36,9 @@ public sealed unsafe partial class RenderingDevice
                     if (entry || size < 5 || words[i + 1] != model || words[i + 3] != 0x6e69616d || words[i + 4] != 0) throw new NotSupportedException("One entry point named main matching the requested stage is required.");
                     entry = true; break;
                 case 16 when compute && size >= 3 && words[i + 2] == 17:
-                    if (size != 6 || words[i + 3] is 0 or > 1024 || words[i + 4] is 0 or > 1024 || words[i + 5] is 0 or > 1024 || (ulong)words[i + 3] * words[i + 4] * words[i + 5] > 1024) throw new ArgumentException("Invalid compute workgroup dimensions.", nameof(code));
+                    if (size != 6 || !template && (words[i + 3] is 0 or > 1024 || words[i + 4] is 0 or > 1024 || words[i + 5] is 0 or > 1024 || (ulong)words[i + 3] * words[i + 4] * words[i + 5] > 1024)) throw new ArgumentException("Invalid compute workgroup dimensions.", nameof(code));
                     localSize = true; break;
+                case 331 when template && compute && size == 6 && words[i + 2] == 38: localSize = true; break;
                 case 21 when size == 4:
                     if (words[i + 2] == 32 && words[i + 3] <= 1) scalars.Add(words[i + 1], words[i + 3] == 1 ? 1 : 2);
                     break;
@@ -66,13 +68,13 @@ public sealed unsafe partial class RenderingDevice
         }
         foreach (var pair in readonlyMembers) if (members.TryGetValue(pair.Key, out var count) && pair.Value.Count == count && pair.Value.All(m => m < count)) readOnly.Add(pair.Key);
         if (!entry || compute && !localSize) throw new ArgumentException("Missing compute entry point or static workgroup dimensions.", nameof(code));
-        var minimumSizes = SpirvReflection.DeviceUniformSizes(code);
+        var minimumSizes = template ? [] : SpirvReflection.DeviceUniformSizes(code);
         var logical = new Dictionary<uint, (uint Set, int Slot)>();
         foreach (var v in variables) if (sets.TryGetValue(v.ID, out var ds) && slots.TryGetValue(v.ID, out var bs)) logical[v.ID] = (words[ds], checked((int)words[bs]));
         var layout = new List<Binding>(); var storage = 0; var uniform = 0; var imageSlot = 0; var textureSlot = 0;
         foreach (var variable in variables)
         {
-            if (variable.Storage == 9) throw new ArgumentException("Untranslated push storage remains in the module.", nameof(code));
+            if (variable.Storage == 9) { if (template) continue; throw new ArgumentException("Untranslated push storage remains in the module.", nameof(code)); }
             if (variable.Storage == 0)
             {
                 if (!sets.TryGetValue(variable.ID, out var imageSet) || !slots.TryGetValue(variable.ID, out var imageBinding) || !pointers.TryGetValue(variable.Type, out var imageType)) throw new ArgumentException("An image has no descriptor layout.", nameof(code));

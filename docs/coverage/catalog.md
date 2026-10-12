@@ -678,7 +678,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RDPipelineMultisampleState](classes/RDPipelineMultisampleState.md) | RefCounted | Partial | 6 |
 | [RDPipelineRasterizationState](classes/RDPipelineRasterizationState.md) | RefCounted | Partial | 11 |
 | [RDPipelineShader](classes/RDPipelineShader.md) | RefCounted | Blocked | 2 |
-| [RDPipelineSpecializationConstant](classes/RDPipelineSpecializationConstant.md) | RefCounted | Blocked | 2 |
+| [RDPipelineSpecializationConstant](classes/RDPipelineSpecializationConstant.md) | RefCounted | Implemented | 2 |
 | [RDSamplerState](classes/RDSamplerState.md) | RefCounted | Partial | 15 |
 | [RDShaderFile](classes/RDShaderFile.md) | Resource | Blocked | 4 |
 | [RDShaderSPIRV](classes/RDShaderSPIRV.md) | Resource | Partial | 24 |
