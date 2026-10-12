@@ -1,6 +1,6 @@
 # Scene domain
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 ## Tile grid and terrain integration
 
@@ -262,3 +262,5 @@ The executable [multiline editing component](../components/multiline-editing.md)
 [Atlas frame animation and padding](../components/tiles.md#atlas-frame-animation-and-padding) provide complete frame reservations/configuration, source-owned transient padded textures and retained timed TileMapLayer drawing. Physics/navigation geometry remains independent of visual frames.
 
 [Scene collection tiles](../components/tiles.md#scene-collections) retain shared PackedScene graphs and compiled factory root validation, with deferred ordinary child placement and explicit editor/physics prerequisites.
+
+Window content policies now execute logical-size fitting, raster target selection and presentation through both native canvas backends, including embedded input and automatic glyph raster scale. [Window](../classes/Window.md#content-scale) records state and verification limits.

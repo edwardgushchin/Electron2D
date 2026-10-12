@@ -191,8 +191,15 @@ public partial class Window
                 if (window.GetThemeFont("title_font", "Window") is { } font) DrawString(font, title.Position + new Vector2(8, titleHeight - 10), window.Title, width: MathF.Max(0, rect.Size.X - 40), fontSize: window.GetThemeFontSize("title_font_size", "Window"), modulate: window.GetThemeColor("title_color", "Window"));
                 var close = title.Position + new Vector2(title.Size.X - 18, 18); DrawLine(close - new Vector2(4, 4), close + new Vector2(4, 4), Colors.White, 2); DrawLine(close + new Vector2(-4, 4), close + new Vector2(4, -4), Colors.White, 2);
             }
-            if (!window.Transparent) DrawRect(rect, RenderingServer.GetDefaultClearColor() with { A = 1 });
-            DrawTextureRect(window.GetTexture(), rect, false);
+            if (!window.Transparent) DrawRect(rect, Colors.Black);
+            var fitted = window.ContentLayout.ScreenRect;
+            var destination = new Rect2(fitted.Position, fitted.Size).Intersection(new Rect2(Vector2.Zero, window.Size));
+            if (destination.HasArea())
+            {
+                var texture = window.GetTexture(); var dimensions = texture.GetSize();
+                var source = new Rect2((destination.Position - (Vector2)fitted.Position) / (Vector2)fitted.Size * dimensions, destination.Size / (Vector2)fitted.Size * dimensions);
+                DrawTextureRectRegion(texture, new(rect.Position + destination.Position, destination.Size), source, clipUV: false);
+            }
         }
     }
     private static readonly PropertyDescriptor[] PopupProperties =

@@ -4,7 +4,7 @@ public abstract partial class Viewport
 {
     internal Transform GetCanvasRenderTransform(CanvasLayer? layer, float interpolationFraction = 1f)
     {
-        var result = GetFinalTransform();
+        var result = RenderFinalTransform;
         var cameraTransform = GetInterpolatedCanvasTransform(interpolationFraction);
         var size = GetVisibleRect().Size;
         var snapOffset = new Vector2(size.X % 2 == 0 ? -0.5f : 0, size.Y % 2 == 0 ? -0.5f : 0);
@@ -20,7 +20,7 @@ public abstract partial class Viewport
         result *= local;
         if (followScale != 1)
         {
-            var pivot = size * 0.5f;
+            var pivot = (this is Window window ? (Vector2)window.ContentLayout.TargetSize : this is SubViewport sub ? sub.Size : size) * 0.5f;
             result = new Transform(0, pivot) * new Transform(0, Vector2.One * followScale, 0, Vector2.Zero) * new Transform(0, -pivot) * result;
         }
         if (!result.IsFinite()) throw new InvalidOperationException("Canvas rendering transform overflowed finite coordinates.");

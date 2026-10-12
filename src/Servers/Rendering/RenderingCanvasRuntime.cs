@@ -17,7 +17,7 @@ internal sealed class RenderingCanvasRuntime
     {
         var rid = viewport.GetViewportRID(); Attachments.TryGetValue(rid, out var attachment); var sceneLayer = Layer is not null && Layer.TryGetTarget(out var l) && !l.IsDisposed ? l : null;
         var primary = sceneLayer is not null ? ReferenceEquals(sceneLayer.CanvasViewport, viewport) : World is not null && World.TryGetTarget(out var world) ? ReferenceEquals(viewport.FindWorld()?.Runtime, world) : false;
-        transform = attachment?.Transform is { } custom ? viewport.GetFinalTransform() * custom : (primary ? viewport.GetCanvasRenderTransform(sceneLayer, fraction) : viewport.GetFinalTransform());
+        transform = attachment?.Transform is { } custom ? viewport.RenderFinalTransform * custom : (primary ? viewport.GetCanvasRenderTransform(sceneLayer, fraction) : viewport.RenderFinalTransform);
         layer = attachment?.Layer ?? (primary ? sceneLayer?.Layer ?? 0 : 0); sublayer = attachment?.Sublayer ?? (primary ? sceneLayer?.GetIndex(includeInternal: true) ?? 0 : 0);
         return Alive && (attachment?.Attached ?? primary);
     }

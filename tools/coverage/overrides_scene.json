@@ -5273,6 +5273,96 @@
       "godot": "ProjectSettings::property:internationalization/rendering/force_right_to_left_layout_direction",
       "electron2d": "property:Electron2D.ProjectSettings.ForceRightToLeftLayoutDirection()",
       "reason": "Typed permanent project policy sampled with feature overrides before SceneTree entry; Window and Control share the same domain-aware resolution."
+    },
+    {
+      "godot": "Window::enum:ContentScaleMode",
+      "electron2d": "T:Electron2D.ContentScaleMode",
+      "reason": "Namespace-level enum preserves the complete window content value domain under ADR 0051."
+    },
+    {
+      "godot": "Window::enum_value:ContentScaleMode.CONTENT_SCALE_MODE_DISABLED",
+      "electron2d": "enumValue:Electron2D.ContentScaleMode.Disabled()",
+      "reason": "Executable content rasterization/fitting policy preserves numeric identity."
+    },
+    {
+      "godot": "Window::enum_value:ContentScaleMode.CONTENT_SCALE_MODE_CANVAS_ITEMS",
+      "electron2d": "enumValue:Electron2D.ContentScaleMode.CanvasItems()",
+      "reason": "Executable content rasterization/fitting policy preserves numeric identity."
+    },
+    {
+      "godot": "Window::enum_value:ContentScaleMode.CONTENT_SCALE_MODE_VIEWPORT",
+      "electron2d": "enumValue:Electron2D.ContentScaleMode.Viewport()",
+      "reason": "Executable content rasterization/fitting policy preserves numeric identity."
+    },
+    {
+      "godot": "Window::enum:ContentScaleAspect",
+      "electron2d": "T:Electron2D.ContentScaleAspect",
+      "reason": "Namespace-level enum preserves the complete window content value domain under ADR 0051."
+    },
+    {
+      "godot": "Window::enum_value:ContentScaleAspect.CONTENT_SCALE_ASPECT_IGNORE",
+      "electron2d": "enumValue:Electron2D.ContentScaleAspect.Ignore()",
+      "reason": "Executable content rasterization/fitting policy preserves numeric identity."
+    },
+    {
+      "godot": "Window::enum_value:ContentScaleAspect.CONTENT_SCALE_ASPECT_KEEP",
+      "electron2d": "enumValue:Electron2D.ContentScaleAspect.Keep()",
+      "reason": "Executable content rasterization/fitting policy preserves numeric identity."
+    },
+    {
+      "godot": "Window::enum_value:ContentScaleAspect.CONTENT_SCALE_ASPECT_KEEP_WIDTH",
+      "electron2d": "enumValue:Electron2D.ContentScaleAspect.KeepWidth()",
+      "reason": "Executable content rasterization/fitting policy preserves numeric identity."
+    },
+    {
+      "godot": "Window::enum_value:ContentScaleAspect.CONTENT_SCALE_ASPECT_KEEP_HEIGHT",
+      "electron2d": "enumValue:Electron2D.ContentScaleAspect.KeepHeight()",
+      "reason": "Executable content rasterization/fitting policy preserves numeric identity."
+    },
+    {
+      "godot": "Window::enum_value:ContentScaleAspect.CONTENT_SCALE_ASPECT_EXPAND",
+      "electron2d": "enumValue:Electron2D.ContentScaleAspect.Expand()",
+      "reason": "Executable content rasterization/fitting policy preserves numeric identity."
+    },
+    {
+      "godot": "Window::enum:ContentScaleStretch",
+      "electron2d": "T:Electron2D.ContentScaleStretch",
+      "reason": "Namespace-level enum preserves the complete window content value domain under ADR 0051."
+    },
+    {
+      "godot": "Window::enum_value:ContentScaleStretch.CONTENT_SCALE_STRETCH_FRACTIONAL",
+      "electron2d": "enumValue:Electron2D.ContentScaleStretch.Fractional()",
+      "reason": "Executable content rasterization/fitting policy preserves numeric identity."
+    },
+    {
+      "godot": "Window::enum_value:ContentScaleStretch.CONTENT_SCALE_STRETCH_INTEGER",
+      "electron2d": "enumValue:Electron2D.ContentScaleStretch.Integer()",
+      "reason": "Executable content rasterization/fitting policy preserves numeric identity."
+    },
+    {
+      "godot": "Window::property:content_scale_size",
+      "electron2d": "property:Electron2D.Window.ContentScaleSize()",
+      "reason": "Executable content policy is stored by typed scene descriptors and shared by rendering, texture dimensions, layout, input and text rasterization."
+    },
+    {
+      "godot": "Window::property:content_scale_factor",
+      "electron2d": "property:Electron2D.Window.ContentScaleFactor()",
+      "reason": "Executable content policy is stored by typed scene descriptors and shared by rendering, texture dimensions, layout, input and text rasterization."
+    },
+    {
+      "godot": "Window::property:content_scale_mode",
+      "electron2d": "property:Electron2D.Window.ContentScaleMode()",
+      "reason": "Executable content policy is stored by typed scene descriptors and shared by rendering, texture dimensions, layout, input and text rasterization."
+    },
+    {
+      "godot": "Window::property:content_scale_aspect",
+      "electron2d": "property:Electron2D.Window.ContentScaleAspect()",
+      "reason": "Executable content policy is stored by typed scene descriptors and shared by rendering, texture dimensions, layout, input and text rasterization."
+    },
+    {
+      "godot": "Window::property:content_scale_stretch",
+      "electron2d": "property:Electron2D.Window.ContentScaleStretch()",
+      "reason": "Executable content policy is stored by typed scene descriptors and shared by rendering, texture dimensions, layout, input and text rasterization."
     }
   ],
   "extras": [
@@ -9441,9 +9531,6 @@
       "reason": "Next Window native-control projection and platform capability audit over the existing DisplayServer, including modes, flags, IME, native notifications and geometry (ADR 0040).",
       "godot": [
         "Window::constant:NOTIFICATION_VISIBILITY_CHANGED",
-        "Window::enum:ContentScaleAspect",
-        "Window::enum:ContentScaleMode",
-        "Window::enum:ContentScaleStretch",
         "Window::enum:WindowInitialPosition",
         "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_ABSOLUTE",
         "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN",
@@ -9481,23 +9568,8 @@
       "state": "Blocked",
       "reason": "First rendered Window viewport, presentation and content-scaling slice; HDR requires a separate capability audit (ADR 0028).",
       "godot": [
-        "Window::enum_value:ContentScaleAspect.CONTENT_SCALE_ASPECT_EXPAND",
-        "Window::enum_value:ContentScaleAspect.CONTENT_SCALE_ASPECT_IGNORE",
-        "Window::enum_value:ContentScaleAspect.CONTENT_SCALE_ASPECT_KEEP",
-        "Window::enum_value:ContentScaleAspect.CONTENT_SCALE_ASPECT_KEEP_HEIGHT",
-        "Window::enum_value:ContentScaleAspect.CONTENT_SCALE_ASPECT_KEEP_WIDTH",
-        "Window::enum_value:ContentScaleMode.CONTENT_SCALE_MODE_CANVAS_ITEMS",
-        "Window::enum_value:ContentScaleMode.CONTENT_SCALE_MODE_DISABLED",
-        "Window::enum_value:ContentScaleMode.CONTENT_SCALE_MODE_VIEWPORT",
-        "Window::enum_value:ContentScaleStretch.CONTENT_SCALE_STRETCH_FRACTIONAL",
-        "Window::enum_value:ContentScaleStretch.CONTENT_SCALE_STRETCH_INTEGER",
         "Window::method:can_draw()",
         "Window::method:get_output_max_linear_value()",
-        "Window::property:content_scale_aspect",
-        "Window::property:content_scale_factor",
-        "Window::property:content_scale_mode",
-        "Window::property:content_scale_size",
-        "Window::property:content_scale_stretch",
         "Window::property:hdr_output_requested",
         "Window::signal:output_max_linear_value_changed(float:)"
       ]
@@ -10717,6 +10789,30 @@
       ],
       "state": "Excluded",
       "reason": "Pinned doc/classes/Control.xml enum_value deprecated metadata: Use [constant LAYOUT_DIRECTION_APPLICATION_LOCALE] instead. ADR 0004 excludes deprecated public mirrors; numeric 1 remains ApplicationLocale. No implementation trigger."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "Window::enum:ContentScaleMode",
+        "Window::enum_value:ContentScaleMode.CONTENT_SCALE_MODE_DISABLED",
+        "Window::enum_value:ContentScaleMode.CONTENT_SCALE_MODE_CANVAS_ITEMS",
+        "Window::enum_value:ContentScaleMode.CONTENT_SCALE_MODE_VIEWPORT",
+        "Window::enum:ContentScaleAspect",
+        "Window::enum_value:ContentScaleAspect.CONTENT_SCALE_ASPECT_IGNORE",
+        "Window::enum_value:ContentScaleAspect.CONTENT_SCALE_ASPECT_KEEP",
+        "Window::enum_value:ContentScaleAspect.CONTENT_SCALE_ASPECT_KEEP_WIDTH",
+        "Window::enum_value:ContentScaleAspect.CONTENT_SCALE_ASPECT_KEEP_HEIGHT",
+        "Window::enum_value:ContentScaleAspect.CONTENT_SCALE_ASPECT_EXPAND",
+        "Window::enum:ContentScaleStretch",
+        "Window::enum_value:ContentScaleStretch.CONTENT_SCALE_STRETCH_FRACTIONAL",
+        "Window::enum_value:ContentScaleStretch.CONTENT_SCALE_STRETCH_INTEGER",
+        "Window::property:content_scale_size",
+        "Window::property:content_scale_factor",
+        "Window::property:content_scale_mode",
+        "Window::property:content_scale_aspect",
+        "Window::property:content_scale_stretch"
+      ],
+      "reason": "WindowContentScaleTests verifies all three raster modes, five aspects, fractional/integer fitting, factor flooring, small/zero content, validation rollback, scene packing, observer commit semantics, owner/disposal, logical input and zero warmed query allocations. WindowContentScaleNativeTests verifies real content/presentation pixels, different target resolutions, embedded target density/input and warmed active/idle frames on Linux Wayland GPU/compatibility. Rendering resources retain their existing explicit native dimension limits. Other targets and owner visual acceptance remain unverified."
     }
   ]
 }

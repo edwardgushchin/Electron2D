@@ -171,7 +171,7 @@ internal sealed partial class FontData : IDisposable
     private NativeTextDirection _direction;
     internal FontGlyph GetGlyph(uint glyph, int fontSize, int outline, float oversampling) =>
         GetGlyph(glyph, fontSize, outline, oversampling, Vector2.Zero, out _);
-    internal FontGlyph GetGlyph(uint glyph, int fontSize, int outline, float oversampling, Vector2 position, out Vector2 rasterPosition)
+    internal FontGlyph GetGlyph(uint glyph, int fontSize, int outline, float oversampling, Vector2 position, out Vector2 rasterPosition, float automaticOversampling = 1)
     {
         ValidateSize(fontSize);
         if (!float.IsFinite(oversampling)) throw new ArgumentOutOfRangeException(nameof(oversampling));
@@ -181,7 +181,7 @@ internal sealed partial class FontData : IDisposable
             Check();
             if (TryAuthoredGlyph(glyph, fontSize, outline, out var authoredGlyph)) { rasterPosition = position; return authoredGlyph; }
             if (_bytes.Length == 0) { rasterPosition = position; return default; }
-            var requested = oversampling > 0 ? oversampling : Oversampling > 0 ? Oversampling : 1;
+            var requested = oversampling > 0 ? oversampling : Oversampling > 0 ? Oversampling : automaticOversampling;
             var factor = (int)(Math.Clamp(requested, .1f, 100f) * 64) / 64f;
             var border = Math.Max(0, outline);
             if (fontSize * (double)factor > 16384 || border * (double)factor > 16384)

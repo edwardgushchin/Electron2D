@@ -16,6 +16,29 @@ internal readonly record struct CanvasBatch(int First, int Count, MaterialState?
 
 internal abstract class CanvasBackend : IDisposable
 {
+    internal Rect2i PresentationRect;
+    private CanvasRenderTarget? _presentation;
+    private bool _usesPresentation;
+    protected CanvasRenderTarget? PreparePresentation(CanvasRenderTarget content)
+    {
+        // Native blit regions must fit their backing texture; crop the completed client region afterwards.
+        var client = GetPixelSize(); var size = client.Max(PresentationRect.End);
+        _usesPresentation = content.Size != client || PresentationRect != new Rect2i(Vector2i.Zero, client);
+        if (!_usesPresentation) return null;
+        if (size.X is < 1 or > 16384 || size.Y is < 1 or > 16384) throw new NotSupportedException("Fitted presentation targets require 1..16384 pixels per axis on this backend profile.");
+        if (_presentation?.Size == size) return _presentation;
+        var current = CreateTarget(size, Colors.Black); RenderHandle next;
+        try { next = CreateTarget(size, Colors.Black); } catch { current.Dispose(); throw; }
+        var replacement = new CanvasRenderTarget(current, next, size);
+        _presentation?.Dispose(); return _presentation = replacement;
+    }
+    internal Image ReadbackScreen(CanvasRenderTarget content)
+    {
+        var target = _usesPresentation && _presentation is { HasFrame: true } ? _presentation : content;
+        var image = Readback(target); var client = GetPixelSize();
+        if (image.Size == client) return image;
+        try { return image.GetRegion(new Rect2i(Vector2i.Zero, client)); } finally { image.Dispose(); }
+    }
     internal abstract DisplayServer.VSyncMode VSync { get; }
     internal abstract void SetVSync(DisplayServer.VSyncMode mode);
     internal abstract string Method { get; }
@@ -39,7 +62,7 @@ internal abstract class CanvasBackend : IDisposable
     }
     internal CanvasRenderTarget? FindTarget(Viewport viewport) => _targets.GetValueOrDefault(viewport);
     internal void ReleaseTarget(Viewport viewport) { if (_targets.Remove(viewport, out var target)) target.Dispose(); }
-    protected void ReleaseTargets() { foreach (var target in _targets.Values) target.Dispose(); _targets.Clear(); }
+    protected void ReleaseTargets() { foreach (var target in _targets.Values) target.Dispose(); _targets.Clear(); _presentation?.Dispose(); _presentation = null; }
     internal virtual void SetWindowVisible(DisplayServer display, bool visible) => display.SetWindowVisible(visible);
     internal virtual void BeginFrame() { }
     internal virtual void EndFrame() { }

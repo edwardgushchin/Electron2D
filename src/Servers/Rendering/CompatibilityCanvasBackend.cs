@@ -255,8 +255,32 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
             finally { Check(SDL.SetRenderTarget(renderer, 0), "restore window render target"); }
         }
         if (!present) return;
-        Check(SDL.SetTextureBlendMode(output.Current.DangerousGetHandle(), SDL.BlendMode.None), "set presentation copy blending");
-        Check(SDL.RenderTexture(renderer, output.Current.DangerousGetHandle(), 0, 0), "copy canvas to window");
+        var presentation = PreparePresentation(output);
+        var source = output.Current.DangerousGetHandle();
+        if (presentation is not null)
+        {
+            Check(SDL.SetRenderTarget(renderer, presentation.Next.DangerousGetHandle()), "bind fitted presentation");
+            try
+            {
+                Check(SDL.SetRenderDrawColorFloat(renderer, 0, 0, 0, 1), "set presentation margins"); Check(SDL.RenderClear(renderer), "clear presentation margins");
+                Check(SDL.SetTextureBlendMode(source, SDL.BlendMode.None), "set fitted content blending");
+                Check(SDL.SetTextureScaleMode(source, SDL.ScaleMode.Nearest), "set presentation filtering");
+                if (PresentationRect.HasArea())
+                {
+                    var rect = new SDL.FRect { X = PresentationRect.Position.X, Y = PresentationRect.Position.Y, W = PresentationRect.Size.X, H = PresentationRect.Size.Y };
+                    Check(SDL.RenderTexture(renderer, source, 0, in rect), "fit content to presentation");
+                }
+                presentation.Commit(); source = presentation.Current.DangerousGetHandle();
+            }
+            finally { Check(SDL.SetRenderTarget(renderer, 0), "restore fitted window target"); }
+        }
+        Check(SDL.SetTextureBlendMode(source, SDL.BlendMode.None), "set presentation copy blending");
+        if (presentation is null) Check(SDL.RenderTexture(renderer, source, 0, 0), "copy canvas to window");
+        else
+        {
+            var client = GetPixelSize(); var rect = new SDL.FRect { W = client.X, H = client.Y };
+            Check(SDL.RenderTexture(renderer, source, in rect, in rect), "copy fitted client region to window");
+        }
         Check(SDL.RenderPresent(renderer), "present canvas");
     }
 

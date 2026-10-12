@@ -715,7 +715,7 @@ internal sealed partial class TextLayout
                     }
                     var offset = Key.Orientation == TextOrientation.Horizontal ? new Vector2(repeat * glyph.Advance, 0) : new Vector2(0, repeat * glyph.Advance);
                     var position = origin + glyph.Position + offset;
-                    var image = glyph.Face!.GetGlyph(glyph.Index, GlyphSize(glyph), outline, oversampling, position, out var rasterPosition);
+                    var image = glyph.Face!.GetGlyph(glyph.Index, GlyphSize(glyph), outline, oversampling, position, out var rasterPosition, canvas.CanvasViewport?.FontRasterScale ?? 1);
                     DrawGlyph(canvas, image, rasterPosition, glyphColor, !outlinePass && glyph.Face.ModulateColorGlyphs, clipRect);
                 }
             }

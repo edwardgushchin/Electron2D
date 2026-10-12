@@ -11,7 +11,7 @@ public partial class CanvasItem
     /// <param name="character">Exactly one Unicode scalar, encoded as one or two UTF-16 code units.</param>
     /// <param name="fontSize">Positive logical font size.</param>
     /// <param name="modulate">Finite color multiplier, or null for white.</param>
-    /// <param name="oversampling">Positive raster scale, or a nonpositive value for automatic scale.</param>
+    /// <param name="oversampling">Positive raster scale, or a nonpositive value for source/viewport automatic scale.</param>
     /// <exception cref="ArgumentNullException">The font or text is null.</exception>
     /// <exception cref="ArgumentException">Text, geometry, color or an option is invalid.</exception>
     /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off the owner thread.</exception>
@@ -30,7 +30,7 @@ public partial class CanvasItem
     /// <param name="fontSize">Positive logical font size.</param>
     /// <param name="size">Outline radius; nonpositive values draw an unexpanded glyph.</param>
     /// <param name="modulate">Finite color multiplier, or null for white.</param>
-    /// <param name="oversampling">Positive raster scale, or a nonpositive value for automatic scale.</param>
+    /// <param name="oversampling">Positive raster scale, or a nonpositive value for source/viewport automatic scale.</param>
     /// <exception cref="ArgumentNullException">The font or text is null.</exception>
     /// <exception cref="ArgumentException">Text, geometry, color or an option is invalid.</exception>
     /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off the owner thread.</exception>
@@ -54,7 +54,7 @@ public partial class CanvasItem
     /// <param name="justificationFlags">Fill-spacing rules.</param>
     /// <param name="direction">Paragraph direction.</param>
     /// <param name="orientation">The glyph advance axis.</param>
-    /// <param name="oversampling">Positive raster scale, or a nonpositive value for automatic scale.</param>
+    /// <param name="oversampling">Positive raster scale, or a nonpositive value for source/viewport automatic scale.</param>
     /// <exception cref="ArgumentNullException">The font or text is null.</exception>
     /// <exception cref="ArgumentException">Text, geometry, color or an option is invalid.</exception>
     /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off the owner thread.</exception>
@@ -80,7 +80,7 @@ public partial class CanvasItem
     /// <param name="justificationFlags">Fill-spacing rules.</param>
     /// <param name="direction">Paragraph direction.</param>
     /// <param name="orientation">The glyph advance axis.</param>
-    /// <param name="oversampling">Positive raster scale, or a nonpositive value for automatic scale.</param>
+    /// <param name="oversampling">Positive raster scale, or a nonpositive value for source/viewport automatic scale.</param>
     /// <exception cref="ArgumentNullException">The font or text is null.</exception>
     /// <exception cref="ArgumentException">Text, geometry, color or an option is invalid.</exception>
     /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off the owner thread.</exception>
@@ -107,7 +107,7 @@ public partial class CanvasItem
     /// <param name="justificationFlags">Fill-spacing rules.</param>
     /// <param name="direction">Paragraph direction.</param>
     /// <param name="orientation">The glyph advance axis.</param>
-    /// <param name="oversampling">Positive raster scale, or a nonpositive value for automatic scale.</param>
+    /// <param name="oversampling">Positive raster scale, or a nonpositive value for source/viewport automatic scale.</param>
     /// <exception cref="ArgumentNullException">The font or text is null.</exception>
     /// <exception cref="ArgumentException">Text, geometry, color or an option is invalid.</exception>
     /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off the owner thread.</exception>
@@ -136,7 +136,7 @@ public partial class CanvasItem
     /// <param name="justificationFlags">Fill-spacing rules.</param>
     /// <param name="direction">Paragraph direction.</param>
     /// <param name="orientation">The glyph advance axis.</param>
-    /// <param name="oversampling">Positive raster scale, or a nonpositive value for automatic scale.</param>
+    /// <param name="oversampling">Positive raster scale, or a nonpositive value for source/viewport automatic scale.</param>
     /// <exception cref="ArgumentNullException">The font or text is null.</exception>
     /// <exception cref="ArgumentException">Text, geometry, color or an option is invalid.</exception>
     /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off the owner thread.</exception>

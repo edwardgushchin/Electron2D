@@ -306,19 +306,33 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 SDL.DrawGPUPrimitives(pass, (uint)batch.Count, (uint)Math.Max(1, batch.InstanceCount), (uint)batch.First, 0);
             }
             SDL.EndGPURenderPass(pass); pass = 0;
+            CanvasRenderTarget? presentation = null;
             if (present)
             {
+                presentation = PreparePresentation(output);
+                var source = output.Next.DangerousGetHandle(); var sourceSize = size;
+                if (presentation is not null)
+                {
+                    var clearPass = BeginPass(command, presentation.Next.DangerousGetHandle(), SDL.GPULoadOp.Clear, Colors.Black);
+                    SDL.EndGPURenderPass(clearPass);
+                    if (PresentationRect.HasArea())
+                    {
+                        var fitted = new SDL.GPUBlitInfo { Source = new() { Texture = source, W = (uint)size.X, H = (uint)size.Y }, Destination = new() { Texture = presentation.Next.DangerousGetHandle(), X = (uint)PresentationRect.Position.X, Y = (uint)PresentationRect.Position.Y, W = (uint)PresentationRect.Size.X, H = (uint)PresentationRect.Size.Y }, LoadOp = SDL.GPULoadOp.Load, Filter = SDL.GPUFilter.Nearest };
+                        SDL.BlitGPUTexture(command, in fitted);
+                    }
+                    source = presentation.Next.DangerousGetHandle(); sourceSize = GetPixelSize();
+                }
                 Check(SDL.WaitAndAcquireGPUSwapchainTexture(command, _window, out var swapchain, out var width, out var height), "acquire swapchain texture");
                 if (swapchain != 0)
                 {
                     swapchainAcquired = _hasPresented = true;
-                    var blit = new SDL.GPUBlitInfo { Source = new() { Texture = output.Next.DangerousGetHandle(), W = (uint)size.X, H = (uint)size.Y }, Destination = new() { Texture = swapchain, W = width, H = height }, LoadOp = SDL.GPULoadOp.DontCare, Filter = SDL.GPUFilter.Nearest };
+                    var blit = new SDL.GPUBlitInfo { Source = new() { Texture = source, W = (uint)sourceSize.X, H = (uint)sourceSize.Y }, Destination = new() { Texture = swapchain, W = width, H = height }, LoadOp = SDL.GPULoadOp.DontCare, Filter = SDL.GPUFilter.Nearest };
                     SDL.BlitGPUTexture(command, in blit);
                 }
             }
             var submitted = command; command = 0; Check(SDL.SubmitGPUCommandBuffer(submitted), "submit canvas frame");
             foreach (var texture in _textures.Values) texture.CommitUpload();
-            foreach (var texture in _layeredTextures.Values) texture.CommitUpload(); output.Commit();
+            foreach (var texture in _layeredTextures.Values) texture.CommitUpload(); output.Commit(); presentation?.Commit();
         }
         finally
         {

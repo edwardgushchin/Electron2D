@@ -235,12 +235,11 @@ public partial class Window : Viewport
     /// <inheritdoc />
     public override Rect2 GetVisibleRect()
     {
-        var size = Size;
-        return new Rect2(Vector2.Zero, new Vector2(size.X, size.Y));
+        ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return new Rect2(Vector2.Zero, ContentLayout.VisibleSize);
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(WindowProperties).Concat(PopupProperties).Concat(ThemeProperties).Concat(ThemeOwner.Properties<Window>());
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(WindowProperties).Concat(ContentProperties).Concat(PopupProperties).Concat(ThemeProperties).Concat(ThemeOwner.Properties<Window>());
 
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Window)
@@ -292,7 +291,7 @@ public partial class Window : Viewport
             _display.WindowSetPositionCore(position);
         if (_mode != WindowMode.Windowed)
             _display.WindowSetModeCore(_mode);
-        _size = _display.WindowGetSizeCore();
+        _size = _display.WindowGetSizeCore(); _contentLayoutValid = false;
         _display.CloseRequestedCore += HandleClose;
         _display.QuitRequestedCore += HandleClose;
         _display.WindowRectChangedCore += HandleRect;
@@ -384,9 +383,9 @@ public partial class Window : Viewport
     {
         if (_size == size)
             return;
-        _size = size;
+        _size = size; _contentLayoutValid = false;
         InvalidateViewportRecording(); _embeddedCanvas?.QueueRedraw();
-        NotifySizeChanged();
+        NotifyContentSizeChanged();
     }
 
     private static void ValidateLimits(Vector2i minimum, Vector2i maximum)

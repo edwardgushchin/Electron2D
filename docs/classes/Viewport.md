@@ -1,6 +1,6 @@
 # Viewport
 
-Last updated: 2026-10-07
+Last updated: 2026-10-12
 
 **Inherits:** [Node](Node.md)
 
@@ -80,7 +80,7 @@ Identity by default. Maps viewport coordinates into the native client area after
 
 `public Transform GetFinalTransform()`
 
-Returns StretchTransform followed by GlobalCanvasTransform. The supported root window has identity content stretch; CanvasTransform, desktop position and framebuffer density are excluded. Attached off-owner access throws InvalidOperationException; disposed access throws ObjectDisposedException.
+Returns window presentation, then StretchTransform and GlobalCanvasTransform. Window presentation includes content fitting margins/image enlargement; CanvasTransform, desktop position and framebuffer density are excluded. Attached off-owner access throws InvalidOperationException; disposed access throws ObjectDisposedException.
 
 ### GetScreenTransform
 
@@ -567,3 +567,5 @@ examples, costs and verification.
 ## Canvas lighting integration
 
 [Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.
+
+Window content scaling separates logical viewport coordinates, raster pixels and client presentation. GetFinalTransform includes the window presentation transform; GetCanvasRenderTransform uses raster coordinates internally. See [Window content scale](Window.md#content-scale) for the executed policy and limits.

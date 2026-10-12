@@ -151,8 +151,8 @@ public sealed partial class RenderingServer : ElectronObject
             if (!ReferenceEquals(viewport, _window) && viewport is not SubViewport && viewport is not Window { Embedder: not null }) continue;
             if (!_canvasFrames.TryGetValue(viewport, out var frame)) _canvasFrames.Add(viewport, frame = new(viewport));
             viewport.RenderingOwner = this; frame.State = 0; frame.Wanted = frame.Drawn = false; _activeFrames.Add(frame);
-            var size = ReferenceEquals(viewport, _window) ? _backend.GetPixelSize() : viewport is SubViewport sub ? sub.Size : ((Window)viewport).Size;
-            if (size.X > 0 && size.Y > 0) _backend.Target(viewport, size, FrameClear(viewport));
+            var size = viewport is SubViewport sub ? sub.Size : ((Window)viewport).ContentRenderSize;
+            if (size.X > 0 && size.Y > 0 || ReferenceEquals(viewport, _window)) _backend.Target(viewport, size.Max(Vector2i.One), FrameClear(viewport));
         }
     }
     internal void InvalidateViewportRecordings(Viewport viewport)
@@ -162,9 +162,9 @@ public sealed partial class RenderingServer : ElectronObject
     internal void SetWindowVisible(DisplayServer display, bool visible) { EnsureViewportMutation(); _backend.SetWindowVisible(display, visible); }
     internal void EnsureViewportMutation() { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport targets cannot mutate during native submission."); }
     internal void ReleaseViewport(Viewport viewport) { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport targets cannot be released during native submission."); _backend.ReleaseTarget(viewport); _canvasFrames.Remove(viewport); viewport.RenderingOwner = null; }
-    internal Vector2i ViewportDimensions(Viewport viewport) { EnsureOwner(); return ReferenceEquals(viewport, _window) ? _backend.GetPixelSize() : viewport is SubViewport sub ? sub.Size : ((Window)viewport).Size; }
+    internal Vector2i ViewportDimensions(Viewport viewport) { EnsureOwner(); return viewport is SubViewport sub ? sub.Size : ((Window)viewport).ContentRenderSize; }
     internal Image? ReadbackViewport(Viewport viewport)
-    { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport readback cannot reenter native submission."); var target = _backend.FindTarget(viewport); return target?.HasFrame == true ? _backend.Readback(target) : null; }
+    { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport readback cannot reenter native submission."); if (viewport is Window w && (w.ContentLayout.TargetSize.X == 0 || w.ContentLayout.TargetSize.Y == 0)) return null; var target = _backend.FindTarget(viewport); return target?.HasFrame == true ? _backend.Readback(target) : null; }
     internal void Render(SceneTree tree, double step)
     {
         EnsureOwner(); if (!_renderLoopEnabled) return;
@@ -227,6 +227,8 @@ public sealed partial class RenderingServer : ElectronObject
         foreach (var child in _activeFrames) if (child.Viewport is SubViewport { RenderTargetUpdateMode: ViewportUpdateMode.WhenParentVisible } && ReferenceEquals(child.Viewport.Parent?.GetViewport(), frame.Viewport)) { child.Wanted = true; SubmitFrame(child, tree); }
         var target = _backend.FindTarget(frame.Viewport); if (target is null) return;
         _submittingTextures = true;
+        var content = _window.ContentLayout;
+        _backend.PresentationRect = content.TargetSize.X > 0 && content.TargetSize.Y > 0 ? content.ScreenRect : default;
         try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), FrameClear(frame.Viewport), frame.Viewport is not SubViewport sub || sub.RenderTargetClearMode != ViewportClearMode.Never, ReferenceEquals(frame.Viewport, _window) && _window.Visible, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting); }
         finally { _submittingTextures = false; }
         if (frame.Viewport is SubViewport completed) completed.Submitted();
@@ -236,7 +238,7 @@ public sealed partial class RenderingServer : ElectronObject
     {
         UseFrame(frame); _instances.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
         var viewport = frame.Viewport; var pixels = _backend.FindTarget(viewport)!.Size;
-        var framebufferTransform = ReferenceEquals(viewport, _window) ? new Transform(0f, new Vector2((float)pixels.X / _window.Size.X, (float)pixels.Y / _window.Size.Y), 0f, Vector2.Zero) : Transform.Identity;
+        var framebufferTransform = viewport is Window embedded ? new Transform(0, Vector2.One * embedded.RenderDensity, 0, Vector2.Zero) : Transform.Identity;
         // Drawing callbacks may change parenting, visibility or sibling order.
         _nodes.Clear();
         CaptureCanvasScene(tree.Root);
@@ -244,7 +246,7 @@ public sealed partial class RenderingServer : ElectronObject
         for (var index = 0; index < _nodes.Count; index++)
         {
             var node = _nodes[index];
-            if ((node.RenderLive(tree) || node is VisibleOnScreenNotifier && !node.IsDisposed && ReferenceEquals(node.Tree, tree)) && node.RenderCanvas() is { } canvas && canvas.View(viewport, out _, out _, out _))
+            if ((viewport is not Window contentWindow || contentWindow.ContentLayout.TargetSize.X > 0 && contentWindow.ContentLayout.TargetSize.Y > 0) && (node.RenderLive(tree) || node is VisibleOnScreenNotifier && !node.IsDisposed && ReferenceEquals(node.Tree, tree)) && node.RenderCanvas() is { } canvas && canvas.View(viewport, out _, out _, out _))
                 _nodes[visibleCount++] = node;
         }
         _nodes.RemoveRange(visibleCount, _nodes.Count - visibleCount);
@@ -473,7 +475,7 @@ public sealed partial class RenderingServer : ElectronObject
         if (child.RenderYSort && !IsCompositor(child)) CollectYSort(child, transform);
     }
 
-    internal Image Readback() { EnsureOwner(); return _backend.Readback(_backend.FindTarget(_window) ?? throw new InvalidOperationException("No canvas frame has completed.")); }
+    internal Image Readback() { EnsureOwner(); return _backend.ReadbackScreen(_backend.FindTarget(_window) ?? throw new InvalidOperationException("No canvas frame has completed.")); }
     internal nint GetNativeHandle(DisplayServer.HandleType type) { EnsureOwner(); return _backend.GetNativeHandle(type); }
     internal void Close() { _closing = true; Dispose(); }
 

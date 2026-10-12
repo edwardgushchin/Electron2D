@@ -277,7 +277,7 @@ public abstract class Font : Resource
     /// <summary>Draws one unshaped Unicode character at a baseline position.</summary>
     /// <param name="canvasItem">The currently recording canvas item.</param><param name="position">The finite baseline position.</param>
     /// <param name="character">A Unicode scalar.</param><param name="fontSize">Positive logical font size.</param>
-    /// <param name="modulate">Finite modulation, or null for white.</param><param name="oversampling">Positive raster scale, or a nonpositive value for automatic scale.</param>
+    /// <param name="modulate">Finite modulation, or null for white.</param><param name="oversampling">Positive raster scale, or a nonpositive value for source/viewport automatic scale.</param>
     /// <returns>The character advance, or zero when missing.</returns>
     /// <exception cref="ArgumentNullException">The canvas is null.</exception><exception cref="ArgumentException">Geometry or color is nonfinite.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Character, font size or raster scale is invalid.</exception>
@@ -289,7 +289,7 @@ public abstract class Font : Resource
     /// <param name="canvasItem">The currently recording canvas item.</param><param name="position">The finite baseline position.</param>
     /// <param name="character">A Unicode scalar.</param><param name="fontSize">Positive logical font size.</param>
     /// <param name="size">Outline radius; nonpositive values draw the unexpanded glyph.</param><param name="modulate">Finite modulation, or null for white.</param>
-    /// <param name="oversampling">Positive raster scale, or a nonpositive value for automatic scale.</param><returns>The character advance.</returns>
+    /// <param name="oversampling">Positive raster scale, or a nonpositive value for source/viewport automatic scale.</param><returns>The character advance.</returns>
     /// <exception cref="ArgumentNullException">The canvas is null.</exception><exception cref="ArgumentException">Geometry or color is nonfinite.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Character, font size or raster scale is invalid.</exception>
     /// <exception cref="InvalidOperationException">The canvas is not recording on its owner thread.</exception>
@@ -302,7 +302,7 @@ public abstract class Font : Resource
     /// <param name="alignment">Advance-axis alignment.</param><param name="width">Finite available width, or a negative value for no limit.</param>
     /// <param name="fontSize">Positive logical font size.</param><param name="modulate">Finite modulation, or null for white.</param>
     /// <param name="justificationFlags">Fill-spacing rules.</param><param name="direction">Paragraph direction.</param><param name="orientation">Advance axis.</param>
-    /// <param name="oversampling">Positive raster scale, or a nonpositive value for automatic scale.</param>
+    /// <param name="oversampling">Positive raster scale, or a nonpositive value for source/viewport automatic scale.</param>
     /// <exception cref="ArgumentNullException">Text or canvas is null.</exception><exception cref="ArgumentException">Geometry or color is nonfinite.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Size, width, raster scale or an enum value is invalid.</exception>
     /// <exception cref="InvalidOperationException">The canvas is not recording on its owner thread.</exception>
@@ -317,7 +317,7 @@ public abstract class Font : Resource
     /// <param name="alignment">Advance-axis alignment.</param><param name="width">Finite available width, or a negative value for no limit.</param>
     /// <param name="fontSize">Positive logical font size.</param><param name="modulate">Finite modulation, or null for white.</param>
     /// <param name="justificationFlags">Fill-spacing rules.</param><param name="direction">Paragraph direction.</param><param name="orientation">Advance axis.</param>
-    /// <param name="oversampling">Positive raster scale, or a nonpositive value for automatic scale.</param>
+    /// <param name="oversampling">Positive raster scale, or a nonpositive value for source/viewport automatic scale.</param>
     /// <exception cref="ArgumentNullException">Text or canvas is null.</exception><exception cref="ArgumentException">Geometry or color is nonfinite.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Size, width, raster scale or an enum value is invalid.</exception>
     /// <exception cref="InvalidOperationException">The canvas is not recording on its owner thread.</exception>
@@ -333,7 +333,7 @@ public abstract class Font : Resource
     /// <param name="alignment">Advance-axis alignment.</param><param name="width">Finite available width, or a negative value for no limit.</param>
     /// <param name="fontSize">Positive logical font size.</param><param name="modulate">Finite modulation, or null for white.</param>
     /// <param name="justificationFlags">Fill-spacing rules.</param><param name="direction">Paragraph direction.</param><param name="orientation">Advance axis.</param>
-    /// <param name="oversampling">Positive raster scale, or a nonpositive value for automatic scale.</param>
+    /// <param name="oversampling">Positive raster scale, or a nonpositive value for source/viewport automatic scale.</param>
     /// <exception cref="ArgumentNullException">Text or canvas is null.</exception><exception cref="ArgumentException">Geometry or color is nonfinite.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Size, width, raster scale or an enum value is invalid.</exception>
     /// <exception cref="InvalidOperationException">The canvas is not recording on its owner thread.</exception>
@@ -350,7 +350,7 @@ public abstract class Font : Resource
     /// <param name="alignment">Advance-axis alignment.</param><param name="width">Finite available width, or a negative value for no limit.</param>
     /// <param name="fontSize">Positive logical font size.</param><param name="modulate">Finite modulation, or null for white.</param>
     /// <param name="justificationFlags">Fill-spacing rules.</param><param name="direction">Paragraph direction.</param><param name="orientation">Advance axis.</param>
-    /// <param name="oversampling">Positive raster scale, or a nonpositive value for automatic scale.</param>
+    /// <param name="oversampling">Positive raster scale, or a nonpositive value for source/viewport automatic scale.</param>
     /// <exception cref="ArgumentNullException">Text or canvas is null.</exception><exception cref="ArgumentException">Geometry or color is nonfinite.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Size, width, raster scale or an enum value is invalid.</exception>
     /// <exception cref="InvalidOperationException">The canvas is not recording on its owner thread.</exception>
@@ -372,7 +372,7 @@ public abstract class Font : Resource
             using var read = BeginRead(); var source = FindSource((uint)character, true);
             if (source is null) { if (read.IsCurrent) return 0; continue; }
             var glyph = source.GetGlyphIndex((uint)character);
-            var image = source.GetGlyph(glyph, size, outline, Math.Max(0, oversampling), position, out var rasterPosition);
+            var image = source.GetGlyph(glyph, size, outline, Math.Max(0, oversampling), position, out var rasterPosition, canvas.CanvasViewport?.FontRasterScale ?? 1);
             var advance = source.GetGlyphAdvance(glyph, size); var modulate = !outlinePass && source.ModulateColorGlyphs;
             if (!read.IsCurrent) continue;
             TextLayout.DrawGlyph(canvas, image, rasterPosition, color, modulate);

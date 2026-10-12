@@ -691,3 +691,29 @@ rendering methods and both physical backends on Linux.
 Window and Control use one domain-aware resolver. An inherited node follows the nearest Window or Control only while ancestor translation domains match. With no such ancestor, `ProjectSettings.RootNodeLayoutDirection` selects 0 application locale, 1 LTR, 2 RTL or 3 system UI locale. `ForceRightToLeftLayoutDirection` forces inherited and application/system locale modes to RTL; explicit LTR/RTL remain authoritative. Each SceneTree samples both settings and feature overrides before entry. Detached nodes use current settings. Authored per-node directions survive scene packing; project defaults do not overwrite them.
 
 Layout-direction and translation notifications reflow geometry and invalidate text; global locale/catalog edits require an explicit translation notification under ADR 0007. Existing locale direction still requires a matching registered catalog or fallback language. [ProjectLayoutDirectionTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionTests.cs) covers resolution, lifetime and reflow; [ProjectLayoutDirectionNativeTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionNativeTests.cs) checks GUI/text pixels on Linux Wayland GPU/compatibility. Foreign targets and owner visual acceptance remain unverified.
+
+## Content scale
+
+The stored `ContentScaleSize`, `ContentScaleMode`, `ContentScaleAspect`, `ContentScaleStretch` and `ContentScaleFactor` configure real canvas rasterization and presentation. Size defaults to zero; either zero axis disables resolution fitting. Mode defaults to Disabled, aspect to Ignore, stretch to Fractional and factor to one. Desired axes must be nonnegative; factor must be positive and finite; undefined enum values and unrepresentable calculated dimensions reject before committing. Equal writes are silent. Successful changes invalidate retained commands and notify viewport texture/SizeChanged observers; callback failure preserves the committed state.
+
+Disabled retains client-resolution pixels while dividing the logical visible area by factor. CanvasItems fits the desired resolution, rasterizes geometry at the fitted client resolution and scales coordinates. Viewport rasterizes at the floored fitted logical resolution divided by factor, then enlarges that image. `GetVisibleRect()` reports logical coordinates; `GetTexture()` reports the actual raster resolution. `Size` remains the client size. `GetFinalTransform()` and `GetScreenTransform()` include presentation margins and scale for input, pointer and IME consumers; the renderer uses its separate raster transform.
+
+Ignore fits both axes independently. Keep preserves the authored aspect with black margins. KeepWidth expands logical height for a taller client and otherwise uses margins; KeepHeight performs the corresponding horizontal policy. Expand grows the logical area to fill the client. Screen and logical fitting dimensions floor before margins are computed; half margins round away from zero. Integer stretch floors and stores factor, clamps it to at least one, and chooses a whole client-to-content ratio of at least one. Small clients clip the image instead of downscaling. A floored zero raster has a zero texture size and no image/device view; presentation remains a cleared client surface. Existing native target limits remain explicit backend errors.
+
+Embedded windows fit inside their physical client rectangles and transform their input independently. Their raster density follows parent canvas stretching, including nested windows. Parent density edits invalidate affected glyph recordings and texture consumers. Automatic glyph oversampling follows the actual viewport raster scale; explicit draw/font oversampling takes priority. Viewport image enlargement preserves its coarse raster grid, while CanvasItems can rasterize glyphs at the larger pixel scale. Pixel snapping and canvas-follow centers operate at raster resolution.
+
+Example inside application setup:
+
+```csharp
+var window = new Window
+{
+    Size = new Vector2i(1280, 720),
+    ContentScaleSize = new Vector2i(640, 360),
+    ContentScaleMode = ContentScaleMode.Viewport,
+    ContentScaleAspect = ContentScaleAspect.Keep,
+    ContentScaleStretch = ContentScaleStretch.Integer
+};
+Engine.Run(window);
+```
+
+[WindowContentScaleTests](../../tests/Electron2D.Tests/WindowContentScaleTests.cs) and [WindowContentScaleNativeTests](../../tests/Electron2D.Tests/WindowContentScaleNativeTests.cs) cover the executable Linux profile. Native allocator totals, foreign targets and owner visual acceptance remain unverified.

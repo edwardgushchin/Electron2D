@@ -7,7 +7,7 @@ internal sealed unsafe partial class GPUCanvasBackend
         if (resource is ViewportTexture viewportTexture)
         {
             var viewport = viewportTexture.Bound; var target = viewport is null ? null : FindTarget(viewport);
-            if (target is null || !target.HasFrame) return default;
+            if (target is null || !target.HasFrame || viewportTexture.GetSize().X == 0 || viewportTexture.GetSize().Y == 0) return default;
             if (SRGB) throw new NotSupportedException("Distinct sRGB renderer views require native format-view integration.");
             return device.BorrowRendererTexture(viewportTexture, null, target);
         }

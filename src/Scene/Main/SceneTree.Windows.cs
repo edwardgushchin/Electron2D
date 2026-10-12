@@ -106,7 +106,7 @@ public sealed partial class SceneTree
             if (menu.Parent is Control owner && (owner is MenuButton { SwitchOnHover: true } || owner is MenuBar { SwitchOnHover: true }) && !menu.EmbeddedHitRect.HasPoint(point.Value)) RefreshMenuBarHover(owner, host, point.Value);
         }
         target = chosen;
-        var localized = input.XformedBy(new Transform(0, -(Vector2)chosen.Position));
+        var localized = input.XformedBy(chosen.GetFinalTransform().AffineInverse() * new Transform(0, -(Vector2)chosen.Position));
         if (localized is InputEventMouse mouseLocal) mouseLocal.GlobalPosition = mouseLocal.Position;
         try
         {
