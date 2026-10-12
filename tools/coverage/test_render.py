@@ -392,7 +392,7 @@ def main():
     assert len(collision_owner_rows) == 21
     assert all(" | Implemented | " in row for row in collision_owner_rows)
     disable_rows = [row for row in pages[CLASS_PAGES / "CollisionObject2D.md"].splitlines()
-                    if row.startswith("| [`") and ("DisableMode" in row or "disable_mode" in row)]
+                    if row.startswith("| [`") and ("DisableMode" in row.split("|")[1] or "disable_mode" in row.split("|")[1])]
     assert len(disable_rows) == 5 and all(" | Implemented | " in row for row in disable_rows)
     assert " | Implemented | " in next(row for row in pages[CLASS_PAGES / "CollisionObject2D.md"].splitlines()
                                         if row.startswith("| [`property float collision_priority"))

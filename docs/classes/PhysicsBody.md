@@ -40,7 +40,7 @@ The inherited [CollisionObject.GetRID](CollisionObject.md#getrid) remains stable
 | Member | Contract |
 | --- | --- |
 | `protected PhysicsBody()` | Creates a detached body with no fixtures. |
-| `public Vector2 GetGravity()` | Returns the last area/world gravity after body scaling; zero for detached or stationary bodies. |
+| `public Vector2 GetGravity()` | Returns the last area/world gravity after body scaling for RigidBody and CharacterBody, including temporary static/frozen participation; zero for detached bodies and StaticBody. |
 | `public void AddCollisionExceptionWith(PhysicsBody body)` / `RemoveCollisionExceptionWith(PhysicsBody body)` | Add or remove a one-sided exception entry by another scene body's RID. |
 | `protected override void ValidateDisposal()` | Preflight scene and dependent-joint world ownership/phases before disposal. |
 | `public PhysicsBody?[] GetCollisionExceptions()` | Caller-owned deduplicated explicit/joint array; a server-only or freed RID has a null scene slot. |
@@ -56,7 +56,7 @@ The first profile accepts unit global scale and zero skew; a transformed active 
 <a id="getgravity"></a>
 ### `GetGravity()`
 
-A dynamic [RigidBody](RigidBody.md) reports its most recently resolved [Area](Area.md) and world gravity vector after `GravityScale`. [CharacterBody](CharacterBody.md) reports the same resolved field without automatically applying it to its desired velocity. The value is zero before its first fixed step, when detached, and for [StaticBody](StaticBody.md). Area edits update it on the next nonzero physics step. An attached read requires the scene owner thread; a disposed body throws. [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks rigid-body field reduction; [CharacterBodyTests](../../tests/Electron2D.Tests/CharacterBodyTests.cs) checks world and Area gravity on a kinematic character.
+[RigidBody](RigidBody.md) reports its most recently resolved [Area](Area.md) and world gravity vector after `GravityScale`. [CharacterBody](CharacterBody.md) reports the same resolved field without automatically applying it to its desired velocity. Both retain field resolution while MakeStatic or Freeze prevents dynamic force integration. The value is zero before its first fixed step, when detached, and for [StaticBody](StaticBody.md). Area edits update it on the next nonzero physics step. An attached read requires the scene owner thread; a disposed body throws. [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks rigid-body field reduction; [CharacterBodyTests](../../tests/Electron2D.Tests/CharacterBodyTests.cs) checks world and Area gravity on a kinematic character. [CollisionDisableModeTests](../../tests/Electron2D.Tests/CollisionDisableModeTests.cs) exercises scaled temporary-static/frozen scene and direct-state fields, Area removal and world fallback on explicitly selected CPU and GPU worlds.
 
 <a id="motion"></a>
 ### `MoveAndCollide` and `TestMove`

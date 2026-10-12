@@ -1,6 +1,6 @@
 # CollisionObject
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PhysicsBody](PhysicsBody.md), [Area](Area.md)
 
@@ -65,7 +65,7 @@ The two getters and two setters take a one-based bit number from 1 through 32. V
 
 Controls physics while the effective inherited Node.ProcessMode is Disabled. [CollisionDisableMode](CollisionDisableMode.md) defines three stored values. Remove/default detaches from queries, solver and Area fields; the same RID, owner groups and borrowed shapes remain for synchronous reattachment. Held direct-body views become invalid. Peer object/shape exits use the normal departure path. MakeStatic preserves membership and sensor behavior but temporarily makes Body static, without changing its Freeze or requested role. KeepActive continues ordinary physics. Scene pause alone does not apply this policy.
 
-Changing the policy while disabled applies it immediately. Entry, reparent and reentry read the current inherited process mode. Undefined enum values, disposed access, off-owner attached mutation and changes during solver ownership reject; departure callback exceptions are reported after committed membership changes. Stored policy survives PackedScene. Manual notification IDs cannot fake a disabled boundary. [CollisionDisableModeTests](../../tests/Electron2D.Tests/CollisionDisableModeTests.cs) checks this contract and warmed solver frames; [ADR 0072](../decisions/physics.md#adr-0072) records the C# enum projection.
+Changing the policy while disabled applies it immediately. Entry, reparent and reentry read the current inherited process mode. Undefined enum values, disposed access, off-owner attached mutation and changes during solver ownership reject; departure callback exceptions are reported after committed membership changes. Stored policy survives PackedScene. Manual notification IDs cannot fake a disabled boundary. [CollisionDisableModeTests](../../tests/Electron2D.Tests/CollisionDisableModeTests.cs) checks this contract on explicitly selected CPU and GPU worlds, including temporary-static/frozen resolved fields and 64 warmed mixed solver frames with zero owner/all-thread managed bytes; [ADR 0072](../decisions/physics.md#adr-0072) records the C# enum projection.
 
 ## Limits and verification
 
@@ -226,3 +226,9 @@ now verifies scene Body/Area policy through selected point queries, numerical
 guards and 128 changed-policy full frames at zero managed allocation. Native
 CPU/GPU/registered worlds each pass with both renderers and target pixel checks;
 full registered geometry and final acceptance remain open.
+
+[Shape-owner metadata access](../components/physics-registered-adapter.md#shape-owner-metadata-access)
+now checks actual space ownership/failure for tree-less scene attachments while
+retaining numerical authored reads and cleanup. The shared CPU/GPU/registered
+consumer exercises every collider role and 128 full scalar-read frames at 0/0
+managed bytes. Complete geometry/disable and final acceptance remain open.

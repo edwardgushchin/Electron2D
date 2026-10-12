@@ -4,7 +4,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
 {
     /// <summary>Authored scalar gravity and signed body damping; omission skips default forces, not constraints or impulses.</summary>
     internal readonly record struct IntegrationPolicy(float GravityScale = 1, float LinearDamp = 0, float AngularDamp = 0,
-        bool LockRotation = false, bool OmitForceIntegration = false, RigidBody.DampMode LinearDampMode = RigidBody.DampMode.Combine, RigidBody.DampMode AngularDampMode = RigidBody.DampMode.Combine);
+        bool LockRotation = false, bool OmitForceIntegration = false, RigidBody.DampMode LinearDampMode = RigidBody.DampMode.Combine, RigidBody.DampMode AngularDampMode = RigidBody.DampMode.Combine, bool ResolveStaticFields = false);
     private const uint ModeEdit = 4096, PolicyEdit = 8192, ClearAngular = 16384;
     private const uint CollisionPriorityEdit = 524288;
     private const uint ContactReportingEdit = 8388608;
@@ -91,6 +91,6 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         ref var command = ref Edit(index); command.Mask |= PolicyEdit;
         command.Body.Force.W = policy.GravityScale;
         command.Body.Properties.Z = policy.LinearDamp; command.Body.Properties.W = policy.AngularDamp;
-        command.Body.Locks = (command.Body.Locks & ~50180u) | (RotationLocked(slot) ? 4u : 0u) | (policy.OmitForceIntegration ? 1024u : 0u) | (policy.LinearDampMode == RigidBody.DampMode.Replace ? 16384u : 0u) | (policy.AngularDampMode == RigidBody.DampMode.Replace ? 32768u : 0u);
+        command.Body.Locks = (command.Body.Locks & ~115716u) | (RotationLocked(slot) ? 4u : 0u) | (policy.OmitForceIntegration ? 1024u : 0u) | (policy.LinearDampMode == RigidBody.DampMode.Replace ? 16384u : 0u) | (policy.AngularDampMode == RigidBody.DampMode.Replace ? 32768u : 0u) | (policy.ResolveStaticFields ? 65536u : 0u);
     }
 }

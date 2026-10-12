@@ -29,7 +29,7 @@ vec2 gravity(Field f,vec4 pose,vec2 position)
 void linkArea(uint at,Shape a,Shape b)
 {
     uint rank=lookup[a.owner.x];
-    if(rank==none||bodies[b.owner.x].flags.y==0u||(a.policy.z&b.policy.y)==0u)return;
+    if(rank==none||!receivesBodyFields(bodies[b.owner.x])||(a.policy.z&b.policy.y)==0u)return;
     uint old=atomicExchange(heads[b.owner.x],at);links[at]=uvec2(rank,old);
 }
 void main()
@@ -52,7 +52,7 @@ void main()
     ResidentBody body=bodies[i];if(body.flags.w==0u)return;
     vec4 total=vec4(0);bvec3 done=bvec3(false);
     uint minimum=0u;
-    if(body.flags.y!=0u)
+    if(receivesBodyFields(body))
     {
         // ponytail: selection is O(overlap links * distinct Areas); sort receiver/rank pairs if heavily nested fields dominate measured cost.
         for(uint count=0u;count<areaCount;count++)

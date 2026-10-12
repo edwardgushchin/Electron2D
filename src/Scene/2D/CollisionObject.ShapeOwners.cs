@@ -46,9 +46,11 @@ public abstract partial class CollisionObject
     /// <param name="owner">Owner object, or null; its lifetime does not control the group's shapes.</param>
     /// <returns>Zero when the registry is empty, otherwise one above its largest current owner ID.</returns>
     /// <remarks>Removed highest IDs can be reused. A group starts enabled with identity transform and no one-way response.</remarks>
+    /// <exception cref="InvalidOperationException">Attached access is off the space owner thread or the world has failed.</exception>
     public uint CreateShapeOwner(ElectronObject? owner)
     {
         EnsureMutable();
+        ReadOwners();
         if (owner?.IsDisposed == true) throw new ObjectDisposedException(nameof(owner));
         uint id = 0;
         foreach (var key in _shapeOwners.Keys)
@@ -69,16 +71,19 @@ public abstract partial class CollisionObject
 
     /// <summary>Returns a caller-owned array of current owner IDs in ascending order.</summary>
     /// <returns>Includes empty and disabled groups.</returns>
+    /// <exception cref="InvalidOperationException">Attached access is off the space owner thread or the world has failed.</exception>
     public uint[] GetShapeOwners() { ReadOwners(); return _shapeOwners.Keys.ToArray(); }
 
     /// <summary>Gets a group's weakly referenced owner object.</summary>
     /// <param name="ownerID">A current owner ID.</param>
     /// <returns>The live object, or null when absent, collected or disposed.</returns>
+    /// <exception cref="InvalidOperationException">Attached access is off the space owner thread or the world has failed.</exception>
     public ElectronObject? ShapeOwnerGetOwner(uint ownerID) => LookupShapeOwner(ownerID).GetObject();
 
     /// <summary>Gets a group's local transform relative to this collision object.</summary>
     /// <param name="ownerID">A current owner ID.</param>
     /// <returns>The configured local pose.</returns>
+    /// <exception cref="InvalidOperationException">Attached access is off the space owner thread or the world has failed.</exception>
     public Transform ShapeOwnerGetTransform(uint ownerID) => LookupShapeOwner(ownerID).Transform;
 
     /// <summary>Sets a finite translated/rotated unit-scale local pose for all group shapes.</summary>
@@ -108,6 +113,7 @@ public abstract partial class CollisionObject
     /// <summary>Tests a group's disabled policy.</summary>
     /// <param name="ownerID">A current owner ID.</param>
     /// <returns>The stored disabled flag.</returns>
+    /// <exception cref="InvalidOperationException">Attached access is off the space owner thread or the world has failed.</exception>
     public bool IsShapeOwnerDisabled(uint ownerID) => LookupShapeOwner(ownerID).Disabled;
 
     /// <summary>Sets one-way response on a body group; Area setters have no effect.</summary>
@@ -122,6 +128,7 @@ public abstract partial class CollisionObject
     /// <summary>Tests a group's one-way policy.</summary>
     /// <param name="ownerID">A current owner ID.</param>
     /// <returns>False for unconfigured groups and Area groups.</returns>
+    /// <exception cref="InvalidOperationException">Attached access is off the space owner thread or the world has failed.</exception>
     public bool IsShapeOwnerOneWayCollisionEnabled(uint ownerID) => LookupShapeOwner(ownerID).OneWay;
 
     /// <summary>Sets finite nonnegative one-way recovery margin in scene units; Area setters have no effect.</summary>
@@ -138,6 +145,7 @@ public abstract partial class CollisionObject
     /// <summary>Gets a group's one-way recovery margin.</summary>
     /// <param name="ownerID">A current owner ID.</param>
     /// <returns>Scene units; zero for a new manual group.</returns>
+    /// <exception cref="InvalidOperationException">Attached access is off the space owner thread or the world has failed.</exception>
     public float GetShapeOwnerOneWayCollisionMargin(uint ownerID) => LookupShapeOwner(ownerID).Margin;
 
     /// <summary>Sets the normalized local pass-through direction; Area setters have no effect.</summary>
@@ -153,6 +161,7 @@ public abstract partial class CollisionObject
     /// <summary>Gets a group's normalized local pass-through direction.</summary>
     /// <param name="ownerID">A current owner ID.</param>
     /// <returns>Down by default, before group rotation.</returns>
+    /// <exception cref="InvalidOperationException">Attached access is off the space owner thread or the world has failed.</exception>
     public Vector2 GetShapeOwnerOneWayCollisionDirection(uint ownerID) => LookupShapeOwner(ownerID).Direction;
 
     /// <summary>Adds a borrowed shape to an owner and appends one global collision slot.</summary>
@@ -170,6 +179,7 @@ public abstract partial class CollisionObject
     /// <summary>Gets the number of shapes in a group, including disabled or disposed resources.</summary>
     /// <param name="ownerID">A current owner ID.</param>
     /// <returns>The logical shape count, independent of compound native fixtures.</returns>
+    /// <exception cref="InvalidOperationException">Attached access is off the space owner thread or the world has failed.</exception>
     public int ShapeOwnerGetShapeCount(uint ownerID) => LookupShapeOwner(ownerID).Shapes.Count;
 
     /// <summary>Gets a group's borrowed shape at a local index.</summary>
@@ -178,12 +188,14 @@ public abstract partial class CollisionObject
     /// <returns>The current borrowed resource identity; server-backed geometry belongs to its server RID.</returns>
     /// <remarks>Raw server replacement updates this slot. A server-owned geometry view expires on data replacement/free
     /// and cannot be disposed by a borrower.</remarks>
+    /// <exception cref="InvalidOperationException">Attached access is off the space owner thread or the world has failed.</exception>
     public Shape ShapeOwnerGetShape(uint ownerID, int shapeIndex) => Slot(ownerID, shapeIndex).Shape;
 
     /// <summary>Gets the global collision index of a group-local shape.</summary>
     /// <param name="ownerID">A current owner ID.</param>
     /// <param name="shapeIndex">Zero-based group-local index.</param>
     /// <returns>An append-order global index; later indices shift when any shape is removed.</returns>
+    /// <exception cref="InvalidOperationException">Attached access is off the space owner thread or the world has failed.</exception>
     public int ShapeOwnerGetShapeIndex(uint ownerID, int shapeIndex) => Slot(ownerID, shapeIndex).Index;
 
     /// <summary>Removes one group-local shape and renumbers later global indices.</summary>
@@ -203,6 +215,7 @@ public abstract partial class CollisionObject
     /// <param name="shapeIndex">A current zero-based global index.</param>
     /// <returns>The owner ID of that logical slot.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The global index is absent.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off the space owner thread or the world has failed.</exception>
     public uint ShapeFindOwner(int shapeIndex)
     {
         ReadOwners(); if ((uint)shapeIndex >= (uint)_shapeSlots.Count) throw new ArgumentOutOfRangeException(nameof(shapeIndex));
@@ -211,7 +224,8 @@ public abstract partial class CollisionObject
 
     internal ShapeSlot GlobalShapeSlot(int index)
     {
-        ReadOwners();
+        // Validated publication and failed-world retirement also inspect slots internally.
+        ThrowIfDisposed(); Tree?.EnsureOwnerThread();
         return (uint)index < (uint)_shapeSlots.Count ? _shapeSlots[index] : throw new ArgumentOutOfRangeException(nameof(index));
     }
 
@@ -254,7 +268,11 @@ public abstract partial class CollisionObject
         foreach (var slot in owner.Shapes) slot.OneWayOverride = null;
     }
 
-    private void ReadOwners() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
+    private void ReadOwners()
+    {
+        ThrowIfDisposed(); Tree?.EnsureOwnerThread();
+        Backend.Space?.EnsureImplementationInputReadAccess();
+    }
     private ShapeOwner LookupShapeOwner(uint id)
     {
         ReadOwners(); return _shapeOwners.TryGetValue(id, out var owner) ? owner :

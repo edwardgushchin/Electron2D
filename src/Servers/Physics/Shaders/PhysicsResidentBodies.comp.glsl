@@ -56,7 +56,7 @@ void main()
         if ((mask & 8192u) != 0u)
         {
             b.force.w=c.body.force.w;b.properties.zw=c.body.properties.zw;
-            b.flags.z=(b.flags.z&~50180u)|(c.body.flags.z&50180u);
+            b.flags.z=(b.flags.z&~115716u)|(c.body.flags.z&115716u);
         }
         if ((mask & 4u) != 0u) b.pose = c.body.pose;
         if ((mask & 16777216u) != 0u)

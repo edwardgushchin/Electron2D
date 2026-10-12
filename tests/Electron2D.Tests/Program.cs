@@ -145,6 +145,14 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNER_DISABLE_CONTRACT") is { } ownerBackend)
+{
+    foreach (var backend in ownerBackend == "cpu" ? new[] { PhysicsServer.Backend.CPU } : new[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU })
+    {
+        ShapeOwnerTests.Run(backend); CollisionDisableModeTests.Run(backend);
+    }
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLLIDER_BACKEND") == "1")
 {
     // Child hosts use their own specific entry points.

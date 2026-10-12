@@ -2,14 +2,14 @@ using Electron2D;
 
 internal static class ShapeOwnerTests
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU)
     {
         VerifyRegistry();
-        VerifyManualFixturesAndMotion();
-        VerifyChildBridgeAndPacking();
-        VerifyAreaAndOneWay();
-        VerifyLifetimeAndAllocation();
-        Console.WriteLine("Collision owner groups, logical indices, manual fixtures and allocation checks passed.");
+        VerifyManualFixturesAndMotion(backend);
+        VerifyChildBridgeAndPacking(backend);
+        VerifyAreaAndOneWay(backend);
+        VerifyLifetimeAndAllocation(backend);
+        Console.WriteLine($"Collision owner groups ({backend}), logical indices, manual fixtures and allocation checks passed.");
     }
 
     private static Transform At(float x, float y, float rotation = 0) => new(rotation, Vector2.One, 0, new(x, y));
@@ -58,18 +58,20 @@ internal static class ShapeOwnerTests
             "Malformed owner mutations reject before replacing stored configuration.");
     }
 
-    private static void VerifyManualFixturesAndMotion()
+    private static void VerifyManualFixturesAndMotion(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var circle = new CircleShape();
         using var box = new RectangleShape { Size = new(200, 20) };
         using var identity = new Resource();
-        var root = new Node();
+        var root = new SubViewport { World = world };
         var mover = new StaticBody { Name = "Mover" };
         var localOwner = mover.CreateShapeOwner(identity); mover.ShapeOwnerAddShape(localOwner, circle);
         var floor = new StaticBody { Name = "Floor", Position = new(0, 100) };
         var floorOwner = floor.CreateShapeOwner(null); floor.ShapeOwnerAddShape(floorOwner, box);
         root.AddChild(mover); root.AddChild(floor);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scene uses the explicitly selected physics backend.");
         using var collision = new KinematicCollision();
         Check(mover.TestMove(Transform.Identity, new(0, 120), collision) &&
             ReferenceEquals(collision.GetLocalShape(), identity) && collision.GetColliderShape() is null &&
@@ -90,8 +92,9 @@ internal static class ShapeOwnerTests
             "Borrowed revision changes reach manual fixtures despite a failed Changed subscriber.");
     }
 
-    private static void VerifyChildBridgeAndPacking()
+    private static void VerifyChildBridgeAndPacking(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var circle = new CircleShape();
         using var box = new RectangleShape();
         using var body = new StaticBody { Name = "Body" };
@@ -115,8 +118,9 @@ internal static class ShapeOwnerTests
         var copiedID = copied.GetShapeOwners().Single();
         Check(ReferenceEquals(copied.ShapeOwnerGetOwner(copiedID), copied.GetChild(0)) && copied.ShapeOwnerGetShapeCount(copiedID) == 1,
             "Packed scene child groups rebuild from configured nodes rather than registry internals.");
-        var root = new Node(); root.AddChild(body);
+        var root = new SubViewport { World = world }; root.AddChild(body);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scene uses the explicitly selected physics backend.");
         Check(body.ShapeOwnerGetTransform(id).Origin == child.Position && !body.IsShapeOwnerDisabled(id),
             "Tree entry resynchronizes the child's configured transform and policy.");
         body.ShapeOwnerSetDisabled(id, true); child.Position = new(60, 0);
@@ -129,11 +133,12 @@ internal static class ShapeOwnerTests
         child.Dispose();
     }
 
-    private static void VerifyAreaAndOneWay()
+    private static void VerifyAreaAndOneWay(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var circle = new CircleShape();
         using var platformShape = new RectangleShape { Size = new(200, 10) };
-        var root = new Node();
+        var root = new SubViewport { World = world };
         var area = new Area { Name = "Sensor" }; var areaOwner = area.CreateShapeOwner(null); area.ShapeOwnerAddShape(areaOwner, circle);
         area.ShapeOwnerSetOneWayCollision(areaOwner, true); area.ShapeOwnerSetOneWayCollisionMargin(areaOwner, 100);
         area.ShapeOwnerSetOneWayCollisionDirection(areaOwner, Vector2.Left);
@@ -145,7 +150,8 @@ internal static class ShapeOwnerTests
         platform.ShapeOwnerSetOneWayCollision(platformOwner, true); platform.ShapeOwnerSetOneWayCollisionMargin(platformOwner, 5);
         platform.ShapeOwnerSetOneWayCollisionDirection(platformOwner, new(0, 4));
         root.AddChild(area); root.AddChild(body); root.AddChild(platform);
-        using var tree = new SceneTree(root); tree.PhysicsFrame(1d / 60);
+        using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scene uses the explicitly selected physics backend."); tree.PhysicsFrame(1d / 60);
         Check(area.OverlapsBody(body), "Manual owner geometry participates in Area sensing.");
         Check(body.TestMove(Transform.Identity, new(0, 120)) && !body.TestMove(At(0, 130), new(0, -60)),
             "Manual one-way body owner blocks its solid side and permits reverse traversal.");
@@ -153,21 +159,28 @@ internal static class ShapeOwnerTests
         Check(!area.OverlapsBody(body), "Disabled owner geometry is removed from overlap snapshots.");
     }
 
-    private static void VerifyLifetimeAndAllocation()
+    private static void VerifyLifetimeAndAllocation(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var circle = new CircleShape();
         using var floorShape = new RectangleShape { Size = new(200, 20) };
-        var root = new Node();
+        var root = new SubViewport { World = world };
         var body = new RigidBody { Name = "Body", CanSleep = false }; var bodyOwner = body.CreateShapeOwner(null); body.ShapeOwnerAddShape(bodyOwner, circle);
         var floor = new StaticBody { Name = "Floor", Position = new(0, 100) }; var floorOwner = floor.CreateShapeOwner(null); floor.ShapeOwnerAddShape(floorOwner, floorShape);
         root.AddChild(body); root.AddChild(floor);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scene uses the explicitly selected physics backend.");
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y is > 75 and < 85, "Manual owner fixtures provide ordinary rigid-body solver response.");
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
+        _ = GC.GetTotalAllocatedBytes(true);
         var before = GC.GetAllocatedBytesForCurrentThread();
+        var allBefore = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed owner fixtures and solver frames allocate no managed bytes.");
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - before;
+        var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        Check(ownerBytes == 0 && allBytes == 0, $"Warmed owner fixtures and solver frames allocate no managed bytes: owner={ownerBytes}, all={allBytes}.");
+        Console.WriteLine($"Owner-fixture warm frames ({backend}): owner={ownerBytes}, all={allBytes} bytes.");
         Check(Task.Run(() => Capture(() => body.ShapeOwnerGetShapeCount(bodyOwner))).GetAwaiter().GetResult() is InvalidOperationException,
             "Attached owner registry access rejects a foreign thread.");
         circle.Dispose(); tree.PhysicsFrame(1d / 60);
