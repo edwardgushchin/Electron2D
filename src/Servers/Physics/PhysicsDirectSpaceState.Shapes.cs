@@ -76,7 +76,7 @@ public partial class PhysicsDirectSpaceState
     /// <param name="parameters">The live shape, pose, motion, margin and filters.</param>
     /// <param name="results">Destination storage; its length is the maximum result count.</param>
     /// <returns>The written count. Remaining elements are unchanged; excess hits are truncated in RID/index order.</returns>
-    /// <remarks>Reuses query scratch capacity after preparation; no output array is created. Ownership and query errors match the array overload.</remarks>
+    /// <remarks>Reuses prepared query scratch when switching live resources; no output array is created. Ownership and query errors match the array overload.</remarks>
     /// <exception cref="ArgumentNullException">Parameters are null.</exception>
     /// <exception cref="ArgumentException">The shape RID is invalid or query geometry is invalid.</exception>
     /// <exception cref="InvalidOperationException">The caller is off-owner or the space is stepping.</exception>

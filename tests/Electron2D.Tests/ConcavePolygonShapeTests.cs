@@ -2,13 +2,13 @@ using Electron2D;
 
 internal static class ConcavePolygonShapeTests
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU)
     {
         VerifySegmentsAndCopy();
-        VerifyHollowBodyAndArea();
-        VerifyDynamicConcaveMass();
-        VerifyPackedResource();
-        Console.WriteLine("Concave segment pairs, hollow contacts, area and allocation checks passed.");
+        VerifyHollowBodyAndArea(backend);
+        VerifyDynamicConcaveMass(backend);
+        VerifyPackedResource(backend);
+        Console.WriteLine($"Concave segment pairs, hollow contacts, area and allocation checks passed on {backend}.");
     }
 
     private static void VerifySegmentsAndCopy()
@@ -46,20 +46,22 @@ internal static class ConcavePolygonShapeTests
         Reject<ObjectDisposedException>(() => _ = duplicate.GetRect());
     }
 
-    private static void VerifyHollowBodyAndArea()
+    private static void VerifyHollowBodyAndArea(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var terrain = new ConcavePolygonShape
         {
             Segments = [new(-80, 0), new(80, 0), new(-80, 0), new(-80, -60), new(80, 0), new(80, -60)]
         };
         using var circle = new CircleShape();
-        var root = new Node();
+        var root = new SubViewport { World = world };
         var ground = new StaticBody { Position = new(0, 100) };
         ground.AddChild(new CollisionShape { Shape = terrain });
         var body = new RigidBody { CanSleep = false, ContactMonitor = true, MaxContactsReported = 4 };
         body.AddChild(new CollisionShape { Shape = circle });
         root.AddChild(ground); root.AddChild(body);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scenario uses the explicitly selected physics backend.");
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y is > 87 and < 93 && body.GetContactCount() > 0 &&
               body.GetCollidingBodies().Contains(ground),
@@ -98,10 +100,14 @@ internal static class ConcavePolygonShapeTests
             "Moving the point fixture away ends its overlap.");
 
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
+        _ = GC.GetTotalAllocatedBytes(true);
         var before = GC.GetAllocatedBytesForCurrentThread();
+        var allBefore = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
-            "Warmed concave terrain contact and area scans allocate no managed memory.");
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - before;
+        var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        Check(ownerBytes == 0 && allBytes == 0, $"Warmed concave terrain contact and area scans allocate no managed memory. owner={ownerBytes}, all={allBytes}.");
+        Console.WriteLine($"ConcavePolygonShapeTests warm path ({backend}): owner={ownerBytes}, all={allBytes} bytes.");
 
         terrain.Changed += _ => throw new InvalidOperationException("Earlier user listener failed.");
         Reject<InvalidOperationException>(() => terrain.Segments = [new(200, 0), new(200, 40)]);
@@ -110,8 +116,9 @@ internal static class ConcavePolygonShapeTests
             "Live pair edits rebuild fixtures even after a user Changed listener throws.");
     }
 
-    private static void VerifyPackedResource()
+    private static void VerifyPackedResource(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var contour = new ConcavePolygonShape
         {
             Segments = [new(-40, 0), new(0, -20), new(0, -20), new(40, 0)]
@@ -123,22 +130,32 @@ internal static class ConcavePolygonShapeTests
         body.Owner = root; collision.Owner = root;
         using var packed = new PackedScene(); packed.Pack(root);
         using var copy = packed.Instantiate();
+        var viewport = new SubViewport { World = world }; viewport.AddChild(copy);
+        using var tree = new SceneTree(viewport);
+        tree.PhysicsFrame(1d / 60);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Packed geometry enters the explicitly selected world.");
+        var center = new Vector2(-20, -10);
+        using var ray = PhysicsRayQueryParameters.Create(center + new Vector2(0, -30), center + new Vector2(0, 30));
+        Check(world.DirectSpaceState.IntersectRay(ray) is { } hit && hit.ColliderRID == copy.GetNode<PhysicsBody>("Body").GetRID(),
+            "Instantiated geometry supplies real ray-query fixtures.");
         Check(ReferenceEquals(copy.GetNode<CollisionShape>("Body/Collision").Shape, contour) &&
               contour.GetRect() == new Rect2(-40, -20, 80, 20),
             "PackedScene retains the borrowed concave contour and its exact bounds.");
     }
 
-    private static void VerifyDynamicConcaveMass()
+    private static void VerifyDynamicConcaveMass(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var contour = new ConcavePolygonShape
         {
             Segments = [new(-20, 0), new(20, 0), new(20, 0), new(20, -20)]
         };
-        var root = new Node();
+        var root = new SubViewport { World = world };
         var body = new RigidBody { Mass = 2 };
         body.AddChild(new CollisionShape { Shape = contour });
         root.AddChild(body);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scenario uses the explicitly selected physics backend.");
         for (var frame = 0; frame < 60; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y > 100,
             "A dynamic body with several zero-area pairs retains mass and responds to gravity.");

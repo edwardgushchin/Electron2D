@@ -47,8 +47,9 @@ internal sealed partial class PhysicsSpace
         var shape = parameters.Shape ?? PhysicsServer.Service.GetShapeGeometry(parameters.ShapeRID);
         if (!ReferenceEquals(_gpuQueryShape, shape))
         {
-            var next = GPUStore!.RetainQueryGeometry(shape);
-            _gpuQueryGeometry?.Dispose(); _gpuQueryGeometry = next; _gpuQueryShape = shape;
+            if (_gpuQueryGeometry is null) _gpuQueryGeometry = GPUStore!.RetainQueryGeometry(shape);
+            else _gpuQueryGeometry.Replace(shape);
+            _gpuQueryShape = shape;
         }
         if (_gpuShapeHits.Length < limit) Array.Resize(ref _gpuShapeHits, Math.Max(8, limit * 2));
         _gpuShapeQuery[0] = new(_gpuQueryGeometry!, parameters.Transform, parameters.Motion, parameters.Margin, mode,

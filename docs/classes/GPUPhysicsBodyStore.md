@@ -343,3 +343,5 @@ Body changes use an adaptive bounded download for dense output and count-first e
 
 
 Contact-color and packed-state resources are prepared before solver command recording. A scoped internal allocation diagnostic can initialize each new storage buffer; tests use NaN and finite nonzero contents in separate worlds to verify first-use initialization. [Preparation and limits](../components/gpu-contact-colors.md#scratch-initialization-and-preparation-order).
+
+The public GPU adapter retains one rebindable query-geometry lease. Alternating live resources reuses its wrapper and retires the previous reference; past resources are not accumulated. ConvexPolygonShapeTests exercises 128 warmed overlap/contact/rest/motion cycles between shared and standalone geometry on CPU/GPU with zero owner/all-thread bytes, preserving current contour results and initial-overlap fractions. GPUPhysicsShapeQueryTests checks successful replacement, null/disposed/thread rejection with preserved previous geometry, and retired lease failure. Geometry uploads and query waits retain their existing separate costs.

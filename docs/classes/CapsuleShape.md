@@ -106,3 +106,5 @@ authoring, including equal assignments. Scene/raw owner, phase and borrowed-hook
 rejection preserves data, RID and immutable geometry cache. Publication rechecks
 owner/phase without repeating selected status hooks; ordinary post-solver edits
 retain their existing behavior.
+
+[CapsuleShapeTests](../../tests/Electron2D.Tests/CapsuleShapeTests.cs) now runs the full existing resource/solver/Area/lifetime suite on explicitly selected CPU/GPU worlds, including a real ray query after PackedScene instantiation and warmed zero owner/all-thread managed allocation. Original numerical tolerances remain unchanged. Native allocations, other platforms and visual acceptance remain unverified.

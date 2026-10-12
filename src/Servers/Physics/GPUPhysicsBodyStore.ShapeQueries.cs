@@ -21,6 +21,15 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             ObjectDisposedException.ThrowIf(_entry is null || _entry.Source is not { IsDisposed: false }, this);
             return ((uint)_entry.Index, _entry.Generation);
         }
+        /// <summary>Rebinds the owned lease without allocating a replacement wrapper or retaining past query resources.</summary>
+        internal void Replace(Shape source)
+        {
+            _store.EnsureAccess(); ObjectDisposedException.ThrowIf(_entry is null, this);
+            ArgumentNullException.ThrowIfNull(source); ObjectDisposedException.ThrowIf(source.IsDisposed, source);
+            if (ReferenceEquals(_entry.Source, source)) return;
+            var next = _store.RetainGeometry(source);
+            _store.ReleaseGeometry(_entry); _entry = next;
+        }
         public void Dispose()
         {
             if (_entry is null) return;

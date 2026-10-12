@@ -2,22 +2,24 @@ using Electron2D;
 
 internal static class ConvexPolygonShapeTests
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU)
     {
         VerifyPointsAndCloud();
-        VerifyLargeHullFixtures();
-        VerifyRotatedFixture();
-        VerifyPackedResource();
-        VerifySharedAndCopiedGeometry();
-        Console.WriteLine("Convex polygon hull, compound fixtures, area, packing and allocation checks passed.");
+        VerifyLargeHullFixtures(backend);
+        VerifyRotatedFixture(backend);
+        VerifyPackedResource(backend);
+        VerifySharedAndCopiedGeometry(backend);
+        Console.WriteLine($"Convex polygon hull, compound fixtures, area, packing and allocation checks passed on {backend}.");
     }
 
-    private static void VerifySharedAndCopiedGeometry()
+    private static void VerifySharedAndCopiedGeometry(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var polygon = new ConvexPolygonShape { Points = RegularPolygon(12, 20) };
         using var duplicate = (ConvexPolygonShape)polygon.Duplicate();
-        using var root = new SubViewport();
+        using var root = new SubViewport { World = world };
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scenario uses the explicitly selected physics backend.");
         var first = new StaticBody { Name = "First" };
         var second = new StaticBody { Name = "Second", Position = new(100, 0) };
         var copied = new StaticBody { Name = "Copy", Position = new(200, 0) };
@@ -53,9 +55,37 @@ internal static class ConvexPolygonShapeTests
         query.Shape = duplicate;
         Check(direct.IntersectShape(query, results) > 0, "Duplicate query compilation retains the original large contour.");
         for (var i = 0; i < 128; i++) { query.Shape = i % 2 == 0 ? polygon : duplicate; direct.IntersectShape(query, results); }
+        _ = GC.GetTotalAllocatedBytes(true);
         var before = GC.GetAllocatedBytesForCurrentThread();
+        var allBefore = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < 128; i++) { query.Shape = i % 2 == 0 ? polygon : duplicate; direct.IntersectShape(query, results); }
-        Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed compiled polygon reuse allocates zero managed bytes.");
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - before;
+        var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        Check(ownerBytes == 0 && allBytes == 0, $"Warmed compiled polygon reuse allocates zero managed bytes. owner={ownerBytes}, all={allBytes}.");
+        Console.WriteLine($"ConvexPolygonShapeTests warm path ({backend}): owner={ownerBytes}, all={allBytes} bytes.");
+        root.RemoveChild(copied); copied.Dispose();
+        var contacts = new Vector2[8];
+        for (var i = 0; i < 128; i++)
+        {
+            query.Shape = i % 2 == 0 ? polygon : duplicate;
+            direct.IntersectShape(query, results); direct.CollideShape(query, contacts);
+            direct.GetRestInfo(query); direct.CastMotion(query);
+        }
+        var standaloneBefore = GC.GetAllocatedBytesForCurrentThread();
+        var standaloneAllBefore = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < 128; i++)
+        {
+            query.Shape = i % 2 == 0 ? polygon : duplicate;
+            Check(direct.IntersectShape(query, results) == (i % 2 == 0 ? 0 : 1), "Alternating shared/standalone geometry returns its current contour.");
+            Check((direct.CollideShape(query, contacts) > 0) == (i % 2 != 0) &&
+                (direct.GetRestInfo(query) is not null) == (i % 2 != 0), "Contact/rest queries use the current shared or standalone contour.");
+            var fractions = direct.CastMotion(query);
+            Check(fractions == (1f, 1f), "Alternating motion queries ignore existing overlaps and preserve no-new-collision fractions.");
+        }
+        var standaloneOwnerBytes = GC.GetAllocatedBytesForCurrentThread() - standaloneBefore;
+        var standaloneAllBytes = GC.GetTotalAllocatedBytes(true) - standaloneAllBefore;
+        Check(standaloneOwnerBytes == 0 && standaloneAllBytes == 0, $"Warmed shared/standalone polygon reuse allocates zero managed bytes: owner={standaloneOwnerBytes}, all={standaloneAllBytes}.");
+        Console.WriteLine($"Alternating standalone polygon queries ({backend}): owner={standaloneOwnerBytes}, all={standaloneAllBytes} bytes.");
     }
 
     private static void VerifyPointsAndCloud()
@@ -101,17 +131,19 @@ internal static class ConvexPolygonShapeTests
         Reject<ObjectDisposedException>(() => _ = duplicate.GetRect());
     }
 
-    private static void VerifyLargeHullFixtures()
+    private static void VerifyLargeHullFixtures(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var floorShape = new RectangleShape { Size = new(200, 20) };
         using var polygon = new ConvexPolygonShape { Points = RegularPolygon(12, 20) };
-        var root = new Node();
+        var root = new SubViewport { World = world };
         var floor = new StaticBody { Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = floorShape });
         var body = new RigidBody { CanSleep = false, ContactMonitor = true, MaxContactsReported = 8 };
         body.AddChild(new CollisionShape { Shape = polygon });
         root.AddChild(floor); root.AddChild(body);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scenario uses the explicitly selected physics backend.");
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y is > 67 and < 74 && body.GetContactCount() > 0 &&
               body.GetCollidingBodies().Contains(floor),
@@ -140,10 +172,14 @@ internal static class ConvexPolygonShapeTests
             "Clearing a live polygon removes every compound fixture and exits the overlap.");
 
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
+        _ = GC.GetTotalAllocatedBytes(true);
         var before = GC.GetAllocatedBytesForCurrentThread();
+        var allBefore = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
-            "Warmed multi-fixture polygon contact and area scans allocate no managed memory.");
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - before;
+        var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        Check(ownerBytes == 0 && allBytes == 0, $"Warmed multi-fixture polygon contact and area scans allocate no managed memory. owner={ownerBytes}, all={allBytes}.");
+        Console.WriteLine($"ConvexPolygonShapeTests warm path ({backend}): owner={ownerBytes}, all={allBytes} bytes.");
 
         polygon.Changed += _ => throw new InvalidOperationException("User callback failure.");
         Reject<InvalidOperationException>(() => polygon.Points = RegularPolygon(12, 10));
@@ -157,27 +193,30 @@ internal static class ConvexPolygonShapeTests
             "Clearing a body polygon removes all compound fixtures while unshaped motion continues.");
     }
 
-    private static void VerifyRotatedFixture()
+    private static void VerifyRotatedFixture(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var floorShape = new RectangleShape { Size = new(200, 20) };
         using var shape = new ConvexPolygonShape
         {
             Points = [new(-30, -10), new(30, -10), new(30, 10), new(-30, 10)]
         };
-        var root = new Node();
+        var root = new SubViewport { World = world };
         var floor = new StaticBody { Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = floorShape });
         var body = new RigidBody { CanSleep = false, LockRotation = true };
         body.AddChild(new CollisionShape { Shape = shape, Rotation = Mathf.Pi * 0.5f });
         root.AddChild(floor); root.AddChild(body);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scenario uses the explicitly selected physics backend.");
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y is > 57 and < 64,
             "A locally rotated polygon fixture rests on its long axis above the floor.");
     }
 
-    private static void VerifyPackedResource()
+    private static void VerifyPackedResource(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var polygon = new ConvexPolygonShape { Points = RegularPolygon(10, 16) };
         using var root = new Node { Name = "Root" };
         var body = new RigidBody { Name = "Body" };
@@ -186,6 +225,14 @@ internal static class ConvexPolygonShapeTests
         body.Owner = root; collision.Owner = root;
         using var packed = new PackedScene(); packed.Pack(root);
         using var copy = packed.Instantiate();
+        var viewport = new SubViewport { World = world }; viewport.AddChild(copy);
+        using var tree = new SceneTree(viewport);
+        tree.PhysicsFrame(1d / 60);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Packed geometry enters the explicitly selected world.");
+        var center = Vector2.Zero;
+        using var ray = PhysicsRayQueryParameters.Create(center + new Vector2(0, -30), center + new Vector2(0, 30));
+        Check(world.DirectSpaceState.IntersectRay(ray) is { } hit && hit.ColliderRID == copy.GetNode<PhysicsBody>("Body").GetRID(),
+            "Instantiated geometry supplies real ray-query fixtures.");
         Check(ReferenceEquals(copy.GetNode<CollisionShape>("Body/Collision").Shape, polygon) &&
               polygon.Points.Length == 10,
             "PackedScene preserves a borrowed large convex polygon resource.");

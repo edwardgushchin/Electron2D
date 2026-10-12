@@ -8,6 +8,8 @@ internal static class PhysicsGPUSpaceTests
         using var device = new GPUPhysicsBodyStore();
         foreach (var backend in new[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU })
         {
+            CapsuleShapeTests.Run(backend); SegmentShapeTests.Run(backend);
+            ConvexPolygonShapeTests.Run(backend); ConcavePolygonShapeTests.Run(backend);
             CharacterBodyTests.Run(backend); AnimatableBodyTests.Run(backend);
             RigidFreezeModeTests.Run(backend); WorldTests.Run(backend);
             PhysicsSurfaceVelocityTests.Run(backend); SeparationRayShapeTests.Run(backend);

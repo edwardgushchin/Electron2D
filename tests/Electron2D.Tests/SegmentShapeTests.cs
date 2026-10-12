@@ -2,23 +2,24 @@ using Electron2D;
 
 internal static class SegmentShapeTests
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU)
     {
         VerifyEndpointsAndCopy();
-        VerifyBodyAndAreaFixtures();
-        VerifyRotatedAndTwoSidedResponse();
-        VerifyDynamicSegment();
-        VerifyMultipleSegmentMass();
-        VerifyUnshapedBodyMass();
-        VerifyPackedResource();
-        Console.WriteLine("Segment shape terrain, two-sided contact, area and allocation checks passed.");
+        VerifyBodyAndAreaFixtures(backend);
+        VerifyRotatedAndTwoSidedResponse(backend);
+        VerifyDynamicSegment(backend);
+        VerifyMultipleSegmentMass(backend);
+        VerifyUnshapedBodyMass(backend);
+        VerifyPackedResource(backend);
+        Console.WriteLine($"Segment shape terrain, two-sided contact, area and allocation checks passed on {backend}.");
     }
 
-    private static void VerifyRotatedAndTwoSidedResponse()
+    private static void VerifyRotatedAndTwoSidedResponse(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var segment = new SegmentShape { A = new(-100, 0), B = new(100, 0) };
         using var circle = new CircleShape();
-        var root = new Node();
+        var root = new SubViewport { World = world };
         var wall = new StaticBody { Position = new(0, 100) };
         var wallCollision = new CollisionShape { Shape = segment };
         wall.AddChild(wallCollision);
@@ -32,6 +33,7 @@ internal static class SegmentShapeTests
         body.AddChild(new CollisionShape { Shape = circle });
         root.AddChild(wall); root.AddChild(body);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scenario uses the explicitly selected physics backend.");
         for (var frame = 0; frame < 60; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y is > 107 and < 114,
             "The segment also blocks a circle approaching from below.");
@@ -44,17 +46,19 @@ internal static class SegmentShapeTests
             "Rotating the collision child turns the segment into a two-sided vertical wall.");
     }
 
-    private static void VerifyDynamicSegment()
+    private static void VerifyDynamicSegment(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var floorShape = new RectangleShape { Size = new(200, 20) };
         using var bodyShape = new SegmentShape { A = new(-20, 0), B = new(20, 0) };
-        var root = new Node();
+        var root = new SubViewport { World = world };
         var floor = new StaticBody { Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = floorShape });
         var body = new RigidBody { CanSleep = false };
         body.AddChild(new CollisionShape { Shape = bodyShape });
         root.AddChild(floor); root.AddChild(body);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scenario uses the explicitly selected physics backend.");
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y is > 86 and < 94 && MathF.Abs(body.LinearVelocity.Y) < 2,
             "A dynamic body with a segment fixture collides with the static floor.");
@@ -67,28 +71,32 @@ internal static class SegmentShapeTests
             "A dynamic segment receives finite rod inertia and responds to torque.");
     }
 
-    private static void VerifyUnshapedBodyMass()
+    private static void VerifyUnshapedBodyMass(PhysicsServer.Backend backend)
     {
-        var root = new Node();
+        using var world = new World(backend);
+        var root = new SubViewport { World = world };
         var body = new RigidBody();
         Reject<ArgumentOutOfRangeException>(() => body.Mass = 1e-40f);
         Check(body.Mass == 1, "A detached body also rejects a mass below the solver range.");
         root.AddChild(body);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scenario uses the explicitly selected physics backend.");
         for (var frame = 0; frame < 60; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y > 100,
             "An unshaped dynamic body retains its requested mass and falls without collision geometry.");
     }
 
-    private static void VerifyMultipleSegmentMass()
+    private static void VerifyMultipleSegmentMass(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var segment = new SegmentShape { A = new(-20, 0), B = new(20, 0) };
-        var root = new Node();
+        var root = new SubViewport { World = world };
         var body = new RigidBody { GravityScale = 0, Mass = 2 };
         body.AddChild(new CollisionShape { Name = "Left", Position = new(-10, 0), Shape = segment });
         body.AddChild(new CollisionShape { Name = "Right", Position = new(10, 0), Shape = segment });
         root.AddChild(body);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scenario uses the explicitly selected physics backend.");
         body.ApplyTorqueImpulse(100);
         tree.PhysicsFrame(1d / 60);
         Check(body.AngularVelocity is > 0.17f and < 0.25f,
@@ -127,17 +135,19 @@ internal static class SegmentShapeTests
         Reject<ObjectDisposedException>(() => copy.A = Vector2.Zero);
     }
 
-    private static void VerifyBodyAndAreaFixtures()
+    private static void VerifyBodyAndAreaFixtures(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var floorShape = new SegmentShape { A = new(-100, 0), B = new(100, 0) };
         using var bodyShape = new CircleShape();
-        var root = new Node();
+        var root = new SubViewport { World = world };
         var floor = new StaticBody { Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = floorShape });
         var body = new RigidBody { CanSleep = false, ContactMonitor = true, MaxContactsReported = 2 };
         body.AddChild(new CollisionShape { Shape = bodyShape });
         root.AddChild(floor); root.AddChild(body);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scenario uses the explicitly selected physics backend.");
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y is > 87 and < 93 && body.GetContactCount() > 0 &&
               body.GetCollidingBodies().Contains(floor),
@@ -174,14 +184,19 @@ internal static class SegmentShapeTests
             "A coincident-point segment keeps a valid fixture and ends the overlap.");
 
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
+        _ = GC.GetTotalAllocatedBytes(true);
         var before = GC.GetAllocatedBytesForCurrentThread();
+        var allBefore = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
-            "Warmed segment contact and area scans allocate no managed memory.");
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - before;
+        var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        Check(ownerBytes == 0 && allBytes == 0, $"Warmed segment contact and area scans allocate no managed memory. owner={ownerBytes}, all={allBytes}.");
+        Console.WriteLine($"SegmentShapeTests warm path ({backend}): owner={ownerBytes}, all={allBytes} bytes.");
     }
 
-    private static void VerifyPackedResource()
+    private static void VerifyPackedResource(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var shape = new SegmentShape { A = new(-20, 4), B = new(30, -8) };
         using var root = new Node { Name = "Root" };
         var body = new StaticBody { Name = "Body" };
@@ -190,6 +205,14 @@ internal static class SegmentShapeTests
         body.Owner = root; collision.Owner = root;
         using var packed = new PackedScene(); packed.Pack(root);
         using var copy = packed.Instantiate();
+        var viewport = new SubViewport { World = world }; viewport.AddChild(copy);
+        using var tree = new SceneTree(viewport);
+        tree.PhysicsFrame(1d / 60);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Packed geometry enters the explicitly selected world.");
+        var center = new Vector2(5, -2);
+        using var ray = PhysicsRayQueryParameters.Create(center + new Vector2(0, -30), center + new Vector2(0, 30));
+        Check(world.DirectSpaceState.IntersectRay(ray) is { } hit && hit.ColliderRID == copy.GetNode<PhysicsBody>("Body").GetRID(),
+            "Instantiated geometry supplies real ray-query fixtures.");
         Check(ReferenceEquals(copy.GetNode<CollisionShape>("Body/Collision").Shape, shape) &&
               shape.GetRect() == new Rect2(-20, -8, 50, 12),
             "PackedScene preserves the borrowed segment and its endpoint bounds.");

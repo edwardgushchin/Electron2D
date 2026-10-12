@@ -153,6 +153,14 @@ internal static class GPUPhysicsShapeQueryTests
         var query = new Query(probe, new(0, new(0, -12)), Limit: 1);
         Check(Query(store, query, hits) == 0, "Standalone query shape is not a world collider");
         circle.Radius = 10; Check(Query(store, query, hits) == 1, "Shared query resource edits upload new geometry");
+        using var small = new CircleShape { Radius = 2 };
+        probe.Replace(small); Check(Query(store, query, hits) == 0, "Rebinding a query lease replaces its geometry without a collider");
+        probe.Replace(circle); Check(Query(store, query, hits) == 1, "Rebinding back preserves the original shared geometry");
+        using var disposed = new CircleShape(); disposed.Dispose();
+        Reject<ObjectDisposedException>(() => probe.Replace(disposed));
+        Reject<ArgumentNullException>(() => probe.Replace(null!));
+        Reject<InvalidOperationException>(() => Task.Run(() => probe.Replace(small)).GetAwaiter().GetResult());
+        Check(Query(store, query, hits) == 1, "Rejected rebinding retains the current valid query geometry");
         Check(store.Count == 1 && store.ShapeCount == 1, "Query geometry does not create simulation bodies or shapes");
         Reject<ArgumentOutOfRangeException>(() => Query(store, query with { Margin = -1 }, new Store.ShapeQueryHit[1]));
         Reject<ArgumentException>(() => Query(store, query with { Pose = new(0, new(2, 1), 0, default) }, new Store.ShapeQueryHit[1]));
@@ -160,6 +168,7 @@ internal static class GPUPhysicsShapeQueryTests
         Reject<InvalidOperationException>(() => Task.Run(() => Query(store, query, new Store.ShapeQueryHit[1])).GetAwaiter().GetResult());
         Reject<InvalidOperationException>(() => Task.Run(probe.Dispose).GetAwaiter().GetResult());
         probe.Dispose(); Reject<ObjectDisposedException>(() => Query(store, query, new Store.ShapeQueryHit[1]));
+        Reject<ObjectDisposedException>(() => probe.Replace(circle));
         using var next = store.RetainQueryGeometry(circle); Check(Query(store, query with { Geometry = next }, hits) == 1, "Lease reuse reloads query geometry without stale handles");
         circle.Dispose(); Reject<ObjectDisposedException>(() => Query(store, query with { Geometry = next }, new Store.ShapeQueryHit[1]));
         store.Dispose(); next.Dispose(); Reject<ObjectDisposedException>(() => Query(store, query, new Store.ShapeQueryHit[1]));

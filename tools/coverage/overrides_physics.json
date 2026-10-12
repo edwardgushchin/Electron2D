@@ -6114,7 +6114,7 @@
         "PhysicsDirectSpaceState2D::method:intersect_shape(PhysicsShapeQueryParameters2D:,int:)"
       ],
       "state": "Implemented",
-      "reason": "Typed shape RID/resource queries execute swept overlap, eight-refinement safe/unsafe motion, contact pairs and deepest rest information with RID/index identity, filters and live scene/server fixtures. Initial overlaps and directed containment treat complete compound slots, excluding internal seams (ADR 0063, PhysicsShapeQueryTests). Independent resident GPU kernels execute; public GPU-world binding remains open."
+      "reason": "Typed shape RID/resource queries execute swept overlap, eight-refinement safe/unsafe motion, contact pairs and deepest rest information with RID/index identity, filters and live scene/server fixtures. Initial overlaps and directed containment treat complete compound slots, excluding internal seams (ADR 0063, PhysicsShapeQueryTests). Public CPU/GPU world queries execute. ConvexPolygonShapeTests verifies 128 warmed alternating shared/standalone overlap/contact/rest/motion cycles at zero owner/all-thread bytes; the GPU adapter rebinds one lease without retaining past resources. Lifecycle/thread/rejected replacements are checked by GPUPhysicsShapeQueryTests. Full cross-family numerical conformance remains separate."
     },
     {
       "godot": [
@@ -6206,7 +6206,7 @@
         "ConcavePolygonShape2D::property:segments"
       ],
       "state": "Implemented",
-      "reason": "Hollow paired-segment resource and multi-fixture body/area integration execute under ADR 0064; ConcavePolygonShapeTests covers ownership, bounds, inside-versus-edge detection, point fallback, live edits, packing and warm allocation."
+      "reason": "Hollow paired-segment resource and multi-fixture body/area integration execute under ADR 0064; ConcavePolygonShapeTests covers ownership, bounds, inside-versus-edge detection, point fallback, live edits, packing and warm allocation. Complete existing fixtures now run explicitly selected CPU/GPU worlds, with unchanged physical tolerances, actual packed-scene ray queries and zero owner/all-thread bytes over warmed full frames or repeated queries (ELECTRON2D_TEST_GEOMETRY_CONTRACT). Native/platform/visual and broader solver acceptance remain separate."
     },
     {
       "godot": [
@@ -6243,7 +6243,7 @@
         "ConvexPolygonShape2D::property:points"
       ],
       "state": "Implemented",
-      "reason": "Solid convex hull resource, point-cloud generation and compound fixtures above eight vertices execute under ADR 0062. PhysicsShapeGeometry exposes borrowed engine values; PhysicsShapeBackend owns compiled CPU hulls. ConvexPolygonShapeTests covers bounds, winding, invalid input, independent copies/shared borrowers, rotated/dynamic contacts, area monitoring, live/rejected edits, packing and warmed query allocation."
+      "reason": "Solid convex hull resource, point-cloud generation and compound fixtures above eight vertices execute under ADR 0062. PhysicsShapeGeometry exposes borrowed engine values; PhysicsShapeBackend owns compiled CPU hulls. ConvexPolygonShapeTests covers bounds, winding, invalid input, independent copies/shared borrowers, rotated/dynamic contacts, area monitoring, live/rejected edits, packing and warmed query allocation. Complete existing fixtures now run explicitly selected CPU/GPU worlds, with unchanged physical tolerances, actual packed-scene ray queries and zero owner/all-thread bytes over warmed full frames or repeated queries (ELECTRON2D_TEST_GEOMETRY_CONTRACT). Native/platform/visual and broader solver acceptance remain separate."
     },
     {
       "godot": [
@@ -6252,7 +6252,7 @@
         "SegmentShape2D::property:b"
       ],
       "state": "Implemented",
-      "reason": "Two-sided segment fixtures, exact endpoints/bounds, copying and live body/area contacts execute under ADR 0061; SegmentShapeTests covers rotated and dynamic geometry, degenerate fallback, mass/inertia, packing, failures and warm allocation."
+      "reason": "Two-sided segment fixtures, exact endpoints/bounds, copying and live body/area contacts execute under ADR 0061; SegmentShapeTests covers rotated and dynamic geometry, degenerate fallback, mass/inertia, packing, failures and warm allocation. Complete existing fixtures now run explicitly selected CPU/GPU worlds, with unchanged physical tolerances, actual packed-scene ray queries and zero owner/all-thread bytes over warmed full frames or repeated queries (ELECTRON2D_TEST_GEOMETRY_CONTRACT). Native/platform/visual and broader solver acceptance remain separate."
     },
     {
       "godot": [
@@ -6305,7 +6305,7 @@
         "CapsuleShape2D::property:radius"
       ],
       "state": "Implemented",
-      "reason": "Coupled dimensions, bounds, resource copying and live body/area fixtures execute under ADR 0059; CapsuleShapeTests covers defaults, degenerate values, rotation, contacts, packing, callback failure and warm allocation."
+      "reason": "Coupled dimensions, bounds, resource copying and live body/area fixtures execute under ADR 0059; CapsuleShapeTests covers defaults, degenerate values, rotation, contacts, packing, callback failure and warm allocation. Complete existing fixtures now run explicitly selected CPU/GPU worlds, with unchanged physical tolerances, actual packed-scene ray queries and zero owner/all-thread bytes over warmed full frames or repeated queries (ELECTRON2D_TEST_GEOMETRY_CONTRACT). Native/platform/visual and broader solver acceptance remain separate."
     },
     {
       "godot": [
@@ -6672,7 +6672,7 @@
         "RigidBody2D::property:freeze_mode"
       ],
       "state": "Implemented",
-      "reason": "ADR 0075: typed Static=0/default and Kinematic=1 choose the frozen physical role. RigidFreezeModeTests runs on public CPU and independent GPU worlds and verifies unaffected unfrozen dynamics, current mass/locks restoration, manual query/zero-step targets, angular velocity tolerance and idle stability, ordinary/fast dynamic path contacts, full outer-step force and single callback duration, disable override/reentry, packed state, input/thread/phase rejection and zero warmed managed allocation."
+      "reason": "ADR 0075: typed Static=0/default and Kinematic=1 choose the frozen physical role. RigidFreezeModeTests runs on public CPU and independent GPU worlds and verifies unaffected unfrozen dynamics, current mass/locks restoration, manual query/zero-step targets, angular velocity tolerance and idle stability, ordinary/fast dynamic path contacts, full outer-step force and single callback duration, disable override/reentry, packed state, input/thread/phase rejection and zero warmed managed allocation. PackedScene explicitly receives the selected World, and public BodyGetMode assertions plus 64 warmed moving full frames at 0/0 owner/all-thread bytes close the formerly implicit CPU storage check."
     },
     {
       "godot": [

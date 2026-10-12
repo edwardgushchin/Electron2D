@@ -1,6 +1,6 @@
 # Resident GPU shape queries
 
-Last updated: 2026-10-09
+Last updated: 2026-10-12
 
 ## Boundary and ownership
 
@@ -12,6 +12,12 @@ the managed solver query path. [Shared world integration](physics-backends.md)
 records the executed public checks and remaining full-contract/network obligations.
 
 RetainQueryGeometry borrows an authored Shape in a disposable QueryGeometry lease.
+The public direct-space adapter rebinds its one retained lease when the selected
+resource changes. It acquires the new geometry before releasing the old reference,
+reuses the wrapper and retains no history of previous query resources. Rejected
+null/disposed/off-owner rebinding preserves the current lease; a retired lease
+cannot be rebound. World disposal still releases its current geometry. Existing
+geometry slot/vertex reuse, uploads and fences remain unchanged.
 The lease shares the world's geometry cache, observes resource changes and has no
 collider identity, mass, body or pair entry. Dispose releases its geometry reference;
 store disposal clears resource references even when a lease survives. Querying a
@@ -133,3 +139,5 @@ shape queries retain initial overlap during motion; body-motion recovery/casts
 retain their own directed-ray policy. The [public GPU world adapter](physics-backends.md) now uses these kernels; full family conformance remains open.
 
 ObjectID now travels with each selected result, adding 16 B per record. The [object association report](physics-object-bindings.md) records the new transfer measurement and snapshot/lifetime checks.
+
+The public GPU adapter retains one rebindable query-geometry lease. Alternating live resources reuses its wrapper and retires the previous reference; past resources are not accumulated. ConvexPolygonShapeTests exercises 128 warmed overlap/contact/rest/motion cycles between shared and standalone geometry on CPU/GPU with zero owner/all-thread bytes, preserving current contour results and initial-overlap fractions. GPUPhysicsShapeQueryTests checks successful replacement, null/disposed/thread rejection with preserved previous geometry, and retired lease failure. Geometry uploads and query waits retain their existing separate costs.

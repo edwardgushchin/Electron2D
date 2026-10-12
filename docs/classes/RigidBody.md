@@ -296,3 +296,5 @@ actual selected Solve. Writes and numerical queries retain their rejection guard
 automatic geometry-dependent reads still need ordinary query access. The public-only
 consumer verifies scene/raw ownership, failures and 128 full active frames at zero
 owner/all-thread managed allocation. Complete numerical-extension acceptance stays open.
+
+RigidFreezeModeTests verifies packed freeze configuration in an explicitly assigned CPU/GPU World, queries public effective BodyGetMode, and measures 64 warmed moving frozen-kinematic full frames at zero owner/all-thread managed bytes. Viewport.World remains a live, nonserialized binding.

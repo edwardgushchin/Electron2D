@@ -2,12 +2,12 @@ using Electron2D;
 
 internal static class CapsuleShapeTests
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU)
     {
         VerifyDimensionsAndCopy();
-        VerifyBodyAndAreaFixtures();
-        VerifyPackedResource();
-        Console.WriteLine("Capsule shape dimensions, contacts, areas, packing and allocation checks passed.");
+        VerifyBodyAndAreaFixtures(backend);
+        VerifyPackedResource(backend);
+        Console.WriteLine($"Capsule shape dimensions, contacts, areas, packing and allocation checks passed on {backend}.");
     }
 
     private static void VerifyDimensionsAndCopy()
@@ -65,11 +65,12 @@ internal static class CapsuleShapeTests
         Reject<ObjectDisposedException>(() => copy.Height = 40);
     }
 
-    private static void VerifyBodyAndAreaFixtures()
+    private static void VerifyBodyAndAreaFixtures(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var floorShape = new RectangleShape { Size = new(200, 20) };
         using var bodyShape = new CapsuleShape();
-        var root = new Node();
+        var root = new SubViewport { World = world };
         var floor = new StaticBody { Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = floorShape });
         var body = new RigidBody { CanSleep = false, ContactMonitor = true, MaxContactsReported = 4 };
@@ -77,6 +78,7 @@ internal static class CapsuleShapeTests
         body.AddChild(bodyCollision);
         root.AddChild(floor); root.AddChild(body);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scenario uses the explicitly selected physics backend.");
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y is > 72 and < 78 && body.GetContactCount() > 0 &&
               body.GetCollidingBodies().Length == 1 && ReferenceEquals(body.GetCollidingBodies()[0], floor),
@@ -121,14 +123,19 @@ internal static class CapsuleShapeTests
             "A zero-size capsule fixture removes its sensor overlap on the next step.");
 
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
+        _ = GC.GetTotalAllocatedBytes(true);
         var before = GC.GetAllocatedBytesForCurrentThread();
+        var allBefore = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
-            "Warmed capsule body contact and area scans allocate no managed memory.");
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - before;
+        var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        Check(ownerBytes == 0 && allBytes == 0, $"Warmed capsule body contact and area scans allocate no managed memory. owner={ownerBytes}, all={allBytes}.");
+        Console.WriteLine($"CapsuleShapeTests warm path ({backend}): owner={ownerBytes}, all={allBytes} bytes.");
     }
 
-    private static void VerifyPackedResource()
+    private static void VerifyPackedResource(PhysicsServer.Backend backend)
     {
+        using var world = new World(backend);
         using var shape = new CapsuleShape { Radius = 7, MidHeight = 23 };
         using var root = new Node { Name = "Root" };
         var body = new RigidBody { Name = "Body" };
@@ -137,6 +144,14 @@ internal static class CapsuleShapeTests
         body.Owner = root; collision.Owner = root;
         using var packed = new PackedScene(); packed.Pack(root);
         using var copy = packed.Instantiate();
+        var viewport = new SubViewport { World = world }; viewport.AddChild(copy);
+        using var tree = new SceneTree(viewport);
+        tree.PhysicsFrame(1d / 60);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Packed geometry enters the explicitly selected world.");
+        var center = Vector2.Zero;
+        using var ray = PhysicsRayQueryParameters.Create(center + new Vector2(0, -30), center + new Vector2(0, 30));
+        Check(world.DirectSpaceState.IntersectRay(ray) is { } hit && hit.ColliderRID == copy.GetNode<PhysicsBody>("Body").GetRID(),
+            "Instantiated geometry supplies real ray-query fixtures.");
         Check(ReferenceEquals(copy.GetNode<CollisionShape>("Body/Collision").Shape, shape) &&
               shape.Radius == 7 && shape.Height == 37,
             "PackedScene keeps the borrowed capsule resource and its coupled dimensions.");

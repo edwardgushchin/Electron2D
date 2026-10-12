@@ -157,3 +157,5 @@ geometry, continue every rollback/retirement and retain all failures; incomplete
 borrowers retry during guarded preparation. Ten formerly unmapped extension rows
 project to the common resource role as Partial. Full numerical-extension and final
 physical/network/performance acceptance remain open.
+
+The complete existing capsule, two-sided segment, convex and hollow concave test suites now run explicitly selected CPU/GPU worlds. They exercise linked/degenerate geometry, rotation and solver response, Area transitions, resource edits including throwing Changed callbacks, shared/independent copies, mass/inertia and real ray queries after PackedScene instantiation. RigidFreezeModeTests also assigns the selected World after loading; public BodyGetMode replaces internal role probes. Existing numeric tolerances are retained: these checks assert supported poses, physical response and exact identities rather than identical backend trajectories. Warm brackets measure 64 full scene frames or 128 query cycles at zero owner/all-thread managed bytes on Linux/.NET 10. Native allocation, other platforms, broad-world performance and owner visual acceptance remain unverified.

@@ -145,6 +145,15 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GEOMETRY_CONTRACT") is { } geometryBackend)
+{
+    foreach (var backend in geometryBackend == "cpu" ? new[] { PhysicsServer.Backend.CPU } : new[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU })
+    {
+        CapsuleShapeTests.Run(backend); SegmentShapeTests.Run(backend);
+        ConvexPolygonShapeTests.Run(backend); ConcavePolygonShapeTests.Run(backend); RigidFreezeModeTests.Run(backend);
+    }
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNER_DISABLE_CONTRACT") is { } ownerBackend)
 {
     foreach (var backend in ownerBackend == "cpu" ? new[] { PhysicsServer.Backend.CPU } : new[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU })
