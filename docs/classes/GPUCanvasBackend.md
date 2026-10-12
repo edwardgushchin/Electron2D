@@ -1,6 +1,6 @@
 # GPUCanvasBackend
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 - Declaration: `internal sealed unsafe class GPUCanvasBackend : CanvasBackend`
 - Source: [GPUCanvasBackend.cs](../../src/Servers/Rendering/GPUCanvasBackend.cs)
@@ -92,3 +92,7 @@ Native group/copy boundaries end a render pass before switching attachments, cop
 ClipChildren MaskBegin copies main background into BackBuffer, then captures children. MaskEnd restores main drawing. The built-in Clip shader separately samples command alpha and screen RGB using physical inverse dimensions; AndDraw reuses uploaded owner vertices for its early pass. Nested/writable-storage hazards reject before Draw. See [alpha masks](../components/canvas-rendering.md#canvas-alpha-masks).
 
 [Automatic scene lighting](../components/shader-materials.md#automatic-scene-lighting) composes the computed fragment color before blend, preserving parameters, texture roles, discard, returns, reload and hardware instancing. Normal/specular and point-mask samplers share the native sixteen-binding stage capacity; four user uniform slots remain available. Current rendered evidence is Linux/Vulkan.
+
+## Device export integration
+
+[GPUCanvasBackend.DeviceTextures.cs](../../src/Servers/Rendering/GPUCanvasBackend.DeviceTextures.cs) creates/reuses the actual upload cache allocation and exports completed viewport target pairs. Borrowed ordinary/array exports retain cache residency until release or retirement. Allocation metadata and optional storage flags match native format/usage support. Device upload versions commit before canvas submission to avoid a second upload overwriting device writes. RenderingServer.TextureGetRDTexture exports actual renderer-managed ordinary uploads, independent arrays and completed viewport images to the retained device without CPU copying. Compatible authored updates keep the RID; replacing allocation, disposing the source, rebinding the viewport or retiring its target expires it. A viewport RID resolves the completed ping-pong image when each command is recorded. FreeRID releases only the borrowed wrapper; queued native operations retain the old allocation through completion. Device writes change GPU storage, while authored CPU snapshots remain unchanged; the next authored update overwrites device changes. Sampling, raw update/copy/read and supported storage roles reflect actual native allocation flags. Prepare changed uploads before starting a draw list. Empty storage, unrendered targets and the compatibility renderer return an empty RID. Distinct sRGB views still require native format-view ownership.

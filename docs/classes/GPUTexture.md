@@ -1,6 +1,6 @@
 # GPUTexture
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 - Declaration: `internal sealed unsafe class GPUTexture : IDisposable`
 - Source: [GPUTexture.cs](../../src/Servers/Rendering/GPUTexture.cs)
@@ -31,6 +31,13 @@ gpuTexture.CommitUpload();
 | `internal GPUTexture(RenderHandle device, LayeredTexturePixels pixels)` | Creates real array storage and bounded transfer capacity. |
 | `internal LayeredTexturePixels? ArrayPixels` | Current immutable array snapshot; upload version commits after submission. |
 | `internal TexturePixels Pixels` | [Pending pixels](#pending-pixels) |
+| `internal RenderHandle Allocation { get; }` | Retained SafeHandle leased by device exports. |
+| `internal bool IsDisposed { get; }` | True after allocation disposal. |
+| `internal RenderingDevice.TextureUsageBits DeviceUsage { get; }` | Actual native sampling/update/copy and supported storage roles. |
+| `internal bool NeedsUpload { get; }` | Current authored version differs from the submitted version. |
+| `internal bool NeedsRecording { get; }` | Current authored version is neither submitted nor already recorded. |
+| `internal void RecordUpload()` | Retains the encoded authored version until submission. |
+| `internal void CancelUpload()` | Clears the cancelled recorded version. |
 | `internal nint Handle { get; }` | [Native handle](#native-handle) |
 | `internal void Upload(nint command)` | [Upload](#upload) |
 | `internal void CommitUpload()` | [Commit upload](#commit-upload) |
@@ -66,7 +73,7 @@ Skips the already committed snapshot. Otherwise maps/copies upload bytes, encode
 
 `internal void CommitUpload()`
 
-Marks the current snapshot uploaded after successful command submission. Never call for cancelled/failed frames.
+Marks the recorded snapshot (or current backend upload snapshot) uploaded after successful command submission. Never call for cancelled/failed frames.
 
 ### Disposal
 
@@ -79,3 +86,7 @@ Disposes texture and transfer SafeHandles; device retention is released with the
 [RenderingRuntimeTests](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs), [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) and [shader import checks](../../tools/shaders/check.py) exercise the supported interface, bad inputs and resource lifecycle. GPU output is verified on Linux Wayland/Vulkan; broader shader features and other backends remain incomplete.
 
 RID proxy batches resolve to their root Texture before cache preparation; each root gets one allocation regardless of alias count. Prepared server-owned source allocations remain cached until free/shutdown. Retargeting among already prepared roots retains their native handles. [Proxy tests](../../tests/Electron2D.Tests/RenderingTextureProxyTests.cs) check sharing and stable handles on both backends.
+
+## Shared renderer-device ownership
+
+Ordinary/array allocation leases retain the texture after backend retirement until pending device commands complete. Storage usage is added only when the complete native graphics/compute read/write flag combination is supported. Raw update/copy use native transfer roles. RecordUpload/CancelUpload distinguish encoded work from successful submission; CommitUpload commits that exact version. Device writes do not mutate authored snapshots and are preserved until a later authored upload. See [renderer export checks](../components/local-compute.md#renderer-texture-export-checkpoint).

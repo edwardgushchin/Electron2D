@@ -15,7 +15,7 @@ public sealed unsafe partial class RenderingDevice
     }
     private void ClearMultisample(Entry entry, Color color)
     {
-        var target = new SDL.GPUColorTargetInfo { Texture = entry.Handle!.DangerousGetHandle(), ClearColor = new() { R = color.R, G = color.G, B = color.B, A = color.A }, LoadOp = SDL.GPULoadOp.Clear, StoreOp = SDL.GPUStoreOp.Store };
+        var target = new SDL.GPUColorTargetInfo { Texture = entry.NativeHandle, ClearColor = new() { R = color.R, G = color.G, B = color.B, A = color.A }, LoadOp = SDL.GPULoadOp.Clear, StoreOp = SDL.GPUStoreOp.Store };
         var pass = SDL.BeginGPURenderPass(Commands(), (nint)(&target), 1, 0);
         if (pass == 0) throw GPUPhysicsDevice.Failure("clear multisample target");
         SDL.EndGPURenderPass(pass);
@@ -34,7 +34,7 @@ public sealed unsafe partial class RenderingDevice
     {
         IdleList(); var source = Get(fromTexture, Kind.Texture); var destination = Get(toTexture, Kind.Texture);
         ResolvePair(source.Texture!, destination.Texture!); TextureRole(source, TextureUsageBits.CanCopyFrom); TextureRole(destination, TextureUsageBits.CanCopyTo);
-        var target = new SDL.GPUColorTargetInfo { Texture = source.Handle!.DangerousGetHandle(), LoadOp = SDL.GPULoadOp.Load, StoreOp = SDL.GPUStoreOp.ResolveAndStore, ResolveTexture = destination.Handle!.DangerousGetHandle() };
+        var target = new SDL.GPUColorTargetInfo { Texture = source.NativeHandle, LoadOp = SDL.GPULoadOp.Load, StoreOp = SDL.GPUStoreOp.ResolveAndStore, ResolveTexture = destination.NativeHandle };
         var pass = SDL.BeginGPURenderPass(Commands(), (nint)(&target), 1, 0);
         if (pass == 0) throw GPUPhysicsDevice.Failure("resolve multisample color target");
         SDL.EndGPURenderPass(pass);

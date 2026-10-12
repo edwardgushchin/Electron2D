@@ -9,7 +9,7 @@ public sealed unsafe partial class RenderingDevice
     internal TextureInfo? CanvasInfo(RID rid)
     {
         Access(true);
-        return _entries.TryGetValue(rid, out var entry) && entry.Kind == Kind.Texture ? entry.Texture : null;
+        return _entries.TryGetValue(rid, out var entry) && entry.Kind == Kind.Texture && entry.Alive ? entry.Texture : null;
     }
     internal TextureInfo ValidateCanvasImage(RID rid, bool array)
     {
@@ -22,7 +22,7 @@ public sealed unsafe partial class RenderingDevice
     internal nint CanvasHandle(RID rid, nint device)
     {
         Access(true); if (Device != device) throw new InvalidOperationException("The image belongs to a different native renderer.");
-        return _entries.TryGetValue(rid, out var entry) && entry.Kind == Kind.Texture ? entry.Handle!.DangerousGetHandle() : throw new ArgumentException("The canvas image is not live.", nameof(rid));
+        return _entries.TryGetValue(rid, out var entry) && entry.Kind == Kind.Texture && entry.Alive ? entry.NativeHandle : throw new ArgumentException("The canvas image is not live.", nameof(rid));
     }
     internal void FlushRendererCommands()
     {
@@ -99,7 +99,7 @@ public sealed unsafe partial class RenderingDevice
             var width = Math.Max(1, info.Width >> mip); var height = Math.Max(1, info.Height >> mip);
             var blit = new SDL.GPUBlitInfo
             {
-                Source = new() { Texture = source.Handle!.DangerousGetHandle(), LayerOrDepthPlane = layer, MipLevel = (uint)mip, W = width, H = height },
+                Source = new() { Texture = source.NativeHandle, LayerOrDepthPlane = layer, MipLevel = (uint)mip, W = width, H = height },
                 Destination = new() { Texture = target.DangerousGetHandle(), MipLevel = (uint)mip, W = width, H = height },
                 LoadOp = SDL.GPULoadOp.DontCare,
                 Filter = SDL.GPUFilter.Nearest

@@ -474,7 +474,10 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     }
     internal override RenderHandle CreateTarget(Vector2i size, Color clear, bool mipmaps = false)
     {
-        var info = new SDL.GPUTextureCreateInfo { Type = SDL.GPUTextureType.TextureType2D, Format = SDL.GPUTextureFormat.R8G8B8A8Unorm, Width = (uint)size.X, Height = (uint)size.Y, LayerCountOrDepth = 1, NumLevels = mipmaps ? (uint)(1 + System.Numerics.BitOperations.Log2((uint)Math.Max(size.X, size.Y))) : 1, Usage = SDL.GPUTextureUsageFlags.ColorTarget | SDL.GPUTextureUsageFlags.Sampler };
+        var usage = SDL.GPUTextureUsageFlags.ColorTarget | SDL.GPUTextureUsageFlags.Sampler;
+        var storage = SDL.GPUTextureUsageFlags.GraphicsStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageWrite | SDL.GPUTextureUsageFlags.ComputeStorageSimultaneousReadWrite;
+        if (SDL.GPUTextureSupportsFormat(Device, SDL.GPUTextureFormat.R8G8B8A8Unorm, SDL.GPUTextureType.TextureType2D, usage | storage)) usage |= storage;
+        var info = new SDL.GPUTextureCreateInfo { Type = SDL.GPUTextureType.TextureType2D, Format = SDL.GPUTextureFormat.R8G8B8A8Unorm, Width = (uint)size.X, Height = (uint)size.Y, LayerCountOrDepth = 1, NumLevels = mipmaps ? (uint)(1 + System.Numerics.BitOperations.Log2((uint)Math.Max(size.X, size.Y))) : 1, Usage = usage };
         var target = new RenderHandle(SDL.CreateGPUTexture(Device, in info), h => SDL.ReleaseGPUTexture(Device, h), _device);
         var command = SDL.AcquireGPUCommandBuffer(Device);
         try

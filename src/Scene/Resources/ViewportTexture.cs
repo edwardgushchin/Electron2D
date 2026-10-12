@@ -3,7 +3,9 @@ namespace Electron2D;
 /// <summary>A scene-local live view of a viewport's completed native canvas image.</summary>
 /// <remarks>Viewport.GetTexture supplies a direct view. Authored ViewportPath resolves from GetLocalScene
 /// after scene reconstruction. The texture borrows its viewport; disposing either never owns the other.
-/// Native sampling uses completed render targets. GetImage is an explicit caller-owned readback.</remarks>
+/// Native sampling uses completed render targets. GetImage is an explicit caller-owned readback.
+/// RenderingServer.TextureGetRDTexture exports the completed GPU image without copying. Its RID follows completed
+/// ping-pong buffers at command recording and expires on target replacement, viewport rebinding or disposal.</remarks>
 public sealed class ViewportTexture : Texture
 {
     private string _path = "";

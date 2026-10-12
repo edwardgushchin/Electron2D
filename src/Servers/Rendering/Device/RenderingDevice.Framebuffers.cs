@@ -92,11 +92,11 @@ public sealed unsafe partial class RenderingDevice
     private RID CreateFramebuffer(ReadOnlySpan<RID> textures, RDFramebufferPass? pass, int validateWithFormat)
     {
         IdleList(); if (textures.Length is < 1 or > 17) throw new ArgumentOutOfRangeException(nameof(textures));
-        var formats = new DataFormat[textures.Length]; var usage = new TextureUsageBits[textures.Length]; var samples = new TextureSamples[textures.Length]; var unique = new HashSet<RID>(); Vector2i size = default;
+        var formats = new DataFormat[textures.Length]; var usage = new TextureUsageBits[textures.Length]; var samples = new TextureSamples[textures.Length]; var unique = new HashSet<nint>(); Vector2i size = default;
         for (var i = 0; i < textures.Length; i++)
         {
-            var info = Get(textures[i], Kind.Texture).Texture!;
-            if (!unique.Add(textures[i]) || info.Type != TextureType.Texture || info.Layers != 1 || info.Mips != 1) throw new ArgumentException("Framebuffer images require distinct ordinary single-mip targets.", nameof(textures));
+            var image = Get(textures[i], Kind.Texture); var info = image.Texture!;
+            if (!unique.Add(image.NativeHandle) || info.Type != TextureType.Texture || info.Layers != 1 || info.Mips != 1) throw new ArgumentException("Framebuffer images require distinct ordinary single-mip targets.", nameof(textures));
             var current = new Vector2i(checked((int)info.Width), checked((int)info.Height)); if (i == 0) size = current; else if (size != current) throw new ArgumentException("Attachment dimensions must match.", nameof(textures));
             formats[i] = info.Format; usage[i] = info.Usage; samples[i] = info.Samples;
         }
@@ -134,7 +134,7 @@ public sealed unsafe partial class RenderingDevice
     public bool FramebufferIsValid(RID framebuffer)
     {
         Access(); if (!_entries.TryGetValue(framebuffer, out var entry) || entry.Kind != Kind.Framebuffer) return false;
-        foreach (var image in entry.Target!.Textures) if (!_entries.ContainsKey(image)) return false;
+        foreach (var image in entry.Target!.Textures) if (!_entries.TryGetValue(image, out var texture) || !texture.Alive) return false;
         return true;
     }
     private Framebuffer GetFramebuffer(RID rid)

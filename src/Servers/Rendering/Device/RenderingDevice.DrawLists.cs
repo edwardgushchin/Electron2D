@@ -49,17 +49,17 @@ public sealed unsafe partial class RenderingDevice
             var color = clearColorValues.IsEmpty ? default : clearColorValues[i];
             colors[i] = new()
             {
-                Texture = Get(target.Textures[layout.Colors[i]], Kind.Texture).Handle!.DangerousGetHandle(),
+                Texture = Get(target.Textures[layout.Colors[i]], Kind.Texture).NativeHandle,
                 ClearColor = new() { R = color.R, G = color.G, B = color.B, A = color.A },
                 LoadOp = (clears & (1u << i)) != 0 ? SDL.GPULoadOp.Clear : (ignores & (1u << i)) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load,
                 StoreOp = layout.Resolves[i] >= 0 ? SDL.GPUStoreOp.ResolveAndStore : SDL.GPUStoreOp.Store,
-                ResolveTexture = layout.Resolves[i] >= 0 ? Get(target.Textures[layout.Resolves[i]], Kind.Texture).Handle!.DangerousGetHandle() : 0
+                ResolveTexture = layout.Resolves[i] >= 0 ? Get(target.Textures[layout.Resolves[i]], Kind.Texture).NativeHandle : 0
             };
         }
         var depth = new SDL.GPUDepthStencilTargetInfo();
         if (depthIndex >= 0)
         {
-            depth.Texture = Get(target.Textures[depthIndex], Kind.Texture).Handle!.DangerousGetHandle(); depth.ClearDepth = clearDepthValue; depth.ClearStencil = (byte)clearStencilValue;
+            depth.Texture = Get(target.Textures[depthIndex], Kind.Texture).NativeHandle; depth.ClearDepth = clearDepthValue; depth.ClearStencil = (byte)clearStencilValue;
             depth.LoadOp = (drawFlags & DrawFlags.ClearDepth) != 0 ? SDL.GPULoadOp.Clear : (drawFlags & DrawFlags.IgnoreDepth) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load;
             depth.StencilLoadOp = (drawFlags & DrawFlags.ClearStencil) != 0 ? SDL.GPULoadOp.Clear : (drawFlags & DrawFlags.IgnoreStencil) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load;
             depth.StoreOp = SDL.GPUStoreOp.Store; depth.StencilStoreOp = SDL.GPUStoreOp.Store;
@@ -154,16 +154,16 @@ public sealed unsafe partial class RenderingDevice
             }
             else if (descriptor.Type == UniformType.SamplerWithTexture)
             {
-                var image = Get(ids[1]); foreach (var target in _drawTarget!.Textures) if (target == ids[1]) throw new InvalidOperationException("An attachment cannot be sampled during its render pass.");
-                var binding = samplerBinding; binding[0] = new() { Sampler = resource.Handle!.DangerousGetHandle(), Texture = image.Handle!.DangerousGetHandle() };
+                var image = Get(ids[1]); foreach (var target in _drawTarget!.Textures) if (Get(target, Kind.Texture).NativeHandle == image.NativeHandle) throw new InvalidOperationException("An attachment cannot be sampled during its render pass.");
+                var binding = samplerBinding; binding[0] = new() { Sampler = resource.NativeHandle, Texture = image.NativeHandle };
                 if (fragment) SDL.BindGPUFragmentSamplers(_drawPass, (uint)descriptor.Native, binding, 1); else SDL.BindGPUVertexSamplers(_drawPass, (uint)descriptor.Native, binding, 1);
             }
             else
             {
-                var binding = storageBinding; binding[0] = resource.Handle!.DangerousGetHandle();
+                var binding = storageBinding; binding[0] = resource.NativeHandle;
                 if (descriptor.Type == UniformType.Image)
                 {
-                    foreach (var target in _drawTarget!.Textures) if (target == ids[0]) throw new InvalidOperationException("An attachment cannot be read as storage during its render pass.");
+                    foreach (var target in _drawTarget!.Textures) if (Get(target, Kind.Texture).NativeHandle == resource.NativeHandle) throw new InvalidOperationException("An attachment cannot be read as storage during its render pass.");
                     if (fragment) SDL.BindGPUFragmentStorageTextures(_drawPass, (uint)descriptor.Native, binding, 1); else SDL.BindGPUVertexStorageTextures(_drawPass, (uint)descriptor.Native, binding, 1);
                 }
                 else { if (fragment) SDL.BindGPUFragmentStorageBuffers(_drawPass, (uint)descriptor.Native, binding, 1); else SDL.BindGPUVertexStorageBuffers(_drawPass, (uint)descriptor.Native, binding, 1); }

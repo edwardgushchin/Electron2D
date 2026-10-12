@@ -196,9 +196,10 @@ public sealed unsafe partial class RenderingDevice
         catch { entry.Handle?.Dispose(); entry.Upload?.Dispose(); throw; }
     }
     private static void Layer(Entry entry, uint layer) { if (layer >= entry.Texture!.Layers) throw new ArgumentOutOfRangeException(nameof(layer)); }
-    private static SDL.GPUTextureRegion Region(Entry entry, uint layer, int mip) => new() { Texture = entry.Handle!.DangerousGetHandle(), Layer = layer, MipLevel = (uint)mip, W = Math.Max(1, entry.Texture!.Width >> mip), H = Math.Max(1, entry.Texture.Height >> mip), D = 1 };
+    private static SDL.GPUTextureRegion Region(Entry entry, uint layer, int mip) => new() { Texture = entry.NativeHandle, Layer = layer, MipLevel = (uint)mip, W = Math.Max(1, entry.Texture!.Width >> mip), H = Math.Max(1, entry.Texture.Height >> mip), D = 1 };
     private void UploadTexture(Entry entry, uint layer, ReadOnlySpan<byte> data)
     {
+        entry.Upload ??= Transfer(entry.Texture!.TransferSize, SDL.GPUTransferBufferUsage.Upload);
         var command = Commands(); var pointer = SDL.MapGPUTransferBuffer(Device, entry.Upload!.DangerousGetHandle(), true);
         if (pointer == 0) throw GPUPhysicsDevice.Failure("map texture upload");
         try { for (var mip = 0; mip < entry.Texture!.Mips; mip++) data.Slice((int)entry.Texture.PackedOffsets[mip], (int)entry.Texture.Sizes[mip]).CopyTo(new Span<byte>((void*)(pointer + (nint)entry.Texture.Offsets[mip]), (int)entry.Texture.Sizes[mip])); }
@@ -276,7 +277,7 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Reports whether an identity is a live texture of this device.</summary>
     /// <param name="texture">The identity to inspect.</param>
     /// <returns>True only for a live owned texture.</returns>
-    public bool TextureIsValid(RID texture) { Access(); return _entries.TryGetValue(texture, out var entry) && entry.Kind == Kind.Texture; }
+    public bool TextureIsValid(RID texture) { Access(); return _entries.TryGetValue(texture, out var entry) && entry.Kind == Kind.Texture && entry.Alive; }
     /// <summary>Copies the actual texture allocation description.</summary>
     /// <param name="texture">Live texture owned by this device.</param>
     /// <returns>A caller-owned description independent of the allocation.</returns>

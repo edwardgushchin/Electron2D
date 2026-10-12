@@ -783,6 +783,7 @@ These types stay inside Electron2D.dll. Games and editor consumers use the publi
 | [RenderHandle](classes/RenderHandle.md) | [CanvasBackend.cs](../src/Servers/Rendering/CanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [GPUCanvasBackend](classes/GPUCanvasBackend.md) | [GPUCanvasBackend.cs](../src/Servers/Rendering/GPUCanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [CompatibilityCanvasBackend](classes/CompatibilityCanvasBackend.md) | [CompatibilityCanvasBackend.cs](../src/Servers/Rendering/CompatibilityCanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
+| [RendererTextureBorrow](classes/RendererTextureBorrow.md) | [RendererTextureBorrow.cs](../src/Servers/Rendering/RendererTextureBorrow.cs) | [local-compute](components/local-compute.md#renderer-texture-export-checkpoint) |
 | [GPUTexture](classes/GPUTexture.md) | [GPUTexture.cs](../src/Servers/Rendering/GPUTexture.cs) | [shader-materials](components/shader-materials.md) |
 | [RenderingTextureRegistry](classes/RenderingTextureRegistry.md), [RenderingTextureRegistry.Entry](classes/RenderingTextureRegistry.md#entry) | [RenderingTextureRegistry.cs](../src/Servers/Rendering/RenderingTextureRegistry.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [ServerTexture](classes/ServerTexture.md) | [RenderingTextureRegistry.cs](../src/Servers/Rendering/RenderingTextureRegistry.cs) | [canvas-rendering](components/canvas-rendering.md) |
@@ -943,7 +944,7 @@ The existing AnimationMixer/AnimationPlayer also use [AnimationBlendValue.cs](..
 | [Rendering](domains/rendering.md) | [Offscreen targets](components/canvas-rendering.md#offscreen-canvas-targets) | [ViewportTexture](classes/ViewportTexture.md) | [ViewportTexture.cs](../src/Scene/Resources/ViewportTexture.cs) | Current | Borrowed scene-local completed native image and explicit readback. |
 | [Rendering](domains/rendering.md) | [Offscreen targets](components/canvas-rendering.md#offscreen-canvas-targets) | [ViewportClearMode](classes/ViewportClearMode.md) | [SubViewport.cs](../src/Scene/Main/SubViewport.cs) | Current | Exact Always/Never/Once target retention policy. |
 | [Rendering](domains/rendering.md) | [Offscreen targets](components/canvas-rendering.md#offscreen-canvas-targets) | [ViewportUpdateMode](classes/ViewportUpdateMode.md) | [SubViewport.cs](../src/Scene/Main/SubViewport.cs) | Current | Exact Disabled/Once/WhenVisible/WhenParentVisible/Always submission policy. |
-| [Rendering](domains/rendering.md) | [Offscreen targets](components/canvas-rendering.md#offscreen-canvas-targets) | [CanvasRenderTarget](classes/CanvasRenderTarget.md) | [CanvasRenderTarget.cs](../src/Servers/Rendering/CanvasRenderTarget.cs) | Internal | Owned native completed/write image pair. |
+| [Rendering](domains/rendering.md) | [Offscreen targets](components/canvas-rendering.md#offscreen-canvas-targets) | [CanvasRenderTarget](classes/CanvasRenderTarget.md) | [CanvasRenderTarget.cs](../src/Servers/Rendering/CanvasRenderTarget.cs) | Internal | Owned native completed/write image pair; borrowed device leases follow completed ping-pong and expire on target retirement. |
 
 ## Canvas group and screen composition
 

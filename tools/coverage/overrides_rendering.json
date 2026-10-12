@@ -4394,7 +4394,7 @@
       "godot": "RenderingServer::method:texture_get_rd_texture(RID:,bool:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureGetRDTexture(Electron2D.RID,System.Boolean)",
       "state": "Partial",
-      "reason": "ADR 0028: resolves live ordinary/layered device resources and nested proxies to their borrowed renderer-device RID, including already-sRGB storage; freed sources return empty. Distinct sRGB reinterpretation requires native format-view ownership. Renderer-managed CPU upload/viewport export requires cache invalidation, borrowed native allocation lifetime and mutable device-role integration; those sources currently have no device identity."
+      "reason": "ADR 0028: exports actual ordinary/array renderer uploads and completed viewport native allocations, resolves device wrappers and nested proxies, retains cache/SafeHandle lifetime through queued operations, preserves compatible-update identity and expires on replacement/disposal/rebinding. Viewport commands resolve completed ping-pong storage at record time; native update/copy/read and supported storage roles execute. RGBA8/HDR mip, GLSL/HLSL compute, canvas pixels, resize/readback and 64 active +64 idle zero-managed frames have Linux Wayland evidence. Partial only for distinct sRGB reinterpretation: add native shared format-view ownership and lifetime before exposing a distinct view; already-sRGB device storage returns directly."
     },
     {
       "godot": "RenderingServer::method:texture_replace(RID:,RID:)",

@@ -659,7 +659,8 @@ def main():
         assert f"Electron2D.{target}" in declaration and " | Implemented | " in declaration
         assert "IntegerLightingTests" in declaration and "IntegerCanvasTests" in declaration
     inverse_image = next(row for row in rendering_rows if "method texture_get_rd_texture(" in row)
-    assert " | Partial | " in inverse_image and "borrowed native allocation lifetime" in inverse_image
+    assert " | Partial | " in inverse_image and "exports actual ordinary/array renderer uploads" in inverse_image
+    assert "completed viewport native allocations" in inverse_image and "Partial only for distinct sRGB reinterpretation" in inverse_image
 
     for name in ('texture_proxy_create(', 'texture_proxy_update('):
         row, = [line for line in rendering_rows if line.startswith(f'| [`method {name}')]

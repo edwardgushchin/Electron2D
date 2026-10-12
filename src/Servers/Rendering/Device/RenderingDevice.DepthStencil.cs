@@ -83,7 +83,7 @@ public sealed unsafe partial class RenderingDevice
         for (uint layer = 0; layer < info.Layers; layer++)
             for (uint mip = 0; mip < info.Mips; mip++)
             {
-                var depth = new SDL.GPUDepthStencilTargetInfo { Texture = entry.Handle!.DangerousGetHandle(), Layer = (byte)layer, MipLevel = (byte)mip, ClearDepth = 0, ClearStencil = 0, LoadOp = SDL.GPULoadOp.Clear, StencilLoadOp = SDL.GPULoadOp.Clear, StoreOp = SDL.GPUStoreOp.Store, StencilStoreOp = SDL.GPUStoreOp.Store };
+                var depth = new SDL.GPUDepthStencilTargetInfo { Texture = entry.NativeHandle, Layer = (byte)layer, MipLevel = (byte)mip, ClearDepth = 0, ClearStencil = 0, LoadOp = SDL.GPULoadOp.Clear, StencilLoadOp = SDL.GPULoadOp.Clear, StoreOp = SDL.GPUStoreOp.Store, StencilStoreOp = SDL.GPUStoreOp.Store };
                 var pass = SDL.BeginGPURenderPass(Commands(), 0, 0, (nint)(&depth));
                 if (pass == 0) throw GPUPhysicsDevice.Failure("initialize depth attachment");
                 SDL.EndGPURenderPass(pass);

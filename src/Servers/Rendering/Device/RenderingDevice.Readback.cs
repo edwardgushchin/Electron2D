@@ -128,6 +128,7 @@ public sealed unsafe partial class RenderingDevice
             _completedReadbacks.Enqueue(new(request.ArrayCallback, request.Data, request.Callback));
             _submittedReadbacks.Dequeue(); RecycleReadback(request);
         }
+        RetireRendererTextures();
     }
     private void DeliverReadbacks()
     {

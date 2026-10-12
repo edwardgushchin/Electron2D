@@ -1,6 +1,6 @@
 # ViewportTexture
 
-Last updated: 2026-10-04
+Last updated: 2026-10-12
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.ViewportTexture` · **Source:** [ViewportTexture.cs](../../src/Scene/Resources/ViewportTexture.cs).
 
@@ -219,3 +219,7 @@ Remarks: The owning scene is available through Electron2D.Resource.GetLocalScene
 ## Verification and dependencies
 
 SubViewportTests verifies guards/defaults/clamps, stable RID/texture identity, observer failures, scene-local copies, input/transform isolation, owner checks and nonunit AA recording invalidation. Two Linux Wayland GPU/two compatibility Engine.Run cycles check ten pixel phases; additional hosts check dependencies, external layers, feedback, stretch, hidden root and detached cleanup. Warm 64 active and 64 idle frames measure zero owner managed bytes separately from explicit readback. GPU checks uniform-only visibility/live sampling and server RID readback. Native/driver allocation totals, other platforms/browser, human acceptance, file/editor/container and multiview/layered storage remain unverified or absent. [ADR 0028](../decisions/rendering.md#adr-0028) and [ADR 0008](../decisions/scene.md#adr-0008) define rendering and node roles.
+
+## Renderer allocation interop
+
+RenderingServer.TextureGetRDTexture exposes actual uploaded ordinary/array storage and completed viewport images to the retained device. Compatible updates keep identity; source allocation replacement/disposal or viewport target retirement expires it. Device writes affect GPU pixels while authored CPU snapshots remain unchanged. TextureRD/TextureArrayRD can sample an exported RID directly. Wrapper disposal does not own the source. See [ordering, lifetime and executed checks](../components/local-compute.md#renderer-texture-export-checkpoint).

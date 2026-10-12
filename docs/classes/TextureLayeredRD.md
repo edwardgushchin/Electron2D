@@ -1,6 +1,6 @@
 # TextureLayeredRD
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Namespace:** `Electron2D`. **Declaration:** `public abstract class Electron2D.TextureLayeredRD`. **Source:** [TextureLayeredRD.cs](../../src/Scene/Resources/TextureLayeredRD.cs). **Component:** [Local compute](../components/local-compute.md#device-images-in-canvas).
 
@@ -170,3 +170,7 @@ Device identities remain borrowed and transient; archives do not store this bind
 
 
 Integer device image consumers now validate float/signed/unsigned sampled scalar types and array roles, migrate reload bindings and use nearest native integer sampling. Cold snapshots expose raw-valued float32 RGBA; byte device readback preserves all integer bits. See [the integer canvas checkpoint](../components/local-compute.md#integer-canvas-sampling-checkpoint) for executable evidence and the connected scalar-aware lighting and alpha-mask behavior.
+
+## Renderer allocation interop
+
+RenderingServer.TextureGetRDTexture exposes actual uploaded ordinary/array storage and completed viewport images to the retained device. Compatible updates keep identity; source allocation replacement/disposal or viewport target retirement expires it. Device writes affect GPU pixels while authored CPU snapshots remain unchanged. TextureRD/TextureArrayRD can sample an exported RID directly. Wrapper disposal does not own the source. See [ordering, lifetime and executed checks](../components/local-compute.md#renderer-texture-export-checkpoint).

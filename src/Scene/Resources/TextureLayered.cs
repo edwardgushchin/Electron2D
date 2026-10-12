@@ -2,7 +2,9 @@ namespace Electron2D;
 
 /// <summary>A sampled array of equally sized image layers, independent of ordinary canvas texture drawing.</summary>
 /// <remarks>Resources own copied pixels or supply them through typed getters. Custom producers emit Changed after
-/// mutation; prepared rendering reuses immutable snapshots. Native allocations belong to the active renderer.</remarks>
+/// mutation; prepared rendering reuses immutable snapshots. Native allocations belong to the active renderer.
+/// RenderingServer.TextureGetRDTexture borrows actual array storage on the retained device; compatible updates
+/// preserve identity while allocation replacement/disposal expires it. Device writes leave authored CPU pixels unchanged.</remarks>
 public abstract class TextureLayered : Resource
 {
     /// <summary>Identifies the applicable layered sampling role.</summary>
@@ -17,7 +19,10 @@ public abstract class TextureLayered : Resource
     internal RenderingServer? ServerOwner;
     internal bool ServerReleased;
     internal string ServerPath = string.Empty;
-    internal bool RetainRendererCache => ServerOwner is not null && !IsDisposed;
+    private int _rendererCacheUsers;
+    internal bool RetainRendererCache => (ServerOwner is not null || Volatile.Read(ref _rendererCacheUsers) > 0) && !IsDisposed;
+    internal void AcquireRendererCacheResidency() { ThrowIfDisposed(); if (Interlocked.Increment(ref _rendererCacheUsers) <= 0) { Interlocked.Decrement(ref _rendererCacheUsers); throw new InvalidOperationException("Texture residency owner count overflow."); } }
+    internal void ReleaseRendererCacheResidency() { if (Interlocked.Decrement(ref _rendererCacheUsers) < 0) { Interlocked.Increment(ref _rendererCacheUsers); throw new InvalidOperationException("Texture residency has no matching owner."); } }
 
     /// <summary>Initializes cached pixel invalidation for a custom layered producer.</summary>
     protected TextureLayered() { Changed += InvalidateSnapshot; }

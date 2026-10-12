@@ -71,7 +71,7 @@ public sealed unsafe partial class RenderingDevice
         if (!position.IsFinite() || position.X < 0 || position.Y < 0 || position.Z != 0 ||
             (double)position.X + size.X > Math.Max(1, entry.Texture!.Width >> (int)mip) ||
             (double)position.Y + size.Y > Math.Max(1, entry.Texture.Height >> (int)mip)) throw new ArgumentOutOfRangeException(nameof(position));
-        return new() { Texture = entry.Handle!.DangerousGetHandle(), MipLevel = mip, Layer = layer, X = checked((uint)position.X), Y = checked((uint)position.Y) };
+        return new() { Texture = entry.NativeHandle, MipLevel = mip, Layer = layer, X = checked((uint)position.X), Y = checked((uint)position.Y) };
     }
     private static void CopyBlocks(Entry entry, SDL.GPUTextureLocation location, uint width, uint height)
     {
@@ -150,7 +150,7 @@ public sealed unsafe partial class RenderingDevice
             try
             {
                 var source = new SDL.GPUTextureLocation { Texture = scratch.DangerousGetHandle(), MipLevel = mip };
-                for (var layer = baseLayer; layer < baseLayer + layerCount; layer++) SDL.CopyGPUTextureToTexture(copy, source, new() { Texture = entry.Handle!.DangerousGetHandle(), MipLevel = mip, Layer = layer }, Math.Max(1, info.Width >> (int)mip), Math.Max(1, info.Height >> (int)mip), 1, false);
+                for (var layer = baseLayer; layer < baseLayer + layerCount; layer++) SDL.CopyGPUTextureToTexture(copy, source, new() { Texture = entry.NativeHandle, MipLevel = mip, Layer = layer }, Math.Max(1, info.Width >> (int)mip), Math.Max(1, info.Height >> (int)mip), 1, false);
             }
             finally { SDL.EndGPUCopyPass(copy); }
         }

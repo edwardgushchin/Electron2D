@@ -38,9 +38,17 @@ public sealed partial class RenderingServer
     /// <summary>Gets the borrowed device image identity represented by a canvas texture.</summary>
     /// <param name="texture">A live ordinary or layered canvas texture RID.</param>
     /// <param name="SRGB">Requests an sRGB view; a distinct view requires the native format-view adapter.</param>
-    /// <returns>The underlying device RID, or an empty identity for a texture with no device source.</returns>
+    /// <returns>A retained global-device RID, or an empty identity for unavailable storage, an unrendered viewport,
+    /// or the compatibility renderer.</returns>
+    /// <remarks>Ordinary uploads, independent arrays and completed viewport images borrow renderer-owned native
+    /// storage without copying. Compatible authored updates keep identity; allocation replacement, source disposal
+    /// or viewport rebinding expires it. A viewport RID follows its completed ping-pong image at command recording.
+    /// FreeRID on the rendering device releases only the wrapper. Device writes affect native storage; authored CPU
+    /// snapshots remain unchanged and a later authored update replaces those writes. Prepare changed uploads before
+    /// beginning a draw list. Access belongs to the scene owner thread.</remarks>
     /// <exception cref="ArgumentException">The canvas texture RID is not live.</exception>
     /// <exception cref="NotSupportedException">A distinct sRGB view requires native format-view ownership.</exception>
+    /// <exception cref="InvalidOperationException">Device list or renderer submission state rejects export.</exception>
     public static RID TextureGetRDTexture(RID texture, bool SRGB = false) => RequireService().TextureGetRDTextureCore(texture, SRGB);
     internal RID TextureGetRDTextureCore(RID texture, bool SRGB)
     {
@@ -48,6 +56,7 @@ public sealed partial class RenderingServer
         if (resource is ServerTexture { IsProxy: true } proxy) resource = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget) ?? resource;
         if (resource is LayeredTextureProxy arrayProxy) resource = RenderingTextureRegistry.ResolveLayeredProxySource(arrayProxy.ProxyTarget) ?? resource;
         var result = resource switch { TextureRD ordinary => ordinary.TextureRDRID, TextureLayeredRD layered => layered.TextureRDRID, _ => default };
+        if (!result.IsValid() && _backend is GPUCanvasBackend gpu) { EnsureDeviceAccess(); var device = GetRenderingDeviceCore()!; device.ValidateCanvasMutation(); result = gpu.ExportTexture(resource, device, SRGB); }
         if (!result.IsValid()) return default;
         var info = GetRenderingDeviceCore()?.CanvasInfo(result); if (info is null) return default;
         if (SRGB && !info.Format.ToString().Contains("SRGB", StringComparison.Ordinal)) throw new NotSupportedException("Distinct sRGB device views require native format-view integration.");

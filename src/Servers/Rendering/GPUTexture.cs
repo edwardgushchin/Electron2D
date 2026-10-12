@@ -8,6 +8,10 @@ internal sealed unsafe class GPUTexture : IDisposable
     private readonly RenderHandle _texture;
     private readonly RenderHandle _transfer;
     private object? _uploaded;
+    private object? _recorded;
+    internal bool IsDisposed => _texture.IsClosed;
+    internal RenderHandle Allocation => _texture;
+    internal RenderingDevice.TextureUsageBits DeviceUsage { get; private set; }
     internal LayeredTexturePixels? ArrayPixels;
     internal TexturePixels Pixels;
     internal nint Handle => _texture.DangerousGetHandle();
@@ -22,6 +26,10 @@ internal sealed unsafe class GPUTexture : IDisposable
         var format = pixels.Upload.Format == Image.Format.Rgba8 ? SDL.GPUTextureFormat.R8G8B8A8Unorm : SDL.GPUTextureFormat.R32G32B32A32Float;
         if (!SDL.GPUTextureSupportsFormat(_device, format, type, SDL.GPUTextureUsageFlags.Sampler))
             throw new NotSupportedException($"The active GPU backend cannot sample texture format {pixels.Source.Format}.");
+        var usage = SDL.GPUTextureUsageFlags.Sampler;
+        DeviceUsage = RenderingDevice.TextureUsageBits.Sampling | RenderingDevice.TextureUsageBits.CanCopyFrom | RenderingDevice.TextureUsageBits.CanCopyTo | RenderingDevice.TextureUsageBits.CanUpdate;
+        var storage = SDL.GPUTextureUsageFlags.GraphicsStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageWrite | SDL.GPUTextureUsageFlags.ComputeStorageSimultaneousReadWrite;
+        if (SDL.GPUTextureSupportsFormat(_device, format, type, usage | storage)) { usage |= storage; DeviceUsage |= RenderingDevice.TextureUsageBits.Storage; }
         var info = new SDL.GPUTextureCreateInfo
         {
             Type = type,
@@ -30,7 +38,7 @@ internal sealed unsafe class GPUTexture : IDisposable
             Height = (uint)pixels.Source.Height,
             LayerCountOrDepth = (uint)layers,
             NumLevels = (uint)pixels.Levels,
-            Usage = SDL.GPUTextureUsageFlags.Sampler
+            Usage = usage
         };
         _texture = new RenderHandle(SDL.CreateGPUTexture(_device, in info), h => SDL.ReleaseGPUTexture(_device, h), device);
         try
@@ -42,6 +50,8 @@ internal sealed unsafe class GPUTexture : IDisposable
     }
 
     private object Version => (object?)ArrayPixels ?? Pixels;
+    internal bool NeedsUpload => !ReferenceEquals(_uploaded, Version);
+    internal bool NeedsRecording => !ReferenceEquals(_recorded, Version) && NeedsUpload;
     internal void Upload(nint command)
     {
         if (ReferenceEquals(_uploaded, Version)) return;
@@ -82,6 +92,8 @@ internal sealed unsafe class GPUTexture : IDisposable
         }
         finally { SDL.EndGPUCopyPass(pass); }
     }
-    internal void CommitUpload() => _uploaded = Version;
+    internal void RecordUpload() => _recorded = Version;
+    internal void CancelUpload() => _recorded = null;
+    internal void CommitUpload() { _uploaded = _recorded ?? Version; _recorded = null; }
     public void Dispose() { _texture.Dispose(); _transfer.Dispose(); }
 }

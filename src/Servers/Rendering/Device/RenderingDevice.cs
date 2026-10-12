@@ -7,6 +7,8 @@ namespace Electron2D;
 /// <remarks>Create a local device through RenderingServer.CreateLocalRenderingDevice or borrow the retained renderer device
 /// through RenderingServer.GetRenderingDevice. Local Submit starts execution and Sync waits; the renderer device
 /// flushes before canvas submission and completes queued reads before FramePostDraw. Buffer reads synchronize pending work. Resource identities never cross devices.
+/// TextureGetRDTexture exports renderer uploads and completed viewport images with borrowed allocation lifetimes;
+/// native writes leave authored CPU snapshots unchanged. FreeRID releases these wrappers without freeing their sources.
 /// The device executes compute and color/depth graphics pipelines with exact multisample state and color resolve, with sampled images, storage resources, borrowed vertex/index arrays and framebuffer attachments.</remarks>
 public sealed unsafe partial class RenderingDevice : ElectronObject
 {
@@ -54,6 +56,10 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     private sealed class Entry
     {
         internal Kind Kind;
+        internal RendererTextureBorrow? Borrowed;
+        internal bool Expired;
+        internal bool Alive => !Expired && (Borrowed?.Alive ?? true);
+        internal nint NativeHandle => Borrowed?.Native ?? Handle!.DangerousGetHandle();
         internal RenderHandle? Handle, Upload, Download, TextureScratch;
         internal bool ScratchColorTarget;
         internal byte[] Data = [];
@@ -90,7 +96,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     private readonly RenderingServer? _serverOwner;
     internal RenderingDevice(RenderingServer? serverOwner = null) { _serverOwner = serverOwner; }
     private void Access(bool canvasMetadata = false) { ThrowIfDisposed(); if (!canvasMetadata) _serverOwner?.EnsureDeviceAccess(); if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("A rendering device belongs to its creating thread."); if (_accessingReadbackMemory) throw new InvalidOperationException("A readback memory accessor cannot reenter its device."); }
-    private Entry Get(RID rid) { Access(); return _entries.TryGetValue(rid, out var entry) ? entry : throw new ArgumentException("The RID is not a live resource of this device.", nameof(rid)); }
+    private Entry Get(RID rid) { Access(); if (!_entries.TryGetValue(rid, out var entry) || !entry.Alive) throw new ArgumentException("The RID is not a live resource of this device.", nameof(rid)); PrepareRendererTexture(entry); return entry; }
     private Entry Get(RID rid, Kind kind) { var entry = Get(rid); return entry.Kind == kind ? entry : throw new ArgumentException("The RID has the wrong resource kind.", nameof(rid)); }
     private RID Add(Entry entry) { var rid = RID.Allocate(); _entries.Add(rid, entry); return rid; }
     private void IdleList() { Access(); if (_activeList != 0) throw new InvalidOperationException("End the active command list first."); }
@@ -286,7 +292,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     {
         Access();
         if (!_entries.TryGetValue(uniformSet, out var e) || e.Kind != Kind.Set || !_entries.ContainsKey(e.Shader)) return false;
-        foreach (var ids in e.Bindings.Values) foreach (var rid in ids) if (!_entries.ContainsKey(rid)) return false;
+        foreach (var ids in e.Bindings.Values) foreach (var rid in ids) if (!_entries.TryGetValue(rid, out var resource) || !resource.Alive) return false;
         return true;
     }
     /// <summary>Begins an owner-thread compute list.</summary>
@@ -329,8 +335,8 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (!_sets.TryGetValue(descriptor.Set, out var set) || set.Shader != Get(_pushPipeline).Shader) throw new InvalidOperationException("Bind each pipeline resource set first.");
             var ids = set.Bindings[descriptor.Slot];
             ValidateBinding(descriptor, ids); var buffer = Get(ids[0]);
-            if (descriptor.Type == UniformType.Image) { images[descriptor.Native] = new() { Texture = buffer.Handle!.DangerousGetHandle() }; imageCount++; }
-            else if (descriptor.Type == UniformType.SamplerWithTexture) { samplers[descriptor.Native] = new() { Sampler = buffer.Handle!.DangerousGetHandle(), Texture = Get(ids[1]).Handle!.DangerousGetHandle() }; samplerCount++; }
+            if (descriptor.Type == UniformType.Image) { images[descriptor.Native] = new() { Texture = buffer.NativeHandle }; imageCount++; }
+            else if (descriptor.Type == UniformType.SamplerWithTexture) { samplers[descriptor.Native] = new() { Sampler = buffer.NativeHandle, Texture = Get(ids[1]).NativeHandle }; samplerCount++; }
             else if (descriptor.Type == UniformType.StorageBuffer) { buffers[descriptor.Native] = new() { Buffer = buffer.Handle!.DangerousGetHandle() }; count++; }
             else fixed (byte* data = buffer.Data) SDL.PushGPUComputeUniformData(_command, (uint)descriptor.Native, (nint)data, buffer.Size);
         }
@@ -365,10 +371,12 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             var command = _command; _command = 0; _fence = SDL.SubmitGPUCommandBufferAndAcquireFence(command);
             if (_fence == 0)
             {
+                CancelRendererUploads();
                 while (_recordedReadbacks.TryDequeue(out var cancelled)) RecycleReadback(cancelled);
                 throw GPUPhysicsDevice.Failure("submit compute commands");
             }
         }
+        CommitRendererUploads();
         while (_recordedReadbacks.TryDequeue(out var request)) _submittedReadbacks.Enqueue(request);
     }
     /// <summary>Waits for submitted work, releases its fence and delivers completed readback callbacks.</summary>
@@ -385,14 +393,15 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     public string GetDeviceName() { Access(); return _context.DeviceName; }
     /// <summary>Frees a resource after completing pending work.</summary>
     /// <param name="rid">A live identity owned by this device.</param>
-    /// <remarks>Borrowers become invalid; they may still be freed explicitly. Pending readbacks complete
+    /// <remarks>Borrowed renderer image identities release their wrapper and leases, preserving source ownership.
+    /// Expired borrowed identities may still be freed. Borrowers become invalid; they may still be freed explicitly. Pending readbacks complete
     /// before removal; their callbacks run after the resource is removed.</remarks>
     /// <exception cref="AggregateException">One or more completed readback callbacks failed.</exception>
     public void FreeRID(RID rid)
     {
-        IdleList(); var entry = Get(rid); CompleteSubmission();
+        IdleList(); if (!_entries.TryGetValue(rid, out var entry)) throw new ArgumentException("The resource identity is not owned by this device.", nameof(rid)); CompleteSubmission();
         if (_command != 0 || _recordedReadbacks.Count != 0) { SubmitRecorded(); CompleteSubmission(); }
-        _entries.Remove(rid); ReleaseProgram(entry.Variant); entry.Handle?.Dispose(); entry.FragmentHandle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose();
+        _entries.Remove(rid); if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.Borrowed?.Dispose(); ReleaseProgram(entry.Variant); entry.Handle?.Dispose(); entry.FragmentHandle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose();
         DeliverReadbacks();
     }
     /// <inheritdoc />
@@ -405,8 +414,9 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (_drawPass != 0) { SDL.EndGPURenderPass(_drawPass); _drawPass = 0; }
             if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
-            foreach (var e in _entries.Values) { ReleaseProgram(e.Variant); e.Handle?.Dispose(); e.FragmentHandle?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); }
-            _entries.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _activeList = 0; CancelReadbacks(); _context.Dispose();
+            CancelRendererUploads();
+            foreach (var e in _entries.Values) { e.Borrowed?.Dispose(); ReleaseProgram(e.Variant); e.Handle?.Dispose(); e.FragmentHandle?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); }
+            _entries.Clear(); _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _activeList = 0; CancelReadbacks(); _context.Dispose();
         }
         base.Dispose(disposing);
     }

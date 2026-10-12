@@ -24,7 +24,7 @@ internal static class RenderingDeviceCanvasTests
         var root = new Window { Size = new(160, 32) };
         if (backend == "compatibility")
         {
-            root.Ready += _ => { Check(RenderingServer.GetRenderingDevice() is null, "Compatibility exposes no compute device."); Reject<InvalidOperationException>(() => texture.TextureRDRID = RID.Allocate()); Reject<InvalidOperationException>(() => RenderingServer.TextureRDCreate(default)); root.Tree!.Quit(); };
+            root.Ready += _ => { using var pixels = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8); using var authored = ImageTexture.CreateFromImage(pixels); Check(!RenderingServer.TextureGetRDTexture(authored.GetRID()).IsValid(), "Compatibility exports no native device identity."); Check(RenderingServer.GetRenderingDevice() is null, "Compatibility exposes no compute device."); Reject<InvalidOperationException>(() => texture.TextureRDRID = RID.Allocate()); Reject<InvalidOperationException>(() => RenderingServer.TextureRDCreate(default)); root.Tree!.Quit(); };
             Engine.Run(root); Check(root.IsDisposed && RenderingServer.Service is null, "Compatibility session cleanup."); Console.WriteLine("Device canvas: unavailable renderer and unbound resource guards passed."); return;
         }
         using var glsl = Load("ArrayGLSL"); using var hlsl = Load("ArrayHLSL");
