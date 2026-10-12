@@ -212,7 +212,8 @@ public sealed partial class PhysicsServer
 
     internal void BodySetCollisionLayerCore(RID body, uint layer)
     {
-        var owners = ShapeOwners(body, isArea: false, writing: true);
+        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureAccess(writing: true);
+        var owners = runtime.Owners; owners.Server?.EnsureAuthoringAccess();
         if (owners.Scene is { } scene) scene.CollisionLayer = layer;
         else owners.Server!.SetFilter(layer, owners.Server.CollisionMask);
     }
@@ -225,7 +226,8 @@ public sealed partial class PhysicsServer
 
     internal void BodySetCollisionMaskCore(RID body, uint mask)
     {
-        var owners = ShapeOwners(body, isArea: false, writing: true);
+        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureAccess(writing: true);
+        var owners = runtime.Owners; owners.Server?.EnsureAuthoringAccess();
         if (owners.Scene is { } scene) scene.CollisionMask = mask;
         else owners.Server!.SetFilter(owners.Server.CollisionLayer, mask);
     }

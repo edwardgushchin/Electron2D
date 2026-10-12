@@ -84,3 +84,6 @@ Raw collider release/transfer preflight checks the live backend world reference,
 
 
 Releasing prevents rebind or recursive free from departure callbacks. Detach attempts motion capture and numerical retirement independently; errors cannot skip the latter. Shared shape removal marks retained authoring dirty before preparation, so a failed numerical update retries at the next query/step.
+
+
+EnsureAuthoringAccess retains release and geometry-borrow checks without treating filter metadata as a hierarchy change. EnsureGeometryLifetimeAccess additionally rejects borrowed extension hierarchy mutation; logical body filter setters use the common body write guard and this authoring preflight. Ordinary body-state forwarding remains available, with numerical hooks rejected before mutation.

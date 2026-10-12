@@ -1,6 +1,6 @@
 # PhysicsDirectSpaceStateExtension
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 **Declaration:** `public abstract partial class PhysicsDirectSpaceStateExtension : PhysicsDirectSpaceState` · **Inherits:** [PhysicsDirectSpaceState](PhysicsDirectSpaceState.md) · **Component:** [Space-query extensions](../components/physics-space-extensions.md)
 
@@ -95,4 +95,7 @@ Every query requires the bound world owner outside solving/failure; disposed-vie
 
 Invalid counts, duplicate/unordered hits, wrong-world/filter/disabled results, nonfinite pairs and invalid fractions throw before output publication. Existing result constructors retain invalid-RID/shape/vector exceptions. Unused caller storage and odd contact tails remain unchanged. Result references are cleared after each invocation. Unchanged warmed scalar/span calls reuse storage; a larger output, deeper nesting, structural edits, user work or nonempty caller-owned arrays can allocate. ShapeGetData deliberately copies data; retained implementation geometry avoids that hot-path allocation.
 
-The separate consumer exercises CPU/GPU and no-device CPU queries, every inherited overload family, real scene/raw/Area geometry and physical motion, policy changes, nesting/failure, output validation, stale association resampling and owner/lifetime guards. Native allocation and foreign platforms remain unverified. Registered-backend factory integration, registered callback-view integration and custom geometry remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+The separate consumer exercises CPU/GPU and no-device CPU queries, every inherited overload family, real scene/raw/Area geometry and physical motion, policy changes, nesting/failure, output validation, stale association resampling and owner/lifetime guards. Native allocation and foreign platforms remain unverified. Registered factory/callback views now execute through the public-only fixture; wider numerical-extension and custom geometry acceptance remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+
+
+[Registered factory-selected views](../components/physics-registered-adapter.md#factory-selected-direct-views) now execute through a separate public-only consumer: cache identity, an initially empty contact snapshot, synchronized immutable publication before callbacks, result/lifetime validation, recreation and zero warm managed allocations. Independent caller-created body views keep direct hook dispatch; wider numerical-extension acceptance stays open.

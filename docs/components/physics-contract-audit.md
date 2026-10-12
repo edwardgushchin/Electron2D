@@ -577,3 +577,6 @@ extension and platform/performance acceptance remain open.
 
 
 Registered contact diagnostics now prepare capacity before solving and relinquish capture on disable/detach; guarded synchronized count/point publication retains ADR 0100. Both SceneTree finalization entries preflight borrowed implementation lifetime before teardown. The three debug-space extension rows remain Partial until their wider acceptance is demonstrated; see [diagnostic capacity and publication](physics-registered-adapter.md#diagnostic-capacity-and-publication).
+
+
+[Factory-selected direct views](physics-registered-adapter.md#factory-selected-direct-views) now execute through a public-only consumer, including cache identity, an initially empty body-contact snapshot, all six query families, immutable contact publication before scene/raw callbacks and failed-factory retry. Both extension direct-state rows remain Partial; full numerical, platform and performance acceptance stays open.

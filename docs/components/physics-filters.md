@@ -1,6 +1,6 @@
 # Directional physics filters
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 ## Public behavior
 
@@ -112,3 +112,6 @@ The randomized resident spatial oracle now admits either mask direction for
 ordinary body pairs, while retaining directional sensor checks and role/AABB
 conditions. Its complete expected pair set still checks canonical identity and
 uniqueness across 36 authored motion frames.
+
+
+Ordinary direct-body-state extension writes may forward BodySetCollisionLayer/Mask for scene and raw bodies. These operations use the common body parameter-write guard, retain raw release/borrowed-geometry validation, and reject numerical-hook writes before mutation. Filter metadata updates preserve their existing query, wake and next-step observation semantics; the public factory-view fixture exercises both siblings and body roles.

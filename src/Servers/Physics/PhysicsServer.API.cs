@@ -1184,7 +1184,8 @@ public sealed partial class PhysicsServer
     /// <summary>Sets a body's 32 collision-layer bits without replacing its geometry.</summary>
     /// <param name="body">A live scene or server body RID, including a generated tile body.</param>
     /// <param name="layer">All layer bits, including zero and bit 32.</param>
-    /// <remarks>Assignments wake the body and its contact neighbors, even for unchanged bits. Queries observe changes immediately; contacts and overlap events update on the next step.</remarks>
+    /// <remarks>Assignments wake the body and its contact neighbors, even for unchanged bits. Queries observe changes immediately; contacts and overlap events update on the next step.
+    /// Ordinary direct-body-state extension writes may forward this operation; numerical implementation hooks and borrowed geometry/lifetime mutation remain guarded.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void BodySetCollisionLayer(RID body, uint layer) => Service.BodySetCollisionLayerCore(body, layer);
@@ -1199,7 +1200,8 @@ public sealed partial class PhysicsServer
     /// <summary>Sets a body's 32 collision-mask bits without replacing its geometry.</summary>
     /// <param name="body">A live scene or server body RID, including a generated tile body.</param>
     /// <param name="mask">All accepted category bits, including zero and bit 32.</param>
-    /// <remarks>Assignments wake the body and its contact neighbors, even for unchanged bits. Motion queries observe changes immediately; contacts and overlap events update on the next step.</remarks>
+    /// <remarks>Assignments wake the body and its contact neighbors, even for unchanged bits. Motion queries observe changes immediately; contacts and overlap events update on the next step.
+    /// Ordinary direct-body-state extension writes may forward this operation; numerical implementation hooks and borrowed geometry/lifetime mutation remain guarded.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void BodySetCollisionMask(RID body, uint mask) => Service.BodySetCollisionMaskCore(body, mask);

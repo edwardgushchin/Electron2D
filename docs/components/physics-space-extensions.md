@@ -1,6 +1,6 @@
 # Caller-created space-query extensions
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 ## Responsibility and owned types
 
@@ -25,3 +25,6 @@ CPU, GPU and a CPU process without display/GPU access are separate profiles. The
 The internal [selected-owner factory route](physics-backends.md#selected-direct-state-construction) now provides a cached extension to World, server acquisition and body-space consumers. Creation runs on the world owner outside the service registry lock; validation and recursive/lifetime guards precede cache publication. A disposed cache permits a new selected view; invalid foreign/null/disposed factory results leave it unchanged. CPU/GPU/no-device ownership fixtures execute actual queries through this route.
 
 Caller-created query extensions execute. Public named backend registration, its full server operation bridge, custom solver algorithms and platform/native acceptance remain open. Class coverage stays Partial. [ADR 0103](../decisions/physics-extensions.md#adr-0103) owns the complete boundary.
+
+
+[Registered factory-selected views](physics-registered-adapter.md#factory-selected-direct-views) now have a public-only check of body/query factory dispatch, cache identity, initially empty contact snapshots, immutable publication before callbacks, failed factories and retry, attachment retirement and zero warm managed allocations. Wider numerical-extension acceptance stays open.

@@ -171,7 +171,9 @@ public class PhysicsDirectBodyState : ElectronObject
     public float GetConstantTorque() { Access(); return this is PhysicsDirectBodyStateExtension extension ? extension.InvokeGetConstantTorque() : _runtime.Owners.Scene is RigidBody rigid ? rigid.ConstantTorque : _runtime.ConstantTorque; }
 
     /// <summary>Gets the last solved contact-point count, capped by the body contact limit.</summary>
-    /// <returns>Gets the last solved contact-point count, capped by the body contact limit.</returns>
+    /// <returns>The published contact-point count, initially zero for a newly cached view.</returns>
+    /// <remarks>Cached factory views read their retained snapshot without invoking implementation contact hooks.
+    /// Independent caller-created extensions retain direct hook dispatch.</remarks>
     public int GetContactCount() { Access(); return this is PhysicsDirectBodyStateExtension extension ? extension.InvokeGetContactCount() : _contactCount; }
 
     /// <summary>Gets the live direct-query view of this body space.</summary>
@@ -345,6 +347,7 @@ public class PhysicsDirectBodyState : ElectronObject
             if (_projectedContacts.Length < limit) Array.Resize(ref _projectedContacts, limit);
         }
         _contactCount = _backendContactCount = 0;
+        _hasPublishedContacts = true;
     }
 
     internal void CaptureContacts()

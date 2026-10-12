@@ -1026,3 +1026,6 @@ extension and platform/performance acceptance remain open.
 
 
 [Registered diagnostic preparation](physics-registered-adapter.md#diagnostic-capacity-and-publication) now notifies the selected implementation before solving and on disable/detach, with a validated synchronized point prefix. This preserves the shared CPU/GPU scene diagnostic contract; wider numerical-extension and final performance acceptance remain open.
+
+
+[Registered factory-selected views](physics-registered-adapter.md#factory-selected-direct-views) now have a public-only check of body/query factory dispatch, cache identity, initially empty contact snapshots, immutable publication before callbacks, failed factories and retry, attachment retirement and zero warm managed allocations. Wider numerical-extension acceptance stays open.

@@ -223,8 +223,12 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     internal bool Releasing;
     internal void EnsureGeometryLifetimeAccess()
     {
-        if (Releasing) throw new InvalidOperationException("A collider being released cannot be rebound or released recursively.");
+        EnsureAuthoringAccess();
         Space?.EnsureExtensionHierarchyChange();
+    }
+    internal void EnsureAuthoringAccess()
+    {
+        if (Releasing) throw new InvalidOperationException("A collider being released cannot be rebound or released recursively.");
         if (_validatingGeometry) throw new InvalidOperationException("A collider cannot be released or transferred while its geometry is borrowed.");
     }
     internal void ValidateGeometry(PhysicsSpace space)

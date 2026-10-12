@@ -1,6 +1,6 @@
 # PhysicsDirectSpaceState
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Inherits:** ElectronObject · **Inherited By:** [PhysicsDirectSpaceStateExtension](PhysicsDirectSpaceStateExtension.md) · **Source:** [PhysicsDirectSpaceState.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.cs)
 
@@ -73,3 +73,6 @@ current GPU metadata transfer cost.
 ## Caller-created extension views
 
 [PhysicsDirectSpaceStateExtension](PhysicsDirectSpaceStateExtension.md) binds a borrowed live space RID and implements all six queries through typed protected hooks. Every inherited public array/span/scalar overload reaches those hooks after common preparation and guards. Hook results are validated before output changes; object associations are sampled from current RID/shape ownership. Nested invocations restore exclusions and use independent retained scratch. The cached server-created view retains its selected built-in solver dispatch; registered-backend integration remains open under ADR 0103.
+
+
+[Registered factory-selected views](../components/physics-registered-adapter.md#factory-selected-direct-views) now execute through a separate public-only consumer: cache identity, an initially empty contact snapshot, synchronized immutable publication before callbacks, result/lifetime validation, recreation and zero warm managed allocations. Independent caller-created body views keep direct hook dispatch; wider numerical-extension acceptance stays open.
