@@ -23,6 +23,33 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <summary>Gets the immutable engine-assigned world identity during implementation hooks.</summary>
     /// <value>A live space after factory binding; invalid before binding.</value>
     protected RID SpaceRID => _space;
+    /// <summary>Tests whether a RID is excluded from this world's current synchronous body-motion test.</summary>
+    /// <param name="body">The identity to test for exact membership, including inert or foreign RIDs.</param>
+    /// <returns>True when listed in the active motion test's body exclusions; false outside a motion test.</returns>
+    /// <remarks>This reads authored inputs without observing numerical state or allocating a copy.
+    /// Nested ordinary queries retain the motion scope; recursive motion tests in the same world reject.
+    /// Normal return and exceptions clear the scope. Calls require this implementation's owner thread.</remarks>
+    /// <exception cref="InvalidOperationException">The implementation is unbound, called off-owner, or its world has failed outside a numerical hook.</exception>
+    /// <exception cref="ObjectDisposedException">The implementation or its world is disposed.</exception>
+    public bool IsBodyExcludedFromMotionTest(RID body)
+    {
+        ThrowIfDisposed();
+        if (!_space.IsValid()) throw new InvalidOperationException("The physics implementation is not bound to a world.");
+        return PhysicsServer.Service.GetSceneSpace(_space).IsBodyExcludedFromMotionTest(body);
+    }
+    /// <summary>Tests whether an object identity is excluded from this world's current synchronous body-motion test.</summary>
+    /// <param name="objectID">The object identity to test for exact membership. No object resolution occurs.</param>
+    /// <returns>True when listed in the active motion test's object exclusions; false outside a motion test.</returns>
+    /// <remarks>This reads authored inputs without numerical observation or allocation. The scope and lifetime
+    /// guards are the same as <see cref="IsBodyExcludedFromMotionTest"/>.</remarks>
+    /// <exception cref="InvalidOperationException">The implementation is unbound, called off-owner, or its world has failed outside a numerical hook.</exception>
+    /// <exception cref="ObjectDisposedException">The implementation or its world is disposed.</exception>
+    public bool IsObjectExcludedFromMotionTest(ulong objectID)
+    {
+        ThrowIfDisposed();
+        if (!_space.IsValid()) throw new InvalidOperationException("The physics implementation is not bound to a world.");
+        return PhysicsServer.Service.GetSceneSpace(_space).IsObjectExcludedFromMotionTest(objectID);
+    }
     /// <summary>Returns the body's retained explicit and active-joint collision exceptions.</summary>
     /// <param name="body">A live scene or server body in this world, or a detached body.</param>
     /// <returns>A caller-owned deduplicated RID array, with explicit entries in insertion order before active joint targets. Empty and retired target RIDs remain inert entries.</returns>

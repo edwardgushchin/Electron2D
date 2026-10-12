@@ -2534,6 +2534,16 @@
       "godot": "PhysicsServer2DExtension::method:_body_set_contacts_reported_depth_threshold(RID:,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetContactsReportedDepthThreshold(Electron2D.RID,System.Single)",
       "reason": "ADR 0070/0103: executable common scene/raw reporting policy replaces the inert built-in reference implementation without a no-op mirror. Zero disables filtering; finite positive scene-unit thresholds retain equal/deeper signed candidate depths, preserve completed snapshots and physical response, and survive detach/reentry. PhysicsBodyContact carries validated explicit depth; CPU converts metre depth, GPU uses existing resident reports, registered and cached projections preserve sampled depth. Public-only CPU/GPU/registered checks cover .5/100 thresholds, exact registered equality, invalid/owner/kind/stale/numerical guards, unchanged response (.00001 scene units), monitor transitions, checkpoint/portable configuration rejection/recovery and 64 edited full frames with 32 entries/exits at 0/0 managed bytes. Complete registered numerical topology and final native/platform/network/performance acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:body_test_motion_is_excluding_body(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.IsBodyExcludedFromMotionTest(Electron2D.RID)",
+      "reason": "ADR 0103: exact world-scoped authored motion-input membership, with owner/lifetime/failure guards, no identity resolution/copy, original inputs retained across parameter edits, nested ordinary/other-world queries and finally cleanup after hook/result errors. Public-only CPU/GPU/registered scene/raw filtering and object association checks execute 1024 outer queries plus 64 warm full frames at zero owner/all-thread bytes; registered hooks, nested queries, unbound/disposed/off-owner/terminal failure checks execute. The broader numerical motion/geometry contract remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:body_test_motion_is_excluding_object(int:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.IsObjectExcludedFromMotionTest(System.UInt64)",
+      "reason": "ADR 0103: exact world-scoped authored motion-input membership, with owner/lifetime/failure guards, no identity resolution/copy, original inputs retained across parameter edits, nested ordinary/other-world queries and finally cleanup after hook/result errors. Public-only CPU/GPU/registered scene/raw filtering and object association checks execute 1024 outer queries plus 64 warm full frames at zero owner/all-thread bytes; registered hooks, nested queries, unbound/disposed/off-owner/terminal failure checks execute. The broader numerical motion/geometry contract remains open."
     }
   ],
   "extras": [
@@ -7343,6 +7353,14 @@
       ],
       "state": "Partial",
       "reason": "ADR 0070/0103: executable common scene/raw reporting policy replaces the inert built-in reference implementation without a no-op mirror. Zero disables filtering; finite positive scene-unit thresholds retain equal/deeper signed candidate depths, preserve completed snapshots and physical response, and survive detach/reentry. PhysicsBodyContact carries validated explicit depth; CPU converts metre depth, GPU uses existing resident reports, registered and cached projections preserve sampled depth. Public-only CPU/GPU/registered checks cover .5/100 thresholds, exact registered equality, invalid/owner/kind/stale/numerical guards, unchanged response (.00001 scene units), monitor transitions, checkpoint/portable configuration rejection/recovery and 64 edited full frames with 32 entries/exits at 0/0 managed bytes. Complete registered numerical topology and final native/platform/network/performance acceptance remain open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:body_test_motion_is_excluding_body(RID:)",
+        "PhysicsServer2DExtension::method:body_test_motion_is_excluding_object(int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0103: exact world-scoped authored motion-input membership, with owner/lifetime/failure guards, no identity resolution/copy, original inputs retained across parameter edits, nested ordinary/other-world queries and finally cleanup after hook/result errors. Public-only CPU/GPU/registered scene/raw filtering and object association checks execute 1024 outer queries plus 64 warm full frames at zero owner/all-thread bytes; registered hooks, nested queries, unbound/disposed/off-owner/terminal failure checks execute. The broader numerical motion/geometry contract remains open."
     }
   ]
 }

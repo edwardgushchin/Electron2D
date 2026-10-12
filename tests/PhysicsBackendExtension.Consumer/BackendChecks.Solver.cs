@@ -102,8 +102,11 @@ public static partial class BackendChecks
             ReadOnlySpan<RID> excludedBodies, ReadOnlySpan<ulong> excludedObjects, bool collideSeparationRay, PhysicsTestMotionResult result)
         {
             var local = Bodies[body]; Body? best = null; var fraction = 1f;
+            MotionHook?.Invoke(body);
             foreach (var other in Bodies.Values)
-                if (other.RID != body && Eligible(other, local.Mask, true, false, excludedBodies) &&
+                if (other.RID != body && Eligible(other, local.Mask, true, false, []) &&
+                    !IsBodyExcludedFromMotionTest(other.RID) &&
+                    (other.ObjectID == 0 || !IsObjectExcludedFromMotionTest(other.ObjectID)) &&
                     !Exceptions.Contains((body, other.RID)) && !Exceptions.Contains((other.RID, body)) &&
                     Annulus.Sweep(from.Origin, motion, other.Position, MathF.Max(0, other.Hole - local.Radius - margin), local.Radius + other.Radius + margin, out var f) && f <= fraction)
                 { best = other; fraction = f; }

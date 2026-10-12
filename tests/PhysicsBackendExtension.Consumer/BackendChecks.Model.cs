@@ -28,6 +28,7 @@ public static partial class BackendChecks
         internal Action<RID>? PolicyHook;
         internal Action? PriorityHook;
         internal Action? StepHook, StatusHook;
+        internal Action<RID>? MotionHook;
         internal Action? WorldPolicyHook;
         internal Action? CapacityHook;
         internal int WorldPolicyCalls;

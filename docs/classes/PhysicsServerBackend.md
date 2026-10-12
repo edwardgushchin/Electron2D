@@ -12,6 +12,42 @@ The engine retains authoring, logical identity, owner-thread/solver guards and o
 
 Numerical hooks cannot change their world's sleep/contact policy, iteration count, default joint bias or local active flag through PhysicsServer. These writes reject before mutation or nested hook dispatch, including equal values. Authored getters stay readable outside solver-owned phases; ordinary post-solver game callbacks can edit the next interval's policies.
 
+## Public methods
+
+| Signature | Contract |
+| --- | --- |
+| `public bool IsBodyExcludedFromMotionTest(RID body)` | Exact membership in this world's active motion-test body exclusions. |
+| `public bool IsObjectExcludedFromMotionTest(ulong objectID)` | Exact membership in the active motion-test object exclusions. |
+
+### IsBodyExcludedFromMotionTest
+
+Reads the already supplied exclusions during `TestBodyMotion`, without resolving
+the candidate RID or copying the list. Inert and foreign RIDs remain ordinary
+membership values. Returns false outside a motion test. The world keeps the
+original input lists if a caller edits its parameter resource during the hook;
+those edits affect the next invocation. Nested ordinary queries and motion tests
+in another world preserve this scope; same-world recursive motion tests reject.
+Normal completion, hook failure and result-validation failure clear the scope.
+
+### IsObjectExcludedFromMotionTest
+
+Uses the same scope and guards, with a 64-bit object identity. It does not resolve
+objects or treat object identity as a body RID; one object may represent several
+raw bodies. Both methods reject unbound implementations, off-owner calls and
+failed-world ordinary access with `InvalidOperationException`; disposed
+implementations/worlds reject with `ObjectDisposedException`. These authored-input
+reads remain available during numerical hooks, with false outside motion testing.
+
+Inside a backend's candidate loop, the following partial snippet skips both
+identity families; the complete compiled example is
+[BackendChecks.Solver.cs](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.Solver.cs).
+
+```csharp
+if (IsBodyExcludedFromMotionTest(candidateRID) ||
+    IsObjectExcludedFromMotionTest(candidateObjectID))
+    continue;
+```
+
 ## Protected implementation hooks
 
 | Declaration | Contract |

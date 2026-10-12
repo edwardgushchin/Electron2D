@@ -38,7 +38,7 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [PhysicsPointQueryParameters2D](classes/PhysicsPointQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 7 | 0 | 0 | 0 | 0 |
 | [PhysicsRayQueryParameters2D](classes/PhysicsRayQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 9 | 0 | 0 | 0 | 0 |
 | [PhysicsServer2D](classes/PhysicsServer2D.md) | [Object](classes/Object.md) | 154 | 6 | 0 | 1 | 54 |
-| [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | [PhysicsServer2D](classes/PhysicsServer2D.md) | 0 | 99 | 3 | 39 | 0 |
+| [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | [PhysicsServer2D](classes/PhysicsServer2D.md) | 2 | 99 | 3 | 37 | 0 |
 | [PhysicsServer2DManager](classes/PhysicsServer2DManager.md) | [Object](classes/Object.md) | 3 | 0 | 0 | 0 | 0 |
 | [PhysicsShapeQueryParameters2D](classes/PhysicsShapeQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 10 | 0 | 0 | 0 | 0 |
 | [PhysicsTestMotionParameters2D](classes/PhysicsTestMotionParameters2D.md) | [RefCounted](classes/RefCounted.md) | 8 | 0 | 0 | 0 | 0 |
@@ -56,7 +56,7 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [StaticBody2D](classes/StaticBody2D.md) | [PhysicsBody2D](classes/PhysicsBody2D.md) | 4 | 0 | 0 | 0 | 0 |
 | [World2D](classes/World2D.md) | [Resource](classes/Resource.md) | 5 | 0 | 0 | 0 | 0 |
 | [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) | [Shape2D](classes/Shape2D.md) | 3 | 0 | 0 | 0 | 0 |
-| **Total** | | 660 | 135 | 3 | 40 | 54 |
+| **Total** | | 662 | 135 | 3 | 38 | 54 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -226,8 +226,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`PhysicsServer2DExtension::method:_step(float:)`](classes/PhysicsServer2DExtension.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2DExtension API slice. |
 | [`PhysicsServer2DExtension::method:_sync()`](classes/PhysicsServer2DExtension.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2DExtension API slice. |
 | [`PhysicsServer2DExtension::method:_world_boundary_shape_create()`](classes/PhysicsServer2DExtension.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2DExtension API slice. |
-| [`PhysicsServer2DExtension::method:body_test_motion_is_excluding_body(RID:)`](classes/PhysicsServer2DExtension.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2DExtension API slice. |
-| [`PhysicsServer2DExtension::method:body_test_motion_is_excluding_object(int:)`](classes/PhysicsServer2DExtension.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2DExtension API slice. |
 | [`class:PhysicsTestMotionResult2D`](classes/PhysicsTestMotionResult2D.md) | Partial | Typed motion result fields execute; collider object projection remains Partial for virtual tile collision bodies (ADR 0063). |
 | [`PhysicsTestMotionResult2D::method:get_collider()`](classes/PhysicsTestMotionResult2D.md) | Partial | Scene bodies resolve and server-only bodies return null; virtual tile collision bodies require typed tile-owner integration (ADR 0063). |
 | [`class:RayCast2D`](classes/RayCast2D.md) | Partial | Cached typed scene queries and retained collision-state diagnostics execute on CPU/GPU worlds. Virtual tile collider owner projection remains open (ADRs 0063/0100). |

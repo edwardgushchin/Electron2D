@@ -638,3 +638,10 @@ Registered [borrowed shape authoring](../components/physics-registered-adapter.m
 
 
 [Separate-process network acceptance](../components/physics-network-example.md#stronger-process-acceptance-2026-10-12) now checks actual GPU denial before CPU authority/late-client startup, restores angular drift and compares nonzero final angular state as well as pose, sleep, identity and linear motion. Named Linux process checks pass; full physical/extension/platform and final performance acceptance remain open.
+
+[Motion-test exclusions](../components/physics-registered-adapter.md#motion-test-exclusions)
+now expose world-scoped body/object membership to registered implementations.
+Common CPU/GPU/registered scene/raw checks cover actual filtering, shared object
+associations, nested scopes, atomic errors and lifecycle; 1024 queries plus 64 warm
+frames allocate zero owner/all-thread managed bytes. Both helper census rows are
+implemented; complete registered numerical motion and geometry remain open.

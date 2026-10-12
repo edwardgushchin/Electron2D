@@ -15,3 +15,9 @@ Inherited `GetCollisionExceptions(RID)` provides scoped retained input. Body/joi
 
 
 [Contact reporting depth](../components/physics-registered-adapter.md#contact-reporting-depth) uses common retained scene/raw policy and selected signed PhysicsBodyContact.Depth. Both extension threshold operations execute; arbitrary registered capped contact topology and full numerical acceptance remain open.
+
+Inherited public `IsBodyExcludedFromMotionTest(RID)` and
+`IsObjectExcludedFromMotionTest(ulong)` expose guarded current-motion input
+membership. Their complete contracts are documented on
+[PhysicsServerBackend](PhysicsServerBackend.md#public-methods), with executable
+CPU/GPU/registered conformance in [Motion-test exclusions](../components/physics-registered-adapter.md#motion-test-exclusions).

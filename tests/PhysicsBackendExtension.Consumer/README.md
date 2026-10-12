@@ -49,3 +49,9 @@ scene/raw read cycles require zero owner/all-thread managed bytes.
 Motion role checks verify exact initial/live RigidLinear delivery, retained velocity, both freeze roles, disable precedence and restoration, owner/numerical guards, published motion, checkpoint restoration and zero allocations across 64 warmed full frames.
 
 `--server-modes` runs the common scene/server mode checks independently. Add `--cpu` or `--gpu` to use a built-in implementation. Checks cover all five scene siblings, four modes, state/forces, reentry, checkpoints, portable state and zero warmed full-frame allocations.
+
+The `--motion-exclusions` fixture (optionally `--cpu` or `--gpu`) shares scene/raw
+motion filtering, object associations and zero-allocation checks. Registered
+probes exercise actual helper calls, nested query/world scopes, parameter edits,
+callback/invalid-result atomicity and lifetime/failure/thread guards. A positive
+hook counter requires lazy world initialization to have actually occurred.

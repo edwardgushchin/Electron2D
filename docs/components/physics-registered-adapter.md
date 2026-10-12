@@ -476,3 +476,45 @@ registered two-unit sample verifies equality eligibility exactly. After 64 warmu
 owner/all-thread managed bytes. Cold errors/history setup are outside the bracket.
 The independent fixture retains one circle contact per body; arbitrary registered
 contact topology/overflow remains part of complete numerical acceptance.
+
+## Motion-test exclusions
+
+The inherited public helpers IsBodyExcludedFromMotionTest(RID) and
+IsObjectExcludedFromMotionTest(ulong) read the current world's synchronous motion
+inputs without copying or resolving identities. The common space borrows the
+already supplied arrays until its finally block, so parameter-resource edits affect
+the next call. Helpers return false outside motion, retain owner/lifetime/failure
+guards, and remain authored-input reads inside numerical hooks. A nested ray query
+or another world's motion query preserves the outer scope; same-world recursive
+motion rejects before replacing it. Hook and invalid-result failures clear the
+scope while preserving the caller's prior result.
+
+The independent circle/annulus consumer now filters object exclusions as well as
+body RIDs. One associated object can represent both raw obstacles; excluding that
+object suppresses both, while a body exclusion removes only the specified body.
+The engine still rejects an excluded collider returned by a faulty implementation.
+
+[BackendChecks.MotionExclusions.cs](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.MotionExclusions.cs)
+uses only public API and executes the same scene/raw numerical cases on CPU, GPU
+and the registered implementation, also running the latter with unavailable GPU
+drivers. Eight cases per mover check nearest/farther hits, mixed/all exclusions,
+shared object association, inert/default RIDs and unknown/zero object values.
+Registered probes execute during actual hooks, including nested ray/other-world
+queries, parameter edits, off-owner access inside/outside motion, hook/result
+failures, unbound/disposed implementations and terminal failed spaces.
+
+Each final process exits zero. After 128 warmup frames, 64 measured full frames
+include 1024 outer motion tests and zero owner/all-thread managed bytes. Registered
+samples additionally execute 1024 nested motion tests and ray queries; total
+outer hooks are 3104 including warmup and recovery controls. Cold error/thread
+probes and GC/finalizer draining stay outside the measured bracket. A 1e-5
+scene-unit pose allowance covers float unit conversion at the authored 60-unit
+coordinate (CPU observed 59.999996); identities/exclusion membership are exact.
+The fixture asserts a positive actual hook count to reject skipped checks caused
+by lazy World initialization. Original rejected runs remain separate.
+
+Reproduce with the source-native Release consumer and --motion-exclusions,
+adding --cpu or --gpu for a built-in owner. Ignored outcomes, copied-runtime
+fingerprints and logs are under bin/physics-motion-exclusions/2026-10-12/final-main.
+This implements the two membership helpers; arbitrary registered geometry and
+complete motion-operation numerical acceptance remain open.

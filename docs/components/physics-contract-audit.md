@@ -521,3 +521,12 @@ Physical invariants, observer quality and the zero-byte physical gate remain unc
 
 
 [Current separate-process networking checks](physics-network-example.md#stronger-process-acceptance-2026-10-12) now require actual denied GPU startup in both CPU workers, complete reported pose/linear/angular state, .45-radian drift recovery and a nonzero final angular response. The instrumented run and standalone public example exercise the named protocol gates; arbitrary topology, foreign platforms, native allocation and final network/window performance acceptance remain open.
+
+[Motion-test exclusion helpers](physics-registered-adapter.md#motion-test-exclusions)
+now execute exact guarded RID/object membership in the selected world's active
+motion test, restoring scope after nested queries and errors. The public-only
+CPU/GPU/registered fixture verifies nearest/farther/all/shared-object filtering,
+real numerical hooks and 1024 outer queries plus 64 warm frames at 0/0 managed
+bytes; registered samples also include nested motion/ray queries. The two helper
+rows are Implemented; the broader motion operation, arbitrary geometry and complete
+physics acceptance remain open.

@@ -13,6 +13,7 @@ public static partial class BackendChecks
         ResourceReleaseChecks();
         AreaMonitorChecks();
         RunContactThreshold();
+        RunMotionExclusions();
         IntegrationChecks();
         MotionRoleChecks();
         ParameterReadChecks();

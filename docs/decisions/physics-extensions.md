@@ -126,6 +126,14 @@ interception would leave scene behavior and direct queries outside the extension
   RID/shape ownership, finite values, result counts and fractions; it must not trust
   forged backend object identities. Query exclusions are scoped to the current
   synchronous invocation and restored in finally, including nesting and exceptions.
+  Motion-test membership helpers are public operations on the world-owned
+  PhysicsServerBackend/Extension: IsBodyExcludedFromMotionTest(RID) and
+  IsObjectExcludedFromMotionTest(ulong), using the same object-ID type as motion
+  parameters/results. They read the original borrowed input lists without copying
+  or resolving identities, return false outside the world's motion test, and keep
+  owner/lifetime/failure guards. Parameter edits affect the next invocation.
+  Same-world recursive motion tests reject before replacing exclusions; another
+  world's nested motion scope is independent. Hook/result failures clear the scope.
 - Backend lifecycle executes for real: initialization precedes attachment; solve,
   synchronization and query/event flush have explicit phases; end-sync and finish
   run on all required cleanup paths. A started failing interval becomes unusable
