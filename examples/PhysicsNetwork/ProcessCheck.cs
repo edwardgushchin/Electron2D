@@ -26,6 +26,10 @@ internal static class ProcessCheck
             await Task.WhenAll(drains);
             foreach (var child in children) if (child.ExitCode != 0) throw new InvalidOperationException("A child process failed; inspect the saved logs.");
             var authority = Read("server"); Check(authority.Role == "server" && authority.Backend == "CPU" && authority.Tick == 360, "CPU server completed all real ticks");
+            Check(authority.GPUUnavailableVerified && Read("late").GPUUnavailableVerified && !Read("gpu").GPUUnavailableVerified,
+                "Both CPU processes exercised actual denied GPU startup before their working network worlds");
+            Check(authority.Actors.Any(actor => Math.Abs(actor.AngularVelocity) > .05),
+                "Final authority state carries a real nonzero angular response for cross-backend restoration");
             Check(authority.InvalidHello >= 2 && authority.GenerationCommands >= 2, "Invalid session tokens and stale incarnations are rejected");
             Check(authority.AppliedCommands > 180, "Authority actually applies numbered player inputs");
             Check(authority.WarmSteps > 0 && authority.WarmStepAllocations == 0 && authority.WarmStepTotalAllocations == 0, "Prepared authority steps allocate zero bytes on owner/all threads");
@@ -39,6 +43,7 @@ internal static class ProcessCheck
                 Check(client.Events.SequenceEqual(authority.Events.Where(item => item.Sequence > client.EventBaseline)), "Confirmed event identities and physical contents match authority");
                 Check(client.SleepObservations > 0 && client.WakeObservations > 0, "Client observes restored sleep and waking");
                 Check(client.InterpolatedSamples > 0 && client.SmoothedSamples > 0 && client.PostDriftCorrections > 0 && client.DriftCorrectionDistance > 10, "Remote interpolation, local smoothing and injected divergence recovery execute");
+                Check(client.AngularDriftCorrection > .1, "Injected rotation/angular-velocity divergence is corrected through real authority state");
                 Check(client.WarmSteps > 0 && client.WarmReplaySteps > 0, "Allocation sample includes real warmed predicted and replayed ticks");
                 Check(client.WarmStepAllocations == 0 && client.WarmReplayAllocations == 0 && client.WarmStepTotalAllocations == 0 && client.WarmReplayTotalAllocations == 0, "Prepared predicted and replayed physics steps allocate zero managed bytes");
                 Check(client.MalformedPackets == 0 && client.MaxVisualOffset > 0, "Valid wire traffic and separate presentation smoothing");
@@ -47,7 +52,8 @@ internal static class ProcessCheck
                 {
                     var a = authority.Actors[i]; var b = client.Actors[i];
                     Check(a.ID == b.ID && a.Generation == b.Generation && a.Owner == b.Owner && a.Epoch == b.Epoch, "Portable identities and control epochs agree");
-                    Check(Math.Abs(a.X - b.X) < .002 && Math.Abs(a.Y - b.Y) < .002 && Math.Abs(a.VX - b.VX) < .002 && Math.Abs(a.VY - b.VY) < .002 && a.Sleeping == b.Sleeping, "Final authoritative correction converges");
+                    Check(Math.Abs(a.X - b.X) < .002 && Math.Abs(a.Y - b.Y) < .002 && Math.Abs(a.VX - b.VX) < .002 && Math.Abs(a.VY - b.VY) < .002 && Math.Abs(Electron2D.Mathf.AngleDifference(a.Rotation, b.Rotation)) < .002 &&
+                        Math.Abs(a.AngularVelocity - b.AngularVelocity) < .002 && a.Sleeping == b.Sleeping, "Final authoritative correction converges");
                 }
             }
             Check(Read("gpu").Backend == "GPU" && Read("gpu").JoinTick < Read("late").JoinTick && Read("late").JoinTick >= 90, "Independent GPU client and real late join");
@@ -66,6 +72,10 @@ internal static class ProcessCheck
             {
                 info.Environment.Remove("DISPLAY"); info.Environment.Remove("WAYLAND_DISPLAY"); info.Environment["SDL_VIDEODRIVER"] = "dummy";
                 info.Environment["VK_ICD_FILENAMES"] = "/nonexistent/e2d-no-gpu.json";
+                info.Environment["VK_DRIVER_FILES"] = "/nonexistent/e2d-no-gpu.json";
+                info.Environment["SDL_GPU_DRIVER"] = "electron2d-no-such-driver";
+                info.Environment["XDG_SESSION_TYPE"] = "unspecified";
+                info.ArgumentList.Add("--require-no-gpu");
             }
             return Process.Start(info) ?? throw new InvalidOperationException("Could not start child process.");
         }

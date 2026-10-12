@@ -1,6 +1,6 @@
 # Authoritative physics network example
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 [PhysicsNetwork](../../examples/PhysicsNetwork/README.md) connects the existing
 `SceneMultiplayer`/`ENetMultiplayerPeer`, `PhysicsSnapshotMap`, `PhysicsSnapshot` and
@@ -76,8 +76,11 @@ cross-process UDP I/O; this is application delivery impairment, not an operating
 or routed Internet loss test. The reports assert nonzero actual impairment counts,
 accepted/applied inputs, rejected control/token/incarnation attempts, old snapshot
 rejection, lifecycle convergence, sleep observations and exact confirmed-event identity.
-Final pose/velocity tolerance is 0.002 scene units for the applied authoritative
-state, not a claim of equal CPU/GPU trajectories between corrections.
+Final position/linear-velocity tolerance is 0.002 scene units; rotation uses wrapped
+angle difference below 0.002 radians and angular velocity differs by less than
+0.002 radians/s. These bounds validate the applied authoritative state, not equal
+CPU/GPU trajectories between corrections. Joint reports now use their actual
+authored global pose rather than an implicit zero coordinate.
 
 The example also injects a client position/impulse error at a validated incoming
 correction boundary and checks restore/replay. This timing prevents intervening
@@ -175,3 +178,60 @@ Every group reported zero owner/all-thread managed bytes. Joint, CPU/common-worl
 checkpoint, portable snapshot, CPU-hosted GPU joint controls and the default test
 runner also passed. Reports retain whole-step/correction latency and traffic for
 these live concurrent runs; they are not a controlled backend speedup comparison.
+
+
+## Stronger process acceptance, 2026-10-12
+
+The launcher denies GPU startup in each CPU process with both Vulkan loader path
+variables and the SDL GPU driver setting. Display variables are removed and the
+video driver is dummy. Before creating its CPU session, each worker exercises
+strict public SpaceCreate(GPU), requires rejection, and records
+GPUUnavailableVerified=true. Both workers must still complete tick 360 without
+creating display/rendering services. A normal-GPU negative control rejects the
+no-GPU verification request when the same public operation succeeds. The GPU
+client inherits its ordinary driver environment and must actually select GPU.
+
+Correction now injects .45 radians of rotation and 2 radians/s of angular velocity
+at the same validated boundary as the position/impulse drift. Client reports must
+observe a wrapped angular correction above .1 radians. An authority torque impulse
+of 800 at tick 360 produces nonzero final angular velocity; the parent requires
+at least one absolute angular velocity above .05 radians/s and compares complete
+poses/linear/angular velocities across all three reports. This includes the
+reported pin author's pose and the independently solved body states.
+
+The angular sample uses one retained 16-float array (64 payload bytes) per process,
+outside warm physics-step brackets. It does not change the wire command format or
+physical snapshot API. The example remains a bounded application protocol; no
+rendered smoothing, networked-window FPS, WAN impairment, cross-platform bounds
+or complete arbitrary joint/contact topology acceptance follows from this test.
+
+
+### Instrumented Linux sample on current sources
+
+The 2026-10-12 run uses the same scenario code in all three processes, based on
+main d4073d59 plus this verification change. The [artifact manifest](../../bin/physics-network-acceptance/2026-10-12/final-instrumented/evidence.json)
+records complete source, test/runtime binary and report SHA-256 values.
+
+| Process | Join tick | Corrections / replay ticks | Warm ordinary / replay samples | Step p50/p95/p99 ms | Correction p50/p95/p99 ms | Sent / received bytes |
+| --- | ---: | ---: | ---: | --- | --- | ---: |
+| server (CPU) | 0 | 0 / 0 | 61 / 0 | 0.0789/0.1258/5.4861 | 0.0000/0.0000/0.0000 | 470,252 / 95,444 |
+| gpu (GPU) | 1 | 66 / 850 | 45 / 161 | 4.6033/5.7100/6.5292 | 58.3020/78.1695/103.6230 | 45,144 / 271,584 |
+| late (CPU) | 121 | 48 / 619 | 61 / 169 | 0.0704/0.1141/1.9869 | 0.6317/0.9584/27.9912 | 53,792 / 195,760 |
+
+All sampled warm physics/replay brackets measured 0 owner/all-thread managed
+bytes. The authority applied 290 commands and numbered twelve confirmed effects;
+GPU confirmed twelve and the late client confirmed six after its sequence-six
+admission baseline. Both clients recorded .45-radian drift correction. Final maximum
+absolute angular velocity was 7.7088966 radians/s in all three reports, with the
+full state checks below the stated tolerances.
+
+The instrumented GPU client recorded 1,257,800 upload bytes,
+4,715,216 readback bytes, 29,720 completed submissions and
+2486.3535 ms of aggregate GPU wait across setup, prediction, publication and replay.
+These lifetime counters do not isolate one correction or one physics kernel. Each
+process retains 131,072 command-record and 36,864 event-record payload bytes, plus
+the new 64 rotation-sample payload bytes and existing separately bounded buffers.
+
+This is one small-world networking sample on Linux. It demonstrates the named
+protocol/state gates and records substantial GPU replay overhead; it does not
+establish the target massive-scene speed advantage or final performance acceptance.

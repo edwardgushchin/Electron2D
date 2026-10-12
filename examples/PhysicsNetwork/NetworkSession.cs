@@ -188,6 +188,7 @@ internal sealed partial class NetworkSession : IDisposable
     {
         var tick = Simulation.Tick + 1; Simulation.BeginTick(tick, SimulationPhase.Authority);
         if (tick is 90 or 140 or 160) ChangeCrate(tick);
+        if (tick == 360 && Simulation.Find(10)?.Body is RigidBody finalSpinner) finalSpinner.ApplyTorqueImpulse(800);
         if (tick == 300)
         {
             var sleeper = (RigidBody)Simulation.Find(30)!.Body!;

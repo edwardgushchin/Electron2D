@@ -1,6 +1,6 @@
 # Networking
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 ## Responsibility and public surface
 
@@ -50,3 +50,6 @@ It exercises CPU authority, GPU prediction/replay, later joining, control transf
 ID reuse and confirmed events in separate processes under application-level loss,
 delay, duplication and reordering. Game-state recipes and policy remain in the
 consumer; the engine does not infer a generic game protocol from property replication.
+
+
+[PhysicsNetwork process checks](../components/physics-network-example.md#stronger-process-acceptance-2026-10-12) now verify both CPU processes lack usable GPU physics and compare full angular/linear authoritative state after deliberate angular divergence. Warm steps/replay retain zero managed allocation; transport impairment remains application scheduling over real ENet loopback.

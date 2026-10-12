@@ -24,6 +24,9 @@ internal static class NetworkApp
                 "gpu" => PhysicsServer.Backend.GPU,
                 _ => throw new ArgumentException("Backend must be cpu or gpu.")
             };
+            var requireNoGPU = args.Contains("--require-no-gpu");
+            if (requireNoGPU && backend != PhysicsServer.Backend.CPU) throw new ArgumentException("GPU denial verification requires CPU selection.");
+            var gpuUnavailable = requireNoGPU && VerifyGPUUnavailable();
             var port = int.Parse(Value("--port", "7777")); var ticks = int.Parse(Value("--ticks", "360"));
             if (ticks is < 360 or > 1800) throw new ArgumentException("Tick count must be between 360 and 1800.");
             var token = Guid.Parse(Value("--token", "dccdb93a-948e-4dda-b4ec-714c7dd69a91"));
@@ -40,12 +43,21 @@ internal static class NetworkApp
                 }
                 Thread.Sleep(1);
             }
-            var report = session.Report();
-            if (authority && backend == PhysicsServer.Backend.CPU && (DisplayServer.IsAvailable || RenderingServer.IsAvailable)) throw new InvalidOperationException("Dedicated CPU authority created a graphics service.");
+            var report = session.Report(); report.GPUUnavailableVerified = gpuUnavailable;
+            if ((authority || requireNoGPU) && backend == PhysicsServer.Backend.CPU && (DisplayServer.IsAvailable || RenderingServer.IsAvailable)) throw new InvalidOperationException("Dedicated CPU authority created a graphics service.");
             File.WriteAllText(reportPath, JsonSerializer.Serialize(report, ReportJSON.Default.SessionReport));
             Console.WriteLine($"COMPLETE {report.Role} {report.Backend}: tick {report.Tick}, {report.Corrections} corrections, {report.ReplayedTicks} replayed ticks");
             return 0;
         }
         catch (Exception error) { Console.Error.WriteLine(error); return 1; }
     }
+    private static bool VerifyGPUUnavailable()
+    {
+        var space = default(RID);
+        try { space = PhysicsServer.SpaceCreate(PhysicsServer.Backend.GPU); }
+        catch (InvalidOperationException) { return true; }
+        finally { if (space.IsValid()) PhysicsServer.FreeRID(space); }
+        throw new InvalidOperationException("A no-GPU CPU process unexpectedly created a GPU physics space.");
+    }
+
 }

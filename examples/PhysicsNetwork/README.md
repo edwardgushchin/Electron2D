@@ -16,7 +16,9 @@ turn this into simultaneous admission.
 Application packets incur 20–99 ms delay, deterministic loss, duplication and
 reordering before transport submission. The two CPU processes have display variables
 removed and an unavailable Vulkan driver path; the server checks that it created
-neither display nor rendering services. The GPU client must actually select GPU.
+neither display nor rendering services. Both CPU processes explicitly attempt strict GPU startup and require rejection
+before creating their CPU network worlds; the report records this proof. The GPU
+client must actually select GPU.
 
 For the test-project version, which additionally measures private backend transfer
 and wait counters without exposing them to the example:
@@ -28,8 +30,10 @@ ELECTRON2D_TEST_PHYSICS_NETWORK=1 dotnet run --project tests/Electron2D.Tests -c
 The scenario includes moving/jumping players, contact/Area events, a two-body pin,
 sleeping bodies, crate creation at tick 90, removal at 140, ID reuse with a new
 generation at 160, a control-owner change at 240, and a verified sleeper waking at 300. Each client is deliberately
-moved away from its predicted trajectory. The final authoritative state at tick 360
-must agree across processes, including identities, generations, ownership and sleep.
+moved away from its predicted trajectory in position, rotation and angular velocity. The final authoritative state at tick 360
+must agree across processes, including identities, generations, ownership, complete
+pose, linear/angular velocity and sleep. An authority torque impulse at the final
+tick requires a real nonzero angular state in that comparison.
 Invalid session tokens, unowned input and old object generations are rejected.
 
 `NetworkWorld` owns the game scene and lifecycle recipes. `NetworkSession` owns

@@ -1,6 +1,6 @@
 # Physics contract and backend audit
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 [Common space bindings](physics-registered-adapter.md#common-space-bindings) now execute all four Body/Area space
 operations on scene and raw RIDs, including explicit target simulation, scene
@@ -503,9 +503,9 @@ Registered [collider metadata](physics-registered-adapter.md#initial-collider-me
 
 [Integration/contact policy](physics-registered-adapter.md#integration-and-contact-publication-policy) now verifies omission, callbacks, contact caps and scene numerical guards with one public-only consumer on CPU/GPU/independent implementations. Six extension rows are Partial; full numerical and final performance acceptance stay open.
 
-The pinned contact-depth-threshold pair has no deprecated XML metadata, but its [built-in server implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/godot_physics_2d/godot_physics_server_2d.cpp#L931) validates the body, ignores the assigned threshold and returns zero. This is not evidence of a working filter. The two extension rows remain open pending an explicit applicable typed decision; no inert public switch was added. A fresh pinned-source check also confirms that the plain [ClassDB server bindings](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/physics_2d/physics_server_2d.cpp) register neither operation, while the [extension header](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/physics_2d/physics_server_2d_extension.h#L378) retains both virtual hooks. This evidence does not authorize an invented filter or a zero-result public mirror. The existing rows stay Unimplemented until a useful, bounded typed dispatch contract is resolved.
+The pinned contact-depth-threshold pair has no deprecated XML metadata, and its built-in implementation remains inert. ADR 0070 now accepts an executable typed reporting policy rather than a no-op mirror. [Contact reporting depth](physics-registered-adapter.md#contact-reporting-depth), implemented at f6d8a6b9, retains scene/raw thresholds, signed scene-unit output, common projected filtering and history configuration. Public-only CPU/GPU/registered conformance checks .5/100 thresholds, registered equality, all scene body siblings, raw static reports, callbacks/lifetime and 64 warm edited frames at zero managed bytes. The two extension rows are Partial for complete numerical acceptance; they are no longer missing declarations or pending an applicable decision.
 
-[Window checks at 567be307](physics-current-performance.md#window-checks-at-567be307) pass ordinary, NaN-filled and finite-nonzero buffer sequences with real rendered captures, 16,384 active bodies and zero warm physics/frame managed bytes. The resident first-step check now covers both dirty patterns. Sustained 60 Hz, native allocations, full scene-window/network performance and the earlier uninstrumented failure cause remain open.
+[Window checks at 567be307](physics-current-performance.md#window-checks-at-567be307) pass ordinary, NaN-filled and finite-nonzero buffer sequences with real rendered captures, 16,384 active bodies and zero warm physics/frame managed bytes. The resident first-step check now covers both dirty patterns. Native allocations, full scene-window/network performance and the earlier uninstrumented failure cause remain open. The goal requires measured GPU advantage on the target scenes; it does not specify a sustained 60 Hz acceptance threshold.
 
 
 [Scoped scene/window allocation](physics-scene-performance.md#physics-and-native-event-allocation-boundaries)
@@ -514,3 +514,6 @@ idle and render memory. Deterministic native mouse input reproduces 320 bytes pe
 event outside physics on CPU/GPU; these bytes remain in the full-window report.
 The earlier aggregate rejection does not establish a physical-step allocation.
 Physical invariants, observer quality and the zero-byte physical gate remain unchanged.
+
+
+[Current separate-process networking checks](physics-network-example.md#stronger-process-acceptance-2026-10-12) now require actual denied GPU startup in both CPU workers, complete reported pose/linear/angular state, .45-radian drift recovery and a nonzero final angular response. The instrumented run and standalone public example exercise the named protocol gates; arbitrary topology, foreign platforms, native allocation and final network/window performance acceptance remain open.

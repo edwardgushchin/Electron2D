@@ -3,12 +3,13 @@ using Electron2D;
 
 namespace Electron2D.Examples.PhysicsNetwork;
 
-internal sealed record ActorReport(ulong ID, uint Generation, int Owner, uint Epoch, float X, float Y, float VX, float VY, bool Sleeping);
+internal sealed record ActorReport(ulong ID, uint Generation, int Owner, uint Epoch, float X, float Y, float VX, float VY, float Rotation, float AngularVelocity, bool Sleeping);
 internal sealed class SessionReport
 {
     public string Role { get; set; } = "";
     public string Backend { get; set; } = "";
     public bool BackendInstrumented { get; set; }
+    public bool GPUUnavailableVerified { get; set; }
     public long GPUUploadBytes { get; set; }
     public long GPUReadbackBytes { get; set; }
     public long GPUSubmissions { get; set; }
@@ -34,6 +35,7 @@ internal sealed class SessionReport
     public int SmoothedSamples { get; set; }
     public int PostDriftCorrections { get; set; }
     public double DriftCorrectionDistance { get; set; }
+    public double AngularDriftCorrection { get; set; }
     public GameEvent[] Events { get; set; } = [];
     public long CommandHistoryBytes { get; set; }
     public long EventHistoryBytes { get; set; }
@@ -74,8 +76,10 @@ internal sealed partial class NetworkSession
             if (actor is not null)
             {
                 var rigid = actor.Body as RigidBody;
+                var pose = actor.Body?.GlobalTransform ?? actor.Joint!.GlobalTransform;
                 actors.Add(new(actor.Spec.ID, actor.Spec.Generation, actor.Spec.Owner, actor.Spec.ControlEpoch,
-                    actor.Position.X, actor.Position.Y, rigid?.LinearVelocity.X ?? 0, rigid?.LinearVelocity.Y ?? 0, rigid?.Sleeping ?? false));
+                    pose.Origin.X, pose.Origin.Y, rigid?.LinearVelocity.X ?? 0, rigid?.LinearVelocity.Y ?? 0,
+                    pose.Rotation, rigid?.AngularVelocity ?? 0, rigid?.Sleeping ?? false));
             }
         var events = new List<GameEvent>(); var lastEvent = _authority ? Simulation.EventSequence : _confirmedEvent;
         var firstEvent = Math.Max(_baseline + 1, lastEvent >= EventCapacity ? lastEvent - EventCapacity + 1 : 1);
@@ -129,6 +133,7 @@ internal sealed partial class NetworkSession
             SmoothedSamples = SmoothedSamples,
             PostDriftCorrections = PostDriftCorrections,
             DriftCorrectionDistance = DriftCorrectionDistance,
+            AngularDriftCorrection = AngularDriftCorrection,
             CommandHistoryBytes = _commands.Length * System.Runtime.CompilerServices.Unsafe.SizeOf<InputCommand>(),
             EventHistoryBytes = (_events.Length + _receivedEvents.Length + _confirmedLog.Length) * System.Runtime.CompilerServices.Unsafe.SizeOf<GameEvent>()
         };

@@ -627,3 +627,6 @@ Registered [borrowed shape authoring](../components/physics-registered-adapter.m
 
 
 [Contact reporting depth](../components/physics-registered-adapter.md#contact-reporting-depth) now executes for scene/raw CPU/GPU/registered bodies and history configuration. Zero disables filtering; positive scene-unit thresholds affect future contact/monitor snapshots while preserving physical response. Complete extension/network/performance acceptance remains open.
+
+
+[Separate-process network acceptance](../components/physics-network-example.md#stronger-process-acceptance-2026-10-12) now checks actual GPU denial before CPU authority/late-client startup, restores angular drift and compares nonzero final angular state as well as pose, sleep, identity and linear motion. Named Linux process checks pass; full physical/extension/platform and final performance acceptance remain open.

@@ -16,7 +16,8 @@ internal sealed partial class NetworkSession
     private int _nextRender, _renderFrames;
     private double _authorArrival, _lastPresentation;
     internal int InterpolatedSamples, SmoothedSamples, PostDriftCorrections;
-    internal double DriftCorrectionDistance;
+    internal double DriftCorrectionDistance, AngularDriftCorrection;
+    private readonly float[] _oldRotations = new float[NetworkWorld.Capacity];
     internal int ForeignCommands, EpochCommands;
     internal ulong JoinTick;
     private bool _sentForgery, _injectedDrift, _sentStaleGeneration;
@@ -81,10 +82,16 @@ internal sealed partial class NetworkSession
         if (final) oldTick = tick;
         // Inject at a validated correction boundary so intervening collisions cannot erase the test displacement.
         if (!_injectedDrift && _started && tick >= 190 && Simulation.Find(10)?.Body is RigidBody body)
-        { body.Position += new Vector2(35, -15); body.ApplyCentralImpulse(new(40, -20)); _injectedDrift = true; }
+        {
+            body.Position += new Vector2(35, -15); body.ApplyCentralImpulse(new(40, -20));
+            body.Rotation += .45f; body.AngularVelocity += 2; _injectedDrift = true;
+        }
         var started = Stopwatch.GetTimestamp();
         for (var i = 0; i < Simulation.Actors.Length; i++)
-        { _oldPredicted[i] = Simulation.Actors[i]?.Position ?? default; _oldSpecs[i] = Simulation.Actors[i]?.Spec ?? default; }
+        {
+            _oldPredicted[i] = Simulation.Actors[i]?.Position ?? default; _oldSpecs[i] = Simulation.Actors[i]?.Spec ?? default;
+            _oldRotations[i] = Simulation.Actors[i]?.Body?.GlobalRotation ?? 0;
+        }
         var created = Simulation.Created; var owners = Simulation.OwnershipChanges;
         Simulation.Phase = SimulationPhase.Correction;
         try
@@ -111,7 +118,12 @@ internal sealed partial class NetworkSession
                 if (same && actor.Spec.Owner == _network.GetUniqueID() && _oldSpecs[i].Owner == actor.Spec.Owner)
                     _offsets[i] += _oldPredicted[i] - actor.Position;
                 else _offsets[i] = default;
-                if (_injectedDrift && actor.Spec.ID == 10) { PostDriftCorrections++; DriftCorrectionDistance = Math.Max(DriftCorrectionDistance, distance); }
+                if (_injectedDrift && actor.Spec.ID == 10)
+                {
+                    PostDriftCorrections++; DriftCorrectionDistance = Math.Max(DriftCorrectionDistance, distance);
+                    if (same && actor.Body is { } collider)
+                        AngularDriftCorrection = Math.Max(AngularDriftCorrection, Math.Abs(Mathf.AngleDifference(_oldRotations[i], collider.GlobalRotation)));
+                }
             }
         SpawnCorrections += Simulation.Created - created; OwnershipCorrections += Simulation.OwnershipChanges - owners;
         for (var i = 0; i < events; i++)
