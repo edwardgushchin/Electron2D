@@ -16,10 +16,12 @@ Retains the implemented numeric topology/channel policy identities; unsupported 
 var value = Mesh.ArrayFormat.Color;
 ```
 
+
 ## Complete API
 
 | Complete signature | Contract |
 | --- | --- |
+| `public const Electron2D.Mesh.ArrayFormat BlendShapeMask = 7` | Position, normal and tangent channels permitted in a blend-shape payload. |
 | `public const Electron2D.Mesh.ArrayFormat Bones = 1024` | Flattened unsigned 16-bit bone indices. |
 | `public const Electron2D.Mesh.ArrayFormat Color = 8` | Vertex colors. |
 | `public const Electron2D.Mesh.ArrayFormat Custom0 = 64` | Packed numerical custom channel. |
@@ -46,6 +48,12 @@ var value = Mesh.ArrayFormat.Color;
 | `public const Electron2D.Mesh.ArrayFormat Weights = 2048` | Flattened unsigned normalized 16-bit skin weights. |
 
 ## Member descriptions
+
+### BlendShapeMask
+
+`public const Electron2D.Mesh.ArrayFormat BlendShapeMask = 7`
+
+summary: Position, normal and tangent channels permitted in a blend-shape payload.
 
 ### Bones
 

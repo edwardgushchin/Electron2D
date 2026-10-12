@@ -24,121 +24,115 @@ var node = new MeshInstance { Mesh = mesh, Position = new(10, 10) };
 // window.AddChild(node); Engine.Run(window);
 ```
 
-## Constructors
+
+Named shape values are stored on each node independently. Rendering mixes local positions according to the shared mesh mode before skinning, preserves the base numerical/other channels, and caches node-owned geometry. See [the complete deformation contract](../components/meshes.md#named-targets-and-instance-deformation).
+
+## Complete API
 
 | Complete signature | Contract |
 | --- | --- |
 | `public MeshInstance()` | Creates a node without mesh or texture. |
-
-## Constructors descriptions
-
-### .ctor
-
-`public MeshInstance()`
-
-Summary: Creates a node without mesh or texture.
-
-
-## Properties
-
-| Complete signature | Contract |
-| --- | --- |
+| `public event System.Action TextureChanged` | Occurs after replacing the borrowed texture and scheduling redraw. |
+| `protected override System.Func<Electron2D.Node> CreateSceneInstanceFactory()` |  |
+| `protected override System.Void Dispose(System.Boolean disposing)` |  |
+| `public System.Single GetBlendShapeValue(System.Int32 index)` | Gets the finite deformation weight of one shape on this instance. |
+| `public override System.String[] GetConfigurationWarnings()` | Reports a missing mesh along with inherited scene warnings. |
+| `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` |  |
+| `protected override System.Void OnDraw()` |  |
+| `public System.Void SetBlendShapeValue(System.Int32 index, System.Single value)` | Sets one finite deformation weight and validates resulting local geometry before mutation. |
+| `protected override System.Void ValidateDisposal()` |  |
+| `protected override System.Void ValidateMutation()` |  |
 | `public Electron2D.Mesh Mesh { get; set; }` | Gets or sets the borrowed mesh. |
 | `public Electron2D.Texture Texture { get; set; }` | Gets or sets the optional borrowed surface texture. |
 
-## Properties descriptions
+## Member descriptions
 
-### Mesh
+### MeshInstance
 
-`public Electron2D.Mesh Mesh { get; set; }`
+`public MeshInstance()`
 
-Summary: Gets or sets the borrowed mesh.
-
-Value: Null initially. Equal assignments are silent; replacement detaches the previous change listener.
-
-System.ObjectDisposedException: The node or assigned mesh is disposed.
-
-System.InvalidOperationException: Mutation is off-owner or capture-owned.
-
-
-### Texture
-
-`public Electron2D.Texture Texture { get; set; }`
-
-Summary: Gets or sets the optional borrowed surface texture.
-
-Value: Null initially. Equal assignments are silent; replacement commits before TextureChanged.
-
-System.ObjectDisposedException: The node or assigned texture is disposed.
-
-System.InvalidOperationException: Mutation is off-owner or capture-owned.
-
-
-## Methods and protected extension points
-
-| Complete signature | Contract |
-| --- | --- |
-| `protected override System.Func<Electron2D.Node> CreateSceneInstanceFactory()` | Concrete inherited contract; see Description. |
-| `protected override System.Void Dispose(System.Boolean disposing)` | Concrete inherited contract; see Description. |
-| `public override System.String[] GetConfigurationWarnings()` | Reports a missing mesh along with inherited scene warnings. |
-| `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | Concrete inherited contract; see Description. |
-| `protected override System.Void OnDraw()` | Concrete inherited contract; see Description. |
-
-## Methods and protected extension points descriptions
-
-### CreateSceneInstanceFactory
-
-`protected override System.Func<Electron2D.Node> CreateSceneInstanceFactory()`
-
-Concrete inherited resource/node hook; ownership, errors and effects are described above.
-
-
-### Dispose
-
-`protected override System.Void Dispose(System.Boolean disposing)`
-
-Concrete inherited resource/node hook; ownership, errors and effects are described above.
-
-
-### GetConfigurationWarnings
-
-`public override System.String[] GetConfigurationWarnings()`
-
-Summary: Reports a missing mesh along with inherited scene warnings.
-
-Returns: Independent warning strings; an empty mesh still counts as an assigned resource.
-
-
-### GetPropertyDescriptors
-
-`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`
-
-Concrete inherited resource/node hook; ownership, errors and effects are described above.
-
-
-### OnDraw
-
-`protected override System.Void OnDraw()`
-
-Concrete inherited resource/node hook; ownership, errors and effects are described above.
-
-
-## Events
-
-| Complete signature | Contract |
-| --- | --- |
-| `public event System.Action TextureChanged` | Occurs after replacing the borrowed texture and scheduling redraw. |
-
-## Events descriptions
+summary: Creates a node without mesh or texture.
 
 ### TextureChanged
 
 `public event System.Action TextureChanged`
 
-Summary: Occurs after replacing the borrowed texture and scheduling redraw.
+summary: Occurs after replacing the borrowed texture and scheduling redraw.
 
-## Dependencies, errors and verification
+### CreateSceneInstanceFactory
 
-[ADR 0092](../decisions/mesh.md#adr-0092) owns typed arrays, pinned exercised byte packing and deferred deformation/channel consumers. [Mesh component](../components/meshes.md) records current scope and executable verification. [MeshTests](../../tests/Electron2D.Tests/MeshTests.cs) checks copied state, updates/rollback, topology, callbacks, lifetime, duplication/scene storage and warmed replay. [MeshRenderingTests](../../tests/Electron2D.Tests/MeshRenderingTests.cs) checks real rendered pixels, primitive profiles, owned server lifetime and active/idle frames on GPU and compatibility. Native allocator totals, other platforms and owner acceptance remain unverified.
+`protected override System.Func<Electron2D.Node> CreateSceneInstanceFactory()`
 
-The borrowed Mesh.GetAABB returns local Rect2 visibility bounds for every stored vertex, including unreferenced vertices and point/line topologies. Prepared bounds/replay do not copy live ArrayMesh data. MeshInstance resource-change listeners use worker-safe invalidation; attached node setters retain owner/capture guards.
+### Dispose
+
+`protected override System.Void Dispose(System.Boolean disposing)`
+
+### GetBlendShapeValue
+
+`public System.Single GetBlendShapeValue(System.Int32 index)`
+
+summary: Gets the finite deformation weight of one shape on this instance.
+
+index: Existing zero-based shape index.
+
+returns: Zero initially; weights belong to this node independently of shared mesh resources.
+
+### GetConfigurationWarnings
+
+`public override System.String[] GetConfigurationWarnings()`
+
+summary: Reports a missing mesh along with inherited scene warnings.
+
+returns: Independent warning strings; an empty mesh still counts as an assigned resource.
+
+### GetPropertyDescriptors
+
+`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`
+
+### OnDraw
+
+`protected override System.Void OnDraw()`
+
+### SetBlendShapeValue
+
+`public System.Void SetBlendShapeValue(System.Int32 index, System.Single value)`
+
+summary: Sets one finite deformation weight and validates resulting local geometry before mutation.
+
+index: Existing zero-based shape index.
+
+value: Finite weight; values are not clamped or renormalized; absolute values at most 0.0001 have no drawing contribution.
+
+remarks: Normalized and relative modes use the mesh's selected policy. Changes update this node's live positions before skinning; numerical normal/tangent, material, UV/custom and skin channels remain inherited. Prepared scalar changes and drawing reuse node-owned geometry storage.
+
+### ValidateDisposal
+
+`protected override System.Void ValidateDisposal()`
+
+### ValidateMutation
+
+`protected override System.Void ValidateMutation()`
+
+### Mesh
+
+`public Electron2D.Mesh Mesh { get; set; }`
+
+summary: Gets or sets the borrowed mesh.
+
+value: Null initially. Equal assignments are silent; replacement detaches the previous change listener.
+
+System.ObjectDisposedException: The node or assigned mesh is disposed.
+
+System.InvalidOperationException: Mutation is off-owner or capture-owned.
+
+### Texture
+
+`public Electron2D.Texture Texture { get; set; }`
+
+summary: Gets or sets the optional borrowed surface texture.
+
+value: Null initially. Equal assignments are silent; replacement commits before TextureChanged.
+
+System.ObjectDisposedException: The node or assigned texture is disposed.
+
+System.InvalidOperationException: Mutation is off-owner or capture-owned.

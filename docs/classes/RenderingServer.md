@@ -1221,3 +1221,16 @@ Returns four bytes for each present normal/tangent channel, zero for neither. Re
 `public const int ArrayCustomCount = 4`
 
 Four independent typed MeshSurfaceData custom channels use the shared [MeshCustomFormat](MeshCustomFormat.md) enum. MeshSurfaceGetFormatAttributeStride sums color, UV and the selected custom record widths. MeshSurfaceUpdateAttributeRegion validates complete affected records before mutation and refreshes retained shader inputs. See [the packed custom contract](../components/meshes.md#numerical-custom-channels).
+
+## Named mesh targets
+
+| Complete signature | Contract |
+| --- | --- |
+| `public static System.Void MeshAddSurfaceFromArrays(Electron2D.RID mesh, Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.ArrayFormat flags = None, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null)` | Copied typed surface/target storage; owned mutations and borrowed queries follow the common mesh identity contract. |
+| `public static Electron2D.RID MeshCreate(System.Int32 blendShapeCount)` | Copied typed surface/target storage; owned mutations and borrowed queries follow the common mesh identity contract. |
+| `public static System.Int32 MeshGetBlendShapeCount(Electron2D.RID mesh)` | Copied typed surface/target storage; owned mutations and borrowed queries follow the common mesh identity contract. |
+| `public static Electron2D.BlendShapeMode MeshGetBlendShapeMode(Electron2D.RID mesh)` | Copied typed surface/target storage; owned mutations and borrowed queries follow the common mesh identity contract. |
+| `public static System.Void MeshSetBlendShapeMode(Electron2D.RID mesh, Electron2D.BlendShapeMode mode)` | Copied typed surface/target storage; owned mutations and borrowed queries follow the common mesh identity contract. |
+| `public static Electron2D.MeshSurfaceData[] MeshSurfaceGetBlendShapeArrays(Electron2D.RID mesh, System.Int32 surface)` | Copied typed surface/target storage; owned mutations and borrowed queries follow the common mesh identity contract. |
+
+MeshCreate(int) defines the shape count before adding owned surfaces. Shapes receive ordinal index names in the managed owned resource. MeshAddSurfaceFromArrays retains positional flags and adds optional typed blendShapes/lods. Nonempty LOD input still rejects. See [named targets and deformation](../components/meshes.md#named-targets-and-instance-deformation).

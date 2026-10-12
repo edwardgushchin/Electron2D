@@ -9,6 +9,9 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_MORPH_CHILD") is { } morphChild) { MeshMorphTests.RunChild(morphChild); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_MORPH_NATIVE") == "1") { MeshMorphNativeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_MORPH") == "1") { MeshMorphTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MASS_PROFILE") == "1")
 {
     PhysicsMassProfileTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU);

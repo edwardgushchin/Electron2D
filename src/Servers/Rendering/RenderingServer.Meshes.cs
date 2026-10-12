@@ -3,12 +3,12 @@ namespace Electron2D;
 public sealed partial class RenderingServer
 {
     private readonly List<RID> _ownedMeshRIDs = [];
-    internal RID MeshCreateCore()
+    internal RID MeshCreateCore(int blendShapeCount = 0)
     {
-        EnsureTextureChange(); var mesh = new ArrayMesh(); var rid = mesh.RegisterOwned(this); _ownedMeshRIDs.Add(rid); return rid;
+        EnsureTextureChange(); if ((uint)blendShapeCount > 4096) throw new ArgumentOutOfRangeException(nameof(blendShapeCount)); var mesh = new ArrayMesh(); for (var i = 0; i < blendShapeCount; i++) mesh.AddBlendShape(i.ToString(System.Globalization.CultureInfo.InvariantCulture)); var rid = mesh.RegisterOwned(this); _ownedMeshRIDs.Add(rid); return rid;
     }
-    internal void MeshAddSurfaceFromArraysCore(RID mesh, Mesh.PrimitiveType primitive, MeshSurfaceData arrays, Mesh.ArrayFormat flags = Mesh.ArrayFormat.None)
-    { EnsureTextureChange(); RenderingMeshRegistry.Owned(mesh, this).AddSurfaceFromArrays(primitive, arrays, flags: flags); }
+    internal void MeshAddSurfaceFromArraysCore(RID mesh, Mesh.PrimitiveType primitive, MeshSurfaceData arrays, Mesh.ArrayFormat flags = Mesh.ArrayFormat.None, IReadOnlyList<MeshSurfaceData>? blendShapes = null, IReadOnlyDictionary<float, int[]>? lods = null)
+    { EnsureTextureChange(); RenderingMeshRegistry.Owned(mesh, this).AddSurfaceFromArrays(primitive, arrays, blendShapes, lods, flags); }
     internal int MeshGetSurfaceCountCore(RID mesh) { EnsureOwner(); return RenderingMeshRegistry.Resolve(mesh).GetSurfaceCount(); }
     internal MeshSurfaceData MeshSurfaceGetArraysCore(RID mesh, int surface) { EnsureOwner(); return RenderingMeshRegistry.Resolve(mesh).SurfaceGetArrays(surface); }
     internal void MeshClearCore(RID mesh) { EnsureTextureChange(); RenderingMeshRegistry.Owned(mesh, this).ClearSurfaces(); }

@@ -192,8 +192,8 @@
     },
     {
       "godot": "RenderingServer::method:mesh_add_surface_from_arrays(RID:,int:RenderingServer.PrimitiveType,Array:,Array:,Dictionary:,int:RenderingServer.ArrayFormat)",
-      "electron2d": "method:Electron2D.RenderingServer.MeshAddSurfaceFromArrays(Electron2D.RID,Electron2D.Mesh.PrimitiveType,Electron2D.MeshSurfaceData,Electron2D.Mesh.ArrayFormat)",
-      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+      "electron2d": "method:Electron2D.RenderingServer.MeshAddSurfaceFromArrays(Electron2D.RID,Electron2D.Mesh.PrimitiveType,Electron2D.MeshSurfaceData,Electron2D.Mesh.ArrayFormat,System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData>,System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]>)",
+      "reason": "Typed owned surface import preserves positional flags and adds copied target payloads. Definition count is authored by MeshCreate(int); LOD input still rejects until typed scale selection exists under ADR 0092."
     },
     {
       "godot": "RenderingServer::method:mesh_clear(RID:)",
@@ -1419,6 +1419,126 @@
       "godot": "SurfaceTool::method:set_custom_format(int:,int:SurfaceTool.CustomFormat)",
       "electron2d": "method:Electron2D.SurfaceTool.SetCustomFormat(System.Int32,Electron2D.MeshCustomFormat)",
       "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "ArrayMesh::method:add_blend_shape(StringName:)",
+      "electron2d": "method:Electron2D.ArrayMesh.AddBlendShape(System.String)",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "ArrayMesh::method:clear_blend_shapes()",
+      "electron2d": "method:Electron2D.ArrayMesh.ClearBlendShapes()",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "ArrayMesh::method:get_blend_shape_count()",
+      "electron2d": "method:Electron2D.Mesh.GetBlendShapeCount()",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "ArrayMesh::method:get_blend_shape_name(int:)",
+      "electron2d": "method:Electron2D.Mesh.GetBlendShapeName(System.Int32)",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "ArrayMesh::method:set_blend_shape_name(int:,StringName:)",
+      "electron2d": "method:Electron2D.Mesh.SetBlendShapeName(System.Int32,System.String)",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "ArrayMesh::property:blend_shape_mode",
+      "electron2d": "property:Electron2D.ArrayMesh.BlendShapeMode()",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "Mesh::enum:BlendShapeMode",
+      "electron2d": "T:Electron2D.BlendShapeMode",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_BLEND_SHAPE_MASK",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.BlendShapeMask()",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:BlendShapeMode.BLEND_SHAPE_MODE_NORMALIZED",
+      "electron2d": "enumValue:Electron2D.BlendShapeMode.Normalized()",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:BlendShapeMode.BLEND_SHAPE_MODE_RELATIVE",
+      "electron2d": "enumValue:Electron2D.BlendShapeMode.Relative()",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "Mesh::method:_get_blend_shape_count()",
+      "electron2d": "method:Electron2D.Mesh.OnGetBlendShapeCount()",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "Mesh::method:_get_blend_shape_name(int:)",
+      "electron2d": "method:Electron2D.Mesh.OnGetBlendShapeName(System.Int32)",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "Mesh::method:_set_blend_shape_name(int:,StringName:)",
+      "electron2d": "method:Electron2D.Mesh.OnSetBlendShapeName(System.Int32,System.String)",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "Mesh::method:_surface_get_blend_shape_arrays(int:)",
+      "electron2d": "method:Electron2D.Mesh.OnSurfaceGetBlendShapeArrays(System.Int32)",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "Mesh::method:surface_get_blend_shape_arrays(int:)",
+      "electron2d": "method:Electron2D.Mesh.SurfaceGetBlendShapeArrays(System.Int32)",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum:BlendShapeMode",
+      "electron2d": "T:Electron2D.BlendShapeMode",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_BLEND_SHAPE_MASK",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.BlendShapeMask()",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:BlendShapeMode.BLEND_SHAPE_MODE_NORMALIZED",
+      "electron2d": "enumValue:Electron2D.BlendShapeMode.Normalized()",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:BlendShapeMode.BLEND_SHAPE_MODE_RELATIVE",
+      "electron2d": "enumValue:Electron2D.BlendShapeMode.Relative()",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_get_blend_shape_count(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshGetBlendShapeCount(Electron2D.RID)",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_get_blend_shape_mode(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshGetBlendShapeMode(Electron2D.RID)",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_set_blend_shape_mode(RID:,int:RenderingServer.BlendShapeMode)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSetBlendShapeMode(Electron2D.RID,Electron2D.BlendShapeMode)",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_surface_get_blend_shape_arrays(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceGetBlendShapeArrays(Electron2D.RID,System.Int32)",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:create_from_blend_shape(Mesh:,int:,String:)",
+      "electron2d": "method:Electron2D.SurfaceTool.CreateFromBlendShape(Electron2D.Mesh,System.Int32,System.String)",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified."
     }
   ],
   "extras": [
@@ -1721,6 +1841,42 @@
     {
       "electron2d": "property:Electron2D.MeshSurfaceData.Custom3()",
       "reason": "ADRs 0001/0092: named copied format/byte payloads replace opaque heterogeneous custom-channel storage and feed actual authoring, archives, packed updates and shader consumers."
+    },
+    {
+      "electron2d": "method:Electron2D.ArrayMesh.OnGetBlendShapeCount()",
+      "reason": "ADR 0092: executable 2D target storage/independent instance-weight producer, inherited snapshot guards and usable owned shape-count construction. No 3D scene or renderer API is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.ArrayMesh.OnGetBlendShapeName(System.Int32)",
+      "reason": "ADR 0092: executable 2D target storage/independent instance-weight producer, inherited snapshot guards and usable owned shape-count construction. No 3D scene or renderer API is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.ArrayMesh.OnSetBlendShapeName(System.Int32,System.String)",
+      "reason": "ADR 0092: executable 2D target storage/independent instance-weight producer, inherited snapshot guards and usable owned shape-count construction. No 3D scene or renderer API is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.ArrayMesh.OnSurfaceGetBlendShapeArrays(System.Int32)",
+      "reason": "ADR 0092: executable 2D target storage/independent instance-weight producer, inherited snapshot guards and usable owned shape-count construction. No 3D scene or renderer API is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.MeshInstance.GetBlendShapeValue(System.Int32)",
+      "reason": "ADR 0092: executable 2D target storage/independent instance-weight producer, inherited snapshot guards and usable owned shape-count construction. No 3D scene or renderer API is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.MeshInstance.SetBlendShapeValue(System.Int32,System.Single)",
+      "reason": "ADR 0092: executable 2D target storage/independent instance-weight producer, inherited snapshot guards and usable owned shape-count construction. No 3D scene or renderer API is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.MeshInstance.ValidateDisposal()",
+      "reason": "ADR 0092: executable 2D target storage/independent instance-weight producer, inherited snapshot guards and usable owned shape-count construction. No 3D scene or renderer API is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.MeshInstance.ValidateMutation()",
+      "reason": "ADR 0092: executable 2D target storage/independent instance-weight producer, inherited snapshot guards and usable owned shape-count construction. No 3D scene or renderer API is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingServer.MeshCreate(System.Int32)",
+      "reason": "ADR 0092: executable 2D target storage/independent instance-weight producer, inherited snapshot guards and usable owned shape-count construction. No 3D scene or renderer API is introduced."
     }
   ],
   "statusGroups": [
@@ -1737,8 +1893,7 @@
       "reason": "Trigger: concrete typed normal/tangent/custom/compressed channel byte storage and an actual shader-attribute consumer over the mesh path (ADR 0092).",
       "godot": [
         "Mesh::enum_value:ArrayFormat.ARRAY_COMPRESS_FLAGS_BASE",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_COMPRESS_ATTRIBUTES",
-        "Mesh::enum_value:BlendShapeMode.BLEND_SHAPE_MODE_NORMALIZED"
+        "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_COMPRESS_ATTRIBUTES"
       ]
     },
     {
@@ -1799,18 +1954,7 @@
       "state": "Blocked",
       "reason": "Trigger: first typed 2D deformation/morph weight and scale-selected LOD producer/consumer slice over the now executable mesh surfaces (ADR 0092).",
       "godot": [
-        "ArrayMesh::method:add_blend_shape(StringName:)",
-        "ArrayMesh::method:clear_blend_shapes()",
-        "ArrayMesh::method:get_blend_shape_count()",
-        "ArrayMesh::method:get_blend_shape_name(int:)",
-        "ArrayMesh::method:set_blend_shape_name(int:,StringName:)",
-        "ArrayMesh::property:blend_shape_mode",
-        "Mesh::method:_get_blend_shape_count()",
-        "Mesh::method:_get_blend_shape_name(int:)",
-        "Mesh::method:_set_blend_shape_name(int:,StringName:)",
-        "Mesh::method:_surface_get_blend_shape_arrays(int:)",
-        "Mesh::method:_surface_get_lods(int:)",
-        "Mesh::method:surface_get_blend_shape_arrays(int:)"
+        "Mesh::method:_surface_get_lods(int:)"
       ]
     },
     {
@@ -1828,24 +1972,10 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits. Morph/LOD inputs explicitly reject until their typed producer/consumer integration.",
-      "godot": [
-        "ArrayMesh::method:add_surface_from_arrays(int:Mesh.PrimitiveType,Array:,Array[]:,Dictionary:,int:Mesh.ArrayFormat)"
-      ]
-    },
-    {
       "state": "Blocked",
       "reason": "Trigger: first 2D light/shadow mesh consumer with actual visible effect (ADR 0092).",
       "godot": [
         "ArrayMesh::property:shadow_mesh"
-      ]
-    },
-    {
-      "state": "Partial",
-      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits.",
-      "godot": [
-        "RenderingServer::method:mesh_add_surface_from_arrays(RID:,int:RenderingServer.PrimitiveType,Array:,Array:,Dictionary:,int:RenderingServer.ArrayFormat)"
       ]
     },
     {
@@ -1891,15 +2021,6 @@
         "Mesh::enum_value:ArrayType.ARRAY_TEX_UV2",
         "Mesh::enum_value:ArrayType.ARRAY_VERTEX",
         "Mesh::enum_value:ArrayType.ARRAY_WEIGHTS"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: typed 2D morph target storage, relative/normalized weight semantics and visible deformation producer/consumer integration (ADR 0092).",
-      "godot": [
-        "Mesh::enum:BlendShapeMode",
-        "Mesh::enum_value:BlendShapeMode.BLEND_SHAPE_MODE_RELATIVE",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_BLEND_SHAPE_MASK"
       ]
     },
     {
@@ -2074,13 +2195,6 @@
     },
     {
       "godot": [
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_BLEND_SHAPE_MASK"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: typed 2D morph target storage, relative/normalized weight semantics and visible deformation producer/consumer integration (ADR 0092)."
-    },
-    {
-      "godot": [
         "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY"
       ],
       "state": "Blocked",
@@ -2160,13 +2274,6 @@
       "reason": "ADR 0004: pinned doc/classes/SurfaceTool.xml generate_lod deprecated metadata: This method is unused internally, as it does not preserve normals or UVs. Consider using [method ImporterMesh.generate_lods] instead. No legacy wrapper or implementation trigger.",
       "godot": [
         "SurfaceTool::method:generate_lod(float:,int:)"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: complete named typed 2D morph-target storage and actual deformation/weight consumer over ArrayMesh under ADR 0092. SurfaceTool pose extraction enters that prerequisite first slice.",
-      "godot": [
-        "SurfaceTool::method:create_from_blend_shape(Mesh:,int:,String:)"
       ]
     },
     {
@@ -2294,6 +2401,44 @@
         "SurfaceTool::method:set_custom_format(int:,int:SurfaceTool.CustomFormat)"
       ],
       "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0004/0051/0092: typed named per-surface position/normal/tangent targets, copied payloads, exact extraction preserving base attributes/material, two stored mixing modes, independent 2D instance weights before skinning, source callback guards and transactional finite coordinates/bounds. AMS5/duplication/fresh scenes preserve definitions/targets/independent weights, reading AMS1-4. Actual Linux GLSL/HLSL/compatibility pixels cover mode changes, raw pose frames, eight-slot skin, groups and owned/borrrowed service APIs; each backend checks 64 active/64 idle complete frames with zero managed bytes. Wider platforms/native allocation totals/human acceptance remain unverified.",
+      "godot": [
+        "ArrayMesh::method:add_blend_shape(StringName:)",
+        "ArrayMesh::method:clear_blend_shapes()",
+        "ArrayMesh::method:get_blend_shape_count()",
+        "ArrayMesh::method:get_blend_shape_name(int:)",
+        "ArrayMesh::method:set_blend_shape_name(int:,StringName:)",
+        "ArrayMesh::property:blend_shape_mode",
+        "Mesh::enum:BlendShapeMode",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_BLEND_SHAPE_MASK",
+        "Mesh::enum_value:BlendShapeMode.BLEND_SHAPE_MODE_NORMALIZED",
+        "Mesh::enum_value:BlendShapeMode.BLEND_SHAPE_MODE_RELATIVE",
+        "Mesh::method:_get_blend_shape_count()",
+        "Mesh::method:_get_blend_shape_name(int:)",
+        "Mesh::method:_set_blend_shape_name(int:,StringName:)",
+        "Mesh::method:_surface_get_blend_shape_arrays(int:)",
+        "Mesh::method:surface_get_blend_shape_arrays(int:)",
+        "RenderingServer::enum:BlendShapeMode",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_BLEND_SHAPE_MASK",
+        "RenderingServer::enum_value:BlendShapeMode.BLEND_SHAPE_MODE_NORMALIZED",
+        "RenderingServer::enum_value:BlendShapeMode.BLEND_SHAPE_MODE_RELATIVE",
+        "RenderingServer::method:mesh_get_blend_shape_count(RID:)",
+        "RenderingServer::method:mesh_get_blend_shape_mode(RID:)",
+        "RenderingServer::method:mesh_set_blend_shape_mode(RID:,int:RenderingServer.BlendShapeMode)",
+        "RenderingServer::method:mesh_surface_get_blend_shape_arrays(RID:,int:)",
+        "SurfaceTool::method:create_from_blend_shape(Mesh:,int:,String:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "ArrayMesh::method:add_surface_from_arrays(int:Mesh.PrimitiveType,Array:,Array[]:,Dictionary:,int:Mesh.ArrayFormat)",
+        "RenderingServer::method:mesh_add_surface_from_arrays(RID:,int:RenderingServer.PrimitiveType,Array:,Array:,Dictionary:,int:RenderingServer.ArrayFormat)"
+      ],
+      "reason": "Typed base/custom/skin and named morph imports execute complete copied storage/rendering. Remaining trigger: typed LOD index-set storage and actual scale-selected draw consumption under ADR 0092; nonempty LOD input rejects before mutation."
     }
   ]
 }

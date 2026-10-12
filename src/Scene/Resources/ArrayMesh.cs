@@ -7,9 +7,11 @@ namespace Electron2D;
 /// listeners do not roll back committed geometry. Mesh draws retain this resource and observe live data.</remarks>
 public sealed partial class ArrayMesh : Mesh
 {
-    internal sealed class Surface(MeshSurfaceData data, PrimitiveType primitive, ArrayFormat flags, uint[]? frameWords = null)
+    internal sealed class Surface(MeshSurfaceData data, PrimitiveType primitive, ArrayFormat flags, uint[]? frameWords = null, MeshSurfaceData[]? blendShapes = null, ArrayFormat blendMask = ArrayFormat.Vertex)
     {
         internal readonly MeshSurfaceData Data = data;
+        internal readonly MeshSurfaceData[] BlendShapes = blendShapes ?? [];
+        internal readonly ArrayFormat BlendMask = blendMask;
         internal readonly uint[] FrameWords = Prepare(data, frameWords);
         private static uint[] Prepare(MeshSurfaceData data, uint[]? words) { data.PrepareCustoms(); return words ?? MeshFrameCodec.Capture(data); }
         internal readonly PrimitiveType Primitive = primitive;
@@ -27,7 +29,7 @@ public sealed partial class ArrayMesh : Mesh
     /// <summary>Adds one copied two-dimensional surface.</summary>
     /// <param name="primitive">Vertex topology, including points, lines and strips.</param>
     /// <param name="arrays">Borrowed typed vertex/normal/tangent/color/primary and secondary UV/custom/index/skin arrays copied before mutation.</param>
-    /// <param name="blendShapes">Null or empty until the typed deformation consumer is integrated.</param>
+    /// <param name="blendShapes">One copied position/normal/tangent-only target per named definition; null or empty for unshaped meshes.</param>
     /// <param name="lods">Null or empty until scale-selected index sets are integrated.</param>
     /// <param name="flags">UseDynamicUpdate, Use2DVertices, Use8BoneWeights and matching channel bits. Unsupported bits reject before mutation.</param>
     /// <remarks>Channel bits are inferred; explicitly supplied channel bits must match the arrays. The new surface index is the old GetSurfaceCount result.</remarks>
@@ -42,16 +44,19 @@ public sealed partial class ArrayMesh : Mesh
     {
         ArgumentNullException.ThrowIfNull(arrays);
         if (material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(material));
-        if (blendShapes is { Count: > 0 } || lods is { Count: > 0 }) throw new NotSupportedException("Morph targets and LOD index sets require their first executable deformation/scale-selection integration.");
+        if (lods is { Count: > 0 }) throw new NotSupportedException("LOD index sets require their first executable scale-selection integration.");
         if ((flags & ~SupportedFormats) != 0) throw new NotSupportedException("These mesh flags require their attribute storage integration.");
-        var copy = arrays.Copy(); copy.Validate(primitive); var packed = new Surface(copy, primitive, flags); var inferred = Surface.Channels(copy); const ArrayFormat channels = ArrayFormat.Custom0 | ArrayFormat.Custom1 | ArrayFormat.Custom2 | ArrayFormat.Custom3 | ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights; if ((flags & channels & ~inferred) != 0) throw new ArgumentException("Explicit channel flags require matching typed arrays.", nameof(flags)); if (copy.SkinSlots != 0 && copy.SkinSlots != ((flags & ArrayFormat.Use8BoneWeights) != 0 ? 8 : 4)) throw new ArgumentException("Skin slot count must match the eight-weight flag.", nameof(flags)); copy.QuantizeSkin();
+        var copy = arrays.Copy(); copy.Validate(primitive);
+        var blendMask = ArrayFormat.Vertex | (copy.Normals.Length != 0 ? ArrayFormat.Normal : 0) | (copy.Tangents.Length != 0 ? ArrayFormat.Tangent : 0);
+        var shapes = blendShapes?.Select(shape => { ArgumentNullException.ThrowIfNull(shape); var result = shape.Copy(); ValidateBlendShape(result, copy, blendMask); for (var i = 0; i < result.Normals.Length; i++) result.Normals[i] = MeshFrameCodec.Normal(MeshFrameCodec.PackNormal(result.Normals[i])); for (var i = 0; i < result.Tangents.Length; i++) result.Tangents[i] = MeshFrameCodec.Tangent(MeshFrameCodec.PackTangent(result.Tangents[i])); return result; }).ToArray() ?? [];
+        var packed = new Surface(copy, primitive, flags, blendShapes: shapes, blendMask: blendMask); var inferred = Surface.Channels(copy); const ArrayFormat channels = ArrayFormat.Custom0 | ArrayFormat.Custom1 | ArrayFormat.Custom2 | ArrayFormat.Custom3 | ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights; if ((flags & channels & ~inferred) != 0) throw new ArgumentException("Explicit channel flags require matching typed arrays.", nameof(flags)); if (copy.SkinSlots != 0 && copy.SkinSlots != ((flags & ArrayFormat.Use8BoneWeights) != 0 ? 8 : 4)) throw new ArgumentException("Skin slot count must match the eight-weight flag.", nameof(flags)); copy.QuantizeSkin();
         for (var channel = 0; channel < 4; channel++)
         {
             var supplied = (ulong)flags >> MeshCustomCodec.Shift(channel) & 7;
             if (supplied != 0 && (copy.Custom(channel) is not { } custom || (ulong)custom.Format != supplied)) throw new ArgumentException("Custom format flags require matching typed data.", nameof(flags));
         }
         for (var i = 0; i < copy.Colors.Length; i++) { var color = copy.Colors[i]; copy.Colors[i] = new(Quantize(color.R), Quantize(color.G), Quantize(color.B), Quantize(color.A)); }
-        lock (Gate) { ThrowIfDisposed(); packed.Material = material; _surfaces.Add(packed); }
+        lock (Gate) { ThrowIfDisposed(); if (shapes.Length != _blendShapeNames.Count) throw new ArgumentException("Every surface requires one payload per named blend shape.", nameof(blendShapes)); packed.Material = material; _surfaces.Add(packed); }
         EmitChanged();
     }
     /// <summary>Removes every surface without disposing borrowed materials.</summary>
@@ -183,11 +188,11 @@ public sealed partial class ArrayMesh : Mesh
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
-        Surface[] copies;
-        lock (Gate) { ThrowIfDisposed(); copies = new Surface[_surfaces.Count]; for (var i = 0; i < copies.Length; i++) { var s = _surfaces[i]; copies[i] = new(s.Data.Copy(), s.Primitive, s.Format & (ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights)) { Name = s.Name, Material = s.Material }; } }
+        Surface[] copies; string[] names; BlendShapeMode mode;
+        lock (Gate) { ThrowIfDisposed(); names = _blendShapeNames.ToArray(); mode = _blendShapeMode; copies = new Surface[_surfaces.Count]; for (var i = 0; i < copies.Length; i++) { var s = _surfaces[i]; copies[i] = new(s.Data.Copy(), s.Primitive, s.Format & (ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights), (uint[])s.FrameWords.Clone(), s.BlendShapes.Select(shape => shape.Copy()).ToArray(), s.BlendMask) { Name = s.Name, Material = s.Material }; } }
         foreach (var copy in copies) copy.Material = (Material?)duplicateSubresource(copy.Material);
-        var other = (ArrayMesh)target; lock (other.Gate) { other.ThrowIfDisposed(); other._surfaces.Clear(); other._surfaces.AddRange(copies); }
+        var other = (ArrayMesh)target; lock (other.Gate) { other.ThrowIfDisposed(); other._surfaces.Clear(); other._surfaces.AddRange(copies); other._blendShapeNames.Clear(); other._blendShapeNames.AddRange(names); other._blendShapeMode = mode; }
     }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { lock (Gate) _surfaces.Clear(); base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { lock (Gate) { _surfaces.Clear(); _blendShapeNames.Clear(); } base.Dispose(disposing); }
 }

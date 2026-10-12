@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>Describes indexed two-dimensional surfaces consumed by retained canvas drawing.</summary>
 /// <remarks>Surfaces use typed copied arrays. Materials and textures are borrowed. Implementations provide the
 /// surface callbacks; geometry, naming and storage changes publish Resource.Changed after committing.</remarks>
-public abstract class Mesh : Resource
+public abstract partial class Mesh : Resource
 {
     /// <summary>Defines the ordering of a surface's indexed or sequential vertices.</summary>
     public enum PrimitiveType
@@ -31,6 +31,8 @@ public abstract class Mesh : Resource
         Normal = 2,
         /// <summary>Octahedrally packed tangent directions and orientation.</summary>
         Tangent = 4,
+        /// <summary>Position, normal and tangent channels permitted in a blend-shape payload.</summary>
+        BlendShapeMask = Vertex | Normal | Tangent,
         /// <summary>Vertex colors.</summary>
         Color = 8,
         /// <summary>Primary texture coordinates.</summary>

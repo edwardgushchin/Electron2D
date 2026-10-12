@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>Draws a borrowed two-dimensional mesh through the retained canvas renderer.</summary>
 /// <remarks>Mesh and texture resources remain caller-owned. Live mesh geometry is read during replay;
 /// change notifications request redraw for captured scene state. Attached mutation uses the scene owner thread.</remarks>
-public class MeshInstance : Entity
+public partial class MeshInstance : Entity
 {
     private Mesh? _mesh;
     private Texture? _texture;
@@ -18,10 +18,10 @@ public class MeshInstance : Entity
         get { ThrowIfDisposed(); return _mesh; }
         set
         {
-            EnsureMutable(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (ReferenceEquals(_mesh, value)) return;
+            EnsureMutable(); EnsureMorphMutable(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (ReferenceEquals(_mesh, value)) return;
             value?.GetRID(); EnsureMutable();
             if (_mesh is not null) _mesh.Changed -= MeshChanged;
-            _mesh = value; if (_mesh is not null) _mesh.Changed += MeshChanged; InvalidateCanvas(); UpdateConfigurationWarnings();
+            _morph?.Dispose(); _morph = null; _blendShapeValues = []; _mesh = value; if (_mesh is not null) _mesh.Changed += MeshChanged; InvalidateCanvas(); UpdateConfigurationWarnings();
         }
     }
     /// <summary>Gets or sets the optional borrowed surface texture.</summary>
@@ -44,11 +44,12 @@ public class MeshInstance : Entity
         return _mesh is null ? [.. warnings, "MeshInstance requires a Mesh to render anything."] : warnings;
     }
     /// <inheritdoc />
-    protected override void OnDraw() { base.OnDraw(); if (_mesh is not null) DrawMesh(_mesh, _texture); }
+    protected override void OnDraw() { base.OnDraw(); if (_mesh is not null) DrawMesh(DrawnMesh(), _texture); }
     private static readonly PropertyDescriptor[] Properties =
     [
         new PropertyDescriptor<MeshInstance, Mesh?>(nameof(Mesh), p => p.Mesh, (p, v) => p.Mesh = v, _ => null, stored: true),
-        new PropertyDescriptor<MeshInstance, Texture?>(nameof(Texture), p => p.Texture, (p, v) => p.Texture = v, _ => null, stored: true)
+        new PropertyDescriptor<MeshInstance, Texture?>(nameof(Texture), p => p.Texture, (p, v) => p.Texture = v, _ => null, stored: true),
+        new PropertyDescriptor<MeshInstance, float[]>("_blend_shape_values", p => p.StoredBlendShapeValues, (p, v) => p.StoredBlendShapeValues = v, _ => [], stored: true)
     ];
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(Properties);
@@ -58,7 +59,7 @@ public class MeshInstance : Entity
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { if (_mesh is not null) _mesh.Changed -= MeshChanged; _mesh = null; _texture = null; TextureChanged = null; }
+        if (disposing) { EnsureMorphMutable(); _morph?.Dispose(); _morph = null; _blendShapeValues = []; if (_mesh is not null) _mesh.Changed -= MeshChanged; _mesh = null; _texture = null; TextureChanged = null; }
         base.Dispose(disposing);
     }
 }

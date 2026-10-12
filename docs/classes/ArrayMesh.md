@@ -8,7 +8,7 @@ Last updated: 2026-10-12
 
 ## Description
 
-Concrete copied surface storage. AddSurfaceFromArrays accepts typed Vertices/Normals/Tangents/Colors/UVs/UV2s/Custom0–Custom3/Indices, optional empty deformation/LOD inputs and supported flags. Every channel is copied and validated before adding; vertex/normal/tangent/color/primary-UV/secondary-UV/custom-record counts and index bounds must match topology. All five topologies execute. Empty or malformed vertex payloads reject. Colors clamp/truncate to RGBA8 UNORM on import; source getters expose decoded quantized colors, preserving the exercised pinned storage precision. Position/texture coordinates remain float pairs. The new index is the previous GetSurfaceCount. Surfaces default to an empty name and null borrowed material; duplicates names are allowed and search returns the first exact ordinal match. Remove shifts later indices, Clear removes all; borrowed materials remain live. Every edit commits before Changed, including equal name/material writes; listener failure does not undo valid data.
+Concrete copied surface storage. AddSurfaceFromArrays accepts typed Vertices/Normals/Tangents/Colors/UVs/UV2s/Custom0–Custom3/Indices, copied named morph targets and optional empty LOD inputs and supported flags. Every channel is copied and validated before adding; vertex/normal/tangent/color/primary-UV/secondary-UV/custom-record counts and index bounds must match topology. All five topologies execute. Empty or malformed vertex payloads reject. Colors clamp/truncate to RGBA8 UNORM on import; source getters expose decoded quantized colors, preserving the exercised pinned storage precision. Position/texture coordinates remain float pairs. The new index is the previous GetSurfaceCount. Surfaces default to an empty name and null borrowed material; duplicates names are allowed and search returns the first exact ordinal match. Remove shifts later indices, Clear removes all; borrowed materials remain live. Every edit commits before Changed, including equal name/material writes; listener failure does not undo valid data.
 
 ## Example
 
@@ -20,21 +20,30 @@ var node = new MeshInstance { Mesh = mesh };
 // Attach node to a Window; retain mesh until the scene is disposed.
 ```
 
+
+Shape count/name accessors are inherited from [Mesh](Mesh.md). Named targets, two stored modes and independent [MeshInstance](MeshInstance.md) weights execute through [the shared deformation contract](../components/meshes.md#named-targets-and-instance-deformation).
+
 ## Complete API
 
 | Complete signature | Contract |
 | --- | --- |
 | `public ArrayMesh()` | Creates an empty mesh. |
+| `public System.Void AddBlendShape(System.String name)` | Adds a named shape definition before any surfaces exist. |
 | `public System.Void AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null, Electron2D.Mesh.ArrayFormat flags = None)` | Adds one copied two-dimensional surface. |
+| `public System.Void ClearBlendShapes()` | Clears shape definitions before any surfaces exist. |
 | `public System.Void ClearSurfaces()` | Removes every surface without disposing borrowed materials. |
 | `protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)` |  |
 | `protected override Electron2D.Resource CreateDuplicateInstance()` |  |
 | `protected override System.Void Dispose(System.Boolean disposing)` |  |
 | `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` |  |
+| `protected override System.Int32 OnGetBlendShapeCount()` |  |
+| `protected override System.String OnGetBlendShapeName(System.Int32 index)` |  |
 | `protected override System.Int32 OnGetSurfaceCount()` |  |
+| `protected override System.Void OnSetBlendShapeName(System.Int32 index, System.String name)` |  |
 | `protected override System.Int32 OnSurfaceGetArrayIndexLen(System.Int32 surfaceIndex)` |  |
 | `protected override System.Int32 OnSurfaceGetArrayLen(System.Int32 surfaceIndex)` |  |
 | `protected override Electron2D.MeshSurfaceData OnSurfaceGetArrays(System.Int32 surfaceIndex)` |  |
+| `protected override Electron2D.MeshSurfaceData[] OnSurfaceGetBlendShapeArrays(System.Int32 surfaceIndex)` |  |
 | `protected override Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)` |  |
 | `protected override Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)` |  |
 | `protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)` |  |
@@ -47,6 +56,7 @@ var node = new MeshInstance { Mesh = mesh };
 | `public System.Void SurfaceUpdateAttributeRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates bytes in a surface's packed color, primary/secondary UV and custom buffer. |
 | `public System.Void SurfaceUpdateSkinRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates copied bytes in the packed skin buffer, including partial records. |
 | `public System.Void SurfaceUpdateVertexRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates bytes in packed positions and octahedral normal/tangent records. |
+| `public Electron2D.BlendShapeMode BlendShapeMode { get; set; }` | Gets or selects normalized absolute targets or additive relative offsets. |
 
 ## Member descriptions
 
@@ -55,6 +65,16 @@ var node = new MeshInstance { Mesh = mesh };
 `public ArrayMesh()`
 
 summary: Creates an empty mesh.
+
+### AddBlendShape
+
+`public System.Void AddBlendShape(System.String name)`
+
+summary: Adds a named shape definition before any surfaces exist.
+
+name: Non-null name; collisions gain the first free ordinal suffix starting at two.
+
+remarks: All subsequently added surfaces require one shape payload per definition.
 
 ### AddSurfaceFromArrays
 
@@ -66,7 +86,7 @@ primitive: Vertex topology, including points, lines and strips.
 
 arrays: Borrowed typed vertex/normal/tangent/color/primary and secondary UV/custom/index/skin arrays copied before mutation.
 
-blendShapes: Null or empty until the typed deformation consumer is integrated.
+blendShapes: One copied position/normal/tangent-only target per named definition; null or empty for unshaped meshes.
 
 lods: Null or empty until scale-selected index sets are integrated.
 
@@ -83,6 +103,14 @@ System.ArgumentOutOfRangeException: An index or primitive is invalid.
 System.NotSupportedException: Flags require an unimplemented storage/attribute layer.
 
 System.ObjectDisposedException: The mesh is disposed.
+
+### ClearBlendShapes
+
+`public System.Void ClearBlendShapes()`
+
+summary: Clears shape definitions before any surfaces exist.
+
+remarks: ClearSurfaces removes geometry while retaining these definitions.
 
 ### ClearSurfaces
 
@@ -108,9 +136,21 @@ System.ObjectDisposedException: The mesh is disposed.
 
 `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`
 
+### OnGetBlendShapeCount
+
+`protected override System.Int32 OnGetBlendShapeCount()`
+
+### OnGetBlendShapeName
+
+`protected override System.String OnGetBlendShapeName(System.Int32 index)`
+
 ### OnGetSurfaceCount
 
 `protected override System.Int32 OnGetSurfaceCount()`
+
+### OnSetBlendShapeName
+
+`protected override System.Void OnSetBlendShapeName(System.Int32 index, System.String name)`
 
 ### OnSurfaceGetArrayIndexLen
 
@@ -123,6 +163,10 @@ System.ObjectDisposedException: The mesh is disposed.
 ### OnSurfaceGetArrays
 
 `protected override Electron2D.MeshSurfaceData OnSurfaceGetArrays(System.Int32 surfaceIndex)`
+
+### OnSurfaceGetBlendShapeArrays
+
+`protected override Electron2D.MeshSurfaceData[] OnSurfaceGetBlendShapeArrays(System.Int32 surfaceIndex)`
 
 ### OnSurfaceGetFormat
 
@@ -146,7 +190,7 @@ System.ObjectDisposedException: The mesh is disposed.
 
 summary: Regenerates each surface's tangent channel from its existing normals and primary UVs.
 
-remarks: Uses the same MikkTSpace path as SurfaceTool. Empty meshes do nothing. Every surface is prepared before publication; errors preserve all prior surfaces. Positions, indices, names, materials, policy flags and exact packed normal words remain unchanged. Success publishes one Changed event. Structural regeneration may allocate.
+remarks: Uses the same MikkTSpace path as SurfaceTool. Empty meshes do nothing. Every surface is prepared before publication; errors preserve all prior surfaces. Positions, indices, names, materials, policy flags, blend definitions/target payloads and exact packed normal words remain unchanged. Success publishes one Changed event. Structural regeneration may allocate.
 
 System.InvalidOperationException: A surface lacks the required normal/UV data or complete face.
 
@@ -251,3 +295,11 @@ remarks: Retained draws observe the update without rerecording.
 System.ArgumentException: An affected position becomes nonfinite.
 
 System.ArgumentOutOfRangeException: The region exceeds the vertex buffer.
+
+### BlendShapeMode
+
+`public Electron2D.BlendShapeMode BlendShapeMode { get; set; }`
+
+summary: Gets or selects normalized absolute targets or additive relative offsets.
+
+value: Relative initially; changing the mode preserves stored payloads and updates drawing.

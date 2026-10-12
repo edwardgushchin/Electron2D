@@ -19,10 +19,12 @@ public sealed partial class RenderingServer
     /// <param name="primitive">Primitive topology.</param>
     /// <param name="arrays">Borrowed arrays copied before mutation.</param>
     /// <param name="flags">Supported two-dimensional update policies.</param>
+    /// <param name="blendShapes">Copied shape payloads matching the owned mesh definition count.</param>
+    /// <param name="lods">Null or empty until scale-selected indices are integrated.</param>
     /// <exception cref="ArgumentException">The identity or geometry is invalid.</exception>
     /// <exception cref="InvalidOperationException">The mesh is borrowed or owned by another renderer.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
-    public static void MeshAddSurfaceFromArrays(RID mesh, Mesh.PrimitiveType primitive, MeshSurfaceData arrays, Mesh.ArrayFormat flags = Mesh.ArrayFormat.None) => RequireService().MeshAddSurfaceFromArraysCore(mesh, primitive, arrays, flags);
+    public static void MeshAddSurfaceFromArrays(RID mesh, Mesh.PrimitiveType primitive, MeshSurfaceData arrays, Mesh.ArrayFormat flags = Mesh.ArrayFormat.None, IReadOnlyList<MeshSurfaceData>? blendShapes = null, IReadOnlyDictionary<float, int[]>? lods = null) => RequireService().MeshAddSurfaceFromArraysCore(mesh, primitive, arrays, flags, blendShapes, lods);
 
     /// <summary>Gets a live mesh's surface count.</summary>
     /// <param name="mesh">Borrowed or owned mesh identity.</param>

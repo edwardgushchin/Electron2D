@@ -12,9 +12,10 @@ CreateFrom and CreateFromArrays replace state only after validation. Source call
 
 Index welds exact complete records, including captured colors/UVs/custom records/skin/groups. Existing indices are unchanged. Deindex validates every reference before replacing geometry. OptimizeIndicesForCache traverses bounded adjacency and accepts a reordered triangle list only when a sixteen-entry LRU model improves; winding and attributes are preserved, global triangle order can change. The retained canvas expands indices; RenderingDevice accepts actual index buffers. Model improvement does not prove physical GPU speed.
 
-Normal/tangent numerical data, generation and fan arguments execute through the shared pipeline. Four numerical custom channels execute through the shared eight packed layouts, transactional format conversion and real shader consumers. Morph pose extraction retains its coverage trigger. No inert setter or unavailable format is exposed. Deprecated LOD generation is excluded using pinned metadata; its current replacement belongs to the future importer/LOD consumer slice.
+Normal/tangent numerical data, generation and fan arguments execute through the shared pipeline. Four numerical custom channels execute through the shared eight packed layouts, transactional format conversion and real shader consumers. CreateFromBlendShape now extracts named raw target channels while retaining base attributes and material; its output commits to actual drawable meshes. No inert setter or unavailable format is exposed. Deprecated LOD generation is excluded using pinned metadata; its current replacement belongs to the future importer/LOD consumer slice.
 
 [SurfaceToolTests](../../tests/Electron2D.Tests/SurfaceToolTests.cs) checks finite/state/channel boundaries, retries, skin selection/overflow, atomic material publication, callback failure/reentry, transformed/mixed append, all topologies, exact index/deindex, bounded cache reorder on 256x256 geometry, fresh-process saved output and warmed prepared replay. [SurfaceToolNativeTests](../../tests/Electron2D.Tests/SurfaceToolNativeTests.cs) verifies identical pre/post cache pixels from real GLSL/HLSL indexed device drawing, UV2/eighth influence/hardware instance output and five canvas topologies on GPU/compatibility. Each device measures 64 alternating replay/readback frames; each retained host measures 64 active and 64 idle frames after warmup, with zero managed bytes on the owner thread. Wider platforms, native allocation totals, physical cache performance and human acceptance remain unverified.
+
 
 
 ## Complete API
@@ -32,6 +33,7 @@ Normal/tangent numerical data, generation and fan arguments execute through the 
 | `public Electron2D.MeshSurfaceData CommitToArrays()` | Returns independent typed arrays for the current authoring state. |
 | `public System.Void CreateFrom(Electron2D.Mesh existing, System.Int32 surface)` | Replaces geometry with a validated copied surface and its borrowed material. |
 | `public System.Void CreateFromArrays(Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.PrimitiveType primitiveType = Triangles)` | Replaces geometry with validated copied typed arrays. |
+| `public System.Void CreateFromBlendShape(Electron2D.Mesh existing, System.Int32 surface, System.String blendShape)` | Replaces geometry with the named raw target pose and the base surface's remaining channels. |
 | `public System.Void Deindex()` | Expands current indices into ordered complete vertex records and removes the index channel. |
 | `protected override System.Void Dispose(System.Boolean disposing)` |  |
 | `public System.Void GenerateNormals(System.Boolean flip = false)` | Generates planar triangle normals, respecting captured smooth groups. |
@@ -195,6 +197,20 @@ arrays: Finite supported channel arrays and complete topology.
 primitiveType: Topology, triangles by default.
 
 System.ArgumentException: The arrays, counts or topology are invalid.
+
+### CreateFromBlendShape
+
+`public System.Void CreateFromBlendShape(Electron2D.Mesh existing, System.Int32 surface, System.String blendShape)`
+
+summary: Replaces geometry with the named raw target pose and the base surface's remaining channels.
+
+existing: Live shaped source mesh.
+
+surface: Existing zero-based surface index.
+
+blendShape: Exact ordinal shape name.
+
+remarks: Copies target positions/normals/tangents, preserving base color/UV/custom/index/skin data and borrowed material. Relative offsets remain raw; extraction does not apply a deformation weight. Failed names, schemas or source callbacks preserve the previous builder.
 
 ### Deindex
 

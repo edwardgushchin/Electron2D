@@ -21,300 +21,334 @@ mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData
 int count = mesh.GetSurfaceCount();
 ```
 
-## Constructors
+
+## Complete API
 
 | Complete signature | Contract |
 | --- | --- |
 | `protected Mesh()` | Initializes the reusable mesh resource contract. |
-
-## Constructors descriptions
-
-### .ctor
-
-`protected Mesh()`
-
-Summary: Initializes the reusable mesh resource contract.
-
-
-## Methods and protected extension points
-
-| Complete signature | Contract |
-| --- | --- |
-| `protected override System.Void Dispose(System.Boolean disposing)` | Concrete inherited contract; see Description. |
+| `protected override System.Void Dispose(System.Boolean disposing)` |  |
+| `public Electron2D.Rect2 GetAABB()` | Returns the axis-aligned visibility bounds of this two-dimensional mesh. |
+| `public System.Int32 GetBlendShapeCount()` | Gets the number of named blend shapes. |
+| `public System.String GetBlendShapeName(System.Int32 index)` | Gets one shape's authored name. |
 | `public Electron2D.Vector2[] GetFaces()` | Gets copied local vertices for every triangle face. |
 | `public override Electron2D.RID GetRID()` | Returns the stable borrowed identity of this mesh. |
 | `public System.Int32 GetSurfaceCount()` | Gets the number of currently authored surfaces. |
+| `protected virtual Electron2D.Rect2 OnGetAABB()` | Supplies the local two-dimensional visibility rectangle. |
+| `protected virtual System.Int32 OnGetBlendShapeCount()` | Supplies the number of named shapes; unshaped meshes return zero. |
+| `protected virtual System.String OnGetBlendShapeName(System.Int32 index)` | Supplies a name for an existing shape. |
 | `protected abstract System.Int32 OnGetSurfaceCount()` | Supplies the authored surface count. |
+| `protected virtual System.Void OnSetBlendShapeName(System.Int32 index, System.String name)` | Renames an existing shape and publishes its resource change. |
 | `protected abstract System.Int32 OnSurfaceGetArrayIndexLen(System.Int32 surfaceIndex)` | Supplies the explicit index count. |
 | `protected abstract System.Int32 OnSurfaceGetArrayLen(System.Int32 surfaceIndex)` | Supplies a surface's vertex count. |
 | `protected abstract Electron2D.MeshSurfaceData OnSurfaceGetArrays(System.Int32 surfaceIndex)` | Supplies copied typed arrays for one surface. |
+| `protected virtual Electron2D.MeshSurfaceData[] OnSurfaceGetBlendShapeArrays(System.Int32 surfaceIndex)` | Supplies copied shape payloads in the mesh's shape-index order. |
 | `protected abstract Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)` | Supplies a surface format mask. |
 | `protected abstract Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)` | Supplies a surface's borrowed material. |
 | `protected abstract Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)` | Supplies the primitive ordering policy. |
 | `protected abstract System.Void OnSurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)` | Commits a borrowed surface material and reports its change. |
+| `public System.Void SetBlendShapeName(System.Int32 index, System.String name)` | Renames one shape without changing its index or payload. |
 | `public System.Int32 SurfaceGetArrayIndexLen(System.Int32 surfaceIndex)` | Gets one surface's explicit index count. |
 | `public System.Int32 SurfaceGetArrayLen(System.Int32 surfaceIndex)` | Gets one surface's vertex count. |
 | `public Electron2D.MeshSurfaceData SurfaceGetArrays(System.Int32 surfaceIndex)` | Gets independent typed arrays for one surface. |
+| `public Electron2D.MeshSurfaceData[] SurfaceGetBlendShapeArrays(System.Int32 surfaceIndex)` | Gets copied position/normal/tangent payloads for all named shapes of one surface. |
 | `public Electron2D.Mesh.ArrayFormat SurfaceGetFormat(System.Int32 surfaceIndex)` | Gets one surface's typed channel and policy mask. |
 | `public Electron2D.Material SurfaceGetMaterial(System.Int32 surfaceIndex)` | Gets a surface's borrowed material. |
 | `public Electron2D.Mesh.PrimitiveType SurfaceGetPrimitiveType(System.Int32 surfaceIndex)` | Gets one surface's primitive topology. |
 | `public System.Void SurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)` | Assigns a borrowed material to one surface. |
 
-## Methods and protected extension points descriptions
+## Member descriptions
+
+### Mesh
+
+`protected Mesh()`
+
+summary: Initializes the reusable mesh resource contract.
 
 ### Dispose
 
 `protected override System.Void Dispose(System.Boolean disposing)`
 
-Concrete inherited resource/node hook; ownership, errors and effects are described above.
+### GetAABB
 
+`public Electron2D.Rect2 GetAABB()`
+
+summary: Returns the axis-aligned visibility bounds of this two-dimensional mesh.
+
+returns: A finite local rectangle, empty without vertices.
+
+remarks: Default bounds include stored vertices from every topology, including unreferenced vertices. Prepared custom surface snapshots are reused; live ArrayMesh positions are read without copied queries.
+
+System.ArgumentException: A custom bounds callback supplies an invalid rectangle.
+
+### GetBlendShapeCount
+
+`public System.Int32 GetBlendShapeCount()`
+
+summary: Gets the number of named blend shapes.
+
+returns: A nonnegative count, zero for an unshaped mesh.
+
+### GetBlendShapeName
+
+`public System.String GetBlendShapeName(System.Int32 index)`
+
+summary: Gets one shape's authored name.
+
+index: Existing zero-based shape index.
+
+returns: A non-null name; empty names are permitted.
 
 ### GetFaces
 
 `public Electron2D.Vector2[] GetFaces()`
 
-Summary: Gets copied local vertices for every triangle face.
+summary: Gets copied local vertices for every triangle face.
 
-Returns: Three vertices per face; point and line surfaces contribute no vertices.
+returns: Three vertices per face; point and line surfaces contribute no vertices.
 
-Remarks: Indexed and sequential triangles and triangle strips are expanded in surface order. Strip winding alternates to preserve face orientation. The result is caller-owned cold query storage.
+remarks: Indexed and sequential triangles and triangle strips are expanded in surface order. Strip winding alternates to preserve face orientation. The result is caller-owned cold query storage.
 
 System.ObjectDisposedException: The mesh is disposed.
 
 System.ArgumentException: Custom surface arrays are malformed.
 
-
 ### GetRID
 
 `public override Electron2D.RID GetRID()`
 
-Summary: Returns the stable borrowed identity of this mesh.
+summary: Returns the stable borrowed identity of this mesh.
 
-Returns: A renderer-independent logical identity valid until resource disposal.
+returns: A renderer-independent logical identity valid until resource disposal.
 
 System.ObjectDisposedException: The mesh is disposed.
-
 
 ### GetSurfaceCount
 
 `public System.Int32 GetSurfaceCount()`
 
-Summary: Gets the number of currently authored surfaces.
+summary: Gets the number of currently authored surfaces.
 
-Returns: The nonnegative surface count.
+returns: The nonnegative surface count.
 
 System.ObjectDisposedException: The mesh is disposed.
 
+### OnGetAABB
+
+`protected virtual Electron2D.Rect2 OnGetAABB()`
+
+summary: Supplies the local two-dimensional visibility rectangle.
+
+returns: Finite nonnegative local bounds; the default derives them from prepared surface positions.
+
+### OnGetBlendShapeCount
+
+`protected virtual System.Int32 OnGetBlendShapeCount()`
+
+summary: Supplies the number of named shapes; unshaped meshes return zero.
+
+returns: A nonnegative count.
+
+### OnGetBlendShapeName
+
+`protected virtual System.String OnGetBlendShapeName(System.Int32 index)`
+
+summary: Supplies a name for an existing shape.
+
+index: Existing zero-based shape index.
+
+returns: A non-null name.
 
 ### OnGetSurfaceCount
 
 `protected abstract System.Int32 OnGetSurfaceCount()`
 
-Summary: Supplies the authored surface count.
+summary: Supplies the authored surface count.
 
-Returns: A nonnegative count.
+returns: A nonnegative count.
 
+### OnSetBlendShapeName
+
+`protected virtual System.Void OnSetBlendShapeName(System.Int32 index, System.String name)`
+
+summary: Renames an existing shape and publishes its resource change.
+
+index: Existing zero-based shape index.
+
+name: Non-null authored name.
 
 ### OnSurfaceGetArrayIndexLen
 
 `protected abstract System.Int32 OnSurfaceGetArrayIndexLen(System.Int32 surfaceIndex)`
 
-Summary: Supplies the explicit index count.
+summary: Supplies the explicit index count.
 
 surfaceIndex: Existing zero-based index.
 
-Returns: The index count.
-
+returns: The index count.
 
 ### OnSurfaceGetArrayLen
 
 `protected abstract System.Int32 OnSurfaceGetArrayLen(System.Int32 surfaceIndex)`
 
-Summary: Supplies a surface's vertex count.
+summary: Supplies a surface's vertex count.
 
 surfaceIndex: Existing zero-based index.
 
-Returns: The vertex count.
-
+returns: The vertex count.
 
 ### OnSurfaceGetArrays
 
 `protected abstract Electron2D.MeshSurfaceData OnSurfaceGetArrays(System.Int32 surfaceIndex)`
 
-Summary: Supplies copied typed arrays for one surface.
+summary: Supplies copied typed arrays for one surface.
 
 surfaceIndex: Existing zero-based index.
 
-Returns: Independent channel arrays.
+returns: Independent channel arrays.
 
+### OnSurfaceGetBlendShapeArrays
+
+`protected virtual Electron2D.MeshSurfaceData[] OnSurfaceGetBlendShapeArrays(System.Int32 surfaceIndex)`
+
+summary: Supplies copied shape payloads in the mesh's shape-index order.
+
+surfaceIndex: Existing zero-based surface index.
+
+returns: Position/normal/tangent-only payloads, or empty when the mesh has no shapes.
 
 ### OnSurfaceGetFormat
 
 `protected abstract Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)`
 
-Summary: Supplies a surface format mask.
+summary: Supplies a surface format mask.
 
 surfaceIndex: Existing zero-based index.
 
-Returns: The format mask.
-
+returns: The format mask.
 
 ### OnSurfaceGetMaterial
 
 `protected abstract Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)`
 
-Summary: Supplies a surface's borrowed material.
+summary: Supplies a surface's borrowed material.
 
 surfaceIndex: Existing zero-based index.
 
-Returns: The borrowed material or null.
-
+returns: The borrowed material or null.
 
 ### OnSurfaceGetPrimitiveType
 
 `protected abstract Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)`
 
-Summary: Supplies the primitive ordering policy.
+summary: Supplies the primitive ordering policy.
 
 surfaceIndex: Existing zero-based index.
 
-Returns: The topology.
-
+returns: The topology.
 
 ### OnSurfaceSetMaterial
 
 `protected abstract System.Void OnSurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)`
 
-Summary: Commits a borrowed surface material and reports its change.
+summary: Commits a borrowed surface material and reports its change.
 
 surfaceIndex: Existing zero-based index.
 
 material: Borrowed live material or null.
 
+### SetBlendShapeName
+
+`public System.Void SetBlendShapeName(System.Int32 index, System.String name)`
+
+summary: Renames one shape without changing its index or payload.
+
+index: Existing zero-based shape index.
+
+name: Non-null authored name.
 
 ### SurfaceGetArrayIndexLen
 
 `public System.Int32 SurfaceGetArrayIndexLen(System.Int32 surfaceIndex)`
 
-Summary: Gets one surface's explicit index count.
+summary: Gets one surface's explicit index count.
 
 surfaceIndex: Existing zero-based surface index.
 
-Returns: Zero for sequential vertices; otherwise the index count.
-
+returns: Zero for sequential vertices; otherwise the index count.
 
 ### SurfaceGetArrayLen
 
 `public System.Int32 SurfaceGetArrayLen(System.Int32 surfaceIndex)`
 
-Summary: Gets one surface's vertex count.
+summary: Gets one surface's vertex count.
 
 surfaceIndex: Existing zero-based surface index.
 
-Returns: The number of vertex positions.
-
+returns: The number of vertex positions.
 
 ### SurfaceGetArrays
 
 `public Electron2D.MeshSurfaceData SurfaceGetArrays(System.Int32 surfaceIndex)`
 
-Summary: Gets independent typed arrays for one surface.
+summary: Gets independent typed arrays for one surface.
 
 surfaceIndex: Existing zero-based surface index.
 
-Returns: Caller-owned copies of the surface channels.
+returns: Caller-owned copies of the surface channels.
 
 System.ArgumentOutOfRangeException: The index is outside the mesh.
 
 System.ObjectDisposedException: The mesh is disposed.
 
+### SurfaceGetBlendShapeArrays
+
+`public Electron2D.MeshSurfaceData[] SurfaceGetBlendShapeArrays(System.Int32 surfaceIndex)`
+
+summary: Gets copied position/normal/tangent payloads for all named shapes of one surface.
+
+surfaceIndex: Existing zero-based surface index.
+
+returns: Independent payloads in shape-index order; empty for an unshaped mesh.
 
 ### SurfaceGetFormat
 
 `public Electron2D.Mesh.ArrayFormat SurfaceGetFormat(System.Int32 surfaceIndex)`
 
-Summary: Gets one surface's typed channel and policy mask.
+summary: Gets one surface's typed channel and policy mask.
 
 surfaceIndex: Existing zero-based surface index.
 
-Returns: The format mask.
-
+returns: The format mask.
 
 ### SurfaceGetMaterial
 
 `public Electron2D.Material SurfaceGetMaterial(System.Int32 surfaceIndex)`
 
-Summary: Gets a surface's borrowed material.
+summary: Gets a surface's borrowed material.
 
 surfaceIndex: Existing zero-based surface index.
 
-Returns: The material or null for the drawing item's material.
-
+returns: The material or null for the drawing item's material.
 
 ### SurfaceGetPrimitiveType
 
 `public Electron2D.Mesh.PrimitiveType SurfaceGetPrimitiveType(System.Int32 surfaceIndex)`
 
-Summary: Gets one surface's primitive topology.
+summary: Gets one surface's primitive topology.
 
 surfaceIndex: Existing zero-based surface index.
 
-Returns: The primitive ordering policy.
-
+returns: The primitive ordering policy.
 
 ### SurfaceSetMaterial
 
 `public System.Void SurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)`
 
-Summary: Assigns a borrowed material to one surface.
+summary: Assigns a borrowed material to one surface.
 
 surfaceIndex: Existing zero-based surface index.
 
 material: Borrowed live material or null.
 
 System.ObjectDisposedException: The mesh or material is disposed.
-
-## Dependencies, errors and verification
-
-[ADR 0092](../decisions/mesh.md#adr-0092) owns typed arrays, pinned exercised byte packing and deferred deformation/channel consumers. [Mesh component](../components/meshes.md) records current scope and executable verification. [MeshTests](../../tests/Electron2D.Tests/MeshTests.cs) checks copied state, updates/rollback, topology, callbacks, lifetime, duplication/scene storage and warmed replay. [MeshRenderingTests](../../tests/Electron2D.Tests/MeshRenderingTests.cs) checks real rendered pixels, primitive profiles, owned server lifetime and active/idle frames on GPU and compatibility. Native allocator totals, other platforms and owner acceptance remain unverified.
-
-Custom OnGetSurfaceCount must return a nonnegative count. Callback preparation rejects a changed revision or disposed resource, then retries on the next replay. Successful snapshots capture surface count and reuse it without callback dispatch on idle frames. The author must publish Changed after edits.
-
-## Instance integration
-
-Bounds expose local 2D Rect2, with default prepared surface queries and overridable finite custom bounds. Custom disposal/reentrant snapshot preparation rejects; callers publish Changed after edits.
-
-## Methods and protected extension points
-
-| Complete signature | Contract |
-| --- | --- |
-| `public Electron2D.Rect2 GetAABB()` | Returns the axis-aligned visibility bounds of this two-dimensional mesh. |
-| `protected virtual Electron2D.Rect2 OnGetAABB()` | Supplies the local two-dimensional visibility rectangle. |
-
-## Methods and protected extension points descriptions
-
-<a id="member-4c169510682c"></a>
-### GetAABB
-
-`public Electron2D.Rect2 GetAABB()`
-
-Returns the axis-aligned visibility bounds of this two-dimensional mesh.
-
-Returns: A finite local rectangle, empty without vertices.
-
-Remarks: Default bounds include stored vertices from every topology, including unreferenced vertices. Prepared custom surface snapshots are reused; live ArrayMesh positions are read without copied queries.
-
-System.ArgumentException: A custom bounds callback supplies an invalid rectangle.
-
-<a id="member-4471ce26133b"></a>
-### OnGetAABB
-
-`protected virtual Electron2D.Rect2 OnGetAABB()`
-
-Supplies the local two-dimensional visibility rectangle.
-
-Returns: Finite nonnegative local bounds; the default derives them from prepared surface positions.
-
-## Secondary mesh UV channel
-
-[MeshSurfaceData.UV2s](MeshSurfaceData.md#uv2s) supplies copied finite float pairs independent of primary UV and instance data. [The mesh component](../components/meshes.md#secondary-uv-storage-and-shader-consumer) records packing, archives, shader locations and executable verification.
