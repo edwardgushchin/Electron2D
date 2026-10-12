@@ -552,3 +552,9 @@ motion/geometry acceptance remains broader than this identity guarantee.
 
 
 [Shared material response](gpu-physics.md#shared-material-response-and-allocation-evidence) closes the confirmed low-speed GPU bounce defect and adds explicit GPU coverage to the common material test. The isolated historical CPU allocation failure remains open; diagnostics preserve strict zero-byte checks.
+
+
+[Shared mass-profile conformance](physics-bodies.md#shared-mass-profile-conformance)
+closes the former CPU-only complete matrix: explicit GPU scene/raw physical paths,
+analytic geometry, lifecycle/guard/storage and zero managed warm changes execute.
+Native allocation and complete registered numerical acceptance remain open.

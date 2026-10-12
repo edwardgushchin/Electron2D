@@ -958,3 +958,9 @@ A same-world result for another moving body rejects before caller publication;
 no-result calls enforce the same rule. SetMotion misses retain normal requested-body
 binding, and rejection restores scope for the next valid query. The numerical
 motion/geometry acceptance remains broader than this identity guarantee.
+
+
+[Shared mass-profile conformance](../components/physics-bodies.md#shared-mass-profile-conformance)
+now executes the full scene/raw mass, center, inertia and lifecycle matrix on CPU
+and GPU worlds. Both retain zero owner/all-thread allocation through 64 changing
+active frames; native implementation diagnostics remain owner-specific.

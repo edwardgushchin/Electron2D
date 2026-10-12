@@ -2,24 +2,24 @@ using Electron2D;
 
 internal static class PhysicsMassProfileTests
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU)
     {
-        VerifyDeferredMassCompletion();
-        VerifyRotatedGeometry();
-        VerifySceneProfile();
-        VerifyServerProfile();
-        VerifySegmentsAndEmptyBodies();
-        VerifyStorageAndFailures();
-        VerifyWarmChanges();
-        Console.WriteLine("Rigid and server mass, custom center/inertia, restoration and allocation checks passed.");
+        VerifyDeferredMassCompletion(backend);
+        VerifyRotatedGeometry(backend);
+        VerifySceneProfile(backend);
+        VerifyServerProfile(backend);
+        VerifySegmentsAndEmptyBodies(backend);
+        VerifyStorageAndFailures(backend);
+        VerifyWarmChanges(backend);
+        Console.WriteLine($"Rigid and server mass, custom center/inertia, restoration and allocation checks passed on {backend}.");
     }
 
-    private static void VerifyRotatedGeometry()
+    private static void VerifyRotatedGeometry(PhysicsServer.Backend backend)
     {
         using var polygon = new ConvexPolygonShape { Points = [Vector2.Zero, new(20, 0), new(0, 30)] };
         using var lines = new ConcavePolygonShape { Segments = [new(-10, 0), new(10, 0), new(10, 0), new(10, 30)] };
         (Shape Shape, Vector2 Center, float Inertia)[] cases = [(polygon, new(20f / 3, 10), 3 * 1300f / 18), (lines, new(6, 9), 409)];
-        var space = PhysicsServer.SpaceCreate();
+        var space = PhysicsServer.SpaceCreate(backend);
         try
         {
             foreach (var sample in cases)
@@ -43,16 +43,25 @@ internal static class PhysicsMassProfileTests
         finally { PhysicsServer.FreeRID(space); }
     }
 
-    private static void VerifyDeferredMassCompletion()
+    private static void VerifyDeferredMassCompletion(PhysicsServer.Backend backend)
     {
         using var shape = new RectangleShape { Size = new(24, 30) };
-        var root = new Node();
+        using var world = backend == PhysicsServer.Backend.GPU ? new World(backend) : null;
+        var root = world is null ? new Node() : new SubViewport { World = world };
         var body = new RigidBody { Mass = 3, Inertia = 125, CenterOfMassMode = RigidCenterOfMassMode.Custom, CenterOfMass = new(2, 4) };
         body.AddChild(new CollisionShape { Shape = shape }); root.AddChild(body);
         using var tree = new SceneTree(root);
         void Clean(RID rid)
         {
             var state = PhysicsServer.BodyGetDirectState(rid)!;
+            Check(PhysicsServer.SpaceGetBackend(PhysicsServer.BodyGetSpace(rid)) == backend, "Mass preparation uses the requested physical implementation.");
+            var mode = PhysicsServer.BodyGetMode(rid);
+            var dynamic = mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear;
+            var inertia = PhysicsServer.BodyGetInertia(rid);
+            Check(Near(state.InverseMass, dynamic ? 1 / PhysicsServer.BodyGetMass(rid) : 0) &&
+                Near(state.InverseInertia, mode == PhysicsServer.BodyMode.Rigid && inertia > 0 ? 1 / inertia : 0),
+                "Prepared public state uses the configured mass/inertia and current motion mode.");
+            if (backend != PhysicsServer.Backend.CPU) return;
             var id = ((CPUPhysicsColliderImplementation)PhysicsServer.Service.BodyRuntime(rid).Backend.Implementation!).BodyID;
             var world = Box2D.NET.B2Worlds.b2GetWorldFromId(Box2D.NET.B2Bodies.b2Body_GetWorld(id));
             Check((Box2D.NET.B2Bodies.b2GetBodyFullId(world, id).flags & (uint)Box2D.NET.B2BodyFlags.b2_dirtyMass) == 0,
@@ -75,10 +84,11 @@ internal static class PhysicsMassProfileTests
         finally { PhysicsServer.FreeRID(server); }
     }
 
-    private static void VerifySceneProfile()
+    private static void VerifySceneProfile(PhysicsServer.Backend backend)
     {
         using var circle = new CircleShape { Radius = 10 };
-        var root = new Node(); var body = new RigidBody { Mass = 2, GravityScale = 0, CanSleep = false, Rotation = Mathf.Pi / 2 };
+        using var world = backend == PhysicsServer.Backend.GPU ? new World(backend) : null;
+        var root = world is null ? new Node() : new SubViewport { World = world }; var body = new RigidBody { Mass = 2, GravityScale = 0, CanSleep = false, Rotation = Mathf.Pi / 2 };
         var owner = body.CreateShapeOwner(null); body.ShapeOwnerAddShape(owner, circle);
         body.ShapeOwnerSetTransform(owner, new(0, Vector2.One, 0, new(20, 0))); root.AddChild(body);
         Check(body.CenterOfMassMode == RigidCenterOfMassMode.Auto && body.CenterOfMass == Vector2.Zero && body.Inertia == 0 &&
@@ -96,8 +106,9 @@ internal static class PhysicsMassProfileTests
         Check(Near(state.AngularVelocity, 0), "Impulse at the rotated custom center has no angular moment.");
         body.Inertia = 200; body.Mass = 3;
         Check(body.Inertia == 200 && Near(1 / state.InverseInertia, 200), "Explicit inertia is independent of mass scaling.");
-        Check(CPUPhysicsColliderImplementation.Simulation(((CPUPhysicsColliderImplementation)body.Backend.Implementation!).BodyID).maxExtent > 0.2f,
-            "Custom center changes recompute solver extents around the selected mass center.");
+        if (backend == PhysicsServer.Backend.CPU)
+            Check(CPUPhysicsColliderImplementation.Simulation(((CPUPhysicsColliderImplementation)body.Backend.Implementation!).BodyID).maxExtent > 0.2f,
+                "Custom center changes recompute CPU solver extents around the selected mass center.");
         body.CenterOfMassMode = RigidCenterOfMassMode.Auto;
         Check(body.CenterOfMass == Vector2.Zero && state.CenterOfMassLocal.IsEqualApprox(new(20, 0)) && Near(1 / state.InverseInertia, 200),
             "Returning to Auto clears the stored custom center and preserves explicit inertia.");
@@ -135,10 +146,10 @@ internal static class PhysicsMassProfileTests
             "Non-rigid scene server profiles survive exit/reentry.");
     }
 
-    private static void VerifyServerProfile()
+    private static void VerifyServerProfile(PhysicsServer.Backend backend)
     {
         var server = PhysicsServer.Service;
-        var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate(); var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate(); var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true);
         try
         {
             Check(PhysicsServer.BodyGetMass(body) == 1 && PhysicsServer.BodyGetInertia(body) == 0 && PhysicsServer.BodyGetCenterOfMass(body) == Vector2.Zero,
@@ -174,10 +185,11 @@ internal static class PhysicsMassProfileTests
         finally { PhysicsServer.FreeRID(area); }
     }
 
-    private static void VerifySegmentsAndEmptyBodies()
+    private static void VerifySegmentsAndEmptyBodies(PhysicsServer.Backend backend)
     {
         using var segment = new SegmentShape { A = new(-30, 0), B = new(30, 0) };
-        var root = new Node(); var body = new RigidBody { Mass = 2, GravityScale = 0 };
+        using var world = backend == PhysicsServer.Backend.GPU ? new World(backend) : null;
+        var root = world is null ? new Node() : new SubViewport { World = world }; var body = new RigidBody { Mass = 2, GravityScale = 0 };
         body.ShapeOwnerAddShape(body.CreateShapeOwner(null), segment); root.AddChild(body);
         var empty = new RigidBody
         {
@@ -200,9 +212,10 @@ internal static class PhysicsMassProfileTests
         empty.Inertia = 0; Check(emptyState.InverseInertia == 0, "Automatic unshaped inertia is zero.");
     }
 
-    private static void VerifyStorageAndFailures()
+    private static void VerifyStorageAndFailures(PhysicsServer.Backend backend)
     {
-        var root = new Node(); var body = new RigidBody
+        using var world = backend == PhysicsServer.Backend.GPU ? new World(backend) : null;
+        var root = world is null ? new Node() : new SubViewport { World = world }; var body = new RigidBody
         {
             Mass = 4,
             Inertia = 30,
@@ -242,10 +255,11 @@ internal static class PhysicsMassProfileTests
         Reject<ObjectDisposedException>(() => _ = disposed.CenterOfMass);
     }
 
-    private static void VerifyWarmChanges()
+    private static void VerifyWarmChanges(PhysicsServer.Backend backend)
     {
         using var circle = new CircleShape();
-        var root = new Node(); var body = new RigidBody
+        using var world = backend == PhysicsServer.Backend.GPU ? new World(backend) : null;
+        var root = world is null ? new Node() : new SubViewport { World = world }; var body = new RigidBody
         {
             GravityScale = 0,
             CanSleep = false,
@@ -254,9 +268,12 @@ internal static class PhysicsMassProfileTests
         body.ShapeOwnerAddShape(body.CreateShapeOwner(null), circle); root.AddChild(body); using var tree = new SceneTree(root);
         var server = PhysicsServer.Service; var rid = body.GetRID();
         for (var pass = 0; pass < 64; pass++) { ChangeProfile(); tree.PhysicsFrame(1d / 60); }
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        Check(PhysicsServer.SpaceGetBackend(PhysicsServer.BodyGetSpace(rid)) == backend, "Warm profile changes use the selected owner.");
+        var all = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread();
         for (var pass = 0; pass < 64; pass++) { ChangeProfile(); tree.PhysicsFrame(1d / 60); }
-        Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed profile changes and active solver frames allocate zero managed bytes.");
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - before; var allBytes = GC.GetTotalAllocatedBytes(true) - all;
+        Check(ownerBytes == 0 && allBytes == 0, $"Warmed profile changes and active solver frames allocate {ownerBytes}/{allBytes} owner/all-thread B.");
+        Console.WriteLine($"Mass profile {backend}: 64 changing active frames, owner/all bytes={ownerBytes}/{allBytes}.");
         void ChangeProfile() { body.Mass = 2; body.Inertia = 20; PhysicsServer.BodySetCenterOfMass(rid, new(2, 0)); PhysicsServer.BodySetMass(rid, 3); PhysicsServer.BodySetInertia(rid, 0); }
     }
 
