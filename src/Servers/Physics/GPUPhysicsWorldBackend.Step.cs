@@ -59,7 +59,7 @@ internal sealed partial class GPUPhysicsWorldBackend
     internal override void Solve(double delta)
     {
         _intervalSubmissions = GPUStore.SubmissionCount; _intervalEntered = true;
-        GPUStore.SimulateFields((float)delta, GPUFields(Space.DefaultAreaFields));
+        GPUStore.SimulateFields((float)delta, GPUFields(Space.DefaultAreaFields), bounceThreshold: 0);
         Space.AdvanceStepTick(); Space.CaptureDebugContacts();
     }
     internal override void SyncResults()

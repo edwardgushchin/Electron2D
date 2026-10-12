@@ -80,3 +80,6 @@ Returns the typed properties exposed to tooling before validation.
 Overrides append or replace descriptors; they must not yield null entries.
 
 Returns: The descriptor sequence. The base sequence exposes identity, lifetime, and translation state.
+
+
+[Shared material response and allocation evidence](../components/gpu-physics.md#shared-material-response-and-allocation-evidence) verifies the full common CPU/GPU material matrix, including low-impact bounce and zero owner/all-thread warm frame allocations. The former GPU driver threshold is removed; the historical isolated CPU allocation failure remains an unproven limit.

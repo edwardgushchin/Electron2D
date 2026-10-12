@@ -1370,3 +1370,42 @@ its collision uniform is 32 bytes, uploaded/matched histories 80 bytes, solver i
 160 bytes and working contacts 240 bytes. Historical timings above keep the layouts
 of their recorded revisions. Independent GPU history records are 96 bytes and
 remain entirely resident; solver uniform size remains 80 bytes.
+
+
+## Shared material response and allocation evidence
+
+The public GPU world now supplies zero restitution-speed threshold to its resident
+solver, matching the accepted low-impact Bounce contract and the CPU world. The
+internal store's diagnostic default previously suppressed contacts below 100 scene
+units per second when the library driver omitted this input. The same unchanged
+low-impact test failed on GPU before the driver fix and passed afterward; no
+coefficient, scene scale, impulse or test threshold was reduced.
+
+PhysicsMaterialTests now runs its full common matrix on explicit CPU/GPU owners:
+add/clamp/subtract bounce, low-speed response, rough/signed friction, live revision
+and throwing-subscriber handling, disposal/default restoration, shared/local scene
+copies and exact resource identity. Each physical fixture asserts the actual owner.
+CPU retains the original Node/fallback-world fixture; GPU uses a caller-owned World
+on a SubViewport without requiring a renderer. CPU with invalid GPU/Vulkan drivers
+and no display/runtime variables is an additional successful process control.
+
+The existing material warmup remains 90 resting frames and 64 active frames at
+1/60 s. Each subsequent 64-frame bracket requires exactly zero owner/all-thread
+managed bytes. A preallocated per-frame byte buffer localizes any resting failure;
+formatting and output occur after measurement. Velocity/displacement thresholds
+retain their original physical meaning (scene units and seconds); no cross-backend
+bitwise or identical-trajectory condition is introduced.
+
+The earlier isolated CPU material allocation failure is still unproven: 24 fresh
+original CPU-only diagnostic processes and two full context runs did not reproduce
+it. Strict zero-byte checks remain. New counter output improves a future failure;
+passing repetitions do not prove its cause fixed. Ignored copied-runtime logs,
+RED GPU outcome and final fingerprints are under
+bin/physics-material-allocation/2026-10-12. Native allocator, other platforms and
+new FPS/performance acceptance are outside these measurements.
+
+
+Reproduce the focused matrix with ELECTRON2D_TEST_PHYSICS_MATERIAL=1 and
+ELECTRON2D_SANDBOX_GPU_SOLVER=0 or 1 when launching Electron2D.Tests.dll.
+The normal full suite runs both material owners. The focused path performs
+simulation/resource checks and does not open a rendered window.

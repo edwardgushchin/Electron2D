@@ -549,3 +549,6 @@ A same-world result for another moving body rejects before caller publication;
 no-result calls enforce the same rule. SetMotion misses retain normal requested-body
 binding, and rejection restores scope for the next valid query. The numerical
 motion/geometry acceptance remains broader than this identity guarantee.
+
+
+[Shared material response](gpu-physics.md#shared-material-response-and-allocation-evidence) closes the confirmed low-speed GPU bounce defect and adds explicit GPU coverage to the common material test. The isolated historical CPU allocation failure remains open; diagnostics preserve strict zero-byte checks.

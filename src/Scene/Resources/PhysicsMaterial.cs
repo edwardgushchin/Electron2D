@@ -24,6 +24,7 @@ public sealed class PhysicsMaterial : Resource
 
     /// <summary>Gets or sets the finite bounce coefficient.</summary>
     /// <value>Zero by default.</value>
+    /// <remarks>Combined bounce applies at nonzero closing contact speeds, including low-speed impacts.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is not finite.</exception>
     public float Bounce
     {

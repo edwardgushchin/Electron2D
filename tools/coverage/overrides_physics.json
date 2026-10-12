@@ -6317,7 +6317,7 @@
         "PhysicsMaterial::property:rough"
       ],
       "state": "Implemented",
-      "reason": "Complete own surface contract: defaults, changes, duplication and signed friction/bounce mixing verified by PhysicsMaterialTests."
+      "reason": "Complete own surface contract: defaults, changes, duplication, signed friction/bounce mixing and low-impact response verified by the same explicit CPU/GPU PhysicsMaterialTests matrix. Public GPU simulation uses zero restitution-speed threshold; before-fix low-impact GPU test is RED. Live revisions, throwing subscribers and disposal/default restoration execute on both owners, including no-GPU CPU launch. Each 64 resting/64 active full-frame bracket requires zero owner/all-thread managed bytes. An earlier isolated CPU allocation assertion remains unproven despite diagnostic repetitions; native/platform and full physics acceptance remain separate."
     },
     {
       "godot": [
