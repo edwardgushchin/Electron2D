@@ -175,3 +175,7 @@ The reserved Instance block has separate reflection/descriptor storage. File fac
 ## Secondary mesh UV channel
 
 [MeshSurfaceData.UV2s](MeshSurfaceData.md#uv2s) supplies copied finite float pairs independent of primary UV and instance data. [The mesh component](../components/meshes.md#secondary-uv-storage-and-shader-consumer) records packing, archives, shader locations and executable verification.
+
+## Mesh custom shader inputs
+
+Four optional mesh-local float4 inputs occupy fragment locations 7, 8, 9 and 10, forwarded from vertex locations 10 through 13. Each MeshSurfaceData custom payload has its own packed format. Missing stored components use zero RGB/one alpha; a wholly absent channel supplies zero. Instance custom data remains independent at location 2. See [the custom mesh contract](../components/meshes.md#numerical-custom-channels).

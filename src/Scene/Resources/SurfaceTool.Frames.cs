@@ -53,7 +53,7 @@ public sealed partial class SurfaceTool
             if (indexed)
             {
                 var unique = new Dictionary<Vertex, int>(count); var compact = new List<Vertex>(count); indices.EnsureCapacity(count);
-                foreach (var vertex in vertices) { if (!unique.TryGetValue(vertex, out var index)) { index = compact.Count; unique.Add(vertex, index); compact.Add(vertex); } indices.Add(index); }
+                foreach (var vertex in vertices) { var key = IndexKey(vertex); if (!unique.TryGetValue(key, out var index)) { index = compact.Count; unique.Add(key, index); compact.Add(vertex); } indices.Add(index); }
                 vertices = compact;
             }
             _vertices = vertices; _indices = indices; _format |= Mesh.ArrayFormat.Normal;

@@ -1139,6 +1139,286 @@
       "godot": "class:MeshDataTool",
       "electron2d": "T:Electron2D.MeshDataTool",
       "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum:ArrayCustomFormat",
+      "electron2d": "T:Electron2D.MeshCustomFormat",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_MAX",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.Max()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA8_SNORM",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGBA8SNORM()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA8_UNORM",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGBA8UNORM()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA_FLOAT",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGBAFloat()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA_HALF",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGBAHalf()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGB_FLOAT",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGBFloat()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RG_FLOAT",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGFloat()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RG_HALF",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGHalf()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_R_FLOAT",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RFloat()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM0",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Custom0()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM0_SHIFT",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Custom0Shift()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM1",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Custom1()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM1_SHIFT",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Custom1Shift()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM2",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Custom2()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM2_SHIFT",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Custom2Shift()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Custom3()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3_SHIFT",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Custom3Shift()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BASE",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.CustomBase()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BITS",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.CustomBits()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_MASK",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.CustomMask()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::constant:ARRAY_CUSTOM_COUNT",
+      "electron2d": "constant:Electron2D.RenderingServer.ArrayCustomCount()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum:ArrayCustomFormat",
+      "electron2d": "T:Electron2D.MeshCustomFormat",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_MAX",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.Max()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA8_SNORM",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGBA8SNORM()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA8_UNORM",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGBA8UNORM()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA_FLOAT",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGBAFloat()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA_HALF",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGBAHalf()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGB_FLOAT",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGBFloat()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RG_FLOAT",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGFloat()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RG_HALF",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGHalf()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_R_FLOAT",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RFloat()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM0",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Custom0()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM0_SHIFT",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Custom0Shift()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM1",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Custom1()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM1_SHIFT",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Custom1Shift()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM2",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Custom2()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM2_SHIFT",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Custom2Shift()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Custom3()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3_SHIFT",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Custom3Shift()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BASE",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.CustomBase()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BITS",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.CustomBits()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_MASK",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.CustomMask()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::enum:CustomFormat",
+      "electron2d": "T:Electron2D.MeshCustomFormat",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::enum_value:CustomFormat.CUSTOM_MAX",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.Max()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGBA8_SNORM",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGBA8SNORM()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGBA8_UNORM",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGBA8UNORM()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGBA_FLOAT",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGBAFloat()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGBA_HALF",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGBAHalf()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGB_FLOAT",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGBFloat()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::enum_value:CustomFormat.CUSTOM_RG_FLOAT",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGFloat()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::enum_value:CustomFormat.CUSTOM_RG_HALF",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RGHalf()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::enum_value:CustomFormat.CUSTOM_R_FLOAT",
+      "electron2d": "enumValue:Electron2D.MeshCustomFormat.RFloat()",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:get_custom_format(int:)",
+      "electron2d": "method:Electron2D.SurfaceTool.GetCustomFormat(System.Int32)",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:set_custom(int:,Color:)",
+      "electron2d": "method:Electron2D.SurfaceTool.SetCustom(System.Int32,Electron2D.Color)",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:set_custom_format(int:,int:SurfaceTool.CustomFormat)",
+      "electron2d": "method:Electron2D.SurfaceTool.SetCustomFormat(System.Int32,Electron2D.MeshCustomFormat)",
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
     }
   ],
   "extras": [
@@ -1409,6 +1689,38 @@
     {
       "electron2d": "property:Electron2D.MeshSurfaceData.Tangents()",
       "reason": "ADR 0001/0092: named finite numerical normal/tangent arrays project the applicable mesh channel payload without heterogeneous array selectors or a spatial scene type."
+    },
+    {
+      "electron2d": "T:Electron2D.MeshCustomData",
+      "reason": "ADRs 0001/0092: named copied format/byte payloads replace opaque heterogeneous custom-channel storage and feed actual authoring, archives, packed updates and shader consumers."
+    },
+    {
+      "electron2d": "constructor:Electron2D.MeshCustomData..ctor()",
+      "reason": "ADRs 0001/0092: named copied format/byte payloads replace opaque heterogeneous custom-channel storage and feed actual authoring, archives, packed updates and shader consumers."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshCustomData.Data()",
+      "reason": "ADRs 0001/0092: named copied format/byte payloads replace opaque heterogeneous custom-channel storage and feed actual authoring, archives, packed updates and shader consumers."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshCustomData.Format()",
+      "reason": "ADRs 0001/0092: named copied format/byte payloads replace opaque heterogeneous custom-channel storage and feed actual authoring, archives, packed updates and shader consumers."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceData.Custom0()",
+      "reason": "ADRs 0001/0092: named copied format/byte payloads replace opaque heterogeneous custom-channel storage and feed actual authoring, archives, packed updates and shader consumers."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceData.Custom1()",
+      "reason": "ADRs 0001/0092: named copied format/byte payloads replace opaque heterogeneous custom-channel storage and feed actual authoring, archives, packed updates and shader consumers."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceData.Custom2()",
+      "reason": "ADRs 0001/0092: named copied format/byte payloads replace opaque heterogeneous custom-channel storage and feed actual authoring, archives, packed updates and shader consumers."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceData.Custom3()",
+      "reason": "ADRs 0001/0092: named copied format/byte payloads replace opaque heterogeneous custom-channel storage and feed actual authoring, archives, packed updates and shader consumers."
     }
   ],
   "statusGroups": [
@@ -1424,29 +1736,8 @@
       "state": "Blocked",
       "reason": "Trigger: concrete typed normal/tangent/custom/compressed channel byte storage and an actual shader-attribute consumer over the mesh path (ADR 0092).",
       "godot": [
-        "Mesh::enum:ArrayCustomFormat",
-        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_MAX",
-        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA8_SNORM",
-        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA8_UNORM",
-        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA_FLOAT",
-        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA_HALF",
-        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGB_FLOAT",
-        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RG_FLOAT",
-        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RG_HALF",
-        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_R_FLOAT",
         "Mesh::enum_value:ArrayFormat.ARRAY_COMPRESS_FLAGS_BASE",
         "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_COMPRESS_ATTRIBUTES",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM0",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM0_SHIFT",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM1",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM1_SHIFT",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM2",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM2_SHIFT",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3_SHIFT",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BASE",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BITS",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_MASK",
         "Mesh::enum_value:BlendShapeMode.BLEND_SHAPE_MODE_NORMALIZED"
       ]
     },
@@ -1776,18 +2067,7 @@
     {
       "godot": [
         "RenderingServer::enum_value:ArrayFormat.ARRAY_COMPRESS_FLAGS_BASE",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_COMPRESS_ATTRIBUTES",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM0",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM0_SHIFT",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM1",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM1_SHIFT",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM2",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM2_SHIFT",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3_SHIFT",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BASE",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BITS",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_MASK"
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_COMPRESS_ATTRIBUTES"
       ],
       "state": "Blocked",
       "reason": "Trigger: concrete typed normal/tangent/custom/compressed channel byte storage and an actual shader-attribute consumer over the mesh path (ADR 0092)."
@@ -1884,25 +2164,6 @@
     },
     {
       "state": "Blocked",
-      "reason": "Trigger: copied custom mesh channel bytes, exact custom format encoding/decoding, renderer vertex layout and actual shader attribute consumer under ADR 0092; SurfaceTool authoring enters that first complete channel slice.",
-      "godot": [
-        "SurfaceTool::enum:CustomFormat",
-        "SurfaceTool::enum_value:CustomFormat.CUSTOM_MAX",
-        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGBA8_SNORM",
-        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGBA8_UNORM",
-        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGBA_FLOAT",
-        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGBA_HALF",
-        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGB_FLOAT",
-        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RG_FLOAT",
-        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RG_HALF",
-        "SurfaceTool::enum_value:CustomFormat.CUSTOM_R_FLOAT",
-        "SurfaceTool::method:get_custom_format(int:)",
-        "SurfaceTool::method:set_custom(int:,Color:)",
-        "SurfaceTool::method:set_custom_format(int:,int:SurfaceTool.CustomFormat)"
-      ]
-    },
-    {
-      "state": "Blocked",
       "reason": "Trigger: complete named typed 2D morph-target storage and actual deformation/weight consumer over ArrayMesh under ADR 0092. SurfaceTool pose extraction enters that prerequisite first slice.",
       "godot": [
         "SurfaceTool::method:create_from_blend_shape(Mesh:,int:,String:)"
@@ -1971,6 +2232,68 @@
         "class:MeshDataTool"
       ],
       "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "Mesh::enum:ArrayCustomFormat",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_MAX",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA8_SNORM",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA8_UNORM",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA_FLOAT",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA_HALF",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGB_FLOAT",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RG_FLOAT",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RG_HALF",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_R_FLOAT",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM0",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM0_SHIFT",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM1",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM1_SHIFT",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM2",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM2_SHIFT",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3_SHIFT",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BASE",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BITS",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_MASK",
+        "RenderingServer::constant:ARRAY_CUSTOM_COUNT",
+        "RenderingServer::enum:ArrayCustomFormat",
+        "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_MAX",
+        "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA8_SNORM",
+        "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA8_UNORM",
+        "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA_FLOAT",
+        "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA_HALF",
+        "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGB_FLOAT",
+        "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RG_FLOAT",
+        "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RG_HALF",
+        "RenderingServer::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_R_FLOAT",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM0",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM0_SHIFT",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM1",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM1_SHIFT",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM2",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM2_SHIFT",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3_SHIFT",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BASE",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BITS",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_MASK",
+        "SurfaceTool::enum:CustomFormat",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_MAX",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGBA8_SNORM",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGBA8_UNORM",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGBA_FLOAT",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGBA_HALF",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGB_FLOAT",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RG_FLOAT",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RG_HALF",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_R_FLOAT",
+        "SurfaceTool::method:get_custom_format(int:)",
+        "SurfaceTool::method:set_custom(int:,Color:)",
+        "SurfaceTool::method:set_custom_format(int:,int:SurfaceTool.CustomFormat)"
+      ],
+      "reason": "ADRs 0001/0051/0092: four copied typed custom channels and one shared MeshCustomFormat preserve eight layouts, exact packed records, transactional attribute updates/AMS4 with AMS1/2/3 reading, structural authoring and format conversion. Real Linux GLSL/HLSL retained pixels cover all formats, ordinary/authored/custom meshes, hardware instances, eight-slot skin, strips/points/lines/groups with all ten fragment inputs and directional lighting; fresh-process replay and warmed 64 active/64 idle frames allocate zero managed bytes. Complete native allocation totals and wider platforms remain unverified."
     }
   ]
 }

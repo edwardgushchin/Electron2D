@@ -14,6 +14,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_MATERIAL") == "1
     PhysicsMaterialTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU);
     return;
 }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_CUSTOM_CHILD") is { } customChild) { MeshCustomTests.RunChild(customChild); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_CUSTOM_NATIVE") == "1") { MeshCustomNativeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_CUSTOM") == "1") { MeshCustomTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_FRAMES_CHILD") is { } frameChild) { MeshFrameTests.RunChild(frameChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_FRAMES_NATIVE") == "1") { MeshFrameNativeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_FRAMES") == "1") { MeshFrameTests.Run(); return; }

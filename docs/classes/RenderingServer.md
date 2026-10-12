@@ -1215,3 +1215,9 @@ A live rendering session and its owner thread are required. Scene and retained i
 `public static int MeshSurfaceGetFormatNormalTangentStride(Mesh.ArrayFormat format, int vertexCount)`
 
 Returns four bytes for each present normal/tangent channel, zero for neither. Requires the renderer owner thread, a supported format and a nonnegative count. Normal/tangent words follow the complete position block in the same vertex buffer; color/UV and skin strides remain independent.
+
+## Numerical mesh custom formats
+
+`public const int ArrayCustomCount = 4`
+
+Four independent typed MeshSurfaceData custom channels use the shared [MeshCustomFormat](MeshCustomFormat.md) enum. MeshSurfaceGetFormatAttributeStride sums color, UV and the selected custom record widths. MeshSurfaceUpdateAttributeRegion validates complete affected records before mutation and refreshes retained shader inputs. See [the packed custom contract](../components/meshes.md#numerical-custom-channels).

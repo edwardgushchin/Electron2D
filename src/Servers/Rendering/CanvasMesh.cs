@@ -82,7 +82,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
                 var count = mesh.GetSurfaceCount(); if (_custom.Length < count) Array.Resize(ref _custom, count);
                 for (var i = 0; i < count; i++)
                 {
-                    var data = mesh.SurfaceGetArrays(i); var primitive = mesh.SurfaceGetPrimitiveType(i); data.Validate(primitive); data.QuantizeSkin(); MeshFrameCodec.Capture(data);
+                    var data = mesh.SurfaceGetArrays(i); var primitive = mesh.SurfaceGetPrimitiveType(i); data.Validate(primitive); data.QuantizeSkin(); MeshFrameCodec.Capture(data); data.PrepareCustoms();
                     _custom[i] = (data, primitive, mesh.SurfaceGetMaterial(i));
                 }
                 ObjectDisposedException.ThrowIf(mesh.IsDisposed, mesh);
@@ -175,6 +175,6 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
     {
         var index = data.Indices.Length == 0 ? order : data.Indices[order]; var position = transform * Deform(data, index, palette, toPalette, fromPalette); var color = (data.Colors.Length == 0 ? Colors.White : data.Colors[index]) * modulation;
         if (!position.IsFinite() || !color.IsFinite()) throw new InvalidOperationException("Mesh canvas values overflowed finite coordinates.");
-        return new(snap ? CanvasGeometry.Snap(position) : position, color, data.UVs.Length == 0 ? Vector2.Zero : data.UVs[index], custom, data.UV2s.Length == 0 ? Vector2.Zero : data.UV2s[index], data.Normals.Length == 0 ? default : data.Normals[index], data.Tangents.Length == 0 ? default : data.Tangents[index]);
+        return new(snap ? CanvasGeometry.Snap(position) : position, color, data.UVs.Length == 0 ? Vector2.Zero : data.UVs[index], custom, data.UV2s.Length == 0 ? Vector2.Zero : data.UV2s[index], data.Normals.Length == 0 ? default : data.Normals[index], data.Tangents.Length == 0 ? default : data.Tangents[index], data.Custom0 is null ? default : data.Custom0.Values[index], data.Custom1 is null ? default : data.Custom1.Values[index], data.Custom2 is null ? default : data.Custom2.Values[index], data.Custom3 is null ? default : data.Custom3.Values[index]);
     }
 }

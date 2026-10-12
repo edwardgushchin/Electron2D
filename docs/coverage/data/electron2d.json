@@ -6140,6 +6140,37 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.MeshCustomData",
+    "kind": "type",
+    "declaringType": "Electron2D.MeshCustomData",
+    "name": "MeshCustomData",
+    "signature": "public sealed class Electron2D.MeshCustomData",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.MeshCustomFormat",
+    "kind": "type",
+    "declaringType": "Electron2D.MeshCustomFormat",
+    "name": "MeshCustomFormat",
+    "signature": "public enum Electron2D.MeshCustomFormat",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.MeshDataTool",
     "kind": "type",
     "declaringType": "Electron2D.MeshDataTool",
@@ -13973,6 +14004,19 @@
     "value": "-1"
   },
   {
+    "id": "constant:Electron2D.RenderingServer.ArrayCustomCount()",
+    "kind": "constant",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ArrayCustomCount",
+    "signature": "public const System.Int32 ArrayCustomCount = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "4"
+  },
+  {
     "id": "constant:Electron2D.RenderingServer.ArrayWeightsSize()",
     "kind": "constant",
     "declaringType": "Electron2D.RenderingServer",
@@ -17378,6 +17422,19 @@
     "name": ".ctor",
     "signature": "protected Mesh()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.MeshCustomData..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.MeshCustomData",
+    "name": ".ctor",
+    "signature": "public MeshCustomData()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -35235,6 +35292,149 @@
     "value": "8"
   },
   {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Custom0()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Custom0",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Custom0 = 64",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "64"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Custom0Shift()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Custom0Shift",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Custom0Shift = 13",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "13"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Custom1()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Custom1",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Custom1 = 128",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "128"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Custom1Shift()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Custom1Shift",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Custom1Shift = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Custom2()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Custom2",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Custom2 = 256",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "256"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Custom2Shift()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Custom2Shift",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Custom2Shift = 19",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "19"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Custom3()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Custom3",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Custom3 = 512",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "512"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Custom3Shift()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Custom3Shift",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Custom3Shift = 22",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "22"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.CustomBase()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "CustomBase",
+    "signature": "public const Electron2D.Mesh.ArrayFormat CustomBase = 13",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "13"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.CustomBits()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "CustomBits",
+    "signature": "public const Electron2D.Mesh.ArrayFormat CustomBits = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.CustomMask()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "CustomMask",
+    "signature": "public const Electron2D.Mesh.ArrayFormat CustomMask = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "7"
+  },
+  {
     "id": "enumValue:Electron2D.Mesh.ArrayFormat.Index()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Mesh.ArrayFormat",
@@ -35441,6 +35641,123 @@
     "parameters": [],
     "returnType": "Electron2D.Mesh.PrimitiveType",
     "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.MeshCustomFormat.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MeshCustomFormat",
+    "name": "Max",
+    "signature": "public const Electron2D.MeshCustomFormat Max = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshCustomFormat",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.MeshCustomFormat.RFloat()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MeshCustomFormat",
+    "name": "RFloat",
+    "signature": "public const Electron2D.MeshCustomFormat RFloat = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshCustomFormat",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.MeshCustomFormat.RGBA8SNORM()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MeshCustomFormat",
+    "name": "RGBA8SNORM",
+    "signature": "public const Electron2D.MeshCustomFormat RGBA8SNORM = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshCustomFormat",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.MeshCustomFormat.RGBA8UNORM()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MeshCustomFormat",
+    "name": "RGBA8UNORM",
+    "signature": "public const Electron2D.MeshCustomFormat RGBA8UNORM = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshCustomFormat",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.MeshCustomFormat.RGBAFloat()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MeshCustomFormat",
+    "name": "RGBAFloat",
+    "signature": "public const Electron2D.MeshCustomFormat RGBAFloat = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshCustomFormat",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.MeshCustomFormat.RGBAHalf()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MeshCustomFormat",
+    "name": "RGBAHalf",
+    "signature": "public const Electron2D.MeshCustomFormat RGBAHalf = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshCustomFormat",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.MeshCustomFormat.RGBFloat()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MeshCustomFormat",
+    "name": "RGBFloat",
+    "signature": "public const Electron2D.MeshCustomFormat RGBFloat = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshCustomFormat",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.MeshCustomFormat.RGFloat()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MeshCustomFormat",
+    "name": "RGFloat",
+    "signature": "public const Electron2D.MeshCustomFormat RGFloat = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshCustomFormat",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.MeshCustomFormat.RGHalf()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MeshCustomFormat",
+    "name": "RGHalf",
+    "signature": "public const Electron2D.MeshCustomFormat RGHalf = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshCustomFormat",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.MouseButton.Left()",
@@ -160980,6 +161297,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SurfaceTool.GetCustomFormat(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "GetCustomFormat",
+    "signature": "public Electron2D.MeshCustomFormat GetCustomFormat(System.Int32 channelIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "channelIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.MeshCustomFormat",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SurfaceTool.GetPrimitiveType()",
     "kind": "method",
     "declaringType": "Electron2D.SurfaceTool",
@@ -161063,6 +161399,54 @@
       {
         "name": "color",
         "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.SetCustom(System.Int32,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "SetCustom",
+    "signature": "public System.Void SetCustom(System.Int32 channelIndex, Electron2D.Color customColor)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "channelIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "customColor",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.SetCustomFormat(System.Int32,Electron2D.MeshCustomFormat)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "SetCustomFormat",
+    "signature": "public System.Void SetCustomFormat(System.Int32 channelIndex, Electron2D.MeshCustomFormat format)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "channelIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "format",
+        "type": "Electron2D.MeshCustomFormat",
         "default": null
       }
     ],
@@ -208915,6 +209299,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.MeshCustomData.Data()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshCustomData",
+    "name": "Data",
+    "signature": "public System.Byte[] Data { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshCustomData.Format()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshCustomData",
+    "name": "Format",
+    "signature": "public Electron2D.MeshCustomFormat Format { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshCustomFormat",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.MeshInstance.Mesh()",
     "kind": "property",
     "declaringType": "Electron2D.MeshInstance",
@@ -208964,6 +209374,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Color[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshSurfaceData.Custom0()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshSurfaceData",
+    "name": "Custom0",
+    "signature": "public Electron2D.MeshCustomData Custom0 { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshCustomData",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshSurfaceData.Custom1()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshSurfaceData",
+    "name": "Custom1",
+    "signature": "public Electron2D.MeshCustomData Custom1 { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshCustomData",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshSurfaceData.Custom2()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshSurfaceData",
+    "name": "Custom2",
+    "signature": "public Electron2D.MeshCustomData Custom2 { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshCustomData",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshSurfaceData.Custom3()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshSurfaceData",
+    "name": "Custom3",
+    "signature": "public Electron2D.MeshCustomData Custom3 { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshCustomData",
     "value": null
   },
   {

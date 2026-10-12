@@ -24,7 +24,7 @@ public sealed partial class SurfaceTool
     /// <param name="surface">Existing zero-based source surface.</param>
     /// <param name="transform">Finite local two-dimensional transform.</param>
     /// <remarks>Empty geometry adopts source topology/skin width. Nonempty inputs must share topology and skin
-    /// presence/width. Missing color/UV/frame channels use white/zero. Normal data uses inverse-transpose XY basis; tangent data uses the basis and reflected orientation. Singular normal-bearing append rejects. Mixed indexing expands sequential order to indices.</remarks>
+    /// presence/width. Missing color/UV/frame channels use white/zero. Normal data uses inverse-transpose XY basis; tangent data uses the basis and reflected orientation. Singular normal-bearing append rejects. Mixed indexing expands sequential order to indices. Present incoming custom formats replace the selected formats; existing values reencode, absent channels fill zero RGB/one alpha. All reencoding validates before mutation.</remarks>
     /// <exception cref="ArgumentException">Topology, skin width, indices or transformed positions are incompatible.</exception>
     public void AppendFrom(Mesh existing, int surface, Transform transform)
     {
@@ -53,7 +53,15 @@ public sealed partial class SurfaceTool
                 if (_indices.Count != 0) indices.AddRange(_indices); else for (var i = 0; i < oldCount; i++) indices.Add(i);
                 if (source.Data.Indices.Length != 0) foreach (var index in source.Data.Indices) indices.Add(checked(oldCount + index)); else for (var i = 0; i < appended.Count; i++) indices.Add(checked(oldCount + i));
             }
-            var sourceFormat = Format(source.Data); _format = (oldCount != 0 ? _format : 0) | sourceFormat;
+            var sourceFormat = Format(source.Data); var formats = (MeshCustomFormat[])_customFormats.Clone();
+            for (var channel = 0; channel < 4; channel++) if (source.Data.Custom(channel) is { } custom) formats[channel] = custom.Format; else if (oldCount == 0) formats[channel] = MeshCustomFormat.Max;
+            Span<byte> customRecord = stackalloc byte[16];
+            for (var channel = 0; channel < 4; channel++)
+                if (formats[channel] != MeshCustomFormat.Max && (((oldCount != 0 ? _format : 0) | sourceFormat) & MeshCustomCodec.Mask(channel)) != 0)
+                    foreach (var vertex in vertices) WriteCustom(vertex, channel, formats[channel], customRecord);
+            _format = ((oldCount != 0 ? _format : 0) | sourceFormat) & ~MeshCustomCodec.FormatMask;
+            for (var channel = 0; channel < 4; channel++) if ((_format & MeshCustomCodec.Mask(channel)) != 0) _format |= (Mesh.ArrayFormat)((ulong)formats[channel] << MeshCustomCodec.Shift(channel));
+            Array.Copy(formats, _customFormats, 4);
             if (indices.Count != 0) _format |= Mesh.ArrayFormat.Index; else _format &= ~Mesh.ArrayFormat.Index;
             if (oldCount == 0) { _primitive = source.Primitive; _skin = source.Data.SkinSlots == 8 ? SkinWeightCount.Eight : SkinWeightCount.Four; }
             _vertices = vertices; _indices = indices; _skinDirty = true;
@@ -86,7 +94,7 @@ public sealed partial class SurfaceTool
             if (vertices.Length < 3) return;
             if (uvs.Length != 0) CanActivate(Mesh.ArrayFormat.TexUV); if (uv2s.Length != 0) CanActivate(Mesh.ArrayFormat.TexUV2); if (colors.Length != 0) CanActivate(Mesh.ArrayFormat.Color);
             if (normals.Length != 0) CanActivate(Mesh.ArrayFormat.Normal); if (tangents.Length != 0) CanActivate(Mesh.ArrayFormat.Tangent);
-            ValidateIndices(); PrepareSkin(); var current = _current;
+            ValidateIndices(); ValidateCustomCapture(); PrepareSkin(); var current = _current;
             var count = checked((vertices.Length - 2) * 3); var appended = new List<Vertex>(count);
             for (var triangle = 1; triangle < vertices.Length - 1; triangle++)
                 for (var corner = 0; corner < 3; corner++)
@@ -111,7 +119,7 @@ public sealed partial class SurfaceTool
         {
             Mutable(); if (_indices.Count != 0) return;
             var unique = new Dictionary<Vertex, int>(_vertices.Count); var vertices = new List<Vertex>(_vertices.Count); var indices = new List<int>(_vertices.Count);
-            foreach (var vertex in _vertices) { if (!unique.TryGetValue(vertex, out var index)) { index = vertices.Count; unique.Add(vertex, index); vertices.Add(vertex); } indices.Add(index); }
+            foreach (var vertex in _vertices) { var key = IndexKey(vertex); if (!unique.TryGetValue(key, out var index)) { index = vertices.Count; unique.Add(key, index); vertices.Add(vertex); } indices.Add(index); }
             _vertices = vertices; _indices = indices; _format |= Mesh.ArrayFormat.Index;
         }
     }
@@ -123,7 +131,7 @@ public sealed partial class SurfaceTool
     }
     private int CapturedSkinSlots => (_format & (Mesh.ArrayFormat.Bones | Mesh.ArrayFormat.Weights)) != 0 ? (_skin == SkinWeightCount.Eight ? 8 : 4) : 0;
     private void ValidateIndices() { foreach (var index in _indices) if ((uint)index >= (uint)_vertices.Count) throw new ArgumentException("An index does not address captured geometry."); }
-    private static Mesh.ArrayFormat Format(MeshSurfaceData data) => Mesh.ArrayFormat.Vertex | Mesh.ArrayFormat.Use2DVertices |
+    private static Mesh.ArrayFormat Format(MeshSurfaceData data) => MeshCustomCodec.Channels(data) | Mesh.ArrayFormat.Vertex | Mesh.ArrayFormat.Use2DVertices |
         (data.Normals.Length != 0 ? Mesh.ArrayFormat.Normal : 0) | (data.Tangents.Length != 0 ? Mesh.ArrayFormat.Tangent : 0) | (data.Colors.Length != 0 ? Mesh.ArrayFormat.Color : 0) | (data.UVs.Length != 0 ? Mesh.ArrayFormat.TexUV : 0) | (data.UV2s.Length != 0 ? Mesh.ArrayFormat.TexUV2 : 0) |
         (data.Indices.Length != 0 ? Mesh.ArrayFormat.Index : 0) | (data.Bones.Length != 0 ? Mesh.ArrayFormat.Bones | Mesh.ArrayFormat.Weights : 0) | (data.SkinSlots == 8 ? Mesh.ArrayFormat.Use8BoneWeights : 0);
     private static List<Vertex> Vertices(MeshSurfaceData data)
@@ -133,13 +141,13 @@ public sealed partial class SurfaceTool
         {
             Vector4i bones = default, extraBones = default; Vector4 weights = default, extraWeights = default;
             for (var j = 0; j < slots; j++) { if (j < 4) { bones[j] = data.Bones[i * slots + j]; weights[j] = data.Weights[i * slots + j]; } else { extraBones[j - 4] = data.Bones[i * slots + j]; extraWeights[j - 4] = data.Weights[i * slots + j]; } }
-            result.Add(new(data.Vertices[i], data.Colors.Length != 0 ? data.Colors[i] : Colors.White, data.UVs.Length != 0 ? data.UVs[i] : default, data.UV2s.Length != 0 ? data.UV2s[i] : default, 0, bones, extraBones, weights, extraWeights, data.Normals.Length == 0 ? default : data.Normals[i], data.Tangents.Length == 0 ? default : data.Tangents[i]));
+            result.Add(new(data.Vertices[i], data.Colors.Length != 0 ? data.Colors[i] : Colors.White, data.UVs.Length != 0 ? data.UVs[i] : default, data.UV2s.Length != 0 ? data.UV2s[i] : default, 0, bones, extraBones, weights, extraWeights, data.Normals.Length == 0 ? default : data.Normals[i], data.Tangents.Length == 0 ? default : data.Tangents[i], ReadCustom(data, 0, i), ReadCustom(data, 1, i), ReadCustom(data, 2, i), ReadCustom(data, 3, i)));
         }
         return result;
     }
     private void Import(MeshSurfaceData data, Mesh.PrimitiveType primitive, Material? material)
     {
-        var vertices = Vertices(data); var indices = new List<int>(data.Indices); var format = Format(data); Reset(); _vertices = vertices; _indices = indices; _primitive = primitive; _material = material; _format = format; _skin = data.SkinSlots == 8 ? SkinWeightCount.Eight : SkinWeightCount.Four;
+        var vertices = Vertices(data); var indices = new List<int>(data.Indices); var format = Format(data); Reset(); _vertices = vertices; _indices = indices; _primitive = primitive; _material = material; _format = format; for (var channel = 0; channel < 4; channel++) _customFormats[channel] = data.Custom(channel)?.Format ?? MeshCustomFormat.Max; _skin = data.SkinSlots == 8 ? SkinWeightCount.Eight : SkinWeightCount.Four;
     }
     private readonly record struct Source(MeshSurfaceData Data, Mesh.PrimitiveType Primitive, Material? Material);
     private Source ReadSource(Mesh mesh, int surface)
@@ -151,9 +159,9 @@ public sealed partial class SurfaceTool
             var primitive = mesh.SurfaceGetPrimitiveType(surface); var data = (mesh.SurfaceGetArrays(surface) ?? throw new ArgumentException("Source surface arrays must not be null.", nameof(mesh))).Copy(); var format = mesh.SurfaceGetFormat(surface); var material = mesh.SurfaceGetMaterial(surface);
             if (mesh.IsDisposed || material is { IsDisposed: true }) throw new ObjectDisposedException("Source mesh or material"); if (revision != mesh.ChangeRevision) throw new InvalidOperationException("Mesh source callbacks must retain a stable revision."); data.Validate(primitive);
             const Mesh.ArrayFormat policies = Mesh.ArrayFormat.Use2DVertices | Mesh.ArrayFormat.UseDynamicUpdate | Mesh.ArrayFormat.Use8BoneWeights;
-            const Mesh.ArrayFormat channels = Mesh.ArrayFormat.Vertex | Mesh.ArrayFormat.Normal | Mesh.ArrayFormat.Tangent | Mesh.ArrayFormat.Color | Mesh.ArrayFormat.TexUV | Mesh.ArrayFormat.TexUV2 | Mesh.ArrayFormat.Index | Mesh.ArrayFormat.Bones | Mesh.ArrayFormat.Weights;
-            if ((format & ~(policies | channels)) != 0) throw new NotSupportedException("Source channels require their typed storage and shader consumer.");
-            if ((format & channels) != (Format(data) & channels) || data.SkinSlots != 0 && data.SkinSlots != ((format & Mesh.ArrayFormat.Use8BoneWeights) != 0 ? 8 : 4)) throw new ArgumentException("Source format must describe its actual channels and skin width.");
+            const Mesh.ArrayFormat channels = Mesh.ArrayFormat.Custom0 | Mesh.ArrayFormat.Custom1 | Mesh.ArrayFormat.Custom2 | Mesh.ArrayFormat.Custom3 | Mesh.ArrayFormat.Vertex | Mesh.ArrayFormat.Normal | Mesh.ArrayFormat.Tangent | Mesh.ArrayFormat.Color | Mesh.ArrayFormat.TexUV | Mesh.ArrayFormat.TexUV2 | Mesh.ArrayFormat.Index | Mesh.ArrayFormat.Bones | Mesh.ArrayFormat.Weights;
+            if ((format & ~(policies | channels | MeshCustomCodec.FormatMask)) != 0) throw new NotSupportedException("Source channels require their typed storage and shader consumer.");
+            if ((format & (channels | MeshCustomCodec.FormatMask)) != (Format(data) & (channels | MeshCustomCodec.FormatMask)) || data.SkinSlots != 0 && data.SkinSlots != ((format & Mesh.ArrayFormat.Use8BoneWeights) != 0 ? 8 : 4)) throw new ArgumentException("Source format must describe its actual channels and skin width.");
             return new(data, primitive, material);
         }
         finally { _readingSource = false; }

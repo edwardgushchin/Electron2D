@@ -16,11 +16,12 @@ public sealed partial class SurfaceTool : ElectronObject
         Eight = 1
     }
     private readonly record struct Vertex(Vector2 Position, Color Color, Vector2 UV, Vector2 UV2, uint Group,
-        Vector4i Bones, Vector4i ExtraBones, Vector4 Weights, Vector4 ExtraWeights, Vector3 Normal = default, Vector4 Tangent = default);
+        Vector4i Bones, Vector4i ExtraBones, Vector4 Weights, Vector4 ExtraWeights, Vector3 Normal = default, Vector4 Tangent = default, CustomVertex Custom0 = default, CustomVertex Custom1 = default, CustomVertex Custom2 = default, CustomVertex Custom3 = default);
+    private readonly MeshCustomFormat[] _customFormats = [MeshCustomFormat.Max, MeshCustomFormat.Max, MeshCustomFormat.Max, MeshCustomFormat.Max];
     private readonly object _gate = new();
     private List<Vertex> _vertices = [];
     private List<int> _indices = [];
-    private Vertex _current = new(default, Colors.White, default, default, 0, default, default, default, default);
+    private Vertex _current = Defaults(new(default, Colors.White, default, default, 0, default, default, default, default));
     private Mesh.PrimitiveType _primitive = Mesh.PrimitiveType.Lines;
     private Mesh.ArrayFormat _format;
     private Material? _material;
@@ -93,11 +94,11 @@ public sealed partial class SurfaceTool : ElectronObject
     public void SetMaterial(Material? material) { lock (_gate) { Mutable(); if (material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(material)); _material = material; } }
     /// <summary>Captures a finite local vertex with the current enabled attributes.</summary>
     /// <param name="vertex">Two-dimensional local position.</param>
-    /// <exception cref="ArgumentException">The position is nonfinite or influence counts do not match.</exception>
+    /// <exception cref="ArgumentException">The position is nonfinite, influence counts do not match or the current custom value cannot fit its selected layout.</exception>
     /// <exception cref="InvalidOperationException">No draft exists or only one skin channel is enabled.</exception>
     public void AddVertex(Vector2 vertex)
     {
-        lock (_gate) { Active(); if (!vertex.IsFinite()) throw new ArgumentException("Position must be finite.", nameof(vertex)); PrepareSkin(); _vertices.Add(_current with { Position = vertex }); _format |= Mesh.ArrayFormat.Vertex; }
+        lock (_gate) { Active(); if (!vertex.IsFinite()) throw new ArgumentException("Position must be finite.", nameof(vertex)); ValidateCustomCapture(); PrepareSkin(); _vertices.Add(_current with { Position = vertex }); _format |= Mesh.ArrayFormat.Vertex; }
     }
     /// <summary>Appends a nonnegative index, permitting references to vertices authored later.</summary>
     /// <param name="index">Zero-based vertex index; Commit validates its final bounds.</param>
@@ -143,7 +144,8 @@ public sealed partial class SurfaceTool : ElectronObject
     private void Activate(Mesh.ArrayFormat flag) { CanActivate(flag); _format |= flag; }
     private void Reset()
     {
-        _vertices.Clear(); _indices.Clear(); _current = new(default, Colors.White, default, default, 0, default, default, default, default);
+        Array.Fill(_customFormats, MeshCustomFormat.Max);
+        _vertices.Clear(); _indices.Clear(); _current = Defaults(new(default, Colors.White, default, default, 0, default, default, default, default));
         _bones = []; _weights = []; _material = null; _skin = SkinWeightCount.Four; _format = 0; _primitive = Mesh.PrimitiveType.Lines; _begun = _skinDirty = false;
     }
     private void PrepareSkin()
@@ -171,6 +173,13 @@ public sealed partial class SurfaceTool : ElectronObject
             var v = _vertices[i]; data.Vertices[i] = v.Position; if (data.Normals.Length != 0) data.Normals[i] = v.Normal; if (data.Tangents.Length != 0) data.Tangents[i] = v.Tangent; if (data.Colors.Length != 0) data.Colors[i] = v.Color; if (data.UVs.Length != 0) data.UVs[i] = v.UV; if (data.UV2s.Length != 0) data.UV2s[i] = v.UV2;
             if (skin) for (var j = 0; j < slots; j++) { data.Bones[i * slots + j] = j < 4 ? v.Bones[j] : v.ExtraBones[j - 4]; data.Weights[i * slots + j] = j < 4 ? v.Weights[j] : v.ExtraWeights[j - 4]; }
         }
+        for (var channel = 0; channel < 4; channel++)
+            if ((_format & MeshCustomCodec.Mask(channel)) != 0)
+            {
+                var format = _customFormats[channel]; var stride = MeshCustomCodec.Stride(format); var custom = new MeshCustomData { Format = format, Data = new byte[checked(count * stride)] };
+                for (var i = 0; i < count; i++) WriteCustom(_vertices[i], channel, format, custom.Data.AsSpan(i * stride, stride));
+                data.SetCustom(channel, custom);
+            }
         return data;
     }
     /// <inheritdoc />

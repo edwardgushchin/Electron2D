@@ -127,19 +127,19 @@ internal static unsafe class ShaderCompiler
                     if (r.NumSamplers != program.Textures.Length || r.NumStorageTextures != 0 || r.NumStorageBuffers != 0 ||
                         r.NumUniformBuffers != program.BufferSizes.Length || !fragment && r.NumUniformBuffers != 1)
                         throw new NotSupportedException($"The reflected resources do not match the canvas stage interface (samplers={r.NumSamplers}/{program.Textures.Length}, storage images={r.NumStorageTextures}, buffers={r.NumStorageBuffers}, uniforms={r.NumUniformBuffers}/{program.BufferSizes.Length}).");
-                    if (metadata.NumInputs > (fragment ? 6 : 10) || (fragment ? metadata.NumOutputs != 1 : metadata.NumOutputs is < 2 or > 6))
-                        throw new NotSupportedException("Canvas shaders use color at zero, UV at one, optional instance data at two, secondary UV at four and one fragment color output.");
+                    if (metadata.NumInputs > (fragment ? 10 : 14) || (fragment ? metadata.NumOutputs != 1 : metadata.NumOutputs is < 2 or > 10))
+                        throw new NotSupportedException("Canvas shaders use color at zero, UV at one, optional instance data at two, secondary UV at four, normal/tangent at five/six, mesh custom float4 at seven through ten and one fragment color output.");
                     if (fragment) ValidateVaryings(metadata.Inputs, metadata.NumInputs);
                     if (!fragment)
                     {
-                        if (metadata.NumInputs is < 3 or > 10) throw new NotSupportedException("Canvas vertices require float2 position, float4 color and float2 UV.");
+                        if (metadata.NumInputs is < 3 or > 14) throw new NotSupportedException("Canvas vertices require float2 position, float4 color and float2 UV.");
                         var locations = 0;
                         for (var i = 0; i < metadata.NumInputs; i++)
                         {
                             var field = Marshal.PtrToStructure<ShaderCross.IOVarMetadata>(metadata.Inputs + i * Marshal.SizeOf<ShaderCross.IOVarMetadata>());
-                            if (field.VectorType != ShaderCross.IOVarType.Float32 || field.Location > 9 || field.VectorSize != (field.Location == 8 ? 3 : field.Location is 0 or 2 or 7 ? 2 : 4) ||
+                            if (field.VectorType != ShaderCross.IOVarType.Float32 || field.Location > 13 || field.VectorSize != (field.Location == 8 ? 3 : field.Location is 0 or 2 or 7 ? 2 : 4) ||
                                 (locations & (1 << (int)field.Location)) != 0)
-                                throw new NotSupportedException("Canvas vertex inputs require position at zero, color at one, UV at two, then raw instance data or the complete hardware instance layout, with optional secondary UV at seven.");
+                                throw new NotSupportedException("Canvas vertex inputs require position at zero, color at one, UV at two, then raw instance data or the complete hardware instance layout, with optional secondary UV at seven, normal/tangent at eight/nine and mesh custom float4 at ten through thirteen.");
                             locations |= 1 << (int)field.Location;
                         }
                         if ((locations & 112) != 0 && (locations & 120) != 120) throw new NotSupportedException("Hardware instances require basis, translation, color and custom data at locations three through six.");
@@ -161,9 +161,9 @@ internal static unsafe class ShaderCompiler
         for (var i = 0; i < count; i++)
         {
             var field = Marshal.PtrToStructure<ShaderCross.IOVarMetadata>(pointer + i * Marshal.SizeOf<ShaderCross.IOVarMetadata>());
-            if (field.VectorType != ShaderCross.IOVarType.Float32 || field.Location is not (0 or 1 or 2 or 4 or 5 or 6) || field.VectorSize != (field.Location == 5 ? 3 : field.Location is 1 or 4 ? 2 : 4) ||
+            if (field.VectorType != ShaderCross.IOVarType.Float32 || field.Location is not (0 or 1 or 2 or 4 or 5 or 6 or 7 or 8 or 9 or 10) || field.VectorSize != (field.Location == 5 ? 3 : field.Location is 1 or 4 ? 2 : 4) ||
                 (locations & (1 << (int)field.Location)) != 0)
-                throw new NotSupportedException("Canvas varyings require float4 color at zero, float2 UV at one and optional float4 instance data at two float2 secondary UV at four, float3 normal at five and float4 tangent at six.");
+                throw new NotSupportedException("Canvas varyings require float4 color at zero, float2 UV at one and optional float4 instance data at two float2 secondary UV at four, float3 normal at five and float4 tangent at six, plus mesh custom float4 at seven through ten.");
             locations |= 1 << (int)field.Location;
         }
         if (requireBase && (locations & 3) != 3) throw new NotSupportedException("Canvas vertex outputs require color and UV.");

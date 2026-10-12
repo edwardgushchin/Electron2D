@@ -37,6 +37,28 @@ public abstract class Mesh : Resource
         TexUV = 16,
         /// <summary>Secondary texture coordinates.</summary>
         TexUV2 = 32,
+        /// <summary>Packed numerical custom channel.</summary>
+        Custom0 = 64,
+        /// <summary>Packed numerical custom channel.</summary>
+        Custom1 = 128,
+        /// <summary>Packed numerical custom channel.</summary>
+        Custom2 = 256,
+        /// <summary>Packed numerical custom channel.</summary>
+        Custom3 = 512,
+        /// <summary>First bit position of the three-bit Custom0 format selector.</summary>
+        Custom0Shift = 13,
+        /// <summary>First bit position of the three-bit Custom1 format selector.</summary>
+        Custom1Shift = 16,
+        /// <summary>First bit position of the three-bit Custom2 format selector.</summary>
+        Custom2Shift = 19,
+        /// <summary>First bit position of the three-bit Custom3 format selector.</summary>
+        Custom3Shift = 22,
+        /// <summary>First custom format selector bit position.</summary>
+        CustomBase = 13,
+        /// <summary>Number of bits per custom format selector.</summary>
+        CustomBits = 3,
+        /// <summary>Unshifted three-bit custom format value mask.</summary>
+        CustomMask = 7,
         /// <summary>Vertex ordering indices.</summary>
         Index = 4096,
         /// <summary>Flattened unsigned 16-bit bone indices.</summary>

@@ -4,15 +4,15 @@ Last updated: 2026-10-12
 
 SurfaceTool : ElectronObject builds and edits supported two-dimensional MeshSurfaceData under [ADR 0092](../decisions/mesh.md#adr-0092). It has deterministic lifetime and borrows source/target meshes and materials. Every public call rejects a disposed builder. Mutations/disposal during source capture throw InvalidOperationException. Draft-only setters reject inactive drafts and late channel activation. Completed ArrayMesh resources use the existing canvas and indexed RenderingDevice consumers.
 
-Begin replaces prior geometry/attributes/material while retaining the selected four/eight influence width. Activate color, primary/secondary UV and paired bone/weight channels before the first vertex. Later values affect subsequent vertices. Clear resets all defaults, including four influences and Lines. SetSkinWeightCount accepts the enum mode and works before Begin or before the first vertex; imported data infers actual width. Short influences pad zero; overfull influences stably select the strongest values and normalize with a finite double sum. Ordinary four/eight records preserve authored weights until mesh UNORM16 packing.
+Begin replaces prior geometry/attributes/material while retaining the selected four/eight influence width. Activate color, primary/secondary UV, selected custom and paired bone/weight channels before the first vertex. Later values affect subsequent vertices. Clear resets all defaults, including four influences and Lines. SetSkinWeightCount accepts the enum mode and works before Begin or before the first vertex; imported data infers actual width. Short influences pad zero; overfull influences stably select the strongest values and normalize with a finite double sum. Ordinary four/eight records preserve authored weights until mesh UNORM16 packing.
 
 CommitToArrays returns independent current arrays, permitting incomplete authoring. Commit validates final topology/index bounds, appends copied geometry and the borrowed material together before one Changed, and preserves the builder. Empty authoring returns the existing/new empty mesh. Invalid data preserves target storage; observer failure retains the committed surface. Structural authoring and snapshots allocate; repeated committed playback uses prepared buffers.
 
 CreateFrom and CreateFromArrays replace state only after validation. Source callbacks must retain stable revisions and cannot mutate/dispose the receiving builder. Imported geometry supports structural editing/append/commit; Begin starts a new incremental draft. AppendFrom uses a finite Transform, requires compatible nonempty topology/skin width, transforms copied positions and fills missing color/UV with white/zero. Mixed indexed/sequential sources retain both prefixes. AddTriangleFan appends wound triangles and extends existing indices; absent optional entries retain current values during fan traversal. All five primitive types execute. GetAABB returns finite local Rect2 bounds including unused vertices.
 
-Index welds exact complete records, including captured colors/UVs/skin/groups. Existing indices are unchanged. Deindex validates every reference before replacing geometry. OptimizeIndicesForCache traverses bounded adjacency and accepts a reordered triangle list only when a sixteen-entry LRU model improves; winding and attributes are preserved, global triangle order can change. The retained canvas expands indices; RenderingDevice accepts actual index buffers. Model improvement does not prove physical GPU speed.
+Index welds exact complete records, including captured colors/UVs/custom records/skin/groups. Existing indices are unchanged. Deindex validates every reference before replacing geometry. OptimizeIndicesForCache traverses bounded adjacency and accepts a reordered triangle list only when a sixteen-entry LRU model improves; winding and attributes are preserved, global triangle order can change. The retained canvas expands indices; RenderingDevice accepts actual index buffers. Model improvement does not prove physical GPU speed.
 
-Normal/tangent numerical data, generation and fan arguments execute through the shared pipeline. Custom codecs/shader consumers and morph pose extraction retain individual coverage triggers. No inert setter or unavailable format is exposed. Deprecated LOD generation is excluded using pinned metadata; its current replacement belongs to the future importer/LOD consumer slice.
+Normal/tangent numerical data, generation and fan arguments execute through the shared pipeline. Four numerical custom channels execute through the shared eight packed layouts, transactional format conversion and real shader consumers. Morph pose extraction retains its coverage trigger. No inert setter or unavailable format is exposed. Deprecated LOD generation is excluded using pinned metadata; its current replacement belongs to the future importer/LOD consumer slice.
 
 [SurfaceToolTests](../../tests/Electron2D.Tests/SurfaceToolTests.cs) checks finite/state/channel boundaries, retries, skin selection/overflow, atomic material publication, callback failure/reentry, transformed/mixed append, all topologies, exact index/deindex, bounded cache reorder on 256x256 geometry, fresh-process saved output and warmed prepared replay. [SurfaceToolNativeTests](../../tests/Electron2D.Tests/SurfaceToolNativeTests.cs) verifies identical pre/post cache pixels from real GLSL/HLSL indexed device drawing, UV2/eighth influence/hardware instance output and five canvas topologies on GPU/compatibility. Each device measures 64 alternating replay/readback frames; each retained host measures 64 active and 64 idle frames after warmup, with zero managed bytes on the owner thread. Wider platforms, native allocation totals, physical cache performance and human acceptance remain unverified.
 
@@ -37,12 +37,15 @@ Normal/tangent numerical data, generation and fan arguments execute through the 
 | `public System.Void GenerateNormals(System.Boolean flip = false)` | Generates planar triangle normals, respecting captured smooth groups. |
 | `public System.Void GenerateTangents()` | Generates tangent directions from normal/UV channels using MikkTSpace. |
 | `public Electron2D.Rect2 GetAABB()` | Gets the local rectangle enclosing every stored vertex, including unreferenced vertices. |
+| `public Electron2D.MeshCustomFormat GetCustomFormat(System.Int32 channelIndex)` | Returns the selected packed custom format. |
 | `public Electron2D.Mesh.PrimitiveType GetPrimitiveType()` | Gets the selected primitive topology, including while empty. |
 | `public Electron2D.SurfaceTool.SkinWeightCount GetSkinWeightCount()` | Gets the selected influence-width mode. |
 | `public System.Void Index()` | Replaces sequential vertices with exact unique records and their original ordered indices. |
 | `public System.Void OptimizeIndicesForCache()` | Reorders indexed triangles for vertex-cache locality without changing their winding or attributes. |
 | `public System.Void SetBones(System.ReadOnlySpan<System.Int32> bones)` | Copies the current bone indices before capturing a vertex. |
 | `public System.Void SetColor(Electron2D.Color color)` | Enables vertex color before the first vertex, or changes its subsequent captured value. |
+| `public System.Void SetCustom(System.Int32 channelIndex, Electron2D.Color customColor)` | Assigns the custom components captured by subsequent vertices. |
+| `public System.Void SetCustomFormat(System.Int32 channelIndex, Electron2D.MeshCustomFormat format)` | Selects the packed format for a numerical custom channel. |
 | `public System.Void SetMaterial(Electron2D.Material material)` | Assigns a live borrowed surface material, including on imported geometry. |
 | `public System.Void SetNormal(Electron2D.Vector3 normal)` | Assigns the normal captured by subsequent vertices. |
 | `public System.Void SetSkinWeightCount(Electron2D.SurfaceTool.SkinWeightCount count)` | Selects four or eight influence slots before any vertex is captured. |
@@ -103,7 +106,7 @@ summary: Captures a finite local vertex with the current enabled attributes.
 
 vertex: Two-dimensional local position.
 
-System.ArgumentException: The position is nonfinite or influence counts do not match.
+System.ArgumentException: The position is nonfinite, influence counts do not match or the current custom value cannot fit its selected layout.
 
 System.InvalidOperationException: No draft exists or only one skin channel is enabled.
 
@@ -119,7 +122,7 @@ surface: Existing zero-based source surface.
 
 transform: Finite local two-dimensional transform.
 
-remarks: Empty geometry adopts source topology/skin width. Nonempty inputs must share topology and skin presence/width. Missing color/UV/frame channels use white/zero. Normal data uses inverse-transpose XY basis; tangent data uses the basis and reflected orientation. Singular normal-bearing append rejects. Mixed indexing expands sequential order to indices.
+remarks: Empty geometry adopts source topology/skin width. Nonempty inputs must share topology and skin presence/width. Missing color/UV/frame channels use white/zero. Normal data uses inverse-transpose XY basis; tangent data uses the basis and reflected orientation. Singular normal-bearing append rejects. Mixed indexing expands sequential order to indices. Present incoming custom formats replace the selected formats; existing values reencode, absent channels fill zero RGB/one alpha. All reencoding validates before mutation.
 
 System.ArgumentException: Topology, skin width, indices or transformed positions are incompatible.
 
@@ -239,6 +242,16 @@ returns: Empty without geometry; otherwise finite nonnegative bounds.
 
 System.ArgumentException: The extent cannot be represented by finite floats.
 
+### GetCustomFormat
+
+`public Electron2D.MeshCustomFormat GetCustomFormat(System.Int32 channelIndex)`
+
+summary: Returns the selected packed custom format.
+
+channelIndex: Zero through three.
+
+returns: The layout, or Max before selection/after Clear.
+
 ### GetPrimitiveType
 
 `public Electron2D.Mesh.PrimitiveType GetPrimitiveType()`
@@ -298,6 +311,30 @@ color: Finite color; mesh commit applies RGBA8 storage precision.
 System.ArgumentException: A component is nonfinite.
 
 System.InvalidOperationException: No draft exists or a new channel is enabled after a vertex.
+
+### SetCustom
+
+`public System.Void SetCustom(System.Int32 channelIndex, Electron2D.Color customColor)`
+
+summary: Assigns the custom components captured by subsequent vertices.
+
+channelIndex: Zero through three.
+
+customColor: Finite raw RGBA components, interpreted by the selected layout.
+
+remarks: Requires a selected format and first activation before the first vertex. Normalized formats clamp/truncate; half authoring truncates and flushes small values according to its packed codec. A value not representable as finite half storage rejects before changing the current value.
+
+### SetCustomFormat
+
+`public System.Void SetCustomFormat(System.Int32 channelIndex, Electron2D.MeshCustomFormat format)`
+
+summary: Selects the packed format for a numerical custom channel.
+
+channelIndex: Zero through three.
+
+format: One of eight layouts, or Max to disable an uncaptured channel.
+
+remarks: Requires Begin. Selecting a format does not activate the channel; SetCustom does. Changing an active format preflights captured and current values, then reencodes them when arrays are produced. Disabling an active channel after vertices exist rejects before mutation.
 
 ### SetMaterial
 

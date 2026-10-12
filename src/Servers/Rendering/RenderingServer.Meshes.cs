@@ -15,8 +15,10 @@ public sealed partial class RenderingServer
     internal void MeshSurfaceRemoveCore(RID mesh, int surface) { EnsureTextureChange(); RenderingMeshRegistry.Owned(mesh, this).SurfaceRemove(surface); }
     internal void MeshSurfaceUpdateVertexRegionCore(RID mesh, int surface, int offset, ReadOnlySpan<byte> data) { EnsureTextureChange(); RenderingMeshRegistry.Owned(mesh, this).SurfaceUpdateVertexRegion(surface, offset, data); }
     internal void MeshSurfaceUpdateAttributeRegionCore(RID mesh, int surface, int offset, ReadOnlySpan<byte> data) { EnsureTextureChange(); RenderingMeshRegistry.Owned(mesh, this).SurfaceUpdateAttributeRegion(surface, offset, data); }
+    /// <summary>Number of independently packed numerical mesh custom channels.</summary>
+    public const int ArrayCustomCount = 4;
     internal int MeshSurfaceGetFormatVertexStrideCore(Mesh.ArrayFormat format, int vertexCount) { EnsureOwner(); ValidateMeshFormat(format, vertexCount); return (format & Mesh.ArrayFormat.Vertex) != 0 ? 8 : 0; }
-    internal int MeshSurfaceGetFormatAttributeStrideCore(Mesh.ArrayFormat format, int vertexCount) { EnsureOwner(); ValidateMeshFormat(format, vertexCount); return ((format & Mesh.ArrayFormat.Color) != 0 ? 4 : 0) + ((format & Mesh.ArrayFormat.TexUV) != 0 ? 8 : 0) + ((format & Mesh.ArrayFormat.TexUV2) != 0 ? 8 : 0); }
+    internal int MeshSurfaceGetFormatAttributeStrideCore(Mesh.ArrayFormat format, int vertexCount) { EnsureOwner(); ValidateMeshFormat(format, vertexCount); return MeshCustomCodec.AttributeStride(format); }
     /// <summary>Returns the packed mesh-local normal/tangent stride.</summary>
     /// <param name="format">Supported typed mesh channel flags.</param>
     /// <param name="vertexCount">Nonnegative vertex count; does not affect the stride.</param>
@@ -42,7 +44,7 @@ public sealed partial class RenderingServer
     private static void ValidateMeshFormat(Mesh.ArrayFormat format, int vertexCount)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(vertexCount);
-        const Mesh.ArrayFormat supported = Mesh.ArrayFormat.Vertex | Mesh.ArrayFormat.Normal | Mesh.ArrayFormat.Tangent | Mesh.ArrayFormat.Color | Mesh.ArrayFormat.TexUV | Mesh.ArrayFormat.TexUV2 | Mesh.ArrayFormat.Index | Mesh.ArrayFormat.Use2DVertices | Mesh.ArrayFormat.UseDynamicUpdate | Mesh.ArrayFormat.Bones | Mesh.ArrayFormat.Weights | Mesh.ArrayFormat.Use8BoneWeights;
+        const Mesh.ArrayFormat supported = Mesh.ArrayFormat.Custom0 | Mesh.ArrayFormat.Custom1 | Mesh.ArrayFormat.Custom2 | Mesh.ArrayFormat.Custom3 | MeshCustomCodec.FormatMask | Mesh.ArrayFormat.Vertex | Mesh.ArrayFormat.Normal | Mesh.ArrayFormat.Tangent | Mesh.ArrayFormat.Color | Mesh.ArrayFormat.TexUV | Mesh.ArrayFormat.TexUV2 | Mesh.ArrayFormat.Index | Mesh.ArrayFormat.Use2DVertices | Mesh.ArrayFormat.UseDynamicUpdate | Mesh.ArrayFormat.Bones | Mesh.ArrayFormat.Weights | Mesh.ArrayFormat.Use8BoneWeights;
         if ((format & ~supported) != 0 || (format & Mesh.ArrayFormat.Vertex) != 0 && (format & Mesh.ArrayFormat.Use2DVertices) == 0)
             throw new NotSupportedException("The mesh format requires unsupported attribute storage or non-2D vertices.");
     }

@@ -72,10 +72,10 @@ public sealed partial class RenderingServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static int MeshSurfaceGetFormatVertexStride(Mesh.ArrayFormat format, int vertexCount) => RequireService().MeshSurfaceGetFormatVertexStrideCore(format, vertexCount);
 
-    /// <summary>Gets the packed color/texture-coordinate stride for a supported format.</summary>
+    /// <summary>Gets the packed color/texture-coordinate/custom stride for a supported format.</summary>
     /// <param name="format">Surface format mask.</param>
     /// <param name="vertexCount">Nonnegative surface vertex count.</param>
-    /// <returns>Four bytes for color plus eight bytes per present primary or secondary UV channel.</returns>
+    /// <returns>Four bytes for color, eight per present UV, plus each custom format record width.</returns>
     /// <exception cref="NotSupportedException">The format requires unsupported channels or non-2D vertices.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static int MeshSurfaceGetFormatAttributeStride(Mesh.ArrayFormat format, int vertexCount) => RequireService().MeshSurfaceGetFormatAttributeStrideCore(format, vertexCount);
