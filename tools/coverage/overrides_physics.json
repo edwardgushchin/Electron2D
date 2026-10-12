@@ -2804,6 +2804,16 @@
       "godot": "PhysicsServer2DExtension::method:_body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetAngularDampMode(Electron2D.RID,Electron2D.RigidBody.DampMode)",
       "reason": "ADR 0103/0073/0076: common scene/raw identity and typed authoring project through the selected collider and integration owner. Public-only construction, server-mode and parameter consumers verify detached/live roles, exact per-body CCD delivery, automatic mass reset, borrowing/lifetime guards and zero warm frames. CPU/GPU public CCD numerical suites remain separate; independent registered CCD and full numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_set_pickable(RID:,bool:)",
+      "electron2d": "property:Electron2D.CollisionObject.InputPickable()",
+      "reason": "ADR 0099/0103: retained CollisionObject.InputPickable projects scene eligibility through selected point-query geometry, with distinct Body/Area defaults, exact canvas routing and common callback/hover lifetime. Public-only CPU/GPU/registered checks exercise equal numerical-write rejection, ordinary pointer authoring and 128 changed-policy full frames at zero managed allocation; six native renderer/physics combinations verify SDL delivery and target pixels. Raw RIDs are not scene callback sources under ADR 0099. Complete registered geometry/numerical and platform/performance acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_pickable(RID:,bool:)",
+      "electron2d": "property:Electron2D.CollisionObject.InputPickable()",
+      "reason": "ADR 0099/0103: retained CollisionObject.InputPickable projects scene eligibility through selected point-query geometry, with distinct Body/Area defaults, exact canvas routing and common callback/hover lifetime. Public-only CPU/GPU/registered checks exercise equal numerical-write rejection, ordinary pointer authoring and 128 changed-policy full frames at zero managed allocation; six native renderer/physics combinations verify SDL delivery and target pixels. Raw RIDs are not scene callback sources under ADR 0099. Complete registered geometry/numerical and platform/performance acceptance remains open."
     }
   ],
   "extras": [
@@ -7649,6 +7659,14 @@
       ],
       "state": "Partial",
       "reason": "ADR 0103/0073/0076: common scene/raw identity and typed authoring project through the selected collider and integration owner. Public-only construction, server-mode and parameter consumers verify detached/live roles, exact per-body CCD delivery, automatic mass reset, borrowing/lifetime guards and zero warm frames. CPU/GPU public CCD numerical suites remain separate; independent registered CCD and full numerical-extension acceptance remain open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_area_set_pickable(RID:,bool:)",
+        "PhysicsServer2DExtension::method:_body_set_pickable(RID:,bool:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0099/0103: retained CollisionObject.InputPickable projects scene eligibility through selected point-query geometry, with distinct Body/Area defaults, exact canvas routing and common callback/hover lifetime. Public-only CPU/GPU/registered checks exercise equal numerical-write rejection, ordinary pointer authoring and 128 changed-policy full frames at zero managed allocation; six native renderer/physics combinations verify SDL delivery and target pixels. Raw RIDs are not scene callback sources under ADR 0099. Complete registered geometry/numerical and platform/performance acceptance remains open."
     }
   ]
 }

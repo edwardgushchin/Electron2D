@@ -7,7 +7,7 @@ public abstract partial class CollisionObject
     /// <value>True for collision objects and areas; physics bodies default to false.</value>
     /// <remarks>Picking also requires a nonzero collision layer, visible active scene membership and processing eligibility.
     /// Changes affect the next physics picking pass, without changing simulation or ordinary queries.</remarks>
-    /// <exception cref="InvalidOperationException">Attached mutation is off-owner or capture-owned.</exception>
+    /// <exception cref="InvalidOperationException">Attached mutation is off-owner, capture-owned, or the selected numerical implementation is borrowed.</exception>
     /// <exception cref="ObjectDisposedException">The object is disposed.</exception>
     public bool InputPickable { get { ThrowIfDisposed(); return _inputPickable; } set { EnsureMutable(); _inputPickable = value; } }
 

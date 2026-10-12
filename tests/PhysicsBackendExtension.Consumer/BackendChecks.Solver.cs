@@ -5,6 +5,7 @@ public static partial class BackendChecks
     private sealed partial class Solver : PhysicsServerExtension
     {
         private readonly List<PhysicsPointResult> _pointHits = [];
+        internal Action? PointHook;
         private readonly List<PhysicsShapeResult> _shapeHits = [];
         private readonly List<PhysicsBackendShapeContact> _shapeContacts = [];
         protected override int ReadDebugContacts(Span<Vector2> output)
@@ -44,6 +45,7 @@ public static partial class BackendChecks
         }
         protected override List<PhysicsPointResult> CollectPointHits(PhysicsPointQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
+            PointHook?.Invoke();
             _pointHits.Clear();
             foreach (var b in Bodies.Values)
                 if (Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded) &&

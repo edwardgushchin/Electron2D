@@ -861,3 +861,35 @@ The eight creation/mode/CCD/mass/typed-parameter extension rows are Partial.
 directed-ray dynamics on CPU and resident GPU. Frozen runner evidence is under
 `bin/physics-construction/2026-10-12/final/`. Full registered numerical, physical,
 network, platform and final performance acceptance remain open.
+
+## Registered pointer delivery
+
+Scene Body/Area pickability is retained by CollisionObject.InputPickable under
+ADR 0099. The selected point-query owner supplies physical hit geometry, canvas
+identity and logical indices; common scene eligibility then chooses callbacks.
+Ordinary point queries include unpickable colliders. Raw RIDs do not become scene
+callback sources. The two extension pickability rows project this existing scene
+role as Partial; no inert raw flags or separate hit-test world are introduced.
+
+The public-only `--picking` consumer runs unchanged on CPU/GPU/registered worlds.
+It verifies false Body/true Area defaults, root/transformed-layer queries, exact
+viewport event coordinates, virtual-before-signal ordering, owned event-copy
+lifetime, object/shape enter/exit, off-owner writes and equal policy writes during
+selected point queries and solving. Ordinary pointer callbacks can edit policy.
+After 128 warmups and complete garbage collection/finalizer draining, 128 complete
+1/120-s frames change both flags and produce 64 real passive entries/inputs and
+64 exits, with zero owner/all-thread managed bytes. Policy/identity values are
+exact; input geometry is a radius-8 circle at local (20,20).
+
+The native SDL picking suite now also creates named registered worlds through
+the existing public consumer factory. GPU/compatibility renderers each run CPU,
+GPU and registered physics, checking localized native clicks, capture suppression,
+exit-before-window-signal and teardown. Pixel assertions at the transformed click
+coordinate (55,50) compare RGB to Pink within 0.02. Native injection uses one
+physics tick per rendered frame so catch-up ticks cannot replace the synthetic
+hover with the actual desktop pointer before the next pump; the previous limit is
+restored. This fixture is not a real-time FPS benchmark.
+
+Frozen evidence and six PNGs are under
+`bin/physics-picking/2026-10-12/final/`. Full registered arbitrary geometry,
+physics/network/performance and platform acceptance remain open.

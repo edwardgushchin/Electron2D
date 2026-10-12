@@ -1,6 +1,6 @@
 # Physics pointer picking
 
-Last updated: 2026-10-09
+Last updated: 2026-10-12
 
 [Viewport](../classes/Viewport.md#physics-picking) queues unhandled pointer events
 for [CollisionObject](../classes/CollisionObject.md#pointer-input) callbacks and
@@ -121,3 +121,9 @@ Evidence: `/tmp/e2d-query-picking-before.log` and `/tmp/e2d-query-picking-after.
 These numbers are not rigid-body stress results or rendered-window FPS. Native/device
 allocation and other platforms remain unmeasured; controlled GPU timing and the
 full-goal performance acceptance remain open.
+
+[Registered pointer delivery](physics-registered-adapter.md#registered-pointer-delivery)
+now verifies scene Body/Area policy through selected point queries, numerical
+guards and 128 changed-policy full frames at zero managed allocation. Native
+CPU/GPU/registered worlds each pass with both renderers and target pixel checks;
+full registered geometry and final acceptance remain open.
