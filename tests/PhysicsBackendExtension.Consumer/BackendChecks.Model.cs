@@ -214,6 +214,7 @@ public static partial class BackendChecks
         internal float Priority;
         internal Vector2 Position, Velocity, Force, Surface;
         internal float Rotation, Angular, Torque, SurfaceAngular, Mass = 1, Inertia = 1, Radius, SleepTime;
+        internal CCDMode ContinuousMode;
         internal bool Awake = true, CanSleep = true, Locked, Detached, Omit;
         internal PhysicsServer.BodyMode Mode;
         private Vector2 _center;
@@ -256,6 +257,7 @@ public static partial class BackendChecks
         protected override void PrepareContactPolicy() => solver.PolicyHook?.Invoke(rid);
         protected override void PrepareIntegration(in PhysicsBodyIntegrationConfiguration configuration, double delta)
         {
+            ContinuousMode = configuration.CCDMode;
             Locked = configuration.LockRotation; Omit = configuration.OmitForces;
             var f = solver.ResolveFields(this);
             _fields = new(f.Gravity * configuration.GravityScale,

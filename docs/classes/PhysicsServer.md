@@ -995,3 +995,9 @@ dirty, rejected private geometry is retired, and apply/rollback/retirement error
 are retained together. Incomplete borrowers stay dirty so public query/step
 preparation retries before observing them. An old-view retirement error after a
 successful replacement does not undo the committed new geometry.
+
+[Body construction and continuous policy](../components/physics-registered-adapter.md#body-construction-and-continuous-policy)
+now share selected CPU/GPU/registered ownership, detached/live modes, automatic
+mass reset and guarded typed configuration. Valid CCD writes avoid enum metadata
+allocation after collection; the public-only consumer checks 128 edited full
+steps at 0/0 managed bytes. Registered numerical CCD and full acceptance remain open.

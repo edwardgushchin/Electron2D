@@ -1,6 +1,6 @@
 # Per-body continuous collision
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 ## Public contract
 
@@ -10,7 +10,10 @@ Disabled=0, CastRay=1, CastShape=2. The default is Disabled, stored by the scene
 property descriptor. Scene and raw server bodies share the same runtime setting;
 packing, reattachment, frozen/static/kinematic roles preserve it. Changes wake a
 dynamic body; undefined values reject without changing configuration. Live body,
-owner-thread and step-phase guards match other body settings.
+owner-thread and step-phase guards match other body settings. Valid-value checks
+avoid enum metadata allocation after collection; the selected-backend public-only
+construction consumer measures 128 changing-CCD complete steps at 0/0 managed
+bytes. Registered configuration delivery is separate from numerical CCD acceptance.
 
 Disabled no longer silently inherits the CPU world's global automatic sweep.
 Ray mode uses the midpoint of the leading support face and its round radius,

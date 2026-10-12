@@ -1,4 +1,6 @@
-if (args.Contains("--shape-resources")) BackendChecks.RunShapeResources(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+if (args.Contains("--construction")) BackendChecks.RunConstruction(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
+else if (args.Contains("--shape-resources")) BackendChecks.RunShapeResources(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
 else if (args.Contains("--shape-geometry")) BackendChecks.RunShapeGeometry(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);

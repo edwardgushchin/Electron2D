@@ -832,3 +832,32 @@ fixture additionally checks mixed apply/rollback/retirement errors, later borrow
 continuation, source view preservation, real query recovery and subsequent success.
 These ten extension rows now map as Partial to the actual common resource role;
 full arbitrary registered numerical geometry and extension acceptance remain open.
+
+## Body construction and continuous policy
+
+The common facade allocates independent detached body identities and inactive
+spaces; explicit CPU/GPU or registered-name selection binds each space owner.
+Four body modes and three per-body CCD values survive detached authoring and
+attachment. All five scene body siblings retain their existing direct mode
+response. Mass reset preserves configured kilograms and recomputes automatic
+center/inertia from current geometry through the selected owner. The complete
+typed BodyParameter family reaches mass, material and integration preparation.
+Numerical borrowing rejects equal mode/CCD writes and mass resets before mutation;
+retained policy reads stay available.
+
+The public-only `--construction` consumer checks these paths on registered, CPU
+and GPU worlds, including sleep preservation for equal CCD, wake on changes,
+invalid positive/negative values and retired views after detachment. Its circle
+uses mass 4 and radius 3: automatic inertia is 18 within 0.0001; center, mode and
+CCD values are exact. After 256 warmups and full garbage collection, 128 complete
+1/120-s steps change CCD, set velocity and solve with 0/0 owner/all-thread managed
+bytes. Direct valid-value checking avoids enum metadata reinitialization: the
+unchanged pre-fix measurement allocated 248/248 B in the first CCD setter after
+collection. The registered fixture records delivered CCD configuration; it does
+not implement or establish independent numerical CCD.
+
+The eight creation/mode/CCD/mass/typed-parameter extension rows are Partial.
+`ELECTRON2D_TEST_GPU_CCD_CONTRACT=1` separately verifies actual CCD, boundaries and
+directed-ray dynamics on CPU and resident GPU. Frozen runner evidence is under
+`bin/physics-construction/2026-10-12/final/`. Full registered numerical, physical,
+network, platform and final performance acceptance remain open.

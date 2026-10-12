@@ -68,3 +68,9 @@ geometry, continue every rollback/retirement and retain all failures; incomplete
 borrowers retry during guarded preparation. Ten formerly unmapped extension rows
 project to the common resource role as Partial. Full numerical-extension and final
 physical/network/performance acceptance remain open.
+
+[Body construction and continuous policy](../components/physics-registered-adapter.md#body-construction-and-continuous-policy)
+now share selected CPU/GPU/registered ownership, detached/live modes, automatic
+mass reset and guarded typed configuration. Valid CCD writes avoid enum metadata
+allocation after collection; the public-only consumer checks 128 edited full
+steps at 0/0 managed bytes. Registered numerical CCD and full acceptance remain open.
