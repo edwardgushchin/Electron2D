@@ -1,6 +1,6 @@
 # FileAccess
 
-Last updated: 2026-10-05
+Last updated: 2026-10-12
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -1286,3 +1286,7 @@ The checks ran on Linux with its active filesystem. They do not prove the implem
 ## Typed file integration
 
 See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.
+
+## Process-pipe streams
+
+OS.ExecuteWithPipe supplies owned stdin/stdout and stderr FileAccess streams. Byte, numeric, strict text/line and CSV operations use the existing stream boundary; Length, Position, Seek, Resize and whole-file ReadAllText reject non-seekable storage. Nonblocking temporary emptiness is not EOF, and partial writes expose PipeWriteException.BytesWritten. Exact reads may consume partial data before an IOException; byte buffers permit incremental framing. Closing a stream does not own the child. Generic FileAccess.Open("pipe://name") remains a named-pipe connector dependency. See [process ownership and checks](../components/processes.md).

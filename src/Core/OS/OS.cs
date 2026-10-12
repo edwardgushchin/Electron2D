@@ -3,7 +3,8 @@ using System.Runtime.InteropServices;
 namespace Electron2D;
 
 /// <summary>Owns process-wide operating-system operations through a retained service object.</summary>
-/// <remarks>The current filesystem operation uses the Linux desktop's recoverable trash service.
+/// <remarks>Independent process launch/capture and owned native pipes are cold operations; child termination is explicit.
+/// The current filesystem operation uses the Linux desktop's recoverable trash service.
 /// Unavailable platform services fail explicitly. Native libraries are system facilities and remain process-owned.</remarks>
 public sealed partial class OS : ElectronObject
 {

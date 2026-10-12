@@ -1,6 +1,6 @@
 # Core domain
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 ## Skeletal schema policy
 
@@ -217,3 +217,5 @@ allocating or synchronizing devices. Other built-in producers and custom monitor
 remain open coverage obligations.
 
 WorkerThreadPool schedules synchronized or independently owned data computations. It does not grant scene/render thread access: the executable WorkerRoutes consumer publishes through SceneTree.Defer. Threaded ResourceLoader, asynchronous baking and their ownership/cancellation contracts remain separate consumers under ADR 0104.
+
+The [independent-process component](../components/processes.md) adds static launch/capture/current-app identity and argv, retained child exit/kill observations and owned typed native pipe results. It supplies runtime primitives for external tools; project orchestration, deadline/cancellation policy and full agent acceptance remain consumer/tooling work.

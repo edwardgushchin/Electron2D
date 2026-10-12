@@ -157,7 +157,7 @@ Executable tests cover the typed registry, exact identity, mutable snapshots, va
 <a id="adr-0020"></a>
 ## ADR 0020: Typed file access and transformed-file containers
 
-Last updated: 2026-10-05
+Last updated: 2026-10-12
 
 ### Status
 
@@ -173,7 +173,7 @@ The BCL supplies robust streams, hashes, DEFLATE/GZip/Brotli, PBKDF2, and AES-GC
 
 `FileAccess` derives directly from `ElectronObject` and owns one stream until idempotent `Close` or disposal. Exact reference enum numbers are preserved in `FileAccessModeFlags`, `FileCompressionMode`, and `UnixPermissionFlags`. Public members use typed PascalCase C# and standard exceptions; acronyms in method names stay fully uppercase under [ADR 0045](product.md#adr-0045). No process-global last error exists.
 
-Ordinary, `res://`, and `user://` paths resolve through `ProjectSettings`; the latter two remain directory-backed. Raw access uses `FileStream`. The cursor, EOF state, endian state, and individual operations are serialized by one instance lock. Compound caller sequences are explicitly not transactional.
+Ordinary, `res://`, and `user://` paths resolve through `ProjectSettings`; the latter two remain directory-backed. Raw access uses `FileStream`. The cursor, EOF state, endian state, and individual seekable-file operations are serialized by one instance lock. Process pipes use independent read/write operation locks because their two directions have no shared cursor; native lifetime calls retain a shared process gate. OS.ExecuteWithPipe additionally supplies owned non-seekable FileAccess process streams; these are existing open pipes, not a named-pipe filesystem connector. Compound caller sequences are explicitly not transactional.
 
 Fixed-width binary values and Pascal strings require complete reads. Buffer reads return the available prefix. `ReadReal`/`WriteReal` use binary32 because Electron2D's 2D numeric types are single-precision; explicit double methods remain available. Text is strict UTF-8; CSV supports quoting and multiline fields. `get_var`/`store_var` have no replacement because ADR 0001 excludes a universal value boundary.
 
@@ -183,6 +183,8 @@ Encrypted containers are Electron2D-specific and authenticated. Raw mode require
 
 Filesystem attributes are exposed through native BCL behavior where the reference contract defines them: hidden/read-only attributes on Apple, BSD, and Windows platforms, and all 12 Unix mode bits on non-Windows platforms. Unsupported attribute platforms throw rather than return a plausible no-op result. Extended attributes present platform-neutral names: Linux adds/removes the `user.` namespace prefix internally, macOS uses libSystem xattrs, and Windows maps names to alternate data streams.
 
+The static retained OS service supplies independent process launch/capture/ID/exit/kill operations. ExecuteWithPipe's fixed result dictionary projects to an owned ProcessPipes with PID/StandardIO/StandardError; it does not expose a universal value carrier. PipeWriteException.BytesWritten projects partial-write error state without a mutable numeric last-error slot. Literal argv never implicitly enters a shell. Blocking pipe I/O stays on the caller; native nonblocking readiness is distinct from EOF, and partial writes preserve a retryable consumed-prefix count. Closing streams never owns process termination. SafeHandles retain native stream/process lifetime. General named pipe connections and mobile/application-bundle/console adapters remain separate exact backend dependencies; [processes](../components/processes.md) records exercised behavior and limits.
+
 ### Consequences
 
 - The normal C# boundary is typed, exception-based, deterministic, and integrates current virtual paths.
@@ -190,7 +192,7 @@ Filesystem attributes are exposed through native BCL behavior where the referenc
 - Authentication prevents wrong credentials or modified ciphertext from exposing plaintext.
 - The transformed envelope is versioned and private to Electron2D; external/reference binary compatibility is not promised.
 - FastLZ/Zstandard remain visible, explicit capability gaps without inert stubs; macOS/Windows attribute backends still require native-host testing.
-- Packed res:// mounts and pipe:// require pack/platform-pipe backends. Registered uid:// identities now resolve through ResourceUID under ADR 0013 before applying the existing directory-backed scope; unknown identities fail explicitly.
+- Packed res:// mounts and arbitrary named pipe:// connections require pack/named-pipe backends. Registered uid:// identities now resolve through ResourceUID under ADR 0013 before applying the existing directory-backed scope; unknown identities fail explicitly.
 
 ### Reference coverage classification
 
@@ -198,7 +200,7 @@ Implemented: raw open modes, temporary files, close/flush/seek/resize, position/
 
 Adapted: reference counting to managed memory and `IDisposable`; numeric error returns and static open error to exceptions; encryption to authenticated private containers; snake_case to typed PascalCase.
 
-Dependency-blocked: FastLZ, Zstandard, packed/exported virtual filesystem paths and pipe:// streams. Registered UID resolution now executes under ADR 0013; this does not mount resource packs.
+Dependency-blocked: FastLZ, Zstandard, packed/exported virtual filesystem paths and arbitrary named pipe:// connections. Registered UID resolution now executes under ADR 0013; this does not mount resource packs.
 
 Permanently excluded: `Variant` read/write and a shared mutable numeric error slot.
 

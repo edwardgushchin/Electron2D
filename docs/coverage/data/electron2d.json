@@ -8039,6 +8039,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PipeWriteException",
+    "kind": "type",
+    "declaringType": "Electron2D.PipeWriteException",
+    "name": "PipeWriteException",
+    "signature": "public sealed class Electron2D.PipeWriteException",
+    "visibility": "public",
+    "baseType": "System.IO.IOException",
+    "interfaces": [
+      "System.Runtime.Serialization.ISerializable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PlaceholderMesh",
     "kind": "type",
     "declaringType": "Electron2D.PlaceholderMesh",
@@ -8207,6 +8222,21 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ProcessPipes",
+    "kind": "type",
+    "declaringType": "Electron2D.ProcessPipes",
+    "name": "ProcessPipes",
+    "signature": "public sealed class Electron2D.ProcessPipes",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -120168,6 +120198,193 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.CreateInstance(System.ReadOnlySpan\u003CSystem.String\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "CreateInstance",
+    "signature": "public static System.Int32 CreateInstance(System.ReadOnlySpan\u003CSystem.String\u003E arguments)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "arguments",
+        "type": "System.ReadOnlySpan\u003CSystem.String\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.CreateProcess(System.String,System.ReadOnlySpan\u003CSystem.String\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "CreateProcess",
+    "signature": "public static System.Int32 CreateProcess(System.String path, System.ReadOnlySpan\u003CSystem.String\u003E arguments, System.Boolean openConsole = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "arguments",
+        "type": "System.ReadOnlySpan\u003CSystem.String\u003E",
+        "default": null
+      },
+      {
+        "name": "openConsole",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.Execute(System.String,System.ReadOnlySpan\u003CSystem.String\u003E,System.Collections.Generic.ICollection\u003CSystem.String\u003E,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "Execute",
+    "signature": "public static System.Int32 Execute(System.String path, System.ReadOnlySpan\u003CSystem.String\u003E arguments, System.Collections.Generic.ICollection\u003CSystem.String\u003E output = null, System.Boolean readStderr = false, System.Boolean openConsole = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "arguments",
+        "type": "System.ReadOnlySpan\u003CSystem.String\u003E",
+        "default": null
+      },
+      {
+        "name": "output",
+        "type": "System.Collections.Generic.ICollection\u003CSystem.String\u003E",
+        "default": "null"
+      },
+      {
+        "name": "readStderr",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "openConsole",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.ExecuteWithPipe(System.String,System.ReadOnlySpan\u003CSystem.String\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "ExecuteWithPipe",
+    "signature": "public static Electron2D.ProcessPipes ExecuteWithPipe(System.String path, System.ReadOnlySpan\u003CSystem.String\u003E arguments, System.Boolean blocking = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "arguments",
+        "type": "System.ReadOnlySpan\u003CSystem.String\u003E",
+        "default": null
+      },
+      {
+        "name": "blocking",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "Electron2D.ProcessPipes",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetCommandLineArgs()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetCommandLineArgs",
+    "signature": "public static System.String[] GetCommandLineArgs()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetCommandLineUserArgs()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetCommandLineUserArgs",
+    "signature": "public static System.String[] GetCommandLineUserArgs()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetExecutablePath()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetExecutablePath",
+    "signature": "public static System.String GetExecutablePath()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetProcessExitCode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetProcessExitCode",
+    "signature": "public static System.Int32 GetProcessExitCode(System.Int32 pid)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pid",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetProcessID()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetProcessID",
+    "signature": "public static System.Int32 GetProcessID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.GetSystemFontPath(System.String,System.Int32,System.Int32,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -120261,6 +120478,44 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.IsProcessRunning(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "IsProcessRunning",
+    "signature": "public static System.Boolean IsProcessRunning(System.Int32 pid)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pid",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.Kill(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "Kill",
+    "signature": "public static System.Void Kill(System.Int32 pid)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pid",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -136917,6 +137172,19 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ProcessPipes.Dispose()",
+    "kind": "method",
+    "declaringType": "Electron2D.ProcessPipes",
+    "name": "Dispose",
+    "signature": "public virtual System.Void Dispose()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -216878,6 +217146,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.PipeWriteException.BytesWritten()",
+    "kind": "property",
+    "declaringType": "Electron2D.PipeWriteException",
+    "name": "BytesWritten",
+    "signature": "public System.Int32 BytesWritten { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.PlaceholderMesh.AABB()",
     "kind": "property",
     "declaringType": "Electron2D.PlaceholderMesh",
@@ -217304,6 +217585,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProcessPipes.PID()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProcessPipes",
+    "name": "PID",
+    "signature": "public System.Int32 PID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProcessPipes.StandardError()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProcessPipes",
+    "name": "StandardError",
+    "signature": "public Electron2D.FileAccess StandardError { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileAccess",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProcessPipes.StandardIO()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProcessPipes",
+    "name": "StandardIO",
+    "signature": "public Electron2D.FileAccess StandardIO { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileAccess",
     "value": null
   },
   {
