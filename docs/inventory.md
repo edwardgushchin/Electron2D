@@ -1274,3 +1274,9 @@ now share selected CPU/GPU/registered ownership, detached/live modes, automatic
 mass reset and guarded typed configuration. Valid CCD writes avoid enum metadata
 allocation after collection; the public-only consumer checks 128 edited full
 steps at 0/0 managed bytes. Registered numerical CCD and full acceptance remain open.
+
+[Registered pointer delivery](components/physics-registered-adapter.md#registered-pointer-delivery)
+now verifies scene Body/Area policy through selected point queries, numerical
+guards and 128 changed-policy full frames at zero managed allocation. Native
+CPU/GPU/registered worlds each pass with both renderers and target pixel checks;
+full registered geometry and final acceptance remain open.

@@ -220,3 +220,9 @@ disposal. Property writes keep normal scene owner/capture guards. See
 CPU/GPU/native tests and costs.
 
 [Shared filter verification](../components/physics-filters.md) covers CPU/GPU one-sided response, CCD, contacts, sensors, queries, sleeping neighbors, callbacks and warmed edits. Kinematic/static and kinematic/kinematic report-only roles now execute; two static bodies remain ineligible.
+
+[Registered pointer delivery](../components/physics-registered-adapter.md#registered-pointer-delivery)
+now verifies scene Body/Area policy through selected point queries, numerical
+guards and 128 changed-policy full frames at zero managed allocation. Native
+CPU/GPU/registered worlds each pass with both renderers and target pixel checks;
+full registered geometry and final acceptance remain open.

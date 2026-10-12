@@ -6,13 +6,17 @@ internal static class PhysicsPickingNativeTests
     internal static void Run()
     {
         var rendering = ProjectSettings.Get(ProjectSettings.RenderingMethod);
+        var maximumSteps = Engine.MaxPhysicsStepsPerFrame;
         try
         {
+            // Keep the injected hover alive until the next native pump; later catch-up ticks sample the actual desktop pointer.
+            Engine.MaxPhysicsStepsPerFrame = 1;
+            BackendChecks.RunPicking();
             foreach (var renderer in new[] { "gpu", "compatibility" })
-                foreach (var backend in new[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU })
+                foreach (var backend in new[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU, PhysicsServer.Backend.Extension })
                 {
                     ProjectSettings.Set(ProjectSettings.RenderingMethod, renderer);
-                    using var world = new World(backend); using var shape = new CircleShape { Radius = 8 };
+                    using var world = backend == PhysicsServer.Backend.Extension ? new World("Picking") : new World(backend); using var shape = new CircleShape { Radius = 8 };
                     var window = new Window
                     {
                         Title = "Physics pointer conformance",
@@ -24,20 +28,20 @@ internal static class PhysicsPickingNativeTests
                     };
                     var body = new DrawnBody { Name = "Body", Position = new(20, 20), InputPickable = true };
                     body.AddChild(new CollisionShape { Shape = shape }); window.AddChild(body);
-                    var probe = new NativeProbe(window, body); window.AddChild(probe);
+                    var probe = new NativeProbe(window, body, $"{renderer}-{backend}"); window.AddChild(probe);
                     Check(Engine.Run(window) == 0 && probe.Finished && probe.Drawn > 0 && body.Draws > 0, "Native pointer scene rendered and finished");
                     Check(!DisplayServer.IsAvailable && !RenderingServer.IsAvailable, "Native picking teardown releases services");
                     Console.WriteLine($"Native physics picking passed: renderer={renderer}, physics={backend}; SDL click localization, capture suppression, pointer exit and rendered lifecycle.");
                 }
         }
-        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, rendering); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, rendering); Engine.MaxPhysicsStepsPerFrame = maximumSteps; }
     }
     private sealed class DrawnBody : StaticBody
     {
         internal int Draws;
         protected override void OnDraw() { Draws++; DrawCircle(Vector2.Zero, 8, Colors.Pink); }
     }
-    private sealed class NativeProbe(Window window, DrawnBody body) : Node
+    private sealed class NativeProbe(Window window, DrawnBody body, string captureName) : Node
     {
         internal int Drawn;
         internal bool Finished;
@@ -48,7 +52,16 @@ internal static class PhysicsPickingNativeTests
         {
             ProcessEnabled = true;
             var windows = SDL.GetWindows(out var count); Check(count == 1, "One native window"); _windowID = SDL.GetWindowID(windows![0]);
-            RenderingServer.FramePostDraw += () => Drawn++;
+            RenderingServer.FramePostDraw += () =>
+            {
+                if (++Drawn != 1) return;
+                using var image = window.GetTexture().GetImage()!;
+                var pixel = image.GetPixel(55, 50);
+                Check(MathF.Abs(pixel.R - Colors.Pink.R) < .02f && MathF.Abs(pixel.G - Colors.Pink.G) < .02f && MathF.Abs(pixel.B - Colors.Pink.B) < .02f,
+                    "Native pointer target is visibly drawn at the transformed click coordinate");
+                if (Environment.GetEnvironmentVariable("ELECTRON2D_PICKING_CAPTURE") is { } folder)
+                { Directory.CreateDirectory(folder); image.SavePNG(System.IO.Path.Combine(folder, $"native-{captureName}.png")); }
+            };
             body.InputEvent += (view, input, index) =>
             {
                 if (input is not InputEventMouseButton { Pressed: true } button) return;
