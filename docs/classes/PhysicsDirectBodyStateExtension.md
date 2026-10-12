@@ -309,7 +309,7 @@ Return the complete immutable captured contact at the supplied zero-based index.
 
 The separate consumer exercises every hook through actual inherited API on CPU/GPU and CPU without display/GPU access. It verifies real force/contact/motion, .001 physical velocity/force tolerances, exact identities/snapshot values, invalid input/output, nesting/failure, release/binding/hierarchy/checkpoint/step guards, cached-view disposal, off-owner access, raw/scene transfer/reentry/free and previous-generation contacts. Full unchanged operation cycles warm for at least one second before 64 measured cycles with strict zero owner/all-thread managed bytes.
 
-Internal selected factories now provide these views to scene/server integration callbacks. Public registered factories remain absent; class coverage stays Partial. Custom Shape and full server backend registration/operation remain open. Native allocation, foreign-platform and new full-step/window-performance acceptance are separate gates under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+Internal selected factories now provide these views to scene/server integration callbacks. Public registered factories now have a bounded public-only scene/raw callback fixture; class coverage stays Partial. Full numerical-extension/custom-geometry acceptance remains open. Native allocation, foreign-platform and new full-step/window-performance acceptance are separate gates under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
 
 ## Factory contact publication
 
@@ -324,3 +324,6 @@ cover every extension scope. See [body authoring](../components/physics-register
 
 
 Cached contact projection preserves PhysicsBodyContact.Depth supplied by GetContactCore and filters it against the common body reporting threshold before committing. It no longer substitutes matching native depth or zero for projected values. Failure still preserves the prior receiver snapshot. See [reporting depth](../components/physics-registered-adapter.md#contact-reporting-depth).
+
+
+[Registered factory-selected views](../components/physics-registered-adapter.md#factory-selected-direct-views) now execute through a separate public-only consumer: cache identity, an initially empty contact snapshot, synchronized immutable publication before callbacks, result/lifetime validation, recreation and zero warm managed allocations. Independent caller-created body views keep direct hook dispatch; wider numerical-extension acceptance stays open.

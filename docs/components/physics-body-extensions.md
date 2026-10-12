@@ -26,7 +26,7 @@ Release fixtures warm all operations for at least one second in 64-cycle batches
 
 The internal [selected-owner factory route](physics-backends.md#selected-direct-state-construction) now returns these views to actual scene integration and raw force/sync callbacks, retaining real completed contacts and one cached attachment identity. Factory publication rejects wrong/stale/disposed/null contexts and borrowing prevents recursive creation or release. Exceptions before solving leave the tick unchanged; late factory errors permit later callbacks. CPU/GPU/no-device ownership fixtures measure 64 warmed steps at 0/0 managed bytes.
 
-Caller-created views are implemented. Public registered factories and the complete server operation bridge remain absent; class coverage stays Partial. Custom solver algorithms and platform/native acceptance remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+Caller-created views are implemented. Registered factories and the typed operation bridge now execute, including the bounded public-only factory-view fixture; complete numerical acceptance keeps class coverage Partial. Custom solver algorithms and platform/native acceptance remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
 
 ## Selected contact publication
 
@@ -42,3 +42,6 @@ Public named server factories/full operation bridge and custom algorithms remain
 
 
 [Contact reporting depth](physics-registered-adapter.md#contact-reporting-depth) adds an explicit signed scene-unit PhysicsBodyContact.Depth sample to numerical and factory projection. Cached projection filters its own sampled depths before committing; physical solving and completed-snapshot lifetime remain unchanged.
+
+
+[Registered factory-selected views](physics-registered-adapter.md#factory-selected-direct-views) now have a public-only check of body/query factory dispatch, cache identity, initially empty contact snapshots, immutable publication before callbacks, failed factories and retry, attachment retirement and zero warm managed allocations. Wider numerical-extension acceptance stays open.

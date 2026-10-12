@@ -692,3 +692,6 @@ extension and platform/performance acceptance remain open.
 
 
 [Selected contact diagnostics](../components/physics-registered-adapter.md#diagnostic-capacity-and-publication) supply the point cap before solving and relinquish it on disable/detach, including registered implementations. Synchronized count/point output stays bounded and validated; full numerical-extension acceptance remains open.
+
+
+[Registered direct-view factories](../components/physics-registered-adapter.md#factory-selected-direct-views) now execute with cached body/query identity, initially empty contact snapshots, immutable publication before scene/raw callbacks and guarded factory failure/retry. This bounded public-only fixture keeps full numerical-extension acceptance open.

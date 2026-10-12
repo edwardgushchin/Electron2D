@@ -38,6 +38,14 @@ public static partial class BackendChecks
         internal PhysicsBackendJoint? ReusedJoint;
         internal Action<RID>? BodyReleaseHook;
         internal Action? InitHook, FinishHook;
+        internal Func<RID, PhysicsDirectSpaceState>? SpaceViewFactory;
+        internal Func<RID, PhysicsDirectBodyState>? BodyViewFactory;
+        internal int SpaceViewCreations, BodyViewCreations;
+        internal float Delta;
+        protected override PhysicsDirectSpaceState CreateDirectSpaceState(RID space)
+        { SpaceViewCreations++; return SpaceViewFactory is { } factory ? factory(space) : base.CreateDirectSpaceState(space); }
+        protected override PhysicsDirectBodyState CreateDirectBodyState(RID body)
+        { BodyViewCreations++; return BodyViewFactory is { } factory ? factory(body) : base.CreateDirectBodyState(body); }
         internal Action<LifecyclePhase>? LifecycleHook;
         internal Exception? EndFailure;
         internal PhysicsBackendStatistics? StatisticsOverride;
@@ -91,8 +99,12 @@ public static partial class BackendChecks
         protected override void Solve(double delta)
         {
             LifecycleHook?.Invoke(LifecyclePhase.Solve); StepHook?.Invoke();
-            Pairs = 0; DebugPointCount = 0;
-            foreach (var b in Bodies.Values) { b.ContactPeer = default; b.Advance((float)delta); }
+            Pairs = 0; DebugPointCount = 0; Delta = (float)delta;
+            foreach (var b in Bodies.Values)
+            {
+                if (!b.IsArea) b.ReportedLimit = PhysicsServer.BodyGetMaxContactsReported(b.RID);
+                b.ContactPeer = default; b.Advance((float)delta);
+            }
             foreach (var a in Bodies.Values)
                 foreach (var b in Bodies.Values)
                 {
@@ -186,6 +198,11 @@ public static partial class BackendChecks
         internal float Hole;
         internal RID RID => rid;
         internal float InvMass => InverseMass;
+        internal float InvInertia => InverseInertia;
+        internal Vector2 Center => CenterOfMass;
+        internal Vector2 LocalCenter => CenterOfMassLocal;
+        internal PhysicsBodyFields Fields => _fields;
+        internal int ReportedLimit;
         internal Transform Pose => GetTransform();
         internal void AddImpulse(Vector2 impulse, float moment) => ApplyImpulse(impulse, moment);
         internal Vector2 PointVelocity(Vector2 point) => GetWorldPointVelocity(point);

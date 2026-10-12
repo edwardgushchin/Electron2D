@@ -217,11 +217,21 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <summary>Supplies the selected implementation operation: create joint.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract PhysicsBackendJoint CreateJoint(RID joint);
-    /// <summary>Supplies the selected implementation operation: create direct space state.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <summary>Creates the owning world's cached direct-query view.</summary>
+    /// <param name="space">The engine-assigned owning space RID.</param>
+    /// <returns>A live view bound to this space; the default uses the selected world's ordinary queries.</returns>
+    /// <remarks>Invoked on the owner thread with the world borrowed, outside registry locks.
+    /// Null, disposed, foreign-space and recursively acquired results reject without replacing another world's view.
+    /// Creation errors unwind scope and permit retry. Disposing a view releases no world state.</remarks>
     protected internal virtual PhysicsDirectSpaceState CreateDirectSpaceState(RID space) => new(space);
-    /// <summary>Supplies the selected implementation operation: create direct body state.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <summary>Creates the cached state/force/contact view for one current body attachment.</summary>
+    /// <param name="body">The owning scene or server body's engine-assigned RID.</param>
+    /// <returns>A live generation-qualified view; the default uses the selected collider's ordinary state.</returns>
+    /// <remarks>Invoked on the owner thread with the world and body borrowed. Null, disposed, foreign-body,
+    /// earlier-attachment and recursive results reject; creation can retry. The accepted view starts with an empty
+    /// contact snapshot, and completed publication supplies immutable contacts before integration/state callbacks.
+    /// Cached contact reads never reinvoke publication hooks. Detach/transfer retires the context permanently;
+    /// caller-created independent views retain their direct hook dispatch.</remarks>
     protected internal virtual PhysicsDirectBodyState CreateDirectBodyState(RID body) => new(PhysicsServer.Service.BodyRuntime(body), PhysicsServer.Service.GetSceneSpace(_space));
     /// <summary>Supplies the selected implementation operation: begin step.</summary>
     /// <remarks>Starts one positive active outer interval before numerical preparation. Inactive, globally suspended and zero-time intervals do not dispatch. The delta uses seconds.

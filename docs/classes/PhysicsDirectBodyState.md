@@ -248,3 +248,6 @@ cover every extension scope. See [body authoring](../components/physics-register
 
 
 [Contact reporting depth](../components/physics-registered-adapter.md#contact-reporting-depth) filters positive thresholds before deepest-point slot selection. CPU candidates use converted scene-unit depth, GPU candidates retain scene units. Zero disables this filter; the next nonzero publication applies edits without changing the completed snapshot or physical response.
+
+
+[Registered factory-selected views](../components/physics-registered-adapter.md#factory-selected-direct-views) now execute through a separate public-only consumer: cache identity, an initially empty contact snapshot, synchronized immutable publication before callbacks, result/lifetime validation, recreation and zero warm managed allocations. Independent caller-created body views keep direct hook dispatch; wider numerical-extension acceptance stays open.

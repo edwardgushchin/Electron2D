@@ -1240,3 +1240,6 @@ The existing [PhysicsNetwork public consumer](components/physics-network-example
 
 
 Registered contact diagnostics dispatch capacity preparation through the selected PhysicsWorldBackend to PhysicsServerBackend.SetDebugContacts before solving, and validated bounded publication through ReadDebugContacts after synchronization. CPU retains its point cap; GPU prepares resident diagnostic storage. See [the diagnostic contract](components/physics-registered-adapter.md#diagnostic-capacity-and-publication).
+
+
+Registered body/query factory hooks now execute through the public-only PhysicsBackendExtension.Consumer. PhysicsDirectBodyState.PrepareContacts seeds the cached empty snapshot, preserving independent caller-created dispatch and complete validated publication before callbacks. See [factory-selected direct views](components/physics-registered-adapter.md#factory-selected-direct-views).

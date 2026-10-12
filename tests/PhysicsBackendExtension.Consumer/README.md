@@ -77,3 +77,5 @@ The --parameter-reads mode verifies all eighteen retained body parameter/policy 
 The --lifecycle mode traces the actual explicit/scene lifecycle, completed statistics, local/global pause and retirement. It checks activation errors, all negative count fields, terminal numerical failures, recoverable notification/finalization failures and 128 full moving frames per ownership role with zero owner/all-thread managed allocation.
 
 `--debug-contacts` exercises selected diagnostic preparation before solving, odd/zero caps, actual circle contacts, pause, validation failures and teardown. `--debug-drawing` renders those contacts through both canvas renderers and checks pixels, live disable/re-enable, separation and native resource release.
+
+`--factory-views` supplies body/query views from the registered solver, checking initial empty snapshots, actual contact publication before scene/raw callbacks, all query families, malformed output, factory failure/retry, attachment lifetime and zero warmed frame allocations. The project links the existing public CircleQueries fixture source.

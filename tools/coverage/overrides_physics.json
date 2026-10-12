@@ -2639,6 +2639,16 @@
       "godot": "PhysicsServer2DExtension::method:_space_get_contact_count(RID:)",
       "electron2d": "method:Electron2D.PhysicsServerBackend.ReadDebugContacts(System.Span<Electron2D.Vector2>)",
       "reason": "ADR 0100/0103: selected SetDebugContacts prepares the sampled point cap before solving, with zero-cap disable/detach and failed-world cleanup; ReadDebugContacts combines bounded count and finite engine-unit point publication after synchronization. The separate public-only diagnostic consumer exercises odd/zero caps, actual circle contacts independent of gameplay report limits, zero/inactive retention, preparation failure/retry, borrowed/owner guards, invalid count/point terminal errors and 128 active full frames at zero managed allocation. Full numerical-extension, native allocator, foreign-platform and final performance acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_direct_state(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CreateDirectBodyState(Electron2D.RID)",
+      "reason": "ADR 0103: selected world factories provide cached generation-qualified body views and scoped query views through the public-only --factory-views consumer. Fresh/disposed-recreated cached contacts start empty without invoking publication hooks; completed immutable contact/identity/impulse snapshots precede raw force/state and scene integration callbacks, while independent caller-created views retain direct dispatch. The consumer exercises all six query families, exclusions/nesting/error validation, public state/forces, disposal/foreign/null/recursive factory failures, retry, detach/reentry and 128 active scene/raw frames with contacts/callbacks/point queries at zero owner/all-thread managed allocation. Full numerical-extension, native allocator, foreign-platform and final performance acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_get_direct_state(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CreateDirectSpaceState(Electron2D.RID)",
+      "reason": "ADR 0103: selected world factories provide cached generation-qualified body views and scoped query views through the public-only --factory-views consumer. Fresh/disposed-recreated cached contacts start empty without invoking publication hooks; completed immutable contact/identity/impulse snapshots precede raw force/state and scene integration callbacks, while independent caller-created views retain direct dispatch. The consumer exercises all six query families, exclusions/nesting/error validation, public state/forces, disposal/foreign/null/recursive factory failures, retry, detach/reentry and 128 active scene/raw frames with contacts/callbacks/point queries at zero owner/all-thread managed allocation. Full numerical-extension, native allocator, foreign-platform and final performance acceptance remain open."
     }
   ],
   "extras": [
@@ -4623,14 +4633,6 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsServerBackend.CreateCollider(Electron2D.RID,System.Boolean)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.CreateDirectBodyState(Electron2D.RID)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.CreateDirectSpaceState(Electron2D.RID)",
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
     {
@@ -7451,6 +7453,14 @@
       ],
       "state": "Partial",
       "reason": "ADR 0100/0103: selected SetDebugContacts prepares the sampled point cap before solving, with zero-cap disable/detach and failed-world cleanup; ReadDebugContacts combines bounded count and finite engine-unit point publication after synchronization. The separate public-only diagnostic consumer exercises odd/zero caps, actual circle contacts independent of gameplay report limits, zero/inactive retention, preparation failure/retry, borrowed/owner guards, invalid count/point terminal errors and 128 active full frames at zero managed allocation. Full numerical-extension, native allocator, foreign-platform and final performance acceptance remain open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_body_get_direct_state(RID:)",
+        "PhysicsServer2DExtension::method:_space_get_direct_state(RID:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0103: selected world factories provide cached generation-qualified body views and scoped query views through the public-only --factory-views consumer. Fresh/disposed-recreated cached contacts start empty without invoking publication hooks; completed immutable contact/identity/impulse snapshots precede raw force/state and scene integration callbacks, while independent caller-created views retain direct dispatch. The consumer exercises all six query families, exclusions/nesting/error validation, public state/forces, disposal/foreign/null/recursive factory failures, retry, detach/reentry and 128 active scene/raw frames with contacts/callbacks/point queries at zero owner/all-thread managed allocation. Full numerical-extension, native allocator, foreign-platform and final performance acceptance remain open."
     }
   ]
 }

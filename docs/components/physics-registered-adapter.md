@@ -724,3 +724,46 @@ Channel tolerances are .05 green/.04 red and blue for render-target rounding.
 The captured GPU image was also visually inspected. Shared built-in CPU/GPU contact
 and native four-combination diagnostic checks retain their independent coverage.
 No new overall FPS, network or mass-scene performance acceptance is claimed here.
+
+
+## Factory-selected direct views
+
+The registered backend's existing CreateDirectBodyState and CreateDirectSpaceState
+hooks now have a public-only executable fixture. The common engine caches one live
+space view and one current-generation body view, validates factory results outside
+registry locks, and retains the existing null/disposed/foreign/recursive rejection
+and retry rules. Disposing a view releases no body/world. Detach/reentry permanently
+retires a body view; another attachment receives a new one.
+
+A newly cached body extension starts with an empty contact snapshot. Preparing
+contact storage marks that empty snapshot as published; getters do not call
+implementation contact hooks before the first completed interval or after view
+recreation. The earlier code initialized only the count, leaving cached extensions
+in caller-created dispatch mode until the first solve. The public regression fails
+on that unexpected hook invocation; the same consumer DLL passes against the fixed
+library. Independent caller-created extensions still dispatch their own contact
+hooks because they are not the runtime's cached view.
+
+After solving, the body extension supplies actual independent contact values during
+qualified publication. Count/identity/geometry/impulse validation completes before
+raw force/state, scene force and scene virtual integration callbacks receive the
+cached view. Later getters preserve that immutable snapshot through pose and object
+association edits; the next interval samples the replacement owner. Equal contact
+cap assignment clears the snapshot explicitly. One bad receiver keeps its previous
+snapshot while later callbacks and the committed tick continue.
+
+`--factory-views` reuses the existing public CircleQueries fixture by linked source,
+without another query algorithm or backend dependency. It exercises all six query
+families, analytic circle cast entry within .0001 fraction tolerance, excluded and
+nested calls, malformed counts/fractions/points, duplicate hits and hook failures.
+The state fixture supplies the complete typed hook family and checks real mass-scaled
+impulses, state/filter/sleep/force operations and callback identity. Null/disposed,
+foreign-body/world, recursive and earlier-attachment factory results reject without
+retiring someone else's view. A pre-solve factory error publishes no tick and retry
+recovers. After 64 warmup cycles, 128 active complete scene/raw frames with contact
+publication, four callbacks and public point-span queries allocate zero owner/all-
+thread managed bytes. This is a bounded circle implementation; full numerical,
+native allocator, foreign-platform and final performance acceptance remain open.
+
+
+Factory state-write checks also exposed an asymmetric guard: raw layer/mask setters used the geometry-lifetime path and rejected ordinary body-state forwarding, while scene setters were parameter writes. Both raw setter siblings now use the common body write guard and retain separate release/geometry-borrow validation. Numerical filter hooks still reject nested layer/mask writes, shape addition and RID release before mutation. Scene and raw view writes preserve the same filter values and real wake/query path.
