@@ -1,6 +1,6 @@
 # Per-body continuous collision
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 ## Public contract
 
@@ -191,3 +191,9 @@ physics and whole rendered-frame loops reported zero managed bytes on owner/all
 threads. Neither world lost a body; both captures were saved under
 `bin/physics-ccd-validation/2026-10-10/native-window/`. This is a 4,096-body
 regression result, not the 65,536-fragment target or a before/after speedup claim.
+
+The ordinary full runner executes the complete PhysicsCCDTests on CPU and GPU;
+`ELECTRON2D_TEST_CONTINUOUS_PHYSICS=cpu|gpu` selects the same cases. Scene fixtures
+assert the actual backend. After 64 warmup steps, 128 reset-active steps require
+0/0 owner/all-thread managed bytes. Existing numerical and error bounds remain;
+native allocations, foreign platforms and final performance acceptance stay open.

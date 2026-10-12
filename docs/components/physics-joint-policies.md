@@ -1,6 +1,6 @@
 # Joint solver policies
 
-Last updated: 2026-10-10
+Last updated: 2026-10-13
 
 ## Public boundary
 
@@ -231,3 +231,9 @@ Local ignored evidence is retained in
 `bin/physics-joint-validation/2026-10-10/final/`: `checks.json`, suite logs, separate
 network-process logs and `mass/` CPU/GPU JSON/PNG. Earlier failing query/spring-cap
 runs and the initial integration-comparison failures are stored beside it.
+
+The ordinary full runner executes the complete PhysicsJointPolicyTests on CPU and
+GPU; `ELECTRON2D_TEST_CONTINUOUS_PHYSICS=cpu|gpu` selects the same cases. After 128
+warmup frames, 128 live-policy/body-velocity edit frames require 0/0 owner/all-thread
+managed bytes. Analytic bounds and error/lifetime assertions remain unchanged;
+native allocations, foreign platforms and final performance acceptance stay open.

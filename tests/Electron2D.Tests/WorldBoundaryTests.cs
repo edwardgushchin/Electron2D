@@ -10,7 +10,9 @@ internal sealed class WorldBoundaryTests(bool gpu, PhysicsServer.Backend backend
         VerifyAPI();
         using var plane = new WorldBoundaryShape { Normal = new(0, -2), Distance = 10 };
         using var ball = new CircleShape { Radius = 2 };
-        var space = PhysicsServer.SpaceCreate(backend); var floor = PhysicsServer.BodyCreate(); var body = PhysicsServer.BodyCreate();
+        var space = PhysicsServer.SpaceCreate(backend);
+        Check(PhysicsServer.SpaceGetBackend(space) == backend, "Boundary uses the selected public backend.");
+        var floor = PhysicsServer.BodyCreate(); var body = PhysicsServer.BodyCreate();
         try
         {
             PhysicsServer.SpaceSetActive(space, true);
@@ -124,7 +126,9 @@ internal sealed class WorldBoundaryTests(bool gpu, PhysicsServer.Backend backend
     private void VerifyRotation(bool gpu)
     {
         using var plane = new WorldBoundaryShape(); using var ray = new SeparationRayShape();
-        var space = PhysicsServer.SpaceCreate(backend); var floor = PhysicsServer.BodyCreate(); var body = PhysicsServer.BodyCreate();
+        var space = PhysicsServer.SpaceCreate(backend);
+        Check(PhysicsServer.SpaceGetBackend(space) == backend, "Boundary uses the selected public backend.");
+        var floor = PhysicsServer.BodyCreate(); var body = PhysicsServer.BodyCreate();
         try
         {
             PhysicsServer.SpaceSetActive(space, true); var world = PhysicsServer.Service.GetSceneSpace(space); PhysicsServer.AreaSetGravity(space, 0);
@@ -151,7 +155,9 @@ internal sealed class WorldBoundaryTests(bool gpu, PhysicsServer.Backend backend
         var area = new Area { Name = "HalfSpace", Position = new(0, 20) }; area.AddChild(new CollisionShape { Shape = areaPlane });
         var empty = new StaticBody { Name = "EmptyRay", Position = new(20, 30) }; empty.AddChild(new CollisionShape { Shape = zero });
         root.AddChild(floor); root.AddChild(body); root.AddChild(area); root.AddChild(empty);
-        using var tree = new SceneTree(root); if (gpu) body.Space!.EnableGPUSolver();
+        using var tree = new SceneTree(root);
+        Check(selectedWorld.PhysicsBackend == backend, "Scene boundary uses the selected public backend.");
+        if (gpu) body.Space!.EnableGPUSolver();
         var contacts = 0; var overlaps = 0;
         body.BodyEntered += other => { if (ReferenceEquals(other, floor)) contacts++; };
         area.BodyEntered += other => { if (ReferenceEquals(other, body)) overlaps++; };
@@ -199,7 +205,9 @@ internal sealed class WorldBoundaryTests(bool gpu, PhysicsServer.Backend backend
                 }
                 else
                 {
-                    var space = PhysicsServer.SpaceCreate(backend); var floor = PhysicsServer.BodyCreate(); var body = PhysicsServer.BodyCreate();
+                    var space = PhysicsServer.SpaceCreate(backend);
+                    Check(PhysicsServer.SpaceGetBackend(space) == backend, "Boundary uses the selected public backend.");
+                    var floor = PhysicsServer.BodyCreate(); var body = PhysicsServer.BodyCreate();
                     try
                     {
                         PhysicsServer.SpaceSetActive(space, true); if (stages) PhysicsServer.Service.GetSceneSpace(space).EnableGPUSolver();
@@ -209,7 +217,7 @@ internal sealed class WorldBoundaryTests(bool gpu, PhysicsServer.Backend backend
                         PhysicsServer.BodySetMaxContactsReported(body, 4); PhysicsServer.BodySetSpace(body, space);
                         for (var i = 0; i < 60; i++) PhysicsServer.SpaceStep(space, 1d / 60);
                         using var state = PhysicsServer.BodyGetDirectState(body)!;
-                        Check(state.Transform.Origin.Y is >= -30 and < 1 && state.GetContactCount() > 0, $"CPU boundary response for {shape.GetType().Name}: {state.Transform.Origin}.");
+                        Check(state.Transform.Origin.Y is >= -30 and < 1 && state.GetContactCount() > 0, $"{backend} boundary response for {shape.GetType().Name}: {state.Transform.Origin}.");
                     }
                     finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(floor); PhysicsServer.FreeRID(space); }
                 }
@@ -222,7 +230,9 @@ internal sealed class WorldBoundaryTests(bool gpu, PhysicsServer.Backend backend
         using var plane = new WorldBoundaryShape(); using var circle = new CircleShape { Radius = 2 };
         foreach (var dynamicPlane in new[] { false, true })
         {
-            var space = PhysicsServer.SpaceCreate(backend); var floor = PhysicsServer.BodyCreate(); var body = PhysicsServer.BodyCreate();
+            var space = PhysicsServer.SpaceCreate(backend);
+            Check(PhysicsServer.SpaceGetBackend(space) == backend, "Boundary uses the selected public backend.");
+            var floor = PhysicsServer.BodyCreate(); var body = PhysicsServer.BodyCreate();
             try
             {
                 PhysicsServer.SpaceSetActive(space, true); PhysicsServer.AreaSetGravity(space, 0);

@@ -172,9 +172,12 @@ internal sealed class PhysicsJointPolicyTests(bool gpu, PhysicsServer.Backend ba
         r.Pin(); Check(PhysicsServer.PinJointGetSoftness(r.Joint) == 0 && PhysicsServer.JointGetBias(r.Joint) == 0.3f, "Concrete replacement resets only pin-specific softness.");
         PhysicsServer.BodySetCanSleep(r.B, false);
         for (var i = 0; i < 128; i++) { PhysicsServer.JointSetMaxForce(r.Joint, 10 + i % 2); PhysicsServer.BodySetLinearVelocity(r.B, new(6, 8)); r.Step(); }
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        _ = GC.GetTotalAllocatedBytes(true);
+        var before = GC.GetAllocatedBytesForCurrentThread(); var allBefore = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < 128; i++) { PhysicsServer.JointSetMaxForce(r.Joint, 10 + i % 2); PhysicsServer.BodySetLinearVelocity(r.B, new(6, 8)); r.Step(); }
-        Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warm public policy edits and physical frames allocate zero owner-thread managed bytes.");
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - before; var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        Check(ownerBytes == 0 && allBytes == 0, $"Warm public policy edits and physical frames allocated {ownerBytes}/{allBytes} owner/all-thread managed bytes.");
+        Console.WriteLine($"Joint policies: 128 warmup/128 edit-active frames, {ownerBytes}/{allBytes} owner/all-thread managed B.");
     }
     private static void Near(Vector2 actual, Vector2 expected, float tolerance, string message) => Near(actual.DistanceTo(expected), 0, tolerance, message);
     private static void Near(float actual, float expected, float tolerance, string message) => Check(MathF.Abs(actual - expected) <= tolerance, $"{message}: {actual} vs {expected}");

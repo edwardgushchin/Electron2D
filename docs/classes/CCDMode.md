@@ -1,6 +1,6 @@
 # CCDMode
 
-Last updated: 2026-10-10
+Last updated: 2026-10-13
 
 **Declaration:** `public enum CCDMode`
 **Source:** [CCDMode.cs](../../src/Servers/Physics/CCDMode.cs)
@@ -32,3 +32,9 @@ projection, geometry, force budgets and warmed allocation are covered by
 PhysicsCCDTests. See the component page for supported geometry and verification
 limits. The common CCD, boundary and directed-ray group runs with
 `ELECTRON2D_TEST_GPU_CCD_CONTRACT=1`; the older stage-hosted diagnostic is separate.
+
+The ordinary full runner executes the complete PhysicsCCDTests on CPU and GPU;
+`ELECTRON2D_TEST_CONTINUOUS_PHYSICS=cpu|gpu` selects the same cases. Scene fixtures
+assert the actual backend. After 64 warmup steps, 128 reset-active steps require
+0/0 owner/all-thread managed bytes. Existing numerical and error bounds remain;
+native allocations, foreign platforms and final performance acceptance stay open.

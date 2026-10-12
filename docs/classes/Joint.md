@@ -1,6 +1,6 @@
 # Joint
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 [Shared joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance)
 exercises this family through explicitly selected CPU and independent GPU worlds.
@@ -126,3 +126,9 @@ Server clear and connection replacement share the numerical writer guard. It cov
 
 
 Attachment departure resets node-space, endpoint and dirty/reentry records even when numerical cleanup fails. The retained RID and authored paths remain scene-owned; subsequent valid entry creates a fresh attachment.
+
+The ordinary full runner executes the complete PhysicsJointPolicyTests on CPU and
+GPU; `ELECTRON2D_TEST_CONTINUOUS_PHYSICS=cpu|gpu` selects the same cases. After 128
+warmup frames, 128 live-policy/body-velocity edit frames require 0/0 owner/all-thread
+managed bytes. Analytic bounds and error/lifetime assertions remain unchanged;
+native allocations, foreign platforms and final performance acceptance stay open.

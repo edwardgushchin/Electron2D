@@ -1,6 +1,6 @@
 # Collision shapes component
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 ## Scope and owned types
 
@@ -159,3 +159,9 @@ project to the common resource role as Partial. Full numerical-extension and fin
 physical/network/performance acceptance remain open.
 
 The complete existing capsule, two-sided segment, convex and hollow concave test suites now run explicitly selected CPU/GPU worlds. They exercise linked/degenerate geometry, rotation and solver response, Area transitions, resource edits including throwing Changed callbacks, shared/independent copies, mass/inertia and real ray queries after PackedScene instantiation. RigidFreezeModeTests also assigns the selected World after loading; public BodyGetMode replaces internal role probes. Existing numeric tolerances are retained: these checks assert supported poses, physical response and exact identities rather than identical backend trajectories. Warm brackets measure 64 full scene frames or 128 query cycles at zero owner/all-thread managed bytes on Linux/.NET 10. Native allocation, other platforms, broad-world performance and owner visual acceptance remain unverified.
+
+The ordinary full runner executes the complete WorldBoundaryTests on CPU and GPU;
+`ELECTRON2D_TEST_CONTINUOUS_PHYSICS=cpu|gpu` selects the same cases. Scene and raw
+spaces assert the actual backend. The 128 warmup/128 active-step all-thread zero
+allocation gate and all numerical/error bounds remain unchanged. Native allocations,
+foreign platforms and final performance acceptance stay open.

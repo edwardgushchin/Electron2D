@@ -70,7 +70,9 @@ internal sealed class PhysicsCCDTests(bool gpu, PhysicsServer.Backend backend)
         };
         body.AddChild(new CollisionShape { Shape = ball }); var wall = new StaticBody { Name = "Wall", Position = new(20, 0) };
         wall.AddChild(new CollisionShape { Shape = wallShape }); root.AddChild(body); root.AddChild(wall);
-        using var tree = new SceneTree(root); if (gpu) body.Space!.EnableGPUSolver(); var entered = 0; body.BodyEntered += _ => entered++;
+        using var tree = new SceneTree(root);
+        Check(selectedWorld.PhysicsBackend == backend, "Scene CCD uses the selected public backend.");
+        if (gpu) body.Space!.EnableGPUSolver(); var entered = 0; body.BodyEntered += _ => entered++;
         tree.PhysicsFrame(.02);
         Check(body.Position.X < 20 && entered == 1 && body.GetContactCount() > 0, "Scene CCD uses ordinary contact snapshots and emits one object entry.");
         body.Freeze = true; body.ContinuousCD = CCDMode.CastRay; body.Freeze = false;
@@ -267,16 +269,18 @@ internal sealed class PhysicsCCDTests(bool gpu, PhysicsServer.Backend backend)
         using var circle = new CircleShape { Radius = 1 }; using var wall = new RectangleShape { Size = new(.2f, 200) };
         using var f = new Fixture(gpu, backend); var a = f.Add(circle, velocity: new(3000, 0), ccd: CCDMode.CastShape); f.Add(wall, new(20, 0), mode: Mode.Static);
         for (var i = 0; i < 64; i++) { PhysicsServer.BodySetTransform(a, Transform.Identity); PhysicsServer.BodySetLinearVelocity(a, new(3000, 0)); f.Step(); }
-        var times = new double[128]; var bytes = GC.GetTotalAllocatedBytes(true);
+        var times = new double[128]; _ = GC.GetTotalAllocatedBytes(true);
+        var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var bytes = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < times.Length; i++)
         {
             var watch = Stopwatch.GetTimestamp();
             PhysicsServer.BodySetTransform(a, Transform.Identity); PhysicsServer.BodySetLinearVelocity(a, new(3000, 0)); f.Step();
             times[i] = Stopwatch.GetElapsedTime(watch).TotalMilliseconds;
         }
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore;
         bytes = GC.GetTotalAllocatedBytes(true) - bytes; Array.Sort(times);
-        Check(bytes == 0, $"Warmed CCD steps allocate {bytes} bytes");
-        Console.WriteLine($"Public CCD: 64 warmup/128 reset-active steps, p50/p95/p99={times[64]:F4}/{times[121]:F4}/{times[126]:F4} ms/step, {bytes} all-thread managed B.");
+        Check(ownerBytes == 0 && bytes == 0, $"Warmed CCD steps allocated {ownerBytes}/{bytes} owner/all-thread managed bytes");
+        Console.WriteLine($"Public CCD: 64 warmup/128 reset-active steps, p50/p95/p99={times[64]:F4}/{times[121]:F4}/{times[126]:F4} ms/step, {ownerBytes}/{bytes} owner/all-thread managed B.");
     }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException($"Expected {typeof(T).Name}"); }

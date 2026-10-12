@@ -1,6 +1,6 @@
 # WorldBoundaryShape
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -90,3 +90,9 @@ authoring, including equal assignments. Scene/raw owner, phase and borrowed-hook
 rejection preserves data, RID and immutable geometry cache. Publication rechecks
 owner/phase without repeating selected status hooks; ordinary post-solver edits
 retain their existing behavior.
+
+The ordinary full runner executes the complete WorldBoundaryTests on CPU and GPU;
+`ELECTRON2D_TEST_CONTINUOUS_PHYSICS=cpu|gpu` selects the same cases. Scene and raw
+spaces assert the actual backend. The 128 warmup/128 active-step all-thread zero
+allocation gate and all numerical/error bounds remain unchanged. Native allocations,
+foreign platforms and final performance acceptance stay open.

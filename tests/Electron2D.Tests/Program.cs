@@ -169,6 +169,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTINUOUS_PHYSICS") is { } continuousBackend)
+{
+    var backend = continuousBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for continuous physics.") };
+    PhysicsCCDTests.Run(backend); PhysicsJointPolicyTests.Run(backend); WorldBoundaryTests.Run(backend); return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_PHYSICS") is { } sceneBackend)
 {
     var backend = sceneBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for scene physics.") };
@@ -931,7 +936,7 @@ PinJointTests.Run(); PinJointTests.Run(PhysicsServer.Backend.GPU);
 GrooveJointTests.Run(); GrooveJointTests.Run(PhysicsServer.Backend.GPU);
 DampedSpringJointTests.Run(); DampedSpringJointTests.Run(PhysicsServer.Backend.GPU);
 PhysicsServerJointTests.Run(); PhysicsServerJointTests.Run(PhysicsServer.Backend.GPU);
-PhysicsJointPolicyTests.Run();
+PhysicsJointPolicyTests.Run(); PhysicsJointPolicyTests.Run(PhysicsServer.Backend.GPU);
 PhysicsServerShapeSlotTests.Run();
 PhysicsActivityTests.Run();
 RenderHandleReplacementTests.Run();
@@ -942,7 +947,7 @@ PhysicsContactPersistenceTests.Run(); PhysicsCollisionPriorityTests.Run();
 CapsuleShapeTests.Run(); CapsuleShapeTests.Run(PhysicsServer.Backend.GPU);
 SegmentShapeTests.Run(); SegmentShapeTests.Run(PhysicsServer.Backend.GPU);
 SeparationRayShapeTests.Run(); SeparationRayShapeTests.Run(PhysicsServer.Backend.GPU);
-WorldBoundaryTests.Run();
+WorldBoundaryTests.Run(); WorldBoundaryTests.Run(PhysicsServer.Backend.GPU);
 ShapeCollisionTests.Run();
 OneWayCollisionTests.Run(); OneWayCollisionTests.Run(PhysicsServer.Backend.GPU);
 CollisionPolygonTests.Run(); CollisionPolygonTests.Run(PhysicsServer.Backend.GPU);
@@ -969,7 +974,7 @@ TileLayoutTests.Run();
 TileMapLayerTests.Run(PhysicsServer.Backend.CPU);
 PhysicsShapeQueryTests.Run(); PhysicsShapeQueryTests.Run(PhysicsServer.Backend.GPU);
 PhysicsMotionTests.Run(); PhysicsMotionTests.Run(PhysicsServer.Backend.GPU);
-PhysicsCCDTests.Run();
+PhysicsCCDTests.Run(); PhysicsCCDTests.Run(PhysicsServer.Backend.GPU);
 PhysicsCollisionExceptionTests.Run(); PhysicsCollisionExceptionTests.Run(PhysicsServer.Backend.GPU);
 CharacterBodyTests.Run(); CharacterBodyTests.Run(PhysicsServer.Backend.GPU);
 RayCastTests.Run();

@@ -1,6 +1,6 @@
 # PinJoint
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 [Shared joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance)
 exercises this family through explicitly selected CPU and independent GPU worlds.
@@ -76,3 +76,9 @@ The inherited stable RID and shared server settings are described by [Joint.GetR
 
 
 Inherited numerical borrowing guards cover Softness, angular limit values/flag and motor values/flag together with common joint settings. Invalid or rejected writes preserve the retained profile; endpoint reentry keeps its values.
+
+The ordinary full runner executes the complete PhysicsJointPolicyTests on CPU and
+GPU; `ELECTRON2D_TEST_CONTINUOUS_PHYSICS=cpu|gpu` selects the same cases. After 128
+warmup frames, 128 live-policy/body-velocity edit frames require 0/0 owner/all-thread
+managed bytes. Analytic bounds and error/lifetime assertions remain unchanged;
+native allocations, foreign platforms and final performance acceptance stay open.
