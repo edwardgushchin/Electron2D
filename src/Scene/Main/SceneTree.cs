@@ -977,8 +977,8 @@ public sealed partial class SceneTree : MainLoop
     }
 
     /// <inheritdoc />
-    /// <remarks>Rejects finalization during construction, a frame, input dispatch, a flush, lifecycle, pause, or scene-change delivery.</remarks>
-    /// <exception cref="InvalidOperationException">Construction is incomplete or execution is active.</exception>
+    /// <remarks>Rejects finalization during construction, a frame, input dispatch, a flush, lifecycle, pause, scene-change delivery or a borrowed physics implementation hook.</remarks>
+    /// <exception cref="InvalidOperationException">Construction is incomplete, execution is active or a physics implementation borrows the tree.</exception>
     protected override void ValidateFinalization()
     {
         if (ReferenceEquals(Engine.MainLoop, this) && Engine.Service.OwnsWindowRun)
@@ -989,12 +989,13 @@ public sealed partial class SceneTree : MainLoop
         if (_activeExecution != 0 || _lifecycleExecutionDepth != 0 || _isChangingPause || _sceneChangePreparing)
             throw new InvalidOperationException("A SceneTree cannot be finalized from one of its frame, input, flush, lifecycle, or pause callbacks.");
 
+        EnsureExtensionHierarchyChange();
         base.ValidateFinalization();
     }
 
     /// <inheritdoc />
-    /// <remarks>Requires the owner thread and rejects disposal re-entered from a frame, input, flush, lifecycle, pause, or scene-change callback.</remarks>
-    /// <exception cref="InvalidOperationException">The caller is not the owner thread or execution is active.</exception>
+    /// <remarks>Requires the owner thread and rejects disposal re-entered from a frame, input, flush, lifecycle, pause, scene-change callback or a borrowed physics implementation hook.</remarks>
+    /// <exception cref="InvalidOperationException">The caller is not the owner thread, execution is active or a physics implementation borrows the tree.</exception>
     protected override void ValidateDisposal()
     {
         if (ReferenceEquals(Engine.MainLoop, this) && Engine.Service.OwnsWindowRun)
@@ -1004,6 +1005,7 @@ public sealed partial class SceneTree : MainLoop
         if (_activeExecution != 0 || _lifecycleExecutionDepth != 0 || _isChangingPause || _sceneChangePreparing)
             throw new InvalidOperationException("A SceneTree cannot be disposed from one of its frame, input, flush, lifecycle, or pause callbacks.");
 
+        EnsureExtensionHierarchyChange();
         base.ValidateDisposal();
     }
 

@@ -1,4 +1,6 @@
-if (args.Contains("--lifecycle")) BackendChecks.RunLifecycle();
+if (args.Contains("--debug-drawing")) BackendChecks.RunDebugDrawing();
+else if (args.Contains("--debug-contacts")) BackendChecks.RunDebugContacts();
+else if (args.Contains("--lifecycle")) BackendChecks.RunLifecycle();
 else if (args.Contains("--parameter-reads")) BackendChecks.RunParameterReads();
 else if (args.Contains("--shape-pairs")) BackendChecks.RunShapePairs(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);

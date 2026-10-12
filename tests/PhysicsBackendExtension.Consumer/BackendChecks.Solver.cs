@@ -9,10 +9,15 @@ public static partial class BackendChecks
         private readonly List<PhysicsBackendShapeContact> _shapeContacts = [];
         protected override int ReadDebugContacts(Span<Vector2> output)
         {
+            Check(output.Length == DebugLimit, "Diagnostic reads use the previously prepared capacity");
             DebugReads++;
+            DebugReadHook?.Invoke();
+            if (NegativeDebugCount) return -1;
             if (BadDebugCount) return output.Length + 1;
             if (BadDebugPoint && !output.IsEmpty) { output[0] = new(float.NaN, 0); return 1; }
-            return 0;
+            DebugPoints.AsSpan(0, DebugPointCount).CopyTo(output);
+            DebugLastCount = DebugPointCount;
+            return DebugPointCount;
         }
         private static bool Eligible(Body b, uint mask, bool bodies, bool areas, ReadOnlySpan<RID> excluded) =>
             b.Shapes != 0 && (b.Layer & mask) != 0 && (b.IsArea ? areas : bodies) && !excluded.Contains(b.RID);

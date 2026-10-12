@@ -175,8 +175,19 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <summary>Supplies the selected implementation operation: apply portable sleep.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract void ApplyPortableSleep(RID collider, float time, bool canSleep, bool sleeping);
-    /// <summary>Supplies the selected implementation operation: read debug contacts.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <summary>Prepares the maximum number of diagnostic boundary points before the next solve.</summary>
+    /// <param name="maximum">Nonnegative point cap; zero disables capture and clears implementation diagnostic state.</param>
+    /// <remarks>Invoked on the owner thread outside solving under a borrowed world lifetime.
+    /// Prepare retained storage here, preserve the previous limit if preparation throws, and avoid managed allocations in warmed steps.
+    /// Unchanged limits do not invoke the hook. Zero remains available after terminal failure for scene disable and detach cleanup.</remarks>
+    protected internal abstract void SetDebugContacts(int maximum);
+    /// <summary>Copies the latest solved batch's diagnostic boundary points after synchronization.</summary>
+    /// <param name="output">Borrowed engine-unit point storage, bounded by the prepared diagnostic cap.</param>
+    /// <returns>The written prefix length, from zero through the supplied capacity.</returns>
+    /// <remarks>The engine validates the count and finite points before publishing the snapshot.
+    /// Only enabled positive active steps invoke this hook. Zero-time and inactive steps retain the prior snapshot.
+    /// Capture penetrating boundary samples independently of gameplay contact-report caps; omit sensors and sleeping pairs.
+    /// The capped subset and its order need not agree across implementations. Do not retain the span.</remarks>
     protected internal abstract int ReadDebugContacts(Span<Vector2> output);
     /// <summary>Supplies the selected implementation operation: set sleep settings.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

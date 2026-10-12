@@ -101,6 +101,7 @@ if (IsBodyExcludedFromMotionTest(candidateRID) ||
 | `protected internal abstract int CapturePortableOneWays(Span<PhysicsBackendOneWay> destination)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract float ReadPortableSleepTime(RID collider)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract void ApplyPortableSleep(RID collider, float time, bool canSleep, bool sleeping)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
+| `protected internal abstract void SetDebugContacts(int maximum)` | Prepares the nonnegative point cap before solving; zero disables capture and supports failed-world cleanup. Preserve the previous limit if preparation throws. |
 | `protected internal abstract int ReadDebugContacts(Span<Vector2> output)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract void SetSleepSettings(in PhysicsSleepSettings settings)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract void SetContactSettings(in PhysicsContactSettings settings)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
@@ -182,3 +183,6 @@ completed statistics, failure/cleanup paths and 128 moving full frames per scene
 role at zero managed allocation through a public-only independent implementation.
 Eight former unmapped rows have their actual typed projections; complete numerical
 extension and platform/performance acceptance remain open.
+
+
+[Selected diagnostic preparation](../components/physics-registered-adapter.md#diagnostic-capacity-and-publication) passes the contact-point cap to the numerical owner before solving, including registered implementations. Zero disables capture and remains available for failed-world cleanup; synchronized point/count reads retain the bounded shared snapshot. Full numerical and platform acceptance remain separate.

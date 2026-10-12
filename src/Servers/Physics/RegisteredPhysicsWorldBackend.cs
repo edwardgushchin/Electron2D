@@ -87,6 +87,8 @@ internal sealed partial class RegisteredPhysicsWorldBackend : PhysicsWorldBacken
         finally { Exit(); }
     }
     internal override void BeginPortableRestore() { Enter(); try { _implementation.BeginPortableRestore(); } finally { Exit(); } }
+    internal override void SetDebugContacts(int maximum)
+    { Enter(); try { _implementation.SetDebugContacts(maximum); } finally { Exit(); } }
     internal override int ReadDebugContacts(Span<Vector2> output)
     {
         Enter();

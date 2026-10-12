@@ -1,6 +1,6 @@
 # PhysicsWorldBackend
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Declaration:** `internal abstract partial class PhysicsWorldBackend : IDisposable` · **Source:** [PhysicsWorldBackend.cs](../../src/Servers/Physics/PhysicsWorldBackend.cs) · **Component:** [Physics backends](../components/physics-backends.md)
 
@@ -141,3 +141,6 @@ The internal resource/resource and body-slot/resource bridge now executes throug
 The internal selected signatures are `bool CollideShapes(RID first, Transform firstPose, Vector2 firstMotion, RID second, Transform secondPose, Vector2 secondMotion, Span<Vector2> contacts, out int count)` and `bool BodyCollideShape(RID body, int index, RID shape, Transform pose, Vector2 motion, Span<Vector2> contacts, out int count)`. Implementations return global-axis alternating point pairs and a pair count; empty spans perform hit-only work. Shared PhysicsSpace validates membership/input/context and stages/validates output before publication.
 
 [Registered numerical adapter](../components/physics-registered-adapter.md) now connects a public value/RID-only implementation to real scene/raw motion, fields/forces, joints, queries, contact/Area publication, private/portable history and terminal failure. Its independent circle/spring test solver owns its own state and does not wrap a built-in. Public registered factories and the typed family now execute in a separate consumer; arbitrary custom geometry and unexercised operation acceptance remain open.
+
+
+[Selected diagnostic preparation](../components/physics-registered-adapter.md#diagnostic-capacity-and-publication) passes the contact-point cap to the numerical owner before solving, including registered implementations. Zero disables capture and remains available for failed-world cleanup; synchronized point/count reads retain the bounded shared snapshot. Full numerical and platform acceptance remain separate.

@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -1008,3 +1008,6 @@ bool DebugNavigationHint { get; set; }
 ```
 
 False initially. Changes invalidate attached tile canvases; Default tile navigation diagnostics consume this hint. Global region/link/avoidance diagnostics remain a separate server capability.
+
+
+SceneTree preflights both explicit FinalizeLoop and Dispose against every borrowed physics implementation context before teardown starts. Rejection leaves work acceptance, the root hierarchy and loop state intact, including diagnostic preparation outside a frame. Ordinary cleanup after terminal solver failure remains available.

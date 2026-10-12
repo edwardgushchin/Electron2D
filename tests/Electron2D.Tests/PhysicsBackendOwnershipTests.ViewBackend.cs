@@ -58,6 +58,7 @@ internal static partial class PhysicsBackendOwnershipTests
         internal override void ApplyPortableSleep(PhysicsColliderBackend collider, float time, bool canSleep, bool sleeping) => _inner.ApplyPortableSleep(collider, time, canSleep, sleeping);
         internal override void CompletePortableRestore(PhysicsSnapshotMap map, List<PhysicsPortableOneWay> pairs, ulong tick) => _inner.CompletePortableRestore(map, pairs, tick);
         internal override void CapturePortableOneWays(PhysicsSnapshotMap map, List<PhysicsPortableOneWay> destination) => _inner.CapturePortableOneWays(map, destination);
+        internal override void SetDebugContacts(int maximum) => _inner.SetDebugContacts(maximum);
         internal override int ReadDebugContacts(Span<Vector2> output) => _inner.ReadDebugContacts(output);
         internal override void EnsureAccess() => _inner.EnsureAccess();
         internal override void SetSleepSettings(in PhysicsSleepSettings settings) => _inner.SetSleepSettings(settings);

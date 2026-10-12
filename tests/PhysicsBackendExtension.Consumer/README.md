@@ -75,3 +75,5 @@ the positive/miss and zero-allocation matrix.
 The --parameter-reads mode verifies all eighteen retained body parameter/policy getters inside numerical Solve on scene and raw bodies, strict write/query guards, automatic-profile rejection, stale/kind/owner/failed-world errors and 128 warmed active full frames with zero owner/all-thread managed bytes.
 
 The --lifecycle mode traces the actual explicit/scene lifecycle, completed statistics, local/global pause and retirement. It checks activation errors, all negative count fields, terminal numerical failures, recoverable notification/finalization failures and 128 full moving frames per ownership role with zero owner/all-thread managed allocation.
+
+`--debug-contacts` exercises selected diagnostic preparation before solving, odd/zero caps, actual circle contacts, pause, validation failures and teardown. `--debug-drawing` renders those contacts through both canvas renderers and checks pixels, live disable/re-enable, separation and native resource release.

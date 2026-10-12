@@ -4,8 +4,11 @@ namespace Electron2D;
 
 internal sealed partial class CPUPhysicsWorldBackend
 {
+    private int _debugContactLimit;
+    internal override void SetDebugContacts(int maximum) => _debugContactLimit = maximum;
     internal override int ReadDebugContacts(Span<Vector2> output)
     {
+        if (output.Length > _debugContactLimit) throw new ArgumentException("Prepare the diagnostic capacity before reading.", nameof(output));
         var count = 0;
         var world = b2GetWorldFromId(WorldID);
         foreach (var color in world.constraintGraph.colors)

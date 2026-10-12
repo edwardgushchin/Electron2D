@@ -11,11 +11,12 @@ internal sealed partial class PhysicsSpace
     internal void SetDebugContacts(int limit)
     {
         EnsureReleaseAccess();
+        EnsureImplementationWriteAccess();
         if (limit < 0 || limit > (int.MaxValue - 8) / 8) throw new ArgumentOutOfRangeException(nameof(limit));
         if (_debugContactLimit == limit) return;
         var next = _debugContacts.Length < limit ? new Vector2[limit] : _debugContacts;
         if (limit > 0) EnsureQueryAccess();
-        GPUStore?.PrepareDebugContacts(limit);
+        _backend.SetDebugContacts(limit);
         _debugContacts = next; _debugContactLimit = limit; ResetDebugContacts();
     }
 

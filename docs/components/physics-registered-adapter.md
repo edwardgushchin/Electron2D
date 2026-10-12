@@ -679,3 +679,48 @@ projects the selector output. The global static facade remains separate from the
 owned implementation. These rows are Partial, with concrete executed paths;
 complete numerical-extension, native/foreign and final performance acceptance
 remain open. No additional lifecycle API or numerical algorithm is introduced.
+
+
+## Diagnostic capacity and publication
+
+`SetDebugContacts(int maximum)` is a required selected implementation hook.
+SceneTree sends its construction-sampled project point cap before the next solve;
+zero disables capture immediately and is also allowed during terminal-error cleanup.
+Preparation runs outside stepping on the owner thread with the world borrowed.
+Equal limits skip the hook. Implementations prepare reusable storage before returning
+and preserve their prior limit if preparation throws. The common cap commits only
+after successful preparation. This gives external GPU implementations the policy
+needed to omit disabled work and retain buffers before stepping.
+
+`ReadDebugContacts(Span<Vector2>)` combines the reference count and point reads.
+After synchronization, it writes a finite engine-unit prefix bounded by the prepared
+cap; negative/excess counts and nonfinite points fail the started interval. These
+samples follow ADR 0100, independently of gameplay contact-report caps. Zero-time
+and inactive intervals retain the latest sample; active empty output replaces it.
+Disable/tree detach relinquishes capture even if a caller retains the World resource.
+No game-facing static debug-space wrappers are introduced. Backend authors must
+implement the newly required preparation hook alongside their existing read hook.
+
+Tree FinalizeLoop and Dispose preflight borrowed implementation ownership before
+teardown starts. This also covers preparation outside a scene frame; rejecting a
+nested release keeps the tree running and its hierarchy intact. Normal failed-world
+cleanup retains the existing release path.
+
+
+The public-only `--debug-contacts` consumer exercises cap 3 and zero, two actual
+circle pairs with gameplay reporting disabled, construction-sampled settings,
+zero/inactive retention, active empty replacement, disable/retained-World detach,
+preparation failure/retry, owner/borrow guards and both tree finalization entries.
+Negative/excess counts and nonfinite points fail the interval and still allow zero-cap
+cleanup. Each cap runs 64 warmup plus 128 measured complete active 1/120-second frames,
+including public transform/velocity edits, with zero owner/all-thread managed bytes.
+These are allocation and lifecycle checks, not native-memory or full numerical acceptance.
+
+`--debug-drawing` uses a continuously forced circle contact and cap 1 to inspect a
+single diagnostic marker. Both gpu and compatibility renderers pass actual pixel
+checks, disable/re-enable, separation and native retirement. Outlines are disabled
+in this fixture so opaque shape outlines do not alter the marker's background.
+Channel tolerances are .05 green/.04 red and blue for render-target rounding.
+The captured GPU image was also visually inspected. Shared built-in CPU/GPU contact
+and native four-combination diagnostic checks retain their independent coverage.
+No new overall FPS, network or mass-scene performance acceptance is claimed here.

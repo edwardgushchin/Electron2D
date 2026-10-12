@@ -36,3 +36,6 @@ identities remain authoritative.
 
 
 [Connection lifetime checks](../components/physics-registered-adapter.md#joint-connection-lifetime) now exercise selected factory/attachment/release guards, claimed-object reuse rejection, failed attachment cleanup, dual errors and explicit retry. The common adapter retains identities and frames; each successful reentry creates a fresh numerical attachment.
+
+
+[Selected diagnostic preparation](../components/physics-registered-adapter.md#diagnostic-capacity-and-publication) passes the contact-point cap to the numerical owner before solving, including registered implementations. Zero disables capture and remains available for failed-world cleanup; synchronized point/count reads retain the bounded shared snapshot. Full numerical and platform acceptance remain separate.

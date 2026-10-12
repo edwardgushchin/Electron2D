@@ -2624,6 +2624,21 @@
       "godot": "PhysicsServer2DExtension::method:_get_process_info(int:PhysicsServer2D.ProcessInfo)",
       "electron2d": "method:Electron2D.PhysicsServer.GetProcessInfo(Electron2D.PhysicsServer.ProcessInfo)",
       "reason": "ADR 0089/0095/0103: selected owned-world lifecycle projects init/activation/begin+solve/sync/flush/end-sync/finish; shared process activation gates all worlds without changing local policy. ReadStatistics returns the complete typed Active/Pairs/Islands sample, validated before cached GetProcessInfo aggregation. Public-only --lifecycle verifies explicit/scene order and real motion, zero/inactive/global suspension, equal/failed activation, foreign-thread cached reads, empty active worlds, terminal solve/sync/statistics errors, recoverable flush/end-sync errors, all negative counts, initialization/finish/disposal aggregation and 128 moving full frames per role at zero owner/all-thread managed allocation. Full numerical, foreign-platform and overall extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_set_debug_contacts(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.SetDebugContacts(System.Int32)",
+      "reason": "ADR 0100/0103: selected SetDebugContacts prepares the sampled point cap before solving, with zero-cap disable/detach and failed-world cleanup; ReadDebugContacts combines bounded count and finite engine-unit point publication after synchronization. The separate public-only diagnostic consumer exercises odd/zero caps, actual circle contacts independent of gameplay report limits, zero/inactive retention, preparation failure/retry, borrowed/owner guards, invalid count/point terminal errors and 128 active full frames at zero managed allocation. Full numerical-extension, native allocator, foreign-platform and final performance acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_get_contacts(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.ReadDebugContacts(System.Span<Electron2D.Vector2>)",
+      "reason": "ADR 0100/0103: selected SetDebugContacts prepares the sampled point cap before solving, with zero-cap disable/detach and failed-world cleanup; ReadDebugContacts combines bounded count and finite engine-unit point publication after synchronization. The separate public-only diagnostic consumer exercises odd/zero caps, actual circle contacts independent of gameplay report limits, zero/inactive retention, preparation failure/retry, borrowed/owner guards, invalid count/point terminal errors and 128 active full frames at zero managed allocation. Full numerical-extension, native allocator, foreign-platform and final performance acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_get_contact_count(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.ReadDebugContacts(System.Span<Electron2D.Vector2>)",
+      "reason": "ADR 0100/0103: selected SetDebugContacts prepares the sampled point cap before solving, with zero-cap disable/detach and failed-world cleanup; ReadDebugContacts combines bounded count and finite engine-unit point publication after synchronization. The separate public-only diagnostic consumer exercises odd/zero caps, actual circle contacts independent of gameplay report limits, zero/inactive retention, preparation failure/retry, borrowed/owner guards, invalid count/point terminal errors and 128 active full frames at zero managed allocation. Full numerical-extension, native allocator, foreign-platform and final performance acceptance remain open."
     }
   ],
   "extras": [
@@ -4668,10 +4683,6 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsServerBackend.ReadAreaOverlaps(Electron2D.RID,System.Span<Electron2D.PhysicsBackendOverlap>)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.ReadDebugContacts(System.Span<Electron2D.Vector2>)",
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
     {
@@ -7431,6 +7442,15 @@
       ],
       "state": "Partial",
       "reason": "ADR 0089/0095/0103: selected owned-world lifecycle projects init/activation/begin+solve/sync/flush/end-sync/finish; shared process activation gates all worlds without changing local policy. ReadStatistics returns the complete typed Active/Pairs/Islands sample, validated before cached GetProcessInfo aggregation. Public-only --lifecycle verifies explicit/scene order and real motion, zero/inactive/global suspension, equal/failed activation, foreign-thread cached reads, empty active worlds, terminal solve/sync/statistics errors, recoverable flush/end-sync errors, all negative counts, initialization/finish/disposal aggregation and 128 moving full frames per role at zero owner/all-thread managed allocation. Full numerical, foreign-platform and overall extension acceptance remain open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_space_set_debug_contacts(RID:,int:)",
+        "PhysicsServer2DExtension::method:_space_get_contacts(RID:)",
+        "PhysicsServer2DExtension::method:_space_get_contact_count(RID:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0100/0103: selected SetDebugContacts prepares the sampled point cap before solving, with zero-cap disable/detach and failed-world cleanup; ReadDebugContacts combines bounded count and finite engine-unit point publication after synchronization. The separate public-only diagnostic consumer exercises odd/zero caps, actual circle contacts independent of gameplay report limits, zero/inactive retention, preparation failure/retry, borrowed/owner guards, invalid count/point terminal errors and 128 active full frames at zero managed allocation. Full numerical-extension, native allocator, foreign-platform and final performance acceptance remain open."
     }
   ]
 }

@@ -278,3 +278,6 @@ The existing borrowed-extension hierarchy guard also rejects object/canvas/prior
 
 
 Membership removal now attempts every dependent joint, state capture, numerical detach and contact/Area observer cleanup before reporting errors. Internal Cleanup/FinishCleanup collect errors while preserving a lone exception type/stack. A failed numerical detach cannot leave a collider outside common membership but alive in the selected solver. [Resource retirement](../components/physics-registered-adapter.md#resource-retirement) records complete scope and limits.
+
+
+[Selected diagnostic preparation](../components/physics-registered-adapter.md#diagnostic-capacity-and-publication) passes the contact-point cap to the numerical owner before solving, including registered implementations. Zero disables capture and remains available for failed-world cleanup; synchronized point/count reads retain the bounded shared snapshot. Full numerical and platform acceptance remain separate.

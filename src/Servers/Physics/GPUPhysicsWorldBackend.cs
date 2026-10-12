@@ -34,6 +34,7 @@ internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend
     {
         EnsureAccess(); return Space.GPUTestMotion(body, from, motion, margin, recoveryAsCollision, excludedBodies, excludedObjects, collideSeparationRay);
     }
+    internal override void SetDebugContacts(int maximum) => GPUStore.PrepareDebugContacts(maximum);
     internal override int ReadDebugContacts(Span<Vector2> output) => GPUStore.ReadDebugContacts(output);
     public override void Dispose()
     {

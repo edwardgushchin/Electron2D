@@ -1023,3 +1023,6 @@ completed statistics, failure/cleanup paths and 128 moving full frames per scene
 role at zero managed allocation through a public-only independent implementation.
 Eight former unmapped rows have their actual typed projections; complete numerical
 extension and platform/performance acceptance remain open.
+
+
+[Registered diagnostic preparation](physics-registered-adapter.md#diagnostic-capacity-and-publication) now notifies the selected implementation before solving and on disable/detach, with a validated synchronized point prefix. This preserves the shared CPU/GPU scene diagnostic contract; wider numerical-extension and final performance acceptance remain open.

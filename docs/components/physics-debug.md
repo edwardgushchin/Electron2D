@@ -1,6 +1,6 @@
 # Physics canvas diagnostics
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 ## Scope
 
@@ -121,7 +121,8 @@ the default world canvas and viewport transform; they are not fixed screen pixel
 The pinned `space_set_debug_contacts`, `space_get_contacts` and
 `space_get_contact_count` hooks are internal server operations and extension virtuals,
 not public scripted PhysicsServer methods. The concrete consumer is implemented;
-the full extension family stays blocked until registration and virtual dispatch work.
+registered capacity preparation and point/count dispatch now execute under ADR 0103.
+The full extension family retains its operation-specific acceptance gates.
 
 `ELECTRON2D_TEST_PHYSICS_CONTACT_DEBUG=1` checks actual surface samples (.02 scene-unit
 geometry tolerance), odd/zero/invalid limits, sampled settings, zero time, sleep/wake,
@@ -166,3 +167,6 @@ while completed contact snapshots may retain an earlier transient observation.
 Exactly touching report-only geometry remains a contact but creates no
 penetration marker. These checks use captured coordinates and canvas records;
 they do not establish real-window rendered acceptance.
+
+
+Registered implementations receive capacity before solving and publish a validated synchronized prefix through the same scene canvas. The external [diagnostic consumer](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.DebugContacts.cs) and [real-window pixel check](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.DebugDrawing.cs) verify preparation, cleanup, owner/borrow guards, zero warm managed allocations and both renderers. See [the selected diagnostic contract](physics-registered-adapter.md#diagnostic-capacity-and-publication) for exact scope and tolerances.

@@ -1236,3 +1236,6 @@ Contact reporting depth belongs to existing [PhysicsBodyRuntime/PhysicsDirectBod
 
 
 The existing [PhysicsNetwork public consumer](components/physics-network-example.md#stronger-process-acceptance-2026-10-12) reports verified GPU denial, full authoritative body/joint-author poses and angular motion. Engine public declarations and wire formats are unchanged; no production type is introduced.
+
+
+Registered contact diagnostics dispatch capacity preparation through the selected PhysicsWorldBackend to PhysicsServerBackend.SetDebugContacts before solving, and validated bounded publication through ReadDebugContacts after synchronization. CPU retains its point cap; GPU prepares resident diagnostic storage. See [the diagnostic contract](components/physics-registered-adapter.md#diagnostic-capacity-and-publication).

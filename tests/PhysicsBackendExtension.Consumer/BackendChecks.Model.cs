@@ -12,7 +12,22 @@ public static partial class BackendChecks
         internal RID[] ReadExceptions(RID body) => GetCollisionExceptions(body);
         internal bool Ready, Finished, FailSolve, FailInit, FailFinish, FailDisposal;
         internal int Steps, Flushes, Synchronizations, Pairs, DebugReads, StatePreparations;
-        internal bool BadDebugCount, BadDebugPoint;
+        internal bool BadDebugCount, BadDebugPoint, NegativeDebugCount, FailDebugPreparation;
+        internal int DebugLimit, DebugSets, DebugPointCount, DebugLastCount;
+        internal Vector2[] DebugPoints = [];
+        internal Action<int>? DebugPolicyHook;
+        internal Action? DebugReadHook;
+        protected override void SetDebugContacts(int maximum)
+        {
+            DebugPolicyHook?.Invoke(maximum);
+            if (maximum > 0 && FailDebugPreparation) throw new ApplicationException("Injected diagnostic preparation failure.");
+            if (DebugPoints.Length < maximum) DebugPoints = new Vector2[maximum];
+            DebugLimit = maximum; DebugPointCount = 0; DebugLastCount = 0; DebugSets++;
+        }
+        private void AddDebugPoint(Vector2 point)
+        {
+            if (DebugPointCount < DebugLimit) DebugPoints[DebugPointCount++] = point;
+        }
         internal RID ContactFailure;
         internal Action<RID>? IdentityHook;
         internal Action<RID>? ShapeHook, FilterHook;
@@ -76,14 +91,19 @@ public static partial class BackendChecks
         protected override void Solve(double delta)
         {
             LifecycleHook?.Invoke(LifecyclePhase.Solve); StepHook?.Invoke();
-            Pairs = 0;
+            Pairs = 0; DebugPointCount = 0;
             foreach (var b in Bodies.Values) { b.ContactPeer = default; b.Advance((float)delta); }
             foreach (var a in Bodies.Values)
                 foreach (var b in Bodies.Values)
                 {
                     if (a.RID.GetID() >= b.RID.GetID() || a.IsArea || b.IsArea || a.Shapes == 0 || b.Shapes == 0 ||
                         (a.Mask & b.Layer) == 0 && (b.Mask & a.Layer) == 0 || Exceptions.Contains((a.RID, b.RID)) || Exceptions.Contains((b.RID, a.RID))) continue;
-                    if (!AllowsContact(a.RID, b.RID) || a.InvMass + b.InvMass == 0 || !Contact(a, b, out var normal, out var depth, out _)) continue;
+                    if (!AllowsContact(a.RID, b.RID) || a.InvMass + b.InvMass == 0 || !Contact(a, b, out var normal, out var depth, out var diagnosticPoint)) continue;
+                    if (depth > 0 && (a.Awake || b.Awake))
+                    {
+                        var half = normal * (depth * .5f);
+                        AddDebugPoint(diagnosticPoint - half); AddDebugPoint(diagnosticPoint + half);
+                    }
                     var inverse = a.InvMass + b.InvMass;
                     a.Position -= normal * depth * (a.InvMass / inverse);
                     b.Position += normal * depth * (b.InvMass / inverse);

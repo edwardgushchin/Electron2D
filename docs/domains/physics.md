@@ -689,3 +689,6 @@ completed statistics, failure/cleanup paths and 128 moving full frames per scene
 role at zero managed allocation through a public-only independent implementation.
 Eight former unmapped rows have their actual typed projections; complete numerical
 extension and platform/performance acceptance remain open.
+
+
+[Selected contact diagnostics](../components/physics-registered-adapter.md#diagnostic-capacity-and-publication) supply the point cap before solving and relinquish it on disable/detach, including registered implementations. Synchronized count/point output stays bounded and validated; full numerical-extension acceptance remains open.

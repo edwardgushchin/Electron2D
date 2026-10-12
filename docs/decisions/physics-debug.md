@@ -1,6 +1,6 @@
 # Physics canvas diagnostics
 
-Last updated: 2026-10-09
+Last updated: 2026-10-12
 
 <a id="adr-0100"></a>
 ## ADR 0100: Retained scene physics drawing and bounded contacts
@@ -72,8 +72,10 @@ transforms. CPU contact capture runs without a display or renderer. No sandbox
 controls are restored by this engine capability.
 
 The pinned debug-space methods are internal server operations and virtual extension
-hooks, not the scripted PhysicsServer API. Keep the implemented consumers internal;
-do not add unsupported public static wrappers or close the complete backend-extension
-family. Tile-owner diagnostics and backend extensions remain open. Native rendered
+hooks, not the scripted PhysicsServer API. Keep scene consumers internal and route
+capacity preparation and validated count/point reads through the selected owner.
+ADR 0103 maps registered implementations to SetDebugContacts and ReadDebugContacts;
+do not add unsupported public static wrappers or close the complete extension
+family. Wider tile-owner diagnostics and extension acceptance remain open. Native rendered
 evidence and common CPU/GPU tests belong to the component report; compilation alone
 is insufficient.

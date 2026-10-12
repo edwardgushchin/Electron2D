@@ -158,6 +158,16 @@ interception would leave scene behavior and direct queries outside the extension
   without hidden CPU replay. Aggregate cleanup failures after attempting every
   owned resource. Borrowed backend/state objects cannot release a live callback
   context or retarget to another world.
+- Diagnostic capacity is an implementation input before solving, not a value first
+  discovered during readback. Map `_space_set_debug_contacts` to the required
+  world-scoped `SetDebugContacts(int maximum)` hook; zero disables capture and remains
+  available for failed-world cleanup. Implementations preserve the previous limit
+  if preparation throws. The engine commits its cap after successful preparation,
+  rejects borrowed numerical writes and suppresses unchanged assignments.
+  `ReadDebugContacts(Span<Vector2>)` combines the applicable count and point-copy
+  operations, returning a validated bounded prefix after synchronization. SceneTree
+  supplies the sampled project cap and relinquishes it on disable/detach. This uses
+  no public static debug-space wrappers and retains ADR 0100's sample semantics.
 - Preserve checkpoint and portable-state guarantees under ADR 0054. Same-backend
   private replay state belongs to the implementation and must have an executable
   capture/restore ownership path. Portable network state retains common identities,
