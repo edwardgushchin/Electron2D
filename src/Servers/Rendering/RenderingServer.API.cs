@@ -20,7 +20,7 @@ public sealed partial class RenderingServer
     /// <param name="arrays">Borrowed arrays copied before mutation.</param>
     /// <param name="flags">Supported two-dimensional update policies.</param>
     /// <param name="blendShapes">Copied shape payloads matching the owned mesh definition count.</param>
-    /// <param name="lods">Null or empty until scale-selected indices are integrated.</param>
+    /// <param name="lods">Copied positive finite local error thresholds mapped to shorter complete index sets; null or empty retains base geometry.</param>
     /// <exception cref="ArgumentException">The identity or geometry is invalid.</exception>
     /// <exception cref="InvalidOperationException">The mesh is borrowed or owned by another renderer.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>

@@ -1,6 +1,6 @@
 # API coverage register
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 [Full monitored scene window measurements](../components/physics-scene-performance.md#full-monitored-scene-in-a-native-window)
 now use the same complete scene fixture with separate physics/frame costs, actual
@@ -578,7 +578,7 @@ The compressed audio slice adds five executable public resource/playback/packet 
 
 AudioStreamRandomizer adds all nineteen own rows as Implemented: typed pool schema, literal weights, identity-based no-repeat/sequential selection, shared history, logarithmic pitch/DB variation, captured child playback, local Resource graph copying and guarded errors. Player now creates exactly one fresh playback per actual Play while retaining lazy native slots; standalone Start retains its capture. Managed, real FAudio PCM/warm active/paused intervals and two sequential public Engine.Run host runs on each Linux Wayland renderer verify the slice. Inherited sample, usage-tag and other concrete parameter dependencies remain separate; physical listening and wider platform/native-allocation limits remain explicit.
 
-The first typed 2D mesh slice executes copied vertex/color/UV/index surfaces, all five topologies, live packed region updates, borrowed/owned RID lifetimes, surface materials and MeshInstance/canvas/server integration under ADR 0092. Mesh/ArrayMesh remain Partial for the listed deformation/LOD/channel producers; MeshInstance2D own rows are implemented. Native GPU/compatibility pixels and 64 active/64 idle warmed frames are separate from native allocation totals and other-platform/owner acceptance. All new declarations are accounted for, with 0 Unmapped.
+Typed 2D mesh slices execute copied position/frame/color/UV/custom/index/skin surfaces, all five topologies, live packed updates, named targets with independent instance deformation and authored LOD indices with real framebuffer scale selection under ADR 0092. Mesh/ArrayMesh remain Partial for compression, automatic import simplification and other member-specific producers; input LOD no longer rejects. Native GPU/compatibility pixels and 64 active/64 idle warmed full frames are separate from native allocation totals and other-platform/owner acceptance. All new declarations are accounted for with 0 Unmapped. See [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
 
 [ImmediateMesh](classes/ImmediateMesh.md) now adds six own executable builder methods under [ADR 0092](../decisions/mesh.md#adr-0092): invisible drafts, late attribute backfill, captured sequential vertices, validation/retry, commit/clear, resource copies and existing mesh-node/canvas/server drawing. The class remains Partial only for SurfaceSetUV2, whose exact missing shader-attribute storage/consumer trigger is retained. Managed and native pixel checks distinguish structural authoring from warmed active/idle replay and broader platform/native-allocation limits.
 

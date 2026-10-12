@@ -62543,6 +62543,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ArrayMesh.OnSurfaceGetLODs(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "OnSurfaceGetLODs",
+    "signature": "protected override System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E OnSurfaceGetLODs(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ArrayMesh.OnSurfaceGetMaterial(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.ArrayMesh",
@@ -109886,6 +109905,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Mesh.OnSurfaceGetLODs(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "OnSurfaceGetLODs",
+    "signature": "protected virtual System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E OnSurfaceGetLODs(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Mesh.OnSurfaceGetMaterial(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.Mesh",
@@ -110064,6 +110102,25 @@
       }
     ],
     "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.SurfaceGetLODs(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "SurfaceGetLODs",
+    "signature": "public System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E SurfaceGetLODs(System.Int32 surfaceIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E",
     "value": null
   },
   {
@@ -145023,6 +145080,30 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshSurfaceGetLODs(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshSurfaceGetLODs",
+    "signature": "public static System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E MeshSurfaceGetLODs(Electron2D.RID mesh, System.Int32 surface)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E",
     "value": null
   },
   {

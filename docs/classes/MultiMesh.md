@@ -370,3 +370,7 @@ System.ArgumentOutOfRangeException: The index is outside storage.
 ## Dependencies, errors and verification
 
 [ADR 0092](../decisions/mesh.md#adr-0092) and [mesh component](../components/meshes.md#repeated-instance-resources) define ownership, typed bounds, callbacks and backend limits. MultiMeshTests checks resource/scene failures and warmed replay; MultiMeshRenderingTests checks native pixels, actual intermediate poses, owned identities and 256-instance active/idle frames. Native allocator totals, structural allocation, dense-scene cost, other targets and owner acceptance remain unverified. Scene-file persistence remains a separate dependency.
+
+## LOD behavior
+
+Authored index sets select from the full local-to-framebuffer basis using a one-pixel error threshold. MultiMesh selects each presentation instance independently; MeshInstance morph output retains LODs. Base queries and conservative bounds describe full geometry. Storage/callback ownership and detailed validation are documented in [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).

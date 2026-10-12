@@ -46,7 +46,7 @@ internal static class MeshTests
         Reject<ArgumentException>(() => mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = [Vector2.Zero], Colors = [Colors.Red, Colors.Blue] }));
         Reject<NotSupportedException>(() => mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = [Vector2.Zero] }, flags: (Mesh.ArrayFormat)536870912));
         Reject<ArgumentException>(() => mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = [Vector2.Zero] }, blendShapes: [new()]));
-        Reject<NotSupportedException>(() => mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = [Vector2.Zero] }, lods: new Dictionary<float, int[]> { [1] = [0] }));
+        Reject<ArgumentException>(() => mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = [Vector2.Zero] }, lods: new Dictionary<float, int[]> { [1] = [0] }));
         Check(mesh.GetSurfaceCount() == 0, "Rejected additions preserve surface count.");
         mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, Quad());
         var bytes = new byte[24]; BinaryPrimitives.WriteSingleLittleEndian(bytes.AsSpan(4), .25f); BinaryPrimitives.WriteSingleLittleEndian(bytes.AsSpan(16), float.NaN);

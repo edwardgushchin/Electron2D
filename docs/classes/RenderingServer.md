@@ -1233,4 +1233,20 @@ Four independent typed MeshSurfaceData custom channels use the shared [MeshCusto
 | `public static System.Void MeshSetBlendShapeMode(Electron2D.RID mesh, Electron2D.BlendShapeMode mode)` | Copied typed surface/target storage; owned mutations and borrowed queries follow the common mesh identity contract. |
 | `public static Electron2D.MeshSurfaceData[] MeshSurfaceGetBlendShapeArrays(Electron2D.RID mesh, System.Int32 surface)` | Copied typed surface/target storage; owned mutations and borrowed queries follow the common mesh identity contract. |
 
-MeshCreate(int) defines the shape count before adding owned surfaces. Shapes receive ordinal index names in the managed owned resource. MeshAddSurfaceFromArrays retains positional flags and adds optional typed blendShapes/lods. Nonempty LOD input still rejects. See [named targets and deformation](../components/meshes.md#named-targets-and-instance-deformation).
+MeshCreate(int) defines the shape count before adding owned surfaces. Shapes receive ordinal index names in the managed owned resource. MeshAddSurfaceFromArrays retains positional flags and adds optional typed blendShapes/lods. Copied LOD indices now execute scale selection. See [named targets and deformation](../components/meshes.md#named-targets-and-instance-deformation).
+
+## LOD behavior
+
+Authored index sets select from the full local-to-framebuffer basis using a one-pixel error threshold. MultiMesh selects each presentation instance independently; MeshInstance morph output retains LODs. Base queries and conservative bounds describe full geometry. Storage/callback ownership and detailed validation are documented in [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
+
+## Mesh LOD query
+
+| Complete signature | Contract |
+| --- | --- |
+| `public static System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> MeshSurfaceGetLODs(Electron2D.RID mesh, System.Int32 surface)` | Copied sorted thresholds and indices from an owned or borrowed live mesh. |
+
+### MeshSurfaceGetLODs
+
+`public static System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> MeshSurfaceGetLODs(Electron2D.RID mesh, System.Int32 surface)`
+
+Uses the initialized process service on its owner thread. Invalid/disposed identities and surface indices reject through the common mesh registry; each query copies arrays and preserves resource ownership. Thresholds are local error units. See [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).

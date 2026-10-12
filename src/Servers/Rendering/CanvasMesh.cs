@@ -3,7 +3,7 @@ namespace Electron2D;
 internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
 {
     internal void Set(Mesh value, Transform pose, Color tint) { if (!ReferenceEquals(mesh, value)) { _revision = -1; _customCount = 0; Array.Clear(_custom); } mesh = value; local = pose; modulate = tint; }
-    private (MeshSurfaceData Data, Mesh.PrimitiveType Primitive, Material? Material)[] _custom = [];
+    private (MeshSurfaceData Data, Mesh.PrimitiveType Primitive, Material? Material, MeshLOD[] LODs)[] _custom = [];
     private long _revision = -1;
     private int _customCount;
     internal Mesh Mesh => mesh;
@@ -27,7 +27,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
                     {
                         var surface = arrays.Get(i); var first = vertices.Count;
                         var instanceCount = 0; var firstInstance = 0;
-                        if (instances is not null && !snap && palette.IsEmpty && surface.Data.Bones.Length == 0 &&
+                        if (surface.LODs.Length == 0 && instances is not null && !snap && palette.IsEmpty && surface.Data.Bones.Length == 0 &&
                             surface.Primitive is Mesh.PrimitiveType.Triangles or Mesh.PrimitiveType.TriangleStrip &&
                             RenderingServer.Service is { } renderer && renderer.CanInstance(skinOwner) &&
                             TryInstanceBounds(surface.Data, out var bounds) && renderer.TryAppendInstances(instances, transform, color, bounds, fraction, out firstInstance))
@@ -35,7 +35,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
                             instanceCount = instances.DrawCount;
                             AppendSurface(vertices, surface.Data, surface.Primitive, Transform.Identity, Colors.White, false, default, default, Transform.Identity, Transform.Identity);
                         }
-                        else AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette);
+                        else AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs);
                         AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, firstInstance, instanceCount);
                     }
                 }
@@ -44,7 +44,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
             PrepareCustom();
             for (var i = 0; i < _customCount; i++)
             {
-                var first = vertices.Count; var surface = _custom[i]; AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette);
+                var first = vertices.Count; var surface = _custom[i]; AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs);
                 AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner);
             }
         }
@@ -83,7 +83,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
                 for (var i = 0; i < count; i++)
                 {
                     var data = mesh.SurfaceGetArrays(i); var primitive = mesh.SurfaceGetPrimitiveType(i); data.Validate(primitive); data.QuantizeSkin(); MeshFrameCodec.Capture(data); data.PrepareCustoms();
-                    _custom[i] = (data, primitive, mesh.SurfaceGetMaterial(i));
+                    _custom[i] = (data, primitive, mesh.SurfaceGetMaterial(i), MeshLOD.Capture(mesh.SurfaceGetLODs(i), data, primitive));
                 }
                 ObjectDisposedException.ThrowIf(mesh.IsDisposed, mesh);
                 if (mesh.ChangeRevision != revision) throw new InvalidOperationException("Mesh callbacks changed the resource while preparing its surfaces.");
@@ -130,14 +130,14 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
         bounds = new(minimum, maximum - minimum);
         return bounds.IsFinite() && bounds.End.IsFinite();
     }
-    private static void AppendSurfaceInstances(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, MultiMesh? instances, float fraction, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette)
+    private static void AppendSurfaceInstances(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, MultiMesh? instances, float fraction, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, MeshLOD[] lods)
     {
         if (!palette.IsEmpty && data.Bones.Length != 0) foreach (var bone in data.Bones) if ((uint)bone >= (uint)palette.Length) throw new InvalidOperationException("A mesh skin index does not resolve in its palette.");
-        if (instances is null) { AppendSurface(output, data, primitive, transform, modulation, snap, default, palette, toPalette, fromPalette); return; }
+        if (instances is null) { AppendSurface(output, MeshLOD.Select(data, lods, transform), primitive, transform, modulation, snap, default, palette, toPalette, fromPalette); return; }
         for (var index = 0; index < instances.DrawCount; index++)
         {
             instances.Presentation(index, fraction, out var pose, out var color, out var custom);
-            AppendSurface(output, data, primitive, transform * pose, modulation * color, snap, custom, palette, toPalette, fromPalette);
+            AppendSurface(output, MeshLOD.Select(data, lods, transform * pose), primitive, transform * pose, modulation * color, snap, custom, palette, toPalette, fromPalette);
         }
     }
     private static void AppendSurface(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, Color custom, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette)

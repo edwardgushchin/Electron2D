@@ -1,6 +1,6 @@
 # CanvasMesh
 
-Last updated: 2026-10-07
+Last updated: 2026-10-12
 
 Internal retained mesh geometry in [CanvasMesh.cs](../../src/Servers/Rendering/CanvasMesh.cs), part of [canvas rendering](../components/canvas-rendering.md) and [mesh rendering](../components/meshes.md). It captures immutable or live mesh surfaces, transform/color/UV/custom instance data and primitive tessellation before appending to the existing canvas vertex/batch stream. Material, texture, filtering, repeat, clipping and native profile rules stay with that stream. Native resources belong to the renderer; this geometry owns no device handles.
 
@@ -15,3 +15,7 @@ Replay now resolves the drawing item palette once, holds owned storage against c
 PrepareSkin now supplies one shared palette/basis/lease policy to ordinary mesh surfaces and low-level indexed triangles. AppendTriangleData uses existing vertex deformation, finite validation, color/UV capture and lease cleanup. See [the executable primitive contract](../components/canvas-rendering.md#low-level-primitive-commands).
 
 Surface and inherited material batches retain the drawing CanvasItem as InstanceOwner when their shader declares instance fields. Hardware MultiMesh batches use the node's one parameter set. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).
+
+## LOD preparation and replay
+
+Private alternate views share base channel arrays and retain copied indices. The full framebuffer basis selects the largest local threshold within one pixel using its greatest singular value. Custom callbacks capture validated levels under the revision guard; MultiMesh selects independently from each presentation transform and expands alternate geometry into the ordinary stream. See [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).

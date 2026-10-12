@@ -8,7 +8,7 @@ Last updated: 2026-10-12
 
 ## Description
 
-Concrete copied surface storage. AddSurfaceFromArrays accepts typed Vertices/Normals/Tangents/Colors/UVs/UV2s/Custom0–Custom3/Indices, copied named morph targets and optional empty LOD inputs and supported flags. Every channel is copied and validated before adding; vertex/normal/tangent/color/primary-UV/secondary-UV/custom-record counts and index bounds must match topology. All five topologies execute. Empty or malformed vertex payloads reject. Colors clamp/truncate to RGBA8 UNORM on import; source getters expose decoded quantized colors, preserving the exercised pinned storage precision. Position/texture coordinates remain float pairs. The new index is the previous GetSurfaceCount. Surfaces default to an empty name and null borrowed material; duplicates names are allowed and search returns the first exact ordinal match. Remove shifts later indices, Clear removes all; borrowed materials remain live. Every edit commits before Changed, including equal name/material writes; listener failure does not undo valid data.
+Concrete copied surface storage. AddSurfaceFromArrays accepts typed Vertices/Normals/Tangents/Colors/UVs/UV2s/Custom0–Custom3/Indices, copied named morph targets and copied authored LOD indices and supported flags. Every channel is copied and validated before adding; vertex/normal/tangent/color/primary-UV/secondary-UV/custom-record counts and index bounds must match topology. All five topologies execute. Empty or malformed vertex payloads reject. Colors clamp/truncate to RGBA8 UNORM on import; source getters expose decoded quantized colors, preserving the exercised pinned storage precision. Position/texture coordinates remain float pairs. The new index is the previous GetSurfaceCount. Surfaces default to an empty name and null borrowed material; duplicates names are allowed and search returns the first exact ordinal match. Remove shifts later indices, Clear removes all; borrowed materials remain live. Every edit commits before Changed, including equal name/material writes; listener failure does not undo valid data.
 
 ## Example
 
@@ -45,6 +45,7 @@ Shape count/name accessors are inherited from [Mesh](Mesh.md). Named targets, tw
 | `protected override Electron2D.MeshSurfaceData OnSurfaceGetArrays(System.Int32 surfaceIndex)` |  |
 | `protected override Electron2D.MeshSurfaceData[] OnSurfaceGetBlendShapeArrays(System.Int32 surfaceIndex)` |  |
 | `protected override Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)` |  |
+| `protected override System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> OnSurfaceGetLODs(System.Int32 surfaceIndex)` |  |
 | `protected override Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)` |  |
 | `protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)` |  |
 | `protected override System.Void OnSurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)` |  |
@@ -88,7 +89,7 @@ arrays: Borrowed typed vertex/normal/tangent/color/primary and secondary UV/cust
 
 blendShapes: One copied position/normal/tangent-only target per named definition; null or empty for unshaped meshes.
 
-lods: Null or empty until scale-selected index sets are integrated.
+lods: Copied positive finite local error thresholds mapped to shorter index sets; null or empty uses base geometry.
 
 flags: UseDynamicUpdate, Use2DVertices, Use8BoneWeights and matching channel bits. Unsupported bits reject before mutation.
 
@@ -171,6 +172,10 @@ System.ObjectDisposedException: The mesh is disposed.
 ### OnSurfaceGetFormat
 
 `protected override Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)`
+
+### OnSurfaceGetLODs
+
+`protected override System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> OnSurfaceGetLODs(System.Int32 surfaceIndex)`
 
 ### OnSurfaceGetMaterial
 
@@ -303,3 +308,7 @@ System.ArgumentOutOfRangeException: The region exceeds the vertex buffer.
 summary: Gets or selects normalized absolute targets or additive relative offsets.
 
 value: Relative initially; changing the mode preserves stored payloads and updates drawing.
+
+## LOD behavior
+
+Authored levels use copied positive local edge-error thresholds and shorter complete index sets over an indexed base. Drawing selects the largest threshold within one framebuffer pixel from the greatest singular value of the full transformed basis. Bounds, arrays and face/index counts preserve full geometry. Morph output and tangent regeneration retain levels. AMS6 persists LODs and targets and reads AMS1–5. See [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).

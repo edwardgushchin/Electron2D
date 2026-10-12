@@ -10,7 +10,7 @@ Last updated: 2026-10-12
 
 ## Description
 
-Abstract typed two-dimensional surface contract. Count/array/format/topology/material callbacks project applicable mesh reads. SurfaceGetArrays returns independent typed channel copies; vertex/index counts and policies preserve the current resource state. Mesh.GetRID lazily creates a weak stable resource-owned identity, independent of Engine.Run, until disposal; it is borrowed and cannot be mutated/freed through RenderingServer ownership. Implementations publish Changed after geometry/material edits. Runtime arrays and node/canvas geometry are strictly 2D. GetFaces exposes copied local 2D triangle faces; strips expand with alternating winding, and point/line surfaces contribute nothing. Further source channels/deformation/LOD/geometry are exact coverage dependencies, not nominal callbacks.
+Abstract typed two-dimensional surface contract. Count/array/format/topology/material callbacks project applicable mesh reads. SurfaceGetArrays returns independent typed channel copies; vertex/index counts and policies preserve the current resource state. Mesh.GetRID lazily creates a weak stable resource-owned identity, independent of Engine.Run, until disposal; it is borrowed and cannot be mutated/freed through RenderingServer ownership. Implementations publish Changed after geometry/material edits. Runtime arrays and node/canvas geometry are strictly 2D. GetFaces exposes copied local 2D triangle faces; strips expand with alternating winding, and point/line surfaces contribute nothing. Named target deformation and authored LOD selection execute; compression, automatic simplification and remaining geometry operations retain exact coverage dependencies.
 
 ## Example
 
@@ -44,6 +44,7 @@ int count = mesh.GetSurfaceCount();
 | `protected abstract Electron2D.MeshSurfaceData OnSurfaceGetArrays(System.Int32 surfaceIndex)` | Supplies copied typed arrays for one surface. |
 | `protected virtual Electron2D.MeshSurfaceData[] OnSurfaceGetBlendShapeArrays(System.Int32 surfaceIndex)` | Supplies copied shape payloads in the mesh's shape-index order. |
 | `protected abstract Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)` | Supplies a surface format mask. |
+| `protected virtual System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> OnSurfaceGetLODs(System.Int32 surfaceIndex)` | Supplies copied alternative index sets for one surface. |
 | `protected abstract Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)` | Supplies a surface's borrowed material. |
 | `protected abstract Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)` | Supplies the primitive ordering policy. |
 | `protected abstract System.Void OnSurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)` | Commits a borrowed surface material and reports its change. |
@@ -53,6 +54,7 @@ int count = mesh.GetSurfaceCount();
 | `public Electron2D.MeshSurfaceData SurfaceGetArrays(System.Int32 surfaceIndex)` | Gets independent typed arrays for one surface. |
 | `public Electron2D.MeshSurfaceData[] SurfaceGetBlendShapeArrays(System.Int32 surfaceIndex)` | Gets copied position/normal/tangent payloads for all named shapes of one surface. |
 | `public Electron2D.Mesh.ArrayFormat SurfaceGetFormat(System.Int32 surfaceIndex)` | Gets one surface's typed channel and policy mask. |
+| `public System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> SurfaceGetLODs(System.Int32 surfaceIndex)` | Returns copied local edge-error thresholds and alternative vertex indices. |
 | `public Electron2D.Material SurfaceGetMaterial(System.Int32 surfaceIndex)` | Gets a surface's borrowed material. |
 | `public Electron2D.Mesh.PrimitiveType SurfaceGetPrimitiveType(System.Int32 surfaceIndex)` | Gets one surface's primitive topology. |
 | `public System.Void SurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)` | Assigns a borrowed material to one surface. |
@@ -227,6 +229,16 @@ surfaceIndex: Existing zero-based index.
 
 returns: The format mask.
 
+### OnSurfaceGetLODs
+
+`protected virtual System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> OnSurfaceGetLODs(System.Int32 surfaceIndex)`
+
+summary: Supplies copied alternative index sets for one surface.
+
+surfaceIndex: Existing zero-based surface index.
+
+returns: Positive finite local thresholds and independent index arrays; empty without LODs.
+
 ### OnSurfaceGetMaterial
 
 `protected abstract Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)`
@@ -321,6 +333,20 @@ surfaceIndex: Existing zero-based surface index.
 
 returns: The format mask.
 
+### SurfaceGetLODs
+
+`public System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> SurfaceGetLODs(System.Int32 surfaceIndex)`
+
+summary: Returns copied local edge-error thresholds and alternative vertex indices.
+
+surfaceIndex: Existing zero-based surface index.
+
+returns: Ascending positive finite thresholds mapped to independent index arrays.
+
+remarks: Canvas drawing chooses the largest threshold whose transformed error is at most one framebuffer pixel. Base arrays, bounds and face queries keep the full authored geometry.
+
+System.ArgumentOutOfRangeException: The surface index is outside the mesh.
+
 ### SurfaceGetMaterial
 
 `public Electron2D.Material SurfaceGetMaterial(System.Int32 surfaceIndex)`
@@ -352,3 +378,7 @@ surfaceIndex: Existing zero-based surface index.
 material: Borrowed live material or null.
 
 System.ObjectDisposedException: The mesh or material is disposed.
+
+## LOD behavior
+
+Authored levels use copied positive local edge-error thresholds and shorter complete index sets over an indexed base. Drawing selects the largest threshold within one framebuffer pixel from the greatest singular value of the full transformed basis. Bounds, arrays and face/index counts preserve full geometry. Morph output and tangent regeneration retain levels. AMS6 persists LODs and targets and reads AMS1–5. See [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).

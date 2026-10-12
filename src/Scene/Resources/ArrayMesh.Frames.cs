@@ -20,7 +20,7 @@ public sealed partial class ArrayMesh
                 if (surface.Material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(Material));
                 using var tool = new SurfaceTool(); tool.CreateFromArrays(surface.Data, surface.Primitive); tool.GenerateTangents();
                 var data = tool.CommitToArrays(); data.Validate(surface.Primitive);
-                var next = new Surface(data, surface.Primitive, surface.Format, blendShapes: surface.BlendShapes, blendMask: surface.BlendMask) { Name = surface.Name, Material = surface.Material };
+                var next = new Surface(data, surface.Primitive, surface.Format, blendShapes: surface.BlendShapes, blendMask: surface.BlendMask, lods: MeshLOD.Copy(surface.LODs)) { Name = surface.Name, Material = surface.Material };
                 if (data.Normals.Length != 0)
                 {
                     var oldStride = surface.FrameWords.Length / data.Vertices.Length; var newStride = next.FrameWords.Length / data.Vertices.Length;

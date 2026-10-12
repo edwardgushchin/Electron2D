@@ -2,7 +2,7 @@ namespace Electron2D;
 
 internal sealed class MeshMorphPose : IDisposable
 {
-    private readonly record struct Source(MeshSurfaceData Basis, uint[] FrameWords, MeshSurfaceData[] Shapes, Mesh.ArrayFormat Mask, Mesh.PrimitiveType Primitive, Material? Material, string Name);
+    private readonly record struct Source(MeshSurfaceData Basis, uint[] FrameWords, MeshSurfaceData[] Shapes, Mesh.ArrayFormat Mask, Mesh.PrimitiveType Primitive, Material? Material, string Name, MeshLOD[] LODs);
     private Source[] _sources = [];
     private int _count;
     private Mesh? _source;
@@ -33,13 +33,13 @@ internal sealed class MeshMorphPose : IDisposable
             var shapeCount = source.GetBlendShapeCount(); if (shapeCount != weights.Length) throw new ArgumentException("Weight count must match named blend shapes.");
             for (var i = 0; i < count; i++)
             {
-                if (arrays is not null) { var s = arrays.Get(i); _sources[i] = new(s.Data, s.FrameWords, s.BlendShapes, s.BlendMask, s.Primitive, s.Material, s.Name); }
+                if (arrays is not null) { var s = arrays.Get(i); _sources[i] = new(s.Data, s.FrameWords, s.BlendShapes, s.BlendMask, s.Primitive, s.Material, s.Name, s.LODs); }
                 else
                 {
                     var data = source.SurfaceGetArrays(i).Copy(); var shapes = source.SurfaceGetBlendShapeArrays(i).Select(shape => shape.Copy()).ToArray(); var primitive = source.SurfaceGetPrimitiveType(i); data.Validate(primitive);
                     var mask = Mesh.ArrayFormat.Vertex | (data.Normals.Length != 0 ? Mesh.ArrayFormat.Normal : 0) | (data.Tangents.Length != 0 ? Mesh.ArrayFormat.Tangent : 0);
                     if (shapes.Length != shapeCount) throw new ArgumentException("Surface shape count must match named shapes."); foreach (var shape in shapes) ArrayMesh.ValidateBlendShape(shape, data, mask);
-                    data.QuantizeSkin(); var words = MeshFrameCodec.Capture(data); data.PrepareCustoms(); _sources[i] = new(data, words, shapes, mask, primitive, source.SurfaceGetMaterial(i), "");
+                    data.QuantizeSkin(); var words = MeshFrameCodec.Capture(data); data.PrepareCustoms(); _sources[i] = new(data, words, shapes, mask, primitive, source.SurfaceGetMaterial(i), "", MeshLOD.Capture(source.SurfaceGetLODs(i), data, primitive));
                 }
             }
             if (source.IsDisposed || source.ChangeRevision != revision) throw new InvalidOperationException("Morph source callbacks must retain a stable live revision.");
@@ -64,7 +64,7 @@ internal sealed class MeshMorphPose : IDisposable
             if (rebuild)
             {
                 next = new();
-                for (var i = 0; i < _count; i++) { var s = _sources[i]; next.AddSurfaceFromArrays(s.Primitive, s.Basis, flags: s.Basis.SkinSlots == 8 ? Mesh.ArrayFormat.Use8BoneWeights : 0); }
+                for (var i = 0; i < _count; i++) { var s = _sources[i]; next.AddSurfaceFromArrays(s.Primitive, s.Basis, lods: MeshLOD.Copy(s.LODs), flags: s.Basis.SkinSlots == 8 ? Mesh.ArrayFormat.Use8BoneWeights : 0); }
             }
             var output = next ?? _output!;
             for (var surface = 0; surface < _count; surface++)
@@ -81,7 +81,13 @@ internal sealed class MeshMorphPose : IDisposable
     private static bool SameLayout(ArrayMesh.Surface target, Source source)
     {
         var a = target.Data; var b = source.Basis;
-        return target.Primitive == source.Primitive && a.Vertices.Length == b.Vertices.Length && a.Normals.Length == b.Normals.Length && a.Tangents.Length == b.Tangents.Length && a.Colors.Length == b.Colors.Length && a.UVs.Length == b.UVs.Length && a.UV2s.Length == b.UV2s.Length && a.Indices.Length == b.Indices.Length && a.Bones.Length == b.Bones.Length && a.Weights.Length == b.Weights.Length && CustomMatches(a.Custom0, b.Custom0) && CustomMatches(a.Custom1, b.Custom1) && CustomMatches(a.Custom2, b.Custom2) && CustomMatches(a.Custom3, b.Custom3);
+        return target.Primitive == source.Primitive && a.Vertices.Length == b.Vertices.Length && a.Normals.Length == b.Normals.Length && a.Tangents.Length == b.Tangents.Length && a.Colors.Length == b.Colors.Length && a.UVs.Length == b.UVs.Length && a.UV2s.Length == b.UV2s.Length && a.Indices.Length == b.Indices.Length && a.Bones.Length == b.Bones.Length && a.Weights.Length == b.Weights.Length && CustomMatches(a.Custom0, b.Custom0) && CustomMatches(a.Custom1, b.Custom1) && CustomMatches(a.Custom2, b.Custom2) && CustomMatches(a.Custom3, b.Custom3) && SameLODs(target.LODs, source.LODs);
+    }
+    private static bool SameLODs(MeshLOD[] a, MeshLOD[] b)
+    {
+        if (a.Length != b.Length) return false;
+        for (var i = 0; i < a.Length; i++) if (a[i].Error != b[i].Error || !a[i].Data.Indices.AsSpan().SequenceEqual(b[i].Data.Indices)) return false;
+        return true;
     }
     private static bool CustomMatches(MeshCustomData? a, MeshCustomData? b) => a is null ? b is null : b is not null && a.Format == b.Format && a.Data.Length == b.Data.Length;
     private static void CopyAttributes(MeshSurfaceData source, MeshSurfaceData target)

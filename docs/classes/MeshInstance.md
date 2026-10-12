@@ -136,3 +136,7 @@ value: Null initially. Equal assignments are silent; replacement commits before 
 System.ObjectDisposedException: The node or assigned texture is disposed.
 
 System.InvalidOperationException: Mutation is off-owner or capture-owned.
+
+## LOD behavior
+
+Authored index sets select from the full local-to-framebuffer basis using a one-pixel error threshold. MultiMesh selects each presentation instance independently; MeshInstance morph output retains LODs. Base queries and conservative bounds describe full geometry. Storage/callback ownership and detailed validation are documented in [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
