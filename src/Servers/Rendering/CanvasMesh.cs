@@ -82,7 +82,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
                 var count = mesh.GetSurfaceCount(); if (_custom.Length < count) Array.Resize(ref _custom, count);
                 for (var i = 0; i < count; i++)
                 {
-                    var data = mesh.SurfaceGetArrays(i); var primitive = mesh.SurfaceGetPrimitiveType(i); data.Validate(primitive); data.QuantizeSkin(); MeshFrameCodec.Capture(data); data.PrepareCustoms();
+                    var data = mesh.SurfaceGetArrays(i); var primitive = mesh.SurfaceGetPrimitiveType(i); data.Validate(primitive); data.QuantizeSkin(); if ((mesh.SurfaceGetFormat(i) & Mesh.ArrayFormat.CompressAttributes) != 0) _ = new MeshCompression(data); else MeshFrameCodec.Capture(data); data.PrepareCustoms();
                     _custom[i] = (data, primitive, mesh.SurfaceGetMaterial(i), MeshLOD.Capture(mesh.SurfaceGetLODs(i), data, primitive));
                 }
                 ObjectDisposedException.ThrowIf(mesh.IsDisposed, mesh);

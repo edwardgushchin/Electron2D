@@ -23,6 +23,8 @@ var value = Mesh.ArrayFormat.Color;
 | --- | --- |
 | `public const Electron2D.Mesh.ArrayFormat BlendShapeMask = 7` | Position, normal and tangent channels permitted in a blend-shape payload. |
 | `public const Electron2D.Mesh.ArrayFormat Bones = 1024` | Flattened unsigned 16-bit bone indices. |
+| `public const Electron2D.Mesh.ArrayFormat CompressFlagsBase = 25` | First policy flag bit. |
+| `public const Electron2D.Mesh.ArrayFormat CompressAttributes = 536870912` | Packed UV and joint numerical frame storage; positions retain float XY. |
 | `public const Electron2D.Mesh.ArrayFormat Color = 8` | Vertex colors. |
 | `public const Electron2D.Mesh.ArrayFormat Custom0 = 64` | Packed numerical custom channel. |
 | `public const Electron2D.Mesh.ArrayFormat Custom0Shift = 13` | First bit position of the three-bit Custom0 format selector. |
@@ -198,3 +200,16 @@ summary: Vertex positions.
 `public const Electron2D.Mesh.ArrayFormat Weights = 2048`
 
 summary: Flattened unsigned normalized 16-bit skin weights.
+
+
+### CompressFlagsBase
+
+`public const Electron2D.Mesh.ArrayFormat CompressFlagsBase = 25`
+
+First bit of the shared storage-policy flags; this is a bit-position value, not a standalone policy mask.
+
+### CompressAttributes
+
+`public const Electron2D.Mesh.ArrayFormat CompressAttributes = 536870912`
+
+Selects four-byte UV UNORM16 pairs and six-byte joint normal/tangent axis/angle records. Position pairs remain float XY; custom/color/skin/index packing is unchanged. See [the compressed attribute contract](../components/meshes.md#compressed-attributes).

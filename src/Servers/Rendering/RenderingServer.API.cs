@@ -62,7 +62,7 @@ public sealed partial class RenderingServer
     /// <param name="mesh">Owned mesh identity.</param>
     /// <param name="surface">Existing zero-based index.</param>
     /// <param name="offset">Byte offset into color/primary-UV/secondary-UV records.</param>
-    /// <param name="data">Present RGBA8 UNORM bytes followed by present primary and secondary little-endian UV pairs.</param>
+    /// <param name="data">Present RGBA8 UNORM bytes, primary/secondary float UV pairs or compressed UNORM16 pairs, then present custom records.</param>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void MeshSurfaceUpdateAttributeRegion(RID mesh, int surface, int offset, ReadOnlySpan<byte> data) => RequireService().MeshSurfaceUpdateAttributeRegionCore(mesh, surface, offset, data);
 
@@ -77,7 +77,7 @@ public sealed partial class RenderingServer
     /// <summary>Gets the packed color/texture-coordinate/custom stride for a supported format.</summary>
     /// <param name="format">Surface format mask.</param>
     /// <param name="vertexCount">Nonnegative surface vertex count.</param>
-    /// <returns>Four bytes for color, eight per present UV, plus each custom format record width.</returns>
+    /// <returns>Four bytes for color, eight per present UV (four with CompressAttributes), plus each custom format record width.</returns>
     /// <exception cref="NotSupportedException">The format requires unsupported channels or non-2D vertices.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static int MeshSurfaceGetFormatAttributeStride(Mesh.ArrayFormat format, int vertexCount) => RequireService().MeshSurfaceGetFormatAttributeStrideCore(format, vertexCount);

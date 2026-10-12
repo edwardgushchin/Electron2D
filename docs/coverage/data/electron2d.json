@@ -35377,6 +35377,32 @@
     "value": "8"
   },
   {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.CompressAttributes()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "CompressAttributes",
+    "signature": "public const Electron2D.Mesh.ArrayFormat CompressAttributes = 536870912",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "536870912"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.CompressFlagsBase()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "CompressFlagsBase",
+    "signature": "public const Electron2D.Mesh.ArrayFormat CompressFlagsBase = 25",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "25"
+  },
+  {
     "id": "enumValue:Electron2D.Mesh.ArrayFormat.Custom0()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Mesh.ArrayFormat",

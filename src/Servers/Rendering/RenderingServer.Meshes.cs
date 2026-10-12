@@ -22,10 +22,11 @@ public sealed partial class RenderingServer
     /// <summary>Returns the packed mesh-local normal/tangent stride.</summary>
     /// <param name="format">Supported typed mesh channel flags.</param>
     /// <param name="vertexCount">Nonnegative vertex count; does not affect the stride.</param>
-    /// <returns>Four bytes per present octahedral normal or tangent channel, zero without either channel.</returns>
+    /// <returns>Six bytes for a CompressAttributes normal/tangent frame; otherwise four bytes per present direction channel. Zero without directions.</returns>
     public static int MeshSurfaceGetFormatNormalTangentStride(Mesh.ArrayFormat format, int vertexCount)
     {
         RequireService().EnsureOwner(); ValidateMeshFormat(format, vertexCount);
+        if ((format & Mesh.ArrayFormat.CompressAttributes) != 0) return (format & Mesh.ArrayFormat.Normal) != 0 ? 6 : 0;
         return ((format & Mesh.ArrayFormat.Normal) != 0 ? 4 : 0) + ((format & Mesh.ArrayFormat.Tangent) != 0 ? 4 : 0);
     }
     internal void MeshSurfaceUpdateSkinRegionCore(RID mesh, int surface, int offset, ReadOnlySpan<byte> data) { EnsureTextureChange(); RenderingMeshRegistry.Owned(mesh, this).SurfaceUpdateSkinRegion(surface, offset, data); }
@@ -44,7 +45,8 @@ public sealed partial class RenderingServer
     private static void ValidateMeshFormat(Mesh.ArrayFormat format, int vertexCount)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(vertexCount);
-        const Mesh.ArrayFormat supported = Mesh.ArrayFormat.Custom0 | Mesh.ArrayFormat.Custom1 | Mesh.ArrayFormat.Custom2 | Mesh.ArrayFormat.Custom3 | MeshCustomCodec.FormatMask | Mesh.ArrayFormat.Vertex | Mesh.ArrayFormat.Normal | Mesh.ArrayFormat.Tangent | Mesh.ArrayFormat.Color | Mesh.ArrayFormat.TexUV | Mesh.ArrayFormat.TexUV2 | Mesh.ArrayFormat.Index | Mesh.ArrayFormat.Use2DVertices | Mesh.ArrayFormat.UseDynamicUpdate | Mesh.ArrayFormat.Bones | Mesh.ArrayFormat.Weights | Mesh.ArrayFormat.Use8BoneWeights;
+        if ((format & Mesh.ArrayFormat.CompressAttributes) != 0 && (format & Mesh.ArrayFormat.Tangent) != 0 && (format & Mesh.ArrayFormat.Normal) == 0) throw new ArgumentException("Compressed tangents require normals.", nameof(format));
+        const Mesh.ArrayFormat supported = Mesh.ArrayFormat.Custom0 | Mesh.ArrayFormat.Custom1 | Mesh.ArrayFormat.Custom2 | Mesh.ArrayFormat.Custom3 | MeshCustomCodec.FormatMask | Mesh.ArrayFormat.Vertex | Mesh.ArrayFormat.Normal | Mesh.ArrayFormat.Tangent | Mesh.ArrayFormat.Color | Mesh.ArrayFormat.TexUV | Mesh.ArrayFormat.TexUV2 | Mesh.ArrayFormat.Index | Mesh.ArrayFormat.Use2DVertices | Mesh.ArrayFormat.UseDynamicUpdate | Mesh.ArrayFormat.Bones | Mesh.ArrayFormat.Weights | Mesh.ArrayFormat.Use8BoneWeights | Mesh.ArrayFormat.CompressAttributes;
         if ((format & ~supported) != 0 || (format & Mesh.ArrayFormat.Vertex) != 0 && (format & Mesh.ArrayFormat.Use2DVertices) == 0)
             throw new NotSupportedException("The mesh format requires unsupported attribute storage or non-2D vertices.");
     }

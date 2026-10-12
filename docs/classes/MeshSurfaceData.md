@@ -110,7 +110,7 @@ value: Empty initially; each index must address Vertices when consumed.
 
 summary: Gets or sets optional mesh-local numerical normal vectors.
 
-value: Empty or one finite Vector3 per vertex; consumed surfaces pack directions to octahedral UNORM16.
+value: Empty or one finite Vector3 per vertex; consumed surfaces pack directions to octahedral UNORM16 or a compressed joint axis/angle frame.
 
 ### Tangents
 
@@ -151,3 +151,8 @@ value: Empty initially; vertices must be finite when consumed.
 summary: Gets or sets flattened skin weights matching Bones.
 
 value: Finite values; imports clamp and truncate to unsigned normalized 16-bit weights without normalizing the sum.
+
+
+## Compressed attribute storage
+
+`Mesh.ArrayFormat.CompressAttributes` retains float XY positions, four-byte UNORM16 primary/secondary UVs and a six-byte joint normal/tangent axis/angle record. UVs outside [0,1] use copied per-component scale metadata; zero axes remain zero and overflowing scale rejects before mutation. Normal-only imports synthesize a tangent; tangent-only compressed input rejects. Frame packing normalizes/projects numerical directions, so it does not retain arbitrary magnitude/nonorthogonality. Partial updates preserve untouched canonical bytes. Tangent regeneration retains exact UV bytes/scale and reencodes the coupled frame. Copies, saved scenes and morph output retain the format and exact base records. AMS7 persists metadata and canonical bytes and reads AMS1–6. See [compressed attributes](../components/meshes.md#compressed-attributes) for layout, precision and verification limits.

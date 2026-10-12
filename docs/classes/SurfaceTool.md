@@ -439,3 +439,6 @@ System.ArgumentException: A value is nonfinite.
 ### ValidateDisposal
 
 `protected override System.Void ValidateDisposal()`
+
+
+Commit accepts CompressAttributes and executes the shared packed UV/joint-frame ArrayMesh import. CreateFrom/CreateFromBlendShape copy decoded compressed base channels and raw target channels; ordinary structural edits preserve those numerical values, while a compressed commit performs its documented quantization. See [compressed storage](../components/meshes.md#compressed-attributes).

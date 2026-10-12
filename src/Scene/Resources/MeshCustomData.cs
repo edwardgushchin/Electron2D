@@ -71,7 +71,8 @@ internal static class MeshCustomCodec
     }
     internal static int AttributeStride(Mesh.ArrayFormat format)
     {
-        var bytes = ((format & Mesh.ArrayFormat.Color) != 0 ? 4 : 0) + ((format & Mesh.ArrayFormat.TexUV) != 0 ? 8 : 0) + ((format & Mesh.ArrayFormat.TexUV2) != 0 ? 8 : 0);
+        var uvSize = (format & Mesh.ArrayFormat.CompressAttributes) != 0 ? 4 : 8;
+        var bytes = ((format & Mesh.ArrayFormat.Color) != 0 ? 4 : 0) + ((format & Mesh.ArrayFormat.TexUV) != 0 ? uvSize : 0) + ((format & Mesh.ArrayFormat.TexUV2) != 0 ? uvSize : 0);
         for (var i = 0; i < 4; i++) if ((format & Mask(i)) != 0) bytes += Stride((MeshCustomFormat)((ulong)format >> Shift(i) & 7));
         return bytes;
     }

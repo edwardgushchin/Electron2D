@@ -19,3 +19,6 @@ Surface and inherited material batches retain the drawing CanvasItem as Instance
 ## LOD preparation and replay
 
 Private alternate views share base channel arrays and retain copied indices. The full framebuffer basis selects the largest local threshold within one pixel using its greatest singular value. Custom callbacks capture validated levels under the revision guard; MultiMesh selects independently from each presentation transform and expands alternate geometry into the ordinary stream. See [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
+
+
+Compressed surfaces use the same decoded numerical channel contract. The cold custom format callback selects the compression codec with stable-revision recovery; prepared retained replay follows the shared [compressed attribute layout](../components/meshes.md#compressed-attributes).

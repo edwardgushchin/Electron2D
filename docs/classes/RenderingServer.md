@@ -1250,3 +1250,8 @@ Authored index sets select from the full local-to-framebuffer basis using a one-
 `public static System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> MeshSurfaceGetLODs(Electron2D.RID mesh, System.Int32 surface)`
 
 Uses the initialized process service on its owner thread. Invalid/disposed identities and surface indices reject through the common mesh registry; each query copies arrays and preserves resource ownership. Thresholds are local error units. See [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
+
+
+## Compressed attribute storage
+
+`Mesh.ArrayFormat.CompressAttributes` retains float XY positions, four-byte UNORM16 primary/secondary UVs and a six-byte joint normal/tangent axis/angle record. UVs outside [0,1] use copied per-component scale metadata; zero axes remain zero and overflowing scale rejects before mutation. Normal-only imports synthesize a tangent; tangent-only compressed input rejects. Frame packing normalizes/projects numerical directions, so it does not retain arbitrary magnitude/nonorthogonality. Partial updates preserve untouched canonical bytes. Tangent regeneration retains exact UV bytes/scale and reencodes the coupled frame. Copies, saved scenes and morph output retain the format and exact base records. AMS7 persists metadata and canonical bytes and reads AMS1–6. See [compressed attributes](../components/meshes.md#compressed-attributes) for layout, precision and verification limits.

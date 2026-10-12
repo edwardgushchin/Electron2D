@@ -526,3 +526,6 @@ index: Existing vertex index.
 value: Stored value, or default on failure.
 
 returns: Whether an annotation of this exact type is stored.
+
+
+Compressed ArrayMesh surfaces import decoded numerical channels and retain their format mask. CommitToSurface accepts CompressAttributes and applies the documented quantization to edited values through the shared [compressed attribute layout](../components/meshes.md#compressed-attributes).

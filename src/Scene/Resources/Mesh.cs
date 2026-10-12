@@ -72,7 +72,11 @@ public abstract partial class Mesh : Resource
         /// <summary>Vertex positions use two floating components.</summary>
         Use2DVertices = 33554432,
         /// <summary>Surface buffers accept explicit region updates.</summary>
-        UseDynamicUpdate = 67108864
+        UseDynamicUpdate = 67108864,
+        /// <summary>First bit position reserved for storage policy flags.</summary>
+        CompressFlagsBase = 25,
+        /// <summary>Uses UNORM16 texture coordinates and a six-byte joint numerical normal/tangent frame; XY positions retain float32.</summary>
+        CompressAttributes = 536870912
     }
     private readonly object _ridGate = new();
     private RID _rid;

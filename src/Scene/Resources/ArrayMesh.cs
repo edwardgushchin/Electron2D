@@ -7,14 +7,15 @@ namespace Electron2D;
 /// listeners do not roll back committed geometry. Mesh draws retain this resource and observe live data.</remarks>
 public sealed partial class ArrayMesh : Mesh
 {
-    internal sealed class Surface(MeshSurfaceData data, PrimitiveType primitive, ArrayFormat flags, uint[]? frameWords = null, MeshSurfaceData[]? blendShapes = null, ArrayFormat blendMask = ArrayFormat.Vertex, IReadOnlyDictionary<float, int[]>? lods = null)
+    internal sealed class Surface(MeshSurfaceData data, PrimitiveType primitive, ArrayFormat flags, uint[]? frameWords = null, MeshSurfaceData[]? blendShapes = null, ArrayFormat blendMask = ArrayFormat.Vertex, IReadOnlyDictionary<float, int[]>? lods = null, MeshCompression? compression = null)
     {
         internal readonly MeshSurfaceData Data = data;
         internal readonly MeshSurfaceData[] BlendShapes = blendShapes ?? [];
         internal readonly ArrayFormat BlendMask = blendMask;
-        internal readonly uint[] FrameWords = Prepare(data, frameWords);
+        internal readonly MeshCompression? Compression = (flags & ArrayFormat.CompressAttributes) != 0 ? compression?.Copy(data) ?? new MeshCompression(data) : null;
+        internal readonly uint[] FrameWords = Prepare(data, frameWords, (flags & ArrayFormat.CompressAttributes) != 0);
         internal readonly MeshLOD[] LODs = MeshLOD.Capture(lods, data, primitive);
-        private static uint[] Prepare(MeshSurfaceData data, uint[]? words) { data.PrepareCustoms(); return words ?? MeshFrameCodec.Capture(data); }
+        private static uint[] Prepare(MeshSurfaceData data, uint[]? words, bool compressed) { data.PrepareCustoms(); return compressed ? [] : words ?? MeshFrameCodec.Capture(data); }
         internal readonly PrimitiveType Primitive = primitive;
         internal readonly ArrayFormat Format = Channels(data) | flags;
         internal static ArrayFormat Channels(MeshSurfaceData data) => MeshCustomCodec.Channels(data) | ArrayFormat.Vertex | ArrayFormat.Use2DVertices |
@@ -22,7 +23,7 @@ public sealed partial class ArrayMesh : Mesh
         internal string Name = "";
         internal Material? Material;
     }
-    internal const ArrayFormat SupportedFormats = ArrayFormat.Custom0 | ArrayFormat.Custom1 | ArrayFormat.Custom2 | ArrayFormat.Custom3 | MeshCustomCodec.FormatMask | ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights;
+    internal const ArrayFormat SupportedFormats = ArrayFormat.Custom0 | ArrayFormat.Custom1 | ArrayFormat.Custom2 | ArrayFormat.Custom3 | MeshCustomCodec.FormatMask | ArrayFormat.CompressAttributes | ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights;
     internal readonly object Gate = new();
     private readonly List<Surface> _surfaces = [];
     /// <summary>Creates an empty mesh.</summary>
@@ -32,7 +33,7 @@ public sealed partial class ArrayMesh : Mesh
     /// <param name="arrays">Borrowed typed vertex/normal/tangent/color/primary and secondary UV/custom/index/skin arrays copied before mutation.</param>
     /// <param name="blendShapes">One copied position/normal/tangent-only target per named definition; null or empty for unshaped meshes.</param>
     /// <param name="lods">Copied positive finite local error thresholds mapped to shorter index sets; null or empty uses base geometry.</param>
-    /// <param name="flags">UseDynamicUpdate, Use2DVertices, Use8BoneWeights and matching channel bits. Unsupported bits reject before mutation.</param>
+    /// <param name="flags">UseDynamicUpdate, Use2DVertices, Use8BoneWeights, CompressAttributes and matching channel bits. Unsupported bits reject before mutation.</param>
     /// <remarks>Channel bits are inferred; explicitly supplied channel bits must match the arrays. The new surface index is the old GetSurfaceCount result.</remarks>
     /// <exception cref="ArgumentException">Channel counts, primitives or finite values are invalid.</exception>
     /// <exception cref="ArgumentNullException">The data or a channel array is null.</exception>
@@ -41,15 +42,15 @@ public sealed partial class ArrayMesh : Mesh
     /// <exception cref="ObjectDisposedException">The mesh is disposed.</exception>
     public void AddSurfaceFromArrays(PrimitiveType primitive, MeshSurfaceData arrays, IReadOnlyList<MeshSurfaceData>? blendShapes = null, IReadOnlyDictionary<float, int[]>? lods = null, ArrayFormat flags = ArrayFormat.None)
         => AddSurface(primitive, arrays, blendShapes, lods, flags, null);
-    internal void AddSurface(PrimitiveType primitive, MeshSurfaceData arrays, IReadOnlyList<MeshSurfaceData>? blendShapes, IReadOnlyDictionary<float, int[]>? lods, ArrayFormat flags, Material? material)
+    internal void AddSurface(PrimitiveType primitive, MeshSurfaceData arrays, IReadOnlyList<MeshSurfaceData>? blendShapes, IReadOnlyDictionary<float, int[]>? lods, ArrayFormat flags, Material? material, MeshCompression? compression = null)
     {
         ArgumentNullException.ThrowIfNull(arrays);
         if (material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(material));
         if ((flags & ~SupportedFormats) != 0) throw new NotSupportedException("These mesh flags require their attribute storage integration.");
         var copy = arrays.Copy(); copy.Validate(primitive);
         var blendMask = ArrayFormat.Vertex | (copy.Normals.Length != 0 ? ArrayFormat.Normal : 0) | (copy.Tangents.Length != 0 ? ArrayFormat.Tangent : 0);
-        var shapes = blendShapes?.Select(shape => { ArgumentNullException.ThrowIfNull(shape); var result = shape.Copy(); ValidateBlendShape(result, copy, blendMask); for (var i = 0; i < result.Normals.Length; i++) result.Normals[i] = MeshFrameCodec.Normal(MeshFrameCodec.PackNormal(result.Normals[i])); for (var i = 0; i < result.Tangents.Length; i++) result.Tangents[i] = MeshFrameCodec.Tangent(MeshFrameCodec.PackTangent(result.Tangents[i])); return result; }).ToArray() ?? [];
-        var packed = new Surface(copy, primitive, flags, blendShapes: shapes, blendMask: blendMask, lods: lods); var inferred = Surface.Channels(copy); const ArrayFormat channels = ArrayFormat.Custom0 | ArrayFormat.Custom1 | ArrayFormat.Custom2 | ArrayFormat.Custom3 | ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights; if ((flags & channels & ~inferred) != 0) throw new ArgumentException("Explicit channel flags require matching typed arrays.", nameof(flags)); if (copy.SkinSlots != 0 && copy.SkinSlots != ((flags & ArrayFormat.Use8BoneWeights) != 0 ? 8 : 4)) throw new ArgumentException("Skin slot count must match the eight-weight flag.", nameof(flags)); copy.QuantizeSkin();
+        var shapes = blendShapes?.Select(shape => { ArgumentNullException.ThrowIfNull(shape); var result = shape.Copy(); ValidateBlendShape(result, copy, blendMask); if ((flags & ArrayFormat.CompressAttributes) != 0) { var authoredTangent = result.Tangents.Length != 0; _ = new MeshCompression(result); if (!authoredTangent) result.Tangents = []; } else { for (var i = 0; i < result.Normals.Length; i++) result.Normals[i] = MeshFrameCodec.Normal(MeshFrameCodec.PackNormal(result.Normals[i])); for (var i = 0; i < result.Tangents.Length; i++) result.Tangents[i] = MeshFrameCodec.Tangent(MeshFrameCodec.PackTangent(result.Tangents[i])); } return result; }).ToArray() ?? [];
+        var packed = new Surface(copy, primitive, flags, blendShapes: shapes, blendMask: blendMask, lods: lods, compression: compression); var inferred = Surface.Channels(copy); const ArrayFormat channels = ArrayFormat.Custom0 | ArrayFormat.Custom1 | ArrayFormat.Custom2 | ArrayFormat.Custom3 | ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights; if ((flags & channels & ~inferred) != 0) throw new ArgumentException("Explicit channel flags require matching typed arrays.", nameof(flags)); if (copy.SkinSlots != 0 && copy.SkinSlots != ((flags & ArrayFormat.Use8BoneWeights) != 0 ? 8 : 4)) throw new ArgumentException("Skin slot count must match the eight-weight flag.", nameof(flags)); copy.QuantizeSkin();
         for (var channel = 0; channel < 4; channel++)
         {
             var supplied = (ulong)flags >> MeshCustomCodec.Shift(channel) & 7;
@@ -81,10 +82,10 @@ public sealed partial class ArrayMesh : Mesh
     /// <returns>The first index, or minus one.</returns>
     /// <exception cref="ArgumentNullException">The name is null.</exception>
     public int SurfaceFindByName(string name) { ArgumentNullException.ThrowIfNull(name); lock (Gate) { ThrowIfDisposed(); for (var i = 0; i < _surfaces.Count; i++) if (_surfaces[i].Name == name) return i; return -1; } }
-    /// <summary>Updates bytes in packed positions and octahedral normal/tangent records.</summary>
+    /// <summary>Updates bytes in packed positions and numerical normal/tangent records.</summary>
     /// <param name="surfaceIndex">Existing zero-based index.</param>
     /// <param name="offset">Byte offset in the position block followed by interleaved normal/tangent words.</param>
-    /// <param name="data">Little-endian float X/Y positions followed by per-vertex octahedral UNORM16 normal/tangent words, including partial byte records.</param>
+    /// <param name="data">Little-endian float X/Y positions followed by per-vertex octahedral normal/tangent words, or six-byte joint axis/angle frames with CompressAttributes; partial records are accepted.</param>
     /// <remarks>Retained draws observe the update without rerecording.</remarks>
     /// <exception cref="ArgumentException">An affected position becomes nonfinite.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The region exceeds the vertex buffer.</exception>
@@ -93,7 +94,7 @@ public sealed partial class ArrayMesh : Mesh
         lock (Gate)
         {
             var surface = Get(surfaceIndex); var positionBytes = surface.Data.Vertices.Length * 8L;
-            if (offset < 0 || (long)offset + data.Length > positionBytes + surface.FrameWords.Length * 4L) throw new ArgumentOutOfRangeException(nameof(offset));
+            if (offset < 0 || (long)offset + data.Length > positionBytes + (surface.Compression?.Frames.Length ?? surface.FrameWords.Length * 4L)) throw new ArgumentOutOfRangeException(nameof(offset));
             Span<byte> record = stackalloc byte[8]; var end = (long)offset + data.Length;
             for (var pass = 0; pass < 2; pass++)
             {
@@ -104,7 +105,14 @@ public sealed partial class ArrayMesh : Mesh
                     if (!next.IsFinite()) throw new ArgumentException("Vertex updates must be finite.", nameof(data));
                     if (pass != 0) surface.Data.Vertices[index] = next;
                 }
-                if (pass != 0 && end > positionBytes)
+                if (pass != 0 && end > positionBytes && surface.Compression is { } compressed)
+                {
+                    for (var index = (int)Math.Max(0, ((long)offset - positionBytes) / 6); positionBytes + index * 6L < end; index++)
+                    {
+                        var bytes = compressed.Frames.AsSpan(index * 6, 6); Overlay(bytes, positionBytes + index * 6L, offset, data); compressed.RestoreFrame(surface.Data, index);
+                    }
+                }
+                else if (pass != 0 && end > positionBytes)
                     for (var word = (int)Math.Max(0, ((long)offset - positionBytes) / 4); positionBytes + word * 4L < end; word++)
                     {
                         var bytes = record[..4]; BinaryPrimitives.WriteUInt32LittleEndian(bytes, surface.FrameWords[word]); Overlay(bytes, positionBytes + word * 4L, offset, data);
@@ -117,8 +125,8 @@ public sealed partial class ArrayMesh : Mesh
     /// <summary>Updates bytes in a surface's packed color, primary/secondary UV and custom buffer.</summary>
     /// <param name="surfaceIndex">Existing zero-based surface index.</param>
     /// <param name="offset">Byte offset within the packed attribute buffer.</param>
-    /// <param name="data">Present RGBA8 UNORM, primary/secondary float UV pairs, then Custom0 through Custom3 records in their selected layouts.</param>
-    /// <remarks>Color uses four bytes per vertex; each UV channel uses eight; custom formats use four, eight, twelve or sixteen. Partial records retain untouched bytes.
+    /// <param name="data">Present RGBA8 UNORM, primary/secondary float UV pairs or compressed UNORM16 pairs, then Custom0 through Custom3 records in their selected layouts.</param>
+    /// <remarks>Color uses four bytes per vertex; each UV channel uses eight bytes, or four with CompressAttributes; custom formats use four, eight, twelve or sixteen. Partial records retain untouched bytes.
     /// Validation of every affected UV and custom component precedes any write.</remarks>
     /// <exception cref="ArgumentException">An affected UV or custom component becomes nonfinite.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The region exceeds the buffer.</exception>
@@ -132,14 +140,16 @@ public sealed partial class ArrayMesh : Mesh
             for (var pass = 0; pass < 2; pass++)
                 for (var index = offset / stride; index * (long)stride < end; index++)
                 {
-                    var buffer = record[..stride]; var uvOffset = colors ? 4 : 0; var secondaryOffset = uvOffset + (uvs ? 8 : 0);
+                    var buffer = record[..stride]; var uvOffset = colors ? 4 : 0; var uvBytes = surface.Compression is null ? 8 : 4; var secondaryOffset = uvOffset + (uvs ? uvBytes : 0);
                     if (colors) { var color = surface.Data.Colors[index]; buffer[0] = Byte(color.R); buffer[1] = Byte(color.G); buffer[2] = Byte(color.B); buffer[3] = Byte(color.A); }
-                    if (uvs) { var uv = surface.Data.UVs[index]; BinaryPrimitives.WriteSingleLittleEndian(buffer[uvOffset..], uv.X); BinaryPrimitives.WriteSingleLittleEndian(buffer[(uvOffset + 4)..], uv.Y); }
-                    if (uv2s) { var uv = surface.Data.UV2s[index]; BinaryPrimitives.WriteSingleLittleEndian(buffer[secondaryOffset..], uv.X); BinaryPrimitives.WriteSingleLittleEndian(buffer[(secondaryOffset + 4)..], uv.Y); }
-                    var customOffset = secondaryOffset + (uv2s ? 8 : 0);
+                    if (uvs && surface.Compression is { } compression) compression.UVs.AsSpan(index * 4, 4).CopyTo(buffer[uvOffset..]);
+                    else if (uvs) { var uv = surface.Data.UVs[index]; BinaryPrimitives.WriteSingleLittleEndian(buffer[uvOffset..], uv.X); BinaryPrimitives.WriteSingleLittleEndian(buffer[(uvOffset + 4)..], uv.Y); }
+                    if (uv2s && surface.Compression is { } secondaryCompression) secondaryCompression.UV2s.AsSpan(index * 4, 4).CopyTo(buffer[secondaryOffset..]);
+                    else if (uv2s) { var uv = surface.Data.UV2s[index]; BinaryPrimitives.WriteSingleLittleEndian(buffer[secondaryOffset..], uv.X); BinaryPrimitives.WriteSingleLittleEndian(buffer[(secondaryOffset + 4)..], uv.Y); }
+                    var customOffset = secondaryOffset + (uv2s ? uvBytes : 0);
                     for (var channel = 0; channel < 4; channel++) if (surface.Data.Custom(channel) is { } custom) { var size = MeshCustomCodec.Stride(custom.Format); custom.Data.AsSpan(index * size, size).CopyTo(buffer[customOffset..]); customOffset += size; }
                     Overlay(buffer, index * (long)stride, offset, data);
-                    customOffset = secondaryOffset + (uv2s ? 8 : 0);
+                    customOffset = secondaryOffset + (uv2s ? uvBytes : 0);
                     for (var channel = 0; channel < 4; channel++) if (surface.Data.Custom(channel) is { } custom)
                         {
                             var size = MeshCustomCodec.Stride(custom.Format); var recordBytes = buffer.Slice(customOffset, size);
@@ -147,11 +157,11 @@ public sealed partial class ArrayMesh : Mesh
                             if (pass != 0) { recordBytes.CopyTo(custom.Data.AsSpan(index * size, size)); custom.Refresh(index); }
                             customOffset += size;
                         }
-                    if (uvs && !ReadVector(buffer[uvOffset..]).IsFinite() || uv2s && !ReadVector(buffer[secondaryOffset..]).IsFinite()) throw new ArgumentException("Attribute updates must be finite.", nameof(data));
+                    if (uvs && !(surface.Compression?.ReadUV(buffer[uvOffset..], false) ?? ReadVector(buffer[uvOffset..])).IsFinite() || uv2s && !(surface.Compression?.ReadUV(buffer[secondaryOffset..], true) ?? ReadVector(buffer[secondaryOffset..])).IsFinite()) throw new ArgumentException("Attribute updates must be finite.", nameof(data));
                     if (pass == 0) continue;
                     if (colors) surface.Data.Colors[index] = new(buffer[0] / 255f, buffer[1] / 255f, buffer[2] / 255f, buffer[3] / 255f);
-                    if (uvs) surface.Data.UVs[index] = ReadVector(buffer[uvOffset..]);
-                    if (uv2s) surface.Data.UV2s[index] = ReadVector(buffer[secondaryOffset..]);
+                    if (uvs) { if (surface.Compression is { } primary) buffer.Slice(uvOffset, 4).CopyTo(primary.UVs.AsSpan(index * 4)); surface.Data.UVs[index] = surface.Compression?.ReadUV(buffer[uvOffset..], false) ?? ReadVector(buffer[uvOffset..]); }
+                    if (uv2s) { if (surface.Compression is { } secondary) buffer.Slice(secondaryOffset, 4).CopyTo(secondary.UV2s.AsSpan(index * 4)); surface.Data.UV2s[index] = surface.Compression?.ReadUV(buffer[secondaryOffset..], true) ?? ReadVector(buffer[secondaryOffset..]); }
                 }
         }
         EmitChanged();
@@ -189,7 +199,7 @@ public sealed partial class ArrayMesh : Mesh
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
         Surface[] copies; string[] names; BlendShapeMode mode;
-        lock (Gate) { ThrowIfDisposed(); names = _blendShapeNames.ToArray(); mode = _blendShapeMode; copies = new Surface[_surfaces.Count]; for (var i = 0; i < copies.Length; i++) { var s = _surfaces[i]; copies[i] = new(s.Data.Copy(), s.Primitive, s.Format & (ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights), (uint[])s.FrameWords.Clone(), s.BlendShapes.Select(shape => shape.Copy()).ToArray(), s.BlendMask, MeshLOD.Copy(s.LODs)) { Name = s.Name, Material = s.Material }; } }
+        lock (Gate) { ThrowIfDisposed(); names = _blendShapeNames.ToArray(); mode = _blendShapeMode; copies = new Surface[_surfaces.Count]; for (var i = 0; i < copies.Length; i++) { var s = _surfaces[i]; copies[i] = new(s.Data.Copy(), s.Primitive, s.Format & (ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.CompressAttributes), (uint[])s.FrameWords.Clone(), s.BlendShapes.Select(shape => shape.Copy()).ToArray(), s.BlendMask, MeshLOD.Copy(s.LODs), s.Compression) { Name = s.Name, Material = s.Material }; } }
         foreach (var copy in copies) copy.Material = (Material?)duplicateSubresource(copy.Material);
         var other = (ArrayMesh)target; lock (other.Gate) { other.ThrowIfDisposed(); other._surfaces.Clear(); other._surfaces.AddRange(copies); other._blendShapeNames.Clear(); other._blendShapeNames.AddRange(names); other._blendShapeMode = mode; }
     }

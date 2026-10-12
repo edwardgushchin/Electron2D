@@ -11,7 +11,7 @@ public sealed class MeshSurfaceData
     /// <value>Empty initially; vertices must be finite when consumed.</value>
     public Vector2[] Vertices { get; set; } = [];
     /// <summary>Gets or sets optional mesh-local numerical normal vectors.</summary>
-    /// <value>Empty or one finite Vector3 per vertex; consumed surfaces pack directions to octahedral UNORM16.</value>
+    /// <value>Empty or one finite Vector3 per vertex; consumed surfaces pack directions to octahedral UNORM16 or a compressed joint axis/angle frame.</value>
     public Vector3[] Normals { get; set; } = [];
     /// <summary>Gets or sets optional mesh-local tangent vectors and handedness.</summary>
     /// <value>Empty or one finite Vector4 per vertex; XYZ is the direction and W selects negative or positive orientation.</value>

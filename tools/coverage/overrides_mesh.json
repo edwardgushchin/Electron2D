@@ -128,7 +128,7 @@
     {
       "godot": "ArrayMesh::method:add_surface_from_arrays(int:Mesh.PrimitiveType,Array:,Array[]:,Dictionary:,int:Mesh.ArrayFormat)",
       "electron2d": "method:Electron2D.ArrayMesh.AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType,Electron2D.MeshSurfaceData,System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData>,System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]>,Electron2D.Mesh.ArrayFormat)",
-      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits. Named morph and authored LOD inputs now execute; unsupported compression flags reject until the first encoder/decoder and precision-validation slice."
+      "reason": "ADR 0092: copied typed base/custom/skin/named-target/LOD/compressed imports execute through finite canonical packing and actual retained drawing. Procedural shader-generated empty-position geometry remains the exact separate prerequisite."
     },
     {
       "godot": "ArrayMesh::method:clear_surfaces()",
@@ -193,7 +193,7 @@
     {
       "godot": "RenderingServer::method:mesh_add_surface_from_arrays(RID:,int:RenderingServer.PrimitiveType,Array:,Array:,Dictionary:,int:RenderingServer.ArrayFormat)",
       "electron2d": "method:Electron2D.RenderingServer.MeshAddSurfaceFromArrays(Electron2D.RID,Electron2D.Mesh.PrimitiveType,Electron2D.MeshSurfaceData,Electron2D.Mesh.ArrayFormat,System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData>,System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]>)",
-      "reason": "Typed owned surface import preserves positional flags and adds copied target payloads. Definition count is authored by MeshCreate(int); LOD input still rejects until typed scale selection exists under ADR 0092."
+      "reason": "ADR 0092: copied typed base/custom/skin/named-target/LOD/compressed imports execute through finite canonical packing and actual retained drawing. Procedural shader-generated empty-position geometry remains the exact separate prerequisite."
     },
     {
       "godot": "RenderingServer::method:mesh_clear(RID:)",
@@ -1544,6 +1544,26 @@
       "godot": "Mesh::method:_surface_get_lods(int:)",
       "electron2d": "method:Electron2D.Mesh.OnSurfaceGetLODs(System.Int32)",
       "reason": "ADR 0092: copied positive finite local error thresholds and shorter complete index sets, sorted queries, full framebuffer-basis singular-value selection and independent MultiMesh levels. Morph/skin/custom channels, tangent regeneration, duplicates and AMS6/fresh scenes preserve the executed geometry; invalid input rejects atomically. Native GPU/compatibility pixels and warm complete frames retain platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_COMPRESS_FLAGS_BASE",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.CompressFlagsBase()",
+      "reason": "ADRs 0051/0092: shared flag values execute canonical UNORM16 UV and six-byte axis/angle frames over float XY, exact partial/copy/archive/morph preservation and real GLSL/HLSL/compatibility pixels. Pinned independent frame precision and warmed managed-zero checks distinguish native/platform limits."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_COMPRESS_ATTRIBUTES",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.CompressAttributes()",
+      "reason": "ADRs 0051/0092: shared flag values execute canonical UNORM16 UV and six-byte axis/angle frames over float XY, exact partial/copy/archive/morph preservation and real GLSL/HLSL/compatibility pixels. Pinned independent frame precision and warmed managed-zero checks distinguish native/platform limits."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_COMPRESS_FLAGS_BASE",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.CompressFlagsBase()",
+      "reason": "ADRs 0051/0092: shared flag values execute canonical UNORM16 UV and six-byte axis/angle frames over float XY, exact partial/copy/archive/morph preservation and real GLSL/HLSL/compatibility pixels. Pinned independent frame precision and warmed managed-zero checks distinguish native/platform limits."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_COMPRESS_ATTRIBUTES",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.CompressAttributes()",
+      "reason": "ADRs 0051/0092: shared flag values execute canonical UNORM16 UV and six-byte axis/angle frames over float XY, exact partial/copy/archive/morph preservation and real GLSL/HLSL/compatibility pixels. Pinned independent frame precision and warmed managed-zero checks distinguish native/platform limits."
     }
   ],
   "extras": [
@@ -1906,14 +1926,6 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: concrete typed normal/tangent/custom/compressed channel byte storage and an actual shader-attribute consumer over the mesh path (ADR 0092).",
-      "godot": [
-        "Mesh::enum_value:ArrayFormat.ARRAY_COMPRESS_FLAGS_BASE",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_COMPRESS_ATTRIBUTES"
-      ]
-    },
-    {
       "state": "Implemented",
       "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits.",
       "godot": [
@@ -2204,14 +2216,6 @@
     },
     {
       "godot": [
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_COMPRESS_FLAGS_BASE",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_COMPRESS_ATTRIBUTES"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: concrete typed normal/tangent/custom/compressed channel byte storage and an actual shader-attribute consumer over the mesh path (ADR 0092)."
-    },
-    {
-      "godot": [
         "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY"
       ],
       "state": "Blocked",
@@ -2455,7 +2459,17 @@
         "ArrayMesh::method:add_surface_from_arrays(int:Mesh.PrimitiveType,Array:,Array[]:,Dictionary:,int:Mesh.ArrayFormat)",
         "RenderingServer::method:mesh_add_surface_from_arrays(RID:,int:RenderingServer.PrimitiveType,Array:,Array:,Dictionary:,int:RenderingServer.ArrayFormat)"
       ],
-      "reason": "Typed base/custom/skin/named morph and copied LOD inputs now execute through storage, saved scenes and actual scale-selected rendering under ADR 0092. Remaining trigger: ARRAY_FLAG_COMPRESS_ATTRIBUTES encoder/decoder and visible precision validation in its first attribute-compression slice; unsupported compression flags reject atomically."
+      "reason": "Typed base/custom/skin/named morph/authored LOD and compressed UV/frame inputs execute through saved resources and real retained rendering under ADR 0092. Remaining trigger: ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires the actual procedural vertex-shader producer and non-position channel drawing; present canvas geometry requires explicit float XY. Empty-position flags remain absent and reject before mutation."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "Mesh::enum_value:ArrayFormat.ARRAY_COMPRESS_FLAGS_BASE",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_COMPRESS_ATTRIBUTES",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_COMPRESS_FLAGS_BASE",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_COMPRESS_ATTRIBUTES"
+      ],
+      "reason": "ADRs 0051/0092: shared flag values execute canonical UNORM16 UV and six-byte axis/angle frames over float XY, exact partial/copy/archive/morph preservation and real GLSL/HLSL/compatibility pixels. Pinned independent frame precision and warmed managed-zero checks distinguish native/platform limits."
     }
   ]
 }

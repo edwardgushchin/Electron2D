@@ -7,7 +7,7 @@ internal static class MeshFrameCodec
         var cross = ((double)b.X - a.X) * ((double)c.Y - a.Y) - ((double)b.Y - a.Y) * ((double)c.X - a.X);
         return new(0, 0, (flip ? 1 : -1) * Math.Sign(cross));
     }
-    internal static uint[] Capture(MeshSurfaceData data)
+    internal static void SynthesizeTangents(MeshSurfaceData data)
     {
         var normal = data.Normals.Length != 0;
         if (normal && data.Tangents.Length == 0)
@@ -20,6 +20,10 @@ internal static class MeshFrameCodec
                 data.Tangents[i] = new(t.X, t.Y, t.Z, 1);
             }
         }
+    }
+    internal static uint[] Capture(MeshSurfaceData data)
+    {
+        SynthesizeTangents(data); var normal = data.Normals.Length != 0;
         var tangent = data.Tangents.Length != 0;
         var stride = (normal ? 1 : 0) + (tangent ? 1 : 0);
         if (stride == 0) return [];

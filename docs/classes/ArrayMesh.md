@@ -8,7 +8,7 @@ Last updated: 2026-10-12
 
 ## Description
 
-Concrete copied surface storage. AddSurfaceFromArrays accepts typed Vertices/Normals/Tangents/Colors/UVs/UV2s/Custom0–Custom3/Indices, copied named morph targets and copied authored LOD indices and supported flags. Every channel is copied and validated before adding; vertex/normal/tangent/color/primary-UV/secondary-UV/custom-record counts and index bounds must match topology. All five topologies execute. Empty or malformed vertex payloads reject. Colors clamp/truncate to RGBA8 UNORM on import; source getters expose decoded quantized colors, preserving the exercised pinned storage precision. Position/texture coordinates remain float pairs. The new index is the previous GetSurfaceCount. Surfaces default to an empty name and null borrowed material; duplicates names are allowed and search returns the first exact ordinal match. Remove shifts later indices, Clear removes all; borrowed materials remain live. Every edit commits before Changed, including equal name/material writes; listener failure does not undo valid data.
+Concrete copied surface storage. AddSurfaceFromArrays accepts typed Vertices/Normals/Tangents/Colors/UVs/UV2s/Custom0–Custom3/Indices, copied named morph targets and copied authored LOD indices and supported flags. Every channel is copied and validated before adding; vertex/normal/tangent/color/primary-UV/secondary-UV/custom-record counts and index bounds must match topology. All five topologies execute. Empty or malformed vertex payloads reject. Colors clamp/truncate to RGBA8 UNORM on import; source getters expose decoded quantized colors, preserving the exercised pinned storage precision. Positions remain float pairs; UVs use float pairs unless CompressAttributes is selected. The new index is the previous GetSurfaceCount. Surfaces default to an empty name and null borrowed material; duplicates names are allowed and search returns the first exact ordinal match. Remove shifts later indices, Clear removes all; borrowed materials remain live. Every edit commits before Changed, including equal name/material writes; listener failure does not undo valid data.
 
 ## Example
 
@@ -91,7 +91,7 @@ blendShapes: One copied position/normal/tangent-only target per named definition
 
 lods: Copied positive finite local error thresholds mapped to shorter index sets; null or empty uses base geometry.
 
-flags: UseDynamicUpdate, Use2DVertices, Use8BoneWeights and matching channel bits. Unsupported bits reject before mutation.
+flags: UseDynamicUpdate, Use2DVertices, Use8BoneWeights, CompressAttributes and matching channel bits. Unsupported bits reject before mutation.
 
 remarks: Channel bits are inferred; explicitly supplied channel bits must match the arrays. The new surface index is the old GetSurfaceCount result.
 
@@ -195,7 +195,7 @@ System.ObjectDisposedException: The mesh is disposed.
 
 summary: Regenerates each surface's tangent channel from its existing normals and primary UVs.
 
-remarks: Uses the same MikkTSpace path as SurfaceTool. Empty meshes do nothing. Every surface is prepared before publication; errors preserve all prior surfaces. Positions, indices, names, materials, policy flags, blend definitions/target payloads and exact packed normal words remain unchanged. Success publishes one Changed event. Structural regeneration may allocate.
+remarks: Uses the same MikkTSpace path as SurfaceTool. Empty meshes do nothing. Every surface is prepared before publication; errors preserve all prior surfaces. Positions, indices, names, materials, policy flags, blend definitions/target payloads and exact packed UV bytes/scale remain unchanged. Ordinary normal words stay exact; compressed coupled frames reencode normals within numerical precision. Success publishes one Changed event. Structural regeneration may allocate.
 
 System.InvalidOperationException: A surface lacks the required normal/UV data or complete face.
 
@@ -257,9 +257,9 @@ surfaceIndex: Existing zero-based surface index.
 
 offset: Byte offset within the packed attribute buffer.
 
-data: Present RGBA8 UNORM, primary/secondary float UV pairs, then Custom0 through Custom3 records in their selected layouts.
+data: Present RGBA8 UNORM, primary/secondary float UV pairs or compressed UNORM16 pairs, then Custom0 through Custom3 records in their selected layouts.
 
-remarks: Color uses four bytes per vertex; each UV channel uses eight; custom formats use four, eight, twelve or sixteen. Partial records retain untouched bytes. Validation of every affected UV and custom component precedes any write.
+remarks: Color uses four bytes per vertex; each UV channel uses eight bytes, or four with CompressAttributes; custom formats use four, eight, twelve or sixteen. Partial records retain untouched bytes. Validation of every affected UV and custom component precedes any write.
 
 System.ArgumentException: An affected UV or custom component becomes nonfinite.
 
@@ -293,7 +293,7 @@ surfaceIndex: Existing zero-based index.
 
 offset: Byte offset in the position block followed by interleaved normal/tangent words.
 
-data: Little-endian float X/Y positions followed by per-vertex octahedral UNORM16 normal/tangent words, including partial byte records.
+data: Little-endian float X/Y positions followed by per-vertex octahedral words or six-byte compressed joint axis/angle frames; partial records are accepted.
 
 remarks: Retained draws observe the update without rerecording.
 
@@ -311,4 +311,9 @@ value: Relative initially; changing the mode preserves stored payloads and updat
 
 ## LOD behavior
 
-Authored levels use copied positive local edge-error thresholds and shorter complete index sets over an indexed base. Drawing selects the largest threshold within one framebuffer pixel from the greatest singular value of the full transformed basis. Bounds, arrays and face/index counts preserve full geometry. Morph output and tangent regeneration retain levels. AMS6 persists LODs and targets and reads AMS1–5. See [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
+Authored levels use copied positive local edge-error thresholds and shorter complete index sets over an indexed base. Drawing selects the largest threshold within one framebuffer pixel from the greatest singular value of the full transformed basis. Bounds, arrays and face/index counts preserve full geometry. Morph output and tangent regeneration retain levels. AMS7 persists LODs, targets and compressed attributes and reads AMS1–6. See [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
+
+
+## Compressed attribute storage
+
+`Mesh.ArrayFormat.CompressAttributes` retains float XY positions, four-byte UNORM16 primary/secondary UVs and a six-byte joint normal/tangent axis/angle record. UVs outside [0,1] use copied per-component scale metadata; zero axes remain zero and overflowing scale rejects before mutation. Normal-only imports synthesize a tangent; tangent-only compressed input rejects. Frame packing normalizes/projects numerical directions, so it does not retain arbitrary magnitude/nonorthogonality. Partial updates preserve untouched canonical bytes. Tangent regeneration retains exact UV bytes/scale and reencodes the coupled frame. Copies, saved scenes and morph output retain the format and exact base records. AMS7 persists metadata and canonical bytes and reads AMS1–6. See [compressed attributes](../components/meshes.md#compressed-attributes) for layout, precision and verification limits.
