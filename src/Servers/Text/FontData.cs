@@ -41,6 +41,12 @@ internal sealed partial class FontData : IDisposable
     private FontMetrics _metricsResult;
     private FontGlyph _glyphResult;
 
+    internal FontSupportPolicy SupportPolicy { get; set; } = FontSupportPolicy.Empty;
+    internal HashSet<uint> SupportedScripts { get; private set; } = [];
+    private bool _colorFont;
+    internal int FallbackPriority(string language, uint script, bool emoji) { lock (_gate) { Check(); return emoji && _colorFont ? 0 : SupportPolicy.Priority(language, script, SupportedScripts); } }
+    internal bool IsLanguageSupported(string language) { lock (_gate) { Check(); return SupportPolicy.SupportsLanguage(language); } }
+    internal bool IsScriptSupported(string script) { lock (_gate) { Check(); return SupportPolicy.SupportsScript(script, SupportedScripts); } }
     internal object Gate => _gate;
     private readonly bool _bitmapData;
     internal bool HasData => _bytes.Length > 0 || _bitmapData;
@@ -88,7 +94,7 @@ internal sealed partial class FontData : IDisposable
             try
             {
                 result.Hinting = Hinting; result.SubpixelPositioning = SubpixelPositioning; result.KeepRoundingRemainders = KeepRoundingRemainders; result.Oversampling = Oversampling; result.ModulateColorGlyphs = ModulateColorGlyphs;
-                result.OpenTypeFeatures = OpenTypeFeatures; result.AllowSystemFallback = AllowSystemFallback; result.AdvertisedFaceCount = AdvertisedFaceCount; return result;
+                result.SupportPolicy = SupportPolicy; result.OpenTypeFeatures = OpenTypeFeatures; result.AllowSystemFallback = AllowSystemFallback; result.AdvertisedFaceCount = AdvertisedFaceCount; return result;
             }
             catch { result.Dispose(); throw; }
         }
@@ -206,7 +212,7 @@ internal sealed partial class FontData : IDisposable
                 {
                     _precision = _bytes.Length > 0 ? new NativeFontPrecision(_bytes, _faceIndex) : new NativeFontPrecision(Authored!);
                     if (_instance != null && _bytes.Length > 0) _precision.ConfigureInstance(_instance);
-                    VariationAxes = _precision.VariationAxes; Palettes = _precision.Palettes; PaletteNames = _precision.PaletteNames;
+                    _colorFont = (_precision.FaceFlags & (1L << 14)) != 0; SupportedScripts = _precision.SupportedScripts; VariationAxes = _precision.VariationAxes; Palettes = _precision.Palettes; PaletteNames = _precision.PaletteNames;
                     FamilyName = _precision.FamilyName; StyleName = _precision.StyleName; FaceCount = _precision.FaceCount; GlyphCount = _precision.GlyphCount; UnitsPerEm = _precision.UnitsPerEm;
                     FontStyle = (_precision.FaceStyleFlags & 2) != 0 ? FontStyle.Bold : 0;
                     if ((_precision.FaceStyleFlags & 1) != 0) FontStyle |= FontStyle.Italic;

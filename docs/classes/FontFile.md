@@ -1,6 +1,6 @@
 # FontFile
 
-Last updated: 2026-10-07
+Last updated: 2026-10-12
 
 **Inherits:** [Font](Font.md), [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
@@ -487,3 +487,54 @@ Type 1 PFB/PFM dynamic sources remain unsupported by the SFNT-backed native sour
 `public bool AllowSystemFallback { get; set; }`
 
 True initially and after file/bitmap reset. Missing shaped/drawn glyphs can load bounded owned platform sources after explicit fallbacks. Equal writes are silent; changing the policy invalidates layout and retains old fallback faces until active readers finish. Discovery is cold; prepared lookups reuse native faces. Missing or unsupported catalogs retain hexadecimal missing output. Source paths are not persisted with the permission.
+
+## Language and script support overrides
+
+Source: [FontFile.Support.cs](../../src/Scene/Resources/FontFile.Support.cs).
+
+| Signature | Contract |
+| --- | --- |
+| `public void SetLanguageSupportOverride(string language, bool supported)` | Stores an exact language preference. |
+| `public bool GetLanguageSupportOverride(string language)` | Returns the exact stored value; absent keys return false without insertion. |
+| `public void RemoveLanguageSupportOverride(string language)` | Removes the exact entry; absent keys are ignored. |
+| `public string[] GetLanguageSupportOverrides()` | Copies all language keys, including false entries, in insertion order. |
+| `public void SetScriptSupportOverride(string script, bool supported)` | Stores an exact writing-system preference. |
+| `public bool GetScriptSupportOverride(string script)` | Returns the exact stored value; absent keys return false without insertion. |
+| `public void RemoveScriptSupportOverride(string script)` | Removes the exact entry; absent keys are ignored. |
+| `public string[] GetScriptSupportOverrides()` | Copies all script keys, including false entries, in insertion order. |
+
+### SetLanguageSupportOverride
+
+`language` uses ordinal case-sensitive identity; empty and unfamiliar keys are retained. `*` supplies wildcard policy. Actual layout priority uses the first three characters of the consumer language with underscores removed, while shaping retains its full language. True gives the preferred language tier when script support is present; false lowers language priority. Primary-source selection always precedes fallback ranking. A preference does not synthesize missing glyphs or forbid a sole last-resort face.
+
+### GetLanguageSupportOverride
+
+Queries the exact entry only. It does not resolve wildcard or automatic support; use inherited `IsLanguageSupported` for that primary-source query. No missing entry is added and empty-font queries do not initialize native state.
+
+### RemoveLanguageSupportOverride
+
+Restores wildcard/default language policy for the removed key. Removing an absent key is silent.
+
+### GetLanguageSupportOverrides
+
+Returns an independently owned array containing both true and false entries in insertion order. Replacing a value retains its position; removing and reinserting moves it to the end.
+
+### SetScriptSupportOverride
+
+`script` ordinarily contains an ISO15924 tag such as `Latn`, `Arab` or `Hebr`. Exact entries precede `*`; otherwise native GSUB/GPOS metadata supplies automatic support. Bitmap sources have no automatic OpenType script metadata. Script-supported/language-supported fallback faces are tried first, followed by script-supported/language-unsupported faces, then script-unsupported faces. Each tier retains authored fallback order. Color fonts retain preferred emoji-presentation priority.
+
+### GetScriptSupportOverride
+
+Queries the exact entry only; absent and explicit false values both return false. Inherited `IsScriptSupported` resolves wildcard and automatic primary-source metadata.
+
+### RemoveScriptSupportOverride
+
+Restores wildcard/automatic script policy. Removing an absent key is silent.
+
+### GetScriptSupportOverrides
+
+Returns an independently owned insertion-order array including false and unfamiliar keys.
+
+All key methods reject null, embedded NUL, malformed UTF16 and keys longer than 65536 UTF16 units. All methods reject disposed fonts. Mutations serialize under the font state gate, update realized indexed data and invalidate dependent layouts/variations. Equal writes do not emit Changed; callbacks run after committing outside storage locks, so observer exceptions leave committed policy intact. Data replacement, bitmap import, duplication and the stored `_font_support` byte-array descriptor preserve policy. Parsing bounds lengths before allocation and validates version, counts, strict UTF8, boolean values, unique keys and complete consumption before publication. Old archives default to empty policy.
+
+FontSupportTests verifies real advances, wildcard/exact/removal behavior, primary priority, last resort, native script metadata, emoji presentation, callback failures, concurrent updates, duplicate independence, malformed storage and fresh-process archives. FontSupportRenderingTests checks actual canvas/Label/RichTextLabel/FontVariation pixel changes and 64 active plus 64 idle prepared intervals on current Linux Wayland GPU and compatibility backends; each measured zero managed bytes. Native allocation and other platform execution remain separate gates.

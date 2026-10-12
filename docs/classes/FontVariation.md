@@ -1,6 +1,6 @@
 # FontVariation
 
-Last updated: 2026-10-07
+Last updated: 2026-10-12
 
 **Inherits:** [Font](Font.md), [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
@@ -79,3 +79,7 @@ Negative face indices, invalid spacing categories, nonfinite coordinates/colors/
 ## System font integration
 
 [System font matching](../components/system-fonts.md) adds installed families/styles/logical collection faces and owned automatic text fallback over the shared native owner and canvas path. FontFile.AllowSystemFallback defaults to true; explicit resources retain precedence and explicit support queries remain distinct from automatic rendered coverage. Active parent readers retain retired fallback faces through policy changes. SystemFont archives store preferences and rematch the host. The current Linux catalog and both canvas consumers are exercised; CoreText/DirectWrite, extra raster/MSDF, native allocator and foreign acceptance gates remain explicit.
+
+## Inherited support policy
+
+Realized sources copy the base FontFile language/script policy while capturing their own native OpenType scripts. Base policy changes invalidate realized variation data and dependent text. Primary support queries describe that variation source; layout still uses the common stable fallback tiers. The FontSupportTests and native rendering host exercise inherited changes through a borrowed variation.

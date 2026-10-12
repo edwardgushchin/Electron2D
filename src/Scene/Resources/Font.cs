@@ -161,6 +161,27 @@ public abstract class Font : Resource
     /// <exception cref="ArgumentOutOfRangeException">The palette index is outside the available range.</exception>
     public string GetPaletteName(int index) { lock (FontGate) { ThrowIfDisposed(); var names = PrimaryData?.PaletteNames ?? []; if ((uint)index >= (uint)names.Length) throw new ArgumentOutOfRangeException(nameof(index)); return names[index]; } }
 
+    /// <summary>Tests the primary source's exact language support policy.</summary>
+    /// <param name="language">An exact ordinal language key. Unspecified language support defaults to true.</param>
+    /// <returns>The explicit override, then wildcard override, then automatic true value; false when no primary source exists.</returns>
+    /// <remarks>Fallback coverage is independent of this primary-source query.</remarks>
+    /// <exception cref="ArgumentException">The key contains NUL, invalid UTF16 or exceeds 65536 units.</exception>
+    /// <exception cref="ObjectDisposedException">The font or its required source is disposed.</exception>
+    public bool IsLanguageSupported(string language)
+    {
+        FontSupportPolicy.Validate(language); lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.IsLanguageSupported(language) ?? false; }
+    }
+    /// <summary>Tests the primary source's writing-system support.</summary>
+    /// <param name="script">An exact ordinal key, ordinarily a four-letter ISO15924 tag.</param>
+    /// <returns>The exact override, then wildcard override, then OpenType GSUB/GPOS script metadata. Bitmap sources have no automatic script metadata.</returns>
+    /// <remarks>Automatic lookup pads short keys with spaces and reads the first four ASCII characters; fallback sources are not queried.</remarks>
+    /// <exception cref="ArgumentException">The key contains NUL, invalid UTF16 or exceeds 65536 units.</exception>
+    /// <exception cref="ObjectDisposedException">The font or its required source is disposed.</exception>
+    public bool IsScriptSupported(string script)
+    {
+        FontSupportPolicy.Validate(script); lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.IsScriptSupported(script) ?? false; }
+    }
+
     /// <summary>Tests whether this font or a fallback contains a Unicode scalar.</summary>
     /// <param name="character">A Unicode scalar value.</param><returns>Whether a glyph is available.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The character is not a Unicode scalar.</exception>

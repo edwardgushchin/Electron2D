@@ -1,6 +1,6 @@
 # Text shaping and canvas fonts
 
-Last updated: 2026-10-07
+Last updated: 2026-10-12
 
 Private native binaries come from versioned Linux/macOS/Windows packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; full Windows/macOS runtime verification is pending.
 
@@ -70,3 +70,9 @@ Span features merge with each selected face’s file defaults, including fallbac
 ## System font integration
 
 [System font matching](../components/system-fonts.md) adds installed families/styles/logical collection faces and owned automatic text fallback over the shared native owner and canvas path. FontFile.AllowSystemFallback defaults to true; explicit resources retain precedence and explicit support queries remain distinct from automatic rendered coverage. Active parent readers retain retired fallback faces through policy changes. SystemFont archives store preferences and rematch the host. The current Linux catalog and both canvas consumers are exercised; CoreText/DirectWrite, extra raster/MSDF, native allocator and foreign acceptance gates remain explicit.
+
+## Support policy and fallback priority
+
+[FontFile support overrides](../classes/FontFile.md#language-and-script-support-overrides) use immutable copied [FontSupportPolicy](../classes/FontSupportPolicy.md) snapshots retained by primary/indexed/variation data. Font primary-source language/script queries are distinct from glyph coverage. NativeFontPrecision captures ISO15924 scripts through public HarfBuzz GSUB/GPOS enumeration on its serialized native owner. TextLayout resolves script before choosing a full grapheme face, tries primary first, then stable support tiers, and keeps unsupported explicit sources as last resort before installed-font fallback. Emoji presentation prefers color faces; text presentation retains ordinary support ordering. Full consumer language remains the shaping input; fallback priority uses its abbreviated key. This extends the existing pipeline and resource schema under ADR 0046 without a new text service.
+
+FontSupportTests exercises real source advances, invalidation, independent duplication and fresh-process typed archives. Native GPU/compatibility capture exercises canvas, Label, RichTextLabel and borrowed FontVariation with policy changes and 64 prepared active plus 64 idle intervals per backend at zero managed bytes. Native allocator counts, foreign execution and owner acceptance are not established by those checks.

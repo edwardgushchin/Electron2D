@@ -1,6 +1,6 @@
 # NativeFontPrecision
 
-Last updated: 2026-10-07
+Last updated: 2026-10-12
 
 - Declaration: `internal sealed unsafe partial class NativeFontPrecision : IDisposable`
 - Sources: [NativeFontPrecision.cs](../../src/Servers/Text/NativeFontPrecision.cs), [NativeFontPrecision.Raster.cs](../../src/Servers/Text/NativeFontPrecision.Raster.cs), [OpenTypeFeatureTags.cs](../../src/Servers/Text/OpenTypeFeatureTags.cs)
@@ -67,3 +67,7 @@ Sixty-four measured shaping/size/metric/raster-bound-query cycles after sixty-fo
 ## Bitmap/indexed font integration
 
 [Bitmap font authoring](../components/bitmap-fonts.md) connects FontFile indexed image/glyph/kerning/metric records and matching configured FontVariation resources to the existing HarfBuzz and common canvas/control path. Copied pixel UV regions preserve clipping and recorded image snapshots; authored publication retires native data after active readers finish. Text/binary v3 import, typed archive/fresh-process restoration and current Linux GPU/compatibility prepared output are exercised. Source policies and other platform/native-allocator gates remain explicit.
+
+## OpenType script metadata
+
+[NativeFontPrecision.Support.cs](../../src/Servers/Text/NativeFontPrecision.Support.cs) enumerates GSUB and GPOS script tags with `hb_ot_layout_table_get_script_tags`, validates counts and converts native tags to ISO15924 using `hb_ot_tag_to_script`. The copied set remains per realized face; bitmap faces have no automatic script tables. FontData combines metadata with explicit FontFile overrides for public primary queries and fallback ranking. No native handle is exposed.

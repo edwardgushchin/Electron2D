@@ -66,7 +66,7 @@ public partial class FontFile
         {
             ThrowIfDisposed(); replacement = new FontData([], authored: imported.Cache);
             replacement.AllowSystemFallback = true; replacement.Hinting = FontHinting.None; replacement.SubpixelPositioning = FontSubpixelPositioning.Disabled;
-            replacement.OpenTypeFeatures = _fontData!.OpenTypeFeatures; replacement.FamilyName = imported.Name; replacement.FontStyle = imported.Style;
+            replacement.SupportPolicy = _fontData!.SupportPolicy; replacement.OpenTypeFeatures = _fontData.OpenTypeFeatures; replacement.FamilyName = imported.Name; replacement.FontStyle = imported.Style;
             replacement.FontWeight = (imported.Style & FontStyle.Bold) != 0 ? 700 : 400;
             retired.Add(_fontData); retired.AddRange(_cacheData.Values); _cacheData.Clear(); _caches.Clear(); _caches.Add(imported.Cache);
             _fixedSize = imported.Cache.FixedSize; _fixedScaleMode = imported.Cache.ScaleMode; _fontData = replacement; _bytes = []; _deferred = false; InvalidateFontStateLocked();

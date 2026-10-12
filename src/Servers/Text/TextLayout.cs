@@ -140,32 +140,7 @@ internal sealed partial class TextLayout
             for (var i = paragraph; i < separatorEnd; i++) _paragraphLevels[i] = (sbyte)_bidi.ParagraphLevel;
             paragraph = separatorEnd;
         }
-        for (var start = 0; start < _count;)
-        {
-            var end = start + 1; while (end < _count && !_grapheme[end]) end++;
-            var sources = StyleAt(start).Font.GetSources();
-            FontData? face = null;
-            foreach (var source in sources)
-            {
-                var supported = true;
-                for (var i = start; i < end; i++) if (!IsIgnorable(i) && source.GetGlyphIndex(_scalars[i]) == 0) { supported = false; break; }
-                if (supported) { face = source; break; }
-            }
-            if (face == null)
-                foreach (var source in sources) if (source.FindSystemFallback(_scalars.AsSpan(start, end - start), _options.Language ?? "") is { } fallback) { face = fallback; break; }
-            for (var i = start; i < end; i++)
-            {
-                _faces[i] = face;
-                if (face is null)
-                {
-                    foreach (var source in sources) if (source.GetGlyphIndex(_scalars[i]) != 0) { _faces[i] = source; break; }
-                }
-                if (_faces[i] is null && !IsIgnorable(i))
-                    foreach (var source in sources) if (source.FindSystemFallback(_scalars[i], _options.Language ?? "") is { } fallback) { _faces[i] = fallback; break; }
-                _scripts[i] = new Codepoint(_scalars[i]).Script;
-            }
-            start = end;
-        }
+        for (var i = 0; i < _count; i++) _scripts[i] = new Codepoint(_scalars[i]).Script;
         var previous = UnicodeScript.Common;
         for (var i = 0; i < _count; i++)
         {
@@ -175,6 +150,38 @@ internal sealed partial class TextLayout
             for (var next = i + 1; next < _count && !IsHardBreak(_scalars[next]); next++)
                 if (TextScript.IsStrong(_scripts[next]) && TextScript.IsCompatible(_scalars[i], _scripts[next])) { _scripts[i] = _scripts[next]; break; }
         }
+        for (var start = 0; start < _count;)
+        {
+            var end = start + 1; while (end < _count && !_grapheme[end]) end++;
+            var style = StyleAt(start); var sources = style.Font.GetSources(); var primary = style.Font.PrimaryData;
+            var language = FontSupportPolicy.LanguageKey(style.Language); var script = TextScript.ToTag(_scripts[start]);
+            var emoji = new Codepoint(_scalars[start]).HasEmojiPresentation;
+            for (var i = start + 1; i < end; i++) { if (_scalars[i] == 0xFE0F) emoji = true; else if (_scalars[i] == 0xFE0E) emoji = false; }
+            if (emoji) script = 0x5A737965;
+            FontData? face = null;
+            for (var tier = -1; tier <= 2 && face is null; tier++) foreach (var source in sources)
+                {
+                    if (ReferenceEquals(source, primary) ? tier != -1 : tier != source.FallbackPriority(language, script, emoji)) continue;
+                    var supported = true;
+                    for (var i = start; i < end; i++) if (!IsIgnorable(i) && source.GetGlyphIndex(_scalars[i]) == 0) { supported = false; break; }
+                    if (supported) { face = source; break; }
+                }
+            if (face == null)
+                foreach (var source in sources) if (source.FindSystemFallback(_scalars.AsSpan(start, end - start), _options.Language ?? "") is { } fallback) { face = fallback; break; }
+            for (var i = start; i < end; i++)
+            {
+                _faces[i] = face;
+                if (face is null)
+                {
+                    for (var tier = -1; tier <= 2 && _faces[i] is null; tier++) foreach (var source in sources) if ((ReferenceEquals(source, primary) ? tier == -1 : tier == source.FallbackPriority(language, script, emoji)) && source.GetGlyphIndex(_scalars[i]) != 0) { _faces[i] = source; break; }
+                }
+                if (_faces[i] is null && !IsIgnorable(i))
+                    foreach (var source in sources) if (source.FindSystemFallback(_scalars[i], _options.Language ?? "") is { } fallback) { _faces[i] = fallback; break; }
+
+            }
+            start = end;
+        }
+
     }
 
     private void MeasureParagraphs()

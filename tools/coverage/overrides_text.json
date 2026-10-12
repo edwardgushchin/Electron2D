@@ -4084,6 +4084,56 @@
       "godot": "SystemFont::property:subpixel_positioning",
       "electron2d": "property:Electron2D.SystemFont.SubpixelPositioning()",
       "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    },
+    {
+      "godot": "Font::method:is_language_supported(String:)",
+      "electron2d": "method:Electron2D.Font.IsLanguageSupported(System.String)",
+      "reason": "ADR 0046: exact ordinal language/script overrides and wildcard precedence execute primary-source queries and stable fallback priority over native OpenType GSUB/GPOS metadata. Primary glyphs remain first; unsupported faces remain last resort and color emoji retain their preference. FontSupportTests covers copied lists, silent equal writes, callback failure, concurrent writes, source/variation/cache invalidation and typed fresh-process storage. Native GPU/compatibility canvas, Label, RichTextLabel and FontVariation pixels execute with 64 active and 64 idle intervals at zero managed bytes. Foreign execution and native allocator counts remain separate."
+    },
+    {
+      "godot": "Font::method:is_script_supported(String:)",
+      "electron2d": "method:Electron2D.Font.IsScriptSupported(System.String)",
+      "reason": "ADR 0046: exact ordinal language/script overrides and wildcard precedence execute primary-source queries and stable fallback priority over native OpenType GSUB/GPOS metadata. Primary glyphs remain first; unsupported faces remain last resort and color emoji retain their preference. FontSupportTests covers copied lists, silent equal writes, callback failure, concurrent writes, source/variation/cache invalidation and typed fresh-process storage. Native GPU/compatibility canvas, Label, RichTextLabel and FontVariation pixels execute with 64 active and 64 idle intervals at zero managed bytes. Foreign execution and native allocator counts remain separate."
+    },
+    {
+      "godot": "FontFile::method:get_language_support_override(String:)",
+      "electron2d": "method:Electron2D.FontFile.GetLanguageSupportOverride(System.String)",
+      "reason": "ADR 0046: exact ordinal language/script overrides and wildcard precedence execute primary-source queries and stable fallback priority over native OpenType GSUB/GPOS metadata. Primary glyphs remain first; unsupported faces remain last resort and color emoji retain their preference. FontSupportTests covers copied lists, silent equal writes, callback failure, concurrent writes, source/variation/cache invalidation and typed fresh-process storage. Native GPU/compatibility canvas, Label, RichTextLabel and FontVariation pixels execute with 64 active and 64 idle intervals at zero managed bytes. Foreign execution and native allocator counts remain separate."
+    },
+    {
+      "godot": "FontFile::method:get_language_support_overrides()",
+      "electron2d": "method:Electron2D.FontFile.GetLanguageSupportOverrides()",
+      "reason": "ADR 0046: exact ordinal language/script overrides and wildcard precedence execute primary-source queries and stable fallback priority over native OpenType GSUB/GPOS metadata. Primary glyphs remain first; unsupported faces remain last resort and color emoji retain their preference. FontSupportTests covers copied lists, silent equal writes, callback failure, concurrent writes, source/variation/cache invalidation and typed fresh-process storage. Native GPU/compatibility canvas, Label, RichTextLabel and FontVariation pixels execute with 64 active and 64 idle intervals at zero managed bytes. Foreign execution and native allocator counts remain separate."
+    },
+    {
+      "godot": "FontFile::method:get_script_support_override(String:)",
+      "electron2d": "method:Electron2D.FontFile.GetScriptSupportOverride(System.String)",
+      "reason": "ADR 0046: exact ordinal language/script overrides and wildcard precedence execute primary-source queries and stable fallback priority over native OpenType GSUB/GPOS metadata. Primary glyphs remain first; unsupported faces remain last resort and color emoji retain their preference. FontSupportTests covers copied lists, silent equal writes, callback failure, concurrent writes, source/variation/cache invalidation and typed fresh-process storage. Native GPU/compatibility canvas, Label, RichTextLabel and FontVariation pixels execute with 64 active and 64 idle intervals at zero managed bytes. Foreign execution and native allocator counts remain separate."
+    },
+    {
+      "godot": "FontFile::method:get_script_support_overrides()",
+      "electron2d": "method:Electron2D.FontFile.GetScriptSupportOverrides()",
+      "reason": "ADR 0046: exact ordinal language/script overrides and wildcard precedence execute primary-source queries and stable fallback priority over native OpenType GSUB/GPOS metadata. Primary glyphs remain first; unsupported faces remain last resort and color emoji retain their preference. FontSupportTests covers copied lists, silent equal writes, callback failure, concurrent writes, source/variation/cache invalidation and typed fresh-process storage. Native GPU/compatibility canvas, Label, RichTextLabel and FontVariation pixels execute with 64 active and 64 idle intervals at zero managed bytes. Foreign execution and native allocator counts remain separate."
+    },
+    {
+      "godot": "FontFile::method:remove_language_support_override(String:)",
+      "electron2d": "method:Electron2D.FontFile.RemoveLanguageSupportOverride(System.String)",
+      "reason": "ADR 0046: exact ordinal language/script overrides and wildcard precedence execute primary-source queries and stable fallback priority over native OpenType GSUB/GPOS metadata. Primary glyphs remain first; unsupported faces remain last resort and color emoji retain their preference. FontSupportTests covers copied lists, silent equal writes, callback failure, concurrent writes, source/variation/cache invalidation and typed fresh-process storage. Native GPU/compatibility canvas, Label, RichTextLabel and FontVariation pixels execute with 64 active and 64 idle intervals at zero managed bytes. Foreign execution and native allocator counts remain separate."
+    },
+    {
+      "godot": "FontFile::method:remove_script_support_override(String:)",
+      "electron2d": "method:Electron2D.FontFile.RemoveScriptSupportOverride(System.String)",
+      "reason": "ADR 0046: exact ordinal language/script overrides and wildcard precedence execute primary-source queries and stable fallback priority over native OpenType GSUB/GPOS metadata. Primary glyphs remain first; unsupported faces remain last resort and color emoji retain their preference. FontSupportTests covers copied lists, silent equal writes, callback failure, concurrent writes, source/variation/cache invalidation and typed fresh-process storage. Native GPU/compatibility canvas, Label, RichTextLabel and FontVariation pixels execute with 64 active and 64 idle intervals at zero managed bytes. Foreign execution and native allocator counts remain separate."
+    },
+    {
+      "godot": "FontFile::method:set_language_support_override(String:,bool:)",
+      "electron2d": "method:Electron2D.FontFile.SetLanguageSupportOverride(System.String,System.Boolean)",
+      "reason": "ADR 0046: exact ordinal language/script overrides and wildcard precedence execute primary-source queries and stable fallback priority over native OpenType GSUB/GPOS metadata. Primary glyphs remain first; unsupported faces remain last resort and color emoji retain their preference. FontSupportTests covers copied lists, silent equal writes, callback failure, concurrent writes, source/variation/cache invalidation and typed fresh-process storage. Native GPU/compatibility canvas, Label, RichTextLabel and FontVariation pixels execute with 64 active and 64 idle intervals at zero managed bytes. Foreign execution and native allocator counts remain separate."
+    },
+    {
+      "godot": "FontFile::method:set_script_support_override(String:,bool:)",
+      "electron2d": "method:Electron2D.FontFile.SetScriptSupportOverride(System.String,System.Boolean)",
+      "reason": "ADR 0046: exact ordinal language/script overrides and wildcard precedence execute primary-source queries and stable fallback priority over native OpenType GSUB/GPOS metadata. Primary glyphs remain first; unsupported faces remain last resort and color emoji retain their preference. FontSupportTests covers copied lists, silent equal writes, callback failure, concurrent writes, source/variation/cache invalidation and typed fresh-process storage. Native GPU/compatibility canvas, Label, RichTextLabel and FontVariation pixels execute with 64 active and 64 idle intervals at zero managed bytes. Foreign execution and native allocator counts remain separate."
     }
   ],
   "statusGroups": [
@@ -4243,29 +4293,29 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Applicable font metadata/support query is not implemented: is_language_supported. FreeType/HarfBuzz and Unicode data are present; add the typed query and verify actual tables/coverage instead of retaining the obsolete first-font dependency blocker.",
+      "state": "Implemented",
+      "reason": "ADR 0046: exact ordinal language/script overrides and wildcard precedence execute primary-source queries and stable fallback priority over native OpenType GSUB/GPOS metadata. Primary glyphs remain first; unsupported faces remain last resort and color emoji retain their preference. FontSupportTests covers copied lists, silent equal writes, callback failure, concurrent writes, source/variation/cache invalidation and typed fresh-process storage. Native GPU/compatibility canvas, Label, RichTextLabel and FontVariation pixels execute with 64 active and 64 idle intervals at zero managed bytes. Foreign execution and native allocator counts remain separate.",
       "godot": [
         "Font::method:is_language_supported(String:)"
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Applicable font metadata/support query is not implemented: is_script_supported. FreeType/HarfBuzz and Unicode data are present; add the typed query and verify actual tables/coverage instead of retaining the obsolete first-font dependency blocker.",
+      "state": "Implemented",
+      "reason": "ADR 0046: exact ordinal language/script overrides and wildcard precedence execute primary-source queries and stable fallback priority over native OpenType GSUB/GPOS metadata. Primary glyphs remain first; unsupported faces remain last resort and color emoji retain their preference. FontSupportTests covers copied lists, silent equal writes, callback failure, concurrent writes, source/variation/cache invalidation and typed fresh-process storage. Native GPU/compatibility canvas, Label, RichTextLabel and FontVariation pixels execute with 64 active and 64 idle intervals at zero managed bytes. Foreign execution and native allocator counts remain separate.",
       "godot": [
         "Font::method:is_script_supported(String:)"
       ]
     },
     {
       "state": "Partial",
-      "reason": "FontFile executes scalable/bitmap loading, indexed glyph/size/texture/kerning/instance authoring and real shared shaping/rendering/storage. Remaining applicable mechanisms: non-SFNT Type 1 sources and source policies: language/script overrides, automatic system fallback, antialiasing/embedded-bitmap/autohinter/mipmap modes and MSDF. Exact dependencies stay on their own rows; no inert settings are exposed.",
+      "reason": "FontFile executes scalable/bitmap loading, indexed glyph/size/texture/kerning/instance authoring, language/script overrides, Linux automatic system fallback and real shared shaping/rendering/storage. Remaining applicable mechanisms: non-SFNT Type 1 sources, antialiasing/embedded-bitmap/autohinter/mipmap modes and MSDF, plus foreign installed-font providers. Exact dependencies stay on their own rows; no inert settings are exposed.",
       "godot": [
         "class:FontFile"
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Language/script support-override state, list/removal and its effect on actual fallback selection are not implemented. Current explicit fallback char-map coverage is not this policy.",
+      "state": "Implemented",
+      "reason": "ADR 0046: exact ordinal language/script overrides and wildcard precedence execute primary-source queries and stable fallback priority over native OpenType GSUB/GPOS metadata. Primary glyphs remain first; unsupported faces remain last resort and color emoji retain their preference. FontSupportTests covers copied lists, silent equal writes, callback failure, concurrent writes, source/variation/cache invalidation and typed fresh-process storage. Native GPU/compatibility canvas, Label, RichTextLabel and FontVariation pixels execute with 64 active and 64 idle intervals at zero managed bytes. Foreign execution and native allocator counts remain separate.",
       "godot": [
         "FontFile::method:get_language_support_override(String:)",
         "FontFile::method:get_language_support_overrides()",

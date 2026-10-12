@@ -1,6 +1,6 @@
 # TextLayout
 
-Last updated: 2026-10-04
+Last updated: 2026-10-12
 
 **Visibility:** internal · **Source:** [TextLayout.cs](../../src/Servers/Text/TextLayout.cs) · **Component:** [Text](../components/text.md)
 
@@ -17,3 +17,7 @@ Used through [Font](Font.md), [FontFile](FontFile.md) and canvas/Label consumers
 ## Editing geometry
 
 [TextLayout.Editing.cs](../../src/Servers/Text/TextLayout.Editing.cs) provides shaped-grapheme/word boundaries, dominant input direction, leading/trailing BiDi carets, nearest-column hit testing and visual selection intervals for [LineEdit](LineEdit.md). Cluster advance is subdivided over scalar columns; zero-width controls keep valid boundary positions. Carets are prepared once per build in retained buffers, so a pointer hit is linear instead of rescanning all glyphs per column. Optional PreserveControl emits visible hexadecimal placeholders; optional local clip rectangles crop glyph textures and missing-glyph rectangles before canvas recording, converting logical glyph coordinates to physical oversampled bitmap UVs. LineEditTests verifies these paths alongside native editing/display.
+
+## Support-aware source selection
+
+Scripts are resolved before fallback selection. Primary sources remain first; explicit fallback sources retain authored order within the three language/script support tiers. Full grapheme coverage is attempted before scalar fallback, and script-unsupported sources remain last resort. Emoji presentation prefers color fonts, including explicit VS16, while VS15 retains ordinary text priority. Policy changes invalidate cached layout and dependent native variations; prepared canvas commands reuse glyph storage. The text component records current native pixel and allocation verification.

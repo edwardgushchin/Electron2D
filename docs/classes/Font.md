@@ -1,6 +1,6 @@
 # Font
 
-Last updated: 2026-10-07
+Last updated: 2026-10-12
 
 **Inherits:** [Resource](Resource.md) · **Source:** [Font.cs](../../src/Scene/Resources/Font.cs) · **Component:** [Text](../components/text.md)
 
@@ -424,3 +424,20 @@ Uses the inherited [Resource graph/lifecycle contract](Resource.md) for the conc
 ## System font integration
 
 [System font matching](../components/system-fonts.md) adds installed families/styles/logical collection faces and owned automatic text fallback over the shared native owner and canvas path. FontFile.AllowSystemFallback defaults to true; explicit resources retain precedence and explicit support queries remain distinct from automatic rendered coverage. Active parent readers retain retired fallback faces through policy changes. SystemFont archives store preferences and rematch the host. The current Linux catalog and both canvas consumers are exercised; CoreText/DirectWrite, extra raster/MSDF, native allocator and foreign acceptance gates remain explicit.
+
+## Language and script queries
+
+| Signature | Contract |
+| --- | --- |
+| `public bool IsLanguageSupported(string language)` | Primary-source exact override, wildcard, then automatic true. |
+| `public bool IsScriptSupported(string script)` | Primary-source exact override, wildcard, then native GSUB/GPOS script metadata. |
+
+### IsLanguageSupported
+
+Accepts an exact ordinal key and returns the primary source's resolved policy. Unlike HasChar, it does not search fallback resources. A missing primary returns false. Unspecified language support returns true; this is a preference query rather than a promise of glyph coverage.
+
+### IsScriptSupported
+
+Accepts an exact ordinal key, ordinarily an ISO15924 tag. Explicit and wildcard policy precede automatic native metadata. Automatic lookup reads the first four ASCII characters, padding shorter/non-ASCII positions with spaces; bitmap sources have no automatic script metadata. FontVariation inherits its base policy while retaining its independently configured native face. Missing primaries return false.
+
+Both methods reject null, embedded NUL, invalid UTF16, keys longer than 65536 units and disposed fonts/sources. FontSupportTests checks metadata, exact case, long tags, override precedence and primary-only semantics. Fallback policy and its rendered verification are described on [FontFile](FontFile.md#language-and-script-support-overrides).

@@ -39,6 +39,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
     internal float Descent { get; private set; }
     internal float Height => Ascent + Descent;
     internal float LineHeight { get; private set; }
+    internal HashSet<uint> SupportedScripts { get; private set; } = [];
     internal float UnderlinePosition { get; private set; }
     internal float UnderlineThickness { get; private set; }
 
@@ -66,6 +67,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
             _callbacks->Face = _face;
             _hbFace = HBFaceCreate((nint)(delegate* unmanaged[Cdecl]<nint, uint, nint, nint>)&ReferenceTable, (nint)_callbacks, 0);
             if (_hbFace == 0 || HBFaceGetGlyphCount(_hbFace) == 0) throw new ArgumentException("Font has no usable shaping tables.", nameof(immutableData));
+            SupportedScripts = ReadSupportedScripts();
             _parentFont = HBFontCreate(_hbFace);
             HBOTFontSetFuncs(_parentFont);
             _font = HBFontCreateSubFont(_parentFont);

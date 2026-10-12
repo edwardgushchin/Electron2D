@@ -89,7 +89,7 @@ internal static class FontCacheTests
         var prior = font.GetFaceIndex(2); Reject<InvalidOperationException>(() => font.SetFaceIndex(2, 99)); Check(font.GetFaceIndex(2) == prior, "Failed native instance realization rolls back.");
         font.RemoveCache(1); Check(font.GetCacheCount() == 2, "Cache removal compacts indices."); font.ClearCache(); Check(font.GetCacheCount() == 0 && font.HasChar('A'), "ClearCache retains scalable source and rebuilds on demand.");
     }
-    private static string Fixture(string directory)
+    internal static string Fixture(string directory)
     {
         using var image = Image.CreateEmpty(16, 8, false, Image.Format.Rgba8); image.Fill(Colors.Transparent);
         for (var y = 1; y < 7; y++) for (var x = 1; x < 6; x++) image.SetPixel(x, y, Colors.Cyan);

@@ -91613,6 +91613,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Font.IsLanguageSupported(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Font",
+    "name": "IsLanguageSupported",
+    "signature": "public System.Boolean IsLanguageSupported(System.String language)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Font.IsScriptSupported(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Font",
+    "name": "IsScriptSupported",
+    "signature": "public System.Boolean IsScriptSupported(System.String script)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "script",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Font.OnResetState()",
     "kind": "method",
     "declaringType": "Electron2D.Font",
@@ -92314,6 +92352,38 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.FontFile.GetLanguageSupportOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontFile",
+    "name": "GetLanguageSupportOverride",
+    "signature": "public System.Boolean GetLanguageSupportOverride(System.String language)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontFile.GetLanguageSupportOverrides()",
+    "kind": "method",
+    "declaringType": "Electron2D.FontFile",
+    "name": "GetLanguageSupportOverrides",
+    "signature": "public System.String[] GetLanguageSupportOverrides()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.FontFile.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.FontFile",
@@ -92324,6 +92394,38 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontFile.GetScriptSupportOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontFile",
+    "name": "GetScriptSupportOverride",
+    "signature": "public System.Boolean GetScriptSupportOverride(System.String script)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "script",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontFile.GetScriptSupportOverrides()",
+    "kind": "method",
+    "declaringType": "Electron2D.FontFile",
+    "name": "GetScriptSupportOverrides",
+    "signature": "public System.String[] GetScriptSupportOverrides()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
     "value": null
   },
   {
@@ -92606,6 +92708,44 @@
       {
         "name": "glyphPair",
         "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontFile.RemoveLanguageSupportOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontFile",
+    "name": "RemoveLanguageSupportOverride",
+    "signature": "public System.Void RemoveLanguageSupportOverride(System.String language)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontFile.RemoveScriptSupportOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontFile",
+    "name": "RemoveScriptSupportOverride",
+    "signature": "public System.Void RemoveScriptSupportOverride(System.String script)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "script",
+        "type": "System.String",
         "default": null
       }
     ],
@@ -93172,6 +93312,54 @@
       {
         "name": "value",
         "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontFile.SetLanguageSupportOverride(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontFile",
+    "name": "SetLanguageSupportOverride",
+    "signature": "public System.Void SetLanguageSupportOverride(System.String language, System.Boolean supported)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "supported",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontFile.SetScriptSupportOverride(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontFile",
+    "name": "SetScriptSupportOverride",
+    "signature": "public System.Void SetScriptSupportOverride(System.String script, System.Boolean supported)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "script",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "supported",
+        "type": "System.Boolean",
         "default": null
       }
     ],

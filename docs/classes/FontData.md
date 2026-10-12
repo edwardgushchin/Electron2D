@@ -1,6 +1,6 @@
 # FontData
 
-Last updated: 2026-10-07
+Last updated: 2026-10-12
 
 **Visibility:** internal · **Source:** [FontData.cs](../../src/Servers/Text/FontData.cs) · **Component:** [Text](../components/text.md)
 
@@ -21,3 +21,7 @@ Nonempty data accepts the packaged desktop and Android process architectures, in
 ## System font integration
 
 [System font matching](../components/system-fonts.md) adds installed families/styles/logical collection faces and owned automatic text fallback over the shared native owner and canvas path. FontFile.AllowSystemFallback defaults to true; explicit resources retain precedence and explicit support queries remain distinct from automatic rendered coverage. Active parent readers retain retired fallback faces through policy changes. SystemFont archives store preferences and rematch the host. The current Linux catalog and both canvas consumers are exercised; CoreText/DirectWrite, extra raster/MSDF, native allocator and foreign acceptance gates remain explicit.
+
+## Support metadata
+
+Retains an immutable FontSupportPolicy snapshot and the native face's automatic script set. Primary support queries serialize with data lifetime checks; layout priority retains supported-script/supported-language, supported-script/unsupported-language and last-resort tiers. Color faces have preferred emoji presentation. Configuration copies and FontVariation realizations carry policy; FontFile commits changes to every realized indexed data object before notifying consumers.
