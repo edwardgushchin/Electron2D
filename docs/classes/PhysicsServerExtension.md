@@ -12,3 +12,6 @@ Inherited `GetCollisionExceptions(RID)` provides scoped retained input. Body/joi
 
 
 [Area pose and monitor publication](../components/physics-registered-adapter.md#area-pose-and-monitor-publication) uses selected collider/overlap operations with common retained identity and authoring. CPU/GPU/registered public-only checks exercise reset/reentry, failure continuation and 64 active transition frames at zero managed allocation; arbitrary registered geometry remains open.
+
+
+[Contact reporting depth](../components/physics-registered-adapter.md#contact-reporting-depth) uses common retained scene/raw policy and selected signed PhysicsBodyContact.Depth. Both extension threshold operations execute; arbitrary registered capped contact topology and full numerical acceptance remain open.

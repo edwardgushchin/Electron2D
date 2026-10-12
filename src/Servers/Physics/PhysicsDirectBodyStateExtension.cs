@@ -94,16 +94,15 @@ public abstract partial class PhysicsDirectBodyStateExtension : PhysicsDirectBod
     {
         var count = ResultContactCount(GetContactCountCore());
         if (count > output.Length) throw new InvalidOperationException("A contact hook exceeded prepared publication storage.");
-        var native = CapturedContacts;
+        var written = 0;
         for (var index = 0; index < count; index++)
         {
             var contact = ResultContact(GetContactCore(index));
-            var depth = index < native.Length && native[index].Collider == contact.ColliderRID && native[index].LocalShape == contact.LocalShape &&
-                native[index].ColliderShape == contact.ColliderShape ? native[index].Depth : 0;
-            output[index] = new(contact.ColliderRID, contact.ColliderID, contact.LocalShape, contact.ColliderShape,
+            if (Runtime.ContactsReportedDepthThreshold > 0 && contact.Depth < Runtime.ContactsReportedDepthThreshold) continue;
+            output[written++] = new(contact.ColliderRID, contact.ColliderID, contact.LocalShape, contact.ColliderShape,
                 contact.LocalPosition, contact.ColliderPosition, contact.Normal, contact.LocalVelocity, contact.ColliderVelocity,
-                contact.Impulse, depth, contact.ColliderOwner, contact.Identity);
+                contact.Impulse, contact.Depth, contact.ColliderOwner, contact.Identity);
         }
-        return count;
+        return written;
     }
 }

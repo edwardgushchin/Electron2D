@@ -442,3 +442,37 @@ geometry/compound logical indices and complete extension numerical acceptance
 remain open. Existing PhysicsAreaMonitorTests/ShapePairEventTests cover built-in
 compound slots and event epochs. Native allocation, other platforms, final network
 scenarios and real-window/performance acceptance are unverified here.
+
+
+## Contact reporting depth
+
+BodySet/GetContactsReportedDepthThreshold retains common scene/raw policy in scene
+units. Zero leaves all signed candidate depths eligible; a positive value includes
+only equal/deeper penetration. The policy filters contact reports and RigidBody's
+point/object/shape snapshots, without changing physical response, waking, geometry
+or the already completed snapshot. Changes apply at the next nonzero publication
+and survive detach/reentry. Checkpoints require unchanged configuration; portable
+schema matching includes the threshold, so incompatible policy rejects before apply.
+
+PhysicsBodyContact exposes immutable signed Depth and a finite explicit-depth
+constructor. The existing constructor derives depth from supplied boundary anchors.
+The registered adapter now stores the implementation's depth rather than zero;
+ReadContacts must return the deepest candidates fitting its supplied span, with
+encounter-order ties. Common filtering is monotonic, so removing shallow records
+from an already deepest capped set cannot omit an eligible deeper candidate. CPU
+converts native metre depths; GPU retains resident reports in scene units. No new
+GPU readback or CPU mirror is introduced. Factory contact projection uses its own
+explicit sampled depth and applies the same common threshold before committing.
+
+The public-only `--contact-threshold` runs on CPU/GPU/registered owners. Two
+independent circle contacts exercise scene/raw defaults, all five scene body sibling
+roles, raw static reporting, invalid input, numerical
+borrow reads/rejected writes, positive .5 and high 100 thresholds, monitor exits,
+unmodified same-backend response (.00001 scene-unit tolerance), stale/kind/thread
+guards, retained edits after failing ordinary callbacks, detach/reentry, checkpoint
+and portable-schema rejection/recovery. The
+registered two-unit sample verifies equality eligibility exactly. After 64 warmup,
+64 threshold-edited full frames deliver 32 scene entries/exits and allocate zero
+owner/all-thread managed bytes. Cold errors/history setup are outside the bracket.
+The independent fixture retains one circle contact per body; arbitrary registered
+contact topology/overflow remains part of complete numerical acceptance.

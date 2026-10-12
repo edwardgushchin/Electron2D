@@ -1,6 +1,6 @@
 # RigidBody
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -279,3 +279,6 @@ A factory-returned cached body extension now projects its contact count/values o
 [Direct server modes](../components/physics-registered-adapter.md#common-server-mode-family) select an independent runtime role. LinearVelocity, AngularVelocity and Sleeping share its immediate scene/server state, including a retained Freeze descriptor; numerical writes reject before changing either channel. Later Freeze/FreezeMode/LockRotation edits restore scene role control.
 
 CustomIntegrator, MaxContactsReported and ContactMonitor assignments reject during a borrowed numerical implementation call before changing configuration or allocating contact storage. Ordinary integration/state callbacks retain access. The public-only integration consumer checks omitted pending/persistent forces, retained impulse/contact response, typed userdata, force-scene-sync order, failure continuation and callback clearing on CPU/GPU and an independent solver. Its 64 measured full warm frames allocate zero owner/all-thread bytes after the shared two-stage warmup.
+
+
+PhysicsServer.BodySetContactsReportedDepthThreshold accepts this scene body RID and filters future point/object/shape contact reports in scene units. Equal/deeper candidates remain eligible; zero disables filtering. The server-owned policy preserves completed snapshots and physical response and survives detach/reentry. See [shared conformance](../components/physics-registered-adapter.md#contact-reporting-depth).

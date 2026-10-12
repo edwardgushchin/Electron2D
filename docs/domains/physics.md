@@ -624,3 +624,6 @@ Registered [borrowed shape authoring](../components/physics-registered-adapter.m
 
 
 [Area pose and monitor publication](../components/physics-registered-adapter.md#area-pose-and-monitor-publication) now checks both observation lanes and shared scene/raw guards across CPU/GPU/registered owners. Warmed active transitions allocate zero managed bytes; complete extension/network/performance acceptance remains open.
+
+
+[Contact reporting depth](../components/physics-registered-adapter.md#contact-reporting-depth) now executes for scene/raw CPU/GPU/registered bodies and history configuration. Zero disables filtering; positive scene-unit thresholds affect future contact/monitor snapshots while preserving physical response. Complete extension/network/performance acceptance remains open.

@@ -1,6 +1,6 @@
 # PhysicsDirectBodyState
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Inherits:** [ElectronObject](ElectronObject.md) · **Inherited By:** [PhysicsDirectBodyStateExtension](PhysicsDirectBodyStateExtension.md)
 
@@ -245,3 +245,6 @@ attachment. Direct-body setters/forces use the same qualified numerical guard.
 Guarded authored reads, ordinary post-solver callbacks and caller-created
 body-state forwarding remain available; hierarchy/resource-lifetime guards still
 cover every extension scope. See [body authoring](../components/physics-registered-adapter.md#borrowed-body-authoring).
+
+
+[Contact reporting depth](../components/physics-registered-adapter.md#contact-reporting-depth) filters positive thresholds before deepest-point slot selection. CPU candidates use converted scene-unit depth, GPU candidates retain scene units. Zero disables this filter; the next nonzero publication applies edits without changing the completed snapshot or physical response.

@@ -89,6 +89,18 @@ public sealed partial class PhysicsServer
         }
     }
 
+    internal void BodySetContactsReportedDepthThresholdCore(RID body, float threshold)
+    {
+        ThrowIfDisposed();
+        if (!float.IsFinite(threshold) || threshold < 0) throw new ArgumentOutOfRangeException(nameof(threshold));
+        var runtime = BodyRuntime(body); runtime.EnsureAccess(writing: true);
+        runtime.ContactsReportedDepthThreshold = threshold;
+    }
+    internal float BodyGetContactsReportedDepthThresholdCore(RID body)
+    {
+        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureAccess(); return runtime.ContactsReportedDepthThreshold;
+    }
+
     internal int BodyGetMaxContactsReportedCore(RID body)
     {
         ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureAccess(); return runtime.ContactLimit;

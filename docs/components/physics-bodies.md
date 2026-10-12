@@ -1,6 +1,6 @@
 # Scene physics bodies component
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 [Per-body CCD](cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; the selected world also dispatches independent GPU CCD. Complete contract and platform acceptance remain open.
 
@@ -168,3 +168,6 @@ Live edits preserve identity, sleep and rigid impulses. See [policy](physics-con
 [Directional filter mutation](physics-filters.md) shares scene/server/tile metadata and query rules across CPU/GPU. It updates existing fixtures without rebuilding geometry; body assignments wake contact neighbors even for unchanged bits.
 
 [Report-only contact verification](physics-report-only.md) now covers nonresponding kinematic/static and kinematic/kinematic pairs, current receiver caps, identity, lifecycle and restoration on both public backends. Existing contact storage and publication are reused; no CPU body-state mirror is added to GPU physics.
+
+
+[Common contact reporting depth](physics-registered-adapter.md#contact-reporting-depth) applies typed scene/raw threshold authoring to selected reports and monitor snapshots, with same-backend response preservation, immutable completed snapshots, history configuration matching and zero warm managed allocation.

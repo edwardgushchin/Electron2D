@@ -1,6 +1,6 @@
 # PhysicsBackendCollider
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Declaration:** `public abstract class PhysicsBackendCollider` · **Source:** [PhysicsBackendCollider.cs](../../src/Servers/Physics/PhysicsBackendCollider.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
 
@@ -107,3 +107,6 @@ cover every extension scope. See [body authoring](../components/physics-register
 [Registered Area fields](../components/physics-registered-adapter.md#registered-area-fields) now exercise the complete typed profile/default shortcut through the selected hooks, including independent override/point/mask response and zero warmed edited full frames. Numerical-hook writes reject before mutation; authored reads and ordinary Area callback edits retain their guards and overlap history. Generic solver/extension acceptance remains open.
 
 Force preparation receives retained pending/persistent totals and already resolved positioned moments; immediate impulses use the selected current mass/inertia. See [force response and verification](../components/physics-registered-adapter.md#force-impulse-and-axis-response) for cadence, lifetime and zero-allocation checks.
+
+
+ReadContacts must return the deepest signed scene-unit candidates fitting the supplied borrowed span, retaining earlier encounters at equal depth. Its PhysicsBodyContact values preserve explicit numerical frame depth; common publication applies retained reporting policy without changing solving.

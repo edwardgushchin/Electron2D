@@ -9,6 +9,7 @@ namespace Electron2D;
 public readonly struct PhysicsBodyContact
 {
     /// <summary>Captures validated logical identities and finite scene-unit contact values.</summary>
+    /// <remarks>Derives signed depth by projecting the collider-minus-local boundary-anchor difference along the normalized normal.</remarks>
     /// <param name="body">The observed live body RID.</param>
     /// <param name="localShape">The observed body's logical slot.</param>
     /// <param name="collider">The other live body RID, including tile/server bodies.</param>
@@ -25,7 +26,31 @@ public readonly struct PhysicsBodyContact
     /// <exception cref="ObjectDisposedException">A required resource is disposed.</exception>
     public PhysicsBodyContact(RID body, int localShape, RID collider, int colliderShape, Vector2 localPosition,
         Vector2 colliderPosition, Vector2 normal, Vector2 localVelocity, Vector2 colliderVelocity, Vector2 impulse)
+        : this(body, localShape, collider, colliderShape, localPosition, colliderPosition, normal,
+            localVelocity, colliderVelocity, impulse, (colliderPosition - localPosition).Dot(normal.Normalized()))
+    { }
+
+    /// <summary>Samples immutable contact values with an explicit signed numerical penetration depth.</summary>
+    /// <param name="body">The observed live scene/server body RID.</param>
+    /// <param name="localShape">Its enabled logical shape index.</param>
+    /// <param name="collider">The other live body RID in the same world.</param>
+    /// <param name="colliderShape">The other body's enabled logical shape index.</param>
+    /// <param name="localPosition">This body's global boundary point.</param>
+    /// <param name="colliderPosition">The other body's global boundary point.</param>
+    /// <param name="normal">The global normal pointing away from the collider.</param>
+    /// <param name="localVelocity">This body's global contact-point velocity.</param>
+    /// <param name="colliderVelocity">The other body's global contact-point velocity.</param>
+    /// <param name="impulse">The completed-step impulse applied to this body.</param>
+    /// <param name="depth">Finite signed depth in scene units; positive penetration, negative separation.</param>
+    /// <exception cref="ArgumentException">Identities, attachment or logical slots are invalid.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Depth or a supplied vector is nonfinite.</exception>
+    /// <exception cref="InvalidOperationException">The caller is off-owner or a required world is solving/failed.</exception>
+    /// <exception cref="ObjectDisposedException">A required resource is disposed.</exception>
+    public PhysicsBodyContact(RID body, int localShape, RID collider, int colliderShape, Vector2 localPosition,
+        Vector2 colliderPosition, Vector2 normal, Vector2 localVelocity, Vector2 colliderVelocity, Vector2 impulse, float depth)
     {
+        if (!float.IsFinite(depth)) throw new ArgumentOutOfRangeException(nameof(depth));
+        Depth = depth;
         if (!localPosition.IsFinite() || !colliderPosition.IsFinite() || !normal.IsFinite() || !localVelocity.IsFinite() ||
             !colliderVelocity.IsFinite() || !impulse.IsFinite()) throw new ArgumentOutOfRangeException(nameof(localPosition));
         if (body == collider) throw new ArgumentException("A body contact requires a distinct collider.", nameof(collider));
@@ -40,11 +65,14 @@ public readonly struct PhysicsBodyContact
     }
     internal PhysicsBodyContact(RID body, long attachment, in PhysicsDirectBodyState.Contact contact)
     {
-        BodyRID = body; BodyAttachment = attachment; LocalShape = contact.LocalShape;
+        Depth = contact.Depth; BodyRID = body; BodyAttachment = attachment; LocalShape = contact.LocalShape;
         ColliderRID = contact.Collider; ColliderShape = contact.ColliderShape; Identity = contact.Identity; ColliderOwner = contact.ColliderOwner;
         LocalPosition = contact.LocalPoint; ColliderPosition = contact.ColliderPoint; Normal = contact.Normal;
         LocalVelocity = contact.LocalVelocity; ColliderVelocity = contact.ColliderVelocity; Impulse = contact.Impulse;
     }
+    /// <summary>Gets sampled signed penetration depth in scene units.</summary>
+    /// <value>Positive for penetration, negative for separation; an explicit frame sample may retain the greatest interval depth.</value>
+    public float Depth { get; }
     /// <summary>Gets the observed body identity.</summary>
     /// <value>The sampled physical RID.</value>
     public RID BodyRID { get; }

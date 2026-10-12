@@ -166,7 +166,9 @@ public abstract class PhysicsBackendCollider
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract void SetSurfaceVelocity(Vector2 linear, float angular);
     /// <summary>Supplies the selected implementation operation: read contacts.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Return the deepest candidates fitting the borrowed span; equal depths retain encounter order.
+    /// Include signed sampled depth in scene units. The common layer filters against the body's retained reporting threshold.
+    /// Invoked under owner/lifetime guards; values and spans are valid for this call only.</remarks>
     protected internal abstract int ReadContacts(Span<PhysicsBodyContact> contacts);
     /// <summary>Supplies the selected implementation operation: portable pose.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

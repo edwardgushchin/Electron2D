@@ -3,7 +3,7 @@ namespace Electron2D;
 internal sealed partial class PhysicsBodyRuntime
 {
     internal readonly record struct ReplayConfiguration(float Mass, float Inertia, Vector2? Center, PhysicsMass.Properties MassProperties,
-        int Contacts, CCDMode CCD, bool Omit, float? Friction, float? Bounce, float GravityScale, float Linear, float Angular,
+        int Contacts, float ContactDepthThreshold, CCDMode CCD, bool Omit, float? Friction, float? Bounce, float GravityScale, float Linear, float Angular,
         RigidBody.DampMode LinearMode, RigidBody.DampMode AngularMode, Action<PhysicsDirectBodyState>? Force, Action<PhysicsDirectBodyState>? Sync);
     internal sealed class ReplayState
     {
@@ -14,7 +14,7 @@ internal sealed partial class PhysicsBodyRuntime
         internal PhysicsDirectBodyState.Contact[] Contacts = [];
         internal int ContactCount;
     }
-    private ReplayConfiguration CurrentReplayConfiguration() => new(Mass, Inertia, CustomCenter, MassProperties, MaxContacts, ContinuousMode, OmitForces,
+    private ReplayConfiguration CurrentReplayConfiguration() => new(Mass, Inertia, CustomCenter, MassProperties, MaxContacts, ContactsReportedDepthThreshold, ContinuousMode, OmitForces,
         FrictionOverride, BounceOverride, BodyGravityScale, BodyLinearDamp, BodyAngularDamp, BodyLinearDampMode, BodyAngularDampMode, ForceCallback, SyncCallback);
     internal void CaptureReplay(ReplayState state)
     {

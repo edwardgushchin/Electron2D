@@ -1012,3 +1012,6 @@ GPU publication now reuses a preceding complete observation only when the public
 
 
 [Area pose and monitor publication](physics-registered-adapter.md#area-pose-and-monitor-publication) now has common CPU/GPU/registered public-only conformance for creation, pose, both callbacks, monitorability, reentry and errors. Sixty-four active transition frames allocate zero managed bytes. Complete registered geometry and final acceptance remain open.
+
+
+[Contact reporting depth](physics-registered-adapter.md#contact-reporting-depth) uses common reporting policy and existing resident GPU capped records. CPU metre depths convert to scene units; registered and projected results carry explicit immutable depth. This adds no GPU transfer or solved-state mirror.

@@ -34,6 +34,7 @@ internal sealed partial class CPUPhysicsColliderImplementation
     internal void CaptureViewContact(PhysicsDirectBodyState view, B2Vec2 normal, B2Vec2 point, float separation,
         float depth, B2Vec2 impulse, B2BodyId collider, bool first, PhysicsFixtureTag own, PhysicsFixtureTag other, int limit)
     {
+        depth *= PhysicsSpace.UnitsPerMeter;
         var slot = view.SelectContactSlot(depth, limit);
         if (slot < 0) return;
         var a = point - normal * (separation * 0.5f);

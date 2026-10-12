@@ -18,6 +18,7 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
     internal bool OmitForces { get => _omitForces; set { GPUParametersDirty |= _omitForces != value; _omitForces = value; } }
     internal const int MaxContactLimit = 4095;
     internal int MaxContacts;
+    internal float ContactsReportedDepthThreshold;
     internal Vector2 Gravity;
     internal float LinearDamp;
     internal float AngularDamp;

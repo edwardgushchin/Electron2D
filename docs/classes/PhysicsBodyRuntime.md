@@ -1,6 +1,6 @@
 # PhysicsBodyRuntime
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Declaration:** `internal sealed partial class PhysicsBodyRuntime`
 
@@ -115,3 +115,6 @@ A factory-returned cached body extension now projects its contact count/values o
 ## Value-only integration preparation
 
 [Force and policy inputs](../components/physics-backends.md#value-only-body-integration-inputs) now separate engine-owned authoring/command state from numerical preparation. Default forces use PhysicsBodyForceConfiguration; CPU fields and GPU parameters use PhysicsBodyIntegrationConfiguration. Pending command retirement and GPU dirty flags stay in the binding layer; numerical methods receive finite authored values and return complete field/preparation results. CPU/GPU/no-device, replay, parameter and full operation checks remain the acceptance boundaries; public registration stays open.
+
+
+Retains scene/raw ContactsReportedDepthThreshold independently of numerical storage. It survives detach/reentry and participates in immutable checkpoint configuration and portable schema. Publication filters signed scene-unit candidate depths; changing policy preserves the completed snapshot.

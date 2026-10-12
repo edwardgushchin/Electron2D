@@ -399,6 +399,7 @@ public class PhysicsDirectBodyState : ElectronObject
 
     internal int SelectContactSlot(float depth, int limit)
     {
+        if (limit == 0 || _runtime.ContactsReportedDepthThreshold > 0 && depth < _runtime.ContactsReportedDepthThreshold) return -1;
         if (_contactCount < limit) return _contactCount++;
         // ponytail: O(candidates * limit); use a retained min-heap if large report limits become a measured bottleneck.
         var slot = 0;

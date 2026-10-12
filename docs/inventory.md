@@ -1222,3 +1222,6 @@ RenderingDevice's [binary push recording](components/local-compute.md#binary-pus
 
 
 Area pose and monitor conformance belongs to existing [Area/PhysicsAreaRuntime/PhysicsSpace](components/physics-registered-adapter.md#area-pose-and-monitor-publication). Scene and server observer dispatch share the own-receiver configuration guard; no new production type is introduced.
+
+
+Contact reporting depth belongs to existing [PhysicsBodyRuntime/PhysicsDirectBodyState/PhysicsBodyContact](components/physics-registered-adapter.md#contact-reporting-depth). Common policy filters selected signed scene-unit records and preserves immutable projection/history configuration; no new production type is introduced.

@@ -18264,6 +18264,75 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.PhysicsBodyContact..ctor(Electron2D.RID,System.Int32,Electron2D.RID,System.Int32,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,System.Single)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PhysicsBodyContact",
+    "name": ".ctor",
+    "signature": "public PhysicsBodyContact(Electron2D.RID body, System.Int32 localShape, Electron2D.RID collider, System.Int32 colliderShape, Electron2D.Vector2 localPosition, Electron2D.Vector2 colliderPosition, Electron2D.Vector2 normal, Electron2D.Vector2 localVelocity, Electron2D.Vector2 colliderVelocity, Electron2D.Vector2 impulse, System.Single depth)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "localShape",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "collider",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "colliderShape",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "localPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "colliderPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "normal",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "localVelocity",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "colliderVelocity",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "impulse",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "depth",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.PhysicsBodyFields..ctor(Electron2D.Vector2,System.Single,System.Single,System.Boolean)",
     "kind": "constructor",
     "declaringType": "Electron2D.PhysicsBodyFields",
@@ -126608,6 +126677,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.BodyGetContactsReportedDepthThreshold(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyGetContactsReportedDepthThreshold",
+    "signature": "public static System.Single BodyGetContactsReportedDepthThreshold(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.BodyGetContinuousCollisionDetectionMode(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -127355,6 +127443,30 @@
       },
       {
         "name": "torque",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodySetContactsReportedDepthThreshold(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodySetContactsReportedDepthThreshold",
+    "signature": "public static System.Void BodySetContactsReportedDepthThreshold(Electron2D.RID body, System.Single threshold)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "threshold",
         "type": "System.Single",
         "default": null
       }
@@ -210311,6 +210423,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsBodyContact.Depth()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsBodyContact",
+    "name": "Depth",
+    "signature": "public System.Single Depth { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

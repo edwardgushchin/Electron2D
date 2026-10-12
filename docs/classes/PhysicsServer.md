@@ -912,3 +912,6 @@ All typed common/pin/spring parameter getter/setter pairs share retained scene/r
 
 
 [Selected Area pose/monitor conformance](../components/physics-registered-adapter.md#area-pose-and-monitor-publication) covers creation, transform access, both typed callbacks and monitorability through CPU/GPU/registered owners. Scene policy changes reject from the same Area's server observer before mutation; equal scene assignments and pose reads remain available during ordinary callbacks.
+
+
+BodySetContactsReportedDepthThreshold(RID, float) and BodyGetContactsReportedDepthThreshold(RID) retain scene/raw reporting policy. Zero disables filtering; positive finite scene-unit thresholds include equal/deeper candidates on the next publication, preserving completed snapshots and physical response. [Shared conformance](../components/physics-registered-adapter.md#contact-reporting-depth) covers CPU/GPU/registered guards, lifetime, history and zero warm allocation.

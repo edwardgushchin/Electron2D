@@ -80,7 +80,7 @@ internal sealed partial class PhysicsReplayEntry
         {
             var c = runtime.Configuration;
             schema.Add(c.Mass); schema.Add(c.Inertia); schema.Add(c.Center.HasValue); schema.Add(c.Center.GetValueOrDefault());
-            schema.Add(_runtime!.ContactLimit); schema.Add((int)c.CCD); schema.Add(c.Omit);
+            schema.Add(_runtime!.ContactLimit); schema.Add(c.ContactDepthThreshold); schema.Add((int)c.CCD); schema.Add(c.Omit);
             schema.Add(c.Friction.HasValue); schema.Add(c.Friction.GetValueOrDefault()); schema.Add(c.Bounce.HasValue); schema.Add(c.Bounce.GetValueOrDefault());
             schema.Add(c.GravityScale); schema.Add(c.Linear); schema.Add(c.Angular); schema.Add((int)c.LinearMode); schema.Add((int)c.AngularMode);
         }

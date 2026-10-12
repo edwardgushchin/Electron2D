@@ -1,6 +1,6 @@
 # PhysicsBodyContact
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Declaration:** `public readonly struct PhysicsBodyContact` · **Source:** [PhysicsBodyContact.cs](../../src/Servers/Physics/PhysicsBodyContact.cs) · **Component:** [Body-state extensions](../components/physics-body-extensions.md)
 
@@ -25,6 +25,8 @@ This snippet requires a current observed body and at least one solved contact. C
 | Declaration | Contract |
 | --- | --- |
 | `public PhysicsBodyContact(RID body, int localShape, RID collider, int colliderShape, Vector2 localPosition, Vector2 colliderPosition, Vector2 normal, Vector2 localVelocity, Vector2 colliderVelocity, Vector2 impulse)` | Validate/sample current body/slot identity and finite contact values. |
+| `public PhysicsBodyContact(RID body, int localShape, RID collider, int colliderShape, Vector2 localPosition, Vector2 colliderPosition, Vector2 normal, Vector2 localVelocity, Vector2 colliderVelocity, Vector2 impulse, float depth)` | Explicit finite sampled signed scene-unit depth; same identity validation. |
+| `public float Depth { get; }` | Signed scene-unit penetration, positive inside/negative separation. |
 | `public RID BodyRID { get; }` | Observed physical body. |
 | `public int LocalShape { get; }` | Observed body's sampled logical slot. |
 | `public RID ColliderRID { get; }` | Other body's sampled physical identity. |
@@ -53,3 +55,11 @@ The [separate consumer](../../tests/PhysicsBodyExtension.Consumer/Program.cs) ch
 ## Factory contact publication
 
 A factory-returned cached body extension now projects its contact count/values on the world owner after native capture and before scene/raw observer delivery. Complete validated snapshots commit atomically; cached getters retain immutable data and do not reinvoke contact hooks. Independent caller-created views keep ordinary guarded direct hook dispatch. Qualified publication permits immutable PhysicsBodyContact identity construction while ordinary solver queries/mutation stay blocked. Bad receivers retain their prior published state while other callbacks and committed ticks continue. [The executing contract and verification](../components/physics-body-extensions.md#selected-contact-publication) retain public registration/native/platform/performance limits.
+
+
+The existing constructor derives signed depth from the boundary-anchor difference
+along the normalized outward normal. A zero normal gives zero projected distance.
+The explicit-depth overload preserves a numerical owner's sampled frame depth,
+which may be the greatest depth across internal intervals. Native/public registered
+and cached direct-state projection retain that value in scene units; CPU reporting
+converts internal metre depths before publication.

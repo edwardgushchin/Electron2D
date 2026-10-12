@@ -97,9 +97,10 @@ internal sealed partial class RegisteredPhysicsWorldBackend
                 }
                 for (var i = 0; i < count; i++)
                 {
-                    var c = _contacts[i]; var slot = view.SelectContactSlot(0, limit);
+                    var c = _contacts[i]; var slot = view.SelectContactSlot(c.Depth, limit);
+                    if (slot < 0) continue;
                     view.StoreContact(slot, new(c.ColliderRID, c.ColliderID, c.LocalShape, c.ColliderShape, c.LocalPosition, c.ColliderPosition,
-                        c.Normal, c.LocalVelocity, c.ColliderVelocity, c.Impulse, 0, c.ColliderOwner, c.Identity));
+                        c.Normal, c.LocalVelocity, c.ColliderVelocity, c.Impulse, c.Depth, c.ColliderOwner, c.Identity));
                 }
             }
             finally { Array.Clear(_contacts); world.Exit(); Space.EndContactResultPublication(); }

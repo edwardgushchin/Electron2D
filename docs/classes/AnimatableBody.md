@@ -1,6 +1,6 @@
 # AnimatableBody
 
-Last updated: 2026-10-09
+Last updated: 2026-10-12
 
 **Inherits:** [StaticBody](StaticBody.md), [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -71,3 +71,6 @@ now run AnimatableBodyTests with explicit backend selection. The linked record
 separates verified motion/lifetime/allocation cases from remaining physics coverage.
 
 [Direct server modes](../components/physics-registered-adapter.md#common-server-mode-family) retain a separate runtime role. Animatable target staging follows that direct profile while it is active; physical-bone binding/role writes reject numerical borrowing before authoring changes. Scene role edits restore configured control.
+
+
+Attached disposal skips the public local-transform notification setter after the node has been marked disposed, then completes normal target reset and physics/tree departure. Ordinary live exit still disables notifications. Shared reporting-policy conformance exercises disposal and stable retained configuration across all five scene body roles.

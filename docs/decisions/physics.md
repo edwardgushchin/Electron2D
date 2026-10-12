@@ -350,7 +350,7 @@ Games can test reusable geometry for placement and procedural tools without ente
 <a id="adr-0070"></a>
 ## ADR 0070: Live body state and post-solver integration callbacks
 
-Last updated: 2026-10-09
+Last updated: 2026-10-12
 
 - Status: Accepted
 - Scope: PhysicsDirectBodyState, RigidBody custom integration and typed body callbacks
@@ -372,6 +372,26 @@ The engine exposes forces, selected Area fields and object-level contacts, but g
 - Report global contact positions, normals, point velocities and both shape indices independently of object ContactMonitor. Keep collider-object virtual tile identity Partial until typed tile-body integration. Both normal and signed tangential contact impulses accumulate applied warm-start and solver deltas across CPU scalar/SIMD and GPU substeps. Tag stored constraints by native solve epoch so sleeping contacts cannot replay a previous step. For subdivided kinematic frames, sum world-axis impulses by canonical fixture pair and feature across intervals, only for reporting bodies; deduplicate shared contacts. Retain every reported fixture/feature observed during the outer frame, including contacts that separate before its final interval. Keep each feature's last geometry and greatest observed depth, with per-body encounter lists, then publish bounded snapshots before callbacks. A later frame without that contact emits departure rather than replaying the old impulse. Scan all current contact candidates before applying a reporting cap: fill slots in encounter order, then replace the first shallowest slot only for strictly deeper penetration. Equal-depth candidates retain the earlier slots. Rigid object/shape monitoring uses these same retained points. Retain peak scratch capacity after warmup; unreported worlds avoid frame accumulation. The CPU single-interval path reads its completed manifold directly; independent GPU publication follows the device record path below.
 
 - The independent GPU store retains one device frame record per observed shape-generation/feature/piece key, accumulating world-axis impulses across all solver and CCD intervals. Opt-in worlds share these records between receiver incidence lists and apply reporting limits only during explicit batched reads. Final publication freezes point velocities before later authoring; idle sleeping ticks retain geometry with zero applied impulse. Device capacity grows before submission without solver replay, and status joins the existing interval fence. Public RID/scene snapshot and event projection remains open. Contact and joint warm starts may scale down for shorter intervals but never amplify cached impulses after a short CCD interval; fresh iteration supplies any additional impulse required by a larger step.
+
+- Expose BodySet/GetContactsReportedDepthThreshold as common scene/server retained
+  reporting policy, default zero. The pinned [built-in setter/getter](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/godot_physics_2d/godot_physics_server_2d.cpp#L931) are inert,
+  while the non-deprecated extension operations are applicable. Implement an
+  executable typed adaptation rather than copying that no-op: zero disables
+  filtering; a positive finite scene-unit threshold excludes candidates with
+  smaller signed penetration depth before capped reporting. Equality is retained.
+  Reporting policy does not alter physical response, wake bodies, rebuild geometry
+  or replace an already published snapshot; changed policy takes effect at the next
+  nonzero publication. Keep the value through detach/reentry and include it in
+  private-checkpoint and portable-schema configuration validation.
+- PhysicsBodyContact carries finite signed Depth in scene units, positive for
+  penetration and negative for separation. Its existing constructor derives depth
+  from the supplied boundary anchors along the normalized outward normal; an
+  explicit-depth overload carries a numerical owner's sampled frame depth. Native
+  and registered cached publication preserve this value. Registered ReadContacts
+  returns the deepest eligible candidates fitting the supplied span; encounter
+  ties retain earlier records. Independent direct-state projection preserves its
+  own explicit sampled depth. Apply the same reporting threshold to projected
+  cached records without changing the numerical solve.
 
 ### Consequences and verification
 

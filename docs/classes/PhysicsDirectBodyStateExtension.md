@@ -1,6 +1,6 @@
 # PhysicsDirectBodyStateExtension
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Declaration:** `public abstract partial class PhysicsDirectBodyStateExtension : PhysicsDirectBodyState` · **Inherits:** [PhysicsDirectBodyState](PhysicsDirectBodyState.md) · **Component:** [Body-state extensions](../components/physics-body-extensions.md)
 
@@ -321,3 +321,6 @@ attachment. Direct-body setters/forces use the same qualified numerical guard.
 Guarded authored reads, ordinary post-solver callbacks and caller-created
 body-state forwarding remain available; hierarchy/resource-lifetime guards still
 cover every extension scope. See [body authoring](../components/physics-registered-adapter.md#borrowed-body-authoring).
+
+
+Cached contact projection preserves PhysicsBodyContact.Depth supplied by GetContactCore and filters it against the common body reporting threshold before committing. It no longer substitutes matching native depth or zero for projected values. Failure still preserves the prior receiver snapshot. See [reporting depth](../components/physics-registered-adapter.md#contact-reporting-depth).

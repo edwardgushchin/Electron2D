@@ -98,9 +98,10 @@ public sealed partial class AnimatableBody : StaticBody
     }
 
     /// <inheritdoc />
+    /// <remarks>Releases pending motion targets on ordinary departure and during disposal.</remarks>
     protected override void OnExitTree()
     {
-        NotifyLocalTransformChanges = false;
+        if (!IsDisposed) NotifyLocalTransformChanges = false;
         _hasTarget = false;
         base.OnExitTree();
     }

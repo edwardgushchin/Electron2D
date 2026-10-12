@@ -1,6 +1,6 @@
 # Caller-created body-state extensions
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 ## Responsibility and types
 
@@ -39,3 +39,6 @@ An engine-only qualified publication scope lets PhysicsBodyContact validate curr
 [Contact publication checks](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.ContactPublication.cs) cover doubled actual reported impulses without double application, scene monitor suppression/departure/reentry, raw callback delivery, immutable associations, invalid count/value/throw/stale attachment recovery and owner-thread hooks with real CPU worker capture. The fixture has 301 scene rigid bodies plus one raw body (and a static floor), 64 warmup/64 measured full 1/60-second frames plus cached contact reads, asserting zero owner/all-thread managed allocation on CPU/GPU. The existing ownership no-device child includes it. Dedicated cold probes are outside the measured hook path; their earlier capturing lambdas allocated 128 bytes per receiver/frame even with the probe disabled, and were moved to a separate probe method without changing the measured operation or budget.
 
 Public named server factories/full operation bridge and custom algorithms remain open under ADR 0103. These internal selected factory tests do not claim public third-party solver acceptance, native allocation, foreign-platform or final GPU/window performance acceptance.
+
+
+[Contact reporting depth](physics-registered-adapter.md#contact-reporting-depth) adds an explicit signed scene-unit PhysicsBodyContact.Depth sample to numerical and factory projection. Cached projection filters its own sampled depths before committing; physical solving and completed-snapshot lifetime remain unchanged.

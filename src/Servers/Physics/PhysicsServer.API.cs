@@ -302,6 +302,23 @@ public sealed partial class PhysicsServer
     /// <exception cref="ArgumentOutOfRangeException">The cap is outside zero through 4095.</exception>
     public static void BodySetMaxContactsReported(RID body, int amount) => Service.BodySetMaxContactsReportedCore(body, amount);
 
+    /// <summary>Sets the minimum signed penetration depth included in future body contact reports.</summary>
+    /// <remarks>Zero disables depth filtering. Positive thresholds retain equal/deeper candidates before capped publication.
+    /// The policy uses scene units, survives detach/reentry and does not alter solving or the completed contact snapshot.</remarks>
+    /// <param name="body">A live scene/server body RID.</param>
+    /// <param name="threshold">Finite nonnegative scene-unit depth; zero initially.</param>
+    /// <exception cref="ArgumentException">The RID is not a live body.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The threshold is negative or nonfinite.</exception>
+    /// <exception cref="InvalidOperationException">Owner, solver or numerical-borrow guards reject before mutation.</exception>
+    public static void BodySetContactsReportedDepthThreshold(RID body, float threshold) => Service.BodySetContactsReportedDepthThresholdCore(body, threshold);
+
+    /// <summary>Gets a body's retained scene-unit contact reporting threshold.</summary>
+    /// <param name="body">A live scene/server body RID.</param>
+    /// <returns>Finite nonnegative threshold; zero disables filtering.</returns>
+    /// <exception cref="ArgumentException">The RID is not a live body.</exception>
+    /// <exception cref="InvalidOperationException">Access is off-owner or solver-owned.</exception>
+    public static float BodyGetContactsReportedDepthThreshold(RID body) => Service.BodyGetContactsReportedDepthThresholdCore(body);
+
     /// <summary>Gets the body's configured contact-point limit.</summary>
     /// <param name="body">A live body RID.</param>
     /// <returns>The configured limit, from zero through 4095; zero disables contact snapshots.</returns>

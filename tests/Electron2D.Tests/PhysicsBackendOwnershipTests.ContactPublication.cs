@@ -8,6 +8,7 @@ internal static partial class PhysicsBackendOwnershipTests
         internal bool Hide, Probe;
         internal PhysicsBodyContact OldContact;
         internal Vector2 NativeImpulse;
+        internal float NativeDepth;
         protected override int GetContactCountCore()
         {
             Check(Environment.CurrentManagedThreadId == ownerThread, "Selected contact hooks execute only on the world owner, after native worker capture");
@@ -18,13 +19,13 @@ internal static partial class PhysicsBackendOwnershipTests
         protected override PhysicsBodyContact GetContactCore(int index)
         {
             ContactCalls++;
-            var value = CapturedContacts[index]; NativeImpulse = value.Impulse;
+            var value = CapturedContacts[index]; NativeImpulse = value.Impulse; NativeDepth = value.Depth;
             if (Probe) ProbeGuards(value);
             if (Mode == 2) throw new InvalidOperationException("Expected selected contact projection failure");
             if (Mode == 3) return default;
             if (Mode == 4) return OldContact;
             return new PhysicsBodyContact(Runtime.RID, value.LocalShape, value.Collider, value.ColliderShape, value.LocalPoint, value.ColliderPoint,
-                value.Normal, value.LocalVelocity, value.ColliderVelocity, value.Impulse * 2);
+                value.Normal, value.LocalVelocity, value.ColliderVelocity, value.Impulse * 2, Mode == 5 ? -1 : value.Depth);
         }
         private void ProbeGuards(PhysicsDirectBodyState.Contact value)
         {
@@ -111,6 +112,16 @@ internal static partial class PhysicsBackendOwnershipTests
             Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
             Check(right.GetContactCount() == 0 && !PhysicsServer.Service.GetSceneSpace(world.Space).HasBackendFailure, "Previous-generation contact cannot publish through a replacement factory view");
             right.Mode = 0;
+            Check(left.ReadContact(0).Depth == left.NativeDepth, "Cached projection retains explicit numerical scene-unit depth");
+            var projectedCalls = left.ContactCalls;
+            PhysicsServer.BodySetContactsReportedDepthThreshold(scene.GetRID(), .000001f); left.Mode = 5;
+            scene.Position = new(0, 11); scene.LinearVelocity = Vector2.Zero;
+            tree.PhysicsFrame(1d / 60);
+            Check(left.ContactCalls > projectedCalls && left.GetContactCount() == 0 && scene.GetContactCount() == 0,
+                $"Cached projected shallow depth filters after eligible capture: hooks={left.ContactCalls - projectedCalls}, view={left.GetContactCount()}, scene={scene.GetContactCount()}, nativeDepth={left.NativeDepth}");
+            left.Mode = 0; PhysicsServer.BodySetContactsReportedDepthThreshold(scene.GetRID(), 0);
+            tree.PhysicsFrame(1d / 60);
+            Check(left.GetContactCount() > 0, "Clearing projected threshold restores committed contact reporting");
             for (var i = 0; i < 64; i++) tree.PhysicsFrame(1d / 60);
             var space = PhysicsServer.Service.GetSceneSpace(world.Space);
             if (backend == PhysicsServer.Backend.CPU)

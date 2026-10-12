@@ -83,6 +83,7 @@ public static partial class BackendChecks
                     var impulse = normal * MathF.Max(0, -(b.Velocity - a.Velocity).Dot(normal) / inverse);
                     a.AddImpulse(-impulse, 0); b.AddImpulse(impulse, 0);
                     Contact(a, b, out _, out _, out var contactPoint); a.ContactPoint = b.ContactPoint = contactPoint;
+                    a.ContactDepth = b.ContactDepth = depth;
                     a.ContactPeer = b.RID; a.ContactNormal = -normal; a.ContactImpulse = -impulse;
                     b.ContactPeer = a.RID; b.ContactNormal = normal; b.ContactImpulse = impulse; Pairs++;
                 }
@@ -153,6 +154,7 @@ public static partial class BackendChecks
     private sealed partial class Body(Solver solver, RID rid, bool area)
     {
         internal RID ContactPeer;
+        internal float ContactDepth;
         internal Vector2 ContactNormal, ContactImpulse, ContactPoint;
         internal float Hole;
         internal RID RID => rid;
@@ -273,7 +275,7 @@ public static partial class BackendChecks
             if (solver.ContactFailure == rid) throw new InvalidOperationException("Injected contact publication failure.");
             if (contacts.IsEmpty || !ContactPeer.IsValid()) return 0;
             var peer = solver.Bodies[ContactPeer]; var point = ContactPoint;
-            contacts[0] = new(rid, 0, peer.RID, 0, point, point, ContactNormal, GetWorldPointVelocity(point), peer.GetWorldPointVelocity(point), ContactImpulse);
+            contacts[0] = new(rid, 0, peer.RID, 0, point, point, ContactNormal, GetWorldPointVelocity(point), peer.GetWorldPointVelocity(point), ContactImpulse, ContactDepth);
             return 1;
         }
         protected override Transform PortablePose => GetTransform();

@@ -1,4 +1,6 @@
-if (args.Contains("--area-monitors")) BackendChecks.RunAreaMonitors(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+if (args.Contains("--contact-threshold")) BackendChecks.RunContactThreshold(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
+else if (args.Contains("--area-monitors")) BackendChecks.RunAreaMonitors(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
 else if (args.Contains("--resources")) BackendChecks.RunResources(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
