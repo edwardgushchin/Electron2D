@@ -6140,6 +6140,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.MeshDataTool",
+    "kind": "type",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "MeshDataTool",
+    "signature": "public sealed class Electron2D.MeshDataTool",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.MeshInstance",
     "kind": "type",
     "declaringType": "Electron2D.MeshInstance",
@@ -17363,6 +17378,19 @@
     "name": ".ctor",
     "signature": "protected Mesh()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.MeshDataTool..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": ".ctor",
+    "signature": "public MeshDataTool()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -109390,6 +109418,777 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.CommitToSurface(Electron2D.ArrayMesh,Electron2D.Mesh.ArrayFormat)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "CommitToSurface",
+    "signature": "public System.Void CommitToSurface(Electron2D.ArrayMesh mesh, Electron2D.Mesh.ArrayFormat compressionFlags = None)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.ArrayMesh",
+        "default": null
+      },
+      {
+        "name": "compressionFlags",
+        "type": "Electron2D.Mesh.ArrayFormat",
+        "default": "None"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.CreateFromSurface(Electron2D.ArrayMesh,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "CreateFromSurface",
+    "signature": "public System.Void CreateFromSurface(Electron2D.ArrayMesh mesh, System.Int32 surface)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.ArrayMesh",
+        "default": null
+      },
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetEdgeCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetEdgeCount",
+    "signature": "public System.Int32 GetEdgeCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetEdgeFaces(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetEdgeFaces",
+    "signature": "public System.Int32[] GetEdgeFaces(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetEdgeMeta\u00601(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetEdgeMeta",
+    "signature": "public T GetEdgeMeta\u003CT\u003E(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetEdgeVertex(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetEdgeVertex",
+    "signature": "public System.Int32 GetEdgeVertex(System.Int32 index, System.Int32 vertex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "vertex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetFaceCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetFaceCount",
+    "signature": "public System.Int32 GetFaceCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetFaceEdge(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetFaceEdge",
+    "signature": "public System.Int32 GetFaceEdge(System.Int32 index, System.Int32 edge)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "edge",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetFaceMeta\u00601(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetFaceMeta",
+    "signature": "public T GetFaceMeta\u003CT\u003E(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetFaceNormal(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetFaceNormal",
+    "signature": "public Electron2D.Vector3 GetFaceNormal(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector3",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetFaceVertex(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetFaceVertex",
+    "signature": "public System.Int32 GetFaceVertex(System.Int32 index, System.Int32 vertex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "vertex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetFormat()",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetFormat",
+    "signature": "public Electron2D.Mesh.ArrayFormat GetFormat()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetMaterial()",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetMaterial",
+    "signature": "public Electron2D.Material GetMaterial()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Material",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetVertex(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetVertex",
+    "signature": "public Electron2D.Vector2 GetVertex(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetVertexBones(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetVertexBones",
+    "signature": "public System.Int32[] GetVertexBones(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetVertexColor(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetVertexColor",
+    "signature": "public Electron2D.Color GetVertexColor(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetVertexCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetVertexCount",
+    "signature": "public System.Int32 GetVertexCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetVertexEdges(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetVertexEdges",
+    "signature": "public System.Int32[] GetVertexEdges(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetVertexFaces(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetVertexFaces",
+    "signature": "public System.Int32[] GetVertexFaces(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetVertexMeta\u00601(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetVertexMeta",
+    "signature": "public T GetVertexMeta\u003CT\u003E(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetVertexUV(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetVertexUV",
+    "signature": "public Electron2D.Vector2 GetVertexUV(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetVertexUV2(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetVertexUV2",
+    "signature": "public Electron2D.Vector2 GetVertexUV2(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetVertexWeights(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetVertexWeights",
+    "signature": "public System.Single[] GetVertexWeights(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.SetEdgeMeta\u00601(System.Int32,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "SetEdgeMeta",
+    "signature": "public System.Void SetEdgeMeta\u003CT\u003E(System.Int32 index, T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.SetFaceMeta\u00601(System.Int32,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "SetFaceMeta",
+    "signature": "public System.Void SetFaceMeta\u003CT\u003E(System.Int32 index, T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.SetMaterial(Electron2D.Material)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "SetMaterial",
+    "signature": "public System.Void SetMaterial(Electron2D.Material material)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "material",
+        "type": "Electron2D.Material",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.SetVertex(System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "SetVertex",
+    "signature": "public System.Void SetVertex(System.Int32 index, Electron2D.Vector2 vertex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "vertex",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.SetVertexBones(System.Int32,System.ReadOnlySpan\u003CSystem.Int32\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "SetVertexBones",
+    "signature": "public System.Void SetVertexBones(System.Int32 index, System.ReadOnlySpan\u003CSystem.Int32\u003E bones)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "bones",
+        "type": "System.ReadOnlySpan\u003CSystem.Int32\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.SetVertexColor(System.Int32,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "SetVertexColor",
+    "signature": "public System.Void SetVertexColor(System.Int32 index, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.SetVertexMeta\u00601(System.Int32,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "SetVertexMeta",
+    "signature": "public System.Void SetVertexMeta\u003CT\u003E(System.Int32 index, T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.SetVertexUV(System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "SetVertexUV",
+    "signature": "public System.Void SetVertexUV(System.Int32 index, Electron2D.Vector2 uv)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "uv",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.SetVertexUV2(System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "SetVertexUV2",
+    "signature": "public System.Void SetVertexUV2(System.Int32 index, Electron2D.Vector2 uv2)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "uv2",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.SetVertexWeights(System.Int32,System.ReadOnlySpan\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "SetVertexWeights",
+    "signature": "public System.Void SetVertexWeights(System.Int32 index, System.ReadOnlySpan\u003CSystem.Single\u003E weights)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "weights",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.TryGetEdgeMeta\u00601(System.Int32,ref T)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "TryGetEdgeMeta",
+    "signature": "public System.Boolean TryGetEdgeMeta\u003CT\u003E(System.Int32 index, out T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "ref T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.TryGetFaceMeta\u00601(System.Int32,ref T)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "TryGetFaceMeta",
+    "signature": "public System.Boolean TryGetFaceMeta\u003CT\u003E(System.Int32 index, out T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "ref T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.TryGetVertexMeta\u00601(System.Int32,ref T)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "TryGetVertexMeta",
+    "signature": "public System.Boolean TryGetVertexMeta\u003CT\u003E(System.Int32 index, out T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "ref T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

@@ -216,6 +216,7 @@ public sealed partial class ThemeDB
         ["MenuBar"] = ["MenuBar", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["MenuButton"] = ["MenuButton", "Button", "BaseButton", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["Mesh"] = ["Mesh", "Resource", "ElectronObject"],
+        ["MeshDataTool"] = ["MeshDataTool", "ElectronObject"],
         ["MeshInstance"] = ["MeshInstance", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["MultiMesh"] = ["MultiMesh", "Resource", "ElectronObject"],
         ["MultiMeshInstance"] = ["MultiMeshInstance", "Entity", "CanvasItem", "Node", "ElectronObject"],

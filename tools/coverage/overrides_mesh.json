@@ -884,6 +884,176 @@
       "godot": "SurfaceTool::enum_value:SkinWeightCount.SKIN_8_WEIGHTS",
       "electron2d": "enumValue:Electron2D.SurfaceTool.SkinWeightCount.Eight()",
       "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:clear()",
+      "electron2d": "method:Electron2D.MeshDataTool.Clear()",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:commit_to_surface(ArrayMesh:,int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.CommitToSurface(Electron2D.ArrayMesh,Electron2D.Mesh.ArrayFormat)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:create_from_surface(ArrayMesh:,int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.CreateFromSurface(Electron2D.ArrayMesh,System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_edge_count()",
+      "electron2d": "method:Electron2D.MeshDataTool.GetEdgeCount()",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_edge_faces(int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetEdgeFaces(System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_edge_vertex(int:,int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetEdgeVertex(System.Int32,System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_face_count()",
+      "electron2d": "method:Electron2D.MeshDataTool.GetFaceCount()",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_face_edge(int:,int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetFaceEdge(System.Int32,System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_face_normal(int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetFaceNormal(System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_face_vertex(int:,int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetFaceVertex(System.Int32,System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_format()",
+      "electron2d": "method:Electron2D.MeshDataTool.GetFormat()",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_material()",
+      "electron2d": "method:Electron2D.MeshDataTool.GetMaterial()",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_vertex(int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetVertex(System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_vertex_bones(int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetVertexBones(System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_vertex_color(int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetVertexColor(System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_vertex_count()",
+      "electron2d": "method:Electron2D.MeshDataTool.GetVertexCount()",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_vertex_edges(int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetVertexEdges(System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_vertex_faces(int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetVertexFaces(System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_vertex_uv(int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetVertexUV(System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_vertex_uv2(int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetVertexUV2(System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_vertex_weights(int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetVertexWeights(System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:set_material(Material:)",
+      "electron2d": "method:Electron2D.MeshDataTool.SetMaterial(Electron2D.Material)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:set_vertex(int:,Vector3:)",
+      "electron2d": "method:Electron2D.MeshDataTool.SetVertex(System.Int32,Electron2D.Vector2)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:set_vertex_bones(int:,PackedInt32Array:)",
+      "electron2d": "method:Electron2D.MeshDataTool.SetVertexBones(System.Int32,System.ReadOnlySpan<System.Int32>)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:set_vertex_color(int:,Color:)",
+      "electron2d": "method:Electron2D.MeshDataTool.SetVertexColor(System.Int32,Electron2D.Color)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:set_vertex_uv(int:,Vector2:)",
+      "electron2d": "method:Electron2D.MeshDataTool.SetVertexUV(System.Int32,Electron2D.Vector2)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:set_vertex_uv2(int:,Vector2:)",
+      "electron2d": "method:Electron2D.MeshDataTool.SetVertexUV2(System.Int32,Electron2D.Vector2)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:set_vertex_weights(int:,PackedFloat32Array:)",
+      "electron2d": "method:Electron2D.MeshDataTool.SetVertexWeights(System.Int32,System.ReadOnlySpan<System.Single>)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_vertex_meta(int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetVertexMeta`1(System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:set_vertex_meta(int:,Variant:)",
+      "electron2d": "method:Electron2D.MeshDataTool.SetVertexMeta`1(System.Int32,T)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_edge_meta(int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetEdgeMeta`1(System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:set_edge_meta(int:,Variant:)",
+      "electron2d": "method:Electron2D.MeshDataTool.SetEdgeMeta`1(System.Int32,T)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_face_meta(int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetFaceMeta`1(System.Int32)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:set_face_meta(int:,Variant:)",
+      "electron2d": "method:Electron2D.MeshDataTool.SetFaceMeta`1(System.Int32,T)",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
     }
   ],
   "extras": [
@@ -1126,6 +1296,26 @@
     {
       "electron2d": "method:Electron2D.SurfaceTool.Dispose(System.Boolean)",
       "reason": "ADRs 0001/0092: managed exact object construction and deterministic lifetime/reentry guards for the existing mesh-authoring concept; borrowed mesh/material resources are not disposed by the builder."
+    },
+    {
+      "electron2d": "constructor:Electron2D.MeshDataTool..ctor()",
+      "reason": "ADRs 0001/0092: deterministic managed construction/lifetime and try-get presence/type guards project the existing mesh topology/metadata concept without Variant; metadata values remain borrowed and transient."
+    },
+    {
+      "electron2d": "method:Electron2D.MeshDataTool.Dispose(System.Boolean)",
+      "reason": "ADRs 0001/0092: deterministic managed construction/lifetime and try-get presence/type guards project the existing mesh topology/metadata concept without Variant; metadata values remain borrowed and transient."
+    },
+    {
+      "electron2d": "method:Electron2D.MeshDataTool.TryGetVertexMeta`1(System.Int32,ref T)",
+      "reason": "ADRs 0001/0092: deterministic managed construction/lifetime and try-get presence/type guards project the existing mesh topology/metadata concept without Variant; metadata values remain borrowed and transient."
+    },
+    {
+      "electron2d": "method:Electron2D.MeshDataTool.TryGetEdgeMeta`1(System.Int32,ref T)",
+      "reason": "ADRs 0001/0092: deterministic managed construction/lifetime and try-get presence/type guards project the existing mesh topology/metadata concept without Variant; metadata values remain borrowed and transient."
+    },
+    {
+      "electron2d": "method:Electron2D.MeshDataTool.TryGetFaceMeta`1(System.Int32,ref T)",
+      "reason": "ADRs 0001/0092: deterministic managed construction/lifetime and try-get presence/type guards project the existing mesh topology/metadata concept without Variant; metadata values remain borrowed and transient."
     }
   ],
   "statusGroups": [
@@ -1645,6 +1835,63 @@
       "reason": "Trigger: complete named typed 2D morph-target storage and actual deformation/weight consumer over ArrayMesh under ADR 0092. SurfaceTool pose extraction enters that prerequisite first slice.",
       "godot": [
         "SurfaceTool::method:create_from_blend_shape(Mesh:,int:,String:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified.",
+      "godot": [
+        "MeshDataTool::method:clear()",
+        "MeshDataTool::method:commit_to_surface(ArrayMesh:,int:)",
+        "MeshDataTool::method:create_from_surface(ArrayMesh:,int:)",
+        "MeshDataTool::method:get_edge_count()",
+        "MeshDataTool::method:get_edge_faces(int:)",
+        "MeshDataTool::method:get_edge_vertex(int:,int:)",
+        "MeshDataTool::method:get_face_count()",
+        "MeshDataTool::method:get_face_edge(int:,int:)",
+        "MeshDataTool::method:get_face_normal(int:)",
+        "MeshDataTool::method:get_face_vertex(int:,int:)",
+        "MeshDataTool::method:get_format()",
+        "MeshDataTool::method:get_material()",
+        "MeshDataTool::method:get_vertex(int:)",
+        "MeshDataTool::method:get_vertex_bones(int:)",
+        "MeshDataTool::method:get_vertex_color(int:)",
+        "MeshDataTool::method:get_vertex_count()",
+        "MeshDataTool::method:get_vertex_edges(int:)",
+        "MeshDataTool::method:get_vertex_faces(int:)",
+        "MeshDataTool::method:get_vertex_uv(int:)",
+        "MeshDataTool::method:get_vertex_uv2(int:)",
+        "MeshDataTool::method:get_vertex_weights(int:)",
+        "MeshDataTool::method:set_material(Material:)",
+        "MeshDataTool::method:set_vertex(int:,Vector3:)",
+        "MeshDataTool::method:set_vertex_bones(int:,PackedInt32Array:)",
+        "MeshDataTool::method:set_vertex_color(int:,Color:)",
+        "MeshDataTool::method:set_vertex_uv(int:,Vector2:)",
+        "MeshDataTool::method:set_vertex_uv2(int:,Vector2:)",
+        "MeshDataTool::method:set_vertex_weights(int:,PackedFloat32Array:)",
+        "MeshDataTool::method:get_vertex_meta(int:)",
+        "MeshDataTool::method:set_vertex_meta(int:,Variant:)",
+        "MeshDataTool::method:get_edge_meta(int:)",
+        "MeshDataTool::method:set_edge_meta(int:,Variant:)",
+        "MeshDataTool::method:get_face_meta(int:)",
+        "MeshDataTool::method:set_face_meta(int:,Variant:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified. Vertex normal/tangent data getters/setters enter their shared first typed storage/packing/shader consumer slice.",
+      "godot": [
+        "class:MeshDataTool"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: numeric Vector3 normal and Vector4 tangent/handedness channels in typed MeshSurfaceData, their packed byte layout and actual shader consumers under ADR 0092. MeshDataTool readers/writers enter that same first producer/consumer slice; no 3D scene or Plane type is added.",
+      "godot": [
+        "MeshDataTool::method:get_vertex_normal(int:)",
+        "MeshDataTool::method:set_vertex_normal(int:,Vector3:)",
+        "MeshDataTool::method:get_vertex_tangent(int:)",
+        "MeshDataTool::method:set_vertex_tangent(int:,Plane:)"
       ]
     }
   ]

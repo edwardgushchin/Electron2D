@@ -243,3 +243,7 @@ The [secondary mesh UV channel](../components/meshes.md#secondary-uv-storage-and
 ## Typed surface authoring
 
 [SurfaceTool](../classes/SurfaceTool.md) now supplies finite typed 2D vertex/fan construction, four/eight skin selection, copied source/array imports, transformed append, exact indexing/deindexing and actual index-cache reordering. Commit atomically publishes copied geometry and borrowed material into ArrayMesh. Completed output executes existing canvas and indexed device rendering; saved output loads and redraws in a fresh process. Advanced normal/tangent/custom/morph prerequisites remain precise coverage gaps. Cold construction may allocate; warmed retained and device playback measures zero managed bytes on Linux Wayland. Physical cache speed, native allocation totals and wider platforms remain unverified.
+
+## Copied triangle topology editing
+
+[MeshDataTool](../classes/MeshDataTool.md) now edits copied 2D triangle vertices and current supported channels with explicit vertex-edge-face connectivity, exact typed transient annotations and atomic copied geometry/material commit. Boundary, degenerate, nonmanifold and eight-influence data execute on the existing consumers. Fresh-process output and native indexed/retained pixels are checked. Native allocation totals, wider platforms and normal/tangent byte/shader integration remain open.
