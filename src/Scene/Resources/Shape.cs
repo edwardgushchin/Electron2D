@@ -6,7 +6,7 @@ namespace Electron2D;
 public abstract partial class Shape : Resource
 {
     private float _customSolverBias;
-    private bool _checkingSolverPolicy;
+    private bool _checkingAuthoringAccess;
     private readonly List<CollisionObject> _policySceneUsers = [];
     private readonly List<PhysicsServerCollider> _policyServerUsers = [];
     private static long _solverPolicyEpoch;
@@ -27,23 +27,14 @@ public abstract partial class Shape : Resource
         get { ThrowIfDisposed(); return _customSolverBias; }
         set
         {
+            ThrowIfDisposed(); if (!PhysicsContactSettings.ValidBias(value)) throw new ArgumentOutOfRangeException(nameof(value));
+            EnsureAuthoringAccess(observeBackend: true, resourceGeometry: false);
             lock (_geometryGate)
             {
-                ThrowIfDisposed(); if (!PhysicsContactSettings.ValidBias(value)) throw new ArgumentOutOfRangeException(nameof(value));
-                if (_readingGeometry || _checkingSolverPolicy) throw new InvalidOperationException("Shape policy cannot change while its geometry or policy access hook is borrowed.");
-                _checkingSolverPolicy = true;
+                ThrowIfDisposed();
+                if (_customSolverBias == value) return;
+                _customSolverBias = value; Interlocked.Increment(ref _solverPolicyEpoch);
             }
-            try
-            {
-                PhysicsServer.Service.EnsureShapePolicyAccess(this, _policySceneUsers, _policyServerUsers);
-                lock (_geometryGate)
-                {
-                    ThrowIfDisposed();
-                    if (_customSolverBias == value) return;
-                    _customSolverBias = value; Interlocked.Increment(ref _solverPolicyEpoch);
-                }
-            }
-            finally { lock (_geometryGate) _checkingSolverPolicy = false; }
             EmitChanged();
         }
     }
@@ -136,18 +127,41 @@ public abstract partial class Shape : Resource
     protected override void ValidateDisposal()
     {
         lock (_geometryGate)
-            if (_readingGeometry || _checkingSolverPolicy) throw new InvalidOperationException("A shape cannot be disposed during its geometry or policy access hook.");
+            if (_readingGeometry || _checkingAuthoringAccess) throw new InvalidOperationException("A shape cannot be disposed during its geometry or authoring access hook.");
         lock (_queryRIDGate)
             if (_serverOwned && _serverReleaseThread != Environment.CurrentManagedThreadId) throw new InvalidOperationException("This geometry is borrowed from a server shape RID.");
         base.ValidateDisposal();
     }
 
-    /// <summary>Invalidates compiled geometry and notifies all borrowers after an authored geometry edit.</summary>
-    /// <remarks>Call after committing valid data. The shape RID remains stable; the next query or step rebuilds affected attachments.</remarks>
+    /// <summary>Checks every borrower before changing this resource's authored geometry.</summary>
+    /// <remarks>Call after validating input and before changing private data, including an equal assignment.
+    /// Call <see cref="EmitGeometryChanged"/> after committing the edit. Access hooks run without resource locks.</remarks>
     /// <exception cref="ObjectDisposedException">This resource is disposed.</exception>
-    /// <exception cref="InvalidOperationException">The geometry construction hook is active.</exception>
+    /// <exception cref="InvalidOperationException">An owner, phase or borrowed geometry/authoring hook rejects this edit.</exception>
+    protected void EnsureGeometryChangeAccess() => EnsureAuthoringAccess(observeBackend: true, resourceGeometry: true);
+
+    private void EnsureAuthoringAccess(bool observeBackend, bool resourceGeometry)
+    {
+        if (Volatile.Read(ref _readingGeometry)) throw new InvalidOperationException("Shape authoring cannot change during its geometry construction hook.");
+        lock (_geometryGate)
+        {
+            ThrowIfDisposed();
+            if (_readingGeometry || _checkingAuthoringAccess) throw new InvalidOperationException("Shape authoring cannot change while its geometry or access hook is borrowed.");
+            _checkingAuthoringAccess = true;
+        }
+        try { PhysicsServer.Service.EnsureShapePolicyAccess(this, _policySceneUsers, _policyServerUsers, observeBackend, resourceGeometry); }
+        finally { lock (_geometryGate) _checkingAuthoringAccess = false; }
+    }
+
+    /// <summary>Invalidates compiled geometry and notifies all borrowers after an authored geometry edit.</summary>
+    /// <remarks>Call <see cref="EnsureGeometryChangeAccess"/> before committing private data.
+    /// This publication checks owner/phase access without calling selected status hooks again. It cannot undo private subclass writes.
+    /// The shape RID remains stable; the next query or step rebuilds affected attachments.</remarks>
+    /// <exception cref="ObjectDisposedException">This resource is disposed.</exception>
+    /// <exception cref="InvalidOperationException">An owner, phase or borrowed geometry/authoring hook rejects publication.</exception>
     protected internal void EmitGeometryChanged()
     {
+        EnsureAuthoringAccess(observeBackend: false, resourceGeometry: true);
         lock (_geometryGate)
         {
             ThrowIfDisposed();
@@ -187,6 +201,7 @@ public sealed class CircleShape : Shape
     /// <summary>Gets or sets the positive finite radius in scene units.</summary>
     /// <value>Ten by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The value is not positive and finite, or its diameter would overflow.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
     public float Radius
     {
         get { ThrowIfDisposed(); return _radius; }
@@ -195,6 +210,7 @@ public sealed class CircleShape : Shape
             ThrowIfDisposed();
             if (!float.IsFinite(value) || value <= 0 || value > float.MaxValue / 2)
                 throw new ArgumentOutOfRangeException(nameof(value));
+            EnsureGeometryChangeAccess();
             _radius = value;
             EmitGeometryChanged();
         }
@@ -244,6 +260,7 @@ public sealed class CapsuleShape : Shape
     /// <summary>Gets or sets the nonnegative finite end-cap radius in scene units.</summary>
     /// <value>Ten by default; increasing it beyond half the height also increases the height.</value>
     /// <exception cref="ArgumentOutOfRangeException">The radius is negative, nonfinite, or its diameter overflows.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
     public float Radius
     {
         get { ThrowIfDisposed(); return _radius; }
@@ -252,6 +269,7 @@ public sealed class CapsuleShape : Shape
             ThrowIfDisposed();
             if (!float.IsFinite(value) || value < 0 || value > float.MaxValue / 2)
                 throw new ArgumentOutOfRangeException(nameof(value));
+            EnsureGeometryChangeAccess();
             if (_radius == value) return;
             _radius = value;
             _height = MathF.Max(_height, 2 * value);
@@ -262,6 +280,7 @@ public sealed class CapsuleShape : Shape
     /// <summary>Gets or sets the nonnegative finite full height, including both end caps.</summary>
     /// <value>Thirty by default; decreasing it below twice the radius also decreases the radius.</value>
     /// <exception cref="ArgumentOutOfRangeException">The height is negative or nonfinite.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
     public float Height
     {
         get { ThrowIfDisposed(); return _height; }
@@ -269,6 +288,7 @@ public sealed class CapsuleShape : Shape
         {
             ThrowIfDisposed();
             if (!float.IsFinite(value) || value < 0) throw new ArgumentOutOfRangeException(nameof(value));
+            EnsureGeometryChangeAccess();
             if (_height == value) return;
             _height = value;
             _radius = MathF.Min(_radius, value * 0.5f);
@@ -279,6 +299,7 @@ public sealed class CapsuleShape : Shape
     /// <summary>Gets or sets the center segment height between the two end-cap centers.</summary>
     /// <value>Ten by default; this is <see cref="Height"/> minus twice <see cref="Radius"/>.</value>
     /// <exception cref="ArgumentOutOfRangeException">The height is negative, nonfinite, or makes the full height overflow.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
     public float MidHeight
     {
         get { ThrowIfDisposed(); return _height - 2 * _radius; }
@@ -288,6 +309,7 @@ public sealed class CapsuleShape : Shape
             var height = value + 2 * _radius;
             if (!float.IsFinite(value) || value < 0 || !float.IsFinite(height))
                 throw new ArgumentOutOfRangeException(nameof(value));
+            EnsureGeometryChangeAccess();
             _height = height;
             EmitGeometryChanged();
         }
@@ -342,6 +364,7 @@ public sealed class SegmentShape : Shape
     /// <summary>Gets or sets the first finite local endpoint.</summary>
     /// <value>Zero by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The endpoint is nonfinite or produces unrepresentable bounds.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
     public Vector2 A
     {
         get { ThrowIfDisposed(); return _a; }
@@ -349,6 +372,7 @@ public sealed class SegmentShape : Shape
         {
             ThrowIfDisposed();
             ValidateEndpoint(value, _b);
+            EnsureGeometryChangeAccess();
             if (_a == value) return;
             _a = value;
             EmitGeometryChanged();
@@ -358,6 +382,7 @@ public sealed class SegmentShape : Shape
     /// <summary>Gets or sets the second finite local endpoint.</summary>
     /// <value>(0, 10) by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The endpoint is nonfinite or produces unrepresentable bounds.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
     public Vector2 B
     {
         get { ThrowIfDisposed(); return _b; }
@@ -365,6 +390,7 @@ public sealed class SegmentShape : Shape
         {
             ThrowIfDisposed();
             ValidateEndpoint(value, _a);
+            EnsureGeometryChangeAccess();
             if (_b == value) return;
             _b = value;
             EmitGeometryChanged();
@@ -425,6 +451,7 @@ public sealed class RectangleShape : Shape
     /// <summary>Gets or sets the finite positive width and height in scene units.</summary>
     /// <value>(20, 20) by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">Either component is not positive and finite.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
     public Vector2 Size
     {
         get { ThrowIfDisposed(); return _size; }
@@ -432,6 +459,7 @@ public sealed class RectangleShape : Shape
         {
             ThrowIfDisposed();
             if (!value.IsFinite() || value.X <= 0 || value.Y <= 0) throw new ArgumentOutOfRangeException(nameof(value));
+            EnsureGeometryChangeAccess();
             _size = value;
             EmitGeometryChanged();
         }

@@ -1,6 +1,6 @@
 # ConcavePolygonShape
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -74,3 +74,9 @@ The built-in resource file registry constructs this concrete shape on load.
 ## Geometry implementation
 
 `protected override ShapeGeometry GetGeometryCore()` supplies immutable exact data for this resource's current geometry. The inherited Shape cache retains it until an authored edit calls EmitGeometryChanged. Bounds, diagnostics and both physical backends consume this same representation; see [procedural geometry](Shape.md#procedural-geometry).
+
+Geometric writes use [Shape.EnsureGeometryChangeAccess](Shape.md) before private
+authoring, including equal assignments. Scene/raw owner, phase and borrowed-hook
+rejection preserves data, RID and immutable geometry cache. Publication rechecks
+owner/phase without repeating selected status hooks; ordinary post-solver edits
+retain their existing behavior.

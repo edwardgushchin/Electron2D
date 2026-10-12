@@ -15,19 +15,21 @@ public sealed class WorldBoundaryShape : Shape
     /// <summary>Gets or sets the finite nonzero normal pointing into the free half-plane.</summary>
     /// <value>Vector2.Up by default; nonunit magnitudes are preserved.</value>
     /// <exception cref="ArgumentOutOfRangeException">The normal is zero/nonfinite or the resulting offset is not representable.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
     public Vector2 Normal
     {
         get { ThrowIfDisposed(); return _normal; }
-        set { ThrowIfDisposed(); Normalize(value, _distance); if (_normal == value) return; _normal = value; EmitGeometryChanged(); }
+        set { ThrowIfDisposed(); Normalize(value, _distance); EnsureGeometryChangeAccess(); if (_normal == value) return; _normal = value; EmitGeometryChanged(); }
     }
 
     /// <summary>Gets or sets the finite right-hand side of the local line equation Normal.Dot(point) = Distance.</summary>
     /// <value>Zero by default, expressed in scene units multiplied by the normal magnitude.</value>
     /// <exception cref="ArgumentOutOfRangeException">The distance or normalized offset is not representable.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
     public float Distance
     {
         get { ThrowIfDisposed(); return _distance; }
-        set { ThrowIfDisposed(); Normalize(_normal, value); if (_distance == value) return; _distance = value; EmitGeometryChanged(); }
+        set { ThrowIfDisposed(); Normalize(_normal, value); EnsureGeometryChangeAccess(); if (_distance == value) return; _distance = value; EmitGeometryChanged(); }
     }
 
     internal static (Vector2 Normal, float Distance) Normalize(Vector2 normal, float distance)

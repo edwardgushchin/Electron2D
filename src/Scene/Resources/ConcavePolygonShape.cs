@@ -16,6 +16,7 @@ public sealed class ConcavePolygonShape : Shape
     /// including an equal assignment; empty input removes all fixtures.</remarks>
     /// <exception cref="ArgumentNullException">The assigned array is null.</exception>
     /// <exception cref="ArgumentException">The array has odd length or a coordinate or span exceeds the finite range.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
     public Vector2[] Segments
     {
         get { ThrowIfDisposed(); return (Vector2[])_segments.Clone(); }
@@ -36,6 +37,7 @@ public sealed class ConcavePolygonShape : Shape
                 max = new(MathF.Max(max.X, point.X), MathF.Max(max.Y, point.Y));
             }
             if (!(max - min).IsFinite()) throw new ArgumentException("Contour bounds exceed the finite range.", nameof(value));
+            EnsureGeometryChangeAccess();
             _segments = copy;
             EmitGeometryChanged();
         }

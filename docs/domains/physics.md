@@ -701,3 +701,9 @@ now preflights scene/raw owners, numerical and own geometry hooks before resourc
 policy mutation. CPU/GPU/registered public checks preserve geometry/RID identity,
 ordinary callback access and zero warmed allocation. Complete numerical extension,
 network and performance acceptance remain open.
+
+[Geometric authoring preflight](../components/physics-registered-adapter.md) now protects all built-in setters,
+CustomShape and procedural authors before private data changes. Registered/CPU/GPU
+checks cover 16 paths, immutable data/RID preservation, ordinary callback/query
+edits and warmed full frames. Arbitrary private subclass writes require the
+protected authoring protocol; full numerical-extension acceptance remains open.

@@ -5396,6 +5396,10 @@
     {
       "electron2d": "method:Electron2D.PhysicsServer.BodyCollideShape(Electron2D.RID,System.Int32,Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Span<Electron2D.Vector2>,ref System.Int32)",
       "reason": "ADR 0103/0095/0069: static public typed projection of selected resource/body pair implementation operations; explicit world/body attachment selection, caller pair spans and validated atomic output. Public-only CPU/GPU/registered consumers execute the path and zero warm allocations; full registered numerical acceptance remains open."
+    },
+    {
+      "electron2d": "method:Electron2D.Shape.EnsureGeometryChangeAccess()",
+      "reason": "ADR 0103: procedural authors preflight all scene/raw borrowers before private geometric authoring, then publish with EmitGeometryChanged. Built-in writers use the same owner/phase/construction/reentry checks; selected status hooks run before mutation outside resource locks. Publication rechecks owner/phase without a second fallible status callback. Public-only registered/CPU/GPU checks cover 16 edit paths, exact immutable data/RID preservation on rejection, ordinary callback/query changes and warmed full frames. Arbitrary subclass private writes require this authoring protocol; full numerical-extension acceptance remains open. Coordinated worker geometry writes remain supported in quiescent worlds without invoking owner-bound status hooks; worker writes during actual numerical preparation reject before authoring. CustomSolverBias keeps its existing owner-thread rule."
     }
   ],
   "statusGroups": [

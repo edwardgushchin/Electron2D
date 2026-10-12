@@ -586,5 +586,11 @@ now rejects off-owner, numerical/step, geometry-supplier and recursive access wr
 before value, epoch or observer mutation, including equal assignments. The shared
 resource projection executes on CPU/GPU/registered scene/raw users and preserves
 post-solver callback edits and zero warm allocation. Two extension bias rows move
-from Unimplemented to Partial; independent registered correction and general
-geometry-edit preflight remain open.
+from Unimplemented to Partial; independent registered correction and
+full extension acceptance remain open.
+
+[Geometric authoring preflight](physics-registered-adapter.md) now protects all built-in setters,
+CustomShape and procedural authors before private data changes. Registered/CPU/GPU
+checks cover 16 paths, immutable data/RID preservation, ordinary callback/query
+edits and warmed full frames. Arbitrary private subclass writes require the
+protected authoring protocol; full numerical-extension acceptance remains open.

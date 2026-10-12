@@ -16,6 +16,7 @@ public sealed class ConvexPolygonShape : Shape
     /// A repeated first vertex may close the contour. Empty input clears all fixtures.</remarks>
     /// <exception cref="ArgumentNullException">The assigned array is null.</exception>
     /// <exception cref="ArgumentException">The nonempty contour is nonfinite, nonconvex, degenerate or outside the finite solver range.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
     public Vector2[] Points
     {
         get { ThrowIfDisposed(); return (Vector2[])_points.Clone(); }
@@ -24,6 +25,7 @@ public sealed class ConvexPolygonShape : Shape
             ThrowIfDisposed();
             ArgumentNullException.ThrowIfNull(value);
             var copy = (Vector2[])value.Clone();
+            EnsureGeometryChangeAccess();
             PhysicsShapeBackend.ValidateAndCachePolygon(this, copy);
             _points = copy;
             EmitGeometryChanged();
@@ -33,6 +35,7 @@ public sealed class ConvexPolygonShape : Shape
     /// <summary>Computes the convex hull of a point cloud and assigns it as <see cref="Points"/>.</summary>
     /// <param name="pointCloud">Finite input points in any order.</param>
     /// <exception cref="ArgumentException">The cloud has fewer than three noncollinear hull points or an invalid coordinate.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
     public void SetPointCloud(ReadOnlySpan<Vector2> pointCloud)
     {
         ThrowIfDisposed();

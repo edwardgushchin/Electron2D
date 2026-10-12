@@ -193,7 +193,7 @@ public static partial class BackendChecks
     private sealed class SpaceCircle : Shape
     {
         internal Action? Read;
-        internal void Invalidate() => EmitGeometryChanged();
+        internal void Invalidate() { EnsureGeometryChangeAccess(); EmitGeometryChanged(); }
         protected override ShapeGeometry GetGeometryCore() { Read?.Invoke(); return ShapeGeometry.Circle(3); }
     }
 }
