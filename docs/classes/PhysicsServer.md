@@ -90,7 +90,7 @@ Parameterless creation remains CPU. See [backend lifetime and verified scope](..
 <a id="colliders"></a>
 ### Collider creation, shapes and ownership
 
-`BodyCreate` defaults to rigid mode; `AreaCreate` defaults to a stationary nonresponding sensor. Neither has a space until `BodySetSpace` or `AreaSetSpace`. The seven shape constructors cover circle, rectangle, capsule, segment, convex/concave polygon and directed separation-ray resources. `ShapeSetData` rejects a disposed or different-kind Shape, duplicates caller data and rebuilds attached users; `ShapeGetData` returns another independent duplicate. Each `BodyAddShape` or `AreaAddShape` appends an indexed slot with a finite unit-scale, zero-skew local transform, default identity, and optional disabled state. Slot-count, disabled-toggle and removal methods make those indices executable after attachment; invalid indices throw before mutation. Compound fixtures from one slot share its public static query ShapeIndex. An explicit collider may be moved into the SceneTree's `World.Space`; direct queries then see it beside scene nodes. Queries return its RID with a null scene Collider.
+`BodyCreate` defaults to rigid mode; `AreaCreate` defaults to a stationary nonresponding sensor. Neither has a space until `BodySetSpace` or `AreaSetSpace`. The eight built-in shape constructors cover circle, rectangle, capsule, segment, convex/concave polygon, directed separation ray and world boundary resources. `ShapeSetData` rejects a disposed or different-kind Shape, duplicates caller data and rebuilds attached users; `ShapeGetData` returns another independent duplicate. Each `BodyAddShape` or `AreaAddShape` appends an indexed slot with a finite unit-scale, zero-skew local transform, default identity, and optional disabled state. Slot-count, disabled-toggle and removal methods make those indices executable after attachment; invalid indices throw before mutation. Compound fixtures from one slot share its public static query ShapeIndex. An explicit collider may be moved into the SceneTree's `World.Space`; direct queries then see it beside scene nodes. Queries return its RID with a null scene Collider.
 
 <a id="body-state"></a>
 ### Body state and filters
@@ -988,3 +988,10 @@ Shared Shape.CustomSolverBias edits preflight every scene/raw borrower before
 mutation, including equal assignments, disabled slots and a scene-held server
 geometry view. [Shape](Shape.md#customsolverbias) defines the owner/phase/borrow
 guards, observer failure and retained geometry identity.
+
+Shared ShapeSetData failure restores the original resource and attempts rollback
+for every raw borrower even if an earlier rollback fails. Scene users are marked
+dirty, rejected private geometry is retired, and apply/rollback/retirement errors
+are retained together. Incomplete borrowers stay dirty so public query/step
+preparation retries before observing them. An old-view retirement error after a
+successful replacement does not undo the committed new geometry.

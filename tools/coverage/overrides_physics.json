@@ -2659,6 +2659,56 @@
       "godot": "PhysicsServer2DExtension::method:_shape_set_custom_solver_bias(RID:,float:)",
       "electron2d": "property:Electron2D.Shape.CustomSolverBias()",
       "reason": "ADR 0103/0098: common Shape.CustomSolverBias metadata reaches selected collider Shape descriptors; authored reads stay available during numerical hooks. Writes preflight every scene/raw borrower, including disabled/server-owned scene views and equal assignments, before policy/epoch/Changed mutation. Public-only CPU/GPU/registered checks exercise owner, numerical/step/construction and recursive access guards, ordinary post-solver edits, observer failure, retained geometry/RID identity and 128 edited complete warm frames at zero owner/all-thread managed allocation. Complete registered numerical correction, arbitrary geometry and extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_circle_shape_create()",
+      "electron2d": "method:Electron2D.PhysicsServer.CircleShapeCreate()",
+      "reason": "ADR 0103/0063: the common facade owns shared shape identities, initialized typed geometry and exact type/data authoring; selected scene/raw collider descriptors consume the same resource identity. Public-only registered/CPU/GPU checks execute all eight factories, independent typed copies and policy, borrowed private-view retirement, disabled slots, owner/type guards and complete scene/raw release. Shared replacement failure restores authoring, attempts every rollback, retires rejected geometry and preserves apply/rollback/retirement errors; dirty borrowers retry through guarded public query preparation. Full arbitrary numerical geometry and extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_capsule_shape_create()",
+      "electron2d": "method:Electron2D.PhysicsServer.CapsuleShapeCreate()",
+      "reason": "ADR 0103/0063: the common facade owns shared shape identities, initialized typed geometry and exact type/data authoring; selected scene/raw collider descriptors consume the same resource identity. Public-only registered/CPU/GPU checks execute all eight factories, independent typed copies and policy, borrowed private-view retirement, disabled slots, owner/type guards and complete scene/raw release. Shared replacement failure restores authoring, attempts every rollback, retires rejected geometry and preserves apply/rollback/retirement errors; dirty borrowers retry through guarded public query preparation. Full arbitrary numerical geometry and extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_rectangle_shape_create()",
+      "electron2d": "method:Electron2D.PhysicsServer.RectangleShapeCreate()",
+      "reason": "ADR 0103/0063: the common facade owns shared shape identities, initialized typed geometry and exact type/data authoring; selected scene/raw collider descriptors consume the same resource identity. Public-only registered/CPU/GPU checks execute all eight factories, independent typed copies and policy, borrowed private-view retirement, disabled slots, owner/type guards and complete scene/raw release. Shared replacement failure restores authoring, attempts every rollback, retires rejected geometry and preserves apply/rollback/retirement errors; dirty borrowers retry through guarded public query preparation. Full arbitrary numerical geometry and extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_segment_shape_create()",
+      "electron2d": "method:Electron2D.PhysicsServer.SegmentShapeCreate()",
+      "reason": "ADR 0103/0063: the common facade owns shared shape identities, initialized typed geometry and exact type/data authoring; selected scene/raw collider descriptors consume the same resource identity. Public-only registered/CPU/GPU checks execute all eight factories, independent typed copies and policy, borrowed private-view retirement, disabled slots, owner/type guards and complete scene/raw release. Shared replacement failure restores authoring, attempts every rollback, retires rejected geometry and preserves apply/rollback/retirement errors; dirty borrowers retry through guarded public query preparation. Full arbitrary numerical geometry and extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_world_boundary_shape_create()",
+      "electron2d": "method:Electron2D.PhysicsServer.WorldBoundaryShapeCreate()",
+      "reason": "ADR 0103/0063: the common facade owns shared shape identities, initialized typed geometry and exact type/data authoring; selected scene/raw collider descriptors consume the same resource identity. Public-only registered/CPU/GPU checks execute all eight factories, independent typed copies and policy, borrowed private-view retirement, disabled slots, owner/type guards and complete scene/raw release. Shared replacement failure restores authoring, attempts every rollback, retires rejected geometry and preserves apply/rollback/retirement errors; dirty borrowers retry through guarded public query preparation. Full arbitrary numerical geometry and extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_separation_ray_shape_create()",
+      "electron2d": "method:Electron2D.PhysicsServer.SeparationRayShapeCreate()",
+      "reason": "ADR 0103/0063: the common facade owns shared shape identities, initialized typed geometry and exact type/data authoring; selected scene/raw collider descriptors consume the same resource identity. Public-only registered/CPU/GPU checks execute all eight factories, independent typed copies and policy, borrowed private-view retirement, disabled slots, owner/type guards and complete scene/raw release. Shared replacement failure restores authoring, attempts every rollback, retires rejected geometry and preserves apply/rollback/retirement errors; dirty borrowers retry through guarded public query preparation. Full arbitrary numerical geometry and extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_convex_polygon_shape_create()",
+      "electron2d": "method:Electron2D.PhysicsServer.ConvexPolygonShapeCreate()",
+      "reason": "ADR 0103/0063: the common facade owns shared shape identities, initialized typed geometry and exact type/data authoring; selected scene/raw collider descriptors consume the same resource identity. Public-only registered/CPU/GPU checks execute all eight factories, independent typed copies and policy, borrowed private-view retirement, disabled slots, owner/type guards and complete scene/raw release. Shared replacement failure restores authoring, attempts every rollback, retires rejected geometry and preserves apply/rollback/retirement errors; dirty borrowers retry through guarded public query preparation. Full arbitrary numerical geometry and extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_concave_polygon_shape_create()",
+      "electron2d": "method:Electron2D.PhysicsServer.ConcavePolygonShapeCreate()",
+      "reason": "ADR 0103/0063: the common facade owns shared shape identities, initialized typed geometry and exact type/data authoring; selected scene/raw collider descriptors consume the same resource identity. Public-only registered/CPU/GPU checks execute all eight factories, independent typed copies and policy, borrowed private-view retirement, disabled slots, owner/type guards and complete scene/raw release. Shared replacement failure restores authoring, attempts every rollback, retires rejected geometry and preserves apply/rollback/retirement errors; dirty borrowers retry through guarded public query preparation. Full arbitrary numerical geometry and extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_shape_get_type(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.ShapeGetType(Electron2D.RID)",
+      "reason": "ADR 0103/0063: the common facade owns shared shape identities, initialized typed geometry and exact type/data authoring; selected scene/raw collider descriptors consume the same resource identity. Public-only registered/CPU/GPU checks execute all eight factories, independent typed copies and policy, borrowed private-view retirement, disabled slots, owner/type guards and complete scene/raw release. Shared replacement failure restores authoring, attempts every rollback, retires rejected geometry and preserves apply/rollback/retirement errors; dirty borrowers retry through guarded public query preparation. Full arbitrary numerical geometry and extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_shape_set_data(RID:,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.ShapeSetData(Electron2D.RID,Electron2D.Shape)",
+      "reason": "ADR 0103/0063: the common facade owns shared shape identities, initialized typed geometry and exact type/data authoring; selected scene/raw collider descriptors consume the same resource identity. Public-only registered/CPU/GPU checks execute all eight factories, independent typed copies and policy, borrowed private-view retirement, disabled slots, owner/type guards and complete scene/raw release. Shared replacement failure restores authoring, attempts every rollback, retires rejected geometry and preserves apply/rollback/retirement errors; dirty borrowers retry through guarded public query preparation. Full arbitrary numerical geometry and extension acceptance remain open."
     }
   ],
   "extras": [
@@ -7483,6 +7533,22 @@
       ],
       "state": "Partial",
       "reason": "ADR 0103/0098: common Shape.CustomSolverBias metadata reaches selected collider Shape descriptors; authored reads stay available during numerical hooks. Writes preflight every scene/raw borrower, including disabled/server-owned scene views and equal assignments, before policy/epoch/Changed mutation. Public-only CPU/GPU/registered checks exercise owner, numerical/step/construction and recursive access guards, ordinary post-solver edits, observer failure, retained geometry/RID identity and 128 edited complete warm frames at zero owner/all-thread managed allocation. Complete registered numerical correction, arbitrary geometry and extension acceptance remain open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_circle_shape_create()",
+        "PhysicsServer2DExtension::method:_capsule_shape_create()",
+        "PhysicsServer2DExtension::method:_rectangle_shape_create()",
+        "PhysicsServer2DExtension::method:_segment_shape_create()",
+        "PhysicsServer2DExtension::method:_world_boundary_shape_create()",
+        "PhysicsServer2DExtension::method:_separation_ray_shape_create()",
+        "PhysicsServer2DExtension::method:_convex_polygon_shape_create()",
+        "PhysicsServer2DExtension::method:_concave_polygon_shape_create()",
+        "PhysicsServer2DExtension::method:_shape_get_type(RID:)",
+        "PhysicsServer2DExtension::method:_shape_set_data(RID:,Variant:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0103/0063: the common facade owns shared shape identities, initialized typed geometry and exact type/data authoring; selected scene/raw collider descriptors consume the same resource identity. Public-only registered/CPU/GPU checks execute all eight factories, independent typed copies and policy, borrowed private-view retirement, disabled slots, owner/type guards and complete scene/raw release. Shared replacement failure restores authoring, attempts every rollback, retires rejected geometry and preserves apply/rollback/retirement errors; dirty borrowers retry through guarded public query preparation. Full arbitrary numerical geometry and extension acceptance remain open."
     }
   ]
 }

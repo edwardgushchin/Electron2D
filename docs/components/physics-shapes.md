@@ -150,3 +150,10 @@ CustomShape and a procedural resource, with immutable data/RID preservation on
 rejection, actual point-query changes and observer failure. Warm frames measure
 stable geometry plus guard calls; array copies and accepted immutable geometry
 creation are authoring allocations. Full numerical-extension acceptance remains open.
+
+[Shared shape factories and data lifetime](physics-registered-adapter.md#shared-shape-construction-and-data-lifetime) now execute through the
+public-only registered/CPU/GPU consumer. Replacement errors preserve original
+geometry, continue every rollback/retirement and retain all failures; incomplete
+borrowers retry during guarded preparation. Ten formerly unmapped extension rows
+project to the common resource role as Partial. Full numerical-extension and final
+physical/network/performance acceptance remain open.

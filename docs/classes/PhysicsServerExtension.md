@@ -61,3 +61,10 @@ available during numerical borrowing; policy writes preflight every scene/raw
 borrower before mutation. Public-only CPU/GPU/registered owner/borrow/reentry checks
 and zero-allocation full frames execute. Arbitrary registered numerical correction
 and complete extension acceptance remain open.
+
+[Shared shape factories and data lifetime](../components/physics-registered-adapter.md#shared-shape-construction-and-data-lifetime) now execute through the
+public-only registered/CPU/GPU consumer. Replacement errors preserve original
+geometry, continue every rollback/retirement and retain all failures; incomplete
+borrowers retry during guarded preparation. Ten formerly unmapped extension rows
+project to the common resource role as Partial. Full numerical-extension and final
+physical/network/performance acceptance remain open.

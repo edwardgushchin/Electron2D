@@ -805,3 +805,30 @@ CustomShape and a procedural resource, with immutable data/RID preservation on
 rejection, actual point-query changes and observer failure. Warm frames measure
 stable geometry plus guard calls; array copies and accepted immutable geometry
 creation are authoring allocations. Full numerical-extension acceptance remains open.
+
+## Shared shape construction and data lifetime
+
+The common facade owns the eight built-in shape factories, exact ShapeGetType and
+typed ShapeSetData/ShapeGetData. A shape RID is shared metadata; selected collider
+attachments consume its actual current Shape resource. Copying data preserves the
+full typed geometry and inherited CustomSolverBias. Returned data is independent.
+A successful replacement retains RID and retires the old private resource view;
+immutable data already retained from that view remains valid. FreeRID removes
+scene/raw slots and retires the current view; empty scene shape owners retain
+identity until explicitly removed.
+
+On replacement failure, original authoring is restored first. Every raw borrower
+is marked dirty and its rollback attempted; an error cannot skip later borrowers
+or retirement of rejected private geometry. Scene borrowers are marked dirty too.
+Original apply, rollback and retirement failures are retained. A failed rollback
+stays dirty so the next guarded public preparation retries before a query or step.
+If old-view retirement throws after successful replacement, new geometry remains
+committed. This path uses the existing resource cleanup/error machinery.
+
+The public-only --shape-resources registered/CPU/GPU profile checks all eight
+factories, exact typed data/policy, copies, private view identity/lifetime, disabled
+scene/raw slots, wrong-owner/type refusal and release. The registered failure
+fixture additionally checks mixed apply/rollback/retirement errors, later borrower
+continuation, source view preservation, real query recovery and subsequent success.
+These ten extension rows now map as Partial to the actual common resource role;
+full arbitrary registered numerical geometry and extension acceptance remain open.

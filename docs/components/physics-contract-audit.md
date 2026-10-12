@@ -594,3 +594,10 @@ CustomShape and procedural authors before private data changes. Registered/CPU/G
 checks cover 16 paths, immutable data/RID preservation, ordinary callback/query
 edits and warmed full frames. Arbitrary private subclass writes require the
 protected authoring protocol; full numerical-extension acceptance remains open.
+
+[Shared shape factories and data lifetime](physics-registered-adapter.md#shared-shape-construction-and-data-lifetime) now execute through the
+public-only registered/CPU/GPU consumer. Replacement errors preserve original
+geometry, continue every rollback/retirement and retain all failures; incomplete
+borrowers retry during guarded preparation. Ten formerly unmapped extension rows
+project to the common resource role as Partial. Full numerical-extension and final
+physical/network/performance acceptance remain open.

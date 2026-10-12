@@ -97,11 +97,18 @@ public sealed partial class PhysicsServer
             foreach (var collider in users) collider.RebuildShapes();
             foreach (var scene in sceneUsers) scene.MarkShapesDirty();
         }
-        catch
+        catch (Exception error)
         {
             entry.Geometry = previous;
-            foreach (var collider in users) collider.RebuildShapes();
-            copy.ReleaseServerGeometry();
+            List<Exception>? errors = [error];
+            foreach (var collider in users)
+            {
+                collider.MarkShapesDirty();
+                PhysicsSpace.Cleanup(collider.RebuildShapes, ref errors);
+            }
+            foreach (var scene in sceneUsers) scene.MarkShapesDirty();
+            PhysicsSpace.Cleanup(copy.ReleaseServerGeometry, ref errors);
+            PhysicsSpace.FinishCleanup(errors);
             throw;
         }
         previous.ReleaseServerGeometry();

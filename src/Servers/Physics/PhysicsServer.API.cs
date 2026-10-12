@@ -995,9 +995,12 @@ public sealed partial class PhysicsServer
     /// <summary>Copies typed geometry into a server-owned shape RID.</summary>
     /// <param name="shape">A live server shape of the same concrete type as the supplied resource.</param>
     /// <param name="data">Caller-owned source geometry; later edits do not affect the server copy.</param>
+    /// <remarks>On a rebuild failure, authoring is restored and every borrower is prepared for rollback or retry.
+    /// Rejected private geometry is retired even if rollback fails. A committed replacement remains committed if old-view retirement fails.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live shape or the resource has another concrete type.</exception>
     /// <exception cref="ObjectDisposedException">The supplied resource is disposed.</exception>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
+    /// <exception cref="AggregateException">Replacement, rollback or rejected-view retirement reports multiple errors.</exception>
     public static void ShapeSetData(RID shape, Shape data) => Service.ShapeSetDataCore(shape, data);
 
     /// <summary>Returns a caller-owned duplicate of server shape geometry.</summary>
