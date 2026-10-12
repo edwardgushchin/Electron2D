@@ -694,3 +694,23 @@ bin/physics-mass-current/2026-10-13/; final/provenance-before.json identifies so
 7958bcf44c4472c947c1bcf7e2b713b0f3a734ef6a836c254ae3650034489fb0 and every frozen
 runtime file. Remaining inherited/extension, networking and full performance gates
 stay open.
+
+The 2026-10-13 ledger reconciliation removes stale claims that named registration,
+factory-selected body/space views, independent GPU body ownership and linear pin
+softness are absent. Their current public-only and shared CPU/GPU suites provide
+bounded evidence; no declaration status is promoted by this wording correction.
+The remaining extension obligation is the complete applicable operation behavior,
+including arbitrary geometry/compound numerical semantics and coupled constraint,
+CCD, sleep/contact-history acceptance. A registered fixture is responsible for its
+own numerical implementation; the runtime bridge must expose and validate its
+complete capabilities. Shared inherited declarations remain on their declaring
+families, and final performance/network/native gates remain distinct.
+
+The remaining moving-custom-pair evidence has a concrete trigger: the annulus
+consumer currently sweeps the second center by secondMotion-firstMotion. That
+checks synchronized relative motion, whereas ADR 0069 resource pairs represent
+independent swept regions. For example, an annulus moving right and a circle moving
+up can have intersecting swept regions even when their same-time relative path
+misses. The next slice must exercise and correct this public-only custom algorithm,
+including both argument orders, inner-hole truth and returned boundary ownership.
+Current static annulus evidence does not close that moving-pair requirement.

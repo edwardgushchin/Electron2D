@@ -6090,7 +6090,7 @@
         "class:PhysicsDirectSpaceState2D"
       ],
       "state": "Partial",
-      "reason": "All six query families, canvas filtering and weak scene/raw/tile identities execute on CPU/GPU. Selected internal owners now create validated cached views outside the registry lock for World/server/body-space consumers. Caller-created typed query/exclusion hooks execute; public registered implementations and their complete operation bridge remain open under ADR 0103."
+      "reason": "All six query families, canvas filtering and weak scene/raw/tile identities execute on explicitly selected CPU/GPU worlds. Public named implementations supply cached direct-space views through PhysicsServerBackend.CreateDirectSpaceState, with scoped exclusions and validated immutable result projection. PhysicsBackendExtension.Consumer --factory-views verifies all six families, nested exclusions, errors, disposal/retry and 128 active scene/raw frames at 0/0 owner/all-thread bytes. Complete registered numerical/geometry semantics and wider inherited acceptance remain open under ADR 0103."
     },
     {
       "godot": [
@@ -6137,7 +6137,7 @@
         "class:PhysicsServer2D"
       ],
       "state": "Partial",
-      "reason": "Space/body/Area/shape RID lifetime, selected typed state operations and direct ray/point access execute; other server operations retain family-specific backend and typed-result triggers (ADR 0063). The complete public scene pipeline now has paired CPU/GPU monitor/interpolation measurements and private capacity growth avoids new managed wrappers; full registration and native/platform/final window performance gates remain open. Attachment-local integration preparation caches static-field demand with mode/edit/replay invalidation; PhysicsHostPreparationTests checks CPU/GPU transitions and dirty/forced preparation. Massive measurements remain workload evidence, not complete performance acceptance."
+      "reason": "Space/body/Area/shape RID lifetime, selected typed state operations and direct ray/point access execute; other server operations retain family-specific backend and typed-result triggers (ADR 0063). The complete public scene pipeline now has paired CPU/GPU monitor/interpolation measurements and private capacity growth avoids new managed wrappers; public named registration and guarded scene/server operation dispatch execute through the separate public-only consumer; complete numerical-extension and final native/performance gates remain open. Attachment-local integration preparation caches static-field demand with mode/edit/replay invalidation; PhysicsHostPreparationTests checks CPU/GPU transitions and dirty/forced preparation. Massive measurements remain workload evidence, not complete performance acceptance."
     },
     {
       "godot": [
@@ -6365,7 +6365,7 @@
         "class:PhysicsBody2D"
       ],
       "state": "Partial",
-      "reason": "Scene-body geometry, fixed-step gravity, impulses, masks and lifetime execute through shared PhysicsColliderBackend ownership also used by Area and server colliders. Initial configuration, scene motion roles and live pose/velocity/sleep operations use engine values; the adapter owns vendor conversion. Resolved scene/server fields share PhysicsBodyRuntime. Body/shape/owner/disable/freeze/character/physical-bone tests and solved-pose notification writes verify these paths; independent GPU ownership and remaining own members stay open (ADR 0054)."
+      "reason": "Scene-body geometry, fixed-step gravity, impulses, masks and lifetime execute through shared PhysicsColliderBackend ownership also used by Area and server colliders. Initial configuration, scene motion roles and live pose/velocity/sleep operations use engine values; the adapter owns vendor conversion. Resolved scene/server fields share PhysicsBodyRuntime. Body/shape/owner/disable/freeze/character/physical-bone tests and solved-pose notification writes verify these paths; The complete shared body/state/force/shape-owner/disable/freeze/character/physical-bone suites now execute on explicitly selected independent GPU and CPU worlds. Remaining inherited/registered numerical acceptance and final performance gates stay open (ADRs 0054/0103)."
     },
     {
       "godot": [
@@ -6379,7 +6379,7 @@
         "class:RigidBody2D"
       ],
       "state": "Partial",
-      "reason": "Scene-body geometry, fixed-step gravity, impulses, masks and lifetime execute through shared PhysicsColliderBackend ownership also used by Area and server colliders. Initial configuration, scene motion roles and live pose/velocity/sleep operations use engine values; the adapter owns vendor conversion. Resolved scene/server fields share PhysicsBodyRuntime. Body/shape/owner/disable/freeze/character/physical-bone tests and solved-pose notification writes verify these paths; independent GPU ownership and remaining own members stay open (ADR 0054)."
+      "reason": "Scene-body geometry, fixed-step gravity, impulses, masks and lifetime execute through shared PhysicsColliderBackend ownership also used by Area and server colliders. Initial configuration, scene motion roles and live pose/velocity/sleep operations use engine values; the adapter owns vendor conversion. Resolved scene/server fields share PhysicsBodyRuntime. Body/shape/owner/disable/freeze/character/physical-bone tests and solved-pose notification writes verify these paths; The complete shared body/state/force/shape-owner/disable/freeze/character/physical-bone suites now execute on explicitly selected independent GPU and CPU worlds. Remaining inherited/registered numerical acceptance and final performance gates stay open (ADRs 0054/0103)."
     },
     {
       "godot": [
@@ -6801,7 +6801,7 @@
         "PhysicsServer2D::enum:PinJointFlag"
       ],
       "state": "Excluded",
-      "reason": "ADR 0001/0087: numeric selection containers/values are replaced by concrete typed spring coefficient pairs and pin flag/limit/speed pairs. This excludes only the selector representation; softness capability has a separate exact Blocked row."
+      "reason": "ADR 0001/0087: numeric selection containers/values are replaced by concrete typed spring coefficient pairs and pin flag/limit/speed pairs. This excludes only the selector representation; linear pin softness executes through the separate Implemented typed getter/setter and scene-property rows; exclusion of the selectors removes no capability."
     },
     {
       "godot": [
@@ -7323,7 +7323,7 @@
         "class:PhysicsDirectSpaceState2DExtension"
       ],
       "state": "Partial",
-      "reason": "ADR 0103: complete caller-created six-query/exclusion inheritance executes. The selected internal owner factory now supplies validated cached views to World/server/body-space consumers outside the registry lock, with real queries and lifecycle/failure guards. Public named registration and complete server operation dispatch remain open."
+      "reason": "ADR 0103: complete caller-created six-query/exclusion inheritance executes. The selected internal owner factory now supplies validated cached views to World/server/body-space consumers outside the registry lock, with real queries and lifecycle/failure guards. Public named registration and factory-selected six-query/exclusion dispatch execute through --factory-views, including invalid factories, borrowed lifetime, retry and zero warm allocation; complete registered numerical/geometry acceptance remains open."
     },
     {
       "godot": [
@@ -7384,7 +7384,7 @@
         "class:PhysicsDirectBodyState2DExtension"
       ],
       "state": "Partial",
-      "reason": "ADR 0103: complete guarded caller-created state/force/contact inheritance and generation-qualified binding execute. The selected internal owner factory now supplies actual scene/raw callback views with solved contacts, validated cache identity, lifecycle/failure guards and zero warmed allocation. Public named registration and complete server operation dispatch remain open. Selected cached contact hooks now publish complete immutable scene/raw snapshots on the owner after native worker capture, reaching real monitor events and callbacks; cached contact reads preserve those values. Invalid/count/stale/user failures isolate receivers while later callbacks and committed ticks continue."
+      "reason": "ADR 0103: complete guarded caller-created state/force/contact inheritance and generation-qualified binding execute. The selected internal owner factory now supplies actual scene/raw callback views with solved contacts, validated cache identity, lifecycle/failure guards and zero warmed allocation. Public named registration and factory-selected body state/force/contact dispatch execute through --factory-views, including initially empty cached contacts, publication before callbacks, failed factories, lifetime/retry and zero warm allocation; complete registered numerical/geometry acceptance remains open. Selected cached contact hooks now publish complete immutable scene/raw snapshots on the owner after native worker capture, reaching real monitor events and callbacks; cached contact reads preserve those values. Invalid/count/stale/user failures isolate receivers while later callbacks and committed ticks continue."
     },
     {
       "godot": [
