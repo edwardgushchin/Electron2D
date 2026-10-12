@@ -1,6 +1,6 @@
 # Physics areas component
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 ## Scope and owned types
 
@@ -44,3 +44,6 @@ checks mixed scene/raw fields, logical slots, masks, audio, disabled geometry, t
 reentry, free and 64 warmed step/audio/read cycles at zero owner/all-thread bytes.
 
 [Registered Area fields](physics-registered-adapter.md#registered-area-fields) now exercise the complete typed profile/default shortcut through the selected hooks, including independent override/point/mask response and zero warmed edited full frames. Numerical-hook writes reject before mutation; authored reads and ordinary Area callback edits retain their guards and overlap history. Generic solver/extension acceptance remains open.
+
+
+[Selected Area monitor publication](physics-registered-adapter.md#area-pose-and-monitor-publication) verifies pose, monitorability and both callbacks on CPU/GPU/registered owners. Scene and server observers share the own-receiver configuration guard while retaining independent histories. Full registered geometry and final network/performance acceptance remain open.

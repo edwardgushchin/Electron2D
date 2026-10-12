@@ -909,3 +909,6 @@ Collision-exception add/remove preserves insertion order and requests wakeup eve
 
 
 All typed common/pin/spring parameter getter/setter pairs share retained scene/raw authoring. Initial/live selected numerical hooks reject writes before mutation, including unchanged assignments; ordinary state callbacks may edit the next interval.
+
+
+[Selected Area pose/monitor conformance](../components/physics-registered-adapter.md#area-pose-and-monitor-publication) covers creation, transform access, both typed callbacks and monitorability through CPU/GPU/registered owners. Scene policy changes reject from the same Area's server observer before mutation; equal scene assignments and pose reads remain available during ordinary callbacks.

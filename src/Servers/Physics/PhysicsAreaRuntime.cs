@@ -9,6 +9,7 @@ internal sealed class PhysicsAreaRuntime(RID rid)
     internal readonly List<PhysicsShapePairChange> Changes = [];
     internal ulong Generation;
     private bool _dispatching;
+    internal bool IsDispatching => _dispatching;
 
     internal (Area? Scene, PhysicsServerCollider? Server) Owners => PhysicsServer.Service.ResolveAreaOwners(RID);
     internal PhysicsSpace? Space { get { var owners = Owners; return owners.Scene?.Space ?? owners.Server?.Space; } }

@@ -621,3 +621,6 @@ Registered [borrowed shape authoring](../components/physics-registered-adapter.m
 
 
 [Resource retirement](../components/physics-registered-adapter.md#resource-retirement) now completes caller-owned Shape/Body/Area/Joint/Space cleanup after errors, preserves every failure and prevents departure observers from resurrecting a freed collider. Shared geometry and scene reentry retain their dirty preparation paths. Full extension/network/performance acceptance remains open.
+
+
+[Area pose and monitor publication](../components/physics-registered-adapter.md#area-pose-and-monitor-publication) now checks both observation lanes and shared scene/raw guards across CPU/GPU/registered owners. Warmed active transitions allocate zero managed bytes; complete extension/network/performance acceptance remains open.

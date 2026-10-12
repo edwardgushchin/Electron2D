@@ -9,3 +9,6 @@ See [registered backend contract](../components/physics-registered-adapter.md) f
 The [complete force and axis family](../components/physics-registered-adapter.md#force-impulse-and-axis-response) uses common validated scene/raw authoring and selected numerical hooks. Shared CPU/GPU/registered public-only checks exercise actual response, lifetime, invalid inputs and 128 edited frames after collection at zero managed allocation. Full numerical-extension acceptance remains open.
 
 Inherited `GetCollisionExceptions(RID)` provides scoped retained input. Body/joint exception authoring rejects numerical hooks before mutation; [shared conformance](../components/physics-registered-adapter.md#collision-exception-authoring-and-response) covers CPU/GPU/registered response, reads and 128 edited frames at zero managed allocation.
+
+
+[Area pose and monitor publication](../components/physics-registered-adapter.md#area-pose-and-monitor-publication) uses selected collider/overlap operations with common retained identity and authoring. CPU/GPU/registered public-only checks exercise reset/reentry, failure continuation and 64 active transition frames at zero managed allocation; arbitrary registered geometry remains open.

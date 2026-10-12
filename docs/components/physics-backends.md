@@ -1,6 +1,6 @@
 # Physics backend selection and shared worlds
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 [Same-revision mass measurements](physics-current-performance.md) record complete
 CPU/GPU headless steps and real-window frames at 65,536 awake bodies on
@@ -1009,3 +1009,6 @@ The complete internal contract and its exercised boundaries are documented in [R
 Public [registered implementations](physics-registered-adapter.md) now execute through PhysicsServerManager, World(string) and PhysicsServer.SpaceCreate(string). Requested/actual names retain the captured registration and startup fallback identity. The scoped PhysicsServerBackend/Extension family and immutable inputs/results have a public-only circle/spring consumer; custom geometry and full extension/performance/platform acceptance remain open.
 
 GPU publication now reuses a preceding complete observation only when the publication epoch and all live cache validity agree. Actual callback writes still force a fresh pre-step read. Dense change streams combine status and bounded data in one wait; sparse streams keep count-first exact-prefix transfer. This changes observation scheduling without changing simulation, contact limits or callback order; [publication evidence](gpu-body-publication.md) records its costs and limits.
+
+
+[Area pose and monitor publication](physics-registered-adapter.md#area-pose-and-monitor-publication) now has common CPU/GPU/registered public-only conformance for creation, pose, both callbacks, monitorability, reentry and errors. Sixty-four active transition frames allocate zero managed bytes. Complete registered geometry and final acceptance remain open.

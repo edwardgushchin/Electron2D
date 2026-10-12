@@ -1,6 +1,6 @@
 # Engine inventory
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 Private native libraries are owned by the Linux/macOS/Windows native packages in ordinary desktop builds; [native delivery](native-packaging.md) records source production and target verification limits. Windows resolution/full-suite checks are connected with execution pending. No public runtime type or managed backend assembly is added; internal floating-point atomics preserve Engine/audio snapshots on 32-bit hosts.
 
@@ -1217,3 +1217,6 @@ Integer device image consumers now validate float/signed/unsigned sampled scalar
 | [Rendering](domains/rendering.md) | [Local device graphics](components/local-compute.md#color-graphics-and-compute-integration) | [TextureSamples](classes/RenderingDevice.TextureSamples.md), [VertexFrequency](classes/RenderingDevice.VertexFrequency.md), [IndexBufferFormat](classes/RenderingDevice.IndexBufferFormat.md), [RenderPrimitive](classes/RenderingDevice.RenderPrimitive.md), [PolygonCullMode](classes/RenderingDevice.PolygonCullMode.md), [PolygonFrontFace](classes/RenderingDevice.PolygonFrontFace.md), [BlendOperation](classes/RenderingDevice.BlendOperation.md), [BlendFactor](classes/RenderingDevice.BlendFactor.md), [DrawFlags](classes/RenderingDevice.DrawFlags.md), [BufferCreationBits](classes/RenderingDevice.BufferCreationBits.md), [PipelineDynamicStateFlags](classes/RenderingDevice.PipelineDynamicStateFlags.md) | [Graphics selectors](../src/Servers/Rendering/Device/RenderingDevice.GraphicsEnums.cs) | Numeric topology, index, frequency, color clear/blend and buffer roles; unimplemented native roles remain precise prerequisites |
 
 RenderingDevice's [binary push recording](components/local-compute.md#binary-push-parameters) connects compute and paired graphics stages to copied original-layout parameters, without exposing native handles or private descriptors. The compiler adapter lives in [RenderingDevice.PushConstantSPIRV.cs](../src/Servers/Rendering/Device/RenderingDevice.PushConstantSPIRV.cs); list snapshots and owner validation live in [RenderingDevice.PushConstants.cs](../src/Servers/Rendering/Device/RenderingDevice.PushConstants.cs).
+
+
+Area pose and monitor conformance belongs to existing [Area/PhysicsAreaRuntime/PhysicsSpace](components/physics-registered-adapter.md#area-pose-and-monitor-publication). Scene and server observer dispatch share the own-receiver configuration guard; no new production type is introduced.

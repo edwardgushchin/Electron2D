@@ -56,22 +56,26 @@ public sealed partial class Area : CollisionObject
 
     /// <summary>Gets or sets whether this area detects overlapping bodies and areas.</summary>
     /// <value>True by default. Disabling takes effect on the next physics step.</value>
-    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread.</exception>
+    /// <remarks>Changed values reject during this Area's scene or server overlap callback; equal assignments remain harmless.</remarks>
+    /// <exception cref="InvalidOperationException">An owner, capture or numerical-borrow guard rejects the write,
+    /// or a changed value is assigned during this Area's overlap callback.</exception>
     /// <exception cref="ObjectDisposedException">The area has been disposed.</exception>
     public bool Monitoring
     {
         get { ThrowIfDisposed(); return _monitoring; }
-        set { EnsureMutable(); if (_monitoring == value) return; if (_dispatchingOverlap) throw new InvalidOperationException("Change monitoring after overlap callbacks return."); _monitoring = value; }
+        set { EnsureMutable(); if (_monitoring == value) return; EnsureMonitorConfigurationChange(); _monitoring = value; }
     }
 
     /// <summary>Gets or sets whether other monitoring areas can detect this area.</summary>
     /// <value>True by default. Disabling takes effect on their next physics step.</value>
-    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread.</exception>
+    /// <remarks>Changed values reject during this Area's scene or server overlap callback; equal assignments remain harmless.</remarks>
+    /// <exception cref="InvalidOperationException">An owner, capture or numerical-borrow guard rejects the write,
+    /// or a changed value is assigned during this Area's overlap callback.</exception>
     /// <exception cref="ObjectDisposedException">The area has been disposed.</exception>
     public bool Monitorable
     {
         get { ThrowIfDisposed(); return _monitorable; }
-        set { EnsureMutable(); if (_monitorable == value) return; if (_dispatchingOverlap) throw new InvalidOperationException("Change monitorable policy after overlap callbacks return."); _monitorable = value; }
+        set { EnsureMutable(); if (_monitorable == value) return; EnsureMonitorConfigurationChange(); _monitorable = value; }
     }
 
     /// <summary>Occurs after a fixed step when another area begins overlapping this area.</summary>
@@ -238,7 +242,8 @@ public sealed partial class Area : CollisionObject
     }
     internal void EnsureMonitorConfigurationChange()
     {
-        if (_dispatchingOverlap) throw new InvalidOperationException("Area monitor configuration cannot change during an overlap callback.");
+        if (_dispatchingOverlap || PhysicsServer.Service.FindAreaRuntime(PhysicsRID)?.IsDispatching == true)
+            throw new InvalidOperationException("Area monitor configuration cannot change during an overlap callback.");
     }
 
     internal void ObjectTreeChanged(Node node, bool entering, List<PhysicsSpace.OverlapEvent> events)

@@ -190,3 +190,6 @@ Explicitly bound Entity/Area instances participate in typed overlap arrays and e
 
 
 Attachment departure resets applied shape revisions in a finally block. Other observer cleanup continues after numerical detach errors, and subsequent valid entry uses a fresh attachment.
+
+
+[Shared Area monitor conformance](../components/physics-registered-adapter.md#area-pose-and-monitor-publication) verifies scene policy changes from this Area's external server callback as well as scene events. Changed Monitoring/Monitorable values reject before mutation; equal assignments remain harmless in ordinary callbacks. CPU/GPU/registered tests deliver 128 entries/128 exits through 64 warmed pose-edited frames at zero owner/all-thread managed bytes.

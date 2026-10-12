@@ -408,3 +408,37 @@ resource creation/retirement intentionally allocates outside that bracket.
 The extension FreeRID row remains Partial until complete numerical-extension
 acceptance. Native allocation, other platforms, final network scenarios and
 real-window/performance acceptance are unverified here.
+
+
+## Area pose and monitor publication
+
+AreaCreate retains a fresh engine RID independently of selection. Common scene/raw
+pose and monitoring authoring projects through selected collider creation, SetPose,
+SetAreaMonitoring and overlap output. AreaGetTransform returns authored engine
+pose, without exposing numerical storage. Invalid finite/scale/skew input rejects
+before replacing authoring. Numerical borrowing rejects configuration writes,
+including equal scene assignments; reads retain their existing access guards.
+
+Scene Monitoring/Monitorable changes also reject from the same Area's raw server
+observer, using the shared dispatch state. Equal assignments remain harmless during
+ordinary overlap callbacks. Typed scene events/snapshots and external server
+observers keep independent histories; disabling scene Monitoring leaves raw
+observers active. Re-registering either callback resets both raw histories, including
+the same delegate. Receiver detach silently clears its histories; reentry preserves
+callbacks and policy. Observer errors continue committed deliveries without replay.
+
+The public-only consumer's `--area-monitors` runs on explicit CPU, GPU and an
+independent registered circle solver. It checks scene/assigned/unassigned RID and
+instance identities, logical slot zero, directional body masks, default/live raw
+monitorability, invalid poses, initial numerical borrowing, own callback mutation,
+equal assignments, zero steps, reset/detach/reentry, four continued failing
+deliveries, off-owner access and wrong/stale RID kinds. After 64 warmup frames and
+completed finalization, 64 pose-edited full PhysicsFrame cycles deliver 128 entries
+and 128 exits and allocate 0 owner/all-thread managed bytes on each implementation.
+Raw handler installation and intentional errors occur outside that bracket.
+
+The registered fixture uses one circle slot per collider; arbitrary registered
+geometry/compound logical indices and complete extension numerical acceptance
+remain open. Existing PhysicsAreaMonitorTests/ShapePairEventTests cover built-in
+compound slots and event epochs. Native allocation, other platforms, final network
+scenarios and real-window/performance acceptance are unverified here.

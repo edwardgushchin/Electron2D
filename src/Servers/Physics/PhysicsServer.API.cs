@@ -250,7 +250,7 @@ public sealed partial class PhysicsServer
     /// <param name="area">A live Area RID.</param>
     /// <returns>Stored scene or server translation and rotation.</returns>
     /// <exception cref="ArgumentException">The RID does not identify a live Area.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner, solver-owned, or receiver configuration is mutated from its own callback.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner or solver-owned. Authored reads remain available during numerical hooks and overlap callbacks.</exception>
     public static Transform AreaGetTransform(RID area) => Service.AreaGetTransformCore(area);
 
     /// <summary>Gets a live owner-thread view of an attached body, or null while detached.</summary>
