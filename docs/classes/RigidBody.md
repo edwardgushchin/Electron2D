@@ -282,3 +282,9 @@ CustomIntegrator, MaxContactsReported and ContactMonitor assignments reject duri
 
 
 PhysicsServer.BodySetContactsReportedDepthThreshold accepts this scene body RID and filters future point/object/shape contact reports in scene units. Equal/deeper candidates remain eligible; zero disables filtering. The server-owned policy preserves completed snapshots and physical response and survives detach/reentry. See [shared conformance](../components/physics-registered-adapter.md#contact-reporting-depth).
+
+
+[Shared mass-profile conformance](../components/physics-bodies.md#shared-mass-profile-conformance)
+now executes the full scene/raw mass, center, inertia and lifecycle matrix on CPU
+and GPU worlds. Both retain zero owner/all-thread allocation through 64 changing
+active frames; native implementation diagnostics remain owner-specific.

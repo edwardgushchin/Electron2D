@@ -667,3 +667,9 @@ motion/geometry acceptance remains broader than this identity guarantee.
 
 
 [Shared material response and allocation evidence](../components/gpu-physics.md#shared-material-response-and-allocation-evidence) verifies the full common CPU/GPU material matrix, including low-impact bounce and zero owner/all-thread warm frame allocations. The former GPU driver threshold is removed; the historical isolated CPU allocation failure remains an unproven limit.
+
+
+[Shared mass-profile conformance](../components/physics-bodies.md#shared-mass-profile-conformance)
+now executes the full scene/raw mass, center, inertia and lifecycle matrix on CPU
+and GPU worlds. Both retain zero owner/all-thread allocation through 64 changing
+active frames; native implementation diagnostics remain owner-specific.

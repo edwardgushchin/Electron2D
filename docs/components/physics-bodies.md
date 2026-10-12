@@ -83,9 +83,10 @@ Logical shape-pair monitoring now uses a shared PhysicsShapePairTracker and comm
 ## Shared body mass profile
 
 [Resident GPU mass](gpu-resident-mass.md) now reuses the same authoring calculation
-without a CPU solver world. Rotated detached profiles and attached CPU fixtures use
-the same authored unit basis; analytic asymmetric polygon/line tests cover this
-consistency. Public GPU-world selection now executes; complete mass-family conformance remains open.
+without a CPU solver world. The same public scene/server mass matrix now executes
+on explicitly selected CPU/GPU owners, including rotated analytic polygon/line
+profiles, center/inertia overrides, impulses and lifecycle restoration. Native
+allocation, other platforms and complete registered numerical acceptance remain open.
 
 [RigidBody](../classes/RigidBody.md#centerofmassmode) stores automatic/custom local center and zero/explicit scene-unit inertia. Typed [PhysicsServer](../classes/PhysicsServer.md) mass methods execute for scene and server identities, using one-kilogram normalization instead of raw fixture density. The internal [PhysicsMass](../../src/Servers/Physics/PhysicsMass.cs) calculation validates before profile/native commit, measures native solid primitives independently of body density, applies parallel-axis inertia or the segment-only rod fallback, and refreshes native shape extents around the selected center. The body runtime retains configured values and resolved geometry separately from static inverse values. Mode/reset property-list callbacks run after commit; profile changes leave scene origin and velocity unchanged. [PhysicsMassProfileTests](../../tests/Electron2D.Tests/PhysicsMassProfileTests.cs) covers force response, shared lifecycle, numeric/thread/phase rejection and 64 warmed changes plus solver frames with zero managed allocation on Linux/.NET 10. Native allocation, other platforms and owner acceptance remain unverified. [ADR 0073](../decisions/physics-mass.md#adr-0073) owns the mass policy and typed parameter projection.
 
@@ -171,3 +172,33 @@ Live edits preserve identity, sleep and rigid impulses. See [policy](physics-con
 
 
 [Common contact reporting depth](physics-registered-adapter.md#contact-reporting-depth) applies typed scene/raw threshold authoring to selected reports and monitor snapshots, with same-backend response preservation, immutable completed snapshots, history configuration matching and zero warm managed allocation.
+
+
+## Shared mass-profile conformance
+
+PhysicsMassProfileTests retains its complete CPU matrix and now runs it unchanged
+through explicit GPU worlds and spaces. CPU-only deferred native-mass flags and
+native extent diagnostics remain CPU diagnostics; both owners verify public inverse
+mass/inertia against configured values and effective modes. No matching native
+layout or traversal is imposed on the GPU.
+
+The matrix covers detached demand, translated/rotated analytic polygon and thin-rod
+geometry, custom/automatic center and parallel-axis inertia, explicit inertia,
+center-relative impulses, static/linear/rigid transitions, Freeze/MakeStatic,
+shape edits, unshaped angular response, reset/reentry, PackedScene configuration,
+callback commit/errors, invalid values, owner thread and solver publication guards.
+Rotated centers use 0.001 scene-unit and polar moments 0.01 kilogram-scene-unit-squared
+absolute tolerances; existing response checks keep their 1 percent relative bound.
+Discrete modes/identity and rejection checks are exact; cross-backend trajectories
+and binary equality are not required.
+
+After 64 changing warmup frames, 64 full active 1/60-s frames with mass/center/inertia
+writes require exactly zero owner/all-thread managed bytes on both owners. CPU
+retains its original fallback Node fixture; GPU uses explicit World/SubViewport
+ownership and no renderer. The focused entry point is
+ELECTRON2D_TEST_MASS_PROFILE=1, selecting CPU/GPU with
+ELECTRON2D_SANDBOX_GPU_SOLVER=0/1. The normal full suite includes both runs.
+Ignored copied-runtime outcomes/fingerprints remain under
+bin/physics-shared-mass/2026-10-12/final. CPU with invalid GPU/Vulkan drivers and no
+display/runtime variables is a separate physical process control. This evidence
+does not establish native allocator, foreign-platform or complete physics acceptance.

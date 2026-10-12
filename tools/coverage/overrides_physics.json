@@ -6439,7 +6439,7 @@
         "PhysicsServer2D::method:body_reset_mass_properties(RID:)"
       ],
       "state": "Implemented",
-      "reason": "ADR 0073: one-kilogram normalized geometry mass, local custom/auto center and scene-unit explicit/automatic polar moment execute for scene/server profiles. GPUPhysicsMassStoreTests additionally verifies shared authored-geometry profiles, center-aware resident integration/contact/joint response and warmed edits; public GPU-world integration remains open. Rotated detached/attached CPU profiles retain one authored basis. PhysicsMassProfileTests verifies live geometry, parallel-axis values, inertia without shapes, center impulse, mode/reset/property-list failure, native extent refresh, freeze/disable restoration, detached entry, numeric/thread/phase rollback, storage and zero warmed managed allocations."
+      "reason": "ADR 0073: complete PhysicsMassProfileTests matrix executes on explicit CPU/GPU worlds and spaces, covering analytic rotated polygon/line geometry, normalized mass, local custom/auto center, parallel-axis/explicit inertia, center impulses, shape edits, scene/raw modes/freeze, unshaped angular response, reset/reentry/PackedScene, callback commits and value/thread/solver guards. Public inverse state matches configured profiles/modes; native dirty-mass/extent diagnostics remain CPU-specific. 64 changing full active frames require zero owner/all-thread managed bytes; CPU with unavailable GPU is a separate process control. Native allocator, other platforms and complete registered numerical acceptance remain open."
     },
     {
       "godot": [

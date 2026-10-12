@@ -9,6 +9,11 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MASS_PROFILE") == "1")
+{
+    PhysicsMassProfileTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU);
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_MATERIAL") == "1")
 {
     PhysicsMaterialTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU);
@@ -986,6 +991,7 @@ ShapeOwnerTests.Run();
 ShapePairEventTests.Run();
 CollisionDisableModeTests.Run();
 PhysicsMassProfileTests.Run();
+PhysicsMassProfileTests.Run(PhysicsServer.Backend.GPU);
 PhysicsServerForceTests.Run();
 RigidFreezeModeTests.Run();
 PhysicsBodyParameterTests.Run();
