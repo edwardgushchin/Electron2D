@@ -558,3 +558,11 @@ motion/geometry acceptance remains broader than this identity guarantee.
 closes the former CPU-only complete matrix: explicit GPU scene/raw physical paths,
 analytic geometry, lifecycle/guard/storage and zero managed warm changes execute.
 Native allocation and complete registered numerical acceptance remain open.
+
+
+[Configured body reads during numerical hooks](physics-registered-adapter.md#parameter-reads-and-preparation)
+use common retained authoring for all eighteen parameter/policy getters, including
+actual selected Solve. Writes and numerical queries retain their rejection guards;
+automatic geometry-dependent reads still need ordinary query access. The public-only
+consumer verifies scene/raw ownership, failures and 128 full active frames at zero
+owner/all-thread managed allocation. Complete numerical-extension acceptance stays open.

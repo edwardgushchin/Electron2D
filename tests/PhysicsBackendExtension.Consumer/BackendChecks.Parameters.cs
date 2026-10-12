@@ -2,6 +2,7 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
+    public static void RunParameterReads() => ParameterReadChecks();
     private static void ParameterReadChecks()
     {
         Solver? solver = null;
@@ -70,19 +71,87 @@ public static partial class BackendChecks
                 "Bounce reload preserves the same nonpreparing material revision repair");
             material.Changed -= fail; scene.PhysicsMaterialOverride = null;
             PhysicsServer.BodySetFriction(scene.GetRID(), .7f); PhysicsServer.BodySetBounce(scene.GetRID(), .2f);
+            foreach (var id in new[] { raw, scene.GetRID() })
+            {
+                PhysicsServer.BodySetContinuousCollisionDetectionMode(id, CCDMode.CastShape);
+                PhysicsServer.BodySetCanSleep(id, false);
+                PhysicsServer.BodySetOmitForceIntegration(id, true);
+                PhysicsServer.BodySetConstantForce(id, new(2, 3)); PhysicsServer.BodySetConstantTorque(id, 4);
+                PhysicsServer.BodySetMaxContactsReported(id, 2); PhysicsServer.BodySetContactsReportedDepthThreshold(id, .5f);
+            }
+            var solvedReads = 0; var checkedSolveGuards = false;
+            solver.StepHook = () =>
+            {
+                Read(raw); Read(scene.GetRID()); ReadPolicies(raw); ReadPolicies(scene.GetRID()); solvedReads++;
+                if (checkedSolveGuards) return;
+                checkedSolveGuards = true;
+                foreach (var id in new[] { raw, scene.GetRID() })
+                {
+                    Reject<InvalidOperationException>(() => PhysicsServer.BodySetMode(id, PhysicsServer.BodyMode.Rigid));
+                    Reject<InvalidOperationException>(() => PhysicsServer.BodySetContinuousCollisionDetectionMode(id, CCDMode.CastShape));
+                    Reject<InvalidOperationException>(() => PhysicsServer.BodySetCanSleep(id, false));
+                    Reject<InvalidOperationException>(() => PhysicsServer.BodySetOmitForceIntegration(id, true));
+                    Reject<InvalidOperationException>(() => PhysicsServer.BodySetConstantForce(id, new(2, 3)));
+                    Reject<InvalidOperationException>(() => PhysicsServer.BodySetConstantTorque(id, 4));
+                    Reject<InvalidOperationException>(() => PhysicsServer.BodySetMaxContactsReported(id, 2));
+                    Reject<InvalidOperationException>(() => PhysicsServer.BodySetContactsReportedDepthThreshold(id, .5f));
+                    Reject<InvalidOperationException>(() => PhysicsServer.BodyGetLinearVelocity(id));
+                    Reject<InvalidOperationException>(() => PhysicsServer.BodyGetDirectState(id));
+                }
+            };
+            tree.PhysicsFrame(1d / 120);
+            Check(solvedReads == 1, "The complete configured body family is readable inside the actual numerical solve");
             Collect(); _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
-            for (var i = 0; i < 64; i++) { Read(raw); Read(scene.GetRID()); }
+            for (var i = 0; i < 64; i++) { Read(raw); Read(scene.GetRID()); tree.PhysicsFrame(1d / 120); }
             var own = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
-            for (var i = 0; i < 128; i++) { Read(raw); Read(scene.GetRID()); }
+            for (var i = 0; i < 128; i++) { Read(raw); Read(scene.GetRID()); tree.PhysicsFrame(1d / 120); }
             own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
             Check(own == 0 && all == 0, $"Authored parameter reads allocated {own}/{all} owner/all-thread B");
             Task.Run(() => Reject<InvalidOperationException>(() => PhysicsServer.BodyGetMass(raw))).GetAwaiter().GetResult();
-            Console.WriteLine($"Registered parameter reads: no numerical preparation, preserved automatic mass and 0/0 owner/all-thread B");
+            PhysicsServer.BodyResetMassProperties(raw);
+            solver.StepHook = () =>
+            {
+                var before = preparations;
+                Check(PhysicsServer.BodyGetMass(raw) == 2, "Authored mass remains readable for an automatic profile while solving");
+                Reject<InvalidOperationException>(() => PhysicsServer.BodyGetInertia(raw));
+                Reject<InvalidOperationException>(() => PhysicsServer.BodyGetCenterOfMass(raw));
+                Check(preparations == before, "Automatic geometry reads reject before numerical preparation while solving");
+            };
+            tree.PhysicsFrame(1d / 120);
+            PhysicsServer.BodySetInertia(raw, 8); PhysicsServer.BodySetCenterOfMass(raw, new(1, 0));
+            Action<RID>[] reads = [id => PhysicsServer.BodyGetMass(id), id => PhysicsServer.BodyGetInertia(id),
+                id => PhysicsServer.BodyGetCenterOfMass(id), id => PhysicsServer.BodyGetFriction(id), id => PhysicsServer.BodyGetBounce(id),
+                id => PhysicsServer.BodyGetGravityScale(id), id => PhysicsServer.BodyGetLinearDamp(id), id => PhysicsServer.BodyGetAngularDamp(id),
+                id => PhysicsServer.BodyGetLinearDampMode(id), id => PhysicsServer.BodyGetAngularDampMode(id),
+                id => PhysicsServer.BodyGetMode(id), id => PhysicsServer.BodyGetContinuousCollisionDetectionMode(id),
+                id => PhysicsServer.BodyGetCanSleep(id), id => PhysicsServer.BodyIsOmittingForceIntegration(id),
+                id => PhysicsServer.BodyGetConstantForce(id), id => PhysicsServer.BodyGetConstantTorque(id),
+                id => PhysicsServer.BodyGetMaxContactsReported(id), id => PhysicsServer.BodyGetContactsReportedDepthThreshold(id)];
+            Task.Run(() => { foreach (var id in new[] { raw, scene.GetRID() }) foreach (var read in reads) Reject<InvalidOperationException>(() => read(id)); }).GetAwaiter().GetResult();
+            using var wrong = new Area();
+            foreach (var read in reads) Reject<ArgumentException>(() => read(wrong.GetRID()));
+            var stale = PhysicsServer.BodyCreate(); PhysicsServer.FreeRID(stale);
+            foreach (var read in reads) Reject<ArgumentException>(() => read(stale));
+            solver.StepHook = null; solver.FailSolve = true;
+            Reject<AggregateException>(() => tree.PhysicsFrame(1d / 120));
+            foreach (var id in new[] { raw, scene.GetRID() }) foreach (var read in reads) Reject<InvalidOperationException>(() => read(id));
+            Console.WriteLine($"Registered parameter reads: complete configured family inside solving, 128 active full frames and 0/0 owner/all-thread B");
         }
         finally
         {
-            solver!.IdentityHook = null; solver.BodyHook = null; solver.ShapeHook = null; solver.PolicyHook = null;
+            solver!.IdentityHook = null; solver.BodyHook = null; solver.ShapeHook = null; solver.PolicyHook = null; solver.StepHook = null;
             PhysicsServer.FreeRID(raw);
+        }
+        void ReadPolicies(RID id)
+        {
+            var before = preparations;
+            Check(PhysicsServer.BodyGetMode(id) == PhysicsServer.BodyMode.Rigid &&
+                PhysicsServer.BodyGetContinuousCollisionDetectionMode(id) == CCDMode.CastShape &&
+                !PhysicsServer.BodyGetCanSleep(id) && PhysicsServer.BodyIsOmittingForceIntegration(id) &&
+                PhysicsServer.BodyGetConstantForce(id) == new Vector2(2, 3) && PhysicsServer.BodyGetConstantTorque(id) == 4 &&
+                PhysicsServer.BodyGetMaxContactsReported(id) == 2 && PhysicsServer.BodyGetContactsReportedDepthThreshold(id) == .5f,
+                "Numerical hooks read the complete authored policy without observing solver state");
+            Check(preparations == before, "Policy reads do not reenter numerical preparation");
         }
         void Read(RID id)
         {

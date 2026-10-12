@@ -71,3 +71,5 @@ The `--motion-exclusions` registered checks also reject results constructed for 
 same-world surrogate moving body. All caller fields stay unchanged, queries without
 caller output reject too, and later valid results recover normally. CPU/GPU share
 the positive/miss and zero-allocation matrix.
+
+The --parameter-reads mode verifies all eighteen retained body parameter/policy getters inside numerical Solve on scene and raw bodies, strict write/query guards, automatic-profile rejection, stale/kind/owner/failed-world errors and 128 warmed active full frames with zero owner/all-thread managed bytes.

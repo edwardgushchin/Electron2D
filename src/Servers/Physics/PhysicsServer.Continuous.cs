@@ -15,8 +15,10 @@ public sealed partial class PhysicsServer
     /// <param name="body">The live body identity.</param>
     /// <returns>The stored mode, Disabled by default, including while detached or not dynamic.</returns>
     /// <exception cref="ArgumentException">The identity does not refer to a live body.</exception>
-    /// <exception cref="InvalidOperationException">The caller is off-owner or the world is stepping.</exception>
-    public static CCDMode BodyGetContinuousCollisionDetectionMode(RID body) => Service.ForceRuntime(body, writing: false).ContinuousMode;
+    /// <exception cref="InvalidOperationException">Attached access is off-owner or the world has failed.</exception>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
+    public static CCDMode BodyGetContinuousCollisionDetectionMode(RID body) => Service.ParameterRuntime(body, writing: false).ContinuousMode;
 }
 
 internal sealed partial class PhysicsBodyRuntime

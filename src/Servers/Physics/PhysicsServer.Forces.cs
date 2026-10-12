@@ -81,7 +81,7 @@ public sealed partial class PhysicsServer
         runtime.SetConstants(force, runtime.GetConstantTorque(), force != Vector2.Zero);
     }
 
-    internal Vector2 BodyGetConstantForceCore(RID body) => ForceRuntime(body, writing: false).GetConstantForce();
+    internal Vector2 BodyGetConstantForceCore(RID body) => ParameterRuntime(body, writing: false).GetConstantForce();
 
     internal void BodySetConstantTorqueCore(RID body, float torque)
     {
@@ -90,5 +90,5 @@ public sealed partial class PhysicsServer
         runtime.SetConstants(runtime.GetConstantForce(), torque, torque != 0);
     }
 
-    internal float BodyGetConstantTorqueCore(RID body) => ForceRuntime(body, writing: false).GetConstantTorque();
+    internal float BodyGetConstantTorqueCore(RID body) => ParameterRuntime(body, writing: false).GetConstantTorque();
 }

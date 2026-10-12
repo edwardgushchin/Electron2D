@@ -54,6 +54,12 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
         if (writing) space?.EnsureImplementationWriteAccess();
     }
 
+    internal void EnsureAuthoringReadAccess()
+    {
+        Owners.Scene?.Tree?.EnsureOwnerThread();
+        Space?.EnsureImplementationInputReadAccess();
+    }
+
     internal void ApplyMassProfile()
     {
         var owners = Owners;

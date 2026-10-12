@@ -6,7 +6,7 @@ public sealed partial class PhysicsServer
     {
         ThrowIfDisposed();
         var runtime = BodyRuntime(body);
-        runtime.EnsureAccess(writing);
+        if (writing) runtime.EnsureAccess(writing: true); else runtime.EnsureAuthoringReadAccess();
         if (writing) PrepareParameters(runtime);
         return runtime;
     }

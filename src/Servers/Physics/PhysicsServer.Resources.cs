@@ -205,7 +205,7 @@ public sealed partial class PhysicsServer
 
     internal BodyMode BodyGetModeCore(RID body)
     {
-        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureAccess();
+        var runtime = ParameterRuntime(body, writing: false);
         var owners = runtime.Owners;
         return owners.Scene?.EffectiveBodyMode ?? owners.Server!.Mode;
     }

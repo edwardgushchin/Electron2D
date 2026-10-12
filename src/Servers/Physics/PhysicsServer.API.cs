@@ -291,6 +291,8 @@ public sealed partial class PhysicsServer
     /// <summary>Tests whether a body omits automatic force integration.</summary>
     /// <param name="body">A live body RID.</param>
     /// <returns>The current custom-integration policy.</returns>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static bool BodyIsOmittingForceIntegration(RID body) => Service.BodyIsOmittingForceIntegrationCore(body);
 
     /// <summary>Sets the maximum retained contact-point count for a body.</summary>
@@ -316,12 +318,16 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live scene/server body RID.</param>
     /// <returns>Finite nonnegative threshold; zero disables filtering.</returns>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">Access is off-owner or solver-owned.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner or the world has failed.</exception>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static float BodyGetContactsReportedDepthThreshold(RID body) => Service.BodyGetContactsReportedDepthThresholdCore(body);
 
     /// <summary>Gets the body's configured contact-point limit.</summary>
     /// <param name="body">A live body RID.</param>
     /// <returns>The configured limit, from zero through 4095; zero disables contact snapshots.</returns>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static int BodyGetMaxContactsReported(RID body) => Service.BodyGetMaxContactsReportedCore(body);
 
     /// <summary>Excludes two bodies from ordinary contact and motion tests when either body lists the other.</summary>
@@ -420,7 +426,9 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live body RID.</param>
     /// <returns>Force in scene units times kilograms per squared second.</returns>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or the solver owns the world.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner or the world has failed.</exception>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static Vector2 BodyGetConstantForce(RID body) => Service.BodyGetConstantForceCore(body);
 
     /// <summary>Replaces the persistent torque.</summary>
@@ -434,7 +442,9 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live body RID.</param>
     /// <returns>Kilograms times squared scene units per squared second.</returns>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or the solver owns the world.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner or the world has failed.</exception>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static float BodyGetConstantTorque(RID body) => Service.BodyGetConstantTorqueCore(body);
 
     /// <summary>Creates an empty caller-owned joint identity.</summary>
@@ -747,7 +757,9 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live scene or server body RID.</param>
     /// <returns>Configured positive mass, including while static, kinematic or detached.</returns>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner or the world has failed.</exception>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static float BodyGetMass(RID body) => Service.BodyGetMassCore(body);
 
     /// <summary>Sets rotational inertia in kilograms times squared scene units.</summary>
@@ -762,8 +774,10 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live scene or server body RID.</param>
     /// <returns>An explicit override or geometry-derived kilograms times squared scene units; zero before an automatic profile is first resolved by attachment or a geometry-dependent force call.</returns>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner, during solver ownership or requires automatic geometry preparation while a numerical hook is borrowed.</exception>
-    /// <remarks>Explicit configuration reads do not prepare numerical state. Automatic geometry reads synchronize pending shapes outside numerical borrowing.</remarks>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, the world has failed or automatic geometry requires numerical preparation inside a borrowed hook.</exception>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Automatic geometry values synchronize pending shapes only outside numerical borrowing.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static float BodyGetInertia(RID body) => Service.BodyGetInertiaCore(body);
 
     /// <summary>Sets a custom center of mass relative to body origin in local scene units.</summary>
@@ -779,8 +793,10 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live scene or server body RID.</param>
     /// <returns>Local scene-unit center, or zero before automatic geometry is first resolved.</returns>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner, during solver ownership or requires automatic geometry preparation while a numerical hook is borrowed.</exception>
-    /// <remarks>Explicit configuration reads do not prepare numerical state. Automatic geometry reads synchronize pending shapes outside numerical borrowing.</remarks>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, the world has failed or automatic geometry requires numerical preparation inside a borrowed hook.</exception>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Automatic geometry values synchronize pending shapes only outside numerical borrowing.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static Vector2 BodyGetCenterOfMass(RID body) => Service.BodyGetCenterOfMassCore(body);
 
     /// <summary>Restores automatic center and inertia while retaining configured body mass.</summary>
@@ -818,7 +834,9 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live body RID.</param>
     /// <returns>Finite signed coefficient; default one.</returns>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner or the world has failed.</exception>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static float BodyGetFriction(RID body) => Service.BodyGetFrictionCore(body);
 
     /// <summary>Sets signed restitution; negative values project absorbent-surface subtraction.</summary>
@@ -832,7 +850,9 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live body RID.</param>
     /// <returns>Finite signed coefficient; default zero.</returns>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner or the world has failed.</exception>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static float BodyGetBounce(RID body) => Service.BodyGetBounceCore(body);
 
     /// <summary>Sets the signed multiplier of resolved Area/world gravity.</summary>
@@ -846,7 +866,9 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live body RID.</param>
     /// <returns>Finite signed multiplier; default one.</returns>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner or the world has failed.</exception>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static float BodyGetGravityScale(RID body) => Service.BodyGetGravityScaleCore(body);
 
     /// <summary>Sets signed linear damping in inverse seconds.</summary>
@@ -860,7 +882,9 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live body RID.</param>
     /// <returns>Finite signed value; default zero.</returns>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner or the world has failed.</exception>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static float BodyGetLinearDamp(RID body) => Service.BodyGetLinearDampCore(body);
 
     /// <summary>Sets signed angular damping in inverse seconds.</summary>
@@ -874,7 +898,9 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live body RID.</param>
     /// <returns>Finite signed value; default zero.</returns>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner or the world has failed.</exception>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static float BodyGetAngularDamp(RID body) => Service.BodyGetAngularDampCore(body);
 
     /// <summary>Chooses whether body linear damping combines with or replaces selected fields.</summary>
@@ -888,7 +914,9 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live body RID.</param>
     /// <returns>Combine/default or Replace.</returns>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner or the world has failed.</exception>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static RigidBody.DampMode BodyGetLinearDampMode(RID body) => Service.BodyGetLinearDampModeCore(body);
 
     /// <summary>Chooses whether body angular damping combines with or replaces selected fields.</summary>
@@ -902,7 +930,9 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live body RID.</param>
     /// <returns>Combine/default or Replace.</returns>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner or the world has failed.</exception>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static RigidBody.DampMode BodyGetAngularDampMode(RID body) => Service.BodyGetAngularDampModeCore(body);
 
     /// <summary>Creates an inactive physics space independent of any scene tree.</summary>
@@ -1124,6 +1154,8 @@ public sealed partial class PhysicsServer
     /// <summary>Gets retained automatic sleep permission.</summary>
     /// <param name="body">A live scene or server body RID.</param>
     /// <returns>True by default; explicit sleep assignments remain available when false.</returns>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static bool BodyGetCanSleep(RID body) => Service.BodyGetCanSleepCore(body);
 
     /// <summary>Replaces linear velocity along the supplied axis, preserving its perpendicular component.</summary>
@@ -1145,6 +1177,8 @@ public sealed partial class PhysicsServer
     /// <summary>Gets the body's current motion mode.</summary>
     /// <param name="body">A live scene or server body RID.</param>
     /// <returns>The current effective mode, including a temporary MakeStatic role.</returns>
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static BodyMode BodyGetMode(RID body) => Service.BodyGetModeCore(body);
 
     /// <summary>Sets a body's 32 collision-layer bits without replacing its geometry.</summary>

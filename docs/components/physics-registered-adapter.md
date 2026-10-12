@@ -153,27 +153,32 @@ numerical/extension acceptance and final platform/performance gates remain open.
 
 ## Parameter reads and preparation
 
-Configured mass, explicit inertia/custom center, friction, bounce, gravity scale
-and damping parameters project guarded common authoring without invoking
-PrepareContactPolicy, RebuildShapes or other numerical preparation hooks.
-Automatic inertia/center getters retain current-geometry preparation outside
-numerical borrowing. They reject inside a numerical hook before preparation,
-while configured values remain readable. Setter preparation is unchanged.
+Configured mass, explicit inertia/custom center, friction, bounce, gravity scale,
+damping, effective body mode, CCD mode, can-sleep, omission, persistent force/torque,
+contact cap and reporting depth use the same guarded authored-input read path.
+The path permits actual selected numerical hooks, including Solve, without querying
+solver state or recursively inspecting its failure hook. Ordinary reads retain
+owner/lifetime/failed-world guards. Numerical writes, including equal-value
+assignments, still reject before mutation; velocity/direct-state queries remain
+unavailable inside a solve.
 
-The public-only consumer reads the complete ten-parameter family during actual
-initial scene/raw attachment and a live velocity hook and asserts no numerical
-preparation. Automatic inertia for a 2 kg circle changes from 9 to 36 when radius
-changes from 3 to 6, within 0.0001. Explicit values then remain unchanged. After
-64 warmups, 128 paired scene/raw read cycles require zero owner/all-thread managed
-bytes. The original runtime triggered numerical preparation from an initial
-identity hook; this is a behavior regression, not an API-count change. General
-numerical/extension and final performance acceptance remain open.
+Automatic inertia/center getters still require current-geometry preparation and
+reject numerical borrowing before entering preparation. The public-only
+--parameter-reads consumer covers all eighteen getters on scene/raw identities,
+initial/live attachment, actual solving, automatic profile rejection, invalid-kind/
+stale IDs, off-owner access and terminal-world reads. It keeps the original circle
+inertia check (9 to 36 kg-scene-unit-squared after radius 3 to 6), within 0.0001.
+Configured values and discrete policy reads are exact. After 64 warmup frames,
+128 full active 1/120-s frames with paired ordinary and solver-hook reads require
+zero owner/all-thread managed bytes. The same pre-fix consumer fails inside Solve;
+the fixed runtime permits the unchanged consumer and keeps write/query guards.
 
-Material revision polling is retained in the authoring read path: friction/bounce
+Material revision polling remains in the authored read path: friction/bounce
 getters clear superseded overrides and mark later shape preparation dirty even
-when an earlier resource subscriber prevented the scene callback. This performs
-no numerical hook. The public-only consumer injects failures for both channels;
-the general material regression remains part of acceptance.
+when an earlier resource subscriber prevented the scene callback. This invokes
+no numerical preparation. The consumer retains its failure cases for both channels.
+Native allocations, other platforms and complete registered numerical acceptance
+remain open; this closes an input-read rejection, not the complete solver contract.
 
 ## Exact scene motion roles
 

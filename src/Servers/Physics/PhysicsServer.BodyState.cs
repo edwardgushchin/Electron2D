@@ -74,7 +74,7 @@ public sealed partial class PhysicsServer
 
     internal bool BodyIsOmittingForceIntegrationCore(RID body)
     {
-        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureAccess(); return runtime.Omitted;
+        return ParameterRuntime(body, writing: false).Omitted;
     }
 
     internal void BodySetMaxContactsReportedCore(RID body, int amount)
@@ -98,12 +98,12 @@ public sealed partial class PhysicsServer
     }
     internal float BodyGetContactsReportedDepthThresholdCore(RID body)
     {
-        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureAccess(); return runtime.ContactsReportedDepthThreshold;
+        return ParameterRuntime(body, writing: false).ContactsReportedDepthThreshold;
     }
 
     internal int BodyGetMaxContactsReportedCore(RID body)
     {
-        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureAccess(); return runtime.ContactLimit;
+        return ParameterRuntime(body, writing: false).ContactLimit;
     }
     internal void BodySetTransformCore(RID body, Transform transform) => ForceRuntime(body).SetTransform(transform);
     internal Transform BodyGetTransformCore(RID body) => ForceRuntime(body, writing: false).GetTransform();
@@ -114,7 +114,7 @@ public sealed partial class PhysicsServer
     internal void BodySetSleepingCore(RID body, bool sleeping) => ForceRuntime(body).SetSleeping(sleeping);
     internal bool BodyGetSleepingCore(RID body) => ForceRuntime(body, writing: false).GetSleeping();
     internal void BodySetCanSleepCore(RID body, bool canSleep) => ForceRuntime(body).SetCanSleep(canSleep);
-    internal bool BodyGetCanSleepCore(RID body) => ForceRuntime(body, writing: false).GetCanSleep();
+    internal bool BodyGetCanSleepCore(RID body) => ParameterRuntime(body, writing: false).GetCanSleep();
     internal void BodySetAxisVelocityCore(RID body, Vector2 axisVelocity) => ForceRuntime(body).SetAxisVelocity(axisVelocity);
 
 }

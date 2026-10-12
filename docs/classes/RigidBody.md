@@ -288,3 +288,11 @@ PhysicsServer.BodySetContactsReportedDepthThreshold accepts this scene body RID 
 now executes the full scene/raw mass, center, inertia and lifecycle matrix on CPU
 and GPU worlds. Both retain zero owner/all-thread allocation through 64 changing
 active frames; native implementation diagnostics remain owner-specific.
+
+
+[Configured body reads during numerical hooks](../components/physics-registered-adapter.md#parameter-reads-and-preparation)
+use common retained authoring for all eighteen parameter/policy getters, including
+actual selected Solve. Writes and numerical queries retain their rejection guards;
+automatic geometry-dependent reads still need ordinary query access. The public-only
+consumer verifies scene/raw ownership, failures and 128 full active frames at zero
+owner/all-thread managed allocation. Complete numerical-extension acceptance stays open.

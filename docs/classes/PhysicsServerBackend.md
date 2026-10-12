@@ -166,3 +166,11 @@ A same-world result for another moving body rejects before caller publication;
 no-result calls enforce the same rule. SetMotion misses retain normal requested-body
 binding, and rejection restores scope for the next valid query. The numerical
 motion/geometry acceptance remains broader than this identity guarantee.
+
+
+[Configured body reads during numerical hooks](../components/physics-registered-adapter.md#parameter-reads-and-preparation)
+use common retained authoring for all eighteen parameter/policy getters, including
+actual selected Solve. Writes and numerical queries retain their rejection guards;
+automatic geometry-dependent reads still need ordinary query access. The public-only
+consumer verifies scene/raw ownership, failures and 128 full active frames at zero
+owner/all-thread managed allocation. Complete numerical-extension acceptance stays open.
