@@ -16,6 +16,7 @@ public sealed partial class ArrayMesh : Mesh
         internal string Name = "";
         internal Material? Material;
     }
+    internal const ArrayFormat SupportedFormats = ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.Vertex | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights;
     internal readonly object Gate = new();
     private readonly List<Surface> _surfaces = [];
     /// <summary>Creates an empty mesh.</summary>
@@ -33,13 +34,16 @@ public sealed partial class ArrayMesh : Mesh
     /// <exception cref="NotSupportedException">Flags require an unimplemented storage/attribute layer.</exception>
     /// <exception cref="ObjectDisposedException">The mesh is disposed.</exception>
     public void AddSurfaceFromArrays(PrimitiveType primitive, MeshSurfaceData arrays, IReadOnlyList<MeshSurfaceData>? blendShapes = null, IReadOnlyDictionary<float, int[]>? lods = null, ArrayFormat flags = ArrayFormat.None)
+        => AddSurface(primitive, arrays, blendShapes, lods, flags, null);
+    internal void AddSurface(PrimitiveType primitive, MeshSurfaceData arrays, IReadOnlyList<MeshSurfaceData>? blendShapes, IReadOnlyDictionary<float, int[]>? lods, ArrayFormat flags, Material? material)
     {
         ArgumentNullException.ThrowIfNull(arrays);
+        if (material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(material));
         if (blendShapes is { Count: > 0 } || lods is { Count: > 0 }) throw new NotSupportedException("Morph targets and LOD index sets require their first executable deformation/scale-selection integration.");
-        if ((flags & ~(ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.Vertex | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights)) != 0) throw new NotSupportedException("These mesh flags require their attribute storage integration.");
+        if ((flags & ~SupportedFormats) != 0) throw new NotSupportedException("These mesh flags require their attribute storage integration.");
         var copy = arrays.Copy(); copy.Validate(primitive); var inferred = new Surface(copy, primitive, ArrayFormat.None).Format; const ArrayFormat channels = ArrayFormat.Vertex | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights; if ((flags & channels & ~inferred) != 0) throw new ArgumentException("Explicit channel flags require matching typed arrays.", nameof(flags)); if (copy.SkinSlots != 0 && copy.SkinSlots != ((flags & ArrayFormat.Use8BoneWeights) != 0 ? 8 : 4)) throw new ArgumentException("Skin slot count must match the eight-weight flag.", nameof(flags)); copy.QuantizeSkin();
         for (var i = 0; i < copy.Colors.Length; i++) { var color = copy.Colors[i]; copy.Colors[i] = new(Quantize(color.R), Quantize(color.G), Quantize(color.B), Quantize(color.A)); }
-        lock (Gate) { ThrowIfDisposed(); _surfaces.Add(new(copy, primitive, flags)); }
+        lock (Gate) { ThrowIfDisposed(); _surfaces.Add(new(copy, primitive, flags) { Material = material }); }
         EmitChanged();
     }
     /// <summary>Removes every surface without disposing borrowed materials.</summary>

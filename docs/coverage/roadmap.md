@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1560 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 1562 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 982 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -93,6 +93,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [RayCast2D](classes/RayCast2D.md) | 0 | 1 |
 | [RichTextLabel](classes/RichTextLabel.md) | 0 | 1 |
 | [ShapeCast2D](classes/ShapeCast2D.md) | 0 | 1 |
+| [SurfaceTool](classes/SurfaceTool.md) | 0 | 1 |
 | [Texture2DRD](classes/TextureRD.md) | 0 | 1 |
 | [TileSetAtlasSource](classes/TileSetAtlasSource.md) | 0 | 1 |
 | [Timer](classes/Timer.md) | 0 | 1 |
@@ -124,7 +125,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed networking, address-resolution and RPC slice. | 2 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
-| Trigger: typed mesh topology/adjacency and incremental geometry editing, attribute conversion and transactional commit to the now executable ArrayMesh; missing advanced channels enter their own shader/skeleton producer slices (ADR 0092). | 2 |
 | ADR 0094: Typed MultiplayerPeer now executes. Requires executable WebRTCPeerConnection/DataChannel SDP/ICE/DTLS/SCTP host integration and an owned WebRTC multiplayer cohort. | 1 |
 | Animation: trigger is the first missing type-specific animation resource utility or persistence slice on the executable graph/state-machine/BlendSpace/action foundation (ADR 0093); applicable event tracks already execute. | 1 |
 | Navigation2D: trigger is the next operation-specific navigation link, agent/obstacle avoidance, source-geometry bake or typed query slice beyond the authored map/region backend (ADRs 0052/0097). | 1 |
@@ -141,6 +141,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed 2D mesh-data and MeshInstance2D rendering slice; audit 3D-only members individually (ADR 0028). | 1 |
 | Trigger: first typed 2D navigation and pathfinding slice. | 1 |
 | Trigger: first typed GUI DPI-scale and theme-texture slice (ADR 0028). | 1 |
+| Trigger: typed mesh topology/adjacency and incremental geometry editing, attribute conversion and transactional commit to the now executable ArrayMesh; missing advanced channels enter their own shader/skeleton producer slices (ADR 0092). | 1 |
 | Trigger: typed missing-asset mesh placeholder producer/loader and its 2D drawing/bounds policy over the implemented Mesh resource (ADR 0092). | 1 |
 | Separate product-scope decision for each of 1 currently unassigned families; see their catalog pages for exact names. | 1 |
 

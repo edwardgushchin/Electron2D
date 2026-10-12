@@ -10521,6 +10521,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.SurfaceTool",
+    "kind": "type",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "SurfaceTool",
+    "signature": "public sealed class Electron2D.SurfaceTool",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.SurfaceTool.SkinWeightCount",
+    "kind": "type",
+    "declaringType": "Electron2D.SurfaceTool.SkinWeightCount",
+    "name": "SkinWeightCount",
+    "signature": "public enum Electron2D.SurfaceTool.SkinWeightCount",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SyntaxHighlighter",
     "kind": "type",
     "declaringType": "Electron2D.SyntaxHighlighter",
@@ -20949,6 +20982,19 @@
     "declaringType": "Electron2D.SubViewportContainer",
     "name": ".ctor",
     "signature": "public SubViewportContainer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SurfaceTool..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": ".ctor",
+    "signature": "public SurfaceTool()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -43024,6 +43070,32 @@
     "parameters": [],
     "returnType": "Electron2D.StructuredTextParser",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.SurfaceTool.SkinWeightCount.Eight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.SurfaceTool.SkinWeightCount",
+    "name": "Eight",
+    "signature": "public const Electron2D.SurfaceTool.SkinWeightCount Eight = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SurfaceTool.SkinWeightCount",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.SurfaceTool.SkinWeightCount.Four()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.SurfaceTool.SkinWeightCount",
+    "name": "Four",
+    "signature": "public const Electron2D.SurfaceTool.SkinWeightCount Four = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SurfaceTool.SkinWeightCount",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.TLSStatus.Connected()",
@@ -159430,6 +159502,486 @@
       }
     ],
     "returnType": "Electron2D.SubtweenTweener",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.AddIndex(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "AddIndex",
+    "signature": "public System.Void AddIndex(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.AddTriangleFan(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Color\u003E,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "AddTriangleFan",
+    "signature": "public System.Void AddTriangleFan(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E vertices, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E uvs = default, System.ReadOnlySpan\u003CElectron2D.Color\u003E colors = default, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E uv2s = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "vertices",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "uvs",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": "default"
+      },
+      {
+        "name": "colors",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Color\u003E",
+        "default": "default"
+      },
+      {
+        "name": "uv2s",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.AddVertex(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "AddVertex",
+    "signature": "public System.Void AddVertex(Electron2D.Vector2 vertex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "vertex",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.AppendFrom(Electron2D.Mesh,System.Int32,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "AppendFrom",
+    "signature": "public System.Void AppendFrom(Electron2D.Mesh existing, System.Int32 surface, Electron2D.Transform transform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "existing",
+        "type": "Electron2D.Mesh",
+        "default": null
+      },
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.Begin(Electron2D.Mesh.PrimitiveType)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "Begin",
+    "signature": "public System.Void Begin(Electron2D.Mesh.PrimitiveType primitive)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "primitive",
+        "type": "Electron2D.Mesh.PrimitiveType",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.Commit(Electron2D.ArrayMesh,Electron2D.Mesh.ArrayFormat)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "Commit",
+    "signature": "public Electron2D.ArrayMesh Commit(Electron2D.ArrayMesh existing = null, Electron2D.Mesh.ArrayFormat flags = None)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "existing",
+        "type": "Electron2D.ArrayMesh",
+        "default": "null"
+      },
+      {
+        "name": "flags",
+        "type": "Electron2D.Mesh.ArrayFormat",
+        "default": "None"
+      }
+    ],
+    "returnType": "Electron2D.ArrayMesh",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.CommitToArrays()",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "CommitToArrays",
+    "signature": "public Electron2D.MeshSurfaceData CommitToArrays()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshSurfaceData",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.CreateFrom(Electron2D.Mesh,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "CreateFrom",
+    "signature": "public System.Void CreateFrom(Electron2D.Mesh existing, System.Int32 surface)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "existing",
+        "type": "Electron2D.Mesh",
+        "default": null
+      },
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.CreateFromArrays(Electron2D.MeshSurfaceData,Electron2D.Mesh.PrimitiveType)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "CreateFromArrays",
+    "signature": "public System.Void CreateFromArrays(Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.PrimitiveType primitiveType = Triangles)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "arrays",
+        "type": "Electron2D.MeshSurfaceData",
+        "default": null
+      },
+      {
+        "name": "primitiveType",
+        "type": "Electron2D.Mesh.PrimitiveType",
+        "default": "Triangles"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.Deindex()",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "Deindex",
+    "signature": "public System.Void Deindex()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.GetAABB()",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "GetAABB",
+    "signature": "public Electron2D.Rect2 GetAABB()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.GetPrimitiveType()",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "GetPrimitiveType",
+    "signature": "public Electron2D.Mesh.PrimitiveType GetPrimitiveType()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.GetSkinWeightCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "GetSkinWeightCount",
+    "signature": "public Electron2D.SurfaceTool.SkinWeightCount GetSkinWeightCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SurfaceTool.SkinWeightCount",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.Index()",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "Index",
+    "signature": "public System.Void Index()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.OptimizeIndicesForCache()",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "OptimizeIndicesForCache",
+    "signature": "public System.Void OptimizeIndicesForCache()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.SetBones(System.ReadOnlySpan\u003CSystem.Int32\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "SetBones",
+    "signature": "public System.Void SetBones(System.ReadOnlySpan\u003CSystem.Int32\u003E bones)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bones",
+        "type": "System.ReadOnlySpan\u003CSystem.Int32\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.SetColor(Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "SetColor",
+    "signature": "public System.Void SetColor(Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.SetMaterial(Electron2D.Material)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "SetMaterial",
+    "signature": "public System.Void SetMaterial(Electron2D.Material material)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "material",
+        "type": "Electron2D.Material",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.SetSkinWeightCount(Electron2D.SurfaceTool.SkinWeightCount)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "SetSkinWeightCount",
+    "signature": "public System.Void SetSkinWeightCount(Electron2D.SurfaceTool.SkinWeightCount count)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "count",
+        "type": "Electron2D.SurfaceTool.SkinWeightCount",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.SetSmoothGroup(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "SetSmoothGroup",
+    "signature": "public System.Void SetSmoothGroup(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.SetUV(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "SetUV",
+    "signature": "public System.Void SetUV(Electron2D.Vector2 uv)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "uv",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.SetUV2(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "SetUV2",
+    "signature": "public System.Void SetUV2(Electron2D.Vector2 uv2)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "uv2",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.SetWeights(System.ReadOnlySpan\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "SetWeights",
+    "signature": "public System.Void SetWeights(System.ReadOnlySpan\u003CSystem.Single\u003E weights)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "weights",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {

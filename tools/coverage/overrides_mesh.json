@@ -749,6 +749,141 @@
       "godot": "ImmediateMesh::method:surface_set_uv2(Vector2:)",
       "electron2d": "method:Electron2D.ImmediateMesh.SurfaceSetUV2(Electron2D.Vector2)",
       "reason": "ADR 0092: copied finite typed UV2s, inferred TexUV2, packed partial updates with rollback, AMS2/legacy AMS1 archives, immediate first-use backfill, retained custom/owned/ordinary/hardware/expanded/skin paths and GLSL/HLSL float2 fragment location four. Native pixels, lighting/group/compatibility gates and 64 active plus 64 idle warmed frames are tested; wider platforms/native allocator totals remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:add_index(int:)",
+      "electron2d": "method:Electron2D.SurfaceTool.AddIndex(System.Int32)",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:add_vertex(Vector3:)",
+      "electron2d": "method:Electron2D.SurfaceTool.AddVertex(Electron2D.Vector2)",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:append_from(Mesh:,int:,Transform3D:)",
+      "electron2d": "method:Electron2D.SurfaceTool.AppendFrom(Electron2D.Mesh,System.Int32,Electron2D.Transform)",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:begin(int:Mesh.PrimitiveType)",
+      "electron2d": "method:Electron2D.SurfaceTool.Begin(Electron2D.Mesh.PrimitiveType)",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:clear()",
+      "electron2d": "method:Electron2D.SurfaceTool.Clear()",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:commit(ArrayMesh:,int:)",
+      "electron2d": "method:Electron2D.SurfaceTool.Commit(Electron2D.ArrayMesh,Electron2D.Mesh.ArrayFormat)",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:commit_to_arrays()",
+      "electron2d": "method:Electron2D.SurfaceTool.CommitToArrays()",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:create_from(Mesh:,int:)",
+      "electron2d": "method:Electron2D.SurfaceTool.CreateFrom(Electron2D.Mesh,System.Int32)",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:create_from_arrays(Array:,int:Mesh.PrimitiveType)",
+      "electron2d": "method:Electron2D.SurfaceTool.CreateFromArrays(Electron2D.MeshSurfaceData,Electron2D.Mesh.PrimitiveType)",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:deindex()",
+      "electron2d": "method:Electron2D.SurfaceTool.Deindex()",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:get_aabb()",
+      "electron2d": "method:Electron2D.SurfaceTool.GetAABB()",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:get_primitive_type()",
+      "electron2d": "method:Electron2D.SurfaceTool.GetPrimitiveType()",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:get_skin_weight_count()",
+      "electron2d": "method:Electron2D.SurfaceTool.GetSkinWeightCount()",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:index()",
+      "electron2d": "method:Electron2D.SurfaceTool.Index()",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:optimize_indices_for_cache()",
+      "electron2d": "method:Electron2D.SurfaceTool.OptimizeIndicesForCache()",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:set_bones(PackedInt32Array:)",
+      "electron2d": "method:Electron2D.SurfaceTool.SetBones(System.ReadOnlySpan<System.Int32>)",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:set_color(Color:)",
+      "electron2d": "method:Electron2D.SurfaceTool.SetColor(Electron2D.Color)",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:set_material(Material:)",
+      "electron2d": "method:Electron2D.SurfaceTool.SetMaterial(Electron2D.Material)",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:set_skin_weight_count(int:SurfaceTool.SkinWeightCount)",
+      "electron2d": "method:Electron2D.SurfaceTool.SetSkinWeightCount(Electron2D.SurfaceTool.SkinWeightCount)",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:set_smooth_group(int:)",
+      "electron2d": "method:Electron2D.SurfaceTool.SetSmoothGroup(System.Int32)",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:set_uv(Vector2:)",
+      "electron2d": "method:Electron2D.SurfaceTool.SetUV(Electron2D.Vector2)",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:set_uv2(Vector2:)",
+      "electron2d": "method:Electron2D.SurfaceTool.SetUV2(Electron2D.Vector2)",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:set_weights(PackedFloat32Array:)",
+      "electron2d": "method:Electron2D.SurfaceTool.SetWeights(System.ReadOnlySpan<System.Single>)",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:add_triangle_fan(PackedVector3Array:,PackedVector2Array:,PackedColorArray:,PackedVector2Array:,PackedVector3Array:,Plane[]:)",
+      "electron2d": "method:Electron2D.SurfaceTool.AddTriangleFan(System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Color>,System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::enum:SkinWeightCount",
+      "electron2d": "T:Electron2D.SurfaceTool.SkinWeightCount",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::enum_value:SkinWeightCount.SKIN_4_WEIGHTS",
+      "electron2d": "enumValue:Electron2D.SurfaceTool.SkinWeightCount.Four()",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
+    },
+    {
+      "godot": "SurfaceTool::enum_value:SkinWeightCount.SKIN_8_WEIGHTS",
+      "electron2d": "enumValue:Electron2D.SurfaceTool.SkinWeightCount.Eight()",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
     }
   ],
   "extras": [
@@ -979,6 +1114,18 @@
     {
       "electron2d": "method:Electron2D.ImmediateMesh.GetPropertyDescriptors()",
       "reason": "ADR 0092: completed immediate surfaces/material graph use typed bounded archive descriptors; drafts are excluded from file storage."
+    },
+    {
+      "electron2d": "constructor:Electron2D.SurfaceTool..ctor()",
+      "reason": "ADRs 0001/0092: managed exact object construction and deterministic lifetime/reentry guards for the existing mesh-authoring concept; borrowed mesh/material resources are not disposed by the builder."
+    },
+    {
+      "electron2d": "method:Electron2D.SurfaceTool.ValidateDisposal()",
+      "reason": "ADRs 0001/0092: managed exact object construction and deterministic lifetime/reentry guards for the existing mesh-authoring concept; borrowed mesh/material resources are not disposed by the builder."
+    },
+    {
+      "electron2d": "method:Electron2D.SurfaceTool.Dispose(System.Boolean)",
+      "reason": "ADRs 0001/0092: managed exact object construction and deterministic lifetime/reentry guards for the existing mesh-authoring concept; borrowed mesh/material resources are not disposed by the builder."
     }
   ],
   "statusGroups": [
@@ -1412,10 +1559,92 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: complete executable typed SurfaceTool builder, commit/index/attribute state and mesh production under ADR 0092. Secondary UV storage, packing and shader consumer are now implemented; no standalone inert setter is exposed.",
+      "state": "Implemented",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified.",
       "godot": [
-        "SurfaceTool::method:set_uv2(Vector2:)"
+        "SurfaceTool::method:add_index(int:)",
+        "SurfaceTool::method:add_vertex(Vector3:)",
+        "SurfaceTool::method:append_from(Mesh:,int:,Transform3D:)",
+        "SurfaceTool::method:begin(int:Mesh.PrimitiveType)",
+        "SurfaceTool::method:clear()",
+        "SurfaceTool::method:commit(ArrayMesh:,int:)",
+        "SurfaceTool::method:commit_to_arrays()",
+        "SurfaceTool::method:create_from(Mesh:,int:)",
+        "SurfaceTool::method:create_from_arrays(Array:,int:Mesh.PrimitiveType)",
+        "SurfaceTool::method:deindex()",
+        "SurfaceTool::method:get_aabb()",
+        "SurfaceTool::method:get_primitive_type()",
+        "SurfaceTool::method:get_skin_weight_count()",
+        "SurfaceTool::method:index()",
+        "SurfaceTool::method:optimize_indices_for_cache()",
+        "SurfaceTool::method:set_bones(PackedInt32Array:)",
+        "SurfaceTool::method:set_color(Color:)",
+        "SurfaceTool::method:set_material(Material:)",
+        "SurfaceTool::method:set_skin_weight_count(int:SurfaceTool.SkinWeightCount)",
+        "SurfaceTool::method:set_smooth_group(int:)",
+        "SurfaceTool::method:set_uv(Vector2:)",
+        "SurfaceTool::method:set_uv2(Vector2:)",
+        "SurfaceTool::method:set_weights(PackedFloat32Array:)",
+        "SurfaceTool::enum:SkinWeightCount",
+        "SurfaceTool::enum_value:SkinWeightCount.SKIN_4_WEIGHTS",
+        "SurfaceTool::enum_value:SkinWeightCount.SKIN_8_WEIGHTS"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified. Missing normal/tangent/custom producer/consumer and morph authoring retain individual triggers.",
+      "godot": [
+        "class:SurfaceTool"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified. Triangle fan supports positions/color/primary and secondary UVs; numeric normal and tangent payloads enter the first typed mesh normal/tangent byte storage and shader consumer slice.",
+      "godot": [
+        "SurfaceTool::method:add_triangle_fan(PackedVector3Array:,PackedVector2Array:,PackedColorArray:,PackedVector2Array:,PackedVector3Array:,Plane[]:)"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned doc/classes/SurfaceTool.xml generate_lod deprecated metadata: This method is unused internally, as it does not preserve normals or UVs. Consider using [method ImporterMesh.generate_lods] instead. No legacy wrapper or implementation trigger.",
+      "godot": [
+        "SurfaceTool::method:generate_lod(float:,int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: copied custom mesh channel bytes, exact custom format encoding/decoding, renderer vertex layout and actual shader attribute consumer under ADR 0092; SurfaceTool authoring enters that first complete channel slice.",
+      "godot": [
+        "SurfaceTool::enum:CustomFormat",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_MAX",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGBA8_SNORM",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGBA8_UNORM",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGBA_FLOAT",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGBA_HALF",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RGB_FLOAT",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RG_FLOAT",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_RG_HALF",
+        "SurfaceTool::enum_value:CustomFormat.CUSTOM_R_FLOAT",
+        "SurfaceTool::method:get_custom_format(int:)",
+        "SurfaceTool::method:set_custom(int:,Color:)",
+        "SurfaceTool::method:set_custom_format(int:,int:SurfaceTool.CustomFormat)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: numeric Vector3 normals/Vector4 tangents in typed 2D mesh storage, exact byte packing and actual canvas/device shader consumers under ADR 0092. These are shader data, not 3D scene types; source Plane tangent is projected to the numeric role. Generation and fan attributes enter that same first channel slice.",
+      "godot": [
+        "SurfaceTool::method:set_normal(Vector3:)",
+        "SurfaceTool::method:set_tangent(Plane:)",
+        "SurfaceTool::method:generate_normals(bool:)",
+        "SurfaceTool::method:generate_tangents()"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: complete named typed 2D morph-target storage and actual deformation/weight consumer over ArrayMesh under ADR 0092. SurfaceTool pose extraction enters that prerequisite first slice.",
+      "godot": [
+        "SurfaceTool::method:create_from_blend_shape(Mesh:,int:,String:)"
       ]
     }
   ]

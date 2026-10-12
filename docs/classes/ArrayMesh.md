@@ -315,3 +315,5 @@ Exact ArrayMesh files store bounded versioned geometry/topology/flags/name/skin 
 ## Secondary mesh UV channel
 
 [MeshSurfaceData.UV2s](MeshSurfaceData.md#uv2s) supplies copied finite float pairs independent of primary UV and instance data. [The mesh component](../components/meshes.md#secondary-uv-storage-and-shader-consumer) records packing, archives, shader locations and executable verification.
+
+[SurfaceTool.Commit](SurfaceTool.md) uses shared internal surface validation and publishes copied geometry plus its borrowed material atomically before one Changed. Public AddSurfaceFromArrays retains its existing null-material initial state.

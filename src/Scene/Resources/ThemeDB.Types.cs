@@ -362,6 +362,7 @@ public sealed partial class ThemeDB
         ["SubViewport"] = ["SubViewport", "Viewport", "Node", "ElectronObject"],
         ["SubViewportContainer"] = ["SubViewportContainer", "Container", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["SubtweenTweener"] = ["SubtweenTweener", "Tweener", "ElectronObject"],
+        ["SurfaceTool"] = ["SurfaceTool", "ElectronObject"],
         ["SyntaxHighlighter"] = ["SyntaxHighlighter", "Resource", "ElectronObject"],
         ["SystemFont"] = ["SystemFont", "Font", "Resource", "ElectronObject"],
         ["TCPServer"] = ["TCPServer", "SocketServer", "ElectronObject"],

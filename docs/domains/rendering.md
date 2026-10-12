@@ -239,3 +239,7 @@ Compute and paired graphics pipeline factories now accept copied typed specializ
 Explicit [device source authoring](../components/local-compute.md#source-authoring-and-build-imports) now compiles typed GLSL/HLSL stage descriptions through the separately installed import tool, then executes the common compute/graphics pipeline path. Per-stage diagnostics, copied artifacts, cache bypass and changed includes are integrated; shipped games require only compiled modules.
 
 The [secondary mesh UV channel](../components/meshes.md#secondary-uv-storage-and-shader-consumer) now executes typed storage, immediate construction, packed updates, archives and GPU shader inputs across ordinary, instanced and skinned meshes. Compatibility preserves primary drawing with explicit programmable-material rejection.
+
+## Typed surface authoring
+
+[SurfaceTool](../classes/SurfaceTool.md) now supplies finite typed 2D vertex/fan construction, four/eight skin selection, copied source/array imports, transformed append, exact indexing/deindexing and actual index-cache reordering. Commit atomically publishes copied geometry and borrowed material into ArrayMesh. Completed output executes existing canvas and indexed device rendering; saved output loads and redraws in a fresh process. Advanced normal/tangent/custom/morph prerequisites remain precise coverage gaps. Cold construction may allocate; warmed retained and device playback measures zero managed bytes on Linux Wayland. Physical cache speed, native allocation totals and wider platforms remain unverified.
