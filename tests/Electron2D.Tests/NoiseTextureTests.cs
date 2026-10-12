@@ -4,7 +4,7 @@ internal static class NoiseTextureTests
 {
     internal static void Run()
     {
-        using var texture = new NoiseTexture { Width = 2, Height = 1, GenerateMipmaps = false };
+        using var texture = new NoiseTexture { Width = 2, Height = 1, GenerateMIPMaps = false };
         Check(texture.GetWidth() == 2 && texture.GetHeight() == 1 && texture.GetImage() is null,
             "A texture without noise retains its configured size but has no pixels.");
         using var noise = new MutableNoise();
@@ -40,10 +40,10 @@ internal static class NoiseTextureTests
 
         texture.AsNormalMap = true;
         texture.BumpStrength = 2;
-        texture.GenerateMipmaps = true;
+        texture.GenerateMIPMaps = true;
         using (var normal = texture.GetImage())
-            Check(normal is not null && normal.PixelFormat == Image.Format.Rgba8 && normal.HasMipmaps &&
-                normal.GetPixel(0, 0).A == 1 && texture.MipmapCount == 1,
+            Check(normal is not null && normal.PixelFormat == Image.Format.Rgba8 && normal.HasMIPMaps &&
+                normal.GetPixel(0, 0).A == 1 && texture.MIPMapCount == 1,
                 "Normal conversion and mipmap generation feed the texture contract.");
         texture.ColorRamp = null;
         texture.AsNormalMap = false;

@@ -3,6 +3,8 @@ using Electron2D;
 
 internal static class FontTestFixtures
 {
+    internal static readonly byte[] ColorStrike = Read(typeof(FontTestFixtures).Assembly, "TestFonts.ColorStrikeTest.ttf");
+    internal static readonly byte[] Strike = Read(typeof(FontTestFixtures).Assembly, "TestFonts.StrikeTest.ttf");
     internal static readonly byte[] OpenSans = Read(typeof(Font).Assembly, "Electron2D.Fonts.OpenSans_SemiBold.woff2");
     internal static readonly byte[] Arabic = Read(typeof(FontTestFixtures).Assembly, "TestFonts.Vazirmatn_Regular.woff2");
     internal static readonly byte[] Color = Read(typeof(FontTestFixtures).Assembly, "TestFonts.ColorTest.ttf");

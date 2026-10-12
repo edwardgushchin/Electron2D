@@ -28,8 +28,8 @@ internal static class IntegerCanvasTests
             using var format = new RDTextureFormat { Width = 4, Height = 4, Format = RenderingDevice.DataFormat.R32G32B32A32UINT, UsageBits = Roles }; using var view = new RDTextureView();
             u = device.TextureCreate(format, view); unsigned.TextureRDRID = u;
             format.Format = RenderingDevice.DataFormat.R32G32B32A32SINT; s = device.TextureCreate(format, view); signed.TextureRDRID = s;
-            format.TextureType = RenderingDevice.TextureType.TextureArray; format.ArrayLayers = 2; format.Mipmaps = 3; a = device.TextureCreate(format, view); layers.TextureRDRID = a;
-            format.TextureType = RenderingDevice.TextureType.Texture; format.ArrayLayers = 1; format.Mipmaps = 1; format.Format = RenderingDevice.DataFormat.R8G8B8A8UINT; custom = device.TextureCreate(format, view); using var values = new TextureRD { TextureRDRID = custom };
+            format.TextureType = RenderingDevice.TextureType.TextureArray; format.ArrayLayers = 2; format.MIPMaps = 3; a = device.TextureCreate(format, view); layers.TextureRDRID = a;
+            format.TextureType = RenderingDevice.TextureType.Texture; format.ArrayLayers = 1; format.MIPMaps = 1; format.Format = RenderingDevice.DataFormat.R8G8B8A8UINT; custom = device.TextureCreate(format, view); using var values = new TextureRD { TextureRDRID = custom };
             // The shader retains its own borrowed resource reference after this callback.
             var retainedValues = (TextureRD)values.Duplicate(); glsl.SetDefaultTextureParameter("values", retainedValues); hlsl.SetDefaultTextureParameter("values", retainedValues);
             glsl.SetDefaultLayeredTextureParameter("layers", layers); hlsl.SetDefaultLayeredTextureParameter("layers", layers);
@@ -67,7 +67,7 @@ internal static class IntegerCanvasTests
                 frames++; if (frames != 56) return;
                 Check(allocated == 0, $"Integer native prepared frames allocated {allocated} managed bytes.");
                 using (var image = unsigned.GetImage()!) Check(image.GetPixel(0, 0) == Colors.Blue, "UInt snapshot keeps raw component values.");
-                using (var image = layers.GetLayerData(0)!) Check(image.HasMipmaps && image.GetPixel(0, 0).R == -10, "Signed array snapshot preserves negative values and mip chain.");
+                using (var image = layers.GetLayerData(0)!) Check(image.HasMIPMaps && image.GetPixel(0, 0).R == -10, "Signed array snapshot preserves negative values and mip chain.");
                 first.Shader = null; second.Shader = null; retainedValues.Dispose(); root.Tree!.Quit();
             };
         };
@@ -82,10 +82,10 @@ internal static class IntegerCanvasTests
         var kinds = new[] { RenderingDevice.DataFormat.R8SINT, RenderingDevice.DataFormat.R8UINT, RenderingDevice.DataFormat.R16SINT, RenderingDevice.DataFormat.R16UINT, RenderingDevice.DataFormat.R32SINT, RenderingDevice.DataFormat.R32UINT };
         foreach (var kind in kinds)
         {
-            format.Format = kind; format.Width = 2; format.Height = 2; format.Mipmaps = 2; format.UsageBits = Roles;
+            format.Format = kind; format.Width = 2; format.Height = 2; format.MIPMaps = 2; format.UsageBits = Roles;
             var rid = device.TextureCreate(format, view); using var resource = new TextureRD { TextureRDRID = rid }; var value = RenderingDevice.PixelType(kind) == 1 ? -7 : 249;
             device.TextureClear(rid, Bits(value, 0, 0), 0, 2, 0, 1);
-            using (var image = resource.GetImage()!) { Check(image.PixelFormat == Image.Format.Rgbaf && image.HasMipmaps && image.GetPixel(0, 0).R == value && image.GetPixel(0, 0).A == 1, "Integer snapshots preserve scalar width/signedness, missing channels and mips."); }
+            using (var image = resource.GetImage()!) { Check(image.PixelFormat == Image.Format.Rgbaf && image.HasMIPMaps && image.GetPixel(0, 0).R == value && image.GetPixel(0, 0).A == 1, "Integer snapshots preserve scalar width/signedness, missing channels and mips."); }
             if (kind == RenderingDevice.DataFormat.R32UINT)
             {
                 device.TextureClear(rid, Bits(unchecked((int)0xffffffff), 0, 0), 0, 2, 0, 1);

@@ -166,9 +166,9 @@ public sealed class AnimatedTexture : Texture
     /// <inheritdoc />
     public override Image.Format PixelFormat => CapturePixels()?.Source.Format ?? Image.Format.L8;
     /// <inheritdoc />
-    public override bool HasMipmaps => CapturePixels()?.Source.HasMipmaps ?? false;
+    public override bool HasMIPMaps => CapturePixels()?.Source.HasMIPMaps ?? false;
     /// <inheritdoc />
-    public override int MipmapCount => (CapturePixels()?.Levels ?? 1) - 1;
+    public override int MIPMapCount => (CapturePixels()?.Levels ?? 1) - 1;
     /// <inheritdoc />
     public override Image? GetImage()
     {

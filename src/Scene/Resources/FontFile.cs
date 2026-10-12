@@ -285,7 +285,7 @@ public partial class FontFile : Font
     {
         target.AllowSystemFallback = source.AllowSystemFallback; target.Hinting = source.Hinting; target.SubpixelPositioning = source.SubpixelPositioning;
         target.KeepRoundingRemainders = source.KeepRoundingRemainders; target.Oversampling = source.Oversampling;
-        target.SupportPolicy = source.SupportPolicy; target.ModulateColorGlyphs = source.ModulateColorGlyphs; target.OpenTypeFeatures = source.OpenTypeFeatures;
+        target.DisableEmbeddedBitmaps = source.DisableEmbeddedBitmaps; target.ForceAutohinter = source.ForceAutohinter; target.GenerateMIPMaps = source.GenerateMIPMaps; target.SupportPolicy = source.SupportPolicy; target.ModulateColorGlyphs = source.ModulateColorGlyphs; target.OpenTypeFeatures = source.OpenTypeFeatures;
     }
     private void FinishReplacement(FontData? previous)
     {
@@ -296,7 +296,7 @@ public partial class FontFile : Font
         if (failure is not null) ExceptionDispatchInfo.Capture(failure).Throw();
     }
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(FileProperties).Append(CacheProperty).Append(SupportProperty);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(FileProperties).Append(CacheProperty).Append(SupportProperty).Concat(RasterProperties);
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => GetType() == typeof(FontFile) ? new FontFile() : base.CreateDuplicateInstance();
     /// <inheritdoc />
@@ -305,14 +305,14 @@ public partial class FontFile : Font
     {
         byte[] bytes, cacheSnapshot; Dictionary<string, int> features; FontSupportPolicy support; bool deferred; int fixedSize; FixedSizeScaleMode scaleMode;
         (FontHinting Hinting, FontSubpixelPositioning Subpixel, bool Remainders, float Oversampling, bool Modulate, bool SystemFallback,
-            string Name, string Style, FontStyle Flags, int Weight, int Stretch) settings;
+            string Name, string Style, FontStyle Flags, int Weight, int Stretch, bool DisableBitmaps, bool AutoHint, bool MIPMaps) settings;
         lock (FontGate)
         {
             ThrowIfDisposed(); fixedSize = _fixedSize; scaleMode = _fixedScaleMode; bytes = (byte[])_bytes.Clone(); features = new(_featureOverrides, StringComparer.Ordinal); deferred = _deferred;
             cacheSnapshot = SaveCaches(); support = _fontData!.SupportPolicy;
             var data = _fontData!;
             settings = (data.Hinting, data.SubpixelPositioning, data.KeepRoundingRemainders, data.Oversampling,
-                data.ModulateColorGlyphs, data.AllowSystemFallback, data.FamilyName, data.StyleName, data.FontStyle, data.FontWeight, data.FontStretch);
+                data.ModulateColorGlyphs, data.AllowSystemFallback, data.FamilyName, data.StyleName, data.FontStyle, data.FontWeight, data.FontStretch, data.DisableEmbeddedBitmaps, data.ForceAutohinter, data.GenerateMIPMaps);
         }
         var compiledFeatures = CompileFeatures(features);
         var replacement = deferred ? new FontData([]) : CreateData(bytes);
@@ -321,7 +321,7 @@ public partial class FontFile : Font
         {
             replacement.Hinting = settings.Hinting; replacement.SubpixelPositioning = settings.Subpixel;
             replacement.KeepRoundingRemainders = settings.Remainders; replacement.Oversampling = settings.Oversampling;
-            replacement.ModulateColorGlyphs = settings.Modulate; replacement.AllowSystemFallback = settings.SystemFallback; replacement.SupportPolicy = support; replacement.OpenTypeFeatures = compiledFeatures;
+            replacement.ModulateColorGlyphs = settings.Modulate; replacement.AllowSystemFallback = settings.SystemFallback; replacement.DisableEmbeddedBitmaps = settings.DisableBitmaps; replacement.ForceAutohinter = settings.AutoHint; replacement.GenerateMIPMaps = settings.MIPMaps; replacement.SupportPolicy = support; replacement.OpenTypeFeatures = compiledFeatures;
             replacement.FamilyName = settings.Name; replacement.StyleName = settings.Style; replacement.FontStyle = settings.Flags;
             replacement.FontWeight = settings.Weight; replacement.FontStretch = settings.Stretch;
             base.CopyCustomStateTo(target, deep, subresourceMode, duplicateSubresource, forceDuplicateSubresource);

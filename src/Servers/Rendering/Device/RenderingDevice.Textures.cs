@@ -134,7 +134,7 @@ public sealed unsafe partial class RenderingDevice
     {
         IdleList(); ArgumentNullException.ThrowIfNull(format); ArgumentNullException.ThrowIfNull(view);
         var shareable = format.ShareableFormats;
-        var kind = format.TextureType; var layers = format.ArrayLayers; var width = format.Width; var height = format.Height; var mips = format.Mipmaps; var pixelFormat = format.Format; var usage = format.UsageBits;
+        var kind = format.TextureType; var layers = format.ArrayLayers; var width = format.Width; var height = format.Height; var mips = format.MIPMaps; var pixelFormat = format.Format; var usage = format.UsageBits;
         if (kind == TextureType.Texture && layers != 1) throw new ArgumentException("An ordinary image has one layer.", nameof(format));
         if (mips > 1 + System.Numerics.BitOperations.Log2(Math.Max(width, height))) throw new ArgumentException("The mip count exceeds this image.", nameof(format));
 
@@ -284,7 +284,7 @@ public sealed unsafe partial class RenderingDevice
     public RDTextureFormat TextureGetFormat(RID texture)
     {
         var info = Get(texture, Kind.Texture).Texture!;
-        var result = new RDTextureFormat { Width = info.Width, Height = info.Height, ArrayLayers = info.Layers, Mipmaps = info.Mips, TextureType = info.Type, Format = info.Format, UsageBits = info.Usage, Samples = info.Samples, IsResolveBuffer = info.Resolve };
+        var result = new RDTextureFormat { Width = info.Width, Height = info.Height, ArrayLayers = info.Layers, MIPMaps = info.Mips, TextureType = info.Type, Format = info.Format, UsageBits = info.Usage, Samples = info.Samples, IsResolveBuffer = info.Resolve };
         foreach (var format in info.Shareable) result.AddShareableFormat(format);
         return result;
     }
@@ -298,7 +298,7 @@ public sealed unsafe partial class RenderingDevice
         static SDL.GPUSamplerAddressMode Address(SamplerRepeatMode mode) => mode switch { SamplerRepeatMode.Repeat => SDL.GPUSamplerAddressMode.Repeat, SamplerRepeatMode.MirroredRepeat => SDL.GPUSamplerAddressMode.MirroredRepeat, SamplerRepeatMode.ClampToEdge => SDL.GPUSamplerAddressMode.ClampToEdge, _ => throw new NotSupportedException("The native sampler has no border/mirror-clamp mode.") };
         if (state.MinLOD < 0 || state.MaxLOD < state.MinLOD) throw new ArgumentException("Invalid sampler LOD interval.", nameof(state));
         if (state.LODBias != 0 && SDL.GetGPUDeviceDriver(Device) == "metal") throw new NotSupportedException("This backend requires shader-applied LOD bias.");
-        var info = new SDL.GPUSamplerCreateInfo { MinFilter = (SDL.GPUFilter)state.MinFilter, MagFilter = (SDL.GPUFilter)state.MagFilter, MipmapMode = (SDL.GPUSamplerMipmapMode)state.MipFilter, AddressModeU = Address(state.RepeatU), AddressModeV = Address(state.RepeatV), AddressModeW = SDL.GPUSamplerAddressMode.ClampToEdge, MipLodBias = state.LODBias, MaxAnisotropy = state.AnisotropyMax, EnableAnisotropy = state.UseAnisotropy, MinLod = state.MinLOD, MaxLod = state.MaxLOD, EnableCompare = state.EnableCompare, CompareOp = Compare(state.CompareOp) };
-        return Add(new Entry { Kind = Kind.Sampler, CompareSampling = state.EnableCompare, LinearSampling = state.MinFilter == SamplerFilter.Linear || state.MagFilter == SamplerFilter.Linear || state.MipFilter == SamplerFilter.Linear || state.UseAnisotropy, Handle = new(SDL.CreateGPUSampler(Device, info), h => SDL.ReleaseGPUSampler(Device, h), _context.Handle) });
+        var info = new SDL.GPUSamplerCreateInfo { MinFilter = (SDL.GPUFilter)state.MinFilter, MagFilter = (SDL.GPUFilter)state.MagFilter, MipmapMode = (SDL.GPUSamplerMipmapMode)state.MIPFilter, AddressModeU = Address(state.RepeatU), AddressModeV = Address(state.RepeatV), AddressModeW = SDL.GPUSamplerAddressMode.ClampToEdge, MipLodBias = state.LODBias, MaxAnisotropy = state.AnisotropyMax, EnableAnisotropy = state.UseAnisotropy, MinLod = state.MinLOD, MaxLod = state.MaxLOD, EnableCompare = state.EnableCompare, CompareOp = Compare(state.CompareOp) };
+        return Add(new Entry { Kind = Kind.Sampler, CompareSampling = state.EnableCompare, LinearSampling = state.MinFilter == SamplerFilter.Linear || state.MagFilter == SamplerFilter.Linear || state.MIPFilter == SamplerFilter.Linear || state.UseAnisotropy, Handle = new(SDL.CreateGPUSampler(Device, info), h => SDL.ReleaseGPUSampler(Device, h), _context.Handle) });
     }
 }

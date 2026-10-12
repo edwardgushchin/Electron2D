@@ -1304,3 +1304,5 @@ now checks actual space ownership/failure for tree-less scene attachments while
 retaining numerical authored reads and cleanup. The shared CPU/GPU/registered
 consumer exercises every collider role and 128 full scalar-read frames at 0/0
 managed bytes. Complete geometry/disable and final acceptance remain open.
+
+Native font policies extend FontFile/SystemFont, FontData/FontVariation and authored/generated FontCachePage ownership. Versioned cache decoding, real native strike/autohinter pixels and MIP publication are tracked by [the text component](components/text.md#native-raster-policy-verification).

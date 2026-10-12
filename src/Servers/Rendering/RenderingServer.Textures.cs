@@ -122,7 +122,7 @@ public sealed partial class RenderingServer
         if (target.IsProxy) throw new InvalidOperationException("Update the source pixels of a proxy texture.");
         var pixels = TexturePixels.FromImage(image);
         var old = target.Pixels.Source; var next = pixels.Source;
-        if (old.Width != next.Width || old.Height != next.Height || old.Format != next.Format || old.HasMipmaps != next.HasMipmaps)
+        if (old.Width != next.Width || old.Height != next.Height || old.Format != next.Format || old.HasMIPMaps != next.HasMIPMaps)
             throw new ArgumentException("Texture updates require matching dimensions, format and mipmap state.", nameof(image));
         pixels.Allocation = target.Pixels.Allocation;
         target.Pixels = pixels;

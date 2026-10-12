@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 **Inherits:** [ProjectSettingsRegistry](ProjectSettingsRegistry.md)
 
@@ -69,7 +69,7 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<int> WorkerPoolMaxPendingTasks { get; }`](#workerpoolmaxpendingtasks) | Positive startup preparation capacity, default 1024 pending regular/group records. |
 | [`public static ProjectSetting<bool> SnapTransformsToPixel { get; }`](#snaptransformstopixel) | Initial transform snapping for a new root Window; false. |
 | [`public static ProjectSetting<bool> SnapVerticesToPixel { get; }`](#snapverticestopixel) | Initial vertex snapping for a new root Window; false. |
-| [`public static ProjectSetting<bool> UseNearestMipmapFilter { get; }`](#usenearestmipmapfilter) | Selects canvas mip interpolation at GPU startup; false by default. |
+| [`public static ProjectSetting<bool> UseNearestMIPMapFilter { get; }`](#usenearestmipmapfilter) | Selects canvas mip interpolation at GPU startup; false by default. |
 | [`public static ProjectSetting<int> AnisotropicFilteringLevel { get; }`](#anisotropicfilteringlevel) | Initializes new viewports; exponent 0..4, default 2. |
 | [`public static ProjectSetting<Color> DefaultClearColor { get; }`](#p-electron2d-projectsettings-defaultclearcolor) | Defines the initial root-framebuffer clear color. |
 | [`public static ProjectSetting<string> LocaleTest { get; }`](#localetest) | Optional startup locale override; empty by default. |
@@ -256,9 +256,9 @@ Defines `rendering/2d/snap/snap_2d_transforms_to_pixel`, default false. New Wind
 
 Defines `rendering/2d/snap/snap_2d_vertices_to_pixel`, default false. Construction and override timing match SnapTransformsToPixel. Controls final primitive vertices independently of transform rounding.
 
-### UseNearestMipmapFilter
+### UseNearestMIPMapFilter
 
-`public static ProjectSetting<bool> UseNearestMipmapFilter { get; }`
+`public static ProjectSetting<bool> UseNearestMIPMapFilter { get; }`
 
 Defines `rendering/textures/default_filters/use_nearest_mipmap_filter`, default false. The GPU renderer reads the active feature override on construction: false linearly interpolates mip levels for canvas samplers, true chooses the nearest mip. Changes apply to the next renderer run. Non-mipmap filters remain restricted to level zero. Named material samplers use fixed linear filtering and remain restricted to level zero, so this setting does not change their output.
 

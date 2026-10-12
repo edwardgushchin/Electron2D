@@ -134,7 +134,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         var size = output.Size; var screen = false;
         foreach (var batch in batches)
         {
-            if (batch.Mipmaps) throw new NotSupportedException("The compatibility renderer cannot generate canvas backbuffer mipmaps.");
+            if (batch.MIPMaps) throw new NotSupportedException("The compatibility renderer cannot generate canvas backbuffer mipmaps.");
             screen |= batch.Operation != CanvasOperation.Draw;
         }
         if (screen) _ = BackBuffer(output, false);

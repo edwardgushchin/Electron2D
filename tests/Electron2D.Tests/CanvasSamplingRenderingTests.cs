@@ -89,7 +89,7 @@ internal static partial class RenderingRuntimeTests
         var data = image.GetData();
         for (var i = 0; i < data.Length; i += 4)
         {
-            data[i + (i < image.GetMipmapOffset(1) ? 0 : i < image.GetMipmapOffset(2) ? 1 : 2)] = 255;
+            data[i + (i < image.GetMIPMapOffset(1) ? 0 : i < image.GetMIPMapOffset(2) ? 1 : 2)] = 255;
             data[i + 3] = 255;
         }
         using var levels = Image.CreateFromData(4, 4, true, Image.Format.Rgba8, data);
@@ -114,12 +114,12 @@ internal static partial class RenderingRuntimeTests
             return;
         }
         var settings = ProjectSettings.Service;
-        var original = ProjectSettings.Get(ProjectSettings.UseNearestMipmapFilter);
+        var original = ProjectSettings.Get(ProjectSettings.UseNearestMIPMapFilter);
         try
         {
             foreach (var nearestMip in new[] { false, true })
             {
-                ProjectSettings.Set(ProjectSettings.UseNearestMipmapFilter, nearestMip);
+                ProjectSettings.Set(ProjectSettings.UseNearestMIPMapFilter, nearestMip);
                 var window = new Window { Size = new(80, 64) };
                 var node = new CanvasNode
                 {
@@ -155,7 +155,7 @@ internal static partial class RenderingRuntimeTests
                 Check(frames == 6, "All six concrete GPU filter modes execute with both mip interpolation settings.");
             }
         }
-        finally { ProjectSettings.Set(ProjectSettings.UseNearestMipmapFilter, original); }
+        finally { ProjectSettings.Set(ProjectSettings.UseNearestMIPMapFilter, original); }
         VerifyCanvasAnisotropy();
         Console.WriteLine("GPU mipmap and anisotropy checks passed.");
     }
@@ -165,7 +165,7 @@ internal static partial class RenderingRuntimeTests
         using var image = Image.CreateEmpty(64, 64, false, Image.Format.Rgba8);
         for (var y = 0; y < 64; y++)
             for (var x = 0; x < 64; x++) image.SetPixel(x, y, x % 4 < 2 ? Colors.Red : Colors.Blue);
-        image.GenerateMipmaps();
+        image.GenerateMIPMaps();
         using var texture = ImageTexture.CreateFromImage(image);
         var window = new Window { Size = new(96, 64), AnisotropicFilteringLevel = Viewport.AnisotropicFiltering.Disabled };
         var frames = 0; var initial = 0f; var final = 0f;

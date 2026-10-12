@@ -1,6 +1,6 @@
 # AtlasTexture
 
-Last updated: 2026-10-01
+Last updated: 2026-10-12
 
 - Declaration: `public sealed class AtlasTexture : Texture`
 - Source: [AtlasTexture.cs](../../src/Scene/Resources/AtlasTexture.cs)
@@ -45,8 +45,8 @@ This constructs resources and a detached node; scene attachment uses the normal 
 | `override Vector2 GetSize()` | Dimensions from one serialized traversal. |
 | `override bool HasAlpha { get; }` | Source alpha capability, false without a source. |
 | `override Image.Format PixelFormat { get; }` | Image.Format.Max: the view has no own pixel format. |
-| `override bool HasMipmaps { get; }` | False for the view. |
-| `override int MipmapCount { get; }` | Zero for the view. |
+| `override bool HasMIPMaps { get; }` | False for the view. |
+| `override int MIPMapCount { get; }` | Zero for the view. |
 | `override Image? GetImage()` | Independent cropped image without margin padding. |
 | `override bool IsPixelOpaque(int x, int y)` | Translated alpha query within full source bounds. |
 | `override void Draw(CanvasItem canvasItem, Vector2 position, Color? modulate = null, bool transpose = false)` | Draw at effective region size with margin offset. |
@@ -81,13 +81,13 @@ Delegates to the immediate source's virtual HasAlpha, or false for null. The oth
 
 Returns Image.Format.Max, the unspecified-format sentinel, because the view has no own image storage. Query the source or returned Image for its actual format. This does not limit the formats the renderer samples.
 
-### HasMipmaps
+### HasMIPMaps
 
 Always false for the view, even when its source has mipmaps. Drawing and material binding retain the source's full mip chain, subject to the selected backend/sampler capability.
 
-### MipmapCount
+### MIPMapCount
 
-Always zero for the view. Query Atlas.MipmapCount for the immediate source's metadata. All three metadata overrides validate view lifetime and throw after disposal.
+Always zero for the view. Query Atlas.MIPMapCount for the immediate source's metadata. All three metadata overrides validate view lifetime and throw after disposal.
 
 ## Method descriptions
 

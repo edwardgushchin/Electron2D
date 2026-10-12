@@ -51,7 +51,7 @@ public abstract partial class CanvasItem
     /// <summary>Gets or sets filtering for this item's built-in texture sampler.</summary>
     /// <value>ParentNode by default. Neutral parents and TopLevel end canvas inheritance.</value>
     /// <remarks>An actual change requests redraw for attached inheriting canvas descendants, then raises PropertyListChanged
-    /// on this item. Detached changes take effect on tree entry. Mipmaps and anisotropy require GPU rendering;
+    /// on this item. Detached changes take effect on tree entry. MIPMaps and anisotropy require GPU rendering;
     /// the software compatibility driver also rejects linear filtering. Images without mipmaps use their sole level. Arbitrary material texture parameters retain their own sampler contract.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The enum value is invalid or Max.</exception>
     /// <exception cref="InvalidOperationException">An attached item is mutated off the owner thread or during capture.</exception>

@@ -1,6 +1,6 @@
 # PlaceholderTextureLayered
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 - Source: [PlaceholderTextureLayered.cs](../../src/Scene/Resources/PlaceholderTextureLayered.cs)
 - Component: [Array resources](../components/texture-arrays.md)
@@ -42,7 +42,7 @@ using var metadata = new PlaceholderTextureArray { Size = new(128, 64), Layers =
 | [`public override System.Int32 GetLayers()`](#member-6672e242a3b9) | method |  |
 | [`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`](#member-08596db36340) | method |  |
 | [`public override System.Int32 GetWidth()`](#member-71790f98070c) | method |  |
-| [`public override System.Boolean HasMipmaps()`](#member-757e3252211c) | method |  |
+| [`public override System.Boolean HasMIPMaps()`](#member-757e3252211c) | method |  |
 | [`public System.Int32 Layers { get; set; }`](#member-cab5ad3d95b2) | property | Gets or replaces the authored layer count, without allocating images or notifying Changed. |
 | [`public Electron2D.Vector2i Size { get; set; }`](#member-5a5a4fc5f349) | property | Gets or replaces authored dimensions in pixels, without allocating images. |
 
@@ -125,12 +125,12 @@ public override System.Int32 GetWidth()
 ```
 
 <a id="member-757e3252211c"></a>
-### `HasMipmaps()`
+### `HasMIPMaps()`
 
 Kind: `method`
 
 ```csharp
-public override System.Boolean HasMipmaps()
+public override System.Boolean HasMIPMaps()
 ```
 
 <a id="member-cab5ad3d95b2"></a>

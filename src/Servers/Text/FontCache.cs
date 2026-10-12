@@ -16,10 +16,10 @@ internal sealed class FontCache
         foreach (var pair in Instance.Coordinates) if (!value.Coordinates.TryGetValue(pair.Key, out var coordinate) || coordinate != pair.Value) return false;
         return true;
     }
-    internal FontCache Clone()
+    internal FontCache Clone(bool discardGenerated = false)
     {
         var copy = new FontCache { Instance = Instance with { Coordinates = new(Instance.Coordinates), CustomColors = (Color[])Instance.CustomColors.Clone() }, Spacing = (int[])Spacing.Clone(), FixedSize = FixedSize, ScaleMode = ScaleMode };
-        foreach (var pair in Sizes) copy.Sizes.Add(pair.Key, pair.Value.Clone());
+        foreach (var pair in Sizes) copy.Sizes.Add(pair.Key, pair.Value.Clone(discardGenerated));
         return copy;
     }
     internal FontCacheSize Size(Vector2i key)
@@ -52,30 +52,37 @@ internal sealed class FontCacheSize
     internal readonly Dictionary<uint, FontCacheGlyph> Glyphs = [];
     internal readonly Dictionary<Vector2i, Vector2> Kerning = [];
     internal readonly List<FontCachePage?> Pages = [];
-    internal FontCacheSize Clone()
+    internal FontCacheSize Clone(bool discardGenerated = false)
     {
         var copy = new FontCacheSize { Metrics = (float[])Metrics.Clone(), Scale = Scale };
         foreach (var p in Advances) copy.Advances.Add(p.Key, p.Value);
-        foreach (var p in Glyphs) copy.Glyphs.Add(p.Key, p.Value);
+        foreach (var p in Glyphs) if (!discardGenerated || p.Value.Authored) copy.Glyphs.Add(p.Key, p.Value);
         foreach (var p in Kerning) copy.Kerning.Add(p.Key, p.Value);
-        foreach (var page in Pages) copy.Pages.Add(page?.Clone());
+        for (var index = 0; index < Pages.Count; index++)
+        {
+            var page = Pages[index];
+            copy.Pages.Add(discardGenerated && page?.Authored == false && !copy.Glyphs.Values.Any(glyph => glyph.Page == index) ? null : page?.Clone());
+        }
+        while (copy.Pages.Count > 0 && copy.Pages[^1] == null) copy.Pages.RemoveAt(copy.Pages.Count - 1);
         return copy;
     }
 }
 internal readonly record struct FontCacheGlyph(Vector2 Offset, Vector2 Size, Rect2 Region, int Page = -1, bool Colored = false, bool Authored = true);
-internal sealed class FontCachePage(int width, int height, byte[] rgba, int[] offsets)
+internal sealed class FontCachePage(int width, int height, byte[] rgba, int[] offsets, bool authored = true)
 {
     internal readonly int Width = width, Height = height;
+    internal readonly bool Authored = authored;
+    internal bool AllowPacking = !authored;
     internal readonly byte[] Pixels = rgba;
     internal int[] Offsets = offsets;
     private ImageTexture? _texture;
     internal ImageTexture? RealizedTexture => _texture;
-    internal FontCachePage Clone() => new(Width, Height, Pixels, (int[])Offsets.Clone());
+    internal FontCachePage Clone() => new(Width, Height, Pixels, (int[])Offsets.Clone(), Authored) { AllowPacking = AllowPacking };
     internal Image Image() => global::Electron2D.Image.CreateFromData(Width, Height, false, global::Electron2D.Image.Format.Rgba8, Pixels);
-    internal ImageTexture Texture()
+    internal ImageTexture Texture(bool mipmaps = false)
     {
         if (_texture != null) return _texture;
-        using var image = Image(); _texture = ImageTexture.CreateFromImage(image); _texture.RetainRendererCache = true; return _texture;
+        using var image = Image(); if (mipmaps) image.GenerateMIPMaps(); _texture = ImageTexture.CreateFromImage(image); _texture.RetainRendererCache = true; return _texture;
     }
     internal void Retire() { if (_texture != null) _texture.RetainRendererCache = false; }
 }

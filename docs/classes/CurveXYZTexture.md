@@ -1,6 +1,6 @@
 # CurveXYZTexture
 
-Last updated: 2026-09-23
+Last updated: 2026-10-12
 
 - Declaration: `public sealed class CurveXYZTexture : Texture`
 - Source: [CurveXYZTexture.cs](../../src/Scene/Resources/CurveXYZTexture.cs)
@@ -38,7 +38,7 @@ The shared-channel case executes in CurveTextureTests. Materials and atlas views
 | `override int GetHeight()` | One. |
 | `override Image? GetImage()` | Caller-owned RGBF image, or null before initialization. |
 
-GetSize, metadata, drawing and material binding are inherited. ResourceLocalToScene defaults to false; there is no storage-mode property. Before initialization PixelFormat is L8, afterward Rgbf; HasAlpha/HasMipmaps are false, MipmapCount zero, and IsPixelOpaque true.
+GetSize, metadata, drawing and material binding are inherited. ResourceLocalToScene defaults to false; there is no storage-mode property. Before initialization PixelFormat is L8, afterward Rgbf; HasAlpha/HasMIPMaps are false, MIPMapCount zero, and IsPixelOpaque true.
 
 ## Property descriptions
 

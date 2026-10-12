@@ -67,7 +67,7 @@ public sealed class ImageTexture : Texture
             if (_pixels is null) throw new InvalidOperationException("Initialize the texture before updating it.");
             var old = _pixels.Source;
             var current = pixels.Source;
-            if (old.Width != current.Width || old.Height != current.Height || old.Format != current.Format || old.HasMipmaps != current.HasMipmaps)
+            if (old.Width != current.Width || old.Height != current.Height || old.Format != current.Format || old.HasMIPMaps != current.HasMIPMaps)
                 throw new ArgumentException("Texture updates require matching pixel dimensions, format and mipmap configuration.", nameof(image));
             pixels.Allocation = _pixels.Allocation;
             _pixels = pixels;

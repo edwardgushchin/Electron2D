@@ -1,6 +1,6 @@
 # FontCacheSize
 
-Last updated: 2026-10-07
+Last updated: 2026-10-12
 
 **Visibility:** internal · **Source:** [FontCache.cs](../../src/Servers/Text/FontCache.cs) · **Component:** [Bitmap fonts](../components/bitmap-fonts.md)
 
@@ -11,3 +11,7 @@ Owns four optional metric overrides, positive scale, glyph geometry, advance/ker
 ## Integration and verification
 
 [FontCacheTests](../../tests/Electron2D.Tests/FontCacheTests.cs) exercises authored/dynamic/import/packing/rollback/storage and prepared native rendering on current Linux GPU/compatibility. Native allocator counts and foreign execution remain unverified. [ADR 0046](../decisions/rendering.md#adr-0046) owns the integration.
+
+## Authored and generated page ownership
+
+Font-cache version two stores explicit authored-page ownership and native packing permission; version one conservatively treats decoded pages as authored. Raster-policy publication discards generated records and unreferenced automatic pages while preserving authored images and glyph references. Native packing uses separate/reusable automatic slots for protected authored glyph content and continues to honor explicitly supplied free shelf metadata. MIP generation occurs when an owned texture is realized; immutable source pixels and retired recorded snapshots remain valid. FontRasterPolicyTests covers mixed-page switching, legacy decoding and corrupt ownership rejection.

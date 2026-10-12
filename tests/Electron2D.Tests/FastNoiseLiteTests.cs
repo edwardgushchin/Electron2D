@@ -69,7 +69,7 @@ internal static class FastNoiseLiteTests
         Check(copy.GetNoise2D(12.5f, -7.25f) != noise.GetNoise2D(12.5f, -7.25f), "Copied generators are independent.");
         copy.CopyFromResource(noise);
         Near(copy.GetNoise2D(12.5f, -7.25f), noise.GetNoise2D(12.5f, -7.25f), "Resource copying restores the exact noise configuration.");
-        using var texture = new NoiseTexture { Noise = noise, Width = 8, Height = 8, GenerateMipmaps = false };
+        using var texture = new NoiseTexture { Noise = noise, Width = 8, Height = 8, GenerateMIPMaps = false };
         using var image = texture.GetImage();
         Check(image is not null && image.GetData().Distinct().Count() > 1, "The built-in generator feeds a concrete noise texture.");
         noise.Seed = 42;

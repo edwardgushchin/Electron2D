@@ -7,7 +7,7 @@ internal static class RenderingDeviceDepthTests
 {
     private static RID Image(RenderingDevice device, DataFormat format, TextureUsageBits usage, uint layers = 1, uint mips = 1)
     {
-        using var description = new RDTextureFormat { Width = 16, Height = 16, Format = format, UsageBits = usage, TextureType = layers == 1 ? TextureType.Texture : TextureType.TextureArray, ArrayLayers = layers, Mipmaps = mips };
+        using var description = new RDTextureFormat { Width = 16, Height = 16, Format = format, UsageBits = usage, TextureType = layers == 1 ? TextureType.Texture : TextureType.TextureArray, ArrayLayers = layers, MIPMaps = mips };
         using var view = new RDTextureView(); return device.TextureCreate(description, view);
     }
     internal static void Run()

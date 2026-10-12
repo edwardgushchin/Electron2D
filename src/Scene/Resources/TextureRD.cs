@@ -38,9 +38,9 @@ public sealed class TextureRD : Texture
     /// <inheritdoc />
     public override bool HasAlpha { get { ThrowIfDisposed(); return false; } }
     /// <inheritdoc />
-    public override bool HasMipmaps => DeviceInfo?.Mips > 1;
+    public override bool HasMIPMaps => DeviceInfo?.Mips > 1;
     /// <inheritdoc />
-    public override int MipmapCount => (int)(DeviceInfo?.Mips ?? 1) - 1;
+    public override int MIPMapCount => (int)(DeviceInfo?.Mips ?? 1) - 1;
     /// <summary>Returns an independent encoded image snapshot, or null for an unbound/unreadable source.</summary>
     /// <returns>A caller-owned image containing all readable mip levels; integer sources use raw component values in float32 RGBA.</returns>
     /// <remarks>This cold readback synchronizes pending device work. Formats without a direct Image representation

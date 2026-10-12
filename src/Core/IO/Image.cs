@@ -24,7 +24,7 @@ public sealed partial class Image : Resource
         new PropertyDescriptor<Image, int>(nameof(Height), image => image.Height),
         new PropertyDescriptor<Image, Vector2i>(nameof(Size), image => image.Size),
         new PropertyDescriptor<Image, Format>(nameof(PixelFormat), image => image.PixelFormat),
-        new PropertyDescriptor<Image, bool>(nameof(HasMipmaps), image => image.HasMipmaps),
+        new PropertyDescriptor<Image, bool>(nameof(HasMIPMaps), image => image.HasMIPMaps),
         new PropertyDescriptor<Image, int>(nameof(DataSize), image => image.DataSize),
     ]);
 
@@ -245,12 +245,12 @@ public sealed partial class Image : Resource
     /// <summary>Gets whether lower-resolution mip levels follow the base level in the raw buffer.</summary>
     /// <value><see langword="true"/> only when at least one complete mip level is stored.</value>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
-    public bool HasMipmaps => Read(state => state.HasMipmaps);
+    public bool HasMIPMaps => Read(state => state.HasMIPMaps);
 
     /// <summary>Gets the number of stored mip levels excluding the base level.</summary>
     /// <value>Zero when mipmaps are absent or the image is empty.</value>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
-    public int MipmapCount => Read(state => GetRequiredMipmapCount(state.Width, state.Height, state.HasMipmaps));
+    public int MIPMapCount => Read(state => GetRequiredMIPMapCount(state.Width, state.Height, state.HasMIPMaps));
 
     /// <summary>Gets the number of bytes in the complete raw image buffer.</summary>
     /// <value>Zero for an empty image; otherwise the base level and every mip level in bytes.</value>
@@ -278,7 +278,7 @@ public sealed partial class Image : Resource
     {
         var length = GetRequiredDataSize(width, height, format, useMipmaps);
         var image = new Image();
-        image.SetStateWithoutNotification(new State(width, height, format, useMipmaps && GetRequiredMipmapCount(width, height, true) != 0, new byte[length]));
+        image.SetStateWithoutNotification(new State(width, height, format, useMipmaps && GetRequiredMIPMapCount(width, height, true) != 0, new byte[length]));
         return image;
     }
 
@@ -311,7 +311,7 @@ public sealed partial class Image : Resource
             throw new ArgumentException($"Image data contains {data.Length} bytes; {expected} bytes are required.", nameof(data));
 
         var image = new Image();
-        image.SetStateWithoutNotification(new State(width, height, format, useMipmaps && GetRequiredMipmapCount(width, height, true) != 0, (byte[])data.Clone()));
+        image.SetStateWithoutNotification(new State(width, height, format, useMipmaps && GetRequiredMIPMapCount(width, height, true) != 0, (byte[])data.Clone()));
         return image;
     }
 
@@ -334,7 +334,7 @@ public sealed partial class Image : Resource
         if (data.Length != expected)
             throw new ArgumentException($"Image data contains {data.Length} bytes; {expected} bytes are required.", nameof(data));
 
-        Commit(new State(width, height, format, useMipmaps && GetRequiredMipmapCount(width, height, true) != 0, (byte[])data.Clone()));
+        Commit(new State(width, height, format, useMipmaps && GetRequiredMIPMapCount(width, height, true) != 0, (byte[])data.Clone()));
     }
 
     /// <summary>Returns an independent copy of the complete raw image buffer.</summary>
@@ -348,13 +348,13 @@ public sealed partial class Image : Resource
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="mipmap"/> does not identify a stored level.</exception>
     /// <exception cref="InvalidOperationException">The image is empty.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
-    public int GetMipmapOffset(int mipmap)
+    public int GetMIPMapOffset(int mipmap)
     {
         var state = Snapshot();
         if (state.Data.Length == 0)
             throw new InvalidOperationException("An empty image has no mip levels.");
 
-        var count = GetRequiredMipmapCount(state.Width, state.Height, state.HasMipmaps);
+        var count = GetRequiredMIPMapCount(state.Width, state.Height, state.HasMIPMaps);
         if ((uint)mipmap > (uint)count)
             throw new ArgumentOutOfRangeException(nameof(mipmap));
 
@@ -404,7 +404,7 @@ public sealed partial class Image : Resource
     public Color GetPixel(Vector2i point) => GetPixel(point.X, point.Y);
 
     /// <summary>Stores a color at a base-level pixel coordinate.</summary>
-    /// <remarks>Existing mip levels are not regenerated; call <see cref="GenerateMipmaps(bool)"/> after a batch of pixel edits when they must reflect the base level.</remarks>
+    /// <remarks>Existing mip levels are not regenerated; call <see cref="GenerateMIPMaps(bool)"/> after a batch of pixel edits when they must reflect the base level.</remarks>
     /// <param name="x">The zero-based horizontal coordinate.</param>
     /// <param name="y">The zero-based vertical coordinate.</param>
     /// <param name="color">The color to encode in the current format.</param>
@@ -430,7 +430,7 @@ public sealed partial class Image : Resource
     }
 
     /// <summary>Stores a color at a base-level pixel coordinate.</summary>
-    /// <remarks>Existing mip levels are not regenerated; call <see cref="GenerateMipmaps(bool)"/> after a batch of pixel edits when they must reflect the base level.</remarks>
+    /// <remarks>Existing mip levels are not regenerated; call <see cref="GenerateMIPMaps(bool)"/> after a batch of pixel edits when they must reflect the base level.</remarks>
     /// <param name="point">The zero-based pixel coordinate.</param>
     /// <param name="color">The color to encode in the current format.</param>
     /// <exception cref="ArgumentOutOfRangeException">The coordinate lies outside the base image.</exception>
@@ -456,7 +456,7 @@ public sealed partial class Image : Resource
         if (state.Data.Length == 0)
             image.SetStateWithoutNotification(state);
         else
-            image.SetData(state.Width, state.Height, state.HasMipmaps, state.Format, state.Data);
+            image.SetData(state.Width, state.Height, state.HasMIPMaps, state.Format, state.Data);
     }
 
     /// <inheritdoc />
@@ -517,7 +517,7 @@ public sealed partial class Image : Resource
             {
                 bytes += (long)w * h * pixelBytes;
                 if (bytes > maximumBytes) throw new ArgumentException("Texture array source and upload pixels exceed their bounded storage.");
-                if (!state.HasMipmaps || w <= 1 && h <= 1) break;
+                if (!state.HasMIPMaps || w <= 1 && h <= 1) break;
             }
             return CaptureState(copyData: true);
         }
@@ -547,7 +547,7 @@ public sealed partial class Image : Resource
             _width = state.Width;
             _height = state.Height;
             _format = state.Format;
-            _hasMipmaps = state.HasMipmaps;
+            _hasMipmaps = state.HasMIPMaps;
             _data = state.Data;
         }
     }
@@ -586,7 +586,7 @@ public sealed partial class Image : Resource
         return (int)size;
     }
 
-    private static int GetRequiredMipmapCount(int width, int height, bool mipmaps)
+    private static int GetRequiredMIPMapCount(int width, int height, bool mipmaps)
     {
         if (!mipmaps || width == 0 || height == 0)
             return 0;
@@ -900,7 +900,7 @@ public sealed partial class Image : Resource
         return exponentBits | (b << 18) | (g << 9) | (r & 511u);
     }
 
-    internal readonly record struct State(int Width, int Height, Format Format, bool HasMipmaps, byte[] Data);
+    internal readonly record struct State(int Width, int Height, Format Format, bool HasMIPMaps, byte[] Data);
 
     private readonly record struct Level(int Offset, int Length, int Width, int Height);
 }

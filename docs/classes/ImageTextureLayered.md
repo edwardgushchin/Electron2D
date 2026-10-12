@@ -1,6 +1,6 @@
 # ImageTextureLayered
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 - Source: [ImageTextureLayered.cs](../../src/Scene/Resources/ImageTextureLayered.cs)
 - Component: [Array resources](../components/texture-arrays.md)
@@ -48,7 +48,7 @@ using var copy = layers.GetLayerData(1); // Caller-owned pixels.
 | [`public override Electron2D.Image GetLayerData(System.Int32 layerIndex)`](#member-3c90a5a2b4de) | method |  |
 | [`public override System.Int32 GetLayers()`](#member-80b476c8e6b1) | method |  |
 | [`public override System.Int32 GetWidth()`](#member-eeb3050e34ca) | method |  |
-| [`public override System.Boolean HasMipmaps()`](#member-2701c5692b1e) | method |  |
+| [`public override System.Boolean HasMIPMaps()`](#member-2701c5692b1e) | method |  |
 | [`public System.Void UpdateLayer(Electron2D.Image image, System.Int32 layer)`](#member-7cd6a0f67ea5) | method | Replaces one layer while retaining all allocation parameters. |
 
 ## Member Details
@@ -157,12 +157,12 @@ public override System.Int32 GetWidth()
 ```
 
 <a id="member-2701c5692b1e"></a>
-### `HasMipmaps()`
+### `HasMIPMaps()`
 
 Kind: `method`
 
 ```csharp
-public override System.Boolean HasMipmaps()
+public override System.Boolean HasMIPMaps()
 ```
 
 <a id="member-7cd6a0f67ea5"></a>

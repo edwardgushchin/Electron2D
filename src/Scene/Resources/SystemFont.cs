@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>Resolves installed font families and styles into ordinary owned native text sources.</summary>
 /// <remarks>Unresolved names use the borrowed theme fallback. Matching and source loading are cold operations;
 /// prepared shaping/raster caches use the same Font and canvas paths. Runtime source paths are not stored in resource archives.</remarks>
-public class SystemFont : Font
+public partial class SystemFont : Font
 {
     private string[] _names = [];
     private int _weight = 400, _stretch = 100;
@@ -82,7 +82,7 @@ public class SystemFont : Font
             if (theme.PrimaryData is { } data) { _data = data.CreateVariation(new(0, [], 0, Transform.Identity, 0, 0, [])); Configure(_data); _data.AdvertisedFaceCount = 0; }
         }
     }
-    private void Configure(FontData data) { data.Hinting = _hinting; data.SubpixelPositioning = _subpixel; data.KeepRoundingRemainders = _remainders; data.ModulateColorGlyphs = _modulate; data.Oversampling = _oversampling; data.AllowSystemFallback = _allowSystemFallback; }
+    private void Configure(FontData data) { data.DisableEmbeddedBitmaps = _disableEmbeddedBitmaps; data.ForceAutohinter = _forceAutohinter; data.GenerateMIPMaps = _generateMipmaps; data.Hinting = _hinting; data.SubpixelPositioning = _subpixel; data.KeepRoundingRemainders = _remainders; data.ModulateColorGlyphs = _modulate; data.Oversampling = _oversampling; data.AllowSystemFallback = _allowSystemFallback; }
     private void Set<T>(ref T field, T value)
     {
         lock (FontGate) { ThrowIfDisposed(); if (EqualityComparer<T>.Default.Equals(field, value)) return; field = value; RetireLocked(); }
@@ -122,6 +122,7 @@ public class SystemFont : Font
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
     {
         foreach (var property in base.GetPropertyDescriptors()) yield return property;
+        foreach (var property in RasterProperties) yield return property;
         yield return new PropertyDescriptor<SystemFont, string[]>(nameof(FontNames), f => f.FontNames, (f, v) => f.FontNames = v, _ => [], stored: true);
         yield return new PropertyDescriptor<SystemFont, bool>(nameof(FontItalic), f => f.FontItalic, (f, v) => f.FontItalic = v, _ => false, stored: true);
         yield return new PropertyDescriptor<SystemFont, int>(nameof(FontWeight), f => f.FontWeight, (f, v) => f.FontWeight = v, _ => 400, stored: true);
@@ -138,7 +139,7 @@ public class SystemFont : Font
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
         var copy = (SystemFont)target;
-        copy.FontNames = FontNames; copy.FontItalic = FontItalic; copy.FontWeight = FontWeight; copy.FontStretch = FontStretch;
+        copy.DisableEmbeddedBitmaps = DisableEmbeddedBitmaps; copy.ForceAutohinter = ForceAutohinter; copy.GenerateMIPMaps = GenerateMIPMaps; copy.FontNames = FontNames; copy.FontItalic = FontItalic; copy.FontWeight = FontWeight; copy.FontStretch = FontStretch;
         copy.AllowSystemFallback = AllowSystemFallback; copy.Hinting = Hinting; copy.SubpixelPositioning = SubpixelPositioning;
         copy.KeepRoundingRemainders = KeepRoundingRemainders; copy.ModulateColorGlyphs = ModulateColorGlyphs; copy.Oversampling = Oversampling;
         base.CopyCustomStateTo(target, deep, subresourceMode, duplicateSubresource, forceDuplicateSubresource);
@@ -146,7 +147,7 @@ public class SystemFont : Font
     /// <inheritdoc />
     protected override void OnResetState()
     {
-        FontNames = []; FontItalic = false; FontWeight = 400; FontStretch = 100; AllowSystemFallback = true; Hinting = FontHinting.Light; SubpixelPositioning = FontSubpixelPositioning.Disabled; KeepRoundingRemainders = true; ModulateColorGlyphs = false; Oversampling = 0; base.OnResetState();
+        DisableEmbeddedBitmaps = true; ForceAutohinter = false; GenerateMIPMaps = false; FontNames = []; FontItalic = false; FontWeight = 400; FontStretch = 100; AllowSystemFallback = true; Hinting = FontHinting.Light; SubpixelPositioning = FontSubpixelPositioning.Disabled; KeepRoundingRemainders = true; ModulateColorGlyphs = false; Oversampling = 0; base.OnResetState();
     }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)

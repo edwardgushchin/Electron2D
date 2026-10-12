@@ -59,9 +59,9 @@ public sealed class ViewportTexture : Texture
     /// <inheritdoc />
     public override bool HasAlpha { get { ThrowIfDisposed(); return false; } }
     /// <inheritdoc />
-    public override bool HasMipmaps { get { ThrowIfDisposed(); return false; } }
+    public override bool HasMIPMaps { get { ThrowIfDisposed(); return false; } }
     /// <inheritdoc />
-    public override int MipmapCount { get { ThrowIfDisposed(); return 0; } }
+    public override int MIPMapCount { get { ThrowIfDisposed(); return 0; } }
     /// <summary>Copies the completed native image, or returns null before rendering or after target loss.</summary>
     /// <returns>A caller-owned RGBA8 image; null when no active completed target exists.</returns>
     /// <remarks>This explicit cold readback synchronizes native execution and allocates. It is not part of ordinary drawing.</remarks>

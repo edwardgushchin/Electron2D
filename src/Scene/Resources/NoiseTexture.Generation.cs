@@ -11,10 +11,10 @@ public sealed partial class NoiseTexture
     private GenerationWork? _pending;
 
     internal sealed class GenerationWork(NoiseTexture owner, SceneTree? tree,
-        (int Width, int Height, bool Mipmaps, bool Normalize, bool Seamless, bool Invert, bool Normal, float Skirt, float Strength, Noise? Noise, Gradient? Ramp, long Version) input, IDisposable? lease, FastNoiseLite? ownedNoise)
+        (int Width, int Height, bool MIPMaps, bool Normalize, bool Seamless, bool Invert, bool Normal, float Skirt, float Strength, Noise? Noise, Gradient? Ramp, long Version) input, IDisposable? lease, FastNoiseLite? ownedNoise)
     {
         internal readonly SceneTree? Tree = tree;
-        internal readonly (int Width, int Height, bool Mipmaps, bool Normalize, bool Seamless, bool Invert, bool Normal, float Skirt, float Strength, Noise? Noise, Gradient? Ramp, long Version) Input = input;
+        internal readonly (int Width, int Height, bool MIPMaps, bool Normalize, bool Seamless, bool Invert, bool Normal, float Skirt, float Strength, Noise? Noise, Gradient? Ramp, long Version) Input = input;
         private readonly IDisposable? _lease = lease;
         internal void Release() { try { Input.Ramp?.Dispose(); } finally { try { ownedNoise?.Dispose(); } finally { _lease?.Dispose(); } } }
         internal long TaskID;

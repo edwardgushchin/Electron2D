@@ -8,13 +8,13 @@ internal static partial class RenderingRuntimeTests
         image.Fill(Colors.Red); image.SetPixel(1, 0, Colors.Transparent);
         using var texture = ImageTexture.CreateFromImage(image);
         using var atlas = new AtlasTexture();
-        Check(atlas.GetSize() == Vector2.One && !atlas.HasAlpha && !atlas.HasMipmaps && atlas.GetImage() is null &&
+        Check(atlas.GetSize() == Vector2.One && !atlas.HasAlpha && !atlas.HasMIPMaps && atlas.GetImage() is null &&
             atlas.IsPixelOpaque(int.MaxValue, int.MinValue) && atlas.Region == default && atlas.Margin == default &&
-            !atlas.FilterClip && !atlas.ResourceLocalToScene && atlas.PixelFormat == Image.Format.Max && atlas.MipmapCount == 0, "Empty atlas defaults.");
+            !atlas.FilterClip && !atlas.ResourceLocalToScene && atlas.PixelFormat == Image.Format.Max && atlas.MIPMapCount == 0, "Empty atlas defaults.");
         using var mipImage = MipImage(Colors.Red, Colors.Green, Colors.Blue);
         using var mipSource = ImageTexture.CreateFromImage(mipImage);
         using var mipAtlas = new AtlasTexture { Atlas = mipSource, Region = new Rect2(0, 0, 1, 1) };
-        Check(!mipAtlas.HasMipmaps && mipAtlas.MipmapCount == 0 && mipAtlas.PixelFormat == Image.Format.Max &&
+        Check(!mipAtlas.HasMIPMaps && mipAtlas.MIPMapCount == 0 && mipAtlas.PixelFormat == Image.Format.Max &&
             mipAtlas.CapturePixels()!.Levels == 3, "View metadata remains unspecified/no mips while rendering retains full source mip storage.");
         var changes = 0; atlas.Changed += _ => changes++;
         atlas.Atlas = texture; atlas.Atlas = texture; atlas.Region = default; atlas.Margin = default;
@@ -25,7 +25,7 @@ internal static partial class RenderingRuntimeTests
         Check(atlas.GetSize() == new Vector2(5, 3) && atlas.Region.Size == new Vector2(2.9f, 1.9f), "Only region size is floored; dimension sums truncate.");
         using (var cropped = atlas.GetImage()!)
         {
-            Check(cropped.Size == new Vector2i(2, 1) && !cropped.HasMipmaps, "Image crop excludes margins and mipmaps.");
+            Check(cropped.Size == new Vector2i(2, 1) && !cropped.HasMIPMaps, "Image crop excludes margins and mipmaps.");
             Check(cropped.GetPixel(0, 0).A == 0 && cropped.GetPixel(1, 0) == Colors.Red, "Fractional position truncates for image extraction.");
             cropped.Fill(Colors.Blue);
         }

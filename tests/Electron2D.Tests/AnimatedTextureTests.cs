@@ -79,14 +79,14 @@ internal static class AnimatedTextureTests
         largeImage.Fill(Colors.Blue);
         using var large = ImageTexture.CreateFromImage(largeImage);
         animation.SetFrameTexture(2, large); animation.Frames = 3; animation.CurrentFrame = 2;
-        Check(animation.GetWidth() == 2 && animation.GetHeight() == 2 && animation.HasMipmaps && animation.MipmapCount == 1,
+        Check(animation.GetWidth() == 2 && animation.GetHeight() == 2 && animation.HasMIPMaps && animation.MIPMapCount == 1,
             "Larger frames crop to the smallest active size, including mipmap metadata.");
         using (var cropped = animation.GetImage()!)
             Check(cropped.Width == 2 && cropped.Height == 2 && cropped.GetPixel(1, 1) == Colors.Blue,
                 "The current frame image is cropped from the top left.");
         using var tinyImage = Image.CreateEmpty(1, 1, false, Image.Format.Rgba8);
         tinyImage.Fill(Colors.Yellow); large.SetImage(tinyImage);
-        Check(animation.GetWidth() == 1 && animation.GetHeight() == 1 && !animation.HasMipmaps && animation.MipmapCount == 0,
+        Check(animation.GetWidth() == 1 && animation.GetHeight() == 1 && !animation.HasMIPMaps && animation.MIPMapCount == 0,
             "A borrowed source resize invalidates the minimum size and mipmap metadata.");
         using (var resized = animation.GetImage()!)
             Check(resized.Width == 1 && resized.Height == 1 && resized.GetPixel(0, 0) == Colors.Yellow,

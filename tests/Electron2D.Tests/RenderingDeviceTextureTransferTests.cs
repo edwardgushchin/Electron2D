@@ -12,7 +12,7 @@ internal static class RenderingDeviceTextureTransferTests
     private const RenderingDevice.TextureUsageBits TransferRoles = RenderingDevice.TextureUsageBits.CPURead | RenderingDevice.TextureUsageBits.CanCopyFrom | RenderingDevice.TextureUsageBits.CanCopyTo;
     private static void Regions(RenderingDevice device)
     {
-        using var format = new RDTextureFormat { Width = 8, Height = 8, Mipmaps = 4, ArrayLayers = 2, TextureType = RenderingDevice.TextureType.TextureArray, Format = RenderingDevice.DataFormat.R8G8B8A8UNORM, UsageBits = TransferRoles };
+        using var format = new RDTextureFormat { Width = 8, Height = 8, MIPMaps = 4, ArrayLayers = 2, TextureType = RenderingDevice.TextureType.TextureArray, Format = RenderingDevice.DataFormat.R8G8B8A8UNORM, UsageBits = TransferRoles };
         using var view = new RDTextureView();
         byte[] a = Enumerable.Range(0, 340).Select(i => (byte)i).ToArray(), b = Enumerable.Range(0, 340).Select(i => (byte)(255 - i)).ToArray();
         var source = device.TextureCreate(format, view, [a, b]); var destination = device.TextureCreate(format, view);
@@ -42,7 +42,7 @@ internal static class RenderingDeviceTextureTransferTests
     }
     private static void Clears(RenderingDevice device)
     {
-        using var format = new RDTextureFormat { Width = 8, Height = 8, Mipmaps = 4, ArrayLayers = 2, TextureType = RenderingDevice.TextureType.TextureArray, Format = RenderingDevice.DataFormat.R8G8B8A8UNORM, UsageBits = TransferRoles }; using var view = new RDTextureView();
+        using var format = new RDTextureFormat { Width = 8, Height = 8, MIPMaps = 4, ArrayLayers = 2, TextureType = RenderingDevice.TextureType.TextureArray, Format = RenderingDevice.DataFormat.R8G8B8A8UNORM, UsageBits = TransferRoles }; using var view = new RDTextureView();
         byte[] initial = Enumerable.Repeat((byte)31, 340).ToArray(); var texture = device.TextureCreate(format, view, [initial, initial]);
         device.TextureClear(texture, new(.25f, .5f, .75f, 1), 1, 2, 1, 1); var expected = (byte[])initial.Clone();
         var layer0 = device.TextureGetData(texture, 0); var layer1 = device.TextureGetData(texture, 1); var clearPixel = layer1.AsSpan(256, 4).ToArray();
@@ -77,7 +77,7 @@ internal static class RenderingDeviceTextureTransferTests
     }
     private static void Compressed(RenderingDevice device)
     {
-        using var format = new RDTextureFormat { Width = 5, Height = 3, Mipmaps = 3, Format = RenderingDevice.DataFormat.BC3UNORMBLOCK, UsageBits = TransferRoles }; using var view = new RDTextureView();
+        using var format = new RDTextureFormat { Width = 5, Height = 3, MIPMaps = 3, Format = RenderingDevice.DataFormat.BC3UNORMBLOCK, UsageBits = TransferRoles }; using var view = new RDTextureView();
         if (!device.TextureIsFormatSupportedForUsage(format.Format, format.UsageBits)) return;
         byte[] bytes = Enumerable.Range(0, 64).Select(x => (byte)x).ToArray(); var source = device.TextureCreate(format, view, [bytes]); var destination = device.TextureCreate(format, view);
         device.TextureCopy(source, destination, new(0, 0, 0), new(0, 0, 0), new(5, 3, 1), 0, 0, 0, 0); device.TextureCopy(source, destination, new(0, 0, 0), new(0, 0, 0), new(2, 1, 1), 1, 1, 0, 0); device.TextureCopy(source, destination, new(0, 0, 0), new(0, 0, 0), new(1, 1, 1), 2, 2, 0, 0);

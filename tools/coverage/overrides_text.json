@@ -4134,6 +4134,36 @@
       "godot": "FontFile::method:set_script_support_override(String:,bool:)",
       "electron2d": "method:Electron2D.FontFile.SetScriptSupportOverride(System.String,System.Boolean)",
       "reason": "ADR 0046: exact ordinal language/script overrides and wildcard precedence execute primary-source queries and stable fallback priority over native OpenType GSUB/GPOS metadata. Primary glyphs remain first; unsupported faces remain last resort and color emoji retain their preference. FontSupportTests covers copied lists, silent equal writes, callback failure, concurrent writes, source/variation/cache invalidation and typed fresh-process storage. Native GPU/compatibility canvas, Label, RichTextLabel and FontVariation pixels execute with 64 active and 64 idle intervals at zero managed bytes. Foreign execution and native allocator counts remain separate."
+    },
+    {
+      "godot": "FontFile::property:disable_embedded_bitmaps",
+      "electron2d": "property:Electron2D.FontFile.DisableEmbeddedBitmaps()",
+      "reason": "ADR 0046: native monochrome strike bypass, forced FreeType autohinting and complete glyph/page MIP chains execute through FontFile/SystemFont, indexed caches, FontVariation and owned automatic fallback. FontRasterPolicyTests verifies exact mono/color strikes, an independent public FreeType raster oracle, active old readers, callbacks/concurrent publication, bounded mixed pages, legacy cache decoding and fresh-process policy storage. Native canvas/Label/rich/variation output runs on current GPU/compatibility; GPU MIP sampling is verified. Compatibility MIP filtering retains its existing explicit backend gate. Foreign execution/native allocation counts remain separate."
+    },
+    {
+      "godot": "FontFile::property:force_autohinter",
+      "electron2d": "property:Electron2D.FontFile.ForceAutohinter()",
+      "reason": "ADR 0046: native monochrome strike bypass, forced FreeType autohinting and complete glyph/page MIP chains execute through FontFile/SystemFont, indexed caches, FontVariation and owned automatic fallback. FontRasterPolicyTests verifies exact mono/color strikes, an independent public FreeType raster oracle, active old readers, callbacks/concurrent publication, bounded mixed pages, legacy cache decoding and fresh-process policy storage. Native canvas/Label/rich/variation output runs on current GPU/compatibility; GPU MIP sampling is verified. Compatibility MIP filtering retains its existing explicit backend gate. Foreign execution/native allocation counts remain separate."
+    },
+    {
+      "godot": "FontFile::property:generate_mipmaps",
+      "electron2d": "property:Electron2D.FontFile.GenerateMIPMaps()",
+      "reason": "ADR 0046: native monochrome strike bypass, forced FreeType autohinting and complete glyph/page MIP chains execute through FontFile/SystemFont, indexed caches, FontVariation and owned automatic fallback. FontRasterPolicyTests verifies exact mono/color strikes, an independent public FreeType raster oracle, active old readers, callbacks/concurrent publication, bounded mixed pages, legacy cache decoding and fresh-process policy storage. Native canvas/Label/rich/variation output runs on current GPU/compatibility; GPU MIP sampling is verified. Compatibility MIP filtering retains its existing explicit backend gate. Foreign execution/native allocation counts remain separate."
+    },
+    {
+      "godot": "SystemFont::property:disable_embedded_bitmaps",
+      "electron2d": "property:Electron2D.SystemFont.DisableEmbeddedBitmaps()",
+      "reason": "ADR 0046: native monochrome strike bypass, forced FreeType autohinting and complete glyph/page MIP chains execute through FontFile/SystemFont, indexed caches, FontVariation and owned automatic fallback. FontRasterPolicyTests verifies exact mono/color strikes, an independent public FreeType raster oracle, active old readers, callbacks/concurrent publication, bounded mixed pages, legacy cache decoding and fresh-process policy storage. Native canvas/Label/rich/variation output runs on current GPU/compatibility; GPU MIP sampling is verified. Compatibility MIP filtering retains its existing explicit backend gate. Foreign execution/native allocation counts remain separate."
+    },
+    {
+      "godot": "SystemFont::property:force_autohinter",
+      "electron2d": "property:Electron2D.SystemFont.ForceAutohinter()",
+      "reason": "ADR 0046: native monochrome strike bypass, forced FreeType autohinting and complete glyph/page MIP chains execute through FontFile/SystemFont, indexed caches, FontVariation and owned automatic fallback. FontRasterPolicyTests verifies exact mono/color strikes, an independent public FreeType raster oracle, active old readers, callbacks/concurrent publication, bounded mixed pages, legacy cache decoding and fresh-process policy storage. Native canvas/Label/rich/variation output runs on current GPU/compatibility; GPU MIP sampling is verified. Compatibility MIP filtering retains its existing explicit backend gate. Foreign execution/native allocation counts remain separate."
+    },
+    {
+      "godot": "SystemFont::property:generate_mipmaps",
+      "electron2d": "property:Electron2D.SystemFont.GenerateMIPMaps()",
+      "reason": "ADR 0046: native monochrome strike bypass, forced FreeType autohinting and complete glyph/page MIP chains execute through FontFile/SystemFont, indexed caches, FontVariation and owned automatic fallback. FontRasterPolicyTests verifies exact mono/color strikes, an independent public FreeType raster oracle, active old readers, callbacks/concurrent publication, bounded mixed pages, legacy cache decoding and fresh-process policy storage. Native canvas/Label/rich/variation output runs on current GPU/compatibility; GPU MIP sampling is verified. Compatibility MIP filtering retains its existing explicit backend gate. Foreign execution/native allocation counts remain separate."
     }
   ],
   "statusGroups": [
@@ -4308,7 +4338,7 @@
     },
     {
       "state": "Partial",
-      "reason": "FontFile executes scalable/bitmap loading, indexed glyph/size/texture/kerning/instance authoring, language/script overrides, Linux automatic system fallback and real shared shaping/rendering/storage. Remaining applicable mechanisms: non-SFNT Type 1 sources, antialiasing/embedded-bitmap/autohinter/mipmap modes and MSDF, plus foreign installed-font providers. Exact dependencies stay on their own rows; no inert settings are exposed.",
+      "reason": "FontFile executes scalable/bitmap loading, indexed glyph/size/texture/kerning/instance authoring, language/script overrides, Linux automatic system fallback and real shared shaping/rendering/storage. Remaining applicable mechanisms: non-SFNT Type 1 sources, antialiasing/LCD modes and MSDF, plus foreign installed-font providers. Exact dependencies stay on their own rows; no inert settings are exposed.",
       "godot": [
         "class:FontFile"
       ]
@@ -4335,22 +4365,22 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Applicable raster/cache policy disable_embedded_bitmaps is not implemented. Add the real FreeType or canvas behavior, source defaults and lifetime tests; no passive compatibility property is exposed.",
+      "state": "Implemented",
+      "reason": "ADR 0046: native monochrome strike bypass, forced FreeType autohinting and complete glyph/page MIP chains execute through FontFile/SystemFont, indexed caches, FontVariation and owned automatic fallback. FontRasterPolicyTests verifies exact mono/color strikes, an independent public FreeType raster oracle, active old readers, callbacks/concurrent publication, bounded mixed pages, legacy cache decoding and fresh-process policy storage. Native canvas/Label/rich/variation output runs on current GPU/compatibility; GPU MIP sampling is verified. Compatibility MIP filtering retains its existing explicit backend gate. Foreign execution/native allocation counts remain separate.",
       "godot": [
         "FontFile::property:disable_embedded_bitmaps"
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Applicable raster/cache policy force_autohinter is not implemented. Add the real FreeType or canvas behavior, source defaults and lifetime tests; no passive compatibility property is exposed.",
+      "state": "Implemented",
+      "reason": "ADR 0046: native monochrome strike bypass, forced FreeType autohinting and complete glyph/page MIP chains execute through FontFile/SystemFont, indexed caches, FontVariation and owned automatic fallback. FontRasterPolicyTests verifies exact mono/color strikes, an independent public FreeType raster oracle, active old readers, callbacks/concurrent publication, bounded mixed pages, legacy cache decoding and fresh-process policy storage. Native canvas/Label/rich/variation output runs on current GPU/compatibility; GPU MIP sampling is verified. Compatibility MIP filtering retains its existing explicit backend gate. Foreign execution/native allocation counts remain separate.",
       "godot": [
         "FontFile::property:force_autohinter"
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Applicable raster/cache policy generate_mipmaps is not implemented. Add the real FreeType or canvas behavior, source defaults and lifetime tests; no passive compatibility property is exposed.",
+      "state": "Implemented",
+      "reason": "ADR 0046: native monochrome strike bypass, forced FreeType autohinting and complete glyph/page MIP chains execute through FontFile/SystemFont, indexed caches, FontVariation and owned automatic fallback. FontRasterPolicyTests verifies exact mono/color strikes, an independent public FreeType raster oracle, active old readers, callbacks/concurrent publication, bounded mixed pages, legacy cache decoding and fresh-process policy storage. Native canvas/Label/rich/variation output runs on current GPU/compatibility; GPU MIP sampling is verified. Compatibility MIP filtering retains its existing explicit backend gate. Foreign execution/native allocation counts remain separate.",
       "godot": [
         "FontFile::property:generate_mipmaps"
       ]
@@ -5255,22 +5285,22 @@
       "godot": [
         "SystemFont::property:disable_embedded_bitmaps"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: first executable FontFile native raster policy/MSDF slice must apply this same policy across SystemFont-owned primary/fallback faces, duplication/storage and both applicable canvas backend contracts. Platform discovery is implemented separately; no passive setting is exposed."
+      "state": "Implemented",
+      "reason": "ADR 0046: native monochrome strike bypass, forced FreeType autohinting and complete glyph/page MIP chains execute through FontFile/SystemFont, indexed caches, FontVariation and owned automatic fallback. FontRasterPolicyTests verifies exact mono/color strikes, an independent public FreeType raster oracle, active old readers, callbacks/concurrent publication, bounded mixed pages, legacy cache decoding and fresh-process policy storage. Native canvas/Label/rich/variation output runs on current GPU/compatibility; GPU MIP sampling is verified. Compatibility MIP filtering retains its existing explicit backend gate. Foreign execution/native allocation counts remain separate."
     },
     {
       "godot": [
         "SystemFont::property:force_autohinter"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: first executable FontFile native raster policy/MSDF slice must apply this same policy across SystemFont-owned primary/fallback faces, duplication/storage and both applicable canvas backend contracts. Platform discovery is implemented separately; no passive setting is exposed."
+      "state": "Implemented",
+      "reason": "ADR 0046: native monochrome strike bypass, forced FreeType autohinting and complete glyph/page MIP chains execute through FontFile/SystemFont, indexed caches, FontVariation and owned automatic fallback. FontRasterPolicyTests verifies exact mono/color strikes, an independent public FreeType raster oracle, active old readers, callbacks/concurrent publication, bounded mixed pages, legacy cache decoding and fresh-process policy storage. Native canvas/Label/rich/variation output runs on current GPU/compatibility; GPU MIP sampling is verified. Compatibility MIP filtering retains its existing explicit backend gate. Foreign execution/native allocation counts remain separate."
     },
     {
       "godot": [
         "SystemFont::property:generate_mipmaps"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: first executable FontFile native raster policy/MSDF slice must apply this same policy across SystemFont-owned primary/fallback faces, duplication/storage and both applicable canvas backend contracts. Platform discovery is implemented separately; no passive setting is exposed."
+      "state": "Implemented",
+      "reason": "ADR 0046: native monochrome strike bypass, forced FreeType autohinting and complete glyph/page MIP chains execute through FontFile/SystemFont, indexed caches, FontVariation and owned automatic fallback. FontRasterPolicyTests verifies exact mono/color strikes, an independent public FreeType raster oracle, active old readers, callbacks/concurrent publication, bounded mixed pages, legacy cache decoding and fresh-process policy storage. Native canvas/Label/rich/variation output runs on current GPU/compatibility; GPU MIP sampling is verified. Compatibility MIP filtering retains its existing explicit backend gate. Foreign execution/native allocation counts remain separate."
     },
     {
       "godot": [

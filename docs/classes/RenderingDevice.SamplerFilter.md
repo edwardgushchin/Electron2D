@@ -1,12 +1,12 @@
 # RenderingDevice.SamplerFilter
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Namespace:** `Electron2D`. **Declaration:** `public enum Electron2D.RenderingDevice.SamplerFilter`. **Source:** [RenderingDevice.TextureEnums.cs](../../src/Servers/Rendering/Device/RenderingDevice.TextureEnums.cs). **Component:** [Local compute](../components/local-compute.md).
 
 ## Description
 
-Nearest selects one texel/mip; Linear interpolates neighboring texels or adjacent mips. MinFilter and MagFilter govern sampling within a mip; MipFilter governs neighboring mip levels. Integer images require nearest filters and no anisotropy.
+Nearest selects one texel/mip; Linear interpolates neighboring texels or adjacent mips. MinFilter and MagFilter govern sampling within a mip; MIPFilter governs neighboring mip levels. Integer images require nearest filters and no anisotropy.
 
 ## Example
 

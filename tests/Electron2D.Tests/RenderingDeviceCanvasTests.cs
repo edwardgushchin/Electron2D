@@ -44,7 +44,7 @@ internal static class RenderingDeviceCanvasTests
             using var format = new RDTextureFormat { Width = 4, Height = 4, Format = RenderingDevice.DataFormat.R8G8B8A8UNORM, UsageBits = Roles }; using var view = new RDTextureView();
             source = device.TextureCreate(format, view);
             format.Format = RenderingDevice.DataFormat.R32G32B32A32SFLOAT; format.UsageBits = Roles | RenderingDevice.TextureUsageBits.Storage; output = device.TextureCreate(format, view); texture.TextureRDRID = output;
-            Check(texture.GetWidth() == 4 && texture.PixelFormat == Image.Format.Rgbaf && !texture.HasMipmaps, "Device resource allocation metadata.");
+            Check(texture.GetWidth() == 4 && texture.PixelFormat == Image.Format.Rgbaf && !texture.HasMIPMaps, "Device resource allocation metadata.");
             using (var local = RenderingServer.CreateLocalRenderingDevice()) { var localTexture = local.TextureCreate(format, view); Reject<ArgumentException>(() => texture.TextureRDRID = localTexture); Reject<ArgumentException>(() => RenderingServer.TextureRDCreate(localTexture)); }
             var count = device.StorageBufferCreate(4); using var state = new RDSamplerState(); var sampler = device.SamplerCreate(state);
             using var module = new RDShaderSPIRV(); using var stream = typeof(RenderingDeviceCanvasTests).Assembly.GetManifestResourceStream("Electron2D.Compute.LocalTexture.comp.spv")!; using var bytes = new MemoryStream(); stream.CopyTo(bytes); module.BytecodeCompute = bytes.ToArray();
@@ -52,9 +52,9 @@ internal static class RenderingDeviceCanvasTests
             using var sampled = new RDUniform { Binding = 7, UniformType = RenderingDevice.UniformType.SamplerWithTexture }; sampled.AddID(sampler); sampled.AddID(source); sourceSet = device.UniformSetCreate([sampled], shader, 3);
             using var target = new RDUniform { Binding = 2, UniformType = RenderingDevice.UniformType.Image }; target.AddID(output); targetSet = device.UniformSetCreate([target], shader, 5);
             using var counter = new RDUniform { Binding = 4, UniformType = RenderingDevice.UniformType.StorageBuffer }; counter.AddID(count); countSet = device.UniformSetCreate([counter], shader, 9);
-            format.Format = RenderingDevice.DataFormat.R8G8B8A8UNORM; format.UsageBits = Roles; format.ArrayLayers = 2; format.Mipmaps = 3; format.TextureType = RenderingDevice.TextureType.TextureArray;
+            format.Format = RenderingDevice.DataFormat.R8G8B8A8UNORM; format.UsageBits = Roles; format.ArrayLayers = 2; format.MIPMaps = 3; format.TextureType = RenderingDevice.TextureType.TextureArray;
             array = device.TextureCreate(format, view); device.TextureClear(array, Colors.Blue, 0, 3, 0, 1); device.TextureClear(array, Colors.Green, 0, 3, 1, 1); layers.TextureRDRID = array;
-            Check(layers.GetWidth() == 4 && layers.GetLayers() == 2 && layers.HasMipmaps(), "Device array metadata.");
+            Check(layers.GetWidth() == 4 && layers.GetLayers() == 2 && layers.HasMIPMaps(), "Device array metadata.");
             Reject<ArgumentException>(() => texture.TextureRDRID = array); Reject<ArgumentException>(() => layers.TextureRDRID = output);
             owned = RenderingServer.TextureRDCreate(output); var replacing = RenderingServer.TextureRDCreate(output); innerProxy = RenderingServer.TextureProxyCreate(replacing); proxy = RenderingServer.TextureProxyCreate(innerProxy);
             RenderingServer.TextureSetPath(replacing, "device-source"); RenderingServer.TextureReplace(owned, replacing);
@@ -131,18 +131,18 @@ internal static class RenderingDeviceCanvasTests
         var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "device-canvas-" + Guid.NewGuid().ToString("N") + ".e2dres");
         try { ResourceSaver.Save(texture, path); using var loaded = ResourceLoader.Load<TextureRD>(path, ResourceLoader.CacheMode.Ignore); Check(!loaded.TextureRDRID.IsValid() && loaded.GetWidth() == 0, "Resource archive omits transient device identity."); }
         finally { System.IO.File.Delete(path); }
-        using (var layer = array.GetLayerData(1)!) { Check(layer.HasMipmaps && layer.GetPixel(0, 0) == Colors.Green, "Array snapshot reads selected layer and all mips."); layer.Fill(Colors.Red); }
+        using (var layer = array.GetLayerData(1)!) { Check(layer.HasMIPMaps && layer.GetPixel(0, 0) == Colors.Green, "Array snapshot reads selected layer and all mips."); layer.Fill(Colors.Red); }
         using (var layer = array.GetLayerData(1)!) Check(layer.GetPixel(0, 0) == Colors.Green, "Readback images never mutate native source.");
         Reject<ArgumentOutOfRangeException>(() => array.GetLayerData(-1)); Reject<ArgumentOutOfRangeException>(() => array.GetLayerData(2));
-        format.ArrayLayers = 1; format.TextureType = RenderingDevice.TextureType.Texture; format.Mipmaps = 3; format.Format = RenderingDevice.DataFormat.B8G8R8A8UNORM;
+        format.ArrayLayers = 1; format.TextureType = RenderingDevice.TextureType.Texture; format.MIPMaps = 3; format.Format = RenderingDevice.DataFormat.B8G8R8A8UNORM;
         var converted = device.TextureCreate(format, view); device.TextureClear(converted, new(.25f, .5f, .75f, 1), 0, 3, 0, 1); using var convertedTexture = new TextureRD { TextureRDRID = converted };
         texture.TextureRDRID = converted; Check(texture.GetRID() == identity, "Rebinding keeps the canvas resource identity."); texture.TextureRDRID = original;
-        using (var image = convertedTexture.GetImage()!) Check(image.PixelFormat == Image.Format.Rgbaf && image.HasMipmaps && Math.Abs(image.GetPixel(0, 0).R - .25f) < .003f && Math.Abs(image.GetPixel(0, 0).B - .75f) < .003f, "Non-Image device format converts to floating RGBA with every mip."); device.FreeRID(converted);
+        using (var image = convertedTexture.GetImage()!) Check(image.PixelFormat == Image.Format.Rgbaf && image.HasMIPMaps && Math.Abs(image.GetPixel(0, 0).R - .25f) < .003f && Math.Abs(image.GetPixel(0, 0).B - .75f) < .003f, "Non-Image device format converts to floating RGBA with every mip."); device.FreeRID(converted);
         format.Format = RenderingDevice.DataFormat.R8G8B8A8SNORM; var signed = device.TextureCreate(format, view); device.TextureClear(signed, new(-.5f, .25f, .75f, 1), 0, 3, 0, 1); using var signedTexture = new TextureRD { TextureRDRID = signed };
-        using (var image = signedTexture.GetImage()!) Check(image.HasMipmaps && Math.Abs(image.GetPixel(0, 0).R + .5f) < .005f, "Signed normalized readback preserves negative values through native conversion."); device.FreeRID(signed);
+        using (var image = signedTexture.GetImage()!) Check(image.HasMIPMaps && Math.Abs(image.GetPixel(0, 0).R + .5f) < .005f, "Signed normalized readback preserves negative values through native conversion."); device.FreeRID(signed);
         format.Format = RenderingDevice.DataFormat.B8G8R8A8UNORM; format.ArrayLayers = 2; format.TextureType = RenderingDevice.TextureType.TextureArray;
         var convertedArray = device.TextureCreate(format, view); device.TextureClear(convertedArray, Colors.Red, 0, 3, 0, 1); device.TextureClear(convertedArray, Colors.Blue, 0, 3, 1, 1); using var arrayTexture = new TextureArrayRD { TextureRDRID = convertedArray };
-        using (var image = arrayTexture.GetLayerData(1)!) Check(image.HasMipmaps && image.GetPixel(0, 0) == Colors.Blue, "Native conversion selects the requested array layer and its mip chain."); device.FreeRID(convertedArray);
+        using (var image = arrayTexture.GetLayerData(1)!) Check(image.HasMIPMaps && image.GetPixel(0, 0) == Colors.Blue, "Native conversion selects the requested array layer and its mip chain."); device.FreeRID(convertedArray);
         format.ArrayLayers = 1; format.TextureType = RenderingDevice.TextureType.Texture;
         format.Format = RenderingDevice.DataFormat.R8G8B8A8SRGB; var srgb = device.TextureCreate(format, view); using var srgbTexture = new TextureRD { TextureRDRID = srgb }; Check(RenderingServer.TextureGetRDTexture(srgbTexture.GetRID(), true) == srgb, "Existing sRGB storage needs no alternate view."); device.FreeRID(srgb);
         Reject<NotSupportedException>(() => RenderingServer.TextureGetRDTexture(texture.GetRID(), true));

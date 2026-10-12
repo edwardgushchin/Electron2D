@@ -164,19 +164,19 @@ public sealed partial class Image
                     WriteColor(state.Data, ((y * state.Width) + x) * bytes, state.Format, color);
             }
 
-            return RebuildMipmapsIfNeeded(state);
+            return RebuildMIPMapsIfNeeded(state);
         });
 
     /// <summary>Removes all mip levels while retaining the base image unchanged.</summary>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the operation commits.</exception>
-    public void ClearMipmaps() => Mutate(
+    public void ClearMIPMaps() => Mutate(
         state =>
         {
-            if (!state.HasMipmaps)
+            if (!state.HasMIPMaps)
                 return state;
             var baseLength = GetLevelByteCount(state.Width, state.Height, state.Format);
-            return state with { HasMipmaps = false, Data = state.Data[..baseLength] };
+            return state with { HasMIPMaps = false, Data = state.Data[..baseLength] };
         });
 
     /// <summary>Generates a complete lower-resolution mip chain from the base image.</summary>
@@ -185,7 +185,7 @@ public sealed partial class Image
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the chain commits.</exception>
-    public void GenerateMipmaps(bool renormalize = false) => Mutate(state => BuildMipmaps(RequireReadablePixels(state), renormalize));
+    public void GenerateMIPMaps(bool renormalize = false) => Mutate(state => BuildMIPMaps(RequireReadablePixels(state), renormalize));
 
     /// <summary>Converts every stored level to another uncompressed pixel format.</summary>
     /// <param name="format">The destination format.</param>
@@ -458,7 +458,7 @@ public sealed partial class Image
                 }
             }
 
-            return RebuildMipmapsIfNeeded(state);
+            return RebuildMIPMapsIfNeeded(state);
         });
 
     /// <summary>Multiplies every stored RGB component by its alpha component.</summary>
@@ -480,7 +480,7 @@ public sealed partial class Image
                 state.Data[offset + 2] = (byte)(((state.Data[offset + 2] * alpha) + 255) >> 8);
             }
 
-            return RebuildMipmapsIfNeeded(state);
+            return RebuildMIPMapsIfNeeded(state);
         });
 
     /// <summary>Converts RGB components from nonlinear sRGB encoding to linear encoding.</summary>
@@ -510,7 +510,7 @@ public sealed partial class Image
             state =>
             {
                 RequireReadablePixels(state);
-                var source = ConvertState(state with { HasMipmaps = false, Data = BaseData(state) }, Format.Rf);
+                var source = ConvertState(state with { HasMIPMaps = false, Data = BaseData(state) }, Format.Rf);
                 var result = new byte[GetRequiredDataSize(state.Width, state.Height, Format.Rgba8, false)];
                 for (var y = 0; y < state.Height; y++)
                 {
@@ -708,7 +708,7 @@ public sealed partial class Image
                     }
                 }
 
-                return RebuildMipmapsIfNeeded(destinationState);
+                return RebuildMIPMapsIfNeeded(destinationState);
             });
     }
 
@@ -763,8 +763,8 @@ public sealed partial class Image
         if (state.Format == destinationFormat)
             return state;
 
-        var levelCount = GetRequiredMipmapCount(state.Width, state.Height, state.HasMipmaps) + 1;
-        var data = new byte[GetRequiredDataSize(state.Width, state.Height, destinationFormat, state.HasMipmaps)];
+        var levelCount = GetRequiredMIPMapCount(state.Width, state.Height, state.HasMIPMaps) + 1;
+        var data = new byte[GetRequiredDataSize(state.Width, state.Height, destinationFormat, state.HasMIPMaps)];
         var sourceBytes = GetBytesPerPixel(state.Format);
         var destinationBytes = GetBytesPerPixel(destinationFormat);
         var destinationOffset = 0;
@@ -781,15 +781,15 @@ public sealed partial class Image
             destinationOffset += pixels * destinationBytes;
         }
 
-        return new State(state.Width, state.Height, destinationFormat, state.HasMipmaps, data);
+        return new State(state.Width, state.Height, destinationFormat, state.HasMIPMaps, data);
     }
 
-    private static State BuildMipmaps(State state, bool renormalize)
+    private static State BuildMIPMaps(State state, bool renormalize)
     {
         RequireReadablePixels(state);
-        var mipCount = GetRequiredMipmapCount(state.Width, state.Height, true);
+        var mipCount = GetRequiredMIPMapCount(state.Width, state.Height, true);
         if (mipCount == 0)
-            return state with { HasMipmaps = false, Data = BaseData(state) };
+            return state with { HasMIPMaps = false, Data = BaseData(state) };
 
         var data = new byte[GetRequiredDataSize(state.Width, state.Height, state.Format, true)];
         var baseData = BaseData(state);
@@ -839,7 +839,7 @@ public sealed partial class Image
         return new State(state.Width, state.Height, state.Format, true, data);
     }
 
-    private static State RebuildMipmapsIfNeeded(State state) => state.HasMipmaps ? BuildMipmaps(state, false) : state;
+    private static State RebuildMIPMapsIfNeeded(State state) => state.HasMIPMaps ? BuildMIPMaps(state, false) : state;
 
     private static byte[] BaseData(State state)
     {
@@ -856,14 +856,14 @@ public sealed partial class Image
         for (var y = 0; y < copyHeight; y++)
             Buffer.BlockCopy(state.Data, y * state.Width * bytes, data, y * width * bytes, copyWidth * bytes);
         var result = new State(width, height, state.Format, false, data);
-        return state.HasMipmaps ? BuildMipmaps(result, false) : result;
+        return state.HasMIPMaps ? BuildMIPMaps(result, false) : result;
     }
 
     private static State FlipState(State state, bool horizontal)
     {
         var data = new byte[state.Data.Length];
         var bytes = GetBytesPerPixel(state.Format);
-        var levelCount = GetRequiredMipmapCount(state.Width, state.Height, state.HasMipmaps) + 1;
+        var levelCount = GetRequiredMIPMapCount(state.Width, state.Height, state.HasMIPMaps) + 1;
         for (var levelIndex = 0; levelIndex < levelCount; levelIndex++)
         {
             var level = GetLevel(state, levelIndex);
@@ -906,7 +906,7 @@ public sealed partial class Image
         }
 
         var result = new State(state.Height, state.Width, state.Format, false, data);
-        return state.HasMipmaps ? BuildMipmaps(result, false) : result;
+        return state.HasMIPMaps ? BuildMIPMaps(result, false) : result;
     }
 
     private static State ResizeState(State state, int width, int height, Interpolation interpolation)
@@ -917,15 +917,15 @@ public sealed partial class Image
         var result = interpolation == Interpolation.Trilinear
             ? ResizeTrilinear(state, width, height)
             : ResizeLevel(state, 0, width, height, interpolation);
-        return state.HasMipmaps ? BuildMipmaps(result, false) : result;
+        return state.HasMIPMaps ? BuildMIPMaps(result, false) : result;
     }
 
     private static State ResizeTrilinear(State state, int width, int height)
     {
-        var mipState = state.HasMipmaps ? state : BuildMipmaps(state, false);
+        var mipState = state.HasMIPMaps ? state : BuildMIPMaps(state, false);
         var scale = Math.Max(state.Width / (double)width, state.Height / (double)height);
         var level = Math.Max(0d, Math.Log2(Math.Max(1d, scale)));
-        var maximum = GetRequiredMipmapCount(mipState.Width, mipState.Height, mipState.HasMipmaps);
+        var maximum = GetRequiredMIPMapCount(mipState.Width, mipState.Height, mipState.HasMIPMaps);
         var lower = Math.Min(maximum, (int)Math.Floor(level));
         var upper = Math.Min(maximum, lower + 1);
         var weight = (float)(level - lower);

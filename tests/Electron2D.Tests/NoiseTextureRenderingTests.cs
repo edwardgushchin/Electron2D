@@ -10,7 +10,7 @@ internal static partial class RenderingRuntimeTests
         {
             Width = 2,
             Height = 1,
-            GenerateMipmaps = false,
+            GenerateMIPMaps = false,
             Noise = noise,
             ColorRamp = ramp,
         };
@@ -19,7 +19,7 @@ internal static partial class RenderingRuntimeTests
         {
             Width = 2,
             Height = 1,
-            GenerateMipmaps = false,
+            GenerateMIPMaps = false,
             Noise = generatedNoise,
         };
         var window = new Window { Size = new(64, 32), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };

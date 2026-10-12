@@ -30,7 +30,7 @@ public sealed partial class NoiseTexture : Texture
 
     /// <summary>Gets or sets whether the generated image contains a complete mipmap chain.</summary>
     /// <value>True by default.</value>
-    public bool GenerateMipmaps { get { lock (_gate) { ThrowIfDisposed(); return _generateMipmaps; } } set => Change(ref _generateMipmaps, value); }
+    public bool GenerateMIPMaps { get { lock (_gate) { ThrowIfDisposed(); return _generateMipmaps; } } set => Change(ref _generateMipmaps, value); }
 
     /// <summary>Gets or sets the borrowed noise source; null leaves the texture without pixels.</summary>
     /// <value>Null by default.</value>
@@ -149,10 +149,10 @@ public sealed partial class NoiseTexture : Texture
             var input = work.Input; if (input.Noise is not { } noise) return null;
             ObjectDisposedException.ThrowIf(noise.IsDisposed, noise);
             using var sampled = (input.Seamless ? noise.GetSeamlessImage(input.Width, input.Height, input.Invert, input.Skirt, input.Normalize) : noise.GetImage(input.Width, input.Height, input.Invert, input.Normalize)) ?? throw new InvalidOperationException("The noise resource returned no image.");
-            if (sampled.Width != input.Width || sampled.Height != input.Height || sampled.HasMipmaps) throw new InvalidOperationException("The noise resource returned an incompatible image.");
+            if (sampled.Width != input.Width || sampled.Height != input.Height || sampled.HasMIPMaps) throw new InvalidOperationException("The noise resource returned an incompatible image.");
             using var mapped = input.Ramp is null ? null : ApplyRamp(sampled, input.Ramp); var image = mapped ?? sampled;
             if (input.Normal) image.BumpMapToNormalMap(input.Strength);
-            if (input.Mipmaps) image.GenerateMipmaps();
+            if (input.MIPMaps) image.GenerateMIPMaps();
             return TexturePixels.FromImage(image);
         }
         finally { baking.Remove(this); }
@@ -202,7 +202,7 @@ public sealed partial class NoiseTexture : Texture
     [
         new PropertyDescriptor<NoiseTexture, int>(nameof(Width), t => t.Width, (t, v) => t.Width = v, _ => 512, stored: true),
         new PropertyDescriptor<NoiseTexture, int>(nameof(Height), t => t.Height, (t, v) => t.Height = v, _ => 512, stored: true),
-        new PropertyDescriptor<NoiseTexture, bool>(nameof(GenerateMipmaps), t => t.GenerateMipmaps, (t, v) => t.GenerateMipmaps = v, _ => true, stored: true),
+        new PropertyDescriptor<NoiseTexture, bool>("GenerateMipmaps", t => t.GenerateMIPMaps, (t, v) => t.GenerateMIPMaps = v, _ => true, stored: true),
         new PropertyDescriptor<NoiseTexture, Noise?>(nameof(Noise), t => t.Noise, (t, v) => t.Noise = v, _ => null, stored: true),
         new PropertyDescriptor<NoiseTexture, Gradient?>(nameof(ColorRamp), t => t.ColorRamp, (t, v) => t.ColorRamp = v, _ => null, stored: true),
         new PropertyDescriptor<NoiseTexture, bool>(nameof(Seamless), t => t.Seamless, (t, v) => t.Seamless = v, _ => false, stored: true),

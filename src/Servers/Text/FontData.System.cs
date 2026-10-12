@@ -23,7 +23,7 @@ internal sealed partial class FontData
                     try
                     {
                         data = LoadSystemSource(match);
-                        data.Hinting = Hinting; data.SubpixelPositioning = SubpixelPositioning; data.KeepRoundingRemainders = KeepRoundingRemainders;
+                        data.DisableEmbeddedBitmaps = DisableEmbeddedBitmaps; data.ForceAutohinter = ForceAutohinter; data.GenerateMIPMaps = GenerateMIPMaps; data.Hinting = Hinting; data.SubpixelPositioning = SubpixelPositioning; data.KeepRoundingRemainders = KeepRoundingRemainders;
                         data.Oversampling = Oversampling; data.ModulateColorGlyphs = ModulateColorGlyphs; data.OpenTypeFeatures = OpenTypeFeatures;
                         _systemSources.Add(sourceKey, data);
                     }
@@ -53,7 +53,7 @@ internal sealed partial class FontData
                 if (!_systemSources.TryGetValue(sourceKey, out var data))
                 {
                     if (_systemSources.Count >= 64) break;
-                    try { data = LoadSystemSource(match); data.Hinting = Hinting; data.SubpixelPositioning = SubpixelPositioning; data.KeepRoundingRemainders = KeepRoundingRemainders; data.Oversampling = Oversampling; data.ModulateColorGlyphs = ModulateColorGlyphs; data.OpenTypeFeatures = OpenTypeFeatures; _systemSources.Add(sourceKey, data); }
+                    try { data = LoadSystemSource(match); data.DisableEmbeddedBitmaps = DisableEmbeddedBitmaps; data.ForceAutohinter = ForceAutohinter; data.GenerateMIPMaps = GenerateMIPMaps; data.Hinting = Hinting; data.SubpixelPositioning = SubpixelPositioning; data.KeepRoundingRemainders = KeepRoundingRemainders; data.Oversampling = Oversampling; data.ModulateColorGlyphs = ModulateColorGlyphs; data.OpenTypeFeatures = OpenTypeFeatures; _systemSources.Add(sourceKey, data); }
                     catch (Exception error) when (error is IOException or ArgumentException or InvalidOperationException or NotSupportedException) { continue; }
                 }
                 var supported = true;

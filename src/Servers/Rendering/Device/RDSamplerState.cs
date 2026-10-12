@@ -19,7 +19,7 @@ public sealed class RDSamplerState : ElectronObject
     private RenderingDevice.SamplerFilter _mipFilter = RenderingDevice.SamplerFilter.Nearest;
     /// <summary>Gets or sets how adjacent mip levels are selected or blended.</summary>
     /// <value>Initially RenderingDevice.SamplerFilter.Nearest; copied when the device creates its resource.</value>
-    public RenderingDevice.SamplerFilter MipFilter { get { ThrowIfDisposed(); return _mipFilter; } set { ThrowIfDisposed(); _mipFilter = RDTextureConfiguration.Filter(value); } }
+    public RenderingDevice.SamplerFilter MIPFilter { get { ThrowIfDisposed(); return _mipFilter; } set { ThrowIfDisposed(); _mipFilter = RDTextureConfiguration.Filter(value); } }
     private RenderingDevice.SamplerRepeatMode _repeatU = RenderingDevice.SamplerRepeatMode.ClampToEdge;
     /// <summary>Gets or sets horizontal normalized-coordinate addressing.</summary>
     /// <value>Initially RenderingDevice.SamplerRepeatMode.ClampToEdge; copied when the device creates its resource.</value>
@@ -64,7 +64,7 @@ public sealed class RDSamplerState : ElectronObject
 
             new PropertyDescriptor<RDSamplerState, RenderingDevice.SamplerFilter>(nameof(MinFilter), p => p.MinFilter, (p, v) => p.MinFilter = v, _ => RenderingDevice.SamplerFilter.Nearest),
             new PropertyDescriptor<RDSamplerState, RenderingDevice.SamplerFilter>(nameof(MagFilter), p => p.MagFilter, (p, v) => p.MagFilter = v, _ => RenderingDevice.SamplerFilter.Nearest),
-            new PropertyDescriptor<RDSamplerState, RenderingDevice.SamplerFilter>(nameof(MipFilter), p => p.MipFilter, (p, v) => p.MipFilter = v, _ => RenderingDevice.SamplerFilter.Nearest),
+            new PropertyDescriptor<RDSamplerState, RenderingDevice.SamplerFilter>(nameof(MIPFilter), p => p.MIPFilter, (p, v) => p.MIPFilter = v, _ => RenderingDevice.SamplerFilter.Nearest),
             new PropertyDescriptor<RDSamplerState, RenderingDevice.SamplerRepeatMode>(nameof(RepeatU), p => p.RepeatU, (p, v) => p.RepeatU = v, _ => RenderingDevice.SamplerRepeatMode.ClampToEdge),
             new PropertyDescriptor<RDSamplerState, RenderingDevice.SamplerRepeatMode>(nameof(RepeatV), p => p.RepeatV, (p, v) => p.RepeatV = v, _ => RenderingDevice.SamplerRepeatMode.ClampToEdge),
             new PropertyDescriptor<RDSamplerState, float>(nameof(LODBias), p => p.LODBias, (p, v) => p.LODBias = v, _ => 0),

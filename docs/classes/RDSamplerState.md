@@ -34,7 +34,7 @@ using var sampler = new RDSamplerState { EnableCompare = true, CompareOp = Rende
 | [`public System.Single MaxLOD { get; set; }`](#member-2bfe2e10cd15) | Gets or sets the maximum mip level used for sampling. |
 | [`public Electron2D.RenderingDevice.SamplerFilter MinFilter { get; set; }`](#member-642eaeb354fb) | Gets or sets the within-mip filter used for minification. |
 | [`public System.Single MinLOD { get; set; }`](#member-a252f84f2d08) | Gets or sets the minimum mip level, with zero identifying the base level. |
-| [`public Electron2D.RenderingDevice.SamplerFilter MipFilter { get; set; }`](#member-a549b7947f32) | Gets or sets how adjacent mip levels are selected or blended. |
+| [`public Electron2D.RenderingDevice.SamplerFilter MIPFilter { get; set; }`](#member-a549b7947f32) | Gets or sets how adjacent mip levels are selected or blended. |
 | [`public Electron2D.RenderingDevice.SamplerRepeatMode RepeatU { get; set; }`](#member-8e24410bc722) | Gets or sets horizontal normalized-coordinate addressing. |
 | [`public Electron2D.RenderingDevice.SamplerRepeatMode RepeatV { get; set; }`](#member-3c8621061881) | Gets or sets vertical normalized-coordinate addressing. |
 | [`public System.Boolean UseAnisotropy { get; set; }`](#member-685ce1197486) | Gets or sets whether the sampler uses anisotropic filtering. |
@@ -146,10 +146,10 @@ Gets or sets the minimum mip level, with zero identifying the base level.
 Initially 0; copied when the device creates its resource.
 
 <a id="member-a549b7947f32"></a>
-### MipFilter
+### MIPFilter
 
 ```csharp
-public Electron2D.RenderingDevice.SamplerFilter MipFilter { get; set; }
+public Electron2D.RenderingDevice.SamplerFilter MIPFilter { get; set; }
 ```
 
 Gets or sets how adjacent mip levels are selected or blended.

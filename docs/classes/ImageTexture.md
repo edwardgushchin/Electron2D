@@ -1,6 +1,6 @@
 # ImageTexture
 
-Last updated: 2026-10-01
+Last updated: 2026-10-12
 
 - Declaration: `public sealed class ImageTexture : Texture`
 - Source: [ImageTexture.cs](../../src/Scene/Resources/ImageTexture.cs)
@@ -42,7 +42,7 @@ texture.Update(image);
 | `override bool IsPixelOpaque(int x, int y)` | Clamped alpha test using one state snapshot. |
 | `override Image? GetImage()` | New independent original image, or null when uninitialized. |
 
-PixelFormat, HasAlpha, HasMipmaps and MipmapCount follow the [Texture metadata contract](Texture.md#property-descriptions).
+PixelFormat, HasAlpha, HasMIPMaps and MIPMapCount follow the [Texture metadata contract](Texture.md#property-descriptions).
 
 ## Method descriptions
 

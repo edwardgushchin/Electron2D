@@ -1,6 +1,6 @@
 # System font matching and automatic fallback
 
-Last updated: 2026-10-07
+Last updated: 2026-10-12
 
 ## Scope and ownership
 
@@ -23,3 +23,7 @@ Ten typed SystemFont preferences and FontFile's fallback permission are stored w
 SystemFontTests checks real native matches, variable glyph advance changes, tied logical faces, explicit coordinates, active retirement, copied arrays, invalid queries, silent equal setters, inherited policy behavior and prepared measurement. Current Linux GPU/compatibility capture verifies canvas/Label/RichTextLabel and a distinct automatic Arabic source, with 64 prepared render intervals per backend at zero managed bytes. Native allocators, foreign platforms, physical/editor and owner acceptance remain separate. Missing CoreText/DirectWrite and native raster/MSDF layers are recorded per coverage row.
 
 Primary native matching source: [Fontconfig manual](https://fontconfig.pages.freedesktop.org/fontconfig/fontconfig-user.html). [ADR 0046](../decisions/rendering.md#adr-0046) defines text ownership; [ADR 0095](../decisions/singleton-services.md#adr-0095) preserves static OS access over its retained service.
+
+## Native raster preferences
+
+DisableEmbeddedBitmaps, ForceAutohinter and GenerateMIPMaps apply to installed matches, independent theme-source realization, FontVariation and owned automatic fallback. Preference changes retire active old data safely, notify outside locks and remain in typed copy/archive state. Actual flags select mono/color native strikes and automatic hinting; generated glyph images carry complete MIP chains. The text component records backend and native pixel verification limits.

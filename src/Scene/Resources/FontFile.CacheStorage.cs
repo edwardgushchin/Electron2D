@@ -12,7 +12,7 @@ public partial class FontFile
         {
             ThrowIfDisposed(); if (_caches.Count == 0) return [];
             using var stream = new MemoryStream(); using var writer = new BinaryWriter(stream, Encoding.UTF8, true);
-            writer.Write(1); writer.Write(_caches.Count);
+            writer.Write(2); writer.Write(_caches.Count);
             foreach (var cache in _caches)
             {
                 var index = _caches.IndexOf(cache); var data = DataLocked(index);
@@ -33,7 +33,7 @@ public partial class FontFile
                         {
                             writer.Write(page != null); if (page == null) continue;
                             writer.Write(page.Width); writer.Write(page.Height); writer.Write(page.Pixels.Length); writer.Write(page.Pixels);
-                            writer.Write(page.Offsets.Length); foreach (var offset in page.Offsets) writer.Write(offset);
+                            writer.Write(page.Offsets.Length); foreach (var offset in page.Offsets) writer.Write(offset); writer.Write(page.Authored); writer.Write(page.AllowPacking);
                         }
                         if (stream.Length > MaximumFontBytes) throw new InvalidDataException("Authored font cache exceeds sixty-four MiB.");
                     }
@@ -52,7 +52,7 @@ public partial class FontFile
         if (bytes.Length > 0)
         {
             using var stream = new MemoryStream(bytes, false); using var reader = new BinaryReader(stream, Encoding.UTF8, true);
-            if (reader.ReadInt32() != 1) throw new InvalidDataException("Unsupported font cache version.");
+            var version = reader.ReadInt32(); if (version is not (1 or 2)) throw new InvalidDataException("Unsupported font cache version.");
             var count = Count(reader, 4096);
             for (var i = 0; i < count; i++)
             {
@@ -82,7 +82,9 @@ public partial class FontFile
                         var pixels = reader.ReadBytes(length); var offsets = new int[Count(reader, 16384)];
                         for (var x = 0; x < offsets.Length; x++) { offsets[x] = Count(reader, 16384); }
                         ValidateShelves(offsets, width, height);
-                        size.Pages.Add(new(width, height, pixels, offsets));
+                        var authored = version == 1 ? (byte)1 : reader.ReadByte(); if (authored > 1) throw new InvalidDataException("Invalid font cache page ownership.");
+                        var packing = version == 1 ? (byte)1 : reader.ReadByte(); if (packing > 1) throw new InvalidDataException("Invalid font cache packing permission.");
+                        size.Pages.Add(new(width, height, pixels, offsets, authored != 0) { AllowPacking = packing != 0 });
                     }
                     cache.Sizes.Add(key, size);
                 }
@@ -98,10 +100,10 @@ public partial class FontFile
         lock (FontGate) { ThrowIfDisposed(); EnsureLoadedLocked(); retired = PublishCachesLocked(caches); }
         NotifyRetired(retired);
     }
-    private List<FontData> PublishCachesLocked(List<FontCache> caches)
+    private List<FontData> PublishCachesLocked(List<FontCache> caches, Action<FontData>? configure = null)
     {
         List<FontData> created = [], retired = [];
-        try { foreach (var cache in caches) created.Add(BuildCacheData(cache)); if (created.Count == 0) { var data = new FontData(_bytes); CopyConfiguration(_fontData!, data); created.Add(data); } }
+        try { foreach (var cache in caches) created.Add(BuildCacheData(cache)); if (created.Count == 0) { var data = new FontData(_bytes); CopyConfiguration(_fontData!, data); data.FamilyName = _fontData!.FamilyName; data.StyleName = _fontData.StyleName; data.FontStyle = _fontData.FontStyle; data.FontWeight = _fontData.FontWeight; data.FontStretch = _fontData.FontStretch; created.Add(data); } foreach (var data in created) configure?.Invoke(data); }
         catch { foreach (var data in created) data.Dispose(); throw; }
         retired.Add(_fontData!); retired.AddRange(_cacheData.Values); _cacheData.Clear(); _caches.Clear(); _caches.AddRange(caches);
         if (caches.Count > 0) { _fixedSize = caches[0].FixedSize; _fixedScaleMode = caches[0].ScaleMode; }

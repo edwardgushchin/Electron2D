@@ -1,6 +1,6 @@
 # Image.State
 
-Last updated: 2026-09-22
+Last updated: 2026-10-12
 
 - Declaration: `internal readonly record struct Image.State`
 - Source: [Image.cs](../../src/Core/IO/Image.cs)
@@ -15,15 +15,15 @@ A managed snapshot record used by Image processing and the texture bridge. The r
 
 | Declaration | Contract |
 | --- | --- |
-| `State(int Width, int Height, Image.Format Format, bool HasMipmaps, byte[] Data)` | [Construction and values](#construction-and-values) |
+| `State(int Width, int Height, Image.Format Format, bool HasMIPMaps, byte[] Data)` | [Construction and values](#construction-and-values) |
 
 ## Member descriptions
 
 ### Construction and values
 
-`State(int Width, int Height, Image.Format Format, bool HasMipmaps, byte[] Data)`
+`State(int Width, int Height, Image.Format Format, bool HasMIPMaps, byte[] Data)`
 
-Width/Height, Format, HasMipmaps and Data are the positional record properties. Image validates payload size and mip layout before publication. A default Image may be empty; texture construction rejects empty snapshots. Internal transformation functions return complete replacement states; ordinary Image single-pixel mutation uses its own lock rather than this shared texture state.
+Width/Height, Format, HasMIPMaps and Data are the positional record properties. Image validates payload size and mip layout before publication. A default Image may be empty; texture construction rejects empty snapshots. Internal transformation functions return complete replacement states; ordinary Image single-pixel mutation uses its own lock rather than this shared texture state.
 
 ## Verification and limits
 

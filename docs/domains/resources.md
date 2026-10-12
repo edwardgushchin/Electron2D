@@ -219,3 +219,7 @@ Integer device image consumers now validate float/signed/unsigned sampled scalar
 ## Font support policy
 
 FontFile owns exact language/script override dictionaries with copied query arrays and bounded typed archive storage. Font primary-source support queries combine explicit/wildcard policy with native script metadata, independently of fallback glyph coverage. Source reload, indexed authoring, duplication and FontVariation preserve policy. Changes invalidate cached text, and the existing canvas/Label/RichTextLabel pipeline executes stable support-aware fallback choice. The [text component](../components/text.md#support-policy-and-fallback-priority) records executable native and storage evidence.
+
+## Native font raster preferences
+
+FontFile/SystemFont native strike and autohinter flags execute through the retained FreeType owner; generated glyph textures and indexed pages publish complete MIP chains. Replacement snapshots preserve active old readers, authored bitmap records, configured variations, copied preferences and bounded fresh-process storage. [Text verification](../components/text.md#native-raster-policy-verification) records actual pixel/sampling and allocation boundaries.

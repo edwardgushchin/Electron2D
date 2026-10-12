@@ -55,6 +55,9 @@ internal sealed partial class FontData : IDisposable
     internal int FontWeight { get; set; } = 400;
     internal int FontStretch { get; set; } = 100;
     internal FontStyle FontStyle { get; set; }
+    internal bool DisableEmbeddedBitmaps { get; set; } = true;
+    internal bool ForceAutohinter { get; set; }
+    internal bool GenerateMIPMaps { get; set; }
     internal bool ModulateColorGlyphs { get; set; }
     internal float Oversampling { get; set; }
     internal FontHinting Hinting { get; set; } = FontHinting.Light;
@@ -88,13 +91,13 @@ internal sealed partial class FontData : IDisposable
                 var coordinates = new Dictionary<uint, float>(_instance?.Coordinates ?? []); foreach (var pair in instance.Coordinates) coordinates[pair.Key] = pair.Value;
                 instance = instance with { FaceIndex = SystemFaces[instance.FaceIndex], Coordinates = coordinates };
             }
-            var cache = Authored?.Clone();
+            var cache = Authored?.Clone(discardGenerated: _bytes.Length > 0);
             if (cache != null && _bytes.Length > 0 && !Authored!.Matches(instance)) cache.Sizes.Clear();
             var result = new FontData(_bytes, instance.FaceIndex, instance, cache);
             try
             {
                 result.Hinting = Hinting; result.SubpixelPositioning = SubpixelPositioning; result.KeepRoundingRemainders = KeepRoundingRemainders; result.Oversampling = Oversampling; result.ModulateColorGlyphs = ModulateColorGlyphs;
-                result.SupportPolicy = SupportPolicy; result.OpenTypeFeatures = OpenTypeFeatures; result.AllowSystemFallback = AllowSystemFallback; result.AdvertisedFaceCount = AdvertisedFaceCount; return result;
+                result.DisableEmbeddedBitmaps = DisableEmbeddedBitmaps; result.ForceAutohinter = ForceAutohinter; result.GenerateMIPMaps = GenerateMIPMaps; result.SupportPolicy = SupportPolicy; result.OpenTypeFeatures = OpenTypeFeatures; result.AllowSystemFallback = AllowSystemFallback; result.AdvertisedFaceCount = AdvertisedFaceCount; return result;
             }
             catch { result.Dispose(); throw; }
         }
@@ -271,10 +274,11 @@ internal sealed partial class FontData : IDisposable
     private FontGlyph RasterGlyph()
     {
         _precision!.SetSize(_size * _oversampling);
-        var raster = _precision.Rasterize(_glyph, Hinting, _phase, checked((int)(_outline * _oversampling) * 16));
+        var raster = _precision.Rasterize(_glyph, Hinting, _phase, checked((int)(_outline * _oversampling) * 16), DisableEmbeddedBitmaps, ForceAutohinter);
         if (raster.Width == 0 || raster.Height == 0) return default;
         if (Authored != null && _oversampling == 1 && _phase == 0) return CacheRaster(_glyph, new(_size, _outline), raster);
         using var image = Image.CreateFromData(raster.Width, raster.Height, false, Image.Format.Rgba8, raster.Pixels);
+        if (GenerateMIPMaps) image.GenerateMIPMaps();
         var texture = ImageTexture.CreateFromImage(image); texture.RetainRendererCache = true;
         var result = new FontGlyph(texture, new Vector2(raster.Left, -raster.Top) / _oversampling,
             new Vector2(raster.Width, raster.Height) / _oversampling, raster.Colored);

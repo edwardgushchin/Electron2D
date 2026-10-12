@@ -71,3 +71,7 @@ Sixty-four measured shaping/size/metric/raster-bound-query cycles after sixty-fo
 ## OpenType script metadata
 
 [NativeFontPrecision.Support.cs](../../src/Servers/Text/NativeFontPrecision.Support.cs) enumerates GSUB and GPOS script tags with `hb_ot_layout_table_get_script_tags`, validates counts and converts native tags to ISO15924 using `hb_ot_tag_to_script`. The copied set remains per realized face; bitmap faces have no automatic script tables. FontData combines metadata with explicit FontFile overrides for public primary queries and fallback ranking. No native handle is exposed.
+
+## Native source raster flags
+
+Rasterize accepts internal monochrome bitmap bypass and forced-autohinter arguments. Public FreeType load flags select embedded monochrome strikes when allowed, preserve color strikes in either bypass state and use native outlines for strokes. These flags affect raster coverage independently of HarfBuzz/unhinted shaping. Engine-owned mono/color fixtures and the independent C oracle exercise actual returned pixels.

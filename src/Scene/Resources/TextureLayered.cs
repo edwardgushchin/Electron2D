@@ -44,7 +44,7 @@ public abstract class TextureLayered : Resource
     public virtual LayeredType GetLayeredType() { ThrowIfDisposed(); return LayeredType.Array; }
     /// <summary>Reports whether each image stores a mipmap chain.</summary>
     /// <returns>True when stored layers contain mipmaps.</returns>
-    public abstract bool HasMipmaps();
+    public abstract bool HasMIPMaps();
     /// <summary>Copies one layer into a caller-owned image.</summary>
     /// <param name="layerIndex">The zero-based image layer.</param>
     /// <returns>An independent image, or null for a metadata-only placeholder.</returns>
@@ -65,7 +65,7 @@ public abstract class TextureLayered : Resource
             var layers = new TexturePixels[count]; var remaining = LayeredTexturePixels.MaximumBytes;
             for (var i = 0; i < count; i++) { using var image = GetLayerData(i); if (image is null) return null; layers[i] = TexturePixels.FromImage(image, remaining); remaining -= layers[i].Source.Data.Length + layers[i].Upload.Data.Length; }
             var snapshot = new LayeredTexturePixels(layers);
-            if (snapshot.First.Source.Width != GetWidth() || snapshot.First.Source.Height != GetHeight() || snapshot.First.Source.Format != GetFormat() || snapshot.First.Source.HasMipmaps != HasMipmaps())
+            if (snapshot.First.Source.Width != GetWidth() || snapshot.First.Source.Height != GetHeight() || snapshot.First.Source.Format != GetFormat() || snapshot.First.Source.HasMIPMaps != HasMIPMaps())
                 throw new InvalidOperationException("Custom layered metadata does not match its readable images.");
             return _snapshot = snapshot;
         }
@@ -98,7 +98,7 @@ internal sealed class LayeredTexturePixels
         foreach (var p in layers)
         {
             var a = layers[0].Source; var b = p.Source;
-            if (a.Width != b.Width || a.Height != b.Height || a.Format != b.Format || a.HasMipmaps != b.HasMipmaps)
+            if (a.Width != b.Width || a.Height != b.Height || a.Format != b.Format || a.HasMIPMaps != b.HasMIPMaps)
                 throw new ArgumentException("Array layers require equal dimensions, formats and mipmap configuration.", nameof(layers));
             sourceBytes += b.Data.Length; uploadBytes += p.Upload.Data.Length;
             if (sourceBytes + uploadBytes > MaximumBytes) throw new ArgumentException("Texture array source and upload pixels exceed 256 MiB.", nameof(layers));

@@ -75,7 +75,7 @@ internal static partial class RenderingRuntimeTests
         pixels.Fill(Colors.Green);
         using var independent = texture.GetImage()!;
         Pixel(independent, 1, 1, Colors.Red);
-        Check(texture.GetWidth() == 2 && texture.GetHeight() == 2 && texture.GetSize() == new Vector2(2, 2) && texture.HasAlpha && !texture.HasMipmaps && texture.MipmapCount == 0,
+        Check(texture.GetWidth() == 2 && texture.GetHeight() == 2 && texture.GetSize() == new Vector2(2, 2) && texture.HasAlpha && !texture.HasMIPMaps && texture.MIPMapCount == 0,
             "Texture metadata describes its copied original pixels.");
         Check(!texture.IsPixelOpaque(0, 0) && texture.IsPixelOpaque(1, 1) && texture.IsPixelOpaque(int.MaxValue, int.MaxValue), "Opacity checks clamp safely.");
         texture.SetSizeOverride(new Vector2i(8, 0));
@@ -310,7 +310,7 @@ internal static partial class RenderingRuntimeTests
         };
         foreach (var node in nodes) { node.DrawAction = n => n.DrawRect(new(0, 0, 96, 12), Colors.White); parent.AddChild(node); }
         var frames = 0; var before = 0L; var allocated = 0L;
-        var settings = ProjectSettings.Service; var nearestMip = ProjectSettings.Get(ProjectSettings.UseNearestMipmapFilter);
+        var settings = ProjectSettings.Service; var nearestMip = ProjectSettings.Get(ProjectSettings.UseNearestMIPMapFilter);
         window.Ready += _ =>
         {
             var server = RenderingServer.Service!;
@@ -332,7 +332,7 @@ internal static partial class RenderingRuntimeTests
                     parent.TextureFilter = TextureFilter.NearestWithMipmapsAnisotropic;
                     window.CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.LinearWithMipmaps;
                     window.CanvasItemDefaultTextureRepeat = Viewport.DefaultCanvasItemTextureRepeat.Enabled;
-                    ProjectSettings.Set(ProjectSettings.UseNearestMipmapFilter, !nearestMip);
+                    ProjectSettings.Set(ProjectSettings.UseNearestMIPMapFilter, !nearestMip);
                 }
                 if (frames == 2)
                 {
@@ -361,7 +361,7 @@ internal static partial class RenderingRuntimeTests
                 Check(frames == 40 && allocated == 0 && nodes[0].Draws == 2 && nodes[1].Draws == 1 && nodes[2].Draws == 2, $"Named sampler result: frames={frames}, allocated={allocated}, draws={string.Join(",", nodes.Select(n => n.Draws))}.");
             }
         }
-        finally { ProjectSettings.Set(ProjectSettings.UseNearestMipmapFilter, nearestMip); }
+        finally { ProjectSettings.Set(ProjectSettings.UseNearestMIPMapFilter, nearestMip); }
         Released(window);
         Check(!texture.IsDisposed && !detail.IsDisposed, "Named sampler teardown preserves borrowed texture resources.");
         Console.WriteLine($"Named sampler defaults passed: {backend}/{fixture}; {frames} frames; {allocated} warm rendering bytes.");

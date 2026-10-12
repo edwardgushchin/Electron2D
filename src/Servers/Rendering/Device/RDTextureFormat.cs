@@ -20,7 +20,7 @@ public sealed class RDTextureFormat : ElectronObject
     private uint _mipmaps = 1;
     /// <summary>Gets or sets the mip count, including the base level.</summary>
     /// <value>Initially 1; copied when the device creates its resource.</value>
-    public uint Mipmaps { get { ThrowIfDisposed(); return _mipmaps; } set { ThrowIfDisposed(); _mipmaps = RDTextureConfiguration.Positive(value); } }
+    public uint MIPMaps { get { ThrowIfDisposed(); return _mipmaps; } set { ThrowIfDisposed(); _mipmaps = RDTextureConfiguration.Positive(value); } }
     private RenderingDevice.DataFormat _format = RenderingDevice.DataFormat.R8UNORM;
     /// <summary>Gets or sets the encoded pixel or compressed-block format.</summary>
     /// <value>Initially RenderingDevice.DataFormat.R8UNORM; copied when the device creates its resource.</value>
@@ -58,7 +58,7 @@ public sealed class RDTextureFormat : ElectronObject
             new PropertyDescriptor<RDTextureFormat, uint>(nameof(ArrayLayers), p => p.ArrayLayers, (p, v) => p.ArrayLayers = v, _ => 1),
             new PropertyDescriptor<RDTextureFormat, uint>(nameof(Width), p => p.Width, (p, v) => p.Width = v, _ => 1),
             new PropertyDescriptor<RDTextureFormat, uint>(nameof(Height), p => p.Height, (p, v) => p.Height = v, _ => 1),
-            new PropertyDescriptor<RDTextureFormat, uint>(nameof(Mipmaps), p => p.Mipmaps, (p, v) => p.Mipmaps = v, _ => 1),
+            new PropertyDescriptor<RDTextureFormat, uint>(nameof(MIPMaps), p => p.MIPMaps, (p, v) => p.MIPMaps = v, _ => 1),
             new PropertyDescriptor<RDTextureFormat, RenderingDevice.DataFormat>(nameof(Format), p => p.Format, (p, v) => p.Format = v, _ => RenderingDevice.DataFormat.R8UNORM),
             new PropertyDescriptor<RDTextureFormat, RenderingDevice.TextureType>(nameof(TextureType), p => p.TextureType, (p, v) => p.TextureType = v, _ => RenderingDevice.TextureType.Texture),
             new PropertyDescriptor<RDTextureFormat, RenderingDevice.TextureUsageBits>(nameof(UsageBits), p => p.UsageBits, (p, v) => p.UsageBits = v, _ => 0)

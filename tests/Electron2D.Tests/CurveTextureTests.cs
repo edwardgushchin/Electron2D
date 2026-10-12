@@ -22,7 +22,7 @@ internal static class CurveTextureTests
         t.Curve = c;
         using (var image = t.GetImage()!)
         {
-            Check(image.Width == 32 && image.Height == 1 && !image.HasMipmaps && image.GetData().Length == 32 * 12, "RGB float layout.");
+            Check(image.Width == 32 && image.Height == 1 && !image.HasMIPMaps && image.GetData().Length == 32 * 12, "RGB float layout.");
             for (var i = 0; i < 32; i++) Near(image.GetPixel(i, 0), new Color(-2 + 5 * i / 32f, -2 + 5 * i / 32f, -2 + 5 * i / 32f, 1));
             image.Fill(Colors.White);
         }
@@ -31,7 +31,7 @@ internal static class CurveTextureTests
         Check(ReferenceEquals(allocation, t.CapturePixels()!.Allocation), "Curve updates retain the allocation.");
         using (var image = t.GetImage()!) Near(image.GetPixel(31, 0).R, c.SampleBaked(31 / 32f));
         t.TextureMode = CurveTexture.TextureModeEnum.Red;
-        Check(!ReferenceEquals(allocation, t.CapturePixels()!.Allocation) && !t.HasAlpha && !t.HasMipmaps && t.MipmapCount == 0 && t.IsPixelOpaque(-1, int.MaxValue), "Mode replaces allocation and retains opaque unmipped metadata.");
+        Check(!ReferenceEquals(allocation, t.CapturePixels()!.Allocation) && !t.HasAlpha && !t.HasMIPMaps && t.MIPMapCount == 0 && t.IsPixelOpaque(-1, int.MaxValue), "Mode replaces allocation and retains opaque unmipped metadata.");
         using (var image = t.GetImage()!)
         {
             Check(image.PixelFormat == Image.Format.Rf && image.GetData().Length == 32 * 4, "Red-only source storage.");

@@ -6,14 +6,14 @@ internal static class CanvasCompositionTests
     {
         CanvasClipTests.Run();
         using var group = new CanvasGroup(); using var copy = new BackBufferCopy();
-        Check(group.FitMargin == 10 && group.ClearMargin == 10 && !group.UseMipmaps && copy.CopyMode == BackBufferCopyMode.Rect && copy.Rect == new Rect2(-100, -100, 200, 200), "Defaults.");
+        Check(group.FitMargin == 10 && group.ClearMargin == 10 && !group.UseMIPMaps && copy.CopyMode == BackBufferCopyMode.Rect && copy.Rect == new Rect2(-100, -100, 200, 200), "Defaults.");
         Reject<ArgumentOutOfRangeException>(() => group.FitMargin = -1); Reject<ArgumentOutOfRangeException>(() => group.ClearMargin = float.NaN);
         Reject<ArgumentException>(() => copy.Rect = new(float.PositiveInfinity, 0, 1, 1)); Reject<ArgumentOutOfRangeException>(() => copy.CopyMode = (BackBufferCopyMode)99);
         Check(group.FitMargin == 10 && group.ClearMargin == 10 && copy.Rect == new Rect2(-100, -100, 200, 200), "Invalid writes preserve values.");
         var changes = 0; copy.PropertyListChanged += _ => changes++; copy.CopyMode = copy.CopyMode; Check(changes == 1, "Equal copy mode notifies property list.");
         var rects = 0; copy.ItemRectChanged += _ => rects++; copy.Rect = copy.Rect; Check(rects == 1, "Equal rectangle emits item change.");
         Action<ElectronObject> fail = _ => throw new InvalidOperationException("copy fixture"); copy.PropertyListChanged += fail; Reject<InvalidOperationException>(() => copy.CopyMode = BackBufferCopyMode.Viewport); Check(copy.CopyMode == BackBufferCopyMode.Viewport, "Observer failure commits policy."); copy.PropertyListChanged -= fail;
-        using var source = new Node { Name = "scene" }; var storedGroup = new CanvasGroup { Name = "group", FitMargin = 3.5f, ClearMargin = 7, UseMipmaps = true, SelfModulate = new(1, 1, 1, .5f) }; var storedCopy = new BackBufferCopy { Name = "copy", CopyMode = BackBufferCopyMode.Viewport, Rect = new(16, 8, -32, 24) }; source.AddChild(storedGroup); source.AddChild(storedCopy); storedGroup.Owner = source; storedCopy.Owner = source; using var packed = new PackedScene(); packed.Pack(source); using var instance = packed.Instantiate(); var restored = (CanvasGroup)instance.GetNode("group"); var restoredCopy = (BackBufferCopy)instance.GetNode("copy"); Check(restored.FitMargin == 3.5f && restored.ClearMargin == 7 && restored.UseMipmaps && restored.SelfModulate.A == .5f && restoredCopy.CopyMode == BackBufferCopyMode.Viewport && restoredCopy.Rect == storedCopy.Rect, "Typed scene reconstruction.");
+        using var source = new Node { Name = "scene" }; var storedGroup = new CanvasGroup { Name = "group", FitMargin = 3.5f, ClearMargin = 7, UseMIPMaps = true, SelfModulate = new(1, 1, 1, .5f) }; var storedCopy = new BackBufferCopy { Name = "copy", CopyMode = BackBufferCopyMode.Viewport, Rect = new(16, 8, -32, 24) }; source.AddChild(storedGroup); source.AddChild(storedCopy); storedGroup.Owner = source; storedCopy.Owner = source; using var packed = new PackedScene(); packed.Pack(source); using var instance = packed.Instantiate(); var restored = (CanvasGroup)instance.GetNode("group"); var restoredCopy = (BackBufferCopy)instance.GetNode("copy"); Check(restored.FitMargin == 3.5f && restored.ClearMargin == 7 && restored.UseMIPMaps && restored.SelfModulate.A == .5f && restoredCopy.CopyMode == BackBufferCopyMode.Viewport && restoredCopy.Rect == storedCopy.Rect, "Typed scene reconstruction.");
         var root = new TestViewport(); var outer = new CanvasGroup { Name = "outer" }; var inner = new CanvasGroup(); root.AddChild(outer); outer.AddChild(inner); using var tree = new SceneTree(root); Check(inner.GetConfigurationWarnings().Length == 1 && outer.GetConfigurationWarnings().Length == 0, "Attached nested-group warning."); Task.Run(() => Reject<InvalidOperationException>(() => inner.ClearMargin = 1)).GetAwaiter().GetResult();
         Console.WriteLine("Canvas composition authoring, callbacks, packing and owner checks passed.");
     }
@@ -145,7 +145,7 @@ internal static class CanvasCompositionTests
             {
                 using var image = renderer.Readback();
                 if (stage == 0) { Pixel(image, 28, 12, Colors.Red); group.ClearMargin = 10; }
-                else if (stage == 1) { Pixel(image, 28, 12, Colors.Blue); material.SetShaderParameter("offset", Vector2.Zero); material.SetShaderParameter("lod", 1f); group.UseMipmaps = true; child.Stripes = true; child.QueueRedraw(); }
+                else if (stage == 1) { Pixel(image, 28, 12, Colors.Blue); material.SetShaderParameter("offset", Vector2.Zero); material.SetShaderParameter("lod", 1f); group.UseMIPMaps = true; child.Stripes = true; child.QueueRedraw(); }
                 else if (stage == 2) { Pixel(image, 16, 16, new(.5f, 0, .5f)); group.SelfModulate = new(1, 1, 1, .5f); }
                 else if (stage == 3) { Pixel(image, 16, 16, new(.25f, 0, .75f)); window.Tree!.Quit(); }
                 stage++;
@@ -170,7 +170,7 @@ internal static class CanvasCompositionTests
     }
     private static void RejectMipmaps()
     {
-        var window = new Window(); var group = new CanvasGroup { UseMipmaps = true }; group.AddChild(new Box()); window.AddChild(group); Reject<NotSupportedException>(() => Engine.Run(window)); Check(window.IsDisposed, "Rejected mipmap cleanup."); Console.WriteLine("Compatibility group mipmaps reject before submission and clean up.");
+        var window = new Window(); var group = new CanvasGroup { UseMIPMaps = true }; group.AddChild(new Box()); window.AddChild(group); Reject<NotSupportedException>(() => Engine.Run(window)); Check(window.IsDisposed, "Rejected mipmap cleanup."); Console.WriteLine("Compatibility group mipmaps reject before submission and clean up.");
     }
     private static void RejectNested()
     {

@@ -66,7 +66,7 @@ internal static class GradientTests
         t.Width = t.Width; t.Height = t.Height; t.Fill = t.Fill; t.FillFrom = t.FillFrom; t.FillTo = t.FillTo; t.Repeat = t.Repeat;
         Check(changes == 6 && t.GetImage() is null, "All other texture settings notify even equal values.");
         ramp.Gradient = g; ramp.Width = 3;
-        using (var image = ramp.GetImage()!) { Check(image.PixelFormat == Image.Format.Rgba8 && !image.HasMipmaps, "Byte storage."); Near(image.GetPixel(0, 0), Colors.Black); Near(image.GetPixel(1, 0), new(128 / 255f, 128 / 255f, 128 / 255f, 1)); Near(image.GetPixel(2, 0), Colors.White); image.Fill(Colors.Red); }
+        using (var image = ramp.GetImage()!) { Check(image.PixelFormat == Image.Format.Rgba8 && !image.HasMIPMaps, "Byte storage."); Near(image.GetPixel(0, 0), Colors.Black); Near(image.GetPixel(1, 0), new(128 / 255f, 128 / 255f, 128 / 255f, 1)); Near(image.GetPixel(2, 0), Colors.White); image.Fill(Colors.Red); }
         ramp.Width = 1; using (var image = ramp.GetImage()!) Near(image.GetPixel(0, 0), Colors.Black);
         ramp.Width = 16384; using (var image = ramp.GetImage()!) Near(image.GetPixel(16383, 0), Colors.White);
         t.Gradient = g; t.Width = t.Height = 3; t.UseHDR = true;

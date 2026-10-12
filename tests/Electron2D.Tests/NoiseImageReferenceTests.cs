@@ -14,10 +14,10 @@ internal static class NoiseImageReferenceTests
             var width = test.GetProperty("width").GetInt32(); var height = test.GetProperty("height").GetInt32(); var kind = test.GetProperty("kind").GetString(); var invert = test.TryGetProperty("invert", out var inv) && inv.GetBoolean();
             var mode = test.TryGetProperty("mode", out var modeValue) ? modeValue.GetInt32() : 0; var skirt = test.TryGetProperty("skirt", out var value) ? value.GetSingle() : .1f;
             using var ramp = mode is not (1 or 3 or 4) ? null : new Gradient { Colors = [new(.1f, .7f, .2f, .3f), new(.9f, .2f, .8f, .9f)] };
-            using var texture = kind != "texture" ? null : new NoiseTexture { Width = width, Height = height, Noise = noise, ColorRamp = ramp, GenerateMipmaps = mode is 3 or 4 or 5, Seamless = test.GetProperty("seamless").GetBoolean(), SeamlessBlendSkirt = skirt, AsNormalMap = mode is 2 or 3, BumpStrength = 2.5f };
+            using var texture = kind != "texture" ? null : new NoiseTexture { Width = width, Height = height, Noise = noise, ColorRamp = ramp, GenerateMIPMaps = mode is 3 or 4 or 5, Seamless = test.GetProperty("seamless").GetBoolean(), SeamlessBlendSkirt = skirt, AsNormalMap = mode is 2 or 3, BumpStrength = 2.5f };
             using var image = kind switch { "image" => noise.GetImage(width, height, invert, test.GetProperty("normalize").GetBoolean()), "seamless" => noise.GetSeamlessImage(width, height, invert, skirt), _ => texture!.GetImage()! };
             var expected = Convert.FromHexString(test.GetProperty("data").GetString()!); var actual = image.GetData();
-            Check((int)image.PixelFormat == test.GetProperty("format").GetInt32() && image.HasMipmaps == test.GetProperty("mipmaps").GetBoolean(), "Image format/mip ownership");
+            Check((int)image.PixelFormat == test.GetProperty("format").GetInt32() && image.HasMIPMaps == test.GetProperty("mipmaps").GetBoolean(), "Image format/mip ownership");
             if (!actual.SequenceEqual(expected)) { var first = Enumerable.Range(0, Math.Min(actual.Length, expected.Length)).FirstOrDefault(i => actual[i] != expected[i]); failures.Add($"case {count} {kind} {width}x{height} skirt {skirt} mode {mode}: byte {first} actual {actual[first]} expected {expected[first]}"); }
             count++;
         }

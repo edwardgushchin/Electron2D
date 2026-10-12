@@ -83,3 +83,7 @@ Negative face indices, invalid spacing categories, nonfinite coordinates/colors/
 ## Inherited support policy
 
 Realized sources copy the base FontFile language/script policy while capturing their own native OpenType scripts. Base policy changes invalidate realized variation data and dependent text. Primary support queries describe that variation source; layout still uses the common stable fallback tiers. The FontSupportTests and native rendering host exercise inherited changes through a borrowed variation.
+
+## Inherited raster policy
+
+Independent realized data inherits native bitmap/autohinter/MIP preferences. Native generated caches are discarded when copying a native variation; authored records survive matching instance configuration. Base changes retire old realized sources after active reads and recreate actual glyph textures with the new policy. FontRasterPolicyTests and its native host exercise this path.

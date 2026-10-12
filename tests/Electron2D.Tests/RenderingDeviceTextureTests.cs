@@ -57,7 +57,7 @@ internal static class RenderingDeviceTextureTests
     }
     private static void LayersAndMips(RenderingDevice device)
     {
-        using var format = new RDTextureFormat { Width = 3, Height = 3, Mipmaps = 2, ArrayLayers = 2, TextureType = RenderingDevice.TextureType.TextureArray, Format = RenderingDevice.DataFormat.R8UNORM, UsageBits = RenderingDevice.TextureUsageBits.Sampling | RenderingDevice.TextureUsageBits.CanUpdate | RenderingDevice.TextureUsageBits.CPURead };
+        using var format = new RDTextureFormat { Width = 3, Height = 3, MIPMaps = 2, ArrayLayers = 2, TextureType = RenderingDevice.TextureType.TextureArray, Format = RenderingDevice.DataFormat.R8UNORM, UsageBits = RenderingDevice.TextureUsageBits.Sampling | RenderingDevice.TextureUsageBits.CanUpdate | RenderingDevice.TextureUsageBits.CPURead };
         using var view = new RDTextureView(); byte[] a = Enumerable.Range(1, 10).Select(x => (byte)x).ToArray(); byte[] b = Enumerable.Range(11, 10).Select(x => (byte)x).ToArray();
         var texture = device.TextureCreate(format, view, [a, b]);
         Check(device.TextureGetData(texture, 0).SequenceEqual(a) && device.TextureGetData(texture, 1).SequenceEqual(b), "Odd-sized mip chains keep tight public layout and aligned native offsets across layers.");
@@ -86,7 +86,7 @@ internal static class RenderingDeviceTextureTests
     }
     private static void SamplingModes(RenderingDevice device)
     {
-        using var format = new RDTextureFormat { Width = 2, Height = 2, ArrayLayers = 2, Mipmaps = 2, TextureType = RenderingDevice.TextureType.TextureArray, Format = RenderingDevice.DataFormat.R8G8B8A8UNORM, UsageBits = RenderingDevice.TextureUsageBits.Sampling };
+        using var format = new RDTextureFormat { Width = 2, Height = 2, ArrayLayers = 2, MIPMaps = 2, TextureType = RenderingDevice.TextureType.TextureArray, Format = RenderingDevice.DataFormat.R8G8B8A8UNORM, UsageBits = RenderingDevice.TextureUsageBits.Sampling };
         using var view = new RDTextureView();
         byte[] first = [0, 0, 0, 255, 255, 0, 0, 255, 0, 0, 0, 255, 255, 0, 0, 255, 0, 255, 0, 255];
         byte[] second = [0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255];
@@ -109,7 +109,7 @@ internal static class RenderingDeviceTextureTests
         state.RepeatU = RenderingDevice.SamplerRepeatMode.MirroredRepeat; Check(Sample(state, 1.25f, .25f, 0, 0)[0] == 1, "Mirror repeat reverses alternating intervals.");
         state.RepeatU = RenderingDevice.SamplerRepeatMode.ClampToEdge; Check(Sample(state, 1.25f, .25f, 0, 0)[0] == 1, "Clamp selects the edge pixel.");
         Check(Sample(state, .25f, .25f, 1, 0)[2] == 1, "Array sampling selects the requested layer.");
-        state.MipFilter = RenderingDevice.SamplerFilter.Linear; var mixed = Sample(state, .75f, .25f, 0, .5f); Check(Math.Abs(mixed[0] - .5f) < .0001f && Math.Abs(mixed[1] - .5f) < .0001f, "Mip filtering interpolates two mip levels.");
+        state.MIPFilter = RenderingDevice.SamplerFilter.Linear; var mixed = Sample(state, .75f, .25f, 0, .5f); Check(Math.Abs(mixed[0] - .5f) < .0001f && Math.Abs(mixed[1] - .5f) < .0001f, "Mip filtering interpolates two mip levels.");
         state.MinLOD = state.MaxLOD = 1; Check(Sample(state, .75f, .25f, 0, 0)[1] == 1, "The minimum LOD clamps to the smaller mip.");
         state.MinLOD = state.MaxLOD = 0; Check(Sample(state, .75f, .25f, 0, 1)[0] == 1, "The maximum LOD clamps to the larger mip.");
         using var wrong = new RDTextureFormat { Format = RenderingDevice.DataFormat.R8G8B8A8UINT, UsageBits = RenderingDevice.TextureUsageBits.Sampling }; var integer = device.TextureCreate(wrong, view); var samplerRID = device.SamplerCreate(state);
@@ -135,7 +135,7 @@ internal static class RenderingDeviceTextureTests
     private static void CompressedTransfer(RenderingDevice device)
     {
         if (!device.TextureIsFormatSupportedForUsage(RenderingDevice.DataFormat.BC3UNORMBLOCK, RenderingDevice.TextureUsageBits.Sampling | RenderingDevice.TextureUsageBits.CPURead)) return;
-        using var format = new RDTextureFormat { Width = 5, Height = 3, Mipmaps = 3, Format = RenderingDevice.DataFormat.BC3UNORMBLOCK, UsageBits = RenderingDevice.TextureUsageBits.Sampling | RenderingDevice.TextureUsageBits.CPURead | RenderingDevice.TextureUsageBits.CanUpdate }; using var view = new RDTextureView();
+        using var format = new RDTextureFormat { Width = 5, Height = 3, MIPMaps = 3, Format = RenderingDevice.DataFormat.BC3UNORMBLOCK, UsageBits = RenderingDevice.TextureUsageBits.Sampling | RenderingDevice.TextureUsageBits.CPURead | RenderingDevice.TextureUsageBits.CanUpdate }; using var view = new RDTextureView();
         byte[] data = Enumerable.Range(0, 64).Select(x => (byte)x).ToArray(); var texture = device.TextureCreate(format, view, [data]); Check(device.TextureGetData(texture, 0).SequenceEqual(data), "Compressed partial blocks and small mips preserve exact bytes.");
         Array.Fill(data, (byte)11); device.TextureUpdate(texture, 0, data); byte[] result = new byte[64]; device.TextureGetDataAsync(texture, 0, result.AsMemory(), () => { }); device.Submit(); device.Sync(); Check(result.SequenceEqual(data), "Compressed asynchronous mip readback uses aligned physical storage."); device.FreeRID(texture);
     }

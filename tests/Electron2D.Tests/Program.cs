@@ -322,6 +322,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_CATALOG") ==
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_CHILD") is { } systemFontPath) { SystemFontTests.RunChild(systemFontPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_HOST") == "1") { SystemFontTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT") == "1") { SystemFontTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_CHILD") is { } fontRasterPath) { FontRasterPolicyTests.RunChild(fontRasterPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_HOST") == "1") { FontRasterPolicyTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER") == "1") { FontRasterPolicyTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_SUPPORT_CHILD") is { } fontSupportPath) { FontSupportTests.RunChild(fontSupportPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_SUPPORT_HOST") == "1") { FontSupportTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_SUPPORT") == "1") { FontSupportTests.Run(); return; }
@@ -761,7 +764,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT") == "1")
     UnicodeTextTests.Run(); NativeTextBreakTests.Run(); TextCaseTests.Run(); TextHelperTests.Run(); LabelSettingsTests.Run();
     NativeFontPrecisionTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
     FontFileTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
-    FontCacheTests.Run(); FontSupportTests.Run();
+    FontCacheTests.Run(); FontSupportTests.Run(); FontRasterPolicyTests.Run();
     SystemFontTests.Run();
     FontLifetimeTests.Run(FontTestFixtures.OpenSans);
     FontTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
@@ -1016,7 +1019,7 @@ TextHelperTests.Run();
 LabelSettingsTests.Run();
 NativeFontPrecisionTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
 FontFileTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
-FontCacheTests.Run(); FontSupportTests.Run();
+FontCacheTests.Run(); FontSupportTests.Run(); FontRasterPolicyTests.Run();
 SystemFontTests.Run();
 FontLifetimeTests.Run(FontTestFixtures.OpenSans);
 FontTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
@@ -2364,7 +2367,7 @@ static void VerifyImages()
         [nameof(Image.BlitRect)] = 1,
         [nameof(Image.BlitRectMask)] = 1,
         [nameof(Image.BumpMapToNormalMap)] = 1,
-        [nameof(Image.ClearMipmaps)] = 1,
+        [nameof(Image.ClearMIPMaps)] = 1,
         [nameof(Image.ComputeImageMetrics)] = 1,
         [nameof(Image.Convert)] = 1,
         [nameof(Image.CopyFrom)] = 1,
@@ -2379,9 +2382,9 @@ static void VerifyImages()
         [nameof(Image.FixAlphaEdges)] = 1,
         [nameof(Image.FlipX)] = 1,
         [nameof(Image.FlipY)] = 1,
-        [nameof(Image.GenerateMipmaps)] = 1,
+        [nameof(Image.GenerateMIPMaps)] = 1,
         [nameof(Image.GetData)] = 1,
-        [nameof(Image.GetMipmapOffset)] = 1,
+        [nameof(Image.GetMIPMapOffset)] = 1,
         [nameof(Image.GetPixel)] = 2,
         [nameof(Image.GetRegion)] = 1,
         [nameof(Image.GetUsedRect)] = 1,
@@ -2422,8 +2425,8 @@ static void VerifyImages()
         "Image must expose exactly the audited image-processing and codec method surface.");
     var expectedProperties = new[]
     {
-        nameof(Image.DataSize), nameof(Image.HasMipmaps), nameof(Image.Height), nameof(Image.IsCompressed),
-        nameof(Image.IsEmpty), nameof(Image.IsInvisible), nameof(Image.MipmapCount), nameof(Image.PixelFormat),
+        nameof(Image.DataSize), nameof(Image.HasMIPMaps), nameof(Image.Height), nameof(Image.IsCompressed),
+        nameof(Image.IsEmpty), nameof(Image.IsInvisible), nameof(Image.MIPMapCount), nameof(Image.PixelFormat),
         nameof(Image.Size), nameof(Image.Width),
     };
     Require(typeof(Image).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance |
@@ -2435,12 +2438,12 @@ static void VerifyImages()
     using (var empty = new Image())
     {
         Require(empty.IsEmpty && empty.Width == 0 && empty.Height == 0 && empty.Size == Vector2i.Zero &&
-                empty.PixelFormat == Image.Format.L8 && !empty.HasMipmaps && empty.MipmapCount == 0 &&
+                empty.PixelFormat == Image.Format.L8 && !empty.HasMIPMaps && empty.MIPMapCount == 0 &&
                 empty.DataSize == 0 && empty.GetData().Length == 0 && empty.IsInvisible &&
                 empty.DetectAlpha() == Image.AlphaMode.None,
             "A default image must expose one canonical empty state.");
         Expect<InvalidOperationException>(() => empty.GetPixel(0, 0), "An empty image must reject pixel access.");
-        Expect<InvalidOperationException>(() => empty.GenerateMipmaps(), "An empty image must reject mipmap generation.");
+        Expect<InvalidOperationException>(() => empty.GenerateMIPMaps(), "An empty image must reject mipmap generation.");
     }
 
     Require(Image.MaxWidth == 16_777_216 && Image.MaxHeight == 16_777_216 &&
@@ -2535,8 +2538,8 @@ static void VerifyImages()
 
     using (var compressedMipmaps = Image.CreateEmpty(8, 8, true, Image.Format.Dxt1))
     {
-        Require(compressedMipmaps.DataSize == 56 && compressedMipmaps.MipmapCount == 3 &&
-                compressedMipmaps.GetMipmapOffset(1) == 32 && compressedMipmaps.GetMipmapOffset(3) == 48,
+        Require(compressedMipmaps.DataSize == 56 && compressedMipmaps.MIPMapCount == 3 &&
+                compressedMipmaps.GetMIPMapOffset(1) == 32 && compressedMipmaps.GetMIPMapOffset(3) == 48,
             "Compressed mip layouts must respect block minima at every level.");
     }
 
@@ -2562,19 +2565,19 @@ static void VerifyImages()
         Expect<ArgumentOutOfRangeException>(() => image.DetectUsedChannels((Image.CompressSource)3),
             "Channel detection must reject its source sentinel.");
 
-        image.GenerateMipmaps();
-        Require(image.HasMipmaps && image.MipmapCount == 2 && image.DataSize == 84 &&
-                image.GetMipmapOffset(0) == 0 && image.GetMipmapOffset(1) == 64 && image.GetMipmapOffset(2) == 80,
+        image.GenerateMIPMaps();
+        Require(image.HasMIPMaps && image.MIPMapCount == 2 && image.DataSize == 84 &&
+                image.GetMIPMapOffset(0) == 0 && image.GetMIPMapOffset(1) == 64 && image.GetMIPMapOffset(2) == 80,
             "Mipmap generation must produce the complete 4x4, 2x2, 1x1 chain.");
-        var priorMip = image.GetData()[image.GetMipmapOffset(1)];
+        var priorMip = image.GetData()[image.GetMIPMapOffset(1)];
         image.SetPixel(0, 0, Colors.Blue);
-        Require(image.GetData()[image.GetMipmapOffset(1)] == priorMip,
+        Require(image.GetData()[image.GetMIPMapOffset(1)] == priorMip,
             "Per-pixel edits must leave existing mip bytes intact until explicit regeneration.");
-        image.GenerateMipmaps();
-        Require(image.GetData()[image.GetMipmapOffset(1)] != priorMip,
+        image.GenerateMIPMaps();
+        Require(image.GetData()[image.GetMIPMapOffset(1)] != priorMip,
             "Explicit regeneration must refresh a stale mip level from edited base pixels.");
-        image.ClearMipmaps();
-        Require(!image.HasMipmaps && image.DataSize == 64, "ClearMipmaps must retain only the base level.");
+        image.ClearMIPMaps();
+        Require(!image.HasMIPMaps && image.DataSize == 64, "ClearMIPMaps must retain only the base level.");
 
         var before = image.GetData();
         Expect<ArgumentException>(() => image.SetData(2, 2, false, Image.Format.Rgba8, new byte[15]),
@@ -2596,9 +2599,9 @@ static void VerifyImages()
 
     using (var onePixel = Image.CreateEmpty(1, 1, true, Image.Format.Rgba8))
     {
-        Require(!onePixel.HasMipmaps && onePixel.MipmapCount == 0 && onePixel.GetMipmapOffset(0) == 0,
+        Require(!onePixel.HasMIPMaps && onePixel.MIPMapCount == 0 && onePixel.GetMIPMapOffset(0) == 0,
             "A 1x1 image must canonicalize an impossible mip chain to base-only storage.");
-        Expect<ArgumentOutOfRangeException>(() => onePixel.GetMipmapOffset(1),
+        Expect<ArgumentOutOfRangeException>(() => onePixel.GetMIPMapOffset(1),
             "Mipmap offsets must reject levels that are not stored.");
     }
 
@@ -2658,7 +2661,7 @@ static void VerifyImages()
         using var image = Image.CreateEmpty(3, 2, true, Image.Format.Rgba8);
         image.Fill(Colors.Red);
         image.Resize(7, 5, interpolation);
-        Require(image.Size == new Vector2i(7, 5) && image.HasMipmaps && ColorNearlyEqual(image.GetPixel(6, 4), Colors.Red, 0.01f),
+        Require(image.Size == new Vector2i(7, 5) && image.HasMIPMaps && ColorNearlyEqual(image.GetPixel(6, 4), Colors.Red, 0.01f),
             $"{interpolation} resizing must preserve dimensions, mipmap policy, and a constant field.");
     }
 
@@ -2695,7 +2698,7 @@ static void VerifyImages()
         mask.SetPixel(1, 0, Colors.White);
         destination.BlendRectMask(source, mask, new Rect2i(0, 0, 2, 2), new Vector2i(1, 0));
         Require(ColorNearlyEqual(destination.GetPixel(2, 0), new Color(0.5f, 0f, 0.5f, 1f), 0.01f) &&
-                destination.GetPixel(1, 0).B == 1f && destination.HasMipmaps,
+                destination.GetPixel(1, 0).B == 1f && destination.HasMIPMaps,
             "Masked blending must honor mask alpha, clipping, straight alpha, and mipmap rebuilding.");
         destination.BlitRectMask(source, mask, new Rect2i(0, 0, 2, 2), Vector2i.Zero);
         Require(destination.GetPixel(1, 0).R == 1f && destination.GetPixel(0, 0).B == 1f,
@@ -2764,7 +2767,7 @@ static void VerifyImages()
         rgbe.SetPixel(0, 0, new Color(2f, 1f, 0.5f));
         rgbe.SetPixel(1, 0, new Color(0.25f, 0.5f, 1f));
         using var srgb = rgbe.RGBEToSRGB();
-        Require(srgb.PixelFormat == Image.Format.Rgb8 && srgb.Size == rgbe.Size && srgb.HasMipmaps,
+        Require(srgb.PixelFormat == Image.Format.Rgb8 && srgb.Size == rgbe.Size && srgb.HasMIPMaps,
             "RGBE conversion must return an RGB8 copy and preserve mipmap policy.");
     }
 
@@ -2799,7 +2802,7 @@ static void VerifyImages()
         source.Fill(new Color(0.2f, 0.4f, 0.6f, 0.8f));
         using var duplicate = (Image)source.Duplicate(deep: true);
         duplicate.SetPixel(0, 0, Colors.Red);
-        Require(source.GetPixel(0, 0) != duplicate.GetPixel(0, 0) && duplicate.HasMipmaps &&
+        Require(source.GetPixel(0, 0) != duplicate.GetPixel(0, 0) && duplicate.HasMIPMaps &&
                 duplicate.GetPropertyList().Select(property => property.Name).Contains(nameof(Image.DataSize)),
             "Image duplication must own an independent buffer and expose typed image descriptors.");
     }

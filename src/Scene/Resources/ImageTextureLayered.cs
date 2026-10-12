@@ -18,7 +18,7 @@ public abstract class ImageTextureLayered : TextureLayered
     /// <inheritdoc />
     public override int GetLayers() { lock (_gate) { ThrowIfDisposed(); return _pixels?.Layers.Length ?? 0; } }
     /// <inheritdoc />
-    public override bool HasMipmaps() { lock (_gate) { ThrowIfDisposed(); return _pixels?.First.Source.HasMipmaps ?? false; } }
+    public override bool HasMIPMaps() { lock (_gate) { ThrowIfDisposed(); return _pixels?.First.Source.HasMIPMaps ?? false; } }
     /// <inheritdoc />
     public override Image? GetLayerData(int layerIndex)
     {

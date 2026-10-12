@@ -1,6 +1,6 @@
 # Project settings component
 
-Last updated: 2026-10-05
+Last updated: 2026-10-12
 
 ## Scope
 
@@ -38,7 +38,7 @@ The input action records are defined by the [Input runtime](input-runtime.md); t
 
 ## Dependencies
 
-The root renderer samples `RenderingMethod`, `RenderingFallback` and `DefaultClearColor` from the process registry during Engine.Run startup. Their feature overrides use the same typed lookup as other settings. They do not switch an active backend or continuously update its clear color. GPU canvas sampler creation uses `UseNearestMipmapFilter` sampled at backend startup; newly constructed viewports read `AnisotropicFilteringLevel` (default 4×). New Windows also read SnapTransformsToPixel and SnapVerticesToPixel at construction; explicit window configuration then takes precedence. These reads apply active feature overrides and do not reconfigure existing consumers when the project setting changes. [ProjectSettings](../classes/ProjectSettings.md) documents keys, defaults and validation; [canvas rendering](canvas-rendering.md) documents startup fallback and runtime controls.
+The root renderer samples `RenderingMethod`, `RenderingFallback` and `DefaultClearColor` from the process registry during Engine.Run startup. Their feature overrides use the same typed lookup as other settings. They do not switch an active backend or continuously update its clear color. GPU canvas sampler creation uses `UseNearestMIPMapFilter` sampled at backend startup; newly constructed viewports read `AnisotropicFilteringLevel` (default 4×). New Windows also read SnapTransformsToPixel and SnapVerticesToPixel at construction; explicit window configuration then takes precedence. These reads apply active feature overrides and do not reconfigure existing consumers when the project setting changes. [ProjectSettings](../classes/ProjectSettings.md) documents keys, defaults and validation; [canvas rendering](canvas-rendering.md) documents startup fallback and runtime controls.
 
 - Core `ElectronObject`, typed `PropertyDescriptor`, `ConfigFile`, `Engine`, `FileAccess`, and `DirAccess` integration.
 - .NET path, filesystem, runtime-platform, architecture, collection, and synchronization primitives.

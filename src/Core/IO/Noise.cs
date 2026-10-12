@@ -86,7 +86,7 @@ public abstract class Noise : Resource
         ValidateSize(sourceWidth, sourceHeight);
 
         using var source = GetImage(sourceWidth, sourceHeight, invert, normalize);
-        if (source is null || source.Width != sourceWidth || source.Height != sourceHeight || source.HasMipmaps)
+        if (source is null || source.Width != sourceWidth || source.Height != sourceHeight || source.HasMIPMaps)
             throw new InvalidOperationException("The noise generator returned an incompatible source image.");
         var channels = source.PixelFormat switch
         {

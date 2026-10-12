@@ -1,6 +1,6 @@
 # CanvasGroup
 
-Last updated: 2026-10-04
+Last updated: 2026-10-12
 
 **Namespace:** `Electron2D`. **Declaration:** `public class CanvasGroup : Entity`.
 
@@ -10,7 +10,7 @@ Last updated: 2026-10-04
 
 ## Description
 
-Fits submitted same-Z children into a native transparent backbuffer, then draws the owner as one object. Default SelfModulate opacity is applied once to the completed image, so overlapping children do not accumulate that opacity. Modulate retains ordinary inherited child/owner participation. FitMargin and ClearMargin are finite nonnegative screen pixels, initially ten; UseMipmaps starts false and generates GPU backbuffer levels for custom material LOD. A material replaces the built-in group shader. Inherited ClipChildren is stored but keeps the group compositor. Recorded owner commands supply the drawable shape and bypass fit expansion; otherwise automatic fitting maps screen bounds through the owner inverse/forward transform and needs an invertible transform. Empty groups without submitted child content draw no invented rectangle. Other effective Z values, TopLevel and independent canvas branches retain separate drawing. Inherited GetConfigurationWarnings reports attached clipping/group ancestors; nested same-Z rendering and writable backbuffer reads by group children reject explicitly. Compatibility executes baseline composition but rejects shaders/mipmaps, and software rejects its unsupported premultiplied group blend. Derived types can provide OnDraw owner geometry and must supply their own factory for scene reconstruction.
+Fits submitted same-Z children into a native transparent backbuffer, then draws the owner as one object. Default SelfModulate opacity is applied once to the completed image, so overlapping children do not accumulate that opacity. Modulate retains ordinary inherited child/owner participation. FitMargin and ClearMargin are finite nonnegative screen pixels, initially ten; UseMIPMaps starts false and generates GPU backbuffer levels for custom material LOD. A material replaces the built-in group shader. Inherited ClipChildren is stored but keeps the group compositor. Recorded owner commands supply the drawable shape and bypass fit expansion; otherwise automatic fitting maps screen bounds through the owner inverse/forward transform and needs an invertible transform. Empty groups without submitted child content draw no invented rectangle. Other effective Z values, TopLevel and independent canvas branches retain separate drawing. Inherited GetConfigurationWarnings reports attached clipping/group ancestors; nested same-Z rendering and writable backbuffer reads by group children reject explicitly. Compatibility executes baseline composition but rejects shaders/mipmaps, and software rejects its unsupported premultiplied group blend. Derived types can provide OnDraw owner geometry and must supply their own factory for scene reconstruction.
 
 Attached reads and mutations use the scene owner; mutation also rejects scene capture. Disposed access rejects. In-memory PackedScene reconstruction has executable checks; file/editor authoring and owner visual acceptance are separate. [The composition component](../components/canvas-rendering.md#group-composition-and-screen-snapshots) records native lifetime, backend and allocation limits.
 
@@ -51,7 +51,7 @@ Creates a group with ten-pixel fit/clear margins and mipmaps disabled.
 | --- | --- |
 | `public System.Single ClearMargin { get; set; }` | Gets or sets the additional screen-pixel expansion of the transparent clearing rectangle. |
 | `public System.Single FitMargin { get; set; }` | Gets or sets the screen-pixel expansion of the fitted drawable rectangle. |
-| `public System.Boolean UseMipmaps { get; set; }` | Gets or sets whether native backbuffer mipmaps are generated before compositing. |
+| `public System.Boolean UseMIPMaps { get; set; }` | Gets or sets whether native backbuffer mipmaps are generated before compositing. |
 
 ## Property Descriptions
 
@@ -90,9 +90,9 @@ System.InvalidOperationException: Mutation is off-owner or during scene capture.
 System.ObjectDisposedException: This node is disposed.
 
 <a id="member-f54f1b228a9e"></a>
-### UseMipmaps
+### UseMIPMaps
 
-`public System.Boolean UseMipmaps { get; set; }`
+`public System.Boolean UseMIPMaps { get; set; }`
 
 Gets or sets whether native backbuffer mipmaps are generated before compositing.
 
@@ -141,3 +141,7 @@ Remarks: Appends this class's typed hierarchy, ownership, processing, and automa
 [CanvasCompositionTests](../../tests/Electron2D.Tests/CanvasCompositionTests.cs) checks authoring, callbacks, typed packing/owner boundaries and actual native pixels. Linux Wayland GPU and hardware compatibility execute the baseline; GPU HLSL/GLSL additionally check custom screen reading and generated LOD. Stable-size warm active/idle intervals measure managed allocation; native allocator totals, other platforms, large scenes, editor inspector integration and human acceptance remain separate.
 
 An ancestor Y-sort treats a CanvasGroup as one ordering boundary; the group performs its own child Y-sort internally. This keeps its capture/composite range atomic while other-Z descendants remain separate. CanvasCompositionTests verifies the ancestor and internal paths.
+
+## Stored key spelling
+
+UseMIPMaps follows ADR 0045. The established stored descriptor key remains `UseMipmaps`, preserving existing scene archives without adding a second CLR property.

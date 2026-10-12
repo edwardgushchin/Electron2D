@@ -30,7 +30,7 @@ internal static class TileAnimationTests
     private static void Padding()
     {
         using var image = Image.CreateEmpty(32, 16, true, Image.Format.Rgba8); image.Fill(Colors.Red); image.FillRect(new(16, 0, 16, 16), Colors.Green); using var texture = ImageTexture.CreateFromImage(image); using var atlas = new TileSetAtlasSource { Texture = texture }; atlas.CreateTile(default); atlas.SetTileAnimationFramesCount(default, 2);
-        var first = atlas.GetRuntimeTexture()!; using (var padded = first.GetImage()!) { Check(padded.Width == 36 && padded.Height == 18 && padded.GetPixel(0, 0) == Colors.Red && padded.GetPixel(17, 17) == Colors.Red && padded.GetPixel(18, 0) == Colors.Green && !padded.HasMipmaps, "Each frame extrudes edges/corners, ordinary stride and base image format"); }
+        var first = atlas.GetRuntimeTexture()!; using (var padded = first.GetImage()!) { Check(padded.Width == 36 && padded.Height == 18 && padded.GetPixel(0, 0) == Colors.Red && padded.GetPixel(17, 17) == Colors.Red && padded.GetPixel(18, 0) == Colors.Green && !padded.HasMIPMaps, "Each frame extrudes edges/corners, ordinary stride and base image format"); }
         Check(ReferenceEquals(first, atlas.GetRuntimeTexture()), "Unchanged runtime cache identity");
         for (var i = 0; i < 20; i++) atlas.GetRuntimeTexture(); var bytes = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 1024; i++) atlas.GetRuntimeTexture(); Check(GC.GetAllocatedBytesForCurrentThread() == bytes, "1024 unchanged runtime-cache reads allocate zero bytes");
         image.Fill(Colors.Blue); texture.SetImage(image); var changed = atlas.GetRuntimeTexture()!; Check(first.IsDisposed && changed != first, "Pixel edits replace and release the owned cache");

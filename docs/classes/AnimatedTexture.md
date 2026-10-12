@@ -1,6 +1,6 @@
 # AnimatedTexture
 
-Last updated: 2026-09-23
+Last updated: 2026-10-12
 
 - Declaration: `public sealed class AnimatedTexture : Texture`
 - Source: [AnimatedTexture.cs](../../src/Scene/Resources/AnimatedTexture.cs)
@@ -48,7 +48,7 @@ This is a partial snippet: `firstImage`, `secondImage` and `sprite` are caller-o
 | `override int GetWidth()` / `override int GetHeight()` | Smallest active texture dimensions, or one. |
 | `override Image? GetImage()` | Cropped copy of current image, or null. |
 | `override bool IsPixelOpaque(int x, int y)` | Current frame opacity query, or true. |
-| `override bool HasAlpha`, `override Image.Format PixelFormat`, `override bool HasMipmaps`, `override int MipmapCount` | Current frame metadata or empty defaults. |
+| `override bool HasAlpha`, `override Image.Format PixelFormat`, `override bool HasMIPMaps`, `override int MIPMapCount` | Current frame metadata or empty defaults. |
 
 Inherited ResourceLocalToScene, Changed, duplication, property metadata and disposal follow [Resource](Resource.md); inherited Texture drawing and GetSize use these current-frame queries. The protected Resource hooks `CreateDuplicateInstance()`, `CopyCustomStateTo(...)`, `GetPropertyDescriptors()` and `Dispose(bool)` override the base contract.
 
@@ -86,7 +86,7 @@ Both accept any slot index in 0..255. The default is one second. Set accepts fin
 
 ### GetWidth, GetHeight, GetImage and IsPixelOpaque
 
-Width and height report the smallest dimensions among non-null active frames, or one when none is assigned. GetImage returns a caller-owned copy of the selected frame cropped from the top left, or null when that frame is empty. IsPixelOpaque samples the cropped image and falls back to true. HasAlpha falls back to false, PixelFormat to L8, HasMipmaps to false, and MipmapCount to zero; mipmaps are regenerated for a cropped image, so its level count reflects the cropped size. Disposed resources reject queries.
+Width and height report the smallest dimensions among non-null active frames, or one when none is assigned. GetImage returns a caller-owned copy of the selected frame cropped from the top left, or null when that frame is empty. IsPixelOpaque samples the cropped image and falls back to true. HasAlpha falls back to false, PixelFormat to L8, HasMIPMaps to false, and MIPMapCount to zero; mipmaps are regenerated for a cropped image, so its level count reflects the cropped size. Disposed resources reject queries.
 
 ## Lifecycle and verification
 

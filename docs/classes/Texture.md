@@ -1,6 +1,6 @@
 # Texture
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 - Declaration: `public abstract class Texture : Resource`
 - Source: [Texture.cs](../../src/Scene/Resources/Texture.cs)
@@ -41,8 +41,8 @@ DisplayServer.CursorSetCustomImage also accepts this resource through its Resour
 | `virtual Vector2 GetSize()` | Logical width and height. |
 | `virtual Image.Format PixelFormat { get; }` | Original pixel format; L8 when uninitialized. |
 | `virtual bool HasAlpha { get; }` | Original format has alpha; false when uninitialized. |
-| `virtual bool HasMipmaps { get; }` | Original pixels contain a complete mip chain. |
-| `virtual int MipmapCount { get; }` | Number of levels after the base level; zero when absent. |
+| `virtual bool HasMIPMaps { get; }` | Original pixels contain a complete mip chain. |
+| `virtual int MIPMapCount { get; }` | Number of levels after the base level; zero when absent. |
 | `virtual Image? GetImage()` | Independent caller-owned pixels, or null when unreadable/uninitialized. |
 | `virtual void Draw(CanvasItem canvasItem, Vector2 position, Color? modulate = null, bool transpose = false)` | Draws at logical size during the target node's OnDraw. |
 | `virtual void DrawRect(CanvasItem canvasItem, Rect2 rect, bool tile, Color? modulate = null, bool transpose = false)` | Stretches or repeats over a local rectangle. |
@@ -59,11 +59,11 @@ Describes the original image, even when GPU upload requires conversion. The base
 
 Reports an alpha channel in the original format, including supported floating-point formats. It does not test whether any pixel is transparent.
 
-### HasMipmaps
+### HasMIPMaps
 
 Reports the original complete mip-chain configuration. GPU upload includes every stored level.
 
-### MipmapCount
+### MIPMapCount
 
 Counts levels following the base image. It is zero for a texture without mipmaps or pixels.
 

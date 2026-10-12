@@ -28,7 +28,7 @@ internal static class NoiseGenerationTests
     {
         if (!WorkerThreadPool.Service.HasRuntime) ProjectSettings.Set(ProjectSettings.WorkerPoolMaxThreads, 2);
         NoiseTests.Run(); NoiseTextureTests.Run(); FastNoiseLiteTests.Run(); NoiseImageReferenceTests.Run();
-        using var noise = new ControlledNoise(); using var texture = new NoiseTexture { Width = 8, Height = 4, GenerateMipmaps = false, Normalize = false, Noise = noise }; noise.Texture = texture;
+        using var noise = new ControlledNoise(); using var texture = new NoiseTexture { Width = 8, Height = 4, GenerateMIPMaps = false, Normalize = false, Noise = noise }; noise.Texture = texture;
         using var tree = new SceneTree(new Entity()); var owner = Environment.CurrentManagedThreadId; var changes = 0;
         texture.Changed += _ => { Check(Environment.CurrentManagedThreadId == owner, "Completed pixel signals execute on the owner"); changes++; };
         Engine.Start(tree);
@@ -91,7 +91,7 @@ internal static class NoiseGenerationTests
     {
         using var scene = new NoiseScene(directory); var a = scene.First; var b = scene.Second;
         Check(NoiseAssets.Settings((FastNoiseLite)a.Noise!) == File.ReadAllText(System.IO.Path.Combine(directory, "settings.txt")), "Every concrete noise configuration field survives the archive");
-        Check(a.Width == 32 && a.Height == 32 && a.GenerateMipmaps && a.Seamless && a.SeamlessBlendSkirt == .2f && a.ResourceLocalToScene && a.ColorRamp is not null && !a.AsNormalMap && a.Normalize && !a.Invert && a.BumpStrength == 8, "Noise texture authored settings survive the resource and local scene graphs");
+        Check(a.Width == 32 && a.Height == 32 && a.GenerateMIPMaps && a.Seamless && a.SeamlessBlendSkirt == .2f && a.ResourceLocalToScene && a.ColorRamp is not null && !a.AsNormalMap && a.Normalize && !a.Invert && a.BumpStrength == 8, "Noise texture authored settings survive the resource and local scene graphs");
         using var original = a.GetImage()!; Check(original.GetData().SequenceEqual(File.ReadAllBytes(System.IO.Path.Combine(directory, "initial.rgba"))), "Fresh generated pixels and mipmaps agree with author output");
         scene.Stage(); using var updated = a.GetImage()!; using var independent = b.GetImage()!;
         Check(updated.GetData().SequenceEqual(File.ReadAllBytes(System.IO.Path.Combine(directory, "updated.rgba"))) && independent.GetData().SequenceEqual(original.GetData()) && !updated.GetData().SequenceEqual(original.GetData()), "Local generator edits change only their own complete image");

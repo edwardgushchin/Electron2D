@@ -57,7 +57,7 @@ public sealed partial class RenderingServer
                 if (bounds is null) { _batches.RemoveAt(begin); active = null; continue; }
                 var fit = bounds.Value == default ? new Rect2(bounds.Value.Position, Vector2.One) : bounds.Value;
                 var clip = GetClip(active, pixels);
-                _batches.Add(new(0, 0, null, Operation: CanvasOperation.GroupEnd, Mipmaps: canvasGroup.UseMipmaps));
+                _batches.Add(new(0, 0, null, Operation: CanvasOperation.GroupEnd, MIPMaps: canvasGroup.UseMIPMaps));
                 var ownFirst = _vertices.Count; var ownBatch = _batches.Count;
                 if (active.HasCanvasCommands) AppendOrderedCanvas(item, pixels);
                 else

@@ -368,7 +368,7 @@
     },
     {
       "godot": "RDTextureFormat::property:mipmaps",
-      "electron2d": "property:Electron2D.RDTextureFormat.Mipmaps()",
+      "electron2d": "property:Electron2D.RDTextureFormat.MIPMaps()",
       "state": "Implemented",
       "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified."
     },
@@ -470,7 +470,7 @@
     },
     {
       "godot": "RDSamplerState::property:mip_filter",
-      "electron2d": "property:Electron2D.RDSamplerState.MipFilter()",
+      "electron2d": "property:Electron2D.RDSamplerState.MIPFilter()",
       "state": "Implemented",
       "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified."
     },
@@ -3728,7 +3728,7 @@
       "adr": "0004, 0013, 0014, 0028"
     },
     {
-      "electron2d": "method:Electron2D.TextureLayeredRD.HasMipmaps()",
+      "electron2d": "method:Electron2D.TextureLayeredRD.HasMIPMaps()",
       "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
       "adr": "0004, 0013, 0014, 0028"
     },
@@ -3778,12 +3778,12 @@
       "adr": "0004, 0013, 0014, 0028"
     },
     {
-      "electron2d": "property:Electron2D.TextureRD.HasMipmaps()",
+      "electron2d": "property:Electron2D.TextureRD.HasMIPMaps()",
       "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
       "adr": "0004, 0013, 0014, 0028"
     },
     {
-      "electron2d": "property:Electron2D.TextureRD.MipmapCount()",
+      "electron2d": "property:Electron2D.TextureRD.MIPMapCount()",
       "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
       "adr": "0004, 0013, 0014, 0028"
     },

@@ -25,7 +25,7 @@ public abstract class PlaceholderTextureLayered : TextureLayered
     /// <inheritdoc />
     public override int GetLayers() => Layers;
     /// <inheritdoc />
-    public override bool HasMipmaps() { ThrowIfDisposed(); return false; }
+    public override bool HasMIPMaps() { ThrowIfDisposed(); return false; }
     /// <inheritdoc />
     public override Image? GetLayerData(int layerIndex) { ThrowIfDisposed(); return null; }
     internal override LayeredTexturePixels? CaptureLayers() { ThrowIfDisposed(); return null; }

@@ -11,7 +11,7 @@ internal sealed class LayeredTextureProxy : TextureLayered
     public override int GetWidth() { ThrowIfDisposed(); return Source.GetWidth(); }
     public override int GetHeight() { ThrowIfDisposed(); return Source.GetHeight(); }
     public override int GetLayers() { ThrowIfDisposed(); return Source.GetLayers(); }
-    public override bool HasMipmaps() { ThrowIfDisposed(); return Source.HasMipmaps(); }
+    public override bool HasMIPMaps() { ThrowIfDisposed(); return Source.HasMIPMaps(); }
     public override Image? GetLayerData(int layerIndex) { ThrowIfDisposed(); return Source.GetLayerData(layerIndex); }
     internal override LayeredTexturePixels? CaptureLayers() { ThrowIfDisposed(); return Source.CaptureLayers(); }
 }

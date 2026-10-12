@@ -8,7 +8,7 @@ Last updated: 2026-10-12
 
 ## Description
 
-A caller-owned allocation description copied during TextureCreate. Width and Height are texels; ArrayLayers counts independently sampled 2D images; Mipmaps includes the base level. Values are validated on assignment and again as a complete allocation. One ordinary image has one layer. Data is one tightly packed encoded mip chain per layer, or omitted for zero encoded bytes. Native alignment remains internal. The format vocabulary is queried against the current device; unsupported allocations throw before returning an identity. Alternate shareable formats require a native view adapter and are rejected explicitly. ColorAttachment allocations now feed executable device color passes and retained canvas consumers. Depth/stencil and exact multisample render targets execute. Samples defaults to Samples1; IsResolveBuffer defaults to false and marks a single-sample color resolve destination. Multisample images require empty ordinary single-layer/single-mip target allocations; resolve before sampling or readback. Discardable lifetime hints retain their last-use prerequisite.
+A caller-owned allocation description copied during TextureCreate. Width and Height are texels; ArrayLayers counts independently sampled 2D images; MIPMaps includes the base level. Values are validated on assignment and again as a complete allocation. One ordinary image has one layer. Data is one tightly packed encoded mip chain per layer, or omitted for zero encoded bytes. Native alignment remains internal. The format vocabulary is queried against the current device; unsupported allocations throw before returning an identity. Alternate shareable formats require a native view adapter and are rejected explicitly. ColorAttachment allocations now feed executable device color passes and retained canvas consumers. Depth/stencil and exact multisample render targets execute. Samples defaults to Samples1; IsResolveBuffer defaults to false and marks a single-sample color resolve destination. Multisample images require empty ordinary single-layer/single-mip target allocations; resolve before sampling or readback. Discardable lifetime hints retain their last-use prerequisite.
 
 ## Example
 
@@ -36,7 +36,7 @@ var texture = device.TextureCreate(format, view);
 | `public System.UInt32 ArrayLayers { get; set; }` | Gets or sets the number of independent image layers. |
 | `public Electron2D.RenderingDevice.DataFormat Format { get; set; }` | Gets or sets the encoded pixel or compressed-block format. |
 | `public System.UInt32 Height { get; set; }` | Gets or sets the base mip height in texels. |
-| `public System.UInt32 Mipmaps { get; set; }` | Gets or sets the mip count, including the base level. |
+| `public System.UInt32 MIPMaps { get; set; }` | Gets or sets the mip count, including the base level. |
 | `public Electron2D.RenderingDevice.TextureType TextureType { get; set; }` | Gets or sets ordinary-image or independently sampled array storage. |
 | `public Electron2D.RenderingDevice.TextureUsageBits UsageBits { get; set; }` | Gets or sets required allocation, sampling and transfer roles. |
 | `public System.UInt32 Width { get; set; }` | Gets or sets the base mip width in texels. |
@@ -119,10 +119,10 @@ Gets or sets the base mip height in texels.
 Initially 1; copied when the device creates its resource.
 
 <a id="member-8c41e7c2204d"></a>
-### Mipmaps
+### MIPMaps
 
 ```csharp
-public System.UInt32 Mipmaps { get; set; }
+public System.UInt32 MIPMaps { get; set; }
 ```
 
 Gets or sets the mip count, including the base level.

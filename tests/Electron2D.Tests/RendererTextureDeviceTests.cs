@@ -31,9 +31,9 @@ internal static class RendererTextureDeviceTests
         using var empty = new ImageTexture(); Check(!RenderingServer.TextureGetRDTexture(empty.GetRID(), true).IsValid(), "Empty storage remains unavailable even with a view request.");
         foreach (var format in new[] { Image.Format.Rgba8, Image.Format.Rgbaf })
         {
-            using var pixels = Image.CreateEmpty(4, 4, false, format); pixels.Fill(new(0.25f, 0.5f, 1, 1)); pixels.GenerateMipmaps(); using var image = ImageTexture.CreateFromImage(pixels); using var array = new TextureArray(); array.CreateFromImages([pixels, pixels]);
+            using var pixels = Image.CreateEmpty(4, 4, false, format); pixels.Fill(new(0.25f, 0.5f, 1, 1)); pixels.GenerateMIPMaps(); using var image = ImageTexture.CreateFromImage(pixels); using var array = new TextureArray(); array.CreateFromImages([pixels, pixels]);
             var ordinary = RenderingServer.TextureGetRDTexture(image.GetRID()); var layered = RenderingServer.TextureGetRDTexture(array.GetRID());
-            Check(device.TextureGetFormat(ordinary).Mipmaps == 3 && device.TextureGetFormat(layered).ArrayLayers == 2, "Every native mip/layer is represented.");
+            Check(device.TextureGetFormat(ordinary).MIPMaps == 3 && device.TextureGetFormat(layered).ArrayLayers == 2, "Every native mip/layer is represented.");
             Check(device.TextureGetData(ordinary, 0).AsSpan().SequenceEqual(pixels.GetData()) && device.TextureGetData(layered, 1).AsSpan().SequenceEqual(pixels.GetData()), "RGBA8/HDR mip chains preserve actual native bytes.");
             var queued = new byte[pixels.DataSize]; var completed = false; Action finished = () => completed = true; device.TextureGetDataAsync(ordinary, 0, queued.AsMemory(), finished); image.Dispose(); Check(!device.TextureIsValid(ordinary), "Disposal expires identity before queued completion."); device.FreeRID(ordinary); Check(completed && queued.AsSpan().SequenceEqual(pixels.GetData()), "Source disposal preserves already recorded readback."); array.Dispose(); Check(!device.TextureIsValid(layered), "Layered source disposal expires identity."); device.FreeRID(layered);
         }

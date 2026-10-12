@@ -1,8 +1,8 @@
 # SystemFont
 
-Last updated: 2026-10-07
+Last updated: 2026-10-12
 
-**Namespace:** Electron2D · **Declaration:** public class SystemFont · **Inherits:** [Font](Font.md) · **Inherited By:** — · **Source:** [SystemFont.cs](../../src/Scene/Resources/SystemFont.cs) · **Component:** [System fonts](../components/system-fonts.md)
+**Namespace:** Electron2D · **Declaration:** public partial class SystemFont · **Inherits:** [Font](Font.md) · **Inherited By:** — · **Source:** [SystemFont.cs](../../src/Scene/Resources/SystemFont.cs) · **Component:** [System fonts](../components/system-fonts.md)
 
 ## Description
 
@@ -143,3 +143,27 @@ Auto initially. Existing half/quarter/threshold policy controls raster phases; u
 [SystemFontTests](../../tests/Electron2D.Tests/SystemFontTests.cs) exercises host matching, independent variable/collection/empty Fontconfig child catalogs, logical face/default coordinate mapping, explicit override precedence, active fallback retirement, theme replacement, copied preferences, resource duplication/fresh process and prepared measurement. Native canvas/Label/RichTextLabel and automatic Arabic fallback produce verified pixels and zero managed bytes over 64 prepared intervals on current Linux GPU/compatibility.
 
 CoreText/DirectWrite providers, extra antialiasing/embedded-bitmap/autohinter/mipmap and MSDF policies remain exact [coverage](../coverage/classes/SystemFont.md) dependencies. Native allocator counts, foreign/device/editor and owner acceptance remain unverified. Unsupported provider profiles use the documented theme behavior; they do not claim native installed discovery. [ADR 0046](../decisions/rendering.md#adr-0046) and [ADR 0095](../decisions/singleton-services.md#adr-0095) own resource/native and retained static service boundaries.
+
+## Native strike, autohinter and MIP policy
+
+| Signature | Contract/default |
+| --- | --- |
+| `public bool DisableEmbeddedBitmaps { get; set; }` | True; bypasses native monochrome strikes. Color strikes remain available; strokes use outlines. |
+| `public bool ForceAutohinter { get; set; }` | False; sets native automatic-hinting raster flags independently of unhinted shaping advances. |
+| `public bool GenerateMIPMaps { get; set; }` | False; publishes complete MIP chains for ordinary glyph images and indexed pages. Sampling requires a MIP filter. |
+
+### DisableEmbeddedBitmaps
+
+Selects scalable monochrome outlines when true. A matching embedded monochrome strike can provide actual bitmap coverage when false; color strikes remain available in both states. Native outlines still supply stroke rasterization. Authored bitmap records and pages are preserved independently of this native-source policy.
+
+### ForceAutohinter
+
+Adds FreeType's forced automatic-hinting load flag to native raster requests. It does not replace the accepted unhinted shaping metric contract. Explicit no-hinting mode keeps its native semantics. FontVariation and owned system fallback sources inherit the selected policy.
+
+### GenerateMIPMaps
+
+Creates complete MIP levels before publishing glyph textures, including oversampled/phase rasters and copied indexed pages. A source policy change invalidates dependent layout and retires earlier native data/textures after active reads. Previously recorded immutable glyph pixels remain valid. GPU sampling consumes the generated levels; compatibility sampling still accepts nearest/linear base-level filters and rejects its existing MIP-filter capability gate.
+
+All three properties reject disposed resources. Equal assignments are silent. Notifications occur after committed publication outside state locks; observer exceptions retain committed policy. Stored descriptors and duplication carry policy. Defaults and verification are shared with [the text component](../components/text.md#native-raster-policy-verification).
+
+Installed matching and unresolved theme realization apply the preferences to independent owned sources. Changes retire realized data after active reads and invalidate dependent variations. Duplication/archives preserve requested preferences; loading rematches the current host. ResetState restores defaults.

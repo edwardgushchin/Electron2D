@@ -74,10 +74,10 @@ public abstract class Texture : Resource
     public virtual bool HasAlpha => CapturePixels() is { } pixels && Image.TextureHasAlpha(pixels.Source.Format);
     /// <summary>Gets whether the texture contains a mipmap chain.</summary>
     /// <value>False for an uninitialized texture.</value>
-    public virtual bool HasMipmaps => CapturePixels()?.Source.HasMipmaps ?? false;
+    public virtual bool HasMIPMaps => CapturePixels()?.Source.HasMIPMaps ?? false;
     /// <summary>Gets the number of mip levels after the base image.</summary>
     /// <value>Zero when no mipmaps are stored.</value>
-    public virtual int MipmapCount => (CapturePixels()?.Levels ?? 1) - 1;
+    public virtual int MIPMapCount => (CapturePixels()?.Levels ?? 1) - 1;
 
     /// <summary>Returns a caller-owned copy of the texture's original image.</summary>
     /// <returns>An independent image, or null when the texture has no readable pixels.</returns>
@@ -173,8 +173,8 @@ public abstract class Texture : Resource
     [
         new PropertyDescriptor<Texture, Image.Format>(nameof(PixelFormat), t => t.PixelFormat),
         new PropertyDescriptor<Texture, bool>(nameof(HasAlpha), t => t.HasAlpha),
-        new PropertyDescriptor<Texture, bool>(nameof(HasMipmaps), t => t.HasMipmaps),
-        new PropertyDescriptor<Texture, int>(nameof(MipmapCount), t => t.MipmapCount),
+        new PropertyDescriptor<Texture, bool>(nameof(HasMIPMaps), t => t.HasMIPMaps),
+        new PropertyDescriptor<Texture, int>(nameof(MIPMapCount), t => t.MIPMapCount),
     ]);
 
     /// <inheritdoc />
@@ -215,7 +215,7 @@ internal sealed class TexturePixels
             ? Image.Format.Rgba8 : Image.Format.Rgbaf;
         Upload = Image.ConvertPixels(source, format);
         Levels = 1;
-        if (source.HasMipmaps)
+        if (source.HasMIPMaps)
             for (int width = source.Width, height = source.Height; width > 1 || height > 1; width = Math.Max(1, width / 2), height = Math.Max(1, height / 2)) Levels++;
     }
 
@@ -230,5 +230,5 @@ internal sealed class TexturePixels
         ArgumentNullException.ThrowIfNull(image); return new(image.CopyTexturePixels(maximumBytes));
     }
 
-    internal Image CopyImage() => Image.CreateFromData(Source.Width, Source.Height, Source.HasMipmaps, Source.Format, Source.Data);
+    internal Image CopyImage() => Image.CreateFromData(Source.Width, Source.Height, Source.HasMIPMaps, Source.Format, Source.Data);
 }

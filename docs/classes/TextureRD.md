@@ -35,8 +35,8 @@ using var snapshot = texture.GetImage(); // Explicit caller-owned mip snapshot.
 | [`public override System.Int32 GetWidth()`](#member-597ac3a433a5) | method | Overrides the inherited resource metadata/readback or managed lifetime contract. |
 | [`protected override System.Void ValidateDisposal()`](#member-0e1b9bd396e4) | method | Overrides the inherited resource metadata/readback or managed lifetime contract. |
 | [`public System.Boolean HasAlpha { get;  }`](#member-42f37d9cf423) | property | Overrides the inherited resource metadata/readback or managed lifetime contract. |
-| [`public System.Boolean HasMipmaps { get;  }`](#member-d0e14e79288f) | property | Overrides the inherited resource metadata/readback or managed lifetime contract. |
-| [`public System.Int32 MipmapCount { get;  }`](#member-8ba65286d921) | property | Overrides the inherited resource metadata/readback or managed lifetime contract. |
+| [`public System.Boolean HasMIPMaps { get;  }`](#member-d0e14e79288f) | property | Overrides the inherited resource metadata/readback or managed lifetime contract. |
+| [`public System.Int32 MIPMapCount { get;  }`](#member-8ba65286d921) | property | Overrides the inherited resource metadata/readback or managed lifetime contract. |
 | [`public Electron2D.Image.Format PixelFormat { get;  }`](#member-121532aebfe6) | property | Overrides the inherited resource metadata/readback or managed lifetime contract. |
 | [`public Electron2D.RID TextureRDRID { get; set; }`](#member-ed6b6f7f74f4) | property | Gets or sets the borrowed image identity of the current rendering device. |
 
@@ -148,20 +148,20 @@ Uses the inherited [Texture](Texture.md) contract with the device image behavior
 
 <a id="member-d0e14e79288f"></a>
 
-### HasMipmaps
+### HasMIPMaps
 
 ```csharp
-public System.Boolean HasMipmaps { get;  }
+public System.Boolean HasMIPMaps { get;  }
 ```
 
 Uses the inherited [Texture](Texture.md) contract with the device image behavior described above.
 
 <a id="member-8ba65286d921"></a>
 
-### MipmapCount
+### MIPMapCount
 
 ```csharp
-public System.Int32 MipmapCount { get;  }
+public System.Int32 MIPMapCount { get;  }
 ```
 
 Uses the inherited [Texture](Texture.md) contract with the device image behavior described above.

@@ -98081,11 +98081,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.ClearMipmaps()",
+    "id": "method:Electron2D.Image.ClearMIPMaps()",
     "kind": "method",
     "declaringType": "Electron2D.Image",
-    "name": "ClearMipmaps",
-    "signature": "public System.Void ClearMipmaps()",
+    "name": "ClearMIPMaps",
+    "signature": "public System.Void ClearMIPMaps()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -98472,11 +98472,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.GenerateMipmaps(System.Boolean)",
+    "id": "method:Electron2D.Image.GenerateMIPMaps(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
-    "name": "GenerateMipmaps",
-    "signature": "public System.Void GenerateMipmaps(System.Boolean renormalize = false)",
+    "name": "GenerateMIPMaps",
+    "signature": "public System.Void GenerateMIPMaps(System.Boolean renormalize = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -98504,11 +98504,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.GetMipmapOffset(System.Int32)",
+    "id": "method:Electron2D.Image.GetMIPMapOffset(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
-    "name": "GetMipmapOffset",
-    "signature": "public System.Int32 GetMipmapOffset(System.Int32 mipmap)",
+    "name": "GetMIPMapOffset",
+    "signature": "public System.Int32 GetMIPMapOffset(System.Int32 mipmap)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -99557,11 +99557,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.ImageTextureLayered.HasMipmaps()",
+    "id": "method:Electron2D.ImageTextureLayered.HasMIPMaps()",
     "kind": "method",
     "declaringType": "Electron2D.ImageTextureLayered",
-    "name": "HasMipmaps",
-    "signature": "public override System.Boolean HasMipmaps()",
+    "name": "HasMIPMaps",
+    "signature": "public override System.Boolean HasMIPMaps()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -135269,11 +135269,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PlaceholderTextureLayered.HasMipmaps()",
+    "id": "method:Electron2D.PlaceholderTextureLayered.HasMIPMaps()",
     "kind": "method",
     "declaringType": "Electron2D.PlaceholderTextureLayered",
-    "name": "HasMipmaps",
-    "signature": "public override System.Boolean HasMipmaps()",
+    "name": "HasMIPMaps",
+    "signature": "public override System.Boolean HasMIPMaps()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -169806,11 +169806,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.TextureLayered.HasMipmaps()",
+    "id": "method:Electron2D.TextureLayered.HasMIPMaps()",
     "kind": "method",
     "declaringType": "Electron2D.TextureLayered",
-    "name": "HasMipmaps",
-    "signature": "public abstract System.Boolean HasMipmaps()",
+    "name": "HasMIPMaps",
+    "signature": "public abstract System.Boolean HasMIPMaps()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -169974,11 +169974,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.TextureLayeredRD.HasMipmaps()",
+    "id": "method:Electron2D.TextureLayeredRD.HasMIPMaps()",
     "kind": "method",
     "declaringType": "Electron2D.TextureLayeredRD",
-    "name": "HasMipmaps",
-    "signature": "public override System.Boolean HasMipmaps()",
+    "name": "HasMIPMaps",
+    "signature": "public override System.Boolean HasMIPMaps()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -195676,11 +195676,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.AnimatedTexture.HasMipmaps()",
+    "id": "property:Electron2D.AnimatedTexture.HasMIPMaps()",
     "kind": "property",
     "declaringType": "Electron2D.AnimatedTexture",
-    "name": "HasMipmaps",
-    "signature": "public System.Boolean HasMipmaps { get;  }",
+    "name": "HasMIPMaps",
+    "signature": "public System.Boolean HasMIPMaps { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -195689,11 +195689,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.AnimatedTexture.MipmapCount()",
+    "id": "property:Electron2D.AnimatedTexture.MIPMapCount()",
     "kind": "property",
     "declaringType": "Electron2D.AnimatedTexture",
-    "name": "MipmapCount",
-    "signature": "public System.Int32 MipmapCount { get;  }",
+    "name": "MIPMapCount",
+    "signature": "public System.Int32 MIPMapCount { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -197249,16 +197249,29 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.AtlasTexture.HasMipmaps()",
+    "id": "property:Electron2D.AtlasTexture.HasMIPMaps()",
     "kind": "property",
     "declaringType": "Electron2D.AtlasTexture",
-    "name": "HasMipmaps",
-    "signature": "public System.Boolean HasMipmaps { get;  }",
+    "name": "HasMIPMaps",
+    "signature": "public System.Boolean HasMIPMaps { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AtlasTexture.MIPMapCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "MIPMapCount",
+    "signature": "public System.Int32 MIPMapCount { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -197272,19 +197285,6 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Rect2",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AtlasTexture.MipmapCount()",
-    "kind": "property",
-    "declaringType": "Electron2D.AtlasTexture",
-    "name": "MipmapCount",
-    "signature": "public System.Int32 MipmapCount { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -200993,11 +200993,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.CanvasGroup.UseMipmaps()",
+    "id": "property:Electron2D.CanvasGroup.UseMIPMaps()",
     "kind": "property",
     "declaringType": "Electron2D.CanvasGroup",
-    "name": "UseMipmaps",
-    "signature": "public System.Boolean UseMipmaps { get; set; }",
+    "name": "UseMIPMaps",
+    "signature": "public System.Boolean UseMIPMaps { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -207324,6 +207324,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.FontFile.DisableEmbeddedBitmaps()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontFile",
+    "name": "DisableEmbeddedBitmaps",
+    "signature": "public System.Boolean DisableEmbeddedBitmaps { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.FontFile.FixedSize()",
     "kind": "property",
     "declaringType": "Electron2D.FontFile",
@@ -207399,6 +207412,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FontFile.ForceAutohinter()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontFile",
+    "name": "ForceAutohinter",
+    "signature": "public System.Boolean ForceAutohinter { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FontFile.GenerateMIPMaps()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontFile",
+    "name": "GenerateMIPMaps",
+    "signature": "public System.Boolean GenerateMIPMaps { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -208728,11 +208767,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Image.HasMipmaps()",
+    "id": "property:Electron2D.Image.HasMIPMaps()",
     "kind": "property",
     "declaringType": "Electron2D.Image",
-    "name": "HasMipmaps",
-    "signature": "public System.Boolean HasMipmaps { get;  }",
+    "name": "HasMIPMaps",
+    "signature": "public System.Boolean HasMIPMaps { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -208793,11 +208832,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Image.MipmapCount()",
+    "id": "property:Electron2D.Image.MIPMapCount()",
     "kind": "property",
     "declaringType": "Electron2D.Image",
-    "name": "MipmapCount",
-    "signature": "public System.Int32 MipmapCount { get;  }",
+    "name": "MIPMapCount",
+    "signature": "public System.Int32 MIPMapCount { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -213850,11 +213889,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.NoiseTexture.GenerateMipmaps()",
+    "id": "property:Electron2D.NoiseTexture.GenerateMIPMaps()",
     "kind": "property",
     "declaringType": "Electron2D.NoiseTexture",
-    "name": "GenerateMipmaps",
-    "signature": "public System.Boolean GenerateMipmaps { get; set; }",
+    "name": "GenerateMIPMaps",
+    "signature": "public System.Boolean GenerateMIPMaps { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -219492,11 +219531,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.ProjectSettings.UseNearestMipmapFilter()",
+    "id": "property:Electron2D.ProjectSettings.UseNearestMIPMapFilter()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
-    "name": "UseNearestMipmapFilter",
-    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E UseNearestMipmapFilter { get;  }",
+    "name": "UseNearestMIPMapFilter",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E UseNearestMIPMapFilter { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -220402,6 +220441,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.RDSamplerState.MIPFilter()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDSamplerState",
+    "name": "MIPFilter",
+    "signature": "public Electron2D.RenderingDevice.SamplerFilter MIPFilter { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.SamplerFilter",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RDSamplerState.MagFilter()",
     "kind": "property",
     "declaringType": "Electron2D.RDSamplerState",
@@ -220451,19 +220503,6 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.RDSamplerState.MipFilter()",
-    "kind": "property",
-    "declaringType": "Electron2D.RDSamplerState",
-    "name": "MipFilter",
-    "signature": "public Electron2D.RenderingDevice.SamplerFilter MipFilter { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.RenderingDevice.SamplerFilter",
     "value": null
   },
   {
@@ -220701,11 +220740,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.RDTextureFormat.Mipmaps()",
+    "id": "property:Electron2D.RDTextureFormat.MIPMaps()",
     "kind": "property",
     "declaringType": "Electron2D.RDTextureFormat",
-    "name": "Mipmaps",
-    "signature": "public System.UInt32 Mipmaps { get; set; }",
+    "name": "MIPMaps",
+    "signature": "public System.UInt32 MIPMaps { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -224731,6 +224770,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.SystemFont.DisableEmbeddedBitmaps()",
+    "kind": "property",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "DisableEmbeddedBitmaps",
+    "signature": "public System.Boolean DisableEmbeddedBitmaps { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.SystemFont.FontItalic()",
     "kind": "property",
     "declaringType": "Electron2D.SystemFont",
@@ -224780,6 +224832,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SystemFont.ForceAutohinter()",
+    "kind": "property",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "ForceAutohinter",
+    "signature": "public System.Boolean ForceAutohinter { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SystemFont.GenerateMIPMaps()",
+    "kind": "property",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "GenerateMIPMaps",
+    "signature": "public System.Boolean GenerateMIPMaps { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -225810,11 +225888,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Texture.HasMipmaps()",
+    "id": "property:Electron2D.Texture.HasMIPMaps()",
     "kind": "property",
     "declaringType": "Electron2D.Texture",
-    "name": "HasMipmaps",
-    "signature": "public System.Boolean HasMipmaps { get;  }",
+    "name": "HasMIPMaps",
+    "signature": "public System.Boolean HasMIPMaps { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -225823,11 +225901,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Texture.MipmapCount()",
+    "id": "property:Electron2D.Texture.MIPMapCount()",
     "kind": "property",
     "declaringType": "Electron2D.Texture",
-    "name": "MipmapCount",
-    "signature": "public System.Int32 MipmapCount { get;  }",
+    "name": "MIPMapCount",
+    "signature": "public System.Int32 MIPMapCount { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -226213,11 +226291,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.TextureRD.HasMipmaps()",
+    "id": "property:Electron2D.TextureRD.HasMIPMaps()",
     "kind": "property",
     "declaringType": "Electron2D.TextureRD",
-    "name": "HasMipmaps",
-    "signature": "public System.Boolean HasMipmaps { get;  }",
+    "name": "HasMIPMaps",
+    "signature": "public System.Boolean HasMIPMaps { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -226226,11 +226304,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.TextureRD.MipmapCount()",
+    "id": "property:Electron2D.TextureRD.MIPMapCount()",
     "kind": "property",
     "declaringType": "Electron2D.TextureRD",
-    "name": "MipmapCount",
-    "signature": "public System.Int32 MipmapCount { get;  }",
+    "name": "MIPMapCount",
+    "signature": "public System.Int32 MIPMapCount { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -228436,11 +228514,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.ViewportTexture.HasMipmaps()",
+    "id": "property:Electron2D.ViewportTexture.HasMIPMaps()",
     "kind": "property",
     "declaringType": "Electron2D.ViewportTexture",
-    "name": "HasMipmaps",
-    "signature": "public System.Boolean HasMipmaps { get;  }",
+    "name": "HasMIPMaps",
+    "signature": "public System.Boolean HasMIPMaps { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -228449,11 +228527,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.ViewportTexture.MipmapCount()",
+    "id": "property:Electron2D.ViewportTexture.MIPMapCount()",
     "kind": "property",
     "declaringType": "Electron2D.ViewportTexture",
-    "name": "MipmapCount",
-    "signature": "public System.Int32 MipmapCount { get;  }",
+    "name": "MIPMapCount",
+    "signature": "public System.Int32 MIPMapCount { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

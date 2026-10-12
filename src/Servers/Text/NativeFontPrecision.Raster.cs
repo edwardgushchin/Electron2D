@@ -8,14 +8,16 @@ internal readonly record struct NativeRasterGlyph(byte[] Pixels, int Width, int 
 internal sealed unsafe partial class NativeFontPrecision
 {
     // Cache-miss rasterization owns its returned RGBA bytes. Phase is applied to the outline, not the final texture position.
-    internal NativeRasterGlyph Rasterize(uint glyph, FontHinting hinting, int phase26Dot6 = 0, int outlineRadius26Dot6 = 0)
+    internal NativeRasterGlyph Rasterize(uint glyph, FontHinting hinting, int phase26Dot6 = 0, int outlineRadius26Dot6 = 0, bool disableEmbeddedBitmaps = true, bool forceAutohinter = false)
     {
         EnsureOwner();
         if (glyph >= GlyphCount) throw new ArgumentOutOfRangeException(nameof(glyph));
         if ((uint)phase26Dot6 >= 64) throw new ArgumentOutOfRangeException(nameof(phase26Dot6));
         if ((uint)outlineRadius26Dot6 > 16384 * 64) throw new ArgumentOutOfRangeException(nameof(outlineRadius26Dot6));
         var flags = hinting switch { FontHinting.None => NoHinting, FontHinting.Light => LightHinting, _ => 0 };
-        flags |= outlineRadius26Dot6 > 0 || (FaceFlags & (1 << 14)) == 0 ? 8 : 1 << 20; // No embedded bitmap for scalable monochrome outlines; preserve native color strikes.
+        if (forceAutohinter) flags |= 1 << 5;
+        if (outlineRadius26Dot6 > 0 || disableEmbeddedBitmaps && (FaceFlags & (1 << 14)) == 0) flags |= 8;
+        else if ((FaceFlags & (1 << 14)) != 0) flags |= 1 << 20;
         var delta = new FTVector { X = new CLong(phase26Dot6) };
         nint detached = 0, stroker = 0;
         FTSetTransform(_face, null, &delta);

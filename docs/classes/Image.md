@@ -1,6 +1,6 @@
 # Image
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Inherits:** [Resource](Resource.md) → [ElectronObject](ElectronObject.md)
 
@@ -30,7 +30,7 @@ Every state read and mutation is synchronized per instance. Bulk mutations prepa
 using var image = Image.CreateEmpty(64, 32, useMipmaps: false, Image.Format.Rgba8);
 image.Fill(Colors.Transparent);
 image.FillRect(new Rect2i(8, 8, 16, 16), Colors.White);
-image.GenerateMipmaps();
+image.GenerateMIPMaps();
 
 Color center = image.GetPixel(16, 16);
 byte[] ownedCopy = image.GetData();
@@ -50,8 +50,8 @@ byte[] ownedCopy = image.GetData();
 | [`public int Height { get; }`](#height) | Base-level height in pixels. |
 | [`public Vector2i Size { get; }`](#size) | Base-level dimensions. |
 | [`public Image.Format PixelFormat { get; }`](#pixelformat) | Raw buffer layout. |
-| [`public bool HasMipmaps { get; }`](#hasmipmaps) | Whether a complete lower-resolution chain follows the base level. |
-| [`public int MipmapCount { get; }`](#mipmapcount) | Number of stored levels excluding the base. |
+| [`public bool HasMIPMaps { get; }`](#hasmipmaps) | Whether a complete lower-resolution chain follows the base level. |
+| [`public int MIPMapCount { get; }`](#mipmapcount) | Number of stored levels excluding the base. |
 | [`public int DataSize { get; }`](#datasize) | Complete raw-buffer length in bytes. |
 | [`public bool IsCompressed { get; }`](#iscompressed) | Whether the format uses GPU block compression. |
 | [`public bool IsEmpty { get; }`](#isempty) | Whether the image is in the canonical empty state. |
@@ -66,7 +66,7 @@ byte[] ownedCopy = image.GetData();
 | [`public static Image CreateFromData(int width, int height, bool useMipmaps, Image.Format format, byte[] data)`](#createfromdata) | Creates an image from an exact copied raw buffer. |
 | [`public void SetData(int width, int height, bool useMipmaps, Image.Format format, byte[] data)`](#setdata) | Atomically replaces all pixel state. |
 | [`public byte[] GetData()`](#getdata) | Returns an independent raw-buffer copy. |
-| [`public int GetMipmapOffset(int mipmap)`](#getmipmapoffset) | Gets a stored level's byte offset. |
+| [`public int GetMIPMapOffset(int mipmap)`](#getmipmapoffset) | Gets a stored level's byte offset. |
 | [`public void CopyFrom(Image source)`](#copyfrom) | Copies pixel state while preserving resource identity. |
 | [`public Color GetPixel(int x, int y)`](#getpixel-xy) | Decodes one base-level pixel. |
 | [`public Color GetPixel(Vector2i point)`](#getpixel-point) | Decodes one base-level pixel. |
@@ -77,8 +77,8 @@ byte[] ownedCopy = image.GetData();
 | [`public Rect2i GetUsedRect()`](#getusedrect) | Finds nontransparent base-level bounds. |
 | [`public void Fill(Color color)`](#fill) | Fills all stored levels. |
 | [`public void FillRect(Rect2i rectangle, Color color)`](#fillrect) | Fills a clipped base-level rectangle. |
-| [`public void ClearMipmaps()`](#clearmipmaps) | Removes lower-resolution levels. |
-| [`public void GenerateMipmaps(bool renormalize = false)`](#generatemipmaps) | Rebuilds a complete mip chain. |
+| [`public void ClearMIPMaps()`](#clearmipmaps) | Removes lower-resolution levels. |
+| [`public void GenerateMIPMaps(bool renormalize = false)`](#generatemipmaps) | Rebuilds a complete mip chain. |
 | [`public void Convert(Image.Format format)`](#convert) | Converts all stored levels to an uncompressed format. |
 | [`public void Crop(int width, int height)`](#crop) | Crops or expands from the top-left corner. |
 | [`public Image GetRegion(Rect2i region)`](#getregion) | Copies a clipped base-level region. |
@@ -179,12 +179,12 @@ Returns `(Width, Height)` in pixels, or `Vector2i.Zero` for an empty image.
 Returns the exact raw-buffer layout. A new empty image reports `L8`; format alone does not imply that storage exists.
 
 <a id="hasmipmaps"></a>
-### `public bool HasMipmaps { get; }`
+### `public bool HasMIPMaps { get; }`
 
 True only when at least one complete lower-resolution level is stored after the base level. A 1×1 image cannot have mipmaps.
 
 <a id="mipmapcount"></a>
-### `public int MipmapCount { get; }`
+### `public int MIPMapCount { get; }`
 
 Returns the number of lower-resolution levels, excluding level zero. Each dimension halves independently and is clamped to one until both are one.
 
@@ -241,9 +241,9 @@ Validates and copies an exact complete buffer before atomically replacing the cu
 Returns a fresh copy containing the base level followed by all mip levels. Mutating the returned array cannot change the image.
 
 <a id="getmipmapoffset"></a>
-### `public int GetMipmapOffset(int mipmap)`
+### `public int GetMIPMapOffset(int mipmap)`
 
-Returns the byte offset for level zero through `MipmapCount`. Empty images throw `InvalidOperationException`; absent levels throw `ArgumentOutOfRangeException`.
+Returns the byte offset for level zero through `MIPMapCount`. Empty images throw `InvalidOperationException`; absent levels throw `ArgumentOutOfRangeException`.
 
 <a id="copyfrom"></a>
 ### `public void CopyFrom(Image source)`
@@ -263,7 +263,7 @@ Equivalent to `GetPixel(point.X, point.Y)`.
 <a id="setpixel-xy"></a>
 ### `public void SetPixel(int x, int y, Color color)`
 
-Encodes one uncompressed base-level pixel using the current format's quantization rules and raises `Changed`. Existing mip levels are not regenerated; call `GenerateMipmaps` after a batch of per-pixel edits when a consistent chain is required.
+Encodes one uncompressed base-level pixel using the current format's quantization rules and raises `Changed`. Existing mip levels are not regenerated; call `GenerateMIPMaps` after a batch of per-pixel edits when a consistent chain is required.
 
 <a id="setpixel-point"></a>
 ### `public void SetPixel(Vector2i point, Color color)`
@@ -296,12 +296,12 @@ Encodes `color` into every pixel of every stored level. Quantization and omitted
 Clips the half-open rectangle to the base image. Nonpositive or disjoint rectangles change no pixels. When mipmaps exist, they are rebuilt from the resulting base level.
 
 <a id="clearmipmaps"></a>
-### `public void ClearMipmaps()`
+### `public void ClearMIPMaps()`
 
 Retains base bytes and removes every lower level. Calling it without mipmaps is safe.
 
 <a id="generatemipmaps"></a>
-### `public void GenerateMipmaps(bool renormalize = false)`
+### `public void GenerateMIPMaps(bool renormalize = false)`
 
 Builds the complete chain using 2×2 averaging. With `renormalize`, averaged RGB values are interpreted as signed normal components and normalized. Empty and compressed images are rejected.
 
@@ -447,7 +447,7 @@ Copies a stable snapshot of dimensions, format, mipmap policy, and bytes into th
 <a id="getpropertydescriptors"></a>
 ### `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
 
-Appends read-only descriptors for `Width`, `Height`, `Size`, `PixelFormat`, `HasMipmaps`, and `DataSize` to inherited resource descriptors.
+Appends read-only descriptors for `Width`, `Height`, `Size`, `PixelFormat`, `HasMIPMaps`, and `DataSize` to inherited resource descriptors.
 
 <a id="dispose-bool"></a>
 ### `protected override void Dispose(bool disposing)`

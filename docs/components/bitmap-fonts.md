@@ -1,6 +1,6 @@
 # Bitmap and indexed font authoring
 
-Last updated: 2026-10-07
+Last updated: 2026-10-12
 
 ## Scope and owned types
 
@@ -23,3 +23,7 @@ FontCacheTests covers real bitmap/dynamic advances, supplementary scalars, metri
 Non-SFNT Type 1 dynamic sources still require their FreeType/HarfBuzz nominal/kerning callback integration and fixtures. SystemFont discovery/fallback, language/script overrides, extra antialiasing/embedded-bitmap/autohinter/mipmap modes and MSDF are still exact coverage obligations. This slice does not add inert properties for those mechanisms or claim a complete TextServer service.
 
 Primary format: [AngelCode BMFont specification](https://www.angelcode.com/products/bmfont/doc/file_format.html); native shaping callbacks: [HarfBuzz font API](https://harfbuzz.github.io/harfbuzz-hb-font.html). [ADR 0046](../decisions/rendering.md#adr-0046) defines ownership, units and backend gates.
+
+## Raster-policy publication
+
+Indexed pages participate in FontFile.GenerateMIPMaps. Native bitmap-strike/autohinter policy changes retain authored image/glyph/metric state while rebuilding generated caches. Automatic pages have explicit ownership in cache format two; format one still loads conservatively. Protected authored glyph pages, explicit free-shelf packing and reused automatic slots preserve mixed content and bounded repeated publication. The native policy tests verify these contracts through versioned storage and real output.

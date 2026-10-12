@@ -13,18 +13,18 @@ internal static class ImageCodecTests
     {
         VerifyNativeIOCounts();
         using var source = Image.CreateFromData(3, 2, false, Image.Format.Rgba8, Pixels);
-        source.GenerateMipmaps();
+        source.GenerateMIPMaps();
         var before = source.GetData();
         var changes = 0;
         source.Changed += _ => changes++;
         var png = source.SavePNGToBuffer();
-        Check(source.GetData().SequenceEqual(before) && source.HasMipmaps && changes == 0, "Encoding uses a snapshot without changing the source.");
+        Check(source.GetData().SequenceEqual(before) && source.HasMIPMaps && changes == 0, "Encoding uses a snapshot without changing the source.");
         using var image = new Image();
         var loaded = 0;
         image.Changed += _ => loaded++;
         image.LoadPNGFromBuffer(png);
         CheckPixels(image, Pixels);
-        Check(!image.HasMipmaps && loaded == 1, "Load replaces the whole image and emits Changed once.");
+        Check(!image.HasMIPMaps && loaded == 1, "Load replaces the whole image and emits Changed once.");
         image.LoadWebPFromBuffer(Convert.FromBase64String(WEBP));
         CheckPixels(image, Pixels);
         image.LoadSVGFromString(SVG);

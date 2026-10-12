@@ -538,3 +538,27 @@ Returns an independently owned insertion-order array including false and unfamil
 All key methods reject null, embedded NUL, malformed UTF16 and keys longer than 65536 UTF16 units. All methods reject disposed fonts. Mutations serialize under the font state gate, update realized indexed data and invalidate dependent layouts/variations. Equal writes do not emit Changed; callbacks run after committing outside storage locks, so observer exceptions leave committed policy intact. Data replacement, bitmap import, duplication and the stored `_font_support` byte-array descriptor preserve policy. Parsing bounds lengths before allocation and validates version, counts, strict UTF8, boolean values, unique keys and complete consumption before publication. Old archives default to empty policy.
 
 FontSupportTests verifies real advances, wildcard/exact/removal behavior, primary priority, last resort, native script metadata, emoji presentation, callback failures, concurrent updates, duplicate independence, malformed storage and fresh-process archives. FontSupportRenderingTests checks actual canvas/Label/RichTextLabel/FontVariation pixel changes and 64 active plus 64 idle prepared intervals on current Linux Wayland GPU and compatibility backends; each measured zero managed bytes. Native allocation and other platform execution remain separate gates.
+
+## Native strike, autohinter and MIP policy
+
+| Signature | Contract/default |
+| --- | --- |
+| `public bool DisableEmbeddedBitmaps { get; set; }` | True; bypasses native monochrome strikes. Color strikes remain available; strokes use outlines. |
+| `public bool ForceAutohinter { get; set; }` | False; sets native automatic-hinting raster flags independently of unhinted shaping advances. |
+| `public bool GenerateMIPMaps { get; set; }` | False; publishes complete MIP chains for ordinary glyph images and indexed pages. Sampling requires a MIP filter. |
+
+### DisableEmbeddedBitmaps
+
+Selects scalable monochrome outlines when true. A matching embedded monochrome strike can provide actual bitmap coverage when false; color strikes remain available in both states. Native outlines still supply stroke rasterization. Authored bitmap records and pages are preserved independently of this native-source policy.
+
+### ForceAutohinter
+
+Adds FreeType's forced automatic-hinting load flag to native raster requests. It does not replace the accepted unhinted shaping metric contract. Explicit no-hinting mode keeps its native semantics. FontVariation and owned system fallback sources inherit the selected policy.
+
+### GenerateMIPMaps
+
+Creates complete MIP levels before publishing glyph textures, including oversampled/phase rasters and copied indexed pages. A source policy change invalidates dependent layout and retires earlier native data/textures after active reads. Previously recorded immutable glyph pixels remain valid. GPU sampling consumes the generated levels; compatibility sampling still accepts nearest/linear base-level filters and rejects its existing MIP-filter capability gate.
+
+All three properties reject disposed resources. Equal assignments are silent. Notifications occur after committed publication outside state locks; observer exceptions retain committed policy. Stored descriptors and duplication carry policy. Defaults and verification are shared with [the text component](../components/text.md#native-raster-policy-verification).
+
+Data assignment preserves policy; LoadDynamicFont, LoadBitmapFont and ResetState restore defaults. Deferred built-in fonts retain lazy native initialization. Policy publication clones configured/indexed snapshots, discards generated glyph records/pages and preserves authored image ownership. Native packing uses separate pages when authored content is present.

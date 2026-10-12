@@ -1,6 +1,6 @@
 # CurveTexture
 
-Last updated: 2026-09-23
+Last updated: 2026-10-12
 
 - Declaration: `public sealed class CurveTexture : Texture`
 - Source: [CurveTexture.cs](../../src/Scene/Resources/CurveTexture.cs)
@@ -40,7 +40,7 @@ The analytic sampling contract is exercised in CurveTextureTests. A ShaderMateri
 | `override int GetHeight()` | Always one. |
 | `override Image? GetImage()` | Independent original float image, or null before initialization. |
 
-Inherited GetSize returns (Width, 1). PixelFormat is L8 before initialization and Rgbf/Rf afterward; HasAlpha and HasMipmaps are false, MipmapCount is zero, and IsPixelOpaque returns true. Drawing and shader bindings follow [Texture](Texture.md). ResourceLocalToScene defaults to false.
+Inherited GetSize returns (Width, 1). PixelFormat is L8 before initialization and Rgbf/Rf afterward; HasAlpha and HasMIPMaps are false, MIPMapCount is zero, and IsPixelOpaque returns true. Drawing and shader bindings follow [Texture](Texture.md). ResourceLocalToScene defaults to false.
 
 ## Property descriptions
 

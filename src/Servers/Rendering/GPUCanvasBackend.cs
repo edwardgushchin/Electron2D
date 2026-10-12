@@ -19,7 +19,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     private readonly HashSet<MaterialState> _usedMaterials = [];
     private readonly Resource?[] _textureScratch = new Resource?[16];
     private readonly Dictionary<(TextureFilter, TextureRepeat, int, bool), RenderHandle> _samplers = [];
-    private readonly bool _nearestMipmaps = ProjectSettings.GetWithOverride(ProjectSettings.UseNearestMipmapFilter);
+    private readonly bool _nearestMipmaps = ProjectSettings.GetWithOverride(ProjectSettings.UseNearestMIPMapFilter);
     private ImageTexture? _whiteTexture;
     private RenderHandle? _clearPipeline;
     private RenderHandle? _vertexBuffer;
@@ -167,7 +167,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             lightingUsed |= batch.Count != 0 && batch.Lighting is not null && !batch.MaskShader && !batch.GroupShader;
             sdfUsed |= batch.Material?.Program.UsesSDFTexture == true;
             screen |= batch.Operation != CanvasOperation.Draw || batch.Material?.Program.UsesScreenTexture == true;
-            screenMipmaps |= batch.Mipmaps || batch.Operation is not (CanvasOperation.GroupEnd or CanvasOperation.MaskEnd) && batch.Material?.Program.UsesScreenTexture == true;
+            screenMipmaps |= batch.MIPMaps || batch.Operation is not (CanvasOperation.GroupEnd or CanvasOperation.MaskEnd) && batch.Material?.Program.UsesScreenTexture == true;
             if (batch.Material?.Program.TimeUniform is not null && !float.IsFinite((float)time))
                 throw new InvalidOperationException("The render clock exceeds the finite float32 range required by shader TIME.");
             var code = BatchCode(batch); var key = (code, batch.Blend, batch.InstanceCount > 0);
@@ -256,7 +256,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 if (batch.Operation is CanvasOperation.GroupEnd or CanvasOperation.MaskEnd && inGroup)
                 {
                     SDL.EndGPURenderPass(pass); pass = 0; inGroup = false;
-                    if (batch.Mipmaps) SDL.GenerateMipmapsForGPUTexture(command, output.BackBuffer!.DangerousGetHandle());
+                    if (batch.MIPMaps) SDL.GenerateMipmapsForGPUTexture(command, output.BackBuffer!.DangerousGetHandle());
                     pass = BeginPass(command, output.Next.DangerousGetHandle(), SDL.GPULoadOp.Load, default);
                 }
                 if (batch.Material?.Program.UsesScreenTexture == true && batch.Operation is not (CanvasOperation.GroupEnd or CanvasOperation.MaskEnd) && !copied)

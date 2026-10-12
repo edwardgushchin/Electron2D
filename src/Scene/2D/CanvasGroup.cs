@@ -31,7 +31,7 @@ public class CanvasGroup : Entity
     /// rejects a submitted mipmapped group before native drawing rather than ignoring this policy.</remarks>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
-    public bool UseMipmaps { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _useMipmaps; } set { EnsureMutable(); _useMipmaps = value; } }
+    public bool UseMIPMaps { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _useMipmaps; } set { EnsureMutable(); _useMipmaps = value; } }
     private static void Margin(float value) { if (!float.IsFinite(value) || value < 0) throw new ArgumentOutOfRangeException(nameof(value)); }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(GroupProperties);
@@ -41,5 +41,5 @@ public class CanvasGroup : Entity
     private static readonly PropertyDescriptor[] GroupProperties =
     [new PropertyDescriptor<CanvasGroup, float>(nameof(FitMargin), n => n.FitMargin, (n,v) => n.FitMargin=v, _ => 10, (_,v) => float.IsFinite(v) && v>=0, stored:true),
      new PropertyDescriptor<CanvasGroup, float>(nameof(ClearMargin), n => n.ClearMargin, (n,v) => n.ClearMargin=v, _ => 10, (_,v) => float.IsFinite(v) && v>=0, stored:true),
-     new PropertyDescriptor<CanvasGroup, bool>(nameof(UseMipmaps), n => n.UseMipmaps, (n,v) => n.UseMipmaps=v, _ => false, stored:true)];
+     new PropertyDescriptor<CanvasGroup, bool>("UseMipmaps", n => n.UseMIPMaps, (n,v) => n.UseMIPMaps=v, _ => false, stored:true)];
 }

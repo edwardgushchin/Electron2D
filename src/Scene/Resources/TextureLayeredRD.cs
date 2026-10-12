@@ -34,7 +34,7 @@ public abstract class TextureLayeredRD : TextureLayered
     /// <inheritdoc />
     public override Image.Format GetFormat() => DeviceInfo is { } info ? RenderingDevice.CanvasImageFormat(info.Format) ?? Image.Format.Rgbaf : Image.Format.L8;
     /// <inheritdoc />
-    public override bool HasMipmaps() => DeviceInfo?.Mips > 1;
+    public override bool HasMIPMaps() => DeviceInfo?.Mips > 1;
     /// <summary>Copies every mip of one readable array layer into a caller-owned image.</summary>
     /// <param name="layerIndex">Zero-based layer; invalid layers reject even for unbound resources.</param>
     /// <returns>An independent image, or null when the selected device image is not CPU readable. Integer lanes convert to raw-valued float32 RGBA with float32 precision.</returns>

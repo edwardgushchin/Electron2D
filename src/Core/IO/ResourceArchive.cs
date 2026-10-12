@@ -328,7 +328,7 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
     {
         stream.Put32(image.Width);
         stream.Put32(image.Height);
-        stream.PutU8(image.HasMipmaps ? (byte)1 : (byte)0);
+        stream.PutU8(image.HasMIPMaps ? (byte)1 : (byte)0);
         stream.Put32((int)image.PixelFormat);
         var data = image.GetData();
         stream.Put32(data.Length);

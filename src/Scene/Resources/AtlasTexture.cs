@@ -125,10 +125,10 @@ public sealed class AtlasTexture : Texture
     public override Image.Format PixelFormat { get { ThrowIfDisposed(); return Image.Format.Max; } }
     /// <inheritdoc />
     /// <remarks>Always false: this view owns no mipmap chain. Rendering can still sample the source's mipmaps.</remarks>
-    public override bool HasMipmaps { get { ThrowIfDisposed(); return false; } }
+    public override bool HasMIPMaps { get { ThrowIfDisposed(); return false; } }
     /// <inheritdoc />
     /// <remarks>Always zero for the view, independently of the source's rendered mip levels.</remarks>
-    public override int MipmapCount { get { ThrowIfDisposed(); return 0; } }
+    public override int MIPMapCount { get { ThrowIfDisposed(); return 0; } }
 
     /// <inheritdoc />
     /// <remarks>Returns only the effective source region, with integer truncation and image-bound clipping,

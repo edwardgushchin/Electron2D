@@ -25,3 +25,7 @@ Nonempty data accepts the packaged desktop and Android process architectures, in
 ## Support metadata
 
 Retains an immutable FontSupportPolicy snapshot and the native face's automatic script set. Primary support queries serialize with data lifetime checks; layout priority retains supported-script/supported-language, supported-script/unsupported-language and last-resort tiers. Color faces have preferred emoji presentation. Configuration copies and FontVariation realizations carry policy; FontFile commits changes to every realized indexed data object before notifying consumers.
+
+## Raster policy snapshots
+
+Owns native monochrome-strike, forced-autohinter and MIP-generation policy. FontFile publishes replacement snapshots on changes; configured variations and automatic system sources copy effective settings. Native raster calls select the real FreeType flags, while metrics keep unhinted precision. Both standalone images and atlas pages generate complete MIP chains before texture publication. Generated page retirement preserves authored images, recorded pixels and active old readers.

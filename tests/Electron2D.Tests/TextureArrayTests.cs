@@ -12,7 +12,7 @@ internal static class TextureArrayTests
         using var red = Image.CreateEmpty(4, 4, false, Image.Format.Rgba8); red.Fill(Colors.Red);
         using var blue = Image.CreateEmpty(4, 4, false, Image.Format.Rgba8); blue.Fill(Colors.Blue);
         using var array = new TextureArray();
-        Check(array.GetWidth() == 0 && array.GetHeight() == 0 && array.GetLayers() == 0 && array.GetFormat() == Image.Format.L8 && !array.HasMipmaps() && array.GetLayeredType() == TextureLayered.LayeredType.Array, "Empty metadata and role.");
+        Check(array.GetWidth() == 0 && array.GetHeight() == 0 && array.GetLayers() == 0 && array.GetFormat() == Image.Format.L8 && !array.HasMIPMaps() && array.GetLayeredType() == TextureLayered.LayeredType.Array, "Empty metadata and role.");
         var rid = array.GetRID(); Check(rid.IsValid() && array.GetRID() == rid, "Resource-owned stable identity.");
         Reject<InvalidOperationException>(() => array.UpdateLayer(red, 0)); Reject<ArgumentOutOfRangeException>(() => array.GetLayerData(0)); Reject<ArgumentException>(() => array.CreateFromImages([])); Reject<ArgumentNullException>(() => array.CreateFromImages([red, null!]));
         array.CreateFromImages([red, blue]); Check(array.GetRID() == rid && array.GetLayers() == 2, "Creation preserves resource identity.");
@@ -27,7 +27,7 @@ internal static class TextureArrayTests
         using var copy = (TextureArray)array.Duplicate(true); copy.UpdateLayer(blue, 0); using (var layer = array.GetLayerData(0)!) Check(layer.GetPixel(0, 0) == Colors.Red, "Duplicates have independent publication.");
         Action<Resource> failing = _ => throw new ApplicationException("fixture"); array.Changed += failing; Reject<ApplicationException>(() => array.UpdateLayer(blue, 0)); array.Changed -= failing;
         using (var layer = array.GetLayerData(0)!) Check(layer.GetPixel(0, 0) == Colors.Blue, "Notification failure retains committed pixels.");
-        using var placeholder = array.CreatePlaceholder(); Check(placeholder.Size == new Vector2i(4, 4) && placeholder.Layers == 2 && placeholder.GetFormat() == Image.Format.Rgb8 && !placeholder.HasMipmaps() && placeholder.GetLayerData(int.MinValue) is null, "Metadata-only placeholder.");
+        using var placeholder = array.CreatePlaceholder(); Check(placeholder.Size == new Vector2i(4, 4) && placeholder.Layers == 2 && placeholder.GetFormat() == Image.Format.Rgb8 && !placeholder.HasMIPMaps() && placeholder.GetLayerData(int.MinValue) is null, "Metadata-only placeholder.");
         var changes = 0; placeholder.Changed += _ => changes++; placeholder.Size = placeholder.Size; placeholder.Layers = -3; Check(changes == 1 && placeholder.Layers == -3, "Pinned placeholder notification policy.");
         using var placeholderCopy = (PlaceholderTextureArray)placeholder.Duplicate(); Check(placeholderCopy.Size == placeholder.Size && placeholderCopy.Layers == -3, "Placeholder stored state.");
         using var custom = new Producer(blue); var first = custom.CaptureLayers(); Check(ReferenceEquals(first, custom.CaptureLayers()) && custom.Reads == 1, "Custom producer snapshot cache."); custom.Invalidate(); Check(!ReferenceEquals(first, custom.CaptureLayers()) && custom.Reads == 2, "Custom Changed invalidation."); custom.Role = (TextureLayered.LayeredType)99; custom.Invalidate(); Reject<NotSupportedException>(() => custom.CaptureLayers());
@@ -72,7 +72,7 @@ internal static class TextureArrayTests
         public override int GetWidth() => image.Width;
         public override int GetHeight() => image.Height;
         public override int GetLayers() => 1;
-        public override bool HasMipmaps() => image.HasMipmaps;
+        public override bool HasMIPMaps() => image.HasMIPMaps;
         public override Image? GetLayerData(int layerIndex) { Reads++; return (Image)image.Duplicate(); }
     }
     internal static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }

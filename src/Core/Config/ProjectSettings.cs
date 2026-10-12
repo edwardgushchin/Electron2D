@@ -300,7 +300,7 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
 
     /// <summary>Selects nearest rather than linear interpolation between canvas mip levels.</summary>
     /// <remarks>False by default. Sampled when the GPU renderer opens.</remarks>
-    public static ProjectSetting<bool> UseNearestMipmapFilter { get; } =
+    public static ProjectSetting<bool> UseNearestMIPMapFilter { get; } =
         new("rendering/textures/default_filters/use_nearest_mipmap_filter", false);
 
     /// <summary>Defines the initial viewport anisotropy limit as a power of two.</summary>

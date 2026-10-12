@@ -1,6 +1,6 @@
 # NoiseTexture
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Inherits:** [Texture](Texture.md) → [Resource](Resource.md) → [ElectronObject](ElectronObject.md)
 
@@ -44,7 +44,7 @@ using Image? image = texture.GetImage();
 | --- | --- |
 | `public int Width { get; set; }` | 512; positive image width, at most 16,384. |
 | `public int Height { get; set; }` | 512; positive image height, at most 16,384. |
-| `public bool GenerateMipmaps { get; set; }` | True; generate the complete mip chain after other processing. |
+| `public bool GenerateMIPMaps { get; set; }` | True; generate the complete mip chain after other processing. |
 | `public Noise? Noise { get; set; }` | Null; borrowed sampling source. |
 | `public Gradient? ColorRamp { get; set; }` | Null; borrowed luminance-to-color source. |
 | `public bool Seamless { get; set; }` | False; choose the noise source's seamless image path. |
@@ -77,3 +77,7 @@ All settings are synchronized. Equal assignments are silent. A changed setting i
 ## Verification and limits
 
 [NoiseTextureTests](../../tests/Electron2D.Tests/NoiseTextureTests.cs) checks managed generation, source invalidation, color mapping, normal maps, mipmaps, seamless selection, copying, disposal and failure recovery. [NoiseTextureRenderingTests](../../tests/Electron2D.Tests/NoiseTextureRenderingTests.cs) checks initial and changed Sprite pixels on Linux Wayland GPU and compatibility backends. Other platforms and exact derived-format pixel parity remain unverified. Lazy generation and immediate invalidation differ from the reference's deferred worker schedule. The built-in [FastNoiseLite](FastNoiseLite.md) generator passes managed texture integration and retained-pixel checks on both tested backends. The 3D-space option is excluded under [ADR 0004](../decisions/product.md#adr-0004); the generation policy is in [ADR 0013](../decisions/resources.md#adr-0013). [Coverage](../coverage/classes/NoiseTexture2D.md) records these limits per member.
+
+## Stored key spelling
+
+GenerateMIPMaps follows ADR 0045. The established stored descriptor key remains `GenerateMipmaps`, preserving existing resource archives without exposing a second CLR property.

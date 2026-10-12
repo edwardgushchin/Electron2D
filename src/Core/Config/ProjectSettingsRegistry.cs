@@ -87,7 +87,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(RenderingTimeRolloverSeconds, isBasic: false);
         RegisterInternal(SnapTransformsToPixel, isBasic: false);
         RegisterInternal(SnapVerticesToPixel, isBasic: false);
-        RegisterInternal(UseNearestMipmapFilter, isBasic: false);
+        RegisterInternal(UseNearestMIPMapFilter, isBasic: false);
         RegisterInternal(AnisotropicFilteringLevel, isBasic: false);
         RegisterInternal(DefaultClearColor, isBasic: true);
         RegisterInternal(DebugPathsColor, isBasic: false);
@@ -1188,7 +1188,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, RenderingTimeRolloverSeconds) ||
         ReferenceEquals(setting, SnapTransformsToPixel) ||
         ReferenceEquals(setting, SnapVerticesToPixel) ||
-        ReferenceEquals(setting, UseNearestMipmapFilter) ||
+        ReferenceEquals(setting, UseNearestMIPMapFilter) ||
         ReferenceEquals(setting, AnisotropicFilteringLevel) ||
         ReferenceEquals(setting, DefaultClearColor) ||
         ReferenceEquals(setting, DebugPathsColor) ||

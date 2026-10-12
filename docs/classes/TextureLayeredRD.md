@@ -34,7 +34,7 @@ using var layer = layers.GetLayerData(1); // Explicit caller-owned mip snapshot.
 | [`public override System.Int32 GetLayers()`](#member-c3c918f68c0f) | method | Overrides the inherited resource metadata/readback or managed lifetime contract. |
 | [`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`](#member-1588e383f755) | method | Overrides the inherited resource metadata/readback or managed lifetime contract. |
 | [`public override System.Int32 GetWidth()`](#member-19128ecc05f4) | method | Overrides the inherited resource metadata/readback or managed lifetime contract. |
-| [`public override System.Boolean HasMipmaps()`](#member-571ece64ebe2) | method | Overrides the inherited resource metadata/readback or managed lifetime contract. |
+| [`public override System.Boolean HasMIPMaps()`](#member-571ece64ebe2) | method | Overrides the inherited resource metadata/readback or managed lifetime contract. |
 | [`protected override System.Void ValidateDisposal()`](#member-6aaf32b0d8b6) | method | Overrides the inherited resource metadata/readback or managed lifetime contract. |
 | [`public Electron2D.RID TextureRDRID { get; set; }`](#member-1b72f3ce81ce) | property | Gets or sets a sampled image-array identity of the active rendering device. |
 
@@ -135,10 +135,10 @@ Uses the inherited [TextureLayered](TextureLayered.md) contract with the device 
 
 <a id="member-571ece64ebe2"></a>
 
-### HasMipmaps
+### HasMIPMaps
 
 ```csharp
-public override System.Boolean HasMipmaps()
+public override System.Boolean HasMIPMaps()
 ```
 
 Uses the inherited [TextureLayered](TextureLayered.md) contract with the device image behavior described above.

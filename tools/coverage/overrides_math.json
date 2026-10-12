@@ -1221,7 +1221,7 @@
       "reason": "Unary plus counterpart."
     },
     {
-      "electron2d": "property:Electron2D.Image.HasMipmaps()",
+      "electron2d": "property:Electron2D.Image.HasMIPMaps()",
       "godot": "Image::method:has_mipmaps()",
       "reason": "Read-only C# property for the Image state query (ADR 0039)."
     },

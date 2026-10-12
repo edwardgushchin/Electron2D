@@ -48,7 +48,7 @@ using var copy = layers.GetLayerData(1); // Caller-owned pixels.
 | [`public abstract System.Int32 GetLayers()`](#member-a9d0cda48571) | method | Gets the number of image layers. |
 | [`public override Electron2D.RID GetRID()`](#member-7b0335766787) | method |  |
 | [`public abstract System.Int32 GetWidth()`](#member-28517e137996) | method | Gets the pixel width of one layer. |
-| [`public abstract System.Boolean HasMipmaps()`](#member-70954727b0a0) | method | Reports whether each image stores a mipmap chain. |
+| [`public abstract System.Boolean HasMIPMaps()`](#member-70954727b0a0) | method | Reports whether each image stores a mipmap chain. |
 | [`protected override System.Void ValidateDisposal()`](#member-02fbf2978ace) | method |  |
 
 ## Member Details
@@ -195,12 +195,12 @@ Gets the pixel width of one layer.
 The authored width; zero for uninitialized image arrays.
 
 <a id="member-70954727b0a0"></a>
-### `HasMipmaps()`
+### `HasMIPMaps()`
 
 Kind: `method`
 
 ```csharp
-public abstract System.Boolean HasMipmaps()
+public abstract System.Boolean HasMIPMaps()
 ```
 
 #### Summary
