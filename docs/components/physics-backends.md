@@ -1015,3 +1015,11 @@ GPU publication now reuses a preceding complete observation only when the public
 
 
 [Contact reporting depth](physics-registered-adapter.md#contact-reporting-depth) uses common reporting policy and existing resident GPU capped records. CPU metre depths convert to scene units; registered and projected results carry explicit immutable depth. This adds no GPU transfer or solved-state mirror.
+
+
+[Registered lifecycle census](physics-registered-adapter.md#registered-lifecycle-census)
+now verifies initialization, local/global activation, complete interval order,
+completed statistics, failure/cleanup paths and 128 moving full frames per scene/raw
+role at zero managed allocation through a public-only independent implementation.
+Eight former unmapped rows have their actual typed projections; complete numerical
+extension and platform/performance acceptance remain open.

@@ -174,3 +174,11 @@ actual selected Solve. Writes and numerical queries retain their rejection guard
 automatic geometry-dependent reads still need ordinary query access. The public-only
 consumer verifies scene/raw ownership, failures and 128 full active frames at zero
 owner/all-thread managed allocation. Complete numerical-extension acceptance stays open.
+
+
+[Registered lifecycle census](../components/physics-registered-adapter.md#registered-lifecycle-census)
+now verifies initialization, local/global activation, complete interval order,
+completed statistics, failure/cleanup paths and 128 moving full frames per scene/raw
+role at zero managed allocation through a public-only independent implementation.
+Eight former unmapped rows have their actual typed projections; complete numerical
+extension and platform/performance acceptance remain open.

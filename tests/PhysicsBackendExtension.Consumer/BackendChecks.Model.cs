@@ -23,6 +23,9 @@ public static partial class BackendChecks
         internal PhysicsBackendJoint? ReusedJoint;
         internal Action<RID>? BodyReleaseHook;
         internal Action? InitHook, FinishHook;
+        internal Action<LifecyclePhase>? LifecycleHook;
+        internal Exception? EndFailure;
+        internal PhysicsBackendStatistics? StatisticsOverride;
         internal bool FailBodyDetach;
         internal RID MotionFailure, ShapeFailure;
         internal Action<RID>? PolicyHook;
@@ -37,13 +40,13 @@ public static partial class BackendChecks
         protected override bool HasFailure { get { StatusHook?.Invoke(); return false; } }
         protected override bool ResultsReady => Ready;
         protected override int PreparedBodyCapacity => Bodies.Count;
-        protected override void Initialize() { InitHook?.Invoke(); if (FailInit) throw new InvalidOperationException("Initialization failure"); }
+        protected override void Initialize() { LifecycleHook?.Invoke(LifecyclePhase.Initialize); InitHook?.Invoke(); if (FailInit) throw new InvalidOperationException("Initialization failure"); }
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
             if (disposing && FailDisposal) throw new InvalidOperationException("Disposal failure");
         }
-        protected override void SetActive(bool active) => WorldPolicy();
+        protected override void SetActive(bool active) { LifecycleHook?.Invoke(LifecyclePhase.Active); WorldPolicy(); }
         protected override void SetSleepSettings(in PhysicsSleepSettings settings) => WorldPolicy();
         protected override void SetContactSettings(in PhysicsContactSettings settings) => WorldPolicy();
         protected override void SetSolverIterations(int value) => WorldPolicy();
@@ -53,6 +56,8 @@ public static partial class BackendChecks
         protected override void PrepareMonitoringCapacity(int bodies, int shapes) { }
         protected override PhysicsBackendStatistics ReadStatistics()
         {
+            LifecycleHook?.Invoke(LifecyclePhase.Statistics);
+            if (StatisticsOverride is { } value) return value;
             var active = 0; foreach (var b in Bodies.Values) if (b.Awake && b.Dynamic) active++;
             return new(active, Pairs, active);
         }
@@ -65,12 +70,12 @@ public static partial class BackendChecks
             if (ReusedJoint is { } reused) return reused;
             var created = new Constraint(this, joint); Joints.Add(joint, created); JointFactoryHook?.Invoke(joint); return created;
         }
-        protected override void BeginStep(double delta) => Ready = false;
+        protected override void BeginStep(double delta) { LifecycleHook?.Invoke(LifecyclePhase.Begin); Ready = false; }
         protected override void PrepareWorld(double delta, in PhysicsAreaFieldConfiguration fields) { Fields = fields; PrepareFieldAreas(); }
         protected override void PrepareBodies(double delta) { }
         protected override void Solve(double delta)
         {
-            StepHook?.Invoke();
+            LifecycleHook?.Invoke(LifecyclePhase.Solve); StepHook?.Invoke();
             Pairs = 0;
             foreach (var b in Bodies.Values) { b.ContactPeer = default; b.Advance((float)delta); }
             foreach (var a in Bodies.Values)
@@ -93,7 +98,7 @@ public static partial class BackendChecks
             foreach (var j in Joints.Values) j.Solve((float)delta);
             Steps++;
         }
-        protected override void SyncResults() => Ready = true;
+        protected override void SyncResults() { Ready = true; LifecycleHook?.Invoke(LifecyclePhase.Sync); }
         protected override void CompleteBody(RID body) { }
         protected override void CollectContacts() { }
         protected override void ScanAreas() { }
@@ -121,9 +126,9 @@ public static partial class BackendChecks
             return Annulus.Contact(a.Position, a.Hole, a.Radius, b.Position, b.Radius, out normal, out depth, out point);
         }
         protected override void EndStep(Exception? failure) { }
-        protected override void FlushQueries() { Flushes++; FlushHook?.Invoke(); }
-        protected override void EndSync(Exception? failure) { Synchronizations++; SyncHook?.Invoke(); }
-        protected override void Finish() { FinishHook?.Invoke(); Finished = true; Bodies.Clear(); Joints.Clear(); if (FailFinish) throw new InvalidOperationException("Finish failure"); }
+        protected override void FlushQueries() { LifecycleHook?.Invoke(LifecyclePhase.Flush); Flushes++; FlushHook?.Invoke(); }
+        protected override void EndSync(Exception? failure) { EndFailure = failure; LifecycleHook?.Invoke(LifecyclePhase.End); Synchronizations++; SyncHook?.Invoke(); }
+        protected override void Finish() { LifecycleHook?.Invoke(LifecyclePhase.Finish); FinishHook?.Invoke(); Finished = true; Bodies.Clear(); Joints.Clear(); if (FailFinish) throw new InvalidOperationException("Finish failure"); }
         protected override void PrepareCheckpoint() { }
         protected override PhysicsBackendCheckpoint CreateCheckpoint() => new History(this);
         protected override void PreparePortableCapture() { }

@@ -2569,6 +2569,61 @@
       "godot": "PhysicsServer2DExtension::method:_body_test_motion(RID:,Transform2D:,Vector2:,float:,bool:,bool:,PhysicsServer2DExtensionMotionResult*:)",
       "electron2d": "method:Electron2D.PhysicsServerBackend.TestBodyMotion(Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Single,System.Boolean,System.ReadOnlySpan<Electron2D.RID>,System.ReadOnlySpan<System.UInt64>,System.Boolean,Electron2D.PhysicsTestMotionResult)",
       "reason": "ADR 0103/0063: actual public BodyTestMotion and scene motion dispatch reaches the typed selected TestBodyMotion hook. Common validation retains the authored moving RID, rejects same-world receiver substitution before optional caller output, and preserves full result fields plus query/exclusion scope after errors. Public-only CPU/GPU/registered positive/miss/filter checks execute 1024 warm queries and 64 full frames at zero managed allocation, with registered nested queries, malformed results, scene/raw receiver substitution, no-result and next-valid-call controls; the pre-fix receiver regression is RED. Arbitrary geometry and complete recovery/separation-ray/numerical extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_init()",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.Initialize()",
+      "reason": "ADR 0089/0095/0103: selected owned-world lifecycle projects init/activation/begin+solve/sync/flush/end-sync/finish; shared process activation gates all worlds without changing local policy. ReadStatistics returns the complete typed Active/Pairs/Islands sample, validated before cached GetProcessInfo aggregation. Public-only --lifecycle verifies explicit/scene order and real motion, zero/inactive/global suspension, equal/failed activation, foreign-thread cached reads, empty active worlds, terminal solve/sync/statistics errors, recoverable flush/end-sync errors, all negative counts, initialization/finish/disposal aggregation and 128 moving full frames per role at zero owner/all-thread managed allocation. Full numerical, foreign-platform and overall extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_set_active(bool:)",
+      "electron2d": "method:Electron2D.PhysicsServer.SetActive(System.Boolean)",
+      "reason": "ADR 0089/0095/0103: selected owned-world lifecycle projects init/activation/begin+solve/sync/flush/end-sync/finish; shared process activation gates all worlds without changing local policy. ReadStatistics returns the complete typed Active/Pairs/Islands sample, validated before cached GetProcessInfo aggregation. Public-only --lifecycle verifies explicit/scene order and real motion, zero/inactive/global suspension, equal/failed activation, foreign-thread cached reads, empty active worlds, terminal solve/sync/statistics errors, recoverable flush/end-sync errors, all negative counts, initialization/finish/disposal aggregation and 128 moving full frames per role at zero owner/all-thread managed allocation. Full numerical, foreign-platform and overall extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_set_active(bool:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.SetActive(System.Boolean)",
+      "reason": "ADR 0089/0095/0103: selected owned-world lifecycle projects init/activation/begin+solve/sync/flush/end-sync/finish; shared process activation gates all worlds without changing local policy. ReadStatistics returns the complete typed Active/Pairs/Islands sample, validated before cached GetProcessInfo aggregation. Public-only --lifecycle verifies explicit/scene order and real motion, zero/inactive/global suspension, equal/failed activation, foreign-thread cached reads, empty active worlds, terminal solve/sync/statistics errors, recoverable flush/end-sync errors, all negative counts, initialization/finish/disposal aggregation and 128 moving full frames per role at zero owner/all-thread managed allocation. Full numerical, foreign-platform and overall extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_step(float:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.BeginStep(System.Double)",
+      "reason": "ADR 0089/0095/0103: selected owned-world lifecycle projects init/activation/begin+solve/sync/flush/end-sync/finish; shared process activation gates all worlds without changing local policy. ReadStatistics returns the complete typed Active/Pairs/Islands sample, validated before cached GetProcessInfo aggregation. Public-only --lifecycle verifies explicit/scene order and real motion, zero/inactive/global suspension, equal/failed activation, foreign-thread cached reads, empty active worlds, terminal solve/sync/statistics errors, recoverable flush/end-sync errors, all negative counts, initialization/finish/disposal aggregation and 128 moving full frames per role at zero owner/all-thread managed allocation. Full numerical, foreign-platform and overall extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_step(float:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.Solve(System.Double)",
+      "reason": "ADR 0089/0095/0103: selected owned-world lifecycle projects init/activation/begin+solve/sync/flush/end-sync/finish; shared process activation gates all worlds without changing local policy. ReadStatistics returns the complete typed Active/Pairs/Islands sample, validated before cached GetProcessInfo aggregation. Public-only --lifecycle verifies explicit/scene order and real motion, zero/inactive/global suspension, equal/failed activation, foreign-thread cached reads, empty active worlds, terminal solve/sync/statistics errors, recoverable flush/end-sync errors, all negative counts, initialization/finish/disposal aggregation and 128 moving full frames per role at zero owner/all-thread managed allocation. Full numerical, foreign-platform and overall extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_sync()",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.SyncResults()",
+      "reason": "ADR 0089/0095/0103: selected owned-world lifecycle projects init/activation/begin+solve/sync/flush/end-sync/finish; shared process activation gates all worlds without changing local policy. ReadStatistics returns the complete typed Active/Pairs/Islands sample, validated before cached GetProcessInfo aggregation. Public-only --lifecycle verifies explicit/scene order and real motion, zero/inactive/global suspension, equal/failed activation, foreign-thread cached reads, empty active worlds, terminal solve/sync/statistics errors, recoverable flush/end-sync errors, all negative counts, initialization/finish/disposal aggregation and 128 moving full frames per role at zero owner/all-thread managed allocation. Full numerical, foreign-platform and overall extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_flush_queries()",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.FlushQueries()",
+      "reason": "ADR 0089/0095/0103: selected owned-world lifecycle projects init/activation/begin+solve/sync/flush/end-sync/finish; shared process activation gates all worlds without changing local policy. ReadStatistics returns the complete typed Active/Pairs/Islands sample, validated before cached GetProcessInfo aggregation. Public-only --lifecycle verifies explicit/scene order and real motion, zero/inactive/global suspension, equal/failed activation, foreign-thread cached reads, empty active worlds, terminal solve/sync/statistics errors, recoverable flush/end-sync errors, all negative counts, initialization/finish/disposal aggregation and 128 moving full frames per role at zero owner/all-thread managed allocation. Full numerical, foreign-platform and overall extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_end_sync()",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.EndSync(System.Exception)",
+      "reason": "ADR 0089/0095/0103: selected owned-world lifecycle projects init/activation/begin+solve/sync/flush/end-sync/finish; shared process activation gates all worlds without changing local policy. ReadStatistics returns the complete typed Active/Pairs/Islands sample, validated before cached GetProcessInfo aggregation. Public-only --lifecycle verifies explicit/scene order and real motion, zero/inactive/global suspension, equal/failed activation, foreign-thread cached reads, empty active worlds, terminal solve/sync/statistics errors, recoverable flush/end-sync errors, all negative counts, initialization/finish/disposal aggregation and 128 moving full frames per role at zero owner/all-thread managed allocation. Full numerical, foreign-platform and overall extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_finish()",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.Finish()",
+      "reason": "ADR 0089/0095/0103: selected owned-world lifecycle projects init/activation/begin+solve/sync/flush/end-sync/finish; shared process activation gates all worlds without changing local policy. ReadStatistics returns the complete typed Active/Pairs/Islands sample, validated before cached GetProcessInfo aggregation. Public-only --lifecycle verifies explicit/scene order and real motion, zero/inactive/global suspension, equal/failed activation, foreign-thread cached reads, empty active worlds, terminal solve/sync/statistics errors, recoverable flush/end-sync errors, all negative counts, initialization/finish/disposal aggregation and 128 moving full frames per role at zero owner/all-thread managed allocation. Full numerical, foreign-platform and overall extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_get_process_info(int:PhysicsServer2D.ProcessInfo)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.ReadStatistics()",
+      "reason": "ADR 0089/0095/0103: selected owned-world lifecycle projects init/activation/begin+solve/sync/flush/end-sync/finish; shared process activation gates all worlds without changing local policy. ReadStatistics returns the complete typed Active/Pairs/Islands sample, validated before cached GetProcessInfo aggregation. Public-only --lifecycle verifies explicit/scene order and real motion, zero/inactive/global suspension, equal/failed activation, foreign-thread cached reads, empty active worlds, terminal solve/sync/statistics errors, recoverable flush/end-sync errors, all negative counts, initialization/finish/disposal aggregation and 128 moving full frames per role at zero owner/all-thread managed allocation. Full numerical, foreign-platform and overall extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_get_process_info(int:PhysicsServer2D.ProcessInfo)",
+      "electron2d": "method:Electron2D.PhysicsServer.GetProcessInfo(Electron2D.PhysicsServer.ProcessInfo)",
+      "reason": "ADR 0089/0095/0103: selected owned-world lifecycle projects init/activation/begin+solve/sync/flush/end-sync/finish; shared process activation gates all worlds without changing local policy. ReadStatistics returns the complete typed Active/Pairs/Islands sample, validated before cached GetProcessInfo aggregation. Public-only --lifecycle verifies explicit/scene order and real motion, zero/inactive/global suspension, equal/failed activation, foreign-thread cached reads, empty active worlds, terminal solve/sync/statistics errors, recoverable flush/end-sync errors, all negative counts, initialization/finish/disposal aggregation and 128 moving full frames per role at zero owner/all-thread managed allocation. Full numerical, foreign-platform and overall extension acceptance remain open."
     }
   ],
   "extras": [
@@ -4516,10 +4571,6 @@
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
     {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.BeginStep(System.Double)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
       "electron2d": "method:Electron2D.PhysicsServerBackend.CapturePortableOneWays(System.Span<Electron2D.PhysicsBackendOneWay>)",
       "reason": "ADR 0103/0094: typed selected implementation portable continuation. The public-only consumer verifies current output capacity after growth/shrink, invalid identity/shape/piece and duplicate rejection before encoding, previous-packet preservation, alternate local RIDs, real pass-through/contact impulse and 64 warmed capture/apply cycles with zero allocation. Full generic solver, separate-process extension and foreign-platform acceptance remain open."
     },
@@ -4576,18 +4627,6 @@
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
     {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.EndSync(System.Exception)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.Finish()",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.FlushQueries()",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
       "electron2d": "method:Electron2D.PhysicsServerBackend.GetAreaOverlapCount(Electron2D.RID)",
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
@@ -4597,10 +4636,6 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsServerBackend.GetRestInfo(Electron2D.PhysicsShapeQueryParameters,System.ReadOnlySpan<Electron2D.RID>)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.Initialize()",
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
     {
@@ -4648,23 +4683,11 @@
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
     {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.ReadStatistics()",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
       "electron2d": "method:Electron2D.PhysicsServerBackend.ScanAreas()",
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
     {
       "electron2d": "method:Electron2D.PhysicsServerBackend.SetCollisionExceptions(System.ReadOnlySpan<System.ValueTuple<Electron2D.RID, Electron2D.RID>>)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.Solve(System.Double)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.SyncResults()",
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
     {
@@ -7394,6 +7417,20 @@
       ],
       "state": "Partial",
       "reason": "ADR 0103/0063: actual public BodyTestMotion and scene motion dispatch reaches the typed selected TestBodyMotion hook. Common validation retains the authored moving RID, rejects same-world receiver substitution before optional caller output, and preserves full result fields plus query/exclusion scope after errors. Public-only CPU/GPU/registered positive/miss/filter checks execute 1024 warm queries and 64 full frames at zero managed allocation, with registered nested queries, malformed results, scene/raw receiver substitution, no-result and next-valid-call controls; the pre-fix receiver regression is RED. Arbitrary geometry and complete recovery/separation-ray/numerical extension acceptance remain open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_init()",
+        "PhysicsServer2DExtension::method:_set_active(bool:)",
+        "PhysicsServer2DExtension::method:_step(float:)",
+        "PhysicsServer2DExtension::method:_sync()",
+        "PhysicsServer2DExtension::method:_flush_queries()",
+        "PhysicsServer2DExtension::method:_end_sync()",
+        "PhysicsServer2DExtension::method:_finish()",
+        "PhysicsServer2DExtension::method:_get_process_info(int:PhysicsServer2D.ProcessInfo)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0089/0095/0103: selected owned-world lifecycle projects init/activation/begin+solve/sync/flush/end-sync/finish; shared process activation gates all worlds without changing local policy. ReadStatistics returns the complete typed Active/Pairs/Islands sample, validated before cached GetProcessInfo aggregation. Public-only --lifecycle verifies explicit/scene order and real motion, zero/inactive/global suspension, equal/failed activation, foreign-thread cached reads, empty active worlds, terminal solve/sync/statistics errors, recoverable flush/end-sync errors, all negative counts, initialization/finish/disposal aggregation and 128 moving full frames per role at zero owner/all-thread managed allocation. Full numerical, foreign-platform and overall extension acceptance remain open."
     }
   ]
 }

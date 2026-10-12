@@ -1,4 +1,5 @@
-if (args.Contains("--parameter-reads")) BackendChecks.RunParameterReads();
+if (args.Contains("--lifecycle")) BackendChecks.RunLifecycle();
+else if (args.Contains("--parameter-reads")) BackendChecks.RunParameterReads();
 else if (args.Contains("--shape-pairs")) BackendChecks.RunShapePairs(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
 else if (args.Contains("--notification-phase")) BackendChecks.RunNotificationPhase(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :

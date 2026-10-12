@@ -124,10 +124,12 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract int PreparedBodyCapacity { get; }
     /// <summary>Supplies the selected implementation operation: initialize.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Runs once after this implementation is bound to its inactive world, before activation or collider attachment. Initialization failure still attempts Finish and disposal.
+    /// Hooks use the guarded owning thread; spans and values retain their existing engine-unit contracts.</remarks>
     protected internal abstract void Initialize();
     /// <summary>Supplies the selected implementation operation: set active.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Runs before a changed local active flag commits; unchanged assignments do not dispatch. Failure preserves the old flag. Shared process suspension gates later intervals independently.
+    /// Hooks use the guarded owning thread; spans and values retain their existing engine-unit contracts.</remarks>
     protected internal abstract void SetActive(bool active);
     /// <summary>Supplies the selected implementation operation: prepare checkpoint.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
@@ -195,7 +197,8 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract void PrepareMonitoringCapacity(int bodies, int shapes);
     /// <summary>Supplies the selected implementation operation: read statistics.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Returns the complete nonnegative Active/Pairs/Islands sample for the completed interval. The engine validates before cached publication. Process reads aggregate cached values and do not call this hook.
+    /// Hooks use the guarded owning thread; spans and values retain their existing engine-unit contracts.</remarks>
     protected internal abstract PhysicsBackendStatistics ReadStatistics();
     /// <summary>Supplies the selected implementation operation: create collider.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
@@ -210,7 +213,8 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal virtual PhysicsDirectBodyState CreateDirectBodyState(RID body) => new(PhysicsServer.Service.BodyRuntime(body), PhysicsServer.Service.GetSceneSpace(_space));
     /// <summary>Supplies the selected implementation operation: begin step.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Starts one positive active outer interval before numerical preparation. Inactive, globally suspended and zero-time intervals do not dispatch. The delta uses seconds.
+    /// Hooks use the guarded owning thread; spans and values retain their existing engine-unit contracts.</remarks>
     protected internal abstract void BeginStep(double delta);
     /// <summary>Supplies the selected implementation operation: prepare world.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
@@ -219,10 +223,12 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract void PrepareBodies(double delta);
     /// <summary>Supplies the selected implementation operation: solve.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Performs the selected numerical interval after preparation. A started solve failure terminates this world without another implementation replay; synchronization and ordinary publication do not proceed.
+    /// Hooks use the guarded owning thread; spans and values retain their existing engine-unit contracts.</remarks>
     protected internal abstract void Solve(double delta);
     /// <summary>Supplies the selected implementation operation: sync results.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Publishes the completed numerical results before body/contact/Area observations and process counts. ResultsReady must be true after success; failed synchronization terminates the started world.
+    /// Hooks use the guarded owning thread; spans and values retain their existing engine-unit contracts.</remarks>
     protected internal abstract void SyncResults();
     /// <summary>Supplies the selected implementation operation: complete body.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
@@ -246,10 +252,12 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract void EndStep(Exception? failure);
     /// <summary>Supplies the selected implementation operation: flush queries.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Runs after completed body observers within the notification-delivery phase. Common contact/sleep/Area deliveries are attempted even when this hook throws. Such errors do not repeat a committed solve.
+    /// Hooks use the guarded owning thread; spans and values retain their existing engine-unit contracts.</remarks>
     protected internal abstract void FlushQueries();
     /// <summary>Supplies the selected implementation operation: end sync.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Runs after notification flushing, including failure paths; failure is the first preceding interval or publication error, or null on success. Finalization retires its phase even if this hook throws.
+    /// Hooks use the guarded owning thread; spans and values retain their existing engine-unit contracts.</remarks>
     protected internal abstract void EndSync(Exception? failure);
     /// <summary>Supplies the selected implementation operation: intersect ray.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
@@ -281,6 +289,7 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// before replacing caller output; a result constructed for another live body is rejected.</remarks>
     protected internal abstract bool TestBodyMotion(RID body, Transform from, Vector2 motion, float margin, bool recoveryAsCollision, ReadOnlySpan<RID> excludedBodies, ReadOnlySpan<ulong> excludedObjects, bool collideSeparationRay, PhysicsTestMotionResult result);
     /// <summary>Supplies the selected implementation operation: finish.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Runs once during owned-world retirement, including failed initialization or simulation. Disposal is still attempted after a Finish error; cleanup errors are retained together.
+    /// Hooks use the guarded owning thread; spans and values retain their existing engine-unit contracts.</remarks>
     protected internal abstract void Finish();
 }

@@ -42,8 +42,8 @@ are guarded. Named registration and typed external dispatch now execute; complet
 [Selected lifecycle](physics-backends.md#selected-lifecycle-and-activity)
 now dispatches owner initialization, atomic local activation, query/event flushing
 and end-sync with guarded context. Empty active intervals reach that owner;
-mandatory observers and cleanup survive selected hook errors. Public registration
-and the full external operation family remain open.
+mandatory observers and cleanup survive selected hook errors. Public registration and the mapped lifecycle/statistics family execute; complete
+external numerical-operation acceptance remains open.
 
 [GPU collider ownership](physics-backends.md#gpu-collider-ownership) removes
 resident handles and concrete GPU casts from the common collider facade.
@@ -566,3 +566,11 @@ actual selected Solve. Writes and numerical queries retain their rejection guard
 automatic geometry-dependent reads still need ordinary query access. The public-only
 consumer verifies scene/raw ownership, failures and 128 full active frames at zero
 owner/all-thread managed allocation. Complete numerical-extension acceptance stays open.
+
+
+[Registered lifecycle census](physics-registered-adapter.md#registered-lifecycle-census)
+now verifies initialization, local/global activation, complete interval order,
+completed statistics, failure/cleanup paths and 128 moving full frames per scene/raw
+role at zero managed allocation through a public-only independent implementation.
+Eight former unmapped rows have their actual typed projections; complete numerical
+extension and platform/performance acceptance remain open.

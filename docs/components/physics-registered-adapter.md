@@ -639,3 +639,43 @@ assertion; a fresh full run of the same unchanged copied runtime passed. Both lo
 are retained as final/full-suite.log and final/full-suite-repeat.log. The isolated
 failure's cause is unproven and remains a verification limit; the repeat does not
 establish that material-allocation intermittency is fixed.
+
+
+## Registered lifecycle census
+
+The public-only --lifecycle consumer drives an independent registered implementation
+through both an explicitly stepped raw body and a SceneTree-owned rigid body.
+Initialize runs once before attachment/activation; a World activates after initialization,
+while SpaceCreate stays inactive. Changed local activation calls SetActive before
+commit; equal values skip it and failure preserves the old policy. Shared global
+suspension skips the interval without rewriting that local flag.
+
+A positive active interval calls BeginStep, Solve, SyncResults and ReadStatistics,
+then delivers the completed body observer before FlushQueries and EndSync. An empty
+active world keeps the same interval stages without body callbacks. Zero-time,
+inactive and globally suspended calls perform no selected interval. Public scene
+reentry and SceneTree release guards are exercised through their own roles; explicit
+spaces use SpaceStep and FreeRID.
+
+ReadStatistics supplies the complete typed Active/Pairs/Islands value; each field
+must be nonnegative. Common publication keeps the last completed sample and
+GetProcessInfo aggregates active spaces without reentering the implementation,
+including on another thread. Failed numerical intervals retain the previous sample.
+Solve, synchronization or statistics failure makes that selected world terminal;
+flush/end-sync errors preserve the committed interval and allow a subsequent tick.
+End-sync still receives earlier failures. Init/finish/disposal errors retain all
+three failures after cleanup; ordinary and failed owners finish and dispose.
+
+Discrete order, mode/count/identity and rejection checks are exact. One 1/120-s
+unit-velocity step permits 0.0001 scene-unit absolute displacement error. After
+64 warmups, each ownership role measures 128 full moving intervals with cached
+statistics reads and requires zero owner/all-thread managed bytes. The fixture's
+phase instrumentation reuses a bounded list; errors and tracing setup are cold.
+
+Eight previously unmapped lifecycle/statistics extension rows now map to eleven
+existing typed declarations under ADR 0103. BeginStep plus Solve project the step
+operation, EndSync accepts the prior failure, and the three-value statistics record
+projects the selector output. The global static facade remains separate from the
+owned implementation. These rows are Partial, with concrete executed paths;
+complete numerical-extension, native/foreign and final performance acceptance
+remain open. No additional lifecycle API or numerical algorithm is introduced.

@@ -40,3 +40,11 @@ A same-world result for another moving body rejects before caller publication;
 no-result calls enforce the same rule. SetMotion misses retain normal requested-body
 binding, and rejection restores scope for the next valid query. The numerical
 motion/geometry acceptance remains broader than this identity guarantee.
+
+
+[Registered lifecycle census](../components/physics-registered-adapter.md#registered-lifecycle-census)
+now verifies initialization, local/global activation, complete interval order,
+completed statistics, failure/cleanup paths and 128 moving full frames per scene/raw
+role at zero managed allocation through a public-only independent implementation.
+Eight former unmapped rows have their actual typed projections; complete numerical
+extension and platform/performance acceptance remain open.
