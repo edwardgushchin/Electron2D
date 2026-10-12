@@ -8,6 +8,18 @@ internal sealed class SessionReport
 {
     public string Role { get; set; } = "";
     public string Backend { get; set; } = "";
+    public string Renderer { get; set; } = "";
+    public string RequestedWindowVSync { get; set; } = "";
+    public string WindowVSync { get; set; } = "";
+    public int WindowMaxFPS { get; set; }
+    public int WindowFrames { get; set; }
+    public long WindowOwnerAllocations { get; set; }
+    public long WindowTotalAllocations { get; set; }
+    public double WindowFPS { get; set; }
+    public double[] WindowFramePercentilesMS { get; set; } = [];
+    public int RenderedSmoothedSamples { get; set; }
+    public int RenderedInterpolatedSamples { get; set; }
+    public bool RenderedPhysicsPreserved { get; set; }
     public bool BackendInstrumented { get; set; }
     public bool GPUUnavailableVerified { get; set; }
     public long GPUUploadBytes { get; set; }
@@ -140,7 +152,7 @@ internal sealed partial class NetworkSession
         FillBackendReport(report); return report;
     }
     partial void FillBackendReport(SessionReport report);
-    private static double[] Percentiles(double[] values, int count)
+    internal static double[] Percentiles(double[] values, int count)
     {
         if (count == 0) return [0, 0, 0]; Array.Sort(values, 0, count);
         return [values[(count - 1) / 2], values[(int)((count - 1) * .95)], values[(int)((count - 1) * .99)]];

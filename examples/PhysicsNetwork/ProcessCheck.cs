@@ -8,6 +8,11 @@ internal static class ProcessCheck
     internal static async Task<int> Run(string[] args)
     {
         ProtocolChecks.Run();
+        var windowed = args.Contains("--window-client");
+        var rendererIndex = Array.IndexOf(args, "--renderer");
+        if (rendererIndex == args.Length - 1) throw new ArgumentException("Missing renderer value.");
+        var renderer = rendererIndex >= 0 ? args[rendererIndex + 1] : "gpu";
+        if (renderer is not ("gpu" or "compatibility")) throw new ArgumentException("Renderer must be gpu or compatibility.");
         var location = Array.IndexOf(args, "--output");
         var output = System.IO.Path.GetFullPath(location >= 0 ? args[location + 1] : "bin/physics-network-check"); Directory.CreateDirectory(output);
         var token = Guid.NewGuid().ToString();
@@ -25,6 +30,12 @@ internal static class ProcessCheck
             foreach (var child in children) await child.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(40));
             await Task.WhenAll(drains);
             foreach (var child in children) if (child.ExitCode != 0) throw new InvalidOperationException("A child process failed; inspect the saved logs.");
+            if (windowed)
+            {
+                var rendered = Read("gpu");
+                Check(rendered.WindowFrames > 0 && rendered.WindowFPS > 0 && rendered.RenderedSmoothedSamples > 0 && rendered.RenderedInterpolatedSamples > 0 &&
+                    rendered.RenderedPhysicsPreserved && File.Exists(System.IO.Path.Combine(output, "gpu-window.png")), "Actual networked window renders smoothing/interpolation while preserving portable physics");
+            }
             var authority = Read("server"); Check(authority.Role == "server" && authority.Backend == "CPU" && authority.Tick == 360, "CPU server completed all real ticks");
             Check(authority.GPUUnavailableVerified && Read("late").GPUUnavailableVerified && !Read("gpu").GPUUnavailableVerified,
                 "Both CPU processes exercised actual denied GPU startup before their working network worlds");
@@ -68,6 +79,8 @@ internal static class ProcessCheck
             info.ArgumentList.Add("--physics-network");
             if (role == "server") info.ArgumentList.Add("--server");
             foreach (var argument in new[] { "--port", port.ToString(), "--backend", backend, "--ticks", "360", "--token", token, "--report", System.IO.Path.Combine(output, role + ".json"), "--impaired" }) info.ArgumentList.Add(argument);
+            if (role == "gpu" && windowed)
+                foreach (var argument in new[] { "--window", "--renderer", renderer, "--capture", System.IO.Path.Combine(output, "gpu-window.png") }) info.ArgumentList.Add(argument);
             if (headless)
             {
                 info.Environment.Remove("DISPLAY"); info.Environment.Remove("WAYLAND_DISPLAY"); info.Environment["SDL_VIDEODRIVER"] = "dummy";

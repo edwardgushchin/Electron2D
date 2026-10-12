@@ -23,3 +23,9 @@ outlives its source world and has no native ownership or disposal requirement.
 Use PhysicsSnapshotMap for world capture and apply. Packet syntax validation does
 not establish sender authority, tick ordering or compatibility with a receiving
 world. See the component for supported state, versioning, budgets and boundaries.
+
+The [rendered PhysicsNetwork client](../components/physics-network-example.md#rendered-client-window)
+now draws remote interpolation and local correction smoothing in a real window
+while CPU authority/late client stay headless. Public snapshot and pixel checks
+verify visible separation without physical-state mutation; renderer choice and
+window FPS/allocation reporting remain separate from physics/replay metrics.

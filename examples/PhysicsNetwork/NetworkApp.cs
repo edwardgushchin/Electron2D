@@ -18,6 +18,8 @@ internal static class NetworkApp
         try
         {
             var authority = args.Contains("--server");
+            var windowed = args.Contains("--window");
+            if (windowed && (authority || args.Contains("--require-no-gpu"))) throw new ArgumentException("Window presentation requires a graphics-capable client.");
             var backend = Value("--backend", "cpu") switch
             {
                 "cpu" => PhysicsServer.Backend.CPU,
@@ -33,6 +35,8 @@ internal static class NetworkApp
             var reportPath = Value("--report", authority ? "physics-server.json" : "physics-client.json");
             using var session = new NetworkSession(authority, backend, port, token, ticks, args.Contains("--impaired"));
             if (authority) { Console.WriteLine($"LISTENING {session.Port}"); Console.Out.Flush(); }
+            var windowReport = new SessionReport();
+            if (windowed) NetworkWindow.Run(session, windowReport, Value("--renderer", "gpu"), Value("--capture", ""));
             var announcedLateJoin = false;
             while (!session.Done)
             {
@@ -44,6 +48,12 @@ internal static class NetworkApp
                 Thread.Sleep(1);
             }
             var report = session.Report(); report.GPUUnavailableVerified = gpuUnavailable;
+            report.RequestedWindowVSync = windowReport.RequestedWindowVSync; report.WindowVSync = windowReport.WindowVSync; report.WindowMaxFPS = windowReport.WindowMaxFPS;
+            report.Renderer = windowReport.Renderer; report.WindowFrames = windowReport.WindowFrames; report.WindowFPS = windowReport.WindowFPS;
+            report.WindowFramePercentilesMS = windowReport.WindowFramePercentilesMS;
+            report.WindowOwnerAllocations = windowReport.WindowOwnerAllocations; report.WindowTotalAllocations = windowReport.WindowTotalAllocations;
+            report.RenderedSmoothedSamples = windowReport.RenderedSmoothedSamples; report.RenderedInterpolatedSamples = windowReport.RenderedInterpolatedSamples;
+            report.RenderedPhysicsPreserved = windowReport.RenderedPhysicsPreserved;
             if ((authority || requireNoGPU) && backend == PhysicsServer.Backend.CPU && (DisplayServer.IsAvailable || RenderingServer.IsAvailable)) throw new InvalidOperationException("Dedicated CPU authority created a graphics service.");
             File.WriteAllText(reportPath, JsonSerializer.Serialize(report, ReportJSON.Default.SessionReport));
             Console.WriteLine($"COMPLETE {report.Role} {report.Backend}: tick {report.Tick}, {report.Corrections} corrections, {report.ReplayedTicks} replayed ticks");

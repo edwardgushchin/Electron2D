@@ -53,3 +53,9 @@ consumer; the engine does not infer a generic game protocol from property replic
 
 
 [PhysicsNetwork process checks](../components/physics-network-example.md#stronger-process-acceptance-2026-10-12) now verify both CPU processes lack usable GPU physics and compare full angular/linear authoritative state after deliberate angular divergence. Warm steps/replay retain zero managed allocation; transport impairment remains application scheduling over real ENet loopback.
+
+The [rendered PhysicsNetwork client](../components/physics-network-example.md#rendered-client-window)
+now draws remote interpolation and local correction smoothing in a real window
+while CPU authority/late client stay headless. Public snapshot and pixel checks
+verify visible separation without physical-state mutation; renderer choice and
+window FPS/allocation reporting remain separate from physics/replay metrics.

@@ -16,6 +16,11 @@ internal sealed partial class NetworkSession
     private int _nextRender, _renderFrames;
     private double _authorArrival, _lastPresentation;
     internal int InterpolatedSamples, SmoothedSamples, PostDriftCorrections;
+    private bool _interpolating;
+    internal Vector2 PresentationPosition(int slot) => _renderFrames == 0 ? Simulation.Actors[slot]!.Position : _visual[slot];
+    internal bool IsSmoothedPresentation(int slot) => Simulation.Actors[slot]!.Spec.Owner == _network.GetUniqueID() && _offsets[slot].LengthSquared() > .0001f;
+    internal bool IsInterpolatedPresentation(int slot) => _interpolating && Simulation.Actors[slot]!.Spec.Owner != _network.GetUniqueID() &&
+        (PresentationPosition(slot) - Simulation.Actors[slot]!.Position).LengthSquared() > .0001f;
     internal double DriftCorrectionDistance, AngularDriftCorrection;
     private readonly float[] _oldRotations = new float[NetworkWorld.Capacity];
     internal int ForeignCommands, EpochCommands;
@@ -221,6 +226,7 @@ internal sealed partial class NetworkSession
         if (first < 0) return;
         var duration = (double)_renderTicks[second] - _renderTicks[first];
         var alpha = duration > 0 ? (float)Math.Clamp((renderTick - _renderTicks[first]) / duration, 0, 1) : 0;
+        _interpolating = first != second && alpha is > 0 and < 1;
         var decay = MathF.Exp(-(float)Math.Max(0, _now - _lastPresentation) / .1f); _lastPresentation = _now;
         for (var i = 0; i < Simulation.Actors.Length; i++)
         {

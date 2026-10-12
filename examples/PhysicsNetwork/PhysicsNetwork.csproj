@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Optimize>true</Optimize>
+    <TieredCompilation Condition="'$(Configuration)' == 'Release'">false</TieredCompilation>
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>
   <ItemGroup><ProjectReference Include="../../Electron2D.csproj" /></ItemGroup>

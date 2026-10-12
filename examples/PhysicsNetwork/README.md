@@ -49,3 +49,20 @@ token and loopback binding are a local demonstration, not an Internet security
 protocol. Geometry recipes and lifecycle policy are deliberately application-owned;
 this example is not a generic scene serializer or a production matchmaking service.
 See [the contract and measured limits](../../docs/components/physics-network-example.md).
+
+Run the GPU client in a real window while the authority and late CPU client remain
+headless:
+
+```sh
+dotnet run --project examples/PhysicsNetwork -c Release -- --check --window-client --renderer gpu --output bin/physics-network-window
+```
+
+Use `--renderer compatibility` to choose the other renderer with the same GPU
+physics. A separately launched client accepts `--window`, `--renderer` and
+`--capture path.png`. The game retains scripted numbered input and authority
+correction. White dots are displayed positions; orange dots are current solved
+positions when a local correction visibly separates them. The view fits all actors
+without moving physical nodes. `gpu-window.png` captures a verified frame with
+identical complete portable physics before/after drawing. Reports include actual
+window FPS/frame percentiles, window allocations and rendered interpolation/
+smoothing counts, separately from physics/replay metrics.

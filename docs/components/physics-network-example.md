@@ -61,8 +61,9 @@ view delay. Missing endpoints clamp; interpolation never crosses object generati
 Owned presentation retains and decays a correction offset over roughly 100 ms.
 These calculations write separate coordinate arrays, and the example checks that
 they never modify solved body positions. Sample counters establish that interpolation
-and smoothing actually executed. They are numerical presentation verification;
-there is no window or rendered visual acceptance in this example.
+and smoothing actually executed. They remain separate from the optional native client window described below,
+which draws the same coordinate arrays and verifies complete portable state
+before/after an observed frame.
 
 ## Executable acceptance
 
@@ -105,7 +106,7 @@ separate costs. Histories are bounded; no unlimited snapshot list is retained.
 The executable scenario is application policy built on the common public API. It
 does not establish arbitrary game-state rollback, speculative client lifecycle,
 production authentication, reconnection/migration, cross-platform numerical bounds,
-rendered smoothing or networked-window FPS. The independent GPU backend's small-world
+native allocator accounting or universal performance bounds. The independent GPU backend's small-world
 replay still incurs substantial submission/publication overhead; the measured
 network behavior does not close the overall GPU performance gate. The broader
 [physics contract audit](physics-contract-audit.md) remains authoritative for open work.
@@ -235,3 +236,78 @@ the new 64 rotation-sample payload bytes and existing separately bounded buffers
 This is one small-world networking sample on Linux. It demonstrates the named
 protocol/state gates and records substantial GPU replay overhead; it does not
 establish the target massive-scene speed advantage or final performance acceptance.
+
+## Rendered client window
+
+`--check --window-client` retains the same impaired three-process protocol while
+the GPU client opens a real 800 x 400 window. `--renderer gpu|compatibility` chooses
+its renderer independently of GPU game physics; the CPU server and late CPU client
+still deny GPU startup and create no display/render service. Manual clients use
+`--window`, with optional `--renderer` and `--capture` output. Scripted numbered
+input, ownership/lifecycle changes and final authority convergence are unchanged.
+
+NetworkWindow uses public Engine.Run and a presentation-only scene tree.
+NetworkWorld retains the existing fixed-step game tree: rendering never adds an
+automatic game-world tick. Polling, prediction and replay still use 1/60-s steps.
+Drawing fits the entire arena and current solved/presented actor positions into
+the view without changing any physical node. White centers show presented poses;
+orange centers show sufficiently separated solved poses during local correction.
+The yellow line connects the two presented pin bodies. Remote interpolation
+counters require an interpolated view that differs from the current solved pose.
+
+At one visibly separated local correction, the consumer captures the complete
+portable physical snapshot before drawing and after FramePostDraw and requires
+identical encoded bytes. Each body's transform also stays unchanged during draw.
+Pixel checks require distinct white/orange centers, with 0.05 RGB tolerance for
+raster/color conversion; center separation exceeds eight pixels for radius-three
+markers. The resulting PNG is saved as `gpu-window.png`. This proves actual
+presentation at that boundary without asserting cross-backend bitwise identity.
+
+Reports add renderer, requested Disabled/effective VSync, MaxFPS, actual rendered
+frame count/FPS, frame p50/p95/p99,
+owner/all-thread window allocations and rendered interpolation/smoothing counts.
+FPS and frame intervals span the first through last completed draw and include
+polling, prediction/correction/replay, input, rendering and the one-time observation
+work between those boundaries. Initialization/teardown and report serialization
+are outside that bracket. Frame percentiles use the first up to 4096 complete
+intervals; frame count/FPS and allocation totals cover all completed intervals. Existing physics/replay warm allocation and timing
+brackets remain separate. Release uses the same non-tiered compilation policy
+as the test host, so prepared-code measurements retain a defined runtime mode.
+An earlier default-runtime headless trial recorded 24,624 non-owner bytes during
+a GPU warm replay bracket; subsequent identical default and non-tiered controls
+passed. That intermittent background allocation was not attributed to a physics
+operation, and the original failed report remains retained. The window adds no claim of whole-loop zero allocation
+or a CPU/GPU speed comparison.
+
+The frozen executable runs and images are retained under
+`bin/physics-network-window/2026-10-12/final-prepared/`. WAN impairment, foreign-platform
+numerical/render bounds, native allocation totals, arbitrary game topology and
+final full-physics performance acceptance remain open. Historical headless
+measurements above retain their original scope and revisions.
+
+### Frozen Linux window observations
+
+The five-profile run at `1f5c8dad7cc51edea46639f8d1fec38d4167bfdf` uses one
+copied runtime for example headless, both example renderers and instrumented
+headless/GPU-window cases. Every process check completes the same impaired
+CPU-authority/GPU-client/late-CPU scenario through tick 360 and final convergence.
+
+| GPU client host | Frames / actual FPS | Frame p50 / p95 / p99 ms | Effective VSync | Window owner/all managed B | Drawn smoothing / interpolation samples |
+| --- | --- | --- | --- | --- | --- |
+| Public example, GPU renderer | 334 / 52.4136 | 6.9444 / 69.5450 / 96.3456 | Enabled | 7,822,656 / 7,822,656 | 281 / 183 |
+| Public example, compatibility renderer | 4984 / 784.1918 | 0.1322 / 4.4967 / 63.2945 | Disabled | 7,959,680 / 7,959,680 | 2734 / 2119 |
+| Instrumented host, GPU renderer | 318 / 49.6862 | 6.9492 / 73.2953 / 95.7834 | Enabled | 7,822,872 / 7,822,872 | 269 / 152 |
+
+All requested Disabled VSync with MaxFPS=0. Actual presentation differs, so these
+are observed native-client costs, not a renderer or CPU/GPU physics speedup claim.
+The compatibility frame percentiles cover the first 4096 intervals; other rows
+cover all completed intervals. The table retains whole-window network/lifecycle/
+observation allocations. Warm predicted and replayed physical steps remain 0/0
+owner/all-thread bytes for every client/server profile; the window counts do not
+replace or relax that physical gate.
+
+Source SHA-256 is `e879eb369786b229952d0ec93b6a01cdc56fa35041e08d51f31e0fb8194341fc`.
+The complete runtime manifest and source/revision are unchanged across all five
+runs. The GPU-renderer example PNG is
+`5a46e48ae335b726cc37aaf2a4c8525167aa98d9198655088eecb58bad2d848f`;
+compatibility is `33857c36bd0cf0d06c1fce142985b03d01f08a5ac2b884c917704d457de467fb`.

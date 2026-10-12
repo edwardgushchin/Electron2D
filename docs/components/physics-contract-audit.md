@@ -613,3 +613,9 @@ now verifies scene Body/Area policy through selected point queries, numerical
 guards and 128 changed-policy full frames at zero managed allocation. Native
 CPU/GPU/registered worlds each pass with both renderers and target pixel checks;
 full registered geometry and final acceptance remain open.
+
+The [rendered PhysicsNetwork client](physics-network-example.md#rendered-client-window)
+now draws remote interpolation and local correction smoothing in a real window
+while CPU authority/late client stay headless. Public snapshot and pixel checks
+verify visible separation without physical-state mutation; renderer choice and
+window FPS/allocation reporting remain separate from physics/replay metrics.
