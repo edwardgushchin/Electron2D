@@ -43,12 +43,13 @@ with tempfile.TemporaryDirectory(prefix="electron2d shader build '&-") as tempor
     project = XML.Element('Project', Sdk='Microsoft.NET.Sdk')
     properties = XML.SubElement(project, 'PropertyGroup')
     for key, value in [('OutputType', 'Exe'), ('TargetFramework', 'net10.0'), ('ImplicitUsings', 'enable'),
-                       ('TreatWarningsAsErrors', 'true')]:
+                       ('TreatWarningsAsErrors', 'true'), ('AppendRuntimeIdentifierToOutputPath', 'false')]:
         XML.SubElement(properties, key).text = value
     items = XML.SubElement(project, 'ItemGroup')
     XML.SubElement(items, 'ProjectReference', Include=escape(str(root / 'Electron2D.csproj')))
     for source in ['Surface.hlsl', 'Surface.glsl', special, 'external.spv']:
         XML.SubElement(items, 'Electron2DShader', Include=escape('Shaders/' + source), Stage='fragment')
+    XML.SubElement(project, 'Import', Project=escape(str(root / 'tools/native-consumer.props')))
     XML.SubElement(project, 'Import', Project=escape(str(targets)))
     project_file = directory / 'Consumer.csproj'
 
@@ -117,10 +118,41 @@ Console.WriteLine("Public shader consumer passed");
     del declarations[0].attrib['TargetPath']
     declarations[0].set('Stage', 'compute')
     save_project()
-    assert 'Stage must be vertex or fragment' in run('build', '--no-restore', success=False)
+    assert 'Stage must be vertex/fragment' in run('build', '--no-restore', success=False)
     declarations[0].set('Stage', 'fragment')
     save_project()
     assert 'Electron2DShaderImportTool is missing' in run('build', '--no-restore', '-p:Electron2DShaderImportTool=missing', success=False)
+
+    declarations[0].set('Profile', 'invalid')
+    save_project()
+    assert 'Profile must be canvas or device' in run('build', '--no-restore', success=False)
+    del declarations[0].attrib['Profile']
+    for name, stage, original in [('DeviceComputeGLSL.glsl', 'compute', 'LocalCompute.comp.glsl'),
+                                   ('DeviceComputeHLSL.hlsl', 'compute', 'LocalComputeHLSL.comp.hlsl'),
+                                   ('DeviceVertex.glsl', 'vertex', 'DevicePushGLSL.vert.glsl'),
+                                   ('DeviceFragment.glsl', 'fragment', 'DevicePushGLSL.frag.glsl')]:
+        shutil.copyfile(root / 'tests/Electron2D.Tests/Shaders' / original, shaders / name)
+        XML.SubElement(items, 'Electron2DShader', Include='Shaders/' + name, Stage=stage, Profile='device')
+    (directory / 'Program.cs').write_text((directory / 'Program.cs').read_text().replace('if (files.Length != 4)', 'if (files.Length != 8)').replace('foreach (var file in files) {', 'foreach (var file in files.Where(f => !System.IO.Path.GetFileName(f).StartsWith("Device"))) {') + '\n' + """using var device = RenderingServer.CreateLocalRenderingDevice();
+foreach (var file in files.Where(f => System.IO.Path.GetFileName(f).StartsWith("DeviceCompute"))) {
+    using var module = new RDShaderSPIRV { BytecodeCompute = File.ReadAllBytes(file) };
+    var shader = device.ShaderCreateFromSPIRV(module); var pipeline = device.ComputePipelineCreate(shader);
+    float[] input = [1, 2, 3, 4]; var buffer = device.StorageBufferCreate(16, System.Runtime.InteropServices.MemoryMarshal.AsBytes(input.AsSpan()));
+    float[] settings = [2, 4, 3, 0]; var uniform = device.UniformBufferCreate(16, System.Runtime.InteropServices.MemoryMarshal.AsBytes(settings.AsSpan()));
+    using var storage = new RDUniform { Binding = 7, UniformType = RenderingDevice.UniformType.StorageBuffer }; storage.AddID(buffer);
+    using var parameters = new RDUniform { Binding = 4, UniformType = RenderingDevice.UniformType.UniformBuffer }; parameters.AddID(uniform);
+    var dataSet = device.UniformSetCreate([storage], shader, 3); var inputSet = device.UniformSetCreate([parameters], shader, 2);
+    var list = device.ComputeListBegin(); device.ComputeListBindComputePipeline(list, pipeline); device.ComputeListBindUniformSet(list, dataSet, 3); device.ComputeListBindUniformSet(list, inputSet, 2); device.ComputeListDispatch(list, 1, 1, 1); device.ComputeListEnd();
+    device.BufferGetData(buffer, System.Runtime.InteropServices.MemoryMarshal.AsBytes(input.AsSpan()));
+    if (!input.SequenceEqual(new float[] {5, 7, 9, 11})) throw new Exception("Imported compute result differs");
+}
+using var graphics = new RDShaderSPIRV { BytecodeVertex = File.ReadAllBytes(files.Single(f => f.EndsWith("DeviceVertex.glsl.spv"))), BytecodeFragment = File.ReadAllBytes(files.Single(f => f.EndsWith("DeviceFragment.glsl.spv"))) };
+if (device.ShaderGetVertexInputAttributeMask(device.ShaderCreateFromSPIRV(graphics)) != 0) throw new Exception("Imported procedural graphics interface differs");
+Console.WriteLine("Public device shader consumer passed");
+""")
+    save_project()
+    run('build', '--no-restore')
+    assert len(list(generated.glob('*.spv'))) == 8
 
     publish = directory / 'publish'
     # SDK publish transforms do not escape apostrophes in an absolute PublishDir.

@@ -203,3 +203,18 @@ Automatic material lighting embeds 32 internal function profiles and exact ID re
 ## Application device graphics
 
 Import `DeviceShaders.targets` and add `Electron2DDeviceShader` items ending in `.vert.glsl`, `.frag.glsl`, `.vert.hlsl` or `.frag.hlsl`. This low-level device profile uses the same pinned glslang frontend and independent `spirv-val` check as compute modules; it preserves shader source/stage diagnostics and atomically replaces completed bytecode. Results are embedded as `Electron2D.Device.<filename>.spv`. Load both stages into `RDShaderSPIRV` and use the public device pipeline/draw API. The device validates paired stage interfaces and logical resources at creation. Canvas material imports retain their separate ShaderImport profile. Source compilers remain build-time tools.
+
+## Device source authoring
+
+The same published tool can import a local-device module:
+
+```sh
+Electron2D.ShaderImport simulation.comp.glsl compute simulation.spv --device
+Electron2D.ShaderImport geometry.vert.hlsl vertex geometry.spv --device
+```
+
+An optional argument after `--device` supplies the include root; otherwise file imports use the input directory. Device imports preserve original descriptors/push/specialization declarations, run the pinned validator and device structural/capability checks, and leave paired interfaces/native validation to pipeline creation. Canvas imports keep the existing default profile and logical-type metadata. Both profiles preserve atomic output replacement and unchanged bytes/timestamps.
+
+Build consumers select `Profile="device"` on `Electron2DShader` items and set Stage to compute, vertex or fragment. The default Profile remains canvas. Invalid profiles/stages/paths reject before output replacement; arguments remain separated without shell interpretation. Ordinary build/publish consumers load the generated SPIR-V through public device APIs and receive no compiler executable or import-tool assembly.
+
+Programmatic authoring uses RDShaderSource and RenderingDevice.ShaderCompileSPIRVFromSource. Select the published executable with ELECTRON2D_SHADER_IMPORT_TOOL, or install it beside the authoring host. This optional cold operation returns copied RDShaderSPIRV stage bytes/diagnostics; it creates no native program. Empty requests need no compiler, while missing prerequisites fail explicitly. Include/preprocessor sources are recompiled rather than cached. Shipped games that load compiled shaders require no authoring tool. [The runtime contract](../../docs/components/local-compute.md#source-authoring-and-build-imports) records bounds, lifetime, caching and native verification.

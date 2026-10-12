@@ -1,6 +1,6 @@
 # RDShaderSPIRV
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDShaderSPIRV`. **Source:** [RDShaderSPIRV.cs](../../src/Servers/Rendering/Device/RDShaderSPIRV.cs). **Component:** [Local device](../components/local-compute.md).
 
@@ -222,3 +222,5 @@ Device-owned resources remain on their creating thread. Descriptions are caller-
 Compiled compute/vertex/fragment modules may declare one binary push block per stage. The device preserves original 32-bit member offsets, fixed arrays, matrix strides/orientation and nested structs through raw-word translation. The executing profile supports at most 128 bytes and uses one native uniform slot; wider precision and pointer address/arithmetic require their own adapters. Push storage is separate from RDUniform descriptors. See [binary push parameters](../components/local-compute.md#binary-push-parameters) for recording, capacity, copied snapshots and verification.
 
 Specialization declarations retain copied symbolic templates until pipeline creation resolves typed values. Workgroup dimensions and uniform/push fixed arrays use the resolved constants before native creation. See [typed pipeline specialization](../components/local-compute.md#typed-pipeline-specialization) for validation and ownership.
+
+[ShaderCompileSPIRVFromSource](RenderingDevice.md#source-authoring) returns an independent compiled resource with diagnostics per attempted stage. Failed stages stay empty while successful siblings survive. Descriptions and returned byte arrays never expose cache storage; native creation still uses the common device capability, lifetime and program-role checks.

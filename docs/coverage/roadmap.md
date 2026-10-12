@@ -4,8 +4,8 @@ Last updated: 2026-10-08
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1557 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 983 missing declarations in already represented type families; split each type by its documented dependency trigger.
+1. Close 1561 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+2. Complete 982 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -15,7 +15,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Godot class | Unimplemented members | Partial members |
 | --- | ---: | ---: |
 | [RenderingServer](classes/RenderingServer.md) | 427 | 33 |
-| [RenderingDevice](classes/RenderingDevice.md) | 155 | 38 |
+| [RenderingDevice](classes/RenderingDevice.md) | 154 | 39 |
 | [OS](classes/OS.md) | 94 | 6 |
 | [Node](classes/Node.md) | 58 | 63 |
 | [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | 39 | 98 |
@@ -77,6 +77,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [InputEventScreenTouch](classes/InputEventScreenTouch.md) | 0 | 2 |
 | [KinematicCollision2D](classes/KinematicCollision2D.md) | 0 | 2 |
 | [LineEdit](classes/LineEdit.md) | 0 | 2 |
+| [RDShaderSource](classes/RDShaderSource.md) | 0 | 2 |
 | [ThemeDB](classes/ThemeDB.md) | 0 | 2 |
 | [AnimationNode](classes/AnimationNode.md) | 0 | 1 |
 | [ArrayMesh](classes/ArrayMesh.md) | 0 | 1 |
@@ -107,8 +108,8 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 8 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
 | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 6 |
-| Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 5 |
 | ADR 0094: Requires a WebRTC backend with ICE/STUN/TURN, SDP, DTLS/SCTP and data-channel state/ownership, plus native/browser packaging. Managed extension hooks follow the executable typed owner. | 4 |
+| Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 4 |
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
 | Trigger: first video decoding, timed texture playback and audio synchronization slice. | 3 |
 | Trigger: typed portable synchronization/explicit thread ownership over the accepted worker foundation (ADRs 0021 and 0104). | 3 |

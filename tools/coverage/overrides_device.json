@@ -3498,6 +3498,72 @@
       "electron2d": "property:Electron2D.RDPipelineSpecializationConstant<T>.Value()",
       "state": "Implemented",
       "reason": "ADR 0028: typed copied Boolean/Int32/UInt32/Single specialization values freeze scalar defaults and dependent integer/logical/vector/composite expressions before native pipeline creation. Compute workgroup dimensions and uniform/push array layouts use specialized values. Shader identities remain borrowed; native variants are owned and released by pipelines. Unassigned descriptions, unknown/duplicate/negative identifiers, scalar type mismatch, malformed/cyclic/undefined expressions and exceeding native limits reject. Linux/Vulkan compute values, paired graphics pixels, retained canvas and 32 warmed zero-owner-thread-managed-byte cycles execute; foreign targets and native allocations remain unverified. Wider scalar precision requires the accepted native shader precision adapter."
+    },
+    {
+      "godot": "class:RDShaderSource",
+      "electron2d": "T:Electron2D.RDShaderSource",
+      "state": "Partial",
+      "reason": "ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified. Tessellation source/access requires an accepted executing backend stage adapter; absent fields are not inert storage. Ray stages remain excluded by ADR 0004/0028."
+    },
+    {
+      "godot": "RDShaderSource::method:get_stage_source(int:RenderingDevice.ShaderStage)",
+      "electron2d": "method:Electron2D.RDShaderSource.GetStageSource(Electron2D.RenderingDevice.ShaderStage)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified. Tessellation source/access requires an accepted executing backend stage adapter; absent fields are not inert storage. Ray stages remain excluded by ADR 0004/0028."
+    },
+    {
+      "godot": "RDShaderSource::method:set_stage_source(int:RenderingDevice.ShaderStage,String:)",
+      "electron2d": "method:Electron2D.RDShaderSource.SetStageSource(Electron2D.RenderingDevice.ShaderStage,System.String)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified. Tessellation source/access requires an accepted executing backend stage adapter; absent fields are not inert storage. Ray stages remain excluded by ADR 0004/0028."
+    },
+    {
+      "godot": "RDShaderSource::property:language",
+      "electron2d": "property:Electron2D.RDShaderSource.Language()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified."
+    },
+    {
+      "godot": "RDShaderSource::property:source_compute",
+      "electron2d": "property:Electron2D.RDShaderSource.SourceCompute()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified."
+    },
+    {
+      "godot": "RDShaderSource::property:source_fragment",
+      "electron2d": "property:Electron2D.RDShaderSource.SourceFragment()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified."
+    },
+    {
+      "godot": "RDShaderSource::property:source_vertex",
+      "electron2d": "property:Electron2D.RDShaderSource.SourceVertex()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum:ShaderLanguage",
+      "electron2d": "T:Electron2D.RenderingDevice.ShaderLanguage",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:ShaderLanguage.SHADER_LANGUAGE_GLSL",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.ShaderLanguage.GLSL()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:ShaderLanguage.SHADER_LANGUAGE_HLSL",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.ShaderLanguage.HLSL()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:shader_compile_spirv_from_source(RDShaderSource:,bool:)",
+      "electron2d": "method:Electron2D.RenderingDevice.ShaderCompileSPIRVFromSource(Electron2D.RDShaderSource,System.Boolean)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified. Tessellation source compilation enters the accepted executing backend stage slice together with RDShaderSource control/evaluation fields and pipeline/interfaces; ray stages remain excluded."
     }
   ],
   "extras": [
@@ -3810,6 +3876,16 @@
       "electron2d": "method:Electron2D.RDPipelineSpecializationConstant<T>.GetPropertyDescriptors()",
       "state": "Implemented",
       "reason": "ADRs 0004/0005/0028: typed specialization family construction and nullable typed metadata preserve the unassigned default without a public Variant/object value. ADR 0028: typed copied Boolean/Int32/UInt32/Single specialization values freeze scalar defaults and dependent integer/logical/vector/composite expressions before native pipeline creation. Compute workgroup dimensions and uniform/push array layouts use specialized values. Shader identities remain borrowed; native variants are owned and released by pipelines. Unassigned descriptions, unknown/duplicate/negative identifiers, scalar type mismatch, malformed/cyclic/undefined expressions and exceeding native limits reject. Linux/Vulkan compute values, paired graphics pixels, retained canvas and 32 warmed zero-owner-thread-managed-byte cycles execute; foreign targets and native allocations remain unverified. Wider scalar precision requires the accepted native shader precision adapter."
+    },
+    {
+      "electron2d": "constructor:Electron2D.RDShaderSource..ctor()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: construction and typed metadata for executable copied source/language descriptions. ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.RDShaderSource.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: construction and typed metadata for executable copied source/language descriptions. ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified."
     }
   ],
   "statusGroups": [
@@ -4766,6 +4842,54 @@
         "RDPipelineSpecializationConstant::property:constant_id",
         "RDPipelineSpecializationConstant::property:value",
         "RenderingDevice::method:compute_pipeline_create(RID:,RDPipelineSpecializationConstant[]:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified.",
+      "godot": [
+        "RDShaderSource::property:language",
+        "RDShaderSource::property:source_compute",
+        "RDShaderSource::property:source_fragment",
+        "RDShaderSource::property:source_vertex",
+        "RenderingDevice::enum:ShaderLanguage",
+        "RenderingDevice::enum_value:ShaderLanguage.SHADER_LANGUAGE_GLSL",
+        "RenderingDevice::enum_value:ShaderLanguage.SHADER_LANGUAGE_HLSL"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified. Tessellation source/access requires an accepted executing backend stage adapter; absent fields are not inert storage. Ray stages remain excluded by ADR 0004/0028.",
+      "godot": [
+        "class:RDShaderSource",
+        "RDShaderSource::method:get_stage_source(int:RenderingDevice.ShaderStage)",
+        "RDShaderSource::method:set_stage_source(int:RenderingDevice.ShaderStage,String:)"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004/0028: ray-tracing source stages are outside the 2D product boundary; no implementation trigger.",
+      "godot": [
+        "RDShaderSource::property:source_any_hit",
+        "RDShaderSource::property:source_closest_hit",
+        "RDShaderSource::property:source_intersection",
+        "RDShaderSource::property:source_miss",
+        "RDShaderSource::property:source_raygen"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "ADR 0028: tessellation control/evaluation source fields enter the first accepted executing backend stage adapter, with paired shader interfaces, native pipelines and topology; current SDL_GPU vertex/fragment/compute stages do not supply that adapter.",
+      "godot": [
+        "RDShaderSource::property:source_tesselation_control",
+        "RDShaderSource::property:source_tesselation_evaluation"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified. Tessellation source compilation enters the accepted executing backend stage slice together with RDShaderSource control/evaluation fields and pipeline/interfaces; ray stages remain excluded.",
+      "godot": [
+        "RenderingDevice::method:shader_compile_spirv_from_source(RDShaderSource:,bool:)"
       ]
     }
   ]

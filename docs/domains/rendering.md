@@ -1,6 +1,6 @@
 # Rendering domain
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 Private native runtime binaries come from versioned Linux/macOS packages in ordinary desktop builds; `Electron2DBuildNativeFromSource=true` rebuilds those libraries. Source builds separately prepare pinned host shader tools on first use and generate built-in shaders under `obj/`. [Shader delivery](../components/shader-materials.md#built-in-shader-delivery) keeps these tools out of game packages. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
@@ -235,3 +235,5 @@ The [local device component](../components/local-compute.md#color-graphics-and-c
 The local and retained device pipelines now accept compiled push blocks and copied per-draw/per-dispatch binary parameters. Original compact 32-bit layouts, paired graphics stages and public uniform bindings remain coherent; [the push contract](../components/local-compute.md#binary-push-parameters) defines the portable 128-byte capacity, initialization, native uniform quota and verified limits.
 
 Compute and paired graphics pipeline factories now accept copied typed specialization values. One shader identity yields independent native variants with resolved workgroups and uniform/push array extents, preserving public uniform sets and retained texture sharing. [The specialization contract](../components/local-compute.md#typed-pipeline-specialization) defines the typed family, validation, lifetime and verified limits.
+
+Explicit [device source authoring](../components/local-compute.md#source-authoring-and-build-imports) now compiles typed GLSL/HLSL stage descriptions through the separately installed import tool, then executes the common compute/graphics pipeline path. Per-stage diagnostics, copied artifacts, cache bypass and changed includes are integrated; shipped games require only compiled modules.

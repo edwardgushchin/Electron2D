@@ -1,6 +1,6 @@
 # Shader materials
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 [Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
@@ -306,3 +306,5 @@ RenderingServer provides the same setters/getters for borrowed scene items and c
 InstanceUniformState weakly caches reusable buffers for each item/program, including alternating surface programs. Ordinary drawing, mesh surfaces, generated tiles, MultiMesh hardware batches and group owner draws carry the item identity; batches with different owners do not merge. Material buffers stay unchanged. Native submission fills each instance block immediately before its draw, including the composed lighting path.
 
 [InstanceUniformTests](../../tests/Electron2D.Tests/InstanceUniformTests.cs) checks sixteen field types, invalid arrays/matrices/reserved fields/overflow, wrong carriers and nonfinite values, compatible reload and incompatible logical shapes, detached authoring, packed/file restoration, scene and retained RID operations, inherited/surface materials, group/tile/hardware-instance pixels and live lighting. Generated tile items consume their TileMapLayer owner's values and expose its active tile shader declarations. The independent validator covers 257 composed shader/profile combinations. Both HLSL/GLSL imports retain logical booleans. Linux Vulkan and prepared managed allocation checks are the exercised gates; foreign platforms, native allocator accounting and owner visual acceptance remain unverified.
+
+The same standalone importer now owns a device profile for vertex/fragment/compute authoring and build imports. The canvas default keeps its existing source/artifact logical-type metadata and interface validation. [The device authoring contract](local-compute.md#source-authoring-and-build-imports) specifies the public source descriptions, per-stage diagnostics and compiler-tool delivery boundary.

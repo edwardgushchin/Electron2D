@@ -682,7 +682,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RDSamplerState](classes/RDSamplerState.md) | RefCounted | Partial | 15 |
 | [RDShaderFile](classes/RDShaderFile.md) | Resource | Blocked | 4 |
 | [RDShaderSPIRV](classes/RDShaderSPIRV.md) | Resource | Partial | 24 |
-| [RDShaderSource](classes/RDShaderSource.md) | RefCounted | Blocked | 13 |
+| [RDShaderSource](classes/RDShaderSource.md) | RefCounted | Partial | 13 |
 | [RDTextureFormat](classes/RDTextureFormat.md) | RefCounted | Partial | 13 |
 | [RDTextureView](classes/RDTextureView.md) | RefCounted | Partial | 5 |
 | [RDUniform](classes/RDUniform.md) | RefCounted | Implemented | 5 |

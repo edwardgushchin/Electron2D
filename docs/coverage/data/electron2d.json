@@ -8353,6 +8353,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RDShaderSource",
+    "kind": "type",
+    "declaringType": "Electron2D.RDShaderSource",
+    "name": "RDShaderSource",
+    "signature": "public sealed class Electron2D.RDShaderSource",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RDTextureFormat",
     "kind": "type",
     "declaringType": "Electron2D.RDTextureFormat",
@@ -8924,6 +8939,24 @@
     "declaringType": "Electron2D.RenderingDevice.SamplerRepeatMode",
     "name": "SamplerRepeatMode",
     "signature": "public enum Electron2D.RenderingDevice.SamplerRepeatMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RenderingDevice.ShaderLanguage",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.ShaderLanguage",
+    "name": "ShaderLanguage",
+    "signature": "public enum Electron2D.RenderingDevice.ShaderLanguage",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -19459,6 +19492,19 @@
     "declaringType": "Electron2D.RDShaderSPIRV",
     "name": ".ctor",
     "signature": "public RDShaderSPIRV()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RDShaderSource..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RDShaderSource",
+    "name": ".ctor",
+    "signature": "public RDShaderSource()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -41041,6 +41087,32 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingDevice.SamplerRepeatMode",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.ShaderLanguage.GLSL()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.ShaderLanguage",
+    "name": "GLSL",
+    "signature": "public const Electron2D.RenderingDevice.ShaderLanguage GLSL = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.ShaderLanguage",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.ShaderLanguage.HLSL()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.ShaderLanguage",
+    "name": "HLSL",
+    "signature": "public const Electron2D.RenderingDevice.ShaderLanguage HLSL = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.ShaderLanguage",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.RenderingDevice.ShaderStage.Compute()",
@@ -135700,6 +135772,62 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RDShaderSource.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RDShaderSource",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RDShaderSource.GetStageSource(Electron2D.RenderingDevice.ShaderStage)",
+    "kind": "method",
+    "declaringType": "Electron2D.RDShaderSource",
+    "name": "GetStageSource",
+    "signature": "public System.String GetStageSource(Electron2D.RenderingDevice.ShaderStage stage)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "stage",
+        "type": "Electron2D.RenderingDevice.ShaderStage",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RDShaderSource.SetStageSource(Electron2D.RenderingDevice.ShaderStage,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RDShaderSource",
+    "name": "SetStageSource",
+    "signature": "public System.Void SetStageSource(Electron2D.RenderingDevice.ShaderStage stage, System.String source)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "stage",
+        "type": "Electron2D.RenderingDevice.ShaderStage",
+        "default": null
+      },
+      {
+        "name": "source",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RDTextureFormat.AddShareableFormat(Electron2D.RenderingDevice.DataFormat)",
     "kind": "method",
     "declaringType": "Electron2D.RDTextureFormat",
@@ -139205,6 +139333,30 @@
       }
     ],
     "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.ShaderCompileSPIRVFromSource(Electron2D.RDShaderSource,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "ShaderCompileSPIRVFromSource",
+    "signature": "public Electron2D.RDShaderSPIRV ShaderCompileSPIRVFromSource(Electron2D.RDShaderSource shaderSource, System.Boolean allowCache = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaderSource",
+        "type": "Electron2D.RDShaderSource",
+        "default": null
+      },
+      {
+        "name": "allowCache",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "Electron2D.RDShaderSPIRV",
     "value": null
   },
   {
@@ -215579,6 +215731,58 @@
     "declaringType": "Electron2D.RDShaderSPIRV",
     "name": "CompileErrorVertex",
     "signature": "public System.String CompileErrorVertex { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDShaderSource.Language()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDShaderSource",
+    "name": "Language",
+    "signature": "public Electron2D.RenderingDevice.ShaderLanguage Language { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.ShaderLanguage",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDShaderSource.SourceCompute()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDShaderSource",
+    "name": "SourceCompute",
+    "signature": "public System.String SourceCompute { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDShaderSource.SourceFragment()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDShaderSource",
+    "name": "SourceFragment",
+    "signature": "public System.String SourceFragment { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDShaderSource.SourceVertex()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDShaderSource",
+    "name": "SourceVertex",
+    "signature": "public System.String SourceVertex { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

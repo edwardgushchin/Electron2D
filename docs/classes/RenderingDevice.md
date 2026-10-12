@@ -77,6 +77,7 @@ byte[] result = device.BufferGetData(buffer);
 | `public System.Void TextureUpdate(Electron2D.RID texture, System.UInt32 layer, System.ReadOnlySpan<System.Byte> data)` | Updates one complete layer including every mip level. |
 | `public System.Void TextureClear(Electron2D.RID texture, Electron2D.Color color, System.UInt32 baseMipmap, System.UInt32 mipmapCount, System.UInt32 baseLayer, System.UInt32 layerCount)` | Records a color clear of complete selected image layers and mip levels. |
 | `public System.Void TextureCopy(Electron2D.RID fromTexture, Electron2D.RID toTexture, Electron2D.Vector3 fromPosition, Electron2D.Vector3 toPosition, Electron2D.Vector3 size, System.UInt32 sourceMipmap, System.UInt32 destinationMipmap, System.UInt32 sourceLayer, System.UInt32 destinationLayer)` | Records a raw rectangular image copy on the GPU timeline. |
+| [`public Electron2D.RDShaderSPIRV ShaderCompileSPIRVFromSource(Electron2D.RDShaderSource shaderSource, System.Boolean allowCache = true)`](#member-c396c1ad031e) | Compiles copied stage sources through the separately installed authoring tool. |
 
 ## Member descriptions
 
@@ -1226,3 +1227,30 @@ Both stages consume the same source bytes through their own original SPIR-V layo
 ## Pipeline specialization
 
 [Typed scalar descriptions](RDPipelineSpecializationConstant.Generic.md) select independent executable compute/graphics variants while preserving the source shader identity and public uniform sets. Values resolve before native workgroup/layout validation and push translation; pipelines copy descriptions and own private native programs. See [the complete specialization contract](../components/local-compute.md#typed-pipeline-specialization) for defaults, identifier/type checks, specialized array sizes, lifetime and native verification.
+
+<a id="member-c396c1ad031e"></a>
+### ShaderCompileSPIRVFromSource(Electron2D.RDShaderSource, System.Boolean)
+
+```csharp
+public Electron2D.RDShaderSPIRV ShaderCompileSPIRVFromSource(Electron2D.RDShaderSource shaderSource, System.Boolean allowCache = true)
+```
+
+Compiles copied stage sources through the separately installed authoring tool.
+
+This owner-thread cold authoring operation creates no GPU program and does not submit or complete pending work. Configure ELECTRON2D_SHADER_IMPORT_TOOL with the published ShaderImport executable, or install it beside the host. Relative includes resolve from the current project directory. Games loading compiled modules require no source compiler.
+
+A new resource with independent stage bytecode and compiler diagnostics. Failed stages remain empty; other stages are still attempted.
+
+| Parameter | Contract |
+| --- | --- |
+| `shaderSource` | Non-null vertex, fragment and compute sources with one language. |
+| `allowCache` | Permits bounded successful-module caching; false bypasses both lookup and storage. Sources with preprocessing dependencies are compiled every time. |
+
+- `T:System.NotSupportedException`: The separate import executable is unavailable.
+- `T:System.ArgumentException`: The language/source payload is invalid.
+
+
+<a id="source-authoring"></a>
+## Source authoring
+
+[RDShaderSource](RDShaderSource.md) and [ShaderLanguage](RenderingDevice.ShaderLanguage.md) feed the separately installed ShaderImport tool through explicit cold compilation. Returned bytecode/diagnostics are copied per stage, and ordinary device shader/pipeline creation remains responsible for executable interfaces and native validation. The [authoring contract](../components/local-compute.md#source-authoring-and-build-imports) defines cache bypass, dependency handling, output/deadline bounds and verified native behavior.

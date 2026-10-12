@@ -4,13 +4,16 @@ using Electron2D;
 using SDL3;
 using System.Runtime.InteropServices;
 
-if (args.Length != 3 || args[1] is not ("vertex" or "fragment"))
+var deviceImport = args.Length is 4 or 5 && args[3] == "--device";
+if ((!deviceImport && args.Length != 3) || args[1] is not ("vertex" or "fragment" or "compute") || args[1] == "compute" && !deviceImport)
 {
-    Console.Error.WriteLine("Usage: ShaderImport <source.hlsl|source.glsl|source.spv> <vertex|fragment> <output.spv>");
+    Console.Error.WriteLine("Usage: ShaderImport <source.hlsl|source.glsl|source.spv> <vertex|fragment|compute> <output.spv> [--device [include-root]]");
     return 2;
 }
 var input = IOPath.GetFullPath(args[0]);
 var output = IOPath.GetFullPath(args[2]);
+var stage = args[1] == "compute" ? RenderingDevice.ShaderStage.Compute : args[1] == "fragment" ? RenderingDevice.ShaderStage.Fragment : RenderingDevice.ShaderStage.Vertex;
+var includeRoot = args.Length == 5 ? IOPath.GetFullPath(args[4]) : IOPath.GetDirectoryName(input);
 var temporary = IOPath.Combine(IOPath.GetTempPath(), "electron2d-shader-" + Guid.NewGuid().ToString("N") + ".spv");
 var debugTemporary = temporary + ".debug";
 try
@@ -24,16 +27,19 @@ try
             // Keep original source locations in diagnostics reported by the native compiler.
             var escaped = input.Replace("\\", "/").Replace("\"", "\\\"");
             var code = CompileHLSL("#line 1 \"" + escaped + "\"\n" + source,
-                fragment: args[1] == "fragment", includeDirectory: IOPath.GetDirectoryName(input), out sourceTypes);
+                stage, includeRoot, deviceImport, out sourceTypes);
             File.WriteAllBytes(temporary, code);
             break;
         case ".glsl":
             await RequireVersion("glslangValidator", "Glslang Version: 11:16.6.0");
             Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
-                args[1] == "fragment" ? "frag" : "vert", "-e", "main", "-o", temporary, input));
-            Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
-                args[1] == "fragment" ? "frag" : "vert", "-e", "main", "-gV", "-o", debugTemporary, input));
-            sourceTypes = ShaderSourceTypes.GLSL(File.ReadAllBytes(debugTemporary), args[1] == "fragment");
+                args[1] == "compute" ? "comp" : args[1] == "fragment" ? "frag" : "vert", "-I" + includeRoot, "-e", "main", "-o", temporary, input));
+            if (!deviceImport)
+            {
+                Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
+                    args[1] == "fragment" ? "frag" : "vert", "-I" + includeRoot, "-e", "main", "-gV", "-o", debugTemporary, input));
+                sourceTypes = ShaderSourceTypes.GLSL(File.ReadAllBytes(debugTemporary), args[1] == "fragment");
+            }
             break;
         case ".spv":
             File.Copy(input, temporary);
@@ -47,7 +53,8 @@ try
         File.WriteAllBytes(temporary, result);
     }
     Console.Write(await Execute("spirv-val", "--target-env", "vulkan1.0", temporary));
-    ShaderCompiler.ValidateInterface(result, fragment: args[1] == "fragment");
+    if (deviceImport) RenderingDevice.ValidateSourceModule(result, stage);
+    else ShaderCompiler.ValidateInterface(result, fragment: args[1] == "fragment");
     if (File.Exists(output) && new FileInfo(output).Length == result.Length &&
         File.ReadAllBytes(output).AsSpan().SequenceEqual(result))
     {
@@ -88,21 +95,21 @@ static async Task<string> Execute(string executable, params string[] arguments)
     return diagnostic;
 }
 
-static byte[] CompileHLSL(string source, bool fragment, string? includeDirectory,
-    out Dictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)> types)
+static byte[] CompileHLSL(string source, RenderingDevice.ShaderStage stage, string? includeDirectory, bool deviceImport,
+    out Dictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? types)
 {
     if (!ShaderCross.Init()) throw new InvalidOperationException("Cannot initialize shadercross: " + SDL.GetError());
     try
     {
         var memory = ShaderCross.CompileSPIRVFromHLSL(source, "main",
-            fragment ? ShaderCross.ShaderStage.Fragment : ShaderCross.ShaderStage.Vertex, out var size, includeDirectory);
+            stage == RenderingDevice.ShaderStage.Compute ? ShaderCross.ShaderStage.Compute : stage == RenderingDevice.ShaderStage.Fragment ? ShaderCross.ShaderStage.Fragment : ShaderCross.ShaderStage.Vertex, out var size, includeDirectory);
         if (memory == 0) throw new ArgumentException("HLSL compilation failed: " + SDL.GetError(), nameof(source));
         try
         {
             if (size > 16 * 1024 * 1024) throw new ArgumentException("Shader bytecode exceeds 16 MiB.");
             var code = new byte[checked((int)size)];
             Marshal.Copy(memory, code, 0, code.Length);
-            types = ShaderSourceTypes.HLSL(source, fragment, includeDirectory, code);
+            types = deviceImport ? null : ShaderSourceTypes.HLSL(source, stage == RenderingDevice.ShaderStage.Fragment, includeDirectory, code);
             return code;
         }
         finally { SDL.Free(memory); }

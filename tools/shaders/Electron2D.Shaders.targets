@@ -28,8 +28,12 @@
             {
                 var input = source.GetMetadata("FullPath");
                 var stage = source.GetMetadata("Stage");
-                if (stage != "vertex" && stage != "fragment")
-                    throw new ArgumentException(input + ": Stage must be vertex or fragment.");
+                var profile = source.GetMetadata("Profile");
+                if (profile.Length != 0 && profile != "canvas" && profile != "device")
+                    throw new ArgumentException(input + ": Profile must be canvas or device.");
+                var device = profile == "device";
+                if (stage != "vertex" && stage != "fragment" && !(device && stage == "compute"))
+                    throw new ArgumentException(input + ": Stage must be vertex/fragment, or compute for Profile=device.");
                 var target = source.GetMetadata("TargetPath");
                 if (target.Length == 0)
                 {
@@ -50,6 +54,7 @@
                 item.SetMetadata("CopyToPublishDirectory", "PreserveNewest");
                 item.SetMetadata("Source", input);
                 item.SetMetadata("Stage", stage);
+                item.SetMetadata("Profile", device ? "device" : "canvas");
                 outputs.Add(item);
             }
             if (Compile)
@@ -72,6 +77,7 @@
                     arguments.Add(output.GetMetadata("Source"));
                     arguments.Add(output.GetMetadata("Stage"));
                     arguments.Add(output.ItemSpec);
+                    if (output.GetMetadata("Profile") == "device") arguments.Add("--device");
                     using (var process = Process.Start(start))
                     {
                         if (process == null) throw new InvalidOperationException("Cannot start " + tool);

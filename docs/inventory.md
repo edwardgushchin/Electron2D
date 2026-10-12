@@ -1225,3 +1225,5 @@ Area pose and monitor conformance belongs to existing [Area/PhysicsAreaRuntime/P
 
 
 Contact reporting depth belongs to existing [PhysicsBodyRuntime/PhysicsDirectBodyState/PhysicsBodyContact](components/physics-registered-adapter.md#contact-reporting-depth). Common policy filters selected signed scene-unit records and preserves immutable projection/history configuration; no new production type is introduced.
+
+| [Rendering](domains/rendering.md) | [Device source authoring](components/local-compute.md#source-authoring-and-build-imports) | [RDShaderSource](classes/RDShaderSource.md), [RenderingDevice.ShaderLanguage](classes/RenderingDevice.ShaderLanguage.md) | [Descriptions](../src/Servers/Rendering/Device/RDShaderSource.cs), [compiler bridge](../src/Servers/Rendering/Device/RenderingDevice.Source.cs) | GLSL/HLSL stage sources, independent compiled resources/diagnostics and bounded authoring cache feeding executable native pipelines |
