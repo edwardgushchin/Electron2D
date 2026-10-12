@@ -762,3 +762,13 @@ on both backends. Source and frozen runtime fingerprints remained identical;
 logs and provenance are under bin/physics-allocation-warmup/2026-10-13/final-current/.
 The earlier run passed executable checks but its provenance guard rejected
 concurrent main/source changes; it is retained separately under final/.
+
+
+The [independent pin/groove response](physics-registered-adapter.md#independent-pin-and-groove-response)
+consumer now solves real anchor/finite-guide constraints with lever arms,
+compliance, inherited bias, force budgets and motor/stop policies. A shared
+registered/CPU/GPU public suite covers both joint owner roles, single-body and
+off-center pins, reversed/zero guides, Replace damping, private next-step replay
+and four 128-frame strict 0/0 allocation intervals. The bounded fixture integrates
+poses once per outer interval; complete coupled geometry/CCD/sleep/history,
+network, native and performance acceptance remains open.

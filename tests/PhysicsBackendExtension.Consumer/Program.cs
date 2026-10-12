@@ -1,4 +1,6 @@
 if (args.Contains("--allocation-warmup")) BackendChecks.RunAllocationWarmup();
+else if (args.Contains("--joint-response")) BackendChecks.RunJointResponse(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
 else if (args.Contains("--shape-owners")) BackendChecks.RunShapeOwners(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
 else if (args.Contains("--picking")) BackendChecks.RunPicking(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :

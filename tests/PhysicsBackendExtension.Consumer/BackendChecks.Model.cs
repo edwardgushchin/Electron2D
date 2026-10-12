@@ -72,8 +72,10 @@ public static partial class BackendChecks
         protected override void SetActive(bool active) { LifecycleHook?.Invoke(LifecyclePhase.Active); WorldPolicy(); }
         protected override void SetSleepSettings(in PhysicsSleepSettings settings) => WorldPolicy();
         protected override void SetContactSettings(in PhysicsContactSettings settings) => WorldPolicy();
-        protected override void SetSolverIterations(int value) => WorldPolicy();
-        protected override void SetConstraintDefaultBias(float value) => WorldPolicy();
+        internal int Iterations = 16;
+        internal float ConstraintBias = .2f;
+        protected override void SetSolverIterations(int value) { WorldPolicy(); Iterations = value; }
+        protected override void SetConstraintDefaultBias(float value) { WorldPolicy(); ConstraintBias = value; }
         private void WorldPolicy() { WorldPolicyCalls++; WorldPolicyHook?.Invoke(); }
         protected override void PrepareSolverCapacity(int bodies, int shapes, int joints) => CapacityHook?.Invoke();
         protected override void PrepareMonitoringCapacity(int bodies, int shapes) { }
@@ -100,6 +102,7 @@ public static partial class BackendChecks
         {
             LifecycleHook?.Invoke(LifecyclePhase.Solve); StepHook?.Invoke();
             Pairs = 0; DebugPointCount = 0; Delta = (float)delta;
+            // shortcut: pose integration uses one outer interval; add substeps/CCD before coupled stability acceptance.
             foreach (var b in Bodies.Values)
             {
                 if (!b.IsArea) b.ReportedLimit = PhysicsServer.BodyGetMaxContactsReported(b.RID);
@@ -127,7 +130,9 @@ public static partial class BackendChecks
                     b.ContactPeer = a.RID; b.ContactNormal = normal; b.ContactImpulse = impulse; Pairs++;
                 }
             if (FailSolve) throw new InvalidOperationException("Injected independent solver failure.");
-            foreach (var j in Joints.Values) j.Solve((float)delta);
+            foreach (var j in Joints.Values) j.BeginSolve();
+            for (var i = 0; i < Iterations; i++)
+                foreach (var j in Joints.Values) j.Solve((float)delta, i == 0);
             Steps++;
         }
         protected override void SyncResults() { Ready = true; LifecycleHook?.Invoke(LifecyclePhase.Sync); }
@@ -261,7 +266,8 @@ public static partial class BackendChecks
             Locked = configuration.LockRotation; Omit = configuration.OmitForces;
             var f = solver.ResolveFields(this);
             _fields = new(f.Gravity * configuration.GravityScale,
-                configuration.LinearDamp + f.LinearDamp, configuration.AngularDamp + f.AngularDamp, true);
+                configuration.LinearDamp + (configuration.LinearDampMode == RigidBody.DampMode.Combine ? f.LinearDamp : 0),
+                configuration.AngularDamp + (configuration.AngularDampMode == RigidBody.DampMode.Combine ? f.AngularDamp : 0), true);
         }
         protected override void SetAreaMonitoring(bool monitoring, bool monitorable) { Monitoring = monitoring; Monitorable = monitorable; }
         protected override void SetAreaFields(in PhysicsAreaFieldConfiguration configuration) => AreaFields = configuration;
@@ -330,7 +336,7 @@ public static partial class BackendChecks
         { SetPose(pose.Origin, pose.Rotation); Velocity = linear; Angular = angular; SleepTime = sleepTime; CanSleep = canSleep; Awake = !sleeping; Surface = surface; SurfaceAngular = surfaceAngular; Force = force; Torque = torque; _fields = new(gravity, linearDamp, angularDamp, fieldsInitialized); }
         protected override void ValidatePortablePiece(int slot, int piece) { if (piece != 0 || slot < 0 || slot >= Shapes) throw new InvalidDataException("Invalid independent circle piece."); }
     }
-    private sealed class Constraint(Solver solver, RID rid) : PhysicsBackendJoint
+    private sealed partial class Constraint(Solver solver, RID rid) : PhysicsBackendJoint
     {
         internal PhysicsJointConfiguration Settings;
         private RID _first, _second;
@@ -354,7 +360,7 @@ public static partial class BackendChecks
         protected override void SetPinMotorVelocity(float value) { Settings = Settings with { PinMotorVelocity = value }; solver.JointHook?.Invoke(rid); }
         protected override void SetPinMotorMaxTorque(float value) { Settings = Settings with { PinMotorMaxTorque = value }; solver.JointHook?.Invoke(rid); }
         protected override void SetGrooveLimits(float lower, float upper) { Settings = Settings with { LowerTranslation = lower, UpperTranslation = upper }; solver.JointHook?.Invoke(rid); }
-        internal void Solve(float dt)
+        private void SolveSpring(float dt)
         {
             if (Settings.Type != PhysicsServer.JointType.DampedSpring) return;
             var a = solver.Bodies[_first]; var b = solver.Bodies[_second];

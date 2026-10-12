@@ -1,6 +1,6 @@
 # Registered numerical solver adapter
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 ## Scope and ownership
 
@@ -338,9 +338,9 @@ low-speed test; it is not a general solver tolerance. After 64 warmup frames,
 on each backend, including the first frame after collection.
 
 The eight extension parameter/flag selector operations map to their complete typed
-facade family under ADR 0087/0103 and remain Partial. Registered pin/groove numerical
-response and complete numerical-extension acceptance remain open; built-in joint
-response uses the existing shared CPU/GPU contract tests. Native allocations, other
+facade family under ADR 0087/0103 and remain Partial. Bounded registered pin/groove
+response now has the shared checks below; complete numerical-extension acceptance
+remains open. Built-in joint response uses the existing shared CPU/GPU contract tests. Native allocations, other
 platforms, networking and final window/performance acceptance are unverified here.
 
 
@@ -373,8 +373,8 @@ scene-unit/s short-run tolerance. After 64 warmup frames, 64 complete frames wit
 six active joint records allocate 0 owner/all-thread managed bytes on each backend.
 Cold creation/replacement intentionally creates fresh numerical objects and is
 outside this allocation bracket. The six extension creation/type/clear/make rows
-remain Partial: registered pin/groove numerical response and complete extension
-acceptance are still open. Native allocations, other platforms, final networking
+remain Partial: broader coupled registered constraint behavior and complete
+extension acceptance are still open. Native allocations, other platforms, final networking
 and real-window/performance acceptance are unverified here.
 
 
@@ -926,3 +926,51 @@ that scalar/step bracket. Identities and policy values are exact. Frozen evidenc
 is under `bin/physics-shape-owners/2026-10-12/final/`. This closes the confirmed
 access defect; full shape-owner geometry/disable, numerical-extension and final
 physics/network/performance acceptance remain open.
+
+
+## Independent pin and groove response
+
+The public-only consumer's Solver now solves pin anchor constraints and finite
+grooves using body-local frames, center-of-mass lever arms and inverse mass/inertia.
+Coupled linear rows share a vector force-times-duration cap. Pin compliance,
+world-inherited bias, correction-speed limits and independently capped motor/stop
+angular impulses use the immutable supplied configuration. Groove translation
+remains free inside its finite interval, and unilateral endpoints permit retreat
+back into it; zero/reversed guides and relative rotation
+retain their roles. Iterations and constraint default bias are actual retained
+solver inputs. Body integration honors Replace damping without adding world drag.
+This is a bounded external test implementation, not a new production backend.
+
+--joint-response, optionally --cpu or --gpu, exercises the same public assertions
+on registered/CPU/GPU worlds without fallback. Both server-owned and scene-owned
+joint RIDs drive a scene body and a raw body. Cases cover physical momentum and
+coupled force caps, positional recovery, compliance, world default edits,
+off-center and single-body pins, motor/general angular caps, simultaneous motor
+and stops, axial/perpendicular/endpoint groove response, retreat at both endpoints and
+reversed/zero guides.
+For mass 2, force 6 and dt 1/60, the maximum physical velocity change is .05;
+checks bound it to (.045, .051) and pair momentum error below .001 scene units/s.
+Motor torque .0006 N m produces .05 rad/s at inertia 2; general angular force .3
+produces .0025 rad/s. Off-center point speed has a .5 scene-unit/s short-interval
+bound. The driven stop allowance .06 rad bounds one 3 rad/s outer tick (.05 rad)
+plus numerical slack. Position and compliance checks require recovery/ordering,
+not identical internal velocity corrections or substep counts.
+
+Each of the four owner/role combinations warms 128 full edited frames and measures
+128 more at strict 0/0 owner/all-thread managed bytes, then restores a private
+checkpoint and verifies the next interval within .001 scene units and units/s.
+The final contract is RED with the former missing pin/groove solve, and separately
+with the former ignored Replace modes. Existing spring/registration/lifetime
+checks remain in the complete consumer. Logs are retained under
+bin/physics-registered-joints/2026-10-13/. Pose integration in this fixture remains
+one outer interval; arbitrary coupled geometry, CCD/sleep/contact history,
+portable/network correction and final native/performance acceptance stay open.
+
+
+Final linux-x64 Release/native-source validation on main a0063147 plus this change
+passed registered and CPU no-GPU response, explicit GPU response, the complete
+registered consumer and the full executable suite (five profiles, all exit 0).
+Source/runtime fingerprints remained identical; final-current/provenance-before.json,
+provenance-after.json and outcomes.json under bin/physics-registered-joints/2026-10-13/
+retain the exact binding. The earlier final/ executable suite passed but its source
+guard rejected the subsequent unilateral-endpoint correction; it is not final proof.

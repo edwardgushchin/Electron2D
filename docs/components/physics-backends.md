@@ -1002,11 +1002,11 @@ Selected motion dispatch now borrows world lifetime for the whole query and vali
 ## Independent implementation bridge
 
 
-[Registered numerical adapter](physics-registered-adapter.md) now connects an internal value/RID-only implementation to real scene/raw motion, fields/forces, joints, queries, contact/Area publication, private/portable history and terminal failure. Its independent circle/spring test solver owns its own state and does not wrap a built-in. Public factories/backend classes, arbitrary custom geometry and full external acceptance remain open.
+[Registered numerical adapter](physics-registered-adapter.md) now connects an internal value/RID-only implementation to real scene/raw motion, fields/forces, joints, queries, contact/Area publication, private/portable history and terminal failure. Its independent circle/constraint test solver owns its own state and does not wrap a built-in. Public factories/backend classes, arbitrary custom geometry and full external acceptance remain open.
 
 The complete internal contract and its exercised boundaries are documented in [Registered numerical solver adapter](physics-registered-adapter.md). Backend.Extension is an observed implementation identity, not a built-in creation option. Existing CPU/GPU enum factories preserve their explicit startup rules.
 
-Public [registered implementations](physics-registered-adapter.md) now execute through PhysicsServerManager, World(string) and PhysicsServer.SpaceCreate(string). Requested/actual names retain the captured registration and startup fallback identity. The scoped PhysicsServerBackend/Extension family and immutable inputs/results have a public-only circle/spring consumer; custom geometry and full extension/performance/platform acceptance remain open.
+Public [registered implementations](physics-registered-adapter.md) now execute through PhysicsServerManager, World(string) and PhysicsServer.SpaceCreate(string). Requested/actual names retain the captured registration and startup fallback identity. The scoped PhysicsServerBackend/Extension family and immutable inputs/results have a public-only circle/constraint consumer; custom geometry and full extension/performance/platform acceptance remain open.
 
 GPU publication now reuses a preceding complete observation only when the publication epoch and all live cache validity agree. Actual callback writes still force a fresh pre-step read. Dense change streams combine status and bounded data in one wait; sparse streams keep count-first exact-prefix transfer. This changes observation scheduling without changing simulation, contact limits or callback order; [publication evidence](gpu-body-publication.md) records its costs and limits.
 
@@ -1101,3 +1101,13 @@ on both backends. Source and frozen runtime fingerprints remained identical;
 logs and provenance are under bin/physics-allocation-warmup/2026-10-13/final-current/.
 The earlier run passed executable checks but its provenance guard rejected
 concurrent main/source changes; it is retained separately under final/.
+
+
+The [independent pin/groove response](physics-registered-adapter.md#independent-pin-and-groove-response)
+consumer now solves real anchor/finite-guide constraints with lever arms,
+compliance, inherited bias, force budgets and motor/stop policies. A shared
+registered/CPU/GPU public suite covers both joint owner roles, single-body and
+off-center pins, reversed/zero guides, Replace damping, private next-step replay
+and four 128-frame strict 0/0 allocation intervals. The bounded fixture integrates
+poses once per outer interval; complete coupled geometry/CCD/sleep/history,
+network, native and performance acceptance remains open.

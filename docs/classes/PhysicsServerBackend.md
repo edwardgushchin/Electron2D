@@ -1,6 +1,6 @@
 # PhysicsServerBackend
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Declaration:** `public abstract class PhysicsServerBackend : ElectronObject` · **Source:** [PhysicsServerBackend.cs](../../src/Servers/Physics/PhysicsServerBackend.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
 
@@ -141,7 +141,7 @@ if (IsBodyExcludedFromMotionTest(candidateRID) ||
 
 ## Verification and limits
 
-[Independent solver probe](../../tests/Electron2D.Tests/PhysicsRegisteredBackendTests.cs) exercises scene/raw integration, ordinary views, queries, Area events, contacts, spring policy, local/portable restore, guarded lifetime and terminal solve failure. The separate public-only consumer implements a bounded circle/spring model; it is a test solver, not a production backend. Arbitrary custom geometry and unexercised operation acceptance remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+[Independent solver probe](../../tests/Electron2D.Tests/PhysicsRegisteredBackendTests.cs) exercises scene/raw integration, ordinary views, queries, Area events, contacts, spring policy, local/portable restore, guarded lifetime and terminal solve failure. The separate public-only consumer implements a bounded circle/constraint model; it is a test solver, not a production backend. Arbitrary custom geometry and unexercised operation acceptance remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
 
 `GetPortableOneWayCount` bounds the next `CapturePortableOneWays` span, even after retained storage has grown. Returned count cannot exceed that current span. Valid continuation requires distinct bound colliders, enabled logical shapes, implementation-validated nonnegative pieces and no duplicate unordered pair. `CompletePortableRestore` receives the translated local identities; the external consumer checks actual pass-through and contact impulses after restore.
 
@@ -189,3 +189,9 @@ extension and platform/performance acceptance remain open.
 
 
 [Registered factory-selected views](../components/physics-registered-adapter.md#factory-selected-direct-views) now execute through a separate public-only consumer: cache identity, an initially empty contact snapshot, synchronized immutable publication before callbacks, result/lifetime validation, recreation and zero warm managed allocations. Independent caller-created body views keep direct hook dispatch; wider numerical-extension acceptance stays open.
+
+
+[Independent constraint checks](../components/physics-registered-adapter.md#independent-pin-and-groove-response)
+exercise real pin/groove response through immutable settings and selected
+attachments on registered/CPU/GPU worlds, including strict warmed allocation and
+private next-step replay. Complete numerical-extension acceptance remains open.
