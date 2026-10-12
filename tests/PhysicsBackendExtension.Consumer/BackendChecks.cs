@@ -4,6 +4,7 @@ public static partial class BackendChecks
 {
     public static void Run()
     {
+        AllocationWarmupCheck.Verify(Collect);
         Solver? solver = null;
         RunShapeResources();
         RunShapeGeometry();
@@ -188,5 +189,6 @@ public static partial class BackendChecks
     }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException($"Expected {typeof(T).Name}"); }
-    private static void Collect() { GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); }
+    public static void RunAllocationWarmup() => AllocationWarmupCheck.Verify(Collect);
+    private static void Collect() { GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers(); }
 }

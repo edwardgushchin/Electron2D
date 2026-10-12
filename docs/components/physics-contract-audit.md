@@ -736,3 +736,29 @@ also passed. Strict zero-byte assertions and operation counts are
 unchanged. Original and diagnostic logs are retained under
 bin/physics-custom-sweep/2026-10-13/; the custom/no-GPU and CPU/GPU pair profiles
 separately passed their own unchanged warm gates.
+
+Allocation warmup in PhysicsBackendOwnershipTests and the public-only registered
+consumer now drains pending finalizers after the final forced collection. A shared
+cold regression object re-registers after its first finalization and blocks the
+second pass. Both former helpers returned while that pass was blocked (RED); both
+corrected helpers wait until release and observe both completed passes. The same
+check runs before ownership and full-consumer acceptance; --allocation-warmup
+selects the consumer check alone.
+
+This changes test preparation, not the physics runtime, measurement counters,
+zero-byte assertions, capacities or warm/measured operation counts. Earlier traces
+sampled .NET array-pool/thread-pool finalizer allocations. The missing final drain
+is now a proved preparation defect and is corrected; the exact objects behind
+historical untraced 0/2304 and 0/3984 intervals were not captured, so those interval
+attributions remain limited. Finalizer drainage does not suppress engine allocations
+or establish native allocation/performance acceptance.
+
+Final linux-x64 Release/native-source validation on main at
+337e114881abdf8cd7438d889b03d1dce0abc15f plus this change passed seven profiles:
+the isolated no-GPU regression, three fresh complete registered-consumer runs,
+CPU ownership without GPU, GPU ownership and the complete executable checks.
+Ownership retained 512 bodies/64 full warmed steps at 0/0 owner/all-thread bytes
+on both backends. Source and frozen runtime fingerprints remained identical;
+logs and provenance are under bin/physics-allocation-warmup/2026-10-13/final-current/.
+The earlier run passed executable checks but its provenance guard rejected
+concurrent main/source changes; it is retained separately under final/.

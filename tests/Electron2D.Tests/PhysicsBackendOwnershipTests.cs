@@ -6,6 +6,7 @@ internal static partial class PhysicsBackendOwnershipTests
 {
     internal static void Run(PhysicsServer.Backend backend)
     {
+        AllocationWarmupCheck.Verify(Collect);
         GuardPresence(backend);
         Initialization(backend);
         NamedFactories(backend);
@@ -631,7 +632,7 @@ internal static partial class PhysicsBackendOwnershipTests
         finally { PhysicsServer.FreeRID(fallback); }
         Console.WriteLine("Fresh CPU implementation, strict unavailable GPU and explicit startup fallback passed without a graphics device.");
     }
-    private static void Collect() { GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); }
+    private static void Collect() { GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException($"Expected {typeof(T).Name}"); }
 }

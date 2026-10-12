@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-10-10
+Last updated: 2026-10-13
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -100,3 +100,11 @@ Before committing an ENet integration change, run `python3 -B tools/enet-native/
 Release executable checks set `TieredCompilation=false` in the test project so warmed allocation intervals use a stable optimized JIT profile. Production hosts retain their own runtime configuration. This does not change allocation budgets, operation counts, warm-up/capacity requirements or native/foreign acceptance boundaries. Test runs with tiered compilation enabled are a separate runtime profile and must be labelled explicitly.
 
 For strict allocation brackets on runtimes affected by [dotnet/runtime#134724](https://github.com/dotnet/runtime/issues/134724), complete any outstanding background collection with a blocking collection after fixture preparation and before warmup. The upstream [accounting fix](https://github.com/dotnet/runtime/pull/134855) concerns unused allocation-context bytes being counted as allocations. Collection-start counters alone do not detect a background collection already in flight. Preserve the measured operations and the zero-byte assertion; do not subtract a guessed allowance or retry until a sample passes. This setup belongs only in tests, not the runtime frame loop.
+
+When explicitly forcing collection during allocation-test setup, drain finalizers
+after the last collection before beginning the warm or measured interval. A preceding
+drain cannot account for objects queued by a later collection. Ownership and registered
+consumer helpers share AllocationWarmupCheck, whose controlled second finalizer
+pass detects premature return without changing allocation gates. This follows
+[GC.WaitForPendingFinalizers](https://learn.microsoft.com/en-us/dotnet/api/system.gc.waitforpendingfinalizers?view=net-10.0).
+Production hosts retain their ordinary GC policy under ADR 0014.
