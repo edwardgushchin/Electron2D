@@ -1,18 +1,20 @@
 using Electron2D;
 
-internal static class CollisionPolygonTests
+internal sealed class CollisionPolygonTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new CollisionPolygonTests(backend).RunCore();
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         VerifyDefaultsAndValidation();
         VerifyBodyAndLiveGeometry();
         VerifyDynamicBody();
         VerifyConcaveAreaAndHollowMode();
         VerifyOneWayAndPacking();
-        Console.WriteLine("Collision polygon solids, hollow edges, one-way contact, packing and allocation passed.");
+        Console.WriteLine($"Collision polygon solids, hollow edges, one-way contact, packing and 0/0 warm owner/all-thread bytes passed on {backend}.");
     }
 
-    private static void VerifyDefaultsAndValidation()
+    private void VerifyDefaultsAndValidation()
     {
         using var polygon = new CollisionPolygon();
         Check(polygon.BuildMode == PolygonBuildMode.Solids && polygon.Polygon.Length == 0 &&
@@ -48,11 +50,11 @@ internal static class CollisionPolygonTests
         Check(polygon.OneWayCollisionDirection == direction, "Invalid one-way direction preserves state.");
     }
 
-    private static void VerifyBodyAndLiveGeometry()
+    private void VerifyBodyAndLiveGeometry()
     {
         using var circle = new CircleShape();
         using var spare = new RectangleShape { Size = new(10, 10) };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var floor = new StaticBody { Name = "Floor", Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Name = "Spare", Shape = spare, Position = new(500, 0) });
         var polygon = new CollisionPolygon
@@ -70,17 +72,17 @@ internal static class CollisionPolygonTests
         };
         body.AddChild(new CollisionShape { Shape = circle });
         root.AddChild(floor); root.AddChild(body);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Polygon fixture uses the explicitly selected backend.");
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y is > 76 and < 84 && body.GetContactCount() > 0 &&
               body.GetCollidingBodies().Contains(floor),
             "A direct polygon owner and a sibling CollisionShape both supply body fixtures.");
 
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var before = GC.GetAllocatedBytesForCurrentThread(); var allBefore = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
-            "Warmed solid polygon contact allocates no managed memory on the stepping thread.");
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - before; var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        Check(ownerBytes == 0 && allBytes == 0, $"Warm solid polygon contact allocated {ownerBytes}/{allBytes} owner/all-thread bytes.");
 
         polygon.Scale = new(2, 1);
         Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
@@ -122,10 +124,10 @@ internal static class CollisionPolygonTests
             "Reentering the owner restores the polygon's live fixtures.");
     }
 
-    private static void VerifyDynamicBody()
+    private void VerifyDynamicBody()
     {
         using var floorShape = new RectangleShape { Size = new(200, 20) };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var floor = new StaticBody { Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = floorShape });
         var body = new RigidBody { CanSleep = false, Mass = 2 };
@@ -135,7 +137,7 @@ internal static class CollisionPolygonTests
         };
         body.AddChild(polygon);
         root.AddChild(floor); root.AddChild(body);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Polygon fixture uses the explicitly selected backend.");
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y is > 76 and < 84,
             "An owned solid polygon contributes mass-bearing fixtures to a dynamic body.");
@@ -149,10 +151,10 @@ internal static class CollisionPolygonTests
             "An owned hollow polygon retains positive body mass and responds to torque.");
     }
 
-    private static void VerifyConcaveAreaAndHollowMode()
+    private void VerifyConcaveAreaAndHollowMode()
     {
         using var circle = new CircleShape { Radius = 5 };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var area = new Area();
         var polygon = new CollisionPolygon
         {
@@ -162,7 +164,7 @@ internal static class CollisionPolygonTests
         var body = new RigidBody { Position = new(10, 60), GravityScale = 0, CanSleep = false };
         body.AddChild(new CollisionShape { Shape = circle });
         root.AddChild(area); root.AddChild(body);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Polygon fixture uses the explicitly selected backend.");
         tree.PhysicsFrame(1d / 60);
         Check(area.GetOverlappingBodies().Contains(body),
             "Convex parts of an L contour detect a body in its vertical arm.");
@@ -189,10 +191,10 @@ internal static class CollisionPolygonTests
             "Area sensing still detects the edge from the other side.");
     }
 
-    private static void VerifyOneWayAndPacking()
+    private void VerifyOneWayAndPacking()
     {
         using var circle = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var wall = new StaticBody { Name = "Wall", Position = new(0, 100) };
         var polygon = new CollisionPolygon
         {
@@ -214,7 +216,8 @@ internal static class CollisionPolygonTests
         var body = new RigidBody { Position = new(0, 120), GravityScale = 0, CanSleep = false, LinearVelocity = new(0, -80) };
         body.AddChild(new CollisionShape { Shape = circle });
         copy.AddChild(body);
-        using var tree = new SceneTree(copy);
+        ((SubViewport)copy).World = selectedWorld;
+        using var tree = new SceneTree(copy); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Restored polygon uses the explicitly selected backend.");
         for (var frame = 0; frame < 60; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y < 60,
             "A restored segment polygon allows traversal from its pass-through side.");

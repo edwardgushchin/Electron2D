@@ -1,6 +1,6 @@
 # CollisionPolygon
 
-Last updated: 2026-10-09
+Last updated: 2026-10-12
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -81,3 +81,5 @@ The node creates its group under a direct CollisionObject parent at parenting, s
 The [CollisionObject owner registry](CollisionObject.md#createshapeowner) now supplies logical shape slots for both child and manual groups. Query/contact indices identify global slots, while ShapeFindOwner returns the distinct group ID; removal shifts later indices. Motion owner accessors resolve weak configured objects as well as child nodes. See [ADR 0071](../decisions/physics.md#adr-0071).
 
 [Physics canvas diagnostics](../components/physics-debug.md) describes this node's retained geometry, live redraw, ordinary canvas behavior and CPU/GPU/native checks.
+
+The complete CollisionPolygonTests now runs on explicitly selected public CPU/GPU worlds, including solid/hollow geometry, concave Area sensing, dynamic mass/torque response, scale rejection/recovery, warning-callback failure, removal/reentry and packed one-way contact. Restored scenes receive the explicit selected World before simulation. Existing numerical bounds are unchanged; 64 warm contact frames require 0/0 owner/all-thread managed bytes. Broader inherited/extension, native/platform and final performance acceptance remains open.

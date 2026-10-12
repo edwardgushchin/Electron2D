@@ -1,22 +1,24 @@
 using Electron2D;
 
-internal static class OneWayCollisionTests
+internal sealed class OneWayCollisionTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new OneWayCollisionTests(backend).RunCore();
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         VerifyPropertiesAndPacking();
         VerifyApproachSidesAndLiveChanges();
         VerifyRotatedDirection();
         VerifyKinematicPlatform();
         VerifyDynamicPlatform();
         VerifyAreaIgnoresOneWay();
-        Console.WriteLine("One-way body contacts, direction, packing and area checks passed.");
+        Console.WriteLine($"One-way body contacts, direction, packing, Area and 0/0 warm owner/all-thread byte checks passed on {backend}.");
     }
 
-    private static void VerifyPropertiesAndPacking()
+    private void VerifyPropertiesAndPacking()
     {
         using var segment = new SegmentShape { A = new(-100, 0), B = new(100, 0) };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var wall = new StaticBody { Name = "Wall" };
         var collision = new CollisionShape { Name = "Collision", Shape = segment };
         root.AddChild(wall); wall.AddChild(collision);
@@ -40,11 +42,11 @@ internal static class OneWayCollisionTests
               ReferenceEquals(restored.Shape, segment), "PackedScene retains one-way state and borrowed geometry.");
     }
 
-    private static void VerifyApproachSidesAndLiveChanges()
+    private void VerifyApproachSidesAndLiveChanges()
     {
         using var platformShape = new SegmentShape { A = new(-100, 0), B = new(100, 0) };
         using var bodyShape = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var platform = new StaticBody { Position = new(0, 100) };
         var collision = new CollisionShape { Shape = platformShape, OneWayCollision = true };
         platform.AddChild(collision);
@@ -59,7 +61,7 @@ internal static class OneWayCollisionTests
         };
         body.AddChild(new CollisionShape { Shape = bodyShape });
         root.AddChild(platform); root.AddChild(body);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "One-way fixture uses the explicitly selected backend.");
         for (var frame = 0; frame < 60; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y < 60 && body.GetContactCount() == 0 && body.GetCollidingBodies().Length == 0,
             "A body travelling upward crosses from below without a reported contact.");
@@ -72,10 +74,10 @@ internal static class OneWayCollisionTests
             "The same platform stops a body travelling downward from above.");
 
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var before = GC.GetAllocatedBytesForCurrentThread(); var allBefore = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
-            "Warmed active one-way contacts allocate no managed memory on the stepping thread.");
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - before; var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        Check(ownerBytes == 0 && allBytes == 0, $"Warm active one-way contacts allocated {ownerBytes}/{allBytes} owner/all-thread bytes.");
 
         collision.OneWayCollision = false;
         body.GlobalPosition = new(0, 120);
@@ -93,18 +95,18 @@ internal static class OneWayCollisionTests
             "A zero one-way direction selects no contact side.");
     }
 
-    private static void VerifyRotatedDirection()
+    private void VerifyRotatedDirection()
     {
         using var wallShape = new SegmentShape { A = new(-100, 0), B = new(100, 0) };
         using var bodyShape = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var wall = new StaticBody { Position = new(100, 0) };
         var collision = new CollisionShape { Shape = wallShape, Rotation = Mathf.Pi / 2, OneWayCollision = true };
         wall.AddChild(collision);
         var body = new RigidBody { Position = new(80, 0), GravityScale = 0, CanSleep = false, LinearVelocity = new(80, 0) };
         body.AddChild(new CollisionShape { Shape = bodyShape });
         root.AddChild(wall); root.AddChild(body);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "One-way fixture uses the explicitly selected backend.");
         for (var frame = 0; frame < 60; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.X > 140, "Rotating the child turns the pass-through direction with the wall.");
         body.GlobalPosition = new(120, 0);
@@ -130,11 +132,11 @@ internal static class OneWayCollisionTests
             "Rotating the owning body turns the pass-through direction too.");
     }
 
-    private static void VerifyAreaIgnoresOneWay()
+    private void VerifyAreaIgnoresOneWay()
     {
         using var sensorShape = new SegmentShape { A = new(-100, 0), B = new(100, 0) };
         using var bodyShape = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var area = new Area { Position = new(0, 100) };
         var collision = new CollisionShape { Shape = sensorShape, OneWayCollision = true };
         area.AddChild(collision);
@@ -143,7 +145,7 @@ internal static class OneWayCollisionTests
         root.AddChild(area); root.AddChild(body);
         Check(collision.GetConfigurationWarnings().Any(warning => warning.Contains("no effect", StringComparison.Ordinal)),
             "An Area child reports that one-way contact response is inapplicable to a sensor.");
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "One-way fixture uses the explicitly selected backend.");
         var entered = 0;
         area.BodyEntered += _ => entered++;
         for (var frame = 0; frame < 60; frame++) tree.PhysicsFrame(1d / 60);
@@ -151,17 +153,17 @@ internal static class OneWayCollisionTests
             "An Area still senses a body crossing from the pass-through side without collision response.");
     }
 
-    private static void VerifyKinematicPlatform()
+    private void VerifyKinematicPlatform()
     {
         using var platformShape = new SegmentShape { A = new(-100, 0), B = new(100, 0) };
         using var bodyShape = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var platform = new AnimatableBody { Position = new(0, 100) };
         platform.AddChild(new CollisionShape { Shape = platformShape, OneWayCollision = true });
         var body = new RigidBody { Position = new(0, 120), GravityScale = 0, CanSleep = false, LinearVelocity = new(0, -80) };
         body.AddChild(new CollisionShape { Shape = bodyShape });
         root.AddChild(platform); root.AddChild(body);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "One-way fixture uses the explicitly selected backend.");
         for (var frame = 0; frame < 60; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y < 60, "A kinematic platform lets a body pass upward from below.");
         body.GlobalPosition = new(0, 80);
@@ -171,11 +173,11 @@ internal static class OneWayCollisionTests
             "The same kinematic platform stops approach from above.");
     }
 
-    private static void VerifyDynamicPlatform()
+    private void VerifyDynamicPlatform()
     {
         using var platformShape = new SegmentShape { A = new(-100, 0), B = new(100, 0) };
         using var bodyShape = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var platform = new RigidBody
         {
             Name = "Platform",
@@ -189,7 +191,7 @@ internal static class OneWayCollisionTests
         var body = new RigidBody { Name = "Rider", Position = new(0, 80), GravityScale = 0, CanSleep = false, LinearVelocity = new(0, 80) };
         body.AddChild(new CollisionShape { Shape = bodyShape });
         root.AddChild(platform); root.AddChild(body);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "One-way fixture uses the explicitly selected backend.");
         for (var frame = 0; frame < 60; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y is > 86 and < 96,
             "A dynamic one-way owner resolves contact from its selected side.");

@@ -258,8 +258,13 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_FIELDS") == "1") { G
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_KINEMATIC") == "1") { GPUPhysicsKinematicTests.Run(); PhysicsSurfaceVelocityTests.Run(PhysicsServer.Backend.GPU); PhysicsServerStateTests.Run(PhysicsServer.Backend.GPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_TRANSIENT_FORCES") == "1") { GPUPhysicsTransientForceTests.Run(); PhysicsServerForceTests.Run(PhysicsServer.Backend.GPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_PARAMETERS") == "1") { GPUPhysicsBodyParameterTests.Run(); PhysicsBodyParameterTests.Run(); PhysicsBodyParameterTests.Run(PhysicsServer.Backend.GPU); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_ONE_WAY") == "1") { GPUPhysicsOneWayTests.Run(); OneWayCollisionTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_EXCEPTIONS") == "1") { GPUPhysicsExceptionStoreTests.Run(); PhysicsCollisionExceptionTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILTER_CONTRACT") is { } filterBackend)
+{
+    var backend = filterBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for the filter contract.") };
+    OneWayCollisionTests.Run(backend); CollisionPolygonTests.Run(backend); PhysicsCollisionExceptionTests.Run(backend); return;
+}
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_ONE_WAY") == "1") { GPUPhysicsOneWayTests.Run(); OneWayCollisionTests.Run(PhysicsServer.Backend.GPU); CollisionPolygonTests.Run(PhysicsServer.Backend.GPU); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_EXCEPTIONS") == "1") { GPUPhysicsExceptionStoreTests.Run(); PhysicsCollisionExceptionTests.Run(PhysicsServer.Backend.GPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_JOINTS") == "1") { GPUPhysicsJointStoreTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_SOLVER") == "1") { GPUPhysicsSolverStoreTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_CONTACTS") == "1") { GPUPhysicsContactStoreTests.Run(); return; }
@@ -906,8 +911,8 @@ SegmentShapeTests.Run();
 SeparationRayShapeTests.Run();
 WorldBoundaryTests.Run();
 ShapeCollisionTests.Run();
-OneWayCollisionTests.Run();
-CollisionPolygonTests.Run();
+OneWayCollisionTests.Run(); OneWayCollisionTests.Run(PhysicsServer.Backend.GPU);
+CollisionPolygonTests.Run(); CollisionPolygonTests.Run(PhysicsServer.Backend.GPU);
 PhysicsDebugTests.Run(false);
 PhysicsContactDebugTests.Run(false);
 PhysicsVelocityEditTests.Run(false);
@@ -932,7 +937,7 @@ TileMapLayerTests.Run(PhysicsServer.Backend.CPU);
 PhysicsShapeQueryTests.Run(); PhysicsShapeQueryTests.Run(PhysicsServer.Backend.GPU);
 PhysicsMotionTests.Run(); PhysicsMotionTests.Run(PhysicsServer.Backend.GPU);
 PhysicsCCDTests.Run();
-PhysicsCollisionExceptionTests.Run();
+PhysicsCollisionExceptionTests.Run(); PhysicsCollisionExceptionTests.Run(PhysicsServer.Backend.GPU);
 CharacterBodyTests.Run();
 RayCastTests.Run();
 ShapeCastTests.Run();

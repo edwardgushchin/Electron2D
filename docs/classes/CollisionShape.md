@@ -1,6 +1,6 @@
 # CollisionShape
 
-Last updated: 2026-10-09
+Last updated: 2026-10-12
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -86,3 +86,5 @@ The child registers during tree entry and unregisters before its exit finishes; 
 [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) checks parent/shape diagnostics, live shape edits, disablement, PackedScene restoration and borrowed lifetime. [OneWayCollisionTests](../../tests/Electron2D.Tests/OneWayCollisionTests.cs) checks both contact sides, direction and rotation, live changes, packing, area sensing and warmed allocation. [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks one-way motion approaches, margin depth and invalid rollback. Other shape-family tests cover their borrowed fixtures. [ADR 0065](../decisions/physics.md#adr-0065) records the one-way body-contact decision.
 
 The [CollisionObject owner registry](CollisionObject.md#createshapeowner) now supplies logical shape slots for both child and manual groups. Query/contact indices identify global slots, while ShapeFindOwner returns the distinct group ID; removal shifts later indices. Motion owner accessors resolve weak configured objects as well as child nodes. See [ADR 0071](../decisions/physics.md#adr-0071).
+
+The complete OneWayCollisionTests now runs on explicitly selected public CPU/GPU worlds: opposite contact sides, child/body rotation, live policy and zero-direction edits, dynamic/kinematic platforms, Area sensor bypass and packing. Existing numerical bounds are unchanged; 64 warm active contact frames require 0/0 owner/all-thread managed bytes. Broader inherited/extension, native/platform and final performance acceptance remains open.
