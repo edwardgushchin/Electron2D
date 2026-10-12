@@ -354,9 +354,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNED_CANVAS") == "1") {
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_SKIN_CHILD") is { } meshSkinChild) { MeshSkinTests.RunChild(meshSkinChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_SKIN_HOST") == "1") { MeshSkinTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_SKIN") == "1") { MeshSkinTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICAL_BONE_CHILD") is { } physicalChild) { PhysicalBoneTests.RunChild(physicalChild); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICAL_BONE_HOST") == "1") { PhysicalBoneTests.RunHost(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICAL_BONE") == "1") { PhysicalBoneTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICAL_BONE_CHILD") is { } physicalChild) { PhysicalBoneTests.RunChild(physicalChild, PhysicalBoneTests.SelectedBackend()); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICAL_BONE_HOST") == "1") { PhysicalBoneTests.RunHost(PhysicalBoneTests.SelectedBackend()); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICAL_BONE") == "1") { PhysicalBoneTests.Run(PhysicalBoneTests.SelectedBackend()); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JIGGLE_CHILD") is { } jiggleChild) { SkeletonJiggleTests.RunChild(jiggleChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JIGGLE_HOST") == "1") { SkeletonJiggleTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JIGGLE") == "1") { SkeletonJiggleTests.Run(); return; }
@@ -1059,7 +1059,7 @@ CPUParticlesTests.Run();
 SkeletonTests.Run();
 SkeletonIKTests.Run();
 SkeletonJiggleTests.Run();
-PhysicalBoneTests.Run();
+PhysicalBoneTests.Run(); PhysicalBoneTests.Run(PhysicsServer.Backend.GPU);
 ImmediateMeshTests.Run();
 TextureRectTests.Run();
 StyleBoxTests.Run();
