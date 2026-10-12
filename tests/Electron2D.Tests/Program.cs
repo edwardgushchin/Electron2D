@@ -169,6 +169,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_PHYSICS") is { } sceneBackend)
+{
+    var backend = sceneBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for scene physics.") };
+    PhysicsBodyTests.Run(backend); RigidBodyForceTests.Run(backend); RigidBodyContactTests.Run(backend); ShapePairEventTests.Run(backend); return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHARED_PHYSICS") is { } sharedBackend)
 {
     var backend = sharedBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for the shared physics suite.") };
@@ -917,7 +922,7 @@ NodeTreeDiagnosticsTests.Run();
 NodeUniqueNameTests.Run();
 NodeReplacementTests.Run();
 PhysicsInterpolationTests.Run();
-PhysicsBodyTests.Run();
+PhysicsBodyTests.Run(); PhysicsBodyTests.Run(PhysicsServer.Backend.GPU);
 PhysicsCheckpointTests.Run();
 PhysicsSnapshotTests.Run();
 PhysicsSpaceCheckpointTests.Run();
@@ -1091,13 +1096,13 @@ LabelTests.Run(FontTestFixtures.OpenSans);
 FontResourceLoaderTests.Run();
 ResourceArchiveTests.Run();
 AudioBusLayoutTests.Run();
-RigidBodyForceTests.Run();
-RigidBodyContactTests.Run();
+RigidBodyForceTests.Run(); RigidBodyForceTests.Run(PhysicsServer.Backend.GPU);
+RigidBodyContactTests.Run(); RigidBodyContactTests.Run(PhysicsServer.Backend.GPU);
 PhysicsBodyStateTests.Run(); PhysicsBodyStateTests.Run(PhysicsServer.Backend.GPU);
 PhysicsServerStateTests.Run(); PhysicsServerStateTests.Run(PhysicsServer.Backend.GPU);
 PhysicsContactImpulseTests.Run(); PhysicsContactImpulseTests.Run(PhysicsServer.Backend.GPU);
 ShapeOwnerTests.Run(); ShapeOwnerTests.Run(PhysicsServer.Backend.GPU);
-ShapePairEventTests.Run();
+ShapePairEventTests.Run(); ShapePairEventTests.Run(PhysicsServer.Backend.GPU);
 CollisionDisableModeTests.Run(); CollisionDisableModeTests.Run(PhysicsServer.Backend.GPU);
 PhysicsMassProfileTests.Run();
 PhysicsMassProfileTests.Run(PhysicsServer.Backend.GPU);

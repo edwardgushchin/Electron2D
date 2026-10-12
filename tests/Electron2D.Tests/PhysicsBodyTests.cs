@@ -1,18 +1,19 @@
 using Electron2D;
 
-internal static class PhysicsBodyTests
+internal sealed class PhysicsBodyTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new PhysicsBodyTests(backend).RunCore();
+    private void RunCore()
     {
-        Box2DSIMDTests.Run();
-        PhysicsParallelTests.Run();
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
+        if (backend == PhysicsServer.Backend.CPU) { Box2DSIMDTests.Run(); PhysicsParallelTests.Run(); }
         VerifyDefaultsAndValidation();
         VerifyCircleAndShapeChanges();
         VerifyPackedPhysicsNodes();
         VerifyMotionSettingsAndRecovery();
         using var floorShape = new RectangleShape { Size = new(200, 20) };
         using var boxShape = new RectangleShape { Size = new(20, 20) };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var floor = new StaticBody { Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = floorShape });
         var body = new RigidBody();
@@ -21,6 +22,7 @@ internal static class PhysicsBodyTests
 
         using (var tree = new SceneTree(root))
         {
+            Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
             for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
             Check(body.GlobalPosition.Y > 75 && body.GlobalPosition.Y < 85,
                 "A dynamic rectangle falls and rests on the static floor.");
@@ -30,16 +32,16 @@ internal static class PhysicsBodyTests
             Reject<ArgumentOutOfRangeException>(() => body.Mass = float.MaxValue);
             Check(body.Mass == 1e-30f, "An unrepresentable geometry-derived inertia leaves the previous body state intact.");
             body.Mass = 1;
-            var allocatedBefore = GC.GetAllocatedBytesForCurrentThread();
+            var allocatedBefore = GC.GetAllocatedBytesForCurrentThread(); var allBefore = GC.GetTotalAllocatedBytes(true);
             for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
             var allocated = GC.GetAllocatedBytesForCurrentThread() - allocatedBefore;
-            Check(allocated == 0, "A warmed resting physics frame allocates no managed memory.");
+            Check(allocated == 0 && GC.GetTotalAllocatedBytes(true) - allBefore == 0, "A warmed resting physics frame allocates no managed memory.");
 
             body.CanSleep = false;
             for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-            allocatedBefore = GC.GetAllocatedBytesForCurrentThread();
+            allocatedBefore = GC.GetAllocatedBytesForCurrentThread(); allBefore = GC.GetTotalAllocatedBytes(true);
             for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-            Check(GC.GetAllocatedBytesForCurrentThread() - allocatedBefore == 0,
+            Check(GC.GetAllocatedBytesForCurrentThread() - allocatedBefore == 0 && GC.GetTotalAllocatedBytes(true) - allBefore == 0,
                 "A warmed active contact frame allocates no managed memory.");
             body.CanSleep = true;
 
@@ -55,19 +57,19 @@ internal static class PhysicsBodyTests
             for (var frame = 0; frame < 60; frame++) tree.PhysicsFrame(1d / 60);
             Check(body.GlobalPosition.Y > 100,
                 "Clearing the floor collision layer removes its response on the next step.");
-            allocatedBefore = GC.GetAllocatedBytesForCurrentThread();
+            allocatedBefore = GC.GetAllocatedBytesForCurrentThread(); allBefore = GC.GetTotalAllocatedBytes(true);
             for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
             allocated = GC.GetAllocatedBytesForCurrentThread() - allocatedBefore;
-            Check(allocated == 0,
+            Check(allocated == 0 && GC.GetTotalAllocatedBytes(true) - allBefore == 0,
                 "A warmed moving-body physics frame allocates no managed memory.");
         }
 
         Check(body.IsDisposed && floor.IsDisposed && !floorShape.IsDisposed && !boxShape.IsDisposed,
             "The tree owns bodies, while collision-shape resources remain caller-owned.");
-        Console.WriteLine("Physics body gravity, collision, impulse, filtering and lifetime checks passed.");
+        Console.WriteLine($"Physics body gravity, collision, impulse, filtering and lifetime checks passed. Backend={backend}; warm gates require 0/0 owner/all-thread bytes.");
     }
 
-    private static void VerifyDefaultsAndValidation()
+    private void VerifyDefaultsAndValidation()
     {
         using var rectangle = new RectangleShape();
         using var circle = new CircleShape();
@@ -108,18 +110,18 @@ internal static class PhysicsBodyTests
             "A collision shape without a body or resource reports both missing prerequisites.");
     }
 
-    private static void VerifyCircleAndShapeChanges()
+    private void VerifyCircleAndShapeChanges()
     {
         using var floorShape = new RectangleShape { Size = new(200, 20) };
         using var circleShape = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var floor = new StaticBody { Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = floorShape });
         var body = new RigidBody { CanSleep = false };
         var collider = new CollisionShape { Shape = circleShape };
         body.AddChild(collider);
         root.AddChild(floor); root.AddChild(body);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y > 75 && body.GlobalPosition.Y < 85,
             "A dynamic circle rests on a rectangular static floor.");
@@ -135,7 +137,7 @@ internal static class PhysicsBodyTests
             "Disabling a child collision shape removes its fixture while the body keeps moving.");
     }
 
-    private static void VerifyPackedPhysicsNodes()
+    private void VerifyPackedPhysicsNodes()
     {
         using var shape = new RectangleShape { Size = new(24, 12) };
         using var root = new Node { Name = "PhysicsRoot" };
@@ -152,9 +154,9 @@ internal static class PhysicsBodyTests
             "Packed scenes restore the exact physics node roles and borrowed shape resource.");
     }
 
-    private static void VerifyMotionSettingsAndRecovery()
+    private void VerifyMotionSettingsAndRecovery()
     {
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var body = new RigidBody
         {
             GravityScale = 0,
@@ -164,7 +166,7 @@ internal static class PhysicsBodyTests
             AngularDampMode = RigidBody.DampMode.Replace
         };
         root.AddChild(body);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
         for (var frame = 0; frame < 60; frame++) tree.PhysicsFrame(1d / 60);
         Check(MathF.Abs(body.GlobalPosition.X - 60) < 1 && MathF.Abs(body.GlobalPosition.Y) < 0.01f,
             "Zero gravity and an initial velocity move an attached body by scene units per second.");

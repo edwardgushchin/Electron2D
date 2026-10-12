@@ -1,6 +1,6 @@
 # CollisionObject
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PhysicsBody](PhysicsBody.md), [Area](Area.md)
 
@@ -234,3 +234,5 @@ consumer exercises every collider role and 128 full scalar-read frames at 0/0
 managed bytes. Complete geometry/disable and final acceptance remain open.
 
 Child-owner entry compares the complete transform/disabled/one-way descriptors and all server slot overrides before synchronization. An unchanged entry keeps existing geometry and sleep state; real descriptor or slot overrides still resynchronize. Shared CPU/GPU Area conformance checks initial sleep and field-change wake, while ShapeOwnerTests checks CollisionShape/CollisionPolygon slot-override reset on reentry.
+
+The complete PhysicsBodyTests, RigidBodyForceTests, RigidBodyContactTests and ShapePairEventTests now execute on explicitly selected public CPU/GPU worlds, with actual backend assertions in every numerical scene. The ordinary full suite runs both variants; ELECTRON2D_TEST_SCENE_PHYSICS=cpu|gpu selects the same complete set. Existing force/impulse/center units and numerical bounds, freeze/lock/mass/geometry recovery, persistent force packing, sleep/wake notification policy, contact caps/deduplication and object-before-shape entry/departure ordering are unchanged. Scene/raw nullable payloads, compound logical slots, handler mutation/errors and committed-event no-replay remain asserted. All existing 64-frame warm gates now require 0/0 owner/all-thread managed bytes for resting/active/moving bodies, forces, monitored/no-contact frames and steady/transitioning shape pairs. Box2D SIMD and worker scheduling probes remain CPU diagnostics; they do not establish independent GPU acceptance. Native allocations, wider inherited/extension, foreign platforms, full networking and final GPU/window performance acceptance remain open.

@@ -5616,7 +5616,7 @@
         "Area2D::signal:area_shape_exited(RID:,Area2D:,int:,int:)"
       ],
       "state": "Implemented",
-      "reason": "Area/Area logical pairs, nullable server payloads, monitorable policy, transitions/removal/guard/failure behavior execute (ADR 0055, ShapePairEventTests)."
+      "reason": "Area/Area logical pairs, nullable server payloads, monitorable policy, transitions/removal/guard/failure behavior execute (ADR 0055, ShapePairEventTests). Complete common scene force/contact/pair suites now run on explicitly selected public CPU/GPU worlds, retaining payloads, sleep/wake policy, caps/deduplication, object-before-shape order, handler mutation/failure and no-replay assertions. Warm64-frame steady/active/no-contact and pair-transition gates require 0/0 owner/all-thread bytes. Wider inherited/extension/platform/performance acceptance stays open."
     },
     {
       "godot": [
@@ -5639,7 +5639,7 @@
         "PhysicsServer2D::method:area_set_monitorable(RID:,bool:)"
       ],
       "state": "Implemented",
-      "reason": "Typed server Area monitorability controls scene shape-pair sensing; default false and nullable payload execute (ADR 0055, ShapePairEventTests)."
+      "reason": "Typed server Area monitorability controls scene shape-pair sensing; default false and nullable payload execute (ADR 0055, ShapePairEventTests). Complete common scene force/contact/pair suites now run on explicitly selected public CPU/GPU worlds, retaining payloads, sleep/wake policy, caps/deduplication, object-before-shape order, handler mutation/failure and no-replay assertions. Warm64-frame steady/active/no-contact and pair-transition gates require 0/0 owner/all-thread bytes. Wider inherited/extension/platform/performance acceptance stays open."
     },
     {
       "godot": [
@@ -6288,7 +6288,7 @@
         "Shape2D::method:get_rect()"
       ],
       "state": "Implemented",
-      "reason": "Pinned defaults and typed behavior execute through the Box2D.NET-backed scene-world slice; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal."
+      "reason": "Pinned defaults and typed behavior execute on explicitly selected public CPU/GPU scene worlds; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal. The complete common suite now runs both variants in the ordinary full entry, retaining numerical bounds and 64-frame warm resting/active/moving gates at 0/0 owner/all-thread bytes. SIMD/worker internals remain CPU diagnostics; wider inherited/extension/platform/performance acceptance stays open."
     },
     {
       "godot": [
@@ -6312,7 +6312,7 @@
         "CircleShape2D::property:radius"
       ],
       "state": "Implemented",
-      "reason": "Pinned defaults and typed behavior execute through the Box2D.NET-backed scene-world slice; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal."
+      "reason": "Pinned defaults and typed behavior execute on explicitly selected public CPU/GPU scene worlds; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal. The complete common suite now runs both variants in the ordinary full entry, retaining numerical bounds and 64-frame warm resting/active/moving gates at 0/0 owner/all-thread bytes. SIMD/worker internals remain CPU diagnostics; wider inherited/extension/platform/performance acceptance stays open."
     },
     {
       "godot": [
@@ -6326,7 +6326,7 @@
         "RectangleShape2D::property:size"
       ],
       "state": "Implemented",
-      "reason": "Pinned defaults and typed behavior execute through the Box2D.NET-backed scene-world slice; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal."
+      "reason": "Pinned defaults and typed behavior execute on explicitly selected public CPU/GPU scene worlds; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal. The complete common suite now runs both variants in the ordinary full entry, retaining numerical bounds and 64-frame warm resting/active/moving gates at 0/0 owner/all-thread bytes. SIMD/worker internals remain CPU diagnostics; wider inherited/extension/platform/performance acceptance stays open."
     },
     {
       "godot": [
@@ -6341,7 +6341,7 @@
         "CollisionShape2D::property:shape"
       ],
       "state": "Implemented",
-      "reason": "Pinned defaults and typed behavior execute through the Box2D.NET-backed scene-world slice; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal."
+      "reason": "Pinned defaults and typed behavior execute on explicitly selected public CPU/GPU scene worlds; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal. The complete common suite now runs both variants in the ordinary full entry, retaining numerical bounds and 64-frame warm resting/active/moving gates at 0/0 owner/all-thread bytes. SIMD/worker internals remain CPU diagnostics; wider inherited/extension/platform/performance acceptance stays open."
     },
     {
       "godot": [
@@ -6358,7 +6358,7 @@
         "CollisionObject2D::method:set_collision_mask_value(int:,bool:)"
       ],
       "state": "Implemented",
-      "reason": "Pinned defaults and typed behavior execute through the Box2D.NET-backed scene-world slice; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal."
+      "reason": "Pinned defaults and typed behavior execute on explicitly selected public CPU/GPU scene worlds; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal. The complete common suite now runs both variants in the ordinary full entry, retaining numerical bounds and 64-frame warm resting/active/moving gates at 0/0 owner/all-thread bytes. SIMD/worker internals remain CPU diagnostics; wider inherited/extension/platform/performance acceptance stays open."
     },
     {
       "godot": [
@@ -6395,7 +6395,7 @@
         "RigidBody2D::property:sleeping"
       ],
       "state": "Implemented",
-      "reason": "Pinned defaults and typed behavior execute through the Box2D.NET-backed scene-world slice; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal."
+      "reason": "Pinned defaults and typed behavior execute on explicitly selected public CPU/GPU scene worlds; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal. The complete common suite now runs both variants in the ordinary full entry, retaining numerical bounds and 64-frame warm resting/active/moving gates at 0/0 owner/all-thread bytes. SIMD/worker internals remain CPU diagnostics; wider inherited/extension/platform/performance acceptance stays open."
     },
     {
       "godot": [
@@ -6470,7 +6470,7 @@
         "RigidBody2D::signal:body_exited(Node:)"
       ],
       "state": "Implemented",
-      "reason": "ADRs 0058/0101: monitored scene/raw contacts project live node associations, including generated TileMapLayer owners, into deduplicated arrays and object entry/departure events. TileMapLayerTests verifies real public CPU/GPU contacts, multiple generated RIDs per owner, filter edits and retirement; ShapePairEventTests/PhysicsReportOnlyTests cover ordinary body monitoring, logical shapes and zero warmed allocation."
+      "reason": "ADRs 0058/0101: monitored scene/raw contacts project live node associations, including generated TileMapLayer owners, into deduplicated arrays and object entry/departure events. TileMapLayerTests verifies real public CPU/GPU contacts, multiple generated RIDs per owner, filter edits and retirement; ShapePairEventTests/PhysicsReportOnlyTests cover ordinary body monitoring, logical shapes and zero warmed allocation. Complete common scene force/contact/pair suites now run on explicitly selected public CPU/GPU worlds, retaining payloads, sleep/wake policy, caps/deduplication, object-before-shape order, handler mutation/failure and no-replay assertions. Warm64-frame steady/active/no-contact and pair-transition gates require 0/0 owner/all-thread bytes. Wider inherited/extension/platform/performance acceptance stays open."
     },
     {
       "godot": [
@@ -6486,7 +6486,7 @@
         "RigidBody2D::signal:sleeping_state_changed()"
       ],
       "state": "Implemented",
-      "reason": "Opt-in monitoring and solver sleep transitions execute with pinned defaults and callback policy; RigidBodyContactTests covers sleep/wake, direct assignment, packing, owner thread and callback mutation. PhysicsReportOnlyTests now verifies public CPU/GPU kinematic/static and kinematic/kinematic reports with zero impulse, either reporting receiver, directional filters/exceptions, caps, slot reuse, frozen scene events, quiet-period activity and zero warmed allocations under ADR 0102; static/static pairs remain ineligible."
+      "reason": "Opt-in monitoring and solver sleep transitions execute with pinned defaults and callback policy; RigidBodyContactTests covers sleep/wake, direct assignment, packing, owner thread and callback mutation. PhysicsReportOnlyTests now verifies public CPU/GPU kinematic/static and kinematic/kinematic reports with zero impulse, either reporting receiver, directional filters/exceptions, caps, slot reuse, frozen scene events, quiet-period activity and zero warmed allocations under ADR 0102; static/static pairs remain ineligible. Complete common scene force/contact/pair suites now run on explicitly selected public CPU/GPU worlds, retaining payloads, sleep/wake policy, caps/deduplication, object-before-shape order, handler mutation/failure and no-replay assertions. Warm64-frame steady/active/no-contact and pair-transition gates require 0/0 owner/all-thread bytes. Wider inherited/extension/platform/performance acceptance stays open."
     },
     {
       "godot": [
@@ -6502,7 +6502,7 @@
         "RigidBody2D::property:constant_torque"
       ],
       "state": "Implemented",
-      "reason": "Positioned force/impulse, torque, persistent totals and axis projection execute on the Box2D body with pinned units and world-axis offsets; RigidBodyForceTests covers mass-center timing, motion, packing, failures and warm allocation."
+      "reason": "Positioned force/impulse, torque, persistent totals and axis projection execute on explicitly selected public CPU/GPU bodies with pinned units and world-axis offsets; RigidBodyForceTests covers mass-center timing, motion, packing, failures and warm allocation. The complete common scene suite now runs both variants in the ordinary full entry, retaining numerical bounds and 64 active constant force/torque frames at 0/0 owner/all-thread bytes. Wider inherited/extension/platform/performance acceptance stays open."
     },
     {
       "godot": [

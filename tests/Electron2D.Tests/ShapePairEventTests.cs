@@ -1,15 +1,17 @@
 using Electron2D;
 
-internal static class ShapePairEventTests
+internal sealed class ShapePairEventTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new ShapePairEventTests(backend).RunCore();
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         VerifyAreaBodyPairs();
         VerifyAreaPairsAndServerPayload();
         VerifyRigidPairs();
         VerifyCompoundAndFailure();
         VerifyWarmAllocation();
-        Console.WriteLine("Area/body shape-pair events, ordering, identities and allocation checks passed.");
+        Console.WriteLine($"Area/body shape-pair events, ordering, identities and allocation checks passed. Backend={backend}; warm gates require 0/0 owner/all-thread bytes.");
     }
 
     private static uint Add(CollisionObject obj, Shape shape, float x = 0)
@@ -18,14 +20,14 @@ internal static class ShapePairEventTests
         obj.ShapeOwnerSetTransform(owner, new(0, Vector2.One, 0, new(x, 0))); return owner;
     }
 
-    private static void VerifyAreaBodyPairs()
+    private void VerifyAreaBodyPairs()
     {
         using var sensor = new RectangleShape { Size = new(60, 60) };
         using var circle = new CircleShape { Radius = 5 };
-        var root = new Node(); var area = new Area { Name = "Area" }; var body = new StaticBody { Name = "Body", CollisionMask = 0 };
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; var area = new Area { Name = "Area" }; var body = new StaticBody { Name = "Body", CollisionMask = 0 };
         Add(area, sensor); Add(area, sensor, 2); var first = Add(body, circle); var second = Add(body, circle, 10);
         root.AddChild(area); root.AddChild(body);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
         var events = new List<string>(); var pairs = new HashSet<(int, int)>();
         area.BodyEntered += _ => events.Add("object+"); area.BodyExited += _ => events.Add("object-");
         area.BodyShapeEntered += (rid, node, remote, local) =>
@@ -48,12 +50,12 @@ internal static class ShapePairEventTests
         body.Dispose();
     }
 
-    private static void VerifyAreaPairsAndServerPayload()
+    private void VerifyAreaPairsAndServerPayload()
     {
         using var box = new RectangleShape { Size = new(30, 30) };
-        var root = new Node(); var area = new Area { Name = "Observer" }; var other = new Area { Name = "Other" };
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; var area = new Area { Name = "Observer" }; var other = new Area { Name = "Other" };
         Add(area, box); Add(other, box); root.AddChild(area); root.AddChild(other);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
         var sequence = new List<string>(); var entered = 0; var exited = 0;
         area.AreaEntered += _ => sequence.Add("object+"); area.AreaExited += _ => sequence.Add("object-");
         Action<RID, Area?, int, int> sceneVerifier = (rid, node, remote, local) =>
@@ -87,14 +89,14 @@ internal static class ShapePairEventTests
         PhysicsServer.FreeRID(serverArea); PhysicsServer.FreeRID(shape);
     }
 
-    private static void VerifyRigidPairs()
+    private void VerifyRigidPairs()
     {
         using var circle = new CircleShape { Radius = 10 };
         using var floorShape = new RectangleShape { Size = new(200, 20) };
-        var root = new Node(); var body = new RigidBody { Name = "Body", MaxContactsReported = 8, ContactMonitor = true, CanSleep = false };
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; var body = new RigidBody { Name = "Body", MaxContactsReported = 8, ContactMonitor = true, CanSleep = false };
         var floor = new StaticBody { Name = "Floor", Position = new(0, 100) };
         var left = Add(body, circle, -15); var right = Add(body, circle, 15); Add(floor, floorShape);
-        root.AddChild(body); root.AddChild(floor); using var tree = new SceneTree(root);
+        root.AddChild(body); root.AddChild(floor); using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
         var objects = 0; var shapeEntries = 0; var shapeExits = 0; var locals = new HashSet<int>();
         body.BodyEntered += _ => objects++;
         body.BodyShapeEntered += (rid, node, remote, local) =>
@@ -111,13 +113,13 @@ internal static class ShapePairEventTests
         root.RemoveChild(floor); Check(shapeExits == 2, "Body departure emits the remaining rigid pair exit."); floor.Dispose();
     }
 
-    private static void VerifyCompoundAndFailure()
+    private void VerifyCompoundAndFailure()
     {
         using var polygon = new ConvexPolygonShape
         { Points = Enumerable.Range(0, 16).Select(i => Vector2.FromAngle(i * Mathf.Tau / 16) * 30).ToArray() };
         using var sensor = new RectangleShape { Size = new(100, 100) };
-        var root = new Node(); var area = new Area { Name = "Area" }; var body = new StaticBody { Name = "Body" };
-        Add(area, sensor); Add(body, polygon); root.AddChild(area); root.AddChild(body); using var tree = new SceneTree(root);
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; var area = new Area { Name = "Area" }; var body = new StaticBody { Name = "Body" };
+        Add(area, sensor); Add(body, polygon); root.AddChild(area); root.AddChild(body); using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
         var entries = 0;
         area.BodyEntered += _ => throw new InvalidOperationException("User callback failed.");
         area.BodyShapeEntered += (_, _, _, _) =>
@@ -131,19 +133,19 @@ internal static class ShapePairEventTests
         tree.PhysicsFrame(1d / 60); Check(entries == 1, "Committed pair transitions do not replay after a handler failure.");
     }
 
-    private static void VerifyWarmAllocation()
+    private void VerifyWarmAllocation()
     {
-        using var shape = new CircleShape(); var root = new Node(); var area = new Area { Name = "Area" }; var body = new StaticBody { Name = "Body" };
-        Add(area, shape); Add(body, shape); root.AddChild(area); root.AddChild(body); using var tree = new SceneTree(root);
+        using var shape = new CircleShape(); using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; var area = new Area { Name = "Area" }; var body = new StaticBody { Name = "Body" };
+        Add(area, shape); Add(body, shape); root.AddChild(area); root.AddChild(body); using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
         area.BodyShapeEntered += static (_, _, _, _) => { }; area.BodyShapeExited += static (_, _, _, _) => { };
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var before = GC.GetAllocatedBytesForCurrentThread(); var allBefore = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed steady pair monitoring allocates no managed bytes.");
+        Check(GC.GetAllocatedBytesForCurrentThread() == before && GC.GetTotalAllocatedBytes(true) == allBefore, "Warmed steady pair monitoring allocates no managed bytes.");
         for (var frame = 0; frame < 64; frame++) { body.Position = new(frame % 2 == 0 ? 100 : 0, 0); tree.PhysicsFrame(1d / 60); }
-        before = GC.GetAllocatedBytesForCurrentThread();
+        before = GC.GetAllocatedBytesForCurrentThread(); allBefore = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) { body.Position = new(frame % 2 == 0 ? 100 : 0, 0); tree.PhysicsFrame(1d / 60); }
-        Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed pair entry/exit callbacks allocate no managed bytes.");
+        Check(GC.GetAllocatedBytesForCurrentThread() == before && GC.GetTotalAllocatedBytes(true) == allBefore, "Warmed pair entry/exit callbacks allocate no managed bytes.");
     }
 
     private static Exception? Capture(Action action) { try { action(); return null; } catch (Exception error) { return error; } }

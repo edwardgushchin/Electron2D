@@ -1,21 +1,23 @@
 using Electron2D;
 
-internal static class RigidBodyContactTests
+internal sealed class RigidBodyContactTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new RigidBodyContactTests(backend).RunCore();
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         VerifyContactSnapshotsAndSleep();
         VerifyMultipleShapesDeduplicate();
         VerifyMonitoringPolicyAndPacking();
         VerifyCallbackMutationAndFailure();
-        Console.WriteLine("Rigid-body contact snapshots, events, sleep and allocation checks passed.");
+        Console.WriteLine($"Rigid-body contact snapshots, events, sleep and allocation checks passed. Backend={backend}; warm gates require 0/0 owner/all-thread bytes.");
     }
 
-    private static void VerifyMultipleShapesDeduplicate()
+    private void VerifyMultipleShapesDeduplicate()
     {
         using var floorGeometry = new RectangleShape { Size = new(200, 20) };
         using var circle = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var floor = new StaticBody { Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = floorGeometry });
         var body = new RigidBody { ContactMonitor = true, MaxContactsReported = 4, LockRotation = true };
@@ -26,7 +28,7 @@ internal static class RigidBodyContactTests
         var enters = 0; var exits = 0;
         body.BodyEntered += _ => enters++;
         body.BodyExited += _ => exits++;
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(enters == 1 && exits == 0 && body.GetCollidingBodies().Length == 1 &&
               body.GetContactCount() >= 2,
@@ -44,11 +46,11 @@ internal static class RigidBodyContactTests
         Check(enters == 2, "Restoring one shape reports one new body-level entry.");
     }
 
-    private static void VerifyContactSnapshotsAndSleep()
+    private void VerifyContactSnapshotsAndSleep()
     {
         using var floorGeometry = new RectangleShape { Size = new(200, 20) };
         using var bodyGeometry = new RectangleShape { Size = new(20, 20) };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var floor = new StaticBody { Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = floorGeometry });
         var body = new RigidBody { ContactMonitor = true, MaxContactsReported = 2 };
@@ -58,7 +60,7 @@ internal static class RigidBodyContactTests
         body.BodyEntered += other => { Check(ReferenceEquals(other, floor), "Contact enter identifies the other body."); enters++; };
         body.BodyExited += other => { Check(ReferenceEquals(other, floor), "Contact exit identifies the other body."); exits++; };
         body.SleepingStateChanged += changed => { Check(ReferenceEquals(changed, body), "Sleep event identifies its body."); sleepEvents++; };
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
         Check(body.GetContactCount() == 0 && body.GetCollidingBodies().Length == 0,
             "Contact state starts empty before the first fixed step.");
         for (var frame = 0; frame < 180; frame++) tree.PhysicsFrame(1d / 60);
@@ -71,9 +73,9 @@ internal static class RigidBodyContactTests
             "Reducing the point cap changes contact count without replaying the body entry.");
         body.MaxContactsReported = 2;
         tree.PhysicsFrame(1d / 60);
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var before = GC.GetAllocatedBytesForCurrentThread(); var allBefore = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
+        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0 && GC.GetTotalAllocatedBytes(true) - allBefore == 0,
             "Warmed resting contact monitoring allocates no managed memory.");
         Check(body.Sleeping, "The resting body reached solver sleep before the wake check.");
         var beforeWake = sleepEvents;
@@ -84,9 +86,9 @@ internal static class RigidBodyContactTests
         body.ConstantForce = Vector2.Zero;
         body.CanSleep = false;
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        before = GC.GetAllocatedBytesForCurrentThread();
+        before = GC.GetAllocatedBytesForCurrentThread(); allBefore = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
+        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0 && GC.GetTotalAllocatedBytes(true) - allBefore == 0,
             "Warmed active contact monitoring allocates no managed memory.");
         Check(sleepEvents >= 1, "Solver sleep transitions report at least one state change.");
         var previousSleepEvents = sleepEvents;
@@ -100,9 +102,9 @@ internal static class RigidBodyContactTests
         tree.PhysicsFrame(1d / 60);
         Check(exits == 1 && body.GetCollidingBodies().Length == 0 && body.GetContactCount() == 0,
             "Rejecting both directions ends the body-level contact on the next fixed step.");
-        before = GC.GetAllocatedBytesForCurrentThread();
+        before = GC.GetAllocatedBytesForCurrentThread(); allBefore = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
+        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0 && GC.GetTotalAllocatedBytes(true) - allBefore == 0,
             "Warmed no-contact monitoring allocates no managed memory.");
         body.CanSleep = true;
         body.Sleeping = true;
@@ -114,11 +116,11 @@ internal static class RigidBodyContactTests
         body.Dispose();
     }
 
-    private static void VerifyMonitoringPolicyAndPacking()
+    private void VerifyMonitoringPolicyAndPacking()
     {
         using var floorGeometry = new RectangleShape { Size = new(200, 20) };
         using var bodyGeometry = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var floor = new StaticBody { Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = floorGeometry });
         var body = new RigidBody();
@@ -126,7 +128,7 @@ internal static class RigidBodyContactTests
         root.AddChild(floor); root.AddChild(body);
         var enters = 0;
         body.BodyEntered += _ => enters++;
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GetContactCount() == 0 && enters == 0 && body.GetCollidingBodies().Length == 0,
             "Zero max contacts and disabled monitoring report no contacts by default.");
@@ -161,11 +163,11 @@ internal static class RigidBodyContactTests
             "PackedScene restores monitoring and its point cap.");
     }
 
-    private static void VerifyCallbackMutationAndFailure()
+    private void VerifyCallbackMutationAndFailure()
     {
         using var floorGeometry = new RectangleShape { Size = new(200, 20) };
         using var bodyGeometry = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var floor = new StaticBody { Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = floorGeometry });
         var body = new RigidBody
@@ -185,7 +187,7 @@ internal static class RigidBodyContactTests
             if (enters == 1) root.RemoveChild(floor);
         };
         body.BodyExited += _ => exits++;
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
         tree.PhysicsFrame(1d / 60);
         Check(enters == 1 && exits == 1 && body.GetCollidingBodies().Length == 0,
             "A contact callback can remove the collider and receive one exit without stale state.");

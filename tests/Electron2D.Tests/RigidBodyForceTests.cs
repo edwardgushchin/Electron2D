@@ -1,17 +1,19 @@
 using Electron2D;
 
-internal static class RigidBodyForceTests
+internal sealed class RigidBodyForceTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new RigidBodyForceTests(backend).RunCore();
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         VerifyDetachedStateAndValidation();
         VerifyPositionedAndRotationalActions();
         VerifyPersistentForcesAndPacking();
         VerifyAxisVelocityAndWarmFrames();
-        Console.WriteLine("Rigid-body positioned force, torque, persistent force and axis checks passed.");
+        Console.WriteLine($"Rigid-body positioned force, torque, persistent force and axis checks passed. Backend={backend}; warm gates require 0/0 owner/all-thread bytes.");
     }
 
-    private static void VerifyDetachedStateAndValidation()
+    private void VerifyDetachedStateAndValidation()
     {
         using var body = new RigidBody();
         Check(body.ConstantForce == Vector2.Zero && body.ConstantTorque == 0,
@@ -44,10 +46,10 @@ internal static class RigidBodyForceTests
         Reject<ArgumentOutOfRangeException>(() => body.ApplyImpulse(new(1, 0), new(float.NaN, 0)));
     }
 
-    private static void VerifyPositionedAndRotationalActions()
+    private void VerifyPositionedAndRotationalActions()
     {
         using var circle = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var body = new RigidBody
         {
             Position = new(100, 0),
@@ -59,7 +61,7 @@ internal static class RigidBodyForceTests
         var collider = new CollisionShape { Shape = circle, Position = new(10, 0) };
         body.AddChild(collider);
         root.AddChild(body);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
         body.AddConstantForce(new(0, 10), new(10, 0));
         Check(MathF.Abs(body.ConstantTorque) < 0.001f,
             "An offset constant force uses the updated shifted center of mass before the first step.");
@@ -114,10 +116,10 @@ internal static class RigidBodyForceTests
             "Invalid positioned and angular actions leave the world reusable.");
     }
 
-    private static void VerifyPersistentForcesAndPacking()
+    private void VerifyPersistentForcesAndPacking()
     {
         using var circle = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var body = new RigidBody
         {
             GravityScale = 0,
@@ -129,6 +131,7 @@ internal static class RigidBodyForceTests
         root.AddChild(body);
         using (var tree = new SceneTree(root))
         {
+            Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
             body.ConstantForce = new(100, 0);
             for (var frame = 0; frame < 60; frame++) tree.PhysicsFrame(1d / 60);
             Check(body.LinearVelocity.X > 80 && body.GlobalPosition.X > 35,
@@ -171,7 +174,7 @@ internal static class RigidBodyForceTests
             "PackedScene restores persistent force and torque without a backend dependency.");
     }
 
-    private static void VerifyAxisVelocityAndWarmFrames()
+    private void VerifyAxisVelocityAndWarmFrames()
     {
         using (var body = new RigidBody { LinearVelocity = new(12, 34) })
         {
@@ -185,7 +188,7 @@ internal static class RigidBodyForceTests
         }
 
         using var circle = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var moving = new RigidBody
         {
             GravityScale = 0,
@@ -197,11 +200,11 @@ internal static class RigidBodyForceTests
         };
         moving.AddChild(new CollisionShape { Shape = circle });
         root.AddChild(moving);
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var before = GC.GetAllocatedBytesForCurrentThread(); var allBefore = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
+        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0 && GC.GetTotalAllocatedBytes(true) - allBefore == 0,
             "Warmed active constant force and torque frames allocate no managed memory.");
         Check(moving.GlobalTransform.Scale.IsEqualApprox(Vector2.One) &&
               Mathf.IsZeroApprox(moving.GlobalTransform.Skew),
