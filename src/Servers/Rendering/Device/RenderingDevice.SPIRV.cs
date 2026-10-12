@@ -5,9 +5,14 @@ namespace Electron2D;
 public sealed unsafe partial class RenderingDevice
 {
     private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0, ShaderStage Stage = ShaderStage.Compute, uint MinimumSize = 0, bool Depth = false);
-    private static (byte[] Code, Binding[] Layout) Remap(byte[] code, ShaderStage stage = ShaderStage.Compute)
+    private static (byte[] Code, Binding[] Layout, PushStage[] Push) Remap(byte[] code, ShaderStage stage = ShaderStage.Compute)
     {
         if (code.Length < 20 || code.Length > 16 * 1024 * 1024 || code.Length % 4 != 0) throw new ArgumentException("A compute module must contain aligned SPIR-V words.", nameof(code));
+        (byte[] Code, uint Variable, uint Size) translated;
+        try { translated = new PushLowering(code).Translate(); }
+        catch (OverflowException error) { throw new ArgumentException("The push layout exceeds module bounds.", nameof(code), error); }
+        code = translated.Code;
+        var push = translated.Variable == 0 ? null : new PushStage(translated.Variable, translated.Size, stage);
         var compute = stage == ShaderStage.Compute;
         var nativeSet = stage == ShaderStage.Fragment ? 2u : 0u;
         var model = compute ? 5u : stage == ShaderStage.Fragment ? 4u : 0u;
@@ -67,7 +72,7 @@ public sealed unsafe partial class RenderingDevice
         var layout = new List<Binding>(); var storage = 0; var uniform = 0; var imageSlot = 0; var textureSlot = 0;
         foreach (var variable in variables)
         {
-            if (variable.Storage == 9) throw new NotSupportedException("Push constants require native uniform-slot translation.");
+            if (variable.Storage == 9) throw new ArgumentException("Untranslated push storage remains in the module.", nameof(code));
             if (variable.Storage == 0)
             {
                 if (!sets.TryGetValue(variable.ID, out var imageSet) || !slots.TryGetValue(variable.ID, out var imageBinding) || !pointers.TryGetValue(variable.Type, out var imageType)) throw new ArgumentException("An image has no descriptor layout.", nameof(code));
@@ -101,6 +106,10 @@ public sealed unsafe partial class RenderingDevice
             if (!compute && isStorage && !readOnly.Contains(variable.ID) && !readOnly.Contains(block)) throw new NotSupportedException("Graphics storage buffers require readonly declarations.");
             var native = isStorage ? storage++ : uniform++;
             if (storage > 8 || uniform > 4) throw new NotSupportedException("Local compute supports eight storage buffers and four uniform buffers per shader.");
+            if (push?.Variable == variable.ID)
+            {
+                push = push with { Native = native }; words[setOffset] = compute ? 2u : nativeSet + 1; words[slotOffset] = (uint)native; continue;
+            }
             var binding = new Binding(words[setOffset], checked((int)words[slotOffset]), isStorage ? UniformType.StorageBuffer : UniformType.UniformBuffer, native, Stage: stage, MinimumSize: isStorage ? 0 : minimumSizes.GetValueOrDefault((words[setOffset], checked((int)words[slotOffset]))));
             if (layout.Any(b => b.Set == binding.Set && b.Slot == binding.Slot)) throw new ArgumentException("Duplicate shader descriptor binding.", nameof(code));
             layout.Add(binding); words[setOffset] = compute ? isStorage ? 1u : 2u : isStorage ? nativeSet : nativeSet + 1; words[slotOffset] = (uint)native;
@@ -113,6 +122,6 @@ public sealed unsafe partial class RenderingDevice
         if (!compute) foreach (var variable in variables.Where(v => v.Storage == 0))
                 if (sets.TryGetValue(variable.ID, out var si) && slots.TryGetValue(variable.ID, out var bi) && pointers.TryGetValue(variable.Type, out var ty) && images.TryGetValue(ty, out var image) && image.Sampled == 2)
                     words[bi] += (uint)textureSlot;
-        return (code, layout.ToArray());
+        return (code, layout.ToArray(), push is null ? [] : [push]);
     }
 }

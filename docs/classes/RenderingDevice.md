@@ -50,6 +50,7 @@ byte[] result = device.BufferGetData(buffer);
 | `public System.Void ComputeListBindUniformSet(System.Int64 computeList, Electron2D.RID uniformSet, System.UInt32 setIndex)` | Binds a resource set for subsequent dispatches. |
 | `public System.Void ComputeListDispatch(System.Int64 computeList, System.UInt32 xGroups, System.UInt32 yGroups, System.UInt32 zGroups)` | Records a compute dispatch with barriers against previous dispatches. |
 | `public System.Void ComputeListDispatchIndirect(System.Int64 computeList, Electron2D.RID buffer, System.UInt32 offset)` | Reads X/Y/Z group counts from a storage buffer created for indirect dispatch. |
+| [`public System.Void ComputeListSetPushConstant(System.Int64 computeList, System.ReadOnlySpan<System.Byte> buffer, System.UInt32 sizeBytes)`](#member-330889262253) | Copies binary push data for subsequent dispatches in the selected compute pipeline. |
 | `public System.Void ComputeListEnd()` | Ends the active list without submitting it. |
 | `public Electron2D.RID ComputePipelineCreate(Electron2D.RID shader)` | Creates an executable pipeline borrowing a live compute shader. |
 | `public System.Boolean ComputePipelineIsValid(Electron2D.RID pipeline)` | Reports whether a pipeline and its shader remain alive. |
@@ -642,6 +643,7 @@ The [graphics component contract](../components/local-compute.md#color-graphics-
 | `public System.Void DrawListDraw(System.Int64 drawList, System.Boolean useIndices, System.UInt32 instances, System.UInt32 proceduralVertexCount = 0)` | Records a procedural, vertex-array or indexed draw with validated instance capacity. |
 | `public System.Void DrawListDrawIndirect(System.Int64 drawList, System.Boolean useIndices, Electron2D.RID buffer, System.UInt32 offset = 0, System.UInt32 drawCount = 1, System.UInt32 stride = 0)` | Records GPU-directed draws from validated indirect command ranges. |
 | `public System.Void DrawListEnableScissor(System.Int64 drawList, Electron2D.Rect2 rect = default)` | Clips subsequent draws to the rectangle intersected with the framebuffer. |
+| [`public System.Void DrawListSetPushConstant(System.Int64 drawList, System.ReadOnlySpan<System.Byte> buffer, System.UInt32 sizeBytes)`](#member-d36881d1257d) | Copies shared binary push data for subsequent vertex and fragment work in the selected graphics pipeline. |
 | `public System.Void DrawListEnd()` | Ends the active draw list, preserving its results for subsequent device work. |
 | `public System.Void DrawListSetBlendConstants(System.Int64 drawList, Electron2D.Color color)` | Sets the finite blend constant for subsequent draws. |
 | [`public Electron2D.RID FramebufferCreate(System.ReadOnlySpan<Electron2D.RID> textures, System.Int32 validateWithFormat = -1)`](#member-a56b363d17da) | Creates a framebuffer borrowing device-owned color and depth/stencil images. |
@@ -1168,3 +1170,49 @@ Preserves the source samples for later passes or resolves. Results are available
 
 - `T:System.ArgumentException`: Dimensions, formats, roles or sample counts disagree.
 - `T:System.InvalidOperationException`: A transfer role, owner thread or device state is invalid.
+
+<a id="member-330889262253"></a>
+### ComputeListSetPushConstant(System.Int64, System.ReadOnlySpan<System.Byte>, System.UInt32)
+
+```csharp
+public System.Void ComputeListSetPushConstant(System.Int64 computeList, System.ReadOnlySpan<System.Byte> buffer, System.UInt32 sizeBytes)
+```
+
+Copies binary push data for subsequent dispatches in the selected compute pipeline.
+
+The original SPIR-V member offsets and array/matrix strides determine the byte layout. Native uniform translation preserves those bytes. Blocks are limited to 128 bytes and the executing 32-bit scalar shader profile. Bind a pipeline before setting data; changing pipeline or beginning another list requires another set. Recorded dispatches retain their own snapshot.
+
+| Parameter | Contract |
+| --- | --- |
+| `computeList` | The active owner-thread compute list. |
+| `buffer` | At least sizeBytes source bytes; the selected prefix is copied before returning. |
+| `sizeBytes` | Exact size of the shader's reflected push block, or zero for a shader without one. |
+
+- `T:System.ArgumentException`: The list, byte count or source capacity is invalid.
+- `T:System.InvalidOperationException`: No pipeline is selected or the creating thread/device state is invalid.
+
+
+<a id="member-d36881d1257d"></a>
+### DrawListSetPushConstant(System.Int64, System.ReadOnlySpan<System.Byte>, System.UInt32)
+
+```csharp
+public System.Void DrawListSetPushConstant(System.Int64 drawList, System.ReadOnlySpan<System.Byte> buffer, System.UInt32 sizeBytes)
+```
+
+Copies shared binary push data for subsequent vertex and fragment work in the selected graphics pipeline.
+
+Both stages consume the same source bytes through their own original SPIR-V layouts, within the 128-byte portable limit. Data remains valid until pipeline changes or the list ends; previously recorded draws retain their own snapshot.
+
+| Parameter | Contract |
+| --- | --- |
+| `drawList` | The active owner-thread draw list. |
+| `buffer` | At least sizeBytes source bytes; the selected prefix is copied before returning. |
+| `sizeBytes` | Maximum reflected push-block extent of the paired stages, or zero when neither has a block. |
+
+- `T:System.ArgumentException`: The list, byte count or source capacity is invalid.
+- `T:System.InvalidOperationException`: No pipeline is selected or the creating thread/device state is invalid.
+
+
+## Binary push recording
+
+[Binary push parameters](../components/local-compute.md#binary-push-parameters) preserve original 32-bit compact layouts through a private uniform block, including arrays, matrix orientation and nested structs. Select a pipeline, copy its exact reflected block size (at most 128 bytes), then issue draw/dispatch work. Pipeline changes and new lists require another setter. Source span mutation and later setters cannot replace prior recorded snapshots. Push storage uses one of four native uniform slots per used stage; logical RDUniform bindings stay independent. Wider precision and pointer address/arithmetic require their native shader adapters. See [the executable consumer](../../tests/Electron2D.Tests/RenderingDevicePushTests.cs) for paired language data, real pixels and verified allocation limits.

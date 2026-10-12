@@ -16,7 +16,7 @@
       "godot": "class:RenderingDevice",
       "electron2d": "T:Electron2D.RenderingDevice",
       "state": "Partial",
-      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Native views/transient last-use, subpasses/multiview, raw depth/sample transfer and shader/dynamic-state adapters remain independently accounted for."
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Native views/transient last-use, subpasses/multiview, raw depth/sample transfer and shader/dynamic-state adapters remain independently accounted for. ADR 0028: executable copied push bytes for compute/vertex/fragment on the shared device timeline. Original 32-bit scalar/vector, compact array, row/column-major matrix and nested-struct layouts lower to a hidden std140 raw-word uniform block; public sets retain their logical bindings. Exact reflected byte count, portable 128-byte bound, per-pipeline/list initialization and recorded snapshots execute. GLSL/HLSL native results, 128-byte/three-uniform capacity, retained canvas and 32 warmed owner-thread zero-managed-byte cycles per compute/graphics language pass on Linux/Vulkan; foreign targets and native allocations remain unverified."
     },
     {
       "godot": "RenderingDevice::enum:ShaderStage",
@@ -226,7 +226,7 @@
       "godot": "RenderingDevice::method:shader_create_from_spirv(RDShaderSPIRV:,String:)",
       "electron2d": "method:Electron2D.RenderingDevice.ShaderCreateFromSPIRV(Electron2D.RDShaderSPIRV,System.String)",
       "state": "Partial",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Compute and paired vertex/fragment modules execute. Geometry/tessellation stages require a backend stage adapter; raytracing stages remain excluded by ADR 0001."
+      "reason": "ADR 0028: executable copied push bytes for compute/vertex/fragment on the shared device timeline. Original 32-bit scalar/vector, compact array, row/column-major matrix and nested-struct layouts lower to a hidden std140 raw-word uniform block; public sets retain their logical bindings. Exact reflected byte count, portable 128-byte bound, per-pipeline/list initialization and recorded snapshots execute. GLSL/HLSL native results, 128-byte/three-uniform capacity, retained canvas and 32 warmed owner-thread zero-managed-byte cycles per compute/graphics language pass on Linux/Vulkan; foreign targets and native allocations remain unverified. Compute or paired graphics modules execute. Descriptor arrays, specialization, native views and additional shader capabilities retain their owning adapters. Push scalar precision beyond the current 32-bit profile and pointer address/arithmetic operations require their native shader capability/translation slices."
     },
     {
       "godot": "RenderingDevice::method:storage_buffer_create(int:,PackedByteArray:,int:RenderingDevice.StorageBufferUsage,int:RenderingDevice.BufferCreationBits)",
@@ -3468,6 +3468,18 @@
       "electron2d": "property:Electron2D.RDTextureFormat.Samples()",
       "state": "Implemented",
       "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:compute_list_set_push_constant(int:,PackedByteArray:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.ComputeListSetPushConstant(System.Int64,System.ReadOnlySpan<System.Byte>,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable copied push bytes for compute/vertex/fragment on the shared device timeline. Original 32-bit scalar/vector, compact array, row/column-major matrix and nested-struct layouts lower to a hidden std140 raw-word uniform block; public sets retain their logical bindings. Exact reflected byte count, portable 128-byte bound, per-pipeline/list initialization and recorded snapshots execute. GLSL/HLSL native results, 128-byte/three-uniform capacity, retained canvas and 32 warmed owner-thread zero-managed-byte cycles per compute/graphics language pass on Linux/Vulkan; foreign targets and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:draw_list_set_push_constant(int:,PackedByteArray:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListSetPushConstant(System.Int64,System.ReadOnlySpan<System.Byte>,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable copied push bytes for compute/vertex/fragment on the shared device timeline. Original 32-bit scalar/vector, compact array, row/column-major matrix and nested-struct layouts lower to a hidden std140 raw-word uniform block; public sets retain their logical bindings. Exact reflected byte count, portable 128-byte bound, per-pipeline/list initialization and recorded snapshots execute. GLSL/HLSL native results, 128-byte/three-uniform capacity, retained canvas and 32 warmed owner-thread zero-managed-byte cycles per compute/graphics language pass on Linux/Vulkan; foreign targets and native allocations remain unverified."
     }
   ],
   "extras": [
@@ -4237,13 +4249,6 @@
     {
       "state": "Blocked",
       "godot": [
-        "RenderingDevice::method:draw_list_set_push_constant(int:,PackedByteArray:,int:)"
-      ],
-      "reason": "Trigger: first SPIR-V push-constant to reserved uniform-slot translation with copied bytes and both-stage limits slice (ADR 0028)."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
         "RenderingDevice::method:draw_list_switch_to_next_pass()"
       ],
       "reason": "Trigger: first RDFramebufferPass attachment lifetime, input-attachment shader translation and ordered subpass integration slice (ADR 0028)."
@@ -4414,7 +4419,7 @@
       "godot": [
         "RenderingDevice::method:shader_create_from_spirv(RDShaderSPIRV:,String:)"
       ],
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Compute and paired vertex/fragment modules execute. Geometry/tessellation stages require a backend stage adapter; raytracing stages remain excluded by ADR 0001."
+      "reason": "ADR 0028: executable copied push bytes for compute/vertex/fragment on the shared device timeline. Original 32-bit scalar/vector, compact array, row/column-major matrix and nested-struct layouts lower to a hidden std140 raw-word uniform block; public sets retain their logical bindings. Exact reflected byte count, portable 128-byte bound, per-pipeline/list initialization and recorded snapshots execute. GLSL/HLSL native results, 128-byte/three-uniform capacity, retained canvas and 32 warmed owner-thread zero-managed-byte cycles per compute/graphics language pass on Linux/Vulkan; foreign targets and native allocations remain unverified. Compute or paired graphics modules execute. Descriptor arrays, specialization, native views and additional shader capabilities retain their owning adapters. Push scalar precision beyond the current 32-bit profile and pointer address/arithmetic operations require their native shader capability/translation slices."
     },
     {
       "state": "Partial",
@@ -4692,10 +4697,24 @@
       "state": "Partial",
       "godot": [
         "class:RDAttachmentFormat",
-        "class:RDTextureFormat",
-        "class:RenderingDevice"
+        "class:RDTextureFormat"
       ],
       "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Native views/transient last-use, subpasses/multiview, raw depth/sample transfer and shader/dynamic-state adapters remain independently accounted for."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0028: executable copied push bytes for compute/vertex/fragment on the shared device timeline. Original 32-bit scalar/vector, compact array, row/column-major matrix and nested-struct layouts lower to a hidden std140 raw-word uniform block; public sets retain their logical bindings. Exact reflected byte count, portable 128-byte bound, per-pipeline/list initialization and recorded snapshots execute. GLSL/HLSL native results, 128-byte/three-uniform capacity, retained canvas and 32 warmed owner-thread zero-managed-byte cycles per compute/graphics language pass on Linux/Vulkan; foreign targets and native allocations remain unverified.",
+      "godot": [
+        "RenderingDevice::method:compute_list_set_push_constant(int:,PackedByteArray:,int:)",
+        "RenderingDevice::method:draw_list_set_push_constant(int:,PackedByteArray:,int:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Native views/transient last-use, subpasses/multiview, raw depth/sample transfer and shader/dynamic-state adapters remain independently accounted for. ADR 0028: executable copied push bytes for compute/vertex/fragment on the shared device timeline. Original 32-bit scalar/vector, compact array, row/column-major matrix and nested-struct layouts lower to a hidden std140 raw-word uniform block; public sets retain their logical bindings. Exact reflected byte count, portable 128-byte bound, per-pipeline/list initialization and recorded snapshots execute. GLSL/HLSL native results, 128-byte/three-uniform capacity, retained canvas and 32 warmed owner-thread zero-managed-byte cycles per compute/graphics language pass on Linux/Vulkan; foreign targets and native allocations remain unverified.",
+      "godot": [
+        "class:RenderingDevice"
+      ]
     }
   ]
 }

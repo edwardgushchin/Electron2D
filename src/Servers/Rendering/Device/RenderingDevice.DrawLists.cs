@@ -66,7 +66,7 @@ public sealed unsafe partial class RenderingDevice
         }
         var pass = SDL.BeginGPURenderPass(Commands(), (nint)colors, (uint)layout.Colors.Length, depthIndex >= 0 ? (nint)(&depth) : 0);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin device graphics pass");
-        _drawPass = pass; _drawTarget = target; _drawRegion = actual; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear();
+        _drawPass = pass; _drawTarget = target; _drawRegion = actual; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush();
         SDL.SetGPUViewport(pass, new() { X = actual.Position.X, Y = actual.Position.Y, W = actual.Size.X, H = actual.Size.Y, MinDepth = 0, MaxDepth = 1 });
         SetScissor(actual);
         return _activeList = ++_nextList;
@@ -80,7 +80,7 @@ public sealed unsafe partial class RenderingDevice
     {
         DrawList(drawList); var entry = Get(renderPipeline, Kind.GraphicsPipeline); Get(entry.Shader, Kind.Shader);
         if (!SameRasterLayout(FramebufferFormat(entry.Graphics!.FramebufferFormat), FramebufferFormat(_drawTarget!.Format))) throw new ArgumentException("The pipeline framebuffer layout does not match.", nameof(renderPipeline));
-        _graphicsPipeline = entry; SDL.BindGPUGraphicsPipeline(_drawPass, entry.Handle!.DangerousGetHandle()); SetBlendConstants(entry.Graphics.Constant); SDL.SetGPUStencilReference(_drawPass, entry.Graphics.StencilReference);
+        _graphicsPipeline = entry; SelectPushPipeline(renderPipeline); SDL.BindGPUGraphicsPipeline(_drawPass, entry.Handle!.DangerousGetHandle()); SetBlendConstants(entry.Graphics.Constant); SDL.SetGPUStencilReference(_drawPass, entry.Graphics.StencilReference);
     }
     /// <summary>Binds a live borrowed vertex array for subsequent draws.</summary>
     /// <param name="drawList">The active draw-list identity.</param>
@@ -140,7 +140,7 @@ public sealed unsafe partial class RenderingDevice
     public void DrawListDisableScissor(long drawList) { DrawList(drawList); SetScissor(new(0, 0, _drawTarget!.Size.X, _drawTarget.Size.Y)); }
     private void BindDrawResources()
     {
-        var program = Get(_graphicsPipeline!.Shader, Kind.Shader);
+        var program = Get(_graphicsPipeline!.Shader, Kind.Shader); RequirePush(program);
         Span<SDL.GPUTextureSamplerBinding> samplerBinding = stackalloc SDL.GPUTextureSamplerBinding[1];
         Span<nint> storageBinding = stackalloc nint[1];
         foreach (var descriptor in program.Layout)
@@ -169,6 +169,7 @@ public sealed unsafe partial class RenderingDevice
                 else { if (fragment) SDL.BindGPUFragmentStorageBuffers(_drawPass, (uint)descriptor.Native, binding, 1); else SDL.BindGPUVertexStorageBuffers(_drawPass, (uint)descriptor.Native, binding, 1); }
             }
         }
+        PushUniforms(program);
     }
     /// <summary>Records a procedural, vertex-array or indexed draw with validated instance capacity.</summary>
     /// <param name="drawList">The active draw list.</param>
@@ -261,6 +262,6 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Ends the active draw list, preserving its results for subsequent device work.</summary>
     public void DrawListEnd()
     {
-        DrawList(_activeList); SDL.EndGPURenderPass(_drawPass); _drawPass = 0; _activeList = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear();
+        DrawList(_activeList); SDL.EndGPURenderPass(_drawPass); _drawPass = 0; _activeList = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush();
     }
 }

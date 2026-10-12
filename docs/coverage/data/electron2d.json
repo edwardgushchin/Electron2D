@@ -138192,6 +138192,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingDevice.ComputeListSetPushConstant(System.Int64,System.ReadOnlySpan\u003CSystem.Byte\u003E,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "ComputeListSetPushConstant",
+    "signature": "public System.Void ComputeListSetPushConstant(System.Int64 computeList, System.ReadOnlySpan\u003CSystem.Byte\u003E buffer, System.UInt32 sizeBytes)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "computeList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "buffer",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "sizeBytes",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingDevice.ComputePipelineCreate(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
@@ -138584,6 +138613,35 @@
       {
         "name": "color",
         "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListSetPushConstant(System.Int64,System.ReadOnlySpan\u003CSystem.Byte\u003E,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListSetPushConstant",
+    "signature": "public System.Void DrawListSetPushConstant(System.Int64 drawList, System.ReadOnlySpan\u003CSystem.Byte\u003E buffer, System.UInt32 sizeBytes)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "buffer",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "sizeBytes",
+        "type": "System.UInt32",
         "default": null
       }
     ],

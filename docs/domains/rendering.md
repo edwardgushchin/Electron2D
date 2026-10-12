@@ -231,3 +231,5 @@ Integer device image consumers now validate float/signed/unsigned sampled scalar
 ## Device color graphics
 
 The [local device component](../components/local-compute.md#color-graphics-and-compute-integration) executes paired vertex/fragment shaders, borrowed vertex/index arrays and color/depth/stencil framebuffer passes with exact MSAA and color resolve, including procedural/instanced/indexed/indirect draws. Compute-generated geometry and commands remain on the GPU timeline. Retained device textures feed ordinary canvas consumers. Depth bounds, independent visible-face stencil masks/reference, raw aspect transfers/depth resolve, subpasses and additional shader interfaces retain explicit prerequisites in coverage.
+
+The local and retained device pipelines now accept compiled push blocks and copied per-draw/per-dispatch binary parameters. Original compact 32-bit layouts, paired graphics stages and public uniform bindings remain coherent; [the push contract](../components/local-compute.md#binary-push-parameters) defines the portable 128-byte capacity, initialization, native uniform quota and verified limits.

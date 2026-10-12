@@ -73,6 +73,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal RenderHandle? FragmentHandle;
         internal uint Set;
         internal Binding[] Layout = [];
+        internal PushStage[] Push = [];
         internal Dictionary<int, RID[]> Bindings = [];
     }
     private readonly GPUPhysicsDevice _context = new();
@@ -209,14 +210,14 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         {
             if (vertex.Length != 0 || fragment.Length != 0) throw new ArgumentException("Compute and graphics modules cannot share a shader identity.", nameof(spirvData));
             if (spirvData.CompileErrorCompute.Length != 0) throw new ArgumentException(spirvData.CompileErrorCompute, nameof(spirvData));
-            var (code, layout) = Remap(compute);
+            var (code, layout, push) = Remap(compute);
             var handle = new RenderHandle(ShaderCompiler.CreateComputePipeline(Device, code), h => SDL.ReleaseGPUComputePipeline(Device, h), _context.Handle);
-            return Add(new Entry { Kind = Kind.Shader, Handle = handle, Layout = layout, Name = name });
+            return Add(new Entry { Kind = Kind.Shader, Handle = handle, Layout = layout, Push = push, Name = name });
         }
         if (vertex.Length == 0 || fragment.Length == 0 || spirvData.CompileErrorVertex.Length != 0 || spirvData.CompileErrorFragment.Length != 0)
             throw new ArgumentException("A graphics shader requires successful vertex and fragment modules.", nameof(spirvData));
-        var (vertexCode, vertexLayout) = Remap(vertex, ShaderStage.Vertex);
-        var (fragmentCode, fragmentLayout) = Remap(fragment, ShaderStage.Fragment);
+        var (vertexCode, vertexLayout, vertexPush) = Remap(vertex, ShaderStage.Vertex);
+        var (fragmentCode, fragmentLayout, fragmentPush) = Remap(fragment, ShaderStage.Fragment);
         var layoutBoth = vertexLayout.Concat(fragmentLayout).ToArray();
         foreach (var group in layoutBoth.GroupBy(b => (b.Set, b.Slot)))
         {
@@ -224,7 +225,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (group.Any(b => b.Type != first.Type || b.Array != first.Array || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType || b.Depth != first.Depth)) throw new ArgumentException("A shared graphics descriptor has inconsistent stage types.", nameof(spirvData));
         }
         var interfaces = ShaderCompiler.ValidateDeviceGraphics(vertexCode, fragmentCode);
-        var entry = new Entry { Kind = Kind.Shader, Stage = ShaderStage.Vertex, Layout = layoutBoth, Name = name, Inputs = interfaces.Inputs, Outputs = interfaces.Outputs };
+        var entry = new Entry { Kind = Kind.Shader, Stage = ShaderStage.Vertex, Layout = layoutBoth, Push = vertexPush.Concat(fragmentPush).ToArray(), Name = name, Inputs = interfaces.Inputs, Outputs = interfaces.Outputs };
         try
         {
             entry.Handle = new(ShaderCompiler.CreateShader(Device, vertexCode, false), h => SDL.ReleaseGPUShader(Device, h), _context.Handle);
@@ -274,11 +275,11 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     }
     /// <summary>Begins an owner-thread compute list.</summary>
     /// <returns>The active list identity; only one list may be active.</returns>
-    public long ComputeListBegin() { IdleList(); Commands(); _pipeline = null; _sets.Clear(); return _activeList = ++_nextList; }
+    public long ComputeListBegin() { IdleList(); Commands(); _pipeline = null; _sets.Clear(); ResetPush(); return _activeList = ++_nextList; }
     /// <summary>Selects a compute pipeline for subsequent dispatches.</summary>
     /// <param name="computeList">The active list.</param>
     /// <param name="computePipeline">A live executable pipeline.</param>
-    public void ComputeListBindComputePipeline(long computeList, RID computePipeline) { List(computeList); _pipeline = Get(Get(computePipeline, Kind.Pipeline).Shader, Kind.Shader); }
+    public void ComputeListBindComputePipeline(long computeList, RID computePipeline) { List(computeList); _pipeline = Get(Get(computePipeline, Kind.Pipeline).Shader, Kind.Shader); SelectPushPipeline(computePipeline); }
     /// <summary>Binds a resource set for subsequent dispatches.</summary>
     /// <param name="computeList">The active list.</param>
     /// <param name="uniformSet">A complete live uniform set.</param>
@@ -303,6 +304,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     private void Dispatch(uint xGroups, uint yGroups, uint zGroups, Entry? indirect = null, uint offset = 0)
     {
         if (_pipeline is null) throw new InvalidOperationException("Bind a compute pipeline first.");
+        RequirePush(_pipeline);
         var buffers = stackalloc SDL.GPUStorageBufferReadWriteBinding[8]; var count = 0;
         var images = stackalloc SDL.GPUStorageTextureReadWriteBinding[8]; var imageCount = 0;
         var samplers = stackalloc SDL.GPUTextureSamplerBinding[16]; var samplerCount = 0;
@@ -316,6 +318,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             else if (descriptor.Type == UniformType.StorageBuffer) { buffers[descriptor.Native] = new() { Buffer = buffer.Handle!.DangerousGetHandle() }; count++; }
             else fixed (byte* data = buffer.Data) SDL.PushGPUComputeUniformData(_command, (uint)descriptor.Native, (nint)data, buffer.Size);
         }
+        PushUniforms(_pipeline);
         var pass = SDL.BeginGPUComputePass(_command, (nint)images, (uint)imageCount, (nint)buffers, (uint)count);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin compute dispatch for " + _pipeline.Name);
         SDL.BindGPUComputePipeline(pass, _pipeline.Handle!.DangerousGetHandle());
@@ -329,7 +332,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <remarks>Every dispatch already closes its native compute pass, providing this dependency.</remarks>
     public void ComputeListAddBarrier(long computeList) => List(computeList);
     /// <summary>Ends the active list without submitting it.</summary>
-    public void ComputeListEnd() { List(_activeList); _activeList = 0; _pipeline = null; _sets.Clear(); }
+    public void ComputeListEnd() { List(_activeList); _activeList = 0; _pipeline = null; _sets.Clear(); ResetPush(); }
     /// <summary>Submits all recorded uploads, compute lists and readback requests.</summary>
     /// <remarks>Local devices only. Host-only and empty readback batches also require Sync before another explicit Submit.</remarks>
     /// <exception cref="InvalidOperationException">The device belongs to the renderer or a previous submission is pending.</exception>
