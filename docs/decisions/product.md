@@ -162,6 +162,8 @@ Electron2D distributes one managed runtime assembly and exposes one engine-owned
 
 SDL3-CS core binding source is pinned in `src/Vendor/SDL3-CS`, and Box2D.NET 3.1.654 source is pinned in `src/Vendor/Box2D.NET`; both compile into `Electron2D.dll`. The first scene-body physics slice is executable under ADR 0054, while server, area, joint and broad shape/query APIs remain incomplete. Native SDL is a separate platform-specific library supplied transitively by the selected Electron2D platform package.
 
+MikkTSpaceSharp source at `b8e44530659f5e98b45eedb3ddd225d759776e68` is approved for structural tangent generation under ADR 0092. Its zlib license, algorithm and allocator provenance are retained in `src/Vendor/MikkTSpaceSharp`; outer visibility and nullable packaging directives are local adaptations. Per-call allocation ownership fixes callback-error cleanup and native-width allocation-size conversion; the allocator patch must be submitted upstream with regression evidence. The source compiles internally into the same runtime assembly, with no new managed or native deployment library. Cold generation owns its temporary unmanaged allocations; renderer replay never invokes the generator. Boundary, failure, memory-balance and reference-parity checks remain required before reporting this dependency integrated.
+
 ### Decision
 
 - Keep all Electron2D runtime code and the managed source of selected backends, including SDL3-CS, Box2D.NET and the FAudio binding, in `Electron2D.csproj`, producing only `Electron2D.dll` as the managed engine artifact. Do not ship these bindings as separate managed runtime assemblies or depend on their managed NuGet packages in a completed integration.

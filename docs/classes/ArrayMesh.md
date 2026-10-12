@@ -317,3 +317,235 @@ Exact ArrayMesh files store bounded versioned geometry/topology/flags/name/skin 
 [MeshSurfaceData.UV2s](MeshSurfaceData.md#uv2s) supplies copied finite float pairs independent of primary UV and instance data. [The mesh component](../components/meshes.md#secondary-uv-storage-and-shader-consumer) records packing, archives, shader locations and executable verification.
 
 [SurfaceTool.Commit](SurfaceTool.md) uses shared internal surface validation and publishes copied geometry plus its borrowed material atomically before one Changed. Public AddSurfaceFromArrays retains its existing null-material initial state.
+
+## Complete API
+
+| Complete signature | Contract |
+| --- | --- |
+| `public ArrayMesh()` | Creates an empty mesh. |
+| `public System.Void AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null, Electron2D.Mesh.ArrayFormat flags = None)` | Adds one copied two-dimensional surface. |
+| `public System.Void ClearSurfaces()` | Removes every surface without disposing borrowed materials. |
+| `protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)` |  |
+| `protected override Electron2D.Resource CreateDuplicateInstance()` |  |
+| `protected override System.Void Dispose(System.Boolean disposing)` |  |
+| `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` |  |
+| `protected override System.Int32 OnGetSurfaceCount()` |  |
+| `protected override System.Int32 OnSurfaceGetArrayIndexLen(System.Int32 surfaceIndex)` |  |
+| `protected override System.Int32 OnSurfaceGetArrayLen(System.Int32 surfaceIndex)` |  |
+| `protected override Electron2D.MeshSurfaceData OnSurfaceGetArrays(System.Int32 surfaceIndex)` |  |
+| `protected override Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)` |  |
+| `protected override Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)` |  |
+| `protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)` |  |
+| `protected override System.Void OnSurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)` |  |
+| `public System.Void RegenNormalMaps()` | Regenerates each surface's tangent channel from its existing normals and primary UVs. |
+| `public System.Int32 SurfaceFindByName(System.String name)` | Finds the first exact ordinal surface name. |
+| `public System.String SurfaceGetName(System.Int32 surfaceIndex)` | Gets an authored surface name. |
+| `public System.Void SurfaceRemove(System.Int32 surfaceIndex)` | Removes one surface and shifts subsequent indices down. |
+| `public System.Void SurfaceSetName(System.Int32 surfaceIndex, System.String name)` | Assigns a literal name and emits Changed. |
+| `public System.Void SurfaceUpdateAttributeRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates bytes in a surface's packed color and primary/secondary UV buffer. |
+| `public System.Void SurfaceUpdateSkinRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates copied bytes in the packed skin buffer, including partial records. |
+| `public System.Void SurfaceUpdateVertexRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates bytes in packed positions and octahedral normal/tangent records. |
+
+## Member descriptions
+
+### ArrayMesh
+
+`public ArrayMesh()`
+
+summary: Creates an empty mesh.
+
+### AddSurfaceFromArrays
+
+`public System.Void AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null, Electron2D.Mesh.ArrayFormat flags = None)`
+
+summary: Adds one copied two-dimensional surface.
+
+primitive: Vertex topology, including points, lines and strips.
+
+arrays: Borrowed typed vertex/normal/tangent/color/primary and secondary UV/index/skin arrays copied before mutation.
+
+blendShapes: Null or empty until the typed deformation consumer is integrated.
+
+lods: Null or empty until scale-selected index sets are integrated.
+
+flags: UseDynamicUpdate, Use2DVertices, Use8BoneWeights and matching channel bits. Unsupported bits reject before mutation.
+
+remarks: Channel bits are inferred; explicitly supplied channel bits must match the arrays. The new surface index is the old GetSurfaceCount result.
+
+System.ArgumentException: Channel counts, primitives or finite values are invalid.
+
+System.ArgumentNullException: The data or a channel array is null.
+
+System.ArgumentOutOfRangeException: An index or primitive is invalid.
+
+System.NotSupportedException: Flags require an unimplemented storage/attribute layer.
+
+System.ObjectDisposedException: The mesh is disposed.
+
+### ClearSurfaces
+
+`public System.Void ClearSurfaces()`
+
+summary: Removes every surface without disposing borrowed materials.
+
+System.ObjectDisposedException: The mesh is disposed.
+
+### CopyCustomStateTo
+
+`protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)`
+
+### CreateDuplicateInstance
+
+`protected override Electron2D.Resource CreateDuplicateInstance()`
+
+### Dispose
+
+`protected override System.Void Dispose(System.Boolean disposing)`
+
+### GetPropertyDescriptors
+
+`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`
+
+### OnGetSurfaceCount
+
+`protected override System.Int32 OnGetSurfaceCount()`
+
+### OnSurfaceGetArrayIndexLen
+
+`protected override System.Int32 OnSurfaceGetArrayIndexLen(System.Int32 surfaceIndex)`
+
+### OnSurfaceGetArrayLen
+
+`protected override System.Int32 OnSurfaceGetArrayLen(System.Int32 surfaceIndex)`
+
+### OnSurfaceGetArrays
+
+`protected override Electron2D.MeshSurfaceData OnSurfaceGetArrays(System.Int32 surfaceIndex)`
+
+### OnSurfaceGetFormat
+
+`protected override Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)`
+
+### OnSurfaceGetMaterial
+
+`protected override Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)`
+
+### OnSurfaceGetPrimitiveType
+
+`protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)`
+
+### OnSurfaceSetMaterial
+
+`protected override System.Void OnSurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)`
+
+### RegenNormalMaps
+
+`public System.Void RegenNormalMaps()`
+
+summary: Regenerates each surface's tangent channel from its existing normals and primary UVs.
+
+remarks: Uses the same MikkTSpace path as SurfaceTool. Empty meshes do nothing. Every surface is prepared before publication; errors preserve all prior surfaces. Positions, indices, names, materials, policy flags and exact packed normal words remain unchanged. Success publishes one Changed event. Structural regeneration may allocate.
+
+System.InvalidOperationException: A surface lacks the required normal/UV data or complete face.
+
+System.ObjectDisposedException: The mesh or a borrowed material is disposed.
+
+### SurfaceFindByName
+
+`public System.Int32 SurfaceFindByName(System.String name)`
+
+summary: Finds the first exact ordinal surface name.
+
+name: Literal non-null name.
+
+returns: The first index, or minus one.
+
+System.ArgumentNullException: The name is null.
+
+### SurfaceGetName
+
+`public System.String SurfaceGetName(System.Int32 surfaceIndex)`
+
+summary: Gets an authored surface name.
+
+surfaceIndex: Existing zero-based index.
+
+returns: The literal name, empty initially.
+
+### SurfaceRemove
+
+`public System.Void SurfaceRemove(System.Int32 surfaceIndex)`
+
+summary: Removes one surface and shifts subsequent indices down.
+
+surfaceIndex: Existing zero-based index.
+
+System.ArgumentOutOfRangeException: The index is invalid.
+
+System.ObjectDisposedException: The mesh is disposed.
+
+### SurfaceSetName
+
+`public System.Void SurfaceSetName(System.Int32 surfaceIndex, System.String name)`
+
+summary: Assigns a literal name and emits Changed.
+
+surfaceIndex: Existing zero-based index.
+
+name: Non-null name; duplicates and empty names are allowed.
+
+System.ArgumentNullException: The name is null.
+
+### SurfaceUpdateAttributeRegion
+
+`public System.Void SurfaceUpdateAttributeRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)`
+
+summary: Updates bytes in a surface's packed color and primary/secondary UV buffer.
+
+surfaceIndex: Existing zero-based surface index.
+
+offset: Byte offset within the packed attribute buffer.
+
+data: Present RGBA8 UNORM bytes followed by present little-endian primary and secondary float UV pairs.
+
+remarks: Color uses four bytes per vertex; each UV channel uses eight. Partial records retain untouched bytes. Validation of every affected coordinate in both channels precedes any write.
+
+System.ArgumentException: An affected coordinate becomes nonfinite.
+
+System.ArgumentOutOfRangeException: The region exceeds the buffer.
+
+### SurfaceUpdateSkinRegion
+
+`public System.Void SurfaceUpdateSkinRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)`
+
+summary: Updates copied bytes in the packed skin buffer, including partial records.
+
+surfaceIndex: Existing surface with bone/weight channels.
+
+offset: Byte offset into 16-byte four-slot or 32-byte eight-slot records.
+
+data: Little-endian uint16 indices followed by UNORM16 weights for each vertex.
+
+remarks: Retained mesh draws observe edits without rerecording; configured palette bounds are validated at draw time.
+
+System.InvalidOperationException: No skin buffer exists.
+
+System.ArgumentOutOfRangeException: The surface or byte region is invalid.
+
+### SurfaceUpdateVertexRegion
+
+`public System.Void SurfaceUpdateVertexRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)`
+
+summary: Updates bytes in packed positions and octahedral normal/tangent records.
+
+surfaceIndex: Existing zero-based index.
+
+offset: Byte offset in the position block followed by interleaved normal/tangent words.
+
+data: Little-endian float X/Y positions followed by per-vertex octahedral UNORM16 normal/tangent words, including partial byte records.
+
+remarks: Retained draws observe the update without rerecording.
+
+System.ArgumentException: An affected position becomes nonfinite.
+
+System.ArgumentOutOfRangeException: The region exceeds the vertex buffer.

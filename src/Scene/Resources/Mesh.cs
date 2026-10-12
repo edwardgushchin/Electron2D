@@ -27,6 +27,10 @@ public abstract class Mesh : Resource
         None = 0,
         /// <summary>Vertex positions.</summary>
         Vertex = 1,
+        /// <summary>Octahedrally packed mesh-local normal directions.</summary>
+        Normal = 2,
+        /// <summary>Octahedrally packed tangent directions and orientation.</summary>
+        Tangent = 4,
         /// <summary>Vertex colors.</summary>
         Color = 8,
         /// <summary>Primary texture coordinates.</summary>

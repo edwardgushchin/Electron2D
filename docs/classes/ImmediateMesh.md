@@ -134,7 +134,7 @@ Returns the draft's captured topology after validation.
 
 ### OnSurfaceGetFormat
 
-Returns inferred Vertex/Use2DVertices with Color, TexUV and/or TexUV2 only when enabled in that surface. New drafts reset activation, independent of prior current attribute values.
+Returns inferred Vertex/Use2DVertices with Normal/Tangent, Color, TexUV and/or TexUV2 when enabled in that surface. New drafts reset activation, independent of prior current attribute values.
 
 ### OnSurfaceGetMaterial
 
@@ -162,7 +162,7 @@ Cancels the draft, disposes its owned private ArrayMesh and delegates outer reso
 
 [ImmediateMeshTests](../../tests/Electron2D.Tests/ImmediateMeshTests.cs) verifies state/finite/topology boundaries, late attributes/quantization, correction after failed End, observer failure/reentry, shallow/deep alias and local scene copies, query isolation, lifetime and already recorded command updates. Twenty warmup cycles precede 64 active material/transform/record/replay cycles and 64 idle replays; both measure zero managed bytes. [ImmediateMeshRenderingTests](../../tests/Electron2D.Tests/ImmediateMeshRenderingTests.cs) checks seven native pixel phases, resource RID drawing/server queries and all five topologies on Linux Wayland GPU/compatibility. Each backend also measures 64 active frames alternating all five built-in blends with null material and 64 idle frames after 20 warmup frames, from ProcessFrameStarted through FramePostDraw, with zero managed bytes.
 
-Draft growth/structural commit are explicit authoring allocations, not a zero-allocation frame replacement API. 3D vertex/normal/tangent operations remain excluded. Inherited advanced mesh members keep their individual dependencies. Native allocator totals, wider platforms, broad performance and owner acceptance remain unverified.
+Draft growth/structural commit are explicit authoring allocations, not a zero-allocation frame replacement API. Spatial vertex operations remain excluded; numerical normal/tangent capture executes. Inherited advanced mesh members keep their individual dependencies. Native allocator totals, wider platforms, broad performance and owner acceptance remain unverified.
 
 Inherited Mesh.GetAABB returns local Rect2 visibility bounds for every stored vertex, including unreferenced vertices and point/line topologies. Prepared bounds/replay do not copy live ArrayMesh data. MeshInstance resource-change listeners use worker-safe invalidation; attached node setters retain owner/capture guards.
 
@@ -177,3 +177,204 @@ ImmediateMesh now registers its file factory and forwards completed surface byte
 `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
 
 Returns the inherited resource descriptors plus stored completed surface bytes and borrowed material references. Draft data is omitted. The file factory is available in fresh processes.
+
+## Complete API
+
+| Complete signature | Contract |
+| --- | --- |
+| `public ImmediateMesh()` | Creates an empty mesh without an active draft. |
+| `public System.Void ClearSurfaces()` | Removes completed surfaces and cancels any draft, then emits Changed. |
+| `protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)` |  |
+| `protected override Electron2D.Resource CreateDuplicateInstance()` |  |
+| `protected override System.Void Dispose(System.Boolean disposing)` |  |
+| `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` |  |
+| `protected override System.Int32 OnGetSurfaceCount()` |  |
+| `protected override System.Int32 OnSurfaceGetArrayIndexLen(System.Int32 surfaceIndex)` |  |
+| `protected override System.Int32 OnSurfaceGetArrayLen(System.Int32 surfaceIndex)` |  |
+| `protected override Electron2D.MeshSurfaceData OnSurfaceGetArrays(System.Int32 surfaceIndex)` |  |
+| `protected override Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)` |  |
+| `protected override Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)` |  |
+| `protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)` |  |
+| `protected override System.Void OnSurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)` |  |
+| `public System.Void SurfaceAddVertex2D(Electron2D.Vector2 vertex)` | Appends a finite local vertex using the current color and texture-coordinate channels. |
+| `public System.Void SurfaceBegin(Electron2D.Mesh.PrimitiveType primitive, Electron2D.Material material = null)` | Begins an invisible surface using the selected topology and borrowed material. |
+| `public System.Void SurfaceEnd()` | Validates and commits the draft, then emits Changed outside the storage lock. |
+| `public System.Void SurfaceSetColor(Electron2D.Color color)` | Sets the current color, enabling the color channel on its first call. |
+| `public System.Void SurfaceSetNormal(Electron2D.Vector3 normal)` | Assigns the current mesh-local normal and backfills the draft on first activation. |
+| `public System.Void SurfaceSetTangent(Electron2D.Vector4 tangent)` | Assigns the current tangent and backfills the draft on first activation. |
+| `public System.Void SurfaceSetUV(Electron2D.Vector2 uv)` | Sets the current primary UV, enabling that channel on its first call. |
+| `public System.Void SurfaceSetUV2(Electron2D.Vector2 uv2)` | Sets the current secondary UV, enabling that channel on its first call. |
+
+## Member descriptions
+
+### ImmediateMesh
+
+`public ImmediateMesh()`
+
+summary: Creates an empty mesh without an active draft.
+
+### ClearSurfaces
+
+`public System.Void ClearSurfaces()`
+
+summary: Removes completed surfaces and cancels any draft, then emits Changed.
+
+remarks: Borrowed materials remain live. Retained drawing observes the emptied storage.
+
+System.ObjectDisposedException: The mesh is disposed.
+
+### CopyCustomStateTo
+
+`protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)`
+
+### CreateDuplicateInstance
+
+`protected override Electron2D.Resource CreateDuplicateInstance()`
+
+### Dispose
+
+`protected override System.Void Dispose(System.Boolean disposing)`
+
+### GetPropertyDescriptors
+
+`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`
+
+### OnGetSurfaceCount
+
+`protected override System.Int32 OnGetSurfaceCount()`
+
+### OnSurfaceGetArrayIndexLen
+
+`protected override System.Int32 OnSurfaceGetArrayIndexLen(System.Int32 surfaceIndex)`
+
+### OnSurfaceGetArrayLen
+
+`protected override System.Int32 OnSurfaceGetArrayLen(System.Int32 surfaceIndex)`
+
+### OnSurfaceGetArrays
+
+`protected override Electron2D.MeshSurfaceData OnSurfaceGetArrays(System.Int32 surfaceIndex)`
+
+### OnSurfaceGetFormat
+
+`protected override Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)`
+
+### OnSurfaceGetMaterial
+
+`protected override Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)`
+
+### OnSurfaceGetPrimitiveType
+
+`protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)`
+
+### OnSurfaceSetMaterial
+
+`protected override System.Void OnSurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)`
+
+### SurfaceAddVertex2D
+
+`public System.Void SurfaceAddVertex2D(Electron2D.Vector2 vertex)`
+
+summary: Appends a finite local vertex using the current color and texture-coordinate channels.
+
+vertex: Local two-dimensional position.
+
+System.InvalidOperationException: No surface is being built.
+
+System.ArgumentException: The position is not finite.
+
+System.ObjectDisposedException: The mesh is disposed.
+
+### SurfaceBegin
+
+`public System.Void SurfaceBegin(Electron2D.Mesh.PrimitiveType primitive, Electron2D.Material material = null)`
+
+summary: Begins an invisible surface using the selected topology and borrowed material.
+
+primitive: One of the five two-dimensional primitive topologies.
+
+material: Live borrowed material, or null to use the drawing item's material.
+
+System.InvalidOperationException: A surface is already being built.
+
+System.ArgumentOutOfRangeException: The topology is invalid.
+
+System.ObjectDisposedException: The mesh or material is disposed.
+
+### SurfaceEnd
+
+`public System.Void SurfaceEnd()`
+
+summary: Validates and commits the draft, then emits Changed outside the storage lock.
+
+remarks: An empty or incomplete primitive rejects without losing the draft; append the missing vertices and retry, or cancel with ClearSurfaces. A throwing Changed listener leaves the surface committed and the builder idle. Material disposal before commit rejects without consuming the draft.
+
+System.InvalidOperationException: No surface is being built.
+
+System.ArgumentException: The draft is empty or its topology is incomplete.
+
+System.ObjectDisposedException: The mesh or draft material is disposed.
+
+### SurfaceSetColor
+
+`public System.Void SurfaceSetColor(Electron2D.Color color)`
+
+summary: Sets the current color, enabling the color channel on its first call.
+
+color: Finite color; clamped and truncated to RGBA8 when committed.
+
+remarks: The first call also fills previously added vertices with this color. Later calls affect only subsequently appended vertices. A new surface starts without a color channel.
+
+System.InvalidOperationException: No surface is being built.
+
+System.ArgumentException: The color is not finite.
+
+System.ObjectDisposedException: The mesh is disposed.
+
+### SurfaceSetNormal
+
+`public System.Void SurfaceSetNormal(Electron2D.Vector3 normal)`
+
+summary: Assigns the current mesh-local normal and backfills the draft on first activation.
+
+normal: Finite numerical direction.
+
+### SurfaceSetTangent
+
+`public System.Void SurfaceSetTangent(Electron2D.Vector4 tangent)`
+
+summary: Assigns the current tangent and backfills the draft on first activation.
+
+tangent: Finite XYZ direction and W orientation.
+
+### SurfaceSetUV
+
+`public System.Void SurfaceSetUV(Electron2D.Vector2 uv)`
+
+summary: Sets the current primary UV, enabling that channel on its first call.
+
+uv: Finite texture coordinate; values outside zero through one use the sampler policy.
+
+remarks: The first call fills all previous vertices; subsequent calls affect only new vertices. New surfaces start without a UV channel.
+
+System.InvalidOperationException: No surface is being built.
+
+System.ArgumentException: The coordinate is not finite.
+
+System.ObjectDisposedException: The mesh is disposed.
+
+### SurfaceSetUV2
+
+`public System.Void SurfaceSetUV2(Electron2D.Vector2 uv2)`
+
+summary: Sets the current secondary UV, enabling that channel on its first call.
+
+uv2: Finite coordinate independent of primary UVs.
+
+remarks: The first call backfills previous vertices; later calls affect only new vertices. Each new surface begins without a secondary channel.
+
+System.InvalidOperationException: No surface is being built.
+
+System.ArgumentException: The coordinate is not finite.
+
+System.ObjectDisposedException: The mesh is disposed.

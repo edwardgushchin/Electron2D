@@ -866,11 +866,6 @@
       "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
     },
     {
-      "godot": "SurfaceTool::method:add_triangle_fan(PackedVector3Array:,PackedVector2Array:,PackedColorArray:,PackedVector2Array:,PackedVector3Array:,Plane[]:)",
-      "electron2d": "method:Electron2D.SurfaceTool.AddTriangleFan(System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Color>,System.ReadOnlySpan<Electron2D.Vector2>)",
-      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
-    },
-    {
       "godot": "SurfaceTool::enum:SkinWeightCount",
       "electron2d": "T:Electron2D.SurfaceTool.SkinWeightCount",
       "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified."
@@ -1054,6 +1049,96 @@
       "godot": "MeshDataTool::method:set_face_meta(int:,Variant:)",
       "electron2d": "method:Electron2D.MeshDataTool.SetFaceMeta`1(System.Int32,T)",
       "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified."
+    },
+    {
+      "godot": "ArrayMesh::method:regen_normal_maps()",
+      "electron2d": "method:Electron2D.ArrayMesh.RegenNormalMaps()",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "ImmediateMesh::method:surface_set_normal(Vector3:)",
+      "electron2d": "method:Electron2D.ImmediateMesh.SurfaceSetNormal(Electron2D.Vector3)",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "ImmediateMesh::method:surface_set_tangent(Plane:)",
+      "electron2d": "method:Electron2D.ImmediateMesh.SurfaceSetTangent(Electron2D.Vector4)",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_NORMAL",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Normal()",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_TANGENT",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Tangent()",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_vertex_normal(int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetVertexNormal(System.Int32)",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:get_vertex_tangent(int:)",
+      "electron2d": "method:Electron2D.MeshDataTool.GetVertexTangent(System.Int32)",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:set_vertex_normal(int:,Vector3:)",
+      "electron2d": "method:Electron2D.MeshDataTool.SetVertexNormal(System.Int32,Electron2D.Vector3)",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "MeshDataTool::method:set_vertex_tangent(int:,Plane:)",
+      "electron2d": "method:Electron2D.MeshDataTool.SetVertexTangent(System.Int32,Electron2D.Vector4)",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_NORMAL",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Normal()",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_TANGENT",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Tangent()",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_surface_get_format_normal_tangent_stride(int:RenderingServer.ArrayFormat,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceGetFormatNormalTangentStride(Electron2D.Mesh.ArrayFormat,System.Int32)",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:add_triangle_fan(PackedVector3Array:,PackedVector2Array:,PackedColorArray:,PackedVector2Array:,PackedVector3Array:,Plane[]:)",
+      "electron2d": "method:Electron2D.SurfaceTool.AddTriangleFan(System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Color>,System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Vector3>,System.ReadOnlySpan<Electron2D.Vector4>)",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:generate_normals(bool:)",
+      "electron2d": "method:Electron2D.SurfaceTool.GenerateNormals(System.Boolean)",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:generate_tangents()",
+      "electron2d": "method:Electron2D.SurfaceTool.GenerateTangents()",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:set_normal(Vector3:)",
+      "electron2d": "method:Electron2D.SurfaceTool.SetNormal(Electron2D.Vector3)",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "SurfaceTool::method:set_tangent(Plane:)",
+      "electron2d": "method:Electron2D.SurfaceTool.SetTangent(Electron2D.Vector4)",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
+    },
+    {
+      "godot": "class:MeshDataTool",
+      "electron2d": "T:Electron2D.MeshDataTool",
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
     }
   ],
   "extras": [
@@ -1316,6 +1401,14 @@
     {
       "electron2d": "method:Electron2D.MeshDataTool.TryGetFaceMeta`1(System.Int32,ref T)",
       "reason": "ADRs 0001/0092: deterministic managed construction/lifetime and try-get presence/type guards project the existing mesh topology/metadata concept without Variant; metadata values remain borrowed and transient."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceData.Normals()",
+      "reason": "ADR 0001/0092: named finite numerical normal/tangent arrays project the applicable mesh channel payload without heterogeneous array selectors or a spatial scene type."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceData.Tangents()",
+      "reason": "ADR 0001/0092: named finite numerical normal/tangent arrays project the applicable mesh channel payload without heterogeneous array selectors or a spatial scene type."
     }
   ],
   "statusGroups": [
@@ -1331,7 +1424,6 @@
       "state": "Blocked",
       "reason": "Trigger: concrete typed normal/tangent/custom/compressed channel byte storage and an actual shader-attribute consumer over the mesh path (ADR 0092).",
       "godot": [
-        "ArrayMesh::method:regen_normal_maps()",
         "Mesh::enum:ArrayCustomFormat",
         "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_MAX",
         "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA8_SNORM",
@@ -1355,8 +1447,6 @@
         "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BASE",
         "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BITS",
         "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_MASK",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_NORMAL",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_TANGENT",
         "Mesh::enum_value:BlendShapeMode.BLEND_SHAPE_MODE_NORMALIZED"
       ]
     },
@@ -1697,9 +1787,7 @@
         "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3_SHIFT",
         "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BASE",
         "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BITS",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_MASK",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_NORMAL",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_TANGENT"
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_MASK"
       ],
       "state": "Blocked",
       "reason": "Trigger: concrete typed normal/tangent/custom/compressed channel byte storage and an actual shader-attribute consumer over the mesh path (ADR 0092)."
@@ -1788,13 +1876,6 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified. Triangle fan supports positions/color/primary and secondary UVs; numeric normal and tangent payloads enter the first typed mesh normal/tangent byte storage and shader consumer slice.",
-      "godot": [
-        "SurfaceTool::method:add_triangle_fan(PackedVector3Array:,PackedVector2Array:,PackedColorArray:,PackedVector2Array:,PackedVector3Array:,Plane[]:)"
-      ]
-    },
-    {
       "state": "Excluded",
       "reason": "ADR 0004: pinned doc/classes/SurfaceTool.xml generate_lod deprecated metadata: This method is unused internally, as it does not preserve normals or UVs. Consider using [method ImporterMesh.generate_lods] instead. No legacy wrapper or implementation trigger.",
       "godot": [
@@ -1818,16 +1899,6 @@
         "SurfaceTool::method:get_custom_format(int:)",
         "SurfaceTool::method:set_custom(int:,Color:)",
         "SurfaceTool::method:set_custom_format(int:,int:SurfaceTool.CustomFormat)"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: numeric Vector3 normals/Vector4 tangents in typed 2D mesh storage, exact byte packing and actual canvas/device shader consumers under ADR 0092. These are shader data, not 3D scene types; source Plane tangent is projected to the numeric role. Generation and fan attributes enter that same first channel slice.",
-      "godot": [
-        "SurfaceTool::method:set_normal(Vector3:)",
-        "SurfaceTool::method:set_tangent(Plane:)",
-        "SurfaceTool::method:generate_normals(bool:)",
-        "SurfaceTool::method:generate_tangents()"
       ]
     },
     {
@@ -1878,21 +1949,28 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "ADR 0092: copied 2D triangle topology, exact ordered edge/face incidences (including degenerate/nonmanifold data), finite vertex/color/UV2/four-eight influence edits, exactly typed transient metadata, atomic geometry/material commit and fresh saved output. Native GLSL/HLSL indexed and GPU/compatibility retained pixels plus warmed zero managed operations are checked; wider platforms/native allocation totals remain unverified. Vertex normal/tangent data getters/setters enter their shared first typed storage/packing/shader consumer slice.",
+      "state": "Implemented",
       "godot": [
-        "class:MeshDataTool"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: numeric Vector3 normal and Vector4 tangent/handedness channels in typed MeshSurfaceData, their packed byte layout and actual shader consumers under ADR 0092. MeshDataTool readers/writers enter that same first producer/consumer slice; no 3D scene or Plane type is added.",
-      "godot": [
+        "ArrayMesh::method:regen_normal_maps()",
+        "ImmediateMesh::method:surface_set_normal(Vector3:)",
+        "ImmediateMesh::method:surface_set_tangent(Plane:)",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_NORMAL",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_TANGENT",
         "MeshDataTool::method:get_vertex_normal(int:)",
-        "MeshDataTool::method:set_vertex_normal(int:,Vector3:)",
         "MeshDataTool::method:get_vertex_tangent(int:)",
-        "MeshDataTool::method:set_vertex_tangent(int:,Plane:)"
-      ]
+        "MeshDataTool::method:set_vertex_normal(int:,Vector3:)",
+        "MeshDataTool::method:set_vertex_tangent(int:,Plane:)",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_NORMAL",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_TANGENT",
+        "RenderingServer::method:mesh_surface_get_format_normal_tangent_stride(int:RenderingServer.ArrayFormat,int:)",
+        "SurfaceTool::method:add_triangle_fan(PackedVector3Array:,PackedVector2Array:,PackedColorArray:,PackedVector2Array:,PackedVector3Array:,Plane[]:)",
+        "SurfaceTool::method:generate_normals(bool:)",
+        "SurfaceTool::method:generate_tangents()",
+        "SurfaceTool::method:set_normal(Vector3:)",
+        "SurfaceTool::method:set_tangent(Plane:)",
+        "class:MeshDataTool"
+      ],
+      "reason": "ADR 0092: numerical mesh-local normal/tangent channels with exact octahedral UNORM16 words, transactional packed edits/AMS3 archives (AMS1/AMS2 readable), immediate/fan/typed topology authoring, clockwise smooth/flat normal and MikkTSpace generation, transformed append and atomic regeneration. Native GLSL/HLSL device/retained and compatibility pixels, fresh-process replay, 100 C-reference fixtures and warmed zero managed frames are checked. Full native allocations and wider platforms remain unverified."
     }
   ]
 }

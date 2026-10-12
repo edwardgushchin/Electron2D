@@ -122,3 +122,101 @@ The [mesh component](../components/meshes.md#server-palettes-and-foureight-skin-
 `public const Electron2D.Mesh.ArrayFormat TexUV2 = 32`
 
 Secondary texture coordinates. Inferred when UV2s is present; explicit flags require matching data.
+
+## Complete API
+
+| Complete signature | Contract |
+| --- | --- |
+| `public const Electron2D.Mesh.ArrayFormat Bones = 1024` | Flattened unsigned 16-bit bone indices. |
+| `public const Electron2D.Mesh.ArrayFormat Color = 8` | Vertex colors. |
+| `public const Electron2D.Mesh.ArrayFormat Index = 4096` | Vertex ordering indices. |
+| `public const Electron2D.Mesh.ArrayFormat None = 0` | No channels or policies. |
+| `public const Electron2D.Mesh.ArrayFormat Normal = 2` | Octahedrally packed mesh-local normal directions. |
+| `public const Electron2D.Mesh.ArrayFormat Tangent = 4` | Octahedrally packed tangent directions and orientation. |
+| `public const Electron2D.Mesh.ArrayFormat TexUV = 16` | Primary texture coordinates. |
+| `public const Electron2D.Mesh.ArrayFormat TexUV2 = 32` | Secondary texture coordinates. |
+| `public const Electron2D.Mesh.ArrayFormat Use2DVertices = 33554432` | Vertex positions use two floating components. |
+| `public const Electron2D.Mesh.ArrayFormat Use8BoneWeights = 134217728` | Skin records contain eight indices and eight weights instead of four. |
+| `public const Electron2D.Mesh.ArrayFormat UseDynamicUpdate = 67108864` | Surface buffers accept explicit region updates. |
+| `public const Electron2D.Mesh.ArrayFormat Vertex = 1` | Vertex positions. |
+| `public const Electron2D.Mesh.ArrayFormat Weights = 2048` | Flattened unsigned normalized 16-bit skin weights. |
+
+## Member descriptions
+
+### Bones
+
+`public const Electron2D.Mesh.ArrayFormat Bones = 1024`
+
+summary: Flattened unsigned 16-bit bone indices.
+
+### Color
+
+`public const Electron2D.Mesh.ArrayFormat Color = 8`
+
+summary: Vertex colors.
+
+### Index
+
+`public const Electron2D.Mesh.ArrayFormat Index = 4096`
+
+summary: Vertex ordering indices.
+
+### None
+
+`public const Electron2D.Mesh.ArrayFormat None = 0`
+
+summary: No channels or policies.
+
+### Normal
+
+`public const Electron2D.Mesh.ArrayFormat Normal = 2`
+
+summary: Octahedrally packed mesh-local normal directions.
+
+### Tangent
+
+`public const Electron2D.Mesh.ArrayFormat Tangent = 4`
+
+summary: Octahedrally packed tangent directions and orientation.
+
+### TexUV
+
+`public const Electron2D.Mesh.ArrayFormat TexUV = 16`
+
+summary: Primary texture coordinates.
+
+### TexUV2
+
+`public const Electron2D.Mesh.ArrayFormat TexUV2 = 32`
+
+summary: Secondary texture coordinates.
+
+### Use2DVertices
+
+`public const Electron2D.Mesh.ArrayFormat Use2DVertices = 33554432`
+
+summary: Vertex positions use two floating components.
+
+### Use8BoneWeights
+
+`public const Electron2D.Mesh.ArrayFormat Use8BoneWeights = 134217728`
+
+summary: Skin records contain eight indices and eight weights instead of four.
+
+### UseDynamicUpdate
+
+`public const Electron2D.Mesh.ArrayFormat UseDynamicUpdate = 67108864`
+
+summary: Surface buffers accept explicit region updates.
+
+### Vertex
+
+`public const Electron2D.Mesh.ArrayFormat Vertex = 1`
+
+summary: Vertex positions.
+
+### Weights
+
+`public const Electron2D.Mesh.ArrayFormat Weights = 2048`
+
+summary: Flattened unsigned normalized 16-bit skin weights.

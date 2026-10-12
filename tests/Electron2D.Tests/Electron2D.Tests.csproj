@@ -55,7 +55,7 @@
   <Import Project="../../tools/native-consumer.props" />
   <ItemGroup><Electron2DComputeShader Include="Shaders/LocalSpecialization.comp.glsl;Shaders/LocalSpecializationLayout.comp.glsl;Shaders/LocalPushCapacity.comp.glsl;Shaders/LocalPushOverCapacity.comp.glsl;Shaders/LocalPushGLSL.comp.glsl;Shaders/LocalPushHLSL.comp.hlsl;Shaders/LocalDepthGLSL.comp.glsl;Shaders/LocalDepthHLSL.comp.hlsl;Shaders/LocalCompute.comp.glsl;Shaders/LocalComputeHLSL.comp.hlsl;Shaders/IndirectArguments.comp.glsl;Shaders/DeviceArguments.comp.glsl;Shaders/LocalTextureInteger.comp.glsl;Shaders/LocalTextureModes.comp.glsl;Shaders/LocalTexture.comp.glsl;Shaders/LocalTextureHLSL.comp.hlsl" /></ItemGroup>
   <Import Project="../../tools/shaders/ComputeShaders.targets" />
-  <ItemGroup><Electron2DDeviceShader Include="Shaders/MeshUV2GLSL.frag.glsl;Shaders/MeshUV2HLSL.frag.hlsl;Shaders/Device*.vert.glsl;Shaders/Device*.frag.glsl;Shaders/Device*.vert.hlsl;Shaders/Device*.frag.hlsl" /></ItemGroup>
+  <ItemGroup><Electron2DDeviceShader Include="Shaders/MeshFrameGLSL.frag.glsl;Shaders/MeshFrameHLSL.frag.hlsl;Shaders/MeshUV2GLSL.frag.glsl;Shaders/MeshUV2HLSL.frag.hlsl;Shaders/Device*.vert.glsl;Shaders/Device*.frag.glsl;Shaders/Device*.vert.hlsl;Shaders/Device*.frag.hlsl" /></ItemGroup>
   <Import Project="../../tools/shaders/DeviceShaders.targets" />
   <ItemGroup><Electron2DComputeShader Include="../../examples/WaterPlayground/Water.comp.glsl" /></ItemGroup>
 </Project>

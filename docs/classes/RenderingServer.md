@@ -1209,3 +1209,9 @@ A live rendering session and its owner thread are required. Scene and retained i
 ## Secondary mesh UV channel
 
 [MeshSurfaceData.UV2s](MeshSurfaceData.md#uv2s) supplies copied finite float pairs independent of primary UV and instance data. [The mesh component](../components/meshes.md#secondary-uv-storage-and-shader-consumer) records packing, archives, shader locations and executable verification.
+
+## Mesh normal/tangent stride
+
+`public static int MeshSurfaceGetFormatNormalTangentStride(Mesh.ArrayFormat format, int vertexCount)`
+
+Returns four bytes for each present normal/tangent channel, zero for neither. Requires the renderer owner thread, a supported format and a nonnegative count. Normal/tangent words follow the complete position block in the same vertex buffer; color/UV and skin strides remain independent.

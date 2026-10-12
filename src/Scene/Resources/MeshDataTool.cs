@@ -103,6 +103,22 @@ public sealed partial class MeshDataTool : ElectronObject
     /// <param name="index">Existing vertex index.</param>
     /// <param name="uv">Finite coordinate.</param>
     public void SetVertexUV(int index, Vector2 uv) { lock (_gate) { Vertex(index); if (!uv.IsFinite()) throw new ArgumentException("UV must be finite.", nameof(uv)); if (_data.UVs.Length == 0) _data.UVs = new Vector2[_data.Vertices.Length]; _data.UVs[index] = uv; _format |= Mesh.ArrayFormat.TexUV; } }
+    /// <summary>Returns the copied mesh-local normal value.</summary>
+    /// <param name="index">Existing vertex index.</param>
+    /// <returns>The normal, or zero without the channel.</returns>
+    public Vector3 GetVertexNormal(int index) { lock (_gate) { Vertex(index); return _data.Normals.Length == 0 ? default : _data.Normals[index]; } }
+    /// <summary>Assigns a finite mesh-local numerical normal vector.</summary>
+    /// <param name="index">Existing vertex index.</param>
+    /// <param name="normal">Finite direction; target commit quantizes it.</param>
+    public void SetVertexNormal(int index, Vector3 normal) { lock (_gate) { Vertex(index); if (!normal.IsFinite()) throw new ArgumentException("Normals must be finite.", nameof(normal)); if (_data.Normals.Length == 0) _data.Normals = new Vector3[_data.Vertices.Length]; _data.Normals[index] = normal; _format |= Mesh.ArrayFormat.Normal; } }
+    /// <summary>Returns the copied tangent direction and orientation.</summary>
+    /// <param name="index">Existing vertex index.</param>
+    /// <returns>XYZ direction and W orientation, or zero without the channel.</returns>
+    public Vector4 GetVertexTangent(int index) { lock (_gate) { Vertex(index); return _data.Tangents.Length == 0 ? default : _data.Tangents[index]; } }
+    /// <summary>Assigns a finite tangent direction and orientation.</summary>
+    /// <param name="index">Existing vertex index.</param>
+    /// <param name="tangent">Finite XYZ direction and W orientation; target commit quantizes them.</param>
+    public void SetVertexTangent(int index, Vector4 tangent) { lock (_gate) { Vertex(index); if (!tangent.IsFinite()) throw new ArgumentException("Tangents must be finite.", nameof(tangent)); if (_data.Tangents.Length == 0) _data.Tangents = new Vector4[_data.Vertices.Length]; _data.Tangents[index] = tangent; _format |= Mesh.ArrayFormat.Tangent; } }
     /// <summary>Gets secondary UV or zero if that channel is absent.</summary>
     /// <param name="index">Existing vertex index.</param>
     /// <returns>Finite secondary coordinate.</returns>
@@ -179,7 +195,7 @@ public sealed partial class MeshDataTool : ElectronObject
     /// <remarks>Uses widened differences/products and actual edited positions; this does not enable a vertex normal channel.</remarks>
     public Vector3 GetFaceNormal(int index)
     {
-        lock (_gate) { FaceAt(index); var face = _faces[index]; var a = _data.Vertices[face.A]; var b = _data.Vertices[face.B]; var c = _data.Vertices[face.C]; var cross = ((double)b.X - a.X) * ((double)c.Y - a.Y) - ((double)b.Y - a.Y) * ((double)c.X - a.X); return new(0, 0, Math.Sign(cross)); }
+        lock (_gate) { FaceAt(index); var face = _faces[index]; var a = _data.Vertices[face.A]; var b = _data.Vertices[face.B]; var c = _data.Vertices[face.C]; return MeshFrameCodec.FaceNormal(a, b, c); }
     }
     /// <summary>Gets the current borrowed surface material.</summary>
     /// <returns>Material, or null for the drawing item's material.</returns>

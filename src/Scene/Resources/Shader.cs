@@ -4,7 +4,7 @@ namespace Electron2D;
 /// <remarks>HLSL and GLSL source is compiled during import or build. Runtime loading checks module structure and
 /// reflected interfaces without compiling source; it does not perform full instruction-level semantic validation.
 /// This interface accepts optional float4 color at location zero,
-/// float2 UV at location one, raw float4 instance data at location two, float2 secondary UV at location four, framebuffer position, and one float4 color output. TEXTURE at set two, binding zero
+/// float2 UV at location one, raw float4 instance data at location two, float2 secondary UV at location four, mesh-local float3 normal at five and float4 tangent at six, framebuffer position, and one float4 color output. TEXTURE at set two, binding zero
 /// samples the current canvas command, or opaque white for untextured geometry; it is not a material parameter.
 /// SCREEN_TEXTURE at any contiguous sampled binding consumes the current viewport screen snapshot;
 /// an optional float2 SCREEN_PIXEL_SIZE uniform supplies inverse native target dimensions. Both are renderer-owned

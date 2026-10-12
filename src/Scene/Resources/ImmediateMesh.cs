@@ -10,6 +10,11 @@ public sealed class ImmediateMesh : Mesh
     internal readonly ArrayMesh Surfaces = new();
     private readonly List<Vector2> _vertices = [], _uvs = [], _uv2s = [];
     private readonly List<Color> _colors = [];
+    private readonly List<Vector3> _normals = [];
+    private readonly List<Vector4> _tangents = [];
+    private Vector3 _normal;
+    private Vector4 _tangent;
+    private bool _usesNormals, _usesTangents;
     private PrimitiveType _primitive;
     private Material? _material;
     private Color _color;
@@ -52,6 +57,7 @@ public sealed class ImmediateMesh : Mesh
             if (_usesColors) _colors.Add(_color);
             if (_usesUVs) _uvs.Add(_uv);
             if (_usesUV2s) _uv2s.Add(_uv2);
+            if (_usesNormals) _normals.Add(_normal); if (_usesTangents) _tangents.Add(_tangent);
         }
     }
 
@@ -109,6 +115,18 @@ public sealed class ImmediateMesh : Mesh
         }
     }
 
+    /// <summary>Assigns the current mesh-local normal and backfills the draft on first activation.</summary>
+    /// <param name="normal">Finite numerical direction.</param>
+    public void SurfaceSetNormal(Vector3 normal)
+    {
+        lock (Surfaces.Gate) { EnsureActive(); if (!normal.IsFinite()) throw new ArgumentException("Normals must be finite.", nameof(normal)); if (!_usesNormals) { for (var i = 0; i < _vertices.Count; i++) _normals.Add(normal); _usesNormals = true; } _normal = normal; }
+    }
+    /// <summary>Assigns the current tangent and backfills the draft on first activation.</summary>
+    /// <param name="tangent">Finite XYZ direction and W orientation.</param>
+    public void SurfaceSetTangent(Vector4 tangent)
+    {
+        lock (Surfaces.Gate) { EnsureActive(); if (!tangent.IsFinite()) throw new ArgumentException("Tangents must be finite.", nameof(tangent)); if (!_usesTangents) { for (var i = 0; i < _vertices.Count; i++) _tangents.Add(tangent); _usesTangents = true; } _tangent = tangent; }
+    }
     /// <summary>Validates and commits the draft, then emits Changed outside the storage lock.</summary>
     /// <remarks>An empty or incomplete primitive rejects without losing the draft; append the missing
     /// vertices and retry, or cancel with ClearSurfaces. A throwing Changed listener leaves the surface
@@ -123,7 +141,7 @@ public sealed class ImmediateMesh : Mesh
             EnsureActive();
             if (_material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(_material));
             var index = Surfaces.GetSurfaceCount();
-            Surfaces.AddSurfaceFromArrays(_primitive, new() { Vertices = _vertices.ToArray(), Colors = _colors.ToArray(), UVs = _uvs.ToArray(), UV2s = _uv2s.ToArray() });
+            Surfaces.AddSurfaceFromArrays(_primitive, new() { Vertices = _vertices.ToArray(), Normals = _normals.ToArray(), Tangents = _tangents.ToArray(), Colors = _colors.ToArray(), UVs = _uvs.ToArray(), UV2s = _uv2s.ToArray() });
             Surfaces.Get(index).Material = _material;
             ResetDraft();
         }
@@ -140,7 +158,7 @@ public sealed class ImmediateMesh : Mesh
     }
 
     private void EnsureActive() { ThrowIfDisposed(); if (!_active) throw new InvalidOperationException("Begin a surface before editing it."); }
-    private void ResetDraft() { _active = _usesColors = _usesUVs = _usesUV2s = false; _vertices.Clear(); _colors.Clear(); _uvs.Clear(); _uv2s.Clear(); _material = null; }
+    private void ResetDraft() { _active = _usesColors = _usesUVs = _usesUV2s = _usesNormals = _usesTangents = false; _normals.Clear(); _tangents.Clear(); _vertices.Clear(); _colors.Clear(); _uvs.Clear(); _uv2s.Clear(); _material = null; }
     /// <inheritdoc />
     protected override int OnGetSurfaceCount() => Surfaces.GetSurfaceCount();
     /// <inheritdoc />

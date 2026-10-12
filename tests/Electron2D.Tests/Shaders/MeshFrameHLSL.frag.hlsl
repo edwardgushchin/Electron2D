@@ -1,0 +1,1 @@
+float4 main([[vk::location(5)]] float3 normal : TEXCOORD5, [[vk::location(6)]] float4 tangent : TEXCOORD6) : SV_Target0 { return float4(saturate(normal.z*.5+.5),saturate(tangent.x*.5+.5),tangent.w<0?1:0,1); }

@@ -9,6 +9,9 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_FRAMES_CHILD") is { } frameChild) { MeshFrameTests.RunChild(frameChild); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_FRAMES_NATIVE") == "1") { MeshFrameNativeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_FRAMES") == "1") { MeshFrameTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_DATA_TOOL_CHILD") is { } topologyChild) { MeshDataToolTests.RunChild(topologyChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_DATA_TOOL_NATIVE") == "1") { MeshDataToolNativeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_DATA_TOOL") == "1") { MeshDataToolTests.Run(); return; }

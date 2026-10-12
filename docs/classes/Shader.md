@@ -39,7 +39,7 @@ material.SetShaderParameter("tint", Colors.White);
 | `Texture? GetDefaultTextureParameter(string name, int index = 0)` | Gets the borrowed default texture. |
 | [Mode](Shader.Mode.md) | Canvas shader domain. |
 
-The fragment interface optionally accepts float4 color at location 0 and float2 UV at location 1, raw float4 instance custom at location 2 and secondary float2 UV at location 4. `TEXTURE` at set 2, binding 0 receives the current command texture or white for untextured geometry. It is reserved and omitted from uniform descriptors/default-parameter APIs. An optional scalar float32 TIME member in any valid fragment uniform buffer receives the renderer clock. Its offset and binding are reflected, not fixed. TIME is omitted from material descriptors and parameter APIs; lowercase time remains an ordinary parameter. See the [shared shader interface](../components/shader-materials.md#current-shader-interface).
+The fragment interface optionally accepts float4 color at location 0 and float2 UV at location 1, raw float4 instance custom at location 2 and secondary float2 UV at location 4, mesh-local float3 normals at location 5 and float4 tangent/orientation at location 6. `TEXTURE` at set 2, binding 0 receives the current command texture or white for untextured geometry. It is reserved and omitted from uniform descriptors/default-parameter APIs. An optional scalar float32 TIME member in any valid fragment uniform buffer receives the renderer clock. Its offset and binding are reflected, not fixed. TIME is omitted from material descriptors and parameter APIs; lowercase time remains an ordinary parameter. See the [shared shader interface](../components/shader-materials.md#current-shader-interface).
 
 ## Method descriptions
 

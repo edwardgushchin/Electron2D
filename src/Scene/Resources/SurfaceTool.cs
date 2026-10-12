@@ -16,7 +16,7 @@ public sealed partial class SurfaceTool : ElectronObject
         Eight = 1
     }
     private readonly record struct Vertex(Vector2 Position, Color Color, Vector2 UV, Vector2 UV2, uint Group,
-        Vector4i Bones, Vector4i ExtraBones, Vector4 Weights, Vector4 ExtraWeights);
+        Vector4i Bones, Vector4i ExtraBones, Vector4 Weights, Vector4 ExtraWeights, Vector3 Normal = default, Vector4 Tangent = default);
     private readonly object _gate = new();
     private List<Vertex> _vertices = [];
     private List<int> _indices = [];
@@ -165,10 +165,10 @@ public sealed partial class SurfaceTool : ElectronObject
     private MeshSurfaceData Arrays()
     {
         var count = _vertices.Count; var skin = (_format & (Mesh.ArrayFormat.Bones | Mesh.ArrayFormat.Weights)) != 0; var slots = _skin == SkinWeightCount.Eight ? 8 : 4;
-        var data = new MeshSurfaceData { Vertices = new Vector2[count], Colors = (_format & Mesh.ArrayFormat.Color) != 0 ? new Color[count] : [], UVs = (_format & Mesh.ArrayFormat.TexUV) != 0 ? new Vector2[count] : [], UV2s = (_format & Mesh.ArrayFormat.TexUV2) != 0 ? new Vector2[count] : [], Indices = _indices.ToArray(), Bones = skin ? new int[checked(count * slots)] : [], Weights = skin ? new float[checked(count * slots)] : [] };
+        var data = new MeshSurfaceData { Vertices = new Vector2[count], Normals = (_format & Mesh.ArrayFormat.Normal) != 0 ? new Vector3[count] : [], Tangents = (_format & Mesh.ArrayFormat.Tangent) != 0 ? new Vector4[count] : [], Colors = (_format & Mesh.ArrayFormat.Color) != 0 ? new Color[count] : [], UVs = (_format & Mesh.ArrayFormat.TexUV) != 0 ? new Vector2[count] : [], UV2s = (_format & Mesh.ArrayFormat.TexUV2) != 0 ? new Vector2[count] : [], Indices = _indices.ToArray(), Bones = skin ? new int[checked(count * slots)] : [], Weights = skin ? new float[checked(count * slots)] : [] };
         for (var i = 0; i < count; i++)
         {
-            var v = _vertices[i]; data.Vertices[i] = v.Position; if (data.Colors.Length != 0) data.Colors[i] = v.Color; if (data.UVs.Length != 0) data.UVs[i] = v.UV; if (data.UV2s.Length != 0) data.UV2s[i] = v.UV2;
+            var v = _vertices[i]; data.Vertices[i] = v.Position; if (data.Normals.Length != 0) data.Normals[i] = v.Normal; if (data.Tangents.Length != 0) data.Tangents[i] = v.Tangent; if (data.Colors.Length != 0) data.Colors[i] = v.Color; if (data.UVs.Length != 0) data.UVs[i] = v.UV; if (data.UV2s.Length != 0) data.UV2s[i] = v.UV2;
             if (skin) for (var j = 0; j < slots; j++) { data.Bones[i * slots + j] = j < 4 ? v.Bones[j] : v.ExtraBones[j - 4]; data.Weights[i * slots + j] = j < 4 ? v.Weights[j] : v.ExtraWeights[j - 4]; }
         }
         return data;

@@ -35261,6 +35261,32 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Normal()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Normal",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Normal = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Tangent()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Tangent",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Tangent = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "4"
+  },
+  {
     "id": "enumValue:Electron2D.Mesh.ArrayFormat.TexUV()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Mesh.ArrayFormat",
@@ -62094,6 +62120,19 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.RegenNormalMaps()",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "RegenNormalMaps",
+    "signature": "public System.Void RegenNormalMaps()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -99022,6 +99061,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ImmediateMesh.SurfaceSetNormal(Electron2D.Vector3)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImmediateMesh",
+    "name": "SurfaceSetNormal",
+    "signature": "public System.Void SurfaceSetNormal(Electron2D.Vector3 normal)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "normal",
+        "type": "Electron2D.Vector3",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImmediateMesh.SurfaceSetTangent(Electron2D.Vector4)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImmediateMesh",
+    "name": "SurfaceSetTangent",
+    "signature": "public System.Void SurfaceSetTangent(Electron2D.Vector4 tangent)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tangent",
+        "type": "Electron2D.Vector4",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ImmediateMesh.SurfaceSetUV(Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.ImmediateMesh",
@@ -109828,6 +109905,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.MeshDataTool.GetVertexNormal(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetVertexNormal",
+    "signature": "public Electron2D.Vector3 GetVertexNormal(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector3",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.GetVertexTangent(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "GetVertexTangent",
+    "signature": "public Electron2D.Vector4 GetVertexTangent(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector4",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.MeshDataTool.GetVertexUV(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.MeshDataTool",
@@ -110041,6 +110156,54 @@
       {
         "name": "value",
         "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.SetVertexNormal(System.Int32,Electron2D.Vector3)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "SetVertexNormal",
+    "signature": "public System.Void SetVertexNormal(System.Int32 index, Electron2D.Vector3 normal)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "normal",
+        "type": "Electron2D.Vector3",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshDataTool.SetVertexTangent(System.Int32,Electron2D.Vector4)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshDataTool",
+    "name": "SetVertexTangent",
+    "signature": "public System.Void SetVertexTangent(System.Int32 index, Electron2D.Vector4 tangent)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "tangent",
+        "type": "Electron2D.Vector4",
         "default": null
       }
     ],
@@ -143957,6 +144120,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.MeshSurfaceGetFormatNormalTangentStride(Electron2D.Mesh.ArrayFormat,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshSurfaceGetFormatNormalTangentStride",
+    "signature": "public static System.Int32 MeshSurfaceGetFormatNormalTangentStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "format",
+        "type": "Electron2D.Mesh.ArrayFormat",
+        "default": null
+      },
+      {
+        "name": "vertexCount",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.MeshSurfaceGetFormatSkinStride(Electron2D.Mesh.ArrayFormat,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -160507,11 +160694,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.SurfaceTool.AddTriangleFan(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Color\u003E,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "id": "method:Electron2D.SurfaceTool.AddTriangleFan(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Color\u003E,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Vector3\u003E,System.ReadOnlySpan\u003CElectron2D.Vector4\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.SurfaceTool",
     "name": "AddTriangleFan",
-    "signature": "public System.Void AddTriangleFan(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E vertices, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E uvs = default, System.ReadOnlySpan\u003CElectron2D.Color\u003E colors = default, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E uv2s = default)",
+    "signature": "public System.Void AddTriangleFan(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E vertices, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E uvs = default, System.ReadOnlySpan\u003CElectron2D.Color\u003E colors = default, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E uv2s = default, System.ReadOnlySpan\u003CElectron2D.Vector3\u003E normals = default, System.ReadOnlySpan\u003CElectron2D.Vector4\u003E tangents = default)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -160534,6 +160721,16 @@
       {
         "name": "uv2s",
         "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": "default"
+      },
+      {
+        "name": "normals",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector3\u003E",
+        "default": "default"
+      },
+      {
+        "name": "tangents",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector4\u003E",
         "default": "default"
       }
     ],
@@ -160738,6 +160935,38 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SurfaceTool.GenerateNormals(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "GenerateNormals",
+    "signature": "public System.Void GenerateNormals(System.Boolean flip = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "flip",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.GenerateTangents()",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "GenerateTangents",
+    "signature": "public System.Void GenerateTangents()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SurfaceTool.GetAABB()",
     "kind": "method",
     "declaringType": "Electron2D.SurfaceTool",
@@ -160860,6 +161089,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SurfaceTool.SetNormal(Electron2D.Vector3)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "SetNormal",
+    "signature": "public System.Void SetNormal(Electron2D.Vector3 normal)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "normal",
+        "type": "Electron2D.Vector3",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SurfaceTool.SetSkinWeightCount(Electron2D.SurfaceTool.SkinWeightCount)",
     "kind": "method",
     "declaringType": "Electron2D.SurfaceTool",
@@ -160891,6 +161139,25 @@
       {
         "name": "index",
         "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SurfaceTool.SetTangent(Electron2D.Vector4)",
+    "kind": "method",
+    "declaringType": "Electron2D.SurfaceTool",
+    "name": "SetTangent",
+    "signature": "public System.Void SetTangent(Electron2D.Vector4 tangent)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tangent",
+        "type": "Electron2D.Vector4",
         "default": null
       }
     ],
@@ -208710,6 +208977,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshSurfaceData.Normals()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshSurfaceData",
+    "name": "Normals",
+    "signature": "public Electron2D.Vector3[] Normals { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector3[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshSurfaceData.Tangents()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshSurfaceData",
+    "name": "Tangents",
+    "signature": "public Electron2D.Vector4[] Tangents { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector4[]",
     "value": null
   },
   {

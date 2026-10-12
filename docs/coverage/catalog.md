@@ -446,7 +446,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [MenuButton](classes/MenuButton.md) | Button | Partial | 17 |
 | [Mesh](classes/Mesh.md) | Resource | Partial | 89 |
 | [MeshConvexDecompositionSettings](classes/MeshConvexDecompositionSettings.md) | RefCounted | Excluded | 16 |
-| [MeshDataTool](classes/MeshDataTool.md) | RefCounted | Partial | 38 |
+| [MeshDataTool](classes/MeshDataTool.md) | RefCounted | Implemented | 38 |
 | [MeshInstance2D](classes/MeshInstance2D.md) | Node2D | Implemented | 3 |
 | [MeshInstance3D](classes/MeshInstance3D.md) | GeometryInstance3D | Excluded | 18 |
 | [MeshLibrary](classes/MeshLibrary.md) | Resource | Excluded | 25 |

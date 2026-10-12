@@ -48,7 +48,7 @@ Imported fixtures use SPIR-V 1.0 and baseline `Shader` capability. Import valida
 
 ## Current shader interface
 
-- One fragment entry point named `main`; optional inputs are float4 color at location zero, float2 UV at location one and raw float4 instance data at location two and float2 secondary UV at location four, and output is float4 at location zero. Framebuffer position is available as the stage builtin.
+- One fragment entry point named `main`; optional inputs are float4 color at location zero, float2 UV at location one and raw float4 instance data at location two and float2 secondary UV at location four, mesh-local float3 normals at five and float4 tangent/orientation at six, and output is float4 at location zero. Framebuffer position is available as the stage builtin.
 - SPIR-V input is little-endian, word-aligned, bounded to 16 MiB and the baseline `Shader` capability. The import command additionally runs `spirv-val`. Runtime resource loading checks the documented payload and interface contract for all origins; it is not a full SPIR-V specification verifier. Native translation/program-creation errors propagate before a successful draw is reported.
 - At most four uniform buffers, descriptor set 3, unique contiguous bindings starting at zero. Each buffer is at most 16 KiB. Std140 alignment and array strides are checked, and uploads include final 16-byte block padding.
 - Uniform member names are nonblank, ordinal/case-sensitive and unique across buffers. Compilers must retain names. Reflection rejects overlapping members and members outside their buffer.

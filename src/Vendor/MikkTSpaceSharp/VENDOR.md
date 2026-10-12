@@ -1,0 +1,3 @@
+Vendored MikkTSpaceSharp from https://github.com/rds1983/MikkTSpaceSharp at b8e44530659f5e98b45eedb3ddd225d759776e68.
+
+Local packaging changes: outer implementation types are internal and nullable analysis is disabled for the upstream source. The numerical algorithm is unchanged. Local allocator patch: per-call ownership scopes release outstanding temporary blocks after callback exceptions, and allocation sizes use checked native-width conversions. The patch is submitted upstream as https://github.com/rds1983/MikkTSpaceSharp/pull/1 (source commit 457b03b). Structural tangent generation may allocate; the renderer does not call this dependency. The zlib license is retained in LICENSE.

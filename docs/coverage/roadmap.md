@@ -4,8 +4,8 @@ Last updated: 2026-10-08
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1566 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 978 missing declarations in already represented type families; split each type by its documented dependency trigger.
+1. Close 1564 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+2. Complete 977 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -14,7 +14,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 
 | Godot class | Unimplemented members | Partial members |
 | --- | ---: | ---: |
-| [RenderingServer](classes/RenderingServer.md) | 427 | 33 |
+| [RenderingServer](classes/RenderingServer.md) | 426 | 33 |
 | [RenderingDevice](classes/RenderingDevice.md) | 154 | 39 |
 | [OS](classes/OS.md) | 94 | 6 |
 | [Node](classes/Node.md) | 58 | 63 |
@@ -93,7 +93,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [RayCast2D](classes/RayCast2D.md) | 0 | 1 |
 | [RichTextLabel](classes/RichTextLabel.md) | 0 | 1 |
 | [ShapeCast2D](classes/ShapeCast2D.md) | 0 | 1 |
-| [SurfaceTool](classes/SurfaceTool.md) | 0 | 1 |
 | [Texture2DRD](classes/TextureRD.md) | 0 | 1 |
 | [TileSetAtlasSource](classes/TileSetAtlasSource.md) | 0 | 1 |
 | [Timer](classes/Timer.md) | 0 | 1 |

@@ -7,23 +7,25 @@ namespace Electron2D;
 /// listeners do not roll back committed geometry. Mesh draws retain this resource and observe live data.</remarks>
 public sealed partial class ArrayMesh : Mesh
 {
-    internal sealed class Surface(MeshSurfaceData data, PrimitiveType primitive, ArrayFormat flags)
+    internal sealed class Surface(MeshSurfaceData data, PrimitiveType primitive, ArrayFormat flags, uint[]? frameWords = null)
     {
         internal readonly MeshSurfaceData Data = data;
+        internal readonly uint[] FrameWords = frameWords ?? MeshFrameCodec.Capture(data);
         internal readonly PrimitiveType Primitive = primitive;
-        internal readonly ArrayFormat Format = ArrayFormat.Vertex | ArrayFormat.Use2DVertices | flags |
-            (data.Colors.Length != 0 ? ArrayFormat.Color : 0) | (data.UVs.Length != 0 ? ArrayFormat.TexUV : 0) | (data.UV2s.Length != 0 ? ArrayFormat.TexUV2 : 0) | (data.Indices.Length != 0 ? ArrayFormat.Index : 0) | (data.Bones.Length != 0 ? ArrayFormat.Bones | ArrayFormat.Weights : 0);
+        internal readonly ArrayFormat Format = Channels(data) | flags;
+        internal static ArrayFormat Channels(MeshSurfaceData data) => ArrayFormat.Vertex | ArrayFormat.Use2DVertices |
+            (data.Normals.Length != 0 ? ArrayFormat.Normal : 0) | (data.Tangents.Length != 0 ? ArrayFormat.Tangent : 0) | (data.Colors.Length != 0 ? ArrayFormat.Color : 0) | (data.UVs.Length != 0 ? ArrayFormat.TexUV : 0) | (data.UV2s.Length != 0 ? ArrayFormat.TexUV2 : 0) | (data.Indices.Length != 0 ? ArrayFormat.Index : 0) | (data.Bones.Length != 0 ? ArrayFormat.Bones | ArrayFormat.Weights : 0);
         internal string Name = "";
         internal Material? Material;
     }
-    internal const ArrayFormat SupportedFormats = ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.Vertex | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights;
+    internal const ArrayFormat SupportedFormats = ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights;
     internal readonly object Gate = new();
     private readonly List<Surface> _surfaces = [];
     /// <summary>Creates an empty mesh.</summary>
     public ArrayMesh() { }
     /// <summary>Adds one copied two-dimensional surface.</summary>
     /// <param name="primitive">Vertex topology, including points, lines and strips.</param>
-    /// <param name="arrays">Borrowed typed vertex/color/primary and secondary UV/index/skin arrays copied before mutation.</param>
+    /// <param name="arrays">Borrowed typed vertex/normal/tangent/color/primary and secondary UV/index/skin arrays copied before mutation.</param>
     /// <param name="blendShapes">Null or empty until the typed deformation consumer is integrated.</param>
     /// <param name="lods">Null or empty until scale-selected index sets are integrated.</param>
     /// <param name="flags">UseDynamicUpdate, Use2DVertices, Use8BoneWeights and matching channel bits. Unsupported bits reject before mutation.</param>
@@ -41,9 +43,9 @@ public sealed partial class ArrayMesh : Mesh
         if (material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(material));
         if (blendShapes is { Count: > 0 } || lods is { Count: > 0 }) throw new NotSupportedException("Morph targets and LOD index sets require their first executable deformation/scale-selection integration.");
         if ((flags & ~SupportedFormats) != 0) throw new NotSupportedException("These mesh flags require their attribute storage integration.");
-        var copy = arrays.Copy(); copy.Validate(primitive); var inferred = new Surface(copy, primitive, ArrayFormat.None).Format; const ArrayFormat channels = ArrayFormat.Vertex | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights; if ((flags & channels & ~inferred) != 0) throw new ArgumentException("Explicit channel flags require matching typed arrays.", nameof(flags)); if (copy.SkinSlots != 0 && copy.SkinSlots != ((flags & ArrayFormat.Use8BoneWeights) != 0 ? 8 : 4)) throw new ArgumentException("Skin slot count must match the eight-weight flag.", nameof(flags)); copy.QuantizeSkin();
+        var copy = arrays.Copy(); copy.Validate(primitive); var packed = new Surface(copy, primitive, flags); var inferred = Surface.Channels(copy); const ArrayFormat channels = ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights; if ((flags & channels & ~inferred) != 0) throw new ArgumentException("Explicit channel flags require matching typed arrays.", nameof(flags)); if (copy.SkinSlots != 0 && copy.SkinSlots != ((flags & ArrayFormat.Use8BoneWeights) != 0 ? 8 : 4)) throw new ArgumentException("Skin slot count must match the eight-weight flag.", nameof(flags)); copy.QuantizeSkin();
         for (var i = 0; i < copy.Colors.Length; i++) { var color = copy.Colors[i]; copy.Colors[i] = new(Quantize(color.R), Quantize(color.G), Quantize(color.B), Quantize(color.A)); }
-        lock (Gate) { ThrowIfDisposed(); _surfaces.Add(new(copy, primitive, flags) { Material = material }); }
+        lock (Gate) { ThrowIfDisposed(); packed.Material = material; _surfaces.Add(packed); }
         EmitChanged();
     }
     /// <summary>Removes every surface without disposing borrowed materials.</summary>
@@ -68,10 +70,10 @@ public sealed partial class ArrayMesh : Mesh
     /// <returns>The first index, or minus one.</returns>
     /// <exception cref="ArgumentNullException">The name is null.</exception>
     public int SurfaceFindByName(string name) { ArgumentNullException.ThrowIfNull(name); lock (Gate) { ThrowIfDisposed(); for (var i = 0; i < _surfaces.Count; i++) if (_surfaces[i].Name == name) return i; return -1; } }
-    /// <summary>Updates bytes in packed two-float positions in the surface vertex buffer.</summary>
+    /// <summary>Updates bytes in packed positions and octahedral normal/tangent records.</summary>
     /// <param name="surfaceIndex">Existing zero-based index.</param>
-    /// <param name="offset">Byte offset within the two-float position buffer.</param>
-    /// <param name="data">Little-endian float X/Y storage, including partial byte records.</param>
+    /// <param name="offset">Byte offset in the position block followed by interleaved normal/tangent words.</param>
+    /// <param name="data">Little-endian float X/Y positions followed by per-vertex octahedral UNORM16 normal/tangent words, including partial byte records.</param>
     /// <remarks>Retained draws observe the update without rerecording.</remarks>
     /// <exception cref="ArgumentException">An affected position becomes nonfinite.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The region exceeds the vertex buffer.</exception>
@@ -79,16 +81,25 @@ public sealed partial class ArrayMesh : Mesh
     {
         lock (Gate)
         {
-            var surface = Get(surfaceIndex); Region(offset, data.Length, surface.Data.Vertices.Length, 8);
+            var surface = Get(surfaceIndex); var positionBytes = surface.Data.Vertices.Length * 8L;
+            if (offset < 0 || (long)offset + data.Length > positionBytes + surface.FrameWords.Length * 4L) throw new ArgumentOutOfRangeException(nameof(offset));
             Span<byte> record = stackalloc byte[8]; var end = (long)offset + data.Length;
             for (var pass = 0; pass < 2; pass++)
-                for (var index = offset / 8; index * 8L < end; index++)
+            {
+                for (var index = offset / 8; index * 8L < Math.Min(end, positionBytes); index++)
                 {
                     var vertex = surface.Data.Vertices[index]; BinaryPrimitives.WriteSingleLittleEndian(record, vertex.X); BinaryPrimitives.WriteSingleLittleEndian(record[4..], vertex.Y);
                     Overlay(record, index * 8L, offset, data); var next = ReadVector(record);
                     if (!next.IsFinite()) throw new ArgumentException("Vertex updates must be finite.", nameof(data));
                     if (pass != 0) surface.Data.Vertices[index] = next;
                 }
+                if (pass != 0 && end > positionBytes)
+                    for (var word = (int)Math.Max(0, ((long)offset - positionBytes) / 4); positionBytes + word * 4L < end; word++)
+                    {
+                        var bytes = record[..4]; BinaryPrimitives.WriteUInt32LittleEndian(bytes, surface.FrameWords[word]); Overlay(bytes, positionBytes + word * 4L, offset, data);
+                        var value = BinaryPrimitives.ReadUInt32LittleEndian(bytes); surface.FrameWords[word] = value; MeshFrameCodec.RestoreWord(surface.Data, word, value);
+                    }
+            }
         }
         EmitChanged();
     }
