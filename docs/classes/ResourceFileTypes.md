@@ -152,3 +152,5 @@ Version-2 role-aware missing-resource storage, snapshot policy and reference rel
 ## Animation property bindings
 
 `RegisterAnimationProperty<TOwner,TValue>(id, property, interpolate)` registers the immutable compiled binding used by file-backed value and scalar Bézier tracks. Reuse the exact descriptor/interpolator pair while authoring and register the same schema in every loading process. IDs and binding pairs are unique; descriptors must be writable. File data never resolves a CLR member or restores a delegate. See [typed clip persistence](../components/scene-animation.md#typed-clip-persistence).
+
+`RegisterAnimationMethod<TOwner,TArguments>(id, callback)` registers immutable compiled method-key receiver/payload bindings. Names remain diagnostic; arguments use typed codecs/resource references. See [cue persistence](../components/scene-animation.md#cue-persistence). The AudioStreamWAV exact resource factory preserves encoded payload and authored metadata.

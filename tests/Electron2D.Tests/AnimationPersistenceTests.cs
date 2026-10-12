@@ -38,7 +38,7 @@ internal static class AnimationPersistenceTests
                 Check(cached.GetAnimation("move").TrackGetKeyValue<Vector2>(0, 1).X == 40 && ReferenceEquals(cached.GetAnimation("move"), cached.GetAnimation("alias")), "Replace restores changed keys and aliases.");
             }
             var prior = File.ReadAllBytes(path);
-            using var unsupported = new Animation(); unsupported.AddAnimationTrack(); Reject<AggregateException>(() => ResourceSaver.Save(unsupported, path));
+            using var unsupported = new Animation(); unsupported.AddMethodTrack<SubViewport>(); Reject<AggregateException>(() => ResourceSaver.Save(unsupported, path));
             Check(File.ReadAllBytes(path).SequenceEqual(prior), "Unsupported tracks cannot overwrite the asset.");
             using var unregistered = new Animation(); var descriptor = new PropertyDescriptor<Box, double>("Unregistered", n => n.Value, (n, v) => n.Value = v); unregistered.AddTrack(descriptor);
             Reject<AggregateException>(() => ResourceSaver.Save(unregistered, path)); Check(File.ReadAllBytes(path).SequenceEqual(prior), "Unregistered property cannot overwrite the asset.");

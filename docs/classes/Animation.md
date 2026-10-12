@@ -1315,4 +1315,6 @@ Nested animation tracks execute clip-name keys against borrowed child players, w
 
 Weighted graph evaluation now retires controlled nested players and audio cues when their binding no longer participates, including state stop/departed clips and nonblended audio. Playback ownership revisions protect user takeovers; already accepted deferred method calls keep their existing safe-point lifetime. [AnimationStateMachineTests](../../tests/Electron2D.Tests/AnimationStateMachineTests.cs) exercises this integration.
 
-File-backed property/Bézier clips and named libraries use the [typed clip persistence contract](../components/scene-animation.md#typed-clip-persistence). Register the exact compiled property binding in each process; unsupported track families reject save.
+File-backed property/Bézier clips and named libraries use the [typed clip persistence contract](../components/scene-animation.md#typed-clip-persistence). Register the exact compiled property binding in each process; method callbacks require their registered cue bindings.
+
+All current value, Bézier, method, audio and nested track kinds persist through the [cue schemas](../components/scene-animation.md#cue-persistence). Method bindings are registered compiled code; other AudioStream subclasses need their own resource factories.

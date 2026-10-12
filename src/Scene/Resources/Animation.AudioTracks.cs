@@ -68,7 +68,7 @@ public sealed partial class Animation
     /// <exception cref="InvalidOperationException">The track kind differs.</exception>
     public void AudioTrackSetUseBlend(int track, bool enable) { Audio(track).UseBlend = enable; EmitChanged(); }
 }
-internal sealed class AnimationAudioTrack : AnimationTypedTrack<AnimationAudioKey>
+internal sealed partial class AnimationAudioTrack : AnimationTypedTrack<AnimationAudioKey>
 {
     internal bool UseBlend = true;
     internal AnimationAudioTrack() : base(null) { }

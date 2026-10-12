@@ -37,6 +37,9 @@ public static partial class ResourceFileTypes
     }
     internal static AnimationTrack CreateAnimationFileTrack(string schema)
     {
+        if (schema == "7:audio") return new AnimationAudioTrack();
+        if (schema == "8:nested") return new AnimationNestedTrack();
+        if (schema is not null && schema.StartsWith("5:", StringComparison.Ordinal)) return AnimationMethodBinding(schema[2..]).CreateTrack();
         if (schema is null || schema.Length < 3 || schema.Length > 258 || schema[1] != ':' || schema[0] is not ('0' or '6'))
             throw new InvalidDataException("Invalid animation track schema.");
         AnimationFileBinding binding;

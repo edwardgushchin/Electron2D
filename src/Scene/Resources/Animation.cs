@@ -6,7 +6,7 @@ namespace Electron2D;
 /// <remarks>Author on the scene owner thread. Tracks carry immutable typed descriptors and relative node paths;
 /// they never own target nodes. Keys are sorted, equal times replace, and copies have independent containers.
 /// Continuous tracks interpolate; discrete tracks hold the last key. Method keys invoke typed callbacks;
-/// scalar Bézier keys use time/value handle geometry; child-animation keys control relative players. Capture is evaluated by AnimationMixer. Edits raise Changed except imported metadata. Length defaults to one second. Value/Bézier resource files require registered typed property bindings; other track kinds reject save.</remarks>
+/// scalar Bézier keys use time/value handle geometry; child-animation keys control relative players. Capture is evaluated by AnimationMixer. Edits raise Changed except imported metadata. Length defaults to one second. Resource files require registered typed property and method bindings; audio and child-animation cues use their built-in schemas.</remarks>
 public sealed partial class Animation : Resource
 {
     /// <summary>Creates an empty one-second nonlooping typed timeline.</summary>
@@ -330,6 +330,8 @@ internal abstract class AnimationTrack
     internal abstract string PropertyName { get; }
     internal virtual PropertyDescriptor? FileProperty => null;
     internal virtual Delegate? FileInterpolator => null;
+    internal virtual string FileReceiverID => throw new NotSupportedException("Track has no compiled receiver binding.");
+    internal virtual IEnumerable<PropertyDescriptor> FileMetadataProperties(int track) => [];
     internal virtual IEnumerable<PropertyDescriptor> FileKeyProperties(int track) => [];
     internal virtual void SetFileTimes(double[] times) => throw new NotSupportedException("This track kind has no portable key schema.");
     internal bool Enabled = true, Imported, LoopWrap = true;

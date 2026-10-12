@@ -268,3 +268,5 @@ Window content policies now execute logical-size fitting, raster target selectio
 [Animation key optimization](../components/scene-animation.md#key-optimization) reduces built-in scalar/Vector2 curves before existing player and graph execution, preserving discrete writes and non-linear curve contracts.
 
 [Typed clip persistence](../components/scene-animation.md#typed-clip-persistence) loads property/Bézier Animation and AnimationLibrary assets through stable compiled property bindings, then executes existing player/mixer/graph consumers.
+
+[Animation cue persistence](../components/scene-animation.md#cue-persistence) reconstructs all current method/audio/nested track kinds for existing players and graphs using compiled callback IDs and typed resource references.

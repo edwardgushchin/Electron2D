@@ -126,3 +126,7 @@ MissingResourceTests covers strict/tolerant policy, recording/typed boundaries, 
 ## Animation clip integration
 
 Exact Animation/AnimationLibrary factories and compiled property binding registrations persist typed value/Bézier curves, resource keys, library aliases and colored markers. Double arrays now have a built-in portable codec and independent stored snapshots for key timing. See [typed clip persistence](scene-animation.md#typed-clip-persistence) for the registration, field budgets and remaining executable-schema triggers.
+
+## Animation cue integration
+
+The existing track schema supports compiled typed method callbacks/payloads, borrowed AudioStream cues and named child-player commands. Exact AudioStreamWAV storage preserves every authored format/metadata field and tags; file graphs retain stream and resource-argument aliases. See [cue persistence](scene-animation.md#cue-persistence) for IDs, budgets and native execution limits.

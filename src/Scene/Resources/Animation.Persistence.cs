@@ -2,6 +2,7 @@ namespace Electron2D;
 
 public sealed partial class Animation
 {
+    internal void NotifyFileSchemaChanged() { EmitChanged(); NotifyPropertyListChanged(); }
     private IEnumerable<PropertyDescriptor> GetFileProperties()
     {
         yield return new PropertyDescriptor<Animation, string[]>("TrackSchemas", a => a.GetFileSchemas(), (a, v) => a.SetFileSchemas(v), stored: true);
@@ -18,6 +19,7 @@ public sealed partial class Animation
                 yield return new PropertyDescriptor<Animation, UpdateMode>(prefix + "Update", a => a.ValueTrackGetUpdateMode(index), (a, v) => a.ValueTrackSetUpdateMode(index, v), stored: true);
             yield return new PropertyDescriptor<Animation, double[]>(prefix + "Times", a => a.Get(index).Times.ToArray(), (a, v) => a.SetFileTimes(index, v), stored: true);
             yield return new PropertyDescriptor<Animation, double[]>(prefix + "Transitions", a => a.Get(index).Transitions.ToArray(), (a, v) => a.SetFileTransitions(index, v), stored: true);
+            foreach (var property in _tracks[index].FileMetadataProperties(index)) yield return property;
             foreach (var property in _tracks[index].FileKeyProperties(index)) yield return property;
         }
     }
@@ -27,9 +29,14 @@ public sealed partial class Animation
         var schemas = new string[_tracks.Count];
         for (var i = 0; i < schemas.Length; i++)
         {
-            if (_tracks[i].Kind is not (TrackType.Value or TrackType.Bezier))
-                throw new NotSupportedException("This animation track kind requires its own portable executable schema.");
-            schemas[i] = ((int)_tracks[i].Kind).ToString(System.Globalization.CultureInfo.InvariantCulture) + ":" + ResourceFileTypes.AnimationBindingID(_tracks[i]);
+            schemas[i] = _tracks[i].Kind switch
+            {
+                TrackType.Value or TrackType.Bezier => ((int)_tracks[i].Kind).ToString(System.Globalization.CultureInfo.InvariantCulture) + ":" + ResourceFileTypes.AnimationBindingID(_tracks[i]),
+                TrackType.Method => "5:" + _tracks[i].FileReceiverID,
+                TrackType.Audio => "7:audio",
+                TrackType.Animation => "8:nested",
+                _ => throw new NotSupportedException("This animation track kind has no portable schema.")
+            };
         }
         return schemas;
     }
@@ -44,7 +51,7 @@ public sealed partial class Animation
     private void EnsureFileBudget(int replacedTrack, int keyCount)
     {
         var fields = 16L + 8L * _tracks.Count;
-        for (var i = 0; i < _tracks.Count; i++) fields += i == replacedTrack ? keyCount : _tracks[i].Times.Count;
+        for (var i = 0; i < _tracks.Count; i++) fields += (_tracks[i].Kind == TrackType.Method ? 2L : _tracks[i].Kind == TrackType.Audio ? 3L : 1L) * (i == replacedTrack ? keyCount : _tracks[i].Times.Count);
         if (_tracks.Count > 4096 || fields > 65536) throw new InvalidDataException("Animation fields exceed archive budget.");
     }
     private void SetFileTimes(int track, double[] times)

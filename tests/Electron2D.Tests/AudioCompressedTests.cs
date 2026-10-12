@@ -75,7 +75,7 @@ internal static class AudioCompressedTests
         using var captured = loaded.InstantiatePlayback();
         var replaced = ResourceLoader.Load<AudioStream>(path, ResourceLoader.CacheMode.Replace); Check(ReferenceEquals(loaded, replaced), "Audio cache Replace retains identity.");
         captured.Start(); Check(captured.MixAudio(1, 256).Length == 256, "Imported retired sequence remains valid for captured playback after reload.");
-        Check(!ResourceLoader.Exists<AudioStreamMP3>(path) && ResourceLoader.GetRecognizedExtensionsForType<AudioStream>().SequenceEqual(new[] { "wav", "mp3", "ogg" }), "Typed extension discovery and mismatched audio existence.");
+        Check(!ResourceLoader.Exists<AudioStreamMP3>(path) && ResourceLoader.GetRecognizedExtensionsForType<AudioStream>().SequenceEqual(new[] { "wav", "mp3", "ogg", "e2dres" }), "Typed extension discovery and mismatched audio existence.");
         Reject<InvalidOperationException>(() => ResourceLoader.Load<AudioStreamMP3>(path));
         Reject<NotSupportedException>(() => ResourceLoader.Load<AudioStreamMP3>(path, ResourceLoader.CacheMode.Ignore));
         using (var ignored = ResourceLoader.Load<AudioStream>(path, ResourceLoader.CacheMode.Ignore)) Check(!ReferenceEquals(ignored, loaded) && ReferenceEquals(ResourceLoader.GetCachedRef<AudioStream>(path), loaded), "Ignore keeps cache identity.");

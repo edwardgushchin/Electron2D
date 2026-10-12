@@ -28,6 +28,7 @@ public abstract class AnimationMethodKey<TOwner> where TOwner : Node
     /// <value>The validated nonblank name; the delegate supplies executable identity.</value>
     public string Name { get; }
     internal abstract void Invoke(TOwner owner);
+    internal abstract IEnumerable<PropertyDescriptor> FileProperties(int track, int key);
     internal abstract T ReadArguments<T>();
     internal abstract AnimationMethodKey<TOwner> Copy(bool deep, Func<Resource?, Resource?>? duplicate);
 }
@@ -51,6 +52,14 @@ public sealed class AnimationMethodKey<TOwner, TArguments> : AnimationMethodKey<
     /// <value>The payload supplied at construction; custom references remain borrowed.</value>
     public TArguments Arguments { get; }
     internal override void Invoke(TOwner owner) => Callback(owner, Arguments);
+    internal override IEnumerable<PropertyDescriptor> FileProperties(int track, int key)
+    {
+        var prefix = $"Track[{track}].Key[{key}].";
+        yield return new PropertyDescriptor<Animation, string>(prefix + "Name", a => ((AnimationMethodTrack<TOwner>)a.Get(track)).Values[key].Name,
+            (a, v) => { var item = (AnimationMethodKey<TOwner, TArguments>)((AnimationMethodTrack<TOwner>)a.Get(track)).Values[key]; a.TrackSetKeyValue<AnimationMethodKey<TOwner>>(track, key, new AnimationMethodKey<TOwner, TArguments>(v, item.Callback, item.Arguments)); }, stored: true);
+        yield return new PropertyDescriptor<Animation, TArguments>(prefix + "Arguments", a => ((AnimationMethodKey<TOwner, TArguments>)((AnimationMethodTrack<TOwner>)a.Get(track)).Values[key]).Arguments,
+            (a, v) => { var item = (AnimationMethodKey<TOwner, TArguments>)((AnimationMethodTrack<TOwner>)a.Get(track)).Values[key]; a.TrackSetKeyValue<AnimationMethodKey<TOwner>>(track, key, new AnimationMethodKey<TOwner, TArguments>(item.Name, item.Callback, v)); }, stored: true);
+    }
     internal override T ReadArguments<T>() { if (typeof(T) != typeof(TArguments)) throw new InvalidCastException("Argument payload type differs from this key."); var args = Arguments; return Unsafe.As<TArguments, T>(ref args); }
     internal override AnimationMethodKey<TOwner> Copy(bool deep, Func<Resource?, Resource?>? duplicate) { var args = Arguments; if (args is Resource resource && deep) args = (TArguments)(object)duplicate!(resource)!; else if (args is Array array) args = (TArguments)(object)array.Clone(); return new AnimationMethodKey<TOwner, TArguments>(Name, Callback, args); }
 }
@@ -188,7 +197,7 @@ internal sealed class AnimationBezierTrack<TOwner, TValue>(PropertyDescriptor<TO
         internal override void Apply(Animation animation, int index, double time, bool backward, double? previous, AnimationMixer mixer, long generation) { if (!Live(mixer)) return; var revision = animation.ChangeRevision; var value = mixer.ProcessKey(animation, index, Convert(track.InterpolateBezier(time, animation)), owner.InstanceID); if (mixer.IsBindingCurrent(animation, generation) && !animation.IsDisposed && revision == animation.ChangeRevision && !owner.IsDisposed) property.SetValue(owner, value); }
     }
 }
-internal sealed class AnimationMethodTrack<TOwner> : AnimationTypedTrack<AnimationMethodKey<TOwner>> where TOwner : Node
+internal sealed partial class AnimationMethodTrack<TOwner> : AnimationTypedTrack<AnimationMethodKey<TOwner>> where TOwner : Node
 {
     internal AnimationMethodTrack() : base(null) { }
     internal override Animation.TrackType Kind => Animation.TrackType.Method;

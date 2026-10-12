@@ -1,6 +1,6 @@
 # Audio playback and routed buses
 
-Last updated: 2026-10-06
+Last updated: 2026-10-13
 
 Private native binaries come from versioned Linux/macOS/Windows packages in ordinary desktop builds. [Native delivery](../native-packaging.md) separates source production, audited packages, executable checks and public publication; complete Windows/macOS target verification remains pending.
 
@@ -326,3 +326,5 @@ Built-in typed resource factories cover the layout and all 27 concrete effect re
 The basic AudioBusesDefaultBusLayout project setting projects audio/buses/default_bus_layout, defaulting to res://default_bus_layout.e2dres. Engine.Start/Run read active feature overrides and apply a present file before main-loop initialization or Window autoplay; empty/missing paths leave buses intact. Invalid/corrupt layouts report startup failure. The archive extension is the existing product format under ADR 0013, not a new codec or serializer.
 
 AudioBusLayoutTests checks all 27 effect schemas, exact controls/aliases, shallow/deep copying, file lifetimes, cache replacement/corruption, endian/compression/bundling, 255-bus capacity, invalid/disposed values, owner checks, factory/reentrancy rollback, cleanup/notification commitment, fresh-process default startup and actual FAudio Stream/Sample PCM. It measures zero managed callback bytes and FAudio allocator calls over 64 warmed post-layout passes. Two public Window runs pass on each current Linux Wayland GPU/compatibility backend. Physical listening, other targets, native graph failure injection and editor UI remain separate gates. The related dB setter now rejects a finite raw value whose linear conversion overflows before mutation.
+
+AudioStreamWAV now has an exact .e2dres graph factory with stored encoded data, format/rate/stereo/loop metadata and copied tags. Native decoded PCM and playback state are rebuilt through the existing consumer; cue file integration and verification are described in [cue persistence](scene-animation.md#cue-persistence).

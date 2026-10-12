@@ -3831,6 +3831,11 @@
     {
       "electron2d": "method:Electron2D.AudioBusLayout.GetPropertyDescriptors()",
       "reason": "Typed constructor and Resource storage/copy/disposal hooks project the AudioBusLayout configuration and resource lifecycle; no native state is copied (ADRs 0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamWAV.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADRs 0047/0013: exact WAV resource-file factory stores copied encoded bytes, format/rate/stereo/loop metadata and tags; prepared PCM/native voices are rebuilt. Four supported format round-trips decode and saved cues emit actual FAudio/SDL PCM; acoustic/foreign/native-allocation gates are separate."
     }
   ],
   "statusGroups": [
@@ -3922,7 +3927,13 @@
         "AudioStreamPlayer::property:pitch_scale",
         "AudioStreamPlayer::property:playing",
         "AudioStreamPlayer::property:stream",
-        "AudioStreamPlayer::signal:finished()",
+        "AudioStreamPlayer::signal:finished()"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native 2/4/6/8-channel PCM checks cover current behavior. Other platforms and physical listening remain unverified. Exact WAV .e2dres factory now preserves copied encoded data, all format/rate/stereo/loop metadata and tags. PCM8/PCM16/IMA ADPCM/QOA file round-trips decode; restored cue playback and native mixed PCM execute on Linux. Decoded caches/native voices are transient; foreign/physical-listening gates remain separate.",
+      "godot": [
         "AudioStreamWAV::enum:Format",
         "AudioStreamWAV::enum:LoopMode",
         "AudioStreamWAV::enum_value:Format.FORMAT_16_BITS",

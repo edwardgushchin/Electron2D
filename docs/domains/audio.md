@@ -77,3 +77,5 @@ Scene players now preserve full attacks with 64-frame lookahead and execute prep
 [Animation audio cues](../components/scene-animation.md#audio-tracks) connect clip keys to the existing player/emitter/polyphonic backend with cold child/native preparation, weighted gain, trim/seek and controller cleanup. No separate audio clock/backend is introduced.
 
 [AudioBusLayout](../classes/AudioBusLayout.md) now persists and restores complete bus configuration and typed effects through resource archives. Engine startup applies an optional project default before initialization/autoplay; live replacement preserves streamed/sample transport and prepares new effect instances before commit. See [saved bus layouts](../components/audio-playback.md#saved-bus-layouts).
+
+AudioStreamWAV encoded payload and authored metadata now persist through the exact .e2dres factory. Animation audio cues retain stream aliases and offsets through the resource graph; see [cue persistence](../components/scene-animation.md#cue-persistence).
