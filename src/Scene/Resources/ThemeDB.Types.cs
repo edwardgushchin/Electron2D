@@ -292,6 +292,7 @@ public sealed partial class ThemeDB
         ["RDPipelineRasterizationState"] = ["RDPipelineRasterizationState", "ElectronObject"],
         ["RDPipelineSpecializationConstant"] = ["RDPipelineSpecializationConstant", "ElectronObject"],
         ["RDSamplerState"] = ["RDSamplerState", "ElectronObject"],
+        ["RDShaderFile"] = ["RDShaderFile", "Resource", "ElectronObject"],
         ["RDShaderSPIRV"] = ["RDShaderSPIRV", "Resource", "ElectronObject"],
         ["RDShaderSource"] = ["RDShaderSource", "ElectronObject"],
         ["RDTextureFormat"] = ["RDTextureFormat", "ElectronObject"],

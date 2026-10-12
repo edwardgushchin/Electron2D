@@ -224,3 +224,5 @@ Compiled compute/vertex/fragment modules may declare one binary push block per s
 Specialization declarations retain copied symbolic templates until pipeline creation resolves typed values. Workgroup dimensions and uniform/push fixed arrays use the resolved constants before native creation. See [typed pipeline specialization](../components/local-compute.md#typed-pipeline-specialization) for validation and ownership.
 
 [ShaderCompileSPIRVFromSource](RenderingDevice.md#source-authoring) returns an independent compiled resource with diagnostics per attempted stage. Failed stages stay empty while successful siblings survive. Descriptions and returned byte arrays never expose cache storage; native creation still uses the common device capability, lifetime and program-role checks.
+
+[RDShaderFile](RDShaderFile.md) borrows these resources under named versions and preserves aliases, copied stage bytecode and diagnostics in saved graphs. Selecting a file version supplies this same module to the ordinary device factories; replacing a version does not dispose its predecessor.

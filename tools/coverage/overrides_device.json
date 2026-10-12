@@ -3564,6 +3564,31 @@
       "electron2d": "method:Electron2D.RenderingDevice.ShaderCompileSPIRVFromSource(Electron2D.RDShaderSource,System.Boolean)",
       "state": "Partial",
       "reason": "ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified. Tessellation source compilation enters the accepted executing backend stage slice together with RDShaderSource control/evaluation fields and pipeline/interfaces; ray stages remain excluded."
+    },
+    {
+      "godot": "class:RDShaderFile",
+      "electron2d": "T:Electron2D.RDShaderFile",
+      "reason": "ADRs 0004/0013/0014/0028: named borrowed compiled stage modules, case-sensitive Unicode scalar-sorted copied version lists, independent import/stage diagnostics, post-commit notifications and validated lifecycle. Typed saved graphs and shallow/deep/local copies preserve module aliases; fresh files execute native compute/graphics pipelines. Warm existing-key edits/lookup and selected dispatch/readback retain measured allocation/platform boundaries."
+    },
+    {
+      "godot": "RDShaderFile::property:base_error",
+      "electron2d": "property:Electron2D.RDShaderFile.BaseError()",
+      "reason": "ADRs 0004/0013/0014/0028: named borrowed compiled stage modules, case-sensitive Unicode scalar-sorted copied version lists, independent import/stage diagnostics, post-commit notifications and validated lifecycle. Typed saved graphs and shallow/deep/local copies preserve module aliases; fresh files execute native compute/graphics pipelines. Warm existing-key edits/lookup and selected dispatch/readback retain measured allocation/platform boundaries."
+    },
+    {
+      "godot": "RDShaderFile::method:get_spirv(StringName:)",
+      "electron2d": "method:Electron2D.RDShaderFile.GetSPIRV(System.String)",
+      "reason": "ADRs 0004/0013/0014/0028: named borrowed compiled stage modules, case-sensitive Unicode scalar-sorted copied version lists, independent import/stage diagnostics, post-commit notifications and validated lifecycle. Typed saved graphs and shallow/deep/local copies preserve module aliases; fresh files execute native compute/graphics pipelines. Warm existing-key edits/lookup and selected dispatch/readback retain measured allocation/platform boundaries."
+    },
+    {
+      "godot": "RDShaderFile::method:get_version_list()",
+      "electron2d": "method:Electron2D.RDShaderFile.GetVersionList()",
+      "reason": "ADRs 0004/0013/0014/0028: named borrowed compiled stage modules, case-sensitive Unicode scalar-sorted copied version lists, independent import/stage diagnostics, post-commit notifications and validated lifecycle. Typed saved graphs and shallow/deep/local copies preserve module aliases; fresh files execute native compute/graphics pipelines. Warm existing-key edits/lookup and selected dispatch/readback retain measured allocation/platform boundaries."
+    },
+    {
+      "godot": "RDShaderFile::method:set_bytecode(RDShaderSPIRV:,StringName:)",
+      "electron2d": "method:Electron2D.RDShaderFile.SetBytecode(Electron2D.RDShaderSPIRV,System.String)",
+      "reason": "ADRs 0004/0013/0014/0028: named borrowed compiled stage modules, case-sensitive Unicode scalar-sorted copied version lists, independent import/stage diagnostics, post-commit notifications and validated lifecycle. Typed saved graphs and shallow/deep/local copies preserve module aliases; fresh files execute native compute/graphics pipelines. Warm existing-key edits/lookup and selected dispatch/readback retain measured allocation/platform boundaries."
     }
   ],
   "extras": [
@@ -3886,6 +3911,26 @@
       "electron2d": "method:Electron2D.RDShaderSource.GetPropertyDescriptors()",
       "state": "Implemented",
       "reason": "ADRs 0004/0005/0028: construction and typed metadata for executable copied source/language descriptions. ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified."
+    },
+    {
+      "electron2d": "constructor:Electron2D.RDShaderFile..ctor()",
+      "reason": "Typed resource construction, stored named graph, inherited duplication and borrowed cleanup project the pinned RDShaderFile resource family under ADR 0013; no new public semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.RDShaderFile.GetPropertyDescriptors()",
+      "reason": "Typed resource construction, stored named graph, inherited duplication and borrowed cleanup project the pinned RDShaderFile resource family under ADR 0013; no new public semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.RDShaderFile.CreateDuplicateInstance()",
+      "reason": "Typed resource construction, stored named graph, inherited duplication and borrowed cleanup project the pinned RDShaderFile resource family under ADR 0013; no new public semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.RDShaderFile.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed resource construction, stored named graph, inherited duplication and borrowed cleanup project the pinned RDShaderFile resource family under ADR 0013; no new public semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.RDShaderFile.Dispose(System.Boolean)",
+      "reason": "Typed resource construction, stored named graph, inherited duplication and borrowed cleanup project the pinned RDShaderFile resource family under ADR 0013; no new public semantic capability."
     }
   ],
   "statusGroups": [
@@ -4890,6 +4935,17 @@
       "reason": "ADR 0028: executable vertex/fragment/compute source authoring through separately published ShaderImport, with GLSL/HLSL compiler profiles, independent stage diagnostics, copied RDShaderSPIRV results and the normal validated device pipeline path. Explicit cache bypass and bounded success caching execute; preprocessing/include sources recompile, preserving changed-include correctness. Native compute/graphics/retained canvas and prepared recording zero managed bytes are verified on Linux/Vulkan. Compiler tools remain absent from published games. Native/driver allocations and foreign hosts/backends remain unverified. Tessellation source compilation enters the accepted executing backend stage slice together with RDShaderSource control/evaluation fields and pipeline/interfaces; ray stages remain excluded.",
       "godot": [
         "RenderingDevice::method:shader_compile_spirv_from_source(RDShaderSource:,bool:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0004/0013/0014/0028: named borrowed compiled stage modules, case-sensitive Unicode scalar-sorted copied version lists, independent import/stage diagnostics, post-commit notifications and validated lifecycle. Typed saved graphs and shallow/deep/local copies preserve module aliases; fresh files execute native compute/graphics pipelines. Warm existing-key edits/lookup and selected dispatch/readback retain measured allocation/platform boundaries.",
+      "godot": [
+        "class:RDShaderFile",
+        "RDShaderFile::property:base_error",
+        "RDShaderFile::method:get_spirv(StringName:)",
+        "RDShaderFile::method:get_version_list()",
+        "RDShaderFile::method:set_bytecode(RDShaderSPIRV:,StringName:)"
       ]
     }
   ]

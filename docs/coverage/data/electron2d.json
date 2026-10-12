@@ -8402,6 +8402,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RDShaderFile",
+    "kind": "type",
+    "declaringType": "Electron2D.RDShaderFile",
+    "name": "RDShaderFile",
+    "signature": "public sealed class Electron2D.RDShaderFile",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RDShaderSPIRV",
     "kind": "type",
     "declaringType": "Electron2D.RDShaderSPIRV",
@@ -19615,6 +19630,19 @@
     "declaringType": "Electron2D.RDSamplerState",
     "name": ".ctor",
     "signature": "public RDSamplerState()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RDShaderFile..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RDShaderFile",
+    "name": ".ctor",
+    "signature": "public RDShaderFile()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -137660,6 +137688,146 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RDShaderFile.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RDShaderFile",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RDShaderFile.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.RDShaderFile",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RDShaderFile.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RDShaderFile",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RDShaderFile.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RDShaderFile",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RDShaderFile.GetSPIRV(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RDShaderFile",
+    "name": "GetSPIRV",
+    "signature": "public Electron2D.RDShaderSPIRV GetSPIRV(System.String version = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "version",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "Electron2D.RDShaderSPIRV",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RDShaderFile.GetVersionList()",
+    "kind": "method",
+    "declaringType": "Electron2D.RDShaderFile",
+    "name": "GetVersionList",
+    "signature": "public System.String[] GetVersionList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RDShaderFile.SetBytecode(Electron2D.RDShaderSPIRV,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RDShaderFile",
+    "name": "SetBytecode",
+    "signature": "public System.Void SetBytecode(Electron2D.RDShaderSPIRV bytecode, System.String version = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bytecode",
+        "type": "Electron2D.RDShaderSPIRV",
+        "default": null
+      },
+      {
+        "name": "version",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RDShaderSPIRV.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.RDShaderSPIRV",
@@ -218659,6 +218827,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDShaderFile.BaseError()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDShaderFile",
+    "name": "BaseError",
+    "signature": "public System.String BaseError { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

@@ -9,6 +9,9 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_FILE_CHILD") is { } shaderFileChild) { RDShaderFileTests.RunChild(shaderFileChild); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_FILE_NATIVE") == "1") { RDShaderFileTests.RunNative(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_FILE") == "1") { RDShaderFileTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_LOD_CHILD") is { } lodChild) { MeshLODTests.RunChild(lodChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_LOD_NATIVE") == "1") { MeshLODNativeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_LOD") == "1") { MeshLODTests.Run(); return; }

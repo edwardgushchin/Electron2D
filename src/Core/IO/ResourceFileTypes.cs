@@ -54,6 +54,7 @@ public static partial class ResourceFileTypes
         RegisterResource("TileSetScenesCollectionSource", CreateTileSetScenesCollectionSource);
         RegisterResourceArray<TileSetSource>();
         RegisterResource("RDShaderSPIRV", CreateRDShaderSPIRV);
+        RegisterResource("RDShaderFile", CreateRDShaderFile);
         RegisterResource("ColorPalette", CreateColorPalette);
         RegisterResource("SyntaxHighlighter", CreateSyntaxHighlighter);
         RegisterResource("CodeHighlighter", CreateCodeHighlighter);
@@ -136,6 +137,7 @@ public static partial class ResourceFileTypes
     private static FontVariation CreateFontVariation() => new();
     private static Script CreateScript() => new();
     private static RDShaderSPIRV CreateRDShaderSPIRV() => new();
+    private static RDShaderFile CreateRDShaderFile() => new();
     private static TileSet CreateTileSet() => new();
     private static TileMapPattern CreateTileMapPattern() => new();
     private static TileSetAtlasSource CreateTileSetAtlasSource() => new();
