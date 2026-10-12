@@ -7,6 +7,7 @@ internal sealed class PhysicsSurfaceVelocityTests(bool gpu, PhysicsServer.Backen
     internal static void Run(PhysicsServer.Backend backend) => new PhysicsSurfaceVelocityTests(false, backend).RunCore();
     private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         using var computeLifetime = gpu ? new GPUPhysicsWorld() : null;
         VerifyStorageAndLifecycle();
         foreach (var mode in new[] { 0, 1, 2 }) VerifyResponse(gpu, mode);
@@ -26,7 +27,7 @@ internal sealed class PhysicsSurfaceVelocityTests(bool gpu, PhysicsServer.Backen
         using var packed = new PackedScene(); packed.Pack(root);
         using var restored = packed.Instantiate(); var copy = restored.GetNode<StaticBody>("Floor");
         Check(copy.ConstantLinearVelocity == new Vector2(30, -4) && copy.ConstantAngularVelocity == .5f, "Packed surface state.");
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Surface fixture uses the explicitly selected backend.");
         using var view = PhysicsServer.BodyGetDirectState(floor.GetRID())!;
         Near(view.LinearVelocity, new(30, -4)); Near(view.AngularVelocity, .5f);
         Near(view.GetVelocityAtLocalPosition(new(20, 0)), new(30, 6));
@@ -54,7 +55,7 @@ internal sealed class PhysicsSurfaceVelocityTests(bool gpu, PhysicsServer.Backen
         var floor = new StaticBody { Name = "Floor", Position = new(0, 100) };
         var body = new RigidBody { Name = "Box", Position = new(mode == 2 ? -100 : 0, 80), LockRotation = true, MaxContactsReported = 4 };
         floor.AddChild(new CollisionShape { Shape = floorShape }); body.AddChild(new CollisionShape { Shape = box });
-        root.AddChild(floor); root.AddChild(body); using var tree = new SceneTree(root);
+        root.AddChild(floor); root.AddChild(body); using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Surface fixture uses the explicitly selected backend.");
         if (gpu) floor.Space!.EnableGPUSolver();
         if (mode == 0)
         {
@@ -81,17 +82,18 @@ internal sealed class PhysicsSurfaceVelocityTests(bool gpu, PhysicsServer.Backen
         {
             Check(body.LinearVelocity.X > 70 && body.Position.X > 50, $"Belt response: {body.LinearVelocity}, {body.Position}.");
             for (var i = 0; i < 96; i++) tree.PhysicsFrame(1d / 60);
-            var before = GC.GetTotalAllocatedBytes(true);
+            var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var before = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < 64; i++) tree.PhysicsFrame(1d / 60);
             var bytes = GC.GetTotalAllocatedBytes(true) - before;
-            Check(bytes == 0, $"Surface contact frames allocated {bytes} managed bytes.");
+            var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore;
+            Check(ownerBytes == 0 && bytes == 0, $"Surface contact frames allocated {ownerBytes}/{bytes} owner/all-thread bytes.");
         }
         else Check(body.Position.Y < 65 && body.LinearVelocity.Y < -5, $"Normal/angular surface response: {body.Position}, {body.LinearVelocity}.");
     }
 
     private void VerifyServer(bool gpu)
     {
-        var space = PhysicsServer.SpaceCreate(backend); var floor = PhysicsServer.BodyCreate();
+        var space = PhysicsServer.SpaceCreate(backend); Check(PhysicsServer.SpaceGetBackend(space) == backend, "Raw surface uses the explicitly selected backend."); var floor = PhysicsServer.BodyCreate();
         var shape = PhysicsServer.RectangleShapeCreate();
         try
         {
@@ -123,7 +125,7 @@ internal sealed class PhysicsSurfaceVelocityTests(bool gpu, PhysicsServer.Backen
         var floor = new AnimatableBody { Name = "Floor", Position = new(0, 100), ConstantLinearVelocity = new(60, 0), ConstantAngularVelocity = 0 };
         var character = new CharacterBody { Name = "Character", Position = new(0, 78), Velocity = new(0, 600), PhysicsProcessEnabled = true };
         floor.AddChild(new CollisionShape { Shape = floorShape }); character.AddChild(new CollisionShape { Shape = circle });
-        root.AddChild(floor); root.AddChild(character); using var tree = new SceneTree(root);
+        root.AddChild(floor); root.AddChild(character); using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Surface fixture uses the explicitly selected backend.");
         if (gpu) floor.Space!.EnableGPUSolver();
         tree.PhysicsFrame(1d / 60);
         character.MoveAndSlide(); Check(character.IsOnFloor(), "Character finds the conveyor floor.");

@@ -1,6 +1,6 @@
 # CharacterBody
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -108,3 +108,5 @@ now run CharacterBodyTests with explicit backend selection. The linked record
 separates verified motion/lifetime/allocation cases from remaining physics coverage.
 
 All internal recovery, sweep and platform-motion queries use the [selected motion boundary](../components/physics-backends.md#selected-motion-result-publication). Returned geometry, fractions, logical slots and filtering are validated before that individual movement applies travel. A rejected query cannot move the body through malformed numerical output; earlier successful movements within a slide call are not rolled back.
+
+The complete shared PhysicsSurfaceVelocityTests and PhysicsServerStateTests now execute on explicitly selected public CPU/GPU worlds. Platform carry retains the stationary surface channel; the configured movement Velocity remains independent of low-level body/contact velocity through detach/reentry. Broader CharacterBody and inherited, platform and final performance acceptance remain open.

@@ -1,20 +1,23 @@
 using Box2D.NET;
 using Electron2D;
 
-internal static class PhysicsServerStateTests
+internal sealed class PhysicsServerStateTests(bool gpu, PhysicsServer.Backend backend)
 {
-    internal static void Run(bool gpu = false)
+    internal static void Run(bool gpu = false) => new PhysicsServerStateTests(gpu, PhysicsServer.Backend.CPU).RunCore();
+    internal static void Run(PhysicsServer.Backend backend) => new PhysicsServerStateTests(false, backend).RunCore();
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         using var lifetime = gpu ? new GPUPhysicsWorld() : null;
         VerifyDetached();
         VerifyDynamic(gpu);
         VerifyStaticTeleport(gpu);
         VerifyKinematic(gpu);
         VerifySceneRoles(gpu);
-        Console.WriteLine($"Typed body state passed on {(gpu ? "GPU" : "CPU")}: scene/server parity, sleep, target motion, lifecycle, guards and zero warmed bytes.");
+        Console.WriteLine($"Typed body state passed on {backend} (legacy stages={gpu}): scene/server parity, sleep, target motion, lifecycle, guards and zero warmed bytes.");
     }
 
-    private static void VerifyDetached()
+    private void VerifyDetached()
     {
         using var scene = new RigidBody();
         var server = PhysicsServer.BodyCreate();
@@ -48,10 +51,10 @@ internal static class PhysicsServerStateTests
         using var area = new Area(); Reject<ArgumentException>(() => PhysicsServer.BodySetCanSleep(area.GetRID(), false));
     }
 
-    private static void VerifyDynamic(bool gpu)
+    private void VerifyDynamic(bool gpu)
     {
-        using var root = new Node(); var body = new RigidBody { GravityScale = 0 }; root.AddChild(body);
-        using var tree = new SceneTree(root); var space = body.Space!;
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; var body = new RigidBody { GravityScale = 0 }; root.AddChild(body);
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body state uses the explicitly selected backend."); var space = body.Space!;
         if (gpu) space.EnableGPUSolver();
         var raw = PhysicsServer.BodyCreate(); PhysicsServer.BodySetGravityScale(raw, 0);
         PhysicsServer.BodySetSpace(raw, body.GetWorld()!.Space);
@@ -72,9 +75,12 @@ internal static class PhysicsServerStateTests
                 Check(!PhysicsServer.BodyGetSleeping(id), "Direct velocity wakes.");
                 Near(PhysicsServer.BodyGetLinearVelocity(id), new(30, 0)); Near(PhysicsServer.BodyGetAngularVelocity(id), 2);
                 Task.Run(() => Reject<InvalidOperationException>(() => PhysicsServer.BodyGetSleeping(id))).GetAwaiter().GetResult();
-                var world = B2Worlds.b2GetWorldFromId(space.WorldID); world.locked = true;
-                try { Reject<InvalidOperationException>(() => PhysicsServer.BodySetAngularVelocity(id, 10)); }
-                finally { world.locked = false; }
+                if (backend == PhysicsServer.Backend.CPU)
+                {
+                    var world = B2Worlds.b2GetWorldFromId(space.WorldID); world.locked = true;
+                    try { Reject<InvalidOperationException>(() => PhysicsServer.BodySetAngularVelocity(id, 10)); }
+                    finally { world.locked = false; }
+                }
                 Near(PhysicsServer.BodyGetAngularVelocity(id), 2);
             }
             PhysicsServer.BodySetSleeping(raw, true); PhysicsServer.BodySetSpace(raw, default);
@@ -84,10 +90,11 @@ internal static class PhysicsServerStateTests
             Check(PhysicsServer.BodyGetSleeping(body.GetRID()), "Scene detached sleep survives.");
             root.AddChild(body); Check(PhysicsServer.BodyGetSleeping(body.GetRID()), "Scene reentry preserves explicit sleep.");
             for (var i = 0; i < 96; i++) Cycle();
-            var before = GC.GetTotalAllocatedBytes(true);
+            var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var before = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < 64; i++) Cycle();
             var bytes = GC.GetTotalAllocatedBytes(true) - before;
-            Check(bytes == 0, $"Typed state cycles allocated {bytes} bytes.");
+            var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore;
+            Check(ownerBytes == 0 && bytes == 0, $"Typed state cycles allocated {ownerBytes}/{bytes} owner/all-thread bytes.");
             void Cycle()
             {
                 PhysicsServer.BodySetCanSleep(raw, false); PhysicsServer.BodySetSleeping(raw, false);
@@ -101,16 +108,16 @@ internal static class PhysicsServerStateTests
         finally { PhysicsServer.FreeRID(raw); }
     }
 
-    private static void VerifyStaticTeleport(bool gpu)
+    private void VerifyStaticTeleport(bool gpu)
     {
-        using var root = new Node(); using var floorShape = new RectangleShape { Size = new(200, 20) };
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; using var floorShape = new RectangleShape { Size = new(200, 20) };
         using var box = new RectangleShape { Size = new(20, 20) };
         var floor = new StaticBody { Name = "Floor", Position = new(0, 100) };
         var first = new RigidBody { Name = "First", Position = new(0, 80) };
         var second = new RigidBody { Name = "Second", Position = new(300, 80) };
         floor.AddChild(new CollisionShape { Shape = floorShape }); first.AddChild(new CollisionShape { Shape = box });
         second.AddChild(new CollisionShape { Shape = box }); root.AddChild(floor); root.AddChild(first); root.AddChild(second);
-        using var tree = new SceneTree(root); if (gpu) floor.Space!.EnableGPUSolver();
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body state uses the explicitly selected backend."); if (gpu) floor.Space!.EnableGPUSolver();
         var raw = PhysicsServer.BodyCreate();
         try
         {
@@ -126,11 +133,11 @@ internal static class PhysicsServerStateTests
         finally { PhysicsServer.FreeRID(raw); }
     }
 
-    private static void VerifyKinematic(bool gpu)
+    private void VerifyKinematic(bool gpu)
     {
-        using var root = new Node(); using var shape = new RectangleShape { Size = new(10, 20) };
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; using var shape = new RectangleShape { Size = new(10, 20) };
         var target = new RigidBody { Position = new(20, 0), GravityScale = 0 }; target.AddChild(new CollisionShape { Shape = shape }); root.AddChild(target);
-        using var tree = new SceneTree(root); if (gpu) target.Space!.EnableGPUSolver();
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body state uses the explicitly selected backend."); if (gpu) target.Space!.EnableGPUSolver();
         var body = PhysicsServer.BodyCreate(); var space = target.GetWorld()!.Space;
         try
         {
@@ -160,12 +167,12 @@ internal static class PhysicsServerStateTests
         finally { PhysicsServer.FreeRID(body); }
     }
 
-    private static void VerifySceneRoles(bool gpu)
+    private void VerifySceneRoles(bool gpu)
     {
-        using var root = new Node(); var surface = new StaticBody { Name = "Surface" }; var mover = new AnimatableBody { Name = "Mover" };
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; var surface = new StaticBody { Name = "Surface" }; var mover = new AnimatableBody { Name = "Mover" };
         var character = new CharacterBody { Name = "Character", Velocity = new(123, 0) };
         root.AddChild(surface); root.AddChild(mover); root.AddChild(character);
-        using var tree = new SceneTree(root); if (gpu) surface.Space!.EnableGPUSolver();
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body state uses the explicitly selected backend."); if (gpu) surface.Space!.EnableGPUSolver();
         foreach (var node in new PhysicsBody[] { surface, mover, character })
         {
             var id = node.GetRID(); PhysicsServer.BodySetLinearVelocity(id, new(30, 0)); PhysicsServer.BodySetAngularVelocity(id, .2f);

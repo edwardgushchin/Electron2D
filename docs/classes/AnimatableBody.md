@@ -74,3 +74,5 @@ separates verified motion/lifetime/allocation cases from remaining physics cover
 
 
 Attached disposal skips the public local-transform notification setter after the node has been marked disposed, then completes normal target reset and physics/tree departure. Ordinary live exit still disables notifications. Shared reporting-policy conformance exercises disposal and stable retained configuration across all five scene body roles.
+
+The full shared PhysicsSurfaceVelocityTests and PhysicsServerStateTests now execute on explicitly selected public CPU/GPU worlds, retaining additive target/surface motion, stationary idle poses and latest-target, zero/inactive-step and reentry rules. This does not close wider inherited, native/platform or final performance acceptance.

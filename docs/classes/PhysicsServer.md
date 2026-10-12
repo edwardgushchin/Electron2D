@@ -613,10 +613,12 @@ before state mutation. For example, `PhysicsServer.BodySetAxisVelocity(body.GetR
 new Vector2(0, -240));` changes vertical speed while preserving horizontal speed.
 
 [PhysicsServerStateTests](../../tests/Electron2D.Tests/PhysicsServerStateTests.cs)
-checks real CPU/GPU response, scene/server/direct-state consistency, raw deferred
-targets, lifecycle, owner/phase/numeric rejection and 64 warmed state/read/solver
-cycles with zero all-thread managed allocation. This does not establish native
-allocation, other platforms, full GPU completion or owner visual acceptance.
+runs the complete family on explicitly selected independent CPU/GPU worlds:
+scene/server/direct-state consistency, raw latest targets and zero/inactive steps,
+sleep/wakeup, reentry, moving-support response and owner/numeric rejection.
+Sixty-four warmed state/read/solver cycles require 0/0 owner/all-thread managed
+bytes. Private native lock injection remains a CPU diagnostic. This does not
+establish native allocation, other platforms, full GPU completion or owner visual acceptance.
 [ADR 0070](../decisions/physics.md#adr-0070) owns the typed state adaptation.
 
 Contact limits prepare bounded point storage before fixed stepping. Every touching pair is scanned directly, retaining the deepest points without copying raw manifolds; no early pair cap hides later candidates. Rigid monitoring prepares its bounded pair/change collections at configuration time. Solver array compaction keeps the removed reference in the unused slot rather than constructing a replacement; active slots remain distinct. PhysicsSandbox profiles check collision churn and debug contact reads after warmup; native allocations remain outside the managed counter.

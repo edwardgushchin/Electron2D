@@ -6191,7 +6191,7 @@
         "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)"
       ],
       "state": "Implemented",
-      "reason": "All five typed state branches execute for scene/server bodies: transform, linear/angular velocity, sleep and automatic sleep permission. Raw kinematic targets defer to a nonzero active step; virtual velocity stays separate. PhysicsServerStateTests covers CPU/GPU motion, lifecycle, wakeup, guards and warmed allocation (ADR 0070)."
+      "reason": "All five typed state branches execute for scene/server bodies: transform, linear/angular velocity, sleep and automatic sleep permission. Raw kinematic targets defer to a nonzero active step; virtual velocity stays separate. PhysicsServerStateTests covers CPU/GPU motion, lifecycle, wakeup, guards and warmed allocation (ADR 0070). The complete shared suite now executes on explicitly selected independent CPU/GPU worlds with backend assertions, unchanged numerical bounds and 64 warm state/read/step cycles at 0/0 owner/all-thread bytes; native lock injection remains a CPU diagnostic. Broader inherited/extension/platform/performance acceptance stays open."
     },
     {
       "godot": [
@@ -6372,7 +6372,7 @@
         "class:StaticBody2D"
       ],
       "state": "Implemented",
-      "reason": "Own static-body surface members execute: material override and stored linear/angular virtual velocity, with CPU/GPU contacts, point queries, character carry, packing and lifecycle verified by PhysicsSurfaceVelocityTests. Inherited gaps remain on their declaring pages."
+      "reason": "Own static-body surface members execute: material override and stored linear/angular virtual velocity, with CPU/GPU contacts, point queries, character carry, packing and lifecycle verified by PhysicsSurfaceVelocityTests. Inherited gaps remain on their declaring pages. The full CPU/GPU suite and independent GPU-kinematic profile now run the complete shared surface suite with backend assertions and 64 warm active contact frames at 0/0 owner/all-thread bytes. Historical staged controls remain diagnostics; final acceptance stays open."
     },
     {
       "godot": [
@@ -6680,7 +6680,7 @@
         "StaticBody2D::property:constant_angular_velocity"
       ],
       "state": "Implemented",
-      "reason": "Finite stored surface velocity drives CPU scalar/SIMD and GPU contacts without pose integration; inherited kinematic target motion is additive. Point/contact queries, character carry, wakeup, packing, reentry and zero all-thread warmed allocation are covered on public CPU/GPU worlds and the historical stage host by PhysicsSurfaceVelocityTests (ADR 0075)."
+      "reason": "Finite stored surface velocity drives CPU scalar/SIMD and GPU contacts without pose integration; inherited kinematic target motion is additive. Point/contact queries, character carry, wakeup, packing, reentry and zero all-thread warmed allocation are covered on public CPU/GPU worlds and the historical stage host by PhysicsSurfaceVelocityTests (ADR 0075). The full CPU/GPU suite and independent GPU-kinematic profile now run the complete shared surface suite with backend assertions and 64 warm active contact frames at 0/0 owner/all-thread bytes. Historical staged controls remain diagnostics; final acceptance stays open."
     },
     {
       "godot": [
@@ -6879,7 +6879,7 @@
         "PhysicsServer2D::method:body_set_axis_velocity(RID:,Vector2:)"
       ],
       "state": "Implemented",
-      "reason": "Finite axis projection uses the shared scene/server velocity and wakeup path, preserving the perpendicular component and rejecting overflow before mutation; PhysicsServerStateTests verifies CPU/GPU behavior (ADR 0070)."
+      "reason": "Finite axis projection uses the shared scene/server velocity and wakeup path, preserving the perpendicular component and rejecting overflow before mutation; PhysicsServerStateTests verifies CPU/GPU behavior (ADR 0070). The complete shared suite now executes on explicitly selected independent CPU/GPU worlds with backend assertions, unchanged numerical bounds and 64 warm state/read/step cycles at 0/0 owner/all-thread bytes; native lock injection remains a CPU diagnostic. Broader inherited/extension/platform/performance acceptance stays open."
     },
     {
       "godot": [
@@ -6891,7 +6891,7 @@
         "PhysicsServer2D::enum_value:BodyState.BODY_STATE_CAN_SLEEP"
       ],
       "state": "Excluded",
-      "reason": "ADR 0001/0070: the Variant selector representation is replaced by all five concrete typed state getter/setter pairs. Only the selector enum/values are excluded; their complete capabilities execute and are verified by PhysicsServerStateTests."
+      "reason": "ADR 0001/0070: the Variant selector representation is replaced by all five concrete typed state getter/setter pairs. Only the selector enum/values are excluded; their complete capabilities execute and are verified by PhysicsServerStateTests. The complete shared suite now executes on explicitly selected independent CPU/GPU worlds with backend assertions, unchanged numerical bounds and 64 warm state/read/step cycles at 0/0 owner/all-thread bytes; native lock injection remains a CPU diagnostic. Broader inherited/extension/platform/performance acceptance stays open."
     },
     {
       "godot": [
