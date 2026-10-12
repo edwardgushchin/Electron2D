@@ -662,3 +662,35 @@ source, but sampled tracing did not observe the original failed interval and doe
 not establish that interval's cause. The complete uninstrumented frozen consumer
 repeat also passed. No threshold or test scope was relaxed, and no runtime
 allocation fix is claimed. Rejected and diagnostic evidence is retained under bin/physics-continuous-suite/2026-10-13/.
+
+Prepared integration's attachment-local flag was measured in alternating baseline
+and candidate headless runs on Linux/Wayland, Vulkan RTX 3090 Ti. All runs keep
+65,536 awake circles plus three walls, dt=1/60, four substeps, 16 iterations,
+240 warmup and 64 samples. Baseline/candidate policy-motion preparation means
+were 12.0725/8.4108 ms, then 11.3485/8.1269 ms; full-step medians were
+52.7323/45.1421 ms, then 48.9022/46.0570 ms. Every run passed 0/0 owner/all-thread
+bytes, no escape and the existing energy/penetration limits. These A/B measurements
+have run variance and do not isolate every change in device/contact scheduling.
+The final source adds the preparation guard assertion and XML clarification;
+its independent CPU/GPU window comparison uses the same frozen source/runtime.
+
+| Final window backend | Physics p50/p95/p99 ms | Frame p50/p95/p99 ms | Actual FPS | Pose publication p50 ms |
+| --- | --- | --- | ---: | ---: |
+| CPU | 283.5741 / 637.8590 / 954.3179 | 305.9499 / 698.2644 / 1008.4203 | 2.6795 | 15.6415 |
+| GPU | 51.9073 / 53.4363 / 54.1009 | 74.4509 / 76.4854 / 76.8478 | 13.4481 | 16.4236 |
+
+The real 1152x800 window retains all 65,536 awake bodies; physics and whole measured
+frames both pass 0/0 owner/all-thread managed bytes. GPU physics reports 232 upload
+and 761 readback bytes per sample; whole-frame store traffic is 1,048,816 upload
+and 1,049,345 readback bytes per tick, dominated by the explicit complete visual
+pose batch. Mean physical GPU wait is 31.2324 ms. Contact-color fallbacks are zero;
+maximum CPU/GPU penetration is .27031/.29711 under the .601 limit, with no escape
+and bounded energy. Both captures were inspected and show the dense pile. Actual
+VSync remains Enabled despite the requested Disabled policy. CPU tail latency is
+noisy. This profile establishes a measured full GPU advantage on this dense scene,
+not 60 Hz, a general game speedup, native allocation or foreign-device acceptance.
+Evidence and full distributions are retained under
+bin/physics-mass-current/2026-10-13/; final/provenance-before.json identifies source
+7958bcf44c4472c947c1bcf7e2b713b0f3a734ef6a836c254ae3650034489fb0 and every frozen
+runtime file. Remaining inherited/extension, networking and full performance gates
+stay open.

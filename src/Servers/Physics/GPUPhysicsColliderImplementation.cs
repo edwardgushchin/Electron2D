@@ -31,7 +31,7 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
     }
 
     private bool _gpuStateValid, _gpuStateMatchesPublication;
-    private bool _gpuParametersPrepared;
+    private bool _gpuParametersPrepared, _gpuResolveStaticFields;
     private long _gpuStateEpoch;
     internal bool GPUStateValid
     {
@@ -99,9 +99,9 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
         if (force == _gpuConstantForce && torque == _gpuConstantTorque) return;
         GPU!.SetConstantForce(GPUHandle, force, torque); _gpuConstantForce = force; _gpuConstantTorque = torque;
     }
-    /// <summary>Reports whether cold or changed integration input needs numerical-owner preparation.</summary>
+    /// <summary>Checks attachment-local preparation and static-field demand; edits and replay invalidate the prepared policy.</summary>
     internal bool NeedsIntegrationPreparation(bool dirty, bool force, bool resolveStaticFields) => force || !_gpuParametersPrepared || dirty ||
-        GPU.GetIntegrationPolicy(GPUHandle).ResolveStaticFields != resolveStaticFields;
+        _gpuResolveStaticFields != resolveStaticFields;
     /// <summary>Consumes value-only integration policy, rebuilding after attachment, role changes or replay.</summary>
     /// <returns>True when ordinary successful preparation permits the binding layer to retire its dirty flags.</returns>
     internal bool PrepareGPUParameters(in PhysicsBodyIntegrationConfiguration configuration, bool dirty, bool force, bool resolveStaticFields)
@@ -114,6 +114,7 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
         SetGPUConstants(configuration.ConstantForce, configuration.ConstantTorque);
         if (!force)
         {
+            _gpuResolveStaticFields = resolveStaticFields;
             _gpuParametersPrepared = true;
         }
         return !force;
