@@ -91,6 +91,7 @@ public partial class Window
     {
         List<Exception>? errors = null;
         try { NotifySizeChanged(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { DispatchNotification(NotificationWmSizeChanged); } catch (Exception error) { CollectException(ref errors, error); }
         try { InvalidateEmbeddedDensity(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Window content size notification failed.", errors);
     }

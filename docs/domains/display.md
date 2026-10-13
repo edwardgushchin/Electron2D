@@ -1,6 +1,6 @@
 # Display domain
 
-Last updated: 2026-10-06
+Last updated: 2026-10-13
 
 ## Responsibility
 
@@ -94,3 +94,10 @@ GetSwapCancelOK exposes the retained DisplayServer platform dialog-order convent
 ## Presentation policy
 
 The main window exposes [DisplayServer.WindowSetVSyncMode and WindowGetVSyncMode](../classes/DisplayServer.md#presentation-synchronization), with [VSyncMode](../classes/DisplayServer.VSyncMode.md) identities. Native unsupported modes fall back to Enabled and the getter reports the applied mode. Engine.MaxFPS independently caps host frames. Managed video-driver environment edits are honored at display/compute initialization with the previous native hint restored afterward. The [WaterPlayground](../../examples/WaterPlayground/README.md) consumer verifies the connected policy, including XWayland immediate presentation.
+
+
+Containing-window notifications now reach physical Node descendants in parent-first
+order, stop before nested Window scopes and continue after callback failures.
+WindowNotificationTests exercises eight event kinds through embedded/public and SDL
+dummy routes plus 1024 zero-byte warmed operations. DPI/position platform limits and
+missing go-back/HDR sources remain open; see [window runtime](../components/window-runtime.md#containing-window-notifications).

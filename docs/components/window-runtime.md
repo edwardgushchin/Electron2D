@@ -1,6 +1,6 @@
 # Window runtime component
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -54,3 +54,32 @@ CanvasTransform and GlobalCanvasTransform are runtime, non-stored Viewport descr
 Embedded windows now expose KeepTitleVisible, expanding width from the actual title font and close-button allowance within MaxSize. Native roots reject this enabled policy before resource acquisition because backend title metrics remain unavailable. [Dialogs](dialogs.md) separately clamp their decorated position into the host. Viewport size/texture notifications enumerate delegates without allocating invocation arrays and continue required callbacks after failures.
 
 Window content scaling now separates logical visible coordinates, raster target dimensions and client presentation. Both native renderers fit the completed content into a client-sized presentation surface with black margins; the borrowed viewport texture keeps its own raster resolution. Window/embedded input removes the complete presentation transform, while rendering excludes that transform and uses raster scale/density. Automatic text raster scale follows the viewport; explicit oversampling remains authoritative. See [Window content scale](../classes/Window.md#content-scale) and the dedicated unit/native checks for the exact policies and platform limits.
+
+## Containing-window notifications
+
+Window emits `NotificationWmMouseEnter` (1002), `NotificationWmMouseExit` (1003),
+`NotificationWmWindowFocusIn` (1004), `NotificationWmWindowFocusOut` (1005),
+`NotificationWmCloseRequest` (1006), `NotificationWmSizeChanged` (1008),
+`NotificationWmDpiChange` (1009) and `NotificationWmPositionChanged` (1012).
+Delivery is owner-thread, parent-first through ordinary and internal children;
+it stops before each nested Window and its subtree, including physical nodes.
+Size/content-policy updates notify only the owning Window, after SizeChanged.
+Focus, close and DPI notifications precede their typed window signal. Pointer
+entry notifies the containing window before content entry; content exit/hover cleanup
+precedes the containing-window exit notification. Window decoration and content
+have independent pointer identities; manual viewport-only notifications emit only
+content signals. Embedded hit testing uses actual pointer position independently
+of input capture, and hiding during entry prevents stale content entry. Direct-child
+mutation/disposal rejects during traversal. Remaining receivers and signal delegates
+are attempted after failures; errors are aggregated. Native close still applies
+AutoAcceptQuit in its finally path; embedded close leaves host quit to the caller.
+
+Public embedded focus/close and actual native/embedded pointer routes use the bridge.
+Repeated pointer entry/exit is silent. Position emits on observed native rectangle
+changes, not placement requests. SDL display-scale changes supply the DPI identity;
+they do not measure physical DPI. Go-back and output-linear/HDR notification sources
+remain absent. WindowNotificationTests checks physical descendants, nested boundaries,
+mutation/thread errors, committed rectangles, all eight injected SDL dummy events,
+later delegates/events after failure and teardown. Its 1024 warmed notification/event
+operations require zero owner/all-thread managed bytes. Real compositor, GPU and
+foreign-platform acceptance are not established by this check.

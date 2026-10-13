@@ -1384,3 +1384,10 @@ RenderingServer.CanvasGroupMode is the four-value retained compositor selector. 
 | Domain | Component | Class | Source | State | Behavior |
 | --- | --- | --- | --- | --- | --- |
 | [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md#viewport-canvas-configuration) | [RenderingServer](classes/RenderingServer.md) | [RenderingServer.Viewports.cs](../src/Servers/Rendering/RenderingServer.Viewports.cs) | Current | Independent viewport render masks, outer matrices and sampler defaults for scene/server targets, source republishing and session lifetime. |
+
+
+Containing-window notifications now reach physical Node descendants in parent-first
+order, stop before nested Window scopes and continue after callback failures.
+WindowNotificationTests exercises eight event kinds through embedded/public and SDL
+dummy routes plus 1024 zero-byte warmed operations. DPI/position platform limits and
+missing go-back/HDR sources remain open; see [window runtime](components/window-runtime.md#containing-window-notifications).

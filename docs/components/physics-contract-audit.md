@@ -958,3 +958,10 @@ deepest caps, depth filters and encounter-order ties. Each path measures 128
 transient replay cycles and 768 changed cap/depth frames at strict 0/0
 owner/all-thread bytes. General feature/coupled geometry, portable networking,
 native totals, rendering and final performance/platform acceptance remain open.
+
+
+Containing-window notifications now reach physical Node descendants in parent-first
+order, stop before nested Window scopes and continue after callback failures.
+WindowNotificationTests exercises eight event kinds through embedded/public and SDL
+dummy routes plus 1024 zero-byte warmed operations. DPI/position platform limits and
+missing go-back/HDR sources remain open; see [window runtime](window-runtime.md#containing-window-notifications).

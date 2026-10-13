@@ -10,6 +10,9 @@ using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_VIEW_CONFIG") is { } viewportBackend) { CanvasViewportConfigurationTests.Run(viewportBackend); return; }
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_NOTIFICATIONS") == "1") { WindowNotificationTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPOSITION_HOST") == "1") { CanvasCompositionTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPOSITION") == "1") { CanvasCompositionTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_GROUP") is { } groupBackend) { CanvasServerGroupTests.Run(groupBackend); return; }

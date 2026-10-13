@@ -30,6 +30,7 @@ public partial class Window : Viewport
     private Vector2i _minSize;
     private Vector2i _maxSize;
     private Vector2i? _screenPosition;
+    private bool _mouseInWindow, _mouseInContent;
 
     /// <summary>Creates a detached visible window with an empty title and a 100 by 100 client area.</summary>
     /// <remarks>Initial pixel-snapping choices read active project settings. No native resources are acquired until <see cref="Engine.Run"/>.</remarks>
@@ -197,16 +198,17 @@ public partial class Window : Viewport
 
     /// <summary>Occurs when the native system or embedded host requests window closure.</summary>
     /// <remarks>Handlers may disable SceneTree.AutoAcceptQuit to keep running, or call SceneTree.Quit with an exit code.
-    /// The default quit decision follows the signal. Handler failures terminate Engine.Run with cleanup.</remarks>
+    /// Containing-window notifications precede all signal delegates; failures are aggregated after remaining receivers.
+    /// The default quit decision follows delivery even on failure. Handler failures terminate Engine.Run with cleanup.</remarks>
     public event Action? CloseRequested;
 
     /// <summary>Occurs after Title commits a different value.</summary>
     public event Action? TitleChanged;
 
-    /// <summary>Occurs when the window gains native keyboard focus.</summary>
+    /// <summary>Occurs when the window gains keyboard focus, after containing-window notifications.</summary>
     public event Action? FocusEntered;
 
-    /// <summary>Occurs when the window loses native keyboard focus, before pressed input is released.</summary>
+    /// <summary>Occurs when the window loses keyboard focus, after containing-window notifications and before pressed input is released.</summary>
     public event Action? FocusExited;
 
     /// <summary>Gets the native window identity while running.</summary>
@@ -350,31 +352,79 @@ public partial class Window : Viewport
 
     private void HandleClose()
     {
-        try { CloseRequested?.Invoke(); }
+        try { RequestEmbeddedClose(); }
         finally
         {
             Tree?.AcceptWindowClose();
         }
     }
 
-    private void HandleRect(Rect2i rect) => CommitSize(rect.Size);
-    private void HandleFocus(bool focused) { if (focused) FocusEntered?.Invoke(); else FocusExited?.Invoke(); }
+    private void HandleRect(Rect2i rect)
+    {
+        List<Exception>? errors = null;
+        if ((_screenPosition ?? Vector2i.Zero) != rect.Position)
+        {
+            _screenPosition = rect.Position;
+            try { PropagateWindowNotification(NotificationWmPositionChanged); } catch (Exception error) { CollectException(ref errors, error); }
+        }
+        try { CommitSize(rect.Size); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Window rectangle callbacks failed.", errors);
+    }
+    private void HandleFocus(bool focused) => EmitWindowEvent(focused ? NotificationWmWindowFocusIn : NotificationWmWindowFocusOut);
     private void HandleMouseEntered()
     {
         List<Exception>? errors = null;
-        try { Tree?.EnterGUIViewport(this); } catch (Exception error) { CollectException(ref errors, error); }
-        try { MouseEntered?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { EnterWindowMouse(); } catch (Exception error) { CollectException(ref errors, error); }
+        if (!IsDisposed && Visible)
+        {
+            try { Tree?.EnterGUIViewport(this); } catch (Exception error) { CollectException(ref errors, error); }
+            try { NotifyMouseEntered(); } catch (Exception error) { CollectException(ref errors, error); }
+        }
         ThrowCollected("Window pointer-enter callbacks failed.", errors);
     }
 
-    private void HandleMouseExited()
+    private void HandleMouseExited() => ExitWindowMouse();
+    internal void EnterWindowMouse()
     {
+        EnsureMutable(); if (_mouseInWindow) return;
+        _mouseInWindow = true;
+        PropagateWindowNotification(NotificationWmMouseEnter);
+    }
+    internal void ExitWindowMouse()
+    {
+        EnsureMutable(); if (!_mouseInWindow) return;
+        _mouseInWindow = false;
         List<Exception>? errors = null;
-        try { Tree?.ExitGUIViewport(this); } catch (Exception error) { CollectException(ref errors, error); }
-        try { MouseExited?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { NotifyMouseExited(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { PropagateWindowNotification(NotificationWmMouseExit); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Window pointer-exit callbacks failed.", errors);
     }
-    private void HandleDPIChanged() => DpiChanged?.Invoke();
+    private void HandleDPIChanged() => EmitWindowEvent(NotificationWmDpiChange);
+
+    private void EmitWindowEvent(int what)
+    {
+        EnsureMutable();
+        List<Exception>? errors = null;
+        try { PropagateWindowNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+        var handlers = what switch
+        {
+            NotificationWmWindowFocusIn => FocusEntered,
+            NotificationWmWindowFocusOut => FocusExited,
+            NotificationWmCloseRequest => CloseRequested,
+            NotificationWmDpiChange => DpiChanged,
+            _ => null
+        };
+        try { EmitWindowSignal(handlers); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Window event callbacks failed.", errors);
+    }
+    private static void EmitWindowSignal(Action? handlers)
+    {
+        List<Exception>? errors = null;
+        if (handlers is not null)
+            foreach (var handler in Delegate.EnumerateInvocationList(handlers))
+                try { handler(); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Window signal callbacks failed.", errors);
+    }
     private void HandleTextInput(string text) => Tree?.DispatchCommittedText(Tree.GetEmbeddedTextWindow(this), text);
     private void HandleTextEditing(string text, Vector2i selection) => Tree?.DispatchIMEComposition(Tree.GetEmbeddedTextWindow(this), text, selection);
     private void HandleFilesDropped(IReadOnlyList<string> paths) => FilesDropped?.Invoke(paths);

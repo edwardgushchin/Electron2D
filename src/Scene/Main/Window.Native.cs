@@ -175,16 +175,16 @@ public partial class Window
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public void SetTaskbarProgressValue(float value) { EnsureMutable(); GetDisplay().WindowSetTaskbarProgressValueCore(value); }
 
-    /// <summary>Occurs on an effective native pointer entry before subsequent frame callbacks.</summary>
-    /// <remarks>Delivered synchronously on the owner thread. Root delivery is native. Embedded pointer entry/exit signaling retains its separate coverage gap.</remarks>
+    /// <summary>Occurs on an effective window pointer entry before subsequent frame callbacks.</summary>
+    /// <remarks>Delivered on the owner thread for native or embedded content entry after containing-window entry. Decoration and viewport entry remain separate; repeated observations are silent.</remarks>
     public event Action? MouseEntered;
 
-    /// <summary>Occurs on an effective native pointer exit before subsequent frame callbacks.</summary>
-    /// <remarks>Delivered synchronously on the owner thread. Root delivery is native. Embedded pointer entry/exit signaling retains its separate coverage gap.</remarks>
+    /// <summary>Occurs on an effective window pointer exit before subsequent frame callbacks.</summary>
+    /// <remarks>Delivered on the owner thread for native or embedded content exit before containing-window exit. Decoration and viewport exit remain separate; repeated observations are silent.</remarks>
     public event Action? MouseExited;
 
     /// <summary>Occurs when the native window's display content scale changes.</summary>
-    /// <remarks>Delivered in native order on the owner thread; this is not a physical-DPI measurement.</remarks>
+    /// <remarks>Delivered after containing-window notifications in native order on the owner thread; this is not a physical-DPI measurement.</remarks>
     public event Action? DpiChanged;
 
     /// <summary>Occurs when a native file drop completes, with paths in arrival order.</summary>

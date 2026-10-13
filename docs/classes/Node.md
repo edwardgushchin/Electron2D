@@ -1607,3 +1607,58 @@ The resolved ProcessMode and SceneTree pause policy gate both lanes. Internal pr
 Changing a built-in node's internal switches directly affects its implementation: for example it suspends and resumes Timer countdowns. Such nodes can overwrite the switch when their playback/callback policy changes. Do not disable internal work unless that is the intended effect. See [Node](Node.md) and [Timer](Timer.md).
 
 NodeInternalProcessingTests verifies both lanes, order and current-state mutation, pause modes, reattachment, errors, ownership/disposal, runtime scene omission and actual idle/physics Timer consumers. Its 1024 warmed set/query/frame operations allocate zero managed owner bytes. Native GPU and compatibility checks verify red pixels, a frozen frame with the internal lane disabled, resumed blue pixels and fixed ticks. Foreign/editor/native allocator and broad load verification remain separate.
+
+## Window notification constants
+
+All constants below are `public const int` fields inherited by physical scene nodes.
+The containing [Window](Window.md#containing-window-notifications) owns automatic
+delivery; manual DispatchNotification does not create a native event.
+
+| Declaration | Value | Delivery |
+| --- | --- | --- |
+| [`public const int NotificationWmMouseEnter`](#notificationwmmouseenter) | 1002 | Containing-window subtree, stopping before nested windows. |
+| [`public const int NotificationWmMouseExit`](#notificationwmmouseexit) | 1003 | Containing-window subtree, stopping before nested windows. |
+| [`public const int NotificationWmWindowFocusIn`](#notificationwmwindowfocusin) | 1004 | Containing-window subtree, stopping before nested windows. |
+| [`public const int NotificationWmWindowFocusOut`](#notificationwmwindowfocusout) | 1005 | Containing-window subtree, stopping before nested windows. |
+| [`public const int NotificationWmCloseRequest`](#notificationwmcloserequest) | 1006 | Containing-window subtree, stopping before nested windows. |
+| [`public const int NotificationWmSizeChanged`](#notificationwmsizechanged) | 1008 | Owning Window only. |
+| [`public const int NotificationWmDpiChange`](#notificationwmdpichange) | 1009 | Containing-window subtree, stopping before nested windows. |
+| [`public const int NotificationWmPositionChanged`](#notificationwmpositionchanged) | 1012 | Containing-window subtree, stopping before nested windows. |
+
+### NotificationWmMouseEnter
+
+`public const int NotificationWmMouseEnter = 1002`. The pointer enters the containing window. Repeated entry is silent.
+
+### NotificationWmMouseExit
+
+`public const int NotificationWmMouseExit = 1003`. The pointer leaves the containing window. Content MouseExited and hover/picking cleanup precede delivery; repeated exit is silent.
+
+### NotificationWmWindowFocusIn
+
+`public const int NotificationWmWindowFocusIn = 1004`. The containing window gains keyboard focus, before FocusEntered.
+
+### NotificationWmWindowFocusOut
+
+`public const int NotificationWmWindowFocusOut = 1005`. The containing window loses keyboard focus, before FocusExited.
+
+### NotificationWmCloseRequest
+
+`public const int NotificationWmCloseRequest = 1006`. Window closure is requested, before CloseRequested and the root quit decision. Embedded requests do not quit the host automatically.
+
+### NotificationWmSizeChanged
+
+`public const int NotificationWmSizeChanged = 1008`. The owning Window updates its size/content policy, after SizeChanged. This identity is not propagated to descendants.
+
+### NotificationWmDpiChange
+
+`public const int NotificationWmDpiChange = 1009`. SDL reports a containing-window display content-scale change, before DpiChanged. Physical DPI measurement is not implied.
+
+### NotificationWmPositionChanged
+
+`public const int NotificationWmPositionChanged = 1012`. An observed native rectangle changes the containing window client position. Placement requests do not emit; Wayland does not expose global positioning.
+
+Non-size automatic delivery is owner-thread and parent-first; nested windows own
+their independent event scopes. Callback errors preserve remaining receivers and
+typed delegates, then aggregate. The same hierarchy barrier protects child lists
+as PropagateNotification. See WindowNotificationTests for embedded, dummy native,
+physical receivers, failure/teardown and 1024 zero-allocation operations.

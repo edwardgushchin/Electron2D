@@ -252,7 +252,9 @@ public partial class Window
     protected override void OnNotification(int what)
     {
         base.OnNotification(what);
-        if (what == NotificationEnterTree) ThemeOwner.NotifySelf();
+        if (what == NotificationVPMouseEnter && !_mouseInContent) { _mouseInContent = true; EmitWindowSignal(MouseEntered); }
+        else if (what == NotificationVPMouseExit && _mouseInContent) { _mouseInContent = false; EmitWindowSignal(MouseExited); }
+        else if (what == NotificationEnterTree) ThemeOwner.NotifySelf();
         else if (what is NotificationParented or NotificationUnparented) ThemeOwner.ParentChanged();
         else if (what == NotificationThemeChanged) ProcessThemeNotification();
     }

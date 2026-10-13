@@ -1019,3 +1019,11 @@ SceneTree preflights both explicit FinalizeLoop and Dispose against every borrow
 The viewport-free fallback runtime captures active-feature `Physics2DEngine` and `Physics2DAllowCPUFallback` on first world creation. Viewport worlds use the same capture helper. The tree steps each retained selected runtime once; later project edits leave existing worlds intact.
 
 See [the selection checks](../components/physics-backends.md#project-physics-selection).
+
+
+Embedded window pointer routing tracks actual window hover separately from input
+capture and viewport content hover. Decorations can receive containing-window
+notifications without entering content. Moving or hiding an entered window clears
+its stored hover on the next input/hide route; callback failures preserve the required
+window and content transition attempts. See [Window](Window.md#containing-window-notifications)
+for notification boundaries and the headless/dummy verification scope.

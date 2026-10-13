@@ -720,3 +720,32 @@ Engine.Run(window);
 ```
 
 [WindowContentScaleTests](../../tests/Electron2D.Tests/WindowContentScaleTests.cs) and [WindowContentScaleNativeTests](../../tests/Electron2D.Tests/WindowContentScaleNativeTests.cs) cover the executable Linux profile. Native allocator totals, foreign targets and owner visual acceptance remain unverified.
+
+## Containing-window notifications
+
+Window emits `NotificationWmMouseEnter` (1002), `NotificationWmMouseExit` (1003),
+`NotificationWmWindowFocusIn` (1004), `NotificationWmWindowFocusOut` (1005),
+`NotificationWmCloseRequest` (1006), `NotificationWmSizeChanged` (1008),
+`NotificationWmDpiChange` (1009) and `NotificationWmPositionChanged` (1012).
+Delivery is owner-thread, parent-first through ordinary and internal children;
+it stops before each nested Window and its subtree, including physical nodes.
+Size/content-policy updates notify only the owning Window, after SizeChanged.
+Focus, close and DPI notifications precede their typed window signal. Pointer
+entry notifies the containing window before content entry; content exit/hover cleanup
+precedes the containing-window exit notification. Window decoration and content
+have independent pointer identities; manual viewport-only notifications emit only
+content signals. Embedded hit testing uses actual pointer position independently
+of input capture, and hiding during entry prevents stale content entry. Direct-child
+mutation/disposal rejects during traversal. Remaining receivers and signal delegates
+are attempted after failures; errors are aggregated. Native close still applies
+AutoAcceptQuit in its finally path; embedded close leaves host quit to the caller.
+
+Public embedded focus/close and actual native/embedded pointer routes use the bridge.
+Repeated pointer entry/exit is silent. Position emits on observed native rectangle
+changes, not placement requests. SDL display-scale changes supply the DPI identity;
+they do not measure physical DPI. Go-back and output-linear/HDR notification sources
+remain absent. WindowNotificationTests checks physical descendants, nested boundaries,
+mutation/thread errors, committed rectangles, all eight injected SDL dummy events,
+later delegates/events after failure and teardown. Its 1024 warmed notification/event
+operations require zero owner/all-thread managed bytes. Real compositor, GPU and
+foreign-platform acceptance are not established by this check.

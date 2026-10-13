@@ -220,13 +220,13 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 80 | 27 | 8 | 0 | 0 |
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
-| [Node](classes/Node.md) | [Object](classes/Object.md) | 93 | 64 | 6 | 50 | 1 |
+| [Node](classes/Node.md) | [Object](classes/Object.md) | 99 | 66 | 6 | 42 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
 | [Object](classes/Object.md) | — | 4 | 23 | 2 | 30 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 4 | 21 | 0 | 2 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 225 | 142 | 19 | 82 | 23 |
+| **Total** | | 231 | 144 | 19 | 74 | 23 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -278,16 +278,10 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Node::constant:NOTIFICATION_ACCESSIBILITY_UPDATE`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
 | [`Node::constant:NOTIFICATION_EDITOR_POST_SAVE`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::constant:NOTIFICATION_EDITOR_PRE_SAVE`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
-| [`Node::constant:NOTIFICATION_WM_CLOSE_REQUEST`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
-| [`Node::constant:NOTIFICATION_WM_DPI_CHANGE`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
-| [`Node::constant:NOTIFICATION_WM_GO_BACK_REQUEST`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
-| [`Node::constant:NOTIFICATION_WM_MOUSE_ENTER`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
-| [`Node::constant:NOTIFICATION_WM_MOUSE_EXIT`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
-| [`Node::constant:NOTIFICATION_WM_OUTPUT_MAX_LINEAR_VALUE_CHANGED`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
-| [`Node::constant:NOTIFICATION_WM_POSITION_CHANGED`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
-| [`Node::constant:NOTIFICATION_WM_SIZE_CHANGED`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
-| [`Node::constant:NOTIFICATION_WM_WINDOW_FOCUS_IN`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
-| [`Node::constant:NOTIFICATION_WM_WINDOW_FOCUS_OUT`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
+| [`Node::constant:NOTIFICATION_WM_DPI_CHANGE`](classes/Node.md) | Partial | WindowNotificationTests verifies actual propagation, committed native-rectangle observation and all eight dummy queue identities. SDL content-scale reporting does not measure physical DPI under ADR 0044; native compositor/X11 event coverage and foreign platforms remain open. Wayland has no global-position event source. |
+| [`Node::constant:NOTIFICATION_WM_GO_BACK_REQUEST`](classes/Node.md) | Unimplemented | Exact prerequisite: a typed native/system go-back event source and Window signal/notification propagation through the owner event pump. No inert identity is exposed before that bridge. |
+| [`Node::constant:NOTIFICATION_WM_OUTPUT_MAX_LINEAR_VALUE_CHANGED`](classes/Node.md) | Unimplemented | Exact prerequisite: observed per-window output linear/HDR capability, change events and a typed Window value/signal bridge. No inert identity is exposed before that integration. |
+| [`Node::constant:NOTIFICATION_WM_POSITION_CHANGED`](classes/Node.md) | Partial | WindowNotificationTests verifies actual propagation, committed native-rectangle observation and all eight dummy queue identities. SDL content-scale reporting does not measure physical DPI under ADR 0044; native compositor/X11 event coverage and foreign platforms remain open. Wayland has no global-position event source. |
 | [`Node::enum:DuplicateFlags`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::enum:ProcessMode`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Node::enum:ProcessThreadGroup`](classes/Node.md) | Unimplemented | Exact executable prerequisite: Node process-group ownership/isolation, inherited group discovery and order, a real group scheduler with frame barriers, typed cross-group mailboxes and deferred/safe call/property/notification dispatch. ADR 0104 worker dispatch alone grants no off-owner scene/render access; metadata-only properties or forwarding everything to ordinary Defer would not implement this family. |

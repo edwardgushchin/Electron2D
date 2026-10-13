@@ -150,8 +150,8 @@ public partial class Window
     internal void QueueEmbeddedRedraw() => _embeddedCanvas?.QueueRedraw();
     internal void RaiseEmbeddedCanvas() { if (_embeddedLayer?.Parent is { } parent) parent.MoveChild(_embeddedLayer, -1); }
     internal Rect2 EmbeddedHitRect => Borderless ? new(Position, Size) : new((Vector2)Position - new Vector2(0, GetThemeConstant("title_height", "Window")), (Vector2)Size + new Vector2(0, GetThemeConstant("title_height", "Window")));
-    internal void RequestEmbeddedClose() => CloseRequested?.Invoke();
-    internal void EmitEmbeddedFocus(bool focus) { if (focus) FocusEntered?.Invoke(); else FocusExited?.Invoke(); }
+    internal void RequestEmbeddedClose() => EmitWindowEvent(NotificationWmCloseRequest);
+    internal void EmitEmbeddedFocus(bool focus) => HandleFocus(focus);
     private void UpdateEmbeddedMembership(bool entering)
     {
         if (!entering)

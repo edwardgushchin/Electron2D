@@ -305,3 +305,10 @@ The resolved ProcessMode and SceneTree pause policy gate both lanes. Internal pr
 Changing a built-in node's internal switches directly affects its implementation: for example it suspends and resumes Timer countdowns. Such nodes can overwrite the switch when their playback/callback policy changes. Do not disable internal work unless that is the intended effect. See [Node](../classes/Node.md) and [Timer](../classes/Timer.md).
 
 NodeInternalProcessingTests verifies both lanes, order and current-state mutation, pause modes, reattachment, errors, ownership/disposal, runtime scene omission and actual idle/physics Timer consumers. Its 1024 warmed set/query/frame operations allocate zero managed owner bytes. Native GPU and compatibility checks verify red pixels, a frozen frame with the internal lane disabled, resumed blue pixels and fixed ticks. Foreign/editor/native allocator and broad load verification remain separate.
+
+
+Containing-window notifications now reach physical Node descendants in parent-first
+order, stop before nested Window scopes and continue after callback failures.
+WindowNotificationTests exercises eight event kinds through embedded/public and SDL
+dummy routes plus 1024 zero-byte warmed operations. DPI/position platform limits and
+missing go-back/HDR sources remain open; see [window runtime](../components/window-runtime.md#containing-window-notifications).

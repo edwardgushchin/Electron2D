@@ -116,6 +116,30 @@ public partial class Node : ElectronObject
     /// <summary>Identifies the notification sent when the effective process mode stops being disabled.</summary>
     public const int NotificationEnabled = 29;
 
+    /// <summary>Identifies the notification sent when the pointer enters the containing window.</summary>
+    public const int NotificationWmMouseEnter = 1002;
+
+    /// <summary>Identifies the notification sent when the pointer exits the containing window.</summary>
+    public const int NotificationWmMouseExit = 1003;
+
+    /// <summary>Identifies the notification sent when the containing window gains keyboard focus.</summary>
+    public const int NotificationWmWindowFocusIn = 1004;
+
+    /// <summary>Identifies the notification sent when the containing window loses keyboard focus.</summary>
+    public const int NotificationWmWindowFocusOut = 1005;
+
+    /// <summary>Identifies the notification sent when closure of the containing window is requested.</summary>
+    public const int NotificationWmCloseRequest = 1006;
+
+    /// <summary>Identifies the notification sent when this window updates its content size.</summary>
+    public const int NotificationWmSizeChanged = 1008;
+
+    /// <summary>Identifies the notification sent when the containing window reports a display content-scale change.</summary>
+    public const int NotificationWmDpiChange = 1009;
+
+    /// <summary>Identifies the notification sent when the containing window changes client position.</summary>
+    public const int NotificationWmPositionChanged = 1012;
+
     /// <summary>Identifies an operating-system low-memory warning propagated by the active scene tree.</summary>
     public const int NotificationOsMemoryWarning = MainLoop.NotificationOsMemoryWarning;
 
@@ -1401,7 +1425,11 @@ public partial class Node : ElectronObject
     /// <exception cref="InvalidOperationException">An attached call runs off-owner.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
     /// <exception cref="AggregateException">One or more callbacks fail after traversal continues.</exception>
-    public void PropagateNotification(int what)
+    public void PropagateNotification(int what) => PropagateNotificationCore(what, stopAtWindows: false);
+
+    internal void PropagateWindowNotification(int what) => PropagateNotificationCore(what, stopAtWindows: true);
+
+    private void PropagateNotificationCore(int what, bool stopAtWindows)
     {
         ThrowIfDisposed(); Tree?.EnsureOwnerThread();
         List<Exception>? errors = null;
@@ -1410,9 +1438,9 @@ public partial class Node : ElectronObject
         {
             try { DispatchNotification(what); }
             catch (Exception error) { CollectException(ref errors, error); }
-            foreach (var child in _children.ToArray())
-                if (!child.IsDisposed && ReferenceEquals(child.Parent, this))
-                    try { child.PropagateNotification(what); }
+            foreach (var child in _children)
+                if (!child.IsDisposed && ReferenceEquals(child.Parent, this) && (!stopAtWindows || child is not Window))
+                    try { child.PropagateNotificationCore(what, stopAtWindows); }
                     catch (Exception error) { CollectException(ref errors, error); }
         }
         finally { _notificationPropagationDepth--; }
