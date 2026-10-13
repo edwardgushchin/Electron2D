@@ -20,6 +20,8 @@ public static partial class BackendChecks
         RunPortableCapture();
         RunPortableGeometry();
         RunPortableMotion();
+        RunSpringAnchors();
+        RunPortableJoints();
         Solver? solver = null;
         RunShapeResources();
         RunShapeGeometry();

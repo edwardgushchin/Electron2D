@@ -401,12 +401,21 @@ public static partial class BackendChecks
         {
             if (Settings.Type != PhysicsServer.JointType.DampedSpring) return;
             var a = solver.Bodies[_first]; var b = solver.Bodies[_second];
-            var separation = b.Pose * Settings.FrameB.Origin - a.Pose * Settings.FrameA.Origin;
+            var pointA = a.Pose * Settings.FrameA.Origin; var pointB = b.Pose * Settings.FrameB.Origin;
+            var separation = pointB - pointA;
             var length = separation.Length(); if (length == 0) return;
             var direction = separation / length;
-            var force = (length - Settings.EffectiveSpringRestLength) * Settings.SpringStiffness + (b.Velocity - a.Velocity).Dot(direction) * Settings.SpringDamping;
-            var impulse = direction * Mathf.Clamp(force, -Settings.MaxForce, Settings.MaxForce) * dt;
-            a.AddImpulse(impulse, 0); b.AddImpulse(-impulse, 0);
+            var ra = pointA - a.Center; var rb = pointB - b.Center;
+            var crossA = Cross(ra, direction); var crossB = Cross(rb, direction);
+            var inverse = (double)a.InvMass + b.InvMass + a.InvInertia * crossA * crossA + b.InvInertia * crossB * crossB;
+            if (inverse == 0) return;
+            var speed = (Motion(b) - Motion(a)).Dot(direction) + Spin(b) * crossB - Spin(a) * crossA;
+            var decay = Math.Exp(-Settings.SpringDamping * dt * inverse);
+            var elastic = (Settings.EffectiveSpringRestLength - length) * (double)Settings.SpringStiffness * dt;
+            var total = elastic * decay - speed * (1 - decay) / inverse;
+            var limit = (double)Settings.MaxForce * dt;
+            var impulse = direction * (float)Math.Clamp(total, -limit, limit);
+            Apply(a, -impulse, Cross(ra, -impulse)); Apply(b, impulse, Cross(rb, impulse));
         }
     }
 }

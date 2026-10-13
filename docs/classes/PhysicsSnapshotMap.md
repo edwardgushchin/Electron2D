@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-13
 
+[Portable joint continuation](../components/physics-snapshots.md#portable-joint-continuation)
+now verifies CPU/registered scene/raw sampled frames, silent correction, atomic
+policy guards, local replay and real pin/groove/spring response. Warm complete-frame
+transfers retain zero managed allocation; wider graphs and GPU/native gates remain open.
+
 [Character motion validation](../components/physics-snapshots.md#character-motion-validation)
 rejects impossible slide encodings and self/Area/unbound platform references before
 packet or world mutation. CPU/registered serial/separate cases preserve previous

@@ -237,3 +237,12 @@ GPU; `ELECTRON2D_TEST_CONTINUOUS_PHYSICS=cpu|gpu` selects the same cases. After 
 warmup frames, 128 live-policy/body-velocity edit frames require 0/0 owner/all-thread
 managed bytes. Analytic bounds and error/lifetime assertions remain unchanged;
 native allocations, foreign platforms and final performance acceptance stay open.
+
+[Off-center spring anchors](physics-registered-adapter.md#off-center-spring-anchors-and-portable-joints)
+now execute an independent consumer's actual anchor torque, angular-velocity axial
+damping, effective mass and shared force cap on scene/raw spring identities in both
+endpoint orders. CPU supplies the same analytic checks; serial/separate modes pass.
+[Portable correction](physics-snapshots.md#portable-joint-continuation) preserves
+sampled frames for scene/raw pin/groove/spring and verifies continued constraints,
+private replay and strict zero warm managed allocation. These bounded circle fixtures
+retain broader numerical/graph/current GPU/native/network/performance limits.

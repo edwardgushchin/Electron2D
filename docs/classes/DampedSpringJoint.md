@@ -1,6 +1,11 @@
 # DampedSpringJoint
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
+
+[Portable joint continuation](../components/physics-snapshots.md#portable-joint-continuation)
+now verifies CPU/registered scene/raw sampled frames, silent correction, atomic
+policy guards, local replay and real pin/groove/spring response. Warm complete-frame
+transfers retain zero managed allocation; wider graphs and GPU/native gates remain open.
 
 [Shared joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance)
 exercises this family through explicitly selected CPU and independent GPU worlds.

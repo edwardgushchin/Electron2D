@@ -1380,3 +1380,32 @@ now rejects malformed completed-slide values and incompatible platform roles bef
 state/event mutation. CPU/registered serial/separate tests preserve complete packets
 and world state, then exercise a valid body-platform correction and actual following
 movement. This does not establish arbitrary platform geometry or GPU acceptance.
+
+## Off-center spring anchors and portable joints
+
+The independent consumer spring solver now applies forces at actual anchors with
+opposite linear impulses and each body's angular moment. Axial damping includes
+angular point velocity and effective inverse mass from both lever arms. Exponential
+decay avoids the former explicit damping reversal; one scalar interval impulse cap
+bounds elasticity plus damping. Static endpoints use zero numerical motion and
+receive no dynamic impulse, matching the separate surface-velocity contract.
+
+--spring-anchors compares CPU/registered scene/raw joint identities and both endpoint
+orders in serial/separate modes. A mass-2, inertia-2 body with a two-unit vertical
+arm, 10-unit spring separation, rest 5 and stiffness 2 receives velocity -.005 X and
+angular +.01 over .001s. Bounds .00005 unit/s and .0001 rad/s permit four-substep
+integration drift. MaxForce=1 gives -.0005 X and +.001 rad/s with .00001/.00002 bounds.
+With stiffness zero, damping 4 and initial angular speed 3, effective inverse mass
+2.5 gives approximately +.01194 X and 2.97612 rad/s. Bounds .011.. .013 and
+2.974..2.978 permit the small anchor rotation; total linear/rotational energy drops.
+Damping 10000 removes axial point motion: +1.2 X and .6 rad/s within .002, with
+complete kinetic energy below 2 rather than the initial 9. This rejects explicit
+high-damping reversal. Eight configurations per thread profile execute all four responses. Springs require
+two live bodies under the accepted contract; an empty second RID is not a world spring.
+
+[Portable joint continuation](physics-snapshots.md#portable-joint-continuation) now
+executes scene/raw pin/groove/spring transfer, local-frame correction, real response,
+atomic policy mismatch, local replay and zero warm full-frame transfers on CPU and
+the independent owner. This is a consumer numerical fix plus stronger public-API
+proof; production runtime/API/ADRs/wire format remain unchanged. Wider joint graphs,
+active geometry/contact coupling, GPU/native/network and performance gates remain open.

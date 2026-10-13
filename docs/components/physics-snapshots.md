@@ -116,6 +116,38 @@ does not establish arbitrary geometry, contacts/joints, foreign/native or GPU
 transfer/replay/performance acceptance. Evidence is retained under
 bin/physics-portable-roles/2026-10-13.
 
+## Portable joint continuation
+
+The public-only --portable-joints consumer transfers pin, groove and damped spring
+constraints between CPU and the independent registered owner, with both scene-owned
+and raw joint RIDs. Each world uses two circle-bearing scene bodies (one static,
+one rigid). Creation order and initial rotations differ, so local attachment frames
+start different while authored roles/policies match. Caller IDs 10/20/30 identify
+the destination's own endpoints and joint. Physical pose and both sampled local
+anchor/axis frames transfer without replacing joint identity or emitting transforms.
+
+All six role/ownership cases reject a changed MaxForce profile before complete
+state/events change, then accept the same unchanged packet after restoration.
+Each destination creates a local checkpoint after correction and repeats a real
+central impulse plus twelve .01-second frames. Pose/velocity repeat within .005
+scene-unit or unit/s and rotation within .002 rad; this permits single precision
+angle reconstruction without requiring CPU/registered trajectory equality.
+
+The following real simulation checks finite bounded state, pin anchor error below
+.3 scene unit, and groove lateral error/endpoint overshoot below .3 for a 20-unit
+guide. These are bounded fixture constraints, not arbitrary numerical guarantees.
+Frames compare copied origins/bases within .0001 and imported pose/velocity within
+.001. Springs retain active elastic/damping motion and local replay; their off-center
+point force/damping semantics are checked separately below.
+
+Each serial/separate profile runs 128 warm plus 128 measured cycles for each of six
+cases. Each bracket contains 3072 complete frames, 1536 encode/decode/apply transfers
+and extra frame-validation captures. All six intervals require strict 0/0 owner/
+all-thread managed bytes. No physics features or joint counts are reduced within
+the bracket. This same-process circle fixture does not close arbitrary geometry,
+world-pin/other recipes, larger joint graphs, real GPU, native/cross-platform/network
+or final performance acceptance.
+
 ## Encoding, budget and cost
 
 Version 3 is explicit little-endian data with bounded counts, finite scalars, strict

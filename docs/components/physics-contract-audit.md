@@ -248,6 +248,13 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   storage/state/events change. CPU/registered serial/separate profiles verify a
   valid body-platform correction and actual subsequent carry. Arbitrary platform
   recipes, geometry/joints and current GPU/native/network/performance gates stay open.
+- [Portable joint continuation](physics-snapshots.md#portable-joint-continuation)
+  now verifies CPU/registered scene/raw pin/groove/spring sampled frames, atomic
+  policy mismatch, local replay, bounded response and zero warm full-frame transfers.
+  [Off-center spring anchors](physics-registered-adapter.md#off-center-spring-anchors-and-portable-joints)
+  now apply independent anchor torque and stable effective-mass point damping in
+  both endpoint orders. Wider graphs/geometry/current GPU/native/network/performance
+  acceptance remains open.
 - Shared inherited Object/Node/Resource/CanvasItem and skeletal editor requirements
   remain with their typed-API, scheduling, script/editor or rendering prerequisites.
   Existing built-in physics tests do not establish those separate declaring APIs.

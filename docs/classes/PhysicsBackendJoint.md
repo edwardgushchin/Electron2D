@@ -1,6 +1,11 @@
 # PhysicsBackendJoint
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
+
+[Portable joint continuation](../components/physics-snapshots.md#portable-joint-continuation)
+now verifies CPU/registered scene/raw sampled frames, silent correction, atomic
+policy guards, local replay and real pin/groove/spring response. Warm complete-frame
+transfers retain zero managed allocation; wider graphs and GPU/native gates remain open.
 
 **Declaration:** `public abstract class PhysicsBackendJoint` · **Source:** [PhysicsBackendJoint.cs](../../src/Servers/Physics/PhysicsBackendJoint.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
 
