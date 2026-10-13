@@ -29,10 +29,10 @@ internal static partial class LightingTests
         using var material = new CanvasItemMaterial { LightMode = LightMode.LightOnly }; using var materialCopy = (CanvasItemMaterial)material.Duplicate(); Check(materialCopy.LightMode == LightMode.LightOnly, "Copied shading policy");
         using var root = new Entity(); var packedLight = new PointLight { Height = 14, RangeItemCullMask = uint.MaxValue, Energy = 2, Offset = new(3, 4) }; root.AddChild(packedLight); packedLight.Owner = root;
         using var packed = new PackedScene(); packed.Pack(root); using var instance = (Entity)packed.Instantiate(); var restored = (PointLight)instance.GetChild(0); Check(restored.Height == 14 && restored.Offset == new Vector2(3, 4) && restored.RangeItemCullMask == uint.MaxValue, "Typed scene factory and descriptors");
-        var interpolation = new CanvasLightInterpolation { Enabled = true };
+        var interpolation = new CanvasTransformInterpolation { Enabled = true };
         interpolation.Reset(new Transform(0, new Vector2(2, 0))); interpolation.Tick(new Transform(0, new Vector2(2, 0)), true); interpolation.Tick(new Transform(0, new Vector2(10, 0)), false);
         Check(interpolation.Render(Transform.Identity, .5f, true).Origin == new Vector2(6, 0), "Retained physics snapshot midpoint");
-        interpolation.Rebase(new Transform(0, new Vector2(3, 0))); Check(interpolation.Render(Transform.Identity, .5f, true).Origin == new Vector2(9, 0), "Snapshot rebase preserves interpolation");
+        interpolation.Rebase(new Transform(0, new Vector2(3, 0)), interpolation.Current); Check(interpolation.Render(Transform.Identity, .5f, true).Origin == new Vector2(9, 0), "Snapshot rebase preserves interpolation");
         interpolation.Enabled = false; Check(interpolation.Render(Transform.Identity, .5f, true) == Transform.Identity, "Disabled interpolation preserves canonical transform");
         Files();
         Console.WriteLine("Canvas lighting resources: defaults, borrowed lifetimes, graph copies, cycle validation and scene metadata passed.");

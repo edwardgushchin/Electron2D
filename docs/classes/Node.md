@@ -1,6 +1,6 @@
 # Node
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -11,6 +11,10 @@ Last updated: 2026-10-13
 - **Declaration:** `public partial class Node : ElectronObject`
 
 Authoring guards inspect affected scene colliders and their actual physical attachments, including detached descendants and colliders imported into caller-owned spaces. Numerical hooks cannot mutate their node/subtree authoring; hierarchy, entry and disposal reject borrowed physical contexts before structural changes. Engine pose publication retains its ordinary step phase. [Common space bindings](../components/physics-registered-adapter.md#common-space-bindings) verifies these paths.
+
+## Retained canvas presentation
+
+Changing PhysicsInterpolationMode republishes the effective source policy for affected borrowed canvas items and resets their retained histories. Explicit renderer state remains session-local; a node reset updates its own source/retained presentation endpoints and propagated descendants. See [contract and native verification](../components/canvas-rendering.md#retained-canvas-item-interpolation).
 
 ## Resource endpoints and subtree operations
 

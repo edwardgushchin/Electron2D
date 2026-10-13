@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -13,6 +13,10 @@ Last updated: 2026-10-13
 > Owns one active node hierarchy and coordinates its lifecycle, input, frames, groups, timers, tweens, and deferred work.
 
 AnimatedSprite uses the existing internal idle lane and tree pause/process policy. Worker SpriteFrames changes remain pending until owner-thread reconciliation; they do not dispatch scene callbacks from a worker. No new public scheduling API is introduced.
+
+## Retained canvas presentation
+
+Physics interpolation capture now includes owned and borrowed retained canvas-item histories at the same boundaries as scene transforms, lights, occluders and MultiMesh data. Scene-wide changes reset all families; failures aggregate after later reset/capture recipients are attempted. See [contract and native verification](../components/canvas-rendering.md#retained-canvas-item-interpolation).
 
 ## Prepared skeletal path bindings
 

@@ -10,6 +10,12 @@ using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
 if (args.Length == 2 && args[0] == "--msaa-scene") { CanvasMSAATests.ReadFile(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTERPOLATION_NATIVE") == "1")
+{
+    PhysicsInterpolationNativeTests.Run();
+    return;
+}
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_INTERPOLATION") is { } canvasInterpolationBackend) { if (canvasInterpolationBackend == "managed") CanvasItemInterpolationTests.RunManaged(); else CanvasItemInterpolationTests.RunNative(canvasInterpolationBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MSAA_OWNED") == "1") { ProjectSettings.Set(ProjectSettings.MSAA2D, Viewport.MSAA.Samples4X); RenderingCanvasTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MSAA") is { } msaaBackend) { if (msaaBackend == "managed") CanvasMSAATests.RunManaged(); else CanvasMSAATests.RunNative(msaaBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MSAA_LIGHTING") == "1") { ProjectSettings.Set(ProjectSettings.MSAA2D, Viewport.MSAA.Samples4X); LightingTests.RunNative(includeCompatibility: false); return; }
@@ -1012,11 +1018,6 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_INTERPOLATION")
         "gpu" => PhysicsServer.Backend.GPU,
         _ => throw new ArgumentException("Choose cpu or gpu for viewport interpolation.")
     });
-    return;
-}
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTERPOLATION_NATIVE") == "1")
-{
-    PhysicsInterpolationNativeTests.Run();
     return;
 }
 

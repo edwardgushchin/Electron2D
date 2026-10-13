@@ -146249,6 +146249,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.CanvasItemResetPhysicsInterpolation(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemResetPhysicsInterpolation",
+    "signature": "public static System.Void CanvasItemResetPhysicsInterpolation(Electron2D.RID item)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.CanvasItemSetCanvasGroupMode(Electron2D.RID,Electron2D.RenderingServer.CanvasGroupMode,System.Single,System.Boolean,System.Single,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -146464,6 +146483,30 @@
       {
         "name": "value",
         "type": "Nullable\u003CT\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemSetInterpolated(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemSetInterpolated",
+    "signature": "public static System.Void CanvasItemSetInterpolated(Electron2D.RID item, System.Boolean interpolated)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "interpolated",
+        "type": "System.Boolean",
         "default": null
       }
     ],
@@ -146791,6 +146834,30 @@
       {
         "name": "zIndex",
         "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemTransformPhysicsInterpolation(Electron2D.RID,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemTransformPhysicsInterpolation",
+    "signature": "public static System.Void CanvasItemTransformPhysicsInterpolation(Electron2D.RID item, Electron2D.Transform transform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
         "default": null
       }
     ],

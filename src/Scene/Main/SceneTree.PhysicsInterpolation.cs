@@ -10,7 +10,7 @@ public sealed partial class SceneTree
     /// <remarks>Changing this while active resets presentation snapshots and leaves logical transforms unchanged.</remarks>
     /// <exception cref="InvalidOperationException">The caller is not the scene owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The scene tree is finalized or disposed.</exception>
-    /// <exception cref="AggregateException">A reset notification callback failed after later descendants were attempted.</exception>
+    /// <exception cref="AggregateException">A retained transform getter or reset callback failed after later resets and descendants were attempted.</exception>
     public bool PhysicsInterpolation
     {
         get { EnsureOwnerThread(); EnsureAcceptingWork(); return _physicsInterpolation; }
@@ -19,8 +19,11 @@ public sealed partial class SceneTree
             EnsureOwnerThread(); EnsureAcceptingWork();
             if (_physicsInterpolation == value) return;
             _physicsInterpolation = value;
-            RenderingServer.Service?.ResetLightingInterpolation(this);
-            Root.PropagateNotification(Node.NotificationResetPhysicsInterpolation);
+            List<Exception>? errors = null;
+            try { RenderingServer.Service?.ResetLightingInterpolation(this); } catch (Exception error) { CollectException(errors ??= [], error); }
+            try { RenderingServer.Service?.ResetCanvasItemInterpolation(this); } catch (Exception error) { CollectException(errors ??= [], error); }
+            try { Root.PropagateNotification(Node.NotificationResetPhysicsInterpolation); } catch (Exception error) { CollectException(errors ??= [], error); }
+            if (errors is not null) throw new AggregateException("Physics interpolation reset failed.", errors);
         }
     }
 
@@ -30,6 +33,7 @@ public sealed partial class SceneTree
     private void CapturePhysicsInterpolation(bool start, ref List<Exception>? errors)
     {
         RenderingServer.Service?.LightingPhysicsTick(this, start);
+        try { RenderingServer.Service?.CanvasItemPhysicsTick(this, start); } catch (Exception error) { CollectException(errors ??= [], error); }
         try { RenderingMultiMeshRegistry.PhysicsTick(start); } catch (Exception error) { CollectException(errors ??= [], error); }
         _scheduleTraversal.Clear();
         _scheduleTraversal.Add(Root);

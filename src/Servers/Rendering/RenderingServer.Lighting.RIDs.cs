@@ -23,29 +23,14 @@ internal sealed class RetainedCanvasLight : PointLight
 {
     internal CanvasLightMode Mode;
     internal RID Canvas;
-    internal CanvasLightInterpolation Interpolation;
+    internal CanvasTransformInterpolation Interpolation;
 }
 internal sealed class RetainedCanvasOccluder : LightOccluder
 {
     internal RID Canvas;
-    internal CanvasLightInterpolation Interpolation;
+    internal CanvasTransformInterpolation Interpolation;
 }
 
-internal struct CanvasLightInterpolation
-{
-    internal bool Enabled;
-    internal Transform Previous, Current;
-    internal void Reset(Transform transform) => Previous = Current = transform;
-    internal void Tick(Transform transform, bool start) { if (start) Previous = Current; Current = transform; }
-    internal Transform Render(Transform canonical, float fraction, bool active) => Enabled && active ? Previous.InterpolateWith(Current, fraction) : canonical;
-    internal void Rebase(Transform transform)
-    {
-        if (!transform.IsFinite()) throw new ArgumentException("Interpolation transforms must be finite.", nameof(transform));
-        var previous = transform * Previous; var current = transform * Current;
-        if (!previous.IsFinite() || !current.IsFinite()) throw new ArgumentException("Interpolation products must be finite.", nameof(transform));
-        Previous = previous; Current = current;
-    }
-}
 
 public sealed partial class RenderingServer
 {

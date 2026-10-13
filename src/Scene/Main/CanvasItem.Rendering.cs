@@ -4,7 +4,18 @@ public abstract partial class CanvasItem
 {
     internal RenderingCanvasItemState? ServerState;
     internal CanvasItem? RenderParent => ServerState is { ParentAssigned: true } state ? RenderingCanvasItemRegistry.ResolveOrNull(state.Parent) : GetParentItem();
-    internal Transform RenderLocal(float fraction) => ServerState?.Transform ?? GetInterpolatedVisualTransform(fraction);
+    internal Transform RenderLocal(float fraction)
+    {
+        if (ServerState is not { } state || state.Transform is null && state.Interpolated is null) return GetInterpolatedVisualTransform(fraction);
+        var canonical = state.Transform ?? GetVisualTransform();
+        state.Interpolation.Enabled = state.Interpolated ?? (state.Owned || IsPhysicsInterpolated());
+        return state.Interpolation.Render(canonical, Math.Clamp(fraction, 0f, 1f), state.Owner?.CanvasSceneTree?.IsPhysicsInterpolationActive == true);
+    }
+    internal void PublishInterpolationPolicy()
+    {
+        if (ServerState is not { Owned: false } state) return;
+        state.Interpolated = null; state.Interpolation.Reset(state.Transform ?? GetVisualTransform());
+    }
     internal Transform RenderGlobal(float fraction) => RenderParent is { } parent ? parent.RenderGlobal(fraction) * RenderLocal(fraction) : RenderLocal(fraction);
     internal Color RenderModulate => ServerState?.Modulate ?? _modulate;
     internal Color RenderSelfModulate => ServerState?.TileOwner is { } tiles ? tiles.RenderSelfModulate : ServerState?.SelfModulate ?? _selfModulate;

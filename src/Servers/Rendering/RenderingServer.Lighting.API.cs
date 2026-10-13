@@ -174,9 +174,9 @@ public sealed partial class RenderingServer
     /// <summary>Resets previous and current presentation snapshots to the canonical transform.</summary><param name="light">Owned identity.</param>
     public static void CanvasLightResetPhysicsInterpolation(RID light)
     { var data = RequireService().LightChange(light); data.Interpolation.Reset(data.Transform); }
-    /// <summary>Rebases both presentation snapshots without changing the canonical transform.</summary><param name="light">Owned identity.</param><param name="transform">Finite transform applied to both snapshots.</param>
+    /// <summary>Rebases both presentation snapshots and the canonical retained transform atomically.</summary><param name="light">Owned identity.</param><param name="transform">Finite transform applied to both snapshots and the canonical transform.</param>
     public static void CanvasLightTransformPhysicsInterpolation(RID light, Transform transform)
-    { var data = RequireService().LightChange(light); data.Interpolation.Rebase(transform); }
+    { var data = RequireService().LightChange(light); data.Transform = data.Interpolation.Rebase(transform, data.Transform); }
 
     /// <summary>Selects presentation interpolation between scene physics snapshots.</summary><param name="occluder">Owned identity.</param><param name="interpolated">Whether to interpolate while the owning tree enables physics interpolation.</param>
     public static void CanvasLightOccluderSetInterpolated(RID occluder, bool interpolated)
@@ -184,8 +184,8 @@ public sealed partial class RenderingServer
     /// <summary>Resets previous and current presentation snapshots to the canonical transform.</summary><param name="occluder">Owned identity.</param>
     public static void CanvasLightOccluderResetPhysicsInterpolation(RID occluder)
     { var data = RequireService().OccluderChange(occluder); data.Interpolation.Reset(data.Transform); }
-    /// <summary>Rebases both presentation snapshots without changing the canonical transform.</summary><param name="occluder">Owned identity.</param><param name="transform">Finite transform applied to both snapshots.</param>
+    /// <summary>Rebases both presentation snapshots and the canonical retained transform atomically.</summary><param name="occluder">Owned identity.</param><param name="transform">Finite transform applied to both snapshots and the canonical transform.</param>
     public static void CanvasLightOccluderTransformPhysicsInterpolation(RID occluder, Transform transform)
-    { var data = RequireService().OccluderChange(occluder); data.Interpolation.Rebase(transform); }
+    { var data = RequireService().OccluderChange(occluder); data.Transform = data.Interpolation.Rebase(transform, data.Transform); }
 
 }

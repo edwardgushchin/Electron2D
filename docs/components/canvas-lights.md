@@ -1,6 +1,6 @@
 # Canvas lights and occlusion
 
-Last updated: 2026-10-11
+Last updated: 2026-10-14
 
 `Light` is an Entity family. `PointLight` places a centered borrowed texture mask using Offset and TextureScale; `DirectionalLight` uses its transformed direction and normalized Height. Visible enabled sources are captured per rendered viewport. Inclusive canvas-layer and item-Z ranges select receivers; reversed ranges select nothing. Point masks intersect each item's LightMask, while directional sources ignore receiving masks. ShadowItemCullMask independently selects visible contour placements.
 
@@ -19,3 +19,5 @@ Static RenderingServer light/occluder/contour/canvas-texture operations retain c
 Compatibility renders diffuse textures and Unshaded fixed materials, and rejects an actual light pass or programmable SDF shader before drawing. Programmable fragment materials receive [automatic scene lighting](shader-materials.md#automatic-scene-lighting) after their own color calculation and before blend. Four user uniform slots remain available. Point-mask and normal/specular samplers share the sixteen-binding native limit; overflow rejects before submission. EditorOnly remains unexposed until editor scene rendering/hint ownership exists. Native axes and combined mask atlas axes are limited to 16384; unsupported floating-point targets fail explicitly. Light/shadow cost grows with pixels, sources and contour edges, and SDF generation with pixels and edges.
 
 `LightingTests` verifies resource graphs, validation, copies and typed scene metadata. Native checks exercise actual GPU lighting/channel/SDF/retained-RID pixels, physics interpolation and compatibility rejection. Prepared owner-frame allocation measurements are distinct from driver/internal native allocations, foreign-platform verification and owner acceptance.
+
+Coordinate rebasing updates previous/current interpolation endpoints and the canonical retained light/occluder transform together. The shift survives subsequent ticks and global interpolation disable/enable. Nonfinite products reject atomically; the GPU [retained canvas checks](canvas-rendering.md#retained-canvas-item-interpolation) verify light/occluder rebase pixels through subsequent ticks and global mode changes. Compatibility continues to reject the light pass.

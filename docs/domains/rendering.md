@@ -1,6 +1,6 @@
 # Rendering domain
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 Private native runtime binaries come from versioned Linux/macOS packages in ordinary desktop builds; `Electron2DBuildNativeFromSource=true` rebuilds those libraries. Source builds separately prepare pinned host shader tools on first use and generate built-in shaders under `obj/`. [Shader delivery](../components/shader-materials.md#built-in-shader-delivery) keeps these tools out of game packages. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
@@ -289,3 +289,5 @@ Renderer-session overrides preserve authored properties and input coordinates. M
 ## Canvas multisample antialiasing
 
 The shared Viewport.MSAA enum, stored MSAA2D scene property, static server selection and typed root project setting execute 2/4/8-sample GPU geometry coverage. Per-sample history survives Never-clear frames and pass restarts; screen/group/clip consumers read resolved pixels. Compatibility rejects enabled MSAA. [Canvas rendering](../components/canvas-rendering.md#canvas-multisample-antialiasing) records target ownership, typed identity, native coverage and warmed allocation evidence.
+
+Retained canvas item interpolation now executes through scene physics boundaries, native hierarchy composition, typed reset/rebase and source policy publication. Shared history logic also preserves canonical light/occluder rebases. See [canvas interpolation](../components/canvas-rendering.md#retained-canvas-item-interpolation) for pixel, lifetime and warmed allocation evidence.

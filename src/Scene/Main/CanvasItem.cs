@@ -575,7 +575,7 @@ public abstract partial class CanvasItem : Node
 
     internal void InvalidatePhysicsReplayTransform()
     {
-        if (ServerState is { } state) state.Transform = null;
+        if (ServerState is { } state) { state.Transform = null; state.Interpolation.Reset(GetVisualTransform()); }
         _globalTransformInvalid = true; _interpolationValid = false;
         Tree?.CancelTransformNotification(this);
         for (var i = 0; i < GetChildCount(includeInternal: true); i++)

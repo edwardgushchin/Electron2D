@@ -19,7 +19,7 @@ public sealed partial class RenderingServer
     {
         CheckCanvasItemOwner(item);
         if (item.ServerState is { } existing) return existing;
-        _serverSceneItems.Add(new(item)); return item.ServerState = new(this, false);
+        var state = new RenderingCanvasItemState(this, false); item.CopyInterpolationSnapshot(ref state.Interpolation); _serverSceneItems.Add(new(item)); return item.ServerState = state;
     }
     private RenderingCanvasItemState Change(RID rid, out CanvasItem item) { EnsureTextureChange(); item = RenderingCanvasItemRegistry.Resolve(rid); if (item.ServerState?.TileOwner is not null) throw new InvalidOperationException("Generated tile drawing is owned by its layer."); return CanvasState(item); }
     private RenderingCanvasRuntime CanvasChange(RID rid) { EnsureTextureChange(); var canvas = RenderingCanvasRegistry.Resolve(rid); if (canvas.Owner is not null && !ReferenceEquals(canvas.Owner, this) || canvas.Layer is not null && canvas.Layer.TryGetTarget(out var layer) && layer.Tree is not null && !ReferenceEquals(layer.Tree, _window.Tree)) throw new InvalidOperationException("Canvas belongs to another renderer or scene owner."); if (canvas.World is not null && canvas.World.TryGetTarget(out var world) && world.SceneOwner is { } worldOwner && !ReferenceEquals(worldOwner, _window.Tree)) throw new InvalidOperationException("World canvas belongs to another scene owner."); if (canvas.Owner is null) { if (canvas.SessionOwner is not null && !ReferenceEquals(canvas.SessionOwner, this)) throw new InvalidOperationException("Canvas overrides belong to another session."); if (canvas.SessionOwner is null) { canvas.SessionOwner = this; _serverSceneCanvases.Add(canvas); } } return canvas; }
@@ -63,7 +63,7 @@ public sealed partial class RenderingServer
         }
         finally { _canvasDepthScratch.Clear(); }
     }
-    internal void CanvasItemSetTransformCore(RID item, Transform transform) { if (!transform.IsFinite()) throw new ArgumentException("Canvas transforms must be finite.", nameof(transform)); Change(item, out _).Transform = transform; }
+    internal void CanvasItemSetTransformCore(RID item, Transform transform) { if (!transform.IsFinite()) throw new ArgumentException("Canvas transforms must be finite.", nameof(transform)); var state = Change(item, out _); state.Transform = transform; state.Interpolation.Current = transform; }
     internal void CanvasItemSetVisibleCore(RID item, bool visible) => Change(item, out _).Visible = visible;
     internal void CanvasItemSetModulateCore(RID item, Color color) { if (!color.IsFinite()) throw new ArgumentException("Canvas colors must be finite.", nameof(color)); Change(item, out _).Modulate = color; }
     internal void CanvasItemSetSelfModulateCore(RID item, Color color) { if (!color.IsFinite()) throw new ArgumentException("Canvas colors must be finite.", nameof(color)); Change(item, out _).SelfModulate = color; }

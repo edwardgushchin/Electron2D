@@ -52,6 +52,8 @@ internal sealed class RenderingCanvasItemState
     internal bool MaterialAssigned;
     internal bool ParentAssigned;
     internal Transform? Transform;
+    internal bool? Interpolated;
+    internal CanvasTransformInterpolation Interpolation = new() { Previous = Electron2D.Transform.Identity, Current = Electron2D.Transform.Identity };
     internal Color? Modulate, SelfModulate;
     internal bool? Visible, Behind, ZRelative, YSort, Clip, UseParentMaterial;
     internal int? Z, DrawIndex;

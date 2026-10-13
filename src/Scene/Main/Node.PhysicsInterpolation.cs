@@ -10,10 +10,11 @@ public partial class Node
     /// <summary>Gets or sets the inherited physics interpolation policy.</summary>
     /// <value>Inherit for ordinary nodes, Off for Control and On for Viewport, including Window and SubViewport.</value>
     /// <remarks>The effective policy applies only while the scene tree enables interpolation. A changed active policy
-    /// resets affected canvas snapshots before subsequent presentation.</remarks>
+    /// republishes affected scene-item renderer policies and resets canvas snapshots before subsequent presentation.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is not a defined mode.</exception>
     /// <exception cref="InvalidOperationException">An attached mutation is off-owner or scene capture is active.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
+    /// <exception cref="AggregateException">A retained transform getter or reset callback failed after later policy publications were attempted.</exception>
     public PhysicsInterpolationMode PhysicsInterpolationMode
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _physicsInterpolationMode; }
@@ -23,16 +24,25 @@ public partial class Node
             if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value));
             if (_physicsInterpolationMode == value) return;
             _physicsInterpolationMode = value;
-            if (Tree is not null)
+            List<Exception>? errors = null;
+            foreach (var descendant in EnumerateDepthFirst())
+                if (descendant is CanvasItem item && !item.IsDisposed)
+                    try { item.PublishInterpolationPolicy(); } catch (Exception error) { (errors ??= []).Add(error); }
+            try
             {
-                if (IsPhysicsInterpolated()) PropagateNotification(NotificationResetPhysicsInterpolation);
-                else
-                    foreach (var descendant in EnumerateDepthFirst())
-                        if (descendant is Camera camera && !camera.IsDisposed)
-                            camera.RefreshInterpolationProcessing();
-                        else if (descendant is MultiMeshInstance instances && !instances.IsDisposed)
-                            instances.RefreshInterpolation();
+                if (Tree is not null)
+                {
+                    if (IsPhysicsInterpolated()) PropagateNotification(NotificationResetPhysicsInterpolation);
+                    else
+                        foreach (var descendant in EnumerateDepthFirst())
+                            if (descendant is Camera camera && !camera.IsDisposed)
+                                camera.RefreshInterpolationProcessing();
+                            else if (descendant is MultiMeshInstance instances && !instances.IsDisposed)
+                                instances.RefreshInterpolation();
+                }
             }
+            catch (Exception error) { (errors ??= []).Add(error); }
+            if (errors is not null) throw new AggregateException("Physics interpolation policy publication failed.", errors);
         }
     }
 

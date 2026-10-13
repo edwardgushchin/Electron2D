@@ -39,8 +39,20 @@ public abstract partial class CanvasItem
 
     internal Transform GetInterpolatedGlobalVisualTransform(float fraction) => GetParentItem() is { } parent ? parent.GetInterpolatedGlobalVisualTransform(fraction) * GetInterpolatedVisualTransform(fraction) : GetInterpolatedVisualTransform(fraction);
 
+    internal void CopyInterpolationSnapshot(ref CanvasTransformInterpolation history)
+    {
+        var canonical = GetVisualTransform();
+        history.Previous = _interpolationValid ? _interpolationPrevious : canonical;
+        history.Current = _interpolationValid ? _interpolationCurrent : canonical;
+    }
+    internal void ResetVisualInterpolationSnapshot()
+    {
+        _interpolationPrevious = _interpolationCurrent = GetVisualTransform();
+        _interpolationValid = true; _interpolationFirstTick = false;
+    }
     private void ResetInterpolationSnapshot()
     {
+        if (ServerState is { } state) state.Interpolation.Reset(state.Transform ?? GetVisualTransform());
         if (_multiMeshes is not null) for (var i = 0; i < _multiMeshCount; i++) _multiMeshes[i].ResetInterpolation();
         _interpolationPrevious = _interpolationCurrent = GetVisualTransform();
         _interpolationValid = true;

@@ -1412,3 +1412,5 @@ the resident GPU modules, point-range/failure checks and common public physics s
 without physical-GPU load. A separate CPU authority/GPU prediction/late CPU client
 run covers the existing impaired-network scenario. Hardware GPU execution, performance
 and full-goal acceptance remain open; software timing is not hardware evidence.
+
+Retained canvas item presentation uses renderer-session physics histories shared with light/occluder transforms. Static interpolation selection, item-local reset and atomic coordinate rebasing execute on caller-owned and scene identities without storing native history in scenes. [Canvas interpolation](components/canvas-rendering.md#retained-canvas-item-interpolation) records native and managed checks.

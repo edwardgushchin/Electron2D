@@ -1,6 +1,6 @@
 # CanvasItem
 
-Last updated: 2026-10-11
+Last updated: 2026-10-14
 
 **Inherits:** [Node](Node.md)
 
@@ -9,6 +9,10 @@ Last updated: 2026-10-11
 - **Source:** [CanvasItem.cs](../../src/Scene/Main/CanvasItem.cs), [CanvasItem.PhysicsInterpolation.cs](../../src/Scene/Main/CanvasItem.PhysicsInterpolation.cs), [CanvasItem.World.cs](../../src/Scene/Main/CanvasItem.World.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public abstract partial class CanvasItem : Node`
+
+## Retained canvas presentation
+
+Scene canvas interpolation remains authoritative until a corresponding native item override is supplied. Adding unrelated server state preserves ordinary history; changed node policies and source resets/replay publish to retained histories. PackedScene captures authored values, never renderer-only endpoints or policies. See [contract and native verification](../components/canvas-rendering.md#retained-canvas-item-interpolation).
 
 ## Skeletal presentation
 

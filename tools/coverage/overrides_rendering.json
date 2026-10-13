@@ -2675,12 +2675,12 @@
     {
       "godot": "RenderingServer::method:texture_proxy_create(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "FlowContainer::theme_item:h_separation",
@@ -4132,7 +4132,7 @@
     {
       "godot": "RenderingServer::method:canvas_light_occluder_transform_physics_interpolation(RID:,Transform2D:)",
       "electron2d": "method:Electron2D.RenderingServer.CanvasLightOccluderTransformPhysicsInterpolation(Electron2D.RID,Electron2D.Transform)",
-      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates. CanvasItemInterpolationTests now verifies canonical and both history endpoints rebase atomically, with GPU light/occluder pixels persisting through subsequent ticks and global interpolation disable/enable."
     },
     {
       "godot": "RenderingServer::method:canvas_light_reset_physics_interpolation(RID:)",
@@ -4237,7 +4237,7 @@
     {
       "godot": "RenderingServer::method:canvas_light_transform_physics_interpolation(RID:,Transform2D:)",
       "electron2d": "method:Electron2D.RenderingServer.CanvasLightTransformPhysicsInterpolation(Electron2D.RID,Electron2D.Transform)",
-      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates. CanvasItemInterpolationTests now verifies canonical and both history endpoints rebase atomically, with GPU light/occluder pixels persisting through subsequent ticks and global interpolation disable/enable."
     },
     {
       "godot": "RenderingServer::method:canvas_occluder_polygon_create()",
@@ -4636,6 +4636,21 @@
       "godot": "ProjectSettings::property:rendering/anti_aliasing/quality/msaa_2d",
       "electron2d": "property:Electron2D.ProjectSettings.MSAA2D()",
       "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_reset_physics_interpolation(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemResetPhysicsInterpolation(Electron2D.RID)",
+      "reason": "ADRs 0004/0006/0011/0028/0095: retained owned/borrowed item history executes at scene physics boundaries, composes independent native parent/child transforms, supports item-local reset and atomic previous/current/canonical rebase, follows matching authored policy/reset/replay publication and stays outside scene storage. CanvasItemInterpolationTests checks intermediate native GPU/compatibility pixels on two views, reset/scene enable/disable/reparent/free and 64 active/64 idle warmed zero-managed-byte render intervals, plus typed finite/overflow/singular math and 1024 warm history cycles. Shared light/occluder rebase now retains canonical shifts through ticks/enable changes. Foreign/native-allocator/human acceptance remain separate."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_interpolated(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetInterpolated(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0004/0006/0011/0028/0095: retained owned/borrowed item history executes at scene physics boundaries, composes independent native parent/child transforms, supports item-local reset and atomic previous/current/canonical rebase, follows matching authored policy/reset/replay publication and stays outside scene storage. CanvasItemInterpolationTests checks intermediate native GPU/compatibility pixels on two views, reset/scene enable/disable/reparent/free and 64 active/64 idle warmed zero-managed-byte render intervals, plus typed finite/overflow/singular math and 1024 warm history cycles. Shared light/occluder rebase now retains canonical shifts through ticks/enable changes. Foreign/native-allocator/human acceptance remain separate."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_transform_physics_interpolation(RID:,Transform2D:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemTransformPhysicsInterpolation(Electron2D.RID,Electron2D.Transform)",
+      "reason": "ADRs 0004/0006/0011/0028/0095: retained owned/borrowed item history executes at scene physics boundaries, composes independent native parent/child transforms, supports item-local reset and atomic previous/current/canonical rebase, follows matching authored policy/reset/replay publication and stays outside scene storage. CanvasItemInterpolationTests checks intermediate native GPU/compatibility pixels on two views, reset/scene enable/disable/reparent/free and 64 active/64 idle warmed zero-managed-byte render intervals, plus typed finite/overflow/singular math and 1024 warm history cycles. Shared light/occluder rebase now retains canonical shifts through ticks/enable changes. Foreign/native-allocator/human acceptance remain separate."
     }
   ],
   "statusGroups": [
@@ -5815,7 +5830,7 @@
         "RenderingServer::method:texture_proxy_update(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": [
@@ -6559,6 +6574,15 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:canvas_item_reset_physics_interpolation(RID:)",
+        "RenderingServer::method:canvas_item_set_interpolated(RID:,bool:)",
+        "RenderingServer::method:canvas_item_transform_physics_interpolation(RID:,Transform2D:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0004/0006/0011/0028/0095: retained owned/borrowed item history executes at scene physics boundaries, composes independent native parent/child transforms, supports item-local reset and atomic previous/current/canonical rebase, follows matching authored policy/reset/replay publication and stays outside scene storage. CanvasItemInterpolationTests checks intermediate native GPU/compatibility pixels on two views, reset/scene enable/disable/reparent/free and 64 active/64 idle warmed zero-managed-byte render intervals, plus typed finite/overflow/singular math and 1024 warm history cycles. Shared light/occluder rebase now retains canonical shifts through ticks/enable changes. Foreign/native-allocator/human acceptance remain separate."
     }
   ],
   "extras": [
