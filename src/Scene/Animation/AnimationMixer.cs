@@ -11,6 +11,7 @@ public partial class AnimationMixer : Node
     [
         new PropertyDescriptor<AnimationMixer, bool>(nameof(Deterministic), n => n.Deterministic, (n, v) => n.Deterministic = v, _ => false, stored: true),
         new PropertyDescriptor<AnimationMixer, AnimationCallbackModeDiscrete>(nameof(CallbackModeDiscrete), n => n.CallbackModeDiscrete, (n, v) => n.CallbackModeDiscrete = v, _ => AnimationCallbackModeDiscrete.Recessive, stored: true),
+        new PropertyDescriptor<AnimationMixer, bool>(nameof(ResetOnSave), n => n.ResetOnSave, (n, v) => n.ResetOnSave = v, _ => true, stored: true),
         new PropertyDescriptor<AnimationMixer, bool>(nameof(Active), n => n.Active, (n, v) => n.Active = v, _ => true, stored: true),
         new PropertyDescriptor<AnimationMixer, string>(nameof(RootNode), n => n.RootNode, (n, v) => n.RootNode = v, _ => "..", stored: true),
         new PropertyDescriptor<AnimationMixer, AnimationCallbackModeProcess>(nameof(CallbackModeProcess), n => n.CallbackModeProcess, (n, v) => n.CallbackModeProcess = v, _ => AnimationCallbackModeProcess.Idle, stored: true),
@@ -30,6 +31,7 @@ public partial class AnimationMixer : Node
     private bool _animationIndexDirty = true;
     private Animation? _cachedAnimation;
     private AnimationBinding?[] _bindings = [];
+    private bool _resetOnSave = true;
     private bool _active = true;
     private string _rootNode = "..";
     private AnimationCallbackModeProcess _callbackModeProcess = AnimationCallbackModeProcess.Idle;
@@ -51,6 +53,13 @@ public partial class AnimationMixer : Node
     public event Action<string>? AnimationFinished;
     /// <summary>Occurs after explicit cache clearing.</summary>
     public event Action? CachesCleared;
+    /// <summary>Gets or sets whether save preparation applies the RESET property pose; defaults to true.</summary>
+    /// <value>The authoring save policy used by PackedScene.PackForSave.</value>
+    /// <remarks>Ordinary Pack and runtime playback do not apply this policy. Save preparation evaluates a detached
+    /// temporary scene; live preview values and controller clocks are preserved. Event tracks are not executed.</remarks>
+    /// <exception cref="ObjectDisposedException">The controller is disposed.</exception>
+    /// <exception cref="InvalidOperationException">Mutation violates owner-thread or capture guards.</exception>
+    public bool ResetOnSave { get { ThrowIfDisposed(); return _resetOnSave; } set { EnsureAnimationMutable(); _resetOnSave = value; } }
     /// <summary>Adds a borrowed library; empty names form the default namespace.</summary>
     /// <param name="name">The ordinal animation, library or marker name; empty names are accepted only where explicitly documented.</param>
     /// <param name="library">The live borrowed animation library.</param>

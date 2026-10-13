@@ -53,6 +53,7 @@ using Node instance = scene.Instantiate();
 | [`public bool CanInstantiate()`](#m-electron2d-packedscene-caninstantiate) | Gets whether this resource contains a scene that can be instantiated. |
 | [`public SceneState GetState()`](#m-electron2d-packedscene-getstate) | Gets the live read-only metadata object for this resource. |
 | [`public Node Instantiate(PackedSceneEditState editState = PackedSceneEditState.Disabled)`](#m-electron2d-packedscene-instantiate-electron2d-packedsceneeditstate) | Creates an independent detached node hierarchy from the stored scene. |
+| [`public void PackForSave(Node root)`](#packforsave) | Captures enabled RESET property poses while preserving preview state. |
 | [`public void Pack(Node root)`](#m-electron2d-packedscene-pack-electron2d-node) | Replaces this resource's contents with a typed snapshot of a node hierarchy. |
 | [`protected override Resource CreateDuplicateInstance()`](#m-electron2d-packedscene-createduplicateinstance) | Creates a fresh default instance used as the target of duplication. |
 | [`protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource, Resource> duplicateSubresource, Func<Resource, Resource> forceDuplicateSubresource)`](#m-electron2d-packedscene-copycustomstateto-electron2d-resource-system-boolean-electron2d-deepduplicatemode-system-func-electron2d-resource-electron2d-resource-system-func-electron2d-resource-electron2d-resource) | Copies derived stored state into a duplicate or copy target. |
@@ -293,3 +294,22 @@ Typed tile scene references now resolve registered TileSetScenesCollectionSource
 Instance parameter descriptors reconstruct captured nullable scalar/vector schemas without requiring a material. Typed aliases restore through their captured schema, with owner/capture validation. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).
 
 Built-in cross-property scene validation runs after all stored values and node references are restored, before local-resource setup and scene-instantiated notification. AnimationPlayer uses it to reject unknown next/blend references or incomplete durations. This stays inside the existing failed-instance cleanup boundary.
+
+## Save-ready authoring
+
+<a id="packforsave"></a>
+### PackForSave
+
+`public void PackForSave(Node root)`
+
+Allocating owner-thread authoring operation. Captures the selected owned hierarchy under the existing source guard. If an enabled mixer has RESET, reconstructs detached nodes and isolated deep resource copies, applies property/Bézier RESET at zero in stored hierarchy order and captures the result. It retains original factories and captures pose-derived names/metadata; prepared resources belong to this PackedScene. Cleanup of temporary nodes does not invalidate the saved assets. Without an applicable RESET, captures the actual pose directly.
+
+Source preview properties and playback state are untouched. Custom state affecting setters/postprocessing must be represented in stored descriptors; resources require their existing duplication contract. Source capture guards reject reentry or callback mutation of source nodes. Adding/removing/reparenting/reordering the selected saved nodes rejects; coupled node-name changes persist. Preparation/factory/setter/cleanup errors preserve previous packed data and release temporary resources; change-notification errors happen after commit, as in ordinary Pack. Callback effects outside the isolated graph remain application-owned. No gameplay lifecycle, local-resource setup or event tracks run.
+
+```csharp
+using var scene = new PackedScene();
+scene.PackForSave(previewRoot);
+ResourceSaver.Save(scene, "scene.e2dscene", SaverFlags.BundleResources);
+```
+
+[AnimationResetSaveTests](../../tests/Electron2D.Tests/AnimationResetSaveTests.cs) covers policy, coupled values/resources, failure atomicity, ownership and files. Linux Wayland GPU/compatibility host verification is recorded in scene animation; foreign/editor/human acceptance remains separate.

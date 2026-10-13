@@ -545,3 +545,5 @@ The exact built-in type supports PackedScene authoring and typed resource files.
 Named blend insertion/removal reports the updated tooling property list after committing.
 
 Returns a fresh, detached, childless exact-type node. Stored descriptors reconstruct authored libraries and settings. It does not capture the source or transfer its playback state. A derived type without an explicit factory throws NotSupportedException during packing.
+
+The inherited stored ResetOnSave policy executes through [PackedScene.PackForSave](PackedScene.md#packforsave). Ordinary Pack and runtime playback keep their prior behavior.

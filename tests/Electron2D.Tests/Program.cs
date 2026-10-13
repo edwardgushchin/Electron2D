@@ -557,6 +557,10 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_BLEND") == "1") { 
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_ANIMATION_HOST") == "1") { SceneAnimationTests.RunHost(); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESET_SAVE_CHILD") is { } resetSaveChild) { AnimationResetSaveTests.RunChild(resetSaveChild); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESET_SAVE_WRITE") is { } resetSaveWrite) { AnimationResetSaveTests.WriteFixture(resetSaveWrite); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESET_SAVE_NATIVE") is { } resetSaveNative) { AnimationResetSaveTests.RunNative(resetSaveNative); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESET_SAVE") == "1") { AnimationResetSaveTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GRAPH_FILE_CHILD") is { } graphFileChild) { AnimationGraphPersistenceTests.RunChild(graphFileChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GRAPH_FILE_WRITE") is { } graphFileWrite) { AnimationGraphPersistenceTests.WriteFixture(graphFileWrite); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GRAPH_FILE_NATIVE") is { } graphFileNative) { AnimationGraphPersistenceTests.RunNative(graphFileNative); return; }
@@ -1022,6 +1026,7 @@ SceneAnimationTests.Run();
 AnimationOptimizeTests.Run();
 AnimationPersistenceTests.Run();
 AnimationControllerPersistenceTests.Run();
+AnimationResetSaveTests.Run();
 AnimationGraphPersistenceTests.Run();
 AnimationCuePersistenceTests.Run();
 SceneAnimationBlendTests.Run();

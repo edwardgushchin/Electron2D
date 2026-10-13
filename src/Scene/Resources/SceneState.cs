@@ -270,6 +270,7 @@ internal sealed class SceneFactoryData(Func<Node> create, Type runtimeType, ulon
     private readonly ConditionalWeakTable<Node, object> _issued = new();
 
     internal Type RuntimeType { get; } = runtimeType;
+    internal ulong SourceInstanceID => sourceInstanceId;
 
     internal Node Create()
     {

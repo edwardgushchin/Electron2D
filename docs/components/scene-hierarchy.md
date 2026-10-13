@@ -1,6 +1,6 @@
 # Scene hierarchy component
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 ## Scope and owned types
 
@@ -127,3 +127,5 @@ SceneTree.Defer and deferred group operations enqueue under the existing lifetim
 [Typed scene multiplayer](scene-multiplayer.md) integrates default/borrowed branch interfaces before node entry, idle-frame polling before node callbacks, Node authority/configured RPC, structural path invalidation before observers and detach/default cleanup after node exit. Programmatic native WS/WSS tests execute client/server branches within one tree; this does not establish replication or editor/rendered/agent acceptance.
 
 [Typed scene spawning and replication](scene-replication.md) now executes custom/automatic in-memory scene factories, pre-Ready state, late admission, visibility/RPC integration, property policies and real periodic/delta batching through SceneMultiplayer. Public branch replacement rebinds typed configurations after committed cleanup, including callback errors. File scene authoring and other acceptance gates remain separate.
+
+RESET save preparation now executes through AnimationMixer.ResetOnSave and PackedScene.PackForSave. Enabled RESET value/Bézier tracks run at zero on detached nodes and isolated copied resources, capturing coupled effects while preserving source preview values/clocks/queues. Ordinary Pack captures the actual pose. Preparation failures preserve prior packed data; temporary resources are cleaned or transferred to the prepared scene. Compiled factories/setters/postprocessing execute, while lifecycle, local-resource setup and method/audio/nested event tracks are suppressed. Custom authoring state must be stored and resource duplication supported. AnimationResetSaveTests exercises policies, all controller families, coupled values/resources, errors, lifetime and portable saved scenes.

@@ -122173,6 +122173,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PackedScene.PackForSave(Electron2D.Node)",
+    "kind": "method",
+    "declaringType": "Electron2D.PackedScene",
+    "name": "PackForSave",
+    "signature": "public System.Void PackForSave(Electron2D.Node root)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "root",
+        "type": "Electron2D.Node",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PackedScene.RemapResourceReferences(System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.PackedScene",
@@ -195938,6 +195957,19 @@
     "declaringType": "Electron2D.AnimationMixer",
     "name": "Deterministic",
     "signature": "public System.Boolean Deterministic { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationMixer.ResetOnSave()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationMixer",
+    "name": "ResetOnSave",
+    "signature": "public System.Boolean ResetOnSave { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

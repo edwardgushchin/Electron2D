@@ -173,3 +173,5 @@ Built-in graph definitions now use exact typed resource-file factories. Files re
 `protected override System.Func<Electron2D.Node> CreateSceneInstanceFactory()`
 
 Returns the exact compiled AnimationTree factory. Application subclasses must supply their own exact static factory; inherited mixer configuration and authored compiled parameter cells are restored after all stored references. Runtime clocks and private playback restart.
+
+The inherited stored ResetOnSave policy executes through [PackedScene.PackForSave](PackedScene.md#packforsave). Ordinary Pack and runtime playback keep their prior behavior.

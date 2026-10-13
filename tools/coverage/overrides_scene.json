@@ -5290,6 +5290,11 @@
       "electron2d": "method:Electron2D.AnimationNodeExtension.IsLooping(Electron2D.AnimationNodeTimeInfo)",
       "state": "Implemented",
       "reason": "ADR 0093 modern typed graph extension: immutable playback input carries all eight time/delta/bounds/seek/crossing/weight fields; immutable timeline output carries all six length/position/delta/loop/end/infinite fields. Ordinary graph bounds are zero and prior reported length, or minus one initially. Compiled exact application resource factories persist custom definitions. AnimationNodeExtensionTests verifies loop helpers, all initial fields, crossing, callback failure rollback and zero warmed managed allocations; graph/action/state-machine consumers use this callback."
+    },
+    {
+      "godot": "AnimationMixer::property:reset_on_save",
+      "electron2d": "property:Electron2D.AnimationMixer.ResetOnSave()",
+      "reason": "ADR 0093 executable RESET save preparation. Stored ResetOnSave defaults true and executes through separate allocating PackedScene.PackForSave: guarded source capture, detached exact factories, isolated deep resource copies, RESET value/Bezier at zero, coupled property/resource capture, original factory metadata and owned copied assets. Preview values/clocks/queues remain untouched; ordinary Pack stays actual-pose. Method/audio/nested events, scene activation/instantiation notification and local-resource setup are suppressed. AnimationResetSaveTests verifies all controller families, disabled/missing/inactive policies, setter failures, source/hierarchy guards, asset lifetime and fresh-process files; Linux native GPU/compatibility checks are recorded separately."
     }
   ],
   "extras": [
@@ -7713,6 +7718,12 @@
       "state": "Implemented",
       "adr": "adr-0093",
       "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "method:Electron2D.PackedScene.PackForSave(Electron2D.Node)",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Explicit programmatic authoring transaction applies RESET while preserving ordinary Pack actual-pose semantics. Exact factories, deep resource isolation, coupled setters, guards, ownership, failures and saved scenes tested."
     }
   ],
   "statusGroups": [
@@ -10290,13 +10301,6 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Exact AnimationMixer/Player libraries and authored constructor state now have PackedScene and resource-file schemas. Trigger: a typed save-pose transaction that seeks RESET at zero, captures coupled property effects and restores preview values on success/failure, including user setter errors and capture guards. AnimationTree graph-definition/parameter schemas now execute; the remaining dependency is the save-pose transaction itself. Ordinary Pack preserves actual pose without invoking RESET (ADR 0093).",
-      "godot": [
-        "AnimationMixer::property:reset_on_save"
-      ]
-    },
-    {
       "state": "Excluded",
       "reason": "Per-frame event fan-out is excluded by ADR 0002. Advance and existing Node process callbacks supply typed update execution without per-frame mixer events.",
       "godot": [
@@ -10852,6 +10856,13 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0093 modern typed graph extension: immutable playback input carries all eight time/delta/bounds/seek/crossing/weight fields; immutable timeline output carries all six length/position/delta/loop/end/infinite fields. Ordinary graph bounds are zero and prior reported length, or minus one initially. Compiled exact application resource factories persist custom definitions. AnimationNodeExtensionTests verifies loop helpers, all initial fields, crossing, callback failure rollback and zero warmed managed allocations; graph/action/state-machine consumers use this callback."
+    },
+    {
+      "godot": [
+        "AnimationMixer::property:reset_on_save"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0093 executable RESET save preparation. Stored ResetOnSave defaults true and executes through separate allocating PackedScene.PackForSave: guarded source capture, detached exact factories, isolated deep resource copies, RESET value/Bezier at zero, coupled property/resource capture, original factory metadata and owned copied assets. Preview values/clocks/queues remain untouched; ordinary Pack stays actual-pose. Method/audio/nested events, scene activation/instantiation notification and local-resource setup are suppressed. AnimationResetSaveTests verifies all controller families, disabled/missing/inactive policies, setter failures, source/hierarchy guards, asset lifetime and fresh-process files; Linux native GPU/compatibility checks are recorded separately."
     }
   ]
 }

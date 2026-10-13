@@ -295,3 +295,5 @@ The managed image checks are Linux/.NET 8 only and do not establish native codec
 - [0035: Foreseeable public type-family completeness](core-math.md#adr-0035)
 
 Exported SceneState views also retain their file-backed graph snapshot through a private lease, including after template disposal. Dispose such a view when finished. Internal unexported views retain no extra ownership; later state/content transitions update exported-view retention. ResourceArchiveTests verifies the final resource snapshot and deterministic release.
+
+Save-pose preparation uses the existing resource duplication session with an explicit internal isolate-all policy. Ordinary instantiation keeps its prior local/internal resource policy. Prepared PackedScene owns the isolated copied resource graph; temporary nodes release that ownership before cleanup. Source resources and live preview values remain untouched by engine writes. The allocating authoring workflow is owned by ADR 0093.

@@ -57,6 +57,7 @@ Initializes internal idle animation scheduling.
 
 | Complete C# signature | Contract |
 | --- | --- |
+| `public System.Boolean ResetOnSave { get; set; }` | Gets or sets the save-preparation RESET policy; defaults true. |
 | `public System.Boolean Active { get; set; }` | Gets or sets whether evaluation is active; defaults to true. |
 | `public System.Int32 AudioMaxPolyphony { get; set; }` | Gets or sets per-receiver audio cue capacity captured at binding preparation. |
 | `public Electron2D.AnimationMixer.AnimationCallbackModeDiscrete CallbackModeDiscrete { get; set; }` | Gets or sets discrete/continuous precedence, initially Recessive. |
@@ -437,3 +438,14 @@ The exact built-in type supports PackedScene authoring and typed resource files.
 ### CreateSceneInstanceFactory
 
 Returns a fresh, detached, childless exact-type node. Stored descriptors reconstruct authored libraries and settings. It does not capture the source or transfer its playback state. A derived type without an explicit factory throws NotSupportedException during packing.
+
+## Save preparation
+
+<a id="member-85fc53ab0f4b"></a>
+### ResetOnSave
+
+`public System.Boolean ResetOnSave { get; set; }`
+
+Defaults true and is stored. PackedScene.PackForSave applies enabled mixers’ RESET value/Bézier tracks at zero on an isolated temporary hierarchy, then captures coupled properties and resources. Ordinary Pack keeps the actual pose. ResetOnSave false and absent RESET skip reconstruction. Live preview values, clocks and queues are unchanged. Owner-thread/capture/disposal guards apply to setter. Temporary callbacks are ordinary compiled factories, stored setters and typed postprocessing; method/audio/nested tracks, scene lifecycle and local-resource setup are suppressed. Custom authoring state must be stored; all resources used in an enabled RESET preparation must implement Resource duplication. Opaque callbacks affecting external state remain application-owned.
+
+[AnimationResetSaveTests](../../tests/Electron2D.Tests/AnimationResetSaveTests.cs) verifies all three controller families, coupled properties and resources, isolated asset lifetime, policy storage, errors, fresh-process files and rendered poses.

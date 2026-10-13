@@ -439,7 +439,7 @@ public class Resource : ElectronObject
         ThrowCombined(cacheError, changedError);
     }
 
-    internal static SceneDuplicationScope CreateSceneDuplicationScope() => new();
+    internal static SceneDuplicationScope CreateSceneDuplicationScope(bool isolateAllResources = false) => new(isolateAllResources);
 
     private void SetupLocalToSceneCore()
     {
@@ -797,10 +797,14 @@ public class Resource : ElectronObject
 
     internal sealed class SceneDuplicationScope
     {
-        private readonly DuplicationSession _session = new(
-            deep: true,
-            DeepDuplicateMode.Internal,
-            static resource => resource.ResourceLocalToScene || resource.IsBuiltIn);
+        private readonly DuplicationSession _session;
+        private readonly bool _isolateAllResources;
+        internal SceneDuplicationScope(bool isolateAllResources)
+        {
+            _isolateAllResources = isolateAllResources;
+            _session = new(deep: true, isolateAllResources ? DeepDuplicateMode.All : DeepDuplicateMode.Internal,
+                isolateAllResources ? static _ => true : static resource => resource.ResourceLocalToScene || resource.IsBuiltIn);
+        }
 
         internal Resource Resolve(Resource source)
         {
@@ -810,7 +814,7 @@ public class Resource : ElectronObject
             if (_session.TryGetDuplicate(source, out var duplicate))
                 return duplicate;
 
-            return source.ResourceLocalToScene ? _session.DuplicateRoot(source) : source;
+            return _isolateAllResources || source.ResourceLocalToScene ? _session.DuplicateRoot(source) : source;
         }
 
         internal Resource ResolveForced(Resource source) { ArgumentNullException.ThrowIfNull(source); source.ThrowIfDisposed(); return _session.TryGetDuplicate(source, out var duplicate) ? duplicate : _session.DuplicateRoot(source); }

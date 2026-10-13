@@ -1853,6 +1853,10 @@ public partial class Node : ElectronObject
         List<Exception>? errors = null; foreach (var item in old) try { item.Dispose(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("File resource graph cleanup failed.", errors);
     }
+    internal Resource[] ReleaseSceneResourcesForSave()
+    {
+        EnsureMutable(); var resources = _ownedSceneResources?.ToArray() ?? []; _ownedSceneResources = null; return resources;
+    }
     internal void AdoptSceneResources(IReadOnlyList<Resource> resources)
     {
         EnsureMutable();

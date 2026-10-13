@@ -10,7 +10,7 @@ namespace Electron2D;
 /// and persistent event endpoints belong to later domains.
 /// An inherited node translation domain is omitted from storage so it continues to track its parent after instantiation.
 /// </remarks>
-public sealed class PackedScene : Resource
+public sealed partial class PackedScene : Resource
 {
     private readonly object _gate = new();
     private PackedSceneData _data = PackedSceneData.Empty;
@@ -71,7 +71,9 @@ public sealed class PackedScene : Resource
     /// <exception cref="InvalidOperationException">The scene is empty or stored node schema cannot be reconstructed safely.</exception>
     /// <exception cref="ObjectDisposedException">The resource or a referenced stored resource is disposing or disposed.</exception>
     /// <exception cref="Exception">A factory, property setter, setup callback, notification, or cleanup operation fails.</exception>
-    public Node Instantiate(PackedSceneEditState editState = PackedSceneEditState.Disabled)
+    public Node Instantiate(PackedSceneEditState editState = PackedSceneEditState.Disabled) => InstantiateCore(editState, true);
+
+    private Node InstantiateCore(PackedSceneEditState editState, bool setupLocalResources)
     {
         ThrowIfDisposed();
 
@@ -96,7 +98,7 @@ public sealed class PackedScene : Resource
         IDisposable? fileLease = RetainFileResources();
         var nodes = new Node[data.Nodes.Length];
         var createdCount = 0;
-        var resources = CreateSceneDuplicationScope();
+        var resources = CreateSceneDuplicationScope(isolateAllResources: !setupLocalResources);
 
         try
         {
@@ -136,11 +138,11 @@ public sealed class PackedScene : Resource
             foreach (var node in nodes) node.ValidateSceneInstance();
 
             resources.AssignLocalScene(root);
-            resources.SetupLocalResources();
+            if (setupLocalResources) resources.SetupLocalResources();
             root.AdoptSceneResources(resources.ReleaseCreated());
             root.AdoptSceneFileLease(fileLease); fileLease = null;
             ValidateInstantiatedHierarchy(data, nodes);
-            root.Notify(Node.NotificationSceneInstantiated);
+            if (setupLocalResources) root.Notify(Node.NotificationSceneInstantiated);
             ValidateInstantiatedHierarchy(data, nodes);
             EndSceneInstantiation(nodes, createdCount);
             root.SpawnSceneIdentity = this;
