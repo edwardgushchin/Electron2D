@@ -336,6 +336,7 @@ public sealed partial class ThemeDB
         ["Semaphore"] = ["Semaphore", "ElectronObject"],
         ["SeparationRayShape"] = ["SeparationRayShape", "Shape", "Resource", "ElectronObject"],
         ["Shader"] = ["Shader", "Resource", "ElectronObject"],
+        ["ShaderInclude"] = ["ShaderInclude", "Resource", "ElectronObject"],
         ["ShaderMaterial"] = ["ShaderMaterial", "Material", "Resource", "ElectronObject"],
         ["Shape"] = ["Shape", "Resource", "ElectronObject"],
         ["ShapeCast"] = ["ShapeCast", "Entity", "CanvasItem", "Node", "ElectronObject"],

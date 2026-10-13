@@ -1,5 +1,6 @@
 {
   "mappings": [
+    {"godot": "ShaderInclude::property:code", "electron2d": "property:Electron2D.ShaderInclude.Code()", "reason": "ADR 0028 uses bounded typed ShaderInclude.Code authoring, source loader/saver and typed archive persistence; source edits are saved and dependent HLSL/GLSL compilation occurs at build/import, preserving the compiled runtime boundary. ShaderIncludeTests and check_includes.py verify edit notifications, rollback, copy/cache/lifetime, actual nested dependency compiler behavior and changed GPU pixels; foreign toolchain/host gates remain separate."},
     {
       "godot": "CanvasItemMaterial::enum:BlendMode",
       "electron2d": "T:Electron2D.BlendMode",
@@ -4500,6 +4501,7 @@
     }
   ],
   "statusGroups": [
+    {"godot": ["class:ShaderInclude", "ShaderInclude::property:code"], "state": "Implemented", "reason": "ADR 0028 uses bounded typed ShaderInclude.Code authoring, source loader/saver and typed archive persistence; source edits are saved and dependent HLSL/GLSL compilation occurs at build/import, preserving the compiled runtime boundary. ShaderIncludeTests and check_includes.py verify edit notifications, rollback, copy/cache/lifetime, actual nested dependency compiler behavior and changed GPU pixels; foreign toolchain/host gates remain separate."},
     {
       "state": "Implemented",
       "reason": "Pinned CanvasItem draw_set_transform builds an offset/rotation/scale matrix with zero rotation, unit scale defaults; draw_set_transform_matrix records a full affine state command. CanvasTimingTests verifies replacement rather than accumulation, node-before-draw composition, invalid write rollback, hidden-interval skipping, per-frame identity reset and zero warmed replay allocations. CanvasTimingRenderingTests passes 12-frame Wayland compatibility/GPU HLSL/GLSL and dummy/software pixels; full matrix pixels also pass through CanvasPixelSnapRenderingTests on Wayland. Typed finite/recording errors follow ADR 0004; other platforms remain unverified.",
@@ -6365,6 +6367,11 @@
     }
   ],
   "extras": [
+    {"electron2d": "method:Electron2D.ShaderInclude.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)", "reason": "Typed Resource lifecycle override for ShaderInclude: stored source descriptor, exact independent duplication, copied source state and logical disposal; inherited runtime contract under ADR0013, exercised by ShaderIncludeTests."},
+    {"electron2d": "method:Electron2D.ShaderInclude.CreateDuplicateInstance()", "reason": "Typed Resource lifecycle override for ShaderInclude: stored source descriptor, exact independent duplication, copied source state and logical disposal; inherited runtime contract under ADR0013, exercised by ShaderIncludeTests."},
+    {"electron2d": "method:Electron2D.ShaderInclude.Dispose(System.Boolean)", "reason": "Typed Resource lifecycle override for ShaderInclude: stored source descriptor, exact independent duplication, copied source state and logical disposal; inherited runtime contract under ADR0013, exercised by ShaderIncludeTests."},
+    {"electron2d": "method:Electron2D.ShaderInclude.GetPropertyDescriptors()", "reason": "Typed Resource lifecycle override for ShaderInclude: stored source descriptor, exact independent duplication, copied source state and logical disposal; inherited runtime contract under ADR0013, exercised by ShaderIncludeTests."},
+    {"electron2d": "constructor:Electron2D.ShaderInclude..ctor()", "reason": "Typed C# default construction for ShaderInclude source resource, empty Code; Resource duplication and archive factory execute this constructor."},
     {
       "electron2d": "constructor:Electron2D.CanvasItemMaterial..ctor()",
       "reason": "Managed construction of the existing canvas material resource with the default Mix mode.",

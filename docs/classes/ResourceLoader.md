@@ -248,3 +248,5 @@ Selects whether newly loaded archive graphs reject absent resource factories/dep
 ## Resource directory discovery
 
 ListDirectory(string directoryPath) returns recognized resource filenames and slash-suffixed immediate directory names using current format loaders and DirAccess path policy. The caller owns the sorted snapshot; discovery does not decode files. See [resource loading](../components/resource-loading.md#resource-directory-discovery) for behavior, errors, current import/remapping limits and executable checks.
+
+ShaderInclude source (`.hlslinc`/`.glslinc`) participates in the existing ordered format and cache lifecycle. Source saves use atomic replacement; typed archives store Code. See [ShaderInclude](ShaderInclude.md) for byte limits and build-time dependency consumption.

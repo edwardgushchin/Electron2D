@@ -35,7 +35,7 @@ public sealed partial class ResourceLoader : ElectronObject
     public static void SetAbortOnMissingResources(bool abort) => Volatile.Write(ref Runtime._abortOnMissing, abort);
     internal readonly ResourceFileRegistry FileTypes = new();
     private readonly object _loadGate = new();
-    private readonly List<ResourceFormatLoader> _fileLoaders = [new ResourceArchiveLoader(), new ScriptSourceLoader()];
+    private readonly List<ResourceFormatLoader> _fileLoaders = [new ResourceArchiveLoader(), new ScriptSourceLoader(), new ShaderIncludeSourceLoader()];
     private ResourceLoader() { }
     private static object LoadGate => Runtime._loadGate;
     private static List<ResourceFormatLoader> FileLoaders => Runtime._fileLoaders;
@@ -59,7 +59,7 @@ public sealed partial class ResourceLoader : ElectronObject
     /// <summary>Returns compiled types used by a recognized resource file.</summary><param name="path">Source file.</param><returns>Copied type census; empty when unrecognized.</returns>
     public static Type[] GetClassesUsed(string path) { path = ResourceUID.EnsurePath(path); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) return loader.GetClassesUsed(path); return []; }
     /// <summary>Loads a supported typed resource from an operating-system, res:// or user:// path.</summary>
-    /// <typeparam name="TResource">Registered archive/plugin resource, ImageTexture, FontFile, implemented AudioStream, X509Certificate, CryptoKey, or an assignable resource base type.</typeparam>
+    /// <typeparam name="TResource">Registered archive/plugin resource, ImageTexture, FontFile, implemented AudioStream, ShaderInclude, X509Certificate, CryptoKey, or an assignable resource base type.</typeparam>
     /// <param name="path">File path; the exact path string is the cache key.</param>
     /// <param name="cacheMode">Whether to reuse, ignore or refresh an existing live instance.</param>
     /// <returns>A caller-owned live resource. Reuse and Replace can return the same cached instance.</returns>

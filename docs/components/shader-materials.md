@@ -1,6 +1,6 @@
 # Shader materials
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 [Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
@@ -312,3 +312,5 @@ The same standalone importer now owns a device profile for vertex/fragment/compu
 ## Mesh custom shader inputs
 
 Four optional mesh-local float4 inputs occupy fragment locations 7, 8, 9 and 10, forwarded from vertex locations 10 through 13. Each MeshSurfaceData custom payload has its own packed format. Missing stored components use zero RGB/one alpha; a wholly absent channel supplies zero. Instance custom data remains independent at location 2. See [the custom mesh contract](meshes.md#numerical-custom-channels).
+
+ShaderInclude now supplies bounded source editing, `.hlslinc`/`.glslinc` ResourceLoader/ResourceSaver paths and typed archive persistence. Nested shader dependencies execute in the build compiler; save/rebuild publishes new SPIR-V and failed imports preserve the old module. [ShaderInclude](../classes/ShaderInclude.md) records source/runtime boundaries and validation.

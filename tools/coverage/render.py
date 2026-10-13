@@ -325,8 +325,10 @@ def reason_for_type(item, lookup):
         return "Blocked", "Trigger: first 2D offscreen composition and framebuffer-copy slice (ADR 0028)."
     if name in {"CanvasItemMaterial", "CanvasModulate", "ShaderGlobalsOverride"}:
         return "Blocked", "Trigger: first missing 2D material, canvas-modulation and shader-global renderer integration (ADR 0028)."
-    if name in {"ShaderInclude", "ShaderIncludeDB"}:
-        return "Blocked", "Trigger: first shader include import and dependency-tracking slice (ADR 0028)."
+    if name == "ShaderIncludeDB":
+        return "Blocked", "Trigger: an installed compiler-consumed built-in include library with stable names, source lookup and all three retained static discovery operations (ADR 0028). ShaderInclude user-source files and native compiler preprocessing now execute; they do not supply a built-in library or invent empty lookup results."
+    if name == "ShaderInclude":
+        return "Blocked", "Trigger: typed include source Resource and actual HLSL/GLSL build consumption (ADR 0028)."
     if name in {"SubViewport", "ViewportTexture"}:
         return "Blocked", "Trigger: first independent offscreen viewport lifecycle and texture-output slice (ADRs 0008 and 0028)."
     if name in {"VisibleOnScreenEnabler2D", "VisibleOnScreenNotifier2D"}:

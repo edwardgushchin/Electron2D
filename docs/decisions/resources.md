@@ -45,6 +45,8 @@ The existing weak path cache does not own returned resources. `Reuse` returns a 
 
 This profile does not introduce a manager-owned shared native payload. An `ImageTexture` owns copied CPU pixels and the existing rendering backend owns GPU uploads and their release. The archive profile below establishes the concrete graph lifetime transition for internal leases. Further concrete schemas remain separate triggers. The threaded profile below uses the executable WorkerThreadPool foundation under [ADR 0104](jobs.md#adr-0104).
 
+ShaderInclude source files (`.hlslinc`/`.glslinc`) use the same ordered format-loader/saver and cache lifecycle; typed archives store its Code descriptor. Source edits are authored data under ADR 0028: save and rebuild dependent shaders to produce new SPIR-V, rather than compile during runtime property assignment. The build compiler evaluates nested/conditional dependencies each import.
+
 ### Typed resource archives and format extensions
 
 ResourceSaver and ResourceUID expose static public operations through permanent retained internal objects under ADR 0095. ResourceFormatSaver/ResourceFormatLoader are ordinary caller-owned managed extension objects; ordered registration borrows them, deduplicates identity, supports front priority and uses invocation snapshots so callbacks cannot corrupt iteration. Typed exceptions replace heterogeneous Error values. Save uses the explicit path or current ResourcePath, validates flags, and restores a temporary ChangePath even on failure. File replacement commits complete encoded data atomically; no failed encode truncates an existing file.

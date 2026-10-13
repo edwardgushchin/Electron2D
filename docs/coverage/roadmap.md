@@ -109,7 +109,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first compressed-texture import, decoder and verified GPU sampling slice (ADRs 0028 and 0039). | 2 |
 | Trigger: first missing 2D material, canvas-modulation and shader-global renderer integration (ADR 0028). | 2 |
 | Trigger: first self-hosted editor and typed GUI authoring slice (ADRs 0027 and 0028). | 2 |
-| Trigger: first shader include import and dependency-tracking slice (ADR 0028). | 2 |
 | Trigger: first typed missing-asset placeholder and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first typed networking, address-resolution and RPC slice. | 2 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
@@ -120,6 +119,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
 | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. | 1 |
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
+| Trigger: an installed compiler-consumed built-in include library with stable names, source lookup and all three retained static discovery operations (ADR 0028). ShaderInclude user-source files and native compiler preprocessing now execute; they do not supply a built-in library or invent empty lookup results. | 1 |
 | Trigger: complete typed thread start/result, priority, main-owner identity and join/retirement, plus a resolved executable safety-check override contract: the pinned set_thread_safety_checks_enabled(bool) must not be an inert flag and current ADRs 0006/0011/0104 require owner-affine scene mutation. | 1 |
 | Trigger: first 2D light/mesh texture renderer integration (ADR 0028). | 1 |
 | Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 1 |

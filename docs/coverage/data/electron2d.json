@@ -10240,6 +10240,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ShaderInclude",
+    "kind": "type",
+    "declaringType": "Electron2D.ShaderInclude",
+    "name": "ShaderInclude",
+    "signature": "public sealed class Electron2D.ShaderInclude",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ShaderMaterial",
     "kind": "type",
     "declaringType": "Electron2D.ShaderMaterial",
@@ -21107,6 +21122,19 @@
     "declaringType": "Electron2D.Shader",
     "name": ".ctor",
     "signature": "public Shader()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ShaderInclude..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ShaderInclude",
+    "name": ".ctor",
+    "signature": "public ShaderInclude()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -157244,6 +157272,90 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ShaderInclude.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderInclude",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderInclude.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderInclude",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderInclude.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderInclude",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderInclude.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderInclude",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ShaderMaterial.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.ShaderMaterial",
@@ -225477,6 +225589,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ShaderInclude.Code()",
+    "kind": "property",
+    "declaringType": "Electron2D.ShaderInclude",
+    "name": "Code",
+    "signature": "public System.String Code { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

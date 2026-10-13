@@ -6,7 +6,7 @@ public sealed class ResourceSaver : ElectronObject
 {
     internal static readonly ResourceSaver Runtime = new();
     private readonly object _gate = new();
-    private readonly List<ResourceFormatSaver> _savers = [new ResourceArchiveSaver(), new ScriptSourceSaver()];
+    private readonly List<ResourceFormatSaver> _savers = [new ResourceArchiveSaver(), new ScriptSourceSaver(), new ShaderIncludeSourceSaver()];
     private readonly HashSet<Resource> _saving = new(ReferenceEqualityComparer.Instance);
     private ResourceSaver()
     { }

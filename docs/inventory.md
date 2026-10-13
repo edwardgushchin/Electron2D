@@ -11,6 +11,7 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 | Domain | Component | Production type | Source | Documentation | State |
 | --- | --- | --- | --- | --- | --- |
 | [Core](domains/core.md) | [Processes](components/processes.md) | [ProcessPipes](classes/ProcessPipes.md), [PipeWriteException](classes/PipeWriteException.md), [OSProcess](classes/OSProcess.md), [ProcessPlatform](classes/ProcessPlatform.md), [ProcessPipeStream](classes/ProcessPipeStream.md), [ProcessPipeHandle](classes/ProcessPipeHandle.md) | [OS process service](../src/Core/OS/OS.Processes.cs), [native pipe adapter](../src/Core/IO/ProcessPipeStream.cs) | Current | Literal launch/capture/identity, actual exit/kill and owned blocking/nonblocking pipes; exact platform adapters remain dependencies. |
+| [Rendering](domains/rendering.md) | [Shader materials](components/shader-materials.md) | [ShaderInclude](classes/ShaderInclude.md) | [ShaderInclude.cs](../src/Scene/Resources/ShaderInclude.cs) | Current | Reusable bounded HLSL/GLSL source, typed archive/source persistence and build-compiler consumption. |
 | [Resources](domains/resources.md) | [Local compute](components/local-compute.md) | [TextureRD](classes/TextureRD.md) | [TextureRD.cs](../src/Scene/Resources/TextureRD.cs) | Current | Borrowed sampled ordinary image, direct canvas/atlas/proxy rendering, explicit copied mip snapshot. |
 | [Resources](domains/resources.md) | [Local compute](components/local-compute.md) | [TextureLayeredRD](classes/TextureLayeredRD.md) | [TextureLayeredRD.cs](../src/Scene/Resources/TextureLayeredRD.cs) | Current | Abstract borrowed independent array image, live metadata, explicit layer/mip snapshot. |
 | [Resources](domains/resources.md) | [Local compute](components/local-compute.md) | [TextureArrayRD](classes/TextureArrayRD.md) | [TextureArrayRD.cs](../src/Scene/Resources/TextureArrayRD.cs) | Current | Concrete device image array for typed canvas shader samplers, transient archives and borrowed duplication. |
@@ -1367,3 +1368,5 @@ ResourceLoader.ListDirectory discovers recognized resource leaf names and immedi
 Control pointer capture transfer and local-to-native warp execute through SceneTree viewport GUI state and existing coordinate transforms; deferred callback targets remain transient.
 
 OS restart-on-exit captures a validated copied argument list for normal desktop process shutdown and launches through the existing current-application process path. Owned/borrowed loop cleanup and native rendering remain ordinary Engine responsibilities.
+
+[ShaderInclude](classes/ShaderInclude.md) is an implemented Resource with stored Code, source/archive persistence and executable HLSL/GLSL import consumption.
