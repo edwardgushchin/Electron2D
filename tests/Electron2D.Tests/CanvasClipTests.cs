@@ -101,14 +101,31 @@ internal static class CanvasClipTests
     }
     private static void Warm(string backend)
     {
-        var window = new Window { Size = new(64, 64) }; var mask = new Paint { Name = "mask", ClipChildren = ClipChildrenMode.AndDraw }; mask.AddChild(new Paint { Name = "child" }); window.AddChild(mask); var frames = 0; long allocated = 0; var prior = GC.GetAllocatedBytesForCurrentThread();
-        window.Ready += _ => RenderingServer.FramePostDraw += () =>
+        var window = new Window { Size = new(64, 64) }; var mask = new Paint { Name = "mask", ClipChildren = ClipChildrenMode.AndDraw }; mask.AddChild(new Paint { Name = "child" }); window.AddChild(mask);
+        var texture = window.GetTexture(); var phase = 0; var frame = 0; var warm = 32; var measured = 0; var cold = 0; long before = 0, active = 0, idle = 0; var priorSize = Vector2.Zero; var frameSize = Vector2.Zero;
+        window.Ready += _ =>
         {
-            var now = GC.GetAllocatedBytesForCurrentThread(); if (frames >= 32) allocated += now - prior; prior = now;
-            if (frames < 96) { mask.Position = new((frames & 1) * 2, 0); mask.ClipChildren = (frames & 1) == 0 ? ClipChildrenMode.AndDraw : ClipChildrenMode.Only; mask.SelfModulate = new(1, 1, 1, (frames & 1) == 0 ? .5f : .75f); }
-            if (++frames == 160) window.Tree!.Quit();
+            window.Tree!.ProcessFrameStarted += _ =>
+            {
+                frameSize = texture.GetSize(); before = GC.GetAllocatedBytesForCurrentThread();
+                if (phase == 0) { mask.Position = new((frame & 1) * 2, 0); mask.ClipChildren = (frame & 1) == 0 ? ClipChildrenMode.AndDraw : ClipChildrenMode.Only; mask.SelfModulate = new(1, 1, 1, (frame & 1) == 0 ? .5f : .75f); }
+            };
+            RenderingServer.FramePostDraw += () =>
+            {
+                var bytes = GC.GetAllocatedBytesForCurrentThread() - before; var size = texture.GetSize();
+                if (size != priorSize || size != frameSize) { warm = 32; cold++; }
+                else if (warm > 0) warm--;
+                else
+                {
+                    Check(bytes == 0, $"Mask phase {phase} frame {frame} allocated {bytes} bytes at {size}.");
+                    if (phase == 0) active += bytes; else idle += bytes;
+                    if (++measured == 64) { measured = 0; if (phase++ == 0) warm = 32; else window.Tree!.Quit(); }
+                }
+                priorSize = size; Check(++frame < 2048, "Mask native dimensions did not stabilize.");
+            };
         };
-        Check(Engine.Run(window) == 0 && frames == 160 && allocated == 0, $"Warmed mask frames allocated {allocated} bytes."); Console.WriteLine($"64 active + 64 idle warmed mask frames: {allocated} managed bytes ({backend}).");
+        Check(Engine.Run(window) == 0 && phase == 2 && active == 0 && idle == 0, "Warm mask lifecycle."); texture.Dispose();
+        Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "canvas-mask-warm", backend, frame, cold, active, idle, measuredPerPhase = 64 }));
     }
     internal static void Materials(ShaderMaterial material, string language)
     {
