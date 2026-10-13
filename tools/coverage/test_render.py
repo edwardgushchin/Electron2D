@@ -5,7 +5,7 @@ import json
 import re
 from unittest.mock import Mock, patch
 
-from render import ALIASES, CLASS_PAGES, DATA, choose, coverage_target, engine_link, render, validate_public_type_names
+from render import ALIASES, CLASS_PAGES, DATA, cell, choose, coverage_target, engine_link, render, validate_public_type_names
 from physics_report import scope
 
 
@@ -37,6 +37,11 @@ def check_physics_report(pages):
             if name in cross and declaration["id"] not in cross[name]:
                 continue
             state = row.split(" | ")[2]
+            if "deprecated" in item.get("attributes", {}) or "deprecated" in declaration.get("attributes", {}):
+                assert state == "Excluded", f"Deprecated physics/inherited API must not remain implementation work: {declaration['id']}"
+                assert row.split(" | ")[1] == "—", f"Deprecated physics/inherited API must not map a public mirror: {declaration['id']}"
+                message = declaration.get("attributes", {}).get("deprecated", item.get("attributes", {}).get("deprecated"))
+                assert upstream["godot_commit"] in row and cell(f'deprecated="{message}"') in row, f"Deprecation exclusion needs exact pinned evidence: {declaration['id']}"
             if state in {"Partial", "Blocked", "Unimplemented"}:
                 expected[declaration["id"]] = state
     assert dict(actual) == expected, "Physics ledger must retain every open row from the class classifier"

@@ -255,6 +255,12 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   now apply independent anchor torque and stable effective-mass point damping in
   both endpoint orders. Wider graphs/geometry/current GPU/native/network/performance
   acceptance remains open.
+- Pinned deprecation metadata is now checked across the full physics family,
+  inherited bases and selected consumers by the coverage gate. The three selected
+  deprecated declarations are excluded with exact evidence and no mapped public
+  mirror. Node's retired moved-in-parent notification is not implementation work;
+  its current child-order notification/event is the supported replacement. This
+  audit correction does not close any remaining runtime behavior or acceptance gate.
 - Shared inherited Object/Node/Resource/CanvasItem and skeletal editor requirements
   remain with their typed-API, scheduling, script/editor or rendering prerequisites.
   Existing built-in physics tests do not establish those separate declaring APIs.

@@ -60,6 +60,12 @@ Deprecated reference API is excluded by [ADR 0004](decisions/product.md#adr-0004
 
 The accepted target preserves the complete applicable Godot API and behavior under all existing decisions, including the typed C#, strictly 2D and naming adaptations. [ADR 0008](decisions/scene.md#adr-0008) maps Godot `Node` to `Node` and `Node2D` to `Entity`, with the same applicable API. Keep `CanvasItem` and the separate spatial/UI branches. Audit each member at its proper declaring layer and propagate the renamed types through every API position. Any further divergence needs an accepted decision; missing implementation remains a gap.
 
+The physics census derives deprecation checks from the pinned metadata across its
+complete families, inherited bases and selected consumers. `tools/coverage/test_render.py`
+requires `Excluded`, no mapped public mirror and the exact pinned `deprecated` message
+for every such declaration; an unmapped retired constant is not implementation work.
+Current replacements retain their own implementation and verification requirements.
+
 ## Complete implementation slice
 
 When asked to implement a type or concept, deliver a production-ready vertical slice rather than a compiling skeleton:

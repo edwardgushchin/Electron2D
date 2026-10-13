@@ -11077,6 +11077,13 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0004 excludes deprecated public mirrors. Pinned doc/classes/Control.xml at ed1daf0bf001b61586d9930840f2f1394092c079 declares auto_translate deprecated: Use [member Node.auto_translate_mode] and [method Node.can_auto_translate] instead. Electron2D exposes the current Node.AutoTranslateMode and CanAutoTranslate replacement; no alias or implementation trigger."
+    },
+    {
+      "godot": [
+        "Node::constant:NOTIFICATION_MOVED_IN_PARENT"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned doc/classes/Node.xml at ed1daf0bf001b61586d9930840f2f1394092c079 declares deprecated=\"This notification is no longer sent by the engine. Use [constant NOTIFICATION_CHILD_ORDER_CHANGED] instead.\" The current Node.NotificationChildOrderChanged/ChildOrderChanged lifecycle is the replacement. No public obsolete mirror or implementation trigger."
     }
   ]
 }

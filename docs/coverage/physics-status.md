@@ -220,13 +220,13 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 80 | 27 | 8 | 0 | 0 |
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
-| [Node](classes/Node.md) | [Object](classes/Object.md) | 93 | 64 | 6 | 51 | 0 |
+| [Node](classes/Node.md) | [Object](classes/Object.md) | 93 | 64 | 6 | 50 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
 | [Object](classes/Object.md) | — | 4 | 23 | 2 | 30 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 4 | 21 | 0 | 2 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 225 | 142 | 19 | 83 | 22 |
+| **Total** | | 225 | 142 | 19 | 82 | 23 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -278,7 +278,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Node::constant:NOTIFICATION_ACCESSIBILITY_UPDATE`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
 | [`Node::constant:NOTIFICATION_EDITOR_POST_SAVE`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::constant:NOTIFICATION_EDITOR_PRE_SAVE`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
-| [`Node::constant:NOTIFICATION_MOVED_IN_PARENT`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::constant:NOTIFICATION_WM_CLOSE_REQUEST`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::constant:NOTIFICATION_WM_DPI_CHANGE`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::constant:NOTIFICATION_WM_GO_BACK_REQUEST`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
