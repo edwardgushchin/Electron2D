@@ -483,7 +483,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     internal override void BeginFrame() { _usedLitPrograms.Clear(); _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, BlendMode.Mix, false)); _usedTextures.Clear(); _usedLayeredTextures.Clear(); _usedMaterials.Clear(); }
     internal override void EndFrame()
     {
-        foreach (var pair in _pipelines) if (!_usedPrograms.Contains(pair.Key) && !ReferenceEquals(pair.Key.Code, _defaultFragment)) { pair.Value.Dispose(); _pipelines.Remove(pair.Key); }
+        foreach (var pair in _pipelines) if (!_usedPrograms.Contains(pair.Key) && !ReferenceEquals(pair.Key.Code, _defaultFragment) && !ReferenceEquals(pair.Key.Code, BuiltInShaders.Clip(0)) && !ReferenceEquals(pair.Key.Code, BuiltInShaders.Clip(1)) && !ReferenceEquals(pair.Key.Code, BuiltInShaders.Clip(2))) { pair.Value.Dispose(); _pipelines.Remove(pair.Key); }
         foreach (var pair in _textures) if (!_usedTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Dispose(); _textures.Remove(pair.Key); }
         foreach (var pair in _layeredTextures) if (!_usedLayeredTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Dispose(); _layeredTextures.Remove(pair.Key); }
         foreach (var pair in _textureBindings) if (!_usedMaterials.Contains(pair.Key)) _textureBindings.Remove(pair.Key);

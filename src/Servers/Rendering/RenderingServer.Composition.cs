@@ -3,7 +3,7 @@ namespace Electron2D;
 public sealed partial class RenderingServer
 {
     internal Image ReadbackBackBuffer(Viewport viewport) { EnsureOwner(); return _backend.Readback(_backend.FindTarget(viewport) ?? throw new InvalidOperationException("No viewport target is available."), true); }
-    private static bool IsCompositor(CanvasItem item) => item is CanvasGroup || item.ClipChildren != ClipChildrenMode.Disabled && item.HasCanvasCommands;
+    private static bool IsCompositor(CanvasItem item) { var group = GroupSettings(item); return group.Mode != CanvasGroupMode.Disabled && (group.Mode == CanvasGroupMode.Transparent || item.HasCanvasCommands || group.FitEmpty); }
     private static CanvasItem? ParentGroup(CanvasItem item)
     {
         // ponytail: ancestry lookup is O(depth) per item; cache on reparenting if large-scene profiling warrants it.
@@ -20,19 +20,21 @@ public sealed partial class RenderingServer
             if (IsCompositor(item.Node) && owner is not null)
                 throw new NotSupportedException("Nested same-Z canvas groups and masks require independent nested backbuffer storage.");
             if (owner is not null && active is null)
-            { active = owner; begin = _batches.Count; first = _vertices.Count; notifierBounds = null; _batches.Add(new(0, 0, null, Operation: owner is CanvasGroup ? CanvasOperation.GroupBegin : CanvasOperation.MaskBegin)); }
+            { active = owner; begin = _batches.Count; first = _vertices.Count; notifierBounds = null; _batches.Add(new(0, 0, null, Operation: GroupSettings(owner).Mode == CanvasGroupMode.Transparent ? CanvasOperation.GroupBegin : CanvasOperation.MaskBegin)); }
             if (active is not null && ReferenceEquals(item.Node, active))
             {
-                if (active is not CanvasGroup)
+                var settings = GroupSettings(active);
+                var childBounds = VertexBounds(first, _vertices.Count, notifierBounds);
+                if (settings.Mode != CanvasGroupMode.Transparent)
                 {
                     var maskBatch = _batches.Count;
                     _batches.Add(new(0, 0, null, Operation: CanvasOperation.MaskEnd));
-                    AppendOrderedCanvas(item, pixels);
+                    AppendGroupOwner(item, pixels, settings, childBounds);
                     var end = _batches.Count;
                     var maskBounds = VertexBounds(first, _vertices.Count, notifierBounds);
-                    var region = maskBounds is { } rect ? PixelRegion(rect, pixels, GetClip(active, pixels)) : default;
-                    var maskBuiltIn = active.ClipChildren == ClipChildrenMode.AndDraw || active.CanvasMaterial is null;
-                    if (active.ClipChildren == ClipChildrenMode.AndDraw)
+                    var region = maskBounds is { } rect ? PixelRegion(GrowFinite(rect, settings.ClearMargin), pixels, GetClip(active, pixels)) : default;
+                    var maskBuiltIn = settings.Mode == CanvasGroupMode.ClipAndDraw || active.CanvasMaterial is null;
+                    if (settings.Mode == CanvasGroupMode.ClipAndDraw)
                     {
                         // Reuse the uploaded owner vertices for its earlier color pass.
                         for (var i = maskBatch + 1; i < end; i++)
@@ -46,30 +48,19 @@ public sealed partial class RenderingServer
                     }
                     for (var i = maskBatch + 1; i < end; i++)
                         _batches[i] = _batches[i] with { Operation = CanvasOperation.MaskEnd, MaskShader = maskBuiltIn, Material = maskBuiltIn ? null : _batches[i].Material, Blend = maskBuiltIn ? BlendMode.Mix : _batches[i].Blend };
-                    _batches[maskBatch] = _batches[maskBatch] with { MaskShader = maskBuiltIn };
+                    _batches[maskBatch] = _batches[maskBatch] with { MaskShader = maskBuiltIn, MIPMaps = settings.BlurMIPMaps };
                     _batches[begin] = new(0, 0, null, Operation: CanvasOperation.MaskBegin, Region: region);
                     _batches.Add(new(0, 0, null, Operation: CanvasOperation.MaskFinish, Region: region, MaskShader: maskBuiltIn));
                     active = null;
                     continue;
                 }
-                var canvasGroup = (CanvasGroup)active;
-                var bounds = VertexBounds(first, _vertices.Count, notifierBounds);
+                var bounds = childBounds;
                 if (bounds is null) { _batches.RemoveAt(begin); active = null; continue; }
                 var fit = bounds.Value == default ? new Rect2(bounds.Value.Position, Vector2.One) : bounds.Value;
                 var clip = GetClip(active, pixels);
-                _batches.Add(new(0, 0, null, Operation: CanvasOperation.GroupEnd, MIPMaps: canvasGroup.UseMIPMaps));
+                _batches.Add(new(0, 0, null, Operation: CanvasOperation.GroupEnd, MIPMaps: settings.BlurMIPMaps));
                 var ownFirst = _vertices.Count; var ownBatch = _batches.Count;
-                if (active.HasCanvasCommands) AppendOrderedCanvas(item, pixels);
-                else
-                {
-                    var material = active.CanvasMaterial;
-                    var color = active.RenderInheritedModulate * active.RenderSelfModulate * (active.RenderCanvas()?.Modulate ?? Colors.White);
-                    fit = GrowFinite(fit, canvasGroup.FitMargin);
-                    var localFit = item.Transform.AffineInverse() * fit;
-                    var drawFirst = _vertices.Count; Quad(localFit, color, pixels, item.Transform);
-                    var state = material?.GetCanvasState();
-                    _batches.Add(new(drawFirst, 6, state, Blend: material?.GetCanvasBlendMode() ?? BlendMode.Mix, Clip: clip, InstanceOwner: state?.Program.HasInstanceUniforms == true ? canvasGroup : null));
-                }
+                AppendGroupOwner(item, pixels, settings, bounds);
                 var builtIn = active.CanvasMaterial is null;
                 for (var i = ownBatch; i < _batches.Count; i++)
                     _batches[i] = _batches[i] with { Operation = CanvasOperation.GroupEnd, GroupShader = builtIn };
@@ -78,14 +69,14 @@ public sealed partial class RenderingServer
                         var v = _vertices[i]; var c = v.Color;
                         _vertices[i] = v with { UV = v.Position / new Vector2(pixels.X, pixels.Y), Color = new(c.R * c.A, c.G * c.A, c.B * c.A, c.A) };
                     }
-                var clearBounds = active.HasCanvasCommands ? VertexBounds(ownFirst, _vertices.Count, bounds)!.Value : fit;
-                var clear = PixelRegion(GrowFinite(clearBounds, canvasGroup.ClearMargin), pixels, clip);
+                var clearBounds = active.HasCanvasCommands || settings.FitEmpty ? VertexBounds(ownFirst, _vertices.Count, bounds)!.Value : fit;
+                var clear = PixelRegion(GrowFinite(clearBounds, settings.ClearMargin), pixels, clip);
                 var clearFirst = _vertices.Count; Quad(new(clear.Position, clear.Size), default, pixels);
                 _batches[begin] = new(clearFirst, 6, null, Clip: clear, Operation: CanvasOperation.GroupBegin, Region: clear);
                 active = null;
                 continue;
             }
-            if (item.Node is CanvasGroup) continue;
+            if ((item.Node.ServerState?.Group is not null || item.Node is CanvasGroup) && IsCompositor(item.Node) && GroupSettings(item.Node).Mode != CanvasGroupMode.ClipAndDraw) continue;
             if (active is not null && owner is not null && !ReferenceEquals(owner, active))
                 throw new NotSupportedException("Overlapping canvas-group ranges require separate nested backbuffers.");
             if (item.Node is BackBufferCopy copy && copy.CopyMode != BackBufferCopyMode.Disabled && active is null)
@@ -111,6 +102,19 @@ public sealed partial class RenderingServer
             }
         }
         if (active is not null) throw new InvalidOperationException("Canvas group boundaries must finish within their ordered canvas range.");
+    }
+    private void AppendGroupOwner(RenderEntry item, Vector2i pixels, CanvasGroupSettings settings, Rect2? childBounds)
+    {
+        if (item.Node.HasCanvasCommands) { AppendOrderedCanvas(item, pixels); return; }
+        if (!settings.FitEmpty || childBounds is null) return;
+        var fit = childBounds.Value == default ? new Rect2(childBounds.Value.Position, Vector2.One) : childBounds.Value;
+        fit = GrowFinite(fit, settings.FitMargin);
+        var material = item.Node.CanvasMaterial;
+        var color = item.Node.RenderInheritedModulate * item.Node.RenderSelfModulate * (item.Node.RenderCanvas()?.Modulate ?? Colors.White);
+        var localFit = item.Transform.AffineInverse() * fit;
+        var first = _vertices.Count; Quad(localFit, color, pixels, item.Transform);
+        var state = material?.GetCanvasState();
+        _batches.Add(new(first, 6, state, Blend: material?.GetCanvasBlendMode() ?? BlendMode.Mix, Clip: GetClip(item.Node, pixels), InstanceOwner: state?.Program.HasInstanceUniforms == true ? item.Node : null));
     }
     private Rect2? VertexBounds(int first, int end, Rect2? initial)
     {

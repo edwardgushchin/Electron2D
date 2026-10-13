@@ -13,25 +13,25 @@ public class CanvasGroup : Entity
     public CanvasGroup() { }
     /// <summary>Gets or sets the screen-pixel expansion of the fitted drawable rectangle.</summary>
     /// <value>Ten initially; finite and nonnegative.</value>
-    /// <remarks>Every assignment commits and requests redraw. Larger margins allow material effects outside child bounds.</remarks>
+    /// <remarks>Every assignment commits, republishes the authored group policy and requests redraw. Larger margins allow material effects outside child bounds.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The margin is negative or nonfinite.</exception>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
-    public float FitMargin { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _fitMargin; } set { EnsureMutable(); Margin(value); _fitMargin = value; QueueRedraw(); } }
+    public float FitMargin { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _fitMargin; } set { EnsureMutable(); Margin(value); _fitMargin = value; if (ServerState is { } state) state.Group = null; QueueRedraw(); } }
     /// <summary>Gets or sets the additional screen-pixel expansion of the transparent clearing rectangle.</summary>
     /// <value>Ten initially; finite and nonnegative.</value>
-    /// <remarks>The extra cleared border prevents stale backbuffer data from entering filtered group samples.</remarks>
+    /// <remarks>Assignment republishes the authored group policy. The extra cleared border prevents stale backbuffer data from entering filtered group samples.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The margin is negative or nonfinite.</exception>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
-    public float ClearMargin { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _clearMargin; } set { EnsureMutable(); Margin(value); _clearMargin = value; QueueRedraw(); } }
+    public float ClearMargin { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _clearMargin; } set { EnsureMutable(); Margin(value); _clearMargin = value; if (ServerState is { } state) state.Group = null; QueueRedraw(); } }
     /// <summary>Gets or sets whether native backbuffer mipmaps are generated before compositing.</summary>
     /// <value>False initially.</value>
-    /// <remarks>Generation is useful for explicit LOD sampling in a custom group shader. The compatibility profile
+    /// <remarks>Assignment republishes the authored group policy. Generation is useful for explicit LOD sampling in a custom group shader. The compatibility profile
     /// rejects a submitted mipmapped group before native drawing rather than ignoring this policy.</remarks>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
-    public bool UseMIPMaps { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _useMipmaps; } set { EnsureMutable(); _useMipmaps = value; } }
+    public bool UseMIPMaps { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _useMipmaps; } set { EnsureMutable(); _useMipmaps = value; if (ServerState is { } state) state.Group = null; } }
     private static void Margin(float value) { if (!float.IsFinite(value) || value < 0) throw new ArgumentOutOfRangeException(nameof(value)); }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(GroupProperties);

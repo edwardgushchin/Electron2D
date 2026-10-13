@@ -9541,6 +9541,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RenderingServer.CanvasGroupMode",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingServer.CanvasGroupMode",
+    "name": "CanvasGroupMode",
+    "signature": "public enum Electron2D.RenderingServer.CanvasGroupMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Repeat",
     "kind": "type",
     "declaringType": "Electron2D.Repeat",
@@ -43374,6 +43392,58 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingDevice.VertexFrequency",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.CanvasGroupMode.ClipAndDraw()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.CanvasGroupMode",
+    "name": "ClipAndDraw",
+    "signature": "public const Electron2D.RenderingServer.CanvasGroupMode ClipAndDraw = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.CanvasGroupMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.CanvasGroupMode.ClipOnly()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.CanvasGroupMode",
+    "name": "ClipOnly",
+    "signature": "public const Electron2D.RenderingServer.CanvasGroupMode ClipOnly = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.CanvasGroupMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.CanvasGroupMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.CanvasGroupMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.RenderingServer.CanvasGroupMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.CanvasGroupMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.CanvasGroupMode.Transparent()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.CanvasGroupMode",
+    "name": "Transparent",
+    "signature": "public const Electron2D.RenderingServer.CanvasGroupMode Transparent = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.CanvasGroupMode",
+    "value": "3"
   },
   {
     "id": "enumValue:Electron2D.Repeat.Mirror()",
@@ -145989,6 +146059,50 @@
       }
     ],
     "returnType": "Nullable\u003CT\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemSetCanvasGroupMode(Electron2D.RID,Electron2D.RenderingServer.CanvasGroupMode,System.Single,System.Boolean,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemSetCanvasGroupMode",
+    "signature": "public static System.Void CanvasItemSetCanvasGroupMode(Electron2D.RID item, Electron2D.RenderingServer.CanvasGroupMode mode, System.Single clearMargin = 5f, System.Boolean fitEmpty = false, System.Single fitMargin = 0f, System.Boolean blurMIPMaps = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.RenderingServer.CanvasGroupMode",
+        "default": null
+      },
+      {
+        "name": "clearMargin",
+        "type": "System.Single",
+        "default": "5f"
+      },
+      {
+        "name": "fitEmpty",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "fitMargin",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "blurMIPMaps",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {

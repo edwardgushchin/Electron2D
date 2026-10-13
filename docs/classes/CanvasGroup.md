@@ -145,3 +145,5 @@ An ancestor Y-sort treats a CanvasGroup as one ordering boundary; the group perf
 ## Stored key spelling
 
 UseMIPMaps follows ADR 0045. The established stored descriptor key remains `UseMipmaps`, preserving existing scene archives without adding a second CLR property.
+
+RenderingServer.CanvasItemSetCanvasGroupMode may override live composition without changing these authored properties. Changed ClipChildren values and CanvasGroup margin/mipmap assignments republish their scene policy; renderer teardown clears native overrides.

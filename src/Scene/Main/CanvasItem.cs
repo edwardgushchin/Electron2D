@@ -14,7 +14,7 @@ public abstract partial class CanvasItem : Node
     /// AndDraw additionally draws this item before children. Without recorded commands, children draw normally;
     /// without a captured same-Z child range, this item draws normally.
     /// CanvasGroup stores the policy but keeps its group compositor. Equal assignments are silent; changed
-    /// assignments commit before warning refresh. Nested masks and groups share storage and cannot render together.</remarks>
+    /// assignments republish authored policy and commit before warning refresh. Nested masks and groups share storage and cannot render together.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The mode is not an assignable enum value.</exception>
     /// <exception cref="InvalidOperationException">Access is off-owner or mutation occurs during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
@@ -22,7 +22,7 @@ public abstract partial class CanvasItem : Node
     public ClipChildrenMode ClipChildren
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _clipChildren; }
-        set { EnsureMutable(); if (value is < ClipChildrenMode.Disabled or >= ClipChildrenMode.Max) throw new ArgumentOutOfRangeException(nameof(value)); if (_clipChildren == value) return; _clipChildren = value; UpdateConfigurationWarnings(); }
+        set { EnsureMutable(); if (value is < ClipChildrenMode.Disabled or >= ClipChildrenMode.Max) throw new ArgumentOutOfRangeException(nameof(value)); if (_clipChildren == value) return; _clipChildren = value; if (ServerState is { } state) state.Group = null; UpdateConfigurationWarnings(); }
     }
     /// <inheritdoc />
     /// <remarks>Reports attached clipping and group ancestors through physical node ancestry.</remarks>

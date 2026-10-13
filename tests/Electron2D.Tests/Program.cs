@@ -9,6 +9,9 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPOSITION_HOST") == "1") { CanvasCompositionTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPOSITION") == "1") { CanvasCompositionTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_GROUP") is { } groupBackend) { CanvasServerGroupTests.Run(groupBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNED_CANVAS_HOST") == "1") { RenderingCanvasTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNED_CANVAS") == "1") { RenderingCanvasTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PARALLAX_REGRESSION") == "1") { ParallaxTests.Run(); LegacyParallaxTests.Run(); return; }
@@ -593,8 +596,6 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_CONTAINER_HOST"
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_CONTAINER") == "1") { SubViewportContainerTests.Run(); return; }
 
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPOSITION_HOST") == "1") { CanvasCompositionTests.RunHost(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPOSITION") == "1") { CanvasCompositionTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_SHADER") == "1") { SubViewportTests.ShaderUniform(); return; }
 

@@ -59,6 +59,7 @@ internal sealed class RenderingCanvasItemState
     internal TextureRepeat? Repeat;
     internal Vector2? ItemRepeatSize;
     internal int ItemRepeatTimes;
+    internal RenderingServer.CanvasGroupSettings? Group;
     internal Rect2? CustomRect;
     internal CanvasVisibilityNotification? VisibilityNotifier;
     internal CanvasItem? Commands;

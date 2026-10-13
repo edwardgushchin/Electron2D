@@ -1344,3 +1344,5 @@ These operations require the scene owner for attached items and reject mutation 
 A retained server visibility notification can extend command/custom culling bounds through its finite local rectangle. This also participates in clip bounds. Borrowed scene items release that runtime callback state immediately during disposal; it is not a stored scene property. See [canvas rendering](../components/canvas-rendering.md).
 
 GetScreenTransform now includes the outer containing native Window origin for embedded viewport/container chains. Viewport.GetScreenTransform retains its client-coordinate role. Wayland desktop placement remains explicitly unsupported. ControlPointerTests covers the shared nested origin contract.
+
+RenderingServer.CanvasItemSetCanvasGroupMode may override live composition without changing these authored properties. Changed ClipChildren values and CanvasGroup margin/mipmap assignments republish their scene policy; renderer teardown clears native overrides.

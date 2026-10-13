@@ -1376,3 +1376,5 @@ TranslationServer now supplies the fixed locale catalog, aliases/script defaults
 Translation catalog import uses internal TranslationCatalogLoader and CatalogPluralRule within the runtime assembly. Public Translation.PluralRulesOverride preserves imported definitions; no separate public parser or loader type is introduced.
 
 RenderingServer.CanvasSetItemRepeat reuses RenderingCanvasItemState and retained canvas composition; no new public type is introduced.
+
+RenderingServer.CanvasGroupMode is the four-value retained compositor selector. CanvasItemSetCanvasGroupMode reuses internal CanvasGroupSettings and the existing scene-group/mask kernels; no public state wrapper is introduced.
