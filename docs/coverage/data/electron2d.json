@@ -4368,6 +4368,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.FontFeatureInfo",
+    "kind": "type",
+    "declaringType": "Electron2D.FontFeatureInfo",
+    "name": "FontFeatureInfo",
+    "signature": "public struct Electron2D.FontFeatureInfo",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.FontFeatureInfo\u003E"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.FontFile",
     "kind": "type",
     "declaringType": "Electron2D.FontFile",
@@ -16933,6 +16948,35 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.FontFeatureInfo..ctor(System.String,System.Boolean,System.Boolean)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.FontFeatureInfo",
+    "name": ".ctor",
+    "signature": "public FontFeatureInfo(System.String Label, System.Boolean IsBoolean, System.Boolean Hidden)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "Label",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "IsBoolean",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "Hidden",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -91631,6 +91675,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Font.GetOTNameStrings()",
+    "kind": "method",
+    "declaringType": "Electron2D.Font",
+    "name": "GetOTNameStrings",
+    "signature": "public System.Collections.Generic.Dictionary\u003CSystem.String, System.Collections.Generic.Dictionary\u003CSystem.String, System.String\u003E\u003E GetOTNameStrings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.String, System.Collections.Generic.Dictionary\u003CSystem.String, System.String\u003E\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Font.GetOpenTypeFeatures()",
     "kind": "method",
     "declaringType": "Electron2D.Font",
@@ -91789,6 +91846,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Font.GetSupportedFeatureList()",
+    "kind": "method",
+    "declaringType": "Electron2D.Font",
+    "name": "GetSupportedFeatureList",
+    "signature": "public System.Collections.Generic.Dictionary\u003CSystem.UInt32, Electron2D.FontFeatureInfo\u003E GetSupportedFeatureList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.UInt32, Electron2D.FontFeatureInfo\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Font.GetSupportedVariationList()",
     "kind": "method",
     "declaringType": "Electron2D.Font",
@@ -91931,6 +92001,99 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontFeatureInfo.Deconstruct(ref System.String,ref System.Boolean,ref System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontFeatureInfo",
+    "name": "Deconstruct",
+    "signature": "public System.Void Deconstruct(out System.String Label, out System.Boolean IsBoolean, out System.Boolean Hidden)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "Label",
+        "type": "ref System.String",
+        "default": null
+      },
+      {
+        "name": "IsBoolean",
+        "type": "ref System.Boolean",
+        "default": null
+      },
+      {
+        "name": "Hidden",
+        "type": "ref System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontFeatureInfo.Equals(Electron2D.FontFeatureInfo)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontFeatureInfo",
+    "name": "Equals",
+    "signature": "public virtual System.Boolean Equals(Electron2D.FontFeatureInfo other)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "other",
+        "type": "Electron2D.FontFeatureInfo",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontFeatureInfo.Equals(System.Object)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontFeatureInfo",
+    "name": "Equals",
+    "signature": "public override System.Boolean Equals(System.Object obj)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "obj",
+        "type": "System.Object",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontFeatureInfo.GetHashCode()",
+    "kind": "method",
+    "declaringType": "Electron2D.FontFeatureInfo",
+    "name": "GetHashCode",
+    "signature": "public override System.Int32 GetHashCode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontFeatureInfo.ToString()",
+    "kind": "method",
+    "declaringType": "Electron2D.FontFeatureInfo",
+    "name": "ToString",
+    "signature": "public override System.String ToString()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -192524,6 +192687,54 @@
     "value": null
   },
   {
+    "id": "operator:Electron2D.FontFeatureInfo.op_Equality(Electron2D.FontFeatureInfo,Electron2D.FontFeatureInfo)",
+    "kind": "operator",
+    "declaringType": "Electron2D.FontFeatureInfo",
+    "name": "op_Equality",
+    "signature": "public static System.Boolean op_Equality(Electron2D.FontFeatureInfo left, Electron2D.FontFeatureInfo right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.FontFeatureInfo",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.FontFeatureInfo",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.FontFeatureInfo.op_Inequality(Electron2D.FontFeatureInfo,Electron2D.FontFeatureInfo)",
+    "kind": "operator",
+    "declaringType": "Electron2D.FontFeatureInfo",
+    "name": "op_Inequality",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.FontFeatureInfo left, Electron2D.FontFeatureInfo right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.FontFeatureInfo",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.FontFeatureInfo",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "operator:Electron2D.FontVariationAxis.op_Equality(Electron2D.FontVariationAxis,Electron2D.FontVariationAxis)",
     "kind": "operator",
     "declaringType": "Electron2D.FontVariationAxis",
@@ -209018,6 +209229,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Font[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FontFeatureInfo.Hidden()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontFeatureInfo",
+    "name": "Hidden",
+    "signature": "public System.Boolean Hidden { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FontFeatureInfo.IsBoolean()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontFeatureInfo",
+    "name": "IsBoolean",
+    "signature": "public System.Boolean IsBoolean { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FontFeatureInfo.Label()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontFeatureInfo",
+    "name": "Label",
+    "signature": "public System.String Label { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

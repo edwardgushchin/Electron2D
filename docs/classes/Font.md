@@ -1,6 +1,6 @@
 # Font
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Inherits:** [Resource](Resource.md) · **Source:** [Font.cs](../../src/Scene/Resources/Font.cs) · **Component:** [Text](../components/text.md)
 
@@ -443,3 +443,37 @@ Accepts an exact ordinal key, ordinarily an ISO15924 tag. Explicit and wildcard 
 Both methods reject null, embedded NUL, invalid UTF16, keys longer than 65536 units and disposed fonts/sources. FontSupportTests checks metadata, exact case, long tags, override precedence and primary-only semantics. Fallback policy and its rendered verification are described on [FontFile](FontFile.md#language-and-script-support-overrides).
 
 Automatic draw oversampling now follows the canvas viewport raster scale, including embedded-window density. A positive draw value takes precedence, then a positive FontFile/SystemFont source override, then the viewport scale. This changes glyph raster/cache identity without changing unhinted metrics. Content changes invalidate retained glyph commands. WindowContentScaleNativeTests compares automatic glyph pixels with an explicit oversampling reference on both native backends; other target and native allocation acceptance remains unverified.
+
+## OpenType metadata
+
+| Method | Result |
+| --- | --- |
+| `public Dictionary<uint, FontFeatureInfo> GetSupportedFeatureList()` | Independent primary-face feature descriptions. |
+| `public Dictionary<string, Dictionary<string, string>> GetOTNameStrings()` | Independent language/name maps, including independently copied inner maps. |
+
+The primary realized face supplies OpenType metadata through `GetSupportedFeatureList()` and `GetOTNameStrings()`. The feature snapshot contains numeric tags and typed optional labels, boolean/integer selection and hidden flags. GSUB is read before GPOS, whose duplicate descriptions win. Name strings are copied by native language spelling and standard role; unknown IDs retain `unknown_N` keys. These cold snapshots allocate independently and omit fallback metadata or authored family overrides. Feature labels retain the tool locale sampled during native realization; source replacement or cache retirement rebuilds metadata.
+
+### GetSupportedFeatureList
+
+Registered tags retain their existing boolean/integer and hidden policies; unknown tags are visible integer selectors. `FontFeatureInfo.Label` is null without a font-defined label and may be empty when the selected tool locale has no localized text. The result lists support and does not copy configured OpenType feature values. Retain snapshots during setup rather than query them each frame. Empty and authored bitmap sources return empty maps.
+
+### GetOTNameStrings
+
+Standard keys are copyright, family_name, subfamily_name, unique_identifier, full_name, version, postscript_name, trademark, manufacturer, designer, description, vendor_url, designer_url, license, license_url, typographic_family_name, typographic_subfamily_name, full_name_macos, sample_text, cid_findfont_name, weight_width_slope_family_name, weight_width_slope_subfamily_name, light_background_palette, dark_background_palette and postscript_name_prefix. Empty strings are omitted; unrecognized numeric IDs are preserved. Neither query merges fallback sources. FontVariation queries its selected face and SystemFont queries its resolved primary source. Disposed queries throw ObjectDisposedException; invalid native counts/text ranges throw InvalidDataException. Native creation and its existing source/platform errors may surface on the first query.
+
+```csharp
+var supported = font.GetSupportedFeatureList();
+if (supported.TryGetValue(0x73733031, out var feature) && feature.IsBoolean)
+{
+    using var variation = new FontVariation
+    {
+        BaseFont = font,
+        OpenTypeFeatures = new Dictionary<string, int> { ["ss01"] = 1 }
+    };
+    var bounds = variation.GetStringSize("A", fontSize: 20);
+}
+```
+
+FontMetadataTests verifies owned multilingual/table fixtures, deep snapshot independence, duplicate-table precedence, selected collections/variations/system sources, source retirement and actual feature-driven shaping. Its native profile exercises distinct glyph pixels and live disablement on Linux Wayland GPU/compatibility. Native/external allocations and other platforms remain unverified.
+
+Name strings are captured lazily on the serialized text owner. Each metadata capture enforces a 64 MiB UTF-16 text budget; excessive alias-expanded tables fail with InvalidDataException before publishing a partial name snapshot. Ordinary shaping does not materialize the localized name map.

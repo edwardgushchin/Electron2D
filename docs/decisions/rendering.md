@@ -131,7 +131,7 @@ The tested Android arm64 phone now runs the GPU canvas and HLSL/SPIR-V material 
 <a id="adr-0046"></a>
 ## ADR 0046: Render text with FreeType and HarfBuzz
 
-Last updated: 2026-10-07
+Last updated: 2026-10-13
 
 ### Status
 
@@ -144,6 +144,7 @@ The existing canvas has GPU and SDL_Renderer paths. Public fonts and GUI text mu
 ### Decision
 
 - Use public FreeType and HarfBuzz C APIs directly for font loading, SFNT-table access, fractional shaping and phase-aware glyph rasterization. Remove the redundant SDL_ttf dependency. Preserve unhinted 26.6 shaping advances and offsets independently of the chosen raster hinting; apply the specified rounding, residual carry, raster phase and outline stroke policy at their own stages.
+- Font metadata queries use the primary realized face, including selected collection/variation/system sources. Project supported OpenType tags into `FontFeatureInfo` with an optional localized label, a boolean-versus-integer discriminator and a hidden-selection flag; return localized name strings as copied language/name maps. Preserve GSUB-before-GPOS duplicate precedence and native tool-locale capture. Name maps are materialized lazily on the serialized text owner, and each capture rejects expanded UTF-16 text beyond 64 MiB before publishing a partial result. These snapshots are cold introspection; configured feature values continue through the existing shaping path.
 - Package native-only `MonoGame.Library.FreeType` 2.13.2.5 and `HarfBuzzSharp.NativeAssets` 14.2.1.301 assets under [ADR 0012](product.md#adr-0012). Their C ABI bindings remain internal engine source in the single `Electron2D.dll`. The FreeType package version is not its native library version: the tested Linux x64 payload reports 2.13.3. HarfBuzz obtains SFNT tables and unhinted metrics from FreeType through public callbacks, which also supports WOFF2 containers without interpreting private native storage.
 - Confine mutable native font state to one serialized synchronous owner. Threaded native runtimes use a worker with a reusable request slot. The nonthreaded browser profile executes on its captured browser thread and rejects another owner instead of starting a worker or blocking the event loop. Browser hosts yield between frames; this does not introduce a multithreaded browser profile. Public resource state uses locks and emits public notifications outside those locks. Cached layouts and glyph textures reuse prepared storage; source replacement is validated before committing and releases old native ownership after invalidation. The built-in font defers native initialization until first text use.
 - Keep text layout, explicit font fallbacks, measurement, line breaking, BiDi, justification, direction and drawing behind typed Electron2D APIs. Compile the bounded Avalonia 12.1.3 Unicode 17.0.0 algorithm/data closure internally, pinned to `8eeda4f6f546165b3f72e63c9f42247abb306905`, retaining its notices and reproducible import. Engine adapters correct integration behavior without modifying vendored algorithms. Unicode conformance does not by itself establish Label or font semantic parity.

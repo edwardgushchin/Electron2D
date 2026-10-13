@@ -84,7 +84,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
             finally { HBFontFuncsDestroy(funcs); }
             _buffer = HBBufferCreate();
             if (_buffer == 0 || HBBufferAllocationSuccessful(_buffer) == 0) throw new OutOfMemoryException();
-            SetSize(16); ReadVariationMetadata();
+            SetSize(16); ReadVariationMetadata(); ReadMetadata();
         }
         catch { Release(); throw; }
     }
@@ -252,6 +252,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
 
     private void Release()
     {
+        SupportedFeatures.Clear(); NameStrings.Clear();
         if (_buffer != 0) HBBufferDestroy(_buffer);
         if (_font != 0) HBFontDestroy(_font);
         if (_parentFont != 0) HBFontDestroy(_parentFont);

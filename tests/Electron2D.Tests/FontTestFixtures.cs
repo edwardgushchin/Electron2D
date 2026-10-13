@@ -3,6 +3,9 @@ using Electron2D;
 
 internal static class FontTestFixtures
 {
+    internal static readonly byte[] Metadata = Read(typeof(FontTestFixtures).Assembly, "TestFonts.MetadataTest.ttf");
+    internal static readonly byte[] MetadataBudget = Read(typeof(FontTestFixtures).Assembly, "TestFonts.MetadataBudgetTest.ttf");
+    internal static readonly byte[] MetadataDuplicate = Read(typeof(FontTestFixtures).Assembly, "TestFonts.MetadataDuplicateTest.ttf");
     internal static readonly byte[] ColorStrike = Read(typeof(FontTestFixtures).Assembly, "TestFonts.ColorStrikeTest.ttf");
     internal static readonly byte[] Strike = Read(typeof(FontTestFixtures).Assembly, "TestFonts.StrikeTest.ttf");
     internal static readonly byte[] OpenSans = Read(typeof(Font).Assembly, "Electron2D.Fonts.OpenSans_SemiBold.woff2");

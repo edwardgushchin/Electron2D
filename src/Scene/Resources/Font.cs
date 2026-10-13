@@ -7,7 +7,7 @@ namespace Electron2D;
 /// disposal. Layout caches and resource state are synchronized; canvas drawing still requires its owning thread
 /// and recording scope. Active reads retain native source snapshots; layouts retry changing state at most
 /// sixty-four times. Already recorded glyph pixels survive data replacement independently of native faces.</remarks>
-public abstract class Font : Resource
+public abstract partial class Font : Resource
 {
     internal static readonly object FallbackMutationGate = new();
     internal object FontGate { get; } = new();

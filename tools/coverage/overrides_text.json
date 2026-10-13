@@ -4164,6 +4164,18 @@
       "godot": "SystemFont::property:generate_mipmaps",
       "electron2d": "property:Electron2D.SystemFont.GenerateMIPMaps()",
       "reason": "ADR 0046: native monochrome strike bypass, forced FreeType autohinting and complete glyph/page MIP chains execute through FontFile/SystemFont, indexed caches, FontVariation and owned automatic fallback. FontRasterPolicyTests verifies exact mono/color strikes, an independent public FreeType raster oracle, active old readers, callbacks/concurrent publication, bounded mixed pages, legacy cache decoding and fresh-process policy storage. Native canvas/Label/rich/variation output runs on current GPU/compatibility; GPU MIP sampling is verified. Compatibility MIP filtering retains its existing explicit backend gate. Foreign execution/native allocation counts remain separate."
+    },
+    {
+      "godot": "Font::method:get_supported_feature_list()",
+      "electron2d": "method:Electron2D.Font.GetSupportedFeatureList()",
+      "state": "Implemented",
+      "reason": "ADR 0004/0046: primary realized source uses native OpenType metadata, copied numeric feature descriptions and deep language/name snapshots. FontMetadataTests checks independently authored multilingual GSUB/GPOS fixtures, typed policy, optional/unknown/empty names, duplicate precedence, lifetime/replacement, selected collection/variation/system sources and actual feature-driven shaping/native GPU/compatibility pixels."
+    },
+    {
+      "godot": "Font::method:get_ot_name_strings()",
+      "electron2d": "method:Electron2D.Font.GetOTNameStrings()",
+      "state": "Implemented",
+      "reason": "ADR 0004/0046: primary realized source uses native OpenType metadata, copied numeric feature descriptions and deep language/name snapshots. FontMetadataTests checks independently authored multilingual GSUB/GPOS fixtures, typed policy, optional/unknown/empty names, duplicate precedence, lifetime/replacement, selected collection/variation/system sources and actual feature-driven shaping/native GPU/compatibility pixels."
     }
   ],
   "statusGroups": [
@@ -4274,13 +4286,6 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Applicable font metadata/support query is not implemented: get_ot_name_strings. FreeType/HarfBuzz and Unicode data are present; add the typed query and verify actual tables/coverage instead of retaining the obsolete first-font dependency blocker.",
-      "godot": [
-        "Font::method:get_ot_name_strings()"
-      ]
-    },
-    {
       "state": "Implemented",
       "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate.",
       "godot": [
@@ -4306,13 +4311,6 @@
       "reason": "Requires a public TextServer font RID ownership/query service. Current FontData faces and renderer glyph textures are intentionally internal resources under ADR0046; no fake or borrowed native RID is exposed.",
       "godot": [
         "Font::method:get_rids()"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable font metadata/support query is not implemented: get_supported_feature_list. FreeType/HarfBuzz and Unicode data are present; add the typed query and verify actual tables/coverage instead of retaining the obsolete first-font dependency blocker.",
-      "godot": [
-        "Font::method:get_supported_feature_list()"
       ]
     },
     {
@@ -5322,6 +5320,20 @@
       ],
       "state": "Blocked",
       "reason": "Trigger: first executable FontFile native raster policy/MSDF slice must apply this same policy across SystemFont-owned primary/fallback faces, duplication/storage and both applicable canvas backend contracts. Platform discovery is implemented separately; no passive setting is exposed."
+    },
+    {
+      "godot": [
+        "Font::method:get_supported_feature_list()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0004/0046: primary realized source uses native OpenType metadata, copied numeric feature descriptions and deep language/name snapshots. FontMetadataTests checks independently authored multilingual GSUB/GPOS fixtures, typed policy, optional/unknown/empty names, duplicate precedence, lifetime/replacement, selected collection/variation/system sources and actual feature-driven shaping/native GPU/compatibility pixels."
+    },
+    {
+      "godot": [
+        "Font::method:get_ot_name_strings()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0004/0046: primary realized source uses native OpenType metadata, copied numeric feature descriptions and deep language/name snapshots. FontMetadataTests checks independently authored multilingual GSUB/GPOS fixtures, typed policy, optional/unknown/empty names, duplicate precedence, lifetime/replacement, selected collection/variation/system sources and actual feature-driven shaping/native GPU/compatibility pixels."
     }
   ],
   "extras": [
@@ -5819,6 +5831,78 @@
       "electron2d": "method:Electron2D.SystemFont.OnResetState()",
       "reason": "Typed SystemFont construction, inherited Font.GetFaceCount dispatch or Resource copy/storage/reset/disposal projection for executable system font ownership; no independent capability.",
       "adr": "docs/decisions/rendering.md#adr-0046"
+    },
+    {
+      "electron2d": "T:Electron2D.FontFeatureInfo",
+      "state": "Implemented",
+      "adr": "adr-0046",
+      "reason": "Typed immutable projection of the existing supported OpenType feature-description result, including optional label, boolean/integer discriminator, hidden flag and standard C# value equality/deconstruction. The complete result family is exercised by FontMetadataTests; no independent feature capability or native handle is exposed."
+    },
+    {
+      "electron2d": "constructor:Electron2D.FontFeatureInfo..ctor(System.String,System.Boolean,System.Boolean)",
+      "state": "Implemented",
+      "adr": "adr-0046",
+      "reason": "Typed immutable projection of the existing supported OpenType feature-description result, including optional label, boolean/integer discriminator, hidden flag and standard C# value equality/deconstruction. The complete result family is exercised by FontMetadataTests; no independent feature capability or native handle is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.FontFeatureInfo.Deconstruct(ref System.String,ref System.Boolean,ref System.Boolean)",
+      "state": "Implemented",
+      "adr": "adr-0046",
+      "reason": "Typed immutable projection of the existing supported OpenType feature-description result, including optional label, boolean/integer discriminator, hidden flag and standard C# value equality/deconstruction. The complete result family is exercised by FontMetadataTests; no independent feature capability or native handle is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.FontFeatureInfo.Equals(Electron2D.FontFeatureInfo)",
+      "state": "Implemented",
+      "adr": "adr-0046",
+      "reason": "Typed immutable projection of the existing supported OpenType feature-description result, including optional label, boolean/integer discriminator, hidden flag and standard C# value equality/deconstruction. The complete result family is exercised by FontMetadataTests; no independent feature capability or native handle is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.FontFeatureInfo.Equals(System.Object)",
+      "state": "Implemented",
+      "adr": "adr-0046",
+      "reason": "Typed immutable projection of the existing supported OpenType feature-description result, including optional label, boolean/integer discriminator, hidden flag and standard C# value equality/deconstruction. The complete result family is exercised by FontMetadataTests; no independent feature capability or native handle is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.FontFeatureInfo.GetHashCode()",
+      "state": "Implemented",
+      "adr": "adr-0046",
+      "reason": "Typed immutable projection of the existing supported OpenType feature-description result, including optional label, boolean/integer discriminator, hidden flag and standard C# value equality/deconstruction. The complete result family is exercised by FontMetadataTests; no independent feature capability or native handle is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.FontFeatureInfo.ToString()",
+      "state": "Implemented",
+      "adr": "adr-0046",
+      "reason": "Typed immutable projection of the existing supported OpenType feature-description result, including optional label, boolean/integer discriminator, hidden flag and standard C# value equality/deconstruction. The complete result family is exercised by FontMetadataTests; no independent feature capability or native handle is exposed."
+    },
+    {
+      "electron2d": "operator:Electron2D.FontFeatureInfo.op_Equality(Electron2D.FontFeatureInfo,Electron2D.FontFeatureInfo)",
+      "state": "Implemented",
+      "adr": "adr-0046",
+      "reason": "Typed immutable projection of the existing supported OpenType feature-description result, including optional label, boolean/integer discriminator, hidden flag and standard C# value equality/deconstruction. The complete result family is exercised by FontMetadataTests; no independent feature capability or native handle is exposed."
+    },
+    {
+      "electron2d": "operator:Electron2D.FontFeatureInfo.op_Inequality(Electron2D.FontFeatureInfo,Electron2D.FontFeatureInfo)",
+      "state": "Implemented",
+      "adr": "adr-0046",
+      "reason": "Typed immutable projection of the existing supported OpenType feature-description result, including optional label, boolean/integer discriminator, hidden flag and standard C# value equality/deconstruction. The complete result family is exercised by FontMetadataTests; no independent feature capability or native handle is exposed."
+    },
+    {
+      "electron2d": "property:Electron2D.FontFeatureInfo.Hidden()",
+      "state": "Implemented",
+      "adr": "adr-0046",
+      "reason": "Typed immutable projection of the existing supported OpenType feature-description result, including optional label, boolean/integer discriminator, hidden flag and standard C# value equality/deconstruction. The complete result family is exercised by FontMetadataTests; no independent feature capability or native handle is exposed."
+    },
+    {
+      "electron2d": "property:Electron2D.FontFeatureInfo.IsBoolean()",
+      "state": "Implemented",
+      "adr": "adr-0046",
+      "reason": "Typed immutable projection of the existing supported OpenType feature-description result, including optional label, boolean/integer discriminator, hidden flag and standard C# value equality/deconstruction. The complete result family is exercised by FontMetadataTests; no independent feature capability or native handle is exposed."
+    },
+    {
+      "electron2d": "property:Electron2D.FontFeatureInfo.Label()",
+      "state": "Implemented",
+      "adr": "adr-0046",
+      "reason": "Typed immutable projection of the existing supported OpenType feature-description result, including optional label, boolean/integer discriminator, hidden flag and standard C# value equality/deconstruction. The complete result family is exercised by FontMetadataTests; no independent feature capability or native handle is exposed."
     }
   ]
 }

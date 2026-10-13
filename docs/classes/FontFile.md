@@ -1,6 +1,6 @@
 # FontFile
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Inherits:** [Font](Font.md), [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
@@ -562,3 +562,5 @@ Creates complete MIP levels before publishing glyph textures, including oversamp
 All three properties reject disposed resources. Equal assignments are silent. Notifications occur after committed publication outside state locks; observer exceptions retain committed policy. Stored descriptors and duplication carry policy. Defaults and verification are shared with [the text component](../components/text.md#native-raster-policy-verification).
 
 Data assignment preserves policy; LoadDynamicFont, LoadBitmapFont and ResetState restore defaults. Deferred built-in fonts retain lazy native initialization. Policy publication clones configured/indexed snapshots, discards generated glyph records/pages and preserves authored image ownership. Native packing uses separate pages when authored content is present.
+
+The primary realized face supplies OpenType metadata through `GetSupportedFeatureList()` and `GetOTNameStrings()`. The feature snapshot contains numeric tags and typed optional labels, boolean/integer selection and hidden flags. GSUB is read before GPOS, whose duplicate descriptions win. Name strings are copied by native language spelling and standard role; unknown IDs retain `unknown_N` keys. These cold snapshots allocate independently and omit fallback metadata or authored family overrides. Feature labels retain the tool locale sampled during native realization; source replacement or cache retirement rebuilds metadata.

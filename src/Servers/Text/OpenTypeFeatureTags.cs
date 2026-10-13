@@ -3,7 +3,7 @@ using System.Text;
 namespace Electron2D;
 
 // Registered human-readable feature and variation aliases; tag spellings remain case-sensitive.
-internal static class OpenTypeFeatureTags
+internal static partial class OpenTypeFeatureTags
 {
     private static readonly Dictionary<string, uint> Aliases = new(StringComparer.Ordinal)
     {

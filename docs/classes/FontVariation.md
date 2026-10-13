@@ -1,6 +1,6 @@
 # FontVariation
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Inherits:** [Font](Font.md), [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
@@ -87,3 +87,5 @@ Realized sources copy the base FontFile language/script policy while capturing t
 ## Inherited raster policy
 
 Independent realized data inherits native bitmap/autohinter/MIP preferences. Native generated caches are discarded when copying a native variation; authored records survive matching instance configuration. Base changes retire old realized sources after active reads and recreate actual glyph textures with the new policy. FontRasterPolicyTests and its native host exercise this path.
+
+The primary realized face supplies OpenType metadata through `GetSupportedFeatureList()` and `GetOTNameStrings()`. The feature snapshot contains numeric tags and typed optional labels, boolean/integer selection and hidden flags. GSUB is read before GPOS, whose duplicate descriptions win. Name strings are copied by native language spelling and standard role; unknown IDs retain `unknown_N` keys. These cold snapshots allocate independently and omit fallback metadata or authored family overrides. Feature labels retain the tool locale sampled during native realization; source replacement or cache retirement rebuilds metadata.

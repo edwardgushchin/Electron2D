@@ -9,7 +9,7 @@ internal readonly record struct FontGlyph(Texture? Texture, Vector2 Offset, Vect
 // Immutable source bytes and portable glyph textures; mutable native state is confined to FontThread.
 internal sealed partial class FontData : IDisposable
 {
-    private enum Operation { Create, Dispose, Metrics, Index, Advance, Shape, Glyph, Characters, Kerning }
+    private enum Operation { Create, Dispose, Metrics, Index, Advance, Shape, Glyph, Characters, Kerning, Names }
     private readonly object _gate = new();
     private byte[] _bytes = [];
     private readonly Action _execute;
@@ -18,6 +18,8 @@ internal sealed partial class FontData : IDisposable
     internal Dictionary<uint, FontVariationAxis> VariationAxes { get; private set; } = [];
     internal Color[][] Palettes { get; private set; } = [];
     internal string[] PaletteNames { get; private set; } = [];
+    internal Dictionary<uint, FontFeatureInfo> SupportedFeatures { get; private set; } = [];
+    internal Dictionary<string, Dictionary<string, string>> NameStrings { get; private set; } = new(StringComparer.Ordinal);
     private NativeFontPrecision? _precision;
     private bool _disposed, _retired;
     private int _readers;
@@ -206,16 +208,24 @@ internal sealed partial class FontData : IDisposable
     }
     private static void ValidateSize(int size) { if (size <= 0) throw new ArgumentOutOfRangeException(nameof(size)); }
 
+    internal Dictionary<string, Dictionary<string, string>> GetNameStrings()
+    {
+        lock (_gate) { Check(); if (_precision != null) Run(Operation.Names); return NameStrings; }
+    }
+
     private void Execute()
     {
         switch (_operation)
         {
+            case Operation.Names:
+                _precision!.ReadNameMetadata(); NameStrings = _precision.NameStrings; break;
             case Operation.Create:
                 try
                 {
                     _precision = _bytes.Length > 0 ? new NativeFontPrecision(_bytes, _faceIndex) : new NativeFontPrecision(Authored!);
                     if (_instance != null && _bytes.Length > 0) _precision.ConfigureInstance(_instance);
                     _colorFont = (_precision.FaceFlags & (1L << 14)) != 0; SupportedScripts = _precision.SupportedScripts; VariationAxes = _precision.VariationAxes; Palettes = _precision.Palettes; PaletteNames = _precision.PaletteNames;
+                    SupportedFeatures = _precision.SupportedFeatures; NameStrings = _precision.NameStrings;
                     FamilyName = _precision.FamilyName; StyleName = _precision.StyleName; FaceCount = _precision.FaceCount; GlyphCount = _precision.GlyphCount; UnitsPerEm = _precision.UnitsPerEm;
                     FontStyle = (_precision.FaceStyleFlags & 2) != 0 ? FontStyle.Bold : 0;
                     if ((_precision.FaceStyleFlags & 1) != 0) FontStyle |= FontStyle.Italic;

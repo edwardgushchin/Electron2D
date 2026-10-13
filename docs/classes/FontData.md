@@ -1,6 +1,6 @@
 # FontData
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Visibility:** internal · **Source:** [FontData.cs](../../src/Servers/Text/FontData.cs) · **Component:** [Text](../components/text.md)
 
@@ -29,3 +29,9 @@ Retains an immutable FontSupportPolicy snapshot and the native face's automatic 
 ## Raster policy snapshots
 
 Owns native monochrome-strike, forced-autohinter and MIP-generation policy. FontFile publishes replacement snapshots on changes; configured variations and automatic system sources copy effective settings. Native raster calls select the real FreeType flags, while metrics keep unhinted precision. Both standalone images and atlas pages generate complete MIP chains before texture publication. Generated page retirement preserves authored images, recorded pixels and active old readers.
+
+The primary realized face supplies OpenType metadata through `GetSupportedFeatureList()` and `GetOTNameStrings()`. The feature snapshot contains numeric tags and typed optional labels, boolean/integer selection and hidden flags. GSUB is read before GPOS, whose duplicate descriptions win. Name strings are copied by native language spelling and standard role; unknown IDs retain `unknown_N` keys. These cold snapshots allocate independently and omit fallback metadata or authored family overrides. Feature labels retain the tool locale sampled during native realization; source replacement or cache retirement rebuilds metadata.
+
+Localized name capture is lazy, runs on the existing serialized FontThread operation slot, publishes only a completed map and enforces a 64 MiB expanded-text boundary. Required feature descriptions are captured with the native face.
+
+Retirement clears supported-feature and localized-name maps only after the final retained reader releases the source. Returned public snapshots remain independent of that cleanup.

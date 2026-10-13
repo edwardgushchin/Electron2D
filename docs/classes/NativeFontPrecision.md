@@ -1,6 +1,6 @@
 # NativeFontPrecision
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 - Declaration: `internal sealed unsafe partial class NativeFontPrecision : IDisposable`
 - Sources: [NativeFontPrecision.cs](../../src/Servers/Text/NativeFontPrecision.cs), [NativeFontPrecision.Raster.cs](../../src/Servers/Text/NativeFontPrecision.Raster.cs), [OpenTypeFeatureTags.cs](../../src/Servers/Text/OpenTypeFeatureTags.cs)
@@ -75,3 +75,7 @@ Sixty-four measured shaping/size/metric/raster-bound-query cycles after sixty-fo
 ## Native source raster flags
 
 Rasterize accepts internal monochrome bitmap bypass and forced-autohinter arguments. Public FreeType load flags select embedded monochrome strikes when allowed, preserve color strikes in either bypass state and use native outlines for strokes. These flags affect raster coverage independently of HarfBuzz/unhinted shaping. Engine-owned mono/color fixtures and the independent C oracle exercise actual returned pixels.
+
+The primary realized face supplies OpenType metadata through `GetSupportedFeatureList()` and `GetOTNameStrings()`. The feature snapshot contains numeric tags and typed optional labels, boolean/integer selection and hidden flags. GSUB is read before GPOS, whose duplicate descriptions win. Name strings are copied by native language spelling and standard role; unknown IDs retain `unknown_N` keys. These cold snapshots allocate independently and omit fallback metadata or authored family overrides. Feature labels retain the tool locale sampled during native realization; source replacement or cache retirement rebuilds metadata.
+
+Localized name capture is lazy, runs on the existing serialized FontThread operation slot, publishes only a completed map and enforces a 64 MiB expanded-text boundary. Required feature descriptions are captured with the native face.
