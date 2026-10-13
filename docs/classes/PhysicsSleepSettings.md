@@ -28,3 +28,10 @@ wake, dynamic groups, static-support separation, inactive intervals and quiet-cl
 rollback on registered/CPU/GPU worlds. Two 128-cycle full-frame brackets measure
 0/0 owner/all-thread managed bytes. This bounded fixture does not establish
 complete geometry, CCD, network or native/performance acceptance.
+
+[Shared public sleep verification](../components/physics-sleep.md#shared-public-sleep-policy-2026-10-14)
+now checks the complete strict threshold/duration, callback/lifetime and scene event
+suite on explicit CPU/GPU worlds in both numerical-thread modes. All six profiles
+retain 64 active or wake/sleep-cycling bodies at 0/0 warm owner/all-thread bytes.
+The public-only CPU/GPU/registered consumer additionally verifies connected groups
+and quiet-clock restoration. Hardware and broader acceptance remain open.

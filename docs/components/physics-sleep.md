@@ -1,6 +1,6 @@
 # World sleep policy
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 ## Contract and ownership
 
@@ -88,3 +88,40 @@ zero thresholds/duration, CanSleep, policy/impulse wake, inactive intervals and
 quiet-clock rollback. Each path measures 1920 replay frames and 896 actual group
 sleep/wake frames at strict 0/0 owner/all-thread managed bytes. General geometry,
 CCD, portable networking, native totals and final performance remain open.
+
+
+## Shared public sleep policy, 2026-10-14
+
+`ELECTRON2D_TEST_PUBLIC_SLEEP_POLICY=cpu|gpu` runs the complete threshold/lifetime/
+scene suite through explicitly selected PhysicsServer spaces and scene Worlds.
+The early entry captures `ELECTRON2D_TEST_THREADED_COLLIDER=1` before world creation;
+the ordinary full runner includes both public backends. Resident and CPU-hosted
+stage controls remain separate. All six profiles pass on software Vulkan.
+
+Binary-exact duration and strict speed-boundary cases remain unchanged, including
+radius-independent angular qualification, zero thresholds/duration, CanSleep,
+invalid/owner/phase access, equal/change ordering and inactive intervals. The public
+GPU path also checks the post-solver policy edit followed by a throwing user
+callback: the live view remains usable, and the next step uses the committed policy.
+Scene automatic sleep and policy wake each publish their promised single transition.
+
+The unchanged 64-body workload runs both moving and wake/sleep-cycling populations,
+256 warmup/128 measured edited whole frames each. Every profile/population now
+requires 0/0 owner/all-thread managed bytes. Public GPU traffic is recorded from its
+actual selected store: 11,400 B upload, 4,372 B uniforms and 152 B readback per
+changing-policy frame in this fixture. No new host state mirror is introduced.
+
+The existing public-only PhysicsBackendExtension.Consumer `--sleep --cpu`,
+`--sleep --gpu` and `--sleep` registered profiles also pass from the same frozen
+runtime. These serial consumer runs check pin/contact group sleep, impulse waking,
+one CanSleep veto, separated static supports and quiet-clock checkpoint restoration.
+Each retains 128 measured replay cycles (1,920 frames) and group sleep/wake cycles
+(896 frames) with 0/0 managed bytes. They are distinct from the primary separate
+numerical-thread profiles, not a new threaded-group acceptance claim.
+
+CPU/registered processes load no graphics driver; GPU/stage/resident processes
+load CPU-only llvmpipe without NVIDIA. The retained numerical thread is observed
+only in separate public profiles. Evidence is retained under
+`bin/physics-public-sleep/2026-10-14/`. Software timing is diagnostic; arbitrary
+registered geometry, native allocation, foreign platforms, networking, massive
+hardware advantage and real-window FPS remain separate acceptance gates.

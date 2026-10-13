@@ -941,3 +941,10 @@ integration and sleep/phase guards on explicit CPU/GPU worlds in both numerical
 thread modes. All six profiles preserve 256 active bodies and 1/16/32-sweep full
 step brackets with 0/0 owner/all-thread managed bytes. Hardware and broader
 registered/network/platform/performance acceptance remain open.
+
+[Shared public sleep verification](../components/physics-sleep.md#shared-public-sleep-policy-2026-10-14)
+now checks the complete strict threshold/duration, callback/lifetime and scene event
+suite on explicit CPU/GPU worlds in both numerical-thread modes. All six profiles
+retain 64 active or wake/sleep-cycling bodies at 0/0 warm owner/all-thread bytes.
+The public-only CPU/GPU/registered consumer additionally verifies connected groups
+and quiet-clock restoration. Hardware and broader acceptance remain open.

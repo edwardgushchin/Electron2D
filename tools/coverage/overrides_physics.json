@@ -7047,7 +7047,7 @@
         "ProjectSettings::property:physics/2d/sleep_threshold_linear"
       ],
       "state": "Implemented",
-      "reason": "Typed finite nonnegative default, built-in registry storage, world capture and separate quiet threshold/duration behavior execute on CPU and independent GPU (ADR 0089, PhysicsSleepPolicyTests). Public GPU world binding remains open."
+      "reason": "Typed finite nonnegative default, built-in registry storage, world capture and separate quiet threshold/duration behavior execute on CPU and independent GPU (ADR 0089, PhysicsSleepPolicyTests). The complete public scene/server sleep suite now executes on explicit CPU/GPU worlds in serial/separate numerical profiles via ELECTRON2D_TEST_PUBLIC_SLEEP_POLICY. Binary-exact strict thresholds/duration, radius-independent angular sleep, zero policy/time, CanSleep, captured/inactive/error/owner/phase settings, post-solver callback failure and scene transitions retain their guarantees. All six public/resident/stage profiles preserve 64 active/cycling bodies and 256 warmup/128 edited full steps at 0/0 owner/all-thread managed bytes. Public-only CPU/GPU/registered serial consumers additionally verify connected groups and quiet-clock checkpoint replay at 0/0. GPU execution uses CPU-only llvmpipe Vulkan; hardware, arbitrary registered geometry, native/foreign/network and performance acceptance remain open."
     },
     {
       "godot": [
@@ -7061,7 +7061,7 @@
         "ProjectSettings::property:physics/2d/sleep_threshold_angular"
       ],
       "state": "Implemented",
-      "reason": "Typed finite nonnegative default, built-in registry storage, world capture and separate quiet threshold/duration behavior execute on CPU and independent GPU (ADR 0089, PhysicsSleepPolicyTests). Public GPU world binding remains open."
+      "reason": "Typed finite nonnegative default, built-in registry storage, world capture and separate quiet threshold/duration behavior execute on CPU and independent GPU (ADR 0089, PhysicsSleepPolicyTests). The complete public scene/server sleep suite now executes on explicit CPU/GPU worlds in serial/separate numerical profiles via ELECTRON2D_TEST_PUBLIC_SLEEP_POLICY. Binary-exact strict thresholds/duration, radius-independent angular sleep, zero policy/time, CanSleep, captured/inactive/error/owner/phase settings, post-solver callback failure and scene transitions retain their guarantees. All six public/resident/stage profiles preserve 64 active/cycling bodies and 256 warmup/128 edited full steps at 0/0 owner/all-thread managed bytes. Public-only CPU/GPU/registered serial consumers additionally verify connected groups and quiet-clock checkpoint replay at 0/0. GPU execution uses CPU-only llvmpipe Vulkan; hardware, arbitrary registered geometry, native/foreign/network and performance acceptance remain open."
     },
     {
       "godot": [
@@ -7075,7 +7075,7 @@
         "ProjectSettings::property:physics/2d/time_before_sleep"
       ],
       "state": "Implemented",
-      "reason": "Typed finite nonnegative default, built-in registry storage, world capture and separate quiet threshold/duration behavior execute on CPU and independent GPU (ADR 0089, PhysicsSleepPolicyTests). Public GPU world binding remains open."
+      "reason": "Typed finite nonnegative default, built-in registry storage, world capture and separate quiet threshold/duration behavior execute on CPU and independent GPU (ADR 0089, PhysicsSleepPolicyTests). The complete public scene/server sleep suite now executes on explicit CPU/GPU worlds in serial/separate numerical profiles via ELECTRON2D_TEST_PUBLIC_SLEEP_POLICY. Binary-exact strict thresholds/duration, radius-independent angular sleep, zero policy/time, CanSleep, captured/inactive/error/owner/phase settings, post-solver callback failure and scene transitions retain their guarantees. All six public/resident/stage profiles preserve 64 active/cycling bodies and 256 warmup/128 edited full steps at 0/0 owner/all-thread managed bytes. Public-only CPU/GPU/registered serial consumers additionally verify connected groups and quiet-clock checkpoint replay at 0/0. GPU execution uses CPU-only llvmpipe Vulkan; hardware, arbitrary registered geometry, native/foreign/network and performance acceptance remain open."
     },
     {
       "godot": [

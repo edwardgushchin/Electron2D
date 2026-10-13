@@ -1,14 +1,17 @@
 using System.Diagnostics;
 using Electron2D;
 
-internal static class PhysicsSleepPolicyTests
+internal sealed class PhysicsSleepPolicyTests(PhysicsServer.Backend backend)
 {
-    internal static void Run(bool stages = false)
+    internal static void Run(bool stages = false) => new PhysicsSleepPolicyTests(PhysicsServer.Backend.CPU).RunCore(stages);
+    internal static void Run(PhysicsServer.Backend backend) => new PhysicsSleepPolicyTests(backend).RunCore(false);
+    private void RunCore(bool stages)
     {
         VerifyProjectDefaults(false); VerifyPolicy(false, stages); VerifyPublicLifetime(stages); VerifyScene(stages); Measure(false, stages); Measure(false, stages, false);
-        Console.WriteLine($"World sleep policy passed on {(stages ? "CPU host/GPU stages" : "CPU")}: independent thresholds, duration, changes, ownership and zero allocation.");
+        Console.WriteLine($"World sleep policy passed on {(stages ? "CPU host/GPU stages" : backend.ToString())}: independent thresholds, duration, changes, ownership and zero allocation.");
     }
-    internal static void RunResident()
+    internal static void RunResident() => new PhysicsSleepPolicyTests(PhysicsServer.Backend.GPU).RunResidentCore();
+    private void RunResidentCore()
     {
         VerifyProjectDefaults(true); VerifyPolicy(true, false); Measure(true, false); Measure(true, false, false);
         Console.WriteLine("Resident world sleep policy passed: shared project defaults, thresholds, duration, changes and zero allocation.");
@@ -20,16 +23,17 @@ internal static class PhysicsSleepPolicyTests
         private readonly List<RID> _bodies = [];
         private readonly List<GPUPhysicsBodyStore.BodyHandle> _residentBodies = [];
         private readonly List<Shape> _shapes = [];
-        internal Rig(bool resident, bool stages = false)
+        internal Rig(PhysicsServer.Backend backend, bool resident, bool stages = false)
         {
             if (resident) Store = new();
             else
             {
-                Space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(Space, true);
+                Space = PhysicsServer.SpaceCreate(backend); Check(PhysicsServer.SpaceGetBackend(Space) == backend, "Sleep policy uses the selected public backend."); PhysicsServer.SpaceSetActive(Space, true);
                 PhysicsServer.AreaSetGravity(Space, 0); PhysicsServer.AreaSetLinearDamp(Space, 0); PhysicsServer.AreaSetAngularDamp(Space, 0);
                 if (stages) PhysicsServer.Service.GetSceneSpace(Space).EnableGPUSolver();
             }
         }
+        internal GPUPhysicsBodyStore? SelectedStore => Store ?? (Space.IsValid() ? PhysicsServer.Service.GetSceneSpace(Space).GPUStore : null);
         internal PhysicsSleepSettings Policy => Store?.GetSleepSettings() ?? new(
             PhysicsServer.SpaceGetBodyLinearVelocitySleepThreshold(Space), PhysicsServer.SpaceGetBodyAngularVelocitySleepThreshold(Space), PhysicsServer.SpaceGetBodyTimeToSleep(Space));
         internal void Set(PhysicsSleepSettings value)
@@ -84,7 +88,7 @@ internal static class PhysicsSleepPolicyTests
             foreach (var shape in _shapes) shape.Dispose();
         }
     }
-    private static void VerifyProjectDefaults(bool resident)
+    private void VerifyProjectDefaults(bool resident)
     {
         var old = PhysicsSleepSettings.FromProject();
         Check(old == new PhysicsSleepSettings(2, .13962634f, .5f), "Default project sleep profile.");
@@ -93,10 +97,10 @@ internal static class PhysicsSleepPolicyTests
             ProjectSettings.Set(ProjectSettings.Physics2DSleepThresholdLinear, 7f);
             ProjectSettings.Set(ProjectSettings.Physics2DSleepThresholdAngular, .25f);
             ProjectSettings.Set(ProjectSettings.Physics2DTimeBeforeSleep, .125f);
-            using var r = new Rig(resident); Check(r.Policy == new PhysicsSleepSettings(7, .25f, .125f), "World captures all project settings.");
+            using var r = new Rig(backend, resident); Check(r.Policy == new PhysicsSleepSettings(7, .25f, .125f), "World captures all project settings.");
             ProjectSettings.Set(ProjectSettings.Physics2DSleepThresholdLinear, 8f);
             Check(r.Policy.LinearThreshold == 7, "Existing world retains its captured setting.");
-            using var next = new Rig(resident); Check(next.Policy.LinearThreshold == 8, "New world observes changed project default.");
+            using var next = new Rig(backend, resident); Check(next.Policy.LinearThreshold == 8, "New world observes changed project default.");
         }
         finally
         {
@@ -105,9 +109,9 @@ internal static class PhysicsSleepPolicyTests
             ProjectSettings.Set(ProjectSettings.Physics2DTimeBeforeSleep, old.TimeToSleep);
         }
     }
-    private static void VerifyPolicy(bool resident, bool stages)
+    private void VerifyPolicy(bool resident, bool stages)
     {
-        using var r = new Rig(resident, stages); r.Set(new(2, .25f, .125f));
+        using var r = new Rig(backend, resident, stages); r.Set(new(2, .25f, .125f));
         var small = r.Add(angular: .125f, radius: 1); var large = r.Add(angular: .125f, radius: 100);
         var linearEdge = r.Add(new(2, 0)); var angularEdge = r.Add(angular: -.25f); var forbidden = r.Add(canSleep: false);
         // Binary-exact duration/steps distinguish strict threshold and delay semantics without rounding tolerance.
@@ -133,9 +137,9 @@ internal static class PhysicsSleepPolicyTests
         r.Set(new(0, 0, 0)); r.Sleep(small); r.Step(); Check(r.Sleeping(small), "Explicit sleep remains available with zero automatic thresholds.");
         Reject<InvalidOperationException>(() => Task.Run(() => r.Set(new(2, .25f, .5f))).GetAwaiter().GetResult());
     }
-    private static void VerifyPublicLifetime(bool stages)
+    private void VerifyPublicLifetime(bool stages)
     {
-        using var r = new Rig(false, stages); r.Set(new(2, .25f, .125f)); var body = r.Add();
+        using var r = new Rig(backend, false, stages); r.Set(new(2, .25f, .125f)); var body = r.Add();
         using var view = PhysicsServer.BodyGetDirectState(r.Body(body))!;
         r.Step(); PhysicsServer.SpaceSetActive(r.Space, false);
         for (var i = 0; i < 8; i++) r.Step();
@@ -151,13 +155,13 @@ internal static class PhysicsSleepPolicyTests
         Check(PhysicsServer.SpaceGetBodyTimeToSleep(r.Space) == 0 && !view.Sleeping, "Post-solver callback change commits and preserves the live view after callback failure.");
         r.Step(); Check(r.Sleeping(body), "Next interval uses the callback's new policy.");
         Reject<ArgumentException>(() => PhysicsServer.SpaceGetBodyTimeToSleep(r.Body(body)));
-        var dead = PhysicsServer.SpaceCreate(); PhysicsServer.FreeRID(dead);
+        var dead = PhysicsServer.SpaceCreate(backend); PhysicsServer.FreeRID(dead);
         Reject<ArgumentException>(() => PhysicsServer.SpaceSetBodyTimeToSleep(dead, 0));
     }
-    private static void VerifyScene(bool stages)
+    private void VerifyScene(bool stages)
     {
         using var shape = new CircleShape { Radius = 100 };
-        var root = new Node(); var body = new RigidBody
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; var body = new RigidBody
         {
             Name = "Body",
             GravityScale = 0,
@@ -167,6 +171,7 @@ internal static class PhysicsSleepPolicyTests
         };
         body.AddChild(new CollisionShape { Shape = shape }); root.AddChild(body);
         using var tree = new SceneTree(root); var space = body.GetWorld()!.Space;
+        Check(PhysicsServer.SpaceGetBackend(space) == backend, "Scene sleep policy uses the selected public backend.");
         if (stages) body.Space!.EnableGPUSolver();
         PhysicsServer.SpaceSetBodyLinearVelocitySleepThreshold(space, 2); PhysicsServer.SpaceSetBodyAngularVelocitySleepThreshold(space, .25f);
         PhysicsServer.SpaceSetBodyTimeToSleep(space, .125f);
@@ -185,22 +190,23 @@ internal static class PhysicsSleepPolicyTests
         PhysicsServer.SpaceSetBodyTimeToSleep(space, .25f);
         tree.PhysicsFrame(.03125); Check(transitions == 2, "Equal policy does not add scene transitions.");
     }
-    private static void Measure(bool resident, bool stages, bool moving = true)
+    private void Measure(bool resident, bool stages, bool moving = true)
     {
-        using var r = new Rig(resident, stages); var duration = moving ? .5f : 0; r.Set(new(2, .25f, duration));
+        using var r = new Rig(backend, resident, stages); var duration = moving ? .5f : 0; r.Set(new(2, .25f, duration));
         for (var i = 0; i < 64; i++) r.Add(moving ? new(4, 0) : Vector2.Zero);
         for (var i = 0; i < 256; i++) { r.Set(new(1 + (i & 1), .25f, duration)); r.Step(1d / 60); }
         Check(r.Sleeping(0) == !moving && r.Sleeping(63) == !moving, "Measured population exercises active or wake/sleep cycles.");
-        var samples = new long[128]; var before = GC.GetTotalAllocatedBytes(true);
-        var upload = r.Store?.UploadBytes ?? 0; var uniforms = r.Store?.UniformBytes ?? 0; var readback = r.Store?.ReadbackBytes ?? 0; var wait = r.Store?.WaitMS ?? 0;
+        var selected = r.SelectedStore;
+        var samples = new long[128]; var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var before = GC.GetTotalAllocatedBytes(true);
+        var upload = selected?.UploadBytes ?? 0; var uniforms = selected?.UniformBytes ?? 0; var readback = selected?.ReadbackBytes ?? 0; var wait = selected?.WaitMS ?? 0;
         for (var i = 0; i < samples.Length; i++)
         {
             var start = Stopwatch.GetTimestamp(); r.Set(new(1 + (i & 1), .25f, duration)); r.Step(1d / 60); samples[i] = Stopwatch.GetTimestamp() - start;
         }
-        var bytes = GC.GetTotalAllocatedBytes(true) - before; Array.Sort(samples); var ms = 1000d / Stopwatch.Frequency;
-        Console.WriteLine($"Sleep policy {(resident ? "resident GPU" : stages ? "CPU host/GPU stages" : "CPU")}: 64 {(moving ? "awake" : "wake/sleep cycling")} isolated circles, alternating linear threshold + whole 1/60 s step, 256 warmup/128 samples; p50/p95/p99={samples[64] * ms:F4}/{samples[121] * ms:F4}/{samples[126] * ms:F4} ms; {bytes} all-thread managed B.");
-        if (r.Store is { } s) Console.WriteLine($"Resident sleep traffic/frame: upload={(s.UploadBytes - upload) / 128}, uniforms={(s.UniformBytes - uniforms) / 128}, readback={(s.ReadbackBytes - readback) / 128} B; wait={(s.WaitMS - wait) / 128:F4} ms; {s.Driver}, {s.DeviceName}.");
-        Check(bytes == 0, "Warmed policy edits and steps allocate no managed memory.");
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore; var bytes = GC.GetTotalAllocatedBytes(true) - before; Array.Sort(samples); var ms = 1000d / Stopwatch.Frequency;
+        Console.WriteLine($"Sleep policy {(resident ? "resident GPU" : stages ? "CPU host/GPU stages" : backend.ToString())}: 64 {(moving ? "awake" : "wake/sleep cycling")} isolated circles, alternating linear threshold + whole 1/60 s step, 256 warmup/128 samples; p50/p95/p99={samples[64] * ms:F4}/{samples[121] * ms:F4}/{samples[126] * ms:F4} ms; {ownerBytes}/{bytes} owner/all-thread managed B.");
+        if (selected is { } s) Console.WriteLine($"Selected sleep traffic/frame: upload={(s.UploadBytes - upload) / 128}, uniforms={(s.UniformBytes - uniforms) / 128}, readback={(s.ReadbackBytes - readback) / 128} B; wait={(s.WaitMS - wait) / 128:F4} ms; {s.Driver}, {s.DeviceName}.");
+        Check(ownerBytes == 0 && bytes == 0, "Warmed policy edits and steps allocate zero owner/all-thread managed memory.");
     }
     private static void Reject<T>(Action action) where T : Exception
     { try { action(); } catch (T) { return; } throw new InvalidOperationException($"Expected {typeof(T).Name}."); }
