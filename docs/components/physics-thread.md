@@ -62,8 +62,9 @@ Run ELECTRON2D_TEST_PHYSICS_THREAD=1 against the Release test executable, or run
 PhysicsBackendExtension.Consumer with --separate-thread. The checked profiles deny
 graphics through dummy video, invalid GPU driver, missing Vulkan driver files and
 absent display/session paths. Evidence is retained under bin/physics-thread/2026-10-13.
-GPU numerical execution, real rendered output, native allocations, other platforms
-and a measured scheduling advantage remain open. The setting stays Partial in
+GPU CCD, boundary and directed-ray numerical execution now passes on software
+Vulkan in both policies; physical GPU execution, real rendered output, native
+allocations, other platforms and a measured scheduling advantage remain open. The setting stays Partial in
 coverage until the GPU/registered/numerical/native boundaries are fully verified;
 CPU workers alone are not its acceptance proof.
 
@@ -75,10 +76,16 @@ process rejects GPU startup first; positive warm prediction/replay samples retai
 0/0 managed owner/all-thread bytes after 128 completed steps in each process.
 Late admission after tick 300 is explicitly exercised with a longer run rather
 than labelling its initial frames warm. This extends CPU integration evidence without
-closing GPU/native or scheduling-performance gates.
+closing hardware GPU/native or scheduling-performance gates.
 
 ## Decisions
 
 [ADR 0054](../decisions/physics-backends.md#adr-0054) owns captured scheduling,
 GPU numerical ownership and failure policy; [ADR 0103](../decisions/physics-extensions.md#adr-0103)
 owns authorized provider inputs and hook lifetimes.
+
+The continuous-contract entry now accepts separate numerical execution without
+being redirected to the general CPU suite. Both CPU/GPU profiles pass the same
+CCD, infinite-boundary and directed-ray cases on software Vulkan, with explicit
+0/0 owner/all-thread warm allocation gates. See [current software conformance](cpu-continuous-collision.md#software-vulkan-continuous-conformance-2026-10-14).
+Hardware performance, native allocation and foreign-platform acceptance remain open.

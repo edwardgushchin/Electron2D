@@ -907,3 +907,9 @@ intermediates before normalization. The shared test covers opposite finite 2e38
 coordinates, signed direction and falloff, affine virtual centers, three body roles
 and zero-allocation full frames. Collision precision at such coordinates and real
 GPU performance remain separate gates. See [field numeric range](../components/physics-areas.md#point-gravity-numeric-range).
+
+The continuous-contract entry now accepts separate numerical execution without
+being redirected to the general CPU suite. Both CPU/GPU profiles pass the same
+CCD, infinite-boundary and directed-ray cases on software Vulkan, with explicit
+0/0 owner/all-thread warm allocation gates. See [current software conformance](../components/cpu-continuous-collision.md#software-vulkan-continuous-conformance-2026-10-14).
+Hardware performance, native allocation and foreign-platform acceptance remain open.

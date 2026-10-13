@@ -101,13 +101,13 @@ internal sealed class SeparationRayDynamicsTests(bool gpu, PhysicsServer.Backend
         var store = PhysicsServer.Service.GetSceneSpace(world.Space).GPUStore;
         var upload = store?.UploadBytes ?? 0; var readback = store?.ReadbackBytes ?? 0;
         var uniforms = store?.UniformBytes ?? 0; var wait = store?.WaitMS ?? 0;
-        var elapsed = new long[128]; var before = GC.GetTotalAllocatedBytes(true);
+        var elapsed = new long[128]; var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var before = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < elapsed.Length; i++) { var start = Stopwatch.GetTimestamp(); world.Step(); elapsed[i] = Stopwatch.GetTimestamp() - start; }
-        var allocated = GC.GetTotalAllocatedBytes(true) - before; Array.Sort(elapsed);
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore; var allocated = GC.GetTotalAllocatedBytes(true) - before; Array.Sort(elapsed);
         var ms = 1000d / Stopwatch.Frequency;
-        Console.WriteLine($"Directed ray active step ({(gpu ? "CPU host/GPU stages" : backend.ToString())}): 1 awake ray + floor, 4 substeps/16 iterations, dt 1/60, 128 warmup/128 samples; p50/p95/p99 {elapsed[64] * ms:F4}/{elapsed[121] * ms:F4}/{elapsed[126] * ms:F4} ms; {allocated} all-thread managed bytes.");
+        Console.WriteLine($"Directed ray active step ({(gpu ? "CPU host/GPU stages" : backend.ToString())}): 1 awake ray + floor, 4 substeps/16 iterations, dt 1/60, 128 warmup/128 samples; p50/p95/p99 {elapsed[64] * ms:F4}/{elapsed[121] * ms:F4}/{elapsed[126] * ms:F4} ms; {ownerBytes}/{allocated} owner/all-thread managed bytes.");
         if (store is not null) Console.WriteLine($"Resident whole-step traffic: upload/readback/uniforms {(store.UploadBytes - upload) / 128}/{(store.ReadbackBytes - readback) / 128}/{(store.UniformBytes - uniforms) / 128} B; mean wait {(store.WaitMS - wait) / 128:F4} ms.");
-        Check(allocated == 0, "Warmed active directed solver steps allocate zero managed bytes.");
+        Check(ownerBytes == 0 && allocated == 0, "Warmed active directed solver steps allocate zero owner/all-thread managed bytes.");
     }
     private void VerifySearchMargin(bool gpu)
     {

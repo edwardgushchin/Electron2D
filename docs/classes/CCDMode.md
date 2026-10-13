@@ -47,3 +47,9 @@ time, full impulse and force/callback/tick budgets through common public checks.
 explicit-space controls check custom hollow geometry and terminal numerical
 budget failure. This bounded fixture does not establish general geometry/rotation,
 full extension, network or native/performance acceptance.
+
+The continuous-contract entry now accepts separate numerical execution without
+being redirected to the general CPU suite. Both CPU/GPU profiles pass the same
+CCD, infinite-boundary and directed-ray cases on software Vulkan, with explicit
+0/0 owner/all-thread warm allocation gates. See [current software conformance](../components/cpu-continuous-collision.md#software-vulkan-continuous-conformance-2026-10-14).
+Hardware performance, native allocation and foreign-platform acceptance remain open.

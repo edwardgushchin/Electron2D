@@ -227,3 +227,29 @@ must produce Y velocity below -10; CastRay remains a pass-through approximation.
 The old CPU CastShape returned approximately (60,0)/(3000,0); the corrected
 CPU, GPU and independent consumer pass the same mode-qualified assertions.
 128 full reset/replay cycles remain at strict 0/0 owner/all-thread bytes.
+
+## Software Vulkan continuous conformance, 2026-10-14
+
+The shared `ELECTRON2D_TEST_GPU_CCD_CONTRACT=1` entry now precedes the general
+CPU threaded-suite entry. Adding `ELECTRON2D_TEST_THREADED_COLLIDER=1` selects
+separate numerical execution for the same six CPU/GPU suites, rather than running
+a different CPU group. The entry prints the compute device and captured policy.
+
+Both serial and separate profiles pass PhysicsCCDTests, WorldBoundaryTests and
+SeparationRayDynamicsTests on explicit CPU and resident GPU worlds. This covers
+Disabled/ray/shape policy, all tested built-in contours, relative/rotational motion,
+remaining-time force/motor and complete impulse budgets, filtering, infinite-plane
+response/queries, ray materials/mass/sleep, geometry edits and scene events.
+Existing numerical bounds and populations are unchanged. The boundary and directed
+ray brackets now explicitly require zero owner-thread as well as all-thread bytes;
+CCD already did. Every 128-sample warm bracket passes with 0/0 managed bytes.
+
+Execution uses the signed, locally extracted CPU-only Vulkan ICD described in
+[software Vulkan verification](physics-backends.md#software-vulkan-functional-checks):
+`vulkan; llvmpipe (LLVM 23.1.1, 256 bits)` with offscreen video. Process maps confirm
+the software library and no NVIDIA driver; the retained solver thread is observed
+only in the separate profile. The frozen Release output remains unchanged across
+both runs. Evidence lives under `bin/physics-continuous-software/2026-10-14/final/`.
+Software timings are diagnostic and establish no physical-GPU speed advantage.
+Hardware/platform, native-memory, rendered FPS, general numerical extensions and
+full-goal acceptance remain open.

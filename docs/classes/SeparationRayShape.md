@@ -99,3 +99,9 @@ authoring, including equal assignments. Scene/raw owner, phase and borrowed-hook
 rejection preserves data, RID and immutable geometry cache. Publication rechecks
 owner/phase without repeating selected status hooks; ordinary post-solver edits
 retain their existing behavior.
+
+The continuous-contract entry now accepts separate numerical execution without
+being redirected to the general CPU suite. Both CPU/GPU profiles pass the same
+CCD, infinite-boundary and directed-ray cases on software Vulkan, with explicit
+0/0 owner/all-thread warm allocation gates. See [current software conformance](../components/cpu-continuous-collision.md#software-vulkan-continuous-conformance-2026-10-14).
+Hardware performance, native allocation and foreign-platform acceptance remain open.

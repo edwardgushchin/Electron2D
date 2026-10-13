@@ -193,8 +193,8 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   closes that omission. [run_on_separate_thread](physics-thread.md) now captures
   a typed policy and executes complete CPU/provider Solve on a retained numerical
   lane, with readonly input, owner publication and joined failure/lifetime barriers.
-  Its row remains Partial: GPU/native numerical execution and scheduling performance
-  have not been accepted. Ordinary retained CPU workers alone do not close it.
+  Its row remains Partial: hardware GPU/native numerical execution and scheduling
+  performance have not been accepted; software Vulkan continuous suites now pass. Ordinary retained CPU workers alone do not close it.
 - Common frequency/catch-up/jitter project keys, Engine clock settings and physical
   frame/count/fraction/phase observations now have audited public CPU evidence.
   [Clock conformance](engine-runtime.md#verification) uses actual world ticks and
@@ -1002,3 +1002,9 @@ Each direction starts its own world so the field check does not request a physic
 unrepresentable one-tick kinematic transition between opposite extreme poses. These are
 field and finite-state checks; they do not establish collision resolution precision
 at huge coordinates or hardware GPU/performance acceptance.
+
+The continuous-contract entry now accepts separate numerical execution without
+being redirected to the general CPU suite. Both CPU/GPU profiles pass the same
+CCD, infinite-boundary and directed-ray cases on software Vulkan, with explicit
+0/0 owner/all-thread warm allocation gates. See [current software conformance](cpu-continuous-collision.md#software-vulkan-continuous-conformance-2026-10-14).
+Hardware performance, native allocation and foreign-platform acceptance remain open.

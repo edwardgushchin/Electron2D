@@ -50,9 +50,11 @@ internal sealed class WorldBoundaryTests(bool gpu, PhysicsServer.Backend backend
             PhysicsServer.BodySetContinuousCollisionDetectionMode(body, CCDMode.Disabled); PhysicsServer.BodySetCanSleep(body, false);
             PhysicsServer.AreaSetGravity(space, 980);
             for (var i = 0; i < 128; i++) PhysicsServer.SpaceStep(space, 1d / 60);
-            var samples = new long[128]; var allocated = GC.GetTotalAllocatedBytes(true);
+            var samples = new long[128]; var owner = GC.GetAllocatedBytesForCurrentThread(); var allocated = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < samples.Length; i++) { var start = Stopwatch.GetTimestamp(); PhysicsServer.SpaceStep(space, 1d / 60); samples[i] = Stopwatch.GetTimestamp() - start; }
-            allocated = GC.GetTotalAllocatedBytes(true) - allocated; Report(gpu ? "CPU host/GPU stages" : backend.ToString(), samples, allocated);
+            owner = GC.GetAllocatedBytesForCurrentThread() - owner; allocated = GC.GetTotalAllocatedBytes(true) - allocated;
+            Check(owner == 0, "Warmed boundary steps allocate zero owner-thread managed bytes.");
+            Report(gpu ? "CPU host/GPU stages" : backend.ToString(), samples, allocated);
         }
         finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(floor); PhysicsServer.FreeRID(space); }
         VerifyRotation(gpu); VerifyScene(gpu); VerifyDiscreteRotation(gpu); VerifyFamilies(false, gpu, backend);
