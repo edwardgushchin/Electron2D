@@ -215779,6 +215779,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Node.InternalPhysicsProcessEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.Node",
+    "name": "InternalPhysicsProcessEnabled",
+    "signature": "public System.Boolean InternalPhysicsProcessEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Node.InternalProcessEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.Node",
+    "name": "InternalProcessEnabled",
+    "signature": "public System.Boolean InternalProcessEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Node.IsInsideTree()",
     "kind": "property",
     "declaringType": "Electron2D.Node",

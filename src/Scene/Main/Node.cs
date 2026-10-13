@@ -45,6 +45,8 @@ public partial class Node : ElectronObject
             stored: true),
         new PropertyDescriptor<Node, bool>(nameof(ProcessEnabled), node => node.ProcessEnabled, (node, value) => node.ProcessEnabled = value, _ => false, stored: true),
         new PropertyDescriptor<Node, bool>(nameof(PhysicsProcessEnabled), node => node.PhysicsProcessEnabled, (node, value) => node.PhysicsProcessEnabled = value, _ => false, stored: true),
+        new PropertyDescriptor<Node, bool>(nameof(InternalProcessEnabled), node => node.InternalProcessEnabled, (node, value) => node.InternalProcessEnabled = value, _ => false),
+        new PropertyDescriptor<Node, bool>(nameof(InternalPhysicsProcessEnabled), node => node.InternalPhysicsProcessEnabled, (node, value) => node.InternalPhysicsProcessEnabled = value, _ => false),
         new PropertyDescriptor<Node, bool>(nameof(InputEnabled), node => node.InputEnabled, (node, value) => node.InputEnabled = value, _ => false, stored: true),
         new PropertyDescriptor<Node, bool>(nameof(UnhandledInputEnabled), node => node.UnhandledInputEnabled, (node, value) => node.UnhandledInputEnabled = value, _ => false, stored: true),
         new PropertyDescriptor<Node, bool>(nameof(UnhandledKeyInputEnabled), node => node.UnhandledKeyInputEnabled, (node, value) => node.UnhandledKeyInputEnabled = value, _ => false, stored: true),
@@ -97,12 +99,12 @@ public partial class Node : ElectronObject
     /// <summary>Identifies the notification sent after the direct child order changes.</summary>
     public const int NotificationChildOrderChanged = 24;
 
-    /// <summary>Identifies an engine-internal process callback notification.</summary>
-    /// <remarks>Built-in node logic uses this lane independently of <see cref="ProcessEnabled"/>.</remarks>
+    /// <summary>Identifies the internal idle-frame notification.</summary>
+    /// <remarks>The InternalProcessEnabled lane precedes ordinary ProcessEnabled callbacks.</remarks>
     public const int NotificationInternalProcess = 25;
 
-    /// <summary>Identifies an engine-internal physics-process callback notification.</summary>
-    /// <remarks>Built-in node logic uses this lane independently of <see cref="PhysicsProcessEnabled"/>.</remarks>
+    /// <summary>Identifies the internal fixed-frame notification.</summary>
+    /// <remarks>The InternalPhysicsProcessEnabled lane precedes ordinary PhysicsProcessEnabled callbacks.</remarks>
     public const int NotificationInternalPhysicsProcess = 26;
 
     /// <summary>Identifies the notification sent after this node and its descendants finish entering a tree.</summary>
@@ -638,6 +640,32 @@ public partial class Node : ElectronObject
             EnsureMutable();
             _physicsProcessEnabled = value;
         }
+    }
+
+    /// <summary>Gets or sets whether this node receives internal idle-frame notifications.</summary>
+    /// <value>False for a plain Node. Built-in subclasses may enable their own internal work.</value>
+    /// <remarks>This lane is independent of ProcessEnabled and runs before ordinary processing. The resolved
+    /// ProcessMode and tree pause state still gate both lanes. Changes are runtime state, not stored scene data.
+    /// Disabling a built-in node's internal work can suspend animation, timers or other implementation logic.</remarks>
+    /// <exception cref="InvalidOperationException">An attached node is mutated off its owner thread or during scene capture.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
+    public bool InternalProcessEnabled
+    {
+        get { ThrowIfDisposed(); return _internalProcessEnabled; }
+        set { EnsureMutable(); _internalProcessEnabled = value; }
+    }
+
+    /// <summary>Gets or sets whether this node receives internal fixed-frame notifications.</summary>
+    /// <value>False for a plain Node. Built-in subclasses may enable their own internal work.</value>
+    /// <remarks>This lane is independent of PhysicsProcessEnabled and runs before ordinary physics processing.
+    /// The resolved ProcessMode and tree pause state still apply. This runtime switch is not stored in scenes.
+    /// Disabling built-in internal physics can suspend casts, timers or other implementation logic.</remarks>
+    /// <exception cref="InvalidOperationException">An attached node is mutated off its owner thread or during scene capture.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
+    public bool InternalPhysicsProcessEnabled
+    {
+        get { ThrowIfDisposed(); return _internalPhysicsProcessEnabled; }
+        set { EnsureMutable(); _internalPhysicsProcessEnabled = value; }
     }
 
     /// <summary>Gets or sets whether this node receives the first input-propagation stage.</summary>
@@ -1993,7 +2021,6 @@ public partial class Node : ElectronObject
         }
 
         var internalEnabled = physics ? _internalPhysicsProcessEnabled : _internalProcessEnabled;
-        var externalEnabled = physics ? _physicsProcessEnabled : _processEnabled;
         var expectedTree = Tree;
         List<Exception>? errors = null;
 
@@ -2009,7 +2036,7 @@ public partial class Node : ElectronObject
             }
         }
 
-        if (!IsDisposed && ReferenceEquals(Tree, expectedTree) && externalEnabled &&
+        if (!IsDisposed && ReferenceEquals(Tree, expectedTree) &&
             (physics ? _physicsProcessEnabled : _processEnabled))
         {
             try

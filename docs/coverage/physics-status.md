@@ -220,13 +220,13 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 80 | 27 | 8 | 0 | 0 |
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
-| [Node](classes/Node.md) | [Object](classes/Object.md) | 89 | 64 | 6 | 55 | 0 |
+| [Node](classes/Node.md) | [Object](classes/Object.md) | 93 | 64 | 6 | 51 | 0 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
 | [Object](classes/Object.md) | — | 4 | 23 | 2 | 30 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 4 | 21 | 0 | 2 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 221 | 142 | 19 | 87 | 22 |
+| **Total** | | 225 | 142 | 19 | 83 | 22 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -350,10 +350,8 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Node::method:is_node_ready()`](classes/Node.md) | Partial | The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit. |
 | [`Node::method:is_part_of_edited_scene()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:is_physics_processing()`](classes/Node.md) | Partial | One C# property supplies upstream query and setter; ADRs 0008 and 0038. |
-| [`Node::method:is_physics_processing_internal()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:is_processing()`](classes/Node.md) | Partial | One C# property supplies upstream query and setter; ADRs 0008 and 0038. |
 | [`Node::method:is_processing_input()`](classes/Node.md) | Partial | One C# property supplies upstream query and setter; ADRs 0008 and 0038. |
-| [`Node::method:is_processing_internal()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:is_processing_unhandled_input()`](classes/Node.md) | Partial | One C# property supplies upstream query and setter; ADRs 0008 and 0038. |
 | [`Node::method:is_processing_unhandled_key_input()`](classes/Node.md) | Partial | One C# property supplies upstream query and setter; ADRs 0008 and 0038. |
 | [`Node::method:notify_deferred_thread_group(int:)`](classes/Node.md) | Unimplemented | Exact executable prerequisite: Node process-group ownership/isolation, inherited group discovery and order, a real group scheduler with frame barriers, typed cross-group mailboxes and deferred/safe call/property/notification dispatch. ADR 0104 worker dispatch alone grants no off-owner scene/render access; metadata-only properties or forwarding everything to ordinary Defer would not implement this family. |
@@ -369,10 +367,8 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Node::method:set_display_folded(bool:)`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:set_editable_instance(Node:,bool:)`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:set_physics_process(bool:)`](classes/Node.md) | Partial | One C# property supplies upstream query and setter; ADRs 0008 and 0038. Return type differs: void → System.Boolean; audit observable contract. |
-| [`Node::method:set_physics_process_internal(bool:)`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:set_process(bool:)`](classes/Node.md) | Partial | One C# property supplies upstream query and setter; ADRs 0008 and 0038. Return type differs: void → System.Boolean; audit observable contract. |
 | [`Node::method:set_process_input(bool:)`](classes/Node.md) | Partial | One C# property supplies upstream query and setter; ADRs 0008 and 0038. Return type differs: void → System.Boolean; audit observable contract. |
-| [`Node::method:set_process_internal(bool:)`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:set_process_unhandled_input(bool:)`](classes/Node.md) | Partial | One C# property supplies upstream query and setter; ADRs 0008 and 0038. Return type differs: void → System.Boolean; audit observable contract. |
 | [`Node::method:set_process_unhandled_key_input(bool:)`](classes/Node.md) | Partial | One C# property supplies upstream query and setter; ADRs 0008 and 0038. Return type differs: void → System.Boolean; audit observable contract. |
 | [`Node::method:set_scene_instance_load_placeholder(bool:)`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |

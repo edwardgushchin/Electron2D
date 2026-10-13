@@ -179,6 +179,8 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public const int NotificationEnabled = 29`](#f-electron2d-node-notificationenabled) | Identifies the notification sent when the effective process mode stops being disabled. |
 | [`public const int NotificationEnterTree = 10`](#f-electron2d-node-notificationentertree) | Identifies the notification sent when a node enters an active `SceneTree`. |
 | [`public const int NotificationExitTree = 11`](#f-electron2d-node-notificationexittree) | Identifies the notification sent after descendants exit and before this node leaves its tree. |
+| `public bool InternalProcessEnabled { get; set; }` | Controls independent internal idle-frame notifications; runtime state. |
+| `public bool InternalPhysicsProcessEnabled { get; set; }` | Controls independent internal fixed-frame notifications; runtime state. |
 | [`public const int NotificationInternalPhysicsProcess = 26`](#f-electron2d-node-notificationinternalphysicsprocess) | Identifies an engine-internal physics-process callback notification. |
 | [`public const int NotificationInternalProcess = 25`](#f-electron2d-node-notificationinternalprocess) | Identifies an engine-internal process callback notification. |
 | [`public const int NotificationOsImeUpdate = 2013`](#f-electron2d-node-notificationosimeupdate) | Identifies an input-method composition update supplied by the operating system. |
@@ -1595,3 +1597,13 @@ measurement](../components/physics-scene-performance.md#empty-hierarchy-guard-sc
 Animation controllers use the same owner-thread and scene-capture mutation guards as other nodes. Built-in scene-state validation finishes after stored values/reference restoration and before resource setup or scene-instantiated notifications.
 
 Internal engine mouse motion refreshes GUI and physics hover without invoking the user OnInput, OnShortcutInput, OnUnhandledKeyInput or OnUnhandledInput callbacks. Ordinary device events retain their existing propagation order.
+
+## Independent internal processing
+
+`public bool InternalProcessEnabled { get; set; }` and `public bool InternalPhysicsProcessEnabled { get; set; }` project each internal-lane setter/query pair. Plain Node defaults are false; built-in nodes may enable their own work. Each switch preserves the other lane and the ordinary ProcessEnabled/PhysicsProcessEnabled flags. Enabled internal notifications run before ordinary callbacks in their selected idle/fixed frame. An internal callback can enable or disable the ordinary callback for the same frame. Detach/dispose prevents further ordinary delivery; failures still attempt the remaining ordinary/sibling callbacks under the scene-tree cleanup policy.
+
+The resolved ProcessMode and SceneTree pause policy gate both lanes. Internal processing is independent of ordinary callback enablement, and does not bypass pausing. Detached nodes retain the runtime switches but receive no frames. Setters require the attached tree's owner and reject scene capture; disposed access rejects. Typed property descriptors expose writable runtime state with IsStored false. Ordinary PackedScene capture omits the flags, while constructors rebuild built-in internal behavior. No hidden thread or scheduler is added.
+
+Changing a built-in node's internal switches directly affects its implementation: for example it suspends and resumes Timer countdowns. Such nodes can overwrite the switch when their playback/callback policy changes. Do not disable internal work unless that is the intended effect. See [Node](Node.md) and [Timer](Timer.md).
+
+NodeInternalProcessingTests verifies both lanes, order and current-state mutation, pause modes, reattachment, errors, ownership/disposal, runtime scene omission and actual idle/physics Timer consumers. Its 1024 warmed set/query/frame operations allocate zero managed owner bytes. Native GPU and compatibility checks verify red pixels, a frozen frame with the internal lane disabled, resumed blue pixels and fixed ticks. Foreign/editor/native allocator and broad load verification remain separate.

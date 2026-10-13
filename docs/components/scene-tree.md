@@ -1,6 +1,6 @@
 # Scene tree component
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 ## Scope
 
@@ -114,3 +114,13 @@ Reusable [scene animation](scene-animation.md) uses Node internal idle/physics c
 [Typed scene multiplayer](scene-multiplayer.md) integrates default/borrowed branch interfaces before node entry, idle-frame polling before node callbacks, Node authority/configured RPC, structural path invalidation before observers and detach/default cleanup after node exit. Programmatic native WS/WSS tests execute client/server branches within one tree; this does not establish replication or editor/rendered/agent acceptance.
 
 [Typed scene spawning and replication](scene-replication.md) now executes custom/automatic in-memory scene factories, pre-Ready state, late admission, visibility/RPC integration, property policies and real periodic/delta batching through SceneMultiplayer. Public branch replacement rebinds typed configurations after committed cleanup, including callback errors. File scene authoring and other acceptance gates remain separate.
+
+## Independent internal processing
+
+`public bool InternalProcessEnabled { get; set; }` and `public bool InternalPhysicsProcessEnabled { get; set; }` project each internal-lane setter/query pair. Plain Node defaults are false; built-in nodes may enable their own work. Each switch preserves the other lane and the ordinary ProcessEnabled/PhysicsProcessEnabled flags. Enabled internal notifications run before ordinary callbacks in their selected idle/fixed frame. An internal callback can enable or disable the ordinary callback for the same frame. Detach/dispose prevents further ordinary delivery; failures still attempt the remaining ordinary/sibling callbacks under the scene-tree cleanup policy.
+
+The resolved ProcessMode and SceneTree pause policy gate both lanes. Internal processing is independent of ordinary callback enablement, and does not bypass pausing. Detached nodes retain the runtime switches but receive no frames. Setters require the attached tree's owner and reject scene capture; disposed access rejects. Typed property descriptors expose writable runtime state with IsStored false. Ordinary PackedScene capture omits the flags, while constructors rebuild built-in internal behavior. No hidden thread or scheduler is added.
+
+Changing a built-in node's internal switches directly affects its implementation: for example it suspends and resumes Timer countdowns. Such nodes can overwrite the switch when their playback/callback policy changes. Do not disable internal work unless that is the intended effect. See [Node](../classes/Node.md) and [Timer](../classes/Timer.md).
+
+NodeInternalProcessingTests verifies both lanes, order and current-state mutation, pause modes, reattachment, errors, ownership/disposal, runtime scene omission and actual idle/physics Timer consumers. Its 1024 warmed set/query/frame operations allocate zero managed owner bytes. Native GPU and compatibility checks verify red pixels, a frozen frame with the internal lane disabled, resumed blue pixels and fixed ticks. Foreign/editor/native allocator and broad load verification remain separate.
