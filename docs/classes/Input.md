@@ -92,7 +92,7 @@ if (Input.IsActionPressed("jump"))
 | [`public static void ParseInputEvent(InputEvent event)`](#m-electron2d-input-parseinputevent-electron2d-inputevent) | Submits one typed input event, updates state, and synchronously routes it to the active main loop. |
 | [`public static void ReleasePressedEvents()`](#m-electron2d-input-releasepressedevents) | Releases every tracked key, mouse button, controller button, axis, and action source. |
 | [`public static CursorShape GetCurrentCursorShape()`](#m-electron2d-input-getcurrentcursorshape) | Gets the shape selected on the active display. |
-| [`public static void SetDefaultCursorShape(CursorShape shape = CursorShape.Arrow)`](#m-electron2d-input-setdefaultcursorshape) | Stores the viewport default and refreshes the current native cursor. |
+| [`public static void SetDefaultCursorShape(CursorShape shape = CursorShape.Arrow)`](#m-electron2d-input-setdefaultcursorshape) | Stores the viewport default and sends internal mouse motion through the root Window when the default changes. |
 | [`public static void SetCustomMouseCursor(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`](#m-electron2d-input-setcustommousecursor) | Installs copied image pixels in a cursor slot or restores the system shape. |
 | [`public static void WarpMouse(Vector2 position)`](#m-electron2d-input-warpmouse) | Requests a native pointer warp on supporting backends. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-input-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
@@ -539,7 +539,7 @@ Returns the current display cursor shape, including a change made directly throu
 <a id="m-electron2d-input-setdefaultcursorshape"></a>
 ### `public static void SetDefaultCursorShape(CursorShape shape = CursorShape.Arrow)`
 
-Stores one of the 17 native cursor shapes separately from the current display shape. It selects the native shape immediately, then reapplies an active root-viewport Control override if present. It does not synthesize mouse motion; the pinned event side effect and nested viewport routing remain gaps.
+Stores one of the 17 native cursor shapes separately from the current display shape. It selects the native shape immediately, then reapplies an active root-viewport Control override if present. Changed defaults synthesize internal mouse motion from the last parsed client position, clearing synthetic velocity while preserving real button polling. GUI routing includes nested viewports, while Node user input callbacks omit internal events. Frame/input/lifecycle requests coalesce at a safe point; an identical default emits nothing.
 
 <a id="m-electron2d-input-setcustommousecursor"></a>
 ### `public static void SetCustomMouseCursor(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`

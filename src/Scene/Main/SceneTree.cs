@@ -863,16 +863,16 @@ public sealed partial class SceneTree : MainLoop
         else DispatchLocalInputEvent(@event);
     }
 
-    internal void DispatchViewportInput(Viewport viewport, InputEvent inputEvent, bool inLocalCoordinates)
+    internal void DispatchViewportInput(Viewport viewport, InputEvent inputEvent, bool inLocalCoordinates, bool executionOwned = false)
     {
         ArgumentNullException.ThrowIfNull(inputEvent); inputEvent.EnsureUsable();
-        ThrowIfDisposed(); EnsureOwnerThread(); EnsureAcceptingWork(); EnsureExecutionAvailable();
+        ThrowIfDisposed(); EnsureOwnerThread(); EnsureAcceptingWork(); if (!executionOwned) EnsureExecutionAvailable();
         if (!ReferenceEquals(viewport.Tree, this)) throw new InvalidOperationException("Viewport is not attached to this tree.");
         var localized = inLocalCoordinates ? inputEvent : viewport.MakeViewportInputLocal(inputEvent);
         InputEvent? routed = null;
-        BeginExecution();
+        if (!executionOwned) BeginExecution();
         try { routed = RouteEmbeddedInput(viewport, localized, out var target); if (routed is not null) DispatchLocalInputEvent(routed, target, executionOwned: true); }
-        finally { if (routed is not null && !ReferenceEquals(routed, localized)) routed.Dispose(); if (!ReferenceEquals(localized, inputEvent)) localized.Dispose(); EndExecution(); }
+        finally { if (routed is not null && !ReferenceEquals(routed, localized)) routed.Dispose(); if (!ReferenceEquals(localized, inputEvent)) localized.Dispose(); if (!executionOwned) EndExecution(); }
     }
 
     internal void DispatchEmbeddedViewportInput(SubViewportContainer container, SubViewport viewport, InputEvent input)
@@ -1445,6 +1445,7 @@ public sealed partial class SceneTree : MainLoop
 
     private void DispatchInputStage(InputEvent @event, InputStage stage, ref List<Exception>? errors)
     {
+        if (@event.Device == InputEvent.DeviceIdInternal) return;
         for (var index = _gui.InputTraversal.Count - 1; index >= 0 && !_inputHandled; index--)
         {
             var node = _gui.InputTraversal[index];
@@ -2005,6 +2006,7 @@ public sealed partial class SceneTree : MainLoop
 
     private void ClearPendingWorkUnderLock()
     {
+        _cursorRefreshWindows.Clear();
         _deferred.Clear(); _deferredSpare?.Clear();
         _deletions = new ConcurrentQueue<DeletionRequest>();
         _uniqueGroupOperations.Clear();

@@ -1353,3 +1353,5 @@ The existing Engine and RenderingServer types now own the [explicit native frame
 The existing CPUPhysicsWorldBackend cast/CCD helper, internal B2Distances geometric query policy and resident GPU query/motion shaders now preserve geometric first touch; [the compound checks](components/physics-registered-adapter.md#compound-slot-numerics) record scope and limits. No new production type or public signature is added.
 
 `SceneConnectionBinding<TPublisher, TSubscriber, TBindings>` implements compiled authored event connections with typed payloads, dual endpoint cleanup and PackedScene file reconstruction (ADR 0010).
+
+Viewport.UpdateMouseCursorState and Input default-cursor changes execute internal stationary-pointer motion through existing GUI routing, with safe-point coalescing and passive physics hover.

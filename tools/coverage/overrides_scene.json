@@ -5367,6 +5367,12 @@
       "godot": "SceneState::method:get_connection_unbinds(int:)",
       "state": "Implemented",
       "reason": "Registered compiled typed scene bindings; active selected endpoints capture/rebind, file archive v3, duplicate order, one-shot/deferred cancellation, resource graph and typed payload snapshots execute under ADRs 0010/0023. Runtime delegates are omitted."
+    },
+    {
+      "electron2d": "method:Electron2D.Viewport.UpdateMouseCursorState()",
+      "godot": "Viewport::method:update_mouse_cursor_state()",
+      "state": "Implemented",
+      "reason": "Internal motion refresh uses containing Window routing, typed GUI delivery and passive physics hover under ADR 0038."
     }
   ],
   "extras": [
@@ -9565,10 +9571,9 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Next viewport input/pointer slice and local-versus-parent input routing audit (ADR 0038); nested viewport ownership must be explicit.",
+      "state": "Implemented",
+      "reason": "Containing-Window native pointer refresh executes internal mouse motion, parent GUI overlap, nested viewport localization and passive physics hover. Requests coalesce at safe points; Node user input callbacks omit internal events. CursorRefreshTests verifies GUI/cursor/pixels and cleanup on both Linux backends (ADR 0038).",
       "godot": [
-        "Viewport::method:push_unhandled_input(InputEvent:,bool:)",
         "Viewport::method:update_mouse_cursor_state()"
       ]
     },
@@ -11006,6 +11011,13 @@
       ],
       "state": "Implemented",
       "reason": "Active authored typed connections execute through Pack, Instantiate and file archives; all metadata queries tested with duplicate, one-shot/deferred and payload/lifetime behavior. ADR 0010 adapts native reference-count flags away."
+    },
+    {
+      "godot": [
+        "Viewport::method:push_unhandled_input(InputEvent:,bool:)"
+      ],
+      "state": "Excluded",
+      "reason": "Pinned doc/classes/Viewport.xml at ed1daf0bf001b61586d9930840f2f1394092c079 has deprecated=\"Use [method push_input] instead.\" ADR 0004 excludes deprecated declarations; use Viewport.PushInput. No implementation trigger."
     }
   ]
 }

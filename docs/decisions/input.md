@@ -1,6 +1,6 @@
 # Input decisions
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 
 Public process-wide service operations delegate statically to retained objects under [ADR 0095](singleton-services.md#adr-0095). Owning lifetime, threading and native resource contracts below continue to apply.
@@ -53,7 +53,9 @@ The following items are **not actionable now** unless their trigger is present i
 | Accelerometer, gravity, gyroscope, magnetometer, and controller motion sensors | Mobile/gamepad sensor backend plus an accepted typed three-component sensor-value representation that does not introduce a 3D scene domain | Both the sensor-value ADR and a concrete SDL/mobile sensor adapter exist | In the first sensor slice after both prerequisites; not implied by ordinary gamepad work |
 | MIDI event type, device enumeration, and message delivery | Product approval for a MIDI domain plus a selected native host API | A user-approved MIDI ADR names scope, host API, ownership, and platform matrix | Only after that separate decision; MIDI is not automatically part of SDL input work |
 | Complete GUI control consumption and nested viewport input routing | Root Control pointer/focus/hover/action navigation and descendant rectangle clipping exist; scroll clipping, exact navigation ranking, exact draw order and nested viewport ownership remain | The first complete GUI/nested viewport routing slice supplies those missing behaviors | Extend root GUI consumption between `OnInput` and unhandled stages and add independently owned nested viewport routing; root viewport coordinate conversion already runs |
-| Synthetic mouse-motion refresh after changing the default cursor | Root-viewport default and Control override precedence execute; the pinned default setter also dispatches mouse motion | Complete root GUI event synthesis and nested viewport routing | Emit the typed motion event through the normal input path without re-entry or duplicate hover signals; preserve the current native cursor override |
+| Synthetic mouse-motion refresh after changing the default cursor | Implemented through internal mouse motion and containing-window routing, with safe-point coalescing during active execution | Current GUI routing and nested viewport ownership | Changed defaults use the last parsed client position; explicit Viewport refresh queries native pointer. User Node input callbacks omit internal events, GUI hover/cursor and passive physics hover execute. |
+
+Explicit Viewport cursor refresh and changed Input default-cursor policy emit internal mouse motion. GUI and passive physics hover execute; Node user input callbacks omit the internal device. Requests during frame/input/lifecycle delivery coalesce at the next safe point to preserve SceneTree non-reentrancy, and synthetic callbacks cannot reenter refresh. The containing Window evaluates parent overlap before nested viewport forwarding. Default changes retain immediate Control cursor precedence, use the last parsed client position and preserve real button polling.
 
 ### Consequences
 

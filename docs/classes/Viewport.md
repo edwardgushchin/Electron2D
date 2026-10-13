@@ -578,3 +578,10 @@ Window content scaling separates logical viewport coordinates, raster pixels and
 Initial local world creation, null reset and expired scene-default recreation capture active-feature project engine/fallback settings. Unknown names reject before replacing the previous canvas; an explicit supplied World keeps its own selection. Later project edits do not reconfigure existing worlds.
 
 See [the selection checks](../components/physics-backends.md#project-physics-selection).
+
+
+## Explicit cursor refresh
+
+`UpdateMouseCursorState()` refreshes stationary pointer hover and cursor selection through the containing Window. It queries the current native pointer, constructs temporary internal mouse motion, and reuses GUI/embedded/nested viewport routing. This checks parent Controls that can cover a SubViewportContainer. GUI receives local motion; Node input and unhandled callbacks omit internal events. Physics picking treats internal mouse motion as passive hover. A viewport without a containing Window has nothing to refresh.
+
+Frame/input/lifecycle requests coalesce at the next safe point; refresh callbacks cannot reenter refresh. The caller must own the active tree. Native-host absence and singular global canvas inverses fail explicitly. Temporary events are disposed even when callbacks fail. Global Input polling is untouched by this method.

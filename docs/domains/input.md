@@ -88,3 +88,5 @@ queue. Delivery occurs at the next physics-frame boundary before node callbacks;
 GUI/ordinary handled input and pointer capture suppress it. Hover shares viewport
 lifetime and native exit routing. See [Physics picking](../components/physics-picking.md)
 for the CPU/GPU, embedded-view and callback/error contracts.
+
+Changed default cursor policy synthesizes internal mouse motion from the last parsed client pointer position. GUI routing and passive physics hover execute, while Node user input callbacks omit internal events. Same defaults are no-ops; active scene requests coalesce at a safe point. Viewport.UpdateMouseCursorState uses the current native pointer through the containing Window. See [input runtime](../components/input-runtime.md).

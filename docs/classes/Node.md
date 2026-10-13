@@ -1593,3 +1593,5 @@ final disposal; it does not index individual subtrees. See the [lifecycle
 measurement](../components/physics-scene-performance.md#empty-hierarchy-guard-scans).
 
 Animation controllers use the same owner-thread and scene-capture mutation guards as other nodes. Built-in scene-state validation finishes after stored values/reference restoration and before resource setup or scene-instantiated notifications.
+
+Internal engine mouse motion refreshes GUI and physics hover without invoking the user OnInput, OnShortcutInput, OnUnhandledKeyInput or OnUnhandledInput callbacks. Ordinary device events retain their existing propagation order.

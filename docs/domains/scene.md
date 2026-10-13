@@ -291,3 +291,5 @@ zero warmed physical-step/presentation allocation. See
 
 
 Authored typed scene connections use registered compiled `SceneConnectionBinding` factories, copied payloads and dual endpoint cleanup. PackedScene captures/rebinds these subscriptions, including file archives v3. SceneState queries expose paths, diagnostic labels, flags, unbind count and typed payload snapshots. See [packed scenes](../components/packed-scenes.md) for ownership and persistence limits.
+
+Viewport cursor refresh sends internal motion through the containing Window, respecting parent GUI overlap before nested viewport routing. Frame/input requests coalesce at a safe point; GUI and passive physics hover execute while Node input callbacks omit the synthetic event. See [input runtime](../components/input-runtime.md).

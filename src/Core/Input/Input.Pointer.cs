@@ -16,10 +16,34 @@ public sealed partial class Input
 
     internal void SetDefaultCursorShapeCore(CursorShape shape = CursorShape.Arrow)
     {
-        RequireDisplay().CursorSetShapeCore(shape);
+        var display = RequireDisplay();
+        if (shape < CursorShape.Arrow || shape >= CursorShape.Max) throw new ArgumentOutOfRangeException(nameof(shape));
+        _ = display.CursorGetShapeCore();
+        if (DefaultCursorShape == shape) return;
+        display.CursorSetShapeCore(shape);
         Volatile.Write(ref _defaultCursorShape, (int)shape);
-        if (Engine.MainLoop is SceneTree tree)
+        lock (_gate) _lastMouseVelocity = _lastMouseScreenVelocity = Vector2.Zero;
+        if (Engine.MainLoop is SceneTree { Root: Window window } tree)
+        {
             tree.RefreshGUICursor();
+            tree.RequestMouseCursorRefresh(window, globalInput: true);
+        }
+
+    }
+
+    internal InputEventMouseMotion CreateCursorRefreshEvent()
+    {
+        lock (_gate)
+        {
+            _lastMouseVelocity = _lastMouseScreenVelocity = Vector2.Zero;
+            return new InputEventMouseMotion
+            {
+                Device = InputEvent.DeviceIdInternal,
+                WindowID = _lastMouseWindowID,
+                Position = _lastMousePosition,
+                GlobalPosition = _lastMousePosition
+            };
+        }
     }
 
     internal void SetCustomMouseCursorCore(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default) =>

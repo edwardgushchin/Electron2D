@@ -34,6 +34,8 @@ public sealed partial class Input : ElectronObject
     private readonly Dictionary<string, ActionState> _actions = new(StringComparer.Ordinal);
     private readonly List<MappedInputAction> _matches = [];
     private MouseButtonMask _mouseButtonMask;
+    private Vector2 _lastMousePosition;
+    private long _lastMouseWindowID;
     private Vector2 _lastMouseVelocity;
     private Vector2 _lastMouseScreenVelocity;
     private bool _isParsing;
@@ -547,6 +549,7 @@ public sealed partial class Input : ElectronObject
 
     private void UpdateRawState(InputEvent @event)
     {
+        if (@event is InputEventMouse pointer) { _lastMousePosition = pointer.Position; _lastMouseWindowID = pointer.WindowID; }
         if (@event.IsCanceled() && @event is not InputEventMouseButton)
             return;
 

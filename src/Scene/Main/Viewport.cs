@@ -74,6 +74,23 @@ public abstract partial class Viewport : Node
         var tree = GetInputTree(); tree.DispatchViewportInput(this, inputEvent, inLocalCoordinates);
     }
 
+    /// <summary>Refreshes pointer hover and cursor selection through the containing Window.</summary>
+    /// <remarks>Uses the current native pointer and a temporary internal mouse-motion event. GUI routing,
+    /// embedded windows, nested viewport hit testing and physics hover run normally; user Node input callbacks
+    /// do not receive this internal event. A viewport without a containing Window is unchanged. Requests during
+    /// frame/input/lifecycle delivery coalesce at the next safe point; a refresh callback cannot reenter refresh.
+    /// This does not update global Input polling state.</remarks>
+    /// <exception cref="InvalidOperationException">The containing window is not active, the caller is off-owner,
+    /// scene capture is active or the required global canvas inverse is singular.</exception>
+    /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
+    /// <exception cref="AggregateException">GUI callbacks fail after dispatch.</exception>
+    public void UpdateMouseCursorState()
+    {
+        EnsureMutable();
+        if (GetWindow() is { } window)
+            (Tree ?? throw new InvalidOperationException("Cursor refresh requires an active containing Window.")).RequestMouseCursorRefresh(window);
+    }
+
     internal void NotifySizeChanged()
     {
         List<Exception>? errors = null;

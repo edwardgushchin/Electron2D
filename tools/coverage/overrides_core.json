@@ -1920,8 +1920,8 @@
       "godot": [
         "Input::method:set_default_cursor_shape(int:Input.CursorShape)"
       ],
-      "state": "Partial",
-      "reason": "Stores the viewport default separately from the current native shape and refreshes hovered Control overrides immediately. The pinned synthetic mouse-motion event on default changes and complete nested viewport GUI routing remain absent."
+      "state": "Implemented",
+      "reason": "Changed defaults synthesize internal mouse motion from last parsed client position, preserve Control override precedence and real button polling, clear synthetic velocity and coalesce during active execution. Identical defaults do not emit. Nested overlap and GUI effects execute; Node user input callbacks omit internal events. CursorRefreshTests verifies this native workflow under ADR 0038."
     },
     {
       "godot": [

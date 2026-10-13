@@ -70,7 +70,7 @@ public sealed partial class SceneTree
                             mouseEvent |= input is InputEventMouse;
                             if (!CanPick(viewport, state)) continue;
                             _inputHandled = false;
-                            try { PickPhysicsEvent(viewport, state, input, false, ref errors); }
+                            try { PickPhysicsEvent(viewport, state, input, input is InputEventMouseMotion { Device: InputEvent.DeviceIdInternal }, ref errors); }
                             catch (Exception error) { CollectException(ref errors, error); }
                         }
                         finally { try { input.Dispose(); } catch (Exception error) { CollectException(ref errors, error); } }

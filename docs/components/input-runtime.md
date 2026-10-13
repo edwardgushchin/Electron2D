@@ -116,3 +116,10 @@ Viewport localization preserves raw Input state and the original by-event transi
 The permanent typed ui_home/ui_end defaults use Key.Home/Key.End and the existing project-setting reload path. [Slider](../classes/Slider.md) consumes them as range endpoint requests, alongside matching-axis direction actions; unhandled opposite-axis input remains available to GUI focus traversal. These actions remain rebindable. Slider repeat uses the existing internal scene-processing lane and controller action state.
 
 [Shortcut](../classes/Shortcut.md) and [InputEventShortcut](../classes/InputEventShortcut.md) execute through the Node shortcut stage after GUI handling and before unhandled-key/general input. Button contexts, groups and tooltip presentation use the [button component](gui-buttons.md). Contact capture, multiple mouse buttons, transformation, cancellation, pause and callback ownership are covered by GUIButtonRoutingTests; this does not add native pan/magnify recognition.
+
+
+## Stationary cursor refresh
+
+Viewport.UpdateMouseCursorState routes a temporary internal mouse-motion event through its containing Window, using native pointer coordinates and the global canvas inverse. Parent GUI overlap is evaluated before nested viewport forwarding. Node input/unhandled callbacks omit internal events; GUI motion and passive physics hover still execute. Active frame/input/lifecycle requests coalesce at a safe point and refresh callbacks cannot recursively refresh. Detached viewports without a Window are unchanged; inactive Window and off-owner access fail explicitly.
+
+Input.SetDefaultCursorShape preserves immediate Control cursor precedence and, for a changed default, emits internal motion from the last parsed client pointer position. An identical default is a no-op. Synthetic motion clears mouse velocity while preserving real button polling, and never emulates a physical press/touch. Both paths use the existing scene GUI workflow and temporary event ownership.

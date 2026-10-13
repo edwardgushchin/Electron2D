@@ -146,7 +146,7 @@ public sealed partial class Input
 
     /// <summary>Sets the viewport's default native cursor shape and refreshes its current selection.</summary>
     /// <param name="shape">A standard shape; Arrow by default.</param>
-    /// <remarks>A hovered Control can override this default. The active scene's cursor is refreshed without synthesizing a mouse-motion input event.</remarks>
+    /// <remarks>A hovered Control can override this default. A changed default synthesizes internal mouse motion through the active root Window, using the last parsed pointer position. Node input callbacks do not receive it. Delivery coalesces at the safe point when frame/input execution is active; setting the same default is a no-op.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The shape is invalid.</exception>
     /// <exception cref="InvalidOperationException">There is no active display or the native change fails.</exception>
     public static void SetDefaultCursorShape(CursorShape shape = CursorShape.Arrow) => Service.SetDefaultCursorShapeCore(shape);
