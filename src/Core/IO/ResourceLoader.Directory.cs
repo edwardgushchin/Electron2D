@@ -26,7 +26,7 @@ public sealed partial class ResourceLoader
         {
             if (directory.CurrentIsDir()) { names.Add(name + "/"); continue; }
             var path = System.IO.Path.Combine(directoryPath, name);
-            var recognized = IsExtension(path, ImageExtensions) || IsExtension(path, FontExtensions) ||
+            var recognized = Image.RecognizesFile(path) || IsExtension(path, FontExtensions) ||
                 AudioType(path, typeof(Resource)) is not null || CryptoType(path, typeof(Resource)) is not null;
             if (!recognized) foreach (var loader in loaders)
                     if (loader.RecognizePath(path)) { recognized = true; break; }

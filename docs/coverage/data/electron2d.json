@@ -5235,6 +5235,54 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ImageFormatLoader",
+    "kind": "type",
+    "declaringType": "Electron2D.ImageFormatLoader",
+    "name": "ImageFormatLoader",
+    "signature": "public abstract class Electron2D.ImageFormatLoader",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ImageFormatLoader.LoaderFlags",
+    "kind": "type",
+    "declaringType": "Electron2D.ImageFormatLoader.LoaderFlags",
+    "name": "LoaderFlags",
+    "signature": "public enum Electron2D.ImageFormatLoader.LoaderFlags",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ImageFormatLoaderExtension",
+    "kind": "type",
+    "declaringType": "Electron2D.ImageFormatLoaderExtension",
+    "name": "ImageFormatLoaderExtension",
+    "signature": "public abstract class Electron2D.ImageFormatLoaderExtension",
+    "visibility": "public",
+    "baseType": "Electron2D.ImageFormatLoader",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ImageMetrics",
     "kind": "type",
     "declaringType": "Electron2D.ImageMetrics",
@@ -17328,6 +17376,19 @@
     "name": ".ctor",
     "signature": "public Image()",
     "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ImageFormatLoaderExtension..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ImageFormatLoaderExtension",
+    "name": ".ctor",
+    "signature": "protected ImageFormatLoaderExtension()",
+    "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -31776,6 +31837,45 @@
     "parameters": [],
     "returnType": "Electron2D.Image.UsedChannels",
     "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.ImageFormatLoader.LoaderFlags.ConvertColors()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ImageFormatLoader.LoaderFlags",
+    "name": "ConvertColors",
+    "signature": "public const Electron2D.ImageFormatLoader.LoaderFlags ConvertColors = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ImageFormatLoader.LoaderFlags",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ImageFormatLoader.LoaderFlags.ForceLinear()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ImageFormatLoader.LoaderFlags",
+    "name": "ForceLinear",
+    "signature": "public const Electron2D.ImageFormatLoader.LoaderFlags ForceLinear = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ImageFormatLoader.LoaderFlags",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ImageFormatLoader.LoaderFlags.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ImageFormatLoader.LoaderFlags",
+    "name": "None",
+    "signature": "public const Electron2D.ImageFormatLoader.LoaderFlags None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ImageFormatLoader.LoaderFlags",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.InlineAlignment.BaselineTo()",
@@ -99523,6 +99623,98 @@
     "declaringType": "Electron2D.Image",
     "name": "ShrinkX2",
     "signature": "public System.Void ShrinkX2()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImageFormatLoaderExtension.AddFormatLoader()",
+    "kind": "method",
+    "declaringType": "Electron2D.ImageFormatLoaderExtension",
+    "name": "AddFormatLoader",
+    "signature": "public System.Void AddFormatLoader()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImageFormatLoaderExtension.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImageFormatLoaderExtension",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImageFormatLoaderExtension.GetRecognizedExtensions()",
+    "kind": "method",
+    "declaringType": "Electron2D.ImageFormatLoaderExtension",
+    "name": "GetRecognizedExtensions",
+    "signature": "protected abstract System.String[] GetRecognizedExtensions()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImageFormatLoaderExtension.LoadImage(Electron2D.Image,Electron2D.FileAccess,Electron2D.ImageFormatLoader.LoaderFlags,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImageFormatLoaderExtension",
+    "name": "LoadImage",
+    "signature": "protected abstract System.Boolean LoadImage(Electron2D.Image image, Electron2D.FileAccess fileAccess, Electron2D.ImageFormatLoader.LoaderFlags flags, System.Single scale)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "image",
+        "type": "Electron2D.Image",
+        "default": null
+      },
+      {
+        "name": "fileAccess",
+        "type": "Electron2D.FileAccess",
+        "default": null
+      },
+      {
+        "name": "flags",
+        "type": "Electron2D.ImageFormatLoader.LoaderFlags",
+        "default": null
+      },
+      {
+        "name": "scale",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImageFormatLoaderExtension.RemoveFormatLoader()",
+    "kind": "method",
+    "declaringType": "Electron2D.ImageFormatLoaderExtension",
+    "name": "RemoveFormatLoader",
+    "signature": "public System.Void RemoveFormatLoader()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

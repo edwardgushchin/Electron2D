@@ -43,7 +43,6 @@ public sealed partial class ResourceLoader : ElectronObject
     protected override void ValidateDisposal() => throw new InvalidOperationException("The resource-loading service is permanent.");
     private static bool IsBitmapFont(string path) => System.IO.Path.GetExtension(path).Equals(".fnt", StringComparison.OrdinalIgnoreCase) || System.IO.Path.GetExtension(path).Equals(".font", StringComparison.OrdinalIgnoreCase);
     private static readonly string[] FontExtensions = ["ttf", "otf", "woff", "woff2", "ttc", "otc", "fnt", "font"];
-    private static readonly string[] ImageExtensions = ["png", "jpg", "jpeg", "webp", "bmp", "tga", "svg"];
 
     /// <summary>Registers a borrowed typed file loader without duplicating identity.</summary><param name="formatLoader">Live format extension.</param><param name="atFront">Whether it precedes existing extensions.</param>
     public static void AddResourceFormatLoader(ResourceFormatLoader formatLoader, bool atFront = false) { ArgumentNullException.ThrowIfNull(formatLoader); ObjectDisposedException.ThrowIf(formatLoader.IsDisposed, formatLoader); lock (LoadGate) { if (FileLoaders.Any(item => ReferenceEquals(item, formatLoader))) return; if (FileLoaders.Count >= 64) throw new InvalidOperationException("At most 64 format loaders can be registered."); if (atFront) FileLoaders.Insert(0, formatLoader); else FileLoaders.Add(formatLoader); } }
@@ -219,7 +218,7 @@ public sealed partial class ResourceLoader : ElectronObject
         foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path, typeof(TResource)) && loader.Exists(path)) { var type = loader.GetResourceType(path); return type is not null && typeof(TResource).IsAssignableFrom(type); }
         return Resource.GetRegisteredPath(path) is TResource ||
 
-            (typeof(TResource).IsAssignableFrom(typeof(ImageTexture)) && IsExtension(path, ImageExtensions) ||
+            (typeof(TResource).IsAssignableFrom(typeof(ImageTexture)) && Image.RecognizesFile(path) ||
              typeof(TResource).IsAssignableFrom(typeof(FontFile)) && IsExtension(path, FontExtensions) || AudioType<TResource>(path) is not null || CryptoType<TResource>(path) is not null) && FileAccess.FileExists(path);
     }
 
@@ -264,7 +263,7 @@ public sealed partial class ResourceLoader : ElectronObject
         if (typeof(TResource).IsAssignableFrom(typeof(AudioStreamOggVorbis))) audio.Add("ogg");
         if (typeof(TResource).IsAssignableFrom(typeof(CryptoKey))) audio.Add("key");
         if (typeof(TResource).IsAssignableFrom(typeof(X509Certificate))) audio.Add("crt");
-        if (images || fonts) return [.. images ? ImageExtensions : [], .. fonts ? FontExtensions : [], .. audio, .. archive];
+        if (images || fonts) return [.. images ? Image.RecognizedFileExtensions() : [], .. fonts ? FontExtensions : [], .. audio, .. archive];
         return audio.Concat(archive).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
 
     }

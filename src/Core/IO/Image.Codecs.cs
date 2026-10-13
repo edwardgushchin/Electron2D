@@ -10,10 +10,12 @@ public sealed partial class Image
     private const int MaximumEncodedBytes = 64 * 1024 * 1024;
 
     /// <summary>Replaces this image with decoded pixels from a file.</summary>
-    /// <param name="path">An operating-system, res:// or user:// path to PNG, JPEG, WebP, BMP, TGA or SVG data.</param>
-    /// <remarks>Input is bounded to 64 MiB. Decoding produces a copied RGBA8 base image without mipmaps.
+    /// <param name="path">An operating-system, res://, user:// or registered UID path to an image file.</param>
+    /// <remarks>Input is bounded to 64 MiB. Built-in decoding produces a copied RGBA8 base image without mipmaps.
+    /// Registered extensions may return other valid Image layouts. Their state is copied before publication.
     /// A failure preserves the previous image. Changed is emitted after a successful replacement.
-    /// Formats requiring further codec integration are rejected explicitly.</remarks>
+    /// Custom decoders execute on this thread using borrowed temporary Image and FileAccess objects.
+    /// Removal affects subsequent snapshots; retain registered decoders through pending calls.</remarks>
     /// <exception cref="InvalidDataException">The encoded image is malformed or exceeds supported limits.</exception>
     /// <exception cref="NotSupportedException">The filename extension is not integrated.</exception>
     /// <exception cref="IOException">The file cannot be read or changes while reading.</exception>
@@ -21,13 +23,7 @@ public sealed partial class Image
     public void Load(string path)
     {
         ThrowIfDisposed();
-        var codec = CodecFromPath(path);
-        using var file = FileAccess.Open(path, FileAccessModeFlags.Read);
-        var length = file.Length;
-        if (length is <= 0 or > MaximumEncodedBytes) throw new InvalidDataException("Encoded images must contain between 1 byte and 64 MiB.");
-        var bytes = file.ReadBytes((int)length);
-        if (bytes.Length != length || file.Length != length) throw new IOException("The encoded image changed while it was read.");
-        DecodeAndCommit(bytes, codec);
+        LoadFile(path);
     }
 
     /// <summary>Creates an image by decoding a supported file.</summary>
@@ -139,7 +135,7 @@ public sealed partial class Image
         AtomicFile.Write(ProjectSettings.GlobalizePath(path), data);
     }
 
-    private static string CodecFromPath(string path)
+    private static string? CodecFromPath(string path)
     {
         ArgumentException.ThrowIfNullOrEmpty(path);
         return IOPath.GetExtension(path).ToLowerInvariant() switch
@@ -150,7 +146,7 @@ public sealed partial class Image
             ".bmp" => "BMP",
             ".tga" => "TGA",
             ".svg" => "SVG",
-            _ => throw new NotSupportedException("This image loader accepts PNG, JPEG, WebP, BMP, TGA and SVG files.")
+            _ => null
         };
     }
 

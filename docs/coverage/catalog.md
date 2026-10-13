@@ -373,8 +373,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [IKModifier3D](classes/IKModifier3D.md) | SkeletonModifier3D | Excluded | 5 |
 | [IP](classes/IP.md) | Object | Blocked | 22 |
 | [Image](classes/Image.md) | Resource | Partial | 159 |
-| [ImageFormatLoader](classes/ImageFormatLoader.md) | RefCounted | Blocked | 4 |
-| [ImageFormatLoaderExtension](classes/ImageFormatLoaderExtension.md) | ImageFormatLoader | Blocked | 4 |
+| [ImageFormatLoader](classes/ImageFormatLoader.md) | RefCounted | Implemented | 4 |
+| [ImageFormatLoaderExtension](classes/ImageFormatLoaderExtension.md) | ImageFormatLoader | Implemented | 4 |
 | [ImageTexture](classes/ImageTexture.md) | Texture2D | Partial | 5 |
 | [ImageTexture3D](classes/ImageTexture3D.md) | Texture3D | Excluded | 2 |
 | [ImageTextureLayered](classes/ImageTextureLayered.md) | TextureLayered | Partial | 2 |

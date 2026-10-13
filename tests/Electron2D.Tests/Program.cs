@@ -9,6 +9,15 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "1")
+{
+    ImageCodecTests.Run();
+    return;
+}
+
+if (args.Length == 2 && args[0] == "--image-decoder-child") { ImageLoaderExtensionTests.Child(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_EXTENSIONS") == "1") { ImageLoaderExtensionTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_EXTENSIONS_NATIVE") is { } imageBackend) { ImageLoaderExtensionTests.RunNative(imageBackend); return; }
 if (args.Length >= 4 && args[0] == "--os-restart-child") { OSRestartTests.Child(args); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OS_RESTART_NATIVE") == "1") { OSRestartTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OS_RESTART") == "1") { OSRestartTests.Run(); return; }
@@ -850,11 +859,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_POINTER_CONFINE"
     return;
 }
 
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "1")
-{
-    ImageCodecTests.Run();
-    return;
-}
+
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LABEL_NATIVE") == "1")
 {

@@ -1,6 +1,6 @@
 # Resource loading component
 
-Last updated: 2026-10-10
+Last updated: 2026-10-13
 
 ## Scope and owned types
 
@@ -63,3 +63,8 @@ ResourceLoader.ListDirectory returns a caller-owned, ordinally sorted snapshot o
 Live format-loader RecognizePath overrides participate alongside built-in image/font/audio/key/certificate support. Registration is captured once; removed/disposed loaders do not participate in later calls. Recognition does not decode, validate contents or consult the weak cache. Files removed from disk are absent even if a cached resource remains. The accepted native resource format preserves its filenames in deployment; no foreign import/remap sidecar generates a synthetic loadable name. An import/export resolver must own original-name reconstruction when that format exists.
 
 ResourceDirectoryTests saves a scene and curve, discovers them and loads/runs the scene in a fresh process. It checks virtual roots, hidden entries, case-insensitive built-in extensions, plugin path overrides/removal/disposal/failure, result independence, invalid paths and missing directories. This is blocking authoring/discovery work and allocates; it is not a frame-loop operation.
+
+
+## Custom image decoder integration
+
+[ImageFormatLoader](../classes/ImageFormatLoader.md) and [ImageFormatLoaderExtension](../classes/ImageFormatLoaderExtension.md) provide caller-owned file decoder registration. Custom suffixes participate in Image loading, resource extension/existence/directory discovery, synchronous/threaded ImageTexture loading and cache replacement. Ordered callbacks execute outside the registry lock with borrowed temporary Image/FileAccess objects; false means unrecognized content, exceptions preserve the destination, and success copies pixels before one Changed notification. Encoded input retains the 64 MiB limit. Registration is process-local and must precede fresh-host file loading. Keep decoders alive through pending worker calls; removal affects subsequent snapshots. Built-in buffer codecs and their channel/color metadata limits remain separate.

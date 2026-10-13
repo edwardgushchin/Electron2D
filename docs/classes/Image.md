@@ -1,6 +1,6 @@
 # Image
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Inherits:** [Resource](Resource.md) → [ElectronObject](ElectronObject.md)
 
@@ -553,7 +553,7 @@ Public state reads and writes are safe for concurrent calls on the same image. M
 
 The implemented surface covers all backend-independent CPU operations in the audited reference API, adapted to typed C# properties, exceptions, arrays, and `ImageMetrics`. The following members are intentionally absent, not stubs:
 
-- PNG/JPEG/WebP/BMP/TGA/SVG file and buffer loading and PNG/JPEG saving are executable under the codec profile above. SVG raster dimensions use the documented XML preflight and may differ from SVG renderers with other CSS sizing rules. DDS/KTX/EXR, WebP saving, supported-format discovery, source channel layouts and complete color/metadata semantics remain unfinished. SDL_image 3.4.6 changes opaque colors when saving WebP at its lossless setting, so no public lossless encoder is claimed.
+- PNG/JPEG/WebP/BMP/TGA/SVG file and buffer loading and PNG/JPEG saving are executable under the codec profile above. SVG raster dimensions use the documented XML preflight and may differ from SVG renderers with other CSS sizing rules. DDS/KTX/EXR, WebP saving, source channel layouts and complete color/metadata semantics remain unfinished. SDL_image 3.4.6 changes opaque colors when saving WebP at its lossless setting, so no public lossless encoder is claimed.
 - `compress` and `compress_from_channels` start with the editor plus primary SDL3 GPU renderer and its selected offline texture-compression toolchain; they belong in the first approved texture import/compression slice.
 - `decompress` starts when a portable CPU decoder or renderer readback path is selected; it belongs in the first compressed-CPU-consumption slice.
 - ImageTexture converts copied pixels for GPU sampling in the first rendering slice; ordinary texture drawing and additional formats remain unfinished.
@@ -565,3 +565,8 @@ See [ADR 0039](../decisions/resources.md#adr-0039).
 The native codec checks in `ImageCodecTests` cover six load formats, PNG/JPEG saving, SVG size/color/scale and rejection of DTD or oversized input, PNG grayscale/16-bit/alpha vectors, BMP/TGA orientation and pitch, callback failure, state preservation, parallel independent decoding, disposal, virtual paths, oversized inputs and atomic-write failures on Linux x64. The rendering checks additionally upload decoded PNG pixels and verify GPU readback through both HLSL and GLSL. These checks do not establish AOT or other-platform acceptance.
 
 Non-renormalized mipmap generation for L8/LA8/R8/RG8/RGB8/RGBA8 uses encoded byte averages rounded to nearest. Odd extents truncate when halved; one-pixel axes repeat their sample. The connected noise image fixtures verify complete grayscale/colored/normal mip chains. Floating, packed and renormalized paths keep their existing typed processing profiles.
+
+
+## Custom image decoder integration
+
+[ImageFormatLoader](ImageFormatLoader.md) and [ImageFormatLoaderExtension](ImageFormatLoaderExtension.md) provide caller-owned file decoder registration. Custom suffixes participate in Image loading, resource extension/existence/directory discovery, synchronous/threaded ImageTexture loading and cache replacement. Ordered callbacks execute outside the registry lock with borrowed temporary Image/FileAccess objects; false means unrecognized content, exceptions preserve the destination, and success copies pixels before one Changed notification. Encoded input retains the 64 MiB limit. Registration is process-local and must precede fresh-host file loading. Keep decoders alive through pending worker calls; removal affects subsequent snapshots. Built-in buffer codecs and their channel/color metadata limits remain separate.

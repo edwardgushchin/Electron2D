@@ -1,6 +1,6 @@
 # Images component
 
-Last updated: 2026-10-05
+Last updated: 2026-10-13
 
 ## Scope
 
@@ -10,6 +10,7 @@ This Resources component owns portable managed 2D pixel buffers, binary masks, r
 
 | Type | Role | Source |
 | --- | --- | --- |
+| [`ImageFormatLoader`](../classes/ImageFormatLoader.md), [`ImageFormatLoader.LoaderFlags`](../classes/ImageFormatLoader.LoaderFlags.md), [`ImageFormatLoaderExtension`](../classes/ImageFormatLoaderExtension.md) | Caller-owned decoder identity/options and protected file hooks | [`ImageFormatLoader.cs`](../../src/Core/IO/ImageFormatLoader.cs), [`ImageFormatLoaderExtension.cs`](../../src/Core/IO/ImageFormatLoaderExtension.cs) |
 | [`Image`](../classes/Image.md) | Mutable managed pixel resource and processing API | [`Image.cs`](../../src/Core/IO/Image.cs), [`Image.Processing.cs`](../../src/Core/IO/Image.Processing.cs), [`Image.Codecs.cs`](../../src/Core/IO/Image.Codecs.cs) |
 | [`BitMap`](../classes/BitMap.md) | Packed alpha-derived mask, morphology and polygon contours | [`BitMap.cs`](../../src/Core/IO/BitMap.cs) |
 | [`Image.Format`](../classes/Image.Format.md) | Raw uncompressed and GPU block-compressed layout identity | [`Image.cs`](../../src/Core/IO/Image.cs) |
@@ -82,3 +83,8 @@ The managed checks are Linux/.NET 8 only. Native `ImageCodecTests` separately ve
 - [0024: Typed color values](../decisions/core-math.md#adr-0024)
 - [0035: Foreseeable type-family completeness](../decisions/core-math.md#adr-0035)
 - [0039: Managed image buffers and codec boundaries](../decisions/resources.md#adr-0039)
+
+
+## Custom image decoder integration
+
+[ImageFormatLoader](../classes/ImageFormatLoader.md) and [ImageFormatLoaderExtension](../classes/ImageFormatLoaderExtension.md) provide caller-owned file decoder registration. Custom suffixes participate in Image loading, resource extension/existence/directory discovery, synchronous/threaded ImageTexture loading and cache replacement. Ordered callbacks execute outside the registry lock with borrowed temporary Image/FileAccess objects; false means unrecognized content, exceptions preserve the destination, and success copies pixels before one Changed notification. Encoded input retains the 64 MiB limit. Registration is process-local and must precede fresh-host file loading. Keep decoders alive through pending worker calls; removal affects subsequent snapshots. Built-in buffer codecs and their channel/color metadata limits remain separate.

@@ -179,6 +179,8 @@ public sealed partial class ThemeDB
         ["HTTPRequest"] = ["HTTPRequest", "Node", "ElectronObject"],
         ["HashingContext"] = ["HashingContext", "ElectronObject"],
         ["Image"] = ["Image", "Resource", "ElectronObject"],
+        ["ImageFormatLoader"] = ["ImageFormatLoader", "ElectronObject"],
+        ["ImageFormatLoaderExtension"] = ["ImageFormatLoaderExtension", "ImageFormatLoader", "ElectronObject"],
         ["ImageTexture"] = ["ImageTexture", "Texture", "Resource", "ElectronObject"],
         ["ImageTextureLayered"] = ["ImageTextureLayered", "TextureLayered", "Resource", "ElectronObject"],
         ["ImmediateMesh"] = ["ImmediateMesh", "Mesh", "Resource", "ElectronObject"],
