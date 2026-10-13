@@ -1,7 +1,7 @@
 namespace Electron2D;
 
-/// <summary>Provides completed runtime diagnostic samples without advancing their producers.</summary>
-public sealed class Performance : ElectronObject
+/// <summary>Reads completed engine diagnostics and invokes typed application monitors.</summary>
+public sealed partial class Performance : ElectronObject
 {
     private static readonly Performance SharedInstance = new();
     private Performance() { }

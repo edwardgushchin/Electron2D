@@ -2814,6 +2814,71 @@
       "godot": "PhysicsServer2DExtension::method:_body_set_pickable(RID:,bool:)",
       "electron2d": "property:Electron2D.CollisionObject.InputPickable()",
       "reason": "ADR 0099/0103: retained CollisionObject.InputPickable projects scene eligibility through selected point-query geometry, with distinct Body/Area defaults, exact canvas routing and common callback/hover lifetime. Public-only CPU/GPU/registered checks exercise equal numerical-write rejection, ordinary pointer authoring and 128 changed-policy full frames at zero managed allocation; six native renderer/physics combinations verify SDL delivery and target pixels. Raw RIDs are not scene callback sources under ADR 0099. Complete registered geometry/numerical and platform/performance acceptance remains open."
+    },
+    {
+      "godot": "Performance::enum:MonitorType",
+      "electron2d": "T:Electron2D.Performance.MonitorType",
+      "reason": "ADR 0004/0095 typed custom monitor execution: retained static service, exact TResult handles, compiled providers and explicitly captured typed/tuple arguments, unit metadata, registration-order snapshots, monotonic microsecond ticks since retained diagnostics initialization, removal/capture release, stale generations and callback-outside-lock semantics. Raw typed results preserve precision/reference identity; numeric presentation/clamping belongs to display clients. CustomMonitorTests verifies values/arguments, metadata, failures/cycles, nested reads, in-flight remove/replace, self-removal, collection and zero warmed managed reads. Public native GPU/compatibility sessions verify live scene samples matching actual pixels and retained identity. Debugger UI, other built-in producers and foreign acceptance remain separate."
+    },
+    {
+      "godot": "Performance::enum_value:MonitorType.MONITOR_TYPE_MEMORY",
+      "electron2d": "enumValue:Electron2D.Performance.MonitorType.Memory()",
+      "reason": "ADR 0004/0095 typed custom monitor execution: retained static service, exact TResult handles, compiled providers and explicitly captured typed/tuple arguments, unit metadata, registration-order snapshots, monotonic microsecond ticks since retained diagnostics initialization, removal/capture release, stale generations and callback-outside-lock semantics. Raw typed results preserve precision/reference identity; numeric presentation/clamping belongs to display clients. CustomMonitorTests verifies values/arguments, metadata, failures/cycles, nested reads, in-flight remove/replace, self-removal, collection and zero warmed managed reads. Public native GPU/compatibility sessions verify live scene samples matching actual pixels and retained identity. Debugger UI, other built-in producers and foreign acceptance remain separate."
+    },
+    {
+      "godot": "Performance::enum_value:MonitorType.MONITOR_TYPE_PERCENTAGE",
+      "electron2d": "enumValue:Electron2D.Performance.MonitorType.Percentage()",
+      "reason": "ADR 0004/0095 typed custom monitor execution: retained static service, exact TResult handles, compiled providers and explicitly captured typed/tuple arguments, unit metadata, registration-order snapshots, monotonic microsecond ticks since retained diagnostics initialization, removal/capture release, stale generations and callback-outside-lock semantics. Raw typed results preserve precision/reference identity; numeric presentation/clamping belongs to display clients. CustomMonitorTests verifies values/arguments, metadata, failures/cycles, nested reads, in-flight remove/replace, self-removal, collection and zero warmed managed reads. Public native GPU/compatibility sessions verify live scene samples matching actual pixels and retained identity. Debugger UI, other built-in producers and foreign acceptance remain separate."
+    },
+    {
+      "godot": "Performance::enum_value:MonitorType.MONITOR_TYPE_QUANTITY",
+      "electron2d": "enumValue:Electron2D.Performance.MonitorType.Quantity()",
+      "reason": "ADR 0004/0095 typed custom monitor execution: retained static service, exact TResult handles, compiled providers and explicitly captured typed/tuple arguments, unit metadata, registration-order snapshots, monotonic microsecond ticks since retained diagnostics initialization, removal/capture release, stale generations and callback-outside-lock semantics. Raw typed results preserve precision/reference identity; numeric presentation/clamping belongs to display clients. CustomMonitorTests verifies values/arguments, metadata, failures/cycles, nested reads, in-flight remove/replace, self-removal, collection and zero warmed managed reads. Public native GPU/compatibility sessions verify live scene samples matching actual pixels and retained identity. Debugger UI, other built-in producers and foreign acceptance remain separate."
+    },
+    {
+      "godot": "Performance::enum_value:MonitorType.MONITOR_TYPE_TIME",
+      "electron2d": "enumValue:Electron2D.Performance.MonitorType.Time()",
+      "reason": "ADR 0004/0095 typed custom monitor execution: retained static service, exact TResult handles, compiled providers and explicitly captured typed/tuple arguments, unit metadata, registration-order snapshots, monotonic microsecond ticks since retained diagnostics initialization, removal/capture release, stale generations and callback-outside-lock semantics. Raw typed results preserve precision/reference identity; numeric presentation/clamping belongs to display clients. CustomMonitorTests verifies values/arguments, metadata, failures/cycles, nested reads, in-flight remove/replace, self-removal, collection and zero warmed managed reads. Public native GPU/compatibility sessions verify live scene samples matching actual pixels and retained identity. Debugger UI, other built-in producers and foreign acceptance remain separate."
+    },
+    {
+      "godot": "Performance::method:add_custom_monitor(StringName:,Callable:,Array:,int:Performance.MonitorType)",
+      "electron2d": "method:Electron2D.Performance.AddCustomMonitor`1(System.String,Func<TValue>,Electron2D.Performance.MonitorType)",
+      "reason": "ADR 0004/0095 typed custom monitor execution: retained static service, exact TResult handles, compiled providers and explicitly captured typed/tuple arguments, unit metadata, registration-order snapshots, monotonic microsecond ticks since retained diagnostics initialization, removal/capture release, stale generations and callback-outside-lock semantics. Raw typed results preserve precision/reference identity; numeric presentation/clamping belongs to display clients. CustomMonitorTests verifies values/arguments, metadata, failures/cycles, nested reads, in-flight remove/replace, self-removal, collection and zero warmed managed reads. Public native GPU/compatibility sessions verify live scene samples matching actual pixels and retained identity. Debugger UI, other built-in producers and foreign acceptance remain separate."
+    },
+    {
+      "godot": "Performance::method:add_custom_monitor(StringName:,Callable:,Array:,int:Performance.MonitorType)",
+      "electron2d": "method:Electron2D.Performance.AddCustomMonitor`2(System.String,Func<TArgument, TValue>,TArgument,Electron2D.Performance.MonitorType)",
+      "reason": "ADR 0004/0095 typed custom monitor execution: retained static service, exact TResult handles, compiled providers and explicitly captured typed/tuple arguments, unit metadata, registration-order snapshots, monotonic microsecond ticks since retained diagnostics initialization, removal/capture release, stale generations and callback-outside-lock semantics. Raw typed results preserve precision/reference identity; numeric presentation/clamping belongs to display clients. CustomMonitorTests verifies values/arguments, metadata, failures/cycles, nested reads, in-flight remove/replace, self-removal, collection and zero warmed managed reads. Public native GPU/compatibility sessions verify live scene samples matching actual pixels and retained identity. Debugger UI, other built-in producers and foreign acceptance remain separate."
+    },
+    {
+      "godot": "Performance::method:get_custom_monitor(StringName:)",
+      "electron2d": "method:Electron2D.Performance.GetCustomMonitor`1(CustomMonitor<TValue>)",
+      "reason": "ADR 0004/0095 typed custom monitor execution: retained static service, exact TResult handles, compiled providers and explicitly captured typed/tuple arguments, unit metadata, registration-order snapshots, monotonic microsecond ticks since retained diagnostics initialization, removal/capture release, stale generations and callback-outside-lock semantics. Raw typed results preserve precision/reference identity; numeric presentation/clamping belongs to display clients. CustomMonitorTests verifies values/arguments, metadata, failures/cycles, nested reads, in-flight remove/replace, self-removal, collection and zero warmed managed reads. Public native GPU/compatibility sessions verify live scene samples matching actual pixels and retained identity. Debugger UI, other built-in producers and foreign acceptance remain separate."
+    },
+    {
+      "godot": "Performance::method:get_custom_monitor_names()",
+      "electron2d": "method:Electron2D.Performance.GetCustomMonitorNames()",
+      "reason": "ADR 0004/0095 typed custom monitor execution: retained static service, exact TResult handles, compiled providers and explicitly captured typed/tuple arguments, unit metadata, registration-order snapshots, monotonic microsecond ticks since retained diagnostics initialization, removal/capture release, stale generations and callback-outside-lock semantics. Raw typed results preserve precision/reference identity; numeric presentation/clamping belongs to display clients. CustomMonitorTests verifies values/arguments, metadata, failures/cycles, nested reads, in-flight remove/replace, self-removal, collection and zero warmed managed reads. Public native GPU/compatibility sessions verify live scene samples matching actual pixels and retained identity. Debugger UI, other built-in producers and foreign acceptance remain separate."
+    },
+    {
+      "godot": "Performance::method:get_custom_monitor_types()",
+      "electron2d": "method:Electron2D.Performance.GetCustomMonitorTypes()",
+      "reason": "ADR 0004/0095 typed custom monitor execution: retained static service, exact TResult handles, compiled providers and explicitly captured typed/tuple arguments, unit metadata, registration-order snapshots, monotonic microsecond ticks since retained diagnostics initialization, removal/capture release, stale generations and callback-outside-lock semantics. Raw typed results preserve precision/reference identity; numeric presentation/clamping belongs to display clients. CustomMonitorTests verifies values/arguments, metadata, failures/cycles, nested reads, in-flight remove/replace, self-removal, collection and zero warmed managed reads. Public native GPU/compatibility sessions verify live scene samples matching actual pixels and retained identity. Debugger UI, other built-in producers and foreign acceptance remain separate."
+    },
+    {
+      "godot": "Performance::method:get_monitor_modification_time()",
+      "electron2d": "method:Electron2D.Performance.GetMonitorModificationTime()",
+      "reason": "ADR 0004/0095 typed custom monitor execution: retained static service, exact TResult handles, compiled providers and explicitly captured typed/tuple arguments, unit metadata, registration-order snapshots, monotonic microsecond ticks since retained diagnostics initialization, removal/capture release, stale generations and callback-outside-lock semantics. Raw typed results preserve precision/reference identity; numeric presentation/clamping belongs to display clients. CustomMonitorTests verifies values/arguments, metadata, failures/cycles, nested reads, in-flight remove/replace, self-removal, collection and zero warmed managed reads. Public native GPU/compatibility sessions verify live scene samples matching actual pixels and retained identity. Debugger UI, other built-in producers and foreign acceptance remain separate."
+    },
+    {
+      "godot": "Performance::method:has_custom_monitor(StringName:)",
+      "electron2d": "method:Electron2D.Performance.HasCustomMonitor(System.String)",
+      "reason": "ADR 0004/0095 typed custom monitor execution: retained static service, exact TResult handles, compiled providers and explicitly captured typed/tuple arguments, unit metadata, registration-order snapshots, monotonic microsecond ticks since retained diagnostics initialization, removal/capture release, stale generations and callback-outside-lock semantics. Raw typed results preserve precision/reference identity; numeric presentation/clamping belongs to display clients. CustomMonitorTests verifies values/arguments, metadata, failures/cycles, nested reads, in-flight remove/replace, self-removal, collection and zero warmed managed reads. Public native GPU/compatibility sessions verify live scene samples matching actual pixels and retained identity. Debugger UI, other built-in producers and foreign acceptance remain separate."
+    },
+    {
+      "godot": "Performance::method:remove_custom_monitor(StringName:)",
+      "electron2d": "method:Electron2D.Performance.RemoveCustomMonitor(System.String)",
+      "reason": "ADR 0004/0095 typed custom monitor execution: retained static service, exact TResult handles, compiled providers and explicitly captured typed/tuple arguments, unit metadata, registration-order snapshots, monotonic microsecond ticks since retained diagnostics initialization, removal/capture release, stale generations and callback-outside-lock semantics. Raw typed results preserve precision/reference identity; numeric presentation/clamping belongs to display clients. CustomMonitorTests verifies values/arguments, metadata, failures/cycles, nested reads, in-flight remove/replace, self-removal, collection and zero warmed managed reads. Public native GPU/compatibility sessions verify live scene samples matching actual pixels and retained identity. Debugger UI, other built-in producers and foreign acceptance remain separate."
     }
   ],
   "extras": [
@@ -5546,6 +5611,24 @@
     {
       "electron2d": "method:Electron2D.Shape.EnsureGeometryChangeAccess()",
       "reason": "ADR 0103: procedural authors preflight all scene/raw borrowers before private geometric authoring, then publish with EmitGeometryChanged. Built-in writers use the same owner/phase/construction/reentry checks; selected status hooks run before mutation outside resource locks. Publication rechecks owner/phase without a second fallible status callback. Public-only registered/CPU/GPU checks cover 16 edit paths, exact immutable data/RID preservation on rejection, ordinary callback/query changes and warmed full frames. Arbitrary subclass private writes require this authoring protocol; full numerical-extension acceptance remains open. Coordinated worker geometry writes remain supported in quiescent worlds without invoking owner-bound status hooks; worker writes during actual numerical preparation reject before authoring. CustomSolverBias keeps its existing owner-thread rule."
+    },
+    {
+      "electron2d": "T:Electron2D.Performance.CustomMonitor<TValue>",
+      "state": "Implemented",
+      "adr": "ADR 0004/0095",
+      "reason": "Exact typed callback/result identity replaces universal custom-monitor values. Issued handles preserve ID/unit metadata, reject stale generations and release providers/captures on removal; collection and typed/native consumers verified."
+    },
+    {
+      "electron2d": "property:Electron2D.Performance.CustomMonitor<TValue>.ID()",
+      "state": "Implemented",
+      "adr": "ADR 0004/0095",
+      "reason": "Exact typed callback/result identity replaces universal custom-monitor values. Issued handles preserve ID/unit metadata, reject stale generations and release providers/captures on removal; collection and typed/native consumers verified."
+    },
+    {
+      "electron2d": "property:Electron2D.Performance.CustomMonitor<TValue>.Type()",
+      "state": "Implemented",
+      "adr": "ADR 0004/0095",
+      "reason": "Exact typed callback/result identity replaces universal custom-monitor values. Issued handles preserve ID/unit metadata, reject stale generations and release providers/captures on removal; collection and typed/native consumers verified."
     }
   ],
   "statusGroups": [
@@ -7124,7 +7207,7 @@
         "class:Performance"
       ],
       "state": "Partial",
-      "reason": "ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests. Other monitor producers and custom-monitor registration/lifecycle remain absent; only the three functioning physics selectors are exposed."
+      "reason": "Three completed physical producers and the complete typed custom-monitor lifecycle execute. Remaining built-in monitor selectors need their exact runtime producer instrumentation, counters or native diagnostics; these prerequisites remain recorded per row. Native Linux sessions and warmed managed reads are verified; debugger UI and foreign acceptance are separate."
     },
     {
       "godot": [
@@ -7141,8 +7224,8 @@
         "Performance::method:has_custom_monitor(StringName:)",
         "Performance::method:remove_custom_monitor(StringName:)"
       ],
-      "state": "Unimplemented",
-      "reason": "Trigger: typed custom monitor callback/argument registration, MonitorType metadata, monotonic modification time, name/type queries, removal, reentrancy and failure/lifetime semantics in one custom-monitor slice."
+      "state": "Implemented",
+      "reason": "ADR 0004/0095 typed custom monitor execution: retained static service, exact TResult handles, compiled providers and explicitly captured typed/tuple arguments, unit metadata, registration-order snapshots, monotonic microsecond ticks since retained diagnostics initialization, removal/capture release, stale generations and callback-outside-lock semantics. Raw typed results preserve precision/reference identity; numeric presentation/clamping belongs to display clients. CustomMonitorTests verifies values/arguments, metadata, failures/cycles, nested reads, in-flight remove/replace, self-removal, collection and zero warmed managed reads. Public native GPU/compatibility sessions verify live scene samples matching actual pixels and retained identity. Debugger UI, other built-in producers and foreign acceptance remain separate."
     },
     {
       "godot": [

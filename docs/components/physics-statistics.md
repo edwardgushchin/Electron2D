@@ -1,6 +1,6 @@
 # Completed physics statistics
 
-Last updated: 2026-10-10
+Last updated: 2026-10-13
 
 [PhysicsServer.GetProcessInfo](../classes/PhysicsServer.md#statistics) and
 [Performance.GetMonitor](../classes/Performance.md) read the same completed-step
@@ -98,3 +98,5 @@ bodies remain ineligible, and report-only pairs add no dynamic constraint island
 See [contact reporting](physics-report-only.md).
 
 The selected PhysicsWorldBackend now supplies completed counts. CPUPhysicsWorldBackend owns native awake/contact/island and sensor-candidate traversal; the shared space contributes report-only observations. GPUPhysicsWorldBackend reads the completed resident counters. Shared publication timing, aggregate service values and portable restoration retain their previous contract.
+
+Performance now also provides [typed custom monitors](runtime-diagnostics.md) for application diagnostics. Their caller-invoked callbacks are separate from these completed physical producer snapshots.

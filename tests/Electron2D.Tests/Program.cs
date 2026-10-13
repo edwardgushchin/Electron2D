@@ -557,6 +557,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_BLEND") == "1") { 
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_ANIMATION_HOST") == "1") { SceneAnimationTests.RunHost(); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CUSTOM_MONITORS_NATIVE") == "1") { CustomMonitorTests.RunNative(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CUSTOM_MONITORS") == "1") { CustomMonitorTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESET_SAVE_CHILD") is { } resetSaveChild) { AnimationResetSaveTests.RunChild(resetSaveChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESET_SAVE_WRITE") is { } resetSaveWrite) { AnimationResetSaveTests.WriteFixture(resetSaveWrite); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESET_SAVE_NATIVE") is { } resetSaveNative) { AnimationResetSaveTests.RunNative(resetSaveNative); return; }
@@ -1026,6 +1028,7 @@ SceneAnimationTests.Run();
 AnimationOptimizeTests.Run();
 AnimationPersistenceTests.Run();
 AnimationControllerPersistenceTests.Run();
+CustomMonitorTests.Run();
 AnimationResetSaveTests.Run();
 AnimationGraphPersistenceTests.Run();
 AnimationCuePersistenceTests.Run();

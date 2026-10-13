@@ -7376,11 +7376,42 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Performance.CustomMonitor\u003CTValue\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.Performance.CustomMonitor\u003CTValue\u003E",
+    "name": "CustomMonitor\u00601",
+    "signature": "public sealed class Electron2D.Performance.CustomMonitor\u003CTValue\u003E",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Performance.Monitor",
     "kind": "type",
     "declaringType": "Electron2D.Performance.Monitor",
     "name": "Monitor",
     "signature": "public enum Electron2D.Performance.Monitor",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Performance.MonitorType",
+    "kind": "type",
+    "declaringType": "Electron2D.Performance.MonitorType",
+    "name": "MonitorType",
+    "signature": "public enum Electron2D.Performance.MonitorType",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -37437,6 +37468,58 @@
     "parameters": [],
     "returnType": "Electron2D.Performance.Monitor",
     "value": "19"
+  },
+  {
+    "id": "enumValue:Electron2D.Performance.MonitorType.Memory()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.MonitorType",
+    "name": "Memory",
+    "signature": "public const Electron2D.Performance.MonitorType Memory = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.MonitorType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Performance.MonitorType.Percentage()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.MonitorType",
+    "name": "Percentage",
+    "signature": "public const Electron2D.Performance.MonitorType Percentage = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.MonitorType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.Performance.MonitorType.Quantity()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.MonitorType",
+    "name": "Quantity",
+    "signature": "public const Electron2D.Performance.MonitorType Quantity = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.MonitorType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Performance.MonitorType.Time()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.MonitorType",
+    "name": "Time",
+    "signature": "public const Electron2D.Performance.MonitorType Time = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.MonitorType",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.PhysicsInterpolationMode.Inherit()",
@@ -123312,6 +123395,114 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Performance.AddCustomMonitor\u00601(System.String,Func\u003CTValue\u003E,Electron2D.Performance.MonitorType)",
+    "kind": "method",
+    "declaringType": "Electron2D.Performance",
+    "name": "AddCustomMonitor",
+    "signature": "public static CustomMonitor\u003CTValue\u003E AddCustomMonitor\u003CTValue\u003E(System.String id, Func\u003CTValue\u003E callback, Electron2D.Performance.MonitorType type = Quantity)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "Func\u003CTValue\u003E",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "Electron2D.Performance.MonitorType",
+        "default": "Quantity"
+      }
+    ],
+    "returnType": "CustomMonitor\u003CTValue\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Performance.AddCustomMonitor\u00602(System.String,Func\u003CTArgument, TValue\u003E,TArgument,Electron2D.Performance.MonitorType)",
+    "kind": "method",
+    "declaringType": "Electron2D.Performance",
+    "name": "AddCustomMonitor",
+    "signature": "public static CustomMonitor\u003CTValue\u003E AddCustomMonitor\u003CTArgument, TValue\u003E(System.String id, Func\u003CTArgument, TValue\u003E callback, TArgument argument, Electron2D.Performance.MonitorType type = Quantity)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "Func\u003CTArgument, TValue\u003E",
+        "default": null
+      },
+      {
+        "name": "argument",
+        "type": "TArgument",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "Electron2D.Performance.MonitorType",
+        "default": "Quantity"
+      }
+    ],
+    "returnType": "CustomMonitor\u003CTValue\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Performance.GetCustomMonitorNames()",
+    "kind": "method",
+    "declaringType": "Electron2D.Performance",
+    "name": "GetCustomMonitorNames",
+    "signature": "public static System.String[] GetCustomMonitorNames()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Performance.GetCustomMonitorTypes()",
+    "kind": "method",
+    "declaringType": "Electron2D.Performance",
+    "name": "GetCustomMonitorTypes",
+    "signature": "public static Electron2D.Performance.MonitorType[] GetCustomMonitorTypes()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.MonitorType[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Performance.GetCustomMonitor\u00601(CustomMonitor\u003CTValue\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Performance",
+    "name": "GetCustomMonitor",
+    "signature": "public static TValue GetCustomMonitor\u003CTValue\u003E(CustomMonitor\u003CTValue\u003E monitor)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "monitor",
+        "type": "CustomMonitor\u003CTValue\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "TValue",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Performance.GetMonitor(Electron2D.Performance.Monitor)",
     "kind": "method",
     "declaringType": "Electron2D.Performance",
@@ -123328,6 +123519,57 @@
       }
     ],
     "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Performance.GetMonitorModificationTime()",
+    "kind": "method",
+    "declaringType": "Electron2D.Performance",
+    "name": "GetMonitorModificationTime",
+    "signature": "public static System.UInt64 GetMonitorModificationTime()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Performance.HasCustomMonitor(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Performance",
+    "name": "HasCustomMonitor",
+    "signature": "public static System.Boolean HasCustomMonitor(System.String id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Performance.RemoveCustomMonitor(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Performance",
+    "name": "RemoveCustomMonitor",
+    "signature": "public static System.Void RemoveCustomMonitor(System.String id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -214747,6 +214989,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Performance.CustomMonitor\u003CTValue\u003E.ID()",
+    "kind": "property",
+    "declaringType": "Electron2D.Performance.CustomMonitor\u003CTValue\u003E",
+    "name": "ID",
+    "signature": "public System.String ID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Performance.CustomMonitor\u003CTValue\u003E.Type()",
+    "kind": "property",
+    "declaringType": "Electron2D.Performance.CustomMonitor\u003CTValue\u003E",
+    "name": "Type",
+    "signature": "public Electron2D.Performance.MonitorType Type { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.MonitorType",
     "value": null
   },
   {
