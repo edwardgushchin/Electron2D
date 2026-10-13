@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 [Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
@@ -223,3 +223,5 @@ FontFile owns exact language/script override dictionaries with copied query arra
 ## Native font raster preferences
 
 FontFile/SystemFont native strike and autohinter flags execute through the retained FreeType owner; generated glyph textures and indexed pages publish complete MIP chains. Replacement snapshots preserve active old readers, authored bitmap records, configured variations, copied preferences and bounded fresh-process storage. [Text verification](../components/text.md#native-raster-policy-verification) records actual pixel/sampling and allocation boundaries.
+
+Animation graph resources and AnimationTree scene controllers now persist authored topology, compiled writable parameter IDs and typed values through the existing archive. See [graph file persistence](../components/scene-animation.md#graph-file-persistence). Resource validation runs after all embedded payloads and before publication.

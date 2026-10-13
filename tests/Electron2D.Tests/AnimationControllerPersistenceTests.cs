@@ -98,7 +98,7 @@ internal static class AnimationControllerPersistenceTests
         blend.SetValue(p, ["a", "a"]); var duration = (PropertyDescriptor<AnimationPlayer, double>)p.GetPropertyList().Single(d => d.Name == "Blend[0]");
         Reject<InvalidDataException>(() => duration.SetValue(p, double.NaN)); Reject<InvalidDataException>(() => duration.SetValue(p, 0)); duration.SetValue(p, .5);
         lib.RemoveAnimation("a"); Reject<KeyNotFoundException>(() => packed.Pack(p)); Check(!packed.CanInstantiate(), "Stale blend reference cannot capture a non-loadable scene.");
-        using var treeNode = new AnimationTree(); Reject<NotSupportedException>(() => packed.Pack(treeNode));
+        using var treeNode = new AnimationTree(); packed.Pack(treeNode); using var emptyTree = packed.Instantiate(); Check(emptyTree is AnimationTree, "Empty graph controller packs with its authored schema.");
     }
     private static void Child(string path, bool unknown)
     {

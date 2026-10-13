@@ -97,16 +97,16 @@ public sealed class AnimationNodeOneShot : AnimationNodeSync
     public AnimationMixMode MixMode { get { ThrowIfDisposed(); return _mix; } set { ThrowIfDisposed(); Animation.Valid(value); _mix = value; EmitGraphChanged(); } }
     private static readonly PropertyDescriptor[] ActionProperties =
     [
-        new PropertyDescriptor<AnimationNodeOneShot, double>(nameof(FadeInTime), n => n.FadeInTime, (n, v) => n.FadeInTime = v, _ => 0),
-        new PropertyDescriptor<AnimationNodeOneShot, double>(nameof(FadeOutTime), n => n.FadeOutTime, (n, v) => n.FadeOutTime = v, _ => 0),
-        new PropertyDescriptor<AnimationNodeOneShot, Curve?>(nameof(FadeInCurve), n => n.FadeInCurve, (n, v) => n.FadeInCurve = v, _ => null),
-        new PropertyDescriptor<AnimationNodeOneShot, Curve?>(nameof(FadeOutCurve), n => n.FadeOutCurve, (n, v) => n.FadeOutCurve = v, _ => null),
-        new PropertyDescriptor<AnimationNodeOneShot, bool>(nameof(Autorestart), n => n.Autorestart, (n, v) => n.Autorestart = v, _ => false),
-        new PropertyDescriptor<AnimationNodeOneShot, double>(nameof(AutorestartDelay), n => n.AutorestartDelay, (n, v) => n.AutorestartDelay = v, _ => 1),
-        new PropertyDescriptor<AnimationNodeOneShot, double>(nameof(AutorestartRandomDelay), n => n.AutorestartRandomDelay, (n, v) => n.AutorestartRandomDelay = v, _ => 0),
-        new PropertyDescriptor<AnimationNodeOneShot, bool>(nameof(BreakLoopAtEnd), n => n.BreakLoopAtEnd, (n, v) => n.BreakLoopAtEnd = v, _ => false),
-        new PropertyDescriptor<AnimationNodeOneShot, bool>(nameof(AbortOnReset), n => n.AbortOnReset, (n, v) => n.AbortOnReset = v, _ => false),
-        new PropertyDescriptor<AnimationNodeOneShot, AnimationMixMode>(nameof(MixMode), n => n.MixMode, (n, v) => n.MixMode = v, _ => AnimationMixMode.Blend),
+        new PropertyDescriptor<AnimationNodeOneShot, double>(nameof(FadeInTime), n => n.FadeInTime, (n, v) => n.FadeInTime = v, _ => 0, stored: true),
+        new PropertyDescriptor<AnimationNodeOneShot, double>(nameof(FadeOutTime), n => n.FadeOutTime, (n, v) => n.FadeOutTime = v, _ => 0, stored: true),
+        new PropertyDescriptor<AnimationNodeOneShot, Curve?>(nameof(FadeInCurve), n => n.FadeInCurve, (n, v) => n.FadeInCurve = v, _ => null, stored: true),
+        new PropertyDescriptor<AnimationNodeOneShot, Curve?>(nameof(FadeOutCurve), n => n.FadeOutCurve, (n, v) => n.FadeOutCurve = v, _ => null, stored: true),
+        new PropertyDescriptor<AnimationNodeOneShot, bool>(nameof(Autorestart), n => n.Autorestart, (n, v) => n.Autorestart = v, _ => false, stored: true),
+        new PropertyDescriptor<AnimationNodeOneShot, double>(nameof(AutorestartDelay), n => n.AutorestartDelay, (n, v) => n.AutorestartDelay = v, _ => 1, stored: true),
+        new PropertyDescriptor<AnimationNodeOneShot, double>(nameof(AutorestartRandomDelay), n => n.AutorestartRandomDelay, (n, v) => n.AutorestartRandomDelay = v, _ => 0, stored: true),
+        new PropertyDescriptor<AnimationNodeOneShot, bool>(nameof(BreakLoopAtEnd), n => n.BreakLoopAtEnd, (n, v) => n.BreakLoopAtEnd = v, _ => false, stored: true),
+        new PropertyDescriptor<AnimationNodeOneShot, bool>(nameof(AbortOnReset), n => n.AbortOnReset, (n, v) => n.AbortOnReset = v, _ => false, stored: true),
+        new PropertyDescriptor<AnimationNodeOneShot, AnimationMixMode>(nameof(MixMode), n => n.MixMode, (n, v) => n.MixMode = v, _ => AnimationMixMode.Blend, stored: true),
     ];
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ActionProperties);
@@ -117,7 +117,7 @@ public sealed class AnimationNodeOneShot : AnimationNodeSync
     /// <inheritdoc />
     protected override bool OnHasFilter() => true;
     /// <inheritdoc />
-    protected override double OnProcess(double time, bool seek, bool isExternalSeeking, bool testOnly)
+    internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly)
     {
         var c = Current(); var generation = c.Tree.GraphGeneration; var request = GetParameter(Request); Animation.Valid(request); SetParameter(Request, AnimationOneShotRequest.None);
         var active = GetParameter(Active); var internalActive = GetParameter(InternalActive); var restart = GetParameter(TimeToRestart); var fadeIn = GetParameter(FadeInRemaining); var fadeOut = GetParameter(FadeOutRemaining);

@@ -75,6 +75,8 @@ public class Resource : ElectronObject
         _fileOwnership = new ResourceFileOwnership([], previous is null ? owners : [previous, .. owners]);
         OnFileOwnershipChanged();
     }
+    internal virtual void ValidateFileState() { }
+
     internal void RemapPreparedReferences(Func<Resource, Resource> remap) => RemapResourceReferences(remap);
     /// <summary>Remaps resource references in freshly prepared data before cache publication.</summary>
     /// <param name="remap">Selects the final live identity for each borrowed or prepared resource reference.</param>

@@ -24,6 +24,7 @@ public sealed partial class ThemeDB
         ["AnimationNodeBlendSpace1D"] = ["AnimationNodeBlendSpace1D", "AnimationRootNode", "AnimationNode", "Resource", "ElectronObject"],
         ["AnimationNodeBlendSpace2D"] = ["AnimationNodeBlendSpace2D", "AnimationRootNode", "AnimationNode", "Resource", "ElectronObject"],
         ["AnimationNodeBlendTree"] = ["AnimationNodeBlendTree", "AnimationRootNode", "AnimationNode", "Resource", "ElectronObject"],
+        ["AnimationNodeExtension"] = ["AnimationNodeExtension", "AnimationNode", "Resource", "ElectronObject"],
         ["AnimationNodeOneShot"] = ["AnimationNodeOneShot", "AnimationNodeSync", "AnimationNode", "Resource", "ElectronObject"],
         ["AnimationNodeOutput"] = ["AnimationNodeOutput", "AnimationNode", "Resource", "ElectronObject"],
         ["AnimationNodeStateMachine"] = ["AnimationNodeStateMachine", "AnimationRootNode", "AnimationNode", "Resource", "ElectronObject"],

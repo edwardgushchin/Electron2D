@@ -134,3 +134,5 @@ The existing track schema supports compiled typed method callbacks/payloads, bor
 ## Animation controllers
 
 [Controller scene files](scene-animation.md#controller-scene-files) restore exact AnimationMixer/AnimationPlayer authored libraries, policies, playback options and transitions through dynamic stored descriptors. Whole-scene fresh-process loading reaches ordinary Ready autoplay and both renderer consumers. Runtime transport and selection are omitted; graph definition storage and reset-on-save transactions remain separate prerequisites.
+
+Animation graph resources and AnimationTree scene controllers now persist authored topology, compiled writable parameter IDs and typed values through the existing archive. See [graph file persistence](scene-animation.md#graph-file-persistence). Resource validation runs after all embedded payloads and before publication.

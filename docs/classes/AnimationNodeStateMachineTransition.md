@@ -1,6 +1,6 @@
 # AnimationNodeStateMachineTransition
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.AnimationNodeStateMachineTransition` · **Source:** [AnimationNodeStateMachineTransition.cs](../../src/Scene/Animation/AnimationNodeStateMachineTransition.cs).
 
@@ -252,3 +252,7 @@ Occurs after assigning the typed condition key, including an equal assignment.
 ## Verification and dependencies
 
 [AnimationStateMachineTests](../../tests/Electron2D.Tests/AnimationStateMachineTests.cs) covers public authoring, defaults, edge guards, copies/aliases, route costs/fallback, timing/fades/boundaries, typed conditions, multiple groups, state events, independent sharing, rename/removal, preparation and observer failures, reentry, tested output and method/nested effects. Warm checks use 64 prepared command/route cycles, 64 cached grouped starts and 64 idle frames with zero owner managed bytes. Separate SDL-dummy/FAudio PCM checks verify state audio start/restart/stop and departed nonblended cues. Linux Wayland GPU/compatibility hosts each run twice and check six actual pixel poses and borrowed-resource cleanup. Native/driver allocator totals, physical listening, other platforms, file/editor and human acceptance remain unverified. [ADR 0093](../decisions/scene-animation.md#adr-0093) defines the typed graph/condition/ownership contract.
+
+## File persistence
+
+Built-in graph definitions now use exact typed resource-file factories. Files retain input captions, filters, authoring policies, child topology and aliases. AnimationTree scene files also retain compiled writable parameter values; clocks, requests already consumed, read-only diagnostics and private playback objects restart. Application subclasses register their own exact factory and stable parameter/predicate IDs. See [graph file persistence](../components/scene-animation.md#graph-file-persistence).

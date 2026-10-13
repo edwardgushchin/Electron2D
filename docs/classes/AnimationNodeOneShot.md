@@ -1,6 +1,6 @@
 # AnimationNodeOneShot
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.AnimationNodeOneShot` · **Source:** [AnimationNodeOneShot.cs](../../src/Scene/Animation/AnimationNodeOneShot.cs).
 
@@ -22,7 +22,7 @@ Definitions and fade curves remain borrowed; duplication copies settings and inp
 
 Weights are computed from the remaining timer before decrementing it. The initial update can retain the outgoing pose; interrupted transitions use the prior selected input rather than capturing the displayed blended pose. The pinned 1e-5 contribution at zero-weight fade endpoints preserves edge-key activity and also adds a small scalar/vector contribution in deterministic mode. Unit Curve samples can be signed or outside one; the existing typed mixer handles them. Nonfinite duration/timer values reject, while finite nonpositive configured durations retain immediate/frozen behavior as documented. Missing connections, invalid keys/indices/requests and disposed curves/resources throw. Mutation commits before synchronous observer delivery; errors from authoring callbacks propagate.
 
-Request consumption happens on real processing. Test-only passes preserve cells/requests and output, and do not draw random restart values. Child evaluation may advance before a later child fails; it is not a global state rollback. Controller timing/selection publication happens after successful child sampling; input requests may already be consumed. Reentrant definition/root/topology edits abandon stale property commits and diagnostics. Disposal releases references/observers without disposing caller-owned curves or connected definitions. No disk/packed/editor constructor-state format is supplied.
+Request consumption happens on real processing. Test-only passes preserve cells/requests and output, and do not draw random restart values. Child evaluation may advance before a later child fails; it is not a global state rollback. Controller timing/selection publication happens after successful child sampling; input requests may already be consumed. Reentrant definition/root/topology edits abandon stale property commits and diagnostics. Disposal releases references/observers without disposing caller-owned curves or connected definitions. Exact built-in graph file schemas now execute; editor UI and expression evaluation remain separate.
 
 ## Example
 
@@ -202,7 +202,6 @@ System.ArgumentOutOfRangeException: The numeric or enum value is invalid.
 | `protected override System.String OnGetCaption()` | Supplies the graph resource's caption. |
 | `protected override System.Collections.Generic.IEnumerable<Electron2D.AnimationParameter> OnGetParameterList()` | Supplies immutable typed parameter definitions. |
 | `protected override System.Boolean OnHasFilter()` | Reports whether child blend helpers apply track filters. |
-| `protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)` | Evaluates custom graph behavior; helpers can blend inputs, children and clips. |
 
 ## Method Descriptions
 
@@ -291,24 +290,6 @@ Returns: False for the base resource.
 
 System.ObjectDisposedException: This resource/controller or a required borrowed resource has been disposed.
 
-<a id="member-158d0eb18aec"></a>
-### OnProcess
-
-`protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)`
-
-Evaluates custom graph behavior; helpers can blend inputs, children and clips.
-
-time: Relative delta seconds, or absolute time when seeking.
-
-seek: Whether time is absolute.
-
-isExternalSeeking: Whether the seek originated outside startup.
-
-testOnly: Whether persistent changes and mixer writes are suppressed.
-
-Returns: The selected remaining duration, or zero when no input is evaluated.
-
-System.ObjectDisposedException: This resource/controller or a required borrowed resource has been disposed.
 
 ## Field summary
 
@@ -379,4 +360,8 @@ System.ObjectDisposedException: The resource has been disposed.
 
 ## Lifecycle, verification and dependencies
 
-[ADR 0093](../decisions/scene-animation.md#adr-0093) and [action controllers](../components/scene-animation.md#action-controllers) define this executed contract. AnimationActionTests covers default/edit/copy/curve semantics, requests/timers/filtering/loops, named/interrupted/self/automatic transitions, shared instances, external/internal seeks, test-only behavior, callback failure/reentry and 256 warmed restarted/interrupted frame passes with deferred events and zero managed bytes. Two Wayland GPU and two compatibility public Engine.Run cycles each verify thirteen composed poses and borrowed-resource cleanup. Cold schema/binding/input/notice-capacity preparation may allocate; manual advances without a flush can grow deferred capacity. Native/driver allocations, other platforms and human visual acceptance remain unmeasured. State-machine/grouped/expression control, event-track schedulers and disk/editor round trips remain separate coverage dependencies.
+[ADR 0093](../decisions/scene-animation.md#adr-0093) and [action controllers](../components/scene-animation.md#action-controllers) define this executed contract. AnimationActionTests covers default/edit/copy/curve semantics, requests/timers/filtering/loops, named/interrupted/self/automatic transitions, shared instances, external/internal seeks, test-only behavior, callback failure/reentry and 256 warmed restarted/interrupted frame passes with deferred events and zero managed bytes. Two Wayland GPU and two compatibility public Engine.Run cycles each verify thirteen composed poses and borrowed-resource cleanup. Cold schema/binding/input/notice-capacity preparation may allocate; manual advances without a flush can grow deferred capacity. Native/driver allocations, other platforms and human visual acceptance remain unmeasured. State-machine/grouped controllers, event-track schedulers and graph files execute. Expression strings remain outside the typed profile; editor authoring remains separate.
+
+## File persistence
+
+Built-in graph definitions now use exact typed resource-file factories. Files retain input captions, filters, authoring policies, child topology and aliases. AnimationTree scene files also retain compiled writable parameter values; clocks, requests already consumed, read-only diagnostics and private playback objects restart. Application subclasses register their own exact factory and stable parameter/predicate IDs. See [graph file persistence](../components/scene-animation.md#graph-file-persistence).

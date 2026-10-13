@@ -1,6 +1,6 @@
 # AnimationRootNode
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D` · **Declaration:** `public class Electron2D.AnimationRootNode` · **Source:** [AnimationNode.cs](../../src/Scene/Animation/AnimationNode.cs).
 
@@ -14,7 +14,7 @@ Marks a resource that can serve as the root of an AnimationTree or named blend s
 
 Marker resource for graph roots and named subtrees. Roots reject AddInput. Custom subclasses declare borrowed child definitions and typed process hooks through AnimationNode.
 
-Graph resources borrow child resources; the blend tree owns only its reserved output. Resource duplication copies definition containers, with shallow/deep resource aliases governed by Resource. Evaluation state and typed parameter cells belong to each AnimationTree and graph path. A definition may be shared sequentially across trees; concurrent processing of the same definition is unsupported. Scene controllers and parameter writes obey the inherited Node owner-thread rule. Resource edits invalidate prepared graph/binding state; cold preparation may allocate. No graph factory, disk format, editor UI or expression evaluator is supplied.
+Graph resources borrow child resources; the blend tree owns only its reserved output. Resource duplication copies definition containers, with shallow/deep resource aliases governed by Resource. Evaluation state and typed parameter cells belong to each AnimationTree and graph path. A definition may be shared sequentially across trees; concurrent processing of the same definition is unsupported. Scene controllers and parameter writes obey the inherited Node owner-thread rule. Resource edits invalidate prepared graph/binding state; cold preparation may allocate. Exact built-in graph file schemas now execute; editor UI and expression evaluation remain separate.
 
 Input/child/parameter names use ordinal comparison. Missing names, invalid input indices, wrong typed keys, duplicate schemas and disconnected required inputs fail explicitly. Disposed resources throw ObjectDisposedException; processing helpers outside evaluation throw InvalidOperationException. Nonfinite times/weights/authoring positions reject. Graph cycles reject before connection/self-containment edits or during preparation for custom graphs. Mutation commits before observer notification; TreeChanged reaches every subscribed tree even when another handler throws, collecting graph notification failures. Authoring callback exceptions propagate; the caller can repair the committed graph. Disposal detaches observers and borrows child resources. Nested graph processing guards connection cycles; inherited mixer Advance rejects recursion and invalidates stale property commits after reentrant edits.
 
@@ -78,8 +78,12 @@ System.NotSupportedException: The runtime type derives from Electron2D.Resource 
 
 ## Lifecycle, verification and dependencies
 
-[ADR 0093](../decisions/scene-animation.md#adr-0093) owns this typed contract. [Scene animation](../components/scene-animation.md#animation-graphs) records formulas, topology, lifetime, tests and limitations. [AnimationGraphTests](../../tests/Electron2D.Tests/AnimationGraphTests.cs) verifies public managed execution and two real Wayland GPU/two compatibility host cycles with five rendered positions. Warmed scalar graph/property passes allocate zero managed bytes on the owner thread; cold preparation/result arrays, native/driver allocations and other platforms are separate. State machines/grouped controllers, Expression evaluation, non-property track schedulers and graph/disk/editor round trips remain applicable separate slices in coverage.
+[ADR 0093](../decisions/scene-animation.md#adr-0093) owns this typed contract. [Scene animation](../components/scene-animation.md#animation-graphs) records formulas, topology, lifetime, tests and limitations. [AnimationGraphTests](../../tests/Electron2D.Tests/AnimationGraphTests.cs) verifies public managed execution and two real Wayland GPU/two compatibility host cycles with five rendered positions. Warmed scalar graph/property passes allocate zero managed bytes on the owner thread; cold preparation/result arrays, native/driver allocations and other platforms are separate. State machines/grouped controllers, Expression evaluation, non-property track schedulers and editor authoring and foreign-platform acceptance remain separate.
 
 ## Blend-space integration
 
 [Blend spaces](../components/scene-animation.md#blend-spaces) now execute linear/triangle mixing, discrete/carry and synchronized clocks through these existing graph hooks. Their definitions stay borrowed and their clocks/selection remain per tree/path.
+
+## File persistence
+
+Built-in graph definitions now use exact typed resource-file factories. Files retain input captions, filters, authoring policies, child topology and aliases. AnimationTree scene files also retain compiled writable parameter values; clocks, requests already consumed, read-only diagnostics and private playback objects restart. Application subclasses register their own exact factory and stable parameter/predicate IDs. See [graph file persistence](../components/scene-animation.md#graph-file-persistence).

@@ -6,18 +6,19 @@ namespace Electron2D;
 /// <summary>Evaluates reusable typed animation graphs through the inherited property mixer.</summary>
 /// <remarks>Graph assets are borrowed. Parameter cells, clocks, connections and scratch belong to each tree/path.
 /// Defaults are deterministic blending and nearest continuous sampling of discrete tracks. Topology edits prepare
-/// a new graph before evaluation. No scene factory or disk format is supplied for graph state.</remarks>
-public class AnimationTree : AnimationMixer
+/// a new graph before evaluation. Exact built-in scene files store graph definitions and authored writable cells;
+/// clocks, read-only diagnostics and per-path playback owners remain transient.</remarks>
+public partial class AnimationTree : AnimationMixer
 {
     private static readonly PropertyDescriptor[] GraphProperties =
     [
-        new PropertyDescriptor<AnimationTree, AnimationRootNode?>(nameof(TreeRoot), n => n.TreeRoot, (n, v) => n.TreeRoot = v, _ => null),
-        new PropertyDescriptor<AnimationTree, string>(nameof(AnimPlayer), n => n.AnimPlayer, (n, v) => n.AnimPlayer = v, _ => ""),
-        new PropertyDescriptor<AnimationTree, bool>(nameof(Deterministic), n => n.Deterministic, (n, v) => n.Deterministic = v, _ => true),
-        new PropertyDescriptor<AnimationTree, AnimationCallbackModeDiscrete>(nameof(CallbackModeDiscrete), n => n.CallbackModeDiscrete, (n, v) => n.CallbackModeDiscrete = v, _ => AnimationCallbackModeDiscrete.ForceContinuous),
+        new PropertyDescriptor<AnimationTree, AnimationRootNode?>(nameof(TreeRoot), n => n.TreeRoot, (n, v) => n.TreeRoot = v, _ => null, stored: true),
+        new PropertyDescriptor<AnimationTree, string>(nameof(AnimPlayer), n => n.AnimPlayer, (n, v) => n.AnimPlayer = v, _ => "", stored: true),
+        new PropertyDescriptor<AnimationTree, bool>(nameof(Deterministic), n => n.Deterministic, (n, v) => n.Deterministic = v, _ => true, stored: true),
+        new PropertyDescriptor<AnimationTree, AnimationCallbackModeDiscrete>(nameof(CallbackModeDiscrete), n => n.CallbackModeDiscrete, (n, v) => n.CallbackModeDiscrete = v, _ => AnimationCallbackModeDiscrete.ForceContinuous, stored: true),
     ];
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Where(p => p.Name != nameof(Deterministic) && p.Name != nameof(CallbackModeDiscrete)).Concat(GraphProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Where(p => p.Name != nameof(Deterministic) && p.Name != nameof(CallbackModeDiscrete)).Concat(GraphProperties).Concat(GetFileParameterProperties());
 
     private AnimationRootNode? _root;
     private string _animPlayer = "";
@@ -161,21 +162,21 @@ public class AnimationTree : AnimationMixer
             child.Weights[i] = weight; any |= Math.Abs(weight) > 1e-12;
         }
         if (!seek && !sync && !any) time = 0;
-        return Evaluate(child, time, seek, external, test || parent.TestOnly, delta ?? (seek ? parent.Delta : time));
+        return Evaluate(child, time, seek, external, test || parent.TestOnly, delta ?? (seek ? parent.Delta : time), parent.Weight * blend);
     }
-    private AnimationGraphTime Evaluate(AnimationGraphInstance instance, double time, bool seek, bool external, bool test, double? inheritedDelta = null)
+    private AnimationGraphTime Evaluate(AnimationGraphInstance instance, double time, bool seek, bool external, bool test, double? inheritedDelta = null, double weight = 1)
     {
         _graphTested |= test;
         if (instance.Evaluating) throw new InvalidOperationException("Animation graph contains an input connection cycle.");
         var generation = _graphGeneration; instance.Evaluating = true; var definition = instance.Definition; var previous = definition.Context; var context = instance.Context;
-        context.Time = time; context.Delta = seek && external ? instance.Get(AnimationNode.CurrentPosition) - time : inheritedDelta ?? time; context.Seek = seek; context.External = external; context.TestOnly = test; context.Result = default; context.Position = seek ? time : instance.Get(AnimationNode.CurrentPosition) + time;
+        context.Weight = weight; context.Time = time; context.Delta = seek && external ? instance.Get(AnimationNode.CurrentPosition) - time : inheritedDelta ?? time; context.Seek = seek; context.External = external; context.TestOnly = test; context.Result = default; context.Position = seek ? time : instance.Get(AnimationNode.CurrentPosition) + time;
         definition.Context = context;
         try
         {
             var remaining = definition.Process(time, seek, external, test); Animation.Finite(remaining);
             var result = context.Result;
             if (!context.HasTime) result = new(Math.Max(0, remaining), 0, 0, SpriteFrames.LoopMode.None);
-            if (!test && generation == _graphGeneration && !definition.IsDisposed && !IsDisposed) { instance.Set(AnimationNode.CurrentLength, result.Length, true); instance.Set(AnimationNode.CurrentPosition, result.Position, true); instance.Set(AnimationNode.CurrentDelta, result.Delta, true); }
+            if (!test && generation == _graphGeneration && !definition.IsDisposed && !IsDisposed) { instance.Set(AnimationNode.CurrentLength, result.Length, true); instance.Set(AnimationNode.CurrentPosition, result.Position, true); instance.Set(AnimationNode.CurrentDelta, result.Delta, true); instance.PreviousTime = result; instance.HasPreviousTime = true; }
             return result;
         }
         finally { definition.Context = previous; instance.Evaluating = false; context.HasTime = false; }
@@ -215,14 +216,14 @@ public class AnimationTree : AnimationMixer
     { if (what == NotificationEnterTree) { _graphTree = Tree; if (_graphTree is not null) _graphTree.TreeChanged += SceneChanged; } else if (what == NotificationExitTree) { if (_graphTree is not null) _graphTree.TreeChanged -= SceneChanged; _graphTree = null; } if (what is NotificationEnterTree or NotificationReady) { _playerDirty = true; ReconcilePlayer(); } base.OnNotification(what); }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
-    { if (disposing) { if (_graphTree is not null) _graphTree.TreeChanged -= SceneChanged; _graphTree = null; UnsubscribeRoot(); _root = null; DetachPlayer(); foreach (var playback in _playbacks) playback.Dispose(); _playbacks.Clear(); _instances.Clear(); _clipMaps.Clear(); _frames.Clear(); _frameWeights.Clear(); _notices.Clear(); AnimationPlayerChanged = null; } base.Dispose(disposing); }
+    { if (disposing) { if (_graphTree is not null) _graphTree.TreeChanged -= SceneChanged; _graphTree = null; UnsubscribeRoot(); _root = null; _fileParameterValues.Clear(); _fileParameterSchemas = null; DetachPlayer(); foreach (var playback in _playbacks) playback.Dispose(); _playbacks.Clear(); _instances.Clear(); _clipMaps.Clear(); _frames.Clear(); _frameWeights.Clear(); _notices.Clear(); AnimationPlayerChanged = null; } base.Dispose(disposing); }
 }
-internal readonly record struct AnimationGraphTime(double Length, double Position, double Delta, SpriteFrames.LoopMode Loop, bool WillEnd = false)
-{ internal double Remaining => GetRemaining(false); internal double GetRemaining(bool breakLoop) => Loop != SpriteFrames.LoopMode.None && !breakLoop ? 1e20 : Loop != SpriteFrames.LoopMode.None && WillEnd ? 0 : Math.Max(0, Length - Position); }
+internal readonly record struct AnimationGraphTime(double Length, double Position, double Delta, SpriteFrames.LoopMode Loop, bool WillEnd = false, bool Infinite = false)
+{ internal double Remaining => GetRemaining(false); internal double GetRemaining(bool breakLoop) => Infinite || Loop != SpriteFrames.LoopMode.None && !breakLoop ? 31540000 : Loop != SpriteFrames.LoopMode.None && WillEnd ? 0 : Mathf.IsZeroApprox(Length - Position) ? 0 : Length - Position; }
 internal sealed class AnimationGraphContext(AnimationTree tree, AnimationGraphInstance instance)
 {
     internal readonly AnimationTree Tree = tree; internal readonly AnimationGraphInstance Instance = instance;
-    internal double Time, Position, Delta; internal bool Seek, External, TestOnly, HasTime;
+    internal double Time, Position, Delta, Weight; internal bool Seek, External, TestOnly, HasTime;
     internal AnimationGraphTime Result;
     internal bool IsCurrent(long generation) => !Instance.Definition.IsDisposed && !Tree.IsDisposed && generation == Tree.GraphGeneration;
 }
@@ -232,7 +233,7 @@ internal sealed class AnimationGraphInstance
     internal string Path; internal readonly double[] Weights; internal readonly AnimationGraphInstance?[] Inputs;
     internal readonly Dictionary<string, AnimationGraphInstance> Children = new(StringComparer.Ordinal);
     internal readonly Dictionary<string, AnimationParameterSlot> Parameters = new(StringComparer.Ordinal);
-    internal readonly AnimationGraphContext Context; internal bool Evaluating;
+    internal readonly AnimationGraphContext Context; internal bool Evaluating, HasPreviousTime; internal AnimationGraphTime PreviousTime;
     internal AnimationGraphInstance(AnimationTree tree, AnimationNode definition, string path, string name, AnimationGraphInstance? parent, int tracks)
     { Definition = definition; Path = path; Name = name; Parent = parent; Weights = new double[tracks]; Inputs = new AnimationGraphInstance?[definition.GetInputCount()]; Context = new(tree, this); }
     internal T Get<T>(AnimationParameter<T> key) { ArgumentNullException.ThrowIfNull(key); return (Parameters.TryGetValue(key.Name, out var slot) && ReferenceEquals(slot.Parameter, key) && slot is AnimationParameterSlot<T> typed) ? typed.Value : throw new ArgumentException("Parameter is not declared by this node.", nameof(key)); }

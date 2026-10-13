@@ -4,7 +4,7 @@ internal static class AnimationGraphTests
 {
     private static readonly PropertyDescriptor<Probe, double> X = new("X", n => n.X, (n, v) => { n.X = v; n.Writes++; n.Hook?.Invoke(); });
     private static readonly PropertyDescriptor<Probe, double> Y = new("Y", n => n.Y, (n, v) => n.Y = v);
-    internal static void Run() { Authoring(); Playback(); Arithmetic(); Timing(); Provider(); Custom(); Ownership(); Warm(); Console.WriteLine("Typed animation graph editing, per-tree parameters/clocks, filters, arithmetic, time controls, lifetime and warmed checks passed."); }
+    internal static void Run() { AnimationNodeExtensionTests.Run(); Authoring(); Playback(); Arithmetic(); Timing(); Provider(); Custom(); Ownership(); Warm(); Console.WriteLine("Typed animation graph editing, per-tree parameters/clocks, filters, arithmetic, time controls, lifetime and warmed checks passed."); }
     private static void Authoring()
     {
         using var graph = new AnimationNodeBlendTree(); using var a = new AnimationNodeAnimation(); using var b = new AnimationNodeBlend2();
@@ -69,17 +69,17 @@ internal static class AnimationGraphTests
     }
     private static void Custom()
     {
-        using var node = new CustomNode(); using var scope = new Setup(node, Clip(10), Clip(30)); scope.Controller.Advance(0); Near(scope.Target.X, 10); scope.Controller.Advance(.5); Near(scope.Controller.GetParameter("", CustomNode.Memory), 2); Check(node.LastTree == scope.Controller.InstanceID, "Custom process helper context.");
+        using var node = new CustomNode(); using var customGraph = new AnimationNodeBlendTree(); customGraph.AddNode("custom", node); customGraph.ConnectNode("output", 0, "custom"); using var scope = new Setup(customGraph, Clip(10), Clip(30)); scope.Controller.Advance(0); Near(scope.Target.X, 10); scope.Controller.Advance(.5); Near(scope.Controller.GetParameter("custom", CustomNode.Memory), 2); Check(node.LastTree == scope.Controller.InstanceID, "Custom process helper context.");
         using var graph = Basic(out var mix, out var a, out var b); Action<ulong, string, string> failRename = (_, _, _) => throw new InvalidOperationException("rename fixture"); graph.AnimationNodeRenamed += failRename; using var editing = new Setup(graph, Clip(10), Clip(30)); editing.Controller.SetParameter("mix", AnimationNodeBlend2.BlendAmount, .5); editing.Controller.Advance(0); Reject<AggregateException>(() => graph.RenameNode("mix", "renamed")); Near(editing.Controller.GetParameter("renamed", AnimationNodeBlend2.BlendAmount), .5); graph.AnimationNodeRenamed -= failRename; graph.RenameNode("renamed", "mix");
         Action failed = () => throw new InvalidOperationException("fixture"); mix.TreeChanged += failed; Reject<AggregateException>(() => mix.FilterEnabled = true); mix.TreeChanged -= failed; mix.SetFilterPath("target:X", true); editing.Controller.Advance(0); Near(editing.Target.X, 20);
         mix.RemoveInput(0); mix.AddInput("replacement"); graph.ConnectNode("mix", 1, "a"); editing.Controller.Advance(0); Near(editing.Target.X, 20); a.Dispose(); b.Dispose(); mix.Dispose();
     }
-    private sealed class CustomNode : AnimationRootNode
+    private sealed class CustomNode : AnimationNodeExtension
     {
         internal static readonly AnimationParameter<double> Memory = new("memory", 0);
         internal ulong LastTree;
         protected override IEnumerable<AnimationParameter> OnGetParameterList() => base.OnGetParameterList().Append(Memory);
-        protected override double OnProcess(double time, bool seek, bool external, bool testOnly) { LastTree = GetProcessingAnimationTreeInstanceID(); SetParameter(Memory, GetParameter(Memory) + 1); BlendAnimation("a", time, time, seek, external, 1); return 4; }
+        protected override AnimationNodeTimeInfo OnProcessAnimationNode(in AnimationNodePlaybackInfo info, bool testOnly) { LastTree = GetProcessingAnimationTreeInstanceID(); SetParameter(Memory, GetParameter(Memory) + 1); BlendAnimation("a", info.Time, info.Delta, info.Seeked, info.IsExternalSeeking, 1); return new(4, info.Time, info.Delta); }
     }
     internal static void RunHost()
     {

@@ -1,6 +1,6 @@
 # AnimationNodeBlendTree
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.AnimationNodeBlendTree` · **Source:** [AnimationNodeBlendTree.cs](../../src/Scene/Animation/AnimationNodeBlendTree.cs).
 
@@ -12,7 +12,7 @@ A named directed graph of borrowed animation resources with one owned output res
 
 The reserved output exists on construction and cannot be renamed, removed or used as a source. AddNode borrows a named resource. Each source may feed at most one destination input; destinations may have multiple distinct inputs. Connect rejects occupied ports and cycles. Remove clears referring connections; Rename updates connection names and per-tree paths. Removing an input shifts existing connections by index, including equal captions. GraphOffset and positions are finite authoring metadata and do not change sampling. A duplicate owns a distinct output and connection containers.
 
-Graph resources borrow child resources; the blend tree owns only its reserved output. Resource duplication copies definition containers, with shallow/deep resource aliases governed by Resource. Evaluation state and typed parameter cells belong to each AnimationTree and graph path. A definition may be shared sequentially across trees; concurrent processing of the same definition is unsupported. Scene controllers and parameter writes obey the inherited Node owner-thread rule. Resource edits invalidate prepared graph/binding state; cold preparation may allocate. No graph factory, disk format, editor UI or expression evaluator is supplied.
+Graph resources borrow child resources; the blend tree owns only its reserved output. Resource duplication copies definition containers, with shallow/deep resource aliases governed by Resource. Evaluation state and typed parameter cells belong to each AnimationTree and graph path. A definition may be shared sequentially across trees; concurrent processing of the same definition is unsupported. Scene controllers and parameter writes obey the inherited Node owner-thread rule. Resource edits invalidate prepared graph/binding state; cold preparation may allocate. Exact built-in graph file schemas now execute; editor UI and expression evaluation remain separate.
 
 Input/child/parameter names use ordinal comparison. Missing names, invalid input indices, wrong typed keys, duplicate schemas and disconnected required inputs fail explicitly. Disposed resources throw ObjectDisposedException; processing helpers outside evaluation throw InvalidOperationException. Nonfinite times/weights/authoring positions reject. Graph cycles reject before connection/self-containment edits or during preparation for custom graphs. Mutation commits before observer notification; TreeChanged reaches every subscribed tree even when another handler throws, collecting graph notification failures. Authoring callback exceptions propagate; the caller can repair the committed graph. Disposal detaches observers and borrows child resources. Nested graph processing guards connection cycles; inherited mixer Advance rejects recursion and invalidates stale property commits after reentrant edits.
 
@@ -92,7 +92,6 @@ System.ArgumentOutOfRangeException: A numeric value is nonfinite or outside the 
 | `protected override System.String OnGetCaption()` | Supplies the graph resource's caption. |
 | `protected override Electron2D.AnimationNode OnGetChildByName(System.String name)` | Finds a named child definition. |
 | `protected override System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String, Electron2D.AnimationNode>> OnGetChildNodes()` | Returns ordered named child definitions; no scene nodes are created. |
-| `protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)` | Evaluates custom graph behavior; helpers can blend inputs, children and clips. |
 | `public System.Void RemoveNode(System.String name)` | Removes a borrowed node and every connection referencing it; output cannot be removed. |
 | `public System.Void RenameNode(System.String name, System.String newName)` | Renames a borrowed node and updates its connection names. |
 | `public System.Void SetNodePosition(System.String name, Electron2D.Vector2 position)` | Changes authoring-position metadata without changing playback. |
@@ -283,25 +282,6 @@ Returns: The graph's borrowed children.
 
 System.ObjectDisposedException: This resource/controller or a required borrowed resource has been disposed.
 
-<a id="member-84d442adf7b6"></a>
-### OnProcess
-
-`protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)`
-
-Evaluates custom graph behavior; helpers can blend inputs, children and clips.
-
-time: Relative delta seconds, or absolute time when seeking.
-
-seek: Whether time is absolute.
-
-isExternalSeeking: Whether the seek originated outside startup.
-
-testOnly: Whether persistent changes and mixer writes are suppressed.
-
-Returns: The selected remaining duration, or zero when no input is evaluated.
-
-System.ObjectDisposedException: This resource/controller or a required borrowed resource has been disposed.
-
 <a id="member-8a942d434798"></a>
 ### RemoveNode
 
@@ -415,4 +395,8 @@ A valid connection.
 
 ## Lifecycle, verification and dependencies
 
-[ADR 0093](../decisions/scene-animation.md#adr-0093) owns this typed contract. [Scene animation](../components/scene-animation.md#animation-graphs) records formulas, topology, lifetime, tests and limitations. [AnimationGraphTests](../../tests/Electron2D.Tests/AnimationGraphTests.cs) verifies public managed execution and two real Wayland GPU/two compatibility host cycles with five rendered positions. Warmed scalar graph/property passes allocate zero managed bytes on the owner thread; cold preparation/result arrays, native/driver allocations and other platforms are separate. State machines/grouped controllers, Expression evaluation, non-property track schedulers and graph/disk/editor round trips remain applicable separate slices in coverage.
+[ADR 0093](../decisions/scene-animation.md#adr-0093) owns this typed contract. [Scene animation](../components/scene-animation.md#animation-graphs) records formulas, topology, lifetime, tests and limitations. [AnimationGraphTests](../../tests/Electron2D.Tests/AnimationGraphTests.cs) verifies public managed execution and two real Wayland GPU/two compatibility host cycles with five rendered positions. Warmed scalar graph/property passes allocate zero managed bytes on the owner thread; cold preparation/result arrays, native/driver allocations and other platforms are separate. State machines and event-track schedulers execute. Expression strings remain excluded by the typed profile; editor authoring and foreign-platform acceptance remain separate.
+
+## File persistence
+
+Built-in graph definitions now use exact typed resource-file factories. Files retain input captions, filters, authoring policies, child topology and aliases. AnimationTree scene files also retain compiled writable parameter values; clocks, requests already consumed, read-only diagnostics and private playback objects restart. Application subclasses register their own exact factory and stable parameter/predicate IDs. See [graph file persistence](../components/scene-animation.md#graph-file-persistence).

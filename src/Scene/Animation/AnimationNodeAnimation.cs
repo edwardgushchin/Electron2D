@@ -16,14 +16,14 @@ public sealed class AnimationNodeAnimation : AnimationRootNode
 {
     private static readonly PropertyDescriptor[] GraphProperties =
     [
-        new PropertyDescriptor<AnimationNodeAnimation, string>(nameof(Animation), n => n.Animation, (n, v) => n.Animation = v, _ => ""),
-        new PropertyDescriptor<AnimationNodeAnimation, bool>(nameof(AdvanceOnStart), n => n.AdvanceOnStart, (n, v) => n.AdvanceOnStart = v, _ => false),
-        new PropertyDescriptor<AnimationNodeAnimation, AnimationPlayMode>(nameof(PlayMode), n => n.PlayMode, (n, v) => n.PlayMode = v, _ => AnimationPlayMode.Forward),
-        new PropertyDescriptor<AnimationNodeAnimation, bool>(nameof(UseCustomTimeline), n => n.UseCustomTimeline, (n, v) => n.UseCustomTimeline = v, _ => false),
-        new PropertyDescriptor<AnimationNodeAnimation, double>(nameof(TimelineLength), n => n.TimelineLength, (n, v) => n.TimelineLength = v, _ => 1),
-        new PropertyDescriptor<AnimationNodeAnimation, double>(nameof(StartOffset), n => n.StartOffset, (n, v) => n.StartOffset = v, _ => 0),
-        new PropertyDescriptor<AnimationNodeAnimation, SpriteFrames.LoopMode>(nameof(LoopMode), n => n.LoopMode, (n, v) => n.LoopMode = v, _ => SpriteFrames.LoopMode.None),
-        new PropertyDescriptor<AnimationNodeAnimation, bool>(nameof(StretchTimeScale), n => n.StretchTimeScale, (n, v) => n.StretchTimeScale = v, _ => false),
+        new PropertyDescriptor<AnimationNodeAnimation, string>(nameof(Animation), n => n.Animation, (n, v) => n.Animation = v, _ => "", stored: true),
+        new PropertyDescriptor<AnimationNodeAnimation, bool>(nameof(AdvanceOnStart), n => n.AdvanceOnStart, (n, v) => n.AdvanceOnStart = v, _ => false, stored: true),
+        new PropertyDescriptor<AnimationNodeAnimation, AnimationPlayMode>(nameof(PlayMode), n => n.PlayMode, (n, v) => n.PlayMode = v, _ => AnimationPlayMode.Forward, stored: true),
+        new PropertyDescriptor<AnimationNodeAnimation, bool>(nameof(UseCustomTimeline), n => n.UseCustomTimeline, (n, v) => n.UseCustomTimeline = v, _ => false, stored: true),
+        new PropertyDescriptor<AnimationNodeAnimation, double>(nameof(TimelineLength), n => n.TimelineLength, (n, v) => n.TimelineLength = v, _ => 1, stored: true),
+        new PropertyDescriptor<AnimationNodeAnimation, double>(nameof(StartOffset), n => n.StartOffset, (n, v) => n.StartOffset = v, _ => 0, stored: true),
+        new PropertyDescriptor<AnimationNodeAnimation, SpriteFrames.LoopMode>(nameof(LoopMode), n => n.LoopMode, (n, v) => n.LoopMode = v, _ => SpriteFrames.LoopMode.None, stored: true),
+        new PropertyDescriptor<AnimationNodeAnimation, bool>(nameof(StretchTimeScale), n => n.StretchTimeScale, (n, v) => n.StretchTimeScale = v, _ => false, stored: true),
     ];
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(GraphProperties);
@@ -73,7 +73,7 @@ public sealed class AnimationNodeAnimation : AnimationRootNode
     /// <inheritdoc />
     protected override string OnGetCaption() => "Animation";
     /// <inheritdoc />
-    protected override double OnProcess(double time, bool seek, bool isExternalSeeking, bool testOnly)
+    internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly)
     {
         var c = Current(); var clip = c.Tree.GetAnimation(_animation); ObjectDisposedException.ThrowIf(clip.IsDisposed, clip);
         var clipLength = clip.Length; var length = _customTimeline ? _length : clipLength; var loop = _customTimeline ? _loop : clip.LoopMode;

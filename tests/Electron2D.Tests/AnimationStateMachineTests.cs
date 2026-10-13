@@ -126,7 +126,11 @@ internal static class AnimationStateMachineTests
     private sealed class Box : Entity { internal Action? ReadyAction; protected override void OnReady() => ReadyAction?.Invoke(); protected override void OnDraw() => DrawRect(new(-3, -3, 6, 6), Colors.Red); }
     private sealed class BorrowedControllerNode(AnimationParameter<AnimationNodeStateMachinePlayback> key) : AnimationRootNode
     { protected override IEnumerable<AnimationParameter> OnGetParameterList() => base.OnGetParameterList().Append(key); }
-    private sealed class Gate : AnimationNode { internal bool Test = true; internal Gate() => AddInput("in"); protected override double OnProcess(double time, bool seek, bool external, bool testOnly) => BlendInput(0, time, seek, external, 1, testOnly: Test); }
+    private sealed class Gate : AnimationNodeExtension
+    {
+        internal bool Test = true; internal Gate() => AddInput("in"); protected override AnimationNodeTimeInfo OnProcessAnimationNode(in AnimationNodePlaybackInfo info, bool testOnly)
+        { var remaining = BlendInput(0, info.Seeked ? info.Time : info.Delta, info.Seeked, info.IsExternalSeeking, 1, testOnly: Test); return new(Math.Max(0, remaining) + info.Time, info.Time, info.Delta); }
+    }
     private sealed class Probe : Node { internal double X; internal int Calls; internal Action? Hook { get; set; } }
     private sealed class Setup : IDisposable
     {

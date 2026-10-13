@@ -272,3 +272,5 @@ Window content policies now execute logical-size fitting, raster target selectio
 [Animation cue persistence](../components/scene-animation.md#cue-persistence) reconstructs all current method/audio/nested track kinds for existing players and graphs using compiled callback IDs and typed resource references.
 
 [Controller scene files](../components/scene-animation.md#controller-scene-files) now preserve exact AnimationMixer/Player authored scene state and load Ready-time autoplay through existing scheduling, with library aliases across nodes. Graph definitions and reset-on-save capture transactions remain distinct dependencies.
+
+Animation graph resources and AnimationTree scene controllers now persist authored topology, compiled writable parameter IDs and typed values through the existing archive. See [graph file persistence](../components/scene-animation.md#graph-file-persistence). Resource validation runs after all embedded payloads and before publication.

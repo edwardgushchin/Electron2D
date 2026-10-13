@@ -154,3 +154,19 @@ Version-2 role-aware missing-resource storage, snapshot policy and reference rel
 `RegisterAnimationProperty<TOwner,TValue>(id, property, interpolate)` registers the immutable compiled binding used by file-backed value and scalar Bézier tracks. Reuse the exact descriptor/interpolator pair while authoring and register the same schema in every loading process. IDs and binding pairs are unique; descriptors must be writable. File data never resolves a CLR member or restores a delegate. See [typed clip persistence](../components/scene-animation.md#typed-clip-persistence).
 
 `RegisterAnimationMethod<TOwner,TArguments>(id, callback)` registers immutable compiled method-key receiver/payload bindings. Names remain diagnostic; arguments use typed codecs/resource references. See [cue persistence](../components/scene-animation.md#cue-persistence). The AudioStreamWAV exact resource factory preserves encoded payload and authored metadata.
+
+## Animation graph bindings
+
+RegisterAnimationParameter associates a stable ID with one exact compiled typed AnimationParameter key. RegisterAnimationPredicate associates a stable ID with an exact compiled machine callback. Both registrations are immutable: duplicate IDs/identities throw InvalidOperationException; null arguments reject; IDs must be nonblank, at most 256 characters and contain no control characters. Application callbacks remain process-owned and are never serialized. Read-only keys may identify conditions but do not become saved writable cells. Register bindings during application setup in every loading process.
+
+### RegisterAnimationParameter
+
+`public static System.Void RegisterAnimationParameter<TValue>(System.String id, AnimationParameter<TValue> parameter)`
+
+The generic value type must have a portable archive value codec or resource-reference schema.
+
+### RegisterAnimationPredicate
+
+`public static System.Void RegisterAnimationPredicate(System.String id, System.Func<Electron2D.AnimationTree, System.Boolean> predicate)`
+
+The callback receives the evaluated AnimationTree and returns its advance decision; captured state remains application-owned.

@@ -2,15 +2,16 @@ namespace Electron2D;
 
 /// <summary>A reusable animation-graph resource with typed parameters, inputs and track filters.</summary>
 /// <remarks>This resource is independent of scene Node. Process-local helpers operate only while a tree evaluates
-/// the resource; parameters and playback state belong to the tree and path, allowing resource sharing.</remarks>
-public class AnimationNode : Resource
+/// the resource; parameters and playback state belong to the tree and path, allowing resource sharing.
+/// Built-in resource files retain authored definitions, inputs, filters and shared child identities.</remarks>
+public partial class AnimationNode : Resource
 {
     private static readonly PropertyDescriptor[] GraphProperties =
     [
-        new PropertyDescriptor<AnimationNode, bool>(nameof(FilterEnabled), n => n.FilterEnabled, (n, v) => n.FilterEnabled = v, _ => false),
+        new PropertyDescriptor<AnimationNode, bool>(nameof(FilterEnabled), n => n.FilterEnabled, (n, v) => n.FilterEnabled = v, _ => false, stored: true),
     ];
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(GraphProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(GraphProperties).Concat(GetBaseFileProperties()).Concat(GetGraphFileProperties());
 
     /// <summary>Controls how an enabled track filter affects a child contribution.</summary>
     public enum FilterAction
@@ -193,21 +194,14 @@ public class AnimationNode : Resource
     /// <returns>False for the base resource.</returns>
     /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>
     protected virtual bool OnHasFilter() => false;
-    /// <summary>Evaluates custom graph behavior; helpers can blend inputs, children and clips.</summary>
-    /// <param name="time">Relative delta seconds, or absolute time when seeking.</param>
-    /// <param name="seek">Whether time is absolute.</param>
-    /// <param name="isExternalSeeking">Whether the seek originated outside startup.</param>
-    /// <param name="testOnly">Whether persistent changes and mixer writes are suppressed.</param>
-    /// <returns>The selected remaining duration, or zero when no input is evaluated.</returns>
-    /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>
-    protected virtual double OnProcess(double time, bool seek, bool isExternalSeeking, bool testOnly) => 0;
+    internal virtual double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly) => 0;
     internal AnimationGraphContext Current() { ThrowIfDisposed(); return Context ?? throw new InvalidOperationException("Animation-node processing helpers require an active AnimationTree evaluation."); }
     internal IEnumerable<KeyValuePair<string, AnimationNode>> Children() => OnGetChildNodes();
     internal IEnumerable<AnimationParameter> Parameters() => OnGetParameterList();
     internal TValue ParameterDefault<TValue>(AnimationParameter<TValue> key) => OnGetParameterDefaultValue(key);
     internal bool ParameterReadOnly(AnimationParameter key) => OnIsParameterReadOnly(key);
     internal bool HasFilter => OnHasFilter();
-    internal double Process(double time, bool seek, bool external, bool test) => OnProcess(time, seek, external, test);
+    internal double Process(double time, bool seek, bool external, bool test) => ProcessGraph(time, seek, external, test);
     internal static void CollectException(ref List<Exception>? errors, Exception error) => (errors ??= []).Add(error);
     internal static void ThrowCollected(string message, List<Exception>? errors) { if (errors is not null) throw new AggregateException(message, errors); }
     internal void EmitGraphChanged()
@@ -215,6 +209,7 @@ public class AnimationNode : Resource
         List<Exception>? errors = null;
         try { EmitChanged(); } catch (Exception error) { CollectException(ref errors, error); }
         if (TreeChanged is { } handlers) foreach (Action handler in handlers.GetInvocationList()) try { handler(); } catch (Exception error) { CollectException(ref errors, error); }
+        if (!IsDisposed) try { NotifyPropertyListChanged(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Animation graph notification failed.", errors);
     }
     internal void Removed(ulong id, string name)
@@ -243,7 +238,7 @@ public class AnimationNodeSync : AnimationNode
 {
     private static readonly PropertyDescriptor[] GraphProperties =
     [
-        new PropertyDescriptor<AnimationNodeSync, bool>(nameof(Sync), n => n.Sync, (n, v) => n.Sync = v, _ => false),
+        new PropertyDescriptor<AnimationNodeSync, bool>(nameof(Sync), n => n.Sync, (n, v) => n.Sync = v, _ => false, stored: true),
     ];
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(GraphProperties);

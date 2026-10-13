@@ -5,7 +5,7 @@ namespace Electron2D;
 /// <summary>Switches named graph inputs with per-tree requests, crossfades and automatic advancement.</summary>
 /// <remarks>Current state changes when a fade starts. Input policies and curves are resource definitions;
 /// selection, requests and timers belong to each AnimationTree/path. Curves and connected graphs are borrowed.</remarks>
-public sealed class AnimationNodeTransition : AnimationNodeSync
+public sealed partial class AnimationNodeTransition : AnimationNodeSync
 {
     /// <summary>The writable exact input-name request; empty means no request and real processing consumes it.</summary>
     /// <exception cref="ObjectDisposedException">The resource has been disposed.</exception>
@@ -56,10 +56,10 @@ public sealed class AnimationNodeTransition : AnimationNodeSync
     public bool AllowTransitionToSelf { get { ThrowIfDisposed(); return _self; } set { ThrowIfDisposed(); _self = value; EmitGraphChanged(); } }
     private static readonly PropertyDescriptor[] TransitionProperties =
     [
-        new PropertyDescriptor<AnimationNodeTransition, int>(nameof(InputCount), n => n.InputCount, (n, v) => n.InputCount = v, _ => 0),
-        new PropertyDescriptor<AnimationNodeTransition, double>(nameof(XFadeTime), n => n.XFadeTime, (n, v) => n.XFadeTime = v, _ => 0),
-        new PropertyDescriptor<AnimationNodeTransition, Curve?>(nameof(XFadeCurve), n => n.XFadeCurve, (n, v) => n.XFadeCurve = v, _ => null),
-        new PropertyDescriptor<AnimationNodeTransition, bool>(nameof(AllowTransitionToSelf), n => n.AllowTransitionToSelf, (n, v) => n.AllowTransitionToSelf = v, _ => false),
+        new PropertyDescriptor<AnimationNodeTransition, int>(nameof(InputCount), n => n.InputCount, (n, v) => n.InputCount = v, _ => 0, stored: true),
+        new PropertyDescriptor<AnimationNodeTransition, double>(nameof(XFadeTime), n => n.XFadeTime, (n, v) => n.XFadeTime = v, _ => 0, stored: true),
+        new PropertyDescriptor<AnimationNodeTransition, Curve?>(nameof(XFadeCurve), n => n.XFadeCurve, (n, v) => n.XFadeCurve = v, _ => null, stored: true),
+        new PropertyDescriptor<AnimationNodeTransition, bool>(nameof(AllowTransitionToSelf), n => n.AllowTransitionToSelf, (n, v) => n.AllowTransitionToSelf = v, _ => false, stored: true),
     ];
     /// <inheritdoc />
     public override bool AddInput(string name)
@@ -108,13 +108,13 @@ public sealed class AnimationNodeTransition : AnimationNodeSync
     /// <exception cref="ArgumentOutOfRangeException">The input index is outside the current port list.</exception>
     public bool IsInputReset(int input) { ThrowIfDisposed(); return _inputData[input].Reset; }
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(TransitionProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(TransitionProperties).Concat(InputFileProperties());
     /// <inheritdoc />
     protected override IEnumerable<AnimationParameter> OnGetParameterList() => base.OnGetParameterList().Concat(StateParameters);
     /// <inheritdoc />
     protected override string OnGetCaption() => "Transition";
     /// <inheritdoc />
-    protected override double OnProcess(double time, bool seek, bool isExternalSeeking, bool testOnly)
+    internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly)
     {
         var c = Current(); var generation = c.Tree.GraphGeneration; var state = GetParameter(Selected); var request = GetParameter(TransitionRequest); ArgumentNullException.ThrowIfNull(request); SetParameter(TransitionRequest, "");
         var current = state.Current is null ? -1 : _inputData.IndexOf(state.Current); var previous = state.Previous is null ? -1 : _inputData.IndexOf(state.Previous); var fade = GetParameter(PreviousXFading);

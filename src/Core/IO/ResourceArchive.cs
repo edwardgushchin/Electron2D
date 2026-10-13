@@ -266,6 +266,7 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
         for (var i = 0; i < _resources.Count; i++)
         {
             var resource = _resources[i];
+            resource.ValidateFileState();
             var role = resource is Mesh ? ResourceArchiveRole.Mesh : ResourceArchiveRole.Resource;
             var bounds = resource is Mesh mesh ? mesh.GetAABB() : default;
             var type = MissingResourceData.For(resource) is { } missing && missing.OriginalClass.Length != 0 ? ResourceArchive.ResolveType(missing.OriginalClass, role, false) : ResourceFileTypes.Get(resource.GetType());
@@ -501,6 +502,7 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
             else _ = ReadProperties(value, resource);
             if (value.GetAvailableBytes() != 0) throw new InvalidDataException("Trailing resource bytes.");
         }
+        foreach (var resource in Owned) resource.ValidateFileState();
     }
     private static void ReadImage(StreamPeerBuffer stream, Image image)
     {

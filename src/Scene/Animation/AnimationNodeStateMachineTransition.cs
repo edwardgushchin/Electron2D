@@ -23,7 +23,7 @@ public enum AnimationAdvanceMode
 /// <summary>A borrowed state-machine edge policy with typed conditions and optional unit fade curve.</summary>
 /// <remarks>Condition keys are declared on each owning machine. The predicate receives the current tree;
 /// captured state and callback allocations remain caller-owned. Changes invalidate attached graphs.</remarks>
-public sealed class AnimationNodeStateMachineTransition : Resource
+public sealed partial class AnimationNodeStateMachineTransition : Resource
 {
     private AnimationSwitchMode _switch = AnimationSwitchMode.Immediate;
     /// <summary>Selects immediate, synchronized or end-of-cycle switching.</summary>
@@ -89,18 +89,18 @@ public sealed class AnimationNodeStateMachineTransition : Resource
     public AnimationNodeStateMachineTransition() { }
     private static readonly PropertyDescriptor[] Properties =
     [
-        new PropertyDescriptor<AnimationNodeStateMachineTransition, AnimationSwitchMode>(nameof(SwitchMode), n => n.SwitchMode, (n, v) => n.SwitchMode = v, _ => AnimationSwitchMode.Immediate),
-        new PropertyDescriptor<AnimationNodeStateMachineTransition, AnimationAdvanceMode>(nameof(AdvanceMode), n => n.AdvanceMode, (n, v) => n.AdvanceMode = v, _ => AnimationAdvanceMode.Enabled),
+        new PropertyDescriptor<AnimationNodeStateMachineTransition, AnimationSwitchMode>(nameof(SwitchMode), n => n.SwitchMode, (n, v) => n.SwitchMode = v, _ => AnimationSwitchMode.Immediate, stored: true),
+        new PropertyDescriptor<AnimationNodeStateMachineTransition, AnimationAdvanceMode>(nameof(AdvanceMode), n => n.AdvanceMode, (n, v) => n.AdvanceMode = v, _ => AnimationAdvanceMode.Enabled, stored: true),
         new PropertyDescriptor<AnimationNodeStateMachineTransition, AnimationParameter<bool>?>(nameof(AdvanceCondition), n => n.AdvanceCondition, (n, v) => n.AdvanceCondition = v, _ => null),
         new PropertyDescriptor<AnimationNodeStateMachineTransition, Func<AnimationTree, bool>?>(nameof(AdvanceExpression), n => n.AdvanceExpression, (n, v) => n.AdvanceExpression = v, _ => null),
-        new PropertyDescriptor<AnimationNodeStateMachineTransition, double>(nameof(XFadeTime), n => n.XFadeTime, (n, v) => n.XFadeTime = v, _ => 0),
-        new PropertyDescriptor<AnimationNodeStateMachineTransition, Curve?>(nameof(XFadeCurve), n => n.XFadeCurve, (n, v) => n.XFadeCurve = v, _ => null),
-        new PropertyDescriptor<AnimationNodeStateMachineTransition, bool>(nameof(BreakLoopAtEnd), n => n.BreakLoopAtEnd, (n, v) => n.BreakLoopAtEnd = v, _ => false),
-        new PropertyDescriptor<AnimationNodeStateMachineTransition, bool>(nameof(Reset), n => n.Reset, (n, v) => n.Reset = v, _ => true),
-        new PropertyDescriptor<AnimationNodeStateMachineTransition, int>(nameof(Priority), n => n.Priority, (n, v) => n.Priority = v, _ => 1),
+        new PropertyDescriptor<AnimationNodeStateMachineTransition, double>(nameof(XFadeTime), n => n.XFadeTime, (n, v) => n.XFadeTime = v, _ => 0, stored: true),
+        new PropertyDescriptor<AnimationNodeStateMachineTransition, Curve?>(nameof(XFadeCurve), n => n.XFadeCurve, (n, v) => n.XFadeCurve = v, _ => null, stored: true),
+        new PropertyDescriptor<AnimationNodeStateMachineTransition, bool>(nameof(BreakLoopAtEnd), n => n.BreakLoopAtEnd, (n, v) => n.BreakLoopAtEnd = v, _ => false, stored: true),
+        new PropertyDescriptor<AnimationNodeStateMachineTransition, bool>(nameof(Reset), n => n.Reset, (n, v) => n.Reset = v, _ => true, stored: true),
+        new PropertyDescriptor<AnimationNodeStateMachineTransition, int>(nameof(Priority), n => n.Priority, (n, v) => n.Priority = v, _ => 1, stored: true),
     ];
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(Properties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(Properties).Concat(FileBindingProperties);
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new AnimationNodeStateMachineTransition();
     /// <inheritdoc />

@@ -1,6 +1,6 @@
 # Electron2D resources decisions
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 This bounded log owns the complete architectural records for resources. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0013](#adr-0013), [0014](#adr-0014), [0039](#adr-0039).
 <a id="adr-0013"></a>
 ## ADR 0013: Managed typed Resource contract
 
-Last updated: 2026-10-05
+Last updated: 2026-10-13
 
 ### Status
 
@@ -56,6 +56,8 @@ Constructors and property codecs are explicitly typed. ResourceFileTypes registe
 An archive contains a resource identity table and scene node tables. Allocate every internal resource identity before applying references to preserve aliases and cycles. External references retain UID, typed class and fallback path; Ordinary Ignore/Replace applies only to the root while dependency cache decisions reuse, and Deep modes propagate. Decode/preparation validates bounds and schema before cache publication; failure attempts every owned resource cleanup without disposing borrowed external resources. PackedScene consumes its existing typed stored model, replacing captured factory delegates with registered stable IDs in files and rebuilding direct factories on load. File-backed instantiation preserves ordinary detached construction and rollback under ADR 0023.
 
 This decision defines the first persistent producer and extensions; current executable behavior and verification are documented with the implementation. File authoring requires save plus fresh-process load/run under ADR 0090. Native rendering, editor controls, inheritance authoring, persistent delegate endpoints and general dynamic values retain their separate dependencies/exclusions.
+
+Built-in resource schema validation runs after every embedded payload is restored and before graph publication. Animation definitions use it for complete table/connection and containment validation, independent of archive table order; failures remain inside decoded-graph cleanup.
 
 ### Threaded loading and owner publication
 
@@ -144,7 +146,7 @@ Executable checks cover path ownership and races, event timing and failures, all
 <a id="adr-0014"></a>
 ## ADR 0014: Managed Resource lifetime and realtime allocation
 
-Last updated: 2026-10-05
+Last updated: 2026-10-13
 
 ### Status
 
@@ -209,7 +211,7 @@ This revision changes architecture and documentation only; it does not establish
 <a id="adr-0039"></a>
 ## ADR 0039: Managed image buffers and codec boundaries
 
-Last updated: 2026-09-23
+Last updated: 2026-10-13
 
 ### Status
 

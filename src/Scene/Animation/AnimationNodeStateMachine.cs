@@ -14,7 +14,7 @@ public enum AnimationStateMachineType
 /// <remarks>Start and End are owned boundary resources. Other states and transitions remain borrowed.
 /// Names are ordinal and cannot contain slash. Graph positions affect geometric travel cost.
 /// In-memory authoring runs on the owner thread; there is no disk persistence factory.</remarks>
-public sealed class AnimationNodeStateMachine : AnimationRootNode
+public sealed partial class AnimationNodeStateMachine : AnimationRootNode
 {
     /// <summary>The read-only per-tree/path playback controller, owned by the tree.</summary>
     public static readonly AnimationParameter<AnimationNodeStateMachinePlayback> Playback = new("playback", null!, true);
@@ -26,7 +26,7 @@ public sealed class AnimationNodeStateMachine : AnimationRootNode
     internal readonly List<Edge> Edges = [];
     private readonly Dictionary<AnimationNode, int> _children = new(ReferenceEqualityComparer.Instance);
     private readonly Dictionary<AnimationNodeStateMachineTransition, int> _policies = new(ReferenceEqualityComparer.Instance);
-    private readonly AnimationRootNode _start = new(), _end = new();
+    private AnimationRootNode _start = new(), _end = new();
     private AnimationStateMachineType _type;
     private bool _self, _resetEnds;
     private Vector2 _offset;
@@ -47,9 +47,9 @@ public sealed class AnimationNodeStateMachine : AnimationRootNode
     public bool ResetEnds { get { ThrowIfDisposed(); return _resetEnds; } set { ThrowIfDisposed(); _resetEnds = value; EmitGraphChanged(); } }
     private static readonly PropertyDescriptor[] Properties =
     [
-        new PropertyDescriptor<AnimationNodeStateMachine, AnimationStateMachineType>(nameof(StateMachineType), n => n.StateMachineType, (n, v) => n.StateMachineType = v, _ => AnimationStateMachineType.Root),
-        new PropertyDescriptor<AnimationNodeStateMachine, bool>(nameof(AllowTransitionToSelf), n => n.AllowTransitionToSelf, (n, v) => n.AllowTransitionToSelf = v, _ => false),
-        new PropertyDescriptor<AnimationNodeStateMachine, bool>(nameof(ResetEnds), n => n.ResetEnds, (n, v) => n.ResetEnds = v, _ => false),
+        new PropertyDescriptor<AnimationNodeStateMachine, AnimationStateMachineType>(nameof(StateMachineType), n => n.StateMachineType, (n, v) => n.StateMachineType = v, _ => AnimationStateMachineType.Root, stored: true),
+        new PropertyDescriptor<AnimationNodeStateMachine, bool>(nameof(AllowTransitionToSelf), n => n.AllowTransitionToSelf, (n, v) => n.AllowTransitionToSelf = v, _ => false, stored: true),
+        new PropertyDescriptor<AnimationNodeStateMachine, bool>(nameof(ResetEnds), n => n.ResetEnds, (n, v) => n.ResetEnds = v, _ => false, stored: true),
     ];
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(Properties);
@@ -211,7 +211,7 @@ public sealed class AnimationNodeStateMachine : AnimationRootNode
     /// <inheritdoc />
     protected override string OnGetCaption() => "StateMachine";
     /// <inheritdoc />
-    protected override double OnProcess(double time, bool seek, bool isExternalSeeking, bool testOnly)
+    internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly)
     { var c = Current(); var playback = c.Instance.Get(Playback); var result = playback.Process(c); c.Result = result; c.HasTime = true; return result.Remaining; }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new AnimationNodeStateMachine();
@@ -219,6 +219,10 @@ public sealed class AnimationNodeStateMachine : AnimationRootNode
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode mode, Func<Resource?, Resource?> duplicate, Func<Resource?, Resource?> force)
     {
         base.CopyCustomStateTo(target, deep, mode, duplicate, force); var copy = (AnimationNodeStateMachine)target; copy._type = _type; copy._self = _self; copy._resetEnds = _resetEnds; copy._offset = _offset;
+        while (copy.Edges.Count != 0) copy.RemoveTransitionByIndex(copy.Edges.Count - 1);
+        foreach (var name in copy.GetFileStateNames()) copy.RemoveNode(name);
+        if (deep) { copy.SetFileBoundary(true, (AnimationRootNode)force(_start)!); copy.SetFileBoundary(false, (AnimationRootNode)force(_end)!); }
+        else { copy._start.CopyFromResource(_start); copy._end.CopyFromResource(_end); }
         copy.States["Start"].Position = States["Start"].Position; copy.States["End"].Position = States["End"].Position;
         foreach (var state in States) if (state.Key is not "Start" and not "End") copy.AddNode(state.Key, deep ? (AnimationNode)duplicate(state.Value.Node)! : state.Value.Node, state.Value.Position);
         foreach (var edge in Edges) copy.AddTransition(edge.From, edge.To, deep ? (AnimationNodeStateMachineTransition)duplicate(edge.Policy)! : edge.Policy);

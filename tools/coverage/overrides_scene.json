@@ -3274,12 +3274,6 @@
       "reason": "ADR 0093 typed animation graph execution: reusable borrowed resources, per-tree/path typed parameter cells, clip timing, graph topology/filtering, signed Blend/Add/Sub, TimeScale/TimeSeek and provider integration. AnimationGraphTests verifies editing/cycles, two shared-tree instances, parameters/readonly/errors, arithmetic/filtering/clock edges, reentry/cleanup and zero warmed managed allocations. Two Linux Wayland GPU and two compatibility five-pose readbacks verify real rendered execution. Disk/editor and other-platform acceptance remain separate."
     },
     {
-      "godot": "AnimationNode::method:_process(float:,bool:,bool:,bool:)",
-      "electron2d": "method:Electron2D.AnimationNode.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
-      "state": "Implemented",
-      "reason": "ADR 0093 typed animation graph execution: reusable borrowed resources, per-tree/path typed parameter cells, clip timing, graph topology/filtering, signed Blend/Add/Sub, TimeScale/TimeSeek and provider integration. AnimationGraphTests verifies editing/cycles, two shared-tree instances, parameters/readonly/errors, arithmetic/filtering/clock edges, reentry/cleanup and zero warmed managed allocations. Two Linux Wayland GPU and two compatibility five-pose readbacks verify real rendered execution. Disk/editor and other-platform acceptance remain separate."
-    },
-    {
       "godot": "AnimationNode::method:add_input(String:)",
       "electron2d": "method:Electron2D.AnimationNode.AddInput(System.String)",
       "state": "Implemented",
@@ -3874,12 +3868,6 @@
       "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
     },
     {
-      "godot": "AnimationNodeBlendSpace1D::property:sync",
-      "electron2d": "property:Electron2D.AnimationNodeBlendSpace1D.Sync()",
-      "state": "Implemented",
-      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
-    },
-    {
       "godot": "AnimationNodeBlendSpace1D::property:sync_mode",
       "electron2d": "property:Electron2D.AnimationNodeBlendSpace1D.SyncMode()",
       "state": "Implemented",
@@ -4074,12 +4062,6 @@
     {
       "godot": "AnimationNodeBlendSpace2D::property:snap",
       "electron2d": "property:Electron2D.AnimationNodeBlendSpace2D.Snap()",
-      "state": "Implemented",
-      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
-    },
-    {
-      "godot": "AnimationNodeBlendSpace2D::property:sync",
-      "electron2d": "property:Electron2D.AnimationNodeBlendSpace2D.Sync()",
       "state": "Implemented",
       "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
     },
@@ -5284,6 +5266,30 @@
       "electron2d": "method:Electron2D.Animation.Optimize(System.Double,System.Double,System.Int32)",
       "godot": "Animation::method:optimize(float:,float:,int:)",
       "reason": "ADR 0093: typed float/double/Vector2 key reduction executes on existing player and graph curves; preserves equal-speed corners, discrete writes, custom interpolators, easing and cubic keys. Velocity/direction tolerances and decimal precision are validated; changes coalesce after commit."
+    },
+    {
+      "godot": "class:AnimationNodeExtension",
+      "electron2d": "T:Electron2D.AnimationNodeExtension",
+      "state": "Implemented",
+      "reason": "ADR 0093 modern typed graph extension: immutable playback input carries all eight time/delta/bounds/seek/crossing/weight fields; immutable timeline output carries all six length/position/delta/loop/end/infinite fields. Ordinary graph bounds are zero and prior reported length, or minus one initially. Compiled exact application resource factories persist custom definitions. AnimationNodeExtensionTests verifies loop helpers, all initial fields, crossing, callback failure rollback and zero warmed managed allocations; graph/action/state-machine consumers use this callback."
+    },
+    {
+      "godot": "AnimationNodeExtension::method:_process_animation_node(PackedFloat64Array:,bool:)",
+      "electron2d": "method:Electron2D.AnimationNodeExtension.OnProcessAnimationNode(ref Electron2D.AnimationNodePlaybackInfo,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 modern typed graph extension: immutable playback input carries all eight time/delta/bounds/seek/crossing/weight fields; immutable timeline output carries all six length/position/delta/loop/end/infinite fields. Ordinary graph bounds are zero and prior reported length, or minus one initially. Compiled exact application resource factories persist custom definitions. AnimationNodeExtensionTests verifies loop helpers, all initial fields, crossing, callback failure rollback and zero warmed managed allocations; graph/action/state-machine consumers use this callback."
+    },
+    {
+      "godot": "AnimationNodeExtension::method:get_remaining_time(PackedFloat32Array:,bool:)",
+      "electron2d": "method:Electron2D.AnimationNodeExtension.GetRemainingTime(Electron2D.AnimationNodeTimeInfo,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 modern typed graph extension: immutable playback input carries all eight time/delta/bounds/seek/crossing/weight fields; immutable timeline output carries all six length/position/delta/loop/end/infinite fields. Ordinary graph bounds are zero and prior reported length, or minus one initially. Compiled exact application resource factories persist custom definitions. AnimationNodeExtensionTests verifies loop helpers, all initial fields, crossing, callback failure rollback and zero warmed managed allocations; graph/action/state-machine consumers use this callback."
+    },
+    {
+      "godot": "AnimationNodeExtension::method:is_looping(PackedFloat32Array:)",
+      "electron2d": "method:Electron2D.AnimationNodeExtension.IsLooping(Electron2D.AnimationNodeTimeInfo)",
+      "state": "Implemented",
+      "reason": "ADR 0093 modern typed graph extension: immutable playback input carries all eight time/delta/bounds/seek/crossing/weight fields; immutable timeline output carries all six length/position/delta/loop/end/infinite fields. Ordinary graph bounds are zero and prior reported length, or minus one initially. Compiled exact application resource factories persist custom definitions. AnimationNodeExtensionTests verifies loop helpers, all initial fields, crossing, callback failure rollback and zero warmed managed allocations; graph/action/state-machine consumers use this callback."
     }
   ],
   "extras": [
@@ -6699,11 +6705,6 @@
       "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
     },
     {
-      "electron2d": "method:Electron2D.AnimationNodeAdd2.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
-      "state": "Implemented",
-      "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
-    },
-    {
       "electron2d": "method:Electron2D.AnimationNodeAdd3.CreateDuplicateInstance()",
       "state": "Implemented",
       "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
@@ -6720,11 +6721,6 @@
     },
     {
       "electron2d": "method:Electron2D.AnimationNodeAdd3.OnHasFilter()",
-      "state": "Implemented",
-      "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
-    },
-    {
-      "electron2d": "method:Electron2D.AnimationNodeAdd3.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
       "state": "Implemented",
       "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
     },
@@ -6754,11 +6750,6 @@
       "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
     },
     {
-      "electron2d": "method:Electron2D.AnimationNodeAnimation.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
-      "state": "Implemented",
-      "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
-    },
-    {
       "electron2d": "method:Electron2D.AnimationNodeBlend2.CreateDuplicateInstance()",
       "state": "Implemented",
       "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
@@ -6779,11 +6770,6 @@
       "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
     },
     {
-      "electron2d": "method:Electron2D.AnimationNodeBlend2.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
-      "state": "Implemented",
-      "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
-    },
-    {
       "electron2d": "method:Electron2D.AnimationNodeBlend3.CreateDuplicateInstance()",
       "state": "Implemented",
       "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
@@ -6800,11 +6786,6 @@
     },
     {
       "electron2d": "method:Electron2D.AnimationNodeBlend3.OnHasFilter()",
-      "state": "Implemented",
-      "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
-    },
-    {
-      "electron2d": "method:Electron2D.AnimationNodeBlend3.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
       "state": "Implemented",
       "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
     },
@@ -6844,22 +6825,12 @@
       "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
     },
     {
-      "electron2d": "method:Electron2D.AnimationNodeBlendTree.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
-      "state": "Implemented",
-      "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
-    },
-    {
       "electron2d": "method:Electron2D.AnimationNodeOutput.CreateDuplicateInstance()",
       "state": "Implemented",
       "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
     },
     {
       "electron2d": "method:Electron2D.AnimationNodeOutput.OnGetCaption()",
-      "state": "Implemented",
-      "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
-    },
-    {
-      "electron2d": "method:Electron2D.AnimationNodeOutput.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
       "state": "Implemented",
       "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
     },
@@ -6880,11 +6851,6 @@
     },
     {
       "electron2d": "method:Electron2D.AnimationNodeSub2.OnHasFilter()",
-      "state": "Implemented",
-      "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
-    },
-    {
-      "electron2d": "method:Electron2D.AnimationNodeSub2.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
       "state": "Implemented",
       "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
     },
@@ -6919,11 +6885,6 @@
       "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
     },
     {
-      "electron2d": "method:Electron2D.AnimationNodeTimeScale.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
-      "state": "Implemented",
-      "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
-    },
-    {
       "electron2d": "method:Electron2D.AnimationNodeTimeSeek.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
       "state": "Implemented",
       "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
@@ -6945,11 +6906,6 @@
     },
     {
       "electron2d": "method:Electron2D.AnimationNodeTimeSeek.OnGetParameterList()",
-      "state": "Implemented",
-      "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
-    },
-    {
-      "electron2d": "method:Electron2D.AnimationNodeTimeSeek.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
       "state": "Implemented",
       "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
     },
@@ -7064,11 +7020,6 @@
       "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
     },
     {
-      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
-      "state": "Implemented",
-      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
-    },
-    {
       "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
       "state": "Implemented",
       "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
@@ -7105,11 +7056,6 @@
     },
     {
       "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.OnGetParameterList()",
-      "state": "Implemented",
-      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
-    },
-    {
-      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
       "state": "Implemented",
       "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
     },
@@ -7214,11 +7160,6 @@
       "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
     },
     {
-      "electron2d": "method:Electron2D.AnimationNodeOneShot.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
-      "state": "Implemented",
-      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
-    },
-    {
       "electron2d": "method:Electron2D.AnimationNodeTransition.AddInput(System.String)",
       "state": "Implemented",
       "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
@@ -7250,11 +7191,6 @@
     },
     {
       "electron2d": "method:Electron2D.AnimationNodeTransition.OnGetParameterList()",
-      "state": "Implemented",
-      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
-    },
-    {
-      "electron2d": "method:Electron2D.AnimationNodeTransition.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
       "state": "Implemented",
       "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
     },
@@ -7450,11 +7386,6 @@
     },
     {
       "electron2d": "method:Electron2D.AnimationNodeStateMachine.OnGetParameterList()",
-      "state": "Implemented",
-      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
-    },
-    {
-      "electron2d": "method:Electron2D.AnimationNodeStateMachine.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
       "state": "Implemented",
       "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
     },
@@ -7662,6 +7593,126 @@
       "electron2d": "method:Electron2D.AnimationPlayer.CreateSceneInstanceFactory()",
       "state": "Implemented",
       "reason": "ADR 0093/0023: exact static scene factory restores authored libraries/settings through typed stored descriptors. Derived application types require their own exact factory; transient transport/playback are omitted."
+    },
+    {
+      "electron2d": "T:Electron2D.AnimationNodePlaybackInfo",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "T:Electron2D.AnimationNodeTimeInfo",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AnimationNodeExtension..ctor()",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AnimationNodePlaybackInfo..ctor(System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Boolean,Electron2D.Animation.LoopedFlag,System.Double)",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AnimationNodeTimeInfo..ctor(System.Double,System.Double,System.Double,Electron2D.SpriteFrames.LoopMode,System.Boolean,System.Boolean)",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationTree.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationNodePlaybackInfo.Delta()",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationNodePlaybackInfo.End()",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationNodePlaybackInfo.IsExternalSeeking()",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationNodePlaybackInfo.LoopedFlag()",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationNodePlaybackInfo.Seeked()",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationNodePlaybackInfo.Start()",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationNodePlaybackInfo.Time()",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationNodePlaybackInfo.Weight()",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationNodeTimeInfo.Delta()",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationNodeTimeInfo.IsInfinite()",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationNodeTimeInfo.Length()",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationNodeTimeInfo.LoopMode()",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationNodeTimeInfo.Position()",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationNodeTimeInfo.WillEnd()",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Typed immutable projection of modern graph input/output, protected construction or exact scene factory; finite validation and graph execution tested."
     }
   ],
   "statusGroups": [
@@ -10030,7 +10081,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Property/Bézier clip and named-library persistence now executes through registered typed descriptors, finite timing/transition validation, colored markers and graph aliases; fresh-process player execution and Linux Wayland GPU/compatibility pixels are verified. All current method/audio/nested track storage now executes through compiled method IDs, typed argument/resource fields and exact WAV encoded metadata; owned animation-node/graph definitions, remaining key-curve edge profiles and other-platform acceptance retain separate triggers.",
+      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Property/Bézier clip and named-library persistence now executes through registered typed descriptors, finite timing/transition validation, colored markers and graph aliases; fresh-process player execution and Linux Wayland GPU/compatibility pixels are verified. All current method/audio/nested track storage now executes through compiled method IDs, typed argument/resource fields and exact WAV encoded metadata; exact authored animation-node/graph definitions now persist; remaining key-curve edge profiles and other-platform acceptance retain separate triggers.",
       "godot": [
         "class:Animation"
       ]
@@ -10115,7 +10166,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Property/Bézier clip and named-library persistence now executes through registered typed descriptors, finite timing/transition validation, colored markers and graph aliases; fresh-process player execution and Linux Wayland GPU/compatibility pixels are verified. All current method/audio/nested track storage now executes through compiled method IDs, typed argument/resource fields and exact WAV encoded metadata; owned animation-node/graph definitions, remaining key-curve edge profiles and other-platform acceptance retain separate triggers.",
+      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Property/Bézier clip and named-library persistence now executes through registered typed descriptors, finite timing/transition validation, colored markers and graph aliases; fresh-process player execution and Linux Wayland GPU/compatibility pixels are verified. All current method/audio/nested track storage now executes through compiled method IDs, typed argument/resource fields and exact WAV encoded metadata; exact authored animation-node/graph definitions now persist; remaining key-curve edge profiles and other-platform acceptance retain separate triggers.",
       "godot": [
         "Animation::enum:FindMode",
         "Animation::enum:LoopMode",
@@ -10193,7 +10244,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Property/Bézier clip and named-library persistence now executes through registered typed descriptors, finite timing/transition validation, colored markers and graph aliases; fresh-process player execution and Linux Wayland GPU/compatibility pixels are verified. All current method/audio/nested track storage now executes through compiled method IDs, typed argument/resource fields and exact WAV encoded metadata; owned animation-node/graph definitions, remaining key-curve edge profiles and other-platform acceptance retain separate triggers. Other track enum members and full generic key-interpolation edge profiles (integer rounding, nonlinear values, ping-pong edge controls and out-of-duration keys) remain applicable unfinished work.",
+      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Property/Bézier clip and named-library persistence now executes through registered typed descriptors, finite timing/transition validation, colored markers and graph aliases; fresh-process player execution and Linux Wayland GPU/compatibility pixels are verified. All current method/audio/nested track storage now executes through compiled method IDs, typed argument/resource fields and exact WAV encoded metadata; exact authored animation-node/graph definitions now persist; remaining key-curve edge profiles and other-platform acceptance retain separate triggers. Other track enum members and full generic key-interpolation edge profiles (integer rounding, nonlinear values, ping-pong edge controls and out-of-duration keys) remain applicable unfinished work.",
       "godot": [
         "Animation::enum:InterpolationType",
         "Animation::method:value_track_interpolate(int:,float:,bool:)"
@@ -10261,16 +10312,15 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "ADR 0093 typed animation graph execution: reusable borrowed resources, per-tree/path typed parameter cells, clip timing, graph topology/filtering, signed Blend/Add/Sub, TimeScale/TimeSeek and provider integration. AnimationGraphTests verifies editing/cycles, two shared-tree instances, parameters/readonly/errors, arithmetic/filtering/clock edges, reentry/cleanup and zero warmed managed allocations. Two Linux Wayland GPU and two compatibility five-pose readbacks verify real rendered execution. Disk/editor and other-platform acceptance remain separate. Expression-driven transition evaluation or non-property track schedulers remain separate.",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact graph files now preserve definitions/topology/aliases and compiled writable per-tree parameter state; AnimationGraphPersistenceTests verifies original/loaded numeric execution, a fresh loading process and full saved-scene three-pose GPU/compatibility pixels. Modern extension callback runs through the graph. Typed compiled predicates replace expression strings under the accepted profile; editor, foreign-platform and native allocation acceptance remain separate.",
       "godot": [
-        "class:AnimationNode",
         "class:AnimationTree"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0093 typed animation graph execution: reusable borrowed resources, per-tree/path typed parameter cells, clip timing, graph topology/filtering, signed Blend/Add/Sub, TimeScale/TimeSeek and provider integration. AnimationGraphTests verifies editing/cycles, two shared-tree instances, parameters/readonly/errors, arithmetic/filtering/clock edges, reentry/cleanup and zero warmed managed allocations. Two Linux Wayland GPU and two compatibility five-pose readbacks verify real rendered execution. Disk/editor and other-platform acceptance remain separate.",
+      "reason": "ADR 0093 typed animation graph execution: reusable borrowed resources, per-tree/path typed parameter cells, clip timing, graph topology/filtering, signed Blend/Add/Sub, TimeScale/TimeSeek and provider integration. AnimationGraphTests verifies editing/cycles, two shared-tree instances, parameters/readonly/errors, arithmetic/filtering/clock edges, reentry/cleanup and zero warmed managed allocations. Two Linux Wayland GPU and two compatibility five-pose readbacks verify real rendered execution. Exact graph file schemas now execute; editor, native allocation and foreign-platform acceptance remain separate.",
       "godot": [
         "AnimationNode::enum:FilterAction",
         "AnimationNode::enum_value:FilterAction.FILTER_BLEND",
@@ -10284,7 +10334,6 @@
         "AnimationNode::method:_get_parameter_list()",
         "AnimationNode::method:_has_filter()",
         "AnimationNode::method:_is_parameter_read_only(StringName:)",
-        "AnimationNode::method:_process(float:,bool:,bool:,bool:)",
         "AnimationNode::method:add_input(String:)",
         "AnimationNode::method:blend_input(int:,float:,bool:,bool:,float:,int:AnimationNode.FilterAction,bool:,bool:)",
         "AnimationNode::method:blend_node(StringName:,AnimationNode:,float:,bool:,bool:,float:,int:AnimationNode.FilterAction,bool:,bool:)",
@@ -10393,12 +10442,11 @@
         "AnimationNodeBlendSpace1D::property:max_space",
         "AnimationNodeBlendSpace1D::property:min_space",
         "AnimationNodeBlendSpace1D::property:snap",
-        "AnimationNodeBlendSpace1D::property:sync",
         "AnimationNodeBlendSpace1D::property:sync_mode",
         "AnimationNodeBlendSpace1D::property:value_label"
       ],
       "state": "Implemented",
-      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Exact graph file schemas now execute; editor, native allocation and foreign-platform acceptance remain separate."
     },
     {
       "godot": [
@@ -10433,14 +10481,13 @@
         "AnimationNodeBlendSpace2D::property:max_space",
         "AnimationNodeBlendSpace2D::property:min_space",
         "AnimationNodeBlendSpace2D::property:snap",
-        "AnimationNodeBlendSpace2D::property:sync",
         "AnimationNodeBlendSpace2D::property:sync_mode",
         "AnimationNodeBlendSpace2D::property:x_label",
         "AnimationNodeBlendSpace2D::property:y_label",
         "AnimationNodeBlendSpace2D::signal:triangles_updated()"
       ],
       "state": "Implemented",
-      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Exact graph file schemas now execute; editor, native allocation and foreign-platform acceptance remain separate."
     },
     {
       "godot": [
@@ -10465,7 +10512,7 @@
         "AnimationNodeOneShot::property:mix_mode"
       ],
       "state": "Implemented",
-      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Exact graph file schemas now execute; editor, native allocation and foreign-platform acceptance remain separate."
     },
     {
       "godot": [
@@ -10482,7 +10529,7 @@
         "AnimationNodeTransition::property:xfade_time"
       ],
       "state": "Implemented",
-      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Exact graph file schemas now execute; editor, native allocation and foreign-platform acceptance remain separate."
     },
     {
       "state": "Implemented",
@@ -10767,6 +10814,44 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0004: pinned AnimationPlayer/Tree process callback methods and enum values are deprecated in favor of AnimationMixer.CallbackModeProcess; player root getters/setters are deprecated in favor of RootNode, and method call accessors/values in favor of CallbackModeMethod. Both obsolete enums have no applicable values. No aliases, storage or implementation trigger."
+    },
+    {
+      "godot": [
+        "AnimationNode::method:_process(float:,bool:,bool:,bool:)"
+      ],
+      "state": "Excluded",
+      "reason": "The pinned declaration is deprecated: the scalar process hook is described as mostly useless and replaced by the structured AnimationNodeExtension callback. ADR 0004 excludes this old hook; no implementation trigger."
+    },
+    {
+      "godot": [
+        "AnimationNodeBlendSpace1D::property:sync"
+      ],
+      "state": "Excluded",
+      "reason": "Pinned property deprecated=\"Use sync_mode instead.\" ADR 0004 excludes the boolean alias; SyncMode and CyclicLength execute and persist. No implementation trigger."
+    },
+    {
+      "godot": [
+        "AnimationNodeBlendSpace2D::property:sync"
+      ],
+      "state": "Excluded",
+      "reason": "Pinned property deprecated=\"Use sync_mode instead.\" ADR 0004 excludes the boolean alias; SyncMode and CyclicLength execute and persist. No implementation trigger."
+    },
+    {
+      "godot": [
+        "class:AnimationNode"
+      ],
+      "state": "Partial",
+      "reason": "Exact graph files and modern typed extension execute. Remaining precise member dependency is forwarding caller-supplied BlendAnimation.LoopedFlag into method/audio/nested endpoint traversal and verifying reverse/section/seam cases; built-in leaves already compute traversal. Editor/native/foreign acceptance remains separate."
+    },
+    {
+      "godot": [
+        "class:AnimationNodeExtension",
+        "AnimationNodeExtension::method:_process_animation_node(PackedFloat64Array:,bool:)",
+        "AnimationNodeExtension::method:get_remaining_time(PackedFloat32Array:,bool:)",
+        "AnimationNodeExtension::method:is_looping(PackedFloat32Array:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0093 modern typed graph extension: immutable playback input carries all eight time/delta/bounds/seek/crossing/weight fields; immutable timeline output carries all six length/position/delta/loop/end/infinite fields. Ordinary graph bounds are zero and prior reported length, or minus one initially. Compiled exact application resource factories persist custom definitions. AnimationNodeExtensionTests verifies loop helpers, all initial fields, crossing, callback failure rollback and zero warmed managed allocations; graph/action/state-machine consumers use this callback."
     }
   ]
 }

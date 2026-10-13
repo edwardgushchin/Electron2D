@@ -1,6 +1,6 @@
 # AnimationNode
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D` · **Declaration:** `public class Electron2D.AnimationNode` · **Source:** [AnimationNode.cs](../../src/Scene/Animation/AnimationNode.cs).
 
@@ -16,9 +16,9 @@ Last updated: 2026-10-04
 
 A reusable animation-graph resource with typed parameters, inputs and track filters.
 
-Protected hooks supply caption, ordered children, typed parameter definitions/defaults/read-only policy, filter support and processing. OnProcess may call BlendInput, BlendNode or BlendAnimation only during evaluation. Blend helpers return remaining seconds for the selected timeline; looped timelines use a large finite remaining duration. GetParameter/SetParameter access the current instance, never the resource definition. Test-only evaluation suppresses persistent cell changes, leaf signals and mixer output. Child filters use exact full track/property paths. BlendAnimation currently schedules property tracks; external seek/loop endpoint flags have no additional property effects and their event-track effects remain a separate scheduler dependency.
+Protected hooks supply caption, ordered children, typed parameter definitions/defaults/read-only policy, filter support and processing. The AnimationNodeExtension.OnProcessAnimationNode callback may call BlendInput, BlendNode or BlendAnimation only during evaluation. Blend helpers return remaining seconds for the selected timeline; looped timelines use a large finite remaining duration. GetParameter/SetParameter access the current instance, never the resource definition. Test-only evaluation suppresses persistent cell changes, leaf signals and mixer output. Child filters use exact full track/property paths. BlendAnimation currently schedules property tracks; external seek/loop endpoint flags have no additional property effects and their event-track effects remain a separate scheduler dependency.
 
-Graph resources borrow child resources; the blend tree owns only its reserved output. Resource duplication copies definition containers, with shallow/deep resource aliases governed by Resource. Evaluation state and typed parameter cells belong to each AnimationTree and graph path. A definition may be shared sequentially across trees; concurrent processing of the same definition is unsupported. Scene controllers and parameter writes obey the inherited Node owner-thread rule. Resource edits invalidate prepared graph/binding state; cold preparation may allocate. No graph factory, disk format or editor UI is supplied. State machines evaluate typed C# predicates and condition keys.
+Graph resources borrow child resources; the blend tree owns only its reserved output. Resource duplication copies definition containers, with shallow/deep resource aliases governed by Resource. Evaluation state and typed parameter cells belong to each AnimationTree and graph path. A definition may be shared sequentially across trees; concurrent processing of the same definition is unsupported. Scene controllers and parameter writes obey the inherited Node owner-thread rule. Resource edits invalidate prepared graph/binding state; cold preparation may allocate. Exact built-in graph file schemas execute; editor UI remains separate. State machines evaluate typed C# predicates and condition keys.
 
 Input/child/parameter names use ordinal comparison. Missing names, invalid input indices, wrong typed keys, duplicate schemas and disconnected required inputs fail explicitly. Disposed resources throw ObjectDisposedException; processing helpers outside evaluation throw InvalidOperationException. Nonfinite times/weights/authoring positions reject. Graph cycles reject before connection/self-containment edits or during preparation for custom graphs. Mutation commits before observer notification; TreeChanged reaches every subscribed tree even when another handler throws, collecting graph notification failures. Authoring callback exceptions propagate; the caller can repair the committed graph. Disposal detaches observers and borrows child resources. Nested graph processing guards connection cycles; inherited mixer Advance rejects recursion and invalidates stale property commits after reentrant edits.
 
@@ -105,7 +105,6 @@ System.ObjectDisposedException: This resource/controller or a required borrowed 
 | `protected virtual System.Collections.Generic.IEnumerable<Electron2D.AnimationParameter> OnGetParameterList()` | Supplies immutable typed parameter definitions. |
 | `protected virtual System.Boolean OnHasFilter()` | Reports whether child blend helpers apply track filters. |
 | `protected virtual System.Boolean OnIsParameterReadOnly(Electron2D.AnimationParameter parameter)` | Reports external write protection for a parameter. |
-| `protected virtual System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)` | Evaluates custom graph behavior; helpers can blend inputs, children and clips. |
 | `public virtual System.Void RemoveInput(System.Int32 index)` | Removes an existing input. |
 | `public System.Void SetFilterPath(System.String path, System.Boolean enable)` | Enables or removes a path from the filter. |
 | `public virtual System.Boolean SetInputName(System.Int32 input, System.String name)` | Renames an input, rejecting slash/dot captions. |
@@ -430,25 +429,6 @@ Returns: Whether external writes are blocked.
 
 System.ObjectDisposedException: This resource/controller or a required borrowed resource has been disposed.
 
-<a id="member-6117375cc771"></a>
-### OnProcess
-
-`protected virtual System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)`
-
-Evaluates custom graph behavior; helpers can blend inputs, children and clips.
-
-time: Relative delta seconds, or absolute time when seeking.
-
-seek: Whether time is absolute.
-
-isExternalSeeking: Whether the seek originated outside startup.
-
-testOnly: Whether persistent changes and mixer writes are suppressed.
-
-Returns: The selected remaining duration, or zero when no input is evaluated.
-
-System.ObjectDisposedException: This resource/controller or a required borrowed resource has been disposed.
-
 <a id="member-c5a37f90835a"></a>
 ### RemoveInput
 
@@ -573,7 +553,7 @@ System.ObjectDisposedException: This resource/controller or a required borrowed 
 
 ## Lifecycle, verification and dependencies
 
-[ADR 0093](../decisions/scene-animation.md#adr-0093) owns this typed contract. [Scene animation](../components/scene-animation.md#animation-graphs) records formulas, topology, lifetime, tests and limitations. [AnimationGraphTests](../../tests/Electron2D.Tests/AnimationGraphTests.cs) verifies public managed execution and two real Wayland GPU/two compatibility host cycles with five rendered positions. Warmed scalar graph/property passes allocate zero managed bytes on the owner thread; cold preparation/result arrays, native/driver allocations and other platforms are separate. State machines/grouped controllers, typed predicates and applicable event tracks now execute on this mixer; graph/disk/editor round trips remain separate slices.
+[ADR 0093](../decisions/scene-animation.md#adr-0093) owns this typed contract. [Scene animation](../components/scene-animation.md#animation-graphs) records formulas, topology, lifetime, tests and limitations. [AnimationGraphTests](../../tests/Electron2D.Tests/AnimationGraphTests.cs) verifies public managed execution and two real Wayland GPU/two compatibility host cycles with five rendered positions. Warmed scalar graph/property passes allocate zero managed bytes on the owner thread; cold preparation/result arrays, native/driver allocations and other platforms are separate. State machines/grouped controllers, typed predicates and applicable event tracks now execute on this mixer; graph file round trips execute; editor authoring remains separate.
 
 ## Blend-space integration
 
@@ -582,3 +562,7 @@ System.ObjectDisposedException: This resource/controller or a required borrowed 
 ## Action-controller integration
 
 [Action controllers](../components/scene-animation.md#action-controllers) now use this graph contract. Virtual input mutation keeps policy/connection storage aligned; external seek delta is previous position minus requested time, predictive end flags support loop breaks, and prepared deferred lifecycle notices preserve delivery through repeated starts/finishes. Reentrant graph edits skip stale diagnostics.
+
+## File persistence
+
+Built-in graph definitions now use exact typed resource-file factories. Files retain input captions, filters, authoring policies, child topology and aliases. AnimationTree scene files also retain compiled writable parameter values; clocks, requests already consumed, read-only diagnostics and private playback objects restart. Application subclasses register their own exact factory and stable parameter/predicate IDs. See [graph file persistence](../components/scene-animation.md#graph-file-persistence).

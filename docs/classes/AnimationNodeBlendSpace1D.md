@@ -1,6 +1,6 @@
 # AnimationNodeBlendSpace1D
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.AnimationNodeBlendSpace1D` · **Source:** [AnimationNodeBlendSpace1D.cs](../../src/Scene/Animation/AnimationNodeBlendSpace1D.cs).
 
@@ -63,7 +63,6 @@ Creates an empty blend space with independent point storage.
 | `public System.Single MaxSpace { get; set; }` | Sets finite authoring maximum; crossing the minimum adjusts each affected component to min plus one. |
 | `public System.Single MinSpace { get; set; }` | Sets finite authoring minimum; crossing the maximum adjusts each affected component to max minus one. |
 | `public System.Single Snap { get; set; }` | Sets the finite authoring snap increment; it does not quantize runtime blending. |
-| `public System.Boolean Sync { get; set; }` | Projects SyncMode: true sets Independent, false sets None; reads true for every non-None mode. |
 | `public Electron2D.AnimationSyncMode SyncMode { get; set; }` | Selects inactive/cyclic clock synchronization; cyclic modes require clip leaves. |
 | `public System.String ValueLabel { get; set; }` | Sets the authoring axis label. |
 
@@ -134,17 +133,6 @@ System.ObjectDisposedException: The resource has been disposed.
 
 System.ArgumentOutOfRangeException: The enum/numeric value is invalid or nonfinite.
 
-<a id="member-186cf70c3a4c"></a>
-### Sync
-
-`public System.Boolean Sync { get; set; }`
-
-Projects SyncMode: true sets Independent, false sets None; reads true for every non-None mode.
-
-Value: The configured Sync value; initial value is false.
-
-System.ObjectDisposedException: The resource has been disposed.
-
 <a id="member-798d6d60ef72"></a>
 ### SyncMode
 
@@ -187,7 +175,6 @@ System.ObjectDisposedException: The resource has been disposed.
 | `protected override Electron2D.AnimationNode OnGetChildByName(System.String name)` | Finds a named child definition. |
 | `protected override System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String, Electron2D.AnimationNode>> OnGetChildNodes()` | Returns ordered named child definitions; no scene nodes are created. |
 | `protected override System.Collections.Generic.IEnumerable<Electron2D.AnimationParameter> OnGetParameterList()` | Supplies immutable typed parameter definitions. |
-| `protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)` | Evaluates custom graph behavior; helpers can blend inputs, children and clips. |
 | `public System.Void RemoveBlendPoint(System.Int32 point)` | Removes a point without disposing its resource; referring triangles are removed and later indices shift. |
 | `public System.Void ReorderBlendPoint(System.Int32 fromIndex, System.Int32 toIndex)` | Swaps two point entries, preserving their names/clocks and remapping triangle indices. |
 | `public System.Void SetBlendPointName(System.Int32 point, System.String name)` | Renames a point, generating a unique suffix for conflicts and preserving per-tree child state. |
@@ -384,25 +371,6 @@ Returns: The node's parameter schema, including inherited timing slots.
 
 System.ObjectDisposedException: This resource/controller or a required borrowed resource has been disposed.
 
-<a id="member-b2797f397e67"></a>
-### OnProcess
-
-`protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)`
-
-Evaluates custom graph behavior; helpers can blend inputs, children and clips.
-
-time: Relative delta seconds, or absolute time when seeking.
-
-seek: Whether time is absolute.
-
-isExternalSeeking: Whether the seek originated outside startup.
-
-testOnly: Whether persistent changes and mixer writes are suppressed.
-
-Returns: The selected remaining duration, or zero when no input is evaluated.
-
-System.ObjectDisposedException: This resource/controller or a required borrowed resource has been disposed.
-
 <a id="member-027a87cf0e81"></a>
 ### RemoveBlendPoint
 
@@ -495,4 +463,8 @@ System.ObjectDisposedException: This resource has been disposed.
 
 ## Lifecycle, verification and dependencies
 
-[ADR 0093](../decisions/scene-animation.md#adr-0093) and [blend spaces](../components/scene-animation.md#blend-spaces) own this executed profile. AnimationBlendSpaceTests verifies names/indices/capacity/cycles, endpoints/duplicate/degenerate/extreme geometry, automatic/manual topology, discrete/carry/PingPong, independent/cyclic clocks, shared libraries/live edits, callback failure/reentry/copies/borrowing and zero warmed managed bytes on 256 cyclic planar and 256 alternating carry passes. Two Wayland GPU and two compatibility Engine.Run cycles verify seven real pixel poses each and clean borrowed-resource shutdown. Cold preparation/triangulation, native/driver allocation, other-platform/human acceptance and scene/disk/editor round trips remain distinct. State-machine/grouped controllers, expressions and non-property track schedulers remain separate coverage triggers.
+[ADR 0093](../decisions/scene-animation.md#adr-0093) and [blend spaces](../components/scene-animation.md#blend-spaces) own this executed profile. AnimationBlendSpaceTests verifies names/indices/capacity/cycles, endpoints/duplicate/degenerate/extreme geometry, automatic/manual topology, discrete/carry/PingPong, independent/cyclic clocks, shared libraries/live edits, callback failure/reentry/copies/borrowing and zero warmed managed bytes on 256 cyclic planar and 256 alternating carry passes. Two Wayland GPU and two compatibility Engine.Run cycles verify seven real pixel poses each and clean borrowed-resource shutdown. Cold preparation/triangulation, native/driver allocation, other-platform/human acceptance and editor authoring remains distinct. State-machine/grouped controllers and event schedulers execute; expression strings stay outside the typed profile.
+
+## File persistence
+
+Built-in graph definitions now use exact typed resource-file factories. Files retain input captions, filters, authoring policies, child topology and aliases. AnimationTree scene files also retain compiled writable parameter values; clocks, requests already consumed, read-only diagnostics and private playback objects restart. Application subclasses register their own exact factory and stable parameter/predicate IDs. See [graph file persistence](../components/scene-animation.md#graph-file-persistence).

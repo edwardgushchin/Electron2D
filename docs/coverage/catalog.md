@@ -33,7 +33,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AnimationNodeBlendSpace1D](classes/AnimationNodeBlendSpace1D.md) | AnimationRootNode | Implemented | 28 |
 | [AnimationNodeBlendSpace2D](classes/AnimationNodeBlendSpace2D.md) | AnimationRootNode | Implemented | 35 |
 | [AnimationNodeBlendTree](classes/AnimationNodeBlendTree.md) | AnimationRootNode | Implemented | 18 |
-| [AnimationNodeExtension](classes/AnimationNodeExtension.md) | AnimationNode | Blocked | 3 |
+| [AnimationNodeExtension](classes/AnimationNodeExtension.md) | AnimationNode | Implemented | 3 |
 | [AnimationNodeOneShot](classes/AnimationNodeOneShot.md) | AnimationNodeSync | Implemented | 18 |
 | [AnimationNodeOutput](classes/AnimationNodeOutput.md) | AnimationNode | Implemented | 0 |
 | [AnimationNodeStateMachine](classes/AnimationNodeStateMachine.md) | AnimationRootNode | Implemented | 27 |
@@ -46,7 +46,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AnimationNodeTransition](classes/AnimationNodeTransition.md) | AnimationNodeSync | Implemented | 10 |
 | [AnimationPlayer](classes/AnimationPlayer.md) | AnimationMixer | Partial | 53 |
 | [AnimationRootNode](classes/AnimationRootNode.md) | AnimationNode | Implemented | 0 |
-| [AnimationTree](classes/AnimationTree.md) | AnimationMixer | Partial | 12 |
+| [AnimationTree](classes/AnimationTree.md) | AnimationMixer | Implemented | 12 |
 | [Area2D](classes/Area2D.md) | CollisionObject2D | Implemented | 35 |
 | [Area3D](classes/Area3D.md) | CollisionObject3D | Excluded | 42 |
 | [AreaLight3D](classes/AreaLight3D.md) | Light3D | Excluded | 7 |

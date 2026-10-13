@@ -774,12 +774,24 @@
     {
       "electron2d": "method:Electron2D.ResourceFileTypes.RegisterAnimationProperty`2(System.String,PropertyDescriptor<TOwner, TValue>,Func<TValue, TValue, System.Double, TValue>)",
       "state": "Implemented",
-      "reason": "ADRs 0093/0013/0090: immutable compiled property/interpolator binding IDs reconstruct exact typed value and scalar B\u00e9zier tracks in resource files; no CLR member lookup or delegate serialization. Validation, aliases, endian/cache replacement, atomic write failure and fresh-process playback execute; registered clip pixels verified on Linux Wayland GPU/compatibility."
+      "reason": "ADRs 0093/0013/0090: immutable compiled property/interpolator binding IDs reconstruct exact typed value and scalar Bézier tracks in resource files; no CLR member lookup or delegate serialization. Validation, aliases, endian/cache replacement, atomic write failure and fresh-process playback execute; registered clip pixels verified on Linux Wayland GPU/compatibility."
     },
     {
       "electron2d": "method:Electron2D.ResourceFileTypes.RegisterAnimationMethod`2(System.String,Action<TOwner, TArguments>)",
       "state": "Implemented",
       "reason": "ADRs 0093/0090/0013: stable compiled receiver/callback/payload IDs reconstruct heterogeneous typed method keys without delegate serialization or CLR member lookup. Exact IDs/triples, receiver/key-count/type validation, fresh-process execution, deferred delivery and failure contracts verified; key arguments follow existing scalar/resource graph schemas."
+    },
+    {
+      "electron2d": "method:Electron2D.ResourceFileTypes.RegisterAnimationParameter`1(System.String,AnimationParameter<TValue>)",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Immutable compiled parameter/predicate IDs reconstruct typed graph files without runtime member/delegate discovery; duplicate/unknown IDs, fresh-process execution and independent authored cells tested."
+    },
+    {
+      "electron2d": "method:Electron2D.ResourceFileTypes.RegisterAnimationPredicate(System.String,System.Func<Electron2D.AnimationTree, System.Boolean>)",
+      "state": "Implemented",
+      "adr": "adr-0093",
+      "reason": "Immutable compiled parameter/predicate IDs reconstruct typed graph files without runtime member/delegate discovery; duplicate/unknown IDs, fresh-process execution and independent authored cells tested."
     }
   ]
 }

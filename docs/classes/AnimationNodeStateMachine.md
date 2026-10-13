@@ -1,6 +1,6 @@
 # AnimationNodeStateMachine
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.AnimationNodeStateMachine` · **Source:** [AnimationNodeStateMachine.cs](../../src/Scene/Animation/AnimationNodeStateMachine.cs).
 
@@ -116,7 +116,6 @@ System.ObjectDisposedException: The resource is disposed.
 | `protected override System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String, Electron2D.AnimationNode>> OnGetChildNodes()` | Returns ordered named child definitions; no scene nodes are created. |
 | `protected override TValue OnGetParameterDefaultValue<TValue>(AnimationParameter<TValue> parameter)` | Supplies one parameter's typed default for a newly prepared tree instance. |
 | `protected override System.Collections.Generic.IEnumerable<Electron2D.AnimationParameter> OnGetParameterList()` | Supplies immutable typed parameter definitions. |
-| `protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)` | Evaluates custom graph behavior; helpers can blend inputs, children and clips. |
 | `public System.Void RemoveNode(System.String name)` | Removes an ordinary state and all incident edges, retaining borrowed resources. |
 | `public System.Void RemoveTransition(System.String from, System.String to)` | Removes an exact edge. |
 | `public System.Void RemoveTransitionByIndex(System.Int32 idx)` | Removes an edge while retaining its borrowed policy. |
@@ -427,25 +426,6 @@ Returns: The node's parameter schema, including inherited timing slots.
 
 System.ObjectDisposedException: This resource/controller or a required borrowed resource has been disposed.
 
-<a id="member-0d5c2525a3c2"></a>
-### OnProcess
-
-`protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)`
-
-Evaluates custom graph behavior; helpers can blend inputs, children and clips.
-
-time: Relative delta seconds, or absolute time when seeking.
-
-seek: Whether time is absolute.
-
-isExternalSeeking: Whether the seek originated outside startup.
-
-testOnly: Whether persistent changes and mixer writes are suppressed.
-
-Returns: The selected remaining duration, or zero when no input is evaluated.
-
-System.ObjectDisposedException: This resource/controller or a required borrowed resource has been disposed.
-
 <a id="member-c6f99bcf6eb6"></a>
 ### RemoveNode
 
@@ -572,3 +552,7 @@ The read-only per-tree/path playback controller, owned by the tree.
 ## Verification and dependencies
 
 [AnimationStateMachineTests](../../tests/Electron2D.Tests/AnimationStateMachineTests.cs) covers public authoring, defaults, edge guards, copies/aliases, route costs/fallback, timing/fades/boundaries, typed conditions, multiple groups, state events, independent sharing, rename/removal, preparation and observer failures, reentry, tested output and method/nested effects. Warm checks use 64 prepared command/route cycles, 64 cached grouped starts and 64 idle frames with zero owner managed bytes. Separate SDL-dummy/FAudio PCM checks verify state audio start/restart/stop and departed nonblended cues. Linux Wayland GPU/compatibility hosts each run twice and check six actual pixel poses and borrowed-resource cleanup. Native/driver allocator totals, physical listening, other platforms, file/editor and human acceptance remain unverified. [ADR 0093](../decisions/scene-animation.md#adr-0093) defines the typed graph/condition/ownership contract.
+
+## File persistence
+
+Built-in graph definitions now use exact typed resource-file factories. Files retain input captions, filters, authoring policies, child topology and aliases. AnimationTree scene files also retain compiled writable parameter values; clocks, requests already consumed, read-only diagnostics and private playback objects restart. Application subclasses register their own exact factory and stable parameter/predicate IDs. See [graph file persistence](../components/scene-animation.md#graph-file-persistence).

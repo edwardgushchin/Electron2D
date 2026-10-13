@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>A reusable 1D animation blend space with typed per-tree position and clock state.</summary>
 /// <remarks>Points borrow root resources. At most 64 named points are supported. Authoring bounds/snap/labels do not clamp playback. Resource copies preserve child aliases; runtime state belongs to AnimationTree.</remarks>
-public sealed class AnimationNodeBlendSpace1D : AnimationRootNode
+public sealed partial class AnimationNodeBlendSpace1D : AnimationRootNode
 {
     /// <summary>The finite per-tree blend position; defaults to zero.</summary>
     /// <exception cref="ObjectDisposedException">This resource has been disposed.</exception>
@@ -13,14 +13,13 @@ public sealed class AnimationNodeBlendSpace1D : AnimationRootNode
     private string _label = "value";
     private static readonly PropertyDescriptor[] SpaceProperties =
     [
-        new PropertyDescriptor<AnimationNodeBlendSpace1D, AnimationBlendMode>(nameof(BlendMode), n => n.BlendMode, (n, v) => n.BlendMode = v, _ => AnimationBlendMode.Interpolated),
-        new PropertyDescriptor<AnimationNodeBlendSpace1D, AnimationSyncMode>(nameof(SyncMode), n => n.SyncMode, (n, v) => n.SyncMode = v, _ => AnimationSyncMode.None),
-        new PropertyDescriptor<AnimationNodeBlendSpace1D, bool>(nameof(Sync), n => n.Sync, (n, v) => n.Sync = v, _ => false),
-        new PropertyDescriptor<AnimationNodeBlendSpace1D, double>(nameof(CyclicLength), n => n.CyclicLength, (n, v) => n.CyclicLength = v, _ => 0),
-        new PropertyDescriptor<AnimationNodeBlendSpace1D, float>(nameof(MinSpace), n => n.MinSpace, (n, v) => n.MinSpace = v, _ => -1),
-        new PropertyDescriptor<AnimationNodeBlendSpace1D, float>(nameof(MaxSpace), n => n.MaxSpace, (n, v) => n.MaxSpace = v, _ => 1),
-        new PropertyDescriptor<AnimationNodeBlendSpace1D, float>(nameof(Snap), n => n.Snap, (n, v) => n.Snap = v, _ => .1f),
-        new PropertyDescriptor<AnimationNodeBlendSpace1D, string>(nameof(ValueLabel), n => n.ValueLabel, (n, v) => n.ValueLabel = v, _ => "value"),
+        new PropertyDescriptor<AnimationNodeBlendSpace1D, AnimationBlendMode>(nameof(BlendMode), n => n.BlendMode, (n, v) => n.BlendMode = v, _ => AnimationBlendMode.Interpolated, stored: true),
+        new PropertyDescriptor<AnimationNodeBlendSpace1D, AnimationSyncMode>(nameof(SyncMode), n => n.SyncMode, (n, v) => n.SyncMode = v, _ => AnimationSyncMode.None, stored: true),
+        new PropertyDescriptor<AnimationNodeBlendSpace1D, double>(nameof(CyclicLength), n => n.CyclicLength, (n, v) => n.CyclicLength = v, _ => 0, stored: true),
+        new PropertyDescriptor<AnimationNodeBlendSpace1D, float>(nameof(MinSpace), n => n.MinSpace, (n, v) => n.MinSpace = v, _ => -1, stored: true),
+        new PropertyDescriptor<AnimationNodeBlendSpace1D, float>(nameof(MaxSpace), n => n.MaxSpace, (n, v) => n.MaxSpace = v, _ => 1, stored: true),
+        new PropertyDescriptor<AnimationNodeBlendSpace1D, float>(nameof(Snap), n => n.Snap, (n, v) => n.Snap = v, _ => .1f, stored: true),
+        new PropertyDescriptor<AnimationNodeBlendSpace1D, string>(nameof(ValueLabel), n => n.ValueLabel, (n, v) => n.ValueLabel = v, _ => "value", stored: true),
     ];
     /// <summary>Creates an empty blend space with independent point storage.</summary>
     public AnimationNodeBlendSpace1D() { _points = new(this); }
@@ -34,10 +33,6 @@ public sealed class AnimationNodeBlendSpace1D : AnimationRootNode
     /// <exception cref="ObjectDisposedException">The resource has been disposed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The enum/numeric value is invalid or nonfinite.</exception>
     public AnimationSyncMode SyncMode { get { ThrowIfDisposed(); return _sync; } set { ThrowIfDisposed(); Animation.Valid(value); _sync = value; EmitGraphChanged(); } }
-    /// <summary>Projects SyncMode: true sets Independent, false sets None; reads true for every non-None mode.</summary>
-    /// <value>The configured Sync value; initial value is false.</value>
-    /// <exception cref="ObjectDisposedException">The resource has been disposed.</exception>
-    public bool Sync { get { ThrowIfDisposed(); return _sync != AnimationSyncMode.None; } set { ThrowIfDisposed(); _sync = value ? AnimationSyncMode.Independent : AnimationSyncMode.None; EmitGraphChanged(); } }
     /// <summary>Sets the finite constant cycle length in seconds; nonpositive values freeze cyclic clocks.</summary>
     /// <value>The configured CyclicLength value; initial value is 0.</value>
     /// <exception cref="ObjectDisposedException">The resource has been disposed.</exception>
@@ -146,7 +141,7 @@ public sealed class AnimationNodeBlendSpace1D : AnimationRootNode
     /// <inheritdoc />
     protected override void Dispose(bool disposing) { if (disposing) { _points.Dispose(); } base.Dispose(disposing); }
     /// <inheritdoc />
-    protected override double OnProcess(double time, bool seek, bool isExternalSeeking, bool testOnly)
+    internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly)
     {
         var points = _points.Items; if (points.Count == 0) throw new InvalidOperationException("Blend space has no points.");
         Span<double> weights = stackalloc double[64]; weights.Clear(); var pos = GetParameter(BlendPosition); Animation.Finite(pos); var closest = 0;

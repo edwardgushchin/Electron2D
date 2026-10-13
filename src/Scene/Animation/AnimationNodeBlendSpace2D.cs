@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>A reusable 2D animation blend space with typed per-tree position and clock state.</summary>
 /// <remarks>Points borrow root resources. At most 64 named points are supported. Authoring bounds/snap/labels do not clamp playback. Resource copies preserve child aliases; runtime state belongs to AnimationTree.</remarks>
-public sealed class AnimationNodeBlendSpace2D : AnimationRootNode
+public sealed partial class AnimationNodeBlendSpace2D : AnimationRootNode
 {
     /// <summary>The finite per-tree blend position; defaults to zero.</summary>
     /// <exception cref="ObjectDisposedException">This resource has been disposed.</exception>
@@ -16,16 +16,15 @@ public sealed class AnimationNodeBlendSpace2D : AnimationRootNode
     public event Action? TrianglesUpdated;
     private static readonly PropertyDescriptor[] SpaceProperties =
     [
-        new PropertyDescriptor<AnimationNodeBlendSpace2D, AnimationBlendMode>(nameof(BlendMode), n => n.BlendMode, (n, v) => n.BlendMode = v, _ => AnimationBlendMode.Interpolated),
-        new PropertyDescriptor<AnimationNodeBlendSpace2D, AnimationSyncMode>(nameof(SyncMode), n => n.SyncMode, (n, v) => n.SyncMode = v, _ => AnimationSyncMode.None),
-        new PropertyDescriptor<AnimationNodeBlendSpace2D, bool>(nameof(Sync), n => n.Sync, (n, v) => n.Sync = v, _ => false),
-        new PropertyDescriptor<AnimationNodeBlendSpace2D, double>(nameof(CyclicLength), n => n.CyclicLength, (n, v) => n.CyclicLength = v, _ => 0),
-        new PropertyDescriptor<AnimationNodeBlendSpace2D, Vector2>(nameof(MinSpace), n => n.MinSpace, (n, v) => n.MinSpace = v, _ => new Vector2(-1, -1)),
-        new PropertyDescriptor<AnimationNodeBlendSpace2D, Vector2>(nameof(MaxSpace), n => n.MaxSpace, (n, v) => n.MaxSpace = v, _ => Vector2.One),
-        new PropertyDescriptor<AnimationNodeBlendSpace2D, Vector2>(nameof(Snap), n => n.Snap, (n, v) => n.Snap = v, _ => new Vector2(.1f, .1f)),
-        new PropertyDescriptor<AnimationNodeBlendSpace2D, string>(nameof(XLabel), n => n.XLabel, (n, v) => n.XLabel = v, _ => "x"),
-        new PropertyDescriptor<AnimationNodeBlendSpace2D, string>(nameof(YLabel), n => n.YLabel, (n, v) => n.YLabel = v, _ => "y"),
-        new PropertyDescriptor<AnimationNodeBlendSpace2D, bool>(nameof(AutoTriangles), n => n.AutoTriangles, (n, v) => n.AutoTriangles = v, _ => true),
+        new PropertyDescriptor<AnimationNodeBlendSpace2D, AnimationBlendMode>(nameof(BlendMode), n => n.BlendMode, (n, v) => n.BlendMode = v, _ => AnimationBlendMode.Interpolated, stored: true),
+        new PropertyDescriptor<AnimationNodeBlendSpace2D, AnimationSyncMode>(nameof(SyncMode), n => n.SyncMode, (n, v) => n.SyncMode = v, _ => AnimationSyncMode.None, stored: true),
+        new PropertyDescriptor<AnimationNodeBlendSpace2D, double>(nameof(CyclicLength), n => n.CyclicLength, (n, v) => n.CyclicLength = v, _ => 0, stored: true),
+        new PropertyDescriptor<AnimationNodeBlendSpace2D, Vector2>(nameof(MinSpace), n => n.MinSpace, (n, v) => n.MinSpace = v, _ => new Vector2(-1, -1), stored: true),
+        new PropertyDescriptor<AnimationNodeBlendSpace2D, Vector2>(nameof(MaxSpace), n => n.MaxSpace, (n, v) => n.MaxSpace = v, _ => Vector2.One, stored: true),
+        new PropertyDescriptor<AnimationNodeBlendSpace2D, Vector2>(nameof(Snap), n => n.Snap, (n, v) => n.Snap = v, _ => new Vector2(.1f, .1f), stored: true),
+        new PropertyDescriptor<AnimationNodeBlendSpace2D, string>(nameof(XLabel), n => n.XLabel, (n, v) => n.XLabel = v, _ => "x", stored: true),
+        new PropertyDescriptor<AnimationNodeBlendSpace2D, string>(nameof(YLabel), n => n.YLabel, (n, v) => n.YLabel = v, _ => "y", stored: true),
+        new PropertyDescriptor<AnimationNodeBlendSpace2D, bool>(nameof(AutoTriangles), n => n.AutoTriangles, (n, v) => n.AutoTriangles = v, _ => true, stored: true),
     ];
     /// <summary>Creates an empty blend space with independent point storage.</summary>
     public AnimationNodeBlendSpace2D() { _points = new(this); }
@@ -39,10 +38,6 @@ public sealed class AnimationNodeBlendSpace2D : AnimationRootNode
     /// <exception cref="ObjectDisposedException">The resource has been disposed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The enum/numeric value is invalid or nonfinite.</exception>
     public AnimationSyncMode SyncMode { get { ThrowIfDisposed(); return _sync; } set { ThrowIfDisposed(); Animation.Valid(value); _sync = value; EmitGraphChanged(); } }
-    /// <summary>Projects SyncMode: true sets Independent, false sets None; reads true for every non-None mode.</summary>
-    /// <value>The configured Sync value; initial value is false.</value>
-    /// <exception cref="ObjectDisposedException">The resource has been disposed.</exception>
-    public bool Sync { get { ThrowIfDisposed(); return _sync != AnimationSyncMode.None; } set { ThrowIfDisposed(); _sync = value ? AnimationSyncMode.Independent : AnimationSyncMode.None; EmitGraphChanged(); } }
     /// <summary>Sets the finite constant cycle length in seconds; nonpositive values freeze cyclic clocks.</summary>
     /// <value>The configured CyclicLength value; initial value is 0.</value>
     /// <exception cref="ObjectDisposedException">The resource has been disposed.</exception>
@@ -208,7 +203,7 @@ public sealed class AnimationNodeBlendSpace2D : AnimationRootNode
         _triangles.Clear(); _triangles.AddRange(prepared); _trianglesDirty = false; TrianglesUpdated?.Invoke();
     }
     /// <inheritdoc />
-    protected override double OnProcess(double time, bool seek, bool isExternalSeeking, bool testOnly)
+    internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly)
     {
         var context = Current(); var generation = context.Tree.GraphGeneration; UpdateTriangles();
         if (IsDisposed || context.Tree.IsDisposed || generation != context.Tree.GraphGeneration) { context.HasTime = true; context.Result = default; return 0; }

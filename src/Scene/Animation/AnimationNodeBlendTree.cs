@@ -4,11 +4,11 @@ namespace Electron2D;
 /// <remarks>Each source connects to at most one input. Cycles and resource self-containment fail before mutation.
 /// Editing positions are metadata; connections and input edits notify attached trees. Copies own independent
 /// graph containers and preserve resource aliases under the normal duplication policy.</remarks>
-public sealed class AnimationNodeBlendTree : AnimationRootNode
+public sealed partial class AnimationNodeBlendTree : AnimationRootNode
 {
     private static readonly PropertyDescriptor[] GraphProperties =
     [
-        new PropertyDescriptor<AnimationNodeBlendTree, Vector2>(nameof(GraphOffset), n => n.GraphOffset, (n, v) => n.GraphOffset = v, _ => Vector2.Zero),
+        new PropertyDescriptor<AnimationNodeBlendTree, Vector2>(nameof(GraphOffset), n => n.GraphOffset, (n, v) => n.GraphOffset = v, _ => Vector2.Zero, stored: true),
     ];
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(GraphProperties);
@@ -26,7 +26,7 @@ public sealed class AnimationNodeBlendTree : AnimationRootNode
     /// <summary>An input or source connection is already occupied.</summary>
     public const int ConnectionErrorConnectionExists = 5;
     private sealed class Entry(AnimationNode node, Vector2 position, Action<Resource> changed)
-    { internal readonly AnimationNode Node = node; internal Vector2 Position = position; internal string[] Inputs = new string[node.GetInputCount()]; internal readonly Action<Resource> Changed = changed; internal Action<int>? InputRemoved; }
+    { internal AnimationNode Node = node; internal Vector2 Position = position; internal string[] Inputs = new string[node.GetInputCount()]; internal readonly Action<Resource> Changed = changed; internal Action<int>? InputRemoved; }
     private readonly Dictionary<string, Entry> _nodes = new(StringComparer.Ordinal);
     private Vector2 _graphOffset;
     /// <summary>Creates the owned reserved output node.</summary>
@@ -141,7 +141,7 @@ public sealed class AnimationNodeBlendTree : AnimationRootNode
     /// <inheritdoc />
     protected override string OnGetCaption() => "BlendTree";
     /// <inheritdoc />
-    protected override double OnProcess(double time, bool seek, bool isExternalSeeking, bool testOnly) => BlendNode("output", _nodes["output"].Node, time, seek, isExternalSeeking, 1, testOnly: testOnly);
+    internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly) => BlendNode("output", _nodes["output"].Node, time, seek, isExternalSeeking, 1, testOnly: testOnly);
     private void Detach(Entry entry) { entry.Node.InputRemoved -= entry.InputRemoved; entry.Node.Changed -= entry.Changed; entry.Node.AnimationNodeRemoved -= ForwardRemoved; entry.Node.AnimationNodeRenamed -= ForwardRenamed; entry.Node.NodeUpdated -= ForwardUpdated; }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new AnimationNodeBlendTree();
@@ -150,6 +150,8 @@ public sealed class AnimationNodeBlendTree : AnimationRootNode
     {
         var copy = (AnimationNodeBlendTree)target; CopyNodeState(copy); foreach (var name in copy._nodes.Keys.Where(n => n != "output").ToArray()) copy.RemoveNode(name);
         foreach (var (name, entry) in _nodes) if (name != "output") copy.AddNode(name, deep ? (AnimationNode)duplicate(entry.Node)! : entry.Node, entry.Position);
+        if (deep) copy.SetFileOutput((AnimationNodeOutput)force(_nodes["output"].Node)!);
+        else copy._nodes["output"].Node.CopyFromResource(_nodes["output"].Node);
         foreach (var (name, entry) in _nodes) { copy._nodes[name].Position = entry.Position; copy._nodes[name].Inputs = (string[])entry.Inputs.Clone(); }
         copy._graphOffset = _graphOffset;
     }
@@ -164,7 +166,7 @@ public sealed class AnimationNodeOutput : AnimationNode
     /// <inheritdoc />
     protected override string OnGetCaption() => "Output";
     /// <inheritdoc />
-    protected override double OnProcess(double time, bool seek, bool isExternalSeeking, bool testOnly) => BlendInput(0, time, seek, isExternalSeeking, 1, testOnly: testOnly);
+    internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly) => BlendInput(0, time, seek, isExternalSeeking, 1, testOnly: testOnly);
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new AnimationNodeOutput();
 }

@@ -15,7 +15,7 @@ public sealed class AnimationNodeBlend2 : AnimationNodeSync
     /// <inheritdoc />
     protected override bool OnHasFilter() => true;
     /// <inheritdoc />
-    protected override double OnProcess(double time, bool seek, bool isExternalSeeking, bool testOnly) { var amount = GetParameter(BlendAmount); var a = BlendInput(0, time, seek, isExternalSeeking, 1 - amount, FilterAction.Blend, Sync, testOnly); var ai = Current().Result; var b = BlendInput(1, time, seek, isExternalSeeking, amount, FilterAction.Pass, Sync, testOnly); if (amount <= .5) Current().Result = ai; return amount > .5 ? b : a; }
+    internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly) { var amount = GetParameter(BlendAmount); var a = BlendInput(0, time, seek, isExternalSeeking, 1 - amount, FilterAction.Blend, Sync, testOnly); var ai = Current().Result; var b = BlendInput(1, time, seek, isExternalSeeking, amount, FilterAction.Pass, Sync, testOnly); if (amount <= .5) Current().Result = ai; return amount > .5 ? b : a; }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new AnimationNodeBlend2();
 }
@@ -34,7 +34,7 @@ public sealed class AnimationNodeBlend3 : AnimationNodeSync
     /// <inheritdoc />
     protected override bool OnHasFilter() => false;
     /// <inheritdoc />
-    protected override double OnProcess(double time, bool seek, bool isExternalSeeking, bool testOnly) { var amount = GetParameter(BlendAmount); var a = BlendInput(0, time, seek, isExternalSeeking, Math.Max(0, -amount), sync: Sync, testOnly: testOnly); var ai = Current().Result; var b = BlendInput(1, time, seek, isExternalSeeking, 1 - Math.Abs(amount), sync: Sync, testOnly: testOnly); var bi = Current().Result; var c = BlendInput(2, time, seek, isExternalSeeking, Math.Max(0, amount), sync: Sync, testOnly: testOnly); if (amount < -.5) Current().Result = ai; else if (amount <= .5) Current().Result = bi; return amount > .5 ? c : amount < -.5 ? a : b; }
+    internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly) { var amount = GetParameter(BlendAmount); var a = BlendInput(0, time, seek, isExternalSeeking, Math.Max(0, -amount), sync: Sync, testOnly: testOnly); var ai = Current().Result; var b = BlendInput(1, time, seek, isExternalSeeking, 1 - Math.Abs(amount), sync: Sync, testOnly: testOnly); var bi = Current().Result; var c = BlendInput(2, time, seek, isExternalSeeking, Math.Max(0, amount), sync: Sync, testOnly: testOnly); if (amount < -.5) Current().Result = ai; else if (amount <= .5) Current().Result = bi; return amount > .5 ? c : amount < -.5 ? a : b; }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new AnimationNodeBlend3();
 }
@@ -53,7 +53,7 @@ public sealed class AnimationNodeAdd2 : AnimationNodeSync
     /// <inheritdoc />
     protected override bool OnHasFilter() => true;
     /// <inheritdoc />
-    protected override double OnProcess(double time, bool seek, bool isExternalSeeking, bool testOnly) { var result = BlendInput(0, time, seek, isExternalSeeking, 1, FilterAction.Ignore, Sync, testOnly); var info = Current().Result; BlendInput(1, time, seek, isExternalSeeking, GetParameter(AddAmount), FilterAction.Pass, Sync, testOnly); Current().Result = info; return result; }
+    internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly) { var result = BlendInput(0, time, seek, isExternalSeeking, 1, FilterAction.Ignore, Sync, testOnly); var info = Current().Result; BlendInput(1, time, seek, isExternalSeeking, GetParameter(AddAmount), FilterAction.Pass, Sync, testOnly); Current().Result = info; return result; }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new AnimationNodeAdd2();
 }
@@ -72,7 +72,7 @@ public sealed class AnimationNodeAdd3 : AnimationNodeSync
     /// <inheritdoc />
     protected override bool OnHasFilter() => true;
     /// <inheritdoc />
-    protected override double OnProcess(double time, bool seek, bool isExternalSeeking, bool testOnly) { var amount = GetParameter(AddAmount); BlendInput(0, time, seek, isExternalSeeking, Math.Max(0, -amount), FilterAction.Pass, Sync, testOnly); var result = BlendInput(1, time, seek, isExternalSeeking, 1, FilterAction.Ignore, Sync, testOnly); var info = Current().Result; BlendInput(2, time, seek, isExternalSeeking, Math.Max(0, amount), FilterAction.Pass, Sync, testOnly); Current().Result = info; return result; }
+    internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly) { var amount = GetParameter(AddAmount); BlendInput(0, time, seek, isExternalSeeking, Math.Max(0, -amount), FilterAction.Pass, Sync, testOnly); var result = BlendInput(1, time, seek, isExternalSeeking, 1, FilterAction.Ignore, Sync, testOnly); var info = Current().Result; BlendInput(2, time, seek, isExternalSeeking, Math.Max(0, amount), FilterAction.Pass, Sync, testOnly); Current().Result = info; return result; }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new AnimationNodeAdd3();
 }
@@ -91,7 +91,7 @@ public sealed class AnimationNodeSub2 : AnimationNodeSync
     /// <inheritdoc />
     protected override bool OnHasFilter() => true;
     /// <inheritdoc />
-    protected override double OnProcess(double time, bool seek, bool isExternalSeeking, bool testOnly) { BlendInput(1, time, seek, isExternalSeeking, -GetParameter(SubAmount), FilterAction.Pass, Sync, testOnly); return BlendInput(0, time, seek, isExternalSeeking, 1, FilterAction.Ignore, Sync, testOnly); }
+    internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly) { BlendInput(1, time, seek, isExternalSeeking, -GetParameter(SubAmount), FilterAction.Pass, Sync, testOnly); return BlendInput(0, time, seek, isExternalSeeking, 1, FilterAction.Ignore, Sync, testOnly); }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new AnimationNodeSub2();
 }
@@ -108,7 +108,7 @@ public sealed class AnimationNodeTimeScale : AnimationNode
     /// <inheritdoc />
     protected override string OnGetCaption() => "TimeScale";
     /// <inheritdoc />
-    protected override double OnProcess(double time, bool seek, bool isExternalSeeking, bool testOnly) => BlendInput(0, seek ? time : time * GetParameter(Scale), seek, isExternalSeeking, 1, testOnly: testOnly);
+    internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly) => BlendInput(0, seek ? time : time * GetParameter(Scale), seek, isExternalSeeking, 1, testOnly: testOnly);
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new AnimationNodeTimeScale();
 }
@@ -117,7 +117,7 @@ public sealed class AnimationNodeTimeSeek : AnimationNode
 {
     private static readonly PropertyDescriptor[] GraphProperties =
     [
-        new PropertyDescriptor<AnimationNodeTimeSeek, bool>(nameof(ExplicitElapse), n => n.ExplicitElapse, (n, v) => n.ExplicitElapse = v, _ => true),
+        new PropertyDescriptor<AnimationNodeTimeSeek, bool>(nameof(ExplicitElapse), n => n.ExplicitElapse, (n, v) => n.ExplicitElapse = v, _ => true, stored: true),
     ];
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(GraphProperties);
@@ -137,7 +137,7 @@ public sealed class AnimationNodeTimeSeek : AnimationNode
     /// <inheritdoc />
     protected override string OnGetCaption() => "TimeSeek";
     /// <inheritdoc />
-    protected override double OnProcess(double time, bool seek, bool isExternalSeeking, bool testOnly) { var request = GetParameter(SeekRequest); if (request >= 0) { time = request; seek = true; isExternalSeeking = _explicitElapse; SetParameter(SeekRequest, -1d); } return BlendInput(0, time, seek, isExternalSeeking, 1, testOnly: testOnly); }
+    internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly) { var request = GetParameter(SeekRequest); if (request >= 0) { time = request; seek = true; isExternalSeeking = _explicitElapse; SetParameter(SeekRequest, -1d); } return BlendInput(0, time, seek, isExternalSeeking, 1, testOnly: testOnly); }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new AnimationNodeTimeSeek();
     /// <inheritdoc />

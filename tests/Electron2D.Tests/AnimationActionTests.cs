@@ -88,7 +88,11 @@ internal static class AnimationActionTests
         finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, prior); }
     }
     private sealed class Box : Entity { internal Action? Start; protected override void OnReady() => Start?.Invoke(); protected override void OnDraw() => DrawRect(new(-3, -3, 6, 6), Colors.Red); }
-    private sealed class TestingGate : AnimationNode { internal bool TestOnly = true; internal TestingGate() => AddInput("in"); protected override double OnProcess(double time, bool seek, bool external, bool testOnly) => BlendInput(0, time, seek, external, 1, testOnly: TestOnly); }
+    private sealed class TestingGate : AnimationNodeExtension
+    {
+        internal bool TestOnly = true; internal TestingGate() => AddInput("in"); protected override AnimationNodeTimeInfo OnProcessAnimationNode(in AnimationNodePlaybackInfo info, bool testOnly)
+        { var remaining = BlendInput(0, info.Seeked ? info.Time : info.Delta, info.Seeked, info.IsExternalSeeking, 1, testOnly: TestOnly); return new(Math.Max(0, remaining) + info.Time, info.Time, info.Delta); }
+    }
     private static void Fire(Setup setup) => setup.Tree.SetParameter("control", AnimationNodeOneShot.Request, AnimationOneShotRequest.Fire);
     private static void Request(Setup setup, string name) => setup.Tree.SetParameter("control", AnimationNodeTransition.TransitionRequest, name);
     private static Curve UnitCurve() { var c = new Curve(); c.AddPoint(new(0, 0)); c.AddPoint(new(.5f, .25f)); c.AddPoint(new(1, 1)); return c; }
