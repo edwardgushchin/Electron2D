@@ -1,5 +1,6 @@
 using Electron2D;
 using System.Globalization;
+using IOPath = System.IO.Path;
 
 internal static partial class LocaleCatalogTests
 {
@@ -14,7 +15,9 @@ internal static partial class LocaleCatalogTests
     {
         var original = TranslationServer.Culture;
         ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
-        using var catalog = new Translation { Locale = "ru" }; catalog.AddPluralMessage("apple", ["one", "few", "many"]); TranslationServer.AddTranslation(catalog);
+        var path = IOPath.Combine(IOPath.GetTempPath(), "e2d-native-gettext-" + Guid.NewGuid() + ".po");
+        File.WriteAllText(path, TranslationCatalogTests.PO);
+        using var catalog = ResourceLoader.Load<Translation>(path, ResourceLoader.CacheMode.Ignore); File.Delete(path); TranslationServer.AddTranslation(catalog);
         var counter = new Counter { Name = "Counter", Count = 2 }; var menu = new OptionButton { Name = "Languages", Position = new(30, 4), Size = new(120, 28) };
         var languages = TranslationServer.GetAllLanguages(); var selected = Array.IndexOf(languages, "ru");
         foreach (var language in languages) menu.AddItem(TranslationServer.GetLanguageName(language)); menu.Select(selected);
@@ -32,6 +35,6 @@ internal static partial class LocaleCatalogTests
         };
         try { Check(Engine.Run(window) == 0 && frames == 2 && window.IsDisposed && !RenderingServer.IsAvailable, "Localized native consumer lifetime."); }
         finally { TranslationServer.RemoveTranslation(catalog); TranslationServer.Culture = original; }
-        Console.WriteLine("Locale language menu, automatic Russian forms, " + backend + " red/blue native pixels and teardown passed.");
+        Console.WriteLine("Locale language menu, imported Russian forms, " + backend + " red/blue native pixels and teardown passed.");
     }
 }

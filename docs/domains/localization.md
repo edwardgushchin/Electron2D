@@ -33,15 +33,15 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 - Selected culture, its parents and invariant culture precede nearby resource locales; the configured fallback locale is tried afterward.
 - Domains, contexts, and messages are ordinal and case-sensitive.
 - Missing singular translations return the source message.
-- Missing plural translations use singular only when count equals one; registered selectors own language-specific plural rules. Resource catalogs without a selector use English rules only for English locales and fail explicitly for other locales with multiple forms.
+- Missing plural translations use singular only when count equals one; registered selectors own language-specific plural rules. Resource catalogs use an imported Plural-Forms definition, then a known automatic locale rule, and fail explicitly for unknown multi-form rules.
 - Catalog lookup semantics are platform-independent; platform locale discovery, when added, remains an external host input.
 
 ## Not implemented
 
-- No `.po`, `.mo`, `.resx`, JSON, or binary catalog loader.
+- `.resx`, JSON catalogs and system-dependent MO extension tables remain outside the current import profile.
 - Optimized translation payloads use an internal Brotli representation; reference Smaz file compatibility and editor-only generation gating remain absent.
 - No operating-system locale discovery, number formatting, interpolation, or full Unicode bidirectional-text implementation. Pseudolocalization includes only test direction-control marks; locale alias/default-script tables and exact Unicode parity remain partial.
-- No built-in CLDR plural-rule database or textual plural-rule evaluator; non-English resource catalogs with multiple forms require a typed selector.
+- Full CLDR decimal categories remain absent; fixed integer locale rules and bounded textual catalog definitions execute. Unknown rules require a valid definition or typed caller selector.
 - No native locale-discovery or localization verification on all targets exists yet.
 
 ## Verification
@@ -60,3 +60,11 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 The permanent `ProjectSettings.RootNodeLayoutDirection` integer selector accepts only 0 application locale, 1 LTR, 2 RTL and 3 system UI locale (default 0). `ForceRightToLeftLayoutDirection` is a permanent boolean, default false. Both support save/load and feature overrides and are sampled independently for each SceneTree before entry. Explicit node LTR/RTL choices override forced policy; other modes are forced RTL when enabled. Global project edits affect subsequent trees, while detached nodes read current settings. [ProjectLayoutDirectionTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionTests.cs) and native [ProjectLayoutDirectionNativeTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionNativeTests.cs) verify the executable profile.
 
 `Control.TranslationContext` is a stored local string, empty by default. `Atr`/`AtrN` use it when the call's context is null or empty; a nonempty call argument overrides it. `Tr`/`TrN` retain their explicit context. The property is not inherited from a parent. Set it before assigning text: changing the context alone sends no notification and preserves already prepared captions. `Notify(Node.NotificationTranslationChanged)` refreshes that control; `PropagateNotification` can refresh its subtree. Existing automatic mode, object enablement and inherited domain rules still apply.
+
+## PO and MO catalog import
+
+`ResourceLoader.Load<Translation>(path)` recognizes `po` and `mo`, shares cache modes and threaded preparation, and returns a complete contextual catalog. Header Language/X-Language selects Locale (English if absent). Plural-Forms supplies a stored definition overriding the automatic locale rule; an explicit PluralSelector wins over either. Resource copies and `.e2dres` archives preserve imported rules and independent message containers. Invalid public override text falls back to automatic rules; malformed imported headers fail before resource publication.
+
+Input is bounded to 16 MiB, 100,000 messages, 64 forms and 4096 rule characters, with 256 expression nodes and 64 nesting levels. Expressions use unsigned 64-bit integer arithmetic, normal operator precedence, ternary and short-circuit logic; divide-by-zero or an out-of-range result fails lookup. PO supports contexts, continued quoted strings, C single-character escapes and contiguous plural indexes; fuzzy and obsolete entries are skipped. MO checks revisions, tables, terminators and aggregate decoded bytes. Non-UTF-8 encodings and system-dependent MO extensions fail explicitly. Import is read-only; save the resource as `.e2dres`.
+
+`TranslationCatalogTests` exercises import, malformed input, cache/threaded paths, fresh-process archive restoration, override priority, copying and zero-byte warm selection. Native language-menu consumers use an imported rule with reordered forms and check rendered two/five-item pixels on GPU and compatibility renderers. These are Linux x64 checks, not foreign-platform acceptance.

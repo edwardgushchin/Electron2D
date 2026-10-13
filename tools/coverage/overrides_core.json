@@ -107,7 +107,7 @@
     {"electron2d": "method:Electron2D.OptimizedTranslation.GetTranslatedMessageList()", "godot": "Translation::method:get_translated_message_list()", "reason": "The optimized override decompresses a copied list of translated values."},
     {"electron2d": "method:Electron2D.OptimizedTranslation.OnGetMessage(System.String,System.String)", "godot": "Translation::method:_get_message(StringName:,StringName:)", "reason": "Derived compressed lookup projects the inherited virtual message resolver and ignores context."},
     {"electron2d": "method:Electron2D.OptimizedTranslation.OnGetPluralMessage(System.String,System.String,System.Int64,System.String)", "godot": "Translation::method:_get_plural_message(StringName:,StringName:,int:,StringName:)", "reason": "Derived resolver returns the singular compressed value regardless of count or context."},
-    {"electron2d": "property:Electron2D.Translation.PluralSelector()", "godot": "Translation::property:plural_rules_override", "reason": "Typed plural-index delegate replaces a textual plural-rule expression under ADR 0007; built-in non-English locale rules remain absent."},
+    {"electron2d": "property:Electron2D.Translation.PluralRulesOverride()", "godot": "Translation::property:plural_rules_override", "reason": "Stored gettext expression overrides automatic locale selection; empty or syntactically invalid definitions retain locale fallback. Caller delegates retain an explicit higher-priority typed override."},
     {"electron2d": "method:Electron2D.TranslationServer.AddTranslation(Electron2D.Translation,System.String)", "godot": "TranslationServer::method:add_translation(Translation:)", "reason": "Registers a borrowed live Translation resource within a case-sensitive domain; later edits and disposal affect lookup."},
     {"electron2d": "method:Electron2D.TranslationServer.RemoveTranslation(Electron2D.Translation,System.String)", "godot": "TranslationServer::method:remove_translation(Translation:)", "reason": "Unregisters the borrowed catalog without disposing it; domain is the typed localization boundary of ADR 0007."},
     {
@@ -468,7 +468,7 @@
     {
       "electron2d": "method:Electron2D.TranslationServer.TranslatePlural(System.String,System.String,System.String,System.Int64,System.String)",
       "godot": "TranslationServer::method:translate_plural(StringName:,StringName:,int:,StringName:)",
-      "reason": "CultureInfo/domain lookup now resolves both direct selectors and borrowed Translation resources (ADR 0007); built-in non-English plural rules remain absent."
+      "reason": "CultureInfo/domain lookup now resolves both direct selectors and borrowed Translation resources (ADR 0007); fixed locale rules and imported expression rules execute; full locale-negotiation parity remains pending."
     },
     {
       "electron2d": "property:Electron2D.TranslationServer.Culture()",
@@ -965,6 +965,7 @@
     }
   ],
   "extras": [
+    {"electron2d": "property:Electron2D.Translation.PluralSelector()", "reason": "Typed optional borrowed caller delegate overrides prepared catalog or locale rules under ADR 0007; cannot be stored in resource files."},
     {"electron2d": "T:Electron2D.JoypadInfo", "reason": "Typed projection of the platform-info dictionary returned by Input.GetJoyInfo; omits unavailable platform-specific fields.", "adr": "docs/decisions/input.md#adr-0038"},
     {"electron2d": "property:Electron2D.JoypadInfo.RawName()", "reason": "Typed raw_name field from the reference joypad-info dictionary.", "adr": "docs/decisions/input.md#adr-0038"},
     {"electron2d": "property:Electron2D.JoypadInfo.VendorID()", "reason": "Typed vendor_id field from the reference joypad-info dictionary.", "adr": "docs/decisions/input.md#adr-0038"},
@@ -1579,6 +1580,7 @@
     }
   ],
   "statusGroups": [
+    {"godot": ["Translation::property:plural_rules_override"], "state": "Implemented", "reason": "Bounded prepared gettext integer expressions, precedence and short circuit execute; invalid definitions retain automatic locale fallback, duplication and archives preserve definitions, and imported PO/MO catalogs reach native pixels. TranslationCatalogTests covers trust boundaries and zero-byte warm lookup on Linux x64."},
     {"godot": ["TranslationServer::method:compare_locales(String:,String:)"], "state": "Implemented", "reason": "ADR0007: same fixed default-aware locale identity parser as StandardizeLocale; score retains exact/language/script/region/variant semantics. Original C++ constructor agrees on 2600 cases and LocalizationProjectSettingsTests retains scalar score checks; actual catalogs consume the provider."},
     {"godot": ["TranslationServer::method:get_all_languages()", "TranslationServer::method:get_all_scripts()", "TranslationServer::method:get_all_countries()", "TranslationServer::method:get_language_name(String:)", "TranslationServer::method:get_script_name(String:)", "TranslationServer::method:get_country_name(String:)", "TranslationServer::method:get_locale_name(String:)", "TranslationServer::method:standardize_locale(String:,bool:)", "TranslationServer::method:get_plural_rules(String:)"], "state": "Implemented", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},
     {"godot": ["FileAccess::method:open_compressed(String:,int:FileAccess.ModeFlags,int:FileAccess.CompressionMode)"], "state": "Implemented", "reason": "ADR 0020 retains the engine-owned E2DCMP envelope and whole-file/atomic semantics; default FastLZ and all five codecs execute seek/read/write/flush/reopen. Native 64 KiB blocks validate structure, exact decode, padding and SHA-256. FileCompressionTests verifies tiny/boundary/random/repeated data, edits, virtual paths, corruption, atomic failure and fresh-process reads; direct codec oracle and GPU/compatibility compressed-PNG pixels exercise Linux x64 with the matching native bundle. No reference container binary compatibility or foreign-host acceptance is claimed."},

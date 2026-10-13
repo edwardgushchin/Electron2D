@@ -9,6 +9,9 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length == 2 && args[0] == "--gettext-oracle") { TranslationCatalogTests.VerifyFiles(args[1]); return; }
+if (args.Length == 2 && args[0] == "--gettext-child") { TranslationCatalogTests.ReadArchive(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GETTEXT") == "1") { TranslationCatalogTests.Run(); return; }
 if (args.Length == 2 && args[0] == "--locale-archive-child") { LocaleCatalogTests.ReadArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOCALE_NATIVE") is { } localeBackend) { LocaleCatalogTests.RunNative(localeBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOCALE_CATALOG") == "1") { LocaleCatalogTests.Run(); VerifyTranslations(); LocalizationProjectSettingsTests.Run(); return; }

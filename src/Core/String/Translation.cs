@@ -11,6 +11,7 @@ public partial class Translation : Resource
     [
         new PropertyDescriptor<Translation, string>(nameof(Locale), translation => translation.Locale,
             (translation, value) => translation.Locale = value, _ => "en", stored: true),
+        new PropertyDescriptor<Translation, string>(nameof(PluralRulesOverride), translation => translation.PluralRulesOverride, (translation, value) => translation.PluralRulesOverride = value, _ => "", stored: true),
         new PropertyDescriptor<Translation, string[]>("Messages", translation => translation.CaptureMessages(), (translation, value) => translation.RestoreMessages(value), _ => [], stored: true),
     ]);
 
@@ -18,6 +19,8 @@ public partial class Translation : Resource
     private readonly Dictionary<(string Context, string Source), string[]> _messages = new();
     private string _locale = "en";
     private Func<long, int>? _pluralSelector;
+    private string _pluralRulesOverride = "";
+    private CatalogPluralRule? _importedRule;
     private Func<long, int>? _defaultPluralSelector = TranslationServer.FindPluralRule("en").Select;
 
     /// <summary>Creates an empty English translation catalog.</summary>
@@ -42,13 +45,32 @@ public partial class Translation : Resource
     }
 
     /// <summary>Gets or sets the locale-specific plural-form index selector.</summary>
-    /// <value>A selector returning an index into registered forms; null uses the fixed locale-specific catalog rule.</value>
+    /// <value>A selector returning an index into registered forms; null uses an imported definition or the fixed locale-specific catalog rule.</value>
     /// <remarks>Supply a selector to override known rules or resolve an unknown locale. The delegate is borrowed and copied by reference.</remarks>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
     public Func<long, int>? PluralSelector
     {
         get { lock (_gate) { ThrowIfDisposed(); return _pluralSelector; } }
         set { lock (_gate) { ThrowIfDisposed(); _pluralSelector = value; } EmitChanged(); }
+    }
+
+    /// <summary>Gets or sets a gettext plural definition overriding the locale rule.</summary>
+    /// <value>A definition such as <c>nplurals=2; plural=n!=1;</c>; initially empty.</value>
+    /// <remarks>Empty or invalid definitions use the automatic locale rule. A caller PluralSelector takes priority.
+    /// The definition is prepared on assignment and retained in copies and catalog archives.</remarks>
+    /// <exception cref="ArgumentNullException">The definition is null.</exception>
+    /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
+    public string PluralRulesOverride
+    {
+        get { lock (_gate) { ThrowIfDisposed(); return _pluralRulesOverride; } }
+        set
+        {
+            ArgumentNullException.ThrowIfNull(value);
+            CatalogPluralRule? rule = null;
+            if (value.Length != 0) { try { rule = CatalogPluralRule.Parse(value); } catch (InvalidDataException) { } }
+            lock (_gate) { ThrowIfDisposed(); _pluralRulesOverride = value; _importedRule = rule; }
+            EmitChanged();
+        }
     }
 
     /// <summary>Adds or replaces one translated message in a context.</summary>
@@ -108,7 +130,7 @@ public partial class Translation : Resource
     /// <param name="count">The quantity used to select a form.</param>
     /// <param name="context">An optional case-sensitive context.</param>
     /// <returns>The selected translated form, or an empty string when absent or the count is negative.</returns>
-    /// <exception cref="InvalidOperationException">A non-English catalog has multiple forms but no plural selector, or a selector returns an invalid index.</exception>
+    /// <exception cref="InvalidOperationException">The catalog has no applicable plural rule, an expression fails arithmetic, or a selector returns an invalid index.</exception>
     /// <exception cref="ArgumentNullException">A supplied string is null.</exception>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
     public string GetPluralMessage(string source, string plural, long count, string context = "")
@@ -123,14 +145,17 @@ public partial class Translation : Resource
 
         string[]? forms;
         Func<long, int>? selector;
+        CatalogPluralRule? imported;
         lock (_gate)
         {
             ThrowIfDisposed();
             if (!_messages.TryGetValue((context, source), out forms)) return string.Empty;
-            selector = _pluralSelector ?? _defaultPluralSelector;
+            selector = _pluralSelector;
+            imported = selector is null ? _importedRule : null;
+            selector ??= _defaultPluralSelector;
         }
 
-        var index = selector is not null ? selector(count) : forms.Length == 1 ? 0 :
+        var index = imported is not null ? imported.Select(count) : selector is not null ? selector(count) : forms.Length == 1 ? 0 :
             throw new InvalidOperationException("A plural selector is required for an unknown locale rule.");
         if ((uint)index >= (uint)forms.Length)
             throw new InvalidOperationException("The plural selector returned an index outside the registered forms.");
@@ -198,6 +223,8 @@ public partial class Translation : Resource
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
         string locale;
+        string ruleDefinition;
+        CatalogPluralRule? importedRule;
         Func<long, int>? selector;
         KeyValuePair<(string Context, string Source), string[]>[] entries;
         lock (_gate)
@@ -205,6 +232,8 @@ public partial class Translation : Resource
             ThrowIfDisposed();
             locale = _locale;
             selector = _pluralSelector;
+            ruleDefinition = _pluralRulesOverride;
+            importedRule = _importedRule;
             entries = _messages.Select(entry => new KeyValuePair<(string, string), string[]>(entry.Key, (string[])entry.Value.Clone())).ToArray();
         }
         var copy = (Translation)target;
@@ -213,6 +242,8 @@ public partial class Translation : Resource
             copy.ThrowIfDisposed();
             copy._locale = locale;
             copy._pluralSelector = selector;
+            copy._pluralRulesOverride = ruleDefinition;
+            copy._importedRule = importedRule;
             copy._defaultPluralSelector = TranslationServer.FindPluralRule(locale).Select;
             copy._messages.Clear();
             foreach (var entry in entries) copy._messages.Add(entry.Key, entry.Value);

@@ -9,7 +9,7 @@ public partial class Translation
         lock (_gate)
         {
             ThrowIfDisposed();
-            if (_pluralSelector is not null) throw new NotSupportedException("Catalog archives cannot store a caller delegate; use automatic locale rules or restore the selector explicitly after loading.");
+            if (_pluralSelector is not null) throw new NotSupportedException("Catalog archives cannot store a caller delegate; use stored plural definitions or automatic locale rules, or restore the selector explicitly after loading.");
         }
     }
     private string[] CaptureMessages()

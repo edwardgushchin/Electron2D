@@ -229936,6 +229936,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Translation.PluralRulesOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.Translation",
+    "name": "PluralRulesOverride",
+    "signature": "public System.String PluralRulesOverride { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Translation.PluralSelector()",
     "kind": "property",
     "declaringType": "Electron2D.Translation",
