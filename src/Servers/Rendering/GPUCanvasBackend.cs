@@ -401,6 +401,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 using var image = Image.CreateEmpty(1, 1, false, Image.Format.Rgba8);
                 image.Fill(Colors.White);
                 _whiteTexture = ImageTexture.CreateFromImage(image);
+                _whiteTexture.RetainRendererCache = true;
             }
             texture = _whiteTexture;
         }

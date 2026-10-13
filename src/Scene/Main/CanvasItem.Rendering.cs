@@ -29,6 +29,12 @@ public abstract partial class CanvasItem
     internal Rect2? RenderClip => ServerState?.Clip == true ? RenderBounds() : ServerState?.Clip == false ? null : CanvasClipRect ?? (this is Control { ClipContents: true } control ? new(Vector2.Zero, control.Size) : null);
     internal Rect2 RenderBounds()
     {
+        var bounds = RenderCommandBounds();
+        return ServerState?.VisibilityNotifier is { Enabled: true } notifier && notifier.Area.Size != Vector2.Zero
+            ? bounds.Merge(notifier.Area.Abs()) : bounds;
+    }
+    private Rect2 RenderCommandBounds()
+    {
         if (ServerState?.CustomRect is { } rect) return rect;
         var commands = ServerState?.Commands ?? this; var found = false; var bounds = default(Rect2); var drawing = Transform.Identity;
         if (commands._canvasCommands is not null) foreach (var command in commands._canvasCommands)

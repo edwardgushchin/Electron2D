@@ -190,18 +190,21 @@ public sealed partial class RenderingServer : ElectronObject
             _staleViewports.Clear(); foreach (var viewport in _canvasFrames.Keys) if (!ViewportLive(viewport, tree)) _staleViewports.Add(viewport);
             foreach (var viewport in _staleViewports) ReleaseViewport(viewport); _staleViewports.Clear();
             _renderingDevice?.FlushRendererCommands();
+            BeginCanvasVisibilityFrame();
             _backend.BeginFrame();
             if (_window.Visible && _canvasFrames.TryGetValue(_window, out var root)) { root.Wanted = true; SubmitFrame(root, tree); }
             for (var i = 0; i < _activeFrames.Count; i++) { var frame = _activeFrames[i]; if (UpdateMode(frame.Viewport) is ViewportUpdateMode.Always or ViewportUpdateMode.Once) { frame.Wanted = true; SubmitFrame(frame, tree); } }
             _backend.EndFrame();
             _frameSubmitted = true;
             Engine.Service.RecordDrawnFrame();
+            CaptureCanvasVisibilityChanges();
             CaptureFrameCallbacks();
-            foreach (var frame in _activeFrames) if (frame.Drawn) { UseFrame(frame); DispatchScreenVisibility(tree); }
+            foreach (var frame in _activeFrames) if (frame.Drawn) { UseFrame(frame); try { DispatchScreenVisibility(tree); } catch (Exception error) { AddCanvasVisibilityError(ref frameError, error); } }
+            DeliverCanvasVisibilityChanges(ref frameError);
             _renderingDevice?.CompleteRendererReadbacks();
             FramePostDrawCore?.Invoke();
         }
-        catch (Exception error) { frameError = error; }
+        catch (Exception error) { AddCanvasVisibilityError(ref frameError, error); }
         finally
         {
             try { if (_frameSubmitted) DeliverFrameCallbacks(ref frameError); }
@@ -415,9 +418,9 @@ public sealed partial class RenderingServer : ElectronObject
         if (item is Parallax parallax) _repeatTransforms[parallax] = transform;
         else if (NativeMirror(item) != Vector2.Zero) _repeatTransforms[item] = _canvasBasis;
         _canvasTransforms[item] = transform;
-        if (!IsCompositor(item) && item.ServerState?.CustomRect is { } custom)
+        if (!IsCompositor(item) && item.ServerState?.CustomRect is not null)
         {
-            var area = transform * custom.Abs();
+            var area = transform * item.RenderBounds();
             for (var parent = item; parent is not null; parent = parent.RenderParent)
                 if (NativeMirror(parent) != Vector2.Zero) { area = ExpandRepeatedClip(area, parent); break; }
             var size = _backend.FindTarget(_viewport)!.Size;

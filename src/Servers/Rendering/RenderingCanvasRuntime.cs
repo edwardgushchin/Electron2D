@@ -59,6 +59,7 @@ internal sealed class RenderingCanvasItemState
     internal TextureFilter? Filter;
     internal TextureRepeat? Repeat;
     internal Rect2? CustomRect;
+    internal CanvasVisibilityNotification? VisibilityNotifier;
     internal CanvasItem? Commands;
     internal readonly List<WeakReference<CanvasItem>> Children = [];
     internal RenderingCanvasItemState(RenderingServer owner, bool owned) { Owner = owner; Owned = owned; }

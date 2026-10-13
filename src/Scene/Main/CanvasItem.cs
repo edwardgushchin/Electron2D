@@ -216,7 +216,7 @@ public abstract partial class CanvasItem : Node
             if (disposing)
             {
                 lock (_canvasItemRIDGate) { if (_canvasItemRID.IsValid()) RenderingCanvasItemRegistry.Remove(_canvasItemRID); _canvasItemRID = AttachedSkeleton = default; }
-                ServerState?.Commands?.Dispose(); ServerState = null;
+                ServerState?.VisibilityNotifier?.Cancel(); ServerState?.Commands?.Dispose(); ServerState = null;
                 _canvasCommands?.Clear(); _meshes?.Clear(); _meshCount = 0; _multiMeshes?.Clear(); _multiMeshCount = 0; _polygons?.Clear(); _polygonCount = 0; _strokes?.Clear(); _strokePoints = []; _strokeCount = 0; _material = null; _instanceUniforms = null;
                 VisibilityChanged = null; Hidden = null; Draw = null; ItemRectChanged = null; LocalTransformChanged = null; TransformChanged = null;
             }

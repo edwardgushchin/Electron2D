@@ -269,3 +269,5 @@ Renderer-managed texture uploads, image arrays and completed viewport targets no
 The [explicit-frame component](../components/manual-render-frames.md) adds owner-thread manual native drawing, real GPU synchronization, one-shot completion actions and Engine frame accounting on the existing retained canvas path.
 
 Server-owned [offscreen viewport targets](../components/canvas-rendering.md#server-owned-offscreen-viewport-targets) now execute canvas output through static RID APIs without attaching scene nodes, sharing native image ownership, dependency submission and explicit texture readback. Single-layer output is implemented; layered targets remain a precise separate dependency.
+
+Retained canvas-item visibility callbacks aggregate culling samples across all submitted viewports, commit once after backend frame completion and run before FramePostDraw. Callback errors do not prevent later transitions/readbacks/completion; disable/free/disposal clear ownership silently. See [canvas rendering](../components/canvas-rendering.md).

@@ -1269,3 +1269,12 @@ Uses the initialized process service on its owner thread. Invalid/disposed ident
 ## Explicit frame execution
 
 ForceDraw(bool swapBuffers = true, double frameStep = 0) executes the current native scene even when RenderLoopEnabled is false; non-presenting frames still update viewport textures. ForceSync submits pending renderer device work and waits for prior GPU operations without drawing. RequestFrameDrawnCallback(Action) schedules an ordered one-shot owner-thread action after a completed frame, with capture release and error cleanup. See [clock, ownership, failure and actual pixel verification](../components/manual-render-frames.md).
+
+
+## Retained canvas visibility callbacks
+
+RenderingServer.CanvasItemSetVisibilityNotifier accepts a live canvas-item RID, enable flag, finite local rectangle and optional typed enter/exit callbacks. The rectangle extends command/custom bounds. Parent visibility, inherited alpha threshold, cull layers, clipping and repeated canvas transforms participate in conservative culling; this does not test occlusion. Notifier-only items can participate without drawing commands.
+
+Sampling is OR-combined across all submitted root, scene and server-owned offscreen viewports. States commit once after successful backend frame submission, before callbacks and FramePostDraw. A submitted global frame with no participating view exits a previously visible raw notifier. Skipped rendering supplies no new sample. Disable, free, borrowed Scene node disposal and renderer close clear callbacks silently. Replacing area/callbacks preserves committed state and invalidates stale queued delivery.
+
+Callbacks run on the renderer owner, may mutate/free retained items after submission, and cannot reenter rendering. All states commit first; later callbacks, readbacks and frame completion continue after a callback fails. Committed transitions never replay. This runtime-only callback state is absent from PackedScene storage.

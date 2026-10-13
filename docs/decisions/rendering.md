@@ -168,10 +168,10 @@ The direct bridge is the sole native font/shaping/raster foundation. It removes 
 <a id="adr-0078"></a>
 ## ADR 0078: Retained screen visibility and processing enablers
 
-Last updated: 2026-09-26
+Last updated: 2026-10-13
 
 - Status: Accepted
-- Scope: VisibleOnScreenNotifier/VisibleOnScreenEnabler runtime regions in the current retained canvases
+- Scope: VisibleOnScreenNotifier/VisibleOnScreenEnabler regions and raw retained canvas-item callbacks
 - Depends on: [0028](#adr-0028), [0008](scene.md#adr-0008), [0014](resources.md#adr-0014), [0072](physics.md#adr-0072), [0027](product.md#adr-0027)
 
 ### Decision
@@ -183,7 +183,11 @@ Last updated: 2026-09-26
 - Node.ProcessMode captures disabled-state transitions in cached depth-specific lists instead of a LINQ dictionary. Preserve preorder, pre-mutation physics validation, callback failure continuation and nested callback edits. Warm each used subtree capacity/reentrancy depth outside the measured interval. Node lifecycle transitions may still perform explicit physics resource attachment/removal; the zero-allocation screen check targets neutral processing nodes, while separate native assertions verify RigidBody remove/reentry behavior.
 - ShowRect is editor-only magenta gizmo drawing in the pinned source. Keep that member Blocked until the first self-hosted editor canvas gizmo drawing slice and add/test its flag and fill there. Do not ship an inert bool. Public independent offscreen viewport rendering remains subject to its existing lifecycle gate; this slice integrates the current root-window renderer and CanvasLayer groups on both backends.
 
+Raw retained canvas items also accept typed visibility callbacks through RenderingServer.CanvasItemSetVisibilityNotifier. The local area extends command/custom bounds; parent visibility, alpha, cull layers and clipping still apply. Samples are OR-combined across every submitted viewport, then committed once after successful backend frame completion. A global submitted frame with no participating viewport exits previously visible raw notifiers. This differs from the scene-node last-sample policy only at its explicitly retained hidden/stopped viewport boundary. Disable, free, scene-node disposal and renderer teardown clear callbacks silently. Replacing callback/area preserves current screen state but invalidates stale queued delivery. Commit every state before callbacks, attempt later transitions after failures and never replay committed transitions. Callback mutation/free is allowed after submission, while nested rendering remains rejected.
+
 ### Verification
+
+CanvasVisibilityTests exercises unavailable renderer/owner validation and both GPU and compatibility backends without fallback on Linux Wayland: actual pixels, root/offscreen aggregation, notifier-only and negative bounds, custom bounds, parent visibility/modulation, clipping/layers, queued replacement/cancellation, borrowed disposal, renderer close and failure continuation. A warmed 64-frame visible/hidden transition loop allocates zero managed owner-thread bytes. The GPU-owned white texture retains its renderer cache until backend disposal, avoiding recreation on empty frames. Other platforms require their platform gate.
 
 ScreenVisibilityTests covers defaults, enums, target cache identity/path changes/errors, every process policy, weak disposal, silent departure/reentry, event failure with policy application, ownership, packing and 64 warmed nested ProcessMode transitions with zero managed bytes. ScreenVisibilityRenderingTests covers twelve native region/mask/layer/default-canvas/alpha/border/degenerate stages, black readback confirming no runtime gizmo, actual RigidBody participation, committed peer state, stale event suppression, failure continuation/native release and 64 warmed active enabler transitions with zero managed bytes per compatibility/GPU Linux Wayland path. Native allocator counts, other platforms, broad-scene cost and owner visual acceptance are unverified; no vendor source changes.
 

@@ -1340,3 +1340,5 @@ item.SetInstanceShaderParameter<Color>("tint", null);
 ```
 
 These operations require the scene owner for attached items and reject mutation during capture or after disposal. No renderer is required for detached authoring. The current compiled profile declares zero scalar/vector defaults.
+
+A retained server visibility notification can extend command/custom culling bounds through its finite local rectangle. This also participates in clip bounds. Borrowed scene items release that runtime callback state immediately during disposal; it is not a stored scene property. See [canvas rendering](../components/canvas-rendering.md).

@@ -4491,6 +4491,12 @@
       "godot": "RenderingServer::method:viewport_set_update_mode(RID:,int:RenderingServer.ViewportUpdateMode)",
       "electron2d": "method:Electron2D.RenderingServer.ViewportSetUpdateMode(Electron2D.RID,Electron2D.ViewportUpdateMode)",
       "reason": "Executable server-owned single-layer canvas targets under ADRs 0028/0095, without scene hierarchy attachment. Shared GPU/compatibility targets support stable viewport/texture RIDs, exact dimensions, activation, clear/update/Once transitions, transparency, canvas suppression, independent rendering parents and texture dependency submission. FreeRID/shutdown retire targets and borrowed texture views; borrowed attached scene policies remain synchronized. ServerViewportTests exercises Linux Wayland GPU/hardware compatibility real pixels, defaults, invalid/stale/session/owner/capture guards, resize, zero/one axes, zero layers, child parents, hidden root and prepared managed allocation. Foreign platforms, native allocation and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetVisibilityNotifier(Electron2D.RID,System.Boolean,Electron2D.Rect2,System.Action,System.Action)",
+      "godot": "RenderingServer::method:canvas_item_set_visibility_notifier(RID:,bool:,Rect2:,Callable:,Callable:)",
+      "state": "Implemented",
+      "reason": "Typed retained-canvas visibility callbacks, conservative merged bounds and multi-viewport sampling execute after frame submission under ADRs 0028/0078."
     }
   ],
   "statusGroups": [
@@ -6341,6 +6347,21 @@
       ],
       "state": "Partial",
       "reason": "Executable server-owned single-layer canvas targets under ADRs 0028/0095, without scene hierarchy attachment. Shared GPU/compatibility targets support stable viewport/texture RIDs, exact dimensions, activation, clear/update/Once transitions, transparency, canvas suppression, independent rendering parents and texture dependency submission. FreeRID/shutdown retire targets and borrowed texture views; borrowed attached scene policies remain synchronized. ServerViewportTests exercises Linux Wayland GPU/hardware compatibility real pixels, defaults, invalid/stale/session/owner/capture guards, resize, zero/one axes, zero layers, child parents, hidden root and prepared managed allocation. Foreign platforms, native allocation and human acceptance remain unverified. Exact remaining prerequisite: layer-aware canvas render targets, selected layer submission and matching ordinary/layered texture/device exports for view_count greater than one. Counts zero/one execute; unsupported layered output rejects before mutation."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:canvas_item_set_visibility_notifier(RID:,bool:,Rect2:,Callable:,Callable:)"
+      ],
+      "state": "Implemented",
+      "reason": "Retained canvas visibility callback slice executes root/offscreen aggregation, inherited culling/clipping, notifier-only items, callback lifetime/generation, failure continuation and warmed frame reuse on GPU/compatibility. ADRs 0028/0078."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:visibility_notifier_create()",
+        "RenderingServer::method:visibility_notifier_set_callbacks(RID:,Callable:,Callable:)"
+      ],
+      "state": "Excluded",
+      "reason": "The pinned 3D visibility notifier RID family uses AABB utilities and INSTANCE_VISIBLITY_NOTIFIER scene instances: servers/rendering/storage/utilities.h and renderer_scene_cull.cpp at ed1daf0bf001b61586d9930840f2f1394092c079. Its set_aabb sibling is already Excluded. ADR 0004 excludes the complete 3D family; the applicable 2D operation is canvas_item_set_visibility_notifier. No implementation trigger."
     }
   ],
   "extras": [
