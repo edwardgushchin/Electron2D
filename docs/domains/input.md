@@ -1,6 +1,6 @@
 # Input domain
 
-Last updated: 2026-10-06
+Last updated: 2026-10-13
 
 ## Responsibility
 
@@ -90,3 +90,5 @@ lifetime and native exit routing. See [Physics picking](../components/physics-pi
 for the CPU/GPU, embedded-view and callback/error contracts.
 
 Changed default cursor policy synthesizes internal mouse motion from the last parsed client pointer position. GUI routing and passive physics hover execute, while Node user input callbacks omit internal events. Same defaults are no-ops; active scene requests coalesce at a safe point. Viewport.UpdateMouseCursorState uses the current native pointer through the containing Window. See [input runtime](../components/input-runtime.md).
+
+Control pointer capture transfers now connect deferred internal button transitions to ordinary GUI motion/release routing. Control local pointer warping shares viewport/window validation and embedded transforms. See [Control](../classes/Control.md#pointer-capture-transfer-and-coordinates).

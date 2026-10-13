@@ -81029,6 +81029,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.GetScreenPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetScreenPosition",
+    "signature": "public Electron2D.Vector2 GetScreenPosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -81241,6 +81254,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GrabClickFocus()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GrabClickFocus",
+    "signature": "public System.Void GrabClickFocus()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -82401,6 +82427,25 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.WarpMouse(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "WarpMouse",
+    "signature": "public System.Void WarpMouse(Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },

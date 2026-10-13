@@ -32,6 +32,7 @@ public sealed partial class SceneTree
         try { ReleaseGUIFocus(viewport); } catch (Exception error) { CollectException(ref errors, error); }
         if (ReferenceEquals(_gui.Section, _gui))
             try { CancelGUIDrag(viewport); } catch (Exception error) { CollectException(ref errors, error); }
+        _gui.ClickGrabber?.SetTarget(null!); _gui.ClickPressTarget?.SetTarget(null!); _gui.ClickPressMask = 0;
         _gui.InputTraversal.Clear(); _gui.GuiTouchCapture.Clear(); _gui.GuiTouchSlots.Clear();
         ReleaseEmbeddedHost(viewport);
         _guiStates.Remove(viewport);

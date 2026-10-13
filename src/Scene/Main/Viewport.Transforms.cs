@@ -83,7 +83,8 @@ public abstract partial class Viewport
     /// <summary>Requests a pointer move to a position in viewport coordinates.</summary>
     /// <param name="position">Finite viewport coordinates, transformed to the window client area before the request.</param>
     /// <remarks>The final transform is applied; CanvasTransform is not. The native request truncates fractional client
-    /// coordinates to integer units. Platform input policy may prevent movement even when the request is supported.</remarks>
+    /// coordinates to integer units. Embedded viewports resolve their containing Window and include container/stretch
+    /// transforms. Platform input policy may prevent movement even when the request is supported.</remarks>
     /// <exception cref="ArgumentException">The input or transformed position is nonfinite or outside native integer coordinates.</exception>
     /// <exception cref="NotSupportedException">The active backend does not support pointer warping.</exception>
     /// <exception cref="InvalidOperationException">No containing native window is active, or the caller is not its owner.</exception>
@@ -92,7 +93,7 @@ public abstract partial class Viewport
     {
         EnsureMutable();
         if (!position.IsFinite()) throw new ArgumentException("Pointer coordinates must be finite.", nameof(position));
-        if (this is not Window window) throw new InvalidOperationException("Pointer warping requires an active native Window.");
+        var window = GetWindow() ?? throw new InvalidOperationException("Pointer warping requires an active containing native Window.");
         position = GetScreenTransform() * position;
         if (!position.IsFinite() || (double)position.X < int.MinValue || (double)position.X > int.MaxValue || (double)position.Y < int.MinValue || (double)position.Y > int.MaxValue)
             throw new ArgumentException("Transformed pointer coordinates exceed native limits.", nameof(position));

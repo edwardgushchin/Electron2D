@@ -1892,7 +1892,7 @@
       "electron2d": "property:Electron2D.Viewport.CanvasTransform()",
       "godot": "Viewport::property:canvas_transform",
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection. Control pointer slice now executes embedded viewport warp through the containing native Window with full container/stretch transforms; managed and native capability gates are covered by ControlPointerTests."
     },
     {
       "electron2d": "property:Electron2D.Viewport.GlobalCanvasTransform()",
@@ -5373,6 +5373,24 @@
       "godot": "Viewport::method:update_mouse_cursor_state()",
       "state": "Implemented",
       "reason": "Internal motion refresh uses containing Window routing, typed GUI delivery and passive physics hover under ADR 0038."
+    },
+    {
+      "godot": "Control::method:grab_click_focus()",
+      "electron2d": "method:Electron2D.Control.GrabClickFocus()",
+      "state": "Implemented",
+      "reason": "ADR 0038 executable viewport GUI capture: coalesced deferred primary-button release/next-batch press, internal event ownership, existing capture mask, keyboard/global-input isolation, stale target/real-release/disposal cancellation, exception continuation and warmed no-op requests. ControlPointerTests exercises managed boundaries and actual GPU/compatibility pixels; nested native warp uses existing canvas/window transforms and explicit host capabilities."
+    },
+    {
+      "godot": "Control::method:get_screen_position()",
+      "electron2d": "method:Electron2D.Control.GetScreenPosition()",
+      "state": "Implemented",
+      "reason": "ADR 0038 executable viewport GUI capture: coalesced deferred primary-button release/next-batch press, internal event ownership, existing capture mask, keyboard/global-input isolation, stale target/real-release/disposal cancellation, exception continuation and warmed no-op requests. ControlPointerTests exercises managed boundaries and actual GPU/compatibility pixels; nested native warp uses existing canvas/window transforms and explicit host capabilities."
+    },
+    {
+      "godot": "Control::method:warp_mouse(Vector2:)",
+      "electron2d": "method:Electron2D.Control.WarpMouse(Electron2D.Vector2)",
+      "state": "Implemented",
+      "reason": "ADR 0038 executable viewport GUI capture: coalesced deferred primary-button release/next-batch press, internal event ownership, existing capture mask, keyboard/global-input isolation, stale target/real-release/disposal cancellation, exception continuation and warmed no-op requests. ControlPointerTests exercises managed boundaries and actual GPU/compatibility pixels; nested native warp uses existing canvas/window transforms and explicit host capabilities."
     }
   ],
   "extras": [
@@ -11025,6 +11043,15 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0002/0006: typed PhysicsFrameStarted event occurs once after pending transforms and before scheduled node fixed callbacks and numerical world stepping. PhysicsClockTests checks real CPU ticks/integration, tree identity/counters, zero-delta frames, error aggregation with completed-tick no-replay and strict 0/0 warmed full Engine frames. Ordinary C# multicast failure semantics remain the accepted adaptation; separate-thread and native/GPU scheduling acceptance remain open."
+    },
+    {
+      "godot": [
+        "Control::method:grab_click_focus()",
+        "Control::method:get_screen_position()",
+        "Control::method:warp_mouse(Vector2:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0038 executable viewport GUI capture: coalesced deferred primary-button release/next-batch press, internal event ownership, existing capture mask, keyboard/global-input isolation, stale target/real-release/disposal cancellation, exception continuation and warmed no-op requests. ControlPointerTests exercises managed boundaries and actual GPU/compatibility pixels; nested native warp uses existing canvas/window transforms and explicit host capabilities."
     }
   ]
 }

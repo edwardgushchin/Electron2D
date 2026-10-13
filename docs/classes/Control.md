@@ -1,6 +1,6 @@
 # Control
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Inherits:** [CanvasItem](CanvasItem.md) → [Node](Node.md) → [ElectronObject](ElectronObject.md)
 
@@ -455,3 +455,13 @@ LocalizeNumeralSystem now defaults true in the typed stored schema and refreshes
 Window and Control use one domain-aware resolver. An inherited node follows the nearest Window or Control only while ancestor translation domains match. With no such ancestor, `ProjectSettings.RootNodeLayoutDirection` selects 0 application locale, 1 LTR, 2 RTL or 3 system UI locale. `ForceRightToLeftLayoutDirection` forces inherited and application/system locale modes to RTL; explicit LTR/RTL remain authoritative. Each SceneTree samples both settings and feature overrides before entry. Detached nodes use current settings. Authored per-node directions survive scene packing; project defaults do not overwrite them.
 
 Layout-direction and translation notifications reflow geometry and invalidate text; global locale/catalog edits require an explicit translation notification under ADR 0007. Existing locale direction still requires a matching registered catalog or fallback language. [ProjectLayoutDirectionTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionTests.cs) covers resolution, lifetime and reflow; [ProjectLayoutDirectionNativeTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionNativeTests.cs) checks GUI/text pixels on Linux Wayland GPU/compatibility. Foreign targets and owner visual acceptance remain unverified.
+
+## Pointer capture transfer and coordinates
+
+Control.GrabClickFocus requests the last target in its viewport at the deferred boundary. Without a current mouse capture it does nothing. Held left/right/middle buttons produce temporary internal releases on the old control and internal presses on the new control in the next deferred batch. These events reach the target directly, preserve global Input button state and keyboard focus, and do not bubble. Real motion/releases then follow the new capture until all held buttons release.
+
+Pending targets are weak and cancel after removal/disposal or viewport teardown. All releases are attempted after callback failure; a successful capture handoff still schedules its presses before reporting errors. Newer capture or physical release cancels stale press delivery. Runtime capture requests are not scene properties. Actual synthetic event delivery allocates temporary owned input objects; coalesced requests reuse their cached queue actions. Singular transforms reject transfer before releasing the previous capture.
+
+GetScreenPosition returns GetScreenTransform().Origin, including the containing outer native Window for embedded viewports, and follows its desktop placement limitations. WarpMouse accepts finite local coordinates and composes current canvas/viewport transforms into the containing native window. Embedded viewports include their container transform and stretch scale. Invalid native ranges and missing/unsupported host capabilities fail explicitly.
+
+ControlPointerTests checks coalescing, two deferred batches, primary buttons, transformed coordinates, keyboard-focus isolation, disposal/viewport removal, singular transforms, exceptions, physical-release cancellation and 64 warmed same-target requests with zero managed bytes. Native Wayland GPU/compatibility tests verify actual capture-driven pixels and explicit unavailable warp/desktop-position boundaries. Dummy compatibility uses nearest sampling for executable embedded warp coordinates. Other platform/hardware verification remains separate.

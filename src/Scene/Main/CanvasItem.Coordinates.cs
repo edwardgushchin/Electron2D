@@ -41,7 +41,7 @@ public abstract partial class CanvasItem
     public Transform GetViewportTransform() { var viewport = RequireCanvasViewport(); return viewport.GetFinalTransform() * GetCanvasTransform(); }
 
     /// <summary>Returns this item's local-to-screen transform, including native window placement.</summary>
-    /// <returns>The native client origin, viewport final transform and local-to-canvas transform composed in order.</returns>
+    /// <returns>The outer containing window desktop origin, complete viewport screen transform and local-to-canvas transform composed in order.</returns>
     /// <remarks>Native desktop placement is unavailable on Wayland and fails explicitly. No fabricated screen origin is returned.</remarks>
     /// <exception cref="NotSupportedException">The native backend cannot report the window's desktop position.</exception>
     /// <exception cref="InvalidOperationException">The item has no active viewport or is queried off-owner.</exception>
@@ -49,7 +49,9 @@ public abstract partial class CanvasItem
     public Transform GetScreenTransform()
     {
         var viewport = RequireCanvasViewport();
-        var origin = viewport is Window window ? (Vector2)window.Position : Vector2.Zero;
+        var window = GetWindow();
+        while (window?.Embedder is { } embedder) window = embedder.GetWindow();
+        var origin = window is null ? Vector2.Zero : (Vector2)window.Position;
         return new Transform(0, origin) * viewport.GetScreenTransform() * GetGlobalTransformWithCanvas();
     }
 

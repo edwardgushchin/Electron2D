@@ -1360,3 +1360,5 @@ Viewport.UpdateMouseCursorState and Input default-cursor changes execute interna
 RenderingServer.CanvasItemSetVisibilityNotifier supplies typed retained-canvas enter/exit callbacks with multi-viewport sampling, cull/clip bounds and deterministic runtime callback ownership.
 
 ResourceLoader.ListDirectory discovers recognized resource leaf names and immediate directory names for current loaders and native formats, with fresh-process discovery/load verification.
+
+Control pointer capture transfer and local-to-native warp execute through SceneTree viewport GUI state and existing coordinate transforms; deferred callback targets remain transient.

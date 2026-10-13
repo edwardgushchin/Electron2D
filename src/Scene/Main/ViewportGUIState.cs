@@ -19,6 +19,11 @@ internal sealed class ViewportGUIState(Viewport? viewport)
     internal Control? GuiFocus;
     internal Control? GuiMouseCapture;
     internal uint GuiMouseCaptureMask;
+    internal WeakReference<Control>? ClickGrabber, ClickPressTarget;
+    internal Action? ClickGrabAction, ClickPressAction;
+    internal bool ClickGrabQueued, ClickPressQueued;
+    internal uint ClickPressMask;
+    internal Vector2 ClickPressPosition;
     internal readonly Dictionary<int, WeakReference<Control>> GuiTouchCapture = [];
     internal readonly Stack<WeakReference<Control>> GuiTouchSlots = [];
     internal readonly List<int> GuiTouchReleaseKeys = [];
