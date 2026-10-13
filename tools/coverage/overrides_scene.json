@@ -10291,7 +10291,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "Exact AnimationMixer/Player libraries and authored constructor state now have PackedScene and resource-file schemas. Trigger: a typed save-pose transaction that seeks RESET at zero, captures coupled property effects and restores preview values on success/failure, including user setter errors and capture guards. AnimationTree additionally needs graph-definition/parameter schemas. Ordinary Pack preserves actual pose without invoking RESET (ADR 0093).",
+      "reason": "Exact AnimationMixer/Player libraries and authored constructor state now have PackedScene and resource-file schemas. Trigger: a typed save-pose transaction that seeks RESET at zero, captures coupled property effects and restores preview values on success/failure, including user setter errors and capture guards. AnimationTree graph-definition/parameter schemas now execute; the remaining dependency is the save-pose transaction itself. Ordinary Pack preserves actual pose without invoking RESET (ADR 0093).",
       "godot": [
         "AnimationMixer::property:reset_on_save"
       ]
