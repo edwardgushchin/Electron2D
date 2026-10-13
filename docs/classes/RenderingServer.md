@@ -1030,7 +1030,8 @@ See [canvas lifetime and replay contract](../components/canvas-rendering.md#call
 | `CanvasItemAddMesh` | Appends a retained borrowed mesh command with identity transform and white tint by default. |
 | `CanvasItemAddMultiMesh` | Appends a retained borrowed repeated-mesh command, consuming live instance storage. |
 | `CanvasSetModulate` | Sets finite canvas-wide native modulation. |
-| `CanvasSetItemMirroring` | Repeats a direct canvas child and its render descendants once along each nonzero finite axis. |
+| `CanvasSetItemRepeat` | Repeats any live item and its render descendants in its local basis; nearest nested source overrides inherited repetition. |
+| `CanvasSetItemMirroring` | Validates direct canvas parentage and sets one repeat through the shared item state. |
 | `ViewportAttachCanvas` | Attaches a live canvas to an active scene viewport; the same canvas can be attached to multiple viewports. |
 | `ViewportRemoveCanvas` | Removes one view attachment while retaining canvas/item ownership and other attachments. |
 | `ViewportSetCanvasTransform` | Sets one attached canvas view matrix without rewriting scene viewport or layer authoring. |
@@ -1278,3 +1279,5 @@ RenderingServer.CanvasItemSetVisibilityNotifier accepts a live canvas-item RID, 
 Sampling is OR-combined across all submitted root, scene and server-owned offscreen viewports. States commit once after successful backend frame submission, before callbacks and FramePostDraw. A submitted global frame with no participating view exits a previously visible raw notifier. Skipped rendering supplies no new sample. Disable, free, borrowed Scene node disposal and renderer close clear callbacks silently. Replacing area/callbacks preserves committed state and invalidates stale queued delivery.
 
 Callbacks run on the renderer owner, may mutate/free retained items after submission, and cannot reenter rendering. All states commit first; later callbacks, readbacks and frame completion continue after a callback fails. Committed transitions never replay. This runtime-only callback state is absent from PackedScene storage.
+
+`CanvasSetItemRepeat(item, repeatSize, repeatTimes)` accepts finite signed periods and nonnegative counts. Each nonzero axis draws count plus one copies with offsets starting at minus floor(count/2); negative periods reverse order. Zero count or zero size disables the local source and descendants may inherit an ancestor source. State follows the logical item when reparented and expires with renderer teardown. Existing clipping/custom bounds and submitted-view visibility use repeated geometry; no scene property or PackedScene storage is added. Ordinary invertible drawing culls offscreen repeat indexes conservatively. Singular transforms, programmable materials and world-coordinate commands retain complete expansion; many overlapping copies can therefore remain expensive.

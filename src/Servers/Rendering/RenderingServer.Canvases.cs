@@ -92,7 +92,13 @@ public sealed partial class RenderingServer
     }
     internal void CanvasSetModulateCore(RID rid, Color color) { if (!color.IsFinite()) throw new ArgumentException("Canvas colors must be finite.", nameof(color)); CanvasChange(rid).Modulate = color; }
     internal void CanvasSetItemMirroringCore(RID rid, RID item, Vector2 mirroring)
-    { if (!mirroring.IsFinite()) throw new ArgumentException("Canvas mirroring must be finite.", nameof(mirroring)); var canvas = CanvasChange(rid); var target = RenderingCanvasItemRegistry.Resolve(item); if (target.RenderParent is not null || !ReferenceEquals(target.RenderCanvas(), canvas)) throw new ArgumentException("Mirroring requires a direct canvas child.", nameof(item)); canvas.Mirroring[item] = mirroring; }
+    { if (!mirroring.IsFinite()) throw new ArgumentException("Canvas mirroring must be finite.", nameof(mirroring)); var canvas = CanvasChange(rid); var target = RenderingCanvasItemRegistry.Resolve(item); if (target.RenderParent is not null || !ReferenceEquals(target.RenderCanvas(), canvas)) throw new ArgumentException("Mirroring requires a direct canvas child.", nameof(item)); CanvasSetItemRepeatCore(item, mirroring, 1); }
+    internal void CanvasSetItemRepeatCore(RID item, Vector2 repeatSize, int repeatTimes)
+    {
+        if (!repeatSize.IsFinite()) throw new ArgumentException("Canvas repeat size must be finite.", nameof(repeatSize));
+        if (repeatTimes < 0) throw new ArgumentOutOfRangeException(nameof(repeatTimes));
+        var state = Change(item, out _); state.ItemRepeatSize = repeatSize; state.ItemRepeatTimes = repeatTimes;
+    }
     internal void ViewportAttachCanvasCore(RID viewport, RID canvas) => ViewChange(viewport, canvas, out _).Attached = true;
     internal void ViewportRemoveCanvasCore(RID viewport, RID canvas) => ViewChange(viewport, canvas, out _).Attached = false;
     internal void ViewportSetCanvasTransformCore(RID viewport, RID canvas, Transform transform) { if (!transform.IsFinite()) throw new ArgumentException("Canvas view transforms must be finite.", nameof(transform)); ViewChange(viewport, canvas, out _).Transform = transform; }
@@ -106,14 +112,14 @@ public sealed partial class RenderingServer
         }
         if (!RenderingCanvasItemRegistry.Contains(rid)) return false;
         if (!RenderingCanvasItemRegistry.IsOwned(rid, this)) throw new InvalidOperationException("Scene canvas items cannot be freed by the renderer.");
-        var item = RenderingCanvasItemRegistry.Resolve(rid); if (item.ServerState?.TileOwner is not null) throw new InvalidOperationException("Generated tile drawing is owned by its layer."); item.RenderParent?.ServerState?.RemoveChild(item); _ownedCanvasItems.Remove(item); foreach (var canvasID in _ownedCanvasRIDs) RenderingCanvasRegistry.Resolve(canvasID).Mirroring.Remove(rid); foreach (var sceneCanvas in _serverSceneCanvases) sceneCanvas.Mirroring.Remove(rid); item.Dispose(); return true;
+        var item = RenderingCanvasItemRegistry.Resolve(rid); if (item.ServerState?.TileOwner is not null) throw new InvalidOperationException("Generated tile drawing is owned by its layer."); item.RenderParent?.ServerState?.RemoveChild(item); _ownedCanvasItems.Remove(item); item.Dispose(); return true;
     }
     private void ReleaseOwnedCanvasGraph()
     {
         foreach (var item in _ownedCanvasItems) { if (item.ServerState is { } state) state.TileOwner = null; RenderingCanvasItemRegistry.Remove(item.GetCanvasItem()); item.Dispose(); }
         _ownedCanvasItems.Clear();
         foreach (var rid in _ownedCanvasRIDs) RenderingCanvasRegistry.Remove(rid); _ownedCanvasRIDs.Clear();
-        foreach (var canvas in _serverSceneCanvases) { canvas.Modulate = Colors.White; canvas.Attachments.Clear(); canvas.Mirroring.Clear(); canvas.SessionOwner = null; }
+        foreach (var canvas in _serverSceneCanvases) { canvas.Modulate = Colors.White; canvas.Attachments.Clear(); canvas.SessionOwner = null; }
         _serverSceneCanvases.Clear();
         foreach (var weak in _serverSceneItems) if (weak.TryGetTarget(out var item) && !item.IsDisposed && ReferenceEquals(item.ServerState?.Owner, this)) { item.ServerState?.VisibilityNotifier?.Cancel(); item.ServerState?.Commands?.Dispose(); item.ServerState = null; }
         _serverSceneItems.Clear(); _capturedCanvasItems.Clear(); _canvasVisibilityItems.Clear(); _canvasVisibilityChanges.Clear();

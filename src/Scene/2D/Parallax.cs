@@ -79,6 +79,7 @@ public class Parallax : Entity
     /// <exception cref="ArgumentOutOfRangeException">The assigned vector is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">Attached mutation is off-owner or the scroll calculation overflows.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
+    /// <remarks>A changed authored period republishes repetition after a live renderer override.</remarks>
     public Vector2 RepeatSize
     {
         get { CheckQuery(); return _repeatSize; }
@@ -87,6 +88,7 @@ public class Parallax : Entity
             EnsureMutable(); Finite(value);
             if (_repeatSize == value) return;
             _repeatSize = new(MathF.Max(0, value.X), MathF.Max(0, value.Y));
+            if (ServerState is { } state) state.ItemRepeatSize = null;
             UpdateProcessing(); UpdateScroll();
         }
     }
@@ -95,10 +97,11 @@ public class Parallax : Entity
     /// <value>One initially. Values below one clamp to one.</value>
     /// <exception cref="InvalidOperationException">Attached access is off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
+    /// <remarks>Assignment republishes repetition after a live renderer override.</remarks>
     public int RepeatTimes
     {
         get { CheckQuery(); return _repeatTimes; }
-        set { EnsureMutable(); _repeatTimes = Math.Max(1, value); }
+        set { EnsureMutable(); _repeatTimes = Math.Max(1, value); if (ServerState is { } state) state.ItemRepeatSize = null; }
     }
 
     /// <summary>Gets or sets the camera-derived scroll origin, or a manual origin when camera scroll is ignored.</summary>

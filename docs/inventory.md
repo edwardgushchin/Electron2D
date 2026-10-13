@@ -1374,3 +1374,5 @@ OS restart-on-exit captures a validated copied argument list for normal desktop 
 TranslationServer now supplies the fixed locale catalog, aliases/script defaults and gettext rules; Translation resources automatically select integer plural forms with preserved caller overrides, copy/archive state and native localized-consumer verification.
 
 Translation catalog import uses internal TranslationCatalogLoader and CatalogPluralRule within the runtime assembly. Public Translation.PluralRulesOverride preserves imported definitions; no separate public parser or loader type is introduced.
+
+RenderingServer.CanvasSetItemRepeat reuses RenderingCanvasItemState and retained canvas composition; no new public type is introduced.

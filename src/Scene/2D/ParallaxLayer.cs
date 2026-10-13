@@ -32,10 +32,11 @@ public sealed class ParallaxLayer : Entity
     /// <summary>Gets or sets the per-axis interval for one additional repeated copy.</summary>
     /// <value>Zero initially. Negative components clamp to zero; repetition is unavailable on a zero axis.</value>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite.</exception>
+    /// <remarks>Assignment republishes repetition after a live renderer override.</remarks>
     public Vector2 MotionMirroring
     {
         get { CheckState(); return _mirroring; }
-        set { EnsureMutable(); Finite(value); _mirroring = new(MathF.Max(0, value.X), MathF.Max(0, value.Y)); }
+        set { EnsureMutable(); Finite(value); _mirroring = new(MathF.Max(0, value.X), MathF.Max(0, value.Y)); if (ServerState is { } state) state.ItemRepeatSize = null; }
     }
 
     internal Vector2 RepeatPeriod => Parent is ParallaxBackground && IsInsideTree ? _mirroring * _originalScale : Vector2.Zero;

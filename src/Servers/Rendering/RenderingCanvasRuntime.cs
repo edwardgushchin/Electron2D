@@ -9,7 +9,6 @@ internal sealed class RenderingCanvasRuntime
     internal readonly WeakReference<WorldRuntime>? World;
     internal Color Modulate = Colors.White;
     internal readonly Dictionary<RID, Attachment> Attachments = [];
-    internal readonly Dictionary<RID, Vector2> Mirroring = [];
     internal sealed class Attachment { internal bool Attached = true; internal Transform? Transform; internal int? Layer, Sublayer; }
     internal RenderingCanvasRuntime(RID rid, RenderingServer? owner = null, CanvasLayer? layer = null, WorldRuntime? world = null) { RID = rid; Owner = owner; if (layer is not null) Layer = new(layer); if (world is not null) World = new(world); }
     internal bool Alive => World is not null && World.TryGetTarget(out var world) && world.Alive || Owner is not null || Layer is not null && Layer.TryGetTarget(out var layer) && !layer.IsDisposed;
@@ -58,6 +57,8 @@ internal sealed class RenderingCanvasItemState
     internal uint? VisibilityLayer, LightMask;
     internal TextureFilter? Filter;
     internal TextureRepeat? Repeat;
+    internal Vector2? ItemRepeatSize;
+    internal int ItemRepeatTimes;
     internal Rect2? CustomRect;
     internal CanvasVisibilityNotification? VisibilityNotifier;
     internal CanvasItem? Commands;

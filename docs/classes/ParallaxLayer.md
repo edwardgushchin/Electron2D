@@ -53,3 +53,5 @@ Entry captures Position and Scale before applying parent movement; exit restores
 [LegacyParallaxTests](../../tests/Electron2D.Tests/LegacyParallaxTests.cs) checks defaults, motion, zoom, packing, detach/reattach, validation and owner-thread access. Native retained-pixel checks cover mirroring with camera motion and original scale on Linux Wayland compatibility/GPU and SDL dummy compatibility. Physics interpolation must be added to Node and the canvas renderer before this layer can default it to Off; editor behavior, independent/offscreen viewports and other native platforms remain gaps in [coverage](../coverage/classes/ParallaxLayer.md).
 
 The spatial mapping follows [ADR 0008](../decisions/scene.md#adr-0008) and drawing follows [ADR 0028](../decisions/rendering.md#adr-0028).
+
+RenderingServer.CanvasSetItemRepeat may override live repetition without changing authored getters. Editing the owned repetition configuration republishes the scene policy; renderer teardown clears the transient override.

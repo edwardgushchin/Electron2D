@@ -127,10 +127,23 @@ public sealed partial class RenderingServer
     /// <summary>Repeats a direct canvas child and its render descendants once along each nonzero finite axis.</summary>
     /// <param name="canvas">Live borrowed or caller-owned canvas identity.</param>
     /// <param name="item">Live scene or caller-owned canvas item identity.</param>
-    /// <param name="mirroring">Finite canvas-space period; each nonzero axis adds one repeated root subtree.</param>
+    /// <param name="mirroring">Finite local period; each nonzero axis adds one repeated root subtree in the item rendered basis.</param>
     /// <exception cref="ArgumentException">An identity or typed value is invalid.</exception>
     /// <exception cref="InvalidOperationException">The service is unavailable or owner/capture/lifetime rules reject the operation.</exception>
     public static void CanvasSetItemMirroring(RID canvas, RID item, Vector2 mirroring) => RequireService().CanvasSetItemMirroringCore(canvas, item, mirroring);
+
+    /// <summary>Repeats an item and its render descendants around its origin along each nonzero local axis.</summary>
+    /// <param name="item">Live scene or caller-owned canvas item identity.</param>
+    /// <param name="repeatSize">Finite local displacement; negative components reverse the corresponding axis.</param>
+    /// <param name="repeatTimes">Nonnegative additional copies per enabled axis. Zero disables this item's repeat source.</param>
+    /// <remarks>An enabled axis draws repeatTimes plus one copies starting at minus floor(repeatTimes / 2).
+    /// Descendants use the nearest enabled repeat source; nested sources replace inherited repetition.
+    /// State belongs to the renderer session, follows reparenting and is not scene authoring storage.</remarks>
+    /// <exception cref="ArgumentException">The identity is invalid or repeatSize is nonfinite.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">repeatTimes is negative.</exception>
+    /// <exception cref="InvalidOperationException">The service is unavailable or owner/capture/lifetime rules reject the operation.</exception>
+    public static void CanvasSetItemRepeat(RID item, Vector2 repeatSize, int repeatTimes) => RequireService().CanvasSetItemRepeatCore(item, repeatSize, repeatTimes);
+
     /// <summary>Attaches a live canvas to an active scene viewport; the same canvas can be attached to multiple viewports.</summary>
     /// <param name="viewport">Live scene viewport identity.</param>
     /// <param name="canvas">Live borrowed or caller-owned canvas identity.</param>

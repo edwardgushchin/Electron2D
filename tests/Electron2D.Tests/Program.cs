@@ -9,6 +9,10 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNED_CANVAS_HOST") == "1") { RenderingCanvasTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNED_CANVAS") == "1") { RenderingCanvasTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PARALLAX_REGRESSION") == "1") { ParallaxTests.Run(); LegacyParallaxTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_REPEAT") is { } repeatBackend) { CanvasRepeatTests.Run(repeatBackend); return; }
 if (args.Length == 2 && args[0] == "--gettext-oracle") { TranslationCatalogTests.VerifyFiles(args[1]); return; }
 if (args.Length == 2 && args[0] == "--gettext-child") { TranslationCatalogTests.ReadArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GETTEXT") == "1") { TranslationCatalogTests.Run(); return; }
@@ -437,8 +441,6 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WORLD_HOST") == "1") { W
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WORLD") == "1") { WorldTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROGRAM_HOST") == "1") { RenderingProgramTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROGRAM") == "1") { RenderingProgramTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNED_CANVAS_HOST") == "1") { RenderingCanvasTests.RunHost(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNED_CANVAS") == "1") { RenderingCanvasTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_SKIN_CHILD") is { } meshSkinChild) { MeshSkinTests.RunChild(meshSkinChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_SKIN_HOST") == "1") { MeshSkinTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_SKIN") == "1") { MeshSkinTests.Run(); return; }

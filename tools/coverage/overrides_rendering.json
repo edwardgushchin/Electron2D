@@ -1,5 +1,6 @@
 {
   "mappings": [
+    {"godot": "RenderingServer::method:canvas_set_item_repeat(RID:,Vector2:,int:)", "electron2d": "method:Electron2D.RenderingServer.CanvasSetItemRepeat(Electron2D.RID,Electron2D.Vector2,System.Int32)", "reason": "Live arbitrary item/subtree repetition with centered signed local periods, nearest source inheritance and transient renderer ownership."},
     {"godot": "ShaderInclude::property:code", "electron2d": "property:Electron2D.ShaderInclude.Code()", "reason": "ADR 0028 uses bounded typed ShaderInclude.Code authoring, source loader/saver and typed archive persistence; source edits are saved and dependent HLSL/GLSL compilation occurs at build/import, preserving the compiled runtime boundary. ShaderIncludeTests and check_includes.py verify edit notifications, rollback, copy/cache/lifetime, actual nested dependency compiler behavior and changed GPU pixels; foreign toolchain/host gates remain separate."},
     {
       "godot": "CanvasItemMaterial::enum:BlendMode",
@@ -4501,6 +4502,7 @@
     }
   ],
   "statusGroups": [
+    {"godot": ["RenderingServer::method:canvas_set_item_repeat(RID:,Vector2:,int:)"], "state": "Implemented", "reason": "CanvasRepeatTests executes inherited/nested/disabled sources, signed periods, odd and grid counts, local rotation, int-max offscreen culling, mirroring, reparenting, clipping and two viewport native pixels on GPU/compatibility Linux, including 64 zero-byte warmed mutation/render intervals."},
     {"godot": ["class:ShaderInclude", "ShaderInclude::property:code"], "state": "Implemented", "reason": "ADR 0028 uses bounded typed ShaderInclude.Code authoring, source loader/saver and typed archive persistence; source edits are saved and dependent HLSL/GLSL compilation occurs at build/import, preserving the compiled runtime boundary. ShaderIncludeTests and check_includes.py verify edit notifications, rollback, copy/cache/lifetime, actual nested dependency compiler behavior and changed GPU pixels; foreign toolchain/host gates remain separate."},
     {
       "state": "Implemented",

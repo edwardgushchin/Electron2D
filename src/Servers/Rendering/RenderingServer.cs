@@ -308,14 +308,17 @@ public sealed partial class RenderingServer : ElectronObject
         ComposeFrame(pixels);
     }
 
-    private static Vector2 NativeMirror(CanvasItem item) => item.RenderParent is null && item.RenderCanvas() is { } canvas && canvas.Mirroring.Count != 0 && canvas.Mirroring.TryGetValue(item.GetCanvasItem(), out var size) ? size : Vector2.Zero;
-    private static Vector2 RepeatSize(CanvasItem item) => item is Parallax parallax ? parallax.RepeatSize : item is ParallaxLayer layer ? layer.RepeatPeriod : NativeMirror(item);
+    private static (Vector2 Size, int Times) RepeatSettings(CanvasItem item)
+    {
+        if (item.ServerState is { ItemRepeatSize: { } size } state) return (size, state.ItemRepeatTimes);
+        return item is Parallax parallax ? (parallax.RepeatSize, parallax.RepeatTimes) : item is ParallaxLayer layer ? (layer.RepeatPeriod, 1) : (Vector2.Zero, 0);
+    }
+    private static bool IsRepeatSource(CanvasItem item) { var repeat = RepeatSettings(item); return repeat.Times != 0 && repeat.Size != Vector2.Zero; }
     private void AppendOrderedCanvas(RenderEntry item, Vector2i pixels)
     {
         CanvasItem? repeatSource = null;
         for (var ancestor = item.Node; ancestor is not null; ancestor = ancestor.RenderParent)
-            if ((ancestor is Parallax parallax && parallax.RepeatSize != Vector2.Zero) ||
-                (ancestor is ParallaxLayer layer && layer.RepeatPeriod != Vector2.Zero) || NativeMirror(ancestor) != Vector2.Zero)
+            if (IsRepeatSource(ancestor))
             {
                 repeatSource = ancestor;
                 break;
@@ -329,25 +332,49 @@ public sealed partial class RenderingServer : ElectronObject
             }
             return;
         }
-        var size = RepeatSize(repeatSource);
-        var times = repeatSource is Parallax repeated ? repeated.RepeatTimes : 1;
+        var (size, times) = RepeatSettings(repeatSource);
         var sourceTransform = _repeatTransforms[repeatSource];
-        var start = size * -(times / 2);
-        var countX = size.X == 0 ? 0 : times;
-        var countY = size.Y == 0 ? 0 : times;
         var repeatedClip = GetClip(item.Node, pixels, repeatSource);
         if (!item.Node.MayIgnoreClip && (repeatedClip is { } empty && !empty.HasArea() || HasEmptyOwnClip(item.Node, pixels, repeatSource))) return;
-        for (long y = 0; y <= countY; y++)
-            for (long x = 0; x <= countX; x++)
+        var (firstX, lastX, firstY, lastY) = VisibleRepeatRange(item, sourceTransform, size, times, pixels);
+        for (long y = firstY; y <= lastY; y++)
+            for (long x = firstX; x <= lastX; x++)
             {
                 var transform = item.Transform;
-                var displacement = repeatSource is Parallax
-                    ? start + new Vector2(x * size.X, y * size.Y)
-                    : new Vector2(x * size.X, y * size.Y);
+                var displacement = new Vector2((float)((x - times / 2) * (double)size.X), (float)((y - times / 2) * (double)size.Y));
                 transform.Origin += sourceTransform.BasisXform(displacement);
-                if (!transform.IsFinite()) throw new InvalidOperationException("Parallax repetition overflowed finite coordinates.");
+                if (!transform.IsFinite()) throw new InvalidOperationException("Canvas repetition overflowed finite coordinates.");
                 AppendScreenCanvas(item.Node, transform, repeatedClip, pixels);
             }
+    }
+
+    private static (long FirstX, long LastX, long FirstY, long LastY) VisibleRepeatRange(RenderEntry item, Transform basis, Vector2 size, int times, Vector2i pixels)
+    {
+        var lastX = size.X == 0 ? 0 : times; var lastY = size.Y == 0 ? 0 : times;
+        var determinant = (double)basis.X.X * basis.Y.Y - (double)basis.X.Y * basis.Y.X;
+        if (determinant == 0 || item.Node.CanvasUsesWorldCoordinates || item.Node.CanvasMaterial is ShaderMaterial) return (0, lastX, 0, lastY);
+        var bounds = item.Transform * item.Node.RenderBounds();
+        if (!bounds.IsFinite() || !bounds.End.IsFinite()) throw new InvalidOperationException("Repeated canvas bounds overflowed finite coordinates.");
+        var minimum = new Vector2(-bounds.End.X, -bounds.End.Y);
+        var maximum = new Vector2(pixels.X - bounds.Position.X, pixels.Y - bounds.Position.Y);
+        double minX = double.PositiveInfinity, maxX = double.NegativeInfinity, minY = double.PositiveInfinity, maxY = double.NegativeInfinity;
+        for (var corner = 0; corner < 4; corner++)
+        {
+            var x = (corner & 1) == 0 ? minimum.X : maximum.X; var y = (corner & 2) == 0 ? minimum.Y : maximum.Y;
+            var localX = (basis.Y.Y * (double)x - basis.Y.X * (double)y) / determinant;
+            var localY = (-basis.X.Y * (double)x + basis.X.X * (double)y) / determinant;
+            minX = Math.Min(minX, localX); maxX = Math.Max(maxX, localX); minY = Math.Min(minY, localY); maxY = Math.Max(maxY, localY);
+        }
+        static (long First, long Last) Axis(double minimum, double maximum, float period, int times)
+        {
+            if (period == 0) return (0, 0);
+            var a = minimum / period + times / 2; var b = maximum / period + times / 2;
+            // One conservative neighbor absorbs float rounding without changing visible overlap or blend order.
+            var first = Math.Max(0, Math.Ceiling(Math.Min(a, b)) - 1); var last = Math.Min(times, Math.Floor(Math.Max(a, b)) + 1);
+            return first > times || last < 0 || first > last ? (1, 0) : ((long)first, (long)last);
+        }
+        var horizontal = Axis(minX, maxX, size.X, times); var vertical = Axis(minY, maxY, size.Y, times);
+        return (horizontal.First, horizontal.Last, vertical.First, vertical.Last);
     }
 
     private void Capture(Node node)
@@ -415,14 +442,13 @@ public sealed partial class RenderingServer : ElectronObject
 
     private void AddRenderEntry(CanvasItem item, Transform transform)
     {
-        if (item is Parallax parallax) _repeatTransforms[parallax] = transform;
-        else if (NativeMirror(item) != Vector2.Zero) _repeatTransforms[item] = _canvasBasis;
+        if (IsRepeatSource(item) && (item is not ParallaxLayer || item.ServerState?.ItemRepeatSize is not null)) _repeatTransforms[item] = transform;
         _canvasTransforms[item] = transform;
         if (!IsCompositor(item) && item.ServerState?.CustomRect is not null)
         {
             var area = transform * item.RenderBounds();
             for (var parent = item; parent is not null; parent = parent.RenderParent)
-                if (NativeMirror(parent) != Vector2.Zero) { area = ExpandRepeatedClip(area, parent); break; }
+                if (IsRepeatSource(parent)) { area = ExpandRepeatedClip(area, parent); break; }
             var size = _backend.FindTarget(_viewport)!.Size;
             if (!area.Intersects(new Rect2(Vector2.Zero, size), includeBorders: true)) return;
         }
@@ -460,8 +486,7 @@ public sealed partial class RenderingServer : ElectronObject
 
     private Rect2 ExpandRepeatedClip(Rect2 area, CanvasItem source)
     {
-        var size = RepeatSize(source);
-        var times = source is Parallax repeated ? repeated.RepeatTimes : 1;
+        var (size, times) = RepeatSettings(source);
         var basis = _repeatTransforms[source];
         var start = size * -(times / 2);
         var first = area with { Position = area.Position + basis.BasisXform(start) };
