@@ -123,8 +123,10 @@ is retained under bin/physics-public-mass-roles/2026-10-14.
 ## Portable joint continuation
 
 The public-only --portable-joints consumer transfers pin, groove and damped spring
-constraints between CPU and the independent registered owner, with both scene-owned
-and raw joint RIDs. Each world uses two circle-bearing scene bodies (one static,
+constraints between CPU and selected CPU/GPU or the independent registered owner,
+with both scene-owned and raw joint RIDs. --gpu/--cpu choose the second owner;
+--threaded captures both numerical lanes before creation. Actual backend and no
+startup fallback are asserted. Each world uses two circle-bearing scene bodies (one static,
 one rigid). Creation order and initial rotations differ, so local attachment frames
 start different while authored roles/policies match. Caller IDs 10/20/30 identify
 the destination's own endpoints and joint. Physical pose and both sampled local
@@ -135,7 +137,7 @@ state/events change, then accept the same unchanged packet after restoration.
 Each destination creates a local checkpoint after correction and repeats a real
 central impulse plus twelve .01-second frames. Pose/velocity repeat within .005
 scene-unit or unit/s and rotation within .002 rad; this permits single precision
-angle reconstruction without requiring CPU/registered trajectory equality.
+angle reconstruction without requiring independently solved trajectory equality.
 
 The following real simulation checks finite bounded state, pin anchor error below
 .3 scene unit, and groove lateral error/endpoint overshoot below .3 for a 20-unit
@@ -149,8 +151,13 @@ cases. Each bracket contains 3072 complete frames, 1536 encode/decode/apply tran
 and extra frame-validation captures. All six intervals require strict 0/0 owner/
 all-thread managed bytes. No physics features or joint counts are reduced within
 the bracket. This same-process circle fixture does not close arbitrary geometry,
-world-pin/other recipes, larger joint graphs, real GPU, native/cross-platform/network
-or final performance acceptance.
+world-pin/other recipes, larger joint graphs, hardware/native/cross-platform/network
+or final performance acceptance. All six CPU/CPU, CPU/GPU and CPU/registered serial/
+separate profiles now pass from the same frozen runtime. GPU uses CPU-only llvmpipe
+Vulkan without NVIDIA; retained numerical threads are observed only in separate
+profiles. The matching six --spring-anchors profiles retain their original analytic
+force/moment/cap/damping bounds; that cold response matrix has no warm allocation
+bracket. Current evidence is retained under bin/physics-public-portable-joints/2026-10-14.
 
 ## Encoding, budget and cost
 

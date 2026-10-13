@@ -1,6 +1,6 @@
 # DampedSpringJoint
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 [Portable joint continuation](../components/physics-snapshots.md#portable-joint-continuation)
 now verifies CPU/registered scene/raw sampled frames, silent correction, atomic
@@ -83,3 +83,11 @@ The inherited stable RID and shared server settings are described by [Joint.GetR
 
 
 Inherited numerical borrowing guards cover Length, RestLength, Stiffness and Damping before retained values change. Engine preparation may resolve automatic scene rest length before solving; ordinary game callbacks can edit the next interval.
+
+[Portable joint continuation](../components/physics-snapshots.md#portable-joint-continuation)
+now passes CPU/CPU, CPU/GPU and CPU/registered serial/separate public-only profiles.
+Scene/raw pin/groove/spring frames, atomic policy rejection, private replay and
+continued constraints retain their bounds; all six warm cases require 0/0 bytes.
+[Off-center spring checks](../components/physics-registered-adapter.md#off-center-spring-anchors-and-portable-joints)
+also retain force/moment/cap and stable damping bounds. GPU executes on llvmpipe;
+hardware, broader geometry/graphs and network acceptance remain open.

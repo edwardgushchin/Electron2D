@@ -3,9 +3,9 @@
 Last updated: 2026-10-14
 
 [Portable joint continuation](../components/physics-snapshots.md#portable-joint-continuation)
-now verifies CPU/registered scene/raw sampled frames, silent correction, atomic
+now verifies CPU/CPU, CPU/GPU and CPU/registered scene/raw sampled frames, silent correction, atomic
 policy guards, local replay and real pin/groove/spring response. Warm complete-frame
-transfers retain zero managed allocation; wider graphs and GPU/native gates remain open.
+transfers retain zero managed allocation; wider graphs and hardware/native gates remain open.
 
 [Character motion validation](../components/physics-snapshots.md#character-motion-validation)
 rejects impossible slide encodings and self/Area/unbound platform references before
@@ -94,3 +94,11 @@ profile retains 14 incompatible/restored cases across both directions. Rejection
 preserves complete packets, sampled values and events; real refresh/continuation
 recovers. These cold structural checks have no allocation claim. Hardware and
 broader geometry/joint/network acceptance remain open.
+
+[Portable joint continuation](../components/physics-snapshots.md#portable-joint-continuation)
+now passes CPU/CPU, CPU/GPU and CPU/registered serial/separate public-only profiles.
+Scene/raw pin/groove/spring frames, atomic policy rejection, private replay and
+continued constraints retain their bounds; all six warm cases require 0/0 bytes.
+[Off-center spring checks](../components/physics-registered-adapter.md#off-center-spring-anchors-and-portable-joints)
+also retain force/moment/cap and stable damping bounds. GPU executes on llvmpipe;
+hardware, broader geometry/graphs and network acceptance remain open.

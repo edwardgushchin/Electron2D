@@ -1,6 +1,6 @@
 # GrooveJoint
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 [Shared joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance)
 exercises this family through explicitly selected CPU and independent GPU worlds.
@@ -65,3 +65,11 @@ The inherited stable RID and shared server settings are described by [Joint.GetR
 
 
 Inherited numerical borrowing guards cover Length and InitialOffset before their local fields change, as well as common joint settings, including pending initial attachment.
+
+[Portable joint continuation](../components/physics-snapshots.md#portable-joint-continuation)
+now passes CPU/CPU, CPU/GPU and CPU/registered serial/separate public-only profiles.
+Scene/raw pin/groove/spring frames, atomic policy rejection, private replay and
+continued constraints retain their bounds; all six warm cases require 0/0 bytes.
+[Off-center spring checks](../components/physics-registered-adapter.md#off-center-spring-anchors-and-portable-joints)
+also retain force/moment/cap and stable damping bounds. GPU executes on llvmpipe;
+hardware, broader geometry/graphs and network acceptance remain open.

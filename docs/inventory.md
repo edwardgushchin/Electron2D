@@ -1496,3 +1496,11 @@ profile retains 14 incompatible/restored cases across both directions. Rejection
 preserves complete packets, sampled values and events; real refresh/continuation
 recovers. These cold structural checks have no allocation claim. Hardware and
 broader geometry/joint/network acceptance remain open.
+
+[Portable joint continuation](components/physics-snapshots.md#portable-joint-continuation)
+now passes CPU/CPU, CPU/GPU and CPU/registered serial/separate public-only profiles.
+Scene/raw pin/groove/spring frames, atomic policy rejection, private replay and
+continued constraints retain their bounds; all six warm cases require 0/0 bytes.
+[Off-center spring checks](components/physics-registered-adapter.md#off-center-spring-anchors-and-portable-joints)
+also retain force/moment/cap and stable damping bounds. GPU executes on llvmpipe;
+hardware, broader geometry/graphs and network acceptance remain open.

@@ -1407,8 +1407,9 @@ decay avoids the former explicit damping reversal; one scalar interval impulse c
 bounds elasticity plus damping. Static endpoints use zero numerical motion and
 receive no dynamic impulse, matching the separate surface-velocity contract.
 
---spring-anchors compares CPU/registered scene/raw joint identities and both endpoint
-orders in serial/separate modes. A mass-2, inertia-2 body with a two-unit vertical
+--spring-anchors compares CPU/CPU, CPU/GPU and CPU/registered scene/raw joint
+identities and both endpoint orders in serial/separate modes. Actual selection
+without fallback is asserted. A mass-2, inertia-2 body with a two-unit vertical
 arm, 10-unit spring separation, rest 5 and stiffness 2 receives velocity -.005 X and
 angular +.01 over .001s. Bounds .00005 unit/s and .0001 rad/s permit four-substep
 integration drift. MaxForce=1 gives -.0005 X and +.001 rad/s with .00001/.00002 bounds.
@@ -1422,7 +1423,10 @@ two live bodies under the accepted contract; an empty second RID is not a world 
 
 [Portable joint continuation](physics-snapshots.md#portable-joint-continuation) now
 executes scene/raw pin/groove/spring transfer, local-frame correction, real response,
-atomic policy mismatch, local replay and zero warm full-frame transfers on CPU and
-the independent owner. This is a consumer numerical fix plus stronger public-API
+atomic policy mismatch, local replay and zero warm full-frame transfers on CPU/CPU,
+CPU/GPU and CPU/registered pairs. All six serial/separate profiles retain six cases
+and their original operation counts. GPU executes on CPU-only llvmpipe without
+NVIDIA. These current checks extend the earlier independent-consumer numerical
 proof; production runtime/API/ADRs/wire format remain unchanged. Wider joint graphs,
-active geometry/contact coupling, GPU/native/network and performance gates remain open.
+active geometry/contact coupling, hardware/native/network and performance gates
+remain open. Evidence is retained under bin/physics-public-portable-joints/2026-10-14.

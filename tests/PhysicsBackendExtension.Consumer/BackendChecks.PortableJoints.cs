@@ -3,18 +3,21 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunPortableJoints(bool threaded = false)
+    public static void RunPortableJoints(bool threaded = false, PhysicsServer.Backend? backend = null)
     {
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
         try
         {
-            PhysicsServerManager.RegisterServer("PortableJoints", static () => new Solver());
+            if (backend is null) PhysicsServerManager.RegisterServer("PortableJoints", static () => new Solver());
             for (var kind = 0; kind < 3; kind++)
                 for (var scene = 0; scene < 2; scene++)
                 {
                     using var cpu = new PortableJointRig(new World(PhysicsServer.Backend.CPU), kind, scene != 0, false);
-                    using var registered = new PortableJointRig(new World("PortableJoints"), kind, scene != 0, true);
+                    using var registered = new PortableJointRig(backend is { } selected ? new World(selected) : new World("PortableJoints"), kind, scene != 0, true);
+                    Check(cpu.World.PhysicsBackend == PhysicsServer.Backend.CPU && registered.World.PhysicsBackend == (backend ?? PhysicsServer.Backend.Extension) &&
+                        cpu.World.PhysicsFallbackReason is null && registered.World.PhysicsFallbackReason is null,
+                        "Portable joints use the selected numerical owners without startup fallback");
                     var sent = new PhysicsSnapshot(65536); var received = new PhysicsSnapshot(65536); var packet = new byte[65536];
                     cpu.Reset(); cpu.Tree.PhysicsFrame(.01); registered.Body.Position += new Vector2(100, 30);
                     Transfer(cpu, registered); Frames(cpu, registered);
@@ -63,7 +66,7 @@ public static partial class BackendChecks
                             "Portable joint frames retain both authored local anchors and axes in a different numerical owner");
                     }
                 }
-            Console.WriteLine($"Portable joints CPU/registered, threaded={threaded}: scene/raw pin/groove/spring frames, atomic policy guards, private replay and 0/0 warm full-frame transfers passed.");
+            Console.WriteLine($"Portable joints CPU/{backend?.ToString() ?? "registered"}, threaded={threaded}: scene/raw pin/groove/spring frames, atomic policy guards, private replay and 0/0 warm full-frame transfers passed.");
         }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
     }

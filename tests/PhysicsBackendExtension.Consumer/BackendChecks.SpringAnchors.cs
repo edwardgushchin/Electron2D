@@ -2,16 +2,19 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunSpringAnchors(bool threaded = false)
+    public static void RunSpringAnchors(bool threaded = false, PhysicsServer.Backend? backend = null)
     {
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
         try
         {
-            PhysicsServerManager.RegisterServer("SpringAnchors", static () => new Solver());
+            if (backend is null) PhysicsServerManager.RegisterServer("SpringAnchors", static () => new Solver());
             for (var registered = 0; registered < 2; registered++)
             {
-                using var world = registered == 0 ? new World(PhysicsServer.Backend.CPU) : new World("SpringAnchors");
+                using var world = registered == 0 ? new World(PhysicsServer.Backend.CPU) :
+                    backend is { } selected ? new World(selected) : new World("SpringAnchors");
+                Check(world.PhysicsBackend == (registered == 0 ? PhysicsServer.Backend.CPU : backend ?? PhysicsServer.Backend.Extension) &&
+                    world.PhysicsFallbackReason is null, "Spring anchors use the selected owner without startup fallback");
                 using var root = new SubViewport { World = world }; using var circle = new CircleShape { Radius = 2 };
                 var anchor = new StaticBody { Position = new(-10, 0), CollisionLayer = 0, CollisionMask = 0 };
                 var body = new RigidBody
@@ -65,7 +68,7 @@ public static partial class BackendChecks
                 void Reset()
                 { body.Position = Vector2.Zero; body.Rotation = 0; body.LinearVelocity = Vector2.Zero; body.AngularVelocity = 0; }
             }
-            Console.WriteLine($"Spring anchors CPU/registered, threaded={threaded}: scene/raw and both endpoint orders retain torque, capped impulse and stable rotational damping.");
+            Console.WriteLine($"Spring anchors CPU/{backend?.ToString() ?? "registered"}, threaded={threaded}: scene/raw and both endpoint orders retain torque, capped impulse and stable rotational damping.");
         }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
     }

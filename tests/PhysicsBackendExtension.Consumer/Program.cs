@@ -9,8 +9,10 @@ else if (args.Contains("--portable-geometry")) BackendChecks.RunPortableGeometry
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
 else if (args.Contains("--portable-motion")) BackendChecks.RunPortableMotion(args.Contains("--threaded"), args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
-else if (args.Contains("--spring-anchors")) BackendChecks.RunSpringAnchors(args.Contains("--threaded"));
-else if (args.Contains("--portable-joints")) BackendChecks.RunPortableJoints(args.Contains("--threaded"));
+else if (args.Contains("--spring-anchors")) BackendChecks.RunSpringAnchors(args.Contains("--threaded"), args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
+else if (args.Contains("--portable-joints")) BackendChecks.RunPortableJoints(args.Contains("--threaded"), args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
 else if (args.Contains("--mass-roles")) BackendChecks.RunMassRoles(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--curved-annulus")) BackendChecks.RunCurvedAnnulus(args.Contains("--threaded"));

@@ -251,12 +251,13 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   valid body-platform correction and actual subsequent carry. Arbitrary platform
   recipes, geometry/joints and hardware/native/network/performance gates stay open.
 - [Portable joint continuation](physics-snapshots.md#portable-joint-continuation)
-  now verifies CPU/registered scene/raw pin/groove/spring sampled frames, atomic
-  policy mismatch, local replay, bounded response and zero warm full-frame transfers.
+  now verifies CPU/CPU, CPU/GPU and CPU/registered scene/raw pin/groove/spring
+  sampled frames, atomic policy mismatch, local replay, bounded response and zero
+  warm full-frame transfers.
   [Off-center spring anchors](physics-registered-adapter.md#off-center-spring-anchors-and-portable-joints)
-  now apply independent anchor torque and stable effective-mass point damping in
-  both endpoint orders. Wider graphs/geometry/current GPU/native/network/performance
-  acceptance remains open.
+  now verify anchor torque, force caps and stable effective-mass point damping on
+  CPU/GPU/registered owners in both endpoint orders and thread modes. Wider graphs/
+  geometry/hardware/native/network/performance acceptance remains open.
 - Pinned deprecation metadata is now checked across the full physics family,
   inherited bases and selected consumers by the coverage gate. The three selected
   deprecated declarations are excluded with exact evidence and no mapped public
