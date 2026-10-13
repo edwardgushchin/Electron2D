@@ -167,3 +167,10 @@ Twelve exact cases, 512 seeded boundary cases and 128 warmed standalone/selected
 cycles retain the .0001 scene-unit boundary tolerance and 0/0 managed-byte gate.
 See [custom collision geometry](../components/physics-custom-geometry.md) for the
 analytic model and remaining numerical-extension limits.
+
+[Shared public contact correction](../components/physics-contact-policy.md#shared-public-correction-2026-10-14)
+now runs the complete shape/world bias, slack, resource/lifetime and scene sleep/event
+suite on explicitly selected CPU/GPU worlds in serial/separate numerical modes.
+Seven forms include both bias-one endpoints; 128 measured edited full steps require
+0/0 owner/all-thread managed bytes. Software Vulkan execution and historical direct
+resident/stage controls remain distinct from hardware/performance acceptance.

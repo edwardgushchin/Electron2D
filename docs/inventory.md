@@ -1427,3 +1427,10 @@ being redirected to the general CPU suite. Both CPU/GPU profiles pass the same
 CCD, infinite-boundary and directed-ray cases on software Vulkan, with explicit
 0/0 owner/all-thread warm allocation gates. See [current software conformance](components/cpu-continuous-collision.md#software-vulkan-continuous-conformance-2026-10-14).
 Hardware performance, native allocation and foreign-platform acceptance remain open.
+
+[Shared public contact correction](components/physics-contact-policy.md#shared-public-correction-2026-10-14)
+now runs the complete shape/world bias, slack, resource/lifetime and scene sleep/event
+suite on explicitly selected CPU/GPU worlds in serial/separate numerical modes.
+Seven forms include both bias-one endpoints; 128 measured edited full steps require
+0/0 owner/all-thread managed bytes. Software Vulkan execution and historical direct
+resident/stage controls remain distinct from hardware/performance acceptance.

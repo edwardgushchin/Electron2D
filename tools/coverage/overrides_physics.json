@@ -6507,7 +6507,7 @@
         "Shape2D::property:custom_solver_bias"
       ],
       "state": "Implemented",
-      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). The complete public scene/server correction suite now executes on explicitly selected CPU/GPU worlds in serial/separate numerical profiles through ELECTRON2D_TEST_CONTACT_CORRECTION. Seven geometries test seven mixed/zero/world-one/shape-one policies, CCD duration budgets, full normal/tangent momentum, captured defaults, guards, copies/storage, role/inertia, throwing Changed observers and sleep/contact events. All six public/resident/stage profiles retain 256 warmup/128 edited full steps at 0/0 owner/all-thread managed bytes. GPU execution uses CPU-only llvmpipe Vulkan; hardware, arbitrary registered correction, native/foreign/network and performance acceptance remain open."
     },
     {
       "godot": [
@@ -7103,7 +7103,7 @@
         "ProjectSettings::property:physics/2d/solver/contact_max_allowed_penetration"
       ],
       "state": "Implemented",
-      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). The complete public scene/server correction suite now executes on explicitly selected CPU/GPU worlds in serial/separate numerical profiles through ELECTRON2D_TEST_CONTACT_CORRECTION. Seven geometries test seven mixed/zero/world-one/shape-one policies, CCD duration budgets, full normal/tangent momentum, captured defaults, guards, copies/storage, role/inertia, throwing Changed observers and sleep/contact events. All six public/resident/stage profiles retain 256 warmup/128 edited full steps at 0/0 owner/all-thread managed bytes. GPU execution uses CPU-only llvmpipe Vulkan; hardware, arbitrary registered correction, native/foreign/network and performance acceptance remain open."
     },
     {
       "godot": [

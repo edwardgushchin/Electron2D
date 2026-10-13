@@ -1026,3 +1026,10 @@ intermediates before normalization. The shared test covers opposite finite 2e38
 coordinates, signed direction and falloff, affine virtual centers, three body roles
 and zero-allocation full frames. Collision precision at such coordinates and real
 GPU performance remain separate gates. See [field numeric range](../components/physics-areas.md#point-gravity-numeric-range).
+
+[Shared public contact correction](../components/physics-contact-policy.md#shared-public-correction-2026-10-14)
+now runs the complete shape/world bias, slack, resource/lifetime and scene sleep/event
+suite on explicitly selected CPU/GPU worlds in serial/separate numerical modes.
+Seven forms include both bias-one endpoints; 128 measured edited full steps require
+0/0 owner/all-thread managed bytes. Software Vulkan execution and historical direct
+resident/stage controls remain distinct from hardware/performance acceptance.
