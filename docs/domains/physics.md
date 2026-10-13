@@ -1,6 +1,6 @@
 # Physics domain
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 [Portable joint continuation](../components/physics-snapshots.md#portable-joint-continuation)
 now verifies CPU/registered scene/raw sampled frames, silent correction, atomic
@@ -885,3 +885,11 @@ await power-cable verification; all broader acceptance requirements remain open.
 [Common fixed-clock conformance](../components/engine-runtime.md#verification) now exercises real CPU motion/ticks through the ordinary Engine scheduler with graphics denied. Frequency, catch-up, jitter, scaling, live settings and frame-event order have explicit acceptance evidence and zero warmed active-frame managed bytes. These common clock rows no longer have a structural-only audit reason; the separate physics-thread setting, numerical GPU/provider and final performance requirements remain open.
 
 [Separate numerical scheduling](../components/physics-thread.md) now has a typed captured project setting and real CPU/provider work on a retained lane. Owner publication/game callbacks and readonly input guards are checked with zero warmed managed bytes, including failure retirement. The setting remains Partial until GPU/native and complete numerical/scheduling acceptance is verified.
+
+
+Point-field reduction avoids float squared-distance underflow/overflow and
+retains signed constant/inverse-square behavior, exact-center zero and rejection
+of truly unrepresentable forces. PhysicsPointGravityRangeTests covers scene, raw
+Area and default-space sources with three body roles and CPU zero-allocation frames.
+The revised device kernel compiles; real GPU numeric-range acceptance remains open.
+See [point-field verification](../components/physics-areas.md#point-gravity-numeric-range).

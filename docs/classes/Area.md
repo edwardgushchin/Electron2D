@@ -1,6 +1,6 @@
 # Area
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 [Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
 keeps sampled public values while rejecting portable capture of retired/reindexed
@@ -204,3 +204,11 @@ TileMapLayerTests verifies deduplicated layer membership across several generate
 The complete PhysicsAreaFieldTests, PhysicsServerAreaFieldTests and PhysicsAreaMonitorTests now execute on explicitly selected CPU/GPU worlds. They retain all five gravity/damping modes, priorities, point transforms/falloff, default-world shortcuts, signed damping, directional masks, logical pair identity, callback failure/removal and lifecycle assertions. Initial unchanged child registration preserves a sleeping body; changed fields still wake it. Sixty-four measured moving, sleeping and edited-field frames and 64 monitor transition cycles (128 frames) require zero owner/all-thread managed bytes. CPU field validation failure can be corrected; a started GPU field-reduction failure is terminal, preserves the selected backend and last published scene field snapshot, and permits resource retirement. Native allocations, other platforms, visual and final performance acceptance remain open.
 
 The complete PhysicsBodyTests, RigidBodyForceTests, RigidBodyContactTests and ShapePairEventTests now execute on explicitly selected public CPU/GPU worlds, with actual backend assertions in every numerical scene. The ordinary full suite runs both variants; ELECTRON2D_TEST_SCENE_PHYSICS=cpu|gpu selects the same complete set. Existing force/impulse/center units and numerical bounds, freeze/lock/mass/geometry recovery, persistent force packing, sleep/wake notification policy, contact caps/deduplication and object-before-shape entry/departure ordering are unchanged. Scene/raw nullable payloads, compound logical slots, handler mutation/errors and committed-event no-replay remain asserted. All existing 64-frame warm gates now require 0/0 owner/all-thread managed bytes for resting/active/moving bodies, forces, monitored/no-contact frames and steady/transitioning shape pairs. Box2D SIMD and worker scheduling probes remain CPU diagnostics; they do not establish independent GPU acceptance. Native allocations, wider inherited/extension, foreign platforms, full networking and final GPU/window performance acceptance remain open.
+
+
+Point-field reduction avoids float squared-distance underflow/overflow and
+retains signed constant/inverse-square behavior, exact-center zero and rejection
+of truly unrepresentable forces. PhysicsPointGravityRangeTests covers scene, raw
+Area and default-space sources with three body roles and CPU zero-allocation frames.
+The revised device kernel compiles; real GPU numeric-range acceptance remains open.
+See [point-field verification](../components/physics-areas.md#point-gravity-numeric-range).

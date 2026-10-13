@@ -2,7 +2,7 @@
 
 [Tile owner projections and failure cleanup](tiles.md) now execute through explicit CPU/GPU tests, including object deduplication, shape/RID payloads, canvas and weak lifetime, scene/server motion and callback-failed replacement/retirement. The formerly tile-blocked Area, KinematicCollision, PhysicsTestMotionResult and point-query rows are reconciled against actual production paths. This closes those recorded implementation triggers; full inherited, numerical-extension, network/platform and performance acceptance remain open.
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 [Common space bindings](physics-registered-adapter.md#common-space-bindings) now execute all four Body/Area space
 operations on scene and raw RIDs, including explicit target simulation, scene
@@ -965,3 +965,11 @@ order, stop before nested Window scopes and continue after callback failures.
 WindowNotificationTests exercises eight event kinds through embedded/public and SDL
 dummy routes plus 1024 zero-byte warmed operations. DPI/position platform limits and
 missing go-back/HDR sources remain open; see [window runtime](window-runtime.md#containing-window-notifications).
+
+
+Point-field reduction avoids float squared-distance underflow/overflow and
+retains signed constant/inverse-square behavior, exact-center zero and rejection
+of truly unrepresentable forces. PhysicsPointGravityRangeTests covers scene, raw
+Area and default-space sources with three body roles and CPU zero-allocation frames.
+The revised device kernel compiles; real GPU numeric-range acceptance remains open.
+See [point-field verification](physics-areas.md#point-gravity-numeric-range).

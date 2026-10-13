@@ -103,7 +103,8 @@ public sealed partial class PhysicsServer
     /// <param name="value">The new value; default zero.</param>
     /// <remarks>Shares the scene owner's stored field state; a space addresses its default Area. Changes affect the next nonzero physics reduction,
     /// independently of monitor callbacks and monitorability; no overlap history is reset. Space defaults
-    /// start from sampled ProjectSettings, with priority -1; their modes/priority are stored but do not gate the final fallback.</remarks>
+    /// start from sampled ProjectSettings, with priority -1; their modes/priority are stored but do not gate the final fallback. Point-field reduction avoids intermediate squared-distance overflow/underflow;
+    /// a genuinely unrepresentable resolved force still fails before field publication.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
     /// <exception cref="InvalidOperationException">Attached access is off-owner, during solver ownership or from a selected numerical hook; fields are unchanged.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or the mode is undefined.</exception>

@@ -11,6 +11,8 @@ using EngineTimer = Electron2D.Timer;
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_VIEW_CONFIG") is { } viewportBackend) { CanvasViewportConfigurationTests.Run(viewportBackend); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POINT_GRAVITY") is { } pointGravityBackend) { if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1") ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, true); PhysicsPointGravityRangeTests.Run(pointGravityBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for point fields.") }); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_NOTIFICATIONS") == "1") { WindowNotificationTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPOSITION_HOST") == "1") { CanvasCompositionTests.RunHost(); return; }
@@ -157,7 +159,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_QUERY_CONTRACT") is { } 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AREA_CONTRACT") is { } areaContract)
 {
     var backend = areaContract == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
-    PhysicsAreaFieldTests.Run(backend); PhysicsServerAreaFieldTests.Run(backend); PhysicsAreaMonitorTests.Run(backend);
+    PhysicsAreaFieldTests.Run(backend); PhysicsServerAreaFieldTests.Run(backend); PhysicsPointGravityRangeTests.Run(backend); PhysicsAreaMonitorTests.Run(backend);
     ShapeOwnerTests.Run(backend);
     return;
 }
@@ -314,7 +316,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLLIDER_BACKEND") == "1
     CapsuleShapeTests.Run(); SegmentShapeTests.Run(); ConvexPolygonShapeTests.Run(); ConcavePolygonShapeTests.Run();
     SeparationRayShapeTests.Run(); WorldBoundaryTests.Run(); CollisionPolygonTests.Run(); OneWayCollisionTests.Run(); ShapeOwnerTests.Run();
     PhysicsMaterialTests.Run(); PhysicsMassProfileTests.Run(); PhysicsServerShapeSlotTests.Run();
-    PhysicsAreaMonitorTests.Run(); PhysicsAreaFieldTests.Run(); PhysicsServerAreaFieldTests.Run(); CollisionDisableModeTests.Run();
+    PhysicsAreaMonitorTests.Run(); PhysicsAreaFieldTests.Run(); PhysicsServerAreaFieldTests.Run(); PhysicsPointGravityRangeTests.Run(PhysicsServer.Backend.CPU); CollisionDisableModeTests.Run();
     PhysicsQueryTests.Run(); PhysicsCanvasTests.Run(); PhysicsObjectBindingTests.Run(); PhysicsShapeQueryTests.Run(); PhysicsMotionTests.Run(); PhysicsCCDTests.Run(); ShapeCollisionTests.Run();
     PinJointTests.Run(); GrooveJointTests.Run(); DampedSpringJointTests.Run();
     PhysicsBodyStateTests.Run(); PhysicsServerForceTests.Run(); PhysicsServerStateTests.Run(); PhysicsBodyParameterTests.Run();

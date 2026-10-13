@@ -1,6 +1,6 @@
 # Physics areas component
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 ## Scope and owned types
 
@@ -53,3 +53,32 @@ Prepared replacement bodies acquire the layer maps before any prior-body departu
 Generated tile bodies retain TileMapLayer owner identity and individual RIDs through Area/rigid object and shape events, point/ray/shape/rest queries, scene casts and scene/server motion results. Object snapshots/events deduplicate multiple bodies for one layer; shape payloads retain remote/local logical indices. Generated server geometry has no scene shape-owner node. Explicit CPU/GPU tests check canvas-qualified point queries, reparenting, sampled weak owner lifetime and 64 warmed full-frame/span-query cycles at zero owner/all-thread managed bytes. Native allocations, other platforms and visual acceptance remain unverified.
 
 The complete PhysicsAreaFieldTests, PhysicsServerAreaFieldTests and PhysicsAreaMonitorTests now execute on explicitly selected CPU/GPU worlds. They retain all five gravity/damping modes, priorities, point transforms/falloff, default-world shortcuts, signed damping, directional masks, logical pair identity, callback failure/removal and lifecycle assertions. Initial unchanged child registration preserves a sleeping body; changed fields still wake it. Sixty-four measured moving, sleeping and edited-field frames and 64 monitor transition cycles (128 frames) require zero owner/all-thread managed bytes. CPU field validation failure can be corrected; a started GPU field-reduction failure is terminal, preserves the selected backend and last published scene field snapshot, and permits resource retirement. Native allocations, other platforms, visual and final performance acceptance remain open.
+
+## Point-gravity numeric range
+
+Point reduction preserves constant-strength behavior for a nonzero finite offset,
+including offsets whose square underflows a float. Positive unit distance retains
+inverse-square falloff without forming overflowing/underflowing float squares.
+The CPU reducer computes the distance, ratio and final components with wider
+intermediates; directional gravity remains the authored, unnormalized vector.
+Exactly coincident point/body positions and zero configured strength yield zero.
+A genuinely unrepresentable resulting force still rejects before field-cache
+publication, and CPU callers can correct its configuration for the next interval.
+
+The resident GPU kernel scales the direction and combines mantissas/exponents
+for each output component. It guards the [GLSL reconstruction limits](https://docs.vulkan.org/glsl/latest/chapters/builtinfunctions.html) for ldexp
+and reports nonfinite resolved fields through the existing failed-step policy.
+This remains device work: no CPU field mirror, transfer or wait is added.
+Offline GLSL/SPIR-V compilation verifies the revised module; its new edge cases
+have not executed on real GPU hardware. The prior ordinary GPU field evidence
+does not establish current numeric-range or performance acceptance.
+
+PhysicsPointGravityRangeTests runs nine independently specified cases through
+scene Areas, raw server Areas and default-space point fields, each with RigidBody,
+CharacterBody and raw body receivers. It checks full finite solver intervals,
+signed/constant/inverse-square/zero behavior and recoverable real overflow.
+Tolerance is max(0.002 scene acceleration units, 0.0002 of the largest expected
+component), rather than CPU/GPU bitwise agreement. The CPU path also measures
+128 warmed reset/full-field frames with zero owner/all-thread managed bytes.
+It is connected to the shared backend and complete CPU suites; native allocation,
+new GPU execution, platform and full-goal acceptance remain open.

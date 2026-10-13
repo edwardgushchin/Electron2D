@@ -18,13 +18,31 @@ layout(std140,set=2,binding=0) uniform Settings { uvec4 control; uint areaCount;
 const uint none=0xffffffffu;
 void fail(){atomicOr(status.x,1u);}
 vec2 rotate(vec2 q,vec2 p){return vec2(q.x*p.x-q.y*p.y,q.y*p.x+q.x*p.y);}
+float pointComponent(float value,int exponent)
+{
+    if(value==0)return 0;
+    int adjustment;float mantissa=frexp(value,adjustment);exponent+=adjustment;
+    // ldexp does not define overflowing products or exponents above 128.
+    if(exponent>128)return sign(mantissa)*uintBitsToFloat(0x7f800000u);
+    return ldexp(mantissa,exponent);
+}
 vec2 gravity(Field f,vec4 pose,vec2 position)
 {
     if(f.policy.y==0u)return f.gravity.xy*f.gravity.z;
     vec2 toward=pose.xy+rotate(pose.zw,f.gravity.xy)-position;
-    float squared=dot(toward,toward);if(squared==0)return vec2(0);
-    float strength=f.gravity.w>0?f.gravity.z*f.gravity.w*f.gravity.w/squared:f.gravity.z;
-    return (toward/sqrt(squared))*strength;
+    if(f.gravity.z==0)return vec2(0);
+    if(any(isnan(toward))||any(isinf(toward)))return vec2(uintBitsToFloat(0x7fc00000u));
+    float scale=max(abs(toward.x),abs(toward.y));if(scale==0)return vec2(0);
+    vec2 scaled=toward/scale;float distance=length(scaled);vec2 direction=scaled/distance;
+    if(f.gravity.w<=0)return direction*f.gravity.z;
+    int gravityExponent,unitExponent,scaleExponent;
+    float gravityMantissa=frexp(f.gravity.z,gravityExponent);
+    float unitMantissa=frexp(f.gravity.w,unitExponent);
+    float scaleMantissa=frexp(scale,scaleExponent);
+    float ratio=unitMantissa/(scaleMantissa*distance);
+    float strength=gravityMantissa*ratio*ratio;
+    int exponent=gravityExponent+2*(unitExponent-scaleExponent);
+    return vec2(pointComponent(direction.x*strength,exponent),pointComponent(direction.y*strength,exponent));
 }
 void linkArea(uint at,Shape a,Shape b)
 {

@@ -1,6 +1,6 @@
 # PhysicsServer
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Inherits:** ElectronObject · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs), [PhysicsServer.Resources.cs](../../src/Servers/Physics/PhysicsServer.Resources.cs), [PhysicsServer.Mass.cs](../../src/Servers/Physics/PhysicsServer.Mass.cs)
 
@@ -1011,3 +1011,11 @@ Complete PhysicsBodyStateTests and PhysicsServerForceTests now execute on explic
 The complete shared PhysicsCollisionExceptionTests now executes scene/raw exceptions on explicitly selected public CPU/GPU worlds, retaining both motion directions, solved contact release/restoration, idempotent edits, opaque/freed targets and reentry. Sixty-four warmed changed raw-exception/step cycles require 0/0 owner/all-thread managed bytes. Internal GPU store probes remain diagnostics; broader inherited/extension, native/platform and final performance acceptance stays open.
 
 New world/space creation captures ProjectSettings.Physics2DRunOnSeparateThread with feature overrides, retaining it across aliases and later project edits. True runs complete selected Solve on a retained numerical lane and joins before owner publication/callbacks; unsupported hosts reject startup. [Thread conformance](../components/physics-thread.md) records CPU/provider checks and the open GPU/native gate.
+
+
+Point-field reduction avoids float squared-distance underflow/overflow and
+retains signed constant/inverse-square behavior, exact-center zero and rejection
+of truly unrepresentable forces. PhysicsPointGravityRangeTests covers scene, raw
+Area and default-space sources with three body roles and CPU zero-allocation frames.
+The revised device kernel compiles; real GPU numeric-range acceptance remains open.
+See [point-field verification](../components/physics-areas.md#point-gravity-numeric-range).

@@ -1,6 +1,6 @@
 # Engine inventory
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 Private native libraries are owned by the Linux/macOS/Windows native packages in ordinary desktop builds; [native delivery](native-packaging.md) records source production and target verification limits. Windows resolution/full-suite checks are connected with execution pending. No public runtime type or managed backend assembly is added; internal floating-point atomics preserve Engine/audio snapshots on 32-bit hosts.
 
@@ -1391,3 +1391,11 @@ order, stop before nested Window scopes and continue after callback failures.
 WindowNotificationTests exercises eight event kinds through embedded/public and SDL
 dummy routes plus 1024 zero-byte warmed operations. DPI/position platform limits and
 missing go-back/HDR sources remain open; see [window runtime](components/window-runtime.md#containing-window-notifications).
+
+
+Point-field reduction avoids float squared-distance underflow/overflow and
+retains signed constant/inverse-square behavior, exact-center zero and rejection
+of truly unrepresentable forces. PhysicsPointGravityRangeTests covers scene, raw
+Area and default-space sources with three body roles and CPU zero-allocation frames.
+The revised device kernel compiles; real GPU numeric-range acceptance remains open.
+See [point-field verification](components/physics-areas.md#point-gravity-numeric-range).

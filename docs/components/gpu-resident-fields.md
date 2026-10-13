@@ -1,6 +1,6 @@
 # Resident GPU Area fields
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 ## Implemented boundary
 
@@ -181,3 +181,32 @@ Final Release SPIR-V SHA-256 (`obj/Release/net10.0/shaders/Physics/`):
 | PhysicsResidentContacts.comp.spv | `7293233fcb5f90b75ffdd2468bd3ebc12e8329174deb0fca804221cc66445f70` |
 | PhysicsResidentShapes.comp.spv | `512b0c41c29f58748fba91fb0ada5fb36042b14531ea0a8a02ba3dbf922efd05` |
 | PhysicsResidentSleep.comp.spv | `07f6dcf492610574ba4ffa68ab7e34beee7e07da86288029e73973001d90bee8` |
+
+## Point-gravity numeric range
+
+Point reduction preserves constant-strength behavior for a nonzero finite offset,
+including offsets whose square underflows a float. Positive unit distance retains
+inverse-square falloff without forming overflowing/underflowing float squares.
+The CPU reducer computes the distance, ratio and final components with wider
+intermediates; directional gravity remains the authored, unnormalized vector.
+Exactly coincident point/body positions and zero configured strength yield zero.
+A genuinely unrepresentable resulting force still rejects before field-cache
+publication, and CPU callers can correct its configuration for the next interval.
+
+The resident GPU kernel scales the direction and combines mantissas/exponents
+for each output component. It guards the [GLSL reconstruction limits](https://docs.vulkan.org/glsl/latest/chapters/builtinfunctions.html) for ldexp
+and reports nonfinite resolved fields through the existing failed-step policy.
+This remains device work: no CPU field mirror, transfer or wait is added.
+Offline GLSL/SPIR-V compilation verifies the revised module; its new edge cases
+have not executed on real GPU hardware. The prior ordinary GPU field evidence
+does not establish current numeric-range or performance acceptance.
+
+PhysicsPointGravityRangeTests runs nine independently specified cases through
+scene Areas, raw server Areas and default-space point fields, each with RigidBody,
+CharacterBody and raw body receivers. It checks full finite solver intervals,
+signed/constant/inverse-square/zero behavior and recoverable real overflow.
+Tolerance is max(0.002 scene acceleration units, 0.0002 of the largest expected
+component), rather than CPU/GPU bitwise agreement. The CPU path also measures
+128 warmed reset/full-field frames with zero owner/all-thread managed bytes.
+It is connected to the shared backend and complete CPU suites; native allocation,
+new GPU execution, platform and full-goal acceptance remain open.
