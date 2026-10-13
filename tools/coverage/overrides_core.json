@@ -924,6 +924,16 @@
       "godot": "Engine::method:get_frames_drawn()",
       "electron2d": "method:Electron2D.Engine.GetFramesDrawn()",
       "reason": "Executable owner-thread native frame driver under ADR 0028/0095: ForceDraw reuses the retained scene/material/viewport/device pipeline, bypasses the automatic loop and supports non-presenting root texture output. ForceSync waits for real GPU completion and queued readbacks. Typed Action requests run once after native commitment, with ordered phase boundaries, error aggregation and capture release; Engine counts completed intervals once across targets. ManualRenderFrameTests exercises Linux Wayland GPU/hardware compatibility pixels, clocks/scene separation, device readback, guards, errors, lifetime and prepared callback/draw allocation. Foreign platforms and full batch/editor tooling acceptance remain separate gates."
+    },
+    {
+      "godot": "Object::method:get_indexed(NodePath:)",
+      "electron2d": "method:Electron2D.ElectronObject.GetIndexed`2(PropertyDescriptor<TOwner, TValue>)",
+      "reason": "Executable typed indexed property projection under ADRs 0001/0004/0005: compiled PropertyDescriptor object/component/array/dictionary compositions replace dynamic property names and Variant. Reads resolve current links; writes propagate typed setters/validators, preserve readonly/lifetime/owner/capture guards, value-copy behavior and visible committed inner writes after outer failure. Array/dictionary writes copy containers and retain comparers. IndexedPropertyTests verifies boundaries, live rebinding, errors, copied containers, Tween and saved scenes, warmed zero-allocation scalar/object access and actual Linux Wayland GPU/hardware compatibility atlas/position pixels. Synthetic projections are not stored and have no manufactured revert defaults. Foreign platforms/editor/native allocation/human gates remain explicit."
+    },
+    {
+      "godot": "Object::method:set_indexed(NodePath:,Variant:)",
+      "electron2d": "method:Electron2D.ElectronObject.SetIndexed`2(PropertyDescriptor<TOwner, TValue>,TValue)",
+      "reason": "Executable typed indexed property projection under ADRs 0001/0004/0005: compiled PropertyDescriptor object/component/array/dictionary compositions replace dynamic property names and Variant. Reads resolve current links; writes propagate typed setters/validators, preserve readonly/lifetime/owner/capture guards, value-copy behavior and visible committed inner writes after outer failure. Array/dictionary writes copy containers and retain comparers. IndexedPropertyTests verifies boundaries, live rebinding, errors, copied containers, Tween and saved scenes, warmed zero-allocation scalar/object access and actual Linux Wayland GPU/hardware compatibility atlas/position pixels. Synthetic projections are not stored and have no manufactured revert defaults. Foreign platforms/editor/native allocation/human gates remain explicit."
     }
   ],
   "extras": [
@@ -1522,6 +1532,22 @@
       "electron2d": "property:Electron2D.ProcessPipes.StandardIO()",
       "reason": "Operation-specific typed projection of OS.execute_with_pipe fixed pid/stdio/stderr result and deterministic owned stream lifetime; not a universal dictionary or new process capability.",
       "adr": "docs/decisions/core-data-io.md#adr-0020"
+    },
+    {
+      "electron2d": "method:Electron2D.PropertyDescriptor.Element`2(PropertyDescriptor<TOwner, TValue[]>,System.Int32)",
+      "reason": "Typed compound/indexed-property construction projects the reference Object get_indexed/set_indexed path roles under ADR 0005, without a path wrapper, reflection dispatch or universal values. Executable typed indexed property projection under ADRs 0001/0004/0005: compiled PropertyDescriptor object/component/array/dictionary compositions replace dynamic property names and Variant. Reads resolve current links; writes propagate typed setters/validators, preserve readonly/lifetime/owner/capture guards, value-copy behavior and visible committed inner writes after outer failure. Array/dictionary writes copy containers and retain comparers. IndexedPropertyTests verifies boundaries, live rebinding, errors, copied containers, Tween and saved scenes, warmed zero-allocation scalar/object access and actual Linux Wayland GPU/hardware compatibility atlas/position pixels. Synthetic projections are not stored and have no manufactured revert defaults. Foreign platforms/editor/native allocation/human gates remain explicit."
+    },
+    {
+      "electron2d": "method:Electron2D.PropertyDescriptor.Key`3(PropertyDescriptor<TOwner, Dictionary<TKey, TValue>>,TKey)",
+      "reason": "Typed compound/indexed-property construction projects the reference Object get_indexed/set_indexed path roles under ADR 0005, without a path wrapper, reflection dispatch or universal values. Executable typed indexed property projection under ADRs 0001/0004/0005: compiled PropertyDescriptor object/component/array/dictionary compositions replace dynamic property names and Variant. Reads resolve current links; writes propagate typed setters/validators, preserve readonly/lifetime/owner/capture guards, value-copy behavior and visible committed inner writes after outer failure. Array/dictionary writes copy containers and retain comparers. IndexedPropertyTests verifies boundaries, live rebinding, errors, copied containers, Tween and saved scenes, warmed zero-allocation scalar/object access and actual Linux Wayland GPU/hardware compatibility atlas/position pixels. Synthetic projections are not stored and have no manufactured revert defaults. Foreign platforms/editor/native allocation/human gates remain explicit."
+    },
+    {
+      "electron2d": "method:Electron2D.PropertyDescriptor.Member`3(PropertyDescriptor<TOwner, TCompound>,System.String,Func<TCompound, TValue>,Func<TCompound, TValue, TCompound>)",
+      "reason": "Typed compound/indexed-property construction projects the reference Object get_indexed/set_indexed path roles under ADR 0005, without a path wrapper, reflection dispatch or universal values. Executable typed indexed property projection under ADRs 0001/0004/0005: compiled PropertyDescriptor object/component/array/dictionary compositions replace dynamic property names and Variant. Reads resolve current links; writes propagate typed setters/validators, preserve readonly/lifetime/owner/capture guards, value-copy behavior and visible committed inner writes after outer failure. Array/dictionary writes copy containers and retain comparers. IndexedPropertyTests verifies boundaries, live rebinding, errors, copied containers, Tween and saved scenes, warmed zero-allocation scalar/object access and actual Linux Wayland GPU/hardware compatibility atlas/position pixels. Synthetic projections are not stored and have no manufactured revert defaults. Foreign platforms/editor/native allocation/human gates remain explicit."
+    },
+    {
+      "electron2d": "method:Electron2D.PropertyDescriptor.Through`3(PropertyDescriptor<TOwner, TChild>,PropertyDescriptor<TChild, TValue>)",
+      "reason": "Typed compound/indexed-property construction projects the reference Object get_indexed/set_indexed path roles under ADR 0005, without a path wrapper, reflection dispatch or universal values. Executable typed indexed property projection under ADRs 0001/0004/0005: compiled PropertyDescriptor object/component/array/dictionary compositions replace dynamic property names and Variant. Reads resolve current links; writes propagate typed setters/validators, preserve readonly/lifetime/owner/capture guards, value-copy behavior and visible committed inner writes after outer failure. Array/dictionary writes copy containers and retain comparers. IndexedPropertyTests verifies boundaries, live rebinding, errors, copied containers, Tween and saved scenes, warmed zero-allocation scalar/object access and actual Linux Wayland GPU/hardware compatibility atlas/position pixels. Synthetic projections are not stored and have no manufactured revert defaults. Foreign platforms/editor/native allocation/human gates remain explicit."
     }
   ],
   "statusGroups": [
@@ -2160,6 +2186,14 @@
       ],
       "state": "Implemented",
       "reason": "Executable owner-thread native frame driver under ADR 0028/0095: ForceDraw reuses the retained scene/material/viewport/device pipeline, bypasses the automatic loop and supports non-presenting root texture output. ForceSync waits for real GPU completion and queued readbacks. Typed Action requests run once after native commitment, with ordered phase boundaries, error aggregation and capture release; Engine counts completed intervals once across targets. ManualRenderFrameTests exercises Linux Wayland GPU/hardware compatibility pixels, clocks/scene separation, device readback, guards, errors, lifetime and prepared callback/draw allocation. Foreign platforms and full batch/editor tooling acceptance remain separate gates."
+    },
+    {
+      "godot": [
+        "Object::method:get_indexed(NodePath:)",
+        "Object::method:set_indexed(NodePath:,Variant:)"
+      ],
+      "state": "Implemented",
+      "reason": "Executable typed indexed property projection under ADRs 0001/0004/0005: compiled PropertyDescriptor object/component/array/dictionary compositions replace dynamic property names and Variant. Reads resolve current links; writes propagate typed setters/validators, preserve readonly/lifetime/owner/capture guards, value-copy behavior and visible committed inner writes after outer failure. Array/dictionary writes copy containers and retain comparers. IndexedPropertyTests verifies boundaries, live rebinding, errors, copied containers, Tween and saved scenes, warmed zero-allocation scalar/object access and actual Linux Wayland GPU/hardware compatibility atlas/position pixels. Synthetic projections are not stored and have no manufactured revert defaults. Foreign platforms/editor/native allocation/human gates remain explicit."
     }
   ]
 }

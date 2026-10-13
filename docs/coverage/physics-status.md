@@ -222,11 +222,11 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
 | [Node](classes/Node.md) | [Object](classes/Object.md) | 89 | 64 | 6 | 55 | 0 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
-| [Object](classes/Object.md) | — | 2 | 23 | 2 | 32 | 15 |
+| [Object](classes/Object.md) | — | 4 | 23 | 2 | 30 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 4 | 21 | 0 | 2 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 219 | 142 | 19 | 89 | 22 |
+| **Total** | | 221 | 142 | 19 | 87 | 22 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -424,7 +424,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Object::method:free()`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:get_class()`](classes/Object.md) | Partial | C# property form of upstream Object operation (ADRs 0005 and 0007). |
 | [`Object::method:get_incoming_connections()`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
-| [`Object::method:get_indexed(NodePath:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:get_instance_id()`](classes/Object.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. Return type differs: int → System.UInt64; audit observable contract. |
 | [`Object::method:get_method_argument_count(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:get_property_list()`](classes/Object.md) | Partial | Typed PropertyDescriptor list replaces Variant dictionaries (ADR 0005). |
@@ -446,7 +445,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Object::method:remove_user_signal(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:set_block_signals(bool:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:set_deferred(StringName:,Variant:)`](classes/Object.md) | Partial | Typed setter delegate replaces StringName/Variant target; ADRs 0001/0006. |
-| [`Object::method:set_indexed(NodePath:,Variant:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:set_message_translation(bool:)`](classes/Object.md) | Partial | C# property form of upstream Object operation (ADRs 0005 and 0007). Return type differs: void → System.Boolean; audit observable contract. |
 | [`Object::method:set_script(Variant:)`](classes/Object.md) | Blocked | Trigger: accepted typed live script-attachment contract for owner identity, instance ownership, replacement, callback ordering and failure rollback, followed by its first executable binding slice under ADR 0091. A factory-created CLR subtype does not change the type of an existing owner. Applicable behavior remains pending; no inert setter or implicit exclusion is accepted. |
 | [`Object::method:set_translation_domain(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |

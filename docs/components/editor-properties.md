@@ -1,6 +1,26 @@
 # Typed editor properties component
 
-Last updated: 2026-10-01
+Last updated: 2026-10-13
+
+## Compiled indexed properties
+
+`ElectronObject.GetIndexed` and `SetIndexed` accept a typed `PropertyDescriptor` for the root owner and result value. The supplied descriptor may describe a direct property or a composition built with `PropertyDescriptor.Through`, `Member`, `Element` or `Key`. Names are metadata labels; there is no runtime string setter, reflection scanner, new path wrapper or universal value container. This follows [ADR 0005](../decisions/core-object-runtime.md#adr-0005).
+
+Through resolves the current referenced ElectronObject for each operation. Its setter invokes the child property then the parent property; validation, notifications and committed changes remain visible when an outer setter fails. Both levels must be writable. Member combines supplied typed struct readers/updaters and writes the complete updated value through the parent. Element checks a fixed nonnegative array index on each access; Key uses a typed dictionary key, permits additions on write and retains the dictionary comparer. Collection writes copy the original container before calling the parent setter, so a precommit validation failure cannot modify the original container. Reads and object values remain borrowed. Wrong owners, null/disposed links, missing keys, bounds and callback failures are explicit. Attached Node access follows owner affinity; writes retain scene capture/mutation guards.
+
+Synthetic compositions are non-stored and provide no invented revert default. Save the original owning properties and resource graph, and use their ordinary revert operations. Their compiled accessors also drive the existing typed TweenProperty API. Descriptor construction and collection copies are cold operations; prepared scalar/object reads and writes are checked separately for zero managed allocation.
+
+```csharp
+var position = new PropertyDescriptor<Sprite, Vector2>(
+    nameof(Sprite.Position), sprite => sprite.Position,
+    (sprite, value) => sprite.Position = value);
+var horizontal = PropertyDescriptor.Member(position, "X",
+    point => point.X, (point, x) => point with { X = x });
+sprite.SetIndexed(horizontal, 32f);
+float x = sprite.GetIndexed(horizontal);
+```
+
+IndexedPropertyTests verifies object rebinding, components, copied arrays/maps/comparers, validation/read-only/lifetime/errors, owner/capture guards, saved scenes and existing Tween integration. Linux Wayland GPU/hardware compatibility hosts check actual atlas-region and Sprite-position pixels. Other platforms, full editor automation, native allocations and human acceptance remain unverified.
 
 ## Scope
 
@@ -57,3 +77,5 @@ No editor UI, reflection scanner, attributes, file-serialization schema, categor
 The executable test verifies discovery, storage metadata, typed reads and writes, validation, typed revert-value retrieval, object-level revert, property-list change notification, packed capture/restore including `Color`, all six vector values, `Rect2`, `Rect2i`, `Transform`, and Timer configuration, resource remapping, and unsupported stored-shape rejection.
 
 Node.GetNodeAndResource reads resource references through the same typed descriptors, including read-only/derived schemas, without reflection-driven property invocation or an untyped public value accessor. Scalar/null properties delimit the returned remainder; getter failures retain their normal error behavior.
+
+The internal indexed-property correspondence was inspected against pinned [object indexed reads and back-propagated writes](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/object.cpp). Compiled descriptors preserve typed access under ADRs 0001/0004/0005; dynamic property-name dispatch remains excluded.

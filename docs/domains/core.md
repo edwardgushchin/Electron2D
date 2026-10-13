@@ -227,3 +227,5 @@ The [independent-process component](../components/processes.md) adds static laun
 [Runtime diagnostics](../components/runtime-diagnostics.md) now includes typed application custom monitors on the retained Performance service: exact callback values, unit/name snapshots, elapsed mutation ticks, explicit removal and captured-provider lifetime. Calls are available without a native runtime; provider execution stays on the caller thread outside the registry lock. Existing physical producers retain their completed-snapshot contract.
 
 Engine.GetFramesDrawn now accounts for completed [native canvas intervals](../components/manual-render-frames.md), independently of process and physics callbacks.
+
+[Compiled indexed properties](../components/editor-properties.md#compiled-indexed-properties) now execute typed object/component/array/dictionary projections through the existing descriptor schema, including Tween and saved-scene consumers.

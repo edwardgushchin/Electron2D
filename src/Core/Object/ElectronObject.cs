@@ -8,7 +8,7 @@ namespace Electron2D;
 /// The contract uses typed properties and events and deliberately omits dynamic calls, untyped metadata, generic signal
 /// registration, and script storage. Instances have deterministic <see cref="IDisposable"/> lifetime.
 /// </remarks>
-public abstract class ElectronObject : IDisposable
+public abstract partial class ElectronObject : IDisposable
 {
     /// <summary>Identifies the post-initialization notification.</summary>
     /// <remarks>

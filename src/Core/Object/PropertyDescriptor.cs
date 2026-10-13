@@ -7,7 +7,7 @@ namespace Electron2D;
 /// This is the non-generic discovery surface used in property lists. It contains immutable metadata and revert
 /// operations but deliberately exposes no Variant-like untyped getter or setter.
 /// </remarks>
-public abstract class PropertyDescriptor
+public abstract partial class PropertyDescriptor
 {
     /// <summary>Initializes immutable metadata for a tooling property.</summary>
     /// <param name="name">The nonblank property name.</param>

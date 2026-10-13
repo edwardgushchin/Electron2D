@@ -2,6 +2,7 @@ namespace Electron2D;
 
 public partial class Node
 {
+    internal void EnsureIndexedMutation() => EnsureMutable();
     /// <summary>Resolves a node path and its successive resource-valued tooling properties.</summary>
     /// <param name="path">A node path followed by optional colon-separated property names; an omitted node path addresses this node.</param>
     /// <returns>The borrowed node, last borrowed resource, and remaining colon-prefixed property subpath. A missing node/property returns a null node; a previously resolved resource is retained in the result.</returns>

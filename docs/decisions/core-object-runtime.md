@@ -51,7 +51,7 @@ The base uses atomic state transitions so concurrent disposal runs cleanup at mo
 <a id="adr-0005"></a>
 ## ADR 0005: Use numeric notifications and typed property descriptors
 
-Last updated: 2026-09-20
+Last updated: 2026-10-13
 
 - Status: Accepted
 - Scope: Engine lifecycle notifications and tooling property exposure
@@ -67,6 +67,7 @@ Godot's `Object` exposes numeric notifications plus Variant-based property disco
 - Pre-delete notification `1` is automatic. Post-initialization notification `0` is only reserved because a base constructor cannot safely call virtual members.
 - Tooling properties use immutable `PropertyDescriptor<TOwner, TValue>` instances with typed delegates.
 - Discovery returns heterogeneous descriptors through the non-generic `PropertyDescriptor` base, but value access remains generic and typed.
+- Indexed property access composes these same typed descriptors rather than resolving arbitrary runtime names. `ElectronObject.GetIndexed`/`SetIndexed` accept a compiled descriptor. `PropertyDescriptor.Through`, `Member`, `Element` and `Key` build owner/value-typed object, struct-component, array and dictionary projections. Names are metadata only. Reads follow current references; writes propagate through the supplied setters and validators. Struct updates copy values; collection updates copy their containers and retain dictionary comparers before committing the parent. Readonly parents/children remain readonly. Synthetic projections are not stored and do not manufacture revert defaults; revert the original owning property. Use them with the existing typed Tween/property tooling. Null/disposed links, wrong owners, invalid bounds/keys and callback errors are explicit. No new path/name wrapper or universal value container is introduced.
 - Derived classes may filter or replace descriptors with `ValidateProperty`; they notify tooling of structural changes through a typed event.
 
 ### Consequences

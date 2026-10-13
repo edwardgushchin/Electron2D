@@ -87984,6 +87984,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ElectronObject.GetIndexed\u00602(PropertyDescriptor\u003CTOwner, TValue\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ElectronObject",
+    "name": "GetIndexed",
+    "signature": "public TValue GetIndexed\u003CTOwner, TValue\u003E(PropertyDescriptor\u003CTOwner, TValue\u003E propertyPath)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "propertyPath",
+        "type": "PropertyDescriptor\u003CTOwner, TValue\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "TValue",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ElectronObject.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.ElectronObject",
@@ -88105,6 +88124,30 @@
       {
         "name": "property",
         "type": "Electron2D.PropertyDescriptor",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ElectronObject.SetIndexed\u00602(PropertyDescriptor\u003CTOwner, TValue\u003E,TValue)",
+    "kind": "method",
+    "declaringType": "Electron2D.ElectronObject",
+    "name": "SetIndexed",
+    "signature": "public System.Void SetIndexed\u003CTOwner, TValue\u003E(PropertyDescriptor\u003CTOwner, TValue\u003E propertyPath, TValue value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "propertyPath",
+        "type": "PropertyDescriptor\u003CTOwner, TValue\u003E",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "TValue",
         "default": null
       }
     ],
@@ -139525,6 +139568,88 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PropertyDescriptor.Element\u00602(PropertyDescriptor\u003CTOwner, TValue[]\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PropertyDescriptor",
+    "name": "Element",
+    "signature": "public static PropertyDescriptor\u003CTOwner, TValue\u003E Element\u003CTOwner, TValue\u003E(PropertyDescriptor\u003CTOwner, TValue[]\u003E parent, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parent",
+        "type": "PropertyDescriptor\u003CTOwner, TValue[]\u003E",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "PropertyDescriptor\u003CTOwner, TValue\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PropertyDescriptor.Key\u00603(PropertyDescriptor\u003CTOwner, Dictionary\u003CTKey, TValue\u003E\u003E,TKey)",
+    "kind": "method",
+    "declaringType": "Electron2D.PropertyDescriptor",
+    "name": "Key",
+    "signature": "public static PropertyDescriptor\u003CTOwner, TValue\u003E Key\u003CTOwner, TKey, TValue\u003E(PropertyDescriptor\u003CTOwner, Dictionary\u003CTKey, TValue\u003E\u003E parent, TKey key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parent",
+        "type": "PropertyDescriptor\u003CTOwner, Dictionary\u003CTKey, TValue\u003E\u003E",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "TKey",
+        "default": null
+      }
+    ],
+    "returnType": "PropertyDescriptor\u003CTOwner, TValue\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PropertyDescriptor.Member\u00603(PropertyDescriptor\u003CTOwner, TCompound\u003E,System.String,Func\u003CTCompound, TValue\u003E,Func\u003CTCompound, TValue, TCompound\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PropertyDescriptor",
+    "name": "Member",
+    "signature": "public static PropertyDescriptor\u003CTOwner, TValue\u003E Member\u003CTOwner, TCompound, TValue\u003E(PropertyDescriptor\u003CTOwner, TCompound\u003E parent, System.String name, Func\u003CTCompound, TValue\u003E getter, Func\u003CTCompound, TValue, TCompound\u003E setter = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parent",
+        "type": "PropertyDescriptor\u003CTOwner, TCompound\u003E",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "getter",
+        "type": "Func\u003CTCompound, TValue\u003E",
+        "default": null
+      },
+      {
+        "name": "setter",
+        "type": "Func\u003CTCompound, TValue, TCompound\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "PropertyDescriptor\u003CTOwner, TValue\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PropertyDescriptor.Revert(Electron2D.ElectronObject)",
     "kind": "method",
     "declaringType": "Electron2D.PropertyDescriptor",
@@ -139541,6 +139666,30 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PropertyDescriptor.Through\u00603(PropertyDescriptor\u003CTOwner, TChild\u003E,PropertyDescriptor\u003CTChild, TValue\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PropertyDescriptor",
+    "name": "Through",
+    "signature": "public static PropertyDescriptor\u003CTOwner, TValue\u003E Through\u003CTOwner, TChild, TValue\u003E(PropertyDescriptor\u003CTOwner, TChild\u003E parent, PropertyDescriptor\u003CTChild, TValue\u003E property)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parent",
+        "type": "PropertyDescriptor\u003CTOwner, TChild\u003E",
+        "default": null
+      },
+      {
+        "name": "property",
+        "type": "PropertyDescriptor\u003CTChild, TValue\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "PropertyDescriptor\u003CTOwner, TValue\u003E",
     "value": null
   },
   {
