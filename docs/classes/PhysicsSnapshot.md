@@ -4,7 +4,7 @@ Last updated: 2026-10-14
 
 [Character motion validation](../components/physics-snapshots.md#character-motion-validation)
 rejects impossible slide encodings and self/Area/unbound platform references before
-packet or world mutation. CPU/registered serial/separate cases preserve previous
+packet or world mutation. CPU/CPU, CPU/GPU and CPU/registered serial/separate cases preserve previous
 state/events and verify real movement after valid platform correction.
 
 The supported encoding is now version 3, including a strict four-byte character
@@ -55,3 +55,12 @@ raw Area/contact history stays silent during correction and avoids repeated ente
 Malformed indices/platforms preserve state and events, and real movement retains
 platform carry. Warm contact cycles require 0/0 bytes; cold motion validation has
 no allocation claim. Hardware and wider geometry/joint/network gates remain open.
+
+[Capture topology](../components/physics-snapshots.md#capture-after-topology-edits)
+and [same-count authoring validation](../components/physics-snapshots.md#same-count-authoring-validation)
+now pass CPU/CPU, CPU/GPU and CPU/registered serial/separate public-only profiles.
+Each capture profile retains 24 removal/reindex/readdition cases; each geometry
+profile retains 14 incompatible/restored cases across both directions. Rejection
+preserves complete packets, sampled values and events; real refresh/continuation
+recovers. These cold structural checks have no allocation claim. Hardware and
+broader geometry/joint/network acceptance remain open.

@@ -2,17 +2,20 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunPortableCapture(bool threaded = false)
+    public static void RunPortableCapture(bool threaded = false, PhysicsServer.Backend? backend = null)
     {
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
         try
         {
-            PhysicsServerManager.RegisterServer("PortableCapture", () => new Solver());
+            if (backend is null) PhysicsServerManager.RegisterServer("PortableCapture", () => new Solver());
             for (var registered = 0; registered < 2; registered++)
                 for (var edit = 0; edit < 12; edit++)
                 {
-                    using var rig = new PortableContactRig(registered == 0 ? new World(PhysicsServer.Backend.CPU) : new World("PortableCapture"));
+                    using var rig = new PortableContactRig(registered == 0 ? new World(PhysicsServer.Backend.CPU) :
+                        backend is { } selected ? new World(selected) : new World("PortableCapture"));
+                    Check(rig.World.PhysicsBackend == (registered == 0 ? PhysicsServer.Backend.CPU : backend ?? PhysicsServer.Backend.Extension) &&
+                        rig.World.PhysicsFallbackReason is null, "Topology capture uses the selected owner without startup fallback");
                     if (edit >= 10) rig.Mover.ContactMonitor = false;
                     rig.Contact();
                     Check(rig.State.GetContactCount() == 1 && rig.Character.GetSlideCollisionCount() == 1,
@@ -58,7 +61,7 @@ public static partial class BackendChecks
                         PhysicsServer.BodyAddShape(body, resource, new(0, new(20, 0)), disabled: true);
                     }
                 }
-            Console.WriteLine($"Portable capture CPU/registered, threaded={threaded}: twelve real topology edits reject stale history and preserve complete packets and public samples.");
+            Console.WriteLine($"Portable capture CPU/{backend?.ToString() ?? "registered"}, threaded={threaded}: twelve real topology edits reject stale history and preserve complete packets and public samples.");
         }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
     }

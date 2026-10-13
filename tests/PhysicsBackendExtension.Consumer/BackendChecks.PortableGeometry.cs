@@ -2,18 +2,23 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunPortableGeometry(bool threaded = false)
+    public static void RunPortableGeometry(bool threaded = false, PhysicsServer.Backend? backend = null)
     {
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
         try
         {
-            PhysicsServerManager.RegisterServer("PortableGeometry", () => new Solver());
+            if (backend is null) PhysicsServerManager.RegisterServer("PortableGeometry", () => new Solver());
             for (var direction = 0; direction < 2; direction++)
                 for (var edit = 0; edit < 7; edit++)
                 {
-                    using var source = new PortableContactRig(direction == 0 ? new World(PhysicsServer.Backend.CPU) : new World("PortableGeometry"));
-                    using var target = new PortableContactRig(direction == 0 ? new World("PortableGeometry") : new World(PhysicsServer.Backend.CPU));
+                    using var source = new PortableContactRig(direction == 0 ? new World(PhysicsServer.Backend.CPU) : PartnerWorld());
+                    using var target = new PortableContactRig(direction == 0 ? PartnerWorld() : new World(PhysicsServer.Backend.CPU));
+                    var partner = backend ?? PhysicsServer.Backend.Extension;
+                    Check(source.World.PhysicsBackend == (direction == 0 ? PhysicsServer.Backend.CPU : partner) &&
+                        target.World.PhysicsBackend == (direction == 0 ? partner : PhysicsServer.Backend.CPU) &&
+                        source.World.PhysicsFallbackReason is null && target.World.PhysicsFallbackReason is null,
+                        "Authoring validation uses the selected numerical owners without startup fallback");
                     using var circle = new CircleShape { Radius = 1.5f };
                     using var rectangle = new RectangleShape { Size = new(2, 2) };
                     source.Contact(); target.Separate();
@@ -72,7 +77,8 @@ public static partial class BackendChecks
                         }
                     }
                 }
-            Console.WriteLine($"Portable geometry CPU/registered, threaded={threaded}: seven same-count authoring guards, unchanged packet recovery and real contact continuation in both directions passed.");
+            Console.WriteLine($"Portable geometry CPU/{backend?.ToString() ?? "registered"}, threaded={threaded}: seven same-count authoring guards, unchanged packet recovery and real contact continuation in both directions passed.");
+            World PartnerWorld() => backend is { } selected ? new World(selected) : new World("PortableGeometry");
         }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
 

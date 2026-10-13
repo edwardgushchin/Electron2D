@@ -236,15 +236,15 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
 - [Capture topology verification](physics-snapshots.md#capture-after-topology-edits)
   now guards source contact/overlap/slide links before packet replacement. Twelve real
   removal/clear/reindex/readdition cases preserve previous packets and sampled
-  public values, then recapture after ordinary refresh on CPU/registered serial/
-  separate owners. In-slot replacement stays valid; broader association/topology
-  and current GPU/native/network/performance acceptance remain open.
+  public values, then recapture after ordinary refresh on CPU/CPU, CPU/GPU and
+  CPU/registered serial/separate owners. In-slot replacement stays valid; broader
+  association/topology and hardware/native/network/performance acceptance remain open.
 - [Same-count authoring validation](physics-snapshots.md#same-count-authoring-validation)
-  now checks seven actual mismatched geometry/slot profiles in CPU/registered
-  serial/separate transfers, unchanged destination state/events/input, and recovery
+  now checks seven actual mismatched geometry/slot profiles in CPU/CPU, CPU/GPU and
+  CPU/registered serial/separate transfers, unchanged destination state/events/input, and recovery
   with real queries and continued contact/Area history. Disabled primitive-kind
-  validation does not establish active rectangle simulation. Broader association/topology and wider geometry/GPU/native/network/performance
-  gates stay open.
+  validation does not establish active rectangle simulation. Broader association/
+  topology and wider geometry/hardware/native/network/performance gates stay open.
 - [Character motion validation](physics-snapshots.md#character-motion-validation)
   now rejects impossible slide encodings and self/Area/unbound platforms before
   storage/state/events change. CPU/CPU, CPU/GPU and CPU/registered serial/separate profiles verify a

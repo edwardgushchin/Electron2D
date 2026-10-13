@@ -260,8 +260,9 @@ The public-only --portable-geometry consumer verifies seven incompatible authore
 profiles with unchanged logical shape counts: active circle radius, disabled slot
 primitive kind, character slot pose, distant slot enablement, removal/reappend
 that reorders active/disabled slots, shared geometry solver bias and raw Area
-geometry. CPU and the independent registered owner alternate as source/destination;
-serial/separate execution covers 28 cases. The registered fixture only solves
+geometry. CPU and selected CPU/GPU or the independent registered owner alternate
+as source/destination. Six serial/separate profiles each retain 14 cases, seven
+in each direction; actual backend and no startup fallback are asserted. The registered fixture only solves
 circles/annuli, so the rectangle-kind case deliberately uses a disabled slot.
 
 Each source supplies real contact impulse, body/raw Area overlap and character
@@ -276,8 +277,8 @@ continuation does not require bitwise equality.
 
 These checks exercise existing authoring-schema guards, with no runtime/API or
 wire-format change. Producer lifetime/index correspondence is checked separately below; wider object
-associations, arbitrary active geometry, GPU/native, cross-process and performance
-acceptance remain open. Structural
+associations, arbitrary active geometry, hardware/native, cross-process and performance
+acceptance remain open. GPU runs on CPU-only llvmpipe Vulkan without NVIDIA. Structural
 edits and this cold validation matrix have no zero-allocation claim.
 
 ### Capture after topology edits
@@ -298,8 +299,9 @@ not roll them back. A real physics interval and character movement refresh the
 retired histories so capture can succeed again.
 
 The public-only --portable-capture fixture starts with real contacts/slides and
-performs twelve removal/clear/reindex/readdition cases on CPU and registered owners
-in serial/separate modes, covering 48 cases. The five original removals are joined
+performs twelve removal/clear/reindex/readdition cases on CPU and selected
+CPU/GPU/registered owners. Six serial/separate profiles retain 24 cases each,
+12 per owner, with actual selection and no fallback asserted. The five original removals are joined
 by remove/reappend of mover, peer, character and raw Area slots and an identical
 active-slot removal/readdition. The unchanged-count CPU case failed before the
 fix. Two additional local/remote contact cases disable the body monitor, so direct
@@ -310,11 +312,14 @@ Tokens hold no resource/owner reference and never enter wire format/schema data.
 Apply seeds history with the destination's existing slot lifetimes; private replay
 copies preserve them. Selected contact projections keep the initially sampled
 tokens, avoiding resampling an old cached contact as current. Common CPU/GPU/
-registered producers share this rule; current GPU execution remains unverified.
-Warm full-frame transfers retain strict 0/0 owner/all-thread managed-byte checks.
+registered producers share this rule; both GPU capture and destination validation
+now execute on CPU-only llvmpipe Vulkan. The separate warm contact-transfer fixture
+retains strict 0/0 owner/all-thread managed-byte checks; these structural/cold
+validation matrices have no zero-allocation claim.
 Structural addition may allocate. Broader collider/object associations, topology
-lifecycle, active geometry/joints, native/network and performance acceptance remain
-separate gates.
+lifecycle, active geometry/joints, hardware/native/network and performance acceptance
+remain separate gates. Current matrices are retained under
+bin/physics-public-portable-topology/2026-10-14.
 
 The public-only --portable-contacts consumer creates real CPU contacts, a character
 slide and raw Area history, then transfers them to selected CPU/GPU or the
