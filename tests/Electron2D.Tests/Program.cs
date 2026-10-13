@@ -9,6 +9,9 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length >= 4 && args[0] == "--os-restart-child") { OSRestartTests.Child(args); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OS_RESTART_NATIVE") == "1") { OSRestartTests.RunNative(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OS_RESTART") == "1") { OSRestartTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_METADATA_NATIVE") == "1") { FontMetadataTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_METADATA") == "1") { FontMetadataTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_CONTEXT_CHILD") is { Length: > 0 } contextScene) { GUITranslationContextTests.RunChild(contextScene); return; }

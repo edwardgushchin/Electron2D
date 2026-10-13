@@ -934,6 +934,24 @@
       "godot": "Object::method:set_indexed(NodePath:,Variant:)",
       "electron2d": "method:Electron2D.ElectronObject.SetIndexed`2(PropertyDescriptor<TOwner, TValue>,TValue)",
       "reason": "Executable typed indexed property projection under ADRs 0001/0004/0005: compiled PropertyDescriptor object/component/array/dictionary compositions replace dynamic property names and Variant. Reads resolve current links; writes propagate typed setters/validators, preserve readonly/lifetime/owner/capture guards, value-copy behavior and visible committed inner writes after outer failure. Array/dictionary writes copy containers and retain comparers. IndexedPropertyTests verifies boundaries, live rebinding, errors, copied containers, Tween and saved scenes, warmed zero-allocation scalar/object access and actual Linux Wayland GPU/hardware compatibility atlas/position pixels. Synthetic projections are not stored and have no manufactured revert defaults. Foreign platforms/editor/native allocation/human gates remain explicit."
+    },
+    {
+      "godot": "OS::method:set_restart_on_exit(bool:,PackedStringArray:)",
+      "electron2d": "method:Electron2D.OS.SetRestartOnExit(System.Boolean,System.ReadOnlySpan<System.String>)",
+      "state": "Implemented",
+      "reason": "ADR 0020/0095: retained desktop OS configuration atomically copies literal arguments; normal managed process exit captures one CreateInstance launch after standalone host cleanup. OSRestartTests verifies snapshot/validation, replacement, cancellation, dotnet/apphost identity, original exit status and actual GPU/compatibility frames in both applications. Non-desktop process profiles fail explicitly; crash/forced termination and editor behavior retain their limits."
+    },
+    {
+      "godot": "OS::method:is_restart_on_exit_set()",
+      "electron2d": "method:Electron2D.OS.IsRestartOnExitSet()",
+      "state": "Implemented",
+      "reason": "ADR 0020/0095: retained desktop OS configuration atomically copies literal arguments; normal managed process exit captures one CreateInstance launch after standalone host cleanup. OSRestartTests verifies snapshot/validation, replacement, cancellation, dotnet/apphost identity, original exit status and actual GPU/compatibility frames in both applications. Non-desktop process profiles fail explicitly; crash/forced termination and editor behavior retain their limits."
+    },
+    {
+      "godot": "OS::method:get_restart_on_exit_arguments()",
+      "electron2d": "method:Electron2D.OS.GetRestartOnExitArguments()",
+      "state": "Implemented",
+      "reason": "ADR 0020/0095: retained desktop OS configuration atomically copies literal arguments; normal managed process exit captures one CreateInstance launch after standalone host cleanup. OSRestartTests verifies snapshot/validation, replacement, cancellation, dotnet/apphost identity, original exit status and actual GPU/compatibility frames in both applications. Non-desktop process profiles fail explicitly; crash/forced termination and editor behavior retain their limits."
     }
   ],
   "extras": [
@@ -2210,6 +2228,27 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0016: process-wide host-driven fixed clock with positive frequency/catch-up limits, finite nonnegative scaling and clamped jitter. Settings are sampled once per frame; frequency changes discard old fractional history. UInt64 projects the nonnegative process-lifetime started-frame count; interpolation is a bounded double fraction and IsInPhysicsFrame is the global fixed-lane snapshot, not caller-thread authorization. VerifyEngine and PhysicsClockTests cover defaults, validation, actual CPU motion/ticks, feature/live settings, zero-scale cadence, catch-up/remainder, frame/callback errors and strict 0/0 warmed full frames. Native cadence, other platforms and complete numerical GPU/provider acceptance remain separate."
+    },
+    {
+      "godot": [
+        "OS::method:set_restart_on_exit(bool:,PackedStringArray:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0020/0095: retained desktop OS configuration atomically copies literal arguments; normal managed process exit captures one CreateInstance launch after standalone host cleanup. OSRestartTests verifies snapshot/validation, replacement, cancellation, dotnet/apphost identity, original exit status and actual GPU/compatibility frames in both applications. Non-desktop process profiles fail explicitly; crash/forced termination and editor behavior retain their limits."
+    },
+    {
+      "godot": [
+        "OS::method:is_restart_on_exit_set()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0020/0095: retained desktop OS configuration atomically copies literal arguments; normal managed process exit captures one CreateInstance launch after standalone host cleanup. OSRestartTests verifies snapshot/validation, replacement, cancellation, dotnet/apphost identity, original exit status and actual GPU/compatibility frames in both applications. Non-desktop process profiles fail explicitly; crash/forced termination and editor behavior retain their limits."
+    },
+    {
+      "godot": [
+        "OS::method:get_restart_on_exit_arguments()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0020/0095: retained desktop OS configuration atomically copies literal arguments; normal managed process exit captures one CreateInstance launch after standalone host cleanup. OSRestartTests verifies snapshot/validation, replacement, cancellation, dotnet/apphost identity, original exit status and actual GPU/compatibility frames in both applications. Non-desktop process profiles fail explicitly; crash/forced termination and editor behavior retain their limits."
     }
   ]
 }

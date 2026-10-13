@@ -157,7 +157,7 @@ Executable tests cover the typed registry, exact identity, mutable snapshots, va
 <a id="adr-0020"></a>
 ## ADR 0020: Typed file access and transformed-file containers
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 ### Status
 
@@ -184,6 +184,8 @@ Encrypted containers are Electron2D-specific and authenticated. Raw mode require
 Filesystem attributes are exposed through native BCL behavior where the reference contract defines them: hidden/read-only attributes on Apple, BSD, and Windows platforms, and all 12 Unix mode bits on non-Windows platforms. Unsupported attribute platforms throw rather than return a plausible no-op result. Extended attributes present platform-neutral names: Linux adds/removes the `user.` namespace prefix internally, macOS uses libSystem xattrs, and Windows maps names to alternate data streams.
 
 The static retained OS service supplies independent process launch/capture/ID/exit/kill operations. ExecuteWithPipe's fixed result dictionary projects to an owned ProcessPipes with PID/StandardIO/StandardError; it does not expose a universal value carrier. PipeWriteException.BytesWritten projects partial-write error state without a mutable numeric last-error slot. Literal argv never implicitly enters a shell. Blocking pipe I/O stays on the caller; native nonblocking readiness is distinct from EOF, and partial writes preserve a retryable consumed-prefix count. Closing streams never owns process termination. SafeHandles retain native stream/process lifetime. General named pipe connections and mobile/application-bundle/console adapters remain separate exact backend dependencies; [processes](../components/processes.md) records exercised behavior and limits.
+
+Desktop restart-on-exit configuration uses that same retained OS and CreateInstance launch path. Copy literal arguments and atomically replace the flag and snapshot; expose independent reads. A single normal managed process-shutdown handler captures the final request and launches after the standalone host has completed Engine.Run cleanup and returned. The library does not terminate its host when a loop ends. Borrowed/owned loop restarts alone do not launch a process. Launch failure is reported to standard error without changing the original exit code; crashes and forced termination do not guarantee normal shutdown. Non-desktop profiles reject this absent independent-process capability explicitly. This is the typed library-host projection of process exit, not a second engine loop.
 
 ### Consequences
 

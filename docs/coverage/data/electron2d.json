@@ -121155,6 +121155,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.GetRestartOnExitArguments()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetRestartOnExitArguments",
+    "signature": "public static System.String[] GetRestartOnExitArguments()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.GetSTDERRType()",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -121378,6 +121391,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.IsRestartOnExitSet()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "IsRestartOnExitSet",
+    "signature": "public static System.Boolean IsRestartOnExitSet()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.Kill(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -121472,6 +121498,30 @@
         "name": "value",
         "type": "System.String",
         "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.SetRestartOnExit(System.Boolean,System.ReadOnlySpan\u003CSystem.String\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "SetRestartOnExit",
+    "signature": "public static System.Void SetRestartOnExit(System.Boolean restart, System.ReadOnlySpan\u003CSystem.String\u003E arguments = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "restart",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "arguments",
+        "type": "System.ReadOnlySpan\u003CSystem.String\u003E",
+        "default": "default"
       }
     ],
     "returnType": "System.Void",

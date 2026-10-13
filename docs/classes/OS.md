@@ -139,3 +139,33 @@ GetEnvironment, HasEnvironment, SetEnvironment and UnsetEnvironment manage proce
 ## Standard handles and input
 
 GetSTDINType, GetSTDOUTType and GetSTDERRType return the nested StdHandleType enum. ReadBufferFromSTDIN reads actual owned bytes, filling pipe/file requests or returning a terminal line/prefix. ReadStringFromSTDIN reads a bounded UTF-8 line, normalizes CRLF and removes trailing LF without taking the next line. These cold blocking operations borrow the process handle and reject invalid sizes/handles or invalid UTF-8 explicitly. See [complete semantics, native adapters and child-process checks](../components/standard-input.md).
+
+## Restart on normal process exit
+
+| Complete declaration | Contract |
+| --- | --- |
+| `public static void SetRestartOnExit(bool restart, ReadOnlySpan<string> arguments = default)` | Copies and validates literal arguments, then replaces the final request. |
+| `public static bool IsRestartOnExitSet()` | Thread-safe flag read; false initially. |
+| `public static string[] GetRestartOnExitArguments()` | Independent retained argument snapshot, initially empty. |
+
+OS restart-on-exit configuration is a process-wide, desktop-only request with a copied literal argument list. SetRestartOnExit atomically replaces both values; IsRestartOnExitSet reads the flag and GetRestartOnExitArguments returns an independent array, including while disabled. Invalid Unicode, NUL or null elements fail before publication. A single normal managed process-shutdown handler captures the final request and uses CreateInstance. A standalone host must finish its loop cleanup and return; stopping a borrowed loop or returning from Engine.Run alone does not exit its host. The replacement process starts with disabled restart state. Failed native launch reports to standard error and preserves the original exit code; crashes and forced termination do not guarantee shutdown callbacks.
+
+### SetRestartOnExit
+
+Arguments replace the entire previous list. Omitting them launches the application with no application arguments. To preserve the original arguments, explicitly pass GetCommandLineArgs(). Disabling retains the supplied snapshot. Setter and getters may be called from worker threads. Once normal shutdown has captured the request, a setter throws InvalidOperationException. Non-desktop profiles throw PlatformNotSupportedException for this missing process service. ArgumentNullException identifies a null element, ArgumentException a NUL element, and EncoderFallbackException invalid Unicode; none changes the committed request.
+
+### IsRestartOnExitSet and GetRestartOnExitArguments
+
+Both read the retained OS service under its process lock. The flag query allocates no managed memory after warmup. Arguments are intentionally copied; changing the returned array does not change restart. The configured state belongs only to this process. CreateInstance handles both application executables and framework-dependent entry assemblies without shell interpretation.
+
+```csharp
+OS.SetRestartOnExit(true, OS.GetCommandLineArgs());
+Environment.ExitCode = Engine.Run(window);
+// Return from the standalone application entry point after the owned runtime ends.
+```
+
+The fragment assumes an authored root Window and a standalone desktop entry point. OSRestartTests launches independent dotnet/apphost children to verify literal empty/Unicode/quote/separator arguments, replacement/cancellation, new process identity, default state and original exit status. Its native profile verifies real GPU/compatibility pixels and runtime cleanup in both applications. Other desktop targets, editor launch behavior and abnormal termination are not verified.
+
+A restart attempt clears its retained flag and arguments before subsequent managed shutdown handlers run. Shutdown capture rejects later setters. A controlled Linux apphost fixture removes only its copied executable and verifies actual launch-failure reporting without changing the original exit status.
+
+The native host check covers both an explicit SceneTree.Quit and a queued native WM-close event. In either case the old host has completed Engine.Run cleanup before normal process shutdown launches the replacement.
