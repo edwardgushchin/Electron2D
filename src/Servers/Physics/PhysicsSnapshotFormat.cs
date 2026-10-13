@@ -3,7 +3,7 @@ namespace Electron2D;
 internal static class PhysicsSnapshotFormat
 {
     internal const int HeaderSize = 48;
-    internal const uint Magic = 0x31535045, Version = 2;
+    internal const uint Magic = 0x31535045, Version = 3;
     internal readonly record struct Metadata(int Objects, int Joints, ulong Tick, float Step, ulong SchemaA, ulong SchemaB, int OneWays);
     internal static Metadata Header(ref PhysicsSnapshotReader reader)
     {
@@ -87,6 +87,7 @@ internal static class PhysicsSnapshotFormat
             _ = reader.Bool();
             _ = reader.Bool();
             _ = reader.Pose();
+            _ = reader.Bool();
             _ = reader.U64();
             Slides(ref reader);
         }

@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-13
 
+[Contact and motion history](../components/physics-snapshots.md#portable-contact-and-motion-history)
+now validates logical slot ranges before apply for contacts, body/Area pairs and
+character slides, while retaining completed history of still-existing disabled
+slots. Version 3 carries prepared character query state separately from its solver
+pose; local/portable capture supports pending movement without another step.
+
 **Declaration:** `public sealed partial class PhysicsSnapshotMap : IDisposable`
 
 **Source:** [PhysicsSnapshotMap.cs](../../src/Servers/Physics/PhysicsSnapshotMap.cs)

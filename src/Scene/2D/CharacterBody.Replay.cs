@@ -26,7 +26,6 @@ public partial class CharacterBody
     private CharacterReplay.Configuration ReplayConfiguration() => new(_motionMode, _platformOnLeave, _safeMargin, _floorStopOnSlope, _floorConstantSpeed, _floorBlockOnWall, _slideOnCeiling, _maxSlides, _floorMaxAngle, _floorSnapLength, _wallMinSlideAngle, _upDirection, _platformFloorLayers, _platformWallLayers);
     internal void CaptureReplay(CharacterReplay state)
     {
-        PhysicsReplayCopy.Require(!_queryPoseApplied);
         state.Settings = ReplayConfiguration();
         state._velocity = _velocity;
         state._floorNormal = _floorNormal;
@@ -48,7 +47,6 @@ public partial class CharacterBody
     internal void ValidateReplay(CharacterReplay state)
     {
         PhysicsReplayCopy.Require(state.Settings == ReplayConfiguration());
-        PhysicsReplayCopy.Require(!_queryPoseApplied);
     }
     internal void RestoreReplay(CharacterReplay state)
     {

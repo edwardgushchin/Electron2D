@@ -74,6 +74,7 @@ internal sealed partial class PhysicsReplayEntry
             writer.Bool(characterState._onWall);
             writer.Bool(characterState._onCeiling);
             writer.Pose(characterState._solverPose);
+            writer.Bool(characterState._queryPoseApplied);
             writer.U64(map.NetworkID(characterState._platformRID));
             WriteSlides(ref writer, map, characterState.Slides);
         }
@@ -167,6 +168,7 @@ internal sealed partial class PhysicsReplayEntry
             characterState._onWall = reader.Bool();
             characterState._onCeiling = reader.Bool();
             characterState._solverPose = reader.Pose();
+            characterState._queryPoseApplied = reader.Bool();
             characterState._platformRID = map.LocalRID(reader.U64());
             ReadSlides(ref reader, map, characterState.Slides);
         }

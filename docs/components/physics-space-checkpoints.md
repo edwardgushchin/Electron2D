@@ -1,6 +1,12 @@
 # Local physics-world checkpoints
 
-Last updated: 2026-10-11
+Last updated: 2026-10-13
+
+A moved character's prepared query pose and separate solver pose are captured
+with the mutable query-preparation flag. Restoring a point keeps immediate query
+geometry and the next interval's pending target behavior. The
+[portable contact fixture](physics-snapshots.md#portable-contact-and-motion-history)
+exercises this local path on CPU as well as independent registered correction.
 
 The public `PhysicsCheckpoint`, created by `PhysicsServer.SpaceCreateCheckpoint`,
 uses the internal `PhysicsSpace.Checkpoint` to connect [CPU solver history](cpu-checkpoints.md)

@@ -1345,3 +1345,11 @@ both directions. Actual continued motion and one-interval pending force/torque
 response, inverse values and logical-slot queries survive correction. The same
 eight-case round trip runs serial/separate frames at strict 0/0 managed bytes;
 this does not establish general collision geometry or complete network acceptance.
+
+[Portable contact/motion history](physics-snapshots.md#portable-contact-and-motion-history)
+now imports real CPU impulse/point records, scene body and raw Area observer pairs,
+and character slides into the independent owner. Local peer identities and disabled/
+enabled logical slots survive; malformed slot indices reject before state or events
+change. Query-prepared character replay and complete serial/separate warm cycles
+execute without managed allocation. General geometry/joint/current GPU acceptance
+remains open.

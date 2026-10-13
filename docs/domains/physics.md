@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-13
 
+[Portable contact/motion history](../components/physics-snapshots.md#portable-contact-and-motion-history)
+now preserves moved character query/solver state and rejects impossible contact,
+overlap and slide indices before apply. CPU/registered real contact transfers
+retain local identities, observer history and zero warm frame allocation; current
+GPU/native and broader physics/network/performance gates remain open.
+
 [Portable body roles](../components/physics-snapshots.md#portable-body-roles) connect
 CPU/registered correction with actual scene/raw mass profiles, pending forces and
 continued movement in serial/separate modes. Full warm frame/transport/query

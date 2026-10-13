@@ -1,6 +1,12 @@
 # CharacterBody
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
+
+[Portable contact/motion verification](../components/physics-snapshots.md#portable-contact-and-motion-history)
+now captures/restores actual moved/query-prepared characters. Local replay keeps
+the query flag with the retained solver pose; portable version 3 encodes it
+explicitly. Corrected query geometry is visible immediately, and the next physics
+interval still consumes pending movement through the ordinary target path.
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 

@@ -225,6 +225,12 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   serial/separate modes. CPU density-only updates reuse unchanged fixtures, removing
   122880 measured role-write bytes while preserving the same full-frame bracket.
   GPU/native and broader role/network/performance acceptance remain open.
+- [Portable contact/motion history](physics-snapshots.md#portable-contact-and-motion-history)
+  now verifies real CPU/registered impulse and point copies, local peer identities,
+  body/raw Area history and character slides. Query-prepared character capture is
+  supported; version 3 retains its preparation flag. Invalid local/remote logical
+  slots reject before state/event mutation, with zero warm full-frame transfer
+  allocation. Wider geometry/joint/current GPU/native/network acceptance remains open.
 - Shared inherited Object/Node/Resource/CanvasItem and skeletal editor requirements
   remain with their typed-API, scheduling, script/editor or rendering prerequisites.
   Existing built-in physics tests do not establish those separate declaring APIs.

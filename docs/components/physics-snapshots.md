@@ -118,7 +118,7 @@ bin/physics-portable-roles/2026-10-13.
 
 ## Encoding, budget and cost
 
-Version 2 is explicit little-endian data with bounded counts, finite scalars, strict
+Version 3 is explicit little-endian data with bounded counts, finite scalars, strict
 booleans and exact-length validation. Unknown versions, truncated/trailing data and
 over-budget packets reject before replacing a snapshot's previous complete payload.
 `maxBytes` is immutable, from 48 bytes through 64 MiB; the default is 64 MiB. It bounds
@@ -175,8 +175,46 @@ budget publication frequency and history rather than assuming free per-frame syn
 
 ## Selected preparation and observation
 
-The map validates bindings and sends a borrowed collider span to the selected world. GPU handles/state batch scratch belongs to that owner; common map/entry state uses engine fields and identities. Preparation and batch reads borrow context, so failure permits recapture without membership loss. The exact bound GPU object set is still read explicitly for authoritative state; ordinary unobserved steps retain demand-driven publication. Field/schema/wire values are unchanged. See [ownership and verification](physics-backends.md#selected-observation-and-collision-policy).
+The map validates bindings and sends a borrowed collider span to the selected world. GPU handles/state batch scratch belongs to that owner; common map/entry state uses engine fields and identities. Preparation and batch reads borrow context, so failure permits recapture without membership loss. The exact bound GPU object set is still read explicitly for authoritative state; ordinary unobserved steps retain demand-driven publication. Selected ownership preserves existing field/schema meanings; the current wire version is described above. See [ownership and verification](physics-backends.md#selected-observation-and-collision-policy).
 
 One-way continuation validates during capture and apply. Self/unbound identities, disabled or unavailable logical slots, invalid pieces and duplicate unordered pairs reject before packet publication or world mutation. A failed capture preserves any previous complete encoding. Registered providers receive a span bounded by the current declared count, even when retained capacity is larger; the external consumer verifies errors, alternate local IDs and numerical continuation.
 
-Version 2 carries retained scene server-mode linear/angular/sleep and kinematic-target state (48 additional bytes per scene body). Its schema includes direct mode presence/value. Version 1 packets reject before replacing any stored payload; endpoints must use the same supported format version.
+Version 3 retains the scene server-mode state introduced in version 2 and adds a
+four-byte strict query-pose boolean per CharacterBody. A character's current query
+pose and separately retained solver pose already have distinct records; the flag
+preserves how the next interval consumes its pending movement without inferring
+state from rounded transforms. Versions 1 and 2 reject before replacing a stored
+payload; both endpoints must use the same supported version.
+
+## Portable contact and motion history
+
+The public-only --portable-contacts consumer creates real CPU contacts, a character
+slide and raw Area history, then transfers them to the independent registered
+owner and back. Disabled slot zero precedes enabled slot one; the character hits
+the same peer's distant slot two. Completed normal/tangent impulses agree with
+actual mass-times-velocity change within .1 kg-scene-unit/s. Immediate imported
+points and impulses retain their encoded values while peer RIDs, objects and
+instance IDs resolve to the destination. Apply stays silent for contact, Area and
+transform observers; the next real interval does not repeat enters, and separation
+still emits ordinary exits.
+
+The initial query-prepared character capture failed despite retaining its solver
+and query state. Local replay now captures that mutable state, and portable version
+3 explicitly restores it. The fixture restores a local checkpoint after movement
+and tests actual point-query geometry at the corrected character pose before the
+next simulation interval. A nonboolean query-state field rejects while preserving
+the previous complete packet.
+
+Another initial packet with local contact index 999 was accepted. Apply now checks
+local and remote logical slot ranges for direct contacts, body/Area observer pairs
+and collided character slides before restoring the world. Sixteen negative cases
+(eight fields on CPU and registered receivers) compare complete before/after
+encodings and observer counters. A completed history may refer to a disabled slot
+that still exists; native fixture counts or current enabled state cannot replace
+logical-index validation.
+
+The 128-warm/128-measured complete contact/step/transfer/slide/query cycles require
+0/0 owner/all-thread managed bytes in serial/separate modes. This bounded circle
+fixture does not establish general geometry, joint correction or current GPU/
+native/foreign/network-performance acceptance. Evidence is retained under
+bin/physics-portable-contacts/2026-10-13.

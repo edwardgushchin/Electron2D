@@ -239,6 +239,7 @@ internal static class PhysicsSnapshotTests
         Check(decoded.Tick == tick, "Malformed input preserves prior snapshot");
         var bad = (byte[])bytes.Clone(); BinaryPrimitives.WriteUInt32LittleEndian(bad.AsSpan(4), 99); Reject<InvalidDataException>(() => decoded.ReadFrom(bad));
         BinaryPrimitives.WriteUInt32LittleEndian(bad.AsSpan(4), 1); Reject<InvalidDataException>(() => decoded.ReadFrom(bad));
+        BinaryPrimitives.WriteUInt32LittleEndian(bad.AsSpan(4), 2); Reject<InvalidDataException>(() => decoded.ReadFrom(bad));
         BinaryPrimitives.WriteUInt32LittleEndian(bad.AsSpan(4), BinaryPrimitives.ReadUInt32LittleEndian(bytes.AsSpan(4)));
         BinaryPrimitives.WriteSingleLittleEndian(bad.AsSpan(24), float.NaN); Reject<InvalidDataException>(() => decoded.ReadFrom(bad));
         var foreign = (byte[])bytes.Clone(); BinaryPrimitives.WriteUInt64LittleEndian(foreign.AsSpan(48), 2); decoded.ReadFrom(foreign);

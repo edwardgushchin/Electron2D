@@ -1,6 +1,11 @@
 # PhysicsCheckpoint
 
-Last updated: 2026-10-11
+Last updated: 2026-10-13
+
+Capturing a moved character now retains its prepared query pose, query flag and
+separate solver pose. These are mutable replay state rather than fixed authoring.
+[The portable contact fixture](../components/physics-snapshots.md#portable-contact-and-motion-history)
+checks restoration and actual query geometry before the next interval.
 
 **Declaration:** `public sealed class PhysicsCheckpoint : IDisposable`
 

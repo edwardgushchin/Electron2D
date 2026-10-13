@@ -18,7 +18,7 @@ internal sealed partial class PhysicsReplayEntry
         {
             var other = map.Collider(reader.U64()); var area = reader.Bool(); var remote = reader.I32(); var local = reader.I32(); var inTree = reader.Bool();
             PhysicsSnapshotReader.Require(other != this && other.IsArea == area);
-            PhysicsSnapshotReader.Require(local >= 0 && remote >= 0);
+            ValidatePortableShapes(other, local, remote);
             var pair = new PhysicsShapePair(other.Backend.RID, other.Backend.ObjectIdentity, area, remote, local) { InTree = inTree };
             PhysicsSnapshotReader.Require(pairs.Current.Add(pair));
         }
@@ -44,7 +44,7 @@ internal sealed partial class PhysicsReplayEntry
             var point = reader.Vector(); var colliderPoint = reader.Vector(); var normal = reader.Vector();
             var velocity = reader.Vector(); var colliderVelocity = reader.Vector(); var impulse = reader.Vector(); var depth = reader.F32();
             PhysicsSnapshotReader.Require(other != this && !other.IsArea);
-            PhysicsSnapshotReader.Require(local >= 0 && remote >= 0);
+            ValidatePortableShapes(other, local, remote);
             var identity = other.Backend.ObjectIdentity;
             state.Contacts[i] = new(other.Backend.RID, identity.ID, local, remote, point, colliderPoint, normal,
                 velocity, colliderVelocity, impulse, depth, other.Backend.SceneOwnerReference, identity);
@@ -71,13 +71,18 @@ internal sealed partial class PhysicsReplayEntry
             var velocity = reader.Vector(); var travel = reader.Vector(); var remainder = reader.Vector();
             var safe = reader.F32(); var unsafeFraction = reader.F32(); var collided = reader.Bool();
             PhysicsSnapshotReader.Require(owner == Backend.RID && (!collided || other is { IsArea: false } && other != this));
-            if (collided) PhysicsSnapshotReader.Require(local >= 0 && remote >= 0);
+            if (collided) ValidatePortableShapes(other!, local, remote);
             var identity = other?.Backend.ObjectIdentity ?? default;
             slides.Add(new(owner, other?.Backend.RID ?? default, identity.ID, local, remote, point, normal, depth, velocity,
                 travel, remainder, safe, unsafeFraction, collided, identity));
         }
     }
     internal bool IsArea => _areaRuntime is not null;
+    private void ValidatePortableShapes(PhysicsReplayEntry other, int local, int remote)
+    {
+        // Completed histories may refer to disabled slots; their logical indices must still exist.
+        PhysicsSnapshotReader.Require((uint)local < (uint)_shapeCount && (uint)remote < (uint)other._shapeCount);
+    }
     internal void ApplyPortableMotion()
     {
         var surface = _surface?._constantLinearVelocity ?? _bodyRuntime?.Surface ?? default;

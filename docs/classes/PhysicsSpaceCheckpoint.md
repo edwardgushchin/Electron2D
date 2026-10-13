@@ -1,6 +1,12 @@
 # PhysicsSpace.Checkpoint
 
-Last updated: 2026-10-11
+Last updated: 2026-10-13
+
+Common CharacterBody replay retains prepared query state with its solver pose;
+capture/validation no longer reject that mutable flag. The backend point and common
+entry restore it together. Portable contact/history links additionally validate
+both endpoints' logical shape ranges before restoring any world state; see
+[the executing fixture](../components/physics-snapshots.md#portable-contact-and-motion-history).
 
 **Declaration:** `internal sealed class PhysicsSpace.Checkpoint : IDisposable`
 

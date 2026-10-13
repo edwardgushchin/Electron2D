@@ -1,6 +1,11 @@
 # PhysicsSnapshot
 
-Last updated: 2026-10-10
+Last updated: 2026-10-13
+
+The supported encoding is now version 3, including a strict four-byte character
+query-pose flag. Older versions reject without replacing existing payloads.
+[Contact/history validation](../components/physics-snapshots.md#portable-contact-and-motion-history)
+also checks destination logical shape ranges before application.
 
 **Declaration:** `public sealed class PhysicsSnapshot`
 

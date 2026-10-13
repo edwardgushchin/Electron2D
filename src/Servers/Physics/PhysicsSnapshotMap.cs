@@ -66,7 +66,8 @@ public sealed partial class PhysicsSnapshotMap : IDisposable
     }
     /// <summary>Captures compatible local physical state and its tick into reusable portable storage.</summary>
     /// <param name="snapshot">Caller-owned destination storage.</param>
-    /// <remarks>GPU capture batches the complete bound object set explicitly; ordinary unobserved steps do not require that transfer.</remarks>
+    /// <remarks>Prepared character query poses retain their separate solver pose and pending target state without advancing simulation.
+    /// GPU capture batches the complete bound object set explicitly; ordinary unobserved steps do not require that transfer.</remarks>
     /// <exception cref="ArgumentNullException">The destination is null.</exception>
     /// <exception cref="InvalidOperationException">The world/bindings are incomplete or busy, access is off-owner, the budget is insufficient, or implementation continuation is invalid.</exception>
     /// <exception cref="ObjectDisposedException">The map/world is disposed.</exception>
@@ -87,7 +88,7 @@ public sealed partial class PhysicsSnapshotMap : IDisposable
     /// <remarks>Network sender authorization and tick ordering are the caller's responsibility. Incoming values are validated before being applied. An execution/device failure after mutation starts fails the world until disposal.
     /// Private solver caches are reconstructed; cross-backend bitwise continuation is not promised.</remarks>
     /// <exception cref="ArgumentNullException">The source is null.</exception>
-    /// <exception cref="InvalidDataException">Wire data, bindings, generations or authoring are incompatible.</exception>
+    /// <exception cref="InvalidDataException">Wire data, bindings, generations, logical contact/history shape indices or authoring are incompatible.</exception>
     /// <exception cref="InvalidOperationException">The world is failed/busy, access is off-owner or execution fails.</exception>
     /// <exception cref="ObjectDisposedException">The map/world is disposed.</exception>
     public void Apply(PhysicsSnapshot snapshot)

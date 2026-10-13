@@ -22,7 +22,8 @@ public sealed class PhysicsCheckpoint : IDisposable
 
     /// <summary>Replaces this point with the source world's current simulation, observer state and tick.</summary>
     /// <remarks>Requires a completed scene physics frame and event dispatch. Does not advance time or consume
-    /// pending forces/targets. A failed copy invalidates this point; a later successful capture can replace it.</remarks>
+    /// pending forces/targets, including a character's prepared query pose and separate solver pose.
+    /// A failed copy invalidates this point; a later successful capture can replace it.</remarks>
     /// <exception cref="ObjectDisposedException">The point or source world has been disposed.</exception>
     /// <exception cref="InvalidOperationException">The world is failed, access is off-owner, or an interval/callback/scene capture is active.</exception>
     public void Capture() => _state.Capture();
