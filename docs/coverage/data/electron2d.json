@@ -73934,6 +73934,40 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CanvasItem.DrawLCDTextureRectRegion(Electron2D.Texture,Electron2D.Rect2,Electron2D.Rect2,System.Nullable\u003CElectron2D.Color\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawLCDTextureRectRegion",
+    "signature": "public System.Void DrawLCDTextureRectRegion(Electron2D.Texture texture, Electron2D.Rect2 rect, Electron2D.Rect2 sourceRect, System.Nullable\u003CElectron2D.Color\u003E modulate = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      },
+      {
+        "name": "sourceRect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CanvasItem.DrawLine(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Color,System.Single,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",
@@ -73967,6 +74001,55 @@
         "name": "antialiased",
         "type": "System.Boolean",
         "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawMSDFTextureRectRegion(Electron2D.Texture,Electron2D.Rect2,Electron2D.Rect2,System.Nullable\u003CElectron2D.Color\u003E,System.Single,System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawMSDFTextureRectRegion",
+    "signature": "public System.Void DrawMSDFTextureRectRegion(Electron2D.Texture texture, Electron2D.Rect2 rect, Electron2D.Rect2 sourceRect, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Single outline = 0f, System.Single pixelRange = 4f, System.Single scale = 1f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      },
+      {
+        "name": "sourceRect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "outline",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "pixelRange",
+        "type": "System.Single",
+        "default": "4f"
+      },
+      {
+        "name": "scale",
+        "type": "System.Single",
+        "default": "1f"
       }
     ],
     "returnType": "System.Void",
@@ -145584,6 +145667,45 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.CanvasItemAddLCDTextureRectRegion(Electron2D.RID,Electron2D.Rect2,Electron2D.RID,Electron2D.Rect2,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemAddLCDTextureRectRegion",
+    "signature": "public static System.Void CanvasItemAddLCDTextureRectRegion(Electron2D.RID item, Electron2D.Rect2 rect, Electron2D.RID texture, Electron2D.Rect2 sourceRect, Electron2D.Color modulate)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "sourceRect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.CanvasItemAddLine(Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Color,System.Single,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -145622,6 +145744,60 @@
         "name": "antialiased",
         "type": "System.Boolean",
         "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemAddMSDFTextureRectRegion(Electron2D.RID,Electron2D.Rect2,Electron2D.RID,Electron2D.Rect2,System.Nullable\u003CElectron2D.Color\u003E,System.Int32,System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemAddMSDFTextureRectRegion",
+    "signature": "public static System.Void CanvasItemAddMSDFTextureRectRegion(Electron2D.RID item, Electron2D.Rect2 rect, Electron2D.RID texture, Electron2D.Rect2 sourceRect, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Int32 outlineSize = 0, System.Single pixelRange = 1f, System.Single scale = 1f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "sourceRect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "outlineSize",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "pixelRange",
+        "type": "System.Single",
+        "default": "1f"
+      },
+      {
+        "name": "scale",
+        "type": "System.Single",
+        "default": "1f"
       }
     ],
     "returnType": "System.Void",

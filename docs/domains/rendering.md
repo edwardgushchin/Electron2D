@@ -6,6 +6,11 @@ Private native runtime binaries come from versioned Linux/macOS packages in ordi
 
 [Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
+
+## LCD and MSDF regions
+
+The retained canvas now draws caller-supplied LCD and MSDF textures through scene and static server commands. GPU executes coverage decoding, component blend, custom materials, lights, masks/groups and MSAA; compatibility rejects the unsupported profile. [The glyph contract and verification](../components/canvas-rendering.md#lcd-and-msdf-texture-regions) distinguish texture consumption from the separate FontFile generation prerequisite.
+
 ## Executable shader and material identities
 
 Caller-owned compiled canvas programs and typed materials now bind directly to retained canvas items. Borrowed Shader/Material RIDs reuse the same parameter, texture, reload and native pipeline behavior. [The program contract](../components/shader-materials.md#shader-and-material-identities) records ownership, actual rendering and remaining initializer/sampler/profile dependencies.

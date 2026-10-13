@@ -34,12 +34,30 @@ internal static class MaterialLightingProgram
         var extraSamplers = (normal >= 0 ? 1 : 0) + (specular >= 0 ? 1 : 0) + (masks ? 1 : 0);
         if (program.Textures.Length + extraSamplers > 16) throw new NotSupportedException("Material textures and scene-light channels exceed the native sixteen-sampler stage limit.");
         var key = ((normal + 1) * 4 + specular + 1) * 2 + (masks ? 1 : 0);
+        return ComposeLibrary(program, $"LightCompose{key}");
+    }
+
+    internal static byte[] ComposeGlyph(ShaderProgram program, bool lcd) => ComposeLibrary(program, lcd ? "GlyphLCD" : "GlyphDecode", glyph: true, inputs: !lcd);
+
+    private static byte[] ComposeLibrary(ShaderProgram program, string name, bool glyph = false, bool inputs = false)
+    {
         var original = new Module(program.Code);
-        var libraryBytes = BuiltInShaders.Read($"LightCompose{key}.frag.spv");
-        var relocations = MemoryMarshal.Cast<byte, uint>(BuiltInShaders.Read($"LightCompose{key}.frag.reloc"));
+        var libraryBytes = BuiltInShaders.Read(name + ".frag.spv");
+        var relocations = MemoryMarshal.Cast<byte, uint>(BuiltInShaders.Read(name + ".frag.reloc"));
         var libraryWords = MemoryMarshal.Cast<byte, uint>(libraryBytes.AsSpan()); var shift = original.Header[3];
         foreach (var wordIndex in relocations) libraryWords[(int)wordIndex] = checked(libraryWords[(int)wordIndex] + shift);
         var library = new Module(libraryBytes);
+        var canvasBinding = Array.FindIndex(program.Textures, texture => texture.IsCanvasTexture);
+        if (glyph && canvasBinding >= 0)
+        {
+            var sourceTypes = original.Instructions.Where(i => Op(i) is >= 19 and <= 33).ToDictionary(i => i[1]);
+            var imageVariable = original.Instructions.First(i => Op(i) == 59 && i[3] == 0 &&
+                Op(sourceTypes[sourceTypes[i[1]][3]]) is 25 or 27 &&
+                original.Instructions.Any(d => Op(d) == 71 && d[1] == i[2] && d[2] == 33 && d[3] == (uint)canvasBinding));
+            var imageType = sourceTypes[sourceTypes[imageVariable[1]][3]];
+            if (Op(imageType) == 27) imageType = sourceTypes[imageType[2]];
+            foreach (var type in library.Instructions.Where(i => Op(i) == 25)) type[4] = imageType[4];
+        }
         if (original.Header[1] >= 0x10400)
             foreach (var instruction in library.Instructions)
             {
@@ -74,12 +92,9 @@ internal static class MaterialLightingProgram
         var originalEntry = original.Instructions.Single(i => Op(i) == 15)[2];
         var libraryIO = library.Instructions.Where(i => Op(i) == 59 && i[3] is 1 or 3).ToDictionary(i => i[2], i => i);
         var libOutput = libraryIO.Single(p => p.Value[3] == 3).Key;
-        uint Located(uint location) => library.Instructions.Single(i => Op(i) == 71 && i[2] == 30 && i[3] == location)[1];
-        var libUV = Located(1); var libItem = Located(3);
-        var libPosition = library.Instructions.Single(i => Op(i) == 71 && i[2] == 11 && i[3] == 15)[1];
         var types = original.Instructions.Concat(library.Instructions).Where(i => Op(i) is >= 19 and <= 33).GroupBy(i => i[1]).ToDictionary(g => g.Key, g => g.First());
         uint Pointee(uint variable) => types[libraryIO[variable][1]][3];
-        var colorType = Pointee(libOutput); var uvType = Pointee(libUV); var indexType = Pointee(libItem);
+        var colorType = Pointee(libOutput);
         var globals = new List<uint[]>(); var decorations = new List<uint[]>(); var interfaces = new List<uint>();
         uint Pointer(uint storage, uint value)
         {
@@ -95,8 +110,39 @@ internal static class MaterialLightingProgram
             return new(id, type, []);
         }
         var output = FindValue(original, types, 3, 30, 0) ?? throw new NotSupportedException("The material has no composed color output.");
-        var uv = Input(uvType, 30, 1); var fragmentPosition = Input(colorType, 11, 15); var item = Input(indexType, 30, 3);
-        decorations.Add(Instruction(71, item.Variable, 14));
+        var arguments = new Dictionary<uint, Value> { [libOutput] = output };
+        foreach (var pair in libraryIO)
+        {
+            if (pair.Value[3] != 1) continue;
+            var location = library.Instructions.Single(i => Op(i) == 71 && i[1] == pair.Key && i[2] is 11 or 30);
+            var input = Input(Pointee(pair.Key), location[2], location[3]); arguments.Add(pair.Key, input);
+            foreach (var decoration in library.Instructions.Where(i => Op(i) == 71 && i[1] == pair.Key && i[2] is 13 or 14 or 16 or 17))
+            {
+                uint[] mapped = [decoration[0], input.Variable, .. decoration.AsSpan(2).ToArray()];
+                if (!original.Instructions.Any(i => i.SequenceEqual(mapped)) && !decorations.Any(i => i.SequenceEqual(mapped))) decorations.Add(mapped);
+            }
+        }
+        var indexType = types.Values.First(i => Op(i) == 21 && i[2] == 32 && i[3] == 0)[1];
+        var reused = new HashSet<uint>(); var canvasSlot = Array.FindIndex(program.Textures, texture => texture.IsCanvasTexture); var reuseCanvas = glyph && canvasSlot >= 0;
+        uint Binding(uint id) => original.Instructions.Single(i => Op(i) == 71 && i[1] == id && i[2] == 33)[3];
+        uint PrimaryImage()
+        {
+            return original.Instructions.First(i => Op(i) == 59 && i[3] == 0 && Op(types[types[i[1]][3]]) is 25 or 27 && Binding(i[2]) == (uint)canvasSlot)[2];
+        }
+        var primary = reuseCanvas ? PrimaryImage() : 0;
+        if (reuseCanvas)
+        {
+            var variable = library.Instructions.First(i => Op(i) == 59 && i[3] == 0 && Op(types[types[i[1]][3]]) == 27);
+            aliases[variable[2]] = primary; reused.Add(primary);
+            position = 5;
+            foreach (var instruction in library.Instructions)
+            {
+                for (var i = 1; i < instruction.Length; i++) if (relocations.BinarySearch((uint)(position + i)) >= 0) instruction[i] = Alias(aliases, instruction[i]);
+                position += instruction.Length;
+            }
+        }
+        var extra = glyph && !reuseCanvas ? 1 : 0;
+        if (glyph && program.Textures.Length + extra > 16) throw new NotSupportedException("Glyph sampling exceeds the sixteen-sampler stage limit.");
         var separateImages = original.Instructions.Any(i => Op(i) == 59 && i[3] == 0 && Op(types[types[i[1]][3]]) == 25);
         var splitSamplers = new Dictionary<uint, (uint Image, uint Sampler, uint SamplerType)>();
         if (separateImages)
@@ -105,16 +151,20 @@ internal static class MaterialLightingProgram
             foreach (var variable in library.Instructions.TakeWhile(i => Op(i) != 54).Where(i => Op(i) == 59 && i[3] == 0))
             {
                 var sampled = types[types[variable[1]][3]]; if (Op(sampled) != 27) continue;
-                var imageType = sampled[2]; var sampler = next++; variable[1] = Pointer(0, imageType);
-                globals.Add(Instruction(59, Pointer(0, samplerType), sampler, 0));
+                var imageType = sampled[2]; var sampler = reused.Contains(variable[2]) ? original.Instructions.First(i => Op(i) == 59 && i[3] == 0 && Op(types[types[i[1]][3]]) == 26 && Binding(i[2]) == (uint)canvasSlot)[2] : next++; variable[1] = Pointer(0, imageType);
+                if (!reused.Contains(variable[2])) globals.Add(Instruction(59, Pointer(0, samplerType), sampler, 0));
                 var binding = library.Instructions.Single(i => Op(i) == 71 && i[1] == variable[2] && i[2] == 33)[3];
-                decorations.Add(Instruction(71, sampler, 34, 2)); decorations.Add(Instruction(71, sampler, 33, binding + (uint)program.Textures.Length));
+                if (!reused.Contains(variable[2]))
+                {
+                    decorations.Add(Instruction(71, sampler, 34, 2));
+                    decorations.Add(Instruction(71, sampler, 33, binding + (uint)program.Textures.Length));
+                }
                 splitSamplers.Add(variable[2], (imageType, sampler, samplerType));
                 if (original.Header[1] >= 0x10400) interfaces.Add(sampler);
             }
         }
-        var parameters = new Dictionary<uint, uint> { [libOutput] = next++, [libUV] = next++, [libPosition] = next++, [libItem] = next++ };
-        var helperType = next++; globals.Add(Instruction(33, helperType, colorType, colorType, uvType, colorType, indexType));
+        var parameters = arguments.Keys.ToDictionary(id => id, _ => next++);
+        var helperType = next++; globals.Add(Instruction(33, [helperType, colorType, .. arguments.Values.Select(value => value.Type)]));
         var constants = new Dictionary<uint, uint>();
         uint Constant(uint value)
         {
@@ -131,19 +181,56 @@ internal static class MaterialLightingProgram
             var result = next++; body.Add(Instruction(61, value.Type, result, pointer)); return result;
         }
         var originalFunctions = new List<uint[]>(); var inEntry = false;
+        var sourceColor = inputs ? FindValue(original, types, 1, 30, 0) : null;
+        var colorPointers = new Dictionary<uint, uint[]>(); var colorStructures = new HashSet<uint>();
+        var dynamicComponents = new Dictionary<uint, uint>();
+        if (sourceColor is { Path.Length: 0 }) colorPointers.Add(sourceColor.Variable, []);
+        var literalValues = original.Instructions.Where(i => Op(i) == 43).ToDictionary(i => i[2], i => i[3]);
         foreach (var instruction in original.Instructions.SkipWhile(i => Op(i) != 54))
         {
             if (Op(instruction) == 54) inEntry = instruction[2] == originalEntry;
-            if (inEntry && Op(instruction) == 253)
+            if (!inputs && inEntry && Op(instruction) == 253)
             {
-                var color = Load(originalFunctions, output, out var outputPointer); var sourceUV = Load(originalFunctions, uv, out _);
-                var sourcePosition = Load(originalFunctions, fragmentPosition, out _); var sourceItem = Load(originalFunctions, item, out _);
-                var result = next++; originalFunctions.Add(Instruction(57, colorType, result, libEntry, color, sourceUV, sourcePosition, sourceItem));
+                var color = Load(originalFunctions, output, out var outputPointer); var call = arguments.Skip(1).Select(pair => Load(originalFunctions, pair.Value, out _)).ToArray();
+                var result = next++; originalFunctions.Add(Instruction(57, [colorType, result, libEntry, color, .. call]));
                 originalFunctions.Add(Instruction(62, outputPointer, result));
+            }
+            if (inputs && sourceColor is not null)
+            {
+                if (Op(instruction) == 65 && instruction[3] == sourceColor.Variable)
+                {
+                    var path = instruction.AsSpan(4).ToArray().Select(id => literalValues.GetValueOrDefault(id, uint.MaxValue)).ToArray();
+                    if (path.AsSpan().StartsWith(sourceColor.Path))
+                    {
+                        var componentPath = path.AsSpan(sourceColor.Path.Length).ToArray(); colorPointers.Add(instruction[2], componentPath);
+                        if (componentPath is [uint.MaxValue]) dynamicComponents.Add(instruction[2], instruction[^1]);
+                    }
+                }
+                if (Op(instruction) == 61 && instruction[3] == sourceColor.Variable && sourceColor.Path.Length != 0) colorStructures.Add(instruction[2]);
+                uint[]? components = null;
+                if (Op(instruction) == 61) colorPointers.TryGetValue(instruction[3], out components);
+                else if (Op(instruction) == 81 && colorStructures.Contains(instruction[3]) && instruction.AsSpan(4).StartsWith(sourceColor.Path)) components = instruction.AsSpan(4 + sourceColor.Path.Length).ToArray();
+                var colorLoad = components is not null;
+                if (colorLoad)
+                {
+                    var result = instruction[2]; uint raw;
+                    if (components!.Length == 0) { instruction[2] = next++; originalFunctions.Add(instruction); raw = instruction[2]; }
+                    else raw = Load(originalFunctions, sourceColor, out _);
+                    var call = arguments.Skip(1).Select(pair => Load(originalFunctions, pair.Value, out _)).ToArray();
+                    var decoded = components.Length == 0 ? result : next++;
+                    originalFunctions.Add(Instruction(57, [colorType, decoded, libEntry, raw, .. call]));
+                    if (components.Length != 0)
+                        originalFunctions.Add(Op(instruction) == 61 && dynamicComponents.TryGetValue(instruction[3], out var dynamicIndex)
+                            ? Instruction(77, instruction[1], result, decoded, dynamicIndex)
+                            : Instruction(81, [instruction[1], result, decoded, .. components]));
+                    continue;
+                }
             }
             originalFunctions.Add(instruction);
         }
         var libraryFunctions = new List<uint[]>(); var inHelper = false; uint returnValue = 0;
+        var inputComponents = new Dictionary<uint, (uint Argument, uint[] Indices)>();
+        var libraryLiterals = library.Instructions.Where(i => Op(i) == 43).ToDictionary(i => i[2], i => i[3]);
         foreach (var instruction in library.Instructions.SkipWhile(i => Op(i) != 54))
         {
             var opcode = Op(instruction);
@@ -153,7 +240,7 @@ internal static class MaterialLightingProgram
                 if (inHelper)
                 {
                     instruction[1] = colorType; instruction[4] = helperType; libraryFunctions.Add(instruction);
-                    foreach (var pair in parameters) libraryFunctions.Add(Instruction(55, pair.Key == libUV ? uvType : pair.Key == libItem ? indexType : colorType, pair.Value));
+                    foreach (var pair in parameters) libraryFunctions.Add(Instruction(55, arguments[pair.Key].Type, pair.Value));
                     continue;
                 }
             }
@@ -163,6 +250,12 @@ internal static class MaterialLightingProgram
                 libraryFunctions.Add(Instruction(61, split.Image, image, instruction[3])); libraryFunctions.Add(Instruction(61, split.SamplerType, sampler, split.Sampler));
                 libraryFunctions.Add(Instruction(86, instruction[1], instruction[2], image, sampler)); continue;
             }
+            if (inHelper && opcode == 65 && parameters.TryGetValue(instruction[3], out var componentArgument))
+            {
+                inputComponents.Add(instruction[2], (componentArgument, instruction.AsSpan(4).ToArray().Select(id => libraryLiterals[id]).ToArray())); continue;
+            }
+            if (inHelper && opcode == 61 && inputComponents.TryGetValue(instruction[3], out var component))
+            { libraryFunctions.Add(Instruction(81, [instruction[1], instruction[2], component.Argument, .. component.Indices])); continue; }
             if (inHelper && opcode == 61 && parameters.TryGetValue(instruction[3], out var argument)) { libraryFunctions.Add(Instruction(83, instruction[1], instruction[2], argument)); continue; }
             if (inHelper && opcode == 62 && instruction[1] == libOutput) { returnValue = instruction[2]; continue; }
             if (inHelper && opcode == 253)
@@ -172,12 +265,19 @@ internal static class MaterialLightingProgram
             }
             libraryFunctions.Add(instruction);
         }
+        if (extra != 0)
+        {
+            var storage = original.Instructions.Where(i => Op(i) == 59 && i[3] is 2 or 12 &&
+                original.Instructions.Any(d => Op(d) == 71 && d[1] == i[2] && d[2] == 34 && d[3] == 2)).Select(i => i[2]).ToHashSet();
+            foreach (var instruction in original.Instructions)
+                if (Op(instruction) == 71 && instruction[2] == 33 && storage.Contains(instruction[1])) instruction[3] += (uint)extra;
+        }
         var prefix = original.Instructions.TakeWhile(i => Op(i) != 54).ToList();
         foreach (var instruction in library.Instructions.TakeWhile(i => Op(i) != 54))
         {
             var opcode = Op(instruction);
             if (opcode is 14 or 15 or 16 || UniqueType(opcode) && duplicateTypes.Contains(instruction)) continue;
-            if (opcode == 59 && libraryIO.ContainsKey(instruction[2]) || opcode is 5 or 71 && libraryIO.ContainsKey(instruction[1])) continue;
+            if (opcode == 59 && (libraryIO.ContainsKey(instruction[2]) || reused.Contains(instruction[2])) || opcode is 5 or 71 && (libraryIO.ContainsKey(instruction[1]) || reused.Contains(instruction[1]))) continue;
             if (opcode == 17 && prefix.Any(i => i.SequenceEqual(instruction))) continue;
             if (opcode == 71 && instruction[2] == 33) instruction[3] += (uint)program.Textures.Length;
             prefix.Add(instruction);
@@ -185,7 +285,9 @@ internal static class MaterialLightingProgram
         if (original.Header[1] >= 0x10400)
             interfaces.AddRange(library.Instructions.TakeWhile(i => Op(i) != 54).Where(i => Op(i) == 59 && !libraryIO.ContainsKey(i[2])).Select(i => i[2]));
         prefix.AddRange(decorations); prefix.AddRange(globals);
-        var entry = prefix.Single(i => Op(i) == 15); prefix[prefix.IndexOf(entry)] = [((uint)(entry.Length + interfaces.Count) << 16) | 15, .. entry.AsSpan(1).ToArray(), .. interfaces];
+        var entry = prefix.Single(i => Op(i) == 15); var entryEnd = StringEnd(entry, 3);
+        var entryInterfaces = entry.AsSpan(entryEnd).ToArray().Concat(interfaces).Distinct().ToArray();
+        prefix[prefix.IndexOf(entry)] = [((uint)(entryEnd + entryInterfaces.Length) << 16) | 15, .. entry.AsSpan(1, entryEnd - 1).ToArray(), .. entryInterfaces];
         var all = prefix.OrderBy(i => Category(Op(i))).ThenBy(i => Category(Op(i)) == 10 && Op(i) == 59 ? 1 : 0).Concat(originalFunctions).Concat(libraryFunctions).ToArray();
         var header = original.Header; header[3] = next;
         var resultWords = new uint[5 + all.Sum(i => i.Length)]; header.CopyTo(resultWords, 0); var at = 5;

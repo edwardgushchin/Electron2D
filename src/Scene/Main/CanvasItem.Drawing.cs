@@ -177,7 +177,7 @@ public abstract partial class CanvasItem
         ValidateCanvasColor(color);
     }
 
-    internal void RecordTexture(Texture texture, Rect2 rect, Rect2? source, Color color, bool tile, bool transpose, bool clipUV)
+    internal void RecordTexture(Texture texture, Rect2 rect, Rect2? source, Color color, bool tile, bool transpose, bool clipUV, CanvasGlyph glyph = default)
     {
         ValidateTextureDraw(texture, rect, color);
         if (source is { } region && !region.IsFinite()) throw new ArgumentException("The texture region must be finite.", nameof(source));
@@ -188,7 +188,7 @@ public abstract partial class CanvasItem
         src = new Rect2(src.Position / size, src.Size / size);
         if (!src.IsFinite()) throw new ArgumentException("Texture coordinates overflowed.", nameof(source));
         (_canvasCommands ??= []).Add(new CanvasCommand(false, rect.Position, rect.Size, color, 0, false,
-            Transform.Identity, texture, src, transpose, clipUV, tile));
+            Transform.Identity, texture, src, transpose, clipUV, tile, Glyph: glyph));
     }
 
     internal void RecordNinePatch(Texture texture, Rect2 destination, Rect2 source, CanvasNinePatch patch, Color? modulate = null)
@@ -373,10 +373,18 @@ public abstract partial class CanvasItem
                     replay = replay with { Source = new(replay.Source.Position + new Vector2(frame % animation.Horizontal, frame / animation.Horizontal) * frameSize, frameSize) };
                 }
             }
+            var glyph = replay.Glyph;
+            var glyphModulation = glyph.Mode == CanvasGlyphMode.LCD ? replay.Color * color : default;
             var first = vertices.Count;
             CanvasGeometry.Append(vertices, replay, transform * drawingTransform, color, viewport?.SnapVerticesToPixel == true, this);
             if (replay.ParticleCustom is { } particleCustom)
                 for (var vertex = first; vertex < vertices.Count; vertex++) vertices[vertex] = vertices[vertex] with { InstanceCustom = particleCustom };
+            if (glyph.Mode != CanvasGlyphMode.None)
+                for (var index = first; index < vertices.Count; index++)
+                {
+                    var value = vertices[index];
+                    vertices[index] = value with { Glyph = glyph.Parameters, Color = glyph.Mode == CanvasGlyphMode.LCD ? new Color(1, 1, 1, value.Color.A) : value.Color };
+                }
             var count = vertices.Count - first;
             if (count == 0) continue;
             if (!capturedMaterial)
@@ -388,11 +396,12 @@ public abstract partial class CanvasItem
             }
             var repeat = command.Tile ? TextureRepeat.Enabled : inheritedRepeat;
             if (batches.Count != 0 && batches[^1] is var last && last.Operation == CanvasOperation.Draw && last.InstanceCount == 0 && last.Material == material && last.InstanceOwner == (material?.Program.HasInstanceUniforms == true ? this : null) && last.Texture == replay.Texture &&
-                last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == commandClip)
+                last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == commandClip && last.Glyph == glyph && last.GlyphModulation == glyphModulation)
 
                 batches[^1] = last with { Count = last.Count + count };
-            else batches.Add(new(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, commandClip, InstanceOwner: material?.Program.HasInstanceUniforms == true ? this : null));
+            else batches.Add(new(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, commandClip, InstanceOwner: material?.Program.HasInstanceUniforms == true ? this : null, Glyph: glyph, GlyphModulation: glyphModulation));
         }
+
     }
 
     internal void DrawParticleQuad(Texture? texture, Rect2 destination, Color color, Color custom)

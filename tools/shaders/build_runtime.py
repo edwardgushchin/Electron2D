@@ -76,6 +76,20 @@ def generate(output, source_root=ROOT):
                     if not target.exists() or target.read_bytes() != data:
                         os.replace(compiled, target)
                     current[name] = {'source': fingerprint, 'binary': hashlib.sha256(data).hexdigest()}
+            if domain == 'Rendering':
+                for stem in ('GlyphDecode.frag', 'GlyphLCD.frag'):
+                    name = f'Rendering/{stem}.reloc'
+                    binary = output / f'Rendering/{stem}.spv'
+                    if not binary.exists(): continue
+                    fingerprint = hashlib.sha256(recipe + binary.read_bytes()).hexdigest()
+                    target = output / name
+                    old = previous.get(name, {})
+                    if old.get('source') == fingerprint and target.exists() and old.get('binary') == hashlib.sha256(target.read_bytes()).hexdigest():
+                        current[name] = old
+                        continue
+                    relocation = material_lighting.relocations(binary, toolchain / 'bin' / ('spirv-dis' + build_toolchain.suffix))
+                    if not target.exists() or target.read_bytes() != relocation: target.write_bytes(relocation)
+                    current[name] = {'source': fingerprint, 'binary': hashlib.sha256(relocation).hexdigest()}
             if domain == 'Rendering' and (directory / 'Lighting.frag.hlsl').exists():
                 lighting = (directory / 'Lighting.frag.hlsl').read_text()
                 for normal, specular, masks in itertools.product(range(-1, 3), range(-1, 3), (False, True)):

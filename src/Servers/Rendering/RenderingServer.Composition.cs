@@ -63,11 +63,20 @@ public sealed partial class RenderingServer
                 AppendGroupOwner(item, pixels, settings, bounds);
                 var builtIn = active.CanvasMaterial is null;
                 for (var i = ownBatch; i < _batches.Count; i++)
-                    _batches[i] = _batches[i] with { Operation = CanvasOperation.GroupEnd, GroupShader = builtIn };
+                {
+                    var batch = _batches[i];
+                    if (builtIn && batch.Glyph.Mode == CanvasGlyphMode.LCD)
+                        for (var vertex = batch.First; vertex < batch.First + batch.Count; vertex++)
+                        {
+                            var value = _vertices[vertex]; var tint = batch.GlyphModulation;
+                            _vertices[vertex] = value with { Color = new(tint.R, tint.G, tint.B, value.Color.A) };
+                        }
+                    _batches[i] = batch with { Operation = CanvasOperation.GroupEnd, GroupShader = builtIn, Glyph = builtIn ? default : batch.Glyph };
+                }
                 if (builtIn) for (var i = ownFirst; i < _vertices.Count; i++)
                     {
                         var v = _vertices[i]; var c = v.Color;
-                        _vertices[i] = v with { UV = v.Position / new Vector2(pixels.X, pixels.Y), Color = new(c.R * c.A, c.G * c.A, c.B * c.A, c.A) };
+                        _vertices[i] = v with { UV = v.Position / new Vector2(pixels.X, pixels.Y), Color = new(c.R * c.A, c.G * c.A, c.B * c.A, c.A), Glyph = default };
                     }
                 var clearBounds = active.HasCanvasCommands || settings.FitEmpty ? VertexBounds(ownFirst, _vertices.Count, bounds)!.Value : fit;
                 var clear = PixelRegion(GrowFinite(clearBounds, settings.ClearMargin), pixels, clip);

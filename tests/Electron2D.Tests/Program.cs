@@ -9,6 +9,7 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_GLYPH") is { } glyphProfile) { if (glyphProfile == "managed") CanvasGlyphTests.RunManaged(); else if (glyphProfile == "modules") CanvasGlyphTests.RunModules(); else CanvasGlyphTests.RunNative(glyphProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES_CHILD") is { } particlesPath) { CPUParticlesTests.RunChild(particlesPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES_HOST") == "1") { CPUParticlesTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES") == "1") { CPUParticlesTests.Run(); return; }

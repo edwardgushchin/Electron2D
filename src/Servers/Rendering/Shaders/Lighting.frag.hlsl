@@ -55,8 +55,8 @@ float3 reflection(float3 normal, float3 lightVector, float3 lightColor, float3 b
     float amount = blinn / max(4 * max(0, normal.z) * ndotl, 0.75);
     return diffuse + specularColor * lightColor * amount;
 }
-float4 main(float4 position : SV_Position, float4 color : TEXCOORD0, float2 uv : TEXCOORD1) : SV_Target0 {
-    float4 base = color * float4(TEXTURE.Sample(colorSampler, uv));
+float4 main(float4 position : SV_Position, float4 color : TEXCOORD0, float2 uv : TEXCOORD1, [[vk::location(11)]] nointerpolation float4 glyph : TEXCOORD11) : SV_Target0 {
+    float4 base = glyph.x == 0 ? color * float4(TEXTURE.Sample(colorSampler, uv)) : color;
     float3 normal = float3(0, 0, 1);
     if (counts.z != 0) {
         float2 mapped = float4(NORMAL_TEXTURE.Sample(normalSampler, uv)).rg * float2(2, -2) - float2(1, -1);

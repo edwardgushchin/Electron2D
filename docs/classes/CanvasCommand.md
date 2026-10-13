@@ -1,6 +1,6 @@
 # CanvasCommand
 
-Last updated: 2026-10-07
+Last updated: 2026-10-14
 
 - Declaration: `internal readonly record struct CanvasCommand`
 - Source: [CanvasGeometry.cs](../../src/Servers/Rendering/CanvasGeometry.cs)
@@ -32,3 +32,5 @@ For lines A/B are endpoints; for textures they are destination position/size. Re
 ## Particle records
 
 The current constructor additionally has NinePatch, ConstantSource, Mesh, MultiMesh and nullable `Color ParticleCustom` channels. A particle record retains `(unused, cycle-normalized age, animation phase, lifetime ratio)` as values. Replay selects sprite-sheet Source UVs from the live CanvasItemMaterial and supplies the common CanvasVertex.InstanceCustom vector. No resource or native ownership is added; ordinary commands retain null particle metadata.
+
+Glyph stores the recording-time LCD/MSDF texture policy, copied into replay vertices and batches. Ordinary commands carry None. Explicit source bounds and backing texture RID are retained independently of texture drawing hooks; renderer commands remain transient scene state.

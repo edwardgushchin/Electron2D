@@ -9,6 +9,11 @@ Last updated: 2026-10-14
 
 Public static declarations are in [`RenderingServer.API.cs`](../../src/Servers/Rendering/RenderingServer.API.cs).
 
+
+## LCD and MSDF regions
+
+CanvasItemAddLCDTextureRectRegion(RID, Rect2, RID, Rect2, Color) and CanvasItemAddMSDFTextureRectRegion(RID, Rect2, RID, Rect2, Color? = null, int outlineSize = 0, float pixelRange = 1, float scale = 1) append executable retained glyph regions to live borrowed or caller-owned items. They share scene rendering and owner/lifetime guards; [the complete glyph contract](../components/canvas-rendering.md#lcd-and-msdf-texture-regions) records sampling, blending, material order and backend limits.
+
 ## Retained canvas presentation
 
 The static retained-item interpolation family now includes CanvasItemSetInterpolated, CanvasItemResetPhysicsInterpolation and CanvasItemTransformPhysicsInterpolation. Native item/child histories are tied to scene physics boundaries; reset is item-local and rebase updates both endpoints and canonical retained pose. Typed owner/finite/lifetime guards and source republishing preserve authored scene properties. See [contract and native verification](../components/canvas-rendering.md#retained-canvas-item-interpolation).

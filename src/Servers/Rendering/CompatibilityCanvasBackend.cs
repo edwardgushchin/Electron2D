@@ -122,7 +122,8 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
     internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)
     {
         foreach (var batch in batches)
-            if (batch.Lighting is not null)
+            if (batch.Glyph.Mode != CanvasGlyphMode.None) throw new NotSupportedException("Glyph distance and component coverage require GPU rendering.");
+            else if (batch.Lighting is not null)
                 throw new NotSupportedException("Canvas lighting requires the GPU renderer.");
             else if (batch.ShaderCode is not null)
                 throw new NotSupportedException("The compatibility renderer does not execute shader materials.");

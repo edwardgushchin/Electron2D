@@ -65,6 +65,17 @@ internal static unsafe class ShaderCompiler
         }
     });
 
+    internal static uint SamplerCount(byte[] code) => Run(() =>
+    {
+        fixed (byte* pointer = code)
+        {
+            var metadata = ShaderCross.ReflectGraphicsSPIRV((nint)pointer, (nuint)code.Length, 0);
+            if (metadata == 0) throw new ArgumentException("Shader reflection failed: " + SDL.GetError(), nameof(code));
+            try { return Marshal.PtrToStructure<ShaderCross.GraphicsShaderMetadata>(metadata).ResourceInfo.NumSamplers; }
+            finally { SDL.Free(metadata); }
+        }
+    });
+
     internal readonly record struct DeviceIO(uint Location, int Type, uint Width);
     internal static (DeviceIO[] Inputs, DeviceIO[] Outputs) ValidateDeviceGraphics(byte[] vertex, byte[] fragment) => Run(() =>
     {

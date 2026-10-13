@@ -115,7 +115,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
         if (count == 0) return;
         var material = surfaceMaterial is null ? inheritedMaterial : surfaceMaterial.GetCanvasState(); var blend = surfaceMaterial is null ? inheritedBlend : surfaceMaterial.GetCanvasBlendMode();
         var instanceOwner = material?.Program.HasInstanceUniforms == true ? owner : null;
-        if (instanceCount == 0 && batches.Count != 0 && batches[^1] is var last && last.InstanceCount == 0 && last.Operation == CanvasOperation.Draw && last.Material == material && last.InstanceOwner == instanceOwner && last.Texture == texture && last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == clip)
+        if (instanceCount == 0 && batches.Count != 0 && batches[^1] is var last && last.InstanceCount == 0 && last.Operation == CanvasOperation.Draw && last.Glyph.Mode == CanvasGlyphMode.None && last.Material == material && last.InstanceOwner == instanceOwner && last.Texture == texture && last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == clip)
             batches[^1] = last with { Count = last.Count + count };
         else batches.Add(new(first, count, material, texture, filter, repeat, anisotropy, blend, clip, FirstInstance: firstInstance, InstanceCount: instanceCount, InstanceOwner: instanceOwner));
     }

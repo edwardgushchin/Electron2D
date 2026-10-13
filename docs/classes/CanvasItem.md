@@ -10,6 +10,11 @@ Last updated: 2026-10-14
 - **Namespace:** `Electron2D`
 - **Declaration:** `public abstract partial class CanvasItem : Node`
 
+
+## LCD and MSDF regions
+
+DrawLCDTextureRectRegion(Texture, Rect2, Rect2, Color? = null) and DrawMSDFTextureRectRegion(Texture, Rect2, Rect2, Color? = null, float outline = 0, float pixelRange = 4, float scale = 1) record encoded texture regions during drawing. The direct backing RID, signed geometry, median/outline or component coverage, sampler and material contract is documented in [LCD/MSDF regions](../components/canvas-rendering.md#lcd-and-msdf-texture-regions). Glyph generation is separate.
+
 ## Retained canvas presentation
 
 Scene canvas interpolation remains authoritative until a corresponding native item override is supplied. Adding unrelated server state preserves ordinary history; changed node policies and source resets/replay publish to retained histories. PackedScene captures authored values, never renderer-only endpoints or policies. See [contract and native verification](../components/canvas-rendering.md#retained-canvas-item-interpolation).

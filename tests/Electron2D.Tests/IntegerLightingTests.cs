@@ -18,7 +18,9 @@ internal static class IntegerLightingTests
         if (programmable)
             for (var scalar = 0; scalar < 3; scalar++)
             {
-                var shader = new Shader(); shader.SetSPIRV(scalar switch { 1 => BuiltInShaders.SignedFragment, 2 => BuiltInShaders.UnsignedFragment, _ => BuiltInShaders.Fragment }); resources.Add(shader);
+                var shader = scalar == 0 ? Load("CanvasGLSL") : new Shader();
+                if (scalar != 0) shader.SetSPIRV(scalar == 1 ? BuiltInShaders.SignedFragment : BuiltInShaders.UnsignedFragment);
+                resources.Add(shader);
                 materials[scalar] = new ShaderMaterial { Shader = shader }; resources.Add(materials[scalar]!);
             }
         var frames = 0; long before = 0, allocated = 0; RenderingDevice device = null!; RID maskID = default, signedMaskID = default, clipID = default, unsignedClipID = default;

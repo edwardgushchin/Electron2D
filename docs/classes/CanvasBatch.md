@@ -1,6 +1,6 @@
 # CanvasBatch
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 - Declaration: `internal readonly record struct CanvasBatch`
 - Source: [CanvasBackend.cs](../../src/Servers/Rendering/CanvasBackend.cs)
@@ -41,3 +41,5 @@ The complete internal constructor also carries BlendMode Blend, nullable Clip, C
 MaskShader selects the built-in final alpha mask while preserving command texture/UV/color. MaskBegin/MaskEnd/MaskFinish carry capture/finalization boundaries and fitted screen regions. Materials are borrowed; the built-in AndDraw final pass deliberately clears its material state.
 
 InstanceOwner carries the CanvasItem supplying per-item uniform buffers. Adjacent batches merge only when this owner also matches. Group/mask operations preserve it through batch rewrites. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).
+
+Glyph carries LCD/MSDF mode and converted range/outline policy; GlyphModulation carries the LCD blend constant. Both participate in ordinary batch equality. CanvasMesh rejects merging into glyph ranges. Built-in masks retain scalar glyph coverage; built-in transparent group rewrites clear glyph state after restoring LCD tint. See [glyph regions](../components/canvas-rendering.md#lcd-and-msdf-texture-regions).

@@ -1,6 +1,26 @@
 {
   "mappings": [
     {
+      "godot": "RenderingServer::method:canvas_item_add_msdf_texture_rect_region(RID:,Rect2:,RID:,Rect2:,Color:,int:,float:,float:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddMSDFTextureRectRegion(Electron2D.RID,Electron2D.Rect2,Electron2D.RID,Electron2D.Rect2,System.Nullable<Electron2D.Color>,System.Int32,System.Single,System.Single)",
+      "reason": "ADRs 0028/0046/0095: executable retained LCD/MSDF regions consume caller-supplied encoded textures through direct backing RIDs, finite/signed geometry and owner/lifetime/recording guards. GPU decodes median/derivative/range/outline or exact-alpha RGB coverage, composes incoming COLOR with full material and automatic lights, then applies LCD final-alpha component blend and command/ancestor constants. Four uniform slots, combined/paired/no-TEXTURE sampler layouts, scalar masks, transparent groups, shader reload, transparency and MSAA execute. Linux pixels and 64 active/64 idle zero-managed-allocation intervals plus 732 glyph/257 lighting module validation are checked; compatibility explicitly rejects the unsupported profile. FontFile image generation, other-platform/native-allocation/owner acceptance remain separate."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_lcd_texture_rect_region(RID:,Rect2:,RID:,Rect2:,Color:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddLCDTextureRectRegion(Electron2D.RID,Electron2D.Rect2,Electron2D.RID,Electron2D.Rect2,Electron2D.Color)",
+      "reason": "ADRs 0028/0046/0095: executable retained LCD/MSDF regions consume caller-supplied encoded textures through direct backing RIDs, finite/signed geometry and owner/lifetime/recording guards. GPU decodes median/derivative/range/outline or exact-alpha RGB coverage, composes incoming COLOR with full material and automatic lights, then applies LCD final-alpha component blend and command/ancestor constants. Four uniform slots, combined/paired/no-TEXTURE sampler layouts, scalar masks, transparent groups, shader reload, transparency and MSAA execute. Linux pixels and 64 active/64 idle zero-managed-allocation intervals plus 732 glyph/257 lighting module validation are checked; compatibility explicitly rejects the unsupported profile. FontFile image generation, other-platform/native-allocation/owner acceptance remain separate."
+    },
+    {
+      "godot": "CanvasItem::method:draw_msdf_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:,float:,float:,float:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawMSDFTextureRectRegion(Electron2D.Texture,Electron2D.Rect2,Electron2D.Rect2,System.Nullable<Electron2D.Color>,System.Single,System.Single,System.Single)",
+      "reason": "ADRs 0028/0046/0095: executable retained LCD/MSDF regions consume caller-supplied encoded textures through direct backing RIDs, finite/signed geometry and owner/lifetime/recording guards. GPU decodes median/derivative/range/outline or exact-alpha RGB coverage, composes incoming COLOR with full material and automatic lights, then applies LCD final-alpha component blend and command/ancestor constants. Four uniform slots, combined/paired/no-TEXTURE sampler layouts, scalar masks, transparent groups, shader reload, transparency and MSAA execute. Linux pixels and 64 active/64 idle zero-managed-allocation intervals plus 732 glyph/257 lighting module validation are checked; compatibility explicitly rejects the unsupported profile. FontFile image generation, other-platform/native-allocation/owner acceptance remain separate."
+    },
+    {
+      "godot": "CanvasItem::method:draw_lcd_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawLCDTextureRectRegion(Electron2D.Texture,Electron2D.Rect2,Electron2D.Rect2,System.Nullable<Electron2D.Color>)",
+      "reason": "ADRs 0028/0046/0095: executable retained LCD/MSDF regions consume caller-supplied encoded textures through direct backing RIDs, finite/signed geometry and owner/lifetime/recording guards. GPU decodes median/derivative/range/outline or exact-alpha RGB coverage, composes incoming COLOR with full material and automatic lights, then applies LCD final-alpha component blend and command/ancestor constants. Four uniform slots, combined/paired/no-TEXTURE sampler layouts, scalar masks, transparent groups, shader reload, transparency and MSAA execute. Linux pixels and 64 active/64 idle zero-managed-allocation intervals plus 732 glyph/257 lighting module validation are checked; compatibility explicitly rejects the unsupported profile. FontFile image generation, other-platform/native-allocation/owner acceptance remain separate."
+    },
+    {
       "godot": "RenderingServer::enum:CanvasGroupMode",
       "electron2d": "T:Electron2D.RenderingServer.CanvasGroupMode",
       "reason": "Retained four-value compositor policy; differs from the scene ClipChildren valid-value set at Transparent=3."
@@ -2675,12 +2695,12 @@
     {
       "godot": "RenderingServer::method:texture_proxy_create(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "FlowContainer::theme_item:h_separation",
@@ -4660,6 +4680,23 @@
   ],
   "statusGroups": [
     {
+      "state": "Implemented",
+      "godot": [
+        "CanvasItem::method:draw_lcd_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:)",
+        "CanvasItem::method:draw_msdf_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:,float:,float:,float:)",
+        "RenderingServer::method:canvas_item_add_lcd_texture_rect_region(RID:,Rect2:,RID:,Rect2:,Color:)",
+        "RenderingServer::method:canvas_item_add_msdf_texture_rect_region(RID:,Rect2:,RID:,Rect2:,Color:,int:,float:,float:)"
+      ],
+      "reason": "ADRs 0028/0046/0095: executable retained LCD/MSDF regions consume caller-supplied encoded textures through direct backing RIDs, finite/signed geometry and owner/lifetime/recording guards. GPU decodes median/derivative/range/outline or exact-alpha RGB coverage, composes incoming COLOR with full material and automatic lights, then applies LCD final-alpha component blend and command/ancestor constants. Four uniform slots, combined/paired/no-TEXTURE sampler layouts, scalar masks, transparent groups, shader reload, transparency and MSAA execute. Linux pixels and 64 active/64 idle zero-managed-allocation intervals plus 732 glyph/257 lighting module validation are checked; compatibility explicitly rejects the unsupported profile. FontFile image generation, other-platform/native-allocation/owner acceptance remain separate."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingServer::method:canvas_item_set_distance_field_mode(RID:,bool:)"
+      ],
+      "reason": "Trigger: approved executable scalar-distance texture consumer and its retained sampling/material policy under ADR 0028. Pinned ed1daf0bf001b61586d9930840f2f1394092c079 renderer_canvas_cull.cpp:674-678 only stores Item.distance_field; the pinned RD/GLES canvas renderers and shader have no distance_field consumer. LCD/MSDF explicit region commands do not read it. A public stored flag alone would be an inert compatibility stub, and inventing an alpha-SDF renderer behavior without an accepted decision would not preserve the reference contract."
+    },
+    {
       "godot": [
         "RenderingServer::enum:CanvasGroupMode",
         "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_DISABLED",
@@ -5354,14 +5391,6 @@
     },
     {
       "state": "Blocked",
-      "reason": "First glyph-distance-field/LCD sampling and blend integration must implement these texture commands together, including shader/backend capability checks and pixel output; ordinary sampled triangles are insufficient.",
-      "godot": [
-        "CanvasItem::method:draw_lcd_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:)",
-        "CanvasItem::method:draw_msdf_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:,float:,float:,float:)"
-      ]
-    },
-    {
-      "state": "Blocked",
       "reason": "First Font/TextServer or DPITexture oversampling integration must implement scale inheritance, invalidation, resource reference accounting and raster output together; ordinary texture scaling is not oversampling.",
       "godot": [
         "CanvasItem::enum:OversamplingWithScale",
@@ -5835,7 +5864,7 @@
         "RenderingServer::method:texture_proxy_update(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": [
@@ -6111,20 +6140,6 @@
         "RenderingServer::method:canvas_item_set_use_parent_material(RID:,bool:)"
       ],
       "reason": "ADRs 0004/0028/0095: native borrowed material inheritance follows the actual renderer parent for owned/source items, preserves authored UseParentMaterial and republish semantics, and executes real additive native pixels in RenderingPrimitiveTests. Direct material RID binding still requires material identity/ownership."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "RenderingServer::method:canvas_item_add_msdf_texture_rect_region(RID:,Rect2:,RID:,Rect2:,Color:,int:,float:,float:)"
-      ],
-      "reason": "Trigger: executable signed-distance/MSDF glyph texture generation plus derivative/range/outline shader and sampler policy on the claiming backends. Ordinary retained texture rectangles and canvas identity are now implemented, but do not decode signed distances."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "RenderingServer::method:canvas_item_add_lcd_texture_rect_region(RID:,Rect2:,RID:,Rect2:,Color:)"
-      ],
-      "reason": "Trigger: shared retained LCD command, sampled-alpha coverage gate, RGB component blend with command/ancestor color constants and correct post-material/post-light ordering. SDL_GPU exposes ConstantColor/OneMinusSrcColor and SetGPUBlendConstants; MaterialLightingProgram still needs the LCD sampling epilogue. SDL_Renderer lacks the constant-color factor: a verified alternate composition or explicit backend capability rejection is required. Ordinary texture tinting does not execute the contract."
     },
     {
       "state": "Blocked",

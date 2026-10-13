@@ -4,6 +4,11 @@ Last updated: 2026-10-13
 
 [Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
+
+## LCD and MSDF regions
+
+Retained LCD/MSDF commands compose an engine decoder into incoming COLOR loads and preserve explicit TEXTURE access to encoded values. LCD additionally gates sampled alpha and multiplies RGB by final alpha after material/light output. A program without TEXTURE receives one extra engine sampler; its four uniform slots remain fixed while set-two storage bindings follow the combined sampler count. Paired HLSL image depth metadata and SPIR-V 1.4+ entry interfaces remain valid. [The glyph contract](canvas-rendering.md#lcd-and-msdf-texture-regions) and [732-module validator](../../tools/shaders/check_canvas_glyphs.py) cover this profile.
+
 ## Built-in shader delivery
 
 The runtime build generates its HLSL rendering and GLSL compute resources with

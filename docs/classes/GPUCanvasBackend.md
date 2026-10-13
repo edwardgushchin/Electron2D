@@ -1,6 +1,6 @@
 # GPUCanvasBackend
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 - Declaration: `internal sealed unsafe class GPUCanvasBackend : CanvasBackend`
 - Source: [GPUCanvasBackend.cs](../../src/Servers/Rendering/GPUCanvasBackend.cs)
@@ -96,3 +96,5 @@ ClipChildren MaskBegin copies main background into BackBuffer, then captures chi
 ## Device export integration
 
 [GPUCanvasBackend.DeviceTextures.cs](../../src/Servers/Rendering/GPUCanvasBackend.DeviceTextures.cs) creates/reuses the actual upload cache allocation and exports completed viewport target pairs. Borrowed ordinary/array exports retain cache residency until release or retirement. Allocation metadata and optional storage flags match native format/usage support. Device upload versions commit before canvas submission to avoid a second upload overwriting device writes. RenderingServer.TextureGetRDTexture exports actual renderer-managed ordinary uploads, independent arrays and completed viewport images to the retained device without CPU copying. Compatible authored updates keep the RID; replacing allocation, disposing the source, rebinding the viewport or retiring its target expires it. A viewport RID resolves the completed ping-pong image when each command is recorded. FreeRID releases only the borrowed wrapper; queued native operations retain the old allocation through completion. Device writes change GPU storage, while authored CPU snapshots remain unchanged; the next authored update overwrites device changes. Sampling, raw update/copy/read and supported storage roles reflect actual native allocation flags. Prepare changed uploads before starting a draw list. Empty storage, unrendered targets and the compatibility renderer return an empty RID. Distinct sRGB views still require native format-view ownership.
+
+GPUCanvasBackend.Glyphs composes and caches encoded coverage programs on cold source/mode identities, binds an extra backing-image sampler for materials without TEXTURE and evicts unused compositions with native pipelines. LCD adds a component-blend pipeline key and per-batch blend constant; masks use ordinary scalar-alpha blend and transparent groups use their rewritten premultiplied capture. Integer sampled values reject this coverage profile. Glyph stages share the existing device, target and MSAA resolution path.
