@@ -7131,7 +7131,7 @@
         "ProjectSettings::property:physics/2d/solver/contact_recycle_radius"
       ],
       "state": "Implemented",
-      "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). The complete public scene/server history suite now executes on explicit CPU/GPU worlds in serial/separate numerical profiles via ELECTRON2D_TEST_PUBLIC_CONTACT_HISTORY. Seven geometries test five live reuse policies, boundary/zero separation, actual support and complete gravity impulse; captured/inactive/error/owner/phase settings and sleep/contact-event ordering retain their guards. All six public/resident/stage profiles require 256 warmup/128 edited full steps at 0/0 owner/all-thread managed bytes. Local reuse counters are auxiliary; no CPU/GPU list/feature identity is required. Execution uses CPU-only llvmpipe Vulkan. Hardware, arbitrary registered geometry, native/foreign/network and performance acceptance remain open."
     },
     {
       "godot": [
@@ -7145,7 +7145,7 @@
         "ProjectSettings::property:physics/2d/solver/contact_max_separation"
       ],
       "state": "Implemented",
-      "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). The complete public scene/server history suite now executes on explicit CPU/GPU worlds in serial/separate numerical profiles via ELECTRON2D_TEST_PUBLIC_CONTACT_HISTORY. Seven geometries test five live reuse policies, boundary/zero separation, actual support and complete gravity impulse; captured/inactive/error/owner/phase settings and sleep/contact-event ordering retain their guards. All six public/resident/stage profiles require 256 warmup/128 edited full steps at 0/0 owner/all-thread managed bytes. Local reuse counters are auxiliary; no CPU/GPU list/feature identity is required. Execution uses CPU-only llvmpipe Vulkan. Hardware, arbitrary registered geometry, native/foreign/network and performance acceptance remain open."
     },
     {
       "godot": [

@@ -927,3 +927,10 @@ lifetime through explicit CPU/GPU worlds in both numerical-thread modes. Changin
 priority preserves sleep and fixture identity over 128 measured full frames at
 0/0 owner/all-thread managed bytes; query brackets retain the same zero budget.
 Software Vulkan execution does not establish hardware or broader acceptance.
+
+[Shared public contact history](../components/physics-contact-policy.md#shared-public-history-2026-10-14)
+now checks seven geometries, live reuse limits, actual support/impulses and scene
+sleep/event ordering through explicit CPU/GPU worlds in both numerical-thread modes.
+All six public/resident/stage profiles retain 128 edited full-step samples at
+0/0 owner/all-thread managed bytes. Software Vulkan evidence leaves hardware,
+registered geometry and broader network/platform/performance acceptance open.

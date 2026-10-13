@@ -393,3 +393,38 @@ under `bin/physics-public-priority/2026-10-14/final/`. Software timing is diagno
 not hardware performance evidence. Contact history/iterations, general registered
 geometry, native allocation, foreign platforms, networking, massive throughput and
 real-window FPS remain separate acceptance gates.
+
+
+## Shared public history, 2026-10-14
+
+`ELECTRON2D_TEST_PUBLIC_CONTACT_HISTORY=cpu|gpu` runs the complete contact-history
+suite through explicit PhysicsServer spaces and scene Worlds. Adding
+`ELECTRON2D_TEST_THREADED_COLLIDER=1` captures separate numerical execution before
+world creation. The focused entry precedes the generic CPU-thread suite, and the
+ordinary full runner includes both public backends. Resident and CPU-hosted stage
+controls remain distinct.
+
+All six profiles pass on the current software Vulkan setup. Seven finite/directed
+geometries each exercise five enable/disable/radius/separation policies; boundary
+and stationary zero-separation cases remain. Reuse counters are backend-local
+auxiliary witnesses, while public direct-state contacts must retain 400 u/s tangent
+motion within 0.01, vertical support within 0.02 u/s and the complete (0, -9.8)
+kg-unit/s gravity impulse within 0.03 over a 0.01-second tick. This requires neither
+bitwise trajectories nor equal private history lists.
+
+Public settings capture, invalid and inactive-world writes, off-owner/phase guards,
+equal-write sleep preservation, changed-policy waking, later explicit sleep and
+unchanged object-entry/exit membership all execute on CPU/GPU. The resident control
+retains its three competing-point ownership witnesses and the older stage retains
+its nearby-anchor fallback control.
+
+The unchanged 256-warmup/128-measured bracket alternates radius 10/0 before each
+complete active step and requires zero owner/all-thread managed bytes in every
+profile. Public GPU diagnostics read its actual selected store outside the loop:
+486 B upload, 2,347 B readback and 15,122 B uniforms per edited tick in this fixture.
+CPU processes load no graphics driver; GPU processes load llvmpipe without NVIDIA.
+Retained numerical threads are observed only in separate public profiles. Frozen
+runtime/source evidence is under `bin/physics-public-history/2026-10-14/`.
+Software timing is diagnostic; solver iterations, general registered geometry,
+native/foreign/network acceptance, massive hardware advantage and real-window FPS
+remain separate gates.

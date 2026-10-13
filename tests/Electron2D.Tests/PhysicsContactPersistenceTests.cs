@@ -4,15 +4,18 @@ using Electron2D;
 using Store = Electron2D.GPUPhysicsBodyStore;
 using Mode = Electron2D.PhysicsServer.BodyMode;
 
-internal static class PhysicsContactPersistenceTests
+internal sealed class PhysicsContactPersistenceTests(PhysicsServer.Backend backend)
 {
-    internal static void Run(bool stages = false)
+    internal static void Run(bool stages = false) => new PhysicsContactPersistenceTests(PhysicsServer.Backend.CPU).RunCore(stages);
+    internal static void Run(PhysicsServer.Backend backend) => new PhysicsContactPersistenceTests(backend).RunCore(false);
+    private void RunCore(bool stages)
     {
         if (stages) GPUPhysicsTests.RunContactRecycling();
         VerifyRules(); VerifySettings(false); VerifyReuse(false, stages); VerifyScene(stages); Measure(false, stages);
-        Console.WriteLine($"Contact recycling passed on {(stages ? "CPU host/GPU stages" : "CPU")}.");
+        Console.WriteLine($"Contact recycling passed on {(stages ? "CPU host/GPU stages" : backend.ToString())}.");
     }
-    internal static void RunResident()
+    internal static void RunResident() => new PhysicsContactPersistenceTests(PhysicsServer.Backend.GPU).RunResidentCore();
+    private void RunResidentCore()
     {
         VerifySettings(true); VerifyReuse(true, false); VerifyResidentOwnership(); Measure(true, false);
         Console.WriteLine("Contact recycling passed on resident GPU.");
@@ -25,7 +28,7 @@ internal static class PhysicsContactPersistenceTests
         private readonly Shape _shape;
         private readonly Shape _plane;
         private readonly PhysicsDirectBodyState? _view;
-        internal Rig(bool resident, bool stages = false, Shape? shape = null, float speed = 400, bool boundary = false)
+        internal Rig(PhysicsServer.Backend backend, bool resident, bool stages = false, Shape? shape = null, float speed = 400, bool boundary = false)
         {
             _shape = shape ?? new CircleShape { Radius = 5 };
             _plane = boundary ? new WorldBoundaryShape() : new RectangleShape { Size = new(10000, 100) };
@@ -39,8 +42,8 @@ internal static class PhysicsContactPersistenceTests
             }
             else
             {
-                Space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(Space, true);
-                var fields = PhysicsServer.Service.GetSceneSpace(Space).DefaultAreaFields; fields.Gravity = 980; fields.LinearDamp = fields.AngularDamp = 0;
+                Space = PhysicsServer.SpaceCreate(backend); Check(PhysicsServer.SpaceGetBackend(Space) == backend, "Contact history uses the selected public backend."); PhysicsServer.SpaceSetActive(Space, true);
+                PhysicsServer.AreaSetGravity(Space, 980); PhysicsServer.AreaSetLinearDamp(Space, 0); PhysicsServer.AreaSetAngularDamp(Space, 0);
                 Floor = PhysicsServer.BodyCreate(); PhysicsServer.BodySetMode(Floor, Mode.Static); PhysicsServer.BodyAddShape(Floor, _plane.GetRID());
                 PhysicsServer.BodySetTransform(Floor, new(0, ground)); PhysicsServer.BodySetFriction(Floor, 0); PhysicsServer.BodySetSpace(Floor, Space);
                 Body = PhysicsServer.BodyCreate(); PhysicsServer.BodySetMode(Body, Mode.RigidLinear); PhysicsServer.BodyAddShape(Body, _shape.GetRID());
@@ -51,6 +54,7 @@ internal static class PhysicsContactPersistenceTests
                 _view = PhysicsServer.BodyGetDirectState(Body)!;
             }
         }
+        internal Store? SelectedStore => GPU ?? (Space.IsValid() ? PhysicsServer.Service.GetSceneSpace(Space).GPUStore : null);
         internal PhysicsContactSettings Settings => GPU?.GetContactSettings() ?? PhysicsServer.Service.GetSceneSpace(Space).ContactSettings;
         internal void Set(float radius, float separation)
         {
@@ -60,7 +64,7 @@ internal static class PhysicsContactPersistenceTests
         internal void Step() { if (GPU is { } gpu) gpu.Simulate(.01f, new(0, 980)); else PhysicsServer.SpaceStep(Space, .01); }
         internal int Reused()
         {
-            if (GPU is { } gpu) return gpu.WarmStartedPointCount;
+            if (SelectedStore is { } gpu) return gpu.WarmStartedPointCount;
             var world = B2Worlds.b2GetWorldFromId(PhysicsServer.Service.GetSceneSpace(Space).WorldID); var count = 0;
             foreach (var color in world.constraintGraph.colors.AsSpan())
                 for (var i = 0; i < color.contactSims.count; i++)
@@ -98,13 +102,13 @@ internal static class PhysicsContactPersistenceTests
         current = old; b.p.X = .5f; Check(Distance(1, .5f) == 0 && float.IsPositiveInfinity(Distance(1, .499f)), "Tangential drift uses an inclusive separation bound.");
         b.p = new(0, .625f); Check(Distance(1, .5f) == 0 && float.IsPositiveInfinity(Distance(1, .499f)), "Positive normal separation invalidates history independently of local anchor proximity.");
     }
-    private static void VerifySettings(bool resident)
+    private void VerifySettings(bool resident)
     {
         var old = PhysicsContactSettings.FromProject(); Check(old.RecycleRadius == 1 && old.MaxSeparation == 1.5f, "Captured project defaults.");
         try
         {
             ProjectSettings.Set(ProjectSettings.Physics2DContactRecycleRadius, 4.5f); ProjectSettings.Set(ProjectSettings.Physics2DContactMaxSeparation, 2.5f);
-            using var r = new Rig(resident); Check(r.Settings.RecycleRadius == 4.5f && r.Settings.MaxSeparation == 2.5f, "New worlds capture both settings.");
+            using var r = new Rig(backend, resident); Check(r.Settings.RecycleRadius == 4.5f && r.Settings.MaxSeparation == 2.5f, "New worlds capture both settings.");
             ProjectSettings.Set(ProjectSettings.Physics2DContactRecycleRadius, 1f); Check(r.Settings.RecycleRadius == 4.5f, "Existing worlds retain their policy.");
             foreach (var invalid in new[] { -1f, float.NaN, float.PositiveInfinity, float.MaxValue, float.Epsilon, 1e-30f })
             {
@@ -125,11 +129,11 @@ internal static class PhysicsContactPersistenceTests
     private static Shape[] Family() => [new CircleShape { Radius = 5 }, new RectangleShape { Size = new(10, 10) }, new CapsuleShape { Radius = 2, Height = 10 },
         new SegmentShape { A = new(-5, 5), B = new(5, 5) }, new ConvexPolygonShape { Points = [new(-5, -5), new(5, -5), new(5, 5), new(-5, 5)] },
         new ConcavePolygonShape { Segments = [new(-5, 5), new(5, 5)] }, new SeparationRayShape { Length = 5 }];
-    private static void VerifyReuse(bool resident, bool stages)
+    private void VerifyReuse(bool resident, bool stages)
     {
         foreach (var shape in Family())
         {
-            using var r = new Rig(resident, stages, shape);
+            using var r = new Rig(backend, resident, stages, shape);
             foreach (var (radius, separation, reused) in new[] { (10f, 10f, true), (0f, 10f, false), (.5f, 10f, false), (10f, .5f, false), (10f, 10f, true) })
             {
                 r.Set(radius, separation); for (var i = 0; i < 4; i++) r.Step();
@@ -139,12 +143,12 @@ internal static class PhysicsContactPersistenceTests
                 Check(state.Impulse.DistanceTo(new(0, -9.8f)) < .03f, $"Frame impulse balances gravity independently of reuse: {state.Impulse}.");
             }
         }
-        using (var boundary = new Rig(resident, stages, boundary: true))
+        using (var boundary = new Rig(backend, resident, stages, boundary: true))
         {
             boundary.Set(10, 10); for (var i = 0; i < 4; i++) boundary.Step(); Check(boundary.Reused() > 0, "Infinite boundary contacts reuse history.");
             boundary.Set(0, 10); boundary.Step(); Check(boundary.Reused() == 0 && boundary.Read().Contacts > 0, "Infinite boundary history can be disabled without losing collisions.");
         }
-        using var stationary = new Rig(resident, stages, speed: 0); stationary.Set(10, 0); for (var i = 0; i < 4; i++) stationary.Step();
+        using var stationary = new Rig(backend, resident, stages, speed: 0); stationary.Set(10, 0); for (var i = 0; i < 4; i++) stationary.Step();
         Check(stationary.Reused() > 0, "Zero maximum separation still accepts a stable penetrating contact.");
     }
     private static void VerifyResidentOwnership()
@@ -167,12 +171,13 @@ internal static class PhysicsContactPersistenceTests
         Check(witnesses > 0, "The tilted-box fixture exercises more fresh points than reusable impulses.");
         Console.WriteLine($"Resident contact history ownership: {witnesses} competing-point intervals passed.");
     }
-    private static void VerifyScene(bool stages)
+    private void VerifyScene(bool stages)
     {
         using var shape = new CircleShape { Radius = 5 }; using var plane = new WorldBoundaryShape();
-        using var root = new Node(); var floor = new StaticBody { Name = "Floor" }; floor.AddChild(new CollisionShape { Shape = plane }); root.AddChild(floor);
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; var floor = new StaticBody { Name = "Floor" }; floor.AddChild(new CollisionShape { Shape = plane }); root.AddChild(floor);
         var body = new RigidBody { Name = "Body", Position = new(0, -4.9f), GravityScale = 0, ContactMonitor = true, MaxContactsReported = 4 };
         body.AddChild(new CollisionShape { Shape = shape }); root.AddChild(body); using var tree = new SceneTree(root); var world = body.GetWorld()!.Space;
+        Check(PhysicsServer.SpaceGetBackend(world) == backend, "Scene history uses the selected public backend.");
         if (stages) body.Space!.EnableGPUSolver();
         var entered = 0; var exited = 0; body.BodyEntered += _ => entered++; body.BodyExited += _ => exited++;
         tree.PhysicsFrame(.01); body.Sleeping = true;
@@ -184,17 +189,18 @@ internal static class PhysicsContactPersistenceTests
         body.LocalTransformChanged += _ => { Reject<InvalidOperationException>(() => PhysicsServer.SpaceSetContactMaxSeparation(world, 2)); guards++; };
         body.Sleeping = false; body.LinearVelocity = new(1, 0); tree.PhysicsFrame(.01); Check(guards > 0, "Solver-phase edits are guarded.");
     }
-    private static void Measure(bool resident, bool stages)
+    private void Measure(bool resident, bool stages)
     {
-        using var r = new Rig(resident, stages); r.Set(10, 10);
+        using var r = new Rig(backend, resident, stages); r.Set(10, 10);
         for (var i = 0; i < 256; i++) r.Step();
-        var samples = new long[128]; var upload = r.GPU?.UploadBytes ?? 0; var read = r.GPU?.ReadbackBytes ?? 0; var uniforms = r.GPU?.UniformBytes ?? 0; var wait = r.GPU?.WaitMS ?? 0;
-        var before = GC.GetTotalAllocatedBytes(true);
+        var selected = r.SelectedStore;
+        var samples = new long[128]; var upload = selected?.UploadBytes ?? 0; var read = selected?.ReadbackBytes ?? 0; var uniforms = selected?.UniformBytes ?? 0; var wait = selected?.WaitMS ?? 0;
+        var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var before = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < samples.Length; i++) { var t = Stopwatch.GetTimestamp(); r.Set((i & 1) == 0 ? 10 : 0, 10); r.Step(); samples[i] = Stopwatch.GetTimestamp() - t; }
-        var bytes = GC.GetTotalAllocatedBytes(true) - before; Array.Sort(samples); var ms = 1000d / Stopwatch.Frequency;
-        Console.WriteLine($"Contact history {(resident ? "resident GPU" : stages ? "stage GPU" : "CPU")}: 1 sliding body, 4 substeps/16 sweeps, 256 warmup/128 edited whole steps; p50/p95/p99={samples[64] * ms:F4}/{samples[121] * ms:F4}/{samples[126] * ms:F4} ms, {bytes} all-thread managed B.");
-        if (r.GPU is { } gpu) Console.WriteLine($"History traffic/tick: upload={(gpu.UploadBytes - upload) / 128}, readback={(gpu.ReadbackBytes - read) / 128}, uniforms={(gpu.UniformBytes - uniforms) / 128} B, wait={(gpu.WaitMS - wait) / 128:F4} ms; {gpu.Driver}/{gpu.DeviceName}.");
-        Check(bytes == 0, "Warmed policy edits and history matching allocate zero managed memory.");
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore; var bytes = GC.GetTotalAllocatedBytes(true) - before; Array.Sort(samples); var ms = 1000d / Stopwatch.Frequency;
+        Console.WriteLine($"Contact history {(resident ? "resident GPU" : stages ? "stage GPU" : backend.ToString())}: 1 sliding body, 4 substeps/16 sweeps, 256 warmup/128 edited whole steps; p50/p95/p99={samples[64] * ms:F4}/{samples[121] * ms:F4}/{samples[126] * ms:F4} ms, {ownerBytes}/{bytes} owner/all-thread managed B.");
+        if (selected is { } gpu) Console.WriteLine($"History traffic/tick: upload={(gpu.UploadBytes - upload) / 128}, readback={(gpu.ReadbackBytes - read) / 128}, uniforms={(gpu.UniformBytes - uniforms) / 128} B, wait={(gpu.WaitMS - wait) / 128:F4} ms; {gpu.Driver}/{gpu.DeviceName}.");
+        Check(ownerBytes == 0 && bytes == 0, "Warmed policy edits and history matching allocate zero owner/all-thread managed memory.");
     }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException($"Expected {typeof(T).Name}."); }
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }

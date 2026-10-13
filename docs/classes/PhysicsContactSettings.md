@@ -17,3 +17,10 @@ CPU PhysicsSpace and independent GPUPhysicsBodyStore retain the same record; it
 contains no physical body state or host mirror. Public GPU binding remains open.
 
 This immutable value is now public and crosses the [registered implementation boundary](../components/physics-registered-adapter.md); complete sampled fields retain the contracts above. No backend storage or native handles are exposed.
+
+[Shared public contact history](../components/physics-contact-policy.md#shared-public-history-2026-10-14)
+now checks seven geometries, live reuse limits, actual support/impulses and scene
+sleep/event ordering through explicit CPU/GPU worlds in both numerical-thread modes.
+All six public/resident/stage profiles retain 128 edited full-step samples at
+0/0 owner/all-thread managed bytes. Software Vulkan evidence leaves hardware,
+registered geometry and broader network/platform/performance acceptance open.
