@@ -1,4 +1,5 @@
-if (args.Contains("--allocation-warmup")) BackendChecks.RunAllocationWarmup();
+if (args.Contains("--project-selection")) BackendChecks.RunProjectSelection();
+else if (args.Contains("--allocation-warmup")) BackendChecks.RunAllocationWarmup();
 else if (args.Contains("--contact-frames")) BackendChecks.RunContactFrames(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
 else if (args.Contains("--continuous-response")) BackendChecks.RunContinuousResponse(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :

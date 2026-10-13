@@ -1,6 +1,6 @@
 # PhysicsBackendRegistry
 
-Last updated: 2026-10-11
+Last updated: 2026-10-13
 
 **Declaration:** `internal sealed class PhysicsBackendRegistry` · **Source:** [PhysicsBackendRegistry.cs](../../src/Servers/Physics/PhysicsBackendRegistry.cs) · **Component:** [Backend selection and ownership](../components/physics-backends.md#named-implementation-selection)
 
@@ -42,8 +42,14 @@ Private `sealed record Creation(Registration Registration, Creation? Parent)` fo
 
 ## Lifecycle, verification and limits
 
-PhysicsSpace retains internal requested/actual names after selection: DEFAULT preserves its requested token, a custom owner reports its registration name, and a built-in startup fallback reports GPU requested / CPU actual. Public enum diagnostics remain the existing CPU/GPU contract. This registry is an internal prerequisite: public PhysicsServerManager, PhysicsServerBackend/Extension, named World/server entry points and the complete operation bridge remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+PhysicsSpace retains internal requested/actual names after selection: DEFAULT preserves its requested token, a custom owner reports its registration name, and a built-in startup fallback reports GPU requested / CPU actual. Public enum diagnostics remain the existing CPU/GPU contract. Public PhysicsServerManager, PhysicsServerBackend/Extension and named World/server entry points execute through this registry; complete numerical-extension acceptance remains open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
 
-[Named factory tests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.NamedFactories.cs) exercise priority ties, immutable lazy aliases, factories outside the lock, fresh scene/explicit owners, selected direct views, real doubled impulse response after a full interval, recursion, null/throwing/foreign owners and recovery. Cold cross-thread checks use dedicated joined threads, avoiding asynchronous thread-pool work in later allocation brackets. CPU/GPU run 64 warmed impulse/step/read intervals with a zero owner/all-thread managed-byte assertion. No-device checks preserve strict GPU failure and explicit startup fallback. Native allocation, foreign platforms and public third-party consumer acceptance remain unverified.
+[Named factory tests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.NamedFactories.cs) exercise priority ties, immutable lazy aliases, factories outside the lock, fresh scene/explicit owners, selected direct views, real doubled impulse response after a full interval, recursion, null/throwing/foreign owners and recovery. Cold cross-thread checks use dedicated joined threads, avoiding asynchronous thread-pool work in later allocation brackets. CPU/GPU run 64 warmed impulse/step/read intervals with a zero owner/all-thread managed-byte assertion. No-device checks preserve strict GPU failure and explicit startup fallback. Native allocation, foreign platforms and complete third-party numerical acceptance remain unverified.
 
 Public [registered implementations](../components/physics-registered-adapter.md) now execute through PhysicsServerManager, World(string) and PhysicsServer.SpaceCreate(string). Requested/actual names retain the captured registration and startup fallback identity. The scoped PhysicsServerBackend/Extension family and immutable inputs/results have a public-only circle/spring consumer; custom geometry and full extension/performance/platform acceptance remain open.
+
+## Project physics capture
+
+Implicit scene worlds resolve `ProjectSettings.Physics2DEngine` through `Resolve` before allocating canvas identity. DEFAULT captures the current priority registration; unknown exact names reject then. Later project/default changes affect future resolutions only.
+
+See [the selection checks](../components/physics-backends.md#project-physics-selection).

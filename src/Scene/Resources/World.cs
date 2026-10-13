@@ -9,7 +9,8 @@ public sealed class World : Resource
 {
     private WorldRuntime _runtime;
     private bool _released;
-    /// <summary>Creates a caller-owned world with an independent logical canvas and lazy physics space.</summary>
+    /// <summary>Creates a caller-owned CPU world with an independent logical canvas and lazy physics space.</summary>
+    /// <remarks>Project physics selection applies to implicit scene worlds; this constructor always selects CPU.</remarks>
     public World() : this(new WorldRuntime(sceneOwned: false)) { }
     /// <summary>Creates a world with an explicitly selected lazy physics implementation.</summary>
     /// <param name="backend">CPU or GPU physics, independently of the renderer.</param>

@@ -1214,3 +1214,7 @@ cycles (768 full frames), each at strict 0/0 owner/all-thread managed bytes.
 Evidence: bin/physics-registered-contact-frames/2026-10-13/. General shape/feature
 and coupled extension, portable network, native totals, real rendering and final
 performance/platform acceptance remain open.
+
+## Implicit project selection
+
+The public-only `--project-selection` consumer registers a fresh named numerical owner and selects it through `ProjectSettings.Physics2DEngine`. It verifies actual scene travel, lazily captured aliases, priority changes after DEFAULT capture, strict provider error propagation even with project fallback enabled, and 128 complete warm frames at 0/0 managed bytes. [The project selection contract](physics-backends.md#project-physics-selection) defines creation/reset and explicit-choice boundaries. General coupled geometry, other-platform and final performance acceptance remain open.

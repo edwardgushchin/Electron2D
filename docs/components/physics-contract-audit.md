@@ -173,10 +173,9 @@ operations remain open in the ledger.
 The complete generated ledger remains the per-declaration list. Current own
 physics families contain 686 Implemented, 151 Partial and 55 Excluded rows,
 with no own Blocked or Unimplemented rows. Shared inherited declarations still
-contain 142 Partial, 19 Blocked and 89 Unimplemented rows; cross-domain consumers
-now contain 12 Partial and two Unimplemented rows after completing the viewport
-default and correcting stale prerequisite
-labels for the viewport default and project engine/thread settings. These are declaration counts,
+contain 142 Partial, 19 Blocked and 87 Unimplemented rows after typed indexed property projections; cross-domain consumers
+now contain 65 Implemented, 12 Partial and one Unimplemented row after completing
+the viewport default and project engine setting. These are declaration counts,
 not a claim that all numerical behaviors pass. The exact inherited names and
 prerequisites remain in the ledger rather than disappearing from this audit.
 
@@ -187,11 +186,13 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   verify the Off-parent boundary, explicit modes, camera/reset and packed/copy/
   duplicate/revert semantics. The former default mismatch is closed; it is not
   an outstanding dependency of the networking presentation contract.
-- Project physics_engine and run_on_separate_thread entries still lack executable
-  setting contracts. Their old first-Box2D prerequisite is stale: CPU/GPU worlds,
-  named defaults and retained CPU workers exist. Project default selection must
-  preserve explicit per-world identity; separate-thread execution needs real
-  scheduling, ownership, callback barriers and teardown rather than an inert bool.
+- Project physics_engine now has its executable typed capture contract, separate
+  opt-in startup fallback, CPU/GPU/registered numerical checks, actual no-device
+  startup and both native rendering paths. Existing explicit worlds retain their
+  choices. [Selection evidence](physics-backends.md#project-physics-selection)
+  closes that omission. run_on_separate_thread remains unimplemented: retained CPU
+  workers do not provide separate simulation scheduling, ownership, callback
+  barriers and teardown.
 - Independent registered numerical acceptance still needs multiple transformed
   logical slots/features, disabled index preservation and compound response/query/
   history assertions. The current fixture's last-shape model is visible in

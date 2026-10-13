@@ -572,3 +572,9 @@ examples, costs and verification.
 [Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.
 
 Window content scaling separates logical viewport coordinates, raster pixels and client presentation. GetFinalTransform includes the window presentation transform; GetCanvasRenderTransform uses raster coordinates internally. See [Window content scale](Window.md#content-scale) for the executed policy and limits.
+
+## Project physics capture
+
+Initial local world creation, null reset and expired scene-default recreation capture active-feature project engine/fallback settings. Unknown names reject before replacing the previous canvas; an explicit supplied World keeps its own selection. Later project edits do not reconfigure existing worlds.
+
+See [the selection checks](../components/physics-backends.md#project-physics-selection).

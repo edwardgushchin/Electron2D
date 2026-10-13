@@ -229,3 +229,5 @@ The [independent-process component](../components/processes.md) adds static laun
 Engine.GetFramesDrawn now accounts for completed [native canvas intervals](../components/manual-render-frames.md), independently of process and physics callbacks.
 
 [Compiled indexed properties](../components/editor-properties.md#compiled-indexed-properties) now execute typed object/component/array/dictionary projections through the existing descriptor schema, including Tween and saved-scene consumers.
+
+[Implicit physics world selection](../components/physics-backends.md#project-physics-selection) now captures typed project engine/fallback settings and manager DEFAULT priority independently of rendering. Caller parameterless and explicit creation retain their policies. CPU/GPU/registered motion, no-device startup and native pixels have scoped checks; separate-thread scheduling and complete physics/performance acceptance remain open.

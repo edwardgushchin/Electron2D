@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Inherits:** [ProjectSettingsRegistry](ProjectSettingsRegistry.md)
 
@@ -51,6 +51,8 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<string> ApplicationName { get; }`](#p-electron2d-projectsettings-applicationname) | Defines the human-readable application name. |
 | [`public static ProjectSetting<string> ApplicationVersion { get; }`](#p-electron2d-projectsettings-applicationversion) | Defines the application version string. |
 | [`public static ProjectSetting<int> PhysicsTicksPerSecond { get; }`](#p-electron2d-projectsettings-physicstickspersecond) | Defines the fixed-step callback frequency used by [`Engine`](Engine.md). |
+| [`public static ProjectSetting<string> Physics2DEngine { get; }`](#physics2dengine) | Captured implicit scene-world implementation name; default DEFAULT. |
+| [`public static ProjectSetting<bool> Physics2DAllowCPUFallback { get; }`](#physics2dallowcpufallback) | Opt-in implicit GPU startup fallback; default false. |
 | [`public static ProjectSetting<float> Physics2DDefaultGravity { get; }`](#p-electron2d-projectsettings-physics2ddefaultgravity) | Default 2D gravity strength, 980 scene units/s². |
 | [`public static ProjectSetting<Vector2> Physics2DDefaultGravityVector { get; }`](#p-electron2d-projectsettings-physics2ddefaultgravityvector) | Default 2D gravity direction, (0, 1) without normalization. |
 | [`public static ProjectSetting<float> Physics2DDefaultLinearDamp { get; }`](#p-electron2d-projectsettings-physics2ddefaultlineardamp) | Default 2D linear damping, 0.1/s. |
@@ -1454,3 +1456,13 @@ Defines `threading/worker_pool/max_pending_tasks`, default 1024, positive only. 
 The named Boolean keys navigation/world/map_use_async_iterations and navigation/world/region_use_async_iterations default true. New navigation identities sample them with feature overrides; existing identities retain their selected policies until changed through NavigationServer. Threaded browser prerequisites remain explicit.
 
 The permanent `ProjectSettings.RootNodeLayoutDirection` integer selector accepts only 0 application locale, 1 LTR, 2 RTL and 3 system UI locale (default 0). `ForceRightToLeftLayoutDirection` is a permanent boolean, default false. Both support save/load and feature overrides and are sampled independently for each SceneTree before entry. Explicit node LTR/RTL choices override forced policy; other modes are forced RTL when enabled. Global project edits affect subsequent trees, while detached nodes read current settings. [ProjectLayoutDirectionTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionTests.cs) and native [ProjectLayoutDirectionNativeTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionNativeTests.cs) verify the executable profile.
+
+<a id="physics2dengine"></a>
+### `public static ProjectSetting<string> Physics2DEngine { get; }`
+
+Defines `physics/2d/physics_engine`, default `DEFAULT`. Nonempty, non-whitespace exact names are persisted and may be loaded before a provider registers. Resolution occurs when an implicit world is captured; an unknown name rejects then. `DEFAULT` captures the manager's current priority-selected implementation. Names are case-sensitive and not trimmed. Caller parameterless World/SpaceCreate remain CPU; explicit selections remain independent.
+
+<a id="physics2dallowcpufallback"></a>
+### `public static ProjectSetting<bool> Physics2DAllowCPUFallback { get; }`
+
+Defines `physics/2d/allow_cpu_fallback`, default false. Implicit worlds capture its active feature override with their implementation. It permits only built-in GPU capability/native-load startup fallback, exposes requested/actual identity and the cause, and never replays a begun GPU step or catches registered-provider errors. Later project changes do not reconfigure existing worlds. [Selection checks](../components/physics-backends.md#project-physics-selection) cover persistence, feature capture, startup and native rendering.

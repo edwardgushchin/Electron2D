@@ -916,6 +916,17 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDER") == "1")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_PHYSICS_NATIVE") is { } projectPhysicsRenderer) { PhysicsProjectSelectionTests.RunNative(projectPhysicsRenderer); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_PHYSICS") is { } projectPhysicsMode)
+{
+    PhysicsProjectSelectionTests.Run(projectPhysicsMode switch
+    {
+        "normal" => true,
+        "unavailable" => false,
+        _ => throw new ArgumentException("Choose normal or unavailable for project physics.")
+    });
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_INTERPOLATION") is { } viewportInterpolationBackend)
 {
     PhysicsViewportInterpolationTests.Run(viewportInterpolationBackend switch
@@ -975,6 +986,7 @@ SceneChangeTests.Run();
 NodeTreeDiagnosticsTests.Run();
 NodeUniqueNameTests.Run();
 NodeReplacementTests.Run();
+PhysicsProjectSelectionTests.Run(true);
 PhysicsInterpolationTests.Run();
 PhysicsViewportInterpolationTests.Run(PhysicsServer.Backend.CPU);
 PhysicsViewportInterpolationTests.Run(PhysicsServer.Backend.GPU);

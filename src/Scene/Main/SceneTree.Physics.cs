@@ -12,7 +12,7 @@ public sealed partial class SceneTree
     {
         EnsureOwnerThread();
         if (Root is Viewport view) return view.FindWorld()!;
-        var runtime = _defaultWorldRuntime ??= new(sceneOwned: true); BindWorld(runtime);
+        var runtime = _defaultWorldRuntime ??= WorldRuntime.CreateSceneDefault(); BindWorld(runtime);
         return _physicsWorld is { IsDisposed: false } current ? current : _physicsWorld = new(runtime);
     }
     private PhysicsSpace PhysicsSpaceFor(CanvasItem item) { var runtime = item.GetWorld()!.Runtime; BindWorld(runtime); return runtime.Space; }

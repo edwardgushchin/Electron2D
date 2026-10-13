@@ -143,3 +143,5 @@ ties. After warmup, 128 transient replay cycles and 128 changed cap/depth cycles
 (768 full frames) each require strict 0/0 owner/all-thread managed bytes. The
 independent fixture owns retained per-peer numerical rows and flat private
 history; arbitrary shape features/coupled geometry and final acceptance remain open.
+
+Use `--project-selection` for typed implicit-world selection: real independent-provider motion, lazy aliases, immutable DEFAULT priorities and factory errors with project fallback enabled. After 128 warmups, 128 complete frames require zero owner/all-thread managed bytes. The profile also runs with actual GPU capability denied; it uses only the public API.

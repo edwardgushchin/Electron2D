@@ -62,6 +62,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(AudioBusesChannelDisableTime, isBasic: false);
         RegisterInternal(AudioBusesDefaultBusLayout, isBasic: true);
         RegisterInternal(PhysicsTicksPerSecond, isBasic: true);
+        RegisterInternal(Physics2DEngine, isBasic: true);
+        RegisterInternal(Physics2DAllowCPUFallback, isBasic: false);
         RegisterInternal(Physics2DDefaultGravity, isBasic: true);
         RegisterInternal(Physics2DDefaultGravityVector, isBasic: true);
         RegisterInternal(Physics2DDefaultLinearDamp, isBasic: false);

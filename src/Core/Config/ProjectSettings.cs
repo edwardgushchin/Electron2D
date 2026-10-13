@@ -180,6 +180,19 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<int> PhysicsTicksPerSecond { get; } =
         new("physics/common/physics_ticks_per_second", 60, value => value > 0);
 
+    /// <summary>Selects the named physics implementation captured by newly created implicit viewport and scene worlds.</summary>
+    /// <value>physics/2d/physics_engine; DEFAULT selects the manager's current default. CPU, GPU or registered names are accepted.</value>
+    /// <remarks>Names resolve when the implicit world is created, allowing registration after project loading.
+    /// Existing worlds and explicit or parameterless caller-created worlds/spaces retain their selection.</remarks>
+    public static ProjectSetting<string> Physics2DEngine { get; } =
+        new("physics/2d/physics_engine", "DEFAULT", value => !string.IsNullOrWhiteSpace(value));
+
+    /// <summary>Allows newly created implicit worlds to use CPU after unavailable built-in GPU startup.</summary>
+    /// <value>physics/2d/allow_cpu_fallback; false by default. Sampled with the project engine selector.</value>
+    /// <remarks>Preserves requested/actual identity and the failure reason. Provider errors and started steps never replay on CPU.</remarks>
+    public static ProjectSetting<bool> Physics2DAllowCPUFallback { get; } =
+        new("physics/2d/allow_cpu_fallback", false);
+
     /// <summary>Defines the two-dimensional world's default gravity strength in scene units per second squared.</summary>
     /// <value>The typed setting with default 980; finite signed values are accepted by the registry.</value>
     public static ProjectSetting<float> Physics2DDefaultGravity { get; } =

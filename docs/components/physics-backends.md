@@ -189,7 +189,7 @@ same policy for lazy physics initialization. `RequestedPhysicsBackend` does not
 initialize it; `PhysicsBackend`, `PhysicsFallbackReason`, `Space` and direct physics
 access do. Resource duplicates retain the same runtime, choice and identity. These
 constructor options configure runtime ownership, not a serialized solver checkpoint.
-Existing parameterless World creation selects CPU.
+Caller parameterless World creation selects CPU.
 
 ```csharp
 using var world = new World(PhysicsServer.Backend.GPU, allowCPUFallback: true);
@@ -1174,3 +1174,11 @@ main advanced, so the reports preserve their actual revision and verification
 limits. Viewport constructor/metadata now preserve the On default with shared CPU/GPU
 and nested native presentation checks. Project engine/thread contracts and
 inherited/provider acceptance remain open.
+
+## Project physics selection
+
+Implicit Viewport worlds and the viewport-free SceneTree fallback capture the active-feature `ProjectSettings.Physics2DEngine` name and `Physics2DAllowCPUFallback` flag before lazy physics creation. The engine defaults to `DEFAULT`, resolving the retained manager priority (initially CPU); exact `CPU`, `GPU` and registered names are supported. Later project/default changes affect later captures only. Unknown names reject before allocating a replacement canvas. Null reset and expired scene-default recreation capture new settings; aliases share the original selection. Caller `new World()`, parameterless `PhysicsServer.SpaceCreate()` and explicit supplied worlds retain their existing CPU/explicit policies. Built-in GPU startup fallback is opt-in, reports requested/actual identity and a cause, and does not catch provider errors or a begun step.
+
+`PhysicsProjectSelectionTests` covers typed defaults, persisted base/feature values before provider registration, active-feature capture, ordinary/viewport-root motion, aliases, invalid-name reset preservation, expired-world recapture and explicit creation. Each CPU/GPU role runs 128 measured complete frames after 128 warmups with strict 0/0 owner/all-thread managed bytes; 120-unit/s motion over 1/60 s uses a .001-unit tolerance for floating integration. The no-device profile denies SDL/Vulkan access, verifies strict refusal and later opt-in CPU fallback without changing an existing strict world. The public-only `--project-selection` consumer covers real registered motion, lazy aliases, immutable DEFAULT priority capture and provider failure propagation with 128 warm frames at 0/0 bytes. Native checks use implicit Window worlds with CPU/GPU physics under both rendering methods, compare fixed-tick travel within .002 units and read actual rendered red-body pixels. These scoped checks do not establish complete physics, other-platform or massive-scene performance acceptance.
+
+The 2026-10-13 verification on the updated main also passes the complete independent consumer, ordinary full test suite and separate-process network checks with a no-GPU CPU server and windowed GPU client under both rendering methods. All ten profiles exit zero; the frozen runtime and source fingerprints remain unchanged throughout. The later coverage-only status correction does not change the 3,656 recorded runtime/build-input files. Local evidence is retained in `bin/physics-project-selection/2026-10-13/final/` (outcomes, binding, runtime manifest, allocation/native logs and network reports). Release/API/wiki and formatting gates pass separately. No new massive-scene performance or foreign-platform acceptance is claimed.

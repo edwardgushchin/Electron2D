@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>Retains named physics implementation factories and the priority-selected default.</summary>
 /// <remarks>Static operations use one retained service object. Selection changes affect later worlds only;
-/// parameterless and enum creation retain their explicit built-in choices. Factories execute outside the registry lock.</remarks>
+/// Implicit scene worlds capture this priority choice when the project physics engine is DEFAULT.
+/// Caller parameterless and enum creation retain their explicit built-in choices. Factories execute outside the registry lock.</remarks>
 public sealed class PhysicsServerManager : ElectronObject
 {
     private static readonly PhysicsServerManager SharedInstance = new();

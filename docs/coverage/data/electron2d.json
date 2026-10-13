@@ -220407,6 +220407,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.Physics2DAllowCPUFallback()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "Physics2DAllowCPUFallback",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E Physics2DAllowCPUFallback { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.Physics2DContactMaxAllowedPenetration()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -220521,6 +220534,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.Physics2DEngine()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "Physics2DEngine",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E Physics2DEngine { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
     "value": null
   },
   {

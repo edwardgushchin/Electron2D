@@ -15,7 +15,7 @@ Combines a stable rendering canvas and lazily created physics space. Viewport.Wo
 
 | Member | Contract |
 | --- | --- |
-| `World()` | Caller-owned independent runtime with logical canvas and lazy physics. |
+| `World()` | Caller-owned CPU runtime with logical canvas and lazy physics, independent of project selection. |
 | `World(PhysicsServer.Backend backend, bool allowCPUFallback = false)` | Explicit lazy physics selection; invalid enum values reject immediately. |
 | `PhysicsServer.Backend RequestedPhysicsBackend { get; }` | Original choice without starting physics. |
 | `PhysicsServer.Backend PhysicsBackend { get; }` | Actual selection; initializes physics if needed. |
@@ -29,7 +29,7 @@ Combines a stable rendering canvas and lazily created physics space. Viewport.Wo
 ## Lifecycle and limits
 
 [Physics backend selection](../components/physics-backends.md) defines CPU/GPU creation,
-startup fallback and failure semantics. Parameterless creation remains CPU. Duplicates
+startup fallback and failure semantics. Caller parameterless creation remains CPU. Duplicates
 share the selected runtime, and Viewport.World replacement retains normal identity and
 attachment behavior. Selection does not change with the renderer.
 
@@ -51,3 +51,9 @@ Public [registered implementations](../components/physics-registered-adapter.md)
 The complete PhysicsQueryTests now verifies explicit CPU/GPU resource ownership: duplicate/recreated World wrappers retain one space and view, SceneTree disposal removes scene colliders while caller-owned aliases still allow empty queries, and releasing the final aliases invalidates retained direct views. The implicit scene-owned world has its separate SceneTree retirement policy.
 
 WorldTests retains default CPU world lifetime and mixed default/explicit transfers, then separately verifies two explicitly selected CPU/GPU viewport worlds: actual backend, isolated scene point queries, preserved body RID and expired old attachment view on sharing, one complete public tick and 60-unit/s body travel of 1 +/- .02 scene units. This tolerance covers default damping and floating-point integration. Ninety-six warmup and 64 measured shared-world steps/lookups require 0/0 owner/all-thread managed bytes. The complete suite now runs on both backends in the ordinary full test entry and ELECTRON2D_TEST_SHARED_PHYSICS=cpu|gpu. Native allocations, wider inherited/extension, foreign platforms and final performance acceptance remain open.
+
+## Project physics capture
+
+`new World()` remains caller-owned CPU regardless of project defaults; enum/name overloads retain their explicit choice. Implicit scene worlds capture `Physics2DEngine` and `Physics2DAllowCPUFallback` separately before lazy startup. All aliases retain that original runtime, selection and requested/actual diagnostics.
+
+See [the selection checks](../components/physics-backends.md#project-physics-selection).

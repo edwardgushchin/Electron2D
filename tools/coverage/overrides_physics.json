@@ -2879,6 +2879,11 @@
       "godot": "Performance::method:remove_custom_monitor(StringName:)",
       "electron2d": "method:Electron2D.Performance.RemoveCustomMonitor(System.String)",
       "reason": "ADR 0004/0095 typed custom monitor execution: retained static service, exact TResult handles, compiled providers and explicitly captured typed/tuple arguments, unit metadata, registration-order snapshots, monotonic microsecond ticks since retained diagnostics initialization, removal/capture release, stale generations and callback-outside-lock semantics. Raw typed results preserve precision/reference identity; numeric presentation/clamping belongs to display clients. CustomMonitorTests verifies values/arguments, metadata, failures/cycles, nested reads, in-flight remove/replace, self-removal, collection and zero warmed managed reads. Public native GPU/compatibility sessions verify live scene samples matching actual pixels and retained identity. Debugger UI, other built-in producers and foreign acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:physics/2d/physics_engine",
+      "electron2d": "property:Electron2D.ProjectSettings.Physics2DEngine()",
+      "reason": "ADRs 0054/0103: typed persisted engine name with DEFAULT priority and exact CPU/GPU/registered names. Implicit viewport and viewport-free worlds capture feature-aware selection/fallback before lazy startup; aliases, null reset, expiration, invalid names and explicit CPU/per-world choices retain their contract. CPU/GPU/independent-provider real motion and strict 0/0 warm frames, actual denied-GPU startup/fallback and both native renderer paths verify this setting slice; separate-thread and full physical/performance acceptance remain open."
     }
   ],
   "extras": [
@@ -5629,6 +5634,11 @@
       "state": "Implemented",
       "adr": "ADR 0004/0095",
       "reason": "Exact typed callback/result identity replaces universal custom-monitor values. Issued handles preserve ID/unit metadata, reject stale generations and release providers/captures on removal; collection and typed/native consumers verified."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.Physics2DAllowCPUFallback()",
+      "reason": "ADR 0054: separately typed opt-in implicit GPU startup fallback, captured with project selection. Denied actual SDL/Vulkan GPU verifies immutable strict worlds, later CPU fallback and requested/actual/cause diagnostics; provider errors and begun steps retain failure without CPU replay.",
+      "adr": "ADR 0054"
     }
   ],
   "statusGroups": [
@@ -7760,17 +7770,17 @@
     },
     {
       "godot": [
-        "ProjectSettings::property:physics/2d/physics_engine"
-      ],
-      "state": "Unimplemented",
-      "reason": "CPU/GPU worlds and named backend/default registration already execute; the old first-Box2D prerequisite is fulfilled. The project engine-selection setting still has no executable typed descriptor or startup/default mapping. Its first slice must preserve explicit immutable per-world selection, DEFAULT/named provider semantics, requested/actual identity, invalid selection errors and startup-only fallback under ADRs 0054/0103."
-    },
-    {
-      "godot": [
         "ProjectSettings::property:physics/2d/run_on_separate_thread"
       ],
       "state": "Unimplemented",
       "reason": "CPU/GPU runtime and retained CPU workers already execute; the old first-Box2D prerequisite is fulfilled. The project setting still has no executable separate-thread simulation contract. Its first slice must implement actual scheduling, world/device ownership, authoring and callback barriers, lifecycle/failure teardown and cross-backend checks under ADRs 0054/0103; worker parallelism inside an owner-thread step or an inert stored bool does not implement it."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:physics/2d/physics_engine"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0054/0103: typed persisted engine name with DEFAULT priority and exact CPU/GPU/registered names. Implicit viewport and viewport-free worlds capture feature-aware selection/fallback before lazy startup; aliases, null reset, expiration, invalid names and explicit CPU/per-world choices retain their contract. CPU/GPU/independent-provider real motion and strict 0/0 warm frames, actual denied-GPU startup/fallback and both native renderer paths verify this setting slice; separate-thread and full physical/performance acceptance remain open."
     }
   ]
 }

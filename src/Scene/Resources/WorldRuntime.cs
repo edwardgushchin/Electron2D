@@ -18,6 +18,9 @@ internal sealed class WorldRuntime
     private readonly Func<PhysicsSpace, PhysicsWorldBackend>? _backendFactory;
     private readonly PhysicsBackendRegistry.Selection? _backendSelection;
     private bool _creatingSpace;
+    internal static WorldRuntime CreateSceneDefault() => new(sceneOwned: true,
+        allowCPUFallback: ProjectSettings.GetWithOverride(ProjectSettings.Physics2DAllowCPUFallback),
+        selection: PhysicsServer.Service.BackendRegistry.Resolve(ProjectSettings.GetWithOverride(ProjectSettings.Physics2DEngine)));
     internal WorldRuntime(bool sceneOwned, PhysicsServer.Backend backend = PhysicsServer.Backend.CPU, bool allowCPUFallback = false,
         Func<PhysicsSpace, PhysicsWorldBackend>? factory = null, PhysicsBackendRegistry.Selection? selection = null)
     {

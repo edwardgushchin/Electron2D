@@ -1,6 +1,6 @@
 # Project settings component
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 ## Scope
 
@@ -93,3 +93,7 @@ DebugPathsColor defines debug/shapes/paths/geometry_color, defaults to finite Co
 [Code authoring](code-authoring.md) adds seven typed registered input settings for completion query/accept/replace, indentation and blank/above newlines; base newline also accepts Shift variants. Registries preserve these permanent built-in definitions and InputMap executes their bindings.
 
 The permanent `ProjectSettings.RootNodeLayoutDirection` integer selector accepts only 0 application locale, 1 LTR, 2 RTL and 3 system UI locale (default 0). `ForceRightToLeftLayoutDirection` is a permanent boolean, default false. Both support save/load and feature overrides and are sampled independently for each SceneTree before entry. Explicit node LTR/RTL choices override forced policy; other modes are forced RTL when enabled. Global project edits affect subsequent trees, while detached nodes read current settings. [ProjectLayoutDirectionTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionTests.cs) and native [ProjectLayoutDirectionNativeTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionNativeTests.cs) verify the executable profile.
+
+## Physics implementation defaults
+
+`Physics2DEngine` registers physics/2d/physics_engine as nonempty exact text, default DEFAULT. `Physics2DAllowCPUFallback` registers physics/2d/allow_cpu_fallback as a boolean, default false. Both persist base/feature values; a provider name may be loaded before registration. Implicit scene worlds capture active-feature values before lazy startup; explicit and caller parameterless creation keep their choices. [The selection contract](physics-backends.md#project-physics-selection) defines priority, reset/expiration and startup-only fallback with actual motion, no-device and rendered evidence.

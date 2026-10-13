@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -1011,3 +1011,9 @@ False initially. Changes invalidate attached tile canvases; Default tile navigat
 
 
 SceneTree preflights both explicit FinalizeLoop and Dispose against every borrowed physics implementation context before teardown starts. Rejection leaves work acceptance, the root hierarchy and loop state intact, including diagnostic preparation outside a frame. Ordinary cleanup after terminal solver failure remains available.
+
+## Project physics capture
+
+The viewport-free fallback runtime captures active-feature `Physics2DEngine` and `Physics2DAllowCPUFallback` on first world creation. Viewport worlds use the same capture helper. The tree steps each retained selected runtime once; later project edits leave existing worlds intact.
+
+See [the selection checks](../components/physics-backends.md#project-physics-selection).

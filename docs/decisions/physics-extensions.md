@@ -1,6 +1,6 @@
 # Physics backend extension decisions
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 <a id="adr-0103"></a>
 ## ADR 0103: Registered world backends and typed extension dispatch
@@ -60,6 +60,15 @@ interception would leave scene behavior and direct queries outside the extension
   existing CPU/GPU identity and fallback diagnostic. A distinct extension backend
   identity must not falsely claim that an arbitrary implementation is Box2D or the
   resident GPU store.
+- The project engine selector supplies implicit scene/viewport defaults through
+  the same named registry resolution. DEFAULT captures the current priority
+  registration; a concrete project name captures that provider independently of
+  later priority changes. Feature overrides and the separate startup fallback
+  setting are sampled before implicit runtime identity allocation. Public World
+  and SpaceCreate overloads retain their explicit/parameterless semantics, and
+  project changes never reconfigure a captured runtime. The selector validates
+  nonempty text in the typed registry, allowing plugins to register names after
+  project loading; actual name resolution occurs on implicit world creation.
 - The facade retains shared resource RIDs and common authoring/lifetime metadata.
   Backend-private handles stay private. Adapt creation hooks to receive engine-
   assigned resource identities where needed; the capability is still actual
