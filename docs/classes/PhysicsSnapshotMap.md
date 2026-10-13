@@ -1,6 +1,6 @@
 # PhysicsSnapshotMap
 
-Last updated: 2026-10-11
+Last updated: 2026-10-13
 
 **Declaration:** `public sealed partial class PhysicsSnapshotMap : IDisposable`
 
@@ -26,6 +26,12 @@ senders or decide whether a received tick is stale. CPU/GPU backends and local
 creation order may differ; scene/server roles and physical authoring must match.
 A validation failure preserves a usable world; a failure after mutation starts
 requires world disposal. See the component for exact state and verification limits.
+
+[CPU-only network profiles](../components/physics-network-example.md#cpu-only-and-separate-numerical-profiles)
+exercise portable application and numbered-input replay across three actual
+processes with serial/separate numerical execution. Lifecycle recipes and
+exact-once confirmed effects remain the application's policy; these checks retain
+GPU, native and broader platform/performance limits.
 
 ## Selected fields, exceptions and portable observation
 

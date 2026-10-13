@@ -5,9 +5,24 @@ namespace Electron2D.Examples.PhysicsNetwork;
 // Backend instrumentation belongs to the tests; the actual example consumes only public engine APIs.
 internal sealed partial class NetworkSession
 {
+    private int _numericalSteps;
+    private bool _numericalThreadVerified = true;
+    partial void PrepareBackendProbe()
+    {
+        var space = PhysicsServer.Service.GetSceneSpace(Simulation.World.Space);
+        if (Simulation.World.PhysicsBackend != PhysicsServer.Backend.CPU) return;
+        var owner = Environment.CurrentManagedThreadId;
+        var separate = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DRunOnSeparateThread);
+        Box2D.NET.B2Worlds.b2GetWorldFromId(space.WorldID).finalizeBodyStates += _ =>
+        {
+            _numericalSteps++;
+            _numericalThreadVerified &= (Environment.CurrentManagedThreadId != owner) == separate;
+        };
+    }
     partial void FillBackendReport(SessionReport report)
     {
         report.BackendInstrumented = true;
+        report.NumericalSteps = _numericalSteps; report.NumericalThreadVerified = _numericalThreadVerified && _numericalSteps > 0;
         var gpu = PhysicsServer.Service.GetSceneSpace(Simulation.World.Space).GPUStore;
         if (gpu is null) return;
         report.GPUUploadBytes = gpu.UploadBytes; report.GPUReadbackBytes = gpu.ReadbackBytes;

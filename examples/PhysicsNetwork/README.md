@@ -5,6 +5,30 @@ steps a headless scene at 60 Hz. Clients send numbered inputs, predict locally,
 apply portable server snapshots and replay unconfirmed input. The verification run
 starts an independent GPU client and a CPU client that joins later.
 
+To run the same three-process scenario entirely on CPU without a graphics device,
+select the first client's backend explicitly. Add `--threaded` to run each world's
+numerical physics on its retained separate thread:
+
+```sh
+dotnet run --project examples/PhysicsNetwork -c Release -- --check --client-backend cpu --threaded --ticks 600 --output bin/physics-network-cpu-threaded
+```
+
+This writes `server.json`, `cpu.json`, `late.json` and their logs. Every process
+must reject strict GPU startup before running CPU physics. Omit `--threaded` for
+owner-thread numerical execution. The default GPU scenario remains required for
+cross-backend verification; a CPU-only pass does not establish that result.
+
+`--ticks` extends the run without changing the lifecycle script; the default remains
+360. `--late-join-tick 310 --ticks 600` reproduces admission after the server's
+measurement threshold. Warm allocation samples require 128 actual completed steps
+in each process as well as tick 300, and positive measured prediction/replay counts.
+Cold replay allocations remain in the total replay counter. The CPU test-host
+profiles use 600 ticks so late clients can complete their own warmup.
+For admission after tick 300, the authority additionally sleeps the crate, wakes
+it with an impulse and transfers player control after the second client joins.
+The client must observe those transitions; the final torque remains at the selected
+final tick.
+
 ```sh
 dotnet run --project examples/PhysicsNetwork -c Release -- --check --output bin/physics-network-check
 ```
@@ -26,6 +50,12 @@ and wait counters without exposing them to the example:
 ```sh
 ELECTRON2D_TEST_PHYSICS_NETWORK=1 dotnet run --project tests/Electron2D.Tests -c Release
 ```
+
+Use `ELECTRON2D_TEST_PHYSICS_NETWORK=cpu` or `cpu-threaded` for the instrumented
+CPU-only profiles, and `gpu-threaded` for the separate-thread GPU profile. The test
+host additionally records actual CPU numerical intervals and verifies their thread
+against the requested policy. The public-only example reports the captured policy
+without claiming those private measurements. GPU modes require an available device.
 
 The scenario includes moving/jumping players, contact/Area events, a two-body pin,
 sleeping bodies, crate creation at tick 90, removal at 140, ID reuse with a new

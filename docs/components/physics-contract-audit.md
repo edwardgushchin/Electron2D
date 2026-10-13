@@ -231,6 +231,12 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
 - Long/coupled workload, network lifecycle and real-window/performance acceptance
   must retain their own revision, inputs, numerical bounds and live evidence.
   A historical stage mirror or a narrower unit test cannot replace the full path.
+- [CPU-only network profiles](physics-network-example.md#cpu-only-and-separate-numerical-profiles)
+  verify three actual impaired ENet processes through tick 360 with serial/separate
+  numerical execution, portable correction/replay, lifecycle/sleep and exact-once
+  confirmed effects. The instrumented host observes the actual CPU lane; prepared
+  prediction/replay retains strict 0/0 owner/all-thread bytes. Current mixed-backend,
+  native and final performance gates stay open.
 
 The explicit goal requirements are routed as follows; a named suite is executable
 coverage of its stated cases, not proof of arbitrary external algorithms.

@@ -198,7 +198,12 @@ unified shape/joint debug drawing, remaining typed server state/identity operati
 and backend extension/registration. Authoritative networking additionally requires
 fixed-tick input and snapshots, restore/replay, predicted/confirmed events, remote
 interpolation and separate-process CPU-server/GPU-client verification under
-[ADR 0094](../decisions/networking.md#adr-0094); these remain unimplemented. The owning [coverage tables](../coverage/index.md),
+[ADR 0094](../decisions/networking.md#adr-0094). The
+[public network example](../components/physics-network-example.md) executes these
+capabilities with application-owned lifecycle/effect policy; its CPU-only profiles
+also verify serial/separate numerical execution without a graphics device.
+Current mixed-backend, wider platform and final performance acceptance remain
+open. The owning [coverage tables](../coverage/index.md),
 including [bodies](../coverage/classes/RigidBody2D.md),
 [surfaces](../coverage/classes/StaticBody2D.md) and
 [server operations](../coverage/classes/PhysicsServer2D.md), retain the detailed

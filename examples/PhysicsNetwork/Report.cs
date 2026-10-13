@@ -21,6 +21,11 @@ internal sealed class SessionReport
     public int RenderedInterpolatedSamples { get; set; }
     public bool RenderedPhysicsPreserved { get; set; }
     public bool BackendInstrumented { get; set; }
+    public bool SeparateThread { get; set; }
+    public int CompletedSteps { get; set; }
+    public int WarmupSteps { get; set; }
+    public int NumericalSteps { get; set; }
+    public bool NumericalThreadVerified { get; set; }
     public bool GPUUnavailableVerified { get; set; }
     public long GPUUploadBytes { get; set; }
     public long GPUReadbackBytes { get; set; }
@@ -100,6 +105,8 @@ internal sealed partial class NetworkSession
         {
             Role = _authority ? "server" : "client",
             Backend = Simulation.World.PhysicsBackend.ToString(),
+            CompletedSteps = CompletedSteps,
+            WarmupSteps = WarmupSteps,
             Tick = Simulation.Tick,
             JoinTick = JoinTick,
             EventSequence = _authority ? Simulation.EventSequence : _confirmedEvent,

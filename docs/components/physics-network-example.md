@@ -93,13 +93,87 @@ client must join at or after tick 90 and after the GPU client. A successful proc
 the parent reads all three reports and compares their actual world contents.
 
 Allocation measurements wrap actual SceneTree steps. Tick 300 onward measures
-prepared authority/prediction/replay steps on both owner and all managed threads,
+prepared authority/prediction/replay steps on both owner and all managed threads
+after each process completes its own first 128 physical steps,
 with positive sample counts required. Cold contact construction and lifecycle costs
 remain in the separate total replay allocation counter. Each process reserves
 131,072 bytes of command records and 36,864 bytes of event records, excluding array
 headers. Additional presentation storage, the 4 MiB impairment slab, reusable wire
 buffers, engine world/checkpoint buffers, transport state and native/GPU storage are
 separate costs. Histories are bounded; no unlimited snapshot list is retained.
+
+## CPU-only and separate numerical profiles
+
+`--check --client-backend cpu` executes the same authority, early prediction client
+and late client without an available GPU. The early client report is named cpu.json;
+the default GPU scenario retains gpu.json. `--threaded` passes the captured numerical
+thread policy to every child before its world is created. The CPU-only check rejects
+window presentation; native-window and CPU-server/GPU-client gates remain separate.
+
+The instrumented host observes actual CPU finalization intervals, counts them and
+checks their thread against the captured policy. Reports distinguish SeparateThread,
+BackendInstrumented, NumericalSteps and NumericalThreadVerified. The public-only
+example records the selected policy; it does not claim private lane observation.
+Both profiles use unchanged command/event/topology, impairment and convergence
+assertions, including positive warm prediction/replay counts and strict 0/0 owner/
+all-thread allocation. They retain the original .002 unit/radian/unit-per-second
+authoritative-state tolerances; this does not require matching unsynchronized paths.
+
+On 2026-10-13 the initial instrumented CPU-only serial and separate-thread runs
+completed tick 360 on all three processes. Each generated 14 authority events;
+the early client confirmed all 14, while the late client joined at tick 123 and
+confirmed the eight events after its baseline. Actual numerical intervals were
+360/1315/860 in serial and 360/1267/845 with a separate thread (authority/early/late).
+Each client's prepared prediction and replay allocated zero owner/all-thread bytes.
+These are individual live network observations, not a scheduling benchmark.
+Evidence is retained under bin/physics-network-thread/2026-10-13. GPU/native,
+foreign-platform, native allocator and final performance acceptance remain open.
+
+A subsequent same-source check exposed a late client joining at tick 308 with only
+81 completed steps. The old tick-only classification called its first cold replay
+warm and recorded 571008 owner / 572248 all-thread bytes. The classification now
+requires 128 completed steps in that process before the measured interval; positive
+warm prediction/replay sample assertions remain mandatory. Cold replay stays in
+ReplayAllocations rather than being subtracted. CompletedSteps/WarmupSteps expose
+the preparation boundary in every report. `--late-join-tick 310 --ticks 600` makes
+late admission after the old threshold reproducible while allowing real preparation
+and measured work. The default mixed-backend run remains 360 ticks; CPU test-host
+profiles use 600 ticks. Extending duration retains every lifecycle/physical check.
+Admission after tick 300 also missed the original crate wake, so the extended
+scenario schedules an explicit crate sleep 32 ticks after the second peer's
+admission, an impulse wake 16 ticks later and a control handoff after another 16.
+Sleep/wake observations remain required on both clients. The final torque impulse
+uses the selected final tick so the convergence check still contains real angular
+state. Earlier lifecycle and natural-sleep/wake cases remain in the same run.
+
+The final frozen-build matrix passes seven 600-tick three-process runs: instrumented
+serial/separate profiles with tick-90 and tick-310 admission, public-only serial/
+separate profiles with tick-310 admission, and the cpu-threaded environment selector.
+Both hosts use the same runtime assembly. In the instrumented late separate-thread
+run, the client joined at tick 344, executed 925 actual numerical intervals and
+measured 190 predicted plus 607 replay steps at 0/0 owner/all-thread bytes. It
+confirmed exactly nine events after its baseline from the authority's 21-event
+journal and observed four wakes. Its 5696 cold replay bytes remain reported.
+The matrix and manifests are retained in
+bin/physics-network-thread/2026-10-13/final-verified. These runs establish CPU
+integration through the stated public protocol; current GPU and window runs are
+still unverified.
+
+On source baseline ba48113bd825f3542a76b1b2e1ee4081cc01c6fd plus this change, the
+late separate-thread CPU run reports the following full step/correction costs.
+Timing includes cold preparation and actual concurrent packet handling; this is
+one impaired loopback run, not an isolated scheduling or GPU comparison.
+
+| Process | Step p50 / p95 / p99 ms | Correction + replay p50 / p95 / p99 ms | Sent / received application bytes |
+| --- | --- | --- | --- |
+| CPU authority | 0.1001 / 0.1629 / 5.0383 | — | 685864 / 200396 |
+| Early CPU client | 0.0899 / 0.1373 / 0.2855 | 0.8510 / 1.4539 / 18.5147 | 141456 / 463700 |
+| Late CPU client | 0.0846 / 0.1253 / 0.1553 | 0.8011 / 1.1100 / 2.7161 | 59192 / 222196 |
+
+Each process retains 131072 command-history bytes and 36864 event-history bytes,
+excluding array headers and the other storage listed above. Cold replay totals
+are 11696/5696 bytes on early/late clients, while all measured warm groups remain
+0/0. No window, GPU transfer/wait or native allocator measurement is inferred.
 
 ## Remaining limits
 

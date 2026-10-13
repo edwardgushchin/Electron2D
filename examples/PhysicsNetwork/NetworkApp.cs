@@ -7,7 +7,6 @@ internal static class NetworkApp
 {
     internal static async Task<int> Run(string[] args)
     {
-        if (args.Contains("--check")) return await ProcessCheck.Run(args);
         string Value(string name, string fallback)
         {
             var at = Array.IndexOf(args, name);
@@ -17,6 +16,8 @@ internal static class NetworkApp
         }
         try
         {
+            if (args.Contains("--check")) return await ProcessCheck.Run(args);
+            ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, args.Contains("--threaded"));
             var authority = args.Contains("--server");
             var windowed = args.Contains("--window");
             if (windowed && (authority || args.Contains("--require-no-gpu"))) throw new ArgumentException("Window presentation requires a graphics-capable client.");
@@ -31,6 +32,8 @@ internal static class NetworkApp
             var gpuUnavailable = requireNoGPU && VerifyGPUUnavailable();
             var port = int.Parse(Value("--port", "7777")); var ticks = int.Parse(Value("--ticks", "360"));
             if (ticks is < 360 or > 1800) throw new ArgumentException("Tick count must be between 360 and 1800.");
+            var lateJoinTick = int.Parse(Value("--late-join-tick", "90"));
+            if (lateJoinTick < 90 || lateJoinTick >= ticks) throw new ArgumentException("Late join must be between tick 90 and the final tick.");
             var token = Guid.Parse(Value("--token", "dccdb93a-948e-4dda-b4ec-714c7dd69a91"));
             var reportPath = Value("--report", authority ? "physics-server.json" : "physics-client.json");
             using var session = new NetworkSession(authority, backend, port, token, ticks, args.Contains("--impaired"));
@@ -41,13 +44,14 @@ internal static class NetworkApp
             while (!session.Done)
             {
                 session.Poll();
-                if (authority && !announcedLateJoin && session.Simulation.Tick >= 90)
+                if (authority && !announcedLateJoin && session.Simulation.Tick >= (ulong)lateJoinTick)
                 {
                     Console.WriteLine($"LATE_JOIN_READY {session.Simulation.Tick}"); Console.Out.Flush(); announcedLateJoin = true;
                 }
                 Thread.Sleep(1);
             }
             var report = session.Report(); report.GPUUnavailableVerified = gpuUnavailable;
+            report.SeparateThread = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DRunOnSeparateThread);
             report.RequestedWindowVSync = windowReport.RequestedWindowVSync; report.WindowVSync = windowReport.WindowVSync; report.WindowMaxFPS = windowReport.WindowMaxFPS;
             report.Renderer = windowReport.Renderer; report.WindowFrames = windowReport.WindowFrames; report.WindowFPS = windowReport.WindowFPS;
             report.WindowFramePercentilesMS = windowReport.WindowFramePercentilesMS;

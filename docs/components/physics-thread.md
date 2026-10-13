@@ -67,6 +67,16 @@ and a measured scheduling advantage remain open. The setting stays Partial in
 coverage until the GPU/registered/numerical/native boundaries are fully verified;
 CPU workers alone are not its acceptance proof.
 
+[The network example](physics-network-example.md#cpu-only-and-separate-numerical-profiles)
+now runs the complete impaired three-process CPU scenario in serial/separate modes.
+The instrumented host verifies actual numerical thread identity while authority
+correction/replay, topology, sleep and exact-once confirmed effects execute. Every
+process rejects GPU startup first; positive warm prediction/replay samples retain
+0/0 managed owner/all-thread bytes after 128 completed steps in each process.
+Late admission after tick 300 is explicitly exercised with a longer run rather
+than labelling its initial frames warm. This extends CPU integration evidence without
+closing GPU/native or scheduling-performance gates.
+
 ## Decisions
 
 [ADR 0054](../decisions/physics-backends.md#adr-0054) owns captured scheduling,

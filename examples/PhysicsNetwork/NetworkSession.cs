@@ -39,6 +39,7 @@ internal sealed partial class NetworkSession : IDisposable
     private bool _started, _finalState, _done, _disposed;
     private int _firstPeer, _secondPeer;
     private ulong _confirmedTick, _confirmedEvent, _baseline, _frameSerial;
+    private ulong _lateSleepTick;
     private int _manifestCount;
     internal int Corrections, ReplayedTicks, RejectedCommands, StalePackets, MalformedPackets, PredictedEvents, ReplayEvents, ConfirmedEffects;
     internal int SpawnCorrections, OwnershipCorrections, SleepObservations, WakeObservations;
@@ -46,6 +47,8 @@ internal sealed partial class NetworkSession : IDisposable
     private readonly uint[] _sleepGenerations = new uint[NetworkWorld.Capacity];
     internal long StepAllocations, ReplayAllocations, WarmReplayAllocations, WarmStepTotalAllocations, WarmReplayTotalAllocations, ReceivedBytes;
     internal int AcceptedCommands, AppliedCommands, CoalescedStates, WarmSteps, WarmReplaySteps, InvalidHello, GenerationCommands;
+    internal const int WarmupSteps = 128;
+    internal int CompletedSteps;
     internal double MaxCorrectionDistance, MaxVisualOffset, StepMS, CorrectionMS;
     internal readonly double[] StepSamples = new double[4096], CorrectionSamples = new double[4096];
     internal int StepSampleCount, CorrectionSampleCount;
@@ -55,6 +58,7 @@ internal sealed partial class NetworkSession : IDisposable
     {
         _authority = authority; _token = token; _ticks = ticks;
         Simulation = new(backend); Simulation.Observed = Observe;
+        PrepareBackendProbe();
         _peer.SetBindIP("127.0.0.1");
         if (authority) _peer.CreateServer(port, 4, 1); else _peer.CreateClient("127.0.0.1", port, 1);
         _network.MultiplayerPeer = _peer;
@@ -84,6 +88,7 @@ internal sealed partial class NetworkSession : IDisposable
             Simulation.Reconcile(_manifest.AsSpan(0, _manifestCount));
         }
     }
+    partial void PrepareBackendProbe();
     internal void Poll()
     {
         _now = _clock.Elapsed.TotalSeconds;
@@ -174,7 +179,11 @@ internal sealed partial class NetworkSession : IDisposable
         if (slot < 0) { RejectedCommands++; return; }
         var peer = new PeerState(sender, Simulation.EventSequence) { Ready = true }; _peers[slot] = peer;
         if (_firstPeer == 0) { _firstPeer = sender; SetOwner(10, sender); }
-        else if (_secondPeer == 0) { _secondPeer = sender; SetOwner(11, sender); }
+        else if (_secondPeer == 0)
+        {
+            _secondPeer = sender; SetOwner(11, sender);
+            if (Simulation.Tick >= 300) _lateSleepTick = Simulation.Tick + 32;
+        }
         if (!_started) { _started = true; _nextStep = _now; }
         SendState(peer);
     }
@@ -188,14 +197,16 @@ internal sealed partial class NetworkSession : IDisposable
     {
         var tick = Simulation.Tick + 1; Simulation.BeginTick(tick, SimulationPhase.Authority);
         if (tick is 90 or 140 or 160) ChangeCrate(tick);
-        if (tick == 360 && Simulation.Find(10)?.Body is RigidBody finalSpinner) finalSpinner.ApplyTorqueImpulse(800);
-        if (tick == 300)
+        if (tick == (ulong)_ticks && Simulation.Find(10)?.Body is RigidBody finalSpinner) finalSpinner.ApplyTorqueImpulse(800);
+        if (_lateSleepTick != 0 && tick == _lateSleepTick) ((RigidBody)Simulation.Find(30)!.Body!).Sleeping = true;
+        if (tick == 300 || _lateSleepTick != 0 && tick == _lateSleepTick + 16)
         {
             var sleeper = (RigidBody)Simulation.Find(30)!.Body!;
             if (!sleeper.Sleeping) throw new InvalidOperationException("The scripted wake requires a previously sleeping crate.");
             sleeper.ApplyCentralImpulse(new(25, -120));
         }
-        if (tick == 240 && _secondPeer != 0) { SetOwner(10, _secondPeer); SetOwner(11, _firstPeer); }
+        if (_secondPeer != 0 && (tick == 240 || _lateSleepTick != 0 && tick == _lateSleepTick + 32))
+        { SetOwner(10, _secondPeer); SetOwner(11, _firstPeer); }
         foreach (var actor in Simulation.Actors)
         {
             if (actor is null) continue;
@@ -253,13 +264,15 @@ internal sealed partial class NetworkSession : IDisposable
     }
     private void MeasureStep(SimulationPhase phase)
     {
+        var warm = Simulation.Tick + 1 >= 300 && CompletedSteps >= WarmupSteps;
         var total = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread(); var started = Stopwatch.GetTimestamp(); Simulation.Step(phase);
         var elapsed = Stopwatch.GetElapsedTime(started).TotalMilliseconds; var allocated = GC.GetAllocatedBytesForCurrentThread() - before; var allAllocated = GC.GetTotalAllocatedBytes(true) - total;
-        if (phase == SimulationPhase.Replay) { ReplayAllocations += allocated; if (Simulation.Tick >= 300) { WarmReplayAllocations += allocated; WarmReplayTotalAllocations += allAllocated; WarmReplaySteps++; } }
+        CompletedSteps++;
+        if (phase == SimulationPhase.Replay) { ReplayAllocations += allocated; if (warm) { WarmReplayAllocations += allocated; WarmReplayTotalAllocations += allAllocated; WarmReplaySteps++; } }
         else
         {
             StepMS += elapsed; if (StepSampleCount < StepSamples.Length) StepSamples[StepSampleCount++] = elapsed;
-            if (Simulation.Tick >= 300) { StepAllocations += allocated; WarmStepTotalAllocations += allAllocated; WarmSteps++; }
+            if (warm) { StepAllocations += allocated; WarmStepTotalAllocations += allAllocated; WarmSteps++; }
         }
         for (var i = 0; i < Simulation.Actors.Length; i++)
         {
