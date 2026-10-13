@@ -1,6 +1,6 @@
 # Complete scene physics measurements
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 The [16,384-body refresh at f3983555](#16384-body-refresh-at-f3983555-2026-10-12)
 retains the complete monitored scene and its executable provenance. Older trials
@@ -443,3 +443,76 @@ goal requires measured GPU advantage and real-window FPS, without a sustained
 | headless/GPU.json | `eb2a63af4b6f1ff9166c9f2d22b3bc7b78f886a6424d8f87306145670cccb16a` |
 | window/CPU.json | `ce8f8b1ba0655be75fc1764d8cf4a0b0195753d7af515e5c42c0dcd7e2d0bbea` |
 | window/GPU.json | `f103d348dc5191a41f299ad30715117d2b54f6804a6cd278086444c344b492e6` |
+
+
+## Frozen complete scene at 7c37a291, 2026-10-13
+
+A source-verified copy of the Release runtime from 7c37a291 ran both explicit
+CPU/GPU implementations in the same monitored scene: 16,384 awake scene bodies,
+four walls, 144 Hz, four substeps, sixteen iterations, friction .25, bounce .35,
+eight reported contacts per body, real enter/exit callbacks and interpolation.
+Each pair used 1600 warmup ticks and 256 measured complete ticks; neither path
+reduced the body count, physical settings or observation features.
+
+| Profile | CPU step p50 / p95 / p99 ms | GPU step p50 / p95 / p99 ms | CPU / GPU actual window FPS | Owner / all-thread bytes |
+| --- | --- | --- | --- | --- |
+| Headless complete scene | 126.2022 / 399.5967 / 448.7577 | 81.2019 / 178.9792 / 211.0549 | — | 0 / 0 on both |
+| 1152×800 native window | 105.0550 / 119.3940 / 124.5442 | 97.9140 / 116.6219 / 130.5440 | 5.8356 / 6.1555 | 0 / 0 on both |
+
+The headless median ratio is 1.554 CPU/GPU; the window
+physics median ratio is 1.073. Actual window throughput differs by
+5.48 percent in this single desktop pair. These results show
+a measured advantage for this workload, with substantial latency variability;
+they do not establish repeatability, a general GPU win or sustained 60 Hz.
+
+| GPU complete path | Upload B/tick | Readback B/tick | Submissions/tick | Wait p50 / p95 / p99 ms |
+| --- | ---: | ---: | ---: | --- |
+| Headless | 262424 | 11863151.1875 | 19.1055 | 11.3960 / 15.5534 / 19.7629 |
+| Window | 262488 | 11863226.7500 | 21.0469 | 35.9675 / 51.7473 / 64.5518 |
+
+The GPU remains the authoritative numerical owner. This deliberately observed
+scene requires current logical poses, point velocities and capped contact values
+for all receivers before callbacks. The roughly 11.86 MB read is the combined
+publication/report path, not proof that internal broad-phase/constraint topology
+is mirrored. It is a measured cost, not a claim of minimal traffic. In headless
+profiling the GPU solve, result synchronization and body/contact completion means
+are 17.9460, 7.9470 and 54.7095 ms.
+The full public path includes those host costs; a kernel-only timing cannot
+replace the total step distribution.
+
+| Window component p50 / p95 / p99 ms | CPU | GPU |
+| --- | --- | --- |
+| Full frame | 168.5976 / 188.0159 / 193.2391 | 162.7397 / 186.0620 / 196.8254 |
+| Pose publication to drawing | 1.0183 / 1.2426 / 1.4295 | 1.0684 / 1.4173 / 1.9720 |
+| Draw/present | 62.4491 / 68.0236 / 70.4011 | 63.7471 / 68.4804 / 72.7594 |
+
+Both windows requested Disabled VSync and reported Enabled. The fixed-frame host
+uses one physics tick per draw and fraction zero; the FPS includes actual drawing
+and presentation but is not a catch-up scheduling or refresh-rate guarantee.
+Timed physics and complete-frame owner/all-thread managed bytes are zero. PNG
+capture and final validation occur outside those brackets. Both PNGs were read
+and visually checked; the mass scene is present.
+
+Physical gates retain penetration/escape ≤ .601 scene units and basis agreement
+≤ 1e-6. CPU penetration/escape is 0.297866821/0.299926758; GPU
+headless is 0.089958191/0.022941589, and window is
+0.116661072/0.077636719. All motion/energy/awake/publication
+checks pass. CPU retains 86303 contacts, GPU headless/window
+91591/91008; different lists/trajectories are allowed.
+
+The immutable runtime manifest remained byte-identical throughout both processes.
+Main advanced to 412222a7 during the window pair due to another chat's offscreen
+rendering work; the repository-state guard then stopped the outer runner. Each
+benchmark itself exited zero. These are valid frozen-7c37a291 results, not results
+for the newer main. The source/revision drift and guard failure are retained;
+network work subsequently reused only this same verified frozen runtime. Shared
+desktop activity and the concurrent work limit performance attribution.
+
+Evidence: bin/physics-goal-acceptance/2026-10-13/frozen-7c37a291 contains exact
+commands/environment/outcomes, runtime manifests, source fingerprints, JSON and
+PNGs. Runtime source SHA-256 is
+`c54bd0322612deac7e4728928c390bc9130b307a7f9762e12384b66b069834d6`;
+Electron2D.dll is `94b6b85ce0611455c65f944e9fb00e31c5d03f35878687d08aa008557185c6bf`;
+test DLL is `71499d686dd220e445cc3d71f3fce97df2bac7f6e17929a363af6c68a5d80276`.
+Native allocator totals, isolated renderer transfers/waits, other platforms and
+complete inherited/registered numerical acceptance remain open.

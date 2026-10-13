@@ -1162,3 +1162,14 @@ deepest caps, depth filters and encounter-order ties. Each path measures 128
 transient replay cycles and 768 changed cap/depth frames at strict 0/0
 owner/all-thread bytes. General feature/coupled geometry, portable networking,
 native totals, rendering and final performance/platform acceptance remain open.
+
+
+[Complete-scene refresh](physics-scene-performance.md#frozen-complete-scene-at-7c37a291-2026-10-13)
+and [separate-process window checks](physics-network-example.md#frozen-processwindow-checks-at-7c37a291-2026-10-13)
+now retain frozen-7c37a291 CPU/GPU distributions, transfers/waits, full-frame FPS,
+zero warmed physics bytes, impaired network convergence and replay/history costs.
+The 16,384-body observed scene has measured GPU advantage in this desktop trial;
+small-world GPU replay remains costly. The runtime stayed byte-identical while
+main advanced, so the reports preserve their actual revision and verification
+limits. The audit also identifies the viewport On-default mismatch and missing
+project engine/thread contracts; inherited/provider acceptance remains open.

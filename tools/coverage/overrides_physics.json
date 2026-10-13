@@ -7757,6 +7757,20 @@
       ],
       "state": "Excluded",
       "reason": "ADRs 0001/0087/0089/0098: the untyped numeric selector representation is replaced by all nine concrete typed space parameter getter/setter pairs. Their capabilities execute; all nine selector values are already excluded with their exact typed projections."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:physics/2d/physics_engine"
+      ],
+      "state": "Unimplemented",
+      "reason": "CPU/GPU worlds and named backend/default registration already execute; the old first-Box2D prerequisite is fulfilled. The project engine-selection setting still has no executable typed descriptor or startup/default mapping. Its first slice must preserve explicit immutable per-world selection, DEFAULT/named provider semantics, requested/actual identity, invalid selection errors and startup-only fallback under ADRs 0054/0103."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:physics/2d/run_on_separate_thread"
+      ],
+      "state": "Unimplemented",
+      "reason": "CPU/GPU runtime and retained CPU workers already execute; the old first-Box2D prerequisite is fulfilled. The project setting still has no executable separate-thread simulation contract. Its first slice must implement actual scheduling, world/device ownership, authoring and callback barriers, lifecycle/failure teardown and cross-backend checks under ADRs 0054/0103; worker parallelism inside an owner-thread step or an inert stored bool does not implement it."
     }
   ]
 }

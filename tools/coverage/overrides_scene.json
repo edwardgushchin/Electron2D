@@ -5295,6 +5295,11 @@
       "godot": "AnimationMixer::property:reset_on_save",
       "electron2d": "property:Electron2D.AnimationMixer.ResetOnSave()",
       "reason": "ADR 0093 executable RESET save preparation. Stored ResetOnSave defaults true and executes through separate allocating PackedScene.PackForSave: guarded source capture, detached exact factories, isolated deep resource copies, RESET value/Bezier at zero, coupled property/resource capture, original factory metadata and owned copied assets. Preview values/clocks/queues remain untouched; ordinary Pack stays actual-pose. Method/audio/nested events, scene activation/instantiation notification and local-resource setup are suppressed. AnimationResetSaveTests verifies all controller families, disabled/missing/inactive policies, setter failures, source/hierarchy guards, asset lifetime and fresh-process files; Linux native GPU/compatibility checks are recorded separately."
+    },
+    {
+      "godot": "Viewport::property:physics_interpolation_mode",
+      "electron2d": "property:Electron2D.Node.PhysicsInterpolationMode()",
+      "reason": "The inherited typed Node mode is executable on Viewport, with per-viewport camera snapshots. Its viewport-specific On default is still missing from construction and property metadata; see the Partial status rather than treating the whole policy as absent."
     }
   ],
   "extras": [
@@ -9505,8 +9510,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Remaining viewport-specific physics interpolation policy over existing worlds and renderer; trigger: its complete default/override integration. Pointer picking now executes under ADR 0099.",
+      "state": "Partial",
+      "reason": "Inherited Node interpolation mode and viewport camera snapshots execute. The pinned Viewport override defaults to On (1), but the current constructor and Node property descriptor leave Inherit (0), so an Off parent disables a default nested viewport. Complete the Window/SubViewport constructor/descriptor defaults and verify live policy, packing/copy/reset and canvas/camera presentation; the renderer/world prerequisite already exists.",
       "godot": [
         "Viewport::property:physics_interpolation_mode"
       ]

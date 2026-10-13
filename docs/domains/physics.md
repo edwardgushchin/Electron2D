@@ -804,3 +804,14 @@ and encounter-order ties. The independent fixture retains bounded per-peer
 numerical rows and frozen velocities; 128 replay cycles and 768 changed-policy
 frames each measure 0/0 owner/all-thread bytes. Arbitrary shape features, coupled
 geometry and final network/native/performance/platform acceptance remain open.
+
+
+[Complete-scene refresh](../components/physics-scene-performance.md#frozen-complete-scene-at-7c37a291-2026-10-13)
+and [separate-process window checks](../components/physics-network-example.md#frozen-processwindow-checks-at-7c37a291-2026-10-13)
+now retain frozen-7c37a291 CPU/GPU distributions, transfers/waits, full-frame FPS,
+zero warmed physics bytes, impaired network convergence and replay/history costs.
+The 16,384-body observed scene has measured GPU advantage in this desktop trial;
+small-world GPU replay remains costly. The runtime stayed byte-identical while
+main advanced, so the reports preserve their actual revision and verification
+limits. The audit also identifies the viewport On-default mismatch and missing
+project engine/thread contracts; inherited/provider acceptance remains open.

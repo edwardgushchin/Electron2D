@@ -492,13 +492,13 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [Engine](classes/Engine.md) | [Object](classes/Object.md) | 0 | 7 | 0 | 0 | 0 |
 | [Performance](classes/Performance.md) | [Object](classes/Object.md) | 3 | 1 | 0 | 0 | 0 |
-| [ProjectSettings](classes/ProjectSettings.md) | [Object](classes/Object.md) | 19 | 3 | 2 | 0 | 0 |
+| [ProjectSettings](classes/ProjectSettings.md) | [Object](classes/Object.md) | 19 | 3 | 0 | 2 | 0 |
 | [SceneTree](classes/SceneTree.md) | [MainLoop](classes/MainLoop.md) | 2 | 1 | 0 | 0 | 0 |
 | [TileData](classes/TileData.md) | [Object](classes/Object.md) | 14 | 0 | 0 | 0 | 0 |
 | [TileMapLayer](classes/TileMapLayer.md) | [Node2D](classes/Node2D.md) | 10 | 0 | 0 | 0 | 0 |
 | [TileSet](classes/TileSet.md) | [Resource](classes/Resource.md) | 12 | 0 | 0 | 0 | 0 |
-| [Viewport](classes/Viewport.md) | [Node](classes/Node.md) | 3 | 0 | 1 | 0 | 0 |
-| **Total** | | 63 | 12 | 3 | 0 | 0 |
+| [Viewport](classes/Viewport.md) | [Node](classes/Node.md) | 3 | 1 | 0 | 0 | 0 |
+| **Total** | | 63 | 13 | 0 | 2 | 0 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -512,10 +512,10 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Engine::property:physics_ticks_per_second`](classes/Engine.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Engine::property:time_scale`](classes/Engine.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Performance::method:get_monitor(int:Performance.Monitor)`](classes/Performance.md) | Partial | Three completed physical producers and the complete typed custom-monitor lifecycle execute. Remaining built-in monitor selectors need their exact runtime producer instrumentation, counters or native diagnostics; these prerequisites remain recorded per row. Native Linux sessions and warmed managed reads are verified; debugger UI and foreign acceptance are separate. |
-| [`ProjectSettings::property:physics/2d/physics_engine`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
-| [`ProjectSettings::property:physics/2d/run_on_separate_thread`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
+| [`ProjectSettings::property:physics/2d/physics_engine`](classes/ProjectSettings.md) | Unimplemented | CPU/GPU worlds and named backend/default registration already execute; the old first-Box2D prerequisite is fulfilled. The project engine-selection setting still has no executable typed descriptor or startup/default mapping. Its first slice must preserve explicit immutable per-world selection, DEFAULT/named provider semantics, requested/actual identity, invalid selection errors and startup-only fallback under ADRs 0054/0103. |
+| [`ProjectSettings::property:physics/2d/run_on_separate_thread`](classes/ProjectSettings.md) | Unimplemented | CPU/GPU runtime and retained CPU workers already execute; the old first-Box2D prerequisite is fulfilled. The project setting still has no executable separate-thread simulation contract. Its first slice must implement actual scheduling, world/device ownership, authoring and callback barriers, lifecycle/failure teardown and cross-backend checks under ADRs 0054/0103; worker parallelism inside an owner-thread step or an inert stored bool does not implement it. |
 | [`ProjectSettings::property:physics/common/max_physics_steps_per_frame`](classes/ProjectSettings.md) | Partial | Typed key identity for upstream setting; Get/Set access values (ADR 0019). |
 | [`ProjectSettings::property:physics/common/physics_jitter_fix`](classes/ProjectSettings.md) | Partial | Typed key identity for upstream setting; Get/Set access values (ADR 0019). |
 | [`ProjectSettings::property:physics/common/physics_ticks_per_second`](classes/ProjectSettings.md) | Partial | Typed key identity for upstream setting; Get/Set access values (ADR 0019). |
 | [`SceneTree::signal:physics_frame()`](classes/SceneTree.md) | Partial | Typed frame-start event; exact signal ordering requires audit under ADR 0002. |
-| [`Viewport::property:physics_interpolation_mode`](classes/Viewport.md) | Blocked | Remaining viewport-specific physics interpolation policy over existing worlds and renderer; trigger: its complete default/override integration. Pointer picking now executes under ADR 0099. |
+| [`Viewport::property:physics_interpolation_mode`](classes/Viewport.md) | Partial | Inherited Node interpolation mode and viewport camera snapshots execute. The pinned Viewport override defaults to On (1), but the current constructor and Node property descriptor leave Inherit (0), so an Off parent disables a default nested viewport. Complete the Window/SubViewport constructor/descriptor defaults and verify live policy, packing/copy/reset and canvas/camera presentation; the renderer/world prerequisite already exists. |

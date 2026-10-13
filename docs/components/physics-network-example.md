@@ -1,6 +1,6 @@
 # Authoritative physics network example
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 [PhysicsNetwork](../../examples/PhysicsNetwork/README.md) connects the existing
 `SceneMultiplayer`/`ENetMultiplayerPeer`, `PhysicsSnapshotMap`, `PhysicsSnapshot` and
@@ -311,3 +311,62 @@ The complete runtime manifest and source/revision are unchanged across all five
 runs. The GPU-renderer example PNG is
 `5a46e48ae335b726cc37aaf2a4c8525167aa98d9198655088eecb58bad2d848f`;
 compatibility is `33857c36bd0cf0d06c1fce142985b03d01f08a5ac2b884c917704d457de467fb`.
+
+
+## Frozen process/window checks at 7c37a291, 2026-10-13
+
+The instrumented public example ran three real ENet processes twice using the
+byte-identical frozen runtime from the complete scene measurement above. CPU
+authority and late CPU client removed display access and required actual strict
+GPU startup rejection before their working CPU worlds. The early client selected
+GPU physics with either GPU or compatibility rendering. Every process completed
+tick 360; both parent checks exited zero.
+
+| Renderer / process | Join tick | Corrections / replay ticks | Step p50 / p95 / p99 ms | Correction p50 / p95 / p99 ms | Sent / received application B |
+| --- | ---: | ---: | --- | --- | ---: |
+| gpu / server | 0 | 0 / 0 | 0.0826 / 0.1248 / 5.6666 | 0.0000 / 0.0000 / 0.0000 | 469304 / 92268 |
+| gpu / gpu | 1 | 69 / 843 | 4.7845 / 5.6465 / 5.9987 | 58.5214 / 77.3214 / 84.5448 | 43524 / 275908 |
+| gpu / late | 123 | 46 / 614 | 0.0736 / 0.1142 / 1.8890 | 0.6953 / 0.8981 / 30.4094 | 52776 / 190572 |
+| compatibility / server | 0 | 0 / 0 | 0.0867 / 0.1359 / 5.5279 | 0.0000 / 0.0000 / 0.0000 | 466212 / 93316 |
+| compatibility / gpu | 1 | 69 / 853 | 4.6651 / 5.7695 / 6.5362 | 57.7216 / 79.1319 / 101.8850 | 45144 / 274240 |
+| compatibility / late | 123 | 47 / 619 | 0.0754 / 0.1215 / 1.8983 | 0.6641 / 0.9385 / 30.0676 | 52744 / 189148 |
+
+Numbered input, generation/ownership errors, body creation/removal, contact/joint
+response, sleep/wake, late admission, 20–99 ms application delay, loss/duplication/
+reordering, stale rejection, injected position/rotation divergence and exact-once
+confirmed effects all execute with positive assertions. Final identity/topology/
+control epochs, sleep and numerical state converge within the unchanged .002
+position/velocity/angle/angular-velocity bounds. GPU/local smoothing and remote
+interpolation are rendered while the encoded physical state remains unchanged.
+
+| GPU-client renderer | Window FPS / frames | Corrections after drift | Warm ordinary / replay samples | Upload / readback B | GPU submissions / lifetime wait ms |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| gpu | 50.5363 / 317 | 35 | 38 / 136 | 1227624 / 4597832 | 28850 / 2525.2924 |
+| compatibility | 831.6008 / 5193 | 36 | 40 / 141 | 1242072 / 4673644 | 29282 / 2521.7569 |
+
+Every process has positive warmed physics samples and every client has positive
+warmed replay samples; all those brackets measure zero owner/all-thread managed
+bytes. Each retains 131,072 command-record and 36,864 event-record payload bytes,
+with existing bounded packet, snapshot, interpolation and visual buffers accounted
+separately. These payload counts exclude array headers and are not whole-process
+memory. GPU waits/transfers above cover setup, publication, ordinary prediction
+and replay, not only the sampled physics loop.
+
+The complete network/window applications still allocate: GPU-rendered client
+owner/all-thread totals are 7,115,976/7,115,976 B and compatibility totals are
+7,252,984/7,252,984 B; cold/lifecycle total replay allocations are
+1,056,448/1,064,664 B. These are separate from the zero warmed physics brackets.
+GPU small-world correction medians near 58 ms remain a real cost; massive-scene
+GPU advantage does not imply a small-world or replay advantage.
+
+GPU rendering requested Disabled VSync but reported Enabled; compatibility
+reported Disabled and both had MaxFPS zero. Thus 50.5363 versus 831.6008 FPS is
+recorded renderer/window throughput under different presentation modes, not a
+controlled physics-throughput comparison. Both retained PNGs were visually
+checked and show the live network actors and world.
+
+Evidence is bin/physics-goal-acceptance/2026-10-13/frozen-7c37a291/
+network-window-gpu and /network-window-compatibility with exact process outcomes
+and manifests in the parent. Main changed during the preceding scene run; these
+network results belong to the immutable 7c37a291 runtime, not newer main. No full
+platform, arbitrary-provider geometry or repeatability acceptance is inferred.
