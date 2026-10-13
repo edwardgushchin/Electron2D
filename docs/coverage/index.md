@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-13
 
+[Curved custom contacts](../components/physics-registered-adapter.md#curved-custom-contacts)
+verify independent inner/outer annulus arcs, a pin motor, moving counterparts,
+retained valid contact points, full impulses and private replay. Serial/separate
+profiles retain 0/0 warm frame bytes. Existing coverage states remain unchanged.
+
 [Angular compound checks](../components/physics-registered-adapter.md#angular-compound-motion)
 verify registered/CPU mass-center offsets, point velocity, intermediate rotational
 contact and coupled circle-slot momentum in serial/separate modes at strict 0/0

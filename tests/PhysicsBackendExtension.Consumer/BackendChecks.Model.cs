@@ -147,14 +147,14 @@ public static partial class BackendChecks
                                 a.Mode == PhysicsServer.BodyMode.Kinematic && (a.Velocity != Vector2.Zero || a.Angular != 0) ||
                                 b.Mode == PhysicsServer.BodyMode.Kinematic && (b.Velocity != Vector2.Zero || b.Angular != 0);
                             var impulse = Vector2.Zero;
+                            var contactPoint = diagnosticPoint;
                             if (active && inverse > 0)
                             {
                                 a.Position -= normal * depth * (a.InvMass / inverse);
                                 b.Position += normal * depth * (b.InvMass / inverse);
-                                PartContact(a, first, b, second, out _, out _, out var solvedPoint);
-                                impulse = SolveContact(a, b, normal, solvedPoint);
+                                if (PartContact(a, first, b, second, out _, out _, out var solvedPoint)) contactPoint = solvedPoint;
+                                impulse = SolveContact(a, b, normal, contactPoint);
                             }
-                            PartContact(a, first, b, second, out _, out _, out var contactPoint);
                             a.RecordContact(b, first.Index, second.Index, contactPoint, -normal, -impulse, depth);
                             b.RecordContact(a, second.Index, first.Index, contactPoint, normal, impulse, depth);
                             if (_framePairs.Add((a.RID, first.Index, b.RID, second.Index))) Pairs++;

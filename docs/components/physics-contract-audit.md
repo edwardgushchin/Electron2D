@@ -213,6 +213,12 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   GPU, general polygon/capsule/multiple-piece and wider coupled CCD acceptance stays
   open; [compound evidence](physics-registered-adapter.md#compound-slot-numerics)
   defines the bounded fixture and numerical tolerances.
+- [Curved custom contacts](physics-registered-adapter.md#curved-custom-contacts)
+  now check inner/outer annulus arcs, motor-generated motion, a rotating counterpart,
+  complete frame points/impulses and private replay in serial/separate provider
+  modes. Corrected non-touching geometry no longer overwrites a valid manifold
+  point with zero. Arbitrary custom algorithms and longer coupled/network/native
+  acceptance remain open.
 - Shared inherited Object/Node/Resource/CanvasItem and skeletal editor requirements
   remain with their typed-API, scheduling, script/editor or rendering prerequisites.
   Existing built-in physics tests do not establish those separate declaring APIs.

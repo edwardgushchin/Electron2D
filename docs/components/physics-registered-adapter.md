@@ -1269,5 +1269,43 @@ physical observations, not matching internal traversal or exact poses. Both
 active contact cases run 128 warmup and 128 measured reset/full-frame cycles at
 strict 0/0 owner/all-thread managed bytes. Logs are under
 bin/physics-angular/2026-10-13. These checks do not establish GPU execution,
-native allocations, arbitrary polygon/capsule/multiple-piece geometry, curved
-custom-annulus acceptance or long coupled/network/performance acceptance.
+native allocations, arbitrary polygon/capsule/multiple-piece geometry or long
+coupled/network/performance acceptance. Curved custom-annulus checks follow below.
+
+## Curved custom contacts
+
+The public-only --curved-annulus fixture runs the independent registered solver in
+serial and --threaded modes. A radius-.25 compound circle rotates from -.4 to .4
+radians through an annulus with inner radius 4 and outer radius 5. Both endpoint
+poses are clear. Discrete motion misses the transient contact; CastShape must
+resolve either the inner or outer arc with exact nonzero logical indices, boundary
+points and the correct impulse direction. A pin motor starting from rest supplies
+the same inner arc while preserving its authored torque cap and bounded anchor.
+A fourth case protects a stationary circle from a rotating offset annulus whose
+own CCD setting remains Disabled. Both moving bodies receive opposite momentum
+changes; the counterpart retains its configured mode.
+
+These cases exposed an independent contact-response defect: full position recovery
+can leave the recomputed pair just outside touching precision. Ignoring a false
+geometry result replaced the valid contact point with zero, which corrupted both
+its lever arm and the published point. The coordinator now starts with the valid
+manifold point and replaces it only when the corrected geometry supplies another
+valid point. Contact solving and frame publication use that same retained point.
+
+Every case also captures its initial private history, solves the curved interval,
+restores the discarded future and solves again. Restoration removes discarded
+contact rows without another game callback; replay preserves the sampled motion
+and impulses within .002 scene unit/unit/s/radian and .02 kg-unit/s. This cold
+restore check does not measure warmed history cost or establish portable network
+confirmation. The four reset/full-frame workloads separately run 128 warmup and
+128 measured cycles at 0/0 owner/all-thread managed bytes. One callback and one
+completed tick remain the outer publication boundary.
+
+Boundary point and final geometry tolerances are .005 scene unit; frame linear
+impulse agrees with momentum change within .02 kg-unit/s. The pinned case accepts
+.1 scene-unit anchor error under the existing finite bias solver and verifies
+that the final circle stays in the hole. It does not require an immovable origin
+or a particular final angle when ordinary joint error permits motion. These
+bounded custom checks pass through their independent algorithm; built-ins retain
+their explicit rejection of unknown custom formats. General geometry, longer
+coupled scenes, foreign/native execution and final performance remain open.

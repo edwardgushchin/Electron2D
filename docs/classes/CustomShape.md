@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-13
 
+[Curved custom verification](../components/physics-registered-adapter.md#curved-custom-contacts)
+now exercises the independent annulus's inner/outer CCD arcs, motor/counterpart
+motion, valid boundary contact points, momentum and private replay in serial and
+separate numerical modes. This does not make the format a built-in algorithm.
+
 **Source:** [CustomShape.cs](../../src/Scene/Resources/CustomShape.cs)
 
 A concrete resource holding initialized immutable custom geometry. Geometry replacement emits a revision change and preserves RID identity. Duplicate and server data copies share immutable geometry in independent resource wrappers. CustomShapeCreate accepts this complete data directly.

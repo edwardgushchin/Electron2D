@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-13
 
+[Curved custom contacts](../components/physics-registered-adapter.md#curved-custom-contacts)
+verify the independent implementation's response and complete frame publication
+when positional recovery retires a transient overlap. Private restore/replay,
+motor/counterpart motion and strict warm frame bytes pass in both numerical modes;
+arbitrary geometry and full extension acceptance remain open.
+
 **Declaration:** `public abstract class PhysicsServerBackend : ElectronObject` · **Source:** [PhysicsServerBackend.cs](../../src/Servers/Physics/PhysicsServerBackend.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
 
 ## Description
