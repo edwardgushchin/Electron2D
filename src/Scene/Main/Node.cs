@@ -1733,6 +1733,7 @@ public partial class Node : ElectronObject
 
         if (disposing)
         {
+            try { DisposeSceneConnections(); } catch (Exception error) { (errors ??= []).Add(error); }
             Interlocked.Exchange(ref _queuedForDeletion, 0);
 
             try

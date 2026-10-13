@@ -9,6 +9,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_CONNECTIONS_NATIVE") == "1") { SceneConnectionTests.RunNative(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_CONNECTIONS") == "1") { SceneConnectionTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INDEXED_PROPERTIES_NATIVE") == "1") { IndexedPropertyTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INDEXED_PROPERTIES") == "1") { IndexedPropertyTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SUBTREE_AUTHORING_NATIVE") == "1") { SubtreeResourceAuthoringTests.RunNative(); return; }

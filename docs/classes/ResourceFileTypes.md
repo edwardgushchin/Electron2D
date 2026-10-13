@@ -170,3 +170,6 @@ The generic value type must have a portable archive value codec or resource-refe
 `public static System.Void RegisterAnimationPredicate(System.String id, System.Func<Electron2D.AnimationTree, System.Boolean> predicate)`
 
 The callback receives the evaluated AnimationTree and returns its advance decision; captured state remains application-owned.
+
+
+Authored typed scene connections use registered compiled `SceneConnectionBinding` factories, copied payloads and dual endpoint cleanup. PackedScene captures/rebinds these subscriptions, including file archives v3. SceneState queries expose paths, diagnostic labels, flags, unbind count and typed payload snapshots. See [packed scenes](../components/packed-scenes.md) for ownership and persistence limits.

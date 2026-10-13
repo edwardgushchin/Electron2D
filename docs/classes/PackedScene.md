@@ -24,8 +24,8 @@ Stores a reusable in-memory node hierarchy and creates independent runtime insta
 
 The snapshot owns no source [`Node`](Node.md). It retains source-independent static node factories, immutable node metadata, typed stored-property values, and references to resources used by those values. Shared resources in an in-memory capture remain caller-owned. A loaded file root owns its newly decoded graph; copies and instances retain it through private ownership leases. During instantiation, the returned root owns all created child nodes and every duplicated scene resource; disposing that root disposes the complete hierarchy and those duplicates.
 
-Runtime packing is typed and uses storage-enabled [`PropertyDescriptor`](PropertyDescriptor.md) instances. Text and binary scene
-files, editor metadata, inheritance authoring, placeholders, and persistent event endpoints belong to later domains.
+Runtime packing is typed and uses storage-enabled [`PropertyDescriptor`](PropertyDescriptor.md) instances. Scene
+files use the typed archive; editor metadata, inheritance authoring and placeholders belong to later domains. Authored persistent event endpoints use registered compiled SceneConnectionBinding factories under ADR 0010.
 
 The node automatic-translation mode is stored. Translation domains are stored only when explicitly assigned; an inheriting descendant continues to resolve the current parent domain after instantiation.
 

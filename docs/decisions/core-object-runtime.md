@@ -119,7 +119,7 @@ ADR 0003 publishes `IsDisposed` as soon as disposal starts so concurrent callers
 <a id="adr-0010"></a>
 ## ADR 0010: Add owned one-shot and deferred wrappers for typed events
 
-Last updated: 2026-09-23
+Last updated: 2026-10-13
 
 - Status: Accepted
 - Scope: Typed event subscription lifecycle and delivery policy
@@ -140,7 +140,7 @@ These capabilities are useful independently of scripting and serialization. They
 - Disposing a connection cancels deferred callbacks that have not begun, but does not wait for running callbacks.
 - Engine events with payloads use sender-first typed signatures. Events carrying only their source use that source as their sole argument.
 - Native duplicate delegate semantics are retained instead of adding a reference-count option.
-- Persistent connections remain deferred until a typed schema can represent stable publisher, event, subscriber, and handler identities. ADR 0023's in-memory packed scenes intentionally omit runtime delegate subscriptions.
+- Persistent scene connections use a registered compiled `SceneConnectionBinding<TPublisher, TSubscriber, TBindings>`. Its stable ID selects a typed factory, never reflected event or method dispatch. Event and handler labels are diagnostic metadata; the factory adapts arguments with ordinary C# code. A typed bindings payload uses the existing stored-value/resource graph schema. Both endpoints own cleanup. PackedScene stores only active authored bindings whose endpoints are selected, and reconstructs them after properties/references and before scene-instantiated notification. Ordinary runtime subscriptions remain omitted. Delivery policy is fixed by the registered factory and verified against its returned EventConnection. Native duplicate semantics remain unchanged.
 
 ### Consequences
 

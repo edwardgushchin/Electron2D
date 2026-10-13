@@ -44,7 +44,7 @@ internal static partial class ResourceArchive
         if (uid == ResourceUID.InvalidID) uid = ResourceUID.CreateID();
         var file = new byte[checked(64 + encoded.Length)];
         "E2DASSET"u8.CopyTo(file);
-        BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(8), 2);
+        BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(8), 3);
         BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(12), (int)flags);
         BinaryPrimitives.WriteInt64LittleEndian(file.AsSpan(16), uid);
         BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(24), payload.Length);
@@ -62,7 +62,7 @@ internal static partial class ResourceArchive
         using var stream = System.IO.File.OpenRead(absolute);
         Span<byte> header = stackalloc byte[24];
         if (stream.Read(header) != header.Length || !header[..8].SequenceEqual("E2DASSET"u8)) return ResourceUID.InvalidID;
-        if (BinaryPrimitives.ReadInt32LittleEndian(header[8..]) is not (1 or 2) || stream.Length < 64) throw new InvalidDataException("Unsupported resource UID header.");
+        if (BinaryPrimitives.ReadInt32LittleEndian(header[8..]) is not (1 or 2 or 3) || stream.Length < 64) throw new InvalidDataException("Unsupported resource UID header.");
         var id = BinaryPrimitives.ReadInt64LittleEndian(header[16..]);
         return id >= 0 ? id : throw new InvalidDataException("Invalid resource UID.");
     }
@@ -82,7 +82,7 @@ internal static partial class ResourceArchive
         var info = new FileInfo(absolute);
         if (info.Length is < 64 or > Limit + 64) throw new InvalidDataException("Invalid resource file size.");
         var bytes = System.IO.File.ReadAllBytes(absolute);
-        if (!bytes.AsSpan(0, 8).SequenceEqual("E2DASSET"u8) || BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(8)) is not (1 or 2)) throw new InvalidDataException("Unsupported resource archive version.");
+        if (!bytes.AsSpan(0, 8).SequenceEqual("E2DASSET"u8) || BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(8)) is not (1 or 2 or 3)) throw new InvalidDataException("Unsupported resource archive version.");
         if (BinaryPrimitives.ReadInt64LittleEndian(bytes.AsSpan(16)) < 0) throw new InvalidDataException("Invalid archive UID.");
         return bytes;
     }
@@ -388,6 +388,16 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
                 temporary.Dispose();
             }
         }
+        stream.Put32(data.Connections.Length);
+        foreach (var connection in data.Connections)
+        {
+            ResourceArchiveStrings.Write(stream, connection.Schema.ID);
+            stream.Put32(connection.PublisherIndex); stream.Put32(connection.SubscriberIndex);
+            using var payload = NewStream();
+            connection.Schema.PayloadDescriptor.WriteFileValue(null!, connection.Bindings, this, payload);
+            var bytes = payload.DataArray;
+            stream.Put32(bytes.Length); stream.PutData(bytes);
+        }
     }
     internal void CommitPaths()
     {
@@ -583,7 +593,11 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
             var factory = new SceneFactoryData(() => (Node)type.Factory(), type.Type, 0);
             nodes[i] = new(factory, name, parent, owner, sibling, nodePath, parent < 0 ? "." : nodes[parent].Path, owner < 0 ? "" : owner == 0 ? "." : "", groups, properties, null, "");
         }
-        if (count == 0) return new(nodes);
+        if (count == 0)
+        {
+            if (version >= 3 && Count(stream) != 0) throw new InvalidDataException("Empty scene contains connection endpoints.");
+            return new(nodes);
+        }
         var firstChild = new int[count]; Array.Fill(firstChild, -1); var nextSibling = new int[count];
         for (var i = count - 1; i > 0; i--) { var parent = nodes[i].ParentIndex; nextSibling[i] = firstChild[parent]; firstChild[parent] = i; }
         var entries = new int[count]; var exits = new int[count]; var stack = new int[count]; var cursors = (int[])firstChild.Clone(); var depth = 0; var clock = 1;
@@ -599,7 +613,24 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
                 OwnerPath = nodes[node.OwnerIndex].Path
             };
         }
-        return new(nodes);
+
+        var connections = version >= 3 ? new SceneConnectionData[Count(stream)] : [];
+        for (var i = 0; i < connections.Length; i++)
+        {
+            var schema = ResourceFileTypes.SceneConnection(ResourceArchiveStrings.Read(stream));
+            var publisher = stream.Get32(); var subscriber = stream.Get32();
+            if ((uint)publisher >= (uint)count || (uint)subscriber >= (uint)count ||
+                !schema.PublisherType.IsAssignableFrom(nodes[publisher].Factory.RuntimeType) ||
+                !schema.SubscriberType.IsAssignableFrom(nodes[subscriber].Factory.RuntimeType))
+                throw new InvalidDataException("Invalid connection endpoint.");
+            var payloadSize = Count(stream, ResourceArchive.Limit);
+            if (payloadSize > stream.GetAvailableBytes()) throw new InvalidDataException("Truncated connection payload.");
+            using var payload = new StreamPeerBuffer { BigEndian = bigEndian, DataArray = stream.GetData(payloadSize) };
+            var bindings = schema.PayloadDescriptor.ReadFileValue(this, payload);
+            if (payload.GetAvailableBytes() != 0) throw new InvalidDataException("Trailing connection payload.");
+            connections[i] = new(schema, publisher, subscriber, bindings);
+        }
+        return new(nodes, connections);
     }
     internal void RedirectRoot(Resource replacement)
     {

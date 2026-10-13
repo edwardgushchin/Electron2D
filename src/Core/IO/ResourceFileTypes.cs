@@ -341,6 +341,7 @@ internal sealed class ResourceFileRegistry
     internal readonly Dictionary<Type, ResourceArrayCodec> ResourceArrays = new();
     internal readonly Dictionary<string, AnimationFileParameterBinding> AnimationParameters = new(StringComparer.Ordinal);
     internal readonly Dictionary<string, Func<AnimationTree, bool>> AnimationPredicates = new(StringComparer.Ordinal);
+    internal readonly Dictionary<string, SceneConnectionSchema> SceneConnections = new(StringComparer.Ordinal);
     internal readonly Dictionary<string, AnimationFileMethodBinding> AnimationMethods = new(StringComparer.Ordinal);
     internal readonly Dictionary<string, AnimationFileBinding> AnimationBindings = new(StringComparer.Ordinal);
     internal readonly Dictionary<Type, TileCustomDataType> TileDataTypes = new();

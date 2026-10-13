@@ -1349,3 +1349,5 @@ AnimationMixer/Player scene storage now restores authored namespaces, shared lib
 PackedScene.PackForSave executes detached RESET property/Bézier preparation with deep resource isolation and ownership transfer; inherited AnimationMixer.ResetOnSave stores the policy across Mixer/Player/Tree. Runtime Pack retains the actual-pose capture contract.
 
 The existing Engine and RenderingServer types now own the [explicit native frame contract](components/manual-render-frames.md): manual draw, GPU synchronization, ordered one-shot callbacks and process-lifetime completed-frame accounting. No new production type is added.
+
+`SceneConnectionBinding<TPublisher, TSubscriber, TBindings>` implements compiled authored event connections with typed payloads, dual endpoint cleanup and PackedScene file reconstruction (ADR 0010).

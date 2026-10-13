@@ -9897,6 +9897,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.SceneConnectionBinding\u003CTPublisher, TSubscriber, TBindings\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.SceneConnectionBinding\u003CTPublisher, TSubscriber, TBindings\u003E",
+    "name": "SceneConnectionBinding\u00603",
+    "signature": "public sealed class Electron2D.SceneConnectionBinding\u003CTPublisher, TSubscriber, TBindings\u003E",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SceneMultiplayer",
     "kind": "type",
     "declaringType": "Electron2D.SceneMultiplayer",
@@ -149968,6 +149981,55 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ResourceFileTypes.RegisterSceneConnection\u00603(System.String,System.String,System.String,Func\u003CTPublisher, TSubscriber, TBindings, Electron2D.EventConnection\u003E,System.Int32,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFileTypes",
+    "name": "RegisterSceneConnection",
+    "signature": "public static SceneConnectionBinding\u003CTPublisher, TSubscriber, TBindings\u003E RegisterSceneConnection\u003CTPublisher, TSubscriber, TBindings\u003E(System.String id, System.String signal, System.String method, Func\u003CTPublisher, TSubscriber, TBindings, Electron2D.EventConnection\u003E factory, System.Int32 unbinds = 0, System.Boolean oneShot = false, System.Boolean deferred = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "signal",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "method",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "factory",
+        "type": "Func\u003CTPublisher, TSubscriber, TBindings, Electron2D.EventConnection\u003E",
+        "default": null
+      },
+      {
+        "name": "unbinds",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "oneShot",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "deferred",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "SceneConnectionBinding\u003CTPublisher, TSubscriber, TBindings\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ResourceFileTypes.RegisterValueCodec\u00601(Action\u003CElectron2D.StreamPeerBuffer, TValue\u003E,Func\u003CElectron2D.StreamPeerBuffer, TValue\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.ResourceFileTypes",
@@ -153474,6 +153536,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SceneConnectionBinding\u003CTPublisher, TSubscriber, TBindings\u003E.Subscribe(TPublisher,TSubscriber,TBindings)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneConnectionBinding\u003CTPublisher, TSubscriber, TBindings\u003E",
+    "name": "Subscribe",
+    "signature": "public Electron2D.EventConnection Subscribe(TPublisher publisher, TSubscriber subscriber, TBindings bindings)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "publisher",
+        "type": "TPublisher",
+        "default": null
+      },
+      {
+        "name": "subscriber",
+        "type": "TSubscriber",
+        "default": null
+      },
+      {
+        "name": "bindings",
+        "type": "TBindings",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.EventConnection",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SceneMultiplayer.Clear()",
     "kind": "method",
     "declaringType": "Electron2D.SceneMultiplayer",
@@ -154243,6 +154334,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SceneState.GetConnectionBinds\u00601(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneState",
+    "name": "GetConnectionBinds",
+    "signature": "public TBindings GetConnectionBinds\u003CTBindings\u003E(System.Int32 connectionIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "connectionIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "TBindings",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SceneState.GetConnectionCount()",
     "kind": "method",
     "declaringType": "Electron2D.SceneState",
@@ -154252,6 +154362,120 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneState.GetConnectionFlags(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneState",
+    "name": "GetConnectionFlags",
+    "signature": "public System.Int32 GetConnectionFlags(System.Int32 connectionIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "connectionIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneState.GetConnectionMethod(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneState",
+    "name": "GetConnectionMethod",
+    "signature": "public System.String GetConnectionMethod(System.Int32 connectionIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "connectionIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneState.GetConnectionSignal(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneState",
+    "name": "GetConnectionSignal",
+    "signature": "public System.String GetConnectionSignal(System.Int32 connectionIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "connectionIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneState.GetConnectionSource(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneState",
+    "name": "GetConnectionSource",
+    "signature": "public System.String GetConnectionSource(System.Int32 connectionIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "connectionIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneState.GetConnectionTarget(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneState",
+    "name": "GetConnectionTarget",
+    "signature": "public System.String GetConnectionTarget(System.Int32 connectionIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "connectionIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneState.GetConnectionUnbinds(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneState",
+    "name": "GetConnectionUnbinds",
+    "signature": "public System.Int32 GetConnectionUnbinds(System.Int32 connectionIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "connectionIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
     "returnType": "System.Int32",
     "value": null
   },

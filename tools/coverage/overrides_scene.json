@@ -973,8 +973,8 @@
     {
       "electron2d": "method:Electron2D.SceneState.GetConnectionCount()",
       "godot": "SceneState::method:get_connection_count()",
-      "state": "Partial",
-      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+      "state": "Implemented",
+      "reason": "Registered compiled typed scene bindings; active selected endpoints capture/rebind, file archive v3, duplicate order, one-shot/deferred cancellation, resource graph and typed payload snapshots execute under ADRs 0010/0023. Runtime delegates are omitted."
     },
     {
       "electron2d": "method:Electron2D.SceneState.GetNodeCount()",
@@ -5325,6 +5325,48 @@
       "godot": "Node::method:propagate_call(StringName:,Array:,bool:)",
       "electron2d": "method:Electron2D.Node.PropagateCall`2(Action<TNode, TArgument>,TArgument,System.Boolean)",
       "reason": "Executable runtime subtree authoring under ADRs 0001/0004/0005/0008/0011. Typed resource endpoints return borrowed Node/Resource plus property remainder through a concrete C# tuple; descriptor getters preserve missing/null/scalar/resource and error boundaries. Compiled operations preserve children-first/parent-first order, internal children, typed node-role filtering and argument tuples, owner affinity, traversal barriers and exception continuation. SubtreeResourceAuthoringTests verifies current resource-path grammar and sibling Node APIs, custom getters, saved scene reconstruction, guards/errors and 1000 warmed zero-managed-allocation propagation calls; Linux Wayland GPU/hardware compatibility verify edited atlas and hierarchy pixels. Other-platform/editor/large-hierarchy/native-allocation/human gates remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneState.GetConnectionBinds`1(System.Int32)",
+      "godot": "SceneState::method:get_connection_binds(int:)",
+      "state": "Implemented",
+      "reason": "Registered compiled typed scene bindings; active selected endpoints capture/rebind, file archive v3, duplicate order, one-shot/deferred cancellation, resource graph and typed payload snapshots execute under ADRs 0010/0023. Runtime delegates are omitted."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneState.GetConnectionFlags(System.Int32)",
+      "godot": "SceneState::method:get_connection_flags(int:)",
+      "state": "Implemented",
+      "reason": "Registered compiled typed scene bindings; active selected endpoints capture/rebind, file archive v3, duplicate order, one-shot/deferred cancellation, resource graph and typed payload snapshots execute under ADRs 0010/0023. Runtime delegates are omitted."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneState.GetConnectionMethod(System.Int32)",
+      "godot": "SceneState::method:get_connection_method(int:)",
+      "state": "Implemented",
+      "reason": "Registered compiled typed scene bindings; active selected endpoints capture/rebind, file archive v3, duplicate order, one-shot/deferred cancellation, resource graph and typed payload snapshots execute under ADRs 0010/0023. Runtime delegates are omitted."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneState.GetConnectionSignal(System.Int32)",
+      "godot": "SceneState::method:get_connection_signal(int:)",
+      "state": "Implemented",
+      "reason": "Registered compiled typed scene bindings; active selected endpoints capture/rebind, file archive v3, duplicate order, one-shot/deferred cancellation, resource graph and typed payload snapshots execute under ADRs 0010/0023. Runtime delegates are omitted."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneState.GetConnectionSource(System.Int32)",
+      "godot": "SceneState::method:get_connection_source(int:)",
+      "state": "Implemented",
+      "reason": "Registered compiled typed scene bindings; active selected endpoints capture/rebind, file archive v3, duplicate order, one-shot/deferred cancellation, resource graph and typed payload snapshots execute under ADRs 0010/0023. Runtime delegates are omitted."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneState.GetConnectionTarget(System.Int32)",
+      "godot": "SceneState::method:get_connection_target(int:)",
+      "state": "Implemented",
+      "reason": "Registered compiled typed scene bindings; active selected endpoints capture/rebind, file archive v3, duplicate order, one-shot/deferred cancellation, resource graph and typed payload snapshots execute under ADRs 0010/0023. Runtime delegates are omitted."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneState.GetConnectionUnbinds(System.Int32)",
+      "godot": "SceneState::method:get_connection_unbinds(int:)",
+      "state": "Implemented",
+      "reason": "Registered compiled typed scene bindings; active selected endpoints capture/rebind, file archive v3, duplicate order, one-shot/deferred cancellation, resource graph and typed payload snapshots execute under ADRs 0010/0023. Runtime delegates are omitted."
     }
   ],
   "extras": [
@@ -7754,6 +7796,24 @@
       "state": "Implemented",
       "adr": "adr-0093",
       "reason": "Explicit programmatic authoring transaction applies RESET while preserving ordinary Pack actual-pose semantics. Exact factories, deep resource isolation, coupled setters, guards, ownership, failures and saved scenes tested."
+    },
+    {
+      "electron2d": "T:Electron2D.SceneConnectionBinding<TPublisher, TSubscriber, TBindings>",
+      "state": "Implemented",
+      "adr": "adr-0010",
+      "reason": "Typed compiled authoring and portable reconstruction of persistent scene connections; projects the accepted event identity/subscription concept without string dispatch."
+    },
+    {
+      "electron2d": "method:Electron2D.ResourceFileTypes.RegisterSceneConnection`3(System.String,System.String,System.String,Func<TPublisher, TSubscriber, TBindings, Electron2D.EventConnection>,System.Int32,System.Boolean,System.Boolean)",
+      "state": "Implemented",
+      "adr": "adr-0010",
+      "reason": "Typed compiled authoring and portable reconstruction of persistent scene connections; projects the accepted event identity/subscription concept without string dispatch."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneConnectionBinding<TPublisher, TSubscriber, TBindings>.Subscribe(TPublisher,TSubscriber,TBindings)",
+      "state": "Implemented",
+      "adr": "adr-0010",
+      "reason": "Typed compiled authoring and portable reconstruction of persistent scene connections; projects the accepted event identity/subscription concept without string dispatch."
     }
   ],
   "statusGroups": [
@@ -10931,7 +10991,21 @@
         "Node::method:duplicate(int:)"
       ],
       "state": "Unimplemented",
-      "reason": "Exact executable prerequisite for the runtime duplication slice: stable typed publisher/event/subscriber/handler identities and persistent connection capture/rebinding under ADRs 0010/0023, plus complete runtime group/script state and subtree factory/resource/node-reference remapping, including UseInstantiation and InternalState policies. Ordinary PackedScene.Pack selects Owner branches and stored properties only and therefore cannot substitute for complete runtime Node duplication. Implement the owning connection/copy layer before exposing flags or a narrowed duplicate wrapper."
+      "reason": "Authored typed connections now capture and rebind under ADRs 0010/0023. Remaining runtime duplication prerequisites: complete runtime groups/script state and subtree factory/resource/node-reference remapping, including UseInstantiation and InternalState policies. Owner-selected stored-property Pack cannot substitute for full runtime duplication."
+    },
+    {
+      "godot": [
+        "SceneState::method:get_connection_count()",
+        "SceneState::method:get_connection_binds(int:)",
+        "SceneState::method:get_connection_flags(int:)",
+        "SceneState::method:get_connection_method(int:)",
+        "SceneState::method:get_connection_signal(int:)",
+        "SceneState::method:get_connection_source(int:)",
+        "SceneState::method:get_connection_target(int:)",
+        "SceneState::method:get_connection_unbinds(int:)"
+      ],
+      "state": "Implemented",
+      "reason": "Active authored typed connections execute through Pack, Instantiate and file archives; all metadata queries tested with duplicate, one-shot/deferred and payload/lifetime behavior. ADR 0010 adapts native reference-count flags away."
     }
   ]
 }

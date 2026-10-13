@@ -45,7 +45,7 @@ public sealed partial class PackedScene
                         if (result.Nodes[i].Factory.SourceInstanceID != identities[i] || result.Nodes[i].ParentIndex != source.Nodes[i].ParentIndex || result.Nodes[i].OwnerIndex != source.Nodes[i].OwnerIndex) throw new InvalidOperationException("RESET changed the saved hierarchy.");
                         nodes[i] = result.Nodes[i] with { Factory = source.Nodes[i].Factory };
                     }
-                    prepared = new(nodes); owned = temporary.ReleaseSceneResourcesForSave();
+                    prepared = new(nodes, result.Connections); owned = temporary.ReleaseSceneResourcesForSave();
                 }
             }
             catch (Exception caught) { error = caught; }

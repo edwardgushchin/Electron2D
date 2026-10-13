@@ -42,14 +42,48 @@ public sealed class SceneState : ElectronObject
         return null;
     }
 
-    /// <summary>Gets the number of persistent connections stored in this state.</summary>
-    /// <returns>Zero because typed persistent connection endpoints are not yet part of the runtime contract.</returns>
-    /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>
-    public int GetConnectionCount()
-    {
-        ThrowIfDisposed();
-        return 0;
-    }
+    /// <summary>Gets the number of active authored connections captured in this state.</summary>
+    public int GetConnectionCount() => Read(data => data.Connections.Length);
+    /// <summary>Gets the publisher's path relative to the packed root.</summary>
+    /// <param name="connectionIndex">The zero-based captured connection index.</param>
+    /// <exception cref="ArgumentOutOfRangeException">The index is outside the captured table.</exception>
+    /// <exception cref="ObjectDisposedException">This state is disposed.</exception>
+    public string GetConnectionSource(int connectionIndex) => Read(data => data.Nodes[ReadConnection(data, connectionIndex).PublisherIndex].Path);
+    /// <summary>Gets the receiver's path relative to the packed root.</summary>
+    /// <param name="connectionIndex">The zero-based captured connection index.</param>
+    /// <exception cref="ArgumentOutOfRangeException">The index is outside the captured table.</exception>
+    /// <exception cref="ObjectDisposedException">This state is disposed.</exception>
+    public string GetConnectionTarget(int connectionIndex) => Read(data => data.Nodes[ReadConnection(data, connectionIndex).SubscriberIndex].Path);
+    /// <summary>Gets the registered diagnostic event label.</summary>
+    /// <param name="connectionIndex">The zero-based captured connection index.</param>
+    /// <exception cref="ArgumentOutOfRangeException">The index is outside the captured table.</exception>
+    /// <exception cref="ObjectDisposedException">This state is disposed.</exception>
+    public string GetConnectionSignal(int connectionIndex) => Read(data => ReadConnection(data, connectionIndex).Schema.Signal);
+    /// <summary>Gets the registered diagnostic handler label.</summary>
+    /// <param name="connectionIndex">The zero-based captured connection index.</param>
+    /// <exception cref="ArgumentOutOfRangeException">The index is outside the captured table.</exception>
+    /// <exception cref="ObjectDisposedException">This state is disposed.</exception>
+    public string GetConnectionMethod(int connectionIndex) => Read(data => ReadConnection(data, connectionIndex).Schema.Method);
+    /// <summary>Gets persistent (2), deferred (1) and one-shot (4) delivery bits.</summary>
+    /// <param name="connectionIndex">The zero-based captured connection index.</param>
+    /// <exception cref="ArgumentOutOfRangeException">The index is outside the captured table.</exception>
+    /// <exception cref="ObjectDisposedException">This state is disposed.</exception>
+    public int GetConnectionFlags(int connectionIndex) => Read(data => ReadConnection(data, connectionIndex).Schema.Flags);
+    /// <summary>Gets the event argument count omitted by the compiled adapter.</summary>
+    /// <param name="connectionIndex">The zero-based captured connection index.</param>
+    /// <exception cref="ArgumentOutOfRangeException">The index is outside the captured table.</exception>
+    /// <exception cref="ObjectDisposedException">This state is disposed.</exception>
+    public int GetConnectionUnbinds(int connectionIndex) => Read(data => ReadConnection(data, connectionIndex).Schema.Unbinds);
+    /// <summary>Reads an independent snapshot of the exact typed bound payload.</summary>
+    /// <typeparam name="TBindings">The payload type used by the registered binding.</typeparam>
+    /// <param name="connectionIndex">The zero-based captured connection index.</param>
+    /// <exception cref="InvalidOperationException">The requested payload type is incompatible.</exception>
+    public TBindings GetConnectionBinds<TBindings>(int connectionIndex) => Read(data =>
+        ReadConnection(data, connectionIndex).Bindings.ValueType == typeof(TBindings) &&
+        ReadConnection(data, connectionIndex).Bindings.TryGetValue<TBindings>(out var value) ? value :
+        throw new InvalidOperationException("Connection payload type does not match."));
+    private static SceneConnectionData ReadConnection(PackedSceneData data, int index) =>
+        (uint)index < (uint)data.Connections.Length ? data.Connections[index] : throw new ArgumentOutOfRangeException(nameof(index));
 
     /// <summary>Gets the number of stored nodes.</summary>
     /// <returns>Zero for an empty state; otherwise the captured node count.</returns>
@@ -232,8 +266,9 @@ public sealed class SceneState : ElectronObject
     }
 }
 
-internal sealed record PackedSceneData(SceneNodeData[] Nodes)
+internal sealed record PackedSceneData(SceneNodeData[] Nodes, SceneConnectionData[] Connections)
 {
+    internal PackedSceneData(SceneNodeData[] nodes) : this(nodes, []) { }
     internal static readonly PackedSceneData Empty = new([]);
 
     internal PackedSceneData TransformResources(Func<Resource, Resource> transform)
@@ -245,7 +280,7 @@ internal sealed record PackedSceneData(SceneNodeData[] Nodes)
                 Properties = node.Properties
                     .Select(property => property with { Value = property.Value.TransformResources(transform) })
                     .ToArray()
-            }).ToArray());
+            }).ToArray(), Connections.Select(c => c with { Bindings = c.Bindings.TransformResources(transform) }).ToArray());
     }
 }
 

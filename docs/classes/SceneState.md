@@ -75,7 +75,7 @@ Gets the inherited base scene state.
 
 Gets the number of persistent connections stored in this state.
 
-**Returns:** Zero because typed persistent connection endpoints are not yet part of the runtime contract.
+**Returns:** The active authored connection count captured by the current Pack operation.
 
 **Exceptions**
 
@@ -342,3 +342,6 @@ Exported SceneState views also retain their file-backed graph snapshot through a
 ### File snapshot disposal
 
 `protected override void Dispose(bool disposing)` releases an exported file snapshot lease, attempts owned graph cleanup and always invokes the ordinary EObject cleanup. Public Dispose is inherited. Dispose file-backed state views when finished; their resources can otherwise outlive the template. The in-memory borrowed-resource contract stays explicit.
+
+
+Authored typed scene connections use registered compiled `SceneConnectionBinding` factories, copied payloads and dual endpoint cleanup. PackedScene captures/rebinds these subscriptions, including file archives v3. SceneState queries expose paths, diagnostic labels, flags, unbind count and typed payload snapshots. See [packed scenes](../components/packed-scenes.md) for ownership and persistence limits.

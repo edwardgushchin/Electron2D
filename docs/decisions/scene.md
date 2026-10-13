@@ -221,7 +221,7 @@ Add one runtime-only packed-scene component to the Scene domain and the existing
 
 #### Capture and storage
 
-`Node.Owner` is the storage-selection boundary. The root is always stored; traversal is parent-first depth-first, and only branches whose first descendant is owned by that root are included. The root does not own itself. Persistent group flags are captured; runtime-only groups are not.
+`Node.Owner` is the storage-selection boundary. The root is always stored; traversal is parent-first depth-first, and only branches whose first descendant is owned by that root are included. The root does not own itself. Persistent group flags are captured; runtime-only groups are not. Authored typed connections under ADR 0010 are captured in publisher traversal/registration order; endpoints outside the selected graph are omitted. Connections are restored after reference resolution, before lifecycle notification. Archive version 3 adds this table; versions 1 and 2 load with no connections.
 
 Stored node state comes only from writable `PropertyDescriptor<TOwner, TValue>` instances explicitly marked `stored: true`. Strings, resources, reference-free value types and the explicit string/int/float/vector/color/contour array profiles are accepted. Typed Node references on node owners are captured as relative paths, without retaining the original node. Arbitrary objects, other collections, delegates, dynamic values and reflection-discovered members are rejected. Names and hierarchy metadata have dedicated fields.
 
@@ -249,9 +249,9 @@ The dependency is restricted to local-scene association and is cleared on resour
 
 #### Events and absent domains
 
-Ordinary C# event subscribers and `EventConnection` tokens are runtime objects, not stored scene data. Persistent event connections remain deferred under ADR 0010 until a typed stable endpoint identity and handler-binding schema exists. No delegate inspection or reflection fallback is introduced.
+Ordinary C# event subscribers and EventConnection tokens remain runtime objects. Authored SceneConnectionBinding subscriptions store only registered compiled schema IDs, selected endpoint indices and typed bound payloads under ADR 0010. They are restored before lifecycle notification; source delegates and Nodes are never serialized.
 
-ResourceSaver/ResourceLoader now persist the typed PackedScene model as version-2 archives under ADR 0013, with known version-1 schemas retained. Registered compiled factory IDs replace in-memory delegates in files; no assembly loading or script serialization occurs. File roots own decoded graphs and instances retain internal leases under ADR 0014, including replacement/disposal. Import remapping, editor/inheritance authoring, missing-node placeholders and editable instances remain absent. Generic/Mesh missing-resource recovery executes under ADR 0013; persistent signal/endpoints and other exact asset substitutions retain their stated prerequisites. The unsupported `PackedSceneEditState` values fail explicitly.
+ResourceSaver/ResourceLoader now persist the typed PackedScene model as version-3 archives under ADR 0013, with version-1/2 schemas retained. Registered compiled factory IDs replace in-memory delegates in files; no assembly loading or script serialization occurs. File roots own decoded graphs and instances retain internal leases under ADR 0014, including replacement/disposal. Import remapping, editor/inheritance authoring, missing-node placeholders and editable instances remain absent. Generic/Mesh missing-resource recovery executes under ADR 0013; other exact asset substitutions retain their stated prerequisites. The unsupported `PackedSceneEditState` values fail explicitly.
 
 ### Consequences
 
@@ -279,7 +279,7 @@ ResourceSaver/ResourceLoader now persist the typed PackedScene model as version-
 
 The executable harness covers the current in-memory contract: empty and unsupported modes, capture selection/order, owner/path/group metadata, typed stored values, source disposal independence, repeated instances, local-resource aliasing/setup/ownership, live-state and path races, duplication, capture failure semantics, capture mutation rejection, factory closure/type/identity rejection, setup cleanup, detached-parent and active-tree escape rollback, and final snapshot survival. Repository verification also checks formatting, Release compilation, generated XML, documentation inventory, internal links, and the absence of prohibited production naming.
 
-It does not establish disk format compatibility, editor behavior, performance on very large loaded scenes, platform asset packaging, persistent connections, script state, visual output, or owner acceptance.
+It does not establish disk format compatibility, editor behavior, performance on very large loaded scenes, platform asset packaging, script state, visual output, or owner acceptance.
 
 <a id="adr-0031"></a>
 ## ADR 0031: Make Node trees and reusable scenes the primary game-object model

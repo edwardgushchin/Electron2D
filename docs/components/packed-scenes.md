@@ -100,3 +100,14 @@ Ordinary Ignore/Replace reuses external dependencies; IgnoreDeep/ReplaceDeep pro
 Ordered borrowed format extensions support front priority, deduplication, metadata, UID/dependencies, exact type discovery and dependency rewrite. File operations allocate and execute synchronously on the initiating thread. The weak cache still owns no resource. ResourceArchiveTests exercises public save/load, fresh-process scene lifecycle, deep ownership, font/theme/pixels/geometry, custom formats, replacement and malformed boundaries. Rendered batches, editor UI, project CLI, all-platform validation, arbitrary import formats and human acceptance remain separate gates.
 
 Exported SceneState views also retain their file-backed graph snapshot through a private lease, including after template disposal. Dispose such a view when finished. Internal unexported views retain no extra ownership; later state/content transitions update exported-view retention. ResourceArchiveTests verifies the final resource snapshot and deterministic release.
+
+
+## Authored typed scene connections
+
+`ResourceFileTypes.RegisterSceneConnection<TPublisher, TSubscriber, TBindings>` registers compiled event accessors and argument adaptation under a stable portable ID. Its returned binding subscribes immediately and records a copied typed payload. Both endpoints cancel the EventConnection during disposal. Pack captures active authored subscriptions whose two endpoints are selected; duplicates preserve registration order, consumed one-shot and ordinary runtime subscriptions are omitted. Instantiate restores the new endpoint identities after properties and references, before scene notification.
+
+SceneState exposes source/target paths, diagnostic signal/method labels, persistent/deferred/one-shot bits, omitted argument count, and `GetConnectionBinds<TBindings>` snapshots. Labels never dispatch members by name. The registered factory implements argument adaptation and delivery policy; the returned token policy is checked. Bound Resource values use the same duplication/local-scene/file ownership graph as node properties.
+
+Resource archives now write version 3, including the connection table and bounded typed payloads; versions 1 and 2 remain readable with no connections. Registration must exist in every loading process. Unknown binding IDs, incompatible endpoint types, malformed payloads and trailing bytes fail before publication.
+
+`SceneConnectionTests` checks duplicate subscriptions, consumed one-shots, deferred cancellation, selected endpoints, metadata bounds/types, resource duplication, file binding identity failures, RESET preparation and owner-thread access. Its native profile loads an archived subscription and verifies moved Sprite pixels plus receiver cleanup on both GPU and compatibility rendering. Platform and owner acceptance remain separate.

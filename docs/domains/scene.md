@@ -288,3 +288,6 @@ zero warmed physical-step/presentation allocation. See
 [Resource endpoints and subtree operations](../components/scene-hierarchy.md#resource-endpoints-and-subtree-operations) now execute typed resource-path resolution and compiled subtree operations through Node. Authored hierarchy/atlas edits survive saved scenes and reach native canvas pixels.
 
 [Implicit physics world selection](../components/physics-backends.md#project-physics-selection) now captures typed project engine/fallback settings and manager DEFAULT priority independently of rendering. Caller parameterless and explicit creation retain their policies. CPU/GPU/registered motion, no-device startup and native pixels have scoped checks; separate-thread scheduling and complete physics/performance acceptance remain open.
+
+
+Authored typed scene connections use registered compiled `SceneConnectionBinding` factories, copied payloads and dual endpoint cleanup. PackedScene captures/rebinds these subscriptions, including file archives v3. SceneState queries expose paths, diagnostic labels, flags, unbind count and typed payload snapshots. See [packed scenes](../components/packed-scenes.md) for ownership and persistence limits.

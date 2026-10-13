@@ -137,6 +137,9 @@ public sealed partial class PackedScene : Resource
 
             foreach (var node in nodes) node.ValidateSceneInstance();
 
+            foreach (var connection in data.Connections)
+                connection.Schema.Subscribe(nodes[connection.PublisherIndex], nodes[connection.SubscriberIndex],
+                    connection.Bindings.TransformResources(resources.Resolve));
             resources.AssignLocalScene(root);
             if (setupLocalResources) resources.SetupLocalResources();
             root.AdoptSceneResources(resources.ReleaseCreated());
@@ -350,7 +353,11 @@ public sealed partial class PackedScene : Resource
                 string.Empty);
         }
 
-        return new PackedSceneData(nodes);
+        var connections = selected.SelectMany(node => node.CaptureSceneConnections())
+            .Where(c => indices.ContainsKey(c.Publisher) && indices.ContainsKey(c.Subscriber))
+            .Select(c => new SceneConnectionData(c.Schema, indices[c.Publisher], indices[c.Subscriber], c.Bindings))
+            .ToArray();
+        return new PackedSceneData(nodes, connections);
     }
 
     private static void AddOwnedChildren(Node parent, Node root, List<Node> selected)

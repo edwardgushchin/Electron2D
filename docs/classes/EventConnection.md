@@ -191,9 +191,12 @@ The token does not make the publisher, subscriber, handler state, or custom even
 - There is no options enum, dynamic connection method, event-name lookup, argument rebinding, or untyped callable.
 - Duplicate ordinary `+=` subscriptions retain native multicast-delegate behavior: each occurrence is invoked and each `-=` removes one occurrence.
 - Source objects are explicit typed event arguments. The token never appends or reshapes arguments.
-- Persistent connections are unavailable until a future component defines declarative typed endpoint identities; in-memory packed scenes do not inspect or copy delegate closures.
+- Authored persistent connections use registered SceneConnectionBinding factories; ordinary delegate closures are never copied or inspected. Both Node endpoints own deterministic cleanup.
 - The implemented overloads cover the zero-, one-, and two-argument event shapes used by the current engine API.
 
 ## Verification
 
 [`tests/Electron2D.Tests/Program.cs`](../../tests/Electron2D.Tests/Program.cs) covers reusable and idempotently disposed connections; duplicate native subscriptions; synchronous, recursive, throwing, and 1,000-way concurrent one-shot delivery; deferred argument capture; cancellation before flush; deferred one-shot consumption and failures; add rollback; simultaneous add/rollback failures; removal failure; scheduler failure; null validation; and all three public overload shapes.
+
+
+Authored typed scene connections use registered compiled `SceneConnectionBinding` factories, copied payloads and dual endpoint cleanup. PackedScene captures/rebinds these subscriptions, including file archives v3. SceneState queries expose paths, diagnostic labels, flags, unbind count and typed payload snapshots. See [packed scenes](../components/packed-scenes.md) for ownership and persistence limits.

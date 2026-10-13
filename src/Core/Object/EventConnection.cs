@@ -10,6 +10,17 @@ namespace Electron2D;
 /// </remarks>
 public sealed class EventConnection : IDisposable
 {
+    private Action? Finished;
+    internal void OnFinished(Action callback)
+    {
+        lock (_gate)
+        {
+            if (_state is not (ConnectionState.Completed or ConnectionState.Disposed)) { Finished = callback; return; }
+        }
+        callback();
+    }
+    internal bool OneShot => _oneShot;
+    internal bool Deferred { get; }
     private readonly object _gate = new();
     private readonly bool _oneShot;
     private Action<Action>? _defer;
@@ -22,6 +33,7 @@ public sealed class EventConnection : IDisposable
         _handler = handler;
         _oneShot = oneShot;
         _defer = defer;
+        Deferred = defer is not null;
     }
 
     /// <summary>Gets whether this connection still accepts event emissions.</summary>
@@ -179,7 +191,7 @@ public sealed class EventConnection : IDisposable
             _handler = null;
         }
 
-        unsubscribe?.Invoke();
+        try { unsubscribe?.Invoke(); } finally { Interlocked.Exchange(ref Finished, null)?.Invoke(); }
     }
 
     private static EventConnection Create<TDelegate>(
@@ -308,6 +320,7 @@ public sealed class EventConnection : IDisposable
         try
         {
             unsubscribe?.Invoke();
+            if (defer is null) Interlocked.Exchange(ref Finished, null)?.Invoke();
         }
         catch
         {
@@ -402,7 +415,7 @@ public sealed class EventConnection : IDisposable
             handler = typedHandler;
         }
 
-        invoke(handler);
+        try { invoke(handler); } finally { Interlocked.Exchange(ref Finished, null)?.Invoke(); }
     }
 
     private void CompletePending()
@@ -415,6 +428,7 @@ public sealed class EventConnection : IDisposable
                 _handler = null;
             }
         }
+        Interlocked.Exchange(ref Finished, null)?.Invoke();
     }
 
     private enum ConnectionState
