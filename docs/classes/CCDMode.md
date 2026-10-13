@@ -1,6 +1,6 @@
 # CCDMode
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Declaration:** `public enum CCDMode`
 **Source:** [CCDMode.cs](../../src/Servers/Physics/CCDMode.cs)
@@ -53,3 +53,10 @@ being redirected to the general CPU suite. Both CPU/GPU profiles pass the same
 CCD, infinite-boundary and directed-ray cases on software Vulkan, with explicit
 0/0 owner/all-thread warm allocation gates. See [current software conformance](../components/cpu-continuous-collision.md#software-vulkan-continuous-conformance-2026-10-14).
 Hardware performance, native allocation and foreign-platform acceptance remain open.
+
+[Public angular CCD](../components/physics-registered-adapter.md#angular-compound-motion)
+now checks asymmetric mass-center motion and intermediate rotational impact on
+CPU/GPU/registered worlds in serial/separate modes. Exact slots, opposite frame
+impulses, authored CCD modes and one callback/tick retain their contract; both
+128-warm/128-measured impact brackets require 0/0 managed bytes. GPU executes on
+CPU-only llvmpipe; hardware, broader geometry and final acceptance remain open.

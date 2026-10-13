@@ -1,6 +1,6 @@
 # Registered numerical solver adapter
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 ## Scope and ownership
 
@@ -1233,8 +1233,8 @@ The [public-only threaded consumer](physics-thread.md) now exercises Solve and i
 
 ## Angular compound motion
 
-The public-only --angular-compound fixture checks the registered solver and CPU
-through the same scene/raw API, in serial and --threaded modes. An asymmetric
+The public-only --angular-compound fixture checks the registered solver, CPU and
+GPU through the same scene/raw API, in serial and --threaded modes. An asymmetric
 two-circle body has a local mass center at (3, 0). Over 32 full frames at .01 s,
 its world mass center follows linear velocity while the origin follows rotation.
 Direct CenterOfMass returns a global-axis offset from that origin, not an absolute
@@ -1242,9 +1242,11 @@ position. Point velocity likewise interprets its argument as a global-axis origi
 offset. The independent collider and direct-state factory now project these
 contracts consistently; its dynamic integration advances the mass center.
 
-Two radius-.25 circles at local x=20 and x=-20, with a disabled slot before them,
-rotate at 30 rad/s for .02 s. A target on the intermediate .2-radian arc has clear
-initial/final poses. CastShape must resolve the contact at logical slot 1 and
+Two radius-.25 circles at local x=40 and x=-40, with a disabled slot before them,
+rotate at 30 rad/s for .02 s. A target on the intermediate .225-radian arc has clear
+initial/final and quarter-step poses. The closest discrete surface gap is 2.4993
+units, beyond the ordinary two-unit speculative contact margin. CastShape must
+resolve the contact at logical slot 1 and
 publish its full momentum-changing impulse. The discrete control misses that
 arc; CastRay remains approximate and ordinary substeps may still encounter it.
 A second case gives the raw target a translated, rotating offset circle while
@@ -1268,9 +1270,19 @@ contact must reduce the scene body's speed by at least 20 percent. These are
 physical observations, not matching internal traversal or exact poses. Both
 active contact cases run 128 warmup and 128 measured reset/full-frame cycles at
 strict 0/0 owner/all-thread managed bytes. Logs are under
-bin/physics-angular/2026-10-13. These checks do not establish GPU execution,
-native allocations, arbitrary polygon/capsule/multiple-piece geometry or long
-coupled/network/performance acceptance. Curved custom-annulus checks follow below.
+bin/physics-angular-public/2026-10-14/final3. All six profiles pass, with actual
+backend/no-fallback checks and observed retained threads. The GPU implementation
+executes on CPU-only llvmpipe Vulkan without NVIDIA. Its separated convex CCD
+advance now bounds projected vertex velocity and angular acceleration against
+the current separating axis, avoiding tiny global-speed-only progress at grazing
+or separating arcs. The original .2-radian/20-unit fixture hit an ordinary GPU
+speculative contact; clearing only discrete poses still did not clear that margin.
+The corrected control preserves the strict no-contact assertion. It then exposed
+a real GPU 256-advance exhaustion, fixed without raising either numerical budget.
+The two GPU contact cases retain final angular speeds 15.000301 and 19.244148 rad/s,
+exact logical slots and momentum tolerance. Native allocations, physical hardware,
+arbitrary polygon/capsule/multiple-piece provider geometry and long coupled/network/
+performance acceptance remain open. Curved custom-annulus checks follow below.
 
 ## Curved custom contacts
 

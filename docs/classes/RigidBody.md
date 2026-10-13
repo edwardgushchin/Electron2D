@@ -1,6 +1,6 @@
 # RigidBody
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 [Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
 keeps sampled public values while rejecting portable capture of retired/reindexed
@@ -309,3 +309,10 @@ Child-owner entry compares the complete transform/disabled/one-way descriptors a
 Complete PhysicsBodyStateTests and PhysicsServerForceTests now execute on explicitly selected public CPU/GPU worlds, alongside the common PhysicsContactImpulseTests and report-only role suite. They retain state/field/force/center values, post-solver callback edits/errors/removal/reentry, borrowed-view lifetime, force omission and pending-input rules. Real scene/raw dynamic and kinematic fixtures expose six uncapped contacts and verify deepest 2/1/0 caps and the corresponding monitor objects without private list-order assumptions; static/static pairs remain ineligible. Momentum checks retain their .08/.1 scene-impulse bounds, equal/opposite and rotating-normal/transient/sleep assertions. Warm gates require 0/0 owner/all-thread bytes for contact/callback/force frames, zero-cap frames and live pose reads. CPU native scheduling/depth-injection checks remain separate diagnostics; legacy staged GPU controls do not establish independent GPU acceptance. Native/platform, visual and final network/performance gates remain open.
 
 The complete PhysicsBodyTests, RigidBodyForceTests, RigidBodyContactTests and ShapePairEventTests now execute on explicitly selected public CPU/GPU worlds, with actual backend assertions in every numerical scene. The ordinary full suite runs both variants; ELECTRON2D_TEST_SCENE_PHYSICS=cpu|gpu selects the same complete set. Existing force/impulse/center units and numerical bounds, freeze/lock/mass/geometry recovery, persistent force packing, sleep/wake notification policy, contact caps/deduplication and object-before-shape entry/departure ordering are unchanged. Scene/raw nullable payloads, compound logical slots, handler mutation/errors and committed-event no-replay remain asserted. All existing 64-frame warm gates now require 0/0 owner/all-thread managed bytes for resting/active/moving bodies, forces, monitored/no-contact frames and steady/transitioning shape pairs. Box2D SIMD and worker scheduling probes remain CPU diagnostics; they do not establish independent GPU acceptance. Native allocations, wider inherited/extension, foreign platforms, full networking and final GPU/window performance acceptance remain open.
+
+[Public angular CCD](../components/physics-registered-adapter.md#angular-compound-motion)
+now checks asymmetric mass-center motion and intermediate rotational impact on
+CPU/GPU/registered worlds in serial/separate modes. Exact slots, opposite frame
+impulses, authored CCD modes and one callback/tick retain their contract; both
+128-warm/128-measured impact brackets require 0/0 managed bytes. GPU executes on
+CPU-only llvmpipe; hardware, broader geometry and final acceptance remain open.

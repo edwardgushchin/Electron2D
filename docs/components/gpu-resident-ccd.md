@@ -40,8 +40,12 @@ explicit diagnostics. No body poses or bounds are uploaded from a CPU mirror.
 The new CCD kernel reuses the contact kernel's complete convex/segment support,
 projection, clipping and ray helpers in PhysicsResidentCollision.inc.glsl. Rounded
 primitive tolerance and hollow segment decomposition remain common. A conservative
-advance uses a separating-axis gap and an upper bound on its closing speed,
-including both bodies' angular motion. Sampling and integration use the same
+advance for finite convex pieces uses a separating-axis gap, worst projected
+velocity over every core vertex and an upper bound on angular acceleration. It
+solves that quadratic distance bound, including separating or tangential initial
+velocity, before applying the existing safety factor. Considering every vertex
+keeps feature switches bounded. Rounded radii do not change under rotation.
+Infinite-boundary pairs retain their global-speed bound. Sampling and integration use the same
 center-relative motion, including positional correction. Calculations stay near
 the first body's initial origin to limit world-coordinate cancellation.
 
@@ -233,3 +237,17 @@ Residual closing at an already processed impact now includes virtual surface
 velocity, like the contact solver. This prevents refinement from exhausting its
 budget when a configured surface cancels geometric normal motion. Geometric
 samples, swept bounds and first-impact advancement still exclude virtual motion.
+
+## Public angular CCD, 2026-10-14
+
+[Angular compound motion](physics-registered-adapter.md#angular-compound-motion)
+now executes the actual public GPU world, serial and separate numerical thread,
+alongside CPU and an independent registered solver. The prior global-speed-only
+sweep exhausted 256 advances on the corrected clear-discrete-sample arc. The
+current axis/acceleration bound completes it without increasing budgets or
+changing state ownership, host traffic, solver iterations or ordinary contacts.
+Both static and translating/rotating discrete counterparts retain exact shape
+indices, complete momentum-changing impulses and one callback/tick per frame.
+Each case runs 128 warmup/128 measured reset/full-frame cycles at 0/0 owner/all-thread
+managed bytes. Software Vulkan evidence does not establish physical GPU speed,
+native totals, arbitrary geometry or network/platform/performance acceptance.

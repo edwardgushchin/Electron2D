@@ -89,6 +89,22 @@ bool directed(Hull ray,Hull other)
     if(d==vec2(0))return false;
     return rayHit(other,from,d+normalized(d)*(4*tolerances.x),t,n,feature);
 }
+float axisClosing(Hull a,Hull b,vec3 va,vec3 vb,vec2 ca,vec2 cb,vec2 n,bool rayA,bool rayB)
+{
+    vec2 centerA=rotate(bodyA.pose.zw,ca),centerB=bodyB.pose.xy-bodyA.pose.xy+rotate(bodyB.pose.zw,cb);
+    float speedA=-3.402823466e38,speedB=3.402823466e38;
+    for(uint i=0u;i<a.count;i++)
+    {
+        vec2 p=vertex(a,i);
+        speedA=max(speedA,rayA?0:va.z*cross2(p-centerA,n));
+    }
+    for(uint i=0u;i<b.count;i++)
+    {
+        vec2 p=vertex(b,i);
+        speedB=min(speedB,rayB?0:vb.z*cross2(p-centerB,n));
+    }
+    return tolerances.w*(dot2(va.xy-vb.xy,n)+speedA-speedB);
+}
 float sweep(Shape sa,Geometry ga,Shape sb,Geometry gb,ResidentBody startA,ResidentBody startB,vec3 va,vec3 vb,
     vec2 ca,vec2 cb,float radiusA,float radiusB,uint pieceA,uint pieceB,bool rayA,bool rayB)
 {
@@ -159,9 +175,32 @@ float sweep(Shape sa,Geometry ga,Shape sb,Geometry gb,ResidentBody startA,Reside
             }
             return time;
         }
-        float closing=tolerances.w*max(0,-dot2(vb.xy-va.xy,axis.normal))+bound;
-        if(closing==0)return 1;
-        float advance=0.9*(gap-tolerances.x)/closing;
+        float advance;
+        if(!a.boundary&&!b.boundary)
+        {
+            // Bound rotation against the current separating axis, including tangential and separating motion.
+            float closing=axisClosing(testA,testB,va,vb,ca,cb,axis.normal,rayA,rayB);
+            float curvature=tolerances.w*tolerances.w*(wa*wa*radiusA+wb*wb*radiusB);
+            float distance=gap-tolerances.x;
+            if(curvature==0)
+            {
+                if(closing<=0)return 1;
+                advance=distance/closing;
+            }
+            else
+            {
+                float root=sqrt(closing*closing+2*curvature*distance);
+                advance=closing>=0?2*distance/(closing+root):(root-closing)/curvature;
+            }
+        }
+        else
+        {
+            float closing=tolerances.w*max(0,-dot2(vb.xy-va.xy,axis.normal))+bound;
+            if(closing==0)return 1;
+            advance=(gap-tolerances.x)/closing;
+        }
+        if(!finite2(vec2(advance))||advance<=0){fail();return 1;}
+        advance*=0.9;
         float next=time+advance;
         if(next>1)return 1;
         if(next==time)

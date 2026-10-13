@@ -1061,3 +1061,10 @@ suite on explicit CPU/GPU worlds in both numerical-thread modes. All six profile
 retain 64 active or wake/sleep-cycling bodies at 0/0 warm owner/all-thread bytes.
 The public-only CPU/GPU/registered consumer additionally verifies connected groups
 and quiet-clock restoration. Hardware and broader acceptance remain open.
+
+[Public angular CCD](../components/physics-registered-adapter.md#angular-compound-motion)
+now checks asymmetric mass-center motion and intermediate rotational impact on
+CPU/GPU/registered worlds in serial/separate modes. Exact slots, opposite frame
+impulses, authored CCD modes and one callback/tick retain their contract; both
+128-warm/128-measured impact brackets require 0/0 managed bytes. GPU executes on
+CPU-only llvmpipe; hardware, broader geometry and final acceptance remain open.

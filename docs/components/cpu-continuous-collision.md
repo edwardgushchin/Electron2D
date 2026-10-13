@@ -253,3 +253,11 @@ both runs. Evidence lives under `bin/physics-continuous-software/2026-10-14/fina
 Software timings are diagnostic and establish no physical-GPU speed advantage.
 Hardware/platform, native-memory, rendered FPS, general numerical extensions and
 full-goal acceptance remain open.
+
+
+[Public angular CCD](physics-registered-adapter.md#angular-compound-motion)
+now checks asymmetric mass-center motion and intermediate rotational impact on
+CPU/GPU/registered worlds in serial/separate modes. Exact slots, opposite frame
+impulses, authored CCD modes and one callback/tick retain their contract; both
+128-warm/128-measured impact brackets require 0/0 managed bytes. GPU executes on
+CPU-only llvmpipe; hardware, broader geometry and final acceptance remain open.

@@ -16,7 +16,13 @@ public static partial class BackendChecks
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
         Console.WriteLine($"Angular compound {backend?.ToString() ?? "registered"}, threaded={threaded}: mass-center motion, intermediate arc, contact identity and 0/0 warm frames passed.");
 
-        World CreateWorld() => backend is { } selected ? new World(selected) : new World("AngularCompound");
+        World CreateWorld()
+        {
+            var world = backend is { } selected ? new World(selected) : new World("AngularCompound");
+            Check(world.PhysicsBackend == (backend ?? PhysicsServer.Backend.Extension) && world.PhysicsFallbackReason is null,
+                "Angular motion uses the selected backend without startup fallback");
+            return world;
+        }
         void CheckMassCenter()
         {
             using var world = CreateWorld(); using var shape = new CircleShape { Radius = 1 };
@@ -45,19 +51,21 @@ public static partial class BackendChecks
         void CheckAngularImpact(CCDMode mode, bool movingPeer = false)
         {
             const float angularSpeed = 30;
+            const float armLength = 40;
             using var world = CreateWorld(); using var disk = new CircleShape { Radius = .25f };
             using var root = new SubViewport { World = world };
             var body = MakeBody(); body.Mass = 2; body.ContinuousCD = mode; body.MaxContactsReported = 8;
             body.AddChild(new CollisionShape { Name = "Disabled", Shape = disk, Disabled = true });
-            body.AddChild(new CollisionShape { Name = "Right", Shape = disk, Position = new(20, 0) });
-            body.AddChild(new CollisionShape { Name = "Left", Shape = disk, Position = new(-20, 0) }); root.AddChild(body);
+            body.AddChild(new CollisionShape { Name = "Right", Shape = disk, Position = new(armLength, 0) });
+            body.AddChild(new CollisionShape { Name = "Left", Shape = disk, Position = new(-armLength, 0) }); root.AddChild(body);
             using var tree = new SceneTree(root);
             var target = PhysicsServer.BodyCreate();
             try
             {
                 PhysicsServer.BodySetMode(target, movingPeer ? PhysicsServer.BodyMode.Rigid : PhysicsServer.BodyMode.Static);
                 PhysicsServer.BodyAddShape(target, disk.GetRID(), new(0, movingPeer ? new Vector2(-5, 0) : Vector2.Zero));
-                var point = new Vector2(20, 0).Rotated(.2f);
+                // Clear ordinary quarter-step poses and their speculative contact margin.
+                var point = new Vector2(armLength, 0).Rotated(.225f);
                 var targetPose = new Transform(0, point + (movingPeer ? new Vector2(5, 0) : Vector2.Zero));
                 PhysicsServer.BodySetTransform(target, targetPose);
                 if (movingPeer)
@@ -73,10 +81,12 @@ public static partial class BackendChecks
                 PhysicsServer.BodySetStateSyncCallback(body.GetRID(), _ => callbacks++);
                 using var state = PhysicsServer.BodyGetDirectState(body.GetRID())!;
                 Reset(); Step();
+                Check(PhysicsServer.BodyGetContinuousCollisionDetectionMode(body.GetRID()) == mode,
+                    "Angular response retains the authored CCD mode");
                 if (mode == CCDMode.Disabled)
                 {
                     Check(state.GetContactCount() == 0 && MathF.Abs(body.AngularVelocity - angularSpeed) < .01f,
-                        $"Discrete and leading-ray controls miss the clear-endpoint pure rotational arc: mode={mode}, omega={body.AngularVelocity}, contacts={state.GetContactCount()}");
+                        $"Discrete control misses the clear-sample pure rotational arc: mode={mode}, omega={body.AngularVelocity}, contacts={state.GetContactCount()}");
                     return;
                 }
                 if (mode == CCDMode.CastRay)
@@ -110,6 +120,7 @@ public static partial class BackendChecks
                 Check(GC.GetAllocatedBytesForCurrentThread() == owner && GC.GetTotalAllocatedBytes(true) == all,
                     "Warmed reset/rotating-contact complete frames allocate zero owner/all-thread managed bytes");
                 Check(state.GetContactCount() > 0 && body.AngularVelocity < .8f * angularSpeed, "Measured frames retain the real angular collision workload");
+                Console.WriteLine($"Angular CastShape, movingPeer={movingPeer}: 128 warmup/128 measured full frames, omega={body.AngularVelocity:F6}, contacts={state.GetContactCount()}, 0/0 owner/all-thread managed B.");
                 void Reset()
                 {
                     body.Transform = Transform.Identity; body.LinearVelocity = Vector2.Zero; body.AngularVelocity = angularSpeed;

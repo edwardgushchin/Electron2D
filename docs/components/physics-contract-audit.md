@@ -210,8 +210,9 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   [Angular compound motion](physics-registered-adapter.md#angular-compound-motion)
   now verifies mass-center/point-velocity projection and coupled rotating circle
   slots on CPU and the independent provider in serial/separate numerical modes.
-  GPU, general polygon/capsule/multiple-piece and wider coupled CCD acceptance stays
-  open; [compound evidence](physics-registered-adapter.md#compound-slot-numerics)
+  GPU software execution now passes serial/separate profiles after the separated
+  convex trajectory advancement fix. Physical hardware, general polygon/capsule/
+  multiple-piece provider and wider coupled CCD acceptance stays open; [compound evidence](physics-registered-adapter.md#compound-slot-numerics)
   defines the bounded fixture and numerical tolerances.
 - [Curved custom contacts](physics-registered-adapter.md#curved-custom-contacts)
   now check inner/outer annulus arcs, motor-generated motion, a rotating counterpart,
