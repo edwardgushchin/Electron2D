@@ -188,6 +188,35 @@ payload; both endpoints must use the same supported version.
 
 ## Portable contact and motion history
 
+### Character motion validation
+
+Portable slide records are completed collisions, matching ordinary CharacterBody
+movement. Decode requires distinct nonzero moving/collider IDs, nonnegative logical
+indices and penetration depth, a true collided flag and ordered fractions satisfying
+0 <= safe <= unsafe <= 1. Signed direct-body contact depth is a separate value and
+remains supported. Rejected bytes leave the previous complete PhysicsSnapshot intact.
+
+A nonempty character platform ID must resolve to a different bound body; Area,
+self and unbound references reject before world state or events change. Capture
+checks the same body/self rule in its measurement pass. The empty platform and
+valid scene/raw body roles remain permitted. No wire fields/version or API changed.
+
+The public-only --portable-motion fixture starts with a real circle wall slide and
+surface platform velocity (0, -4). Eight malformed wire cases preserve the reusable
+packet. Three incompatible platform IDs on CPU and registered destinations preserve
+complete encoded state, events and input bytes. Both serial/separate profiles pass,
+covering 16 wire and 12 world-binding rejection cases. A valid unchanged packet
+applies silently, resolves the destination's own platform and remains point-queryable;
+the following actual .01-second frame/movement carries the character upward. The
+fixture permits .02 through .1 scene units around expected .04, distinguishing no
+carry and large displacement while allowing the contact recovery response.
+
+The reversed-fraction decode and self-platform apply failed before their fixes.
+These checks do not establish arbitrary platform recipes, all geometry/joints,
+GPU/native, cross-platform or performance acceptance. Existing warm contact
+transport retains its strict zero-managed-allocation checks; malformed cold decoding
+has no allocation-free claim.
+
 ### Same-count authoring validation
 
 The public-only --portable-geometry consumer verifies seven incompatible authored

@@ -243,6 +243,11 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   with real queries and continued contact/Area history. Disabled primitive-kind
   validation does not establish active rectangle simulation. Broader association/topology and wider geometry/GPU/native/network/performance
   gates stay open.
+- [Character motion validation](physics-snapshots.md#character-motion-validation)
+  now rejects impossible slide encodings and self/Area/unbound platforms before
+  storage/state/events change. CPU/registered serial/separate profiles verify a
+  valid body-platform correction and actual subsequent carry. Arbitrary platform
+  recipes, geometry/joints and current GPU/native/network/performance gates stay open.
 - Shared inherited Object/Node/Resource/CanvasItem and skeletal editor requirements
   remain with their typed-API, scheduling, script/editor or rendering prerequisites.
   Existing built-in physics tests do not establish those separate declaring APIs.

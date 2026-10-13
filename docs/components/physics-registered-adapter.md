@@ -1374,3 +1374,9 @@ rejects removal/reindex/readdition before replacing bytes while preserving sampl
 public data and events. In-slot replacement stays valid. CPU/registered serial/
 separate twelve-case verification executes; destination apply remaps tokens, which
 never enter wire data. Current GPU/native and broader topology acceptance stay open.
+
+[Character motion validation](physics-snapshots.md#character-motion-validation)
+now rejects malformed completed-slide values and incompatible platform roles before
+state/event mutation. CPU/registered serial/separate tests preserve complete packets
+and world state, then exercise a valid body-platform correction and actual following
+movement. This does not establish arbitrary platform geometry or GPU acceptance.

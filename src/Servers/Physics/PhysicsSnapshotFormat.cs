@@ -156,11 +156,12 @@ internal static class PhysicsSnapshotFormat
         var count = reader.Count(80);
         for (var i = 0; i < count; i++)
         {
-            PhysicsSnapshotReader.Require(reader.U64() != 0); var other = reader.U64();
-            _ = reader.I32(); _ = reader.I32();
-            for (var f = 0; f < 11; f++) _ = reader.F32();
+            var owner = reader.U64(); var other = reader.U64();
+            PhysicsSnapshotReader.Require(owner != 0 && other != 0 && owner != other && reader.I32() >= 0 && reader.I32() >= 0);
+            _ = reader.Vector(); _ = reader.Vector(); PhysicsSnapshotReader.Require(reader.F32() >= 0);
+            _ = reader.Vector(); _ = reader.Vector(); _ = reader.Vector();
             var safe = reader.F32(); var unsafeFraction = reader.F32(); var collided = reader.Bool();
-            PhysicsSnapshotReader.Require(safe is >= 0 and <= 1 && unsafeFraction is >= 0 and <= 1 && (!collided || other != 0));
+            PhysicsSnapshotReader.Require(safe >= 0 && safe <= unsafeFraction && unsafeFraction <= 1 && collided);
         }
     }
 }

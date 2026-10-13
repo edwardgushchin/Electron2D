@@ -75,7 +75,12 @@ internal sealed partial class PhysicsReplayEntry
             writer.Bool(characterState._onCeiling);
             writer.Pose(characterState._solverPose);
             writer.Bool(characterState._queryPoseApplied);
-            writer.U64(map.NetworkID(characterState._platformRID));
+            var platformID = map.NetworkID(characterState._platformRID);
+            if (platformID != 0)
+            {
+                var platform = map.Collider(platformID); PhysicsReplayCopy.Require(platform != this && !platform.IsArea);
+            }
+            writer.U64(platformID);
             WriteSlides(ref writer, map, characterState.Slides);
         }
         if (_area is { } areaState)
@@ -169,7 +174,9 @@ internal sealed partial class PhysicsReplayEntry
             characterState._onCeiling = reader.Bool();
             characterState._solverPose = reader.Pose();
             characterState._queryPoseApplied = reader.Bool();
-            characterState._platformRID = map.LocalRID(reader.U64());
+            var platformID = reader.U64(); var platform = platformID == 0 ? null : map.Collider(platformID);
+            PhysicsSnapshotReader.Require(platform is null || platform != this && !platform.IsArea);
+            characterState._platformRID = platform?.Backend.RID ?? default;
             ReadSlides(ref reader, map, characterState.Slides);
         }
         if (_area is { } areaState)

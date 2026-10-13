@@ -38,6 +38,7 @@ public sealed class PhysicsSnapshot
     /// <summary>Validates and copies a complete encoded packet into reusable owned storage.</summary>
     /// <param name="source">The exact packet payload, borrowed only for this call.</param>
     /// <remarks>Malformed or over-budget payloads leave the previous complete snapshot unchanged.
+    /// Character slide history requires real distinct hit identities, nonnegative indices/depth and ordered fractions within zero through one.
     /// Applying to a world performs additional identity, generation and authoring checks before mutation.</remarks>
     /// <exception cref="InvalidDataException">The payload is malformed, unsupported or over budget.</exception>
     /// <exception cref="InvalidOperationException">Access is off-owner.</exception>

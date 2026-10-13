@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-13
 
+[Character motion validation](../components/physics-snapshots.md#character-motion-validation)
+rejects impossible slide encodings and self/Area/unbound platform references before
+packet or world mutation. CPU/registered serial/separate cases preserve previous
+state/events and verify real movement after valid platform correction.
+
 [Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
 keeps sampled public values while rejecting portable capture of retired/reindexed
 slots before replacing packet bytes. In-slot replacement and disabled history stay

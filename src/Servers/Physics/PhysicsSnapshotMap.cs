@@ -87,6 +87,7 @@ public sealed partial class PhysicsSnapshotMap : IDisposable
     /// <summary>Validates then applies a compatible authoritative snapshot without gameplay callbacks.</summary>
     /// <param name="snapshot">A complete decoded or locally captured portable snapshot.</param>
     /// <remarks>Network sender authorization and tick ordering are the caller's responsibility. Incoming values are validated before being applied. An execution/device failure after mutation starts fails the world until disposal.
+    /// Character platform references must name a different bound body or be empty.
     /// Private solver caches are reconstructed; cross-backend bitwise continuation is not promised.</remarks>
     /// <exception cref="ArgumentNullException">The source is null.</exception>
     /// <exception cref="InvalidDataException">Wire data, bindings, generations, logical contact/history shape indices or authoring are incompatible.</exception>

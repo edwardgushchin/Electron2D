@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-13
 
+[Character motion validation](../components/physics-snapshots.md#character-motion-validation)
+rejects impossible slide encodings and self/Area/unbound platform references before
+packet or world mutation. CPU/registered serial/separate cases preserve previous
+state/events and verify real movement after valid platform correction.
+
 [Same-count authoring validation](../components/physics-snapshots.md#same-count-authoring-validation)
 now exercises radius, disabled primitive kind, local pose, enablement, actual
 remove/reappend order, solver bias and raw Area geometry in CPU/registered serial/

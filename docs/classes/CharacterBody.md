@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-13
 
+[Character motion validation](../components/physics-snapshots.md#character-motion-validation)
+rejects impossible slide encodings and self/Area/unbound platform references before
+packet or world mutation. CPU/registered serial/separate cases preserve previous
+state/events and verify real movement after valid platform correction.
+
 [Portable contact/motion verification](../components/physics-snapshots.md#portable-contact-and-motion-history)
 now captures/restores actual moved/query-prepared characters. Local replay keeps
 the query flag with the retained solver pose; portable version 3 encodes it

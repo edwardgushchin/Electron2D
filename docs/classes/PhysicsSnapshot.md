@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-13
 
+[Character motion validation](../components/physics-snapshots.md#character-motion-validation)
+rejects impossible slide encodings and self/Area/unbound platform references before
+packet or world mutation. CPU/registered serial/separate cases preserve previous
+state/events and verify real movement after valid platform correction.
+
 The supported encoding is now version 3, including a strict four-byte character
 query-pose flag. Older versions reject without replacing existing payloads.
 [Contact/history validation](../components/physics-snapshots.md#portable-contact-and-motion-history)

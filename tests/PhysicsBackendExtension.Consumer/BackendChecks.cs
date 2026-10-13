@@ -19,6 +19,7 @@ public static partial class BackendChecks
         RunPortableContacts();
         RunPortableCapture();
         RunPortableGeometry();
+        RunPortableMotion();
         Solver? solver = null;
         RunShapeResources();
         RunShapeGeometry();
