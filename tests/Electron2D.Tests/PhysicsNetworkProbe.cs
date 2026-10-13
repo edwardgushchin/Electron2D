@@ -25,6 +25,7 @@ internal sealed partial class NetworkSession
         report.NumericalSteps = _numericalSteps; report.NumericalThreadVerified = _numericalThreadVerified && _numericalSteps > 0;
         var gpu = PhysicsServer.Service.GetSceneSpace(Simulation.World.Space).GPUStore;
         if (gpu is null) return;
+        report.GPUDriver = gpu.Driver; report.GPUDeviceName = gpu.DeviceName;
         report.GPUUploadBytes = gpu.UploadBytes; report.GPUReadbackBytes = gpu.ReadbackBytes;
         report.GPUSubmissions = gpu.SubmissionCount; report.GPUWaitMS = gpu.WaitMS;
     }

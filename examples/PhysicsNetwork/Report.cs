@@ -27,6 +27,8 @@ internal sealed class SessionReport
     public int NumericalSteps { get; set; }
     public bool NumericalThreadVerified { get; set; }
     public bool GPUUnavailableVerified { get; set; }
+    public string GPUDriver { get; set; } = "";
+    public string GPUDeviceName { get; set; } = "";
     public long GPUUploadBytes { get; set; }
     public long GPUReadbackBytes { get; set; }
     public long GPUSubmissions { get; set; }

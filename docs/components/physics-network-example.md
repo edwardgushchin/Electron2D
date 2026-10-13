@@ -1,6 +1,6 @@
 # Authoritative physics network example
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 [PhysicsNetwork](../../examples/PhysicsNetwork/README.md) connects the existing
 `SceneMultiplayer`/`ENetMultiplayerPeer`, `PhysicsSnapshotMap`, `PhysicsSnapshot` and
@@ -444,3 +444,15 @@ network-window-gpu and /network-window-compatibility with exact process outcomes
 and manifests in the parent. Main changed during the preceding scene run; these
 network results belong to the immutable 7c37a291 runtime, not newer main. No full
 platform, arbitrary-provider geometry or repeatability acceptance is inferred.
+
+
+[Software Vulkan validation](physics-backends.md#software-vulkan-functional-checks) now executes
+the resident GPU modules, point-range/failure checks and common public physics suites
+without physical-GPU load. A separate CPU authority/GPU prediction/late CPU client
+run covers the existing impaired-network scenario. Hardware GPU execution, performance
+and full-goal acceptance remain open; software timing is not hardware evidence.
+
+Instrumented test-host reports include GPUDriver and GPUDeviceName from the actual
+retained compute device. The executable example still consumes only public engine
+APIs; backend introspection remains in PhysicsNetworkProbe. Empty strings in the
+public-only host mean no device observation, not a hardware identity.

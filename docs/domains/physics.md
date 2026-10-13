@@ -893,3 +893,10 @@ of truly unrepresentable forces. PhysicsPointGravityRangeTests covers scene, raw
 Area and default-space sources with three body roles and CPU zero-allocation frames.
 The revised device kernel compiles; real GPU numeric-range acceptance remains open.
 See [point-field verification](../components/physics-areas.md#point-gravity-numeric-range).
+
+
+[Software Vulkan validation](../components/physics-backends.md#software-vulkan-functional-checks) now executes
+the resident GPU modules, point-range/failure checks and common public physics suites
+without physical-GPU load. A separate CPU authority/GPU prediction/late CPU client
+run covers the existing impaired-network scenario. Hardware GPU execution, performance
+and full-goal acceptance remain open; software timing is not hardware evidence.

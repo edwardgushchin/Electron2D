@@ -11,6 +11,11 @@ internal static class PhysicsPointGravityRangeTests
         var rigid = new RigidBody { Name = "Rigid", CanSleep = false, CollisionMask = 0 }; Add(rigid, circle); root.AddChild(rigid);
         var character = new CharacterBody { Name = "Character", CollisionMask = 0 }; Add(character, circle); root.AddChild(character);
         using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Explicit field backend.");
+        if (backend == PhysicsServer.Backend.GPU)
+        {
+            var device = PhysicsServer.Service.GetSceneSpace(world.Space).GPUStore!;
+            Console.WriteLine($"Point field compute device: {device.Driver}; {device.DeviceName}.");
+        }
         var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate(); var rawArea = PhysicsServer.AreaCreate(); var regionShape = PhysicsServer.CircleShapeCreate();
         try
         {
@@ -64,6 +69,18 @@ internal static class PhysicsPointGravityRangeTests
             var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; var allBytes = GC.GetTotalAllocatedBytes(true) - all;
             Check(ownerBytes == 0 && allBytes == 0, "Warmed authored-reset/full field frames allocate zero owner/all-thread bytes.");
             Console.WriteLine($"Point gravity range: backend={backend}, profiles=3, cases={cases.Length}, receivers=3, warmFrames=128, ownerBytes={ownerBytes}, allBytes={allBytes}.");
+            if (backend == PhysicsServer.Backend.GPU)
+            {
+                var prior = rigid.GetGravity();
+                area.GravityPointCenter = new(1e-25f, 0); area.GravityPointUnitDistance = 1e20f; area.Gravity = float.MaxValue;
+                Reset(rigid, body);
+                Reject<AggregateException>(() => tree.PhysicsFrame(.001));
+                Check(rigid.GetGravity() == prior && world.PhysicsBackend == PhysicsServer.Backend.GPU && world.RequestedPhysicsBackend == PhysicsServer.Backend.GPU && world.PhysicsFallbackReason is null,
+                    "Started point-force overflow preserves published fields and backend without fallback.");
+                Reject<AggregateException>(() => tree.PhysicsFrame(.001));
+                Reject<InvalidOperationException>(() => area.Gravity = 0);
+                Console.WriteLine("GPU point-force overflow is terminal, preserves selection/publication and permits final resource retirement.");
+            }
         }
         finally { PhysicsServer.FreeRID(rawArea); PhysicsServer.FreeRID(regionShape); PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(shape); }
     }
@@ -78,5 +95,6 @@ internal static class PhysicsPointGravityRangeTests
         var tolerance = MathF.Max(.002f, MathF.Max(MathF.Abs(expected.X), MathF.Abs(expected.Y)) * .0002f);
         Check(actual.IsFinite() && MathF.Abs(actual.X - expected.X) <= tolerance && MathF.Abs(actual.Y - expected.Y) <= tolerance, message + $": {actual} vs {expected}");
     }
+    private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
 }

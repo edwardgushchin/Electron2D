@@ -1,6 +1,6 @@
 # Physics backend selection and shared worlds
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 [Same-revision mass measurements](physics-current-performance.md) record complete
 CPU/GPU headless steps and real-window frames at 65,536 awake bodies on
@@ -1192,3 +1192,51 @@ See [the shared compound checks](physics-registered-adapter.md#compound-slot-num
 ## Separate numerical scheduling
 
 The [captured numerical thread policy](physics-thread.md) now executes real CPU/provider Solve on a retained lane with owner preparation/publication barriers and joined failure teardown. Device creation and retirement keep their original owner; the independent GPU remains numerical owner. CPU/provider conformance and zero warmed allocations are checked. GPU/native numerical and scheduling-performance gates stay open.
+
+## Software Vulkan functional checks
+
+The independent GPU implementation can be exercised through a CPU Vulkan adapter
+without creating a physical-GPU workload. This runs the actual resident compute
+modules and the GPU backend's storage, queries, events, checkpoints and failures;
+it does not use the Box2D CPU world or establish hardware GPU performance.
+
+The 2026-10-14 validation uses signed CachyOS vulkan-swrast 3:26.2.4-1, extracted
+only into ignored validation output. The Vulkan loader enumerates exactly one
+CPU-type adapter: llvmpipe (LLVM 23.1.1, 256 bits). Its ICD library path is absolute;
+both loader driver variables select only that JSON, implicit/explicit layers are
+disabled and the tested process maps contain libvulkan_lvp with no NVIDIA library.
+No package is installed and no system driver/configuration is changed. SDL's dummy
+video driver rejects Vulkan creation; SDL offscreen supplies the headless bridge.
+
+Use an existing, verified software ICD and already-built linux-x64 test host:
+
+```bash
+SDL_VIDEODRIVER=offscreen SDL_GPU_DRIVER=vulkan \
+VK_DRIVER_FILES=/absolute/software-vulkan.json \
+VK_ICD_FILENAMES=/absolute/software-vulkan.json \
+VK_LOADER_LAYERS_DISABLE='~all~' LP_NUM_THREADS=4 \
+ELECTRON2D_TEST_POINT_GRAVITY=gpu \
+dotnet tests/Electron2D.Tests/bin/Release/net10.0/linux-x64/Electron2D.Tests.dll
+```
+
+The ICD must point to the software library, and device enumeration must establish
+CPU type before execution. A hardware ICD is a different validation profile.
+DISPLAY/WAYLAND/XDG runtime and inherited test selectors were absent in the recorded
+headless runs. Point tests print the actual device, retain 81 physical field-vector
+assertions, require zero owner/all-thread allocation over 128 warmed frames, and
+verify that genuinely unrepresentable GPU point force terminally fails without
+changing backend or published scene fields. Retirement still succeeds.
+
+The Area/body/query/scene/shared public suites execute on this profile. The separate
+600-tick CPU-authority/GPU-prediction/late-CPU-client scenario additionally executes
+impaired packet delivery, lifecycle/control changes, confirmed effects, sleep/wake,
+portable correction/replay and final convergence. The CPU server and late client
+retain their unavailable-device environment. Instrumented network JSON now records
+GPUDriver/GPUDeviceName next to transfer/submission/wait counters; public-only
+example reports leave these test-owned observations empty.
+
+This evidence is software-driver functional acceptance for the named checks.
+Physical GPU drivers, native GPU allocations, device-loss behavior, foreign platforms,
+real window FPS and same-revision hardware CPU/GPU advantage remain open. Software
+adapter timing and transfer counters must not be used as an RTX/PCIe performance
+measurement. Full physics and registered-backend conformance remain separate gates.

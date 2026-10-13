@@ -1,6 +1,6 @@
 # Portable physics snapshots
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 `PhysicsSnapshotMap` connects caller-assigned network identities to one live CPU,
 GPU or registered world. `PhysicsSnapshot` owns a bounded reusable byte encoding. Together they
@@ -341,3 +341,10 @@ The 128-warm/128-measured complete contact/step/transfer/slide/query cycles requ
 fixture does not establish general geometry, joint correction or current GPU/
 native/foreign/network-performance acceptance. Evidence is retained under
 bin/physics-portable-contacts/2026-10-13.
+
+
+[Software Vulkan validation](physics-backends.md#software-vulkan-functional-checks) now executes
+the resident GPU modules, point-range/failure checks and common public physics suites
+without physical-GPU load. A separate CPU authority/GPU prediction/late CPU client
+run covers the existing impaired-network scenario. Hardware GPU execution, performance
+and full-goal acceptance remain open; software timing is not hardware evidence.

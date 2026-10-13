@@ -69,9 +69,10 @@ The resident GPU kernel scales the direction and combines mantissas/exponents
 for each output component. It guards the [GLSL reconstruction limits](https://docs.vulkan.org/glsl/latest/chapters/builtinfunctions.html) for ldexp
 and reports nonfinite resolved fields through the existing failed-step policy.
 This remains device work: no CPU field mirror, transfer or wait is added.
-Offline GLSL/SPIR-V compilation verifies the revised module; its new edge cases
-have not executed on real GPU hardware. The prior ordinary GPU field evidence
-does not establish current numeric-range or performance acceptance.
+The revised module now executes the numeric-range cases and terminal point-force
+overflow through a CPU Vulkan adapter; [software validation](physics-backends.md#software-vulkan-functional-checks)
+records the actual driver and profile. Physical GPU execution and performance
+acceptance remain open.
 
 PhysicsPointGravityRangeTests runs nine independently specified cases through
 scene Areas, raw server Areas and default-space point fields, each with RigidBody,
