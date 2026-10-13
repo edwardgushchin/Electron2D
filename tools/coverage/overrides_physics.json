@@ -7117,7 +7117,7 @@
         "ProjectSettings::property:physics/2d/solver/solver_iterations"
       ],
       "state": "Implemented",
-      "reason": "Positive typed project/world iteration policy executes for CPU contact/joint biased and relaxation sweeps and independent GPU physical/position sweeps; shared convergence, momentum, time, lifecycle and allocation checks run in PhysicsSolverIterationTests (ADR 0098). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "Positive typed project/world iteration policy executes for CPU contact/joint biased and relaxation sweeps and independent GPU physical/position sweeps; shared convergence, momentum, time, lifecycle and allocation checks run in PhysicsSolverIterationTests (ADR 0098). The complete public scene/server iteration suite now executes on explicit CPU/GPU worlds in serial/separate numerical profiles via ELECTRON2D_TEST_PUBLIC_SOLVER_ITERATIONS. Contact/pin convergence, momentum, fixed-time 1/16/128/int.MaxValue empty-world integration, captured/unclamped/invalid/inactive settings and sleep/owner/phase ordering retain their bounds. All six public/resident/stage profiles preserve 256 active bodies, 1/16/32 sweeps and 128 warmup/128 measured full steps at 0/0 owner/all-thread bytes. The CPU-specific 8193-sweep parallel schedule control remains. GPU execution uses CPU-only llvmpipe Vulkan; hardware, arbitrary registered constraints, native/foreign/network and performance acceptance remain open."
     },
     {
       "godot": [

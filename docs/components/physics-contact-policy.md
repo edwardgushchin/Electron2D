@@ -428,3 +428,41 @@ runtime/source evidence is under `bin/physics-public-history/2026-10-14/`.
 Software timing is diagnostic; solver iterations, general registered geometry,
 native/foreign/network acceptance, massive hardware advantage and real-window FPS
 remain separate gates.
+
+
+## Shared public iterations, 2026-10-14
+
+`ELECTRON2D_TEST_PUBLIC_SOLVER_ITERATIONS=cpu|gpu` runs the complete iteration
+suite through explicit PhysicsServer spaces and scene Worlds. The early entry
+also captures `ELECTRON2D_TEST_THREADED_COLLIDER=1` before creating worlds. The
+ordinary full runner includes both public backends; resident and CPU-hosted stage
+controls remain separate. All six profiles pass on software Vulkan.
+
+The same eight-body contact and pin chains retain their physical bounds: 128
+sweeps reduce RMS velocity error below 40% of the one-sweep result and below
+0.5 u/s, while total momentum remains within 0.03 kg-unit/s of 60. Current public
+CPU contact/pin RMS is approximately 0.000002/0.000002 u/s; public GPU is
+0.000003/0.028477 u/s. These results establish the requested convergence, without
+requiring equal intermediate trajectories or convergence rates.
+
+The free-body interval check retains 1/16/128/int.MaxValue policies: 40 u/s for
+0.02 seconds advances 0.8 units within 0.00003. The maximum-count case has no
+constraints and exercises the empty-loop optimization, not billions of active
+constraint sweeps. Captured defaults, unclamped positive authoring, invalid and
+inactive-world settings, owner/phase guards, equal-write sleep preservation,
+changed-count waking and later explicit sleep execute through public CPU/GPU paths.
+
+The unchanged 256-active-body workload runs 1/16/32 sweeps with four substeps,
+128 warmup and 128 measured full steps per count. Every profile/count now requires
+zero owner/all-thread managed bytes. Selected public GPU traffic is recorded from
+its actual store, outside the measured loop. The CPU-specific 8193-sweep parallel
+boundary control remains in both public CPU profiles, with multiple work blocks,
+zero all-thread allocation and no stage-storage growth.
+
+The frozen runtime/source manifests and logs are retained under
+`bin/physics-public-iterations/2026-10-14/`. CPU processes load no graphics driver;
+GPU processes load CPU-only llvmpipe without NVIDIA, and retained numerical threads
+are observed only in separate public profiles. Software timings include independent
+verification contention and establish no hardware or scheduling advantage. Native
+allocation, arbitrary registered constraint geometry, foreign platforms, networking,
+massive GPU throughput and real-window FPS remain separate acceptance gates.

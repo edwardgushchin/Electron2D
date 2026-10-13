@@ -1047,3 +1047,10 @@ sleep/event ordering through explicit CPU/GPU worlds in both numerical-thread mo
 All six public/resident/stage profiles retain 128 edited full-step samples at
 0/0 owner/all-thread managed bytes. Software Vulkan evidence leaves hardware,
 registered geometry and broader network/platform/performance acceptance open.
+
+[Shared public iteration verification](../components/physics-contact-policy.md#shared-public-iterations-2026-10-14)
+now exercises captured/live counts, contact/pin convergence, momentum, fixed-time
+integration and sleep/phase guards on explicit CPU/GPU worlds in both numerical
+thread modes. All six profiles preserve 256 active bodies and 1/16/32-sweep full
+step brackets with 0/0 owner/all-thread managed bytes. Hardware and broader
+registered/network/platform/performance acceptance remain open.

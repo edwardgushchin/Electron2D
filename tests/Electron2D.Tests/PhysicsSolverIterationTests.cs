@@ -4,15 +4,18 @@ using Electron2D;
 using Store = Electron2D.GPUPhysicsBodyStore;
 using Mode = Electron2D.PhysicsServer.BodyMode;
 
-internal static class PhysicsSolverIterationTests
+internal sealed class PhysicsSolverIterationTests(PhysicsServer.Backend backend)
 {
-    internal static void Run(bool stages = false)
+    internal static void Run(bool stages = false) => new PhysicsSolverIterationTests(PhysicsServer.Backend.CPU).RunCore(stages);
+    internal static void Run(PhysicsServer.Backend backend) => new PhysicsSolverIterationTests(backend).RunCore(false);
+    private void RunCore(bool stages)
     {
         VerifyDefaults(false); VerifyConvergence(false, stages); VerifyScene(stages); Measure(false, stages);
-        if (!stages) VerifyLongParallelSchedule();
-        Console.WriteLine($"World solver iterations passed on {(stages ? "CPU host/GPU stages" : "CPU")}.");
+        if (!stages && backend == PhysicsServer.Backend.CPU) VerifyLongParallelSchedule();
+        Console.WriteLine($"World solver iterations passed on {(stages ? "CPU host/GPU stages" : backend.ToString())}.");
     }
-    internal static void RunResident()
+    internal static void RunResident() => new PhysicsSolverIterationTests(PhysicsServer.Backend.GPU).RunResidentCore();
+    private void RunResidentCore()
     {
         VerifyDefaults(true); VerifyConvergence(true, false); Measure(true, false);
         Console.WriteLine("World solver iterations passed on resident GPU.");
@@ -24,16 +27,17 @@ internal static class PhysicsSolverIterationTests
         internal readonly List<RID> Bodies = [], Joints = [];
         internal readonly List<Store.BodyHandle> Handles = [];
         private readonly CircleShape _shape = new() { Radius = 5 };
-        internal Rig(bool resident, bool stages = false)
+        internal Rig(PhysicsServer.Backend backend, bool resident, bool stages = false)
         {
             if (resident) { GPU = new(); GPU.SetContactSettings(new(0, .3f)); }
             else
             {
-                Space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(Space, true);
+                Space = PhysicsServer.SpaceCreate(backend); Check(PhysicsServer.SpaceGetBackend(Space) == backend, "Iterations use the selected public backend."); PhysicsServer.SpaceSetActive(Space, true);
                 PhysicsServer.SpaceSetContactDefaultBias(Space, 0);
                 if (stages) PhysicsServer.Service.GetSceneSpace(Space).EnableGPUSolver();
             }
         }
+        internal Store? SelectedStore => GPU ?? (Space.IsValid() ? PhysicsServer.Service.GetSceneSpace(Space).GPUStore : null);
         internal int Iterations
         {
             get => GPU?.GetSolverIterations() ?? PhysicsServer.SpaceGetSolverIterations(Space);
@@ -81,12 +85,12 @@ internal static class PhysicsSolverIterationTests
             if (Space.IsValid()) PhysicsServer.FreeRID(Space); _shape.Dispose();
         }
     }
-    private static void VerifyDefaults(bool resident)
+    private void VerifyDefaults(bool resident)
     {
         var old = ProjectSettings.Get(ProjectSettings.Physics2DSolverIterations); Check(old == 16, "Project default is sixteen.");
         try
         {
-            ProjectSettings.Set(ProjectSettings.Physics2DSolverIterations, 3); using var r = new Rig(resident); Check(r.Iterations == 3, "World captures the project value.");
+            ProjectSettings.Set(ProjectSettings.Physics2DSolverIterations, 3); using var r = new Rig(backend, resident); Check(r.Iterations == 3, "World captures the project value.");
             ProjectSettings.Set(ProjectSettings.Physics2DSolverIterations, 7); Check(r.Iterations == 3, "An existing world retains its count.");
             foreach (var value in new[] { 0, -1 })
             {
@@ -113,12 +117,12 @@ internal static class PhysicsSolverIterationTests
         }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DSolverIterations, old); }
     }
-    private static void VerifyConvergence(bool resident, bool stages)
+    private void VerifyConvergence(bool resident, bool stages)
     {
         Span<Store.Snapshot> timeState = stackalloc Store.Snapshot[1];
         foreach (var iterations in new[] { 1, 16, 128, int.MaxValue })
         {
-            using var r = new Rig(resident, stages); r.Iterations = iterations; r.Add(Vector2.Zero, new(40, 0), shape: false); r.Step(.02f);
+            using var r = new Rig(backend, resident, stages); r.Iterations = iterations; r.Add(Vector2.Zero, new(40, 0), shape: false); r.Step(.02f);
             Vector2 position;
             if (r.GPU is { } gpu) { gpu.Read(CollectionsMarshal.AsSpan(r.Handles), timeState); position = timeState[0].Position; }
             else position = PhysicsServer.BodyGetTransform(r.Bodies[0]).Origin;
@@ -127,11 +131,11 @@ internal static class PhysicsSolverIterationTests
         foreach (var joints in new[] { false, true })
         {
             var low = Error(1); var high = Error(128);
-            Console.WriteLine($"Iteration convergence {(resident ? "resident" : stages ? "stages" : "CPU")}, {(joints ? "pins" : "contacts")}: rms(1)={low:F6}, rms(128)={high:F6} u/s.");
+            Console.WriteLine($"Iteration convergence {(resident ? "resident" : stages ? "stages" : backend.ToString())}, {(joints ? "pins" : "contacts")}: rms(1)={low:F6}, rms(128)={high:F6} u/s.");
             Check(high < low * .4f && high < .5f, "Additional sweeps converge the eight-body common velocity, preserving time and momentum.");
             float Error(int iterations)
             {
-                using var r = new Rig(resident, stages); r.Iterations = iterations;
+                using var r = new Rig(backend, resident, stages); r.Iterations = iterations;
                 for (var i = 0; i < 8; i++) r.Add(new(i * 10, 0), i == 0 ? new(60, 0) : default, !joints);
                 if (joints) for (var i = 1; i < 8; i++) r.Pin(i - 1, i);
                 r.Step(); Span<Vector2> v = stackalloc Vector2[8]; r.Read(v);
@@ -141,10 +145,11 @@ internal static class PhysicsSolverIterationTests
             }
         }
     }
-    private static void VerifyScene(bool stages)
+    private void VerifyScene(bool stages)
     {
-        using var root = new Node(); var body = new RigidBody { GravityScale = 0 }; root.AddChild(body);
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; var body = new RigidBody { GravityScale = 0 }; root.AddChild(body);
         using var tree = new SceneTree(root); var world = body.GetWorld()!.Space;
+        Check(PhysicsServer.SpaceGetBackend(world) == backend, "Scene iteration policy uses the selected public backend.");
         if (stages) body.Space!.EnableGPUSolver();
         PhysicsServer.SpaceSetSolverIterations(world, 4); body.Sleeping = true;
         PhysicsServer.SpaceSetSolverIterations(world, 4); Check(body.Sleeping, "Equal counts preserve explicit sleep.");
@@ -155,25 +160,26 @@ internal static class PhysicsSolverIterationTests
         body.LocalTransformChanged += _ => { Reject<InvalidOperationException>(() => PhysicsServer.SpaceSetSolverIterations(world, 2)); calls++; };
         body.Sleeping = false; body.LinearVelocity = new(1, 0); tree.PhysicsFrame(.01); Check(calls > 0, "Solver guard was exercised."); Check(PhysicsServer.SpaceGetSolverIterations(world) == 16, "Solver-phase edits reject before publication.");
     }
-    private static void Measure(bool resident, bool stages)
+    private void Measure(bool resident, bool stages)
     {
-        using var r = new Rig(resident, stages);
+        using var r = new Rig(backend, resident, stages);
         for (var i = 0; i < 256; i++) r.Add(new(i % 8 * 9.8f, i / 8 * 30), new(4, 0));
         foreach (var sweeps in new[] { 1, 16, 32 })
         {
             r.Iterations = sweeps; for (var i = 0; i < 128; i++) r.Step();
-            var samples = new long[128]; var upload = r.GPU?.UploadBytes ?? 0; var read = r.GPU?.ReadbackBytes ?? 0; var uniform = r.GPU?.UniformBytes ?? 0; var wait = r.GPU?.WaitMS ?? 0;
-            var before = GC.GetTotalAllocatedBytes(true);
+            var selected = r.SelectedStore;
+            var samples = new long[128]; var upload = selected?.UploadBytes ?? 0; var read = selected?.ReadbackBytes ?? 0; var uniform = selected?.UniformBytes ?? 0; var wait = selected?.WaitMS ?? 0;
+            var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var before = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < samples.Length; i++) { var t = Stopwatch.GetTimestamp(); r.Step(); samples[i] = Stopwatch.GetTimestamp() - t; }
-            var bytes = GC.GetTotalAllocatedBytes(true) - before; Array.Sort(samples); var ms = 1000d / Stopwatch.Frequency;
-            Console.WriteLine($"Solver iterations {(resident ? "resident GPU" : stages ? "stage GPU" : "CPU")}: 256 active bodies, {sweeps} sweeps, 4 substeps, 128 warmup/128 samples, p50/p95/p99={samples[64] * ms:F4}/{samples[121] * ms:F4}/{samples[126] * ms:F4} ms; {bytes} all-thread managed B.");
-            if (r.GPU is { } gpu) Console.WriteLine($"Iteration traffic: {(gpu.UploadBytes - upload) / 128} upload, {(gpu.ReadbackBytes - read) / 128} readback, {(gpu.UniformBytes - uniform) / 128} uniform B/tick; wait={(gpu.WaitMS - wait) / 128:F4} ms; {gpu.Driver}/{gpu.DeviceName}.");
-            Check(bytes == 0, "Warmed changing iteration budgets retain zero managed allocation.");
+            var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore; var bytes = GC.GetTotalAllocatedBytes(true) - before; Array.Sort(samples); var ms = 1000d / Stopwatch.Frequency;
+            Console.WriteLine($"Solver iterations {(resident ? "resident GPU" : stages ? "stage GPU" : backend.ToString())}: 256 active bodies, {sweeps} sweeps, 4 substeps, 128 warmup/128 samples, p50/p95/p99={samples[64] * ms:F4}/{samples[121] * ms:F4}/{samples[126] * ms:F4} ms; {ownerBytes}/{bytes} owner/all-thread managed B.");
+            if (selected is { } gpu) Console.WriteLine($"Iteration traffic: {(gpu.UploadBytes - upload) / 128} upload, {(gpu.ReadbackBytes - read) / 128} readback, {(gpu.UniformBytes - uniform) / 128} uniform B/tick; wait={(gpu.WaitMS - wait) / 128:F4} ms; {gpu.Driver}/{gpu.DeviceName}.");
+            Check(ownerBytes == 0 && bytes == 0, "Warmed changing iteration budgets retain zero owner/all-thread managed allocation.");
         }
     }
     private static void VerifyLongParallelSchedule()
     {
-        using var r = new Rig(false); for (var i = 0; i < 256; i++) r.Add(new(i % 2 * 9.8f, i / 2 * 30));
+        using var r = new Rig(PhysicsServer.Backend.CPU, false); for (var i = 0; i < 256; i++) r.Add(new(i % 2 * 9.8f, i / 2 * 30));
         r.Iterations = 1; for (var i = 0; i < 64; i++) r.Step();
         r.Iterations = 8193; var start = Stopwatch.GetTimestamp(); var before = GC.GetTotalAllocatedBytes(true); r.Step(.001f);
         var bytes = GC.GetTotalAllocatedBytes(true) - before;

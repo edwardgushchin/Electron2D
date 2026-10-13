@@ -28,6 +28,18 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_VIEW_CONFIG") is 
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POINT_GRAVITY") is { } pointGravityBackend) { if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1") ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, true); PhysicsPointGravityRangeTests.Run(pointGravityBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for point fields.") }); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PUBLIC_SOLVER_ITERATIONS") is { } iterationBackend)
+{
+    ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1");
+    PhysicsSolverIterationTests.Run(iterationBackend switch
+    {
+        "cpu" => PhysicsServer.Backend.CPU,
+        "gpu" => PhysicsServer.Backend.GPU,
+        _ => throw new ArgumentException("Use cpu or gpu for solver iterations.")
+    });
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PUBLIC_CONTACT_HISTORY") is { } historyBackend)
 {
     ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1");
@@ -1127,7 +1139,7 @@ PhysicsActivityTests.Run();
 RenderHandleReplacementTests.Run();
 PhysicsSleepPolicyTests.Run();
 PhysicsContactPolicyTests.Run(); PhysicsContactPolicyTests.Run(PhysicsServer.Backend.GPU);
-PhysicsSolverIterationTests.Run();
+PhysicsSolverIterationTests.Run(); PhysicsSolverIterationTests.Run(PhysicsServer.Backend.GPU);
 PhysicsContactPersistenceTests.Run(); PhysicsContactPersistenceTests.Run(PhysicsServer.Backend.GPU); PhysicsCollisionPriorityTests.Run(); PhysicsCollisionPriorityTests.Run(PhysicsServer.Backend.GPU);
 CapsuleShapeTests.Run(); CapsuleShapeTests.Run(PhysicsServer.Backend.GPU);
 SegmentShapeTests.Run(); SegmentShapeTests.Run(PhysicsServer.Backend.GPU);
