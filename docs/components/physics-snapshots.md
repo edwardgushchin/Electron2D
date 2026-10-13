@@ -87,8 +87,9 @@ checkpoints retain the full backend-private history for subsequent replay.
 ## Portable body roles
 
 The public-only consumer --portable-roles transfers CPU state to its independent
-registered numerical owner and back. --threaded captures separate numerical
-execution on both worlds. Each world contains one scene RigidBody and one raw body
+registered numerical owner and back. --gpu selects a real GPU recipient; --cpu
+provides a CPU/CPU control. --threaded captures separate numerical execution on
+both worlds. Actual selection and no startup fallback are asserted. Each world contains one scene RigidBody and one raw body
 with two circle slots at (8, 0)/(-2, 0); local creation order differs. Caller IDs
 10/20 with generation 1 resolve to each world's own RIDs. The eight configurations
 combine Rigid, Static, Kinematic and RigidLinear with automatic center (3, 0) or
@@ -112,9 +113,12 @@ center tolerance is .002 scene unit, unit/s or radians; inverse values and force
 increments use .0001 in their respective units. These bounds accommodate single
 precision pose/angle conversion while distinguishing the full force increment
 and its accidental repetition. This same-process, collision-free circle fixture
-does not establish arbitrary geometry, contacts/joints, foreign/native or GPU
-transfer/replay/performance acceptance. Evidence is retained under
-bin/physics-portable-roles/2026-10-13.
+now passes all six CPU/CPU, CPU/GPU and CPU/registered serial/separate profiles.
+GPU executes on CPU-only llvmpipe Vulkan without NVIDIA. This verifies the full
+eight-case role fixture in both transfer directions, with its original operation
+counts and tolerances. It does not establish arbitrary geometry, contacts/joints,
+foreign/native, cross-process or hardware/performance acceptance. Current evidence
+is retained under bin/physics-public-mass-roles/2026-10-14.
 
 ## Portable joint continuation
 

@@ -1324,8 +1324,8 @@ coupled scenes, foreign/native execution and final performance remain open.
 
 ## Mass profiles across roles
 
-The public-only --mass-roles fixture runs explicit CPU or the independent registered
-solver, with --threaded selecting separate numerical execution. It checks both a
+The public-only --mass-roles fixture runs explicit CPU/GPU or the independent
+registered solver, with --threaded selecting separate numerical execution. It checks both a
 scene body and raw RID through Rigid, Static, Kinematic and RigidLinear transitions.
 An asymmetric two-circle profile retains automatic center (3, 0); a custom center
 (1, -2) likewise survives every role. Direct local/global-axis center offsets,
@@ -1347,13 +1347,16 @@ The same 128-warm/128-measured bracket now requires 0/0 owner/all-thread bytes,
 including 512 complete frames per bracket, two bodies, all role writes, direct
 mass/point-velocity reads and two slot queries per body before/after each frame.
 Center and point-velocity tolerance is .002 scene unit or unit/s; inverse values
-use .0001 reciprocal tolerance. Native allocation, GPU execution and wider
-platform/performance acceptance remain open. Evidence is retained under
-bin/physics-mass-roles/2026-10-13. No public API or mass-policy change is introduced.
+use .0001 reciprocal tolerance. All six CPU/GPU/registered serial/separate profiles
+now pass, including actual selection with no fallback. GPU execution uses CPU-only
+llvmpipe Vulkan without NVIDIA; CPU/registered processes load no graphics driver.
+Native allocation, physical hardware and wider platform/performance acceptance
+remain open. Current evidence is retained under
+bin/physics-public-mass-roles/2026-10-14. No public API or mass-policy change is introduced.
 
 [Portable body roles](physics-snapshots.md#portable-body-roles) now transfer those
-scene/raw profiles between CPU and the independent registered numerical owner in
-both directions. Actual continued motion and one-interval pending force/torque
+scene/raw profiles between CPU and explicitly selected CPU/GPU or the independent
+registered numerical owner in both directions. Actual continued motion and one-interval pending force/torque
 response, inverse values and logical-slot queries survive correction. The same
 eight-case round trip runs serial/separate frames at strict 0/0 managed bytes;
 this does not establish general collision geometry or complete network acceptance.

@@ -1,6 +1,6 @@
 # PhysicsDirectBodyState
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 [Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
 keeps sampled public values while rejecting portable capture of retired/reindexed
@@ -271,3 +271,11 @@ cover every extension scope. See [body authoring](../components/physics-register
 [Registered factory-selected views](../components/physics-registered-adapter.md#factory-selected-direct-views) now execute through a separate public-only consumer: cache identity, an initially empty contact snapshot, synchronized immutable publication before callbacks, result/lifetime validation, recreation and zero warm managed allocations. Independent caller-created body views keep direct hook dispatch; wider numerical-extension acceptance stays open.
 
 Complete PhysicsBodyStateTests and PhysicsServerForceTests now execute on explicitly selected public CPU/GPU worlds, alongside the common PhysicsContactImpulseTests and report-only role suite. They retain state/field/force/center values, post-solver callback edits/errors/removal/reentry, borrowed-view lifetime, force omission and pending-input rules. Real scene/raw dynamic and kinematic fixtures expose six uncapped contacts and verify deepest 2/1/0 caps and the corresponding monitor objects without private list-order assumptions; static/static pairs remain ineligible. Momentum checks retain their .08/.1 scene-impulse bounds, equal/opposite and rotating-normal/transient/sleep assertions. Warm gates require 0/0 owner/all-thread bytes for contact/callback/force frames, zero-cap frames and live pose reads. CPU native scheduling/depth-injection checks remain separate diagnostics; legacy staged GPU controls do not establish independent GPU acceptance. Native/platform, visual and final network/performance gates remain open.
+
+[Mass roles](../components/physics-registered-adapter.md#mass-profiles-across-roles)
+and [portable role correction](../components/physics-snapshots.md#portable-body-roles)
+now execute explicit CPU/GPU/registered serial and separate numerical profiles.
+Scene/raw automatic/custom centers, inverse dynamics, point velocity and exact
+slot queries survive role changes; CPU/GPU round trips preserve pending force/
+torque consumption and atomic authoring rejection. Original warm brackets retain
+0/0 managed bytes. GPU uses llvmpipe; hardware and broader acceptance stay open.

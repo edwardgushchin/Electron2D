@@ -37,7 +37,8 @@ public static partial class BackendChecks
                 using var sceneState = PhysicsServer.BodyGetDirectState(sceneRID)!;
                 rawState = PhysicsServer.BodyGetDirectState(raw)!;
                 using var direct = world.DirectSpaceState; using var point = new PhysicsPointQueryParameters(); var hits = new PhysicsPointResult[2];
-                Check(PhysicsServer.SpaceGetBackend(world.Space) == (backend ?? PhysicsServer.Backend.Extension), "Mass roles use the requested selected implementation");
+                Check(PhysicsServer.SpaceGetBackend(world.Space) == (backend ?? PhysicsServer.Backend.Extension) && world.PhysicsFallbackReason is null,
+                    "Mass roles use the requested selected implementation without fallback");
                 var modes = new[] { PhysicsServer.BodyMode.Rigid, PhysicsServer.BodyMode.Static, PhysicsServer.BodyMode.Kinematic, PhysicsServer.BodyMode.RigidLinear };
                 Cycle();
                 foreach (var id in new[] { sceneRID, raw })

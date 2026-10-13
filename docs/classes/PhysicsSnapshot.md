@@ -1,6 +1,6 @@
 # PhysicsSnapshot
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 [Character motion validation](../components/physics-snapshots.md#character-motion-validation)
 rejects impossible slide encodings and self/Area/unbound platform references before
@@ -39,3 +39,11 @@ now draws remote interpolation and local correction smoothing in a real window
 while CPU authority/late client stay headless. Public snapshot and pixel checks
 verify visible separation without physical-state mutation; renderer choice and
 window FPS/allocation reporting remain separate from physics/replay metrics.
+
+[Mass roles](../components/physics-registered-adapter.md#mass-profiles-across-roles)
+and [portable role correction](../components/physics-snapshots.md#portable-body-roles)
+now execute explicit CPU/GPU/registered serial and separate numerical profiles.
+Scene/raw automatic/custom centers, inverse dynamics, point velocity and exact
+slot queries survive role changes; CPU/GPU round trips preserve pending force/
+torque consumption and atomic authoring rejection. Original warm brackets retain
+0/0 managed bytes. GPU uses llvmpipe; hardware and broader acceptance stay open.

@@ -2,16 +2,17 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunPortableRoles(bool threaded = false)
+    public static void RunPortableRoles(bool threaded = false, PhysicsServer.Backend? backend = null)
     {
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
         try
         {
-            PhysicsServerManager.RegisterServer("PortableRoles", () => new Solver());
+            if (backend is null) PhysicsServerManager.RegisterServer("PortableRoles", () => new Solver());
             using var cpu = new PortableRoleRig(new World(PhysicsServer.Backend.CPU), false);
-            using var registered = new PortableRoleRig(new World("PortableRoles"), true);
-            Check(cpu.World.PhysicsBackend == PhysicsServer.Backend.CPU && registered.World.PhysicsBackend == PhysicsServer.Backend.Extension,
+            using var registered = new PortableRoleRig(backend is { } selected ? new World(selected) : new World("PortableRoles"), true);
+            Check(cpu.World.PhysicsBackend == PhysicsServer.Backend.CPU && registered.World.PhysicsBackend == (backend ?? PhysicsServer.Backend.Extension) &&
+                cpu.World.PhysicsFallbackReason is null && registered.World.PhysicsFallbackReason is null,
                 "Portable roles use independent selected numerical owners");
             var sent = new PhysicsSnapshot(65536); var received = new PhysicsSnapshot(65536); var packet = new byte[65536];
             var modes = new[] { PhysicsServer.BodyMode.Rigid, PhysicsServer.BodyMode.Static, PhysicsServer.BodyMode.Kinematic, PhysicsServer.BodyMode.RigidLinear };
@@ -29,7 +30,7 @@ public static partial class BackendChecks
             for (var i = 0; i < 128; i++) Cycle();
             var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; var allBytes = GC.GetTotalAllocatedBytes(true) - all;
             Check(ownerBytes == 0 && allBytes == 0, $"Portable role cycles allocate zero owner/all-thread bytes: {ownerBytes}/{allBytes}");
-            Console.WriteLine($"Portable roles CPU/registered, threaded={threaded}: four scene/raw roles, automatic/custom centers, correction/continuation, queries, validation and 0/0 warm cycles passed.");
+            Console.WriteLine($"Portable roles CPU/{backend?.ToString() ?? "registered"}, threaded={threaded}: four scene/raw roles, automatic/custom centers, correction/continuation, queries, validation and 0/0 warm cycles passed.");
 
             void Cycle()
             {

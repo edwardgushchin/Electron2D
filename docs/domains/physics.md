@@ -955,3 +955,11 @@ CPU/GPU/registered worlds in serial/separate modes. Exact slots, opposite frame
 impulses, authored CCD modes and one callback/tick retain their contract; both
 128-warm/128-measured impact brackets require 0/0 managed bytes. GPU executes on
 CPU-only llvmpipe; hardware, broader geometry and final acceptance remain open.
+
+[Mass roles](../components/physics-registered-adapter.md#mass-profiles-across-roles)
+and [portable role correction](../components/physics-snapshots.md#portable-body-roles)
+now execute explicit CPU/GPU/registered serial and separate numerical profiles.
+Scene/raw automatic/custom centers, inverse dynamics, point velocity and exact
+slot queries survive role changes; CPU/GPU round trips preserve pending force/
+torque consumption and atomic authoring rejection. Original warm brackets retain
+0/0 managed bytes. GPU uses llvmpipe; hardware and broader acceptance stay open.
