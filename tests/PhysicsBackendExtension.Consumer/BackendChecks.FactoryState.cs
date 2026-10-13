@@ -11,6 +11,7 @@ public static partial class BackendChecks
         internal int ContactReads;
         internal bool BadContactCount;
         internal Action? ContactHook;
+        private PhysicsBodyContact[] _contacts = [];
         protected override float GetAngularVelocityCore() => PhysicsServer.BodyGetAngularVelocity(body);
         protected override void SetAngularVelocityCore(float value) => PhysicsServer.BodySetAngularVelocity(body, value);
         protected override Vector2 GetLinearVelocityCore() => PhysicsServer.BodyGetLinearVelocity(body);
@@ -34,7 +35,12 @@ public static partial class BackendChecks
         protected override Vector2 GetConstantForceCore() => PhysicsServer.BodyGetConstantForce(body);
         protected override float GetConstantTorqueCore() => PhysicsServer.BodyGetConstantTorque(body);
         protected override int GetContactCountCore()
-        { ContactHook?.Invoke(); ContactReads++; return BadContactCount ? -1 : Data.ContactPeer.IsValid() ? Math.Min(1, Data.ReportedLimit) : 0; }
+        {
+            ContactHook?.Invoke(); ContactReads++; if (BadContactCount) return -1;
+            var limit = Math.Min(Data.ReportedLimit, Data.Contacts.Count);
+            if (_contacts.Length < limit) Array.Resize(ref _contacts, limit);
+            Array.Clear(_contacts); return Data.CopyContacts(_contacts.AsSpan(0, limit));
+        }
         protected override PhysicsDirectSpaceState GetSpaceStateCore() => PhysicsServer.SpaceGetDirectState(solver.Space);
         protected override Vector2 GetVelocityAtLocalPositionCore(Vector2 localPosition) => Data.PointVelocity(Data.Center + localPosition);
         protected override void SetConstantForceCore(Vector2 force) => PhysicsServer.BodySetConstantForce(body, force);
@@ -54,10 +60,6 @@ public static partial class BackendChecks
             AngularVelocity *= MathF.Max(0, 1 - Step * TotalAngularDamp);
         }
         protected override PhysicsBodyContact GetContactCore(int contactIndex)
-        {
-            var data = Data; var peer = solver.Bodies[data.ContactPeer];
-            return new(body, 0, peer.RID, 0, data.ContactPoint, data.ContactPoint, data.ContactNormal,
-                data.PointVelocity(data.ContactPoint), peer.PointVelocity(data.ContactPoint), data.ContactImpulse, data.ContactDepth);
-        }
+            => _contacts[contactIndex];
     }
 }

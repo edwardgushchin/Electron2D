@@ -133,3 +133,13 @@ Registered explicit-space controls also check custom inner-wall rebounds and
 terminal numerical interval-budget failure. General rotated/coupled geometry,
 multiple-peer contact history, networking and final native/performance acceptance
 remain open.
+
+
+`--contact-frames`, optionally `--cpu` or `--gpu`, checks two separated CCD
+impacts retained in one completed frame, full signed impulse versus momentum,
+contact-free future clearing and immediate private restoration. Three report-only
+peers exercise deepest caps 3/2/1/0, positive depth filters and encounter-order
+ties. After warmup, 128 transient replay cycles and 128 changed cap/depth cycles
+(768 full frames) each require strict 0/0 owner/all-thread managed bytes. The
+independent fixture owns retained per-peer numerical rows and flat private
+history; arbitrary shape features/coupled geometry and final acceptance remain open.

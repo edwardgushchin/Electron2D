@@ -204,3 +204,12 @@ time, full impulse and force/callback/tick budgets through common public checks.
 explicit-space controls check custom hollow geometry and terminal numerical
 budget failure. This bounded fixture does not establish general geometry/rotation,
 full extension, network or native/performance acceptance.
+
+
+[Completed contact frame checks](../components/physics-registered-adapter.md#independent-completed-contact-frames)
+share registered/CPU/GPU assertions for separated multi-peer CCD impacts, full
+signed impulse sums, immediate private restoration, deepest caps, depth filters
+and encounter-order ties. The independent fixture retains bounded per-peer
+numerical rows and frozen velocities; 128 replay cycles and 768 changed-policy
+frames each measure 0/0 owner/all-thread bytes. Arbitrary shape features, coupled
+geometry and final network/native/performance/platform acceptance remain open.

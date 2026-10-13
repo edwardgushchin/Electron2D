@@ -1152,3 +1152,13 @@ one outer callback/tick, force duration and 128 replay cycles at strict 0/0 byte
 The registered controls also exercise hollow inner-wall rebounds and terminal
 interval-budget failure. General geometry/rotation/coupled extension, network,
 native totals and final performance acceptance remain open.
+
+
+[Independent completed contact frames](physics-registered-adapter.md#independent-completed-contact-frames)
+now retain every observed peer in the bounded single-shape fixture, sum signed
+impulses across separated CCD impacts and restore complete numerical history.
+Shared registered/CPU/GPU --contact-frames verifies momentum, report-only peers,
+deepest caps, depth filters and encounter-order ties. Each path measures 128
+transient replay cycles and 768 changed cap/depth frames at strict 0/0
+owner/all-thread bytes. General feature/coupled geometry, portable networking,
+native totals, rendering and final performance/platform acceptance remain open.

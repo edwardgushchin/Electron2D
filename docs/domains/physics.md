@@ -795,3 +795,12 @@ now verifies actual primitive impacts, remaining time, full impulses and replay 
 registered/CPU/GPU paths. The shared grazing case fixes CPU linear-disk TOI while
 preserving approximate CastRay policy. General extension, native/platform, network
 and final performance gates remain open.
+
+
+[Completed contact frame checks](../components/physics-registered-adapter.md#independent-completed-contact-frames)
+share registered/CPU/GPU assertions for separated multi-peer CCD impacts, full
+signed impulse sums, immediate private restoration, deepest caps, depth filters
+and encounter-order ties. The independent fixture retains bounded per-peer
+numerical rows and frozen velocities; 128 replay cycles and 768 changed-policy
+frames each measure 0/0 owner/all-thread bytes. Arbitrary shape features, coupled
+geometry and final network/native/performance/platform acceptance remain open.

@@ -111,7 +111,8 @@ public static partial class BackendChecks
             foreach (var b in Bodies.Values)
             {
                 if (!b.IsArea) b.ReportedLimit = PhysicsServer.BodyGetMaxContactsReported(b.RID);
-                b.ContactPeer = default;
+                if (!b.IsArea) b.ReportedDepth = PhysicsServer.BodyGetContactsReportedDepthThreshold(b.RID);
+                b.Contacts.Clear();
             }
             if (HasContinuousBodies()) SolveContinuous((float)delta);
             else
@@ -129,7 +130,9 @@ public static partial class BackendChecks
                 {
                     if (a.RID.GetID() >= b.RID.GetID() || a.IsArea || b.IsArea || a.Shapes == 0 || b.Shapes == 0 ||
                         (a.Mask & b.Layer) == 0 && (b.Mask & a.Layer) == 0 || Exceptions.Contains((a.RID, b.RID)) || Exceptions.Contains((b.RID, a.RID))) continue;
-                    if (!AllowsContact(a.RID, b.RID) || a.InvMass + b.InvMass == 0 || !Contact(a, b, out var normal, out var depth, out var diagnosticPoint)) continue;
+                    if (!AllowsContact(a.RID, b.RID) || a.Mode == PhysicsServer.BodyMode.Static && b.Mode == PhysicsServer.BodyMode.Static ||
+                        a.InvMass + b.InvMass == 0 && a.ReportedLimit == 0 && b.ReportedLimit == 0 ||
+                        !Contact(a, b, out var normal, out var depth, out var diagnosticPoint)) continue;
                     if (depth > 0 && (a.Awake || b.Awake))
                     {
                         var half = normal * (depth * .5f);
@@ -140,19 +143,16 @@ public static partial class BackendChecks
                         a.Mode == PhysicsServer.BodyMode.Kinematic && (a.Velocity != Vector2.Zero || a.Angular != 0) ||
                         b.Mode == PhysicsServer.BodyMode.Kinematic && (b.Velocity != Vector2.Zero || b.Angular != 0);
                     var impulse = Vector2.Zero;
-                    if (active)
+                    if (active && inverse > 0)
                     {
                         a.Position -= normal * depth * (a.InvMass / inverse);
                         b.Position += normal * depth * (b.InvMass / inverse);
                         Contact(a, b, out _, out _, out var solvedPoint);
                         impulse = SolveContact(a, b, normal, solvedPoint);
                     }
-                    Contact(a, b, out _, out _, out var contactPoint); a.ContactPoint = b.ContactPoint = contactPoint;
-                    a.ContactDepth = b.ContactDepth = depth;
-                    a.ContactImpulse = a.ContactPeer == b.RID ? a.ContactImpulse - impulse : -impulse;
-                    b.ContactImpulse = b.ContactPeer == a.RID ? b.ContactImpulse + impulse : impulse;
-                    a.ContactPeer = b.RID; a.ContactNormal = -normal;
-                    b.ContactPeer = a.RID; b.ContactNormal = normal;
+                    Contact(a, b, out _, out _, out var contactPoint);
+                    a.RecordContact(b, contactPoint, -normal, -impulse, depth);
+                    b.RecordContact(a, contactPoint, normal, impulse, depth);
                     if (_framePairs.Add((a.RID, b.RID))) Pairs++;
                 }
             if (FailSolve) throw new InvalidOperationException("Injected independent solver failure.");
@@ -163,7 +163,8 @@ public static partial class BackendChecks
             for (var i = 0; i < Iterations; i++)
                 foreach (var j in Joints.Values) j.Solve(delta, begin && i == 0);
         }
-        protected override void SyncResults() { Ready = true; LifecycleHook?.Invoke(LifecyclePhase.Sync); }
+        protected override void SyncResults()
+        { foreach (var body in Bodies.Values) body.FreezeContacts(); Ready = true; LifecycleHook?.Invoke(LifecyclePhase.Sync); }
         protected override void CompleteBody(RID body) { }
         protected override void CollectContacts() { }
         protected override void ScanAreas() { }
@@ -225,9 +226,6 @@ public static partial class BackendChecks
     }
     private sealed partial class Body(Solver solver, RID rid, bool area)
     {
-        internal RID ContactPeer;
-        internal float ContactDepth;
-        internal Vector2 ContactNormal, ContactImpulse, ContactPoint;
         internal float Hole;
         internal RID RID => rid;
         internal float InvMass => InverseMass;
@@ -367,10 +365,7 @@ public static partial class BackendChecks
         protected override int ReadContacts(Span<PhysicsBodyContact> contacts)
         {
             if (solver.ContactFailure == rid) throw new InvalidOperationException("Injected contact publication failure.");
-            if (contacts.IsEmpty || !ContactPeer.IsValid()) return 0;
-            var peer = solver.Bodies[ContactPeer]; var point = ContactPoint;
-            contacts[0] = new(rid, 0, peer.RID, 0, point, point, ContactNormal, GetWorldPointVelocity(point), peer.GetWorldPointVelocity(point), ContactImpulse, ContactDepth);
-            return 1;
+            return CopyContacts(contacts);
         }
         protected override Transform PortablePose => GetTransform();
         protected override void ApplyPortableMotion(Transform pose, Vector2 linear, float angular, float sleepTime, bool canSleep, bool sleeping,

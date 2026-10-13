@@ -10,6 +10,7 @@ public static partial class BackendChecks
         RunSleep();
         RunContactResponse();
         RunContinuousResponse();
+        RunContactFrames();
         Solver? solver = null;
         RunShapeResources();
         RunShapeGeometry();

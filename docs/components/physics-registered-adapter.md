@@ -1126,8 +1126,9 @@ Contact impulses accumulate for repeated observations of the same peer, includin
 impacts that separate before final publication. A retained frame-pair set avoids
 counting internal intervals as new collision pairs. Private history already owns
 completed numerical motion/forces/sleep/contact state; force eligibility and the
-pair set are regenerated interval scratch. The fixture's single-peer contact
-storage and general multiple-peer/coupled geometry acceptance remain bounded.
+pair set are regenerated interval scratch. Completed numerical contacts now retain
+all observed peers in this single-shape fixture; arbitrary coupled geometry and
+multiple features per shape remain outside its bounded acceptance.
 
 --continuous-response, optionally --cpu or --gpu, exercises the same public
 scene/raw assertions without fallback. Mass-2 circles at 3000 scene units/s and
@@ -1176,3 +1177,40 @@ frozen runtime hash remained identical before/after. Exact commands, environment
 and hashes are under bin/physics-registered-continuous-response/2026-10-13/final/;
 mandatory format/build/API/wiki logs are under final-checks/. Earlier controls
 and RED runs remain separate; none substitutes for this final source binding.
+
+
+## Independent completed contact frames
+
+The bounded public-only solver retains one numerical row per observed peer for
+the complete outer frame, including CCD impacts that have separated by its end.
+Repeated observations sum the full signed world-axis impulse, keep the last
+geometry/normal and greatest depth, and freeze final point velocities before
+callbacks. Publication scans all eligible rows: fill in encounter order, then
+replace the first shallowest slot only for strictly greater depth. Equal-depth
+ties keep earlier rows. Positive depth thresholds filter before the cap; zero
+cap publishes nothing. Kinematic/static contacts can report without physical
+response; static/static pairs stay excluded. Lists retain peak capacity.
+
+Private history stores flat numerical rows plus each body's prefix and frozen
+reporting policy, prepares restore capacity before mutation and clears retired
+prefixes. The ordinary selected view and a caller-created implementation view
+both restore multi-peer observations immediately. Public contact records are
+constructed in qualified capture, after numeric point velocities freeze.
+
+--contact-frames, optionally --cpu or --gpu, shares the same public assertions
+without fallback. A mass-2 circle at 3000 units/s rebounds from x=20 and x=-20
+within .028 s: both separated peers retain impulses -12000/+12000 within 20,
+and their sum matches full-frame momentum change within 20. Contact-free future
+frames clear observations; private restore recovers both peers and motion
+within .001. Three report-only peers at depths .25/.5/1 exercise caps 3/2/1/0,
+thresholds .49/1.1 and encounter-order ties at equal .5 depth. A scaled case has depths near
+25/50/100 and keeps the middle peer at its selected observed depth (within .001
+of 50), using published boundary points/normal for built-ins and known explicit
+fixture depth. This checks equality without requiring identical geometry bits
+across numerical implementations. A raw kinematic
+receiver reports a scene peer with zero cap, then filters that contact at .51. Each backend
+measures 128 transient step/capture/restore cycles and 128 changed cap/depth
+cycles (768 full frames), each at strict 0/0 owner/all-thread managed bytes.
+Evidence: bin/physics-registered-contact-frames/2026-10-13/. General shape/feature
+and coupled extension, portable network, native totals, real rendering and final
+performance/platform acceptance remain open.

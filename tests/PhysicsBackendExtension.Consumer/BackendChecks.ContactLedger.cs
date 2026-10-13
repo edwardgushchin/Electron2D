@@ -1,0 +1,51 @@
+using Electron2D;
+
+public static partial class BackendChecks
+{
+    private readonly record struct FrameContact(RID Peer, Vector2 Point, Vector2 Normal, Vector2 Impulse, float Depth,
+        Vector2 LocalVelocity = default, Vector2 PeerVelocity = default);
+
+    private sealed partial class Body
+    {
+        internal readonly List<FrameContact> Contacts = [];
+        internal float ReportedDepth;
+        internal void RecordContact(Body peer, Vector2 point, Vector2 normal, Vector2 impulse, float depth)
+        {
+            if (ReportedLimit == 0) return;
+            for (var i = 0; i < Contacts.Count; i++)
+                if (Contacts[i].Peer == peer.RID)
+                {
+                    var old = Contacts[i]; Contacts[i] = new(peer.RID, point, normal, old.Impulse + impulse, MathF.Max(old.Depth, depth)); return;
+                }
+            Contacts.Add(new(peer.RID, point, normal, impulse, depth));
+        }
+        internal void FreezeContacts()
+        {
+            for (var i = 0; i < Contacts.Count; i++)
+            {
+                var contact = Contacts[i]; var peer = solver.Bodies[contact.Peer];
+                Contacts[i] = contact with { LocalVelocity = PointVelocity(contact.Point), PeerVelocity = peer.PointVelocity(contact.Point) };
+            }
+        }
+        internal int CopyContacts(Span<PhysicsBodyContact> output)
+        {
+            var limit = Math.Min(output.Length, ReportedLimit); var count = 0;
+            if (limit == 0) return 0;
+            foreach (var contact in Contacts)
+            {
+                if (ReportedDepth > 0 && contact.Depth < ReportedDepth) continue;
+                var slot = count;
+                if (count == limit)
+                {
+                    slot = 0;
+                    for (var i = 1; i < count; i++) if (output[i].Depth < output[slot].Depth) slot = i;
+                    if (contact.Depth <= output[slot].Depth) continue;
+                }
+                else count++;
+                output[slot] = new(rid, 0, contact.Peer, 0, contact.Point, contact.Point, contact.Normal,
+                    contact.LocalVelocity, contact.PeerVelocity, contact.Impulse, contact.Depth);
+            }
+            return count;
+        }
+    }
+}
