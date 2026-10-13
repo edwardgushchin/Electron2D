@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-13
 
+[Portable body roles](../components/physics-snapshots.md#portable-body-roles) connect
+CPU/registered correction with actual scene/raw mass profiles, pending forces and
+continued movement in serial/separate modes. Full warm frame/transport/query
+cycles remain allocation-free; wider geometry and GPU/native/network acceptance
+stay open.
+
 [Mass profiles across roles](../components/physics-registered-adapter.md#mass-profiles-across-roles)
 now verify retained centers and public point velocity independently of inverse
 dynamics. Unchanged CPU fixtures survive density edits during role transitions,

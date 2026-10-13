@@ -1,9 +1,9 @@
 # Portable physics snapshots
 
-Last updated: 2026-10-11
+Last updated: 2026-10-13
 
-`PhysicsSnapshotMap` connects caller-assigned network identities to one live CPU or
-GPU world. `PhysicsSnapshot` owns a bounded reusable byte encoding. Together they
+`PhysicsSnapshotMap` connects caller-assigned network identities to one live CPU,
+GPU or registered world. `PhysicsSnapshot` owns a bounded reusable byte encoding. Together they
 capture and apply authoritative physical state across different worlds, object
 creation orders and backends. The [local checkpoint](physics-space-checkpoints.md)
 remains the separate exact-history mechanism for local prediction/replay.
@@ -83,6 +83,38 @@ basis vectors to avoid repeated angle-conversion drift. Cross-backend or cross-p
 bitwise continuation is not promised. Capture a new local checkpoint after correction: replacing sampled joint frames
 can invalidate older points under their fixed-configuration contract. Local
 checkpoints retain the full backend-private history for subsequent replay.
+
+## Portable body roles
+
+The public-only consumer --portable-roles transfers CPU state to its independent
+registered numerical owner and back. --threaded captures separate numerical
+execution on both worlds. Each world contains one scene RigidBody and one raw body
+with two circle slots at (8, 0)/(-2, 0); local creation order differs. Caller IDs
+10/20 with generation 1 resolve to each world's own RIDs. The eight configurations
+combine Rigid, Static, Kinematic and RigidLinear with automatic center (3, 0) or
+custom center (1, -2). Authored geometry/roles match; corrected poses and velocities
+start deliberately different.
+
+Every case checks capture/encode/decode/apply, the imported world tick, actual
+inverse mass/inertia, global/local center offsets, origin-relative point velocity
+and both logical-slot point queries. It advances real complete .01-second frames
+before/after correction. Dynamic roles receive a pending (4, -2) force and torque 6
+with mass 2; the following interval must change velocity by (.02, -.01) and angular
+velocity by torque times inverse inertia times .01. Reverse transfer then another
+frame must not revive the consumed interval. An incompatible mass profile rejects
+before changing the destination pose/tick, and restoring compatible authoring
+allows the same packet to apply.
+
+The 128-warm/128-measured bracket includes 5120 complete frames, 2048 portable
+transfers and 32768 actual point queries per bracket across the two worlds. Both
+serial/separate profiles require strict 0/0 owner/all-thread managed bytes. Motion/
+center tolerance is .002 scene unit, unit/s or radians; inverse values and force
+increments use .0001 in their respective units. These bounds accommodate single
+precision pose/angle conversion while distinguishing the full force increment
+and its accidental repetition. This same-process, collision-free circle fixture
+does not establish arbitrary geometry, contacts/joints, foreign/native or GPU
+transfer/replay/performance acceptance. Evidence is retained under
+bin/physics-portable-roles/2026-10-13.
 
 ## Encoding, budget and cost
 

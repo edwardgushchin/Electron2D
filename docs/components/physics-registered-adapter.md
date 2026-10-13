@@ -1338,3 +1338,10 @@ Center and point-velocity tolerance is .002 scene unit or unit/s; inverse values
 use .0001 reciprocal tolerance. Native allocation, GPU execution and wider
 platform/performance acceptance remain open. Evidence is retained under
 bin/physics-mass-roles/2026-10-13. No public API or mass-policy change is introduced.
+
+[Portable body roles](physics-snapshots.md#portable-body-roles) now transfer those
+scene/raw profiles between CPU and the independent registered numerical owner in
+both directions. Actual continued motion and one-interval pending force/torque
+response, inverse values and logical-slot queries survive correction. The same
+eight-case round trip runs serial/separate frames at strict 0/0 managed bytes;
+this does not establish general collision geometry or complete network acceptance.

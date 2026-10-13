@@ -228,6 +228,12 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
 - Shared inherited Object/Node/Resource/CanvasItem and skeletal editor requirements
   remain with their typed-API, scheduling, script/editor or rendering prerequisites.
   Existing built-in physics tests do not establish those separate declaring APIs.
+- [Portable body roles](physics-snapshots.md#portable-body-roles) verify CPU/registered
+  scene/raw round trips, automatic/custom centers and exactly one interval of
+  pending force/torque, continued motion and real logical-slot queries. Serial/
+  separate warm full-frame transport cycles require 0/0 managed bytes. This bounded
+  same-process circle fixture leaves collision/joint, broader geometry and current
+  GPU/network/native/performance gates open.
 - Long/coupled workload, network lifecycle and real-window/performance acceptance
   must retain their own revision, inputs, numerical bounds and live evidence.
   A historical stage mirror or a narrower unit test cannot replace the full path.

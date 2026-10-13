@@ -35,6 +35,13 @@ GPU, native and broader platform/performance limits.
 
 ## Selected fields, exceptions and portable observation
 
+[Portable body roles](../components/physics-snapshots.md#portable-body-roles) verify
+CPU/registered round trips of scene/raw bodies through all four roles, retained
+automatic/custom centers, point velocity, actual slot geometry and pending force/
+torque consumption. Serial/separate full-frame transfer cycles retain strict zero
+managed allocation; general geometry, contacts/joints and GPU/native gates remain
+separate.
+
 Resolved fields and exception invalidation dispatch through the selected collider/world; common server/replay/map code retains no GPU handle/state aliases. Portable preparation and bound-body observation use the selected owner and borrowed common inputs. GPU pair/batch scratch stays private; CPU preserves existing field/fixture preparation. See [the executing contract and limits](../components/physics-backends.md#selected-observation-and-collision-policy).
 
 One-way continuation validates before encoding as well as before applying: different bound colliders, enabled shape slots, valid nonnegative pieces and unique unordered pairs. Invalid implementation output rejects capture before destination bytes change; a previous complete packet remains usable.

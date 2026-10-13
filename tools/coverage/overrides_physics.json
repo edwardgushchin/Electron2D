@@ -3872,11 +3872,11 @@
     },
     {
       "electron2d": "T:Electron2D.PhysicsSnapshot",
-      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open. Shared CPU/registered --portable-roles now verifies scene/raw four-role round trips, automatic/custom centers, inverse dynamics, actual logical-slot queries and continued motion after portable correction. Pending force/torque applies for one interval and stays consumed after reverse transfer. Serial/separate 128-warm/128-measured eight-case full-frame transport cycles require 0/0 owner/all-thread bytes. General collision/joint, GPU/native and complete network/performance acceptance remain open."
     },
     {
       "electron2d": "T:Electron2D.PhysicsSnapshotMap",
-      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open. Shared CPU/registered --portable-roles now verifies scene/raw four-role round trips, automatic/custom centers, inverse dynamics, actual logical-slot queries and continued motion after portable correction. Pending force/torque applies for one interval and stays consumed after reverse transfer. Serial/separate 128-warm/128-measured eight-case full-frame transport cycles require 0/0 owner/all-thread bytes. General collision/joint, GPU/native and complete network/performance acceptance remain open."
     },
     {
       "electron2d": "constructor:Electron2D.PhysicsSnapshot..ctor(System.Int32)",
@@ -3900,7 +3900,7 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsSnapshotMap.Apply(Electron2D.PhysicsSnapshot)",
-      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open. Shared CPU/registered --portable-roles now verifies scene/raw four-role round trips, automatic/custom centers, inverse dynamics, actual logical-slot queries and continued motion after portable correction. Pending force/torque applies for one interval and stays consumed after reverse transfer. Serial/separate 128-warm/128-measured eight-case full-frame transport cycles require 0/0 owner/all-thread bytes. General collision/joint, GPU/native and complete network/performance acceptance remain open."
     },
     {
       "electron2d": "method:Electron2D.PhysicsSnapshotMap.Bind(System.UInt64,System.UInt32,Electron2D.RID)",
@@ -3908,7 +3908,7 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsSnapshotMap.Capture(Electron2D.PhysicsSnapshot)",
-      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open. Shared CPU/registered --portable-roles now verifies scene/raw four-role round trips, automatic/custom centers, inverse dynamics, actual logical-slot queries and continued motion after portable correction. Pending force/torque applies for one interval and stays consumed after reverse transfer. Serial/separate 128-warm/128-measured eight-case full-frame transport cycles require 0/0 owner/all-thread bytes. General collision/joint, GPU/native and complete network/performance acceptance remain open."
     },
     {
       "electron2d": "method:Electron2D.PhysicsSnapshotMap.Dispose()",

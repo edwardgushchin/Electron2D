@@ -15,6 +15,7 @@ public static partial class BackendChecks
         RunAngularCompound();
         RunCurvedAnnulus();
         RunMassRoles();
+        RunPortableRoles();
         Solver? solver = null;
         RunShapeResources();
         RunShapeGeometry();
