@@ -150014,6 +150014,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.ViewportSetCanvasCullMask(Electron2D.RID,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetCanvasCullMask",
+    "signature": "public static System.Void ViewportSetCanvasCullMask(Electron2D.RID viewport, System.UInt32 canvasCullMask)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "canvasCullMask",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.ViewportSetCanvasStacking(Electron2D.RID,Electron2D.RID,System.Int32,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -150101,6 +150125,54 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.ViewportSetDefaultCanvasItemTextureFilter(Electron2D.RID,Electron2D.TextureFilter)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetDefaultCanvasItemTextureFilter",
+    "signature": "public static System.Void ViewportSetDefaultCanvasItemTextureFilter(Electron2D.RID viewport, Electron2D.TextureFilter filter)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "filter",
+        "type": "Electron2D.TextureFilter",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ViewportSetDefaultCanvasItemTextureRepeat(Electron2D.RID,Electron2D.TextureRepeat)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetDefaultCanvasItemTextureRepeat",
+    "signature": "public static System.Void ViewportSetDefaultCanvasItemTextureRepeat(Electron2D.RID viewport, Electron2D.TextureRepeat repeat)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "repeat",
+        "type": "Electron2D.TextureRepeat",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.ViewportSetDisable2D(Electron2D.RID,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -150118,6 +150190,30 @@
       {
         "name": "disable",
         "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ViewportSetGlobalCanvasTransform(Electron2D.RID,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetGlobalCanvasTransform",
+    "signature": "public static System.Void ViewportSetGlobalCanvasTransform(Electron2D.RID viewport, Electron2D.Transform transform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
         "default": null
       }
     ],

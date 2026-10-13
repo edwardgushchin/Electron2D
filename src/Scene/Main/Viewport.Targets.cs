@@ -41,6 +41,7 @@ public abstract partial class Viewport
     internal virtual Transform StretchTransform => Transform.Identity;
     internal virtual Transform WindowTransform => Transform.Identity;
     internal Transform RenderFinalTransform => StretchTransform * GlobalCanvasTransform;
+    internal Transform CanvasCompositionTransform => StretchTransform * (RenderingOwner?.GlobalCanvasTransform(this) ?? GlobalCanvasTransform);
     internal float FontRasterScale { get { var scale = StretchTransform.Scale; var value = MathF.Min(MathF.Abs(scale.X), MathF.Abs(scale.Y)) * (this is Window window ? window.RenderDensity : 1); return value > 0 ? value : 1; } }
     internal Vector2i TextureDimensions => RenderingOwner?.ViewportDimensions(this) ?? (this is SubViewport sub ? sub.Size : (this is Window window ? window.ContentRenderSize : default));
     /// <summary>Returns this viewport's live scene-local texture view.</summary>

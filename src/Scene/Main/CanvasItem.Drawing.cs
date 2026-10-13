@@ -319,9 +319,9 @@ public abstract partial class CanvasItem
         var color = RenderInheritedModulate * RenderSelfModulate * (illumination ? Colors.White : RenderCanvas()?.Modulate ?? Colors.White);
         var viewport = renderViewport ?? ServerState?.Owner?.CurrentCanvasViewport ?? CanvasViewport;
         var filter = RenderFilter;
-        if (filter == TextureFilter.ParentNode) filter = viewport?.TextureFilterInTree ?? TextureFilter.Linear;
+        if (filter == TextureFilter.ParentNode) filter = viewport?.RenderingOwner?.CanvasFilter(viewport) ?? viewport?.TextureFilterInTree ?? TextureFilter.Linear;
         var inheritedRepeat = RenderRepeat;
-        if (inheritedRepeat == TextureRepeat.ParentNode) inheritedRepeat = viewport?.TextureRepeatInTree ?? TextureRepeat.Disabled;
+        if (inheritedRepeat == TextureRepeat.ParentNode) inheritedRepeat = viewport?.RenderingOwner?.CanvasRepeat(viewport) ?? viewport?.TextureRepeatInTree ?? TextureRepeat.Disabled;
         var anisotropy = filter >= TextureFilter.NearestWithMipmapsAnisotropic
             ? 1 << (int)(viewport?.AnisotropicFilteringLevel ?? Viewport.AnisotropicFiltering.Anisotropy4X) : 1;
         MaterialState? material = null;

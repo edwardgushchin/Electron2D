@@ -1378,3 +1378,9 @@ Translation catalog import uses internal TranslationCatalogLoader and CatalogPlu
 RenderingServer.CanvasSetItemRepeat reuses RenderingCanvasItemState and retained canvas composition; no new public type is introduced.
 
 RenderingServer.CanvasGroupMode is the four-value retained compositor selector. CanvasItemSetCanvasGroupMode reuses internal CanvasGroupSettings and the existing scene-group/mask kernels; no public state wrapper is introduced.
+
+## Retained viewport canvas configuration
+
+| Domain | Component | Class | Source | State | Behavior |
+| --- | --- | --- | --- | --- | --- |
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md#viewport-canvas-configuration) | [RenderingServer](classes/RenderingServer.md) | [RenderingServer.Viewports.cs](../src/Servers/Rendering/RenderingServer.Viewports.cs) | Current | Independent viewport render masks, outer matrices and sampler defaults for scene/server targets, source republishing and session lifetime. |

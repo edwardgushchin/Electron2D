@@ -34,14 +34,14 @@ public abstract partial class Viewport
     /// <summary>Gets or sets the outer transform from viewport coordinates to the window's client coordinates.</summary>
     /// <value>Identity initially. Finite singular transforms are allowed.</value>
     /// <remarks>Applies after CanvasTransform and is removed from incoming window coordinates before input callbacks.
-    /// Rendering changes need no redraw; logical node state remains unchanged. Runtime state is not stored by PackedScene.</remarks>
+    /// Rendering changes need no redraw; logical node state remains unchanged. Assignments republish any renderer-only global transform. Runtime state is not stored by PackedScene.</remarks>
     /// <exception cref="ArgumentException">The transform is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">An attached viewport is accessed off-owner, or changed during capture.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
     public Transform GlobalCanvasTransform
     {
         get { CheckTransformQuery(); return _globalCanvasTransform; }
-        set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentException("Global canvas transform must be finite.", nameof(value)); _globalCanvasTransform = value; }
+        set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentException("Global canvas transform must be finite.", nameof(value)); _globalCanvasTransform = value; RenderingOwner?.PublishGlobalCanvasTransform(this); }
     }
 
     /// <summary>Returns the transform from viewport coordinates to the containing client area.</summary>

@@ -1,13 +1,45 @@
 {
   "mappings": [
-    {"godot": "RenderingServer::enum:CanvasGroupMode", "electron2d": "T:Electron2D.RenderingServer.CanvasGroupMode", "reason": "Retained four-value compositor policy; differs from the scene ClipChildren valid-value set at Transparent=3."},
-    {"godot": "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_DISABLED", "electron2d": "enumValue:Electron2D.RenderingServer.CanvasGroupMode.Disabled()", "reason": "Executable retained group mode through shared scene/mask compositor."},
-    {"godot": "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_CLIP_ONLY", "electron2d": "enumValue:Electron2D.RenderingServer.CanvasGroupMode.ClipOnly()", "reason": "Executable retained group mode through shared scene/mask compositor."},
-    {"godot": "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_CLIP_AND_DRAW", "electron2d": "enumValue:Electron2D.RenderingServer.CanvasGroupMode.ClipAndDraw()", "reason": "Executable retained group mode through shared scene/mask compositor."},
-    {"godot": "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_TRANSPARENT", "electron2d": "enumValue:Electron2D.RenderingServer.CanvasGroupMode.Transparent()", "reason": "Executable retained group mode through shared scene/mask compositor."},
-    {"godot": "RenderingServer::method:canvas_item_set_canvas_group_mode(RID:,int:RenderingServer.CanvasGroupMode,float:,bool:,float:,bool:)", "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetCanvasGroupMode(Electron2D.RID,Electron2D.RenderingServer.CanvasGroupMode,System.Single,System.Boolean,System.Single,System.Boolean)", "reason": "Typed retained configuration with copied value state, source republishing, fitting and margins, and GPU mipmap generation."},
-    {"godot": "RenderingServer::method:canvas_set_item_repeat(RID:,Vector2:,int:)", "electron2d": "method:Electron2D.RenderingServer.CanvasSetItemRepeat(Electron2D.RID,Electron2D.Vector2,System.Int32)", "reason": "Live arbitrary item/subtree repetition with centered signed local periods, nearest source inheritance and transient renderer ownership."},
-    {"godot": "ShaderInclude::property:code", "electron2d": "property:Electron2D.ShaderInclude.Code()", "reason": "ADR 0028 uses bounded typed ShaderInclude.Code authoring, source loader/saver and typed archive persistence; source edits are saved and dependent HLSL/GLSL compilation occurs at build/import, preserving the compiled runtime boundary. ShaderIncludeTests and check_includes.py verify edit notifications, rollback, copy/cache/lifetime, actual nested dependency compiler behavior and changed GPU pixels; foreign toolchain/host gates remain separate."},
+    {
+      "godot": "RenderingServer::enum:CanvasGroupMode",
+      "electron2d": "T:Electron2D.RenderingServer.CanvasGroupMode",
+      "reason": "Retained four-value compositor policy; differs from the scene ClipChildren valid-value set at Transparent=3."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_DISABLED",
+      "electron2d": "enumValue:Electron2D.RenderingServer.CanvasGroupMode.Disabled()",
+      "reason": "Executable retained group mode through shared scene/mask compositor."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_CLIP_ONLY",
+      "electron2d": "enumValue:Electron2D.RenderingServer.CanvasGroupMode.ClipOnly()",
+      "reason": "Executable retained group mode through shared scene/mask compositor."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_CLIP_AND_DRAW",
+      "electron2d": "enumValue:Electron2D.RenderingServer.CanvasGroupMode.ClipAndDraw()",
+      "reason": "Executable retained group mode through shared scene/mask compositor."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_TRANSPARENT",
+      "electron2d": "enumValue:Electron2D.RenderingServer.CanvasGroupMode.Transparent()",
+      "reason": "Executable retained group mode through shared scene/mask compositor."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_canvas_group_mode(RID:,int:RenderingServer.CanvasGroupMode,float:,bool:,float:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetCanvasGroupMode(Electron2D.RID,Electron2D.RenderingServer.CanvasGroupMode,System.Single,System.Boolean,System.Single,System.Boolean)",
+      "reason": "Typed retained configuration with copied value state, source republishing, fitting and margins, and GPU mipmap generation."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_set_item_repeat(RID:,Vector2:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasSetItemRepeat(Electron2D.RID,Electron2D.Vector2,System.Int32)",
+      "reason": "Live arbitrary item/subtree repetition with centered signed local periods, nearest source inheritance and transient renderer ownership."
+    },
+    {
+      "godot": "ShaderInclude::property:code",
+      "electron2d": "property:Electron2D.ShaderInclude.Code()",
+      "reason": "ADR 0028 uses bounded typed ShaderInclude.Code authoring, source loader/saver and typed archive persistence; source edits are saved and dependent HLSL/GLSL compilation occurs at build/import, preserving the compiled runtime boundary. ShaderIncludeTests and check_includes.py verify edit notifications, rollback, copy/cache/lifetime, actual nested dependency compiler behavior and changed GPU pixels; foreign toolchain/host gates remain separate."
+    },
     {
       "godot": "CanvasItemMaterial::enum:BlendMode",
       "electron2d": "T:Electron2D.BlendMode",
@@ -2643,12 +2675,12 @@
     {
       "godot": "RenderingServer::method:texture_proxy_create(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "FlowContainer::theme_item:h_separation",
@@ -4505,12 +4537,60 @@
       "godot": "RenderingServer::method:canvas_item_set_visibility_notifier(RID:,bool:,Rect2:,Callable:,Callable:)",
       "state": "Implemented",
       "reason": "Typed retained-canvas visibility callbacks, conservative merged bounds and multi-viewport sampling execute after frame submission under ADRs 0028/0078."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetCanvasCullMask(Electron2D.RID,System.UInt32)",
+      "godot": "RenderingServer::method:viewport_set_canvas_cull_mask(RID:,int:)",
+      "state": "Implemented",
+      "reason": "ADRs 0028/0095: independent renderer-session viewport cull masks, outer canvas transforms and concrete sampler defaults execute on scene/caller-owned viewports and shared canvas attachments without rewriting authored getters or input transforms. Matching source assignments republish. CanvasViewportConfigurationTests verifies native GPU/compatibility pixels, two offscreen targets, high mask bit, item sampler precedence, singular/invalid matrices, owner/capture/stale RID guards, cleanup and 64 active/64 idle warmed zero-managed-byte frames. Mip/anisotropic filtering and mirrored addressing retain the existing GPU-only capability gate; foreign/native allocator and human acceptance are separate."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetDefaultCanvasItemTextureFilter(Electron2D.RID,Electron2D.TextureFilter)",
+      "godot": "RenderingServer::method:viewport_set_default_canvas_item_texture_filter(RID:,int:RenderingServer.CanvasItemTextureFilter)",
+      "state": "Implemented",
+      "reason": "ADRs 0028/0095: independent renderer-session viewport cull masks, outer canvas transforms and concrete sampler defaults execute on scene/caller-owned viewports and shared canvas attachments without rewriting authored getters or input transforms. Matching source assignments republish. CanvasViewportConfigurationTests verifies native GPU/compatibility pixels, two offscreen targets, high mask bit, item sampler precedence, singular/invalid matrices, owner/capture/stale RID guards, cleanup and 64 active/64 idle warmed zero-managed-byte frames. Mip/anisotropic filtering and mirrored addressing retain the existing GPU-only capability gate; foreign/native allocator and human acceptance are separate."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetDefaultCanvasItemTextureRepeat(Electron2D.RID,Electron2D.TextureRepeat)",
+      "godot": "RenderingServer::method:viewport_set_default_canvas_item_texture_repeat(RID:,int:RenderingServer.CanvasItemTextureRepeat)",
+      "state": "Implemented",
+      "reason": "ADRs 0028/0095: independent renderer-session viewport cull masks, outer canvas transforms and concrete sampler defaults execute on scene/caller-owned viewports and shared canvas attachments without rewriting authored getters or input transforms. Matching source assignments republish. CanvasViewportConfigurationTests verifies native GPU/compatibility pixels, two offscreen targets, high mask bit, item sampler precedence, singular/invalid matrices, owner/capture/stale RID guards, cleanup and 64 active/64 idle warmed zero-managed-byte frames. Mip/anisotropic filtering and mirrored addressing retain the existing GPU-only capability gate; foreign/native allocator and human acceptance are separate."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetGlobalCanvasTransform(Electron2D.RID,Electron2D.Transform)",
+      "godot": "RenderingServer::method:viewport_set_global_canvas_transform(RID:,Transform2D:)",
+      "state": "Implemented",
+      "reason": "ADRs 0028/0095: independent renderer-session viewport cull masks, outer canvas transforms and concrete sampler defaults execute on scene/caller-owned viewports and shared canvas attachments without rewriting authored getters or input transforms. Matching source assignments republish. CanvasViewportConfigurationTests verifies native GPU/compatibility pixels, two offscreen targets, high mask bit, item sampler precedence, singular/invalid matrices, owner/capture/stale RID guards, cleanup and 64 active/64 idle warmed zero-managed-byte frames. Mip/anisotropic filtering and mirrored addressing retain the existing GPU-only capability gate; foreign/native allocator and human acceptance are separate."
     }
   ],
   "statusGroups": [
-    {"godot": ["RenderingServer::enum:CanvasGroupMode", "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_DISABLED", "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_CLIP_ONLY", "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_CLIP_AND_DRAW", "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_TRANSPARENT", "RenderingServer::method:canvas_item_set_canvas_group_mode(RID:,int:RenderingServer.CanvasGroupMode,float:,bool:,float:,bool:)"], "state": "Implemented", "reason": "CanvasServerGroupTests executes all four modes, masks/one-pass opacity, fitting/clear margins, reparenting and two viewport GPU/compatibility pixels, parameter rollback/source republishing and 64 warmed zero-byte mutation/render intervals. Existing composition tests verify screen shaders, mipmaps, rejection paths and lifetime. Accepted shared-backbuffer nested-group/child-read restrictions and foreign-platform gates remain explicit."},
-    {"godot": ["RenderingServer::method:canvas_set_item_repeat(RID:,Vector2:,int:)"], "state": "Implemented", "reason": "CanvasRepeatTests executes inherited/nested/disabled sources, signed periods, odd and grid counts, local rotation, int-max offscreen culling, mirroring, reparenting, clipping and two viewport native pixels on GPU/compatibility Linux, including 64 zero-byte warmed mutation/render intervals."},
-    {"godot": ["class:ShaderInclude", "ShaderInclude::property:code"], "state": "Implemented", "reason": "ADR 0028 uses bounded typed ShaderInclude.Code authoring, source loader/saver and typed archive persistence; source edits are saved and dependent HLSL/GLSL compilation occurs at build/import, preserving the compiled runtime boundary. ShaderIncludeTests and check_includes.py verify edit notifications, rollback, copy/cache/lifetime, actual nested dependency compiler behavior and changed GPU pixels; foreign toolchain/host gates remain separate."},
+    {
+      "godot": [
+        "RenderingServer::enum:CanvasGroupMode",
+        "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_DISABLED",
+        "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_CLIP_ONLY",
+        "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_CLIP_AND_DRAW",
+        "RenderingServer::enum_value:CanvasGroupMode.CANVAS_GROUP_MODE_TRANSPARENT",
+        "RenderingServer::method:canvas_item_set_canvas_group_mode(RID:,int:RenderingServer.CanvasGroupMode,float:,bool:,float:,bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "CanvasServerGroupTests executes all four modes, masks/one-pass opacity, fitting/clear margins, reparenting and two viewport GPU/compatibility pixels, parameter rollback/source republishing and 64 warmed zero-byte mutation/render intervals. Existing composition tests verify screen shaders, mipmaps, rejection paths and lifetime. Accepted shared-backbuffer nested-group/child-read restrictions and foreign-platform gates remain explicit."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:canvas_set_item_repeat(RID:,Vector2:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "CanvasRepeatTests executes inherited/nested/disabled sources, signed periods, odd and grid counts, local rotation, int-max offscreen culling, mirroring, reparenting, clipping and two viewport native pixels on GPU/compatibility Linux, including 64 zero-byte warmed mutation/render intervals."
+    },
+    {
+      "godot": [
+        "class:ShaderInclude",
+        "ShaderInclude::property:code"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0028 uses bounded typed ShaderInclude.Code authoring, source loader/saver and typed archive persistence; source edits are saved and dependent HLSL/GLSL compilation occurs at build/import, preserving the compiled runtime boundary. ShaderIncludeTests and check_includes.py verify edit notifications, rollback, copy/cache/lifetime, actual nested dependency compiler behavior and changed GPU pixels; foreign toolchain/host gates remain separate."
+    },
     {
       "state": "Implemented",
       "reason": "Pinned CanvasItem draw_set_transform builds an offset/rotation/scale matrix with zero rotation, unit scale defaults; draw_set_transform_matrix records a full affine state command. CanvasTimingTests verifies replacement rather than accumulation, node-before-draw composition, invalid write rollback, hidden-interval skipping, per-frame identity reset and zero warmed replay allocations. CanvasTimingRenderingTests passes 12-frame Wayland compatibility/GPU HLSL/GLSL and dummy/software pixels; full matrix pixels also pass through CanvasPixelSnapRenderingTests on Wayland. Typed finite/recording errors follow ADR 0004; other platforms remain unverified.",
@@ -5660,7 +5740,7 @@
         "RenderingServer::method:texture_proxy_update(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": [
@@ -6373,14 +6453,39 @@
       ],
       "state": "Excluded",
       "reason": "The pinned 3D visibility notifier RID family uses AABB utilities and INSTANCE_VISIBLITY_NOTIFIER scene instances: servers/rendering/storage/utilities.h and renderer_scene_cull.cpp at ed1daf0bf001b61586d9930840f2f1394092c079. Its set_aabb sibling is already Excluded. ADR 0004 excludes the complete 3D family; the applicable 2D operation is canvas_item_set_visibility_notifier. No implementation trigger."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:viewport_set_canvas_cull_mask(RID:,int:)",
+        "RenderingServer::method:viewport_set_default_canvas_item_texture_filter(RID:,int:RenderingServer.CanvasItemTextureFilter)",
+        "RenderingServer::method:viewport_set_default_canvas_item_texture_repeat(RID:,int:RenderingServer.CanvasItemTextureRepeat)",
+        "RenderingServer::method:viewport_set_global_canvas_transform(RID:,Transform2D:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0028/0095: independent renderer-session viewport cull masks, outer canvas transforms and concrete sampler defaults execute on scene/caller-owned viewports and shared canvas attachments without rewriting authored getters or input transforms. Matching source assignments republish. CanvasViewportConfigurationTests verifies native GPU/compatibility pixels, two offscreen targets, high mask bit, item sampler precedence, singular/invalid matrices, owner/capture/stale RID guards, cleanup and 64 active/64 idle warmed zero-managed-byte frames. Mip/anisotropic filtering and mirrored addressing retain the existing GPU-only capability gate; foreign/native allocator and human acceptance are separate."
     }
   ],
   "extras": [
-    {"electron2d": "method:Electron2D.ShaderInclude.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)", "reason": "Typed Resource lifecycle override for ShaderInclude: stored source descriptor, exact independent duplication, copied source state and logical disposal; inherited runtime contract under ADR0013, exercised by ShaderIncludeTests."},
-    {"electron2d": "method:Electron2D.ShaderInclude.CreateDuplicateInstance()", "reason": "Typed Resource lifecycle override for ShaderInclude: stored source descriptor, exact independent duplication, copied source state and logical disposal; inherited runtime contract under ADR0013, exercised by ShaderIncludeTests."},
-    {"electron2d": "method:Electron2D.ShaderInclude.Dispose(System.Boolean)", "reason": "Typed Resource lifecycle override for ShaderInclude: stored source descriptor, exact independent duplication, copied source state and logical disposal; inherited runtime contract under ADR0013, exercised by ShaderIncludeTests."},
-    {"electron2d": "method:Electron2D.ShaderInclude.GetPropertyDescriptors()", "reason": "Typed Resource lifecycle override for ShaderInclude: stored source descriptor, exact independent duplication, copied source state and logical disposal; inherited runtime contract under ADR0013, exercised by ShaderIncludeTests."},
-    {"electron2d": "constructor:Electron2D.ShaderInclude..ctor()", "reason": "Typed C# default construction for ShaderInclude source resource, empty Code; Resource duplication and archive factory execute this constructor."},
+    {
+      "electron2d": "method:Electron2D.ShaderInclude.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed Resource lifecycle override for ShaderInclude: stored source descriptor, exact independent duplication, copied source state and logical disposal; inherited runtime contract under ADR0013, exercised by ShaderIncludeTests."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderInclude.CreateDuplicateInstance()",
+      "reason": "Typed Resource lifecycle override for ShaderInclude: stored source descriptor, exact independent duplication, copied source state and logical disposal; inherited runtime contract under ADR0013, exercised by ShaderIncludeTests."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderInclude.Dispose(System.Boolean)",
+      "reason": "Typed Resource lifecycle override for ShaderInclude: stored source descriptor, exact independent duplication, copied source state and logical disposal; inherited runtime contract under ADR0013, exercised by ShaderIncludeTests."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderInclude.GetPropertyDescriptors()",
+      "reason": "Typed Resource lifecycle override for ShaderInclude: stored source descriptor, exact independent duplication, copied source state and logical disposal; inherited runtime contract under ADR0013, exercised by ShaderIncludeTests."
+    },
+    {
+      "electron2d": "constructor:Electron2D.ShaderInclude..ctor()",
+      "reason": "Typed C# default construction for ShaderInclude source resource, empty Code; Resource duplication and archive factory execute this constructor."
+    },
     {
       "electron2d": "constructor:Electron2D.CanvasItemMaterial..ctor()",
       "reason": "Managed construction of the existing canvas material resource with the default Mix mode.",

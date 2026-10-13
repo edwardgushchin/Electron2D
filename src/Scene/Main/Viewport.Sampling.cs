@@ -67,7 +67,7 @@ public abstract partial class Viewport
     /// <value>Linear by default. ParentNode on a root also resolves to linear.</value>
     /// <remarks>Changes affect the next frame and request redraw through direct inheriting canvas children.
     /// Mipmap modes require GPU rendering; the software compatibility driver rejects linear filtering.
-    /// Detached settings become effective on tree entry.</remarks>
+    /// Detached settings become effective on tree entry. Valid assignments, including equal values, republish the matching renderer-only override.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The enum value is invalid or Max.</exception>
     /// <exception cref="InvalidOperationException">An attached viewport is mutated off-owner or during capture.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
@@ -78,6 +78,7 @@ public abstract partial class Viewport
         {
             EnsureMutable();
             if ((uint)value >= (uint)DefaultCanvasItemTextureFilter.Max) throw new ArgumentOutOfRangeException(nameof(value));
+            RenderingOwner?.PublishCanvasSampling(this, filter: true);
             if (_canvasFilter == value) return;
             _canvasFilter = value; UpdateTextureSampling(filter: true);
         }
@@ -86,7 +87,8 @@ public abstract partial class Viewport
     /// <summary>Gets or sets addressing used when no canvas ancestor selects explicit repeat behavior.</summary>
     /// <value>Disabled by default. ParentNode on a root also resolves to disabled.</value>
     /// <remarks>Changes affect the next frame and request redraw through direct inheriting canvas children.
-    /// Mirror requires GPU rendering; unsupported fallback wrapping fails explicitly.</remarks>
+    /// Mirror requires GPU rendering; unsupported fallback wrapping fails explicitly. Valid assignments, including equal values,
+    /// republish any renderer-only repeat override.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The enum value is invalid or Max.</exception>
     /// <exception cref="InvalidOperationException">An attached viewport is mutated off-owner or during capture.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
@@ -97,6 +99,7 @@ public abstract partial class Viewport
         {
             EnsureMutable();
             if ((uint)value >= (uint)DefaultCanvasItemTextureRepeat.Max) throw new ArgumentOutOfRangeException(nameof(value));
+            RenderingOwner?.PublishCanvasSampling(this, filter: false);
             if (_canvasRepeat == value) return;
             _canvasRepeat = value; UpdateTextureSampling(filter: false);
         }

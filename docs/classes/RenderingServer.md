@@ -9,6 +9,12 @@ Last updated: 2026-10-13
 
 Public static declarations are in [`RenderingServer.API.cs`](../../src/Servers/Rendering/RenderingServer.API.cs).
 
+## Viewport canvas configuration
+
+`RenderingServer.ViewportSetCanvasCullMask`, `ViewportSetGlobalCanvasTransform`, `ViewportSetDefaultCanvasItemTextureFilter` and `ViewportSetDefaultCanvasItemTextureRepeat` configure the next submitted image of a live scene or caller-owned viewport. One shared canvas can therefore render with independent transforms, visibility masks and samplers in each attached viewport. The outer matrix applies after the canvas attachment matrix and before window stretch/pixel density, including default scene canvases and CanvasLayer canvases. Finite singular matrices are valid; zero masks hide all canvas items and bit 31 remains usable.
+
+Renderer-session overrides preserve authored properties and input coordinates. Matching scene setters republish, including equal sampling values. Invalid sampler/matrix/identity values reject; unsupported native sampling retains explicit backend gates. See [canvas configuration behavior and verification](../components/canvas-rendering.md#viewport-canvas-configuration).
+
 ## Server-owned offscreen viewport targets
 
 The static viewport family creates an inactive zero-size RID target without attaching a node to the user scene. `ViewportCreate`, `ViewportSetActive`, `ViewportSetSize`, `ViewportGetUpdateMode`, `ViewportSetUpdateMode`, `ViewportSetClearMode`, `ViewportSetTransparentBackground`, `ViewportSetDisable2D` and `ViewportSetParentViewport` share the existing native GPU/compatibility compositor. Attach an owned or borrowed canvas, record its items, set dimensions and activate the target. The existing `ViewportGetTexture` and `Texture2DGet` supply stable sampling identity and explicit copied pixel readback.

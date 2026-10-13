@@ -4,7 +4,7 @@ public abstract partial class Viewport
 {
     internal Transform GetCanvasRenderTransform(CanvasLayer? layer, float interpolationFraction = 1f)
     {
-        var result = RenderFinalTransform;
+        var result = CanvasCompositionTransform;
         var cameraTransform = GetInterpolatedCanvasTransform(interpolationFraction);
         var size = GetVisibleRect().Size;
         var snapOffset = new Vector2(size.X % 2 == 0 ? -0.5f : 0, size.Y % 2 == 0 ? -0.5f : 0);
@@ -47,7 +47,7 @@ public abstract partial class Viewport
     public uint CanvasCullMask
     {
         get { CheckTransformQuery(); return _canvasCullMask; }
-        set { EnsureMutable(); _canvasCullMask = value; }
+        set { EnsureMutable(); _canvasCullMask = value; RenderingOwner?.PublishCanvasCullMask(this); }
     }
 
     /// <summary>Returns whether a zero-based canvas cull-mask bit is enabled.</summary>
@@ -66,7 +66,7 @@ public abstract partial class Viewport
     /// <summary>Changes one canvas cull-mask bit without changing the other bits.</summary>
     /// <param name="layer">Bit index from zero through 31, inclusive.</param>
     /// <param name="enable">True to enable the bit; false to clear it.</param>
-    /// <remarks>The next submission uses the new mask without invalidating retained commands.</remarks>
+    /// <remarks>The next submission uses the new mask without invalidating retained commands. Assignments republish any renderer-only cull-mask override.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The bit index is outside zero through 31.</exception>
     /// <exception cref="InvalidOperationException">An attached viewport is mutated off-owner or during capture.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
@@ -76,6 +76,7 @@ public abstract partial class Viewport
         if ((uint)layer >= 32) throw new ArgumentOutOfRangeException(nameof(layer));
         var bit = 1u << layer;
         _canvasCullMask = enable ? _canvasCullMask | bit : _canvasCullMask & ~bit;
+        RenderingOwner?.PublishCanvasCullMask(this);
     }
 
     /// <summary>Gets or sets whether canvas transform translations round to whole pixels during rendering.</summary>

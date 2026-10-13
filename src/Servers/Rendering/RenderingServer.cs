@@ -404,7 +404,7 @@ public sealed partial class RenderingServer : ElectronObject
 
     private void OrderCanvas(CanvasItem item, Transform transform, bool alreadyYSorted = false)
     {
-        if (!item.RenderVisible || (item.RenderVisibilityLayer & _viewport.CanvasCullMask) == 0) return;
+        if (!item.RenderVisible || (item.RenderVisibilityLayer & CanvasCullMask(_viewport)) == 0) return;
         if (item is ParallaxLayer layer) _repeatTransforms[layer] = transform;
         if (!alreadyYSorted)
         {
@@ -512,7 +512,7 @@ public sealed partial class RenderingServer : ElectronObject
     }
     private void AddYSorted(CanvasItem child, Transform parentTransform)
     {
-        if (!child.RenderVisible || (child.RenderVisibilityLayer & _viewport.CanvasCullMask) == 0) return;
+        if (!child.RenderVisible || (child.RenderVisibilityLayer & CanvasCullMask(_viewport)) == 0) return;
         var local = child.RenderLocal(_interpolationFraction);
         if (_viewport.SnapTransformsToPixel) local.Origin = CanvasGeometry.Snap(local.Origin);
         var transform = parentTransform * local;

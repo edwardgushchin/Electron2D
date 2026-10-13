@@ -7,6 +7,15 @@ Process-wide service operations and events use static access to retained objects
 
 [Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
+## Viewport canvas configuration
+
+`RenderingServer.ViewportSetCanvasCullMask`, `ViewportSetGlobalCanvasTransform`, `ViewportSetDefaultCanvasItemTextureFilter` and `ViewportSetDefaultCanvasItemTextureRepeat` configure the next submitted image of a live scene or caller-owned viewport. One shared canvas can therefore render with independent transforms, visibility masks and samplers in each attached viewport. The outer matrix applies after the canvas attachment matrix and before window stretch/pixel density, including default scene canvases and CanvasLayer canvases. Finite singular matrices are valid; composed overflow rejects before native submission; zero masks hide all canvas items and bit 31 remains usable.
+
+These are renderer-session overrides. Authored properties, input coordinates and PackedScene data retain their scene values. Every valid assignment of the matching viewport property, including equal sampling values and SetCanvasCullMaskBit, republishes that scene setting. Other overrides remain independent; viewport release and renderer shutdown remove them. Explicit item/ancestor sampling wins over the viewport default, and tiled commands retain their repeat policy. ParentNode/Max and undefined server sampler choices reject before changing state. Native unsupported filtering/addressing fails explicitly under the existing backend capability gates.
+
+`CanvasViewportConfigurationTests` exercises native Linux GPU and compatibility pixels over the root, a scene SubViewport and a server-owned offscreen target; sharing, high-bit masks, matrix order, sampler precedence, scene republishing, singular matrices, owner/capture/foreign/stale identity rejection and teardown. It measures 64 active configuration/render frames and 64 idle frames after window-size stabilization with zero managed bytes. GPU mip/anisotropic and mirror choices execute separately; this does not establish foreign-platform, native allocator or human visual acceptance.
+
+
 ## Server-owned offscreen viewport targets
 
 The static viewport family creates an inactive zero-size RID target without attaching a node to the user scene. `ViewportCreate`, `ViewportSetActive`, `ViewportSetSize`, `ViewportGetUpdateMode`, `ViewportSetUpdateMode`, `ViewportSetClearMode`, `ViewportSetTransparentBackground`, `ViewportSetDisable2D` and `ViewportSetParentViewport` share the existing native GPU/compatibility compositor. Attach an owned or borrowed canvas, record its items, set dimensions and activate the target. The existing `ViewportGetTexture` and `Texture2DGet` supply stable sampling identity and explicit copied pixel readback.

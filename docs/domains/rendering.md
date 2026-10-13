@@ -279,3 +279,9 @@ The primary realized face supplies OpenType metadata through `GetSupportedFeatur
 Retained canvas items now support local finite repetition through CanvasSetItemRepeat, sharing one state with direct-child CanvasSetItemMirroring. Arbitrary item subtrees repeat on both backends; nested sources override inherited repetitions, and viewport culling avoids expanding distant ordinary copies. See the [canvas component](../components/canvas-rendering.md#retained-item-repetition) for state lifetime and verification limits.
 
 Retained canvas-group configuration now executes through RenderingServer.CanvasItemSetCanvasGroupMode for arbitrary live items, with the shared masking/transparent composition path. See [retained configuration](../components/canvas-rendering.md#retained-canvas-group-configuration) for fitting, margins, mipmaps, source republishing, lifetime and shared-backbuffer limits.
+
+## Viewport canvas configuration
+
+`RenderingServer.ViewportSetCanvasCullMask`, `ViewportSetGlobalCanvasTransform`, `ViewportSetDefaultCanvasItemTextureFilter` and `ViewportSetDefaultCanvasItemTextureRepeat` configure the next submitted image of a live scene or caller-owned viewport. One shared canvas can therefore render with independent transforms, visibility masks and samplers in each attached viewport. The outer matrix applies after the canvas attachment matrix and before window stretch/pixel density, including default scene canvases and CanvasLayer canvases. Finite singular matrices are valid; zero masks hide all canvas items and bit 31 remains usable.
+
+Renderer-session overrides preserve authored properties and input coordinates. Matching scene setters republish, including equal sampling values. Invalid sampler/matrix/identity values reject; unsupported native sampling retains explicit backend gates. See [canvas configuration behavior and verification](../components/canvas-rendering.md#viewport-canvas-configuration).

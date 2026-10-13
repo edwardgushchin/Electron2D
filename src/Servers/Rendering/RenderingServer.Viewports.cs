@@ -9,6 +9,10 @@ public sealed partial class RenderingServer
         internal Viewport? Parent;
         internal int ViewCount = 1;
         internal Vector2i? Size;
+        internal uint? CanvasCullMask;
+        internal Transform? GlobalCanvasTransform;
+        internal TextureFilter? CanvasFilter;
+        internal TextureRepeat? CanvasRepeat;
         internal ViewportUpdateMode Update = ViewportUpdateMode.Always;
         internal ViewportClearMode Clear;
     }
@@ -28,6 +32,20 @@ public sealed partial class RenderingServer
         view.RenderingOwner = this;
         return state;
     }
+    internal uint CanvasCullMask(Viewport view) => _serverViewports.TryGetValue(view, out var state) && state.CanvasCullMask is { } mask ? mask : view.CanvasCullMask;
+    internal Transform GlobalCanvasTransform(Viewport view) => _serverViewports.TryGetValue(view, out var state) && state.GlobalCanvasTransform is { } transform ? transform : view.GlobalCanvasTransform;
+    internal TextureFilter CanvasFilter(Viewport view) => _serverViewports.TryGetValue(view, out var state) && state.CanvasFilter is { } filter ? filter : view.TextureFilterInTree;
+    internal TextureRepeat CanvasRepeat(Viewport view) => _serverViewports.TryGetValue(view, out var state) && state.CanvasRepeat is { } repeat ? repeat : view.TextureRepeatInTree;
+    internal void PublishCanvasCullMask(Viewport view) { if (_serverViewports.TryGetValue(view, out var state)) state.CanvasCullMask = null; }
+    internal void PublishGlobalCanvasTransform(Viewport view) { if (_serverViewports.TryGetValue(view, out var state)) state.GlobalCanvasTransform = null; }
+    internal void PublishCanvasSampling(Viewport view, bool filter) { if (!_serverViewports.TryGetValue(view, out var state)) return; if (filter) state.CanvasFilter = null; else state.CanvasRepeat = null; }
+    private void ViewportSetCanvasCullMaskCore(RID rid, uint mask) => ChangeViewport(rid, out _).CanvasCullMask = mask;
+    private void ViewportSetGlobalCanvasTransformCore(RID rid, Transform transform)
+    { if (!transform.IsFinite()) throw new ArgumentException("Canvas transforms must be finite.", nameof(transform)); ChangeViewport(rid, out _).GlobalCanvasTransform = transform; }
+    private void ViewportSetDefaultCanvasItemTextureFilterCore(RID rid, TextureFilter filter)
+    { if (filter <= TextureFilter.ParentNode || filter >= TextureFilter.Max) throw new ArgumentOutOfRangeException(nameof(filter)); ChangeViewport(rid, out _).CanvasFilter = filter; }
+    private void ViewportSetDefaultCanvasItemTextureRepeatCore(RID rid, TextureRepeat repeat)
+    { if (repeat <= TextureRepeat.ParentNode || repeat >= TextureRepeat.Max) throw new ArgumentOutOfRangeException(nameof(repeat)); ChangeViewport(rid, out _).CanvasRepeat = repeat; }
     private RID ViewportCreateCore()
     {
         EnsureServerViewportChange(); var view = new SubViewport(); view.SetServerSize(default); view.RenderingOwner = this;
@@ -103,6 +121,33 @@ public sealed partial class RenderingServer
         _serverViewports.Clear(); _staleViewports.Clear();
         if (errors is not null) throw new AggregateException("Viewport cleanup failed.", errors);
     }
+
+    /// <summary>Sets the render visibility mask for every canvas attached to a viewport.</summary>
+    /// <param name="viewport">A live scene or caller-owned viewport.</param><param name="canvasCullMask">The 32 visibility bits; zero hides all canvas items.</param>
+    /// <remarks>Renderer-session state preserves scene getters. Assigning the matching scene property republishes it.</remarks>
+    /// <exception cref="ArgumentException">The identity is invalid.</exception>
+    /// <exception cref="InvalidOperationException">The renderer is unavailable or mutation violates owner/capture/submission rules.</exception>
+    public static void ViewportSetCanvasCullMask(RID viewport, uint canvasCullMask) => RequireService().ViewportSetCanvasCullMaskCore(viewport, canvasCullMask);
+    /// <summary>Sets the outer render transform applied to every canvas attached to a viewport.</summary>
+    /// <param name="viewport">A live scene or caller-owned viewport.</param><param name="transform">A finite transform, including singular matrices.</param>
+    /// <remarks>Applied after individual canvas matrices and before window stretch and pixel density. Preserves scene getters and input coordinates. Assigning GlobalCanvasTransform republishes the scene value.</remarks>
+    /// <exception cref="ArgumentException">The identity is invalid or the matrix is nonfinite.</exception>
+    /// <exception cref="InvalidOperationException">The renderer is unavailable or mutation violates owner/capture/submission rules.</exception>
+    public static void ViewportSetGlobalCanvasTransform(RID viewport, Transform transform) => RequireService().ViewportSetGlobalCanvasTransformCore(viewport, transform);
+    /// <summary>Sets the concrete texture filter used by attached canvas items that inherit their viewport default.</summary>
+    /// <param name="viewport">A live scene or caller-owned viewport.</param><param name="filter">A concrete filter; ParentNode and Max are invalid.</param>
+    /// <remarks>Applies on the next submission without redraw. Explicit item/ancestor filters take precedence. Preserves scene getters; assigning CanvasItemDefaultTextureFilter republishes scene state. Unsupported native filtering fails at submission.</remarks>
+    /// <exception cref="ArgumentException">The identity is invalid.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The filter is undefined, ParentNode or Max.</exception>
+    /// <exception cref="InvalidOperationException">The renderer is unavailable or mutation violates owner/capture/submission rules.</exception>
+    public static void ViewportSetDefaultCanvasItemTextureFilter(RID viewport, TextureFilter filter) => RequireService().ViewportSetDefaultCanvasItemTextureFilterCore(viewport, filter);
+    /// <summary>Sets the concrete texture addressing used by attached canvas items that inherit their viewport default.</summary>
+    /// <param name="viewport">A live scene or caller-owned viewport.</param><param name="repeat">A concrete repeat mode; ParentNode and Max are invalid.</param>
+    /// <remarks>Explicit item/ancestor addressing and tiled commands take precedence. Preserves scene getters; assigning CanvasItemDefaultTextureRepeat republishes scene state. Unsupported native addressing fails at submission.</remarks>
+    /// <exception cref="ArgumentException">The identity is invalid.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The mode is undefined, ParentNode or Max.</exception>
+    /// <exception cref="InvalidOperationException">The renderer is unavailable or mutation violates owner/capture/submission rules.</exception>
+    public static void ViewportSetDefaultCanvasItemTextureRepeat(RID viewport, TextureRepeat repeat) => RequireService().ViewportSetDefaultCanvasItemTextureRepeatCore(viewport, repeat);
 
     /// <summary>Creates an inactive, zero-size offscreen viewport owned by the active renderer.</summary>
     /// <returns>A stable identity released by FreeRID or renderer shutdown.</returns>
