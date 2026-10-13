@@ -1111,3 +1111,12 @@ off-center pins, reversed/zero guides, Replace damping, private next-step replay
 and four 128-frame strict 0/0 allocation intervals. The bounded fixture integrates
 poses once per outer interval; complete coupled geometry/CCD/sleep/history,
 network, native and performance acceptance remains open.
+
+
+[Independent private history](physics-registered-adapter.md#independent-private-history)
+now preserves numerical sleep/force/contact/field state and retained one-way
+choices, supports grown/shrunk recapture, and clears retired references. The common
+registered/CPU/GPU public suite checks real force/torque replay, sleep and immediate
+contacts at 0/0 bytes over 128 full-step/capture/restore cycles; registered decision
+replay has its own 128-cycle zero budget. This bounded fixture does not close
+arbitrary CCD/sleep/contact algorithms, portable networking or final acceptance.

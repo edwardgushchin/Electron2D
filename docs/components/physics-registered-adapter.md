@@ -16,7 +16,7 @@ Same-backend private history stays with the implementation. Portable state trans
 
 ## Verification boundary
 
-The separate [public-only consumer](../../tests/PhysicsBackendExtension.Consumer/PhysicsBackendExtension.Consumer.csproj) implements a bounded circle/spring model, with actual integration, queries, overlap and contact output and spring response. It is not a production physics option. The fixture runs 64 warmup and 64 measured complete PhysicsFrame cycles, including raw state callbacks, and measures zero owner/all-thread managed bytes. Scene/raw mass2/4 and constant forces12/24 both yield .1 scene units/s after the first 1/60-second interval within .000001 float tolerance; retained checkpoint and portable poses compare exactly. Contact/Area events, real circle queries, bounded spring response, receiver-failure continuation, reuse rejection and terminal solve failure cover their named paths. The fixture proves these exercised adapter paths. All currently applicable built-in shape/body/Area/joint behavior still requires its existing shared CPU/GPU checks.
+The separate [public-only consumer](../../tests/PhysicsBackendExtension.Consumer/PhysicsBackendExtension.Consumer.csproj) implements a bounded circle/constraint model, with actual integration, queries, overlap and contact output and spring response. It is not a production physics option. The fixture runs 64 warmup and 64 measured complete PhysicsFrame cycles, including raw state callbacks, and measures zero owner/all-thread managed bytes. Scene/raw mass2/4 and constant forces12/24 both yield .1 scene units/s after the first 1/60-second interval within .000001 float tolerance; retained checkpoint and portable poses compare exactly. Contact/Area events, real circle queries, bounded spring response, receiver-failure continuation, reuse rejection and terminal solve failure cover their named paths. The fixture proves these exercised adapter paths. All currently applicable built-in shape/body/Area/joint behavior still requires its existing shared CPU/GPU checks.
 
 PhysicsServerManager.RegisterServer and SetDefaultServer now execute through a retained static facade. Factories return fresh PhysicsServerBackend objects, typically derived from PhysicsServerExtension. Duplicate/reserved names, null/disposed/reused implementations and recursive creation reject. DEFAULT uses strictly greater priorities; World(string) captures its selection before lazy startup, while SpaceCreate(string) initializes an owned inactive space immediately. Resource aliases retain one runtime. Requested and actual names accompany Backend.Extension; explicit CPU/GPU and parameterless CPU remain independent of the default. Factories execute outside the lock, including registration from another thread. World release calls Finish and disposes the implementation; direct caller disposal of a bound implementation rejects.
 
@@ -974,3 +974,46 @@ Source/runtime fingerprints remained identical; final-current/provenance-before.
 provenance-after.json and outcomes.json under bin/physics-registered-joints/2026-10-13/
 retain the exact binding. The earlier final/ executable suite passed but its source
 guard rejected the subsequent unilateral-endpoint correction; it is not final proof.
+
+
+## Independent private history
+
+The public-only consumer's private History now captures typed numerical body state,
+including motion, pending numerical forces, sleep/can-sleep/time, integration flags,
+surface motion, resolved fields, saved motion poses and implementation-local
+contact observations. It also preserves one-way decisions, the last numerical
+step, pair statistics, readiness and diagnostic points. Common authoring,
+scene/server observations and joint configuration keep their existing shared
+ownership; the independent constraints reset interval scratch at BeginSolve and
+have no additional persistent warm-start state. No vendor data is exported.
+
+Capture reuses growable arrays and a current body prefix, clears retired body
+references on shrink, and validates attachment identity before restoring. One-way
+capacity is prepared before mutation. Dispose releases arrays and the solver
+reference. This replaces the former pose/velocity-only fixed-size snapshot.
+
+--history, optionally --cpu or --gpu, runs the same public sleep, topology
+recapture, force/torque replay, contact restoration and warmed checks on the
+registered and built-in paths with explicit actual backend and no fallback.
+Mass 2 with force 12 and torque 6 over 1/60 s gives .1 scene-unit/s and .05 rad/s;
+replayed pose/velocity/angular/contact values use .001 bounds, identities and
+sleep flags are exact. The registered case separately reads restored numerical
+contacts and 1/60 step through an uncached caller-created view. A retained rejected
+one-way decision keeps 60 scene-unit/s pass-through after rollback; explicitly
+allowing the same pair gives 30 and one contact. This is a bounded episode fixture,
+not a new general one-way/CCD algorithm.
+
+Each path warms 128 then measures 128 full-step/capture/restore cycles at strict
+0/0 owner/all-thread managed bytes. The registered episode case separately
+measures 128 capture/changed-decision/contact-step/restore cycles at the same zero
+budget. Cold topology growth and setup are outside those intervals. Evidence is
+under bin/physics-registered-history/2026-10-13/. Full coupled geometry/CCD/automatic
+sleeping, portable network replay, native allocations and final performance
+acceptance remain open.
+
+
+Final linux-x64 Release/native-source checks on main 4911a033 plus this change
+passed registered/CPU no-GPU history, explicit GPU history, the full consumer and
+the complete executable suite (five profiles, all exit 0). Source and all frozen
+runtime hashes remained identical before/after. Exact commands, environment and
+provenance are retained under bin/physics-registered-history/2026-10-13/final/.

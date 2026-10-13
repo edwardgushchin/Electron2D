@@ -1,6 +1,6 @@
 # PhysicsBackendCheckpoint
 
-Last updated: 2026-10-11
+Last updated: 2026-10-13
 
 **Declaration:** `public abstract class PhysicsBackendCheckpoint : IDisposable` · **Source:** [PhysicsBackendCheckpoint.cs](../../src/Servers/Physics/PhysicsBackendCheckpoint.cs) · **Component:** [Physics backends](../components/physics-backends.md#native-simulation-and-replay-ownership)
 
@@ -26,4 +26,11 @@ The base history contract is public; built-in history implementations remain int
 
 Selected operations borrow world/point lifetime, including capacity reads and release. Recursive checkpoint access and release reject; cleanup failure still retires common point state. PrepareCheckpoint executes before kernel capture. See [ownership and failure checks](../components/physics-backends.md#selected-checkpoint-ownership).
 
-[Registered numerical adapter](../components/physics-registered-adapter.md) now connects a public value/RID-only implementation to real scene/raw motion, fields/forces, joints, queries, contact/Area publication, private/portable history and terminal failure. Its independent circle/spring test solver owns its own state and does not wrap a built-in. Public registered factories and the typed family now execute in a separate consumer; arbitrary custom geometry and unexercised operation acceptance remain open.
+[Registered numerical adapter](../components/physics-registered-adapter.md) now connects a public value/RID-only implementation to real scene/raw motion, fields/forces, joints, queries, contact/Area publication, private/portable history and terminal failure. Its independent circle/constraint test solver owns its own state and does not wrap a built-in. Public registered factories and the typed family now execute in a separate consumer; arbitrary custom geometry and unexercised operation acceptance remain open.
+
+
+The public-only [independent history checks](../components/physics-registered-adapter.md#independent-private-history)
+now restore numerical sleep/force/contact/episode state and reuse topology-dependent
+storage after recapture. Common CPU/GPU/registered checks retain zero allocations
+across 128 full-step/capture/restore cycles. Complete numerical-extension and
+portable/network acceptance remain open.

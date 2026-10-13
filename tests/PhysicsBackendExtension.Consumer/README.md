@@ -94,3 +94,12 @@ finite/reversed/zero guides, free rotation and private next-step replay. Each of
 four owner/role combinations measures 128 full edited frames after 128 warmups
 at strict 0/0 owner/all-thread bytes. The independent fixture performs one outer
 pose integration; full coupled numerical and portable/network acceptance remain open.
+
+
+`--history`, optionally `--cpu` or `--gpu`, checks numerical sleep restoration,
+grow/shrink recapture, real pending force/torque replay, immediate contact values
+and 128 warmed full-step/capture/restore cycles at 0/0 owner/all-thread bytes.
+The registered case also checks uncached numerical contacts/step and retained
+one-way decisions, with a separate 128-cycle zero budget. Private history captures
+typed state and releases retired references; generic CCD/automatic sleep and
+portable/network acceptance remain open.

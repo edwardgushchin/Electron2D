@@ -372,16 +372,4 @@ public static partial class BackendChecks
             a.AddImpulse(impulse, 0); b.AddImpulse(-impulse, 0);
         }
     }
-    private sealed class History(Solver solver) : PhysicsBackendCheckpoint
-    {
-        private readonly (Body Body, Vector2 Position, Vector2 Velocity, float Angular, float Rotation)[] _states = new (Body, Vector2, Vector2, float, float)[solver.Bodies.Count];
-        protected override long DeviceCapacityBytes => 0;
-        protected override void Capture()
-        {
-            var i = 0; foreach (var b in solver.Bodies.Values) _states[i++] = (b, b.Position, b.Velocity, b.Angular, b.Rotation);
-        }
-        protected override void ValidateRestore() { foreach (var s in _states) if (s.Body.Detached) throw new InvalidOperationException("Independent history attachment expired."); }
-        protected override void Restore() { foreach (var s in _states) { s.Body.Position = s.Position; s.Body.Velocity = s.Velocity; s.Body.Angular = s.Angular; s.Body.Rotation = s.Rotation; } }
-        public override void Dispose() { }
-    }
 }

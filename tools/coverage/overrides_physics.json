@@ -4093,7 +4093,7 @@
     },
     {
       "electron2d": "T:Electron2D.PhysicsBackendCheckpoint",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Independent private history now restores numerical sleep/forces/fields/contact/episode state, reuses grown/shrunk topology storage and releases retired references. Shared CPU/GPU/registered --history checks verify actual force/torque replay and immediate contacts plus 128 full-step/capture/restore cycles at 0/0 owner/all-thread bytes; registered episode replay has another 128-cycle zero budget. This bounded replay evidence does not establish complete numerical/portable/network acceptance."
     },
     {
       "electron2d": "T:Electron2D.PhysicsBackendCollider",
@@ -4169,7 +4169,7 @@
     },
     {
       "electron2d": "constructor:Electron2D.PhysicsBackendCheckpoint..ctor()",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Independent private history now restores numerical sleep/forces/fields/contact/episode state, reuses grown/shrunk topology storage and releases retired references. Shared CPU/GPU/registered --history checks verify actual force/torque replay and immediate contacts plus 128 full-step/capture/restore cycles at 0/0 owner/all-thread bytes; registered episode replay has another 128-cycle zero budget. This bounded replay evidence does not establish complete numerical/portable/network acceptance."
     },
     {
       "electron2d": "constructor:Electron2D.PhysicsBackendCollider..ctor()",
@@ -4289,19 +4289,19 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCheckpoint.Capture()",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Independent private history now restores numerical sleep/forces/fields/contact/episode state, reuses grown/shrunk topology storage and releases retired references. Shared CPU/GPU/registered --history checks verify actual force/torque replay and immediate contacts plus 128 full-step/capture/restore cycles at 0/0 owner/all-thread bytes; registered episode replay has another 128-cycle zero budget. This bounded replay evidence does not establish complete numerical/portable/network acceptance."
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCheckpoint.Dispose()",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Independent private history now restores numerical sleep/forces/fields/contact/episode state, reuses grown/shrunk topology storage and releases retired references. Shared CPU/GPU/registered --history checks verify actual force/torque replay and immediate contacts plus 128 full-step/capture/restore cycles at 0/0 owner/all-thread bytes; registered episode replay has another 128-cycle zero budget. This bounded replay evidence does not establish complete numerical/portable/network acceptance."
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCheckpoint.Restore()",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Independent private history now restores numerical sleep/forces/fields/contact/episode state, reuses grown/shrunk topology storage and releases retired references. Shared CPU/GPU/registered --history checks verify actual force/torque replay and immediate contacts plus 128 full-step/capture/restore cycles at 0/0 owner/all-thread bytes; registered episode replay has another 128-cycle zero budget. This bounded replay evidence does not establish complete numerical/portable/network acceptance."
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCheckpoint.ValidateRestore()",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Independent private history now restores numerical sleep/forces/fields/contact/episode state, reuses grown/shrunk topology storage and releases retired references. Shared CPU/GPU/registered --history checks verify actual force/torque replay and immediate contacts plus 128 full-step/capture/restore cycles at 0/0 owner/all-thread bytes; registered episode replay has another 128-cycle zero budget. This bounded replay evidence does not establish complete numerical/portable/network acceptance."
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.ApplyCentralForce(Electron2D.Vector2,System.Boolean)",
@@ -5057,7 +5057,7 @@
     },
     {
       "electron2d": "property:Electron2D.PhysicsBackendCheckpoint.DeviceCapacityBytes()",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Independent private history now restores numerical sleep/forces/fields/contact/episode state, reuses grown/shrunk topology storage and releases retired references. Shared CPU/GPU/registered --history checks verify actual force/torque replay and immediate contacts plus 128 full-step/capture/restore cycles at 0/0 owner/all-thread bytes; registered episode replay has another 128-cycle zero budget. This bounded replay evidence does not establish complete numerical/portable/network acceptance."
     },
     {
       "electron2d": "property:Electron2D.PhysicsBackendCollider.AngularVelocity()",
@@ -7400,7 +7400,7 @@
         "class:PhysicsServer2DExtension"
       ],
       "state": "Partial",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Independent private history now restores numerical sleep/forces/fields/contact/episode state, reuses grown/shrunk topology storage and releases retired references. Shared CPU/GPU/registered --history checks verify actual force/torque replay and immediate contacts plus 128 full-step/capture/restore cycles at 0/0 owner/all-thread bytes; registered episode replay has another 128-cycle zero budget. This bounded replay evidence does not establish complete numerical/portable/network acceptance."
     },
     {
       "godot": [
