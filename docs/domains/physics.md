@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-13
 
+[Mass profiles across roles](../components/physics-registered-adapter.md#mass-profiles-across-roles)
+now verify retained centers and public point velocity independently of inverse
+dynamics. Unchanged CPU fixtures survive density edits during role transitions,
+with zero warm role/frame/query allocation; GPU and wider acceptance stay open.
+
 [Curved custom contact checks](../components/physics-registered-adapter.md#curved-custom-contacts)
 cover independent inner/outer annulus arcs, motor/counterpart motion and private
 replay, preserving valid contact points and zero warm frame allocation in both

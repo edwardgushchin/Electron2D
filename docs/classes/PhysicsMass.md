@@ -1,6 +1,11 @@
 # PhysicsMass
 
-Last updated: 2026-10-10
+Last updated: 2026-10-13
+
+[Mass profiles across roles](../components/physics-registered-adapter.md#mass-profiles-across-roles)
+verify that normalized automatic/custom centers survive scene/raw role changes
+independently of inverse dynamics. Density edits now reuse unchanged CPU fixtures;
+the complete validated profile still owns physical mass and center application.
 
 **Declaration:** `internal static class PhysicsMass`
 

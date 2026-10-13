@@ -1309,3 +1309,32 @@ or a particular final angle when ordinary joint error permits motion. These
 bounded custom checks pass through their independent algorithm; built-ins retain
 their explicit rejection of unknown custom formats. General geometry, longer
 coupled scenes, foreign/native execution and final performance remain open.
+
+## Mass profiles across roles
+
+The public-only --mass-roles fixture runs explicit CPU or the independent registered
+solver, with --threaded selecting separate numerical execution. It checks both a
+scene body and raw RID through Rigid, Static, Kinematic and RigidLinear transitions.
+An asymmetric two-circle profile retains automatic center (3, 0); a custom center
+(1, -2) likewise survives every role. Direct local/global-axis center offsets,
+origin-relative point velocity and physical inverse mass/inertia remain coherent
+before and after complete frames. Zero inverse dynamics does not erase resolved
+center metadata under ADR 0073. Raw removal/reentry retains that profile, and both
+logical circle slots remain visible in actual point queries throughout transitions.
+
+The initial CPU measured bracket allocated 122880 owner/all-thread bytes over
+128 four-role cycles. Phase diagnostics localized 61440 bytes each to Static and
+RigidLinear configuration; queries and full frames themselves allocated zero.
+Those transitions changed the internal fixture density and recreated unchanged
+shape tags. The CPU adapter now treats density as an updateable property beside
+materials, preserving native fixtures when slots, geometry, transforms, bias,
+filters and sensor identity match. Its density setter defers automatic native
+mass rebuilding; the owner reapplies the validated full engine mass profile.
+
+The same 128-warm/128-measured bracket now requires 0/0 owner/all-thread bytes,
+including 512 complete frames per bracket, two bodies, all role writes, direct
+mass/point-velocity reads and two slot queries per body before/after each frame.
+Center and point-velocity tolerance is .002 scene unit or unit/s; inverse values
+use .0001 reciprocal tolerance. Native allocation, GPU execution and wider
+platform/performance acceptance remain open. Evidence is retained under
+bin/physics-mass-roles/2026-10-13. No public API or mass-policy change is introduced.

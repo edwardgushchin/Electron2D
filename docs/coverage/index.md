@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-13
 
+[Mass-role verification](../components/physics-registered-adapter.md#mass-profiles-across-roles)
+checks scene/raw retained centers, point velocity, inverse values and live geometry
+through all roles. CPU density updates retain unchanged fixtures; CPU/provider
+serial/separate warm role/frame/query cycles require 0/0 managed bytes. Existing
+states are retained; GPU and wider acceptance remain open.
+
 [Curved custom contacts](../components/physics-registered-adapter.md#curved-custom-contacts)
 verify independent inner/outer annulus arcs, a pin motor, moving counterparts,
 retained valid contact points, full impulses and private replay. Serial/separate

@@ -219,6 +219,12 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   modes. Corrected non-touching geometry no longer overwrites a valid manifold
   point with zero. Arbitrary custom algorithms and longer coupled/network/native
   acceptance remain open.
+- [Mass profiles across roles](physics-registered-adapter.md#mass-profiles-across-roles)
+  now verify automatic/custom center retention, direct point velocity, inverse
+  dynamics and actual scene/raw geometry through all four roles in CPU/registered
+  serial/separate modes. CPU density-only updates reuse unchanged fixtures, removing
+  122880 measured role-write bytes while preserving the same full-frame bracket.
+  GPU/native and broader role/network/performance acceptance remain open.
 - Shared inherited Object/Node/Resource/CanvasItem and skeletal editor requirements
   remain with their typed-API, scheduling, script/editor or rendering prerequisites.
   Existing built-in physics tests do not establish those separate declaring APIs.

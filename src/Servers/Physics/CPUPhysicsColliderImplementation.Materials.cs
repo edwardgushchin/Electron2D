@@ -10,12 +10,12 @@ internal sealed partial class CPUPhysicsColliderImplementation
     private readonly record struct ShapeInput(PhysicsColliderShape Slot, ShapeGeometry? Geometry, float Bias);
     private ShapeInput[] _shapeInputs = [];
     private int _shapeInputCount = -1;
-    private (uint Layer, uint Mask, bool Sensor, float Density) _shapeSettings;
+    private (uint Layer, uint Mask, bool Sensor) _shapeSettings;
 
-    private bool UpdateMaterials(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask, bool sensor,
+    private bool UpdateShapeProperties(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask, bool sensor,
         float density, float friction, float bounce)
     {
-        if (_shapeInputCount != slots.Length || _shapeSettings != (layer, mask, sensor, density)) return false;
+        if (_shapeInputCount != slots.Length || _shapeSettings != (layer, mask, sensor)) return false;
         for (var i = 0; i < slots.Length; i++)
         {
             ref readonly var slot = ref slots[i]; ref readonly var saved = ref _shapeInputs[i];
@@ -27,6 +27,8 @@ internal sealed partial class CPUPhysicsColliderImplementation
         if (!sensor) CPUPhysicsWorldBackend.SetMaterial(ref definition, friction, bounce);
         foreach (var id in _shapes)
         {
+            // The owner reapplies its validated mass profile after these property updates.
+            b2Shape_SetDensity(id, density, updateBodyMass: false);
             var material = b2Shape_GetSurfaceMaterial(id);
             material.friction = definition.material.friction; material.restitution = definition.material.restitution;
             material.userMaterialId = definition.material.userMaterialId;
@@ -36,7 +38,7 @@ internal sealed partial class CPUPhysicsColliderImplementation
         return true;
     }
 
-    private void CaptureShapeInputs(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask, bool sensor, float density)
+    private void CaptureShapeInputs(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask, bool sensor)
     {
         if (_shapeInputs.Length < slots.Length) Array.Resize(ref _shapeInputs, Math.Max(8, slots.Length));
         for (var i = 0; i < slots.Length; i++)
@@ -46,6 +48,6 @@ internal sealed partial class CPUPhysicsColliderImplementation
                 slot.Shape.IsDisposed ? 0 : slot.Shape.CustomSolverBias);
         }
         Array.Clear(_shapeInputs, slots.Length, _shapeInputs.Length - slots.Length);
-        _shapeInputCount = slots.Length; _shapeSettings = (layer, mask, sensor, density);
+        _shapeInputCount = slots.Length; _shapeSettings = (layer, mask, sensor);
     }
 }

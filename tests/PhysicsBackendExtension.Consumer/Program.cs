@@ -1,4 +1,6 @@
 if (args.Contains("--separate-thread")) BackendChecks.RunSeparateThread();
+else if (args.Contains("--mass-roles")) BackendChecks.RunMassRoles(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--curved-annulus")) BackendChecks.RunCurvedAnnulus(args.Contains("--threaded"));
 else if (args.Contains("--angular-compound")) BackendChecks.RunAngularCompound(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));

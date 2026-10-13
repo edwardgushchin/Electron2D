@@ -82,13 +82,13 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
                 throw new InvalidOperationException("Physics shapes require unit scale and zero skew.");
             if (!slot.Shape.IsDisposed) PhysicsShapeBackend.RequireBuiltIn(slot.Shape);
         }
-        if (UpdateMaterials(slots, layer, mask, sensor, density, friction, bounce)) return;
+        if (UpdateShapeProperties(slots, layer, mask, sensor, density, friction, bounce)) return;
         _shapeInputCount = -1;
         var definition = BeginShapeUpdate(layer, mask, sensor, density, friction, bounce);
         foreach (ref readonly var slot in slots)
             if (slot.Enabled && !slot.Shape.IsDisposed)
                 AppendShape(slot.Shape, slot.Transform, slot.Index, sensor ? null : slot.OneWay, ref definition);
-        CaptureShapeInputs(slots, layer, mask, sensor, density);
+        CaptureShapeInputs(slots, layer, mask, sensor);
     }
 
     private B2ShapeDef BeginShapeUpdate(uint layer, uint mask, bool sensor, float density, float friction, float bounce)

@@ -119,6 +119,13 @@ LinearVelocity uses global scene units/s; AngularVelocity uses radians/s. Assign
 
 CenterOfMass is the offset from body origin to center along global axes; CenterOfMassLocal is that offset before body rotation. Both use scene units. InverseMass uses reciprocal kilograms; InverseInertia uses reciprocal kg times squared scene units and reports zero for a rotation lock. Static/kinematic native inverse mass and inertia are zero. These are actual native solver mass values, including child offsets and the existing shape/mass policy.
 
+[Role-transition verification](../components/physics-registered-adapter.md#mass-profiles-across-roles)
+checks retained automatic/custom centers and origin-relative point velocity on
+scene/raw CPU and independent provider bodies before/after all four roles. Static
+and kinematic inverse values remain zero while center metadata survives. Serial
+and separate numerical modes retain strict zero warm allocation; GPU is unverified
+for this new fixture.
+
 <a id="fields"></a>
 ### Step, TotalGravity, TotalLinearDamp and TotalAngularDamp
 
