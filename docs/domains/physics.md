@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-13
 
+[Angular compound motion](../components/physics-registered-adapter.md#angular-compound-motion)
+now verifies CPU/registered mass-center projection and coupled rotating circle slots,
+including contact momentum and 0/0 warm frames in serial/separate numerical modes.
+GPU and general geometry acceptance remain open.
+
 [Full monitored scene window measurements](../components/physics-scene-performance.md#full-monitored-scene-in-a-native-window)
 now use the same complete scene fixture with separate physics/frame costs, actual
 image and instance validation, reported VSync and zero warmed managed-byte checks.

@@ -1230,3 +1230,44 @@ The final 2026-10-13 verification on main at 55429120 plus this change passes al
 ## Separate numerical scheduling
 
 The [public-only threaded consumer](physics-thread.md) now exercises Solve and immediate status on a retained numerical lane, authorized readonly inputs, owner factories/publication/lifecycle, terminal failure/no-replay and 0/0 warm full frames. General geometry, GPU/native thread execution and final performance remain open.
+
+## Angular compound motion
+
+The public-only --angular-compound fixture checks the registered solver and CPU
+through the same scene/raw API, in serial and --threaded modes. An asymmetric
+two-circle body has a local mass center at (3, 0). Over 32 full frames at .01 s,
+its world mass center follows linear velocity while the origin follows rotation.
+Direct CenterOfMass returns a global-axis offset from that origin, not an absolute
+position. Point velocity likewise interprets its argument as a global-axis origin
+offset. The independent collider and direct-state factory now project these
+contracts consistently; its dynamic integration advances the mass center.
+
+Two radius-.25 circles at local x=20 and x=-20, with a disabled slot before them,
+rotate at 30 rad/s for .02 s. A target on the intermediate .2-radian arc has clear
+initial/final poses. CastShape must resolve the contact at logical slot 1 and
+publish its full momentum-changing impulse. The discrete control misses that
+arc; CastRay remains approximate and ordinary substeps may still encounter it.
+A second case gives the raw target a translated, rotating offset circle while
+its CCD remains Disabled. Both bodies must receive opposite momentum changes,
+including the target's angular response, without changing that authored policy.
+Each outer frame publishes one tick and one scene callback.
+
+The independent coordinator now includes offset-center angular speed in candidate
+intervals. Circular/ring trajectories use the same mass-center-relative rotation
+as integration. Fixed-rotation casts retain their analytic entry/exit roots.
+Curved casts advance against a current separating axis with a bounded angular
+acceleration; an inner-hole bound also includes the linear distance curvature.
+This avoids exhausting tiny speed-only advances after a tangent/separating
+contact. Curved searches are bounded at 256 advances; the outer coordinator retains
+its 4096-interval bound. Exhaustion fails explicitly;
+remaining motion is not discarded or replayed through a built-in solver.
+
+Mass-center/point-velocity tolerances are .002 scene unit or unit/s. Full frame
+linear impulse must match momentum change within .02 kg-unit/s, and angular
+contact must reduce the scene body's speed by at least 20 percent. These are
+physical observations, not matching internal traversal or exact poses. Both
+active contact cases run 128 warmup and 128 measured reset/full-frame cycles at
+strict 0/0 owner/all-thread managed bytes. Logs are under
+bin/physics-angular/2026-10-13. These checks do not establish GPU execution,
+native allocations, arbitrary polygon/capsule/multiple-piece geometry, curved
+custom-annulus acceptance or long coupled/network/performance acceptance.

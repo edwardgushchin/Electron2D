@@ -1,6 +1,12 @@
 # PhysicsDirectBodyState
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
+
+[Angular compound verification](../components/physics-registered-adapter.md#angular-compound-motion)
+checks global-axis mass-center offsets and origin-relative point velocity on CPU
+and the independent registered factory while an asymmetric body translates and
+rotates. CPU/provider serial and separate numerical modes pass; GPU is unverified
+for this new fixture.
 
 **Inherits:** [ElectronObject](ElectronObject.md) · **Inherited By:** [PhysicsDirectBodyStateExtension](PhysicsDirectBodyStateExtension.md)
 

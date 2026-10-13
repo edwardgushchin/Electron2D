@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-13
 
+[Angular compound checks](../components/physics-registered-adapter.md#angular-compound-motion)
+verify registered/CPU mass-center offsets, point velocity, intermediate rotational
+contact and coupled circle-slot momentum in serial/separate modes at strict 0/0
+warm managed bytes. Existing states stay unchanged; GPU and general geometry
+acceptance remain open.
+
 [Separate numerical thread implementation](../components/physics-thread.md)
 now captures a typed false-default project policy and dispatches the complete
 selected Solve on a retained lane. CPU/provider input, publication, failure and

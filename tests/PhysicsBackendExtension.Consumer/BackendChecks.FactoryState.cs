@@ -16,7 +16,7 @@ public static partial class BackendChecks
         protected override void SetAngularVelocityCore(float value) => PhysicsServer.BodySetAngularVelocity(body, value);
         protected override Vector2 GetLinearVelocityCore() => PhysicsServer.BodyGetLinearVelocity(body);
         protected override void SetLinearVelocityCore(Vector2 value) => PhysicsServer.BodySetLinearVelocity(body, value);
-        protected override Vector2 GetCenterOfMassCore() => Data.Center;
+        protected override Vector2 GetCenterOfMassCore() => Data.LocalCenter.Rotated(Data.Rotation);
         protected override Vector2 GetCenterOfMassLocalCore() => Data.LocalCenter;
         protected override float GetInverseMassCore() => Data.InvMass;
         protected override float GetInverseInertiaCore() => Data.InvInertia;
@@ -42,7 +42,7 @@ public static partial class BackendChecks
             Array.Clear(_contacts); return Data.CopyContacts(_contacts.AsSpan(0, limit));
         }
         protected override PhysicsDirectSpaceState GetSpaceStateCore() => PhysicsServer.SpaceGetDirectState(solver.Space);
-        protected override Vector2 GetVelocityAtLocalPositionCore(Vector2 localPosition) => Data.PointVelocity(Data.Center + localPosition);
+        protected override Vector2 GetVelocityAtLocalPositionCore(Vector2 localPosition) => Data.PointVelocity(Data.Position + localPosition);
         protected override void SetConstantForceCore(Vector2 force) => PhysicsServer.BodySetConstantForce(body, force);
         protected override void SetConstantTorqueCore(float torque) => PhysicsServer.BodySetConstantTorque(body, torque);
         protected override void AddConstantCentralForceCore(Vector2 force) => PhysicsServer.BodyAddConstantCentralForce(body, force);

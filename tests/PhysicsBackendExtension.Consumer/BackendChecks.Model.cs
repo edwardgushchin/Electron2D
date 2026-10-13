@@ -225,7 +225,7 @@ public static partial class BackendChecks
         internal RID RID => rid;
         internal float InvMass => InverseMass;
         internal float InvInertia => InverseInertia;
-        internal Vector2 Center => CenterOfMass;
+        internal Vector2 Center => Position + CenterOfMass;
         internal Vector2 LocalCenter => CenterOfMassLocal;
         internal PhysicsBodyFields Fields => _fields;
         internal int ReportedLimit;
@@ -269,7 +269,9 @@ public static partial class BackendChecks
         internal void Move(float dt)
         {
             if (!Awake || area || Mode == PhysicsServer.BodyMode.Static) return;
-            Position += Velocity * dt; if (!Locked) Rotation += Angular * dt;
+            var next = Locked ? Rotation : Rotation + Angular * dt;
+            Position += Velocity * dt + (Dynamic ? _center.Rotated(Rotation) - _center.Rotated(next) : Vector2.Zero);
+            Rotation = next;
         }
         internal bool FrameForcesApplied;
         protected override int ShapeCount => Shapes;
@@ -344,15 +346,19 @@ public static partial class BackendChecks
         protected override void ApplyCentralForce(Vector2 force, bool wake) { Force += force; Awake |= wake; }
         protected override void ApplyTorque(float torque, bool wake) { Torque += torque; Awake |= wake; }
         protected override bool RotationLocked => Locked;
-        protected override Vector2 CenterOfMass => Position + _center.Rotated(Rotation);
+        protected override Vector2 CenterOfMass => _center.Rotated(Rotation);
         protected override Vector2 CenterOfMassLocal => _center;
         protected override float InverseMass => Dynamic ? 1 / Mass : 0;
         protected override float InverseInertia => Dynamic && !Locked ? 1 / Inertia : 0;
         protected override PhysicsMassProperties ApplyMassProfile(float mass, float inertia, Vector2? center)
         => PartMass(mass, inertia, center);
         protected override void WakeTouching() => solver.WakeConnected(this);
-        protected override Vector2 GetPointVelocity(Vector2 offset) => LinearVelocity + new Vector2(-offset.Y, offset.X) * AngularVelocity;
-        protected override Vector2 GetWorldPointVelocity(Vector2 point) => GetPointVelocity(point - CenterOfMass);
+        protected override Vector2 GetPointVelocity(Vector2 offset)
+        {
+            var arm = offset - CenterOfMass;
+            return LinearVelocity + new Vector2(-arm.Y, arm.X) * AngularVelocity;
+        }
+        protected override Vector2 GetWorldPointVelocity(Vector2 point) => GetPointVelocity(point - Position);
         protected override void ApplyImpulse(Vector2 impulse, float moment) { AddImpulse(impulse, moment); if (Dynamic) { Awake = true; SleepTime = 0; solver.WakeConnected(this); } }
         protected override void SetSurfaceVelocity(Vector2 linear, float angular)
         { if (Surface == linear && SurfaceAngular == angular) return; Surface = linear; SurfaceAngular = angular; solver.WakeConnected(this); }

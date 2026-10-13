@@ -1,6 +1,12 @@
 # PhysicsDirectBodyStateExtension
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
+
+[Angular compound verification](../components/physics-registered-adapter.md#angular-compound-motion)
+now exercises the independent factory's rotated mass offset and origin-relative
+point velocity with real translating/rotating bodies. Numerical circle-slot CCD,
+full frame impulses and 0/0 warm frames pass in serial/separate modes on CPU and
+the registered consumer; GPU and broader geometry acceptance stay open.
 
 **Declaration:** `public abstract partial class PhysicsDirectBodyStateExtension : PhysicsDirectBodyState` · **Inherits:** [PhysicsDirectBodyState](PhysicsDirectBodyState.md) · **Component:** [Body-state extensions](../components/physics-body-extensions.md)
 
