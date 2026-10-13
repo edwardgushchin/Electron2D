@@ -1,6 +1,6 @@
 # Tree
 
-Last updated: 2026-10-07
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.Tree`. **Source:** [source](../../src/Scene/GUI/Tree.cs). **Component:** [Hierarchical cells](../components/hierarchical-cells.md).
 
@@ -945,3 +945,5 @@ Gets or sets repeated scroll-hint texture presentation.
 ## Lifecycle, invariants and verification
 
 Attached operations require the owning scene thread and a live item/control. Invalid indices, invalid enum values, nonfinite required configuration and ownership/cycle violations throw before mutation. Item/metadata/resource lifetimes follow the description above. See [hierarchical cells](../components/hierarchical-cells.md) for runtime flow, exercised editor and native workflows, allocation boundaries and dependency limits; [Tree coverage](../coverage/classes/Tree.md) and [TreeItem coverage](../coverage/classes/TreeItem.md) account for the applicable comparison surface. Relevant decisions: ADRs 0004, 0008, 0014, 0023, 0038, 0046, 0051 and 0083.
+
+Column titles and noneditable inherited-policy cells use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation. Always item policy uses explicit `Tr` and keeps its explicit context; Disabled preserves the source.

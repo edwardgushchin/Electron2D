@@ -458,12 +458,12 @@ Gets or sets whether this node receives unhandled keyboard events before general
 <a id="m-electron2d-node-atr-system-string-system-string"></a>
 ### `public string Atr(string message, string? context = null)`
 
-Returns the source message when `CanAutoTranslate()` is false; otherwise delegates to inherited `Tr`, including its per-object message enablement, domain and context behavior. A null message throws `ArgumentNullException`.
+Returns the source message when `CanAutoTranslate()` is false; otherwise delegates to inherited `Tr`, including its per-object message enablement, domain and context behavior. A null message throws `ArgumentNullException`. On a Control, a null or empty context selects that control's local `TranslationContext`; a nonempty argument overrides it. Ordinary nodes keep their supplied context.
 
 <a id="m-electron2d-node-atrn-system-string-system-string-system-int64-system-string"></a>
 ### `public string AtrN(string singular, string plural, long count, string? context = null)`
 
-Returns singular only for count one, or plural otherwise, while automatic translation is disabled. Otherwise delegates to inherited `TrN`. Null source forms throw `ArgumentNullException`.
+Returns singular only for count one, or plural otherwise, while automatic translation is disabled. Otherwise delegates to inherited `TrN`, using the same Control default-context rule as `Atr`. Null source forms throw `ArgumentNullException`.
 
 <a id="m-electron2d-node-canautotranslate"></a>
 ### `public bool CanAutoTranslate()`

@@ -382,7 +382,7 @@ public partial class Node : ElectronObject
 
     /// <summary>Translates a message only when automatic translation is enabled for this node.</summary>
     /// <param name="message">The source message.</param>
-    /// <param name="context">An optional disambiguation context.</param>
+    /// <param name="context">An optional disambiguation context; null or empty uses the local default on a Control.</param>
     /// <returns>The resolved translation or the source message.</returns>
     /// <exception cref="ArgumentNullException">The message is null.</exception>
     /// <exception cref="InvalidOperationException">An attached node is queried off the owner thread.</exception>
@@ -391,14 +391,14 @@ public partial class Node : ElectronObject
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(message);
-        return CanAutoTranslate() ? Tr(message, context) : message;
+        return CanAutoTranslate() ? Tr(message, ResolveAutomaticTranslationContext(context)) : message;
     }
 
     /// <summary>Translates singular or plural text only when automatic translation is enabled for this node.</summary>
     /// <param name="singular">The source singular form.</param>
     /// <param name="plural">The source plural form.</param>
     /// <param name="count">The message quantity.</param>
-    /// <param name="context">An optional disambiguation context.</param>
+    /// <param name="context">An optional disambiguation context; null or empty uses the local default on a Control.</param>
     /// <returns>The resolved form or the source form for the quantity.</returns>
     /// <exception cref="ArgumentNullException">Either source form is null.</exception>
     /// <exception cref="InvalidOperationException">An attached node is queried off the owner thread.</exception>
@@ -408,8 +408,10 @@ public partial class Node : ElectronObject
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(singular);
         ArgumentNullException.ThrowIfNull(plural);
-        return CanAutoTranslate() ? TrN(singular, plural, count, context) : count == 1 ? singular : plural;
+        return CanAutoTranslate() ? TrN(singular, plural, count, ResolveAutomaticTranslationContext(context)) : count == 1 ? singular : plural;
     }
+
+    internal virtual string? ResolveAutomaticTranslationContext(string? context) => context;
 
     private void NotifyInheritedTranslationDomainChanged()
     {

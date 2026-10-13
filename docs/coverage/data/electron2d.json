@@ -207331,6 +207331,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Control.TranslationContext()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "TranslationContext",
+    "signature": "public System.String TranslationContext { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ConvexPolygonShape.Points()",
     "kind": "property",
     "declaringType": "Electron2D.ConvexPolygonShape",

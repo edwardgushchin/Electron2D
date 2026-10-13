@@ -1,6 +1,6 @@
 # LineEdit
 
-Last updated: 2026-10-07
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D`. **Declaration:** `public class LineEdit : Control`.
 
@@ -801,3 +801,5 @@ The embedded popup slice adds Popup/PopupPanel theme/type and exact file-factory
 The owned SpinBox input reuses editing, scalar selection/caret, submission and theme behavior. An internal formatting operation restores bounded selection/caret after replacing generated numeric text; it adds no public text facade. See [numeric input](../components/numeric-input.md) for the exercised workflow and limits.
 
 Editing commands use [TextMenuAction](TextMenuAction.md), shared with TextEdit under ADR 0051. The former owner-specific enum identity is removed; command numbers and behavior remain.
+
+The placeholder use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation. User-entered text stays literal.

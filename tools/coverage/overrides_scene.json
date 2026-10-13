@@ -5391,6 +5391,12 @@
       "electron2d": "method:Electron2D.Control.WarpMouse(Electron2D.Vector2)",
       "state": "Implemented",
       "reason": "ADR 0038 executable viewport GUI capture: coalesced deferred primary-button release/next-batch press, internal event ownership, existing capture mask, keyboard/global-input isolation, stale target/real-release/disposal cancellation, exception continuation and warmed no-op requests. ControlPointerTests exercises managed boundaries and actual GPU/compatibility pixels; nested native warp uses existing canvas/window transforms and explicit host capabilities."
+    },
+    {
+      "godot": "Control::property:translation_context",
+      "electron2d": "property:Electron2D.Control.TranslationContext()",
+      "state": "Implemented",
+      "reason": "ADR 0007/0004: stored local Control default context is applied only by automatic Atr/AtrN for null/empty arguments; explicit arguments override it and ordinary Tr/TrN remain unchanged. Setter sends no translation notification. GUITranslationContextTests checks real cached consumers, policies, base references, descriptors, fresh scene files, owner/disposal and warmed zero managed bytes; native Linux GPU/compatibility compares actual contextual glyph pixels."
     }
   ],
   "extras": [
@@ -9074,7 +9080,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Automatic policy, singular/plural source fallback, root setting and change notifications execute in NodeLocalizationTests; exact locale/catalog parity remains Partial on TranslationServer, and absent text controls do not yet consume automatic translation.",
+      "reason": "Automatic policy, singular/plural source fallback, root setting and change notifications execute in NodeLocalizationTests. Control default contexts, actual GUI text consumers and fresh-file/native glyph output execute in GUITranslationContextTests. Exact locale/catalog parity remains Partial on TranslationServer; global locale-change scene notification and inherited full-family acceptance remain separate prerequisites.",
       "godot": [
         "Node::method:atr(String:,StringName:)",
         "Node::method:atr_n(String:,StringName:,int:,StringName:)",
@@ -11052,6 +11058,20 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0038 executable viewport GUI capture: coalesced deferred primary-button release/next-batch press, internal event ownership, existing capture mask, keyboard/global-input isolation, stale target/real-release/disposal cancellation, exception continuation and warmed no-op requests. ControlPointerTests exercises managed boundaries and actual GPU/compatibility pixels; nested native warp uses existing canvas/window transforms and explicit host capabilities."
+    },
+    {
+      "godot": [
+        "Control::property:translation_context"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0007/0004: stored local Control default context is applied only by automatic Atr/AtrN for null/empty arguments; explicit arguments override it and ordinary Tr/TrN remain unchanged. Setter sends no translation notification. GUITranslationContextTests checks real cached consumers, policies, base references, descriptors, fresh scene files, owner/disposal and warmed zero managed bytes; native Linux GPU/compatibility compares actual contextual glyph pixels."
+    },
+    {
+      "godot": [
+        "Control::property:auto_translate"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004 excludes deprecated public mirrors. Pinned doc/classes/Control.xml at ed1daf0bf001b61586d9930840f2f1394092c079 declares auto_translate deprecated: Use [member Node.auto_translate_mode] and [method Node.can_auto_translate] instead. Electron2D exposes the current Node.AutoTranslateMode and CanAutoTranslate replacement; no alias or implementation trigger."
     }
   ]
 }

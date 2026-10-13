@@ -9,6 +9,9 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_CONTEXT_CHILD") is { Length: > 0 } contextScene) { GUITranslationContextTests.RunChild(contextScene); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_CONTEXT_NATIVE") == "1") { GUITranslationContextTests.RunNative(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_CONTEXT") == "1") { GUITranslationContextTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_POINTER_NATIVE") == "1") { ControlPointerTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_POINTER") == "1") { ControlPointerTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_DIRECTORY_CHILD") is { Length: > 0 } resourceDirectory) { ResourceDirectoryTests.RunChild(resourceDirectory); return; }

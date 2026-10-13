@@ -6,7 +6,7 @@ Last updated: 2026-10-13
 
 **Inherited By:** [Label](Label.md), [Panel](Panel.md), [Container](Container.md), [Range](Range.md), [NinePatchRect](NinePatchRect.md), [ItemList](ItemList.md), [TextureRect](TextureRect.md). BaseButton, buttons, scroll bars and ScrollContainer are current consumers.
 
-- **Source:** [Control.cs](../../src/Scene/GUI/Control.cs), [Control.Input.cs](../../src/Scene/GUI/Control.Input.cs), [Control.TextInput.cs](../../src/Scene/GUI/Control.TextInput.cs), [Control.Drag.cs](../../src/Scene/GUI/Control.Drag.cs), [Control.Focus.cs](../../src/Scene/GUI/Control.Focus.cs), [Control.SizeFlags.cs](../../src/Scene/GUI/Control.SizeFlags.cs)
+- **Source:** [Control.cs](../../src/Scene/GUI/Control.cs), [Control.Input.cs](../../src/Scene/GUI/Control.Input.cs), [Control.TextInput.cs](../../src/Scene/GUI/Control.TextInput.cs), [Control.Drag.cs](../../src/Scene/GUI/Control.Drag.cs), [Control.Focus.cs](../../src/Scene/GUI/Control.Focus.cs), [Control.SizeFlags.cs](../../src/Scene/GUI/Control.SizeFlags.cs), [Control.Translation.cs](../../src/Scene/GUI/Control.Translation.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public partial class Control : CanvasItem`
 
@@ -57,6 +57,7 @@ When the window changes size, the panel's right edge stays 12 units from the win
 
 | Member | Contract |
 | --- | --- |
+| `public string TranslationContext { get; set; }` | Local default automatic translation context, empty initially; stored and revertible. |
 | `public Vector2 Position { get; set; }` | Upper-left layout position before pivot and scale. |
 | `public Vector2 Size { get; set; }` | Finite requested size, clamped to the effective minimum and maximum. |
 | `public bool ClipContents { get; set; }` | False by default; clips direct canvas descendants and their viewport-local pointer targeting to this rectangle. |
@@ -465,3 +466,17 @@ Pending targets are weak and cancel after removal/disposal or viewport teardown.
 GetScreenPosition returns GetScreenTransform().Origin, including the containing outer native Window for embedded viewports, and follows its desktop placement limitations. WarpMouse accepts finite local coordinates and composes current canvas/viewport transforms into the containing native window. Embedded viewports include their container transform and stretch scale. Invalid native ranges and missing/unsupported host capabilities fail explicitly.
 
 ControlPointerTests checks coalescing, two deferred batches, primary buttons, transformed coordinates, keyboard-focus isolation, disposal/viewport removal, singular transforms, exceptions, physical-release cancellation and 64 warmed same-target requests with zero managed bytes. Native Wayland GPU/compatibility tests verify actual capture-driven pixels and explicit unavailable warp/desktop-position boundaries. Dummy compatibility uses nearest sampling for executable embedded warp coordinates. Other platform/hardware verification remains separate.
+
+## Automatic translation context
+
+`Control.TranslationContext` is a stored local string, empty by default. `Atr`/`AtrN` use it when the call's context is null or empty; a nonempty call argument overrides it. `Tr`/`TrN` retain their explicit context. The property is not inherited from a parent. Set it before assigning text: changing the context alone sends no notification and preserves already prepared captions. `Notify(Node.NotificationTranslationChanged)` refreshes that control; `PropagateNotification` can refresh its subtree. Existing automatic mode, object enablement and inherited domain rules still apply.
+
+```csharp
+var caption = new Label { TranslationContext = "action", Text = "Open" };
+caption.TranslationContext = "status";
+caption.Notify(Node.NotificationTranslationChanged);
+```
+
+Null assignment throws `ArgumentNullException`; disposed access throws `ObjectDisposedException`. Attached property access requires the scene owner thread and writes are rejected during scene capture. Equal writes are silent. Context values copy independently through PackedScene and file loading.
+
+`GUITranslationContextTests` exercises singular/plural lookup through base references, explicit overrides, policy disabling, descriptors, cached Label/RichTextLabel captions, Button/OptionButton consumers, owner/disposal checks, fresh file processes and zero warmed managed bytes. Its native profile compares actual initial/refreshed glyph pixels with independently authored expected labels on Linux Wayland GPU and compatibility. Other platforms and native allocations remain unverified.

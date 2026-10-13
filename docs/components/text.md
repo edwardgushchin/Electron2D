@@ -1,6 +1,6 @@
 # Text shaping and canvas fonts
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 Private native binaries come from versioned Linux/macOS/Windows packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; full Windows/macOS runtime verification is pending.
 
@@ -88,3 +88,5 @@ FontRasterPolicyTests uses engine-owned EBDT/EBLC monochrome and CBDT/CBLC color
 MIP method/property identifiers use the product-wide uppercase acronym rule in ADR 0045, including image, texture, sampler and project-filter siblings. Enum/type/field identities keep their owning rules; native binding names retain their external contracts.
 
 Automatic draw oversampling now follows the canvas viewport raster scale, including embedded-window density. A positive draw value takes precedence, then a positive FontFile/SystemFont source override, then the viewport scale. This changes glyph raster/cache identity without changing unhinted metrics. Content changes invalidate retained glyph commands. WindowContentScaleNativeTests compares automatic glyph pixels with an explicit oversampling reference on both native backends; other target and native allocation acceptance remains unverified.
+
+Automatic captions and placeholders use the inherited [Control.TranslationContext](../classes/Control.md#automatic-translation-context) default when no explicit context is supplied. Set it before assigning text; changing it alone preserves prepared text. An explicit translation-change notification refreshes the control. Editable user text remains literal and item policies that call explicit `Tr` retain their explicit context.

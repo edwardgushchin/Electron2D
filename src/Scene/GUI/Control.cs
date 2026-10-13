@@ -868,6 +868,7 @@ public partial class Control : CanvasItem
 
     private static readonly PropertyDescriptor[] ControlProperties =
     [
+        new PropertyDescriptor<Control, string>(nameof(TranslationContext), c => c.TranslationContext, (c, v) => c.TranslationContext = v, _ => string.Empty, stored: true),
         new PropertyDescriptor<Control, bool>(nameof(LocalizeNumeralSystem), c => c.LocalizeNumeralSystem, (c, v) => c.LocalizeNumeralSystem = v, _ => true, stored: true),
         new PropertyDescriptor<Control, bool>(nameof(ClipContents), node => node.ClipContents, (node, value) => node.ClipContents = value, _ => false, stored: true),
         new PropertyDescriptor<Control, Vector2>(nameof(Position), node => node.Position, (node, value) => node.Position = value, _ => Vector2.Zero, stored: true),

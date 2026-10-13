@@ -1,6 +1,6 @@
 # OptionButton
 
-Last updated: 2026-10-06
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D`. **Declaration:** `public partial class OptionButton : Button`. **Inherits:** [Button](Button.md). **Inherited By:** —. **Source:** [model](../../src/Scene/GUI/OptionButton.cs), [layout](../../src/Scene/GUI/OptionButton.Layout.cs), [storage](../../src/Scene/GUI/OptionButton.Storage.cs). **Component:** [Dropdown choices](../components/dropdown-choices.md).
 
@@ -649,3 +649,5 @@ Occurs after a user activation commits the selected index and caption.
 Nested embedded window routing descends to the owned popup. Anchor placement now adds the containing Window offset only when the popup embedder is outside that Window; MenuButtonTests executes both nested choice and command consumers. Shortcut callbacks retain their captured SceneTree so disposing an owner during command delivery cannot dereference a detached Tree.
 
 Popup anchors include GetGlobalTransformWithCanvas before any embedder offset, so a changed canvas translation moves the command/choice popup by the same amount exactly once. MenuButtonTests verifies both consumers under a translated inner viewport.
+
+Inherited-policy item captions use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation. Always item policy uses explicit `Tr` and keeps its explicit context; Disabled preserves the source.

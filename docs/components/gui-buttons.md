@@ -1,6 +1,6 @@
 # GUI buttons and shortcuts
 
-Last updated: 2026-10-06
+Last updated: 2026-10-13
 
 The component turns pointer, touch, action and shortcut input into themed application actions. It owns [BaseButton](../classes/BaseButton.md), [ButtonGroup](../classes/ButtonGroup.md), [Button](../classes/Button.md), [CheckBox](../classes/CheckBox.md), [CheckButton](../classes/CheckButton.md) and [TextureButton](../classes/TextureButton.md). [Shortcut](../classes/Shortcut.md) and [InputEventShortcut](../classes/InputEventShortcut.md) integrate the input-resource and scene-routing boundary. It reuses Control, Theme, Font, StyleBox, Texture and BitMap; it adds no backend or managed dependency.
 
@@ -37,3 +37,5 @@ Embedded Controls now reuse the same button/focus/tooltip hooks in independent v
 [Command menu buttons](command-menu-buttons.md) add a concrete MenuButton consumer for command menus and FileDialog drive/sort prerequisites. It uses the existing PopupMenu model and themes with related hover switching, exact indexed scenes and preserved accessibility-focus defaults.
 
 FileDialog exercises tooltip ownership under embedded Window GUI sections. Once SceneTree closes its work queues, CancelTooltip clears presenter state and leaves attached layers to recursive root disposal instead of requesting deferred deletion; detached layers still dispose directly. Context-pointer and active-tooltip teardown regressions cover both embedding policies.
+
+`Control.TranslationContext` is a stored local string, empty by default. `Atr`/`AtrN` use it when the call's context is null or empty; a nonempty call argument overrides it. `Tr`/`TrN` retain their explicit context. The property is not inherited from a parent. Set it before assigning text: changing the context alone sends no notification and preserves already prepared captions. `Notify(Node.NotificationTranslationChanged)` refreshes that control; `PropagateNotification` can refresh its subtree. Existing automatic mode, object enablement and inherited domain rules still apply.

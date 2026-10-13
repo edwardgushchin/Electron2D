@@ -1,6 +1,6 @@
 # MenuBar
 
-Last updated: 2026-10-10
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D`. **Declaration:** `public partial class Electron2D.MenuBar : Control`. **Source:** [model](../../src/Scene/GUI/MenuBar.cs), [layout](../../src/Scene/GUI/MenuBar.Layout.cs), [input](../../src/Scene/GUI/MenuBar.Input.cs), [storage](../../src/Scene/GUI/MenuBar.Storage.cs). **Component:** [Menu strips](../components/menu-strips.md).
 
@@ -454,3 +454,5 @@ Gets or sets the base writing direction independently of visual layout direction
 #### Value
 
 Auto initially; Inherited follows layout direction.
+
+Menu headers use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation.

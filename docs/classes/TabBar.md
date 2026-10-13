@@ -1,6 +1,6 @@
 # TabBar
 
-Last updated: 2026-10-06
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D`. **Declaration:** `public partial class Electron2D.TabBar : Control`. **Source:** [model](../../src/Scene/GUI/TabBar.cs), [layout/drawing](../../src/Scene/GUI/TabBar.Layout.cs), [input/drag](../../src/Scene/GUI/TabBar.Input.cs), [stored fields](../../src/Scene/GUI/TabBar.Storage.cs).
 
@@ -778,3 +778,5 @@ TabBarTests exercises source defaults, equal/nested/failed selection, unavailabl
 Native accessibility roles/actions and editor tab authoring still require those services. TabContainer is a separate child-panel consumer and remains tracked independently. See ADRs [0008](../decisions/scene.md#adr-0008), [0038](../decisions/input.md#adr-0038), [0046](../decisions/rendering.md#adr-0046) and [0083](../decisions/rendering.md#adr-0083).
 
 [TabContainer](TabContainer.md) now owns a stable borrowed internal strip for actual Control pages. Page count and order belong to its scene children. Internal record sharing retains exact metadata and configuration during page transfer; the public TabBar API is unchanged.
+
+Tab titles use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation.

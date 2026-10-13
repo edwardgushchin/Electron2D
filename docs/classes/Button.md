@@ -1,6 +1,6 @@
 # Button
 
-Last updated: 2026-10-06
+Last updated: 2026-10-13
 
 **Inherits:** [BaseButton](BaseButton.md) · **Inherited By:** [OptionButton](OptionButton.md), [CheckBox](CheckBox.md), [CheckButton](CheckButton.md)
 
@@ -268,3 +268,5 @@ State styles are `normal`, `pressed`, `hover`, `disabled`, optional `hover_press
 [ButtonTests](../../tests/Electron2D.Tests/ButtonTests.cs) passes defaults, typed scene storage, geometry, text clipping/wrapping, fill paragraph defaults, theme indicators, callback failures, nested atlas changes, balanced residency and 64 warmed active plus idle cycles at zero managed bytes. [ButtonRenderingTests](../../tests/Electron2D.Tests/ButtonRenderingTests.cs) passes ten native state/focus/pointer/keyboard/RTL/text phases on Linux Wayland GPU and compatibility, followed by 64 measured active frames after 64 warmup frames at zero managed bytes from ProcessFrameStarted through FramePostDraw. The final images match pixel-for-pixel. These checks do not imply native allocator counts, accessibility-service or other-platform support. See [coverage](../coverage/classes/Button.md).
 
 [Dropdown choices](../components/dropdown-choices.md) add OptionButton as an executable Button/PopupMenu consumer with three arrow theme keys and an exact scene/file factory. Selected item translation uses the shared Button text path. Disposed borrowed button icons read as null and clear on owner processing, avoiding the internal-process/deferred-cleanup race. Public shared-owner signatures remain unchanged.
+
+Automatic button captions use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation.

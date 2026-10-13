@@ -1,6 +1,6 @@
 # Localization domain
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 ## Responsibility
 
@@ -58,3 +58,5 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 [Numeric input](../components/numeric-input.md) adds SpinBox formula/text/arrow/repeat/relative-drag authoring through shared Range and LineEdit, fresh scene factories and generated numeral localization. Current Wayland GPU/compatibility capture/input/pixels and prepared active rendering are exercised; precise pointer warp, inherited semantic/editor and foreign target gates remain separate.
 
 The permanent `ProjectSettings.RootNodeLayoutDirection` integer selector accepts only 0 application locale, 1 LTR, 2 RTL and 3 system UI locale (default 0). `ForceRightToLeftLayoutDirection` is a permanent boolean, default false. Both support save/load and feature overrides and are sampled independently for each SceneTree before entry. Explicit node LTR/RTL choices override forced policy; other modes are forced RTL when enabled. Global project edits affect subsequent trees, while detached nodes read current settings. [ProjectLayoutDirectionTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionTests.cs) and native [ProjectLayoutDirectionNativeTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionNativeTests.cs) verify the executable profile.
+
+`Control.TranslationContext` is a stored local string, empty by default. `Atr`/`AtrN` use it when the call's context is null or empty; a nonempty call argument overrides it. `Tr`/`TrN` retain their explicit context. The property is not inherited from a parent. Set it before assigning text: changing the context alone sends no notification and preserves already prepared captions. `Notify(Node.NotificationTranslationChanged)` refreshes that control; `PropagateNotification` can refresh its subtree. Existing automatic mode, object enablement and inherited domain rules still apply.

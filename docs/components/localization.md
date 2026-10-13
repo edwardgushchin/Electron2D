@@ -1,6 +1,6 @@
 # Translation component
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 ## Scope
 
@@ -41,3 +41,5 @@ Tests cover parent-culture lookup, source fallback, scored regional selection, p
 Generated numeric input now uses TranslationServer.FormatNumber/ParseNumber/GetPercentSign with exact rune/decimal/exponent data for nine systems and 92 locale identities. The SpinBox first consumer respects Control.LocalizeNumeralSystem; ordinary text is unchanged. Independent locale vectors include supplementary-plane digits, unknown-locale identity and hyphen spellings. Global locale notifications and broader CLDR/alias negotiation remain separate prerequisites.
 
 The permanent `ProjectSettings.RootNodeLayoutDirection` integer selector accepts only 0 application locale, 1 LTR, 2 RTL and 3 system UI locale (default 0). `ForceRightToLeftLayoutDirection` is a permanent boolean, default false. Both support save/load and feature overrides and are sampled independently for each SceneTree before entry. Explicit node LTR/RTL choices override forced policy; other modes are forced RTL when enabled. Global project edits affect subsequent trees, while detached nodes read current settings. [ProjectLayoutDirectionTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionTests.cs) and native [ProjectLayoutDirectionNativeTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionNativeTests.cs) verify the executable profile.
+
+`Control.TranslationContext` is a stored local string, empty by default. `Atr`/`AtrN` use it when the call's context is null or empty; a nonempty call argument overrides it. `Tr`/`TrN` retain their explicit context. The property is not inherited from a parent. Set it before assigning text: changing the context alone sends no notification and preserves already prepared captions. `Notify(Node.NotificationTranslationChanged)` refreshes that control; `PropagateNotification` can refresh its subtree. Existing automatic mode, object enablement and inherited domain rules still apply.

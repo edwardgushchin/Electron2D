@@ -1,6 +1,6 @@
 # TextEdit
 
-Last updated: 2026-10-07
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.TextEdit`. **Source:** [source](../../src/Scene/GUI/TextEdit.cs). **Component:** [Multiline editing](../components/multiline-editing.md).
 
@@ -245,3 +245,5 @@ Undo snapshots cost O(document size) per cold edit and are limited by TextEditUn
 TextEditTests covers scalar/grapheme edits, multicaret ordering, grouped undo/redo, observer failure, copied metadata/configuration, syntax continuation/cache invalidation, committed/preedit input and fresh-process scene loading. Native GPU/compatibility readbacks exercise actual glyph/selection/gutter/minimap/placeholder recording, SDL event producers and clipboard restoration. The warm interval measures prepared managed owner recording and selection; it excludes cold parsing/edit snapshots, native events and native allocator totals. See [coverage](../coverage/classes/TextEdit.md) for inherited/native/editor dependencies.
 
 The [CodeEdit](CodeEdit.md) specialization uses this same document and typed hooks. GetLineRangesFromCarets uses an unselected caret location rather than its stale selection origin, preserving correct duplicate/move/indent ranges.
+
+The placeholder use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation. User-entered text stays literal.
