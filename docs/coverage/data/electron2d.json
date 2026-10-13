@@ -119460,6 +119460,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.GetNodeAndResource(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "GetNodeAndResource",
+    "signature": "public System.ValueTuple\u003CElectron2D.Node, Electron2D.Resource, System.String\u003E GetNodeAndResource(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.ValueTuple\u003CElectron2D.Node, Electron2D.Resource, System.String\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.GetNodeOrNull(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -119618,6 +119637,25 @@
     "declaringType": "Electron2D.Node",
     "name": "HasNode",
     "signature": "public System.Boolean HasNode(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.HasNodeAndResource(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "HasNodeAndResource",
+    "signature": "public System.Boolean HasNodeAndResource(System.String path)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -119946,6 +119984,83 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.PropagateCall(System.Action\u003CElectron2D.Node\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "PropagateCall",
+    "signature": "public System.Void PropagateCall(System.Action\u003CElectron2D.Node\u003E operation, System.Boolean parentFirst = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "operation",
+        "type": "System.Action\u003CElectron2D.Node\u003E",
+        "default": null
+      },
+      {
+        "name": "parentFirst",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.PropagateCall\u00601(Action\u003CTNode\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "PropagateCall",
+    "signature": "public System.Void PropagateCall\u003CTNode\u003E(Action\u003CTNode\u003E operation, System.Boolean parentFirst = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "operation",
+        "type": "Action\u003CTNode\u003E",
+        "default": null
+      },
+      {
+        "name": "parentFirst",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.PropagateCall\u00602(Action\u003CTNode, TArgument\u003E,TArgument,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "PropagateCall",
+    "signature": "public System.Void PropagateCall\u003CTNode, TArgument\u003E(Action\u003CTNode, TArgument\u003E operation, TArgument argument, System.Boolean parentFirst = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "operation",
+        "type": "Action\u003CTNode, TArgument\u003E",
+        "default": null
+      },
+      {
+        "name": "argument",
+        "type": "TArgument",
+        "default": null
+      },
+      {
+        "name": "parentFirst",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },

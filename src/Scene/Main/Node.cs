@@ -1209,7 +1209,7 @@ public partial class Node : ElectronObject
     /// <summary>Resolves a required relative or absolute node path.</summary>
     /// <param name="path">A nonblank slash-separated path supporting <c>.</c>, <c>..</c>, owner-scoped <c>%Name</c>, and an optional absolute root-name segment.</param>
     /// <returns>The resolved node.</returns>
-    /// <remarks>Absolute paths require active scene membership and start with the scene root's name.</remarks>
+    /// <remarks>Absolute paths require active scene membership and start with the scene root's name. Colon-separated property subnames are validated for empty components but do not participate in node traversal; a property-only path addresses this node.</remarks>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">An attached lookup runs off the scene owner thread.</exception>
@@ -1233,7 +1233,7 @@ public partial class Node : ElectronObject
     /// <summary>Attempts to resolve a relative or absolute node path.</summary>
     /// <param name="path">A nonblank slash-separated path supporting <c>.</c>, <c>..</c>, owner-scoped <c>%Name</c>, and an optional absolute root-name segment.</param>
     /// <returns>The resolved node, or <see langword="null"/> when traversal cannot continue.</returns>
-    /// <remarks>Absolute paths require active scene membership and start with the scene root's name.</remarks>
+    /// <remarks>Absolute paths require active scene membership and start with the scene root's name. Colon-separated property subnames are validated for empty components but do not participate in node traversal; a property-only path addresses this node.</remarks>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">An attached lookup runs off the scene owner thread.</exception>
@@ -1244,6 +1244,12 @@ public partial class Node : ElectronObject
         Tree?.EnsureOwnerThread();
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
 
+        var subpath = path.IndexOf(':');
+        if (subpath >= 0)
+        {
+            if (path.Length == 1 || path.Contains("::", StringComparison.Ordinal)) throw new ArgumentException("Node property path components cannot be empty.", nameof(path));
+            path = subpath == 0 ? "." : path[..subpath];
+        }
         var absolute = path.StartsWith('/');
         if (absolute && Tree is null) return null;
         var current = absolute ? GetHierarchyRoot() : this;
@@ -1689,7 +1695,7 @@ public partial class Node : ElectronObject
     {
         EnsurePhysicsObjectAccess();
         if (_notificationPropagationDepth != 0 || (Parent?._notificationPropagationDepth ?? 0) != 0)
-            throw new InvalidOperationException("A node cannot be disposed during notification propagation through its parent.");
+            throw new InvalidOperationException("A node cannot be disposed during subtree propagation through its parent.");
 
         if (Volatile.Read(ref _sceneInstantiationDepth) != 0)
             throw new InvalidOperationException("A node cannot be disposed while packed-scene instantiation is active.");
@@ -2617,7 +2623,7 @@ public partial class Node : ElectronObject
         EnsurePhysicsObjectAccess();
         Tree?.EnsureExtensionHierarchyChange();
         if (_notificationPropagationDepth != 0)
-            throw new InvalidOperationException("Children cannot be changed during notification propagation.");
+            throw new InvalidOperationException("Children cannot be changed during subtree propagation.");
     }
 
     private List<Node> GetAncestry()

@@ -168,7 +168,7 @@
     {
       "electron2d": "method:Electron2D.Node.HasNode(System.String)",
       "godot": "Node::method:has_node(NodePath:)",
-      "reason": "String path projects the accepted typed NodePath adaptation."
+      "reason": "String path projects the accepted typed NodePath adaptation. Colon-separated property subnames now parse with the resource endpoint grammar and do not participate in node traversal; SubtreeResourceAuthoringTests verifies this sibling integration."
     },
     {
       "electron2d": "method:Electron2D.Node.IsGreaterThan(Electron2D.Node)",
@@ -878,19 +878,19 @@
       "electron2d": "method:Electron2D.Node.GetNode(System.String)",
       "godot": "Node::method:get_node(NodePath:)",
       "state": "Partial",
-      "reason": "Ordinary and owner-scoped unique paths resolve, and absolute paths now require an active tree and root-name segment. NodeUniqueNameTests covers those transitions. The typed string mapping still needs the full NodePath subname and error-surface audit."
+      "reason": "Ordinary and owner-scoped unique paths resolve, and absolute paths now require an active tree and root-name segment. NodeUniqueNameTests covers those transitions. The typed string mapping still needs the full NodePath subname and error-surface audit. Colon-separated property subnames now parse with the resource endpoint grammar and do not participate in node traversal; SubtreeResourceAuthoringTests verifies this sibling integration."
     },
     {
       "electron2d": "method:Electron2D.Node.GetNode`1(System.String)",
       "godot": "Node::method:get_node(NodePath:)",
       "state": "Partial",
-      "reason": "Typed generic lookup projects get_node through ordinary and owner-scoped unique paths, including attached absolute roots. NodeUniqueNameTests covers the shared resolver; NodePath subnames and exact typed failure behavior remain to audit."
+      "reason": "Typed generic lookup projects get_node through ordinary and owner-scoped unique paths, including attached absolute roots. NodeUniqueNameTests covers the shared resolver; NodePath subnames and exact typed failure behavior remain to audit. Colon-separated property subnames now parse with the resource endpoint grammar and do not participate in node traversal; SubtreeResourceAuthoringTests verifies this sibling integration."
     },
     {
       "electron2d": "method:Electron2D.Node.GetNodeOrNull(System.String)",
       "godot": "Node::method:get_node_or_null(NodePath:)",
       "state": "Partial",
-      "reason": "Relative and owner-scoped unique paths resolve in detached and active trees; absolute paths require an active root-name segment, and attached queries enforce the owner thread. NodeUniqueNameTests covers these paths. Full NodePath subname and malformed-path parity remains to audit."
+      "reason": "Relative and owner-scoped unique paths resolve in detached and active trees; absolute paths require an active root-name segment, and attached queries enforce the owner thread. NodeUniqueNameTests covers these paths. Full NodePath subname and malformed-path parity remains to audit. Colon-separated property subnames now parse with the resource endpoint grammar and do not participate in node traversal; SubtreeResourceAuthoringTests verifies this sibling integration."
     },
     {
       "electron2d": "method:Electron2D.Node.GetPath()",
@@ -3205,13 +3205,13 @@
       "godot": "AnimationNode::enum:FilterAction",
       "electron2d": "T:Electron2D.AnimationNode.FilterAction",
       "state": "Implemented",
-      "reason": "ADR 0093 typed animation graph execution: reusable borrowed resources, per-tree/path typed parameter cells, clip timing, graph topology/filtering, signed Blend/Add/Sub, TimeScale/TimeSeek and provider integration. AnimationGraphTests verifies editing/cycles, two shared-tree instances, parameters/readonly/errors, arithmetic/filtering/clock edges, reentry/cleanup and zero warmed managed allocations. Two Linux Wayland GPU and two compatibility five-pose readbacks verify real rendered execution. Disk/editor and other-platform acceptance remain separate."
+      "reason": "ADR 0093 typed animation graph execution: reusable borrowed resources, per-tree/path typed parameter cells, clip timing, graph topology/filtering, signed Blend/Add/Sub, TimeScale/TimeSeek and provider integration. AnimationGraphTests verifies editing/cycles, two shared-tree instances, parameters/readonly/errors, arithmetic/filtering/clock edges, reentry/cleanup and zero warmed managed allocations. Two Linux Wayland GPU and two compatibility five-pose readbacks verify real rendered execution. Disk/editor and other-platform acceptance remain separate. Colon-separated property subnames now parse with the resource endpoint grammar and do not participate in node traversal; SubtreeResourceAuthoringTests verifies this sibling integration."
     },
     {
       "godot": "AnimationNode::enum_value:FilterAction.FILTER_BLEND",
       "electron2d": "enumValue:Electron2D.AnimationNode.FilterAction.Blend()",
       "state": "Implemented",
-      "reason": "ADR 0093 typed animation graph execution: reusable borrowed resources, per-tree/path typed parameter cells, clip timing, graph topology/filtering, signed Blend/Add/Sub, TimeScale/TimeSeek and provider integration. AnimationGraphTests verifies editing/cycles, two shared-tree instances, parameters/readonly/errors, arithmetic/filtering/clock edges, reentry/cleanup and zero warmed managed allocations. Two Linux Wayland GPU and two compatibility five-pose readbacks verify real rendered execution. Disk/editor and other-platform acceptance remain separate."
+      "reason": "ADR 0093 typed animation graph execution: reusable borrowed resources, per-tree/path typed parameter cells, clip timing, graph topology/filtering, signed Blend/Add/Sub, TimeScale/TimeSeek and provider integration. AnimationGraphTests verifies editing/cycles, two shared-tree instances, parameters/readonly/errors, arithmetic/filtering/clock edges, reentry/cleanup and zero warmed managed allocations. Two Linux Wayland GPU and two compatibility five-pose readbacks verify real rendered execution. Disk/editor and other-platform acceptance remain separate. Colon-separated property subnames now parse with the resource endpoint grammar and do not participate in node traversal; SubtreeResourceAuthoringTests verifies this sibling integration."
     },
     {
       "godot": "AnimationNode::enum_value:FilterAction.FILTER_IGNORE",
@@ -4507,13 +4507,13 @@
       "godot": "class:AnimationNodeStateMachine",
       "electron2d": "T:Electron2D.AnimationNodeStateMachine",
       "state": "Implemented",
-      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified. Colon-separated property subnames now parse with the resource endpoint grammar and do not participate in node traversal; SubtreeResourceAuthoringTests verifies this sibling integration."
     },
     {
       "godot": "AnimationNodeStateMachine::enum:StateMachineType",
       "electron2d": "T:Electron2D.AnimationStateMachineType",
       "state": "Implemented",
-      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified. Colon-separated property subnames now parse with the resource endpoint grammar and do not participate in node traversal; SubtreeResourceAuthoringTests verifies this sibling integration."
     },
     {
       "godot": "AnimationNodeStateMachine::enum_value:StateMachineType.STATE_MACHINE_TYPE_GROUPED",
@@ -5300,6 +5300,31 @@
       "godot": "Viewport::property:physics_interpolation_mode",
       "electron2d": "property:Electron2D.Node.PhysicsInterpolationMode()",
       "reason": "The inherited typed Node mode is executable on Viewport, with per-viewport camera snapshots. Its viewport-specific On default is still missing from construction and property metadata; see the Partial status rather than treating the whole policy as absent."
+    },
+    {
+      "godot": "Node::method:get_node_and_resource(NodePath:)",
+      "electron2d": "method:Electron2D.Node.GetNodeAndResource(System.String)",
+      "reason": "Executable runtime subtree authoring under ADRs 0001/0004/0005/0008/0011. Typed resource endpoints return borrowed Node/Resource plus property remainder through a concrete C# tuple; descriptor getters preserve missing/null/scalar/resource and error boundaries. Compiled operations preserve children-first/parent-first order, internal children, typed node-role filtering and argument tuples, owner affinity, traversal barriers and exception continuation. SubtreeResourceAuthoringTests verifies current resource-path grammar and sibling Node APIs, custom getters, saved scene reconstruction, guards/errors and 1000 warmed zero-managed-allocation propagation calls; Linux Wayland GPU/hardware compatibility verify edited atlas and hierarchy pixels. Other-platform/editor/large-hierarchy/native-allocation/human gates remain unverified."
+    },
+    {
+      "godot": "Node::method:has_node_and_resource(NodePath:)",
+      "electron2d": "method:Electron2D.Node.HasNodeAndResource(System.String)",
+      "reason": "Executable runtime subtree authoring under ADRs 0001/0004/0005/0008/0011. Typed resource endpoints return borrowed Node/Resource plus property remainder through a concrete C# tuple; descriptor getters preserve missing/null/scalar/resource and error boundaries. Compiled operations preserve children-first/parent-first order, internal children, typed node-role filtering and argument tuples, owner affinity, traversal barriers and exception continuation. SubtreeResourceAuthoringTests verifies current resource-path grammar and sibling Node APIs, custom getters, saved scene reconstruction, guards/errors and 1000 warmed zero-managed-allocation propagation calls; Linux Wayland GPU/hardware compatibility verify edited atlas and hierarchy pixels. Other-platform/editor/large-hierarchy/native-allocation/human gates remain unverified."
+    },
+    {
+      "godot": "Node::method:propagate_call(StringName:,Array:,bool:)",
+      "electron2d": "method:Electron2D.Node.PropagateCall(System.Action<Electron2D.Node>,System.Boolean)",
+      "reason": "Executable runtime subtree authoring under ADRs 0001/0004/0005/0008/0011. Typed resource endpoints return borrowed Node/Resource plus property remainder through a concrete C# tuple; descriptor getters preserve missing/null/scalar/resource and error boundaries. Compiled operations preserve children-first/parent-first order, internal children, typed node-role filtering and argument tuples, owner affinity, traversal barriers and exception continuation. SubtreeResourceAuthoringTests verifies current resource-path grammar and sibling Node APIs, custom getters, saved scene reconstruction, guards/errors and 1000 warmed zero-managed-allocation propagation calls; Linux Wayland GPU/hardware compatibility verify edited atlas and hierarchy pixels. Other-platform/editor/large-hierarchy/native-allocation/human gates remain unverified."
+    },
+    {
+      "godot": "Node::method:propagate_call(StringName:,Array:,bool:)",
+      "electron2d": "method:Electron2D.Node.PropagateCall`1(Action<TNode>,System.Boolean)",
+      "reason": "Executable runtime subtree authoring under ADRs 0001/0004/0005/0008/0011. Typed resource endpoints return borrowed Node/Resource plus property remainder through a concrete C# tuple; descriptor getters preserve missing/null/scalar/resource and error boundaries. Compiled operations preserve children-first/parent-first order, internal children, typed node-role filtering and argument tuples, owner affinity, traversal barriers and exception continuation. SubtreeResourceAuthoringTests verifies current resource-path grammar and sibling Node APIs, custom getters, saved scene reconstruction, guards/errors and 1000 warmed zero-managed-allocation propagation calls; Linux Wayland GPU/hardware compatibility verify edited atlas and hierarchy pixels. Other-platform/editor/large-hierarchy/native-allocation/human gates remain unverified."
+    },
+    {
+      "godot": "Node::method:propagate_call(StringName:,Array:,bool:)",
+      "electron2d": "method:Electron2D.Node.PropagateCall`2(Action<TNode, TArgument>,TArgument,System.Boolean)",
+      "reason": "Executable runtime subtree authoring under ADRs 0001/0004/0005/0008/0011. Typed resource endpoints return borrowed Node/Resource plus property remainder through a concrete C# tuple; descriptor getters preserve missing/null/scalar/resource and error boundaries. Compiled operations preserve children-first/parent-first order, internal children, typed node-role filtering and argument tuples, owner affinity, traversal barriers and exception continuation. SubtreeResourceAuthoringTests verifies current resource-path grammar and sibling Node APIs, custom getters, saved scene reconstruction, guards/errors and 1000 warmed zero-managed-allocation propagation calls; Linux Wayland GPU/hardware compatibility verify edited atlas and hierarchy pixels. Other-platform/editor/large-hierarchy/native-allocation/human gates remain unverified."
     }
   ],
   "extras": [
@@ -10891,6 +10916,22 @@
       ],
       "state": "Unimplemented",
       "reason": "Exact executable prerequisite: Node process-group ownership/isolation, inherited group discovery and order, a real group scheduler with frame barriers, typed cross-group mailboxes and deferred/safe call/property/notification dispatch. ADR 0104 worker dispatch alone grants no off-owner scene/render access; metadata-only properties or forwarding everything to ordinary Defer would not implement this family."
+    },
+    {
+      "godot": [
+        "Node::method:get_node_and_resource(NodePath:)",
+        "Node::method:has_node_and_resource(NodePath:)",
+        "Node::method:propagate_call(StringName:,Array:,bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "Executable runtime subtree authoring under ADRs 0001/0004/0005/0008/0011. Typed resource endpoints return borrowed Node/Resource plus property remainder through a concrete C# tuple; descriptor getters preserve missing/null/scalar/resource and error boundaries. Compiled operations preserve children-first/parent-first order, internal children, typed node-role filtering and argument tuples, owner affinity, traversal barriers and exception continuation. SubtreeResourceAuthoringTests verifies current resource-path grammar and sibling Node APIs, custom getters, saved scene reconstruction, guards/errors and 1000 warmed zero-managed-allocation propagation calls; Linux Wayland GPU/hardware compatibility verify edited atlas and hierarchy pixels. Other-platform/editor/large-hierarchy/native-allocation/human gates remain unverified."
+    },
+    {
+      "godot": [
+        "Node::method:duplicate(int:)"
+      ],
+      "state": "Unimplemented",
+      "reason": "Exact executable prerequisite for the runtime duplication slice: stable typed publisher/event/subscriber/handler identities and persistent connection capture/rebinding under ADRs 0010/0023, plus complete runtime group/script state and subtree factory/resource/node-reference remapping, including UseInstantiation and InternalState policies. Ordinary PackedScene.Pack selects Owner branches and stored properties only and therefore cannot substitute for complete runtime Node duplication. Implement the owning connection/copy layer before exposing flags or a narrowed duplicate wrapper."
     }
   ]
 }

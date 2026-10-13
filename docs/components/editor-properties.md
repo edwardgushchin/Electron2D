@@ -55,3 +55,5 @@ No editor UI, reflection scanner, attributes, file-serialization schema, categor
 ## Verification
 
 The executable test verifies discovery, storage metadata, typed reads and writes, validation, typed revert-value retrieval, object-level revert, property-list change notification, packed capture/restore including `Color`, all six vector values, `Rect2`, `Rect2i`, `Transform`, and Timer configuration, resource remapping, and unsupported stored-shape rejection.
+
+Node.GetNodeAndResource reads resource references through the same typed descriptors, including read-only/derived schemas, without reflection-driven property invocation or an untyped public value accessor. Scalar/null properties delimit the returned remainder; getter failures retain their normal error behavior.

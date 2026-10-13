@@ -75,6 +75,8 @@ public abstract class PropertyDescriptor
     /// <exception cref="Exception">A configured getter, revert-value, validator, or setter delegate throws.</exception>
     public abstract void Revert(ElectronObject owner);
 
+    internal virtual Resource? ReadResource(ElectronObject owner) => throw new NotSupportedException($"Property descriptor '{Name}' has no typed resource accessor.");
+
     internal virtual StoredPropertyValue CaptureStoredValue(ElectronObject owner) =>
         throw new NotSupportedException($"Property descriptor '{Name}' does not support scene storage.");
 
@@ -149,6 +151,8 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
         _revertValue = revertValue;
         _validator = validator;
     }
+
+    internal override Resource? ReadResource(ElectronObject owner) => GetValue(GetOwner(owner)) is Resource resource ? resource : null;
 
     /// <summary>Reads the property's current value from a compatible live owner.</summary>
     /// <param name="owner">The owner passed to the configured getter.</param>
