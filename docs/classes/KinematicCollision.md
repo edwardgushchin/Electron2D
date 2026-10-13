@@ -50,3 +50,11 @@ Rebinding does not retarget earlier results; disposal/collection makes object re
 without erasing the sampled ID. See [object associations](../components/physics-object-bindings.md).
 
 The complete PhysicsMotionTests, PhysicsQueryTests and PhysicsShapeQueryTests now use explicitly selected public CPU/GPU worlds. The common suites retain scene/raw identities, view replacement and last-resource retirement, filters/exclusions, compound origin-inside and initial-overlap rules, hollow/segment/convex contact families, one-way recovery, motion fractions/travel and scene shape-owner payloads. Existing numerical bounds are unchanged. Warm gates include both owner/all-thread managed counters: 64 scene-motion, compound recovery/ray/cast/rest queries and 128 alternating span-query cycles require 0/0 bytes. Caller-owned World aliases may outlive the SceneTree; its colliders retire immediately and the view expires after the last World resource is released. Native allocations, foreign platforms, visual and final performance acceptance remain open.
+
+[Portable contact and motion history](../components/physics-snapshots.md#portable-contact-and-motion-history)
+now passes CPU/CPU, CPU/GPU and CPU/registered serial/separate public-only profiles.
+Imported points/impulses and character slides retain destination peer/slot identity;
+raw Area/contact history stays silent during correction and avoids repeated enters.
+Malformed indices/platforms preserve state and events, and real movement retains
+platform carry. Warm contact cycles require 0/0 bytes; cold motion validation has
+no allocation claim. Hardware and wider geometry/joint/network gates remain open.

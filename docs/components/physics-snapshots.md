@@ -239,17 +239,18 @@ valid scene/raw body roles remain permitted. No wire fields/version or API chang
 
 The public-only --portable-motion fixture starts with a real circle wall slide and
 surface platform velocity (0, -4). Eight malformed wire cases preserve the reusable
-packet. Three incompatible platform IDs on CPU and registered destinations preserve
-complete encoded state, events and input bytes. Both serial/separate profiles pass,
-covering 16 wire and 12 world-binding rejection cases. A valid unchanged packet
+packet. Three incompatible platform IDs on CPU and selected CPU/GPU/registered
+destinations preserve complete encoded state, events and input bytes. All six
+serial/separate profiles pass. Each profile checks eight wire and six world-binding
+rejections with original bounds, including a GPU receiver without fallback. A valid unchanged packet
 applies silently, resolves the destination's own platform and remains point-queryable;
 the following actual .01-second frame/movement carries the character upward. The
 fixture permits .02 through .1 scene units around expected .04, distinguishing no
 carry and large displacement while allowing the contact recovery response.
 
 The reversed-fraction decode and self-platform apply failed before their fixes.
-These checks do not establish arbitrary platform recipes, all geometry/joints,
-GPU/native, cross-platform or performance acceptance. Existing warm contact
+These software Vulkan checks do not establish arbitrary platform recipes, all
+geometry/joints, hardware/native, cross-platform or performance acceptance. Existing warm contact
 transport retains its strict zero-managed-allocation checks; malformed cold decoding
 has no allocation-free claim.
 
@@ -316,8 +317,10 @@ lifecycle, active geometry/joints, native/network and performance acceptance rem
 separate gates.
 
 The public-only --portable-contacts consumer creates real CPU contacts, a character
-slide and raw Area history, then transfers them to the independent registered
-owner and back. Disabled slot zero precedes enabled slot one; the character hits
+slide and raw Area history, then transfers them to selected CPU/GPU or the
+independent registered owner and back. --gpu/--cpu select the second owner;
+--threaded captures both numerical lanes before world creation. Actual backend
+and no fallback are asserted. Disabled slot zero precedes enabled slot one; the character hits
 the same peer's distant slot two. Completed normal/tangent impulses agree with
 actual mass-times-velocity change within .1 kg-scene-unit/s. Immediate imported
 points and impulses retain their encoded values while peer RIDs, objects and
@@ -334,17 +337,24 @@ the previous complete packet.
 
 Another initial packet with local contact index 999 was accepted. Apply now checks
 local and remote logical slot ranges for direct contacts, body/Area observer pairs
-and collided character slides before restoring the world. Sixteen negative cases
-(eight fields on CPU and registered receivers) compare complete before/after
+and collided character slides before restoring the world. Sixteen negative cases per profile
+(eight fields on CPU and the selected receiver) compare complete before/after
 encodings and observer counters. A completed history may refer to a disabled slot
 that still exists; native fixture counts or current enabled state cannot replace
 logical-index validation.
 
 The 128-warm/128-measured complete contact/step/transfer/slide/query cycles require
 0/0 owner/all-thread managed bytes in serial/separate modes. This bounded circle
-fixture does not establish general geometry, joint correction or current GPU/
-native/foreign/network-performance acceptance. Evidence is retained under
-bin/physics-portable-contacts/2026-10-13.
+fixture now passes all six CPU/CPU, CPU/GPU and CPU/registered serial/separate
+profiles. Each measured bracket retains 640 complete frames, 256 transfers,
+128 character movements and 256 actual point queries at 0/0 owner/all-thread bytes.
+GPU processes load CPU-only llvmpipe without NVIDIA; CPU/registered load no graphics
+driver, and retained numerical threads are observed only in separate profiles.
+The corresponding six --portable-motion profiles also pass exact wire/platform
+guards and real carried movement; that cold validation fixture has no warm
+allocation bracket. These results do not establish general geometry, joint
+correction, hardware/native/foreign/cross-process/network-performance acceptance.
+Current evidence is retained under bin/physics-public-portable-history/2026-10-14.
 
 
 [Software Vulkan validation](physics-backends.md#software-vulkan-functional-checks) now executes

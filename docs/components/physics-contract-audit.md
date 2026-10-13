@@ -228,11 +228,11 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   GPU software execution now passes serial/separate profiles; hardware/native and
   broader role/network/performance acceptance remain open.
 - [Portable contact/motion history](physics-snapshots.md#portable-contact-and-motion-history)
-  now verifies real CPU/registered impulse and point copies, local peer identities,
+  now verifies real CPU/CPU, CPU/GPU and CPU/registered impulse and point copies, local peer identities,
   body/raw Area history and character slides. Query-prepared character capture is
   supported; version 3 retains its preparation flag. Invalid local/remote logical
   slots reject before state/event mutation, with zero warm full-frame transfer
-  allocation. Wider geometry/joint/current GPU/native/network acceptance remains open.
+  allocation. Hardware, wider geometry/joint/native/network acceptance remains open.
 - [Capture topology verification](physics-snapshots.md#capture-after-topology-edits)
   now guards source contact/overlap/slide links before packet replacement. Twelve real
   removal/clear/reindex/readdition cases preserve previous packets and sampled
@@ -247,9 +247,9 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   gates stay open.
 - [Character motion validation](physics-snapshots.md#character-motion-validation)
   now rejects impossible slide encodings and self/Area/unbound platforms before
-  storage/state/events change. CPU/registered serial/separate profiles verify a
+  storage/state/events change. CPU/CPU, CPU/GPU and CPU/registered serial/separate profiles verify a
   valid body-platform correction and actual subsequent carry. Arbitrary platform
-  recipes, geometry/joints and current GPU/native/network/performance gates stay open.
+  recipes, geometry/joints and hardware/native/network/performance gates stay open.
 - [Portable joint continuation](physics-snapshots.md#portable-joint-continuation)
   now verifies CPU/registered scene/raw pin/groove/spring sampled frames, atomic
   policy mismatch, local replay, bounded response and zero warm full-frame transfers.

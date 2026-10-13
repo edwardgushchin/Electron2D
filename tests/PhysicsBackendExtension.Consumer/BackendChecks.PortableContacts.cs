@@ -3,15 +3,18 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunPortableContacts(bool threaded = false)
+    public static void RunPortableContacts(bool threaded = false, PhysicsServer.Backend? backend = null)
     {
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
         try
         {
-            PhysicsServerManager.RegisterServer("PortableContacts", () => new Solver());
+            if (backend is null) PhysicsServerManager.RegisterServer("PortableContacts", () => new Solver());
             using var cpu = new PortableContactRig(new World(PhysicsServer.Backend.CPU));
-            using var registered = new PortableContactRig(new World("PortableContacts"));
+            using var registered = new PortableContactRig(backend is { } selected ? new World(selected) : new World("PortableContacts"));
+            Check(cpu.World.PhysicsBackend == PhysicsServer.Backend.CPU && registered.World.PhysicsBackend == (backend ?? PhysicsServer.Backend.Extension) &&
+                cpu.World.PhysicsFallbackReason is null && registered.World.PhysicsFallbackReason is null,
+                "Portable contacts use selected numerical owners without startup fallback");
             var sent = new PhysicsSnapshot(65536); var received = new PhysicsSnapshot(65536); var packet = new byte[65536];
             cpu.Contact(); cpu.Map.Capture(sent); var size = sent.WriteTo(packet);
             using (var checkpoint = PhysicsServer.SpaceCreateCheckpoint(cpu.World.Space))
@@ -91,7 +94,7 @@ public static partial class BackendChecks
             for (var i = 0; i < 128; i++) Cycle();
             var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; var allBytes = GC.GetTotalAllocatedBytes(true) - all;
             Check(ownerBytes == 0 && allBytes == 0, $"Portable contact cycles allocate zero owner/all-thread bytes: {ownerBytes}/{allBytes}");
-            Console.WriteLine($"Portable contacts CPU/registered, threaded={threaded}: real impulse, remapped contacts/slides/Area history, sixteen atomic index guards and 0/0 warm cycles passed.");
+            Console.WriteLine($"Portable contacts CPU/{backend?.ToString() ?? "registered"}, threaded={threaded}: real impulse, remapped contacts/slides/Area history, sixteen atomic index guards and 0/0 warm cycles passed.");
 
             void Cycle()
             {

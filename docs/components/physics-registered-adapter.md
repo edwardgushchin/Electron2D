@@ -1363,11 +1363,13 @@ this does not establish general collision geometry or complete network acceptanc
 
 [Portable contact/motion history](physics-snapshots.md#portable-contact-and-motion-history)
 now imports real CPU impulse/point records, scene body and raw Area observer pairs,
-and character slides into the independent owner. Local peer identities and disabled/
+and character slides into the independent owner or a selected CPU/GPU world. Local peer identities and disabled/
 enabled logical slots survive; malformed slot indices reject before state or events
 change. Query-prepared character replay and complete serial/separate warm cycles
-execute without managed allocation. General geometry/joint/current GPU acceptance
-remains open.
+execute without managed allocation on CPU/CPU, CPU/GPU and CPU/registered pairs.
+The related platform fixture also rejects malformed motion and invalid bindings
+while preserving actual carried movement. Hardware, general geometry/joint and
+full network acceptance remain open.
 
 [Capture after topology edits](physics-snapshots.md#capture-after-topology-edits)
 also guards the producer: invalid contact/overlap/slide references reject before

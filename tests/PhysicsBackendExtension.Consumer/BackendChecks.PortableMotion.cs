@@ -3,15 +3,18 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunPortableMotion(bool threaded = false)
+    public static void RunPortableMotion(bool threaded = false, PhysicsServer.Backend? backend = null)
     {
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
         try
         {
-            PhysicsServerManager.RegisterServer("PortableMotion", () => new Solver());
+            if (backend is null) PhysicsServerManager.RegisterServer("PortableMotion", () => new Solver());
             using var cpu = new PortableContactRig(new World(PhysicsServer.Backend.CPU));
-            using var registered = new PortableContactRig(new World("PortableMotion"));
+            using var registered = new PortableContactRig(backend is { } selected ? new World(selected) : new World("PortableMotion"));
+            Check(cpu.World.PhysicsBackend == PhysicsServer.Backend.CPU && registered.World.PhysicsBackend == (backend ?? PhysicsServer.Backend.Extension) &&
+                cpu.World.PhysicsFallbackReason is null && registered.World.PhysicsFallbackReason is null,
+                "Portable motion uses selected numerical owners without startup fallback");
             foreach (var rig in new[] { cpu, registered })
             {
                 rig.Character.PlatformWallLayers = uint.MaxValue;
@@ -67,7 +70,7 @@ public static partial class BackendChecks
                 Check(carried > .02f && carried < .1f, "The next real movement follows the remapped platform's nonzero surface velocity");
                 target.Map.Capture(snapshot);
             }
-            Console.WriteLine($"Portable motion CPU/registered, threaded={threaded}: eight atomic wire guards, six platform binding guards and real platform continuation passed.");
+            Console.WriteLine($"Portable motion CPU/{backend?.ToString() ?? "registered"}, threaded={threaded}: eight atomic wire guards, six platform binding guards and real platform continuation passed.");
         }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
 

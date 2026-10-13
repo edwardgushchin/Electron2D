@@ -279,3 +279,11 @@ Scene/raw automatic/custom centers, inverse dynamics, point velocity and exact
 slot queries survive role changes; CPU/GPU round trips preserve pending force/
 torque consumption and atomic authoring rejection. Original warm brackets retain
 0/0 managed bytes. GPU uses llvmpipe; hardware and broader acceptance stay open.
+
+[Portable contact and motion history](../components/physics-snapshots.md#portable-contact-and-motion-history)
+now passes CPU/CPU, CPU/GPU and CPU/registered serial/separate public-only profiles.
+Imported points/impulses and character slides retain destination peer/slot identity;
+raw Area/contact history stays silent during correction and avoids repeated enters.
+Malformed indices/platforms preserve state and events, and real movement retains
+platform carry. Warm contact cycles require 0/0 bytes; cold motion validation has
+no allocation claim. Hardware and wider geometry/joint/network gates remain open.
