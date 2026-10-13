@@ -21,13 +21,16 @@ internal sealed partial class PhysicsSpace
             backend.PrepareBodies(delta); RecordStepPhase(2, ref profileMark);
             backend.Solve(delta); RecordStepPhase(3, ref profileMark);
             backend.SynchronizeResults(); RecordStepPhase(4, ref profileMark);
+            var completionMark = ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
             foreach (var body in _serverColliders) backend.CompleteBody(body);
             foreach (var body in _bodies)
             {
                 try { backend.CompleteBody(body); }
                 catch (Exception error) { (errors ??= []).Add(error); }
             }
+            RecordCompletionPhase(0, ref completionMark);
             backend.CollectContacts(ref errors);
+            RecordCompletionPhase(1, ref completionMark);
             foreach (var body in _bodies)
                 if (body is RigidBody rigid)
                 {
@@ -39,6 +42,7 @@ internal sealed partial class PhysicsSpace
                     if (rigid.TakeSleepChange()) _sleepEvents.Add(rigid);
                     rigid.QueueContactChanges(_contactEvents);
                 }
+            RecordCompletionPhase(2, ref completionMark);
             RecordStepPhase(5, ref profileMark);
             backend.ScanAreas(ref errors); CaptureBodyStates(ref errors); PublishStatistics();
             RecordStepPhase(6, ref profileMark);

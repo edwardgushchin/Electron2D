@@ -415,6 +415,14 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal static bool ProfilingEnabled;
     internal readonly double[] ProfileMS = new double[8];
     internal readonly long[] ProfileBytes = new long[8];
+    internal readonly double[] ProfileCompletionMS = new double[3];
+    internal bool ForceSerialContactPublication;
+    private void RecordCompletionPhase(int index, ref long mark)
+    {
+        if (!ProfilingEnabled) return;
+        var now = System.Diagnostics.Stopwatch.GetTimestamp();
+        ProfileCompletionMS[index] = System.Diagnostics.Stopwatch.GetElapsedTime(mark, now).TotalMilliseconds; mark = now;
+    }
     private long _profileAllocated;
 
     private void RecordStepPhase(int index, ref long mark)

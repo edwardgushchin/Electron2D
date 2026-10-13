@@ -30,7 +30,7 @@ internal sealed partial class CPUPhysicsWorldBackend
     internal override void CollectContacts(ref List<Exception>? errors)
     {
         CaptureBodyMotions(); var world = b2GetWorldFromId(WorldID); var count = Space.Bodies.Count;
-        if (world.workerCount == 1 || count < 256) PhysicsSpace.CollectBodyContactRange(0, count, 0, Space);
+        if (Space.ForceSerialContactPublication || world.workerCount == 1 || count < 256) PhysicsSpace.CollectBodyContactRange(0, count, 0, Space);
         else
         {
             var end = count * (world.workerCount - 1) / world.workerCount;

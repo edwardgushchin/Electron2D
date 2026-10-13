@@ -1,6 +1,13 @@
 # API coverage register
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
+
+[Completion-stage CPU controls](../components/physics-scene-performance.md#completion-stage-cpu-control-2026-10-13)
+separate host publication costs without changing declarations or closing any
+physical contract row. Both complete 16,384-body CPU trials retain 0/0 warmed
+managed bytes and physical/publication gates. GPU subphase and current-revision
+mass/window verification await the confirmed power-cable check; final performance
+and inherited/provider acceptance remain open.
 
 [Full monitored scene window measurements](../components/physics-scene-performance.md#full-monitored-scene-in-a-native-window)
 now use the same complete scene fixture with separate physics/frame costs, actual

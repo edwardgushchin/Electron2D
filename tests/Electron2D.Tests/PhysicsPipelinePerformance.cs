@@ -96,8 +96,10 @@ internal static partial class PhysicsPipelinePerformance
             var data = PhysicsServer.Service.GetSceneSpace(world.Space); var gpu = data.GPUStore;
             var publicationControl = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_PUBLICATION_CONTROL") == "1";
             data.ForceGPUStatePublication = publicationControl;
+            var serialContacts = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_SERIAL_CONTACTS") == "1";
+            data.ForceSerialContactPublication = serialContacts;
             if (gpu is not null) gpu.ForceCountFirstChangeReadback = publicationControl;
-            var times = new double[samples]; var waits = new double[samples]; var phases = new double[8]; var phaseBytes = new long[8];
+            var times = new double[samples]; var waits = new double[samples]; var phases = new double[8]; var phaseBytes = new long[8]; var completionPhases = new double[3];
             var frameTimes = new double[samples]; var publishTimes = new double[samples]; var renderTimes = new double[samples];
             for (var i = 0; i < warmup; i++) { display?.Pump(tree); tree.PhysicsFrame(delta); display?.Draw(tree, bodies, delta); }
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: false); GC.WaitForPendingFinalizers();
@@ -122,6 +124,7 @@ internal static partial class PhysicsPipelinePerformance
                 physicsAllThreadsBytes += GC.GetTotalAllocatedBytes(true) - physicalAll;
                 waits[i] = (gpu?.WaitMS ?? 0) - wait;
                 for (var phase = 0; phase < phases.Length; phase++) { phases[phase] += data.ProfileMS[phase]; phaseBytes[phase] += data.ProfileBytes[phase]; }
+                for (var phase = 0; phase < completionPhases.Length; phase++) completionPhases[phase] += data.ProfileCompletionMS[phase];
                 if (display is not null)
                 {
                     display.Draw(tree, bodies, delta);
@@ -130,6 +133,7 @@ internal static partial class PhysicsPipelinePerformance
                     frameTimes[i] = Stopwatch.GetElapsedTime(frame).TotalMilliseconds;
                 }
             }
+            Check(completionPhases.Sum() <= phases[5] + .001 * samples, "Completion subphases remain inside their complete pipeline phase");
             var frameSeconds = Stopwatch.GetElapsedTime(frameStart).TotalSeconds;
             allocated = GC.GetAllocatedBytesForCurrentThread() - allocated; total = GC.GetTotalAllocatedBytes(true) - total;
             upload = (gpu?.UploadBytes ?? 0) - upload; readback = (gpu?.ReadbackBytes ?? 0) - readback;
@@ -203,12 +207,15 @@ internal static partial class PhysicsPipelinePerformance
                 windowHost = display is null ? null : "fixed-scene-frame",
                 presentationInterpolationFraction = display is null ? (double?)null : Engine.PhysicsInterpolationFraction,
                 publicationControl,
+                serialContacts,
                 warmup,
                 samples,
                 meanMS = times.Average(),
                 step = Distribution(times),
                 wait = Distribution(waits),
                 phaseMeanMS = phases.Select(value => value / samples).ToArray(),
+                completionPhaseNames = new[] { "pose-motion-fields", "contact-capture-monitor", "extension-events" },
+                completionPhaseMeanMS = completionPhases.Select(value => value / samples).ToArray(),
                 uploadBytesPerTick = (double)upload / samples,
                 readbackBytesPerTick = (double)readback / samples,
                 uniformBytesPerTick = (double)uniform / samples,

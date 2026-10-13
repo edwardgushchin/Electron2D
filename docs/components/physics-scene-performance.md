@@ -2,9 +2,10 @@
 
 Last updated: 2026-10-13
 
-The [16,384-body refresh at f3983555](#16384-body-refresh-at-f3983555-2026-10-12)
-retains the complete monitored scene and its executable provenance. Older trials
-below keep their own revisions and workloads.
+The [completion-stage CPU control](#completion-stage-cpu-control-2026-10-13)
+separates host publication costs in the complete monitored scene. The latest
+[frozen CPU/GPU pair](#frozen-complete-scene-at-7c37a291-2026-10-13) retains its
+actual executable revision. Older trials below keep their own revisions and workloads.
 
 ## Workload and provenance
 
@@ -516,3 +517,79 @@ Electron2D.dll is `94b6b85ce0611455c65f944e9fb00e31c5d03f35878687d08aa008557185c
 test DLL is `71499d686dd220e445cc3d71f3fce97df2bac7f6e17929a363af6c68a5d80276`.
 Native allocator totals, isolated renderer transfers/waits, other platforms and
 complete inherited/registered numerical acceptance remain open.
+
+## Completion-stage CPU control, 2026-10-13
+
+Optional internal profiling now splits the existing completion phase into
+pose/motion/resolved-field publication, contact capture/monitor tracking and
+extension-contact projection/event queue preparation. The three intervals remain
+inside phase 5; the benchmark checks their summed duration against that phase.
+User event delivery remains in its existing later phase. Profiling adds three
+interval timestamps when enabled, with no per-body timestamps or new device waits.
+The public API and the default contact scheduling policy are unchanged.
+
+A frozen Release build based on main baa00305 plus this profiling slice ran two
+CPU-only processes. Both retained the complete 16,384-body scene above, four walls,
+1600 warmup ticks and 256 measured ticks. Only
+ELECTRON2D_PHYSICS_PERFORMANCE_SERIAL_CONTACTS changed from 0 to 1: the control
+forces contact publication onto the owner while leaving the four-worker numerical
+solver and all observation features intact. This is a host-stage control, not a
+different physics implementation or a CPU/GPU comparison.
+
+| CPU contact publication | Complete step p50 / p95 / p99 / max ms | Completion mean ms | Pose/fields mean ms | Contacts/monitor mean ms | Extension/events mean ms |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Default parallel | 102.5065 / 113.9158 / 136.3221 / 144.4272 | 25.1609 | 5.8715 | 17.7884 | 1.4994 |
+| Forced serial | 133.2271 / 147.3538 / 158.4564 / 164.7605 | 60.3021 | 5.6112 | 53.2847 | 1.4044 |
+
+Both processes exited zero with 0/0 owner/all-thread managed bytes, 86,303 retained
+contacts, 156,928 enter and 70,625 exit observations. Penetration/escape was
+.297866821/.299926758 against the unchanged .601 limit; motion, energy, awake and
+publication gates passed. Same-backend state/contact hashes also matched as a
+diagnostic. These single sequential shared-desktop trials show that contact
+publication can dominate host completion; they do not establish isolated scaling
+or a GPU speedup. The earlier default-only run also passed with 0/0 bytes and a
+91.5712 ms step median, illustrating between-run host variability.
+
+The GPU currently collects completed scene contacts serially after immutable
+readback. Its new subphase timing has not been exercised. Parallel host conversion
+is a candidate to measure, preserving owner-thread callbacks and device-owned
+numerics. Capacity-sized GPU reports are another measured cost: 80-byte rows at
+eight slots for 16,384 receivers occupy 10,485,760 bytes before counts and state
+publication. Compacting those destinations must account for any additional
+selection/count wait; neither optimization is implemented by this slice.
+
+These CPU runs explicitly denied graphics availability through the dummy video
+driver, invalid GPU driver/missing Vulkan files and absent display/session paths.
+The owner confirmed that the power cable involved in the latest device-loss
+investigation remains unchecked. Long mass GPU and native-window trials are
+deferred until its compatibility is verified; GPU performance acceptance stays
+open. No GPU load was added by this control.
+
+Main advanced to 49256885 during the serial trial. The saved runtime remained
+byte-identical across both processes; the observed C# fingerprint reconstructs
+exactly from baa00305 plus the four changed profiling files. These timings belong
+to that frozen candidate, not the newer main. Evidence under
+bin/physics-completion-profile/2026-10-13/cpu-paired retains the build, commands,
+runtime manifest, source binding, candidate patch, outcomes and full reports.
+
+| Evidence | SHA-256 |
+| --- | --- |
+| C# source under src and tests/Electron2D.Tests | `dc98ca3d96ff68d8c2774ff2aefc537cf71acef2ca536fb1b04abfd454b32895` |
+| Frozen runtime DLL | `b37963fd16ada005907aca245b28f56037b5b8e48c693890da4d2befc609e82e` |
+| Frozen test DLL | `c17bf34f244c05831080c4fc50b6de0f2e690fb4099d83902fe460a4d27c89a0` |
+| parallel/CPU.json | `b4b480831bc9e9ec296949ab34eb77024196b7d6e03b040077465d9d6b42aa28` |
+| serial/CPU.json | `5ce8de803fa89aa2de70a50af0cd80e560ebdc1b50a065beae5f4802dc19c752` |
+
+Reproduce with the complete-scene command above using BACKEND=cpu and
+SERIAL_CONTACTS=0 or 1. Complete-step distributions and three named completion means
+are emitted in CPU.json. Native allocation totals, GPU subphases, current-revision
+paired GPU/window measurements and final physics acceptance remain open.
+
+The final slice was rebuilt and checked on main 49256885: CPU scene force/contact/
+shape-event regressions, retained-worker scheduling and both 512-body profiling
+modes passed with graphics denied. Each small profile used 256 warmup and 64 measured
+ticks and retained 2,506 contacts with 0/0 managed bytes. Release runtime/test builds,
+both formatting checks, compiled API coverage and wiki tests/generation/check
+passed; source and saved runtime stayed unchanged throughout. This is CPU-only
+verification of the profiling change, not a fresh full GPU/native/network gate.
+Logs and manifests are retained in the sibling final-checks directory.

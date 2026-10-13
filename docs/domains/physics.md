@@ -820,3 +820,11 @@ inherited/provider acceptance remain open.
 [Implicit physics world selection](../components/physics-backends.md#project-physics-selection) now captures typed project engine/fallback settings and manager DEFAULT priority independently of rendering. Caller parameterless and explicit creation retain their policies. CPU/GPU/registered motion, no-device startup and native pixels have scoped checks; separate-thread scheduling and complete physics/performance acceptance remain open.
 
 [Compound slot numerics](../components/physics-registered-adapter.md#compound-slot-numerics) now exercise independent multiple circle/annulus placements, disabled index preservation, query/contact/Area/CCD/private history and deepest same-peer caps against CPU/GPU. Disk and general rounded/sharp CastMotion regressions fix both built-in query/motion paths to bracket geometric first touch. General geometry, coupled angular CCD, separate-thread scheduling and final platform/performance acceptance remain open.
+
+[Completion-stage profiling](../components/physics-scene-performance.md#completion-stage-cpu-control-2026-10-13)
+now separates pose/field publication, contact capture/monitoring and extension/event
+preparation. A same-build CPU contact-scheduling control retains all 16,384 bodies,
+physical/publication gates and 0/0 warmed managed bytes; serial contact capture
+costs 53.2847 ms versus 17.7884 ms in the default parallel path. This diagnoses a
+host-stage cost without establishing a GPU improvement. GPU mass/window trials
+await power-cable verification; all broader acceptance requirements remain open.
