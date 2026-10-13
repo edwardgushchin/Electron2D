@@ -1414,3 +1414,10 @@ run covers the existing impaired-network scenario. Hardware GPU execution, perfo
 and full-goal acceptance remain open; software timing is not hardware evidence.
 
 Retained canvas item presentation uses renderer-session physics histories shared with light/occluder transforms. Static interpolation selection, item-local reset and atomic coordinate rebasing execute on caller-owned and scene identities without storing native history in scenes. [Canvas interpolation](components/canvas-rendering.md#retained-canvas-item-interpolation) records native and managed checks.
+
+
+Point-gravity center transformation and coordinate subtraction retain widened CPU
+intermediates before normalization. The shared test covers opposite finite 2e38
+coordinates, signed direction and falloff, affine virtual centers, three body roles
+and zero-allocation full frames. Collision precision at such coordinates and real
+GPU performance remain separate gates. See [field numeric range](components/physics-areas.md#point-gravity-numeric-range).

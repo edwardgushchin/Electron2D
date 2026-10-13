@@ -89,7 +89,7 @@ public sealed partial class Area
     }
 
     /// <summary>Gets or sets the local attraction point used when <see cref="GravityPoint"/> is true.</summary>
-    /// <remarks>Only exact coincidence yields zero gravity. Finite point fields avoid squared-distance overflow/underflow; unrepresentable resolved forces still reject before publication.</remarks>
+    /// <remarks>Only exact coincidence yields zero gravity. Point transformation, coordinate subtraction and distance reduction use widened intermediates to avoid overflow/underflow; unrepresentable resolved forces still reject before publication.</remarks>
     /// <value>(0, 1) by default. Shares its stored vector with <see cref="GravityDirection"/>.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread or while the solver owns its space.</exception>

@@ -212,3 +212,10 @@ of truly unrepresentable forces. PhysicsPointGravityRangeTests covers scene, raw
 Area and default-space sources with three body roles and CPU zero-allocation frames.
 The revised device kernel compiles; real GPU numeric-range acceptance remains open.
 See [point-field verification](../components/physics-areas.md#point-gravity-numeric-range).
+
+
+Point-gravity center transformation and coordinate subtraction retain widened CPU
+intermediates before normalization. The shared test covers opposite finite 2e38
+coordinates, signed direction and falloff, affine virtual centers, three body roles
+and zero-allocation full frames. Collision precision at such coordinates and real
+GPU performance remain separate gates. See [field numeric range](../components/physics-areas.md#point-gravity-numeric-range).

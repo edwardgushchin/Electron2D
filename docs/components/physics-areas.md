@@ -83,3 +83,25 @@ component), rather than CPU/GPU bitwise agreement. The CPU path also measures
 128 warmed reset/full-field frames with zero owner/all-thread managed bytes.
 It is connected to the shared backend and complete CPU suites; native allocation,
 new GPU execution, platform and full-goal acceptance remain open.
+
+
+The CPU point reducer also widens the affine center transformation and subtraction
+from body position before measuring/normalizing the offset. Finite authored point
+and body coordinates may have a difference larger than a float while still yielding
+a finite constant or inverse-square force; this is not a reason to reject the field.
+Only final acceleration components are narrowed, preserving the existing real
+nonfinite-result guard and directional-vector behavior. The resident GPU kernel retains its ordinary finite-offset path and scales
+authored point/pose/body coordinates before their affine sum when that intermediate
+overflows. It performs normalization and falloff on-device with no new publication
+mirror, transfer or wait.
+
+The same point test now covers default-space centers/body positions at opposite
+2e38 scene coordinates, both directions and constant/inverse-square policies, with
+RigidBody, CharacterBody and raw body receivers. Two CPU affine checks additionally
+exercise rotation/translation producing a virtual center outside the float range,
+using independent 3:4 direction and falloff expectations. A separate 128-frame
+wide-coordinate warm bracket per direction requires zero owner/all-thread allocation.
+Each direction starts its own world so the field check does not request a physically
+unrepresentable one-tick kinematic transition between opposite extreme poses. These are
+field and finite-state checks; they do not establish collision resolution precision
+at huge coordinates or hardware GPU/performance acceptance.

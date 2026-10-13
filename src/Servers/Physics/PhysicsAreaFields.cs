@@ -22,12 +22,13 @@ internal sealed class PhysicsAreaFields(float gravity, Vector2 gravityVector)
     internal Vector2 ComputeGravity(Transform transform, Vector2 position)
     {
         if (!GravityPoint) return GravityVector * Gravity;
-        var toward = transform * GravityVector - position;
-        var distance = Math.Sqrt((double)toward.X * toward.X + (double)toward.Y * toward.Y);
+        var x = (double)transform.X.X * GravityVector.X + (double)transform.Y.X * GravityVector.Y + transform.Origin.X - position.X;
+        var y = (double)transform.X.Y * GravityVector.X + (double)transform.Y.Y * GravityVector.Y + transform.Origin.Y - position.Y;
+        var distance = Math.Sqrt(x * x + y * y);
         if (distance == 0 || Gravity == 0) return Vector2.Zero;
         var ratio = GravityPointUnitDistance > 0 ? GravityPointUnitDistance / distance : 1;
         var strength = Gravity * ratio * ratio;
-        return new((float)(toward.X / distance * strength), (float)(toward.Y / distance * strength));
+        return new((float)(x / distance * strength), (float)(y / distance * strength));
     }
 
     internal static void ValidateFinite(float value)

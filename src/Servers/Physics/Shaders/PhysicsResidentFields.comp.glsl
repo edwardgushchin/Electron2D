@@ -31,9 +31,21 @@ vec2 gravity(Field f,vec4 pose,vec2 position)
     if(f.policy.y==0u)return f.gravity.xy*f.gravity.z;
     vec2 toward=pose.xy+rotate(pose.zw,f.gravity.xy)-position;
     if(f.gravity.z==0)return vec2(0);
-    if(any(isnan(toward))||any(isinf(toward)))return vec2(uintBitsToFloat(0x7fc00000u));
-    float scale=max(abs(toward.x),abs(toward.y));if(scale==0)return vec2(0);
-    vec2 scaled=toward/scale;float distance=length(scaled);vec2 direction=scaled/distance;
+    float scale;vec2 scaled;
+    if(any(isnan(toward))||any(isinf(toward)))
+    {
+        // Scale before the affine sum when only its intermediate overflows.
+        scale=max(max(max(abs(pose.x),abs(pose.y)),max(abs(f.gravity.x),abs(f.gravity.y))),max(abs(position.x),abs(position.y)));
+        scaled=pose.xy/scale+rotate(pose.zw,f.gravity.xy/scale)-position/scale;
+    }
+    else
+    {
+        scale=max(abs(toward.x),abs(toward.y));if(scale==0)return vec2(0);
+        scaled=toward/scale;
+    }
+    if(any(isnan(scaled))||any(isinf(scaled)))return vec2(uintBitsToFloat(0x7fc00000u));
+    float distance=length(scaled);if(distance==0)return vec2(0);
+    vec2 direction=scaled/distance;
     if(f.gravity.w<=0)return direction*f.gravity.z;
     int gravityExponent,unitExponent,scaleExponent;
     float gravityMantissa=frexp(f.gravity.z,gravityExponent);

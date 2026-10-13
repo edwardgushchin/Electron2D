@@ -4,6 +4,7 @@ internal static class PhysicsPointGravityRangeTests
 {
     internal static void Run(PhysicsServer.Backend backend)
     {
+        WideCoordinates(backend);
         using var world = new World(backend); using var region = new CircleShape { Radius = 20 }; using var circle = new CircleShape { Radius = 1 };
         using var root = new SubViewport { World = world };
         var area = new Area { GravityPoint = true, GravitySpaceOverride = Area.SpaceOverride.Replace, Monitoring = false };
@@ -83,6 +84,49 @@ internal static class PhysicsPointGravityRangeTests
             }
         }
         finally { PhysicsServer.FreeRID(rawArea); PhysicsServer.FreeRID(regionShape); PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(shape); }
+    }
+    private static void WideCoordinates(PhysicsServer.Backend backend)
+    {
+        foreach (var sign in new[] { 1f, -1f })
+        {
+            using var world = new World(backend); using var root = new SubViewport { World = world };
+            var rigid = new RigidBody { Name = "WideRigid", Position = new(-sign * 2e38f, 0), CanSleep = false, CollisionMask = 0 };
+            var character = new CharacterBody { Name = "WideCharacter", Position = rigid.Position, CollisionMask = 0 };
+            root.AddChild(rigid); root.AddChild(character); using var tree = new SceneTree(root);
+            var body = PhysicsServer.BodyCreate();
+            try
+            {
+                PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Rigid); PhysicsServer.BodySetCanSleep(body, false); PhysicsServer.BodySetSpace(body, world.Space);
+                PhysicsServer.AreaSetGravityPoint(world.Space, true);
+                PhysicsServer.BodySetTransform(body, new(0, rigid.Position));
+                PhysicsServer.AreaSetGravityVector(world.Space, new(sign * 2e38f, 0)); PhysicsServer.AreaSetGravity(world.Space, 10);
+                foreach (var unit in new[] { 0f, 2e38f })
+                {
+                    Console.WriteLine($"Wide point case: backend={backend}, sign={sign}, unit={unit}.");
+                    PhysicsServer.AreaSetGravityPointUnitDistance(world.Space, unit); tree.PhysicsFrame(.001);
+                    var expected = new Vector2(sign * (unit == 0 ? 10 : 2.5f), 0);
+                    Near(rigid.GetGravity(), expected, "Wide scene point offset"); Near(character.GetGravity(), expected, "Wide character point offset");
+                    Near(PhysicsServer.BodyGetDirectState(body)!.TotalGravity, expected, "Wide raw point offset");
+                    Check(rigid.Position.IsFinite() && PhysicsServer.BodyGetTransform(body).Origin.IsFinite(), "Wide finite positions survive the complete interval.");
+                }
+                for (var i = 0; i < 128; i++) tree.PhysicsFrame(.001);
+                var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+                for (var i = 0; i < 128; i++) tree.PhysicsFrame(.001);
+                var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; var allBytes = GC.GetTotalAllocatedBytes(true) - all;
+                Check(ownerBytes == 0 && allBytes == 0, "Wide-coordinate full frames allocate zero owner/all-thread bytes.");
+                Console.WriteLine($"Wide point warm gate: backend={backend}, frames=128, ownerBytes={ownerBytes}, allBytes={allBytes}.");
+            }
+            finally { PhysicsServer.FreeRID(body); }
+        }
+        if (backend == PhysicsServer.Backend.CPU)
+        {
+            var fields = new PhysicsAreaFields(10, new(0, -2e38f)) { GravityPoint = true };
+            var pose = new Transform(new(0, 1), new(-1, 0), new(2e38f, 2e38f));
+            Near(fields.ComputeGravity(pose, new(1e38f, -2e38f)), new(6, 8), "Rotated/translated point coordinates normalize before narrowing.");
+            fields.GravityPointUnitDistance = 1e38f;
+            Near(fields.ComputeGravity(pose, new(1e38f, -2e38f)), new(.24f, .32f), "Rotated/translated point falloff preserves finite components.");
+        }
+        Console.WriteLine($"Wide point coordinates: backend={backend}, directions=2, policies=2, receivers=3; affineChecks={(backend == PhysicsServer.Backend.CPU ? 2 : 0)}.");
     }
     private static void Reset(RigidBody rigid, RID body)
     {
