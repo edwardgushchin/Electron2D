@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Inherits:** [Viewport](Viewport.md)
 
@@ -11,6 +11,9 @@ Last updated: 2026-10-12
 - **Declaration:** `public partial class Window : Viewport`
 
 ## Description
+
+Physics interpolation defaults to `On` at the inherited Node policy. Explicit `Inherit` follows the parent and `Off` disables presentation history for inheriting descendants; scene-wide enablement remains required. Stored scenes, resource duplication/copy and property reversion preserve this per-type default and explicit overrides. Logical transforms and input coordinates remain current.
+
 
 A configurable native root window that owns scene children.
 

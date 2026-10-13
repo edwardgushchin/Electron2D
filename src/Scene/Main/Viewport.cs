@@ -2,10 +2,15 @@ namespace Electron2D;
 
 /// <summary>Provides a window or offscreen canvas rectangle and scene input boundary.</summary>
 /// <remarks>A root <see cref="Window"/> owns native presentation; <see cref="SubViewport"/> supplies independent
-/// canvas targets and optional logical stretch. Canvas transforms, sampling and pixel-snapping policies apply to each target. Window input is localized through the inverse final transform.</remarks>
+/// canvas targets and optional logical stretch. Physics interpolation defaults to On independently of ancestor policy.
+/// Canvas transforms, sampling and pixel-snapping policies apply to each target. Window input is localized through the inverse final transform.</remarks>
 public abstract partial class Viewport : Node
 {
-    private protected Viewport() => _guiDragThreshold = ProjectSettings.GetWithOverride(ProjectSettings.DefaultGUIDragThreshold);
+    private protected Viewport()
+    {
+        PhysicsInterpolationMode = PhysicsInterpolationMode.On;
+        _guiDragThreshold = ProjectSettings.GetWithOverride(ProjectSettings.DefaultGUIDragThreshold);
+    }
 
     /// <summary>Returns the client rectangle in viewport coordinates.</summary>
     /// <returns>A zero-origin rectangle in client units, independent of desktop and node position.</returns>

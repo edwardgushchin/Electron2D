@@ -248,7 +248,7 @@ Verification: `dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.cspr
 
 ## Physics interpolation
 
-`SceneTree.PhysicsInterpolation` samples the typed project setting and can change while active. Around each fixed physics tick it keeps previous/current local visual transforms for eligible CanvasItems and the current camera's viewport transform. `Node.PhysicsInterpolationMode` inherits On from a root, while Control starts Off. The renderer composes presentation transforms at `Engine.PhysicsInterpolationFraction` on GPU and compatibility; public logical transforms and input conversion remain current. An initial tick, explicit reset, pause, camera switch or process-time edit discards stale history. The existing transform-snapping policies apply after interpolation; their combined visual precision requires its own native audit.
+`SceneTree.PhysicsInterpolation` samples the typed project setting and can change while active. Around each fixed physics tick it keeps previous/current local visual transforms for eligible CanvasItems and the current camera's viewport transform. `Node.PhysicsInterpolationMode` inherits On from an ordinary root, while Control starts Off. Viewport, including Window/SubViewport, starts On and forms an independent presentation boundary under an Off ancestor. Explicit Inherit/Off remain available and stored defaults/reversion agree. The renderer composes presentation transforms at `Engine.PhysicsInterpolationFraction` on GPU and compatibility; public logical transforms and input conversion remain current. An initial tick, explicit reset, pause, camera switch or process-time edit discards stale history. The existing transform-snapping policies apply after interpolation; their combined visual precision requires its own native audit.
 
 [PhysicsInterpolationTests](../../tests/Electron2D.Tests/PhysicsInterpolationTests.cs) checks policy inheritance, Control opt-in, first and repeated ticks, camera Idle override, reset/pause, stored state and zero managed bytes over 128 warmed active ticks. [PhysicsInterpolationNativeTests](../../tests/Electron2D.Tests/PhysicsInterpolationNativeTests.cs) checks separated current and interpolated pixels for moving geometry and camera scroll on dummy compatibility and Linux Wayland compatibility/GPU. Other native targets, variable refresh behavior and visual owner acceptance remain unverified.
 
@@ -503,3 +503,14 @@ ShaderMaterial now participates in [automatic scene lighting](shader-materials.m
 Window content scaling now separates logical visible coordinates, raster target dimensions and client presentation. Both native renderers fit the completed content into a client-sized presentation surface with black margins; the borrowed viewport texture keeps its own raster resolution. Window/embedded input removes the complete presentation transform, while rendering excludes that transform and uses raster scale/density. Automatic text raster scale follows the viewport; explicit oversampling remains authoritative. See [Window content scale](../classes/Window.md#content-scale) and the dedicated unit/native checks for the exact policies and platform limits.
 
 The internal server viewport audit uses the pinned [viewport storage defaults](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/rendering/renderer_viewport.h) and [size/activity/update/clear/canvas submission behavior](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/rendering/renderer_viewport.cpp). Typed ownership/errors, cycle rejection and the exact single-layer dependency are recorded in coverage.
+
+
+[Viewport boundary checks](../../tests/Electron2D.Tests/PhysicsViewportInterpolationTests.cs)
+exercise real explicitly selected CPU/GPU bodies under an Off ancestor, all three
+viewport modes, camera history/reset, scene enablement, both viewport siblings and
+packing/duplicate/copy/revert. Position/velocity/presentation bounds are .001 scene
+units. After warmup, 128 policy cycles measure 384 full physical steps plus
+presentation reads at strict 0/0 owner/all-thread managed bytes; authored mode
+changes happen before each bracket and do not receive a zero-allocation claim.
+The native interpolation fixture also checks actual nested source/camera pixels
+on Wayland compatibility and GPU with requested-renderer assertions and disposal.

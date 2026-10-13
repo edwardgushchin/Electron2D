@@ -5299,7 +5299,7 @@
     {
       "godot": "Viewport::property:physics_interpolation_mode",
       "electron2d": "property:Electron2D.Node.PhysicsInterpolationMode()",
-      "reason": "The inherited typed Node mode is executable on Viewport, with per-viewport camera snapshots. Its viewport-specific On default is still missing from construction and property metadata; see the Partial status rather than treating the whole policy as absent."
+      "reason": "The inherited typed Node property preserves the Viewport On-default override through construction, revert metadata and stored/duplicated/copied scenes. CPU/GPU physical/presentation and nested native pixel checks execute the complete policy."
     },
     {
       "godot": "Node::method:get_node_and_resource(NodePath:)",
@@ -9535,8 +9535,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Inherited Node interpolation mode and viewport camera snapshots execute. The pinned Viewport override defaults to On (1), but the current constructor and Node property descriptor leave Inherit (0), so an Off parent disables a default nested viewport. Complete the Window/SubViewport constructor/descriptor defaults and verify live policy, packing/copy/reset and canvas/camera presentation; the renderer/world prerequisite already exists.",
+      "state": "Implemented",
+      "reason": "Inherited typed Node interpolation policy defaults to On for every Viewport, including Window/SubViewport, independently of ancestor policy. Constructor, revert metadata, packed instantiation, duplicated/copied scene state and explicit Inherit/Off agree. Shared CPU/GPU real-body tests check physical versus presented poses, nested camera/reset and 384 warmed full-step/presentation reads at 0/0 owner/all-thread bytes; policy authoring is outside those allocation brackets. Wayland compatibility/GPU pixel tests verify nested source and camera presentation under an Off parent with renderer assertions and retirement.",
       "godot": [
         "Viewport::property:physics_interpolation_mode"
       ]

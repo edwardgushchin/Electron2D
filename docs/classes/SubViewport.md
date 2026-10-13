@@ -1,12 +1,15 @@
 # SubViewport
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.SubViewport` · **Source:** [SubViewport.cs](../../src/Scene/Main/SubViewport.cs).
 
 **Inherits:** [Viewport](Viewport.md).
 
 ## Description
+
+Physics interpolation defaults to `On` at the inherited Node policy. Explicit `Inherit` follows the parent and `Off` disables presentation history for inheriting descendants; scene-wide enablement remains required. Stored scenes, resource duplication/copy and property reversion preserve this per-type default and explicit overrides. Logical transforms and input coordinates remain current.
+
 
 Renders an independent scene canvas into a live viewport texture without creating a window.
 

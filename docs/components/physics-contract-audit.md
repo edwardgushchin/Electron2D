@@ -168,24 +168,25 @@ API are outside this contract. General tile authoring, shared scene/resource and
 rendering prerequisites retain their owning coverage pages; missing inherited
 operations remain open in the ledger.
 
-## Requirement audit at 7c37a291
+## Current requirement audit
 
 The complete generated ledger remains the per-declaration list. Current own
 physics families contain 686 Implemented, 151 Partial and 55 Excluded rows,
 with no own Blocked or Unimplemented rows. Shared inherited declarations still
-contain 142 Partial, 19 Blocked and 92 Unimplemented rows; cross-domain consumers
-now contain 13 Partial and two Unimplemented rows after correcting stale prerequisite
+contain 142 Partial, 19 Blocked and 89 Unimplemented rows; cross-domain consumers
+now contain 12 Partial and two Unimplemented rows after completing the viewport
+default and correcting stale prerequisite
 labels for the viewport default and project engine/thread settings. These are declaration counts,
 not a claim that all numerical behaviors pass. The exact inherited names and
 prerequisites remain in the ledger rather than disappearing from this audit.
 
 Fresh source review distinguishes concrete omissions from acceptance limits:
 
-- Viewport already inherits executable Node interpolation policy and owns camera
-  snapshots. The pinned override default is On (1), while its constructor and
-  Node descriptor currently leave Inherit (0). An Off parent therefore leaks
-  through a default nested viewport. Correct constructor/descriptor defaults,
-  both viewport siblings, packing/copy/reset and actual canvas/camera presentation.
+- Viewport's On (1) default now agrees in construction and Node property metadata,
+  including Window/SubViewport. Shared real-body CPU/GPU and native nested pixels
+  verify the Off-parent boundary, explicit modes, camera/reset and packed/copy/
+  duplicate/revert semantics. The former default mismatch is closed; it is not
+  an outstanding dependency of the networking presentation contract.
 - Project physics_engine and run_on_separate_thread entries still lack executable
   setting contracts. Their old first-Box2D prerequisite is stale: CPU/GPU worlds,
   named defaults and retained CPU workers exist. Project default selection must
@@ -217,7 +218,7 @@ coverage of its stated cases, not proof of arbitrary external algorithms.
 | Scene/raw server states, axis velocity, layers/masks, shape type, process info, object/canvas IDs and registration | Shared state/force/binding/query suites plus complete selected operation hooks and public-only consumer | Exact open inherited/extension rows in the ledger; no placeholder exemption. |
 | Bodies, CharacterBody, shapes, queries, forces, materials, Area, joints and physical bones | Full existing suite explicitly exercises independent CPU/GPU variants | Uncovered coupled/long-run cases and remaining external geometry acceptance. |
 | Headless CPU authority, fixed ticks, numbered input, portable cross-process identity and snapshots | Public PhysicsNetwork example, checkpoint/snapshot suites and no-GPU process checks | Same-revision final process runs and bounded packet/history costs. |
-| Prediction, correction/replay, remote interpolation, physical/presentation separation and confirmed effects | NetworkSession, PhysicsNetwork process checks and native window captures | Viewport default boundary above; broader gameplay/topology coverage remains scoped. |
+| Prediction, correction/replay, remote interpolation, physical/presentation separation and confirmed effects | NetworkSession, PhysicsNetwork process checks and native window captures | Viewport default boundary is now verified; broader gameplay/topology coverage remains scoped. |
 | Spawn/removal, ownership changes, late join, impaired delivery, CPU server with GPU client and divergence recovery | Three actual ENet processes, generation/authority checks, joints/sleep/event assertions | Current workload results must include all positive counters and convergence rather than startup alone. |
 | Full step distributions, transfers/waits/allocations, real-window FPS and network replay/history cost | Full monitored-scene pipeline and instrumented public network example | Same-revision results, physical gates, retained all-body/features and repeatability scope; stage-only metrics cannot satisfy it. |
 | Zero warmed managed allocations and massive-workload GPU advantage | Strict owner/all-thread brackets in complete workloads | Measured advantage for the declared workload; revise architecture on an actual failure, not a diagnostic ordering mismatch. |

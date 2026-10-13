@@ -320,7 +320,7 @@ Gets the direct parent.
 <a id="p-electron2d-node-physicsinterpolationmode"></a>
 ### `public PhysicsInterpolationMode PhysicsInterpolationMode { get; set; }`
 
-Defaults to `Inherit`, with a root resolving to On. `Control` starts Off; a descendant may opt back in. Changing an attached enabled policy resets presentation history for the subtree. The selected mode is stored by PackedScene. This property does not change logical transforms or processing callbacks.
+Defaults to `Inherit` for ordinary nodes, with a root resolving to On. `Control` starts Off; `Viewport`, including `Window` and `SubViewport`, starts On independently of ancestors. A descendant may opt back in. Changing an attached enabled policy resets presentation history for the subtree. The selected mode is stored by PackedScene. This property does not change logical transforms or processing callbacks.
 
 **ArgumentOutOfRangeException:** The value is not Inherit, On or Off.
 

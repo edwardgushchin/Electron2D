@@ -914,6 +914,16 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDER") == "1")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_INTERPOLATION") is { } viewportInterpolationBackend)
+{
+    PhysicsViewportInterpolationTests.Run(viewportInterpolationBackend switch
+    {
+        "cpu" => PhysicsServer.Backend.CPU,
+        "gpu" => PhysicsServer.Backend.GPU,
+        _ => throw new ArgumentException("Choose cpu or gpu for viewport interpolation.")
+    });
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTERPOLATION_NATIVE") == "1")
 {
     PhysicsInterpolationNativeTests.Run();
@@ -963,6 +973,8 @@ NodeTreeDiagnosticsTests.Run();
 NodeUniqueNameTests.Run();
 NodeReplacementTests.Run();
 PhysicsInterpolationTests.Run();
+PhysicsViewportInterpolationTests.Run(PhysicsServer.Backend.CPU);
+PhysicsViewportInterpolationTests.Run(PhysicsServer.Backend.GPU);
 PhysicsBodyTests.Run(); PhysicsBodyTests.Run(PhysicsServer.Backend.GPU);
 PhysicsCheckpointTests.Run();
 PhysicsSnapshotTests.Run();

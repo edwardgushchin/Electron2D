@@ -277,4 +277,12 @@ Animation graph resources and AnimationTree scene controllers now persist author
 
 RESET save preparation now executes through AnimationMixer.ResetOnSave and PackedScene.PackForSave. Enabled RESET value/Bézier tracks run at zero on detached nodes and isolated copied resources, capturing coupled effects while preserving source preview values/clocks/queues. Ordinary Pack captures the actual pose. Preparation failures preserve prior packed data; temporary resources are cleaned or transferred to the prepared scene. Compiled factories/setters/postprocessing execute, while lifecycle, local-resource setup and method/audio/nested event tracks are suppressed. Custom authoring state must be stored and resource duplication supported. AnimationResetSaveTests exercises policies, all controller families, coupled values/resources, errors, lifetime and portable saved scenes.
 
+
+Viewport interpolation now starts On independently of an Off ancestor; explicit
+Inherit/Off and scene-wide enablement retain their meanings. Shared physical
+CPU/GPU checks and nested Wayland renderer pixels validate body/camera history
+without changing logical poses, plus packed/copy/duplicate/revert behavior and
+zero warmed physical-step/presentation allocation. See
+[the canvas contract](../components/canvas-rendering.md#physics-interpolation).
+
 [Resource endpoints and subtree operations](../components/scene-hierarchy.md#resource-endpoints-and-subtree-operations) now execute typed resource-path resolution and compiled subtree operations through Node. Authored hierarchy/atlas edits survive saved scenes and reach native canvas pixels.

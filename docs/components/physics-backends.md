@@ -1171,5 +1171,6 @@ zero warmed physics bytes, impaired network convergence and replay/history costs
 The 16,384-body observed scene has measured GPU advantage in this desktop trial;
 small-world GPU replay remains costly. The runtime stayed byte-identical while
 main advanced, so the reports preserve their actual revision and verification
-limits. The audit also identifies the viewport On-default mismatch and missing
-project engine/thread contracts; inherited/provider acceptance remains open.
+limits. Viewport constructor/metadata now preserve the On default with shared CPU/GPU
+and nested native presentation checks. Project engine/thread contracts and
+inherited/provider acceptance remain open.

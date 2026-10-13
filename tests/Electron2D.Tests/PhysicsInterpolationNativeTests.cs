@@ -18,6 +18,8 @@ internal static class PhysicsInterpolationNativeTests
             Engine.MaxFPS = 120;
             SpritePixels();
             CameraPixels();
+            NestedViewportPixels(false, backend);
+            NestedViewportPixels(true, backend);
         }
         finally
         {
@@ -104,6 +106,45 @@ internal static class PhysicsInterpolationNativeTests
         };
         Engine.Run(window);
         Check(sampled && window.IsDisposed, "The native camera interpolation probe completed and released the window.");
+    }
+
+    private static void NestedViewportPixels(bool cameraMotion, string backend)
+    {
+        var window = new Window { Size = new(256, 96) };
+        var off = new Node { PhysicsInterpolationMode = PhysicsInterpolationMode.Off };
+        var viewport = new SubViewport { Size = window.Size, RenderTargetUpdateMode = ViewportUpdateMode.Always };
+        Entity source = cameraMotion ? new FixedCanvasNode { Position = new(120, 40) } : new MovingCanvasNode { Position = new(20, 40) };
+        source.PhysicsProcessEnabled = !cameraMotion;
+        var camera = new Camera { AnchorMode = AnchorMode.FixedTopLeft, LimitEnabled = false };
+        viewport.AddChild(source); if (cameraMotion) viewport.AddChild(camera);
+        off.AddChild(viewport); window.AddChild(off);
+        using var texture = viewport.GetTexture();
+        window.AddChild(new Sprite { Texture = texture, Centered = false, TextureFilter = TextureFilter.Nearest });
+        var sampled = false; var frames = 0; ulong start = 0;
+        window.Ready += _ =>
+        {
+            var tree = window.Tree!; start = Engine.PhysicsFrames;
+            if (cameraMotion) tree.PhysicsFrameStarted += _ => camera.Position += new Vector2(24, 0);
+            Check(RenderingServer.GetCurrentRenderingMethod() == backend, "Nested viewport pixels use the requested renderer");
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
+            {
+                if (++frames > 500) throw new InvalidOperationException("No suitable nested viewport interpolation frame was presented.");
+                var fraction = (float)Engine.PhysicsInterpolationFraction;
+                if (Engine.PhysicsFrames - start < 3 || fraction is < .2f or > .6f) return;
+                var logicalX = source.Position.X - (cameraMotion ? camera.Position.X : 0);
+                var interpolatedX = logicalX + (cameraMotion ? 24 : -24) * (1 - fraction);
+                using var image = RenderingServer.Service!.Readback();
+                var sx = image.Width / (float)window.Size.X; var sy = image.Height / (float)window.Size.Y;
+                var presented = image.GetPixel((int)MathF.Round((interpolatedX + 2) * sx), (int)MathF.Round(42 * sy));
+                var current = image.GetPixel((int)MathF.Round((logicalX + 2) * sx), (int)MathF.Round(42 * sy));
+                Check(presented.R > .95f && presented.G < .05f && current.R < .05f && source.IsPhysicsInterpolatedAndEnabled() && !off.IsPhysicsInterpolated(),
+                    "A nested viewport renders interpolated source/camera pixels independently of its Off parent");
+                sampled = true; tree.Quit();
+            };
+        };
+        Check(Engine.Run(window) == 0 && sampled && window.IsDisposed && viewport.IsDisposed,
+            "Nested interpolation pixels complete with viewport/window retirement");
     }
 
     private sealed class MovingCanvasNode : Entity

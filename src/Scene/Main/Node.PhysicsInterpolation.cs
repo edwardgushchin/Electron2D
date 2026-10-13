@@ -8,7 +8,7 @@ public partial class Node
     private PhysicsInterpolationMode _physicsInterpolationMode;
 
     /// <summary>Gets or sets the inherited physics interpolation policy.</summary>
-    /// <value>Inherit for ordinary nodes; Control starts Off.</value>
+    /// <value>Inherit for ordinary nodes, Off for Control and On for Viewport, including Window and SubViewport.</value>
     /// <remarks>The effective policy applies only while the scene tree enables interpolation. A changed active policy
     /// resets affected canvas snapshots before subsequent presentation.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is not a defined mode.</exception>

@@ -494,8 +494,8 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [TileData](classes/TileData.md) | [Object](classes/Object.md) | 14 | 0 | 0 | 0 | 0 |
 | [TileMapLayer](classes/TileMapLayer.md) | [Node2D](classes/Node2D.md) | 10 | 0 | 0 | 0 | 0 |
 | [TileSet](classes/TileSet.md) | [Resource](classes/Resource.md) | 12 | 0 | 0 | 0 | 0 |
-| [Viewport](classes/Viewport.md) | [Node](classes/Node.md) | 3 | 1 | 0 | 0 | 0 |
-| **Total** | | 63 | 13 | 0 | 2 | 0 |
+| [Viewport](classes/Viewport.md) | [Node](classes/Node.md) | 4 | 0 | 0 | 0 | 0 |
+| **Total** | | 64 | 12 | 0 | 2 | 0 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -515,4 +515,3 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`ProjectSettings::property:physics/common/physics_jitter_fix`](classes/ProjectSettings.md) | Partial | Typed key identity for upstream setting; Get/Set access values (ADR 0019). |
 | [`ProjectSettings::property:physics/common/physics_ticks_per_second`](classes/ProjectSettings.md) | Partial | Typed key identity for upstream setting; Get/Set access values (ADR 0019). |
 | [`SceneTree::signal:physics_frame()`](classes/SceneTree.md) | Partial | Typed frame-start event; exact signal ordering requires audit under ADR 0002. |
-| [`Viewport::property:physics_interpolation_mode`](classes/Viewport.md) | Partial | Inherited Node interpolation mode and viewport camera snapshots execute. The pinned Viewport override defaults to On (1), but the current constructor and Node property descriptor leave Inherit (0), so an Off parent disables a default nested viewport. Complete the Window/SubViewport constructor/descriptor defaults and verify live policy, packing/copy/reset and canvas/camera presentation; the renderer/world prerequisite already exists. |

@@ -29,7 +29,12 @@ public partial class Node : ElectronObject
             stored: true),
         new PropertyDescriptor<Node, PhysicsInterpolationMode>(nameof(PhysicsInterpolationMode),
             node => node.PhysicsInterpolationMode, (node, value) => node.PhysicsInterpolationMode = value,
-            node => node is Control ? PhysicsInterpolationMode.Off : PhysicsInterpolationMode.Inherit,
+            node => node switch
+            {
+                Control => PhysicsInterpolationMode.Off,
+                Viewport => PhysicsInterpolationMode.On,
+                _ => PhysicsInterpolationMode.Inherit
+            },
             (_, value) => Enum.IsDefined(value), stored: true),
         new PropertyDescriptor<Node, NodeAutoTranslateMode>(
             nameof(AutoTranslateMode),
