@@ -1,5 +1,6 @@
 {
   "mappings": [
+    {"electron2d": "method:Electron2D.FileAccess.OpenCompressed(System.String,Electron2D.FileAccessModeFlags,Electron2D.FileCompressionMode)", "godot": "FileAccess::method:open_compressed(String:,int:FileAccess.ModeFlags,int:FileAccess.CompressionMode)", "state": "Implemented", "reason": "ADR 0020 retains the engine-owned E2DCMP envelope and whole-file/atomic semantics; default FastLZ and all five codecs execute seek/read/write/flush/reopen. Native 64 KiB blocks validate structure, exact decode, padding and SHA-256. FileCompressionTests verifies tiny/boundary/random/repeated data, edits, virtual paths, corruption, atomic failure and fresh-process reads; direct codec oracle and GPU/compatibility compressed-PNG pixels exercise Linux x64 with the matching native bundle. No reference container binary compatibility or foreign-host acceptance is claimed."} ,
     {"godot": "Input::method:get_connected_joypads()", "electron2d": "method:Electron2D.Input.GetConnectedJoypads()", "reason": "Typed array snapshot of connected SDL joystick and gamepad IDs."},
     {"godot": "ProjectSettings::property:input_devices/joypads/ignore_joypad_on_unfocused_application", "electron2d": "property:Electron2D.ProjectSettings.IgnoreJoypadOnUnfocusedApplication()", "reason": "Typed project setting sampled before Engine.Run opens the native controller host."},
     {"godot": "WeakRef::method:get_ref()", "electron2d": "method:Electron2D.WeakRef<T>.GetRef()", "state": "Implemented", "reason": "ADR 0050 returns the same live object or null after target disposal or collection; WeakRefTests checks identity, null, deterministic disposal and GC collection."},
@@ -1569,6 +1570,7 @@
     }
   ],
   "statusGroups": [
+    {"godot": ["FileAccess::method:open_compressed(String:,int:FileAccess.ModeFlags,int:FileAccess.CompressionMode)"], "state": "Implemented", "reason": "ADR 0020 retains the engine-owned E2DCMP envelope and whole-file/atomic semantics; default FastLZ and all five codecs execute seek/read/write/flush/reopen. Native 64 KiB blocks validate structure, exact decode, padding and SHA-256. FileCompressionTests verifies tiny/boundary/random/repeated data, edits, virtual paths, corruption, atomic failure and fresh-process reads; direct codec oracle and GPU/compatibility compressed-PNG pixels exercise Linux x64 with the matching native bundle. No reference container binary compatibility or foreign-host acceptance is claimed."},
     {
       "godot": [
         "Object::method:get_script()"

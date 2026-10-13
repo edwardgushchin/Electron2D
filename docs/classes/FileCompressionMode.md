@@ -1,6 +1,6 @@
 # FileCompressionMode
 
-Last updated: 2026-09-21
+Last updated: 2026-10-13
 
 **Inherits:** —
 
@@ -20,9 +20,9 @@ The enum identifies the codec recorded in a whole-file compressed `FileAccess` c
 
 | Value | Number | Current state |
 | --- | ---: | --- |
-| `FastLz` | 0 | Defined for API/format identity; explicitly rejected because no codec provider is integrated |
+| `FastLz` | 0 | Executable bounded, checksummed native blocks; matching bundle required |
 | `Deflate` | 1 | Read and write implemented with `DeflateStream` |
-| `Zstandard` | 2 | Defined for API/format identity; explicitly rejected because no codec provider is integrated |
+| `Zstandard` | 2 | Executable bounded, checksummed native blocks; matching bundle required |
 | `Gzip` | 3 | Read and write implemented with `GZipStream` |
 | `Brotli` | 4 | Read and write implemented with `BrotliStream` |
 
@@ -53,7 +53,7 @@ var value = FileCompressionMode.FastLz;
 <a id="f-electron2d-filecompressionmode-fastlz"></a>
 ### `FastLz = 0`
 
-Uses the FastLZ codec. The current runtime has no FastLZ provider.
+Uses the FastLZ native codec in bounded, checksummed blocks.
 
 <a id="f-electron2d-filecompressionmode-deflate"></a>
 ### `Deflate = 1`
@@ -63,7 +63,7 @@ Uses the DEFLATE codec.
 <a id="f-electron2d-filecompressionmode-zstandard"></a>
 ### `Zstandard = 2`
 
-Uses the Zstandard codec. The current runtime has no Zstandard provider.
+Uses the Zstandard native codec in bounded, checksummed blocks.
 
 <a id="f-electron2d-filecompressionmode-gzip"></a>
 ### `Gzip = 3`
@@ -85,4 +85,4 @@ Implemented codecs use `System.IO.Compression`. The container is Electron2D-spec
 
 ## Verification
 
-The executable harness round-trips all three available codecs, verifies intermediate flush, cross-instance reads, malformed envelopes, and explicit failures for FastLZ and Zstandard.
+The executable harness round-trips all five codecs, verifies intermediate flush, cross-instance and fresh-process reads, block boundaries, edits, malformed envelopes, checksum failures and atomic replacement failures. Native file codecs require a matching bridge; Linux x64 is the exercised target.

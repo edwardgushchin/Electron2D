@@ -167,7 +167,7 @@ Accepted.
 
 The reference `FileAccess` combines a reference-counted stream, numeric error state, `Variant` serialization, raw and virtual paths, platform attributes, compression, and encryption. Electron2D already requires managed deterministic lifetime, typed C# without `Variant`, standard exceptions, one owned assembly, directory-backed `res://`/`user://`, and no fictional methods for absent domains. It also requires real-time hot paths to avoid blocking/allocating filesystem work.
 
-The BCL supplies robust streams, hashes, DEFLATE/GZip/Brotli, PBKDF2, and AES-GCM, but not FastLZ or Zstandard. The project has no pack mount, resource loader, SDL platform service, or accepted codec dependency.
+The BCL supplies robust streams, hashes, DEFLATE/GZip/Brotli, PBKDF2, and AES-GCM, but not FastLZ or Zstandard. The executable ENet layer under ADR 0094 now supplies unchanged FastLZ and Zstandard native codec dependencies; resource/file loading and the SDL host also execute. Pack mounts remain separate.
 
 ### Decision
 
@@ -177,7 +177,7 @@ Ordinary, `res://`, and `user://` paths resolve through `ProjectSettings`; the l
 
 Fixed-width binary values and Pascal strings require complete reads. Buffer reads return the available prefix. `ReadReal`/`WriteReal` use binary32 because Electron2D's 2D numeric types are single-precision; explicit double methods remain available. Text is strict UTF-8; CSV supports quoting and multiline fields. `get_var`/`store_var` have no replacement because ADR 0001 excludes a universal value boundary.
 
-Transformed access is whole-file and seekable in memory. It validates/decrypts before publishing an instance. Dirty data is encoded and atomically persisted with the same flushed same-directory replacement helper used by `ConfigFile`. DEFLATE, GZip, and Brotli use BCL providers. FastLZ and Zstandard are recognized but rejected before side effects until a dependency is separately accepted.
+Transformed access is whole-file and seekable in memory. It validates/decrypts before publishing an instance. Dirty data is encoded and atomically persisted with the same flushed same-directory replacement helper used by `ConfigFile`. DEFLATE, GZip, and Brotli use BCL providers. FileAccess reuses the unchanged FastLZ/Zstandard dependencies already selected under [ADR 0094](networking.md#adr-0094), through two general file-codec exports in the existing private native bridge. It does not create an ENet host or socket. The source-built native bundle must match the managed ABI; older prebuilt bundles fail explicitly before file side effects. Native payloads use 64 KiB blocks with stored compressed lengths and SHA-256 corruption checks inside the existing E2DCMP version-1 envelope. FastLZ pads its final sub-16-byte codec input and verifies discarded padding; empty files have no blocks. Block records are validated before allocating decoded storage. BCL codec reads stop at the declared length and reject surplus decoded data. The envelope, managed size range, whole-file ownership and atomic replacement remain unchanged; these checks are not cryptographic authentication.
 
 Encrypted containers are Electron2D-specific and authenticated. Raw mode requires 32 bytes. Password mode uses a random 16-byte salt, 600,000 PBKDF2-HMAC-SHA-256 iterations, and a 32-byte key. AES-256-GCM uses a new 12-byte nonce and 16-byte tag per commit and authenticates the header. A public caller-supplied IV is omitted because nonce reuse would destroy GCM security.
 
@@ -193,16 +193,16 @@ Desktop restart-on-exit configuration uses that same retained OS and CreateInsta
 - Compression/encryption files are seekable but allocate proportional to decoded size and are unsuitable for real-time callbacks or very large streaming assets.
 - Authentication prevents wrong credentials or modified ciphertext from exposing plaintext.
 - The transformed envelope is versioned and private to Electron2D; external/reference binary compatibility is not promised.
-- FastLZ/Zstandard remain visible, explicit capability gaps without inert stubs; macOS/Windows attribute backends still require native-host testing.
+- FastLZ/Zstandard require a matching source-built or updated native bundle; macOS/Windows attribute backends still require native-host testing.
 - Packed res:// mounts and arbitrary named pipe:// connections require pack/named-pipe backends. Registered uid:// identities now resolve through ResourceUID under ADR 0013 before applying the existing directory-backed scope; unknown identities fail explicitly.
 
 ### Reference coverage classification
 
-Implemented: raw open modes, temporary files, close/flush/seek/resize, position/length/EOF/path state, endian numeric I/O, buffers, strict text, lines, CSV, Pascal strings, full-text snapshots, hashes, timestamps, size/existence, hidden/read-only/Unix permissions, Linux extended attributes, DEFLATE/GZip/Brotli containers, and key/password encryption.
+Implemented: raw open modes, temporary files, close/flush/seek/resize, position/length/EOF/path state, endian numeric I/O, buffers, strict text, lines, CSV, Pascal strings, full-text snapshots, hashes, timestamps, size/existence, hidden/read-only/Unix permissions, Linux extended attributes, FastLZ/DEFLATE/Zstandard/GZip/Brotli containers, and key/password encryption.
 
 Adapted: reference counting to managed memory and `IDisposable`; numeric error returns and static open error to exceptions; encryption to authenticated private containers; snake_case to typed PascalCase.
 
-Dependency-blocked: FastLZ, Zstandard, packed/exported virtual filesystem paths and arbitrary named pipe:// connections. Registered UID resolution now executes under ADR 0013; this does not mount resource packs.
+Dependency-blocked: older native bundles missing the general file-codec ABI, packed/exported virtual filesystem paths and arbitrary named pipe:// connections. Registered UID resolution now executes under ADR 0013; this does not mount resource packs.
 
 Permanently excluded: `Variant` read/write and a shared mutable numeric error slot.
 

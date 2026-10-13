@@ -11,3 +11,5 @@ _e2d_enet_peer
 _e2d_enet_stat
 _e2d_enet_host
 _e2d_enet_compress
+_e2d_file_encode
+_e2d_file_decode

@@ -48,7 +48,7 @@ def required_exports(name):
         return {"e2d_mesh_scale", "e2d_mesh_simplify"}
     if "ENet" in name:
         return {"e2d_enet_" + item for item in ("callbacks", "create", "destroy", "connect", "service", "flush",
-                                             "send", "packet", "release", "peer", "stat", "host", "compress")}
+                                             "send", "packet", "release", "peer", "stat", "host", "compress")} | {"e2d_file_encode", "e2d_file_decode"}
     if "HarfBuzz" in name:
         return {"hb_shape", "hb_buffer_create", "hb_font_create"}
     if name == "libSDL3.a":

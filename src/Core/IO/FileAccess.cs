@@ -18,7 +18,7 @@ namespace Electron2D;
 /// temporary emptiness is not EOF. Exact reads may consume a partial value before raising IOException. Nonblocking
 /// writes may raise PipeWriteException with an exact consumed prefix. Closing a pipe does not terminate its child.
 /// </remarks>
-public sealed class FileAccess : ElectronObject
+public sealed partial class FileAccess : ElectronObject
 {
     private const byte ContainerVersion = 1;
     private const byte RawKeyEncryption = 0;
@@ -334,11 +334,11 @@ public sealed class FileAccess : ElectronObject
     /// <param name="mode">The required access mode.</param>
     /// <param name="compressionMode">The codec used to decode or encode the container.</param>
     /// <returns>A seekable view of the decoded bytes.</returns>
-    /// <remarks>Changes are atomically encoded to the destination by <see cref="Flush"/> or <see cref="Close"/>.</remarks>
+    /// <remarks>Changes are atomically encoded by <see cref="Flush"/> or <see cref="Close"/>. FastLZ and Zstandard require the matching native bundle and use bounded, checksummed blocks. Compression is not authentication.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or the mode is invalid.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="compressionMode"/> is unknown.</exception>
-    /// <exception cref="NotSupportedException">The selected codec has no runtime provider.</exception>
+    /// <exception cref="PlatformNotSupportedException">The selected native codec is unavailable in the packaged bridge.</exception>
     /// <exception cref="InvalidDataException">An existing container is malformed or uses another codec.</exception>
     /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
@@ -1347,13 +1347,15 @@ public sealed class FileAccess : ElectronObject
             throw new InvalidDataException("The decoded length is outside the supported managed range.");
         offset += sizeof(long);
 
+        if (IsNativeCodec(mode)) return DecodeNativeBlocks(envelope[offset..], (int)expectedLength, mode);
+
         using var input = new MemoryStream(envelope[offset..].ToArray(), writable: false);
         using var decoder = CreateCompressionStream(input, mode, CompressionMode.Decompress, leaveOpen: false);
-        using var output = new MemoryStream(checked((int)expectedLength));
-        decoder.CopyTo(output);
-        if (output.Length != expectedLength)
-            throw new InvalidDataException("The decoded length does not match the compressed envelope.");
-        return output.ToArray();
+        var result = new byte[(int)expectedLength];
+        try { decoder.ReadExactly(result); }
+        catch (EndOfStreamException error) { throw new InvalidDataException("The decoded length does not match the compressed envelope.", error); }
+        if (decoder.ReadByte() != -1) throw new InvalidDataException("Decoded data exceeds the compressed envelope length.");
+        return result;
     }
 
     private static byte[] DeriveKey(string password, ReadOnlySpan<byte> salt) => Rfc2898DeriveBytes.Pbkdf2(
@@ -1373,8 +1375,9 @@ public sealed class FileAccess : ElectronObject
         Span<byte> length = stackalloc byte[sizeof(long)];
         BinaryPrimitives.WriteInt64LittleEndian(length, data.Length);
         output.Write(length);
-        using (var encoder = CreateCompressionStream(output, mode, CompressionMode.Compress, leaveOpen: true))
-            encoder.Write(data);
+        if (IsNativeCodec(mode)) output.Write(EncodeNativeBlocks(data, mode));
+        else using (var encoder = CreateCompressionStream(output, mode, CompressionMode.Compress, leaveOpen: true))
+                encoder.Write(data);
         return output.ToArray();
     }
 
@@ -1387,8 +1390,6 @@ public sealed class FileAccess : ElectronObject
             FileCompressionMode.Deflate => new DeflateStream(stream, direction, leaveOpen),
             FileCompressionMode.Gzip => new GZipStream(stream, direction, leaveOpen),
             FileCompressionMode.Brotli => new BrotliStream(stream, direction, leaveOpen),
-            FileCompressionMode.FastLz => throw new NotSupportedException("FastLZ requires a codec provider that is not integrated."),
-            FileCompressionMode.Zstandard => throw new NotSupportedException("Zstandard requires a codec provider that is not integrated."),
             _ => throw new ArgumentOutOfRangeException(nameof(mode))
         };
 
@@ -1759,8 +1760,7 @@ public sealed class FileAccess : ElectronObject
     {
         if (!Enum.IsDefined(mode))
             throw new ArgumentOutOfRangeException(nameof(mode));
-        if (mode is FileCompressionMode.FastLz or FileCompressionMode.Zstandard)
-            throw new NotSupportedException($"The {mode} codec provider is not integrated.");
+        if (IsNativeCodec(mode)) NativeEncodeBound(mode, NativeBlockSize);
     }
 
     private static void ValidateDelimiter(char delimiter)

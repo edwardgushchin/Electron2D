@@ -15,6 +15,10 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "1")
     return;
 }
 
+if (args.Length == 3 && args[0] == "--file-compression-child") { FileCompressionTests.Child(args[1], args[2]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_COMPRESSION_NATIVE") is { } fileBackend) { FileCompressionTests.RunNative(fileBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_CODEC_ENET") == "1") { ENetTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_ACCESS") == "1") { VerifyFileAccess(); FileCompressionTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_INTERNAL") == "1") { NodeInternalProcessingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_INTERNAL_NATIVE") is { } internalBackend) { NodeInternalProcessingTests.RunNative(internalBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYNCHRONIZATION") == "1") { SynchronizationTests.Run(); return; }
@@ -5463,6 +5467,8 @@ static void VerifyFileAccess()
 
         foreach (var compression in new[]
                  {
+                     FileCompressionMode.FastLz,
+                     FileCompressionMode.Zstandard,
                      FileCompressionMode.Deflate,
                      FileCompressionMode.Gzip,
                      FileCompressionMode.Brotli
@@ -5487,12 +5493,6 @@ static void VerifyFileAccess()
         Expect<InvalidDataException>(() => EngineFileAccess.OpenCompressed(
                 IOPath.Combine(directory, "compressed-Deflate.bin"), FileAccessModeFlags.Read, FileCompressionMode.Gzip),
             "Compressed access must reject a container opened with the wrong codec.");
-        Expect<NotSupportedException>(() => EngineFileAccess.OpenCompressed(
-                IOPath.Combine(directory, "fastlz.bin"), FileAccessModeFlags.Write, FileCompressionMode.FastLz),
-            "Unavailable FastLZ support must fail explicitly.");
-        Expect<NotSupportedException>(() => EngineFileAccess.OpenCompressed(
-                IOPath.Combine(directory, "zstd.bin"), FileAccessModeFlags.Write, FileCompressionMode.Zstandard),
-            "Unavailable Zstandard support must fail explicitly.");
         var corruptCompressedPath = IOPath.Combine(directory, "corrupt-compressed.bin");
         File.WriteAllBytes(corruptCompressedPath, [1, 2, 3]);
         Expect<InvalidDataException>(() => EngineFileAccess.OpenCompressed(

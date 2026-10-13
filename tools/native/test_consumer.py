@@ -51,7 +51,18 @@ try
     Thread.Sleep(100);
     if (player.GetPlaybackPosition() <= 0 || AudioServer.GetOutputLatency() < 0)
         throw new Exception("Native audio/output bridge failed");
-    Console.WriteLine("Public text, audio, ENet and mesh consumer passed");
+    foreach (var codec in new[] { FileCompressionMode.FastLz, FileCompressionMode.Zstandard })
+    {
+        var compressedPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "electron2d-native-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            using (var file = Electron2D.FileAccess.OpenCompressed(compressedPath, FileAccessModeFlags.Write, codec)) file.WriteBytes([3, 5, 7]);
+            using var read = Electron2D.FileAccess.OpenCompressed(compressedPath, FileAccessModeFlags.Read, codec);
+            if (!read.ReadBytes(3).SequenceEqual(new byte[] { 3, 5, 7 })) throw new Exception("Native file codec failed");
+        }
+        finally { System.IO.File.Delete(compressedPath); }
+    }
+    Console.WriteLine("Public text, audio, ENet, file codecs and mesh consumer passed");
 }
 finally { Engine.Stop(); }
 '''

@@ -299,8 +299,8 @@
     {
       "electron2d": "enumValue:Electron2D.FileCompressionMode.Zstandard()",
       "godot": "FileAccess::enum_value:CompressionMode.COMPRESSION_ZSTD",
-      "state": "Partial",
-      "reason": "Numeric mode value 2 matches upstream Zstandard; actual Zstandard codec integration is absent and must be added in the FileAccess compression vertical slice under ADR 0020."
+      "state": "Implemented",
+      "reason": "Numeric identity 2 and executable Zstandard file blocks via the accepted private bridge; matching native bundle required (ADR 0020)."
     },
     {
       "electron2d": "enumValue:Electron2D.Key.AsciiCircumflex()",

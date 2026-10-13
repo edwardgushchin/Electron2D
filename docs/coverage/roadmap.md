@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1572 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 1571 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 802 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -30,7 +30,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [SceneState](classes/SceneState.md) | 5 | 15 |
 | [FontFile](classes/FontFile.md) | 4 | 1 |
 | [Control](classes/Control.md) | 3 | 60 |
-| [FileAccess](classes/FileAccess.md) | 2 | 66 |
+| [FileAccess](classes/FileAccess.md) | 2 | 65 |
 | [Resource](classes/Resource.md) | 2 | 20 |
 | [DirAccess](classes/DirAccess.md) | 1 | 39 |
 | [Texture2D](classes/Texture.md#godot-texture2d) | 1 | 22 |
@@ -120,7 +120,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
 | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. | 1 |
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
-| Trigger: caller-owned thread start/result, priority, identity and join/retirement contract over the executable Mutex/Semaphore and worker foundation (ADRs 0021 and 0104). | 1 |
+| Trigger: complete typed thread start/result, priority, main-owner identity and join/retirement, plus a resolved executable safety-check override contract: the pinned set_thread_safety_checks_enabled(bool) must not be an inert flag and current ADRs 0006/0011/0104 require owner-affine scene mutation. | 1 |
 | Trigger: first 2D light/mesh texture renderer integration (ADR 0028). | 1 |
 | Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 1 |
 | Trigger: first applicable typed 2D procedural geometry producer with concrete generation parameters and visible mesh output; static surface rendering already executes (ADR 0092). | 1 |

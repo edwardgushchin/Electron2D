@@ -457,3 +457,33 @@ API int e2d_enet_compress(State *s, int mode) {
   enet_host_compress(s->host, &codec);
   return 0;
 }
+
+API int e2d_file_encode(int mode, const unsigned char *input, int length,
+                        unsigned char *output, int capacity) {
+  if (length < 0 || length > 65536 || (mode != 0 && mode != 2)) return -1;
+  size_t bound = mode == 0 ? (size_t)length * 2 + 64 : ZSTD_compressBound((size_t)length);
+  if (!output && capacity == 0) return (int)bound;
+  if (!input || !output || capacity < (int)bound) return -1;
+  if (mode == 0) {
+    unsigned char padded[16] = {0};
+    if (length < 16) { memcpy(padded, input, (size_t)length); input = padded; length = 16; }
+    int result = fastlz_compress(input, length, output);
+    return result > 0 && result <= capacity ? result : -1;
+  }
+  size_t result = ZSTD_compress(output, (size_t)capacity, input, (size_t)length, 3);
+  return ZSTD_isError(result) || result > (size_t)capacity ? -1 : (int)result;
+}
+API int e2d_file_decode(int mode, const unsigned char *input, int length,
+                        unsigned char *output, int capacity) {
+  if (!input || !output || length <= 0 || capacity <= 0 || capacity > 65536 ||
+      (mode != 0 && mode != 2)) return -1;
+  if (mode == 0) {
+    if (length < 2) return -1;
+    int result = fastlz_decompress(input, length, output, capacity);
+    return result > 0 ? result : -1;
+  }
+  size_t frame = ZSTD_findFrameCompressedSize(input, (size_t)length);
+  if (ZSTD_isError(frame) || frame != (size_t)length) return -1;
+  size_t result = ZSTD_decompress(output, (size_t)capacity, input, (size_t)length);
+  return ZSTD_isError(result) || result > (size_t)capacity ? -1 : (int)result;
+}

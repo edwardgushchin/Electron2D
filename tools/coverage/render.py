@@ -398,7 +398,7 @@ def reason_for_type(item, lookup):
         ({"Crypto", "CryptoKey", "X509Certificate"}, "first typed networking-security integration slice with a portable crypto backend (ADR 0021)"),
         ({"RID"}, "first executable shared server resource-identity and lifetime slice under ADR 0063; renderer and navigation consumers retain their own domain gates"),
         ({"Thread"},
-         "caller-owned thread start/result, priority, identity and join/retirement contract over the executable Mutex/Semaphore and worker foundation (ADRs 0021 and 0104)"),
+         "complete typed thread start/result, priority, main-owner identity and join/retirement, plus a resolved executable safety-check override contract: the pinned set_thread_safety_checks_enabled(bool) must not be an inert flag and current ADRs 0006/0011/0104 require owner-affine scene mutation"),
         ({"WeakRef"},
          "an accepted public weak-reference contract beyond System.WeakReference<T>; Resource currently uses only an internal weak path cache (ADR 0013)"),
     )

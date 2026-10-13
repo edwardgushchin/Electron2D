@@ -18,4 +18,12 @@
     <PackageReference Include="Electron2D.$(Electron2DConsumerPlatform)" Version="[$(Electron2DNativePackageVersion)]" />
     <PackageReference Include="SDL3-CS.Android" Version="$(Electron2DSDLVersion)" ExcludeAssets="compile;runtime;native" Condition="'$(Electron2DConsumerPlatform)' == 'Android'" />
   </ItemGroup>
+  <Target Name="CopyElectron2DConsumerENetOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DENetNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
+    <PropertyGroup>
+      <_Electron2DConsumerENetName>libElectron2DENet.so</_Electron2DConsumerENetName>
+      <_Electron2DConsumerENetName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DENet.dylib</_Electron2DConsumerENetName>
+    </PropertyGroup>
+    <Copy SourceFiles="$(Electron2DENetNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerENetName)" />
+    <Copy SourceFiles="$(Electron2DENetNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerENetName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
+  </Target>
 </Project>

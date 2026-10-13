@@ -77,7 +77,7 @@ def check(rid: str, publish: Path) -> None:
         assert needed == {"libz.so.1", "libzstd.so.1", "libc.so.6", {"linux-x64": "ld-linux-x86-64.so.2", "linux-arm64": "ld-linux-aarch64.so.1"}[rid]}, f"Unreviewed ENet dependencies: {needed}"
         symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(enet)], text=True)
         exports = {line.split()[-1] for line in symbols.splitlines()}
-        assert exports == {"e2d_enet_" + name for name in ("callbacks", "create", "destroy", "connect", "service", "flush", "send", "packet", "release", "peer", "stat", "host", "compress")}, "ENet private ABI export mismatch"
+        assert exports == {"e2d_enet_" + name for name in ("callbacks", "create", "destroy", "connect", "service", "flush", "send", "packet", "release", "peer", "stat", "host", "compress")} | {"e2d_file_encode", "e2d_file_decode"}, "ENet private ABI export mismatch"
         audio = native / "libFAudio.so.0"
         assert audio.is_file(), "Missing pinned native audio backend"
         header = audio.read_bytes()[:20]
@@ -91,7 +91,7 @@ def check(rid: str, publish: Path) -> None:
         assert re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic) == ["libFAudio.so.0"], "Audio SONAME mismatch"
         assert not (publish / "FAudio.dll").exists(), "Managed backend leaked outside the engine assembly"
         assert not list(publish.rglob("libicu*")), "A private text publish must not deliver global ICU libraries"
-        print(f"{rid}: self-contained host, SDL/FAudio/FreeType/HarfBuzz and private text/ENet backends verified (9/13 exports, no global ICU dependency)")
+        print(f"{rid}: self-contained host, SDL/FAudio/FreeType/HarfBuzz and private text/ENet backends verified (9/15 exports, no global ICU dependency)")
     else:
         assert not list(publish.rglob("libElectron2DENet.so")), "Linux ENet backend leaked into a foreign publish"
         assert not list(publish.rglob("libFAudio*")), "Linux audio library leaked into a foreign publish"

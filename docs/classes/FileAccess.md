@@ -1,6 +1,6 @@
 # FileAccess
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -19,7 +19,7 @@ Provides seekable binary and text access to ordinary and directory-backed virtua
 `FileAccess` owns one seekable physical stream or decoded in-memory view. It supplies blocking binary/text I/O, virtual-path resolution, file metadata, hashing, Linux/macOS/Windows extended attributes, temporary files, whole-file compression, and authenticated whole-file encryption. The instance exclusively owns and closes its stream; it never owns `ProjectSettings`.
 
 Instances own their stream until [`FileAccess.Close`](FileAccess.md#m-electron2d-fileaccess-close) or disposal. Individual operations are serialized, but a
-multi-call seek/read/write sequence is not atomic. File operations may block and are unsuitable for real-time frame
+multi-call seek/read/write sequence is not atomic. FastLZ (the default), DEFLATE, Zstandard, GZip and Brotli execute seekable whole-file access. FastLZ/Zstandard need the matching native bridge with the two file-codec exports; an older bundle fails before file effects. Native payloads use 64 KiB logical blocks with compressed lengths and SHA-256 checksums. Checksums detect corruption, not malicious replacement. File operations may block and are unsuitable for real-time frame
 callbacks. Compressed and encrypted files are authenticated or decoded completely before their contents are exposed.
 
 ## Examples
@@ -291,7 +291,7 @@ Opens a whole-file compressed container.
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: The path is empty or the mode is invalid.
 - `ArgumentOutOfRangeException`: `compressionMode` is unknown.
-- `NotSupportedException`: The selected codec has no runtime provider.
+- `PlatformNotSupportedException`: The selected native codec is unavailable in the packaged bridge.
 - `IO.InvalidDataException`: An existing container is malformed or uses another codec.
 - `IO.IOException`: The physical file cannot be read or replaced.
 - `UnauthorizedAccessException`: The caller lacks filesystem access.
@@ -1273,7 +1273,7 @@ All instance state/stream operations are serialized by one private lock. One cal
 
 `tests/Electron2D.Tests/Program.cs` covers invalid paths/modes, all four access modes, truncation/preservation, little/big-endian primitives, half/float/double/real, buffers, strict UTF-8, CR/LF/null lines, CSV/Pascal strings, EOF and seek transitions, resize, cursor preservation on decode failure, close/dispose, static metadata/hashes and missing-file errors, explicit unsupported Linux hidden/read-only attributes, Unix permissions, Linux xattrs, temporary ownership including prefix/extension/read-only mode, three codecs, malformed/mismatched compression, raw/password encryption, wrong keys/passwords/mode confusion, tampering, virtual project paths, concurrent static hashing and compound Pascal writes, and commit failure cleanup.
 
-The checks ran on Linux with its active filesystem. They do not prove the implemented macOS xattr or Windows alternate-stream backends, and no Android/iOS extended-attribute backend or native-host verification is currently claimed. Web browser storage behavior is unimplemented and unverified; its capability boundary belongs to the first Web host slice. These checks also do not prove every filesystem's crash durability, very-large-file memory behavior for transformed whole-file access, hostile TOCTOU races, or protection after process compromise. FastLZ, Zstandard, and packed archives remain explicitly unimplemented.
+The checks ran on Linux with its active filesystem. They do not prove the implemented macOS xattr or Windows alternate-stream backends, and no Android/iOS extended-attribute backend or native-host verification is currently claimed. Web browser storage behavior is unimplemented and unverified; its capability boundary belongs to the first Web host slice. These checks also do not prove every filesystem's crash durability, very-large-file memory behavior for transformed whole-file access, hostile TOCTOU races, or protection after process compromise. FastLZ and Zstandard execute through the matching private native bundle; packed archives remain unimplemented. Native file-codec verification covers Linux x64 only.
 
 ## Decisions
 
