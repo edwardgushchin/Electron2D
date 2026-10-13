@@ -2884,6 +2884,11 @@
       "godot": "ProjectSettings::property:physics/2d/physics_engine",
       "electron2d": "property:Electron2D.ProjectSettings.Physics2DEngine()",
       "reason": "ADRs 0054/0103: typed persisted engine name with DEFAULT priority and exact CPU/GPU/registered names. Implicit viewport and viewport-free worlds capture feature-aware selection/fallback before lazy startup; aliases, null reset, expiration, invalid names and explicit CPU/per-world choices retain their contract. CPU/GPU/independent-provider real motion and strict 0/0 warm frames, actual denied-GPU startup/fallback and both native renderer paths verify this setting slice; separate-thread and full physical/performance acceptance remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.Physics2DRunOnSeparateThread()",
+      "godot": "ProjectSettings::property:physics/2d/run_on_separate_thread",
+      "reason": "Typed captured false-default numerical thread setting under ADRs 0054/0103; effective feature values are sampled before lazy World startup or raw space creation."
     }
   ],
   "extras": [
@@ -7772,8 +7777,8 @@
       "godot": [
         "ProjectSettings::property:physics/2d/run_on_separate_thread"
       ],
-      "state": "Unimplemented",
-      "reason": "CPU/GPU runtime and retained CPU workers already execute; the old first-Box2D prerequisite is fulfilled. The project setting still has no executable separate-thread simulation contract. Its first slice must implement actual scheduling, world/device ownership, authoring and callback barriers, lifecycle/failure teardown and cross-backend checks under ADRs 0054/0103; worker parallelism inside an owner-thread step or an inert stored bool does not implement it."
+      "state": "Partial",
+      "reason": "ADRs 0054/0103: captured feature-aware false-default policy now dispatches complete selected Solve on a retained numerical lane with owner preparation/publication barriers, exact readonly input borrowing and joined error/lifetime cleanup. CPU and independent public-only provider checks execute real motion, callback identity, failure/no-replay, retirement and strict 0/0 warmed full frames. GPU store borrowing is implemented but unverified; actual GPU/native/threaded-browser and scheduling/performance acceptance remain open. No serial fallback or inert stored switch closes these gates."
     },
     {
       "godot": [

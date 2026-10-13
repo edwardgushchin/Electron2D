@@ -11,7 +11,7 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
     private readonly PhysicsTaskScheduler _tasks;
     private GPUPhysicsWorld? _stageGPU;
     private bool _disposed;
-    internal override bool HasFailure => _continuousFailure is not null;
+    internal override bool HasFailure => _solverFailure is not null;
     internal override PhysicsServer.Backend Kind => PhysicsServer.Backend.CPU;
     internal override B2WorldId WorldID { get { ThrowIfDisposed(); return _worldID; } }
     internal override PhysicsTaskScheduler Tasks => _tasks;
@@ -50,7 +50,7 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
     internal override void EnsureAccess()
     {
         ThrowIfDisposed();
-        if (_continuousFailure is not null) throw new InvalidOperationException("The continuous physics step failed; dispose this world before creating a replacement.", _continuousFailure);
+        if (_solverFailure is not null) throw new InvalidOperationException("The CPU numerical physics step failed; dispose this world before creating a replacement.", _solverFailure);
         if (b2GetWorldFromId(_worldID).locked) throw new InvalidOperationException("Physics state is owned by the solver.");
     }
     private readonly Dictionary<PhysicsColliderBackend, CPUPhysicsColliderImplementation> _colliders = [];
@@ -93,7 +93,7 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
         EnsureAccess(); var implementation = new CPUPhysicsJointImplementation(Space, this, joint);
         _jointAttachments.Add(joint, implementation); return implementation;
     }
-    internal override void StepNative(float delta, int substeps) { ThrowIfDisposed(); b2World_Step(_worldID, delta, substeps); }
+    internal override void StepNative(float delta, int substeps) { ThrowIfDisposed(); _nativeStepStarted = true; b2World_Step(_worldID, delta, substeps); }
 
     internal override GPUPhysicsWorld EnableGPUIntegration()
     {

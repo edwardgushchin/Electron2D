@@ -1,6 +1,6 @@
 # PhysicsServer
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Inherits:** ElectronObject · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs), [PhysicsServer.Resources.cs](../../src/Servers/Physics/PhysicsServer.Resources.cs), [PhysicsServer.Mass.cs](../../src/Servers/Physics/PhysicsServer.Mass.cs)
 
@@ -1009,3 +1009,5 @@ The complete PhysicsAreaFieldTests, PhysicsServerAreaFieldTests and PhysicsAreaM
 Complete PhysicsBodyStateTests and PhysicsServerForceTests now execute on explicitly selected public CPU/GPU worlds, alongside the common PhysicsContactImpulseTests and report-only role suite. They retain state/field/force/center values, post-solver callback edits/errors/removal/reentry, borrowed-view lifetime, force omission and pending-input rules. Real scene/raw dynamic and kinematic fixtures expose six uncapped contacts and verify deepest 2/1/0 caps and the corresponding monitor objects without private list-order assumptions; static/static pairs remain ineligible. Momentum checks retain their .08/.1 scene-impulse bounds, equal/opposite and rotating-normal/transient/sleep assertions. Warm gates require 0/0 owner/all-thread bytes for contact/callback/force frames, zero-cap frames and live pose reads. CPU native scheduling/depth-injection checks remain separate diagnostics; legacy staged GPU controls do not establish independent GPU acceptance. Native/platform, visual and final network/performance gates remain open.
 
 The complete shared PhysicsCollisionExceptionTests now executes scene/raw exceptions on explicitly selected public CPU/GPU worlds, retaining both motion directions, solved contact release/restoration, idempotent edits, opaque/freed targets and reentry. Sixty-four warmed changed raw-exception/step cycles require 0/0 owner/all-thread managed bytes. Internal GPU store probes remain diagnostics; broader inherited/extension, native/platform and final performance acceptance stays open.
+
+New world/space creation captures ProjectSettings.Physics2DRunOnSeparateThread with feature overrides, retaining it across aliases and later project edits. True runs complete selected Solve on a retained numerical lane and joins before owner publication/callbacks; unsupported hosts reject startup. [Thread conformance](../components/physics-thread.md) records CPU/provider checks and the open GPU/native gate.

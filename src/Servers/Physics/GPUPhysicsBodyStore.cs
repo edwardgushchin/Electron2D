@@ -75,6 +75,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     private readonly GPUPhysicsDevice _context;
     private readonly RenderHandle _pipeline;
     private readonly int _owner = Environment.CurrentManagedThreadId;
+    private int _solverBorrowThreadID;
     private RenderHandle? _bodies, _centers, _transientForces, _targets, _resolvedFields, _commands, _requests, _results, _status, _upload, _download;
     private Slot[] _slots = [];
     private Command[] _pending = [];
@@ -315,8 +316,20 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     private void EnsureAccess(bool allowFailed = false)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
-        if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU body state requires its owner thread.");
+        if (_owner != Environment.CurrentManagedThreadId && _solverBorrowThreadID != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU body state requires its owner or borrowed solver thread.");
         if (_failed && !allowFailed) throw new InvalidOperationException("The GPU body store failed and must be disposed.");
+    }
+
+    internal void BeginSolverBorrow(int threadID)
+    {
+        EnsureAccess();
+        if (_solverBorrowThreadID != 0 || threadID <= 0 || _owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU state cannot borrow another solver thread.");
+        _solverBorrowThreadID = threadID;
+    }
+    internal void EndSolverBorrow()
+    {
+        if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU solver borrowing must end on its owner.");
+        _solverBorrowThreadID = 0;
     }
 
     // Diagnostic initialization runs before the new buffer enters recorded compute work.

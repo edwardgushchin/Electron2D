@@ -43,3 +43,5 @@ Existing CPU/GPU creation resolves built-in entries through the retained interna
 `CreateSceneDefault()` resolves active-feature project engine/fallback settings before allocating canvas identity. It captures the retained registry selection, including DEFAULT priority, for lazy physics creation; later settings do not change it. Explicit constructors retain their own choices.
 
 See [the selection checks](../components/physics-backends.md#project-physics-selection).
+
+The feature-aware separate numerical thread policy is captured with this runtime before lazy space creation. Duplicates retain it; later project edits affect new runtimes. Unsupported browser selection rejects before canvas registration. See [thread ownership](../components/physics-thread.md).

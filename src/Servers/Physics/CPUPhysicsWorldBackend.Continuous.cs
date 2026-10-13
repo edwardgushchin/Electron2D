@@ -25,7 +25,7 @@ internal sealed partial class CPUPhysicsWorldBackend
     private readonly List<ContinuousShape> _continuousShapes = [];
     private readonly List<int> _continuousProxies = [], _continuousBoundaries = [];
     private B2DynamicTree? _continuousTree;
-    private Exception? _continuousFailure;
+    private Exception? _solverFailure;
     private float _continuousFraction, _continuousNearStep, _continuousDuration;
     internal long ContinuousQueryCount { get; private set; }
 

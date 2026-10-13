@@ -1,6 +1,6 @@
 # PhysicsBodyRuntime
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Declaration:** `internal sealed partial class PhysicsBodyRuntime`
 
@@ -118,3 +118,5 @@ A factory-returned cached body extension now projects its contact count/values o
 
 
 Retains scene/raw ContactsReportedDepthThreshold independently of numerical storage. It survives detach/reentry and participates in immutable checkpoint configuration and portable schema. Publication filters signed scene-unit candidate depths; changing policy preserves the completed snapshot.
+
+Prepared authoring reads can bypass the scene owner check only inside this world's exact authorized numerical implementation scope. Live state reads, authoring and lifetime operations keep their original owner/phase guards. Ordinary threads and foreign attached bodies gain no access. The [public-only consumer](../components/physics-thread.md) exercises mass/geometry/exclusion reads and write/query/lifetime rejection.

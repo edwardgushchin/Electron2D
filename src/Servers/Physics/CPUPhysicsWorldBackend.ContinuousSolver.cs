@@ -72,7 +72,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         }
         catch (Exception failure)
         {
-            _continuousFailure = failure;
+            _solverFailure = failure;
             Tasks.Drain(); world.locked = false;
             foreach (var arena in world.arena.AsSpan()) arena.Abort();
             world.reusableStepContext.Reset();

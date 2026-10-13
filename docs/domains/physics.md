@@ -830,3 +830,5 @@ host-stage cost without establishing a GPU improvement. GPU mass/window trials
 await power-cable verification; all broader acceptance requirements remain open.
 
 [Common fixed-clock conformance](../components/engine-runtime.md#verification) now exercises real CPU motion/ticks through the ordinary Engine scheduler with graphics denied. Frequency, catch-up, jitter, scaling, live settings and frame-event order have explicit acceptance evidence and zero warmed active-frame managed bytes. These common clock rows no longer have a structural-only audit reason; the separate physics-thread setting, numerical GPU/provider and final performance requirements remain open.
+
+[Separate numerical scheduling](../components/physics-thread.md) now has a typed captured project setting and real CPU/provider work on a retained lane. Owner publication/game callbacks and readonly input guards are checked with zero warmed managed bytes, including failure retirement. The setting remains Partial until GPU/native and complete numerical/scheduling acceptance is verified.

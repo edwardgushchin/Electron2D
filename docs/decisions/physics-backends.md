@@ -19,6 +19,25 @@ ADR 0012 selected vendored managed Box2D.NET for CPU physics. Scene/server bodie
 
 ### Decision
 
+- Physics2DRunOnSeparateThread projects physics/2d/run_on_separate_thread, false
+  by default. Each World runtime captures its feature-aware value before lazy
+  startup; raw spaces capture it at creation. A true value retains one numerical
+  solver thread for that world. Owner preparation completes before dispatch;
+  the numerical interval joins before synchronization, scene/contact publication,
+  queries and gameplay callbacks. Device creation/retirement and authored edits
+  remain on the original owner. Only that exact solver thread borrows device
+  state during its interval, with command acquisition/use/submission on the same
+  thread. The independent GPU still owns numerical state; no host solver/mirror
+  is introduced. Registered Solve and its immediate failure observation use the
+  same numerical lane with readonly prepared authoring access. All other hooks
+  retain the owner lane. Browser hosts without this threading capability reject
+  true before world/canvas identity allocation. Worker join/release survives errors;
+  a begun failed numerical interval retains its backend failure/no-replay policy.
+  This synchronous library barrier keeps ordinary explicit Step/query workflows
+  usable without exposing an asynchronous in-flight world. CPU and provider
+  verification must be recorded separately from the pending GPU/native gate;
+  serial/parallel scheduling alone is not a performance acceptance claim.
+
 - Backend implementation registration and complete typed extension dispatch follow [ADR 0103](physics-extensions.md#adr-0103). Named registration requires the connected scene/query/state routing and external consumer defined there; a factory alone does not close the extension requirement. Current operation-specific acceptance remains recorded in coverage.
 - Preserve managed Box2D.NET as the CPU backend and develop an Electron2D-owned GPU backend through the already vendored SDL GPU/ShaderCross interface. Game developers explicitly choose CPU/Box2D or GPU according to their simulation and deployment goals; CPU is a first-class selectable backend. Physical computation and canvas rendering have independent selection; GPU rendering must continue to support CPU physics. Startup fallback to CPU when GPU is unavailable is a separate configurable policy, not a replacement for explicit backend choice. A failed or partially committed GPU step must not silently replay on CPU. Requested and actual backend identity and startup fallback must be observable. Expose `PhysicsServer.Backend` with CPU/GPU, `SpaceCreate(Backend, bool allowCPUFallback = false)` and the parallel `World` constructor. Keep existing parameterless creation CPU-only. Requested/actual backend and a nullable startup fallback reason are readable for spaces and worlds. World physics stays lazy; duplicates retain the same selected runtime. Backend choice is immutable for that runtime; assigning another viewport World uses ordinary detach/reattach. Fallback catches startup capability/native-load failures only during construction, preserving the failure diagnostic, and never catches a begun physics step. Shared-world integration is now in progress; acceptance remains bounded by the executed common tests.
 - Preserve public Electron2D capabilities, parameter meanings, object/RID identity, ownership, queries and promised callback/event semantics. Box2D internal APIs, storage, lists, island topology and algorithms are replaceable implementation details. Bitwise CPU/GPU equality and exact internal ordering are diagnostic tools only, never acceptance requirements or reasons to retain CPU mirrors. Backend-specific numerical methods must satisfy the same observable contract; this does not authorize dropping features or changing public units.

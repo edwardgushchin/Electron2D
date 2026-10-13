@@ -46,8 +46,8 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <returns>True when listed in the active motion test's body exclusions; false outside a motion test.</returns>
     /// <remarks>This reads authored inputs without observing numerical state or allocating a copy.
     /// Nested ordinary queries retain the motion scope; recursive motion tests in the same world reject.
-    /// Normal return and exceptions clear the scope. Calls require this implementation's owner thread.</remarks>
-    /// <exception cref="InvalidOperationException">The implementation is unbound, called off-owner, or its world has failed outside a numerical hook.</exception>
+    /// Normal return and exceptions clear the scope. Calls require the owner or its authorized numerical hook.</remarks>
+    /// <exception cref="InvalidOperationException">The implementation is unbound, called outside an authorized lane, or its world has failed outside a numerical hook.</exception>
     /// <exception cref="ObjectDisposedException">The implementation or its world is disposed.</exception>
     public bool IsBodyExcludedFromMotionTest(RID body)
     {
@@ -60,7 +60,7 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <returns>True when listed in the active motion test's object exclusions; false outside a motion test.</returns>
     /// <remarks>This reads authored inputs without numerical observation or allocation. The scope and lifetime
     /// guards are the same as <see cref="IsBodyExcludedFromMotionTest"/>.</remarks>
-    /// <exception cref="InvalidOperationException">The implementation is unbound, called off-owner, or its world has failed outside a numerical hook.</exception>
+    /// <exception cref="InvalidOperationException">The implementation is unbound, called outside an authorized lane, or its world has failed outside a numerical hook.</exception>
     /// <exception cref="ObjectDisposedException">The implementation or its world is disposed.</exception>
     public bool IsObjectExcludedFromMotionTest(ulong objectID)
     {
@@ -74,7 +74,7 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <remarks>This input read is available during numerical hooks, including solving, without observing numerical state.
     /// Each call creates a snapshot; retain supplied exception-pair spans or implementation-owned buffers for warmed solver work.</remarks>
     /// <exception cref="ArgumentException">The owner is not a live body or belongs to another world.</exception>
-    /// <exception cref="InvalidOperationException">The implementation is unbound, called off-owner, or its world has failed outside a numerical hook.</exception>
+    /// <exception cref="InvalidOperationException">The implementation is unbound, called outside an authorized lane, or its world has failed outside a numerical hook.</exception>
     /// <exception cref="ObjectDisposedException">The implementation or its world is disposed.</exception>
     protected RID[] GetCollisionExceptions(RID body)
     {
@@ -115,7 +115,7 @@ public abstract class PhysicsServerBackend : ElectronObject
         Dispose();
     }
     /// <summary>Supplies the selected implementation operation: has failure.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Invoked under world lifetime borrowing. Ordinary checks use the owner; the immediate check following Solve shares its captured numerical lane.</remarks>
     protected internal abstract bool HasFailure { get; }
     /// <summary>Supplies the selected implementation operation: results ready.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
@@ -245,7 +245,8 @@ public abstract class PhysicsServerBackend : ElectronObject
     protected internal abstract void PrepareBodies(double delta);
     /// <summary>Supplies the selected implementation operation: solve.</summary>
     /// <remarks>Performs the selected numerical interval after preparation. A started solve failure terminates this world without another implementation replay; synchronization and ordinary publication do not proceed.
-    /// Hooks use the guarded owning thread; spans and values retain their existing engine-unit contracts.</remarks>
+    /// Runs on the owner by default or the world's retained numerical thread when the captured project policy selects it.
+    /// Prepared readonly authoring inputs remain available; live public queries, authoring writes and scene/lifetime access remain forbidden.</remarks>
     protected internal abstract void Solve(double delta);
     /// <summary>Supplies the selected implementation operation: sync results.</summary>
     /// <remarks>Publishes the completed numerical results before body/contact/Area observations and process counts. ResultsReady must be true after success; failed synchronization terminates the started world.

@@ -1,4 +1,5 @@
-if (args.Contains("--compound-native")) BackendChecks.RunCompoundNative(args.Contains("--gpu-renderer") ? "gpu" : "compatibility");
+if (args.Contains("--separate-thread")) BackendChecks.RunSeparateThread();
+else if (args.Contains("--compound-native")) BackendChecks.RunCompoundNative(args.Contains("--gpu-renderer") ? "gpu" : "compatibility");
 else if (args.Contains("--compound")) BackendChecks.RunCompound(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
 else if (args.Contains("--project-selection")) BackendChecks.RunProjectSelection();

@@ -487,17 +487,17 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [Engine](classes/Engine.md) | [Object](classes/Object.md) | 7 | 0 | 0 | 0 | 0 |
 | [Performance](classes/Performance.md) | [Object](classes/Object.md) | 3 | 1 | 0 | 0 | 0 |
-| [ProjectSettings](classes/ProjectSettings.md) | [Object](classes/Object.md) | 23 | 0 | 0 | 1 | 0 |
+| [ProjectSettings](classes/ProjectSettings.md) | [Object](classes/Object.md) | 23 | 1 | 0 | 0 | 0 |
 | [SceneTree](classes/SceneTree.md) | [MainLoop](classes/MainLoop.md) | 3 | 0 | 0 | 0 | 0 |
 | [TileData](classes/TileData.md) | [Object](classes/Object.md) | 14 | 0 | 0 | 0 | 0 |
 | [TileMapLayer](classes/TileMapLayer.md) | [Node2D](classes/Node2D.md) | 10 | 0 | 0 | 0 | 0 |
 | [TileSet](classes/TileSet.md) | [Resource](classes/Resource.md) | 12 | 0 | 0 | 0 | 0 |
 | [Viewport](classes/Viewport.md) | [Node](classes/Node.md) | 4 | 0 | 0 | 0 | 0 |
-| **Total** | | 76 | 1 | 0 | 1 | 0 |
+| **Total** | | 76 | 2 | 0 | 0 | 0 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
 | Declaration | State | Missing behavior / evidence |
 | --- | --- | --- |
 | [`Performance::method:get_monitor(int:Performance.Monitor)`](classes/Performance.md) | Partial | Three completed physical producers and the complete typed custom-monitor lifecycle execute. Remaining built-in monitor selectors need their exact runtime producer instrumentation, counters or native diagnostics; these prerequisites remain recorded per row. Native Linux sessions and warmed managed reads are verified; debugger UI and foreign acceptance are separate. |
-| [`ProjectSettings::property:physics/2d/run_on_separate_thread`](classes/ProjectSettings.md) | Unimplemented | CPU/GPU runtime and retained CPU workers already execute; the old first-Box2D prerequisite is fulfilled. The project setting still has no executable separate-thread simulation contract. Its first slice must implement actual scheduling, world/device ownership, authoring and callback barriers, lifecycle/failure teardown and cross-backend checks under ADRs 0054/0103; worker parallelism inside an owner-thread step or an inert stored bool does not implement it. |
+| [`ProjectSettings::property:physics/2d/run_on_separate_thread`](classes/ProjectSettings.md) | Partial | ADRs 0054/0103: captured feature-aware false-default policy now dispatches complete selected Solve on a retained numerical lane with owner preparation/publication barriers, exact readonly input borrowing and joined error/lifetime cleanup. CPU and independent public-only provider checks execute real motion, callback identity, failure/no-replay, retirement and strict 0/0 warmed full frames. GPU store borrowing is implemented but unverified; actual GPU/native/threaded-browser and scheduling/performance acceptance remain open. No serial fallback or inert stored switch closes these gates. |

@@ -50,7 +50,7 @@ public sealed partial class PhysicsServer
     {
         ThrowIfDisposed(); context.EnsureImplementationInputReadAccess();
         var runtime = BodyRuntime(body);
-        runtime.Owners.Scene?.Tree?.EnsureOwnerThread();
+        if (!context.IsNumericalInputThread) runtime.Owners.Scene?.Tree?.EnsureOwnerThread();
         if (runtime.Space is { } attached && !ReferenceEquals(attached, context))
             throw new ArgumentException("The body belongs to another physics world.", nameof(body));
         return CopyBodyCollisionExceptions(body);

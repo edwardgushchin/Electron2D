@@ -57,3 +57,5 @@ WorldTests retains default CPU world lifetime and mixed default/explicit transfe
 `new World()` remains caller-owned CPU regardless of project defaults; enum/name overloads retain their explicit choice. Implicit scene worlds capture `Physics2DEngine` and `Physics2DAllowCPUFallback` separately before lazy startup. All aliases retain that original runtime, selection and requested/actual diagnostics.
 
 See [the selection checks](../components/physics-backends.md#project-physics-selection).
+
+New world/space creation captures ProjectSettings.Physics2DRunOnSeparateThread with feature overrides, retaining it across aliases and later project edits. True runs complete selected Solve on a retained numerical lane and joins before owner publication/callbacks; unsupported hosts reject startup. [Thread conformance](../components/physics-thread.md) records CPU/provider checks and the open GPU/native gate.

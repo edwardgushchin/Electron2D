@@ -237,6 +237,16 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNER_DISABLE_CONTRACT")
     }
     return;
 }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICAL_BONE_CHILD") is { } physicalChild)
+{
+    if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1") ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, true);
+    PhysicalBoneTests.RunChild(physicalChild, PhysicalBoneTests.SelectedBackend()); return;
+}
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1")
+{
+    ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, true);
+    Environment.SetEnvironmentVariable("ELECTRON2D_TEST_COLLIDER_BACKEND", "1");
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLLIDER_BACKEND") == "1")
 {
     // Child hosts use their own specific entry points.
@@ -384,7 +394,6 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNED_CANVAS") == "1") {
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_SKIN_CHILD") is { } meshSkinChild) { MeshSkinTests.RunChild(meshSkinChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_SKIN_HOST") == "1") { MeshSkinTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_SKIN") == "1") { MeshSkinTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICAL_BONE_CHILD") is { } physicalChild) { PhysicalBoneTests.RunChild(physicalChild, PhysicalBoneTests.SelectedBackend()); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICAL_BONE_HOST") == "1") { PhysicalBoneTests.RunHost(PhysicalBoneTests.SelectedBackend()); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICAL_BONE") == "1") { PhysicalBoneTests.Run(PhysicalBoneTests.SelectedBackend()); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JIGGLE_CHILD") is { } jiggleChild) { SkeletonJiggleTests.RunChild(jiggleChild); return; }
@@ -453,6 +462,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIALOG") == "1") { Dialo
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIALOG_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_BODY_STATE") == "1") { PhysicsBodyStateTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PARALLEL") == "1") { PhysicsParallelTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_THREAD") == "1") { PhysicsSeparateThreadTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_CLOCK") == "1") { VerifyEngine(); PhysicsClockTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PERFORMANCE") == "1") { PhysicsPipelinePerformance.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDERING_DEVICE") == "1") { RenderingDeviceTests.Run(); return; }
@@ -1280,6 +1290,7 @@ InputActionSettingsTests.Run();
 VerifyInputEmulation();
 VerifyEngine();
 PhysicsClockTests.Run();
+PhysicsSeparateThreadTests.Run();
 VerifyMainLoop();
 VerifyNodeHierarchyAndTransforms();
 VerifyProcessing();

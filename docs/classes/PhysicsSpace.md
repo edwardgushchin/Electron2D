@@ -1,6 +1,6 @@
 # PhysicsSpace
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Declaration:** `internal sealed partial class PhysicsSpace : IDisposable`
 
@@ -26,7 +26,7 @@ One owner-thread world shared by scene bodies/Areas/joints and caller-owned coll
 
 | State/operation | Contract |
 | --- | --- |
-| `PhysicsSpace(RID rid)`, `InitializeBackend(...)` | Registered immutable identity and sampled settings precede selected-owner construction; initialization completes before activation. CPU alone owns the retained task scheduler and native policy/capacity/statistics implementation. |
+| `PhysicsSpace(RID rid, bool separateSolverThread = false)`, `InitializeBackend(...)` | Registered immutable identity and sampled settings precede selected-owner construction; initialization completes before activation. CPU alone owns the retained task scheduler and native policy/capacity/statistics implementation. |
 | `RID`, `WorldID`, body/Area/server-collider/joint lists | Stable server identity and current native generation/membership. |
 | `bool IsActive { get; }`, `SetActive(bool active)` | Local interval policy is retained by the selected owner and commits after its hook succeeds; owner/solver/recursive guards remain. SceneTree sets true after initialization. |
 | `EnsureQueryAccess()`, `EnsureReleaseAccess()`, `PrepareForQuery()` | Owner/lifetime/solver guard and pending fixture/pose preparation, including inactive worlds. |
@@ -283,3 +283,5 @@ Membership removal now attempts every dependent joint, state capture, numerical 
 [Selected diagnostic preparation](../components/physics-registered-adapter.md#diagnostic-capacity-and-publication) passes the contact-point cap to the numerical owner before solving, including registered implementations. Zero disables capture and remains available for failed-world cleanup; synchronized point/count reads retain the bounded shared snapshot. Full numerical and platform acceptance remain separate.
 
 The public GPU adapter retains one rebindable query-geometry lease. Alternating live resources reuses its wrapper and retires the previous reference; past resources are not accumulated. ConvexPolygonShapeTests exercises 128 warmed overlap/contact/rest/motion cycles between shared and standalone geometry on CPU/GPU with zero owner/all-thread bytes, preserving current contour results and initial-overlap fractions. GPUPhysicsShapeQueryTests checks successful replacement, null/disposed/thread rejection with preserved previous geometry, and retired lease failure. Geometry uploads and query waits retain their existing separate costs.
+
+A captured [separate numerical lane](../components/physics-thread.md) now dispatches only Solve after owner preparation and joins before all observations/callbacks. Its private exact-thread borrow authorizes prepared readonly inputs, while public queries, authoring and lifetime remain owner-bound. Disposal joins the retained lane before attachments; CPU/provider checks pass and GPU/native acceptance remains open.

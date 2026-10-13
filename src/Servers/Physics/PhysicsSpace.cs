@@ -33,6 +33,11 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal GPUPhysicsWorld EnableGPUSolver() { EnsureQueryAccess(); return _backend.EnableGPUSolver(); }
     private Vector2 _defaultGravity;
     private readonly int _ownerThreadID = Environment.CurrentManagedThreadId;
+    private readonly bool _separateSolverThread;
+    private PhysicsSolverThread? _solverThread;
+    private int _solverBorrowThreadID;
+    private bool IsSolverThread => _solverBorrowThreadID != 0 && Environment.CurrentManagedThreadId == _solverBorrowThreadID;
+    internal bool IsNumericalInputThread => _implementationCallbackDepth != 0 && IsSolverThread;
     internal PhysicsAreaFields DefaultAreaFields { get; }
     private bool _stepping;
     private bool _dispatching;
@@ -49,9 +54,10 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal string RequestedBackendName { get; private set; } = string.Empty;
     internal string ActualBackendName { get; private set; } = string.Empty;
 
-    internal PhysicsSpace(RID rid)
+    internal PhysicsSpace(RID rid, bool separateSolverThread = false)
     {
         RID = rid;
+        _separateSolverThread = separateSolverThread;
         var settings = ProjectSettings.Service;
         SleepSettings = PhysicsSleepSettings.FromProject(); SleepSettings.Validate();
         ContactSettings = PhysicsContactSettings.FromProject(); ContactSettings.Validate();
@@ -171,7 +177,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void BeginImplementationCallback(bool cleanup = false)
     {
         if (_disposed && !cleanup) throw new ObjectDisposedException(nameof(PhysicsSpace));
-        if (Environment.CurrentManagedThreadId != _ownerThreadID) throw new InvalidOperationException("Physics implementations require the space owner thread.");
+        if (Environment.CurrentManagedThreadId != _ownerThreadID && !IsSolverThread) throw new InvalidOperationException("Physics implementations require the owner or its borrowed solver thread.");
         _extensionCallbackDepth++;
         _implementationCallbackDepth++;
     }
@@ -180,8 +186,8 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         if (_implementationCallbackDepth == 0) { EnsureQueryAccess(); return; }
         ObjectDisposedException.ThrowIf(_disposed, this);
-        if (Environment.CurrentManagedThreadId != _ownerThreadID)
-            throw new InvalidOperationException("Physics implementation inputs require the space owner thread.");
+        if (Environment.CurrentManagedThreadId != _ownerThreadID && !IsSolverThread)
+            throw new InvalidOperationException("Physics implementation inputs require the owner or its borrowed solver thread.");
     }
     internal void EnsureImplementationWriteAccess()
     {
@@ -461,6 +467,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (_disposed) return;
         EnsureWorldRelease();
         List<Exception>? errors = null;
+        if (_solverThread is not null) Release(_solverThread.Dispose);
         foreach (var map in _snapshotMaps.ToArray()) Release(map.Dispose);
         _snapshotMaps.Clear();
         foreach (var checkpoint in _checkpoints.ToArray()) Release(checkpoint.Dispose);

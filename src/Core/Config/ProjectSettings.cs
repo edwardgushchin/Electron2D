@@ -193,6 +193,12 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<bool> Physics2DAllowCPUFallback { get; } =
         new("physics/2d/allow_cpu_fallback", false);
 
+    /// <summary>Selects a retained separate thread for each new world's numerical physics intervals.</summary>
+    /// <value>physics/2d/run_on_separate_thread; false by default. Worlds capture feature overrides before lazy startup.</value>
+    /// <remarks>Preparation, queries, publication and game callbacks retain their owner thread. Each solve joins before publication. Hosts without threads reject this mode.</remarks>
+    public static ProjectSetting<bool> Physics2DRunOnSeparateThread { get; } =
+        new("physics/2d/run_on_separate_thread", false);
+
     /// <summary>Defines the two-dimensional world's default gravity strength in scene units per second squared.</summary>
     /// <value>The typed setting with default 980; finite signed values are accepted by the registry.</value>
     public static ProjectSetting<float> Physics2DDefaultGravity { get; } =

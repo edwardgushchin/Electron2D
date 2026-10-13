@@ -91,13 +91,15 @@ public sealed partial class PhysicsServer : ElectronObject
 
     internal PhysicsSpace CreateRegisteredSpace(Backend backend, bool allowCPUFallback, bool owned,
         Func<PhysicsSpace, PhysicsWorldBackend>? factory = null, Action<PhysicsSpace>? initialize = null,
-        PhysicsBackendRegistry.Selection? selection = null)
+        PhysicsBackendRegistry.Selection? selection = null, bool? separateSolverThread = null)
     {
         ThrowIfDisposed();
         if (backend is not (Backend.CPU or Backend.GPU)) throw new ArgumentOutOfRangeException(nameof(backend));
         if (selection is null && factory is null) selection = BackendRegistry.Resolve(backend.ToString());
+        var separate = separateSolverThread ?? ProjectSettings.GetWithOverride(ProjectSettings.Physics2DRunOnSeparateThread);
+        if (separate && OperatingSystem.IsBrowser()) throw new PlatformNotSupportedException("This host cannot run physics on a separate thread.");
         var rid = RID.Allocate();
-        var space = new PhysicsSpace(rid);
+        var space = new PhysicsSpace(rid, separate);
         lock (_registryGate)
         {
             _sceneSpaces.Add(rid, space);

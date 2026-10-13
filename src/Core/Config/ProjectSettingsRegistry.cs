@@ -64,6 +64,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(PhysicsTicksPerSecond, isBasic: true);
         RegisterInternal(Physics2DEngine, isBasic: true);
         RegisterInternal(Physics2DAllowCPUFallback, isBasic: false);
+        RegisterInternal(Physics2DRunOnSeparateThread, isBasic: false);
         RegisterInternal(Physics2DDefaultGravity, isBasic: true);
         RegisterInternal(Physics2DDefaultGravityVector, isBasic: true);
         RegisterInternal(Physics2DDefaultLinearDamp, isBasic: false);
@@ -1169,6 +1170,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, AudioBusesChannelDisableTime) ||
         ReferenceEquals(setting, AudioBusesDefaultBusLayout) ||
         ReferenceEquals(setting, PhysicsTicksPerSecond) ||
+        ReferenceEquals(setting, Physics2DRunOnSeparateThread) ||
         ReferenceEquals(setting, Physics2DDefaultGravity) ||
         ReferenceEquals(setting, Physics2DDefaultGravityVector) ||
         ReferenceEquals(setting, Physics2DDefaultLinearDamp) ||

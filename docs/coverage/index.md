@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-13
 
+[Separate numerical thread implementation](../components/physics-thread.md)
+now captures a typed false-default project policy and dispatches the complete
+selected Solve on a retained lane. CPU/provider input, publication, failure and
+retirement checks execute with zero warmed managed bytes. The setting is Partial,
+with GPU/native numerical and scheduling/performance acceptance still open.
+
 [Common physics clock acceptance](../components/engine-runtime.md#verification)
 reconciles eleven previously structural rows: effective project frequency/cap/
 jitter keys, four Engine timing settings, three fixed-phase/count/fraction reads

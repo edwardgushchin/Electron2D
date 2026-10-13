@@ -220845,6 +220845,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.Physics2DRunOnSeparateThread()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "Physics2DRunOnSeparateThread",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E Physics2DRunOnSeparateThread { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.Physics2DSleepThresholdAngular()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",

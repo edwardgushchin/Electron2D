@@ -4,24 +4,29 @@ namespace Electron2D;
 /// <remarks>Viewports may share a world or select independent worlds. Physics storage is created on first use;
 /// resources and scene ownership retain it. Resource duplicates borrow the same runtime identities and never copy solver state.
 /// Navigation map ownership shares the same runtime lifetime; topology synchronization remains a separate boundary.
-/// Last-resource disposal still releases a failed physics world, subject to its owner-thread and callback restrictions.</remarks>
+/// Last-resource disposal still releases a failed physics world, subject to its owner-thread and callback restrictions.
+/// Each constructor captures <see cref="ProjectSettings.Physics2DRunOnSeparateThread"/> with feature overrides.
+/// A selected numerical thread joins before owner publication; later project edits affect new runtimes only.</remarks>
 public sealed class World : Resource
 {
     private WorldRuntime _runtime;
     private bool _released;
     /// <summary>Creates a caller-owned CPU world with an independent logical canvas and lazy physics space.</summary>
     /// <remarks>Project physics selection applies to implicit scene worlds; this constructor always selects CPU.</remarks>
+    /// <exception cref="PlatformNotSupportedException">The captured project policy requests an unavailable separate numerical thread.</exception>
     public World() : this(new WorldRuntime(sceneOwned: false)) { }
     /// <summary>Creates a world with an explicitly selected lazy physics implementation.</summary>
     /// <param name="backend">CPU or GPU physics, independently of the renderer.</param>
     /// <param name="allowCPUFallback">Allows CPU startup if the requested GPU cannot initialize.</param>
     /// <exception cref="ArgumentOutOfRangeException">The backend is not a selectable built-in implementation.</exception>
+    /// <exception cref="PlatformNotSupportedException">The captured project policy requests an unavailable separate numerical thread.</exception>
     /// <remarks>The device is initialized only on first physics access. Duplicates share the same selected runtime.</remarks>
     public World(PhysicsServer.Backend backend, bool allowCPUFallback = false) : this(new WorldRuntime(false, backend, allowCPUFallback)) { }
     /// <summary>Creates a world with a named registered implementation captured now and constructed on first physics access.</summary>
     /// <param name="backendName">A registered name, CPU, GPU or DEFAULT.</param>
     /// <param name="allowCPUFallback">Allows startup fallback only for the built-in GPU selection.</param>
     /// <exception cref="ArgumentException">The name is empty or unregistered.</exception>
+    /// <exception cref="PlatformNotSupportedException">The captured project policy requests an unavailable separate numerical thread.</exception>
     public World(string backendName, bool allowCPUFallback = false) : this(new WorldRuntime(false, allowCPUFallback: allowCPUFallback,
         selection: PhysicsServer.Service.BackendRegistry.Resolve(backendName)))
     { }

@@ -34,6 +34,15 @@ interception would leave scene behavior and direct queries outside the extension
 
 ### Decision
 
+- The opt-in separate numerical thread under ADR 0054 moves only Solve and its
+  immediate HasFailure read onto the world's retained solver lane. Factories,
+  authoring, preparation, synchronization, publication and lifecycle hooks retain
+  their original owner. Numerical borrowing authorizes readonly prepared input
+  projection on that exact solver thread; it grants no scene mutation, live public
+  solver query, recursive step or lifetime access. Join completes before any
+  owner publication or user gameplay callback. Serial mode retains existing
+  numerical hook threading, and captured policy is immutable for each world.
+
 - Keep PhysicsServer and PhysicsServerManager as sealed retained service objects
   with static public operations under ADR 0095. Separate the reference server's
   implementation-object role as PhysicsServerBackend : ElectronObject, with
@@ -206,7 +215,8 @@ interception would leave scene behavior and direct queries outside the extension
   The preflight checks all scene/raw borrowers, including disabled slots and equal
   writes, and invokes selected status hooks on the owner before mutation without
   resource locks. Coordinated worker geometry edits remain valid while all using
-  worlds are quiescent; workers never invoke owner-bound status hooks. A step or
+  worlds are quiescent; general workers never invoke owner-bound status hooks.
+  The authorized numerical lane may read its immediate Solve failure result. A step or
   numerical borrow rejects worker edits before private authoring.
   Publication rechecks owner/phase access without repeating fallible status hooks.
   It cannot roll back arbitrary private subclass writes; procedural subclasses must

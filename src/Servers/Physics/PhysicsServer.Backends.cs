@@ -19,7 +19,9 @@ public sealed partial class PhysicsServer
     /// <returns>A caller-owned RID; activate with SpaceSetActive and release with FreeRID.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The backend is not a selectable built-in implementation.</exception>
     /// <exception cref="InvalidOperationException">GPU initialization fails and fallback is disabled.</exception>
-    /// <remarks>Fallback occurs only during creation. A failed GPU step never replays on CPU.</remarks>
+    /// <exception cref="PlatformNotSupportedException">The project requests an unavailable separate numerical thread.</exception>
+    /// <remarks>Fallback occurs only during creation. A failed GPU step never replays on CPU.
+    /// Captures the feature-aware separate numerical thread setting for this space; publication and callbacks retain the owner.</remarks>
     public static RID SpaceCreate(Backend backend, bool allowCPUFallback = false) => Service.SpaceCreateCore(backend, allowCPUFallback);
 
     /// <summary>Creates an inactive space using a captured named registration.</summary>
@@ -27,6 +29,8 @@ public sealed partial class PhysicsServer
     /// <param name="allowCPUFallback">Allows startup fallback only for built-in GPU.</param>
     /// <returns>A caller-owned space RID released with FreeRID.</returns>
     /// <exception cref="ArgumentException">The registration is unknown or empty.</exception>
+    /// <exception cref="PlatformNotSupportedException">The project requests an unavailable separate numerical thread.</exception>
+    /// <remarks>Captures the feature-aware separate numerical thread setting; later edits affect new spaces only.</remarks>
     public static RID SpaceCreate(string backendName, bool allowCPUFallback = false)
     {
         var selection = Service.BackendRegistry.Resolve(backendName);

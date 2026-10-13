@@ -53,6 +53,7 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<int> PhysicsTicksPerSecond { get; }`](#p-electron2d-projectsettings-physicstickspersecond) | Defines the fixed-step callback frequency used by [`Engine`](Engine.md). |
 | [`public static ProjectSetting<string> Physics2DEngine { get; }`](#physics2dengine) | Captured implicit scene-world implementation name; default DEFAULT. |
 | [`public static ProjectSetting<bool> Physics2DAllowCPUFallback { get; }`](#physics2dallowcpufallback) | Opt-in implicit GPU startup fallback; default false. |
+| [`public static ProjectSetting<bool> Physics2DRunOnSeparateThread { get; }`](#physics2drunonseparatethread) | Captured separate numerical thread selection; default false. |
 | [`public static ProjectSetting<float> Physics2DDefaultGravity { get; }`](#p-electron2d-projectsettings-physics2ddefaultgravity) | Default 2D gravity strength, 980 scene units/s². |
 | [`public static ProjectSetting<Vector2> Physics2DDefaultGravityVector { get; }`](#p-electron2d-projectsettings-physics2ddefaultgravityvector) | Default 2D gravity direction, (0, 1) without normalization. |
 | [`public static ProjectSetting<float> Physics2DDefaultLinearDamp { get; }`](#p-electron2d-projectsettings-physics2ddefaultlineardamp) | Default 2D linear damping, 0.1/s. |
@@ -1468,3 +1469,8 @@ Defines `physics/2d/physics_engine`, default `DEFAULT`. Nonempty, non-whitespace
 ### `public static ProjectSetting<bool> Physics2DAllowCPUFallback { get; }`
 
 Defines `physics/2d/allow_cpu_fallback`, default false. Implicit worlds capture its active feature override with their implementation. It permits only built-in GPU capability/native-load startup fallback, exposes requested/actual identity and the cause, and never replays a begun GPU step or catches registered-provider errors. Later project changes do not reconfigure existing worlds. [Selection checks](../components/physics-backends.md#project-physics-selection) cover persistence, feature capture, startup and native rendering.
+
+<a id="physics2drunonseparatethread"></a>
+### `public static ProjectSetting<bool> Physics2DRunOnSeparateThread { get; }`
+
+Defines `physics/2d/run_on_separate_thread`, default false. New World runtimes capture feature overrides before lazy startup; raw spaces capture them at creation. True selects one retained numerical thread with a join before owner publication. Queries, authoring, factories, lifecycle and gameplay callbacks retain their owner. Hosts without this thread capability reject true. CPU and independent-provider checks execute; GPU/native and performance acceptance remain open in the [thread contract](../components/physics-thread.md).

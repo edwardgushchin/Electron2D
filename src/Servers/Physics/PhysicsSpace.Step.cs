@@ -9,6 +9,7 @@ internal sealed partial class PhysicsSpace
         if (ProfilingEnabled) _profileAllocated = GC.GetAllocatedBytesForCurrentThread();
         try
         {
+            if (_separateSolverThread) _solverThread ??= new(this);
             backend.BeginStep(delta);
             PrepareBodyViews();
             _stepping = true;
@@ -19,7 +20,8 @@ internal sealed partial class PhysicsSpace
             RecordStepPhase(0, ref profileMark);
             backend.PrepareWorld(delta); RecordStepPhase(1, ref profileMark);
             backend.PrepareBodies(delta); RecordStepPhase(2, ref profileMark);
-            backend.Solve(delta); RecordStepPhase(3, ref profileMark);
+            if (_solverThread is null) backend.Solve(delta); else _solverThread.Solve(backend, delta);
+            RecordStepPhase(3, ref profileMark);
             backend.SynchronizeResults(); RecordStepPhase(4, ref profileMark);
             var completionMark = ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
             foreach (var body in _serverColliders) backend.CompleteBody(body);
@@ -65,6 +67,17 @@ internal sealed partial class PhysicsSpace
         if (errors is not null) throw new AggregateException(backend.Kind == PhysicsServer.Backend.GPU ? "GPU physics-world step failed." : "Physics-world step failed.", errors);
     }
     internal void AdvanceStepTick() => Tick++;
+    internal void BeginSolverBorrow(int threadID)
+    {
+        if (!IsOwnerThread || !_stepping || _solverBorrowThreadID != 0) throw new InvalidOperationException("A numerical interval can borrow one solver thread only after owner preparation.");
+        GPUStore?.BeginSolverBorrow(threadID);
+        _solverBorrowThreadID = threadID;
+    }
+    internal void EndSolverBorrow()
+    {
+        _solverBorrowThreadID = 0;
+        GPUStore?.EndSolverBorrow();
+    }
     internal void ClearCallbackBodies() => _callbackBodies.Clear();
     internal void PrepareCallbackBodies()
     {

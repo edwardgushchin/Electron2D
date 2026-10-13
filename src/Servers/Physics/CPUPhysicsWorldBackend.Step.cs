@@ -6,7 +6,7 @@ namespace Electron2D;
 internal sealed partial class CPUPhysicsWorldBackend
 {
     private static readonly b2TaskCallback CollectBodyContacts = PhysicsSpace.CollectBodyContactRange;
-    private bool _hasKinematicBodies, _resultsReady;
+    private bool _hasKinematicBodies, _resultsReady, _nativeStepStarted;
     internal override bool ResultsReady => _resultsReady;
     internal override void BeginStep(double delta) { _resultsReady = false; EnsureAccess(); }
     internal override void PrepareWorld(double delta) => PrepareAreaFields();
@@ -14,8 +14,21 @@ internal sealed partial class CPUPhysicsWorldBackend
     internal override void Solve(double delta)
     {
         var world = b2GetWorldFromId(WorldID); world.contactBiasDuration = (float)delta;
+        _nativeStepStarted = false;
         var warmStarting = world.enableWarmStarting;
         try { if (Space.PortableColdStep) world.enableWarmStarting = false; StepKinematicPaths(delta, _hasKinematicBodies); Space.PortableColdStep = false; }
+        catch (Exception error) when (_nativeStepStarted && _solverFailure is null)
+        {
+            _solverFailure ??= error;
+            try { _tasks.Drain(); }
+            finally
+            {
+                world.locked = false;
+                foreach (var arena in world.arena.AsSpan()) arena.Abort();
+                world.reusableStepContext.Reset();
+            }
+            throw;
+        }
         finally { world.enableWarmStarting = warmStarting; }
         _resultsReady = true; Space.AdvanceStepTick();
     }

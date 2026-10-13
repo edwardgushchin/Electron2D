@@ -35,11 +35,11 @@ local geometry for any live shape RID, without cloning the resource. Cached data
 survives later edits/disposal. Every built-in family and custom canonical data are
 available; this does not impose a particular collision algorithm on the backend.
 
-Bound/live owner-thread and failed-world guards apply. Numerical hooks may read
+Bound/live authorized-lane and failed-world guards apply. Numerical hooks may read
 this authored input without solver reentry. Procedural suppliers execute under
 world borrowing, reject authoring/lifetime writes, and restore the borrow after
 errors. First-demand supplier allocations remain caller-controlled. Invalid or
-retired shape RIDs reject; unbound/disposed/off-owner implementations reject.
+retired shape RIDs reject; unbound/disposed/unauthorized implementations reject.
 [Public pair conformance](../components/physics-registered-adapter.md#public-shape-pair-dispatch)
 exercises the read, its guards and geometry revision lifetime.
 
@@ -64,7 +64,7 @@ Normal completion, hook failure and result-validation failure clear the scope.
 
 Uses the same scope and guards, with a 64-bit object identity. It does not resolve
 objects or treat object identity as a body RID; one object may represent several
-raw bodies. Both methods reject unbound implementations, off-owner calls and
+raw bodies. Both methods reject unbound implementations, unauthorized-lane calls and
 failed-world ordinary access with `InvalidOperationException`; disposed
 implementations/worlds reject with `ObjectDisposedException`. These authored-input
 reads remain available during numerical hooks, with false outside motion testing.
@@ -83,7 +83,7 @@ if (IsBodyExcludedFromMotionTest(candidateRID) ||
 
 | Declaration | Contract |
 | --- | --- |
-| `protected internal abstract bool HasFailure { get` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
+| `protected internal abstract bool HasFailure { get` | Owner status except the immediate Solve result, which shares the captured numerical lane. |
 | `protected internal abstract bool ResultsReady { get` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract int PreparedBodyCapacity { get` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract void Initialize()` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
@@ -117,7 +117,7 @@ if (IsBodyExcludedFromMotionTest(candidateRID) ||
 | `protected internal abstract void BeginStep(double delta)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract void PrepareWorld(double delta, in PhysicsAreaFieldConfiguration fields)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract void PrepareBodies(double delta)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
-| `protected internal abstract void Solve(double delta)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
+| `protected internal abstract void Solve(double delta)` | Complete numerical interval on the captured owner/separate lane; prepared inputs are read-only and publication waits for completion. |
 | `protected internal abstract void SyncResults()` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract void CompleteBody(RID body)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract void CollectContacts()` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
@@ -215,3 +215,5 @@ frames each measure 0/0 owner/all-thread bytes. Arbitrary shape features, couple
 geometry and final network/native/performance/platform acceptance remain open.
 
 [Compound slot numerics](../components/physics-registered-adapter.md#compound-slot-numerics) now verify independent multiple-circle/annulus placements and logical indices through the typed hook family, including Area/CCD/contact/private-history use. General geometry and coupled angular acceptance remain open.
+
+With the captured separate-thread policy, Solve and its immediate HasFailure check execute on the retained numerical lane. Prepared readonly geometry, mass and exclusion inputs remain available in that exact borrowed scope; authoring, live queries and scene/lifetime operations reject. All other hooks, factories, synchronization and game callbacks remain on the owner. See [thread conformance](../components/physics-thread.md).

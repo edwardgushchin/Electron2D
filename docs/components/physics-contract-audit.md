@@ -174,8 +174,8 @@ The complete generated ledger remains the per-declaration list. Current own
 physics families contain 686 Implemented, 151 Partial and 55 Excluded rows,
 with no own Blocked or Unimplemented rows. Shared inherited declarations still
 contain 142 Partial, 19 Blocked and 87 Unimplemented rows after typed indexed property projections; cross-domain consumers
-now contain 76 Implemented, one Partial and one Unimplemented row after completing
-the common fixed-clock audit. These are declaration counts,
+now contain 76 Implemented, two Partial and no Unimplemented rows after the
+captured numerical-thread implementation. These are declaration counts,
 not a claim that all numerical behaviors pass. The exact inherited names and
 prerequisites remain in the ledger rather than disappearing from this audit.
 
@@ -190,16 +190,18 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   opt-in startup fallback, CPU/GPU/registered numerical checks, actual no-device
   startup and both native rendering paths. Existing explicit worlds retain their
   choices. [Selection evidence](physics-backends.md#project-physics-selection)
-  closes that omission. run_on_separate_thread remains unimplemented: retained CPU
-  workers do not provide separate simulation scheduling, ownership, callback
-  barriers and teardown.
+  closes that omission. [run_on_separate_thread](physics-thread.md) now captures
+  a typed policy and executes complete CPU/provider Solve on a retained numerical
+  lane, with readonly input, owner publication and joined failure/lifetime barriers.
+  Its row remains Partial: GPU/native numerical execution and scheduling performance
+  have not been accepted. Ordinary retained CPU workers alone do not close it.
 - Common frequency/catch-up/jitter project keys, Engine clock settings and physical
   frame/count/fraction/phase observations now have audited public CPU evidence.
   [Clock conformance](engine-runtime.md#verification) uses actual world ticks and
   travel, live frame-boundary capture, feature overrides, zero scale, event ordering/
   failure and strict 0/0 warmed full frames. The eleven declaration rows no longer
-  have structural-only reasons. This does not implement the separate-thread
-  setting or certify numerical GPU/native cadence.
+  have structural-only reasons. These clock checks do not verify the separate numerical lane
+  or GPU/native cadence.
   The compared source is the pinned [clock member/reference document](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Engine.xml)
   and [fixed-frame signal document](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SceneTree.xml), retaining the accepted typed clock and event adaptations.
 - Independent registered multiple-circle/annulus slots now retain transformed
