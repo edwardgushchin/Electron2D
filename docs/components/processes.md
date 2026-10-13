@@ -37,3 +37,5 @@ var pid = child.PID;
 Uses BCL Windows process launch and the approved internal SDL process/IO backend with POSIX status observation, without new packages or vendor edits. ADRs 0004/0020/0095 define typed result/error, stream and service ownership. ADR 0090 separates the runtime primitives from a complete agent/editor workflow. Native SDL pipe streams must retain their process until closure; their native cleanup removes process stream properties before process destruction. [SDL process creation](https://wiki.libsdl.org/SDL3/SDL_CreateProcessWithProperties) and [input](https://wiki.libsdl.org/SDL3/SDL_GetProcessInput) describe native stream readiness/partial writes.
 
 Process-local environment changes through OS.SetEnvironment/UnsetEnvironment are inherited by subsequent launches through both managed and SDL native paths. See [environment ownership and directory queries](os-environment.md).
+
+A process launched with ExecuteWithPipe can receive its request through OS.ReadBufferFromSTDIN/ReadStringFromSTDIN and inspect its actual standard handles. The [standard-input component](standard-input.md) verifies this linked public workflow with an independent child.

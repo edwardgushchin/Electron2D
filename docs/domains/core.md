@@ -8,6 +8,8 @@ The existing PropertyDescriptor/Resource scene-copy machinery now supports an in
 
 The [OS environment and directory component](../components/os-environment.md) now executes process-local variables, native child inheritance and global/project/user-directory queries through the retained static OS service.
 
+The [standard-input component](../components/standard-input.md) executes actual native standard-handle classification and serialized raw/UTF-8 input, including pipe-driven child applications.
+
 ## Responsibility
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.

@@ -135,3 +135,7 @@ GetEnvironment, HasEnvironment, SetEnvironment and UnsetEnvironment manage proce
 | GetConfigDir() / GetDataDir() / GetCacheDir() / GetTempDir() | Global host paths, with absolute XDG overrides on Linux. |
 | GetUserDataDir() | Exact active ProjectSettings.UserDataRoot. |
 | GetSystemDir(SystemDir dir, bool sharedStorage = true) | Native Desktop, DCIM, Documents, Downloads, Movies, Music, Pictures and Ringtones roles; explicit unsupported-host/role errors. |
+
+## Standard handles and input
+
+GetSTDINType, GetSTDOUTType and GetSTDERRType return the nested StdHandleType enum. ReadBufferFromSTDIN reads actual owned bytes, filling pipe/file requests or returning a terminal line/prefix. ReadStringFromSTDIN reads a bounded UTF-8 line, normalizes CRLF and removes trailing LF without taking the next line. These cold blocking operations borrow the process handle and reject invalid sizes/handles or invalid UTF-8 explicitly. See [complete semantics, native adapters and child-process checks](../components/standard-input.md).

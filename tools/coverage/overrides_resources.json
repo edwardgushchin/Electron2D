@@ -558,6 +558,22 @@
       ],
       "state": "Blocked",
       "reason": "Exact prerequisite: typed persistent scene signal/endpoint storage and binding, plus missing-node factory/reference projection. Version-2 resource field roles do not implement node signal recording or missing-node hierarchy restoration (ADRs 0013/0023). No inert recording switch."
+    },
+    {
+      "godot": [
+        "Image::method:compress(int:Image.CompressMode,int:Image.CompressSource,int:Image.ASTCFormat)",
+        "Image::method:compress_from_channels(int:Image.CompressMode,int:Image.UsedChannels,int:Image.ASTCFormat)",
+        "Image::method:decompress()",
+        "Image::method:load_dds_from_buffer(PackedByteArray:)",
+        "Image::method:load_exr_from_buffer(PackedByteArray:)",
+        "Image::method:load_ktx_from_buffer(PackedByteArray:)",
+        "Image::method:save_dds(String:)",
+        "Image::method:save_dds_to_buffer()",
+        "Image::method:save_exr(String:,bool:,bool:,float:)",
+        "Image::method:save_exr_to_buffer(bool:,bool:,float:)"
+      ],
+      "state": "Unimplemented",
+      "reason": "Exact executable dependency under ADR 0039: the approved SDL_image 3.4.6 backend has no DDS/EXR/KTX or GPU-block compression/decompression codec API. Select and integrate mature codecs within that decision, including channel/HDR/mipmap semantics, format-specific encoders, bounded file/buffer paths, native packaging and compressed-image texture consumers. Raw Image format storage and SDL GPU upload capability do not supply a codec; no placeholder or manual codec rewrite is accepted."
     }
   ],
   "extras": [

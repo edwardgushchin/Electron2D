@@ -864,6 +864,61 @@
       "godot": "OS::method:unset_environment(String:)",
       "electron2d": "method:Electron2D.OS.UnsetEnvironment(System.String)",
       "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::enum:StdHandleType",
+      "electron2d": "T:Electron2D.OS.StdHandleType",
+      "reason": "Retained static OS standard-input slice under ADR 0004/0020/0045/0051/0095: native standard-device types, borrowed serialized raw buffers and bounded strict-UTF8 lines execute, with uppercase STDIN/STDOUT/STDERR member names. OSStandardInputTests checks actual pipe/file/PTY/null/closed handles, fragmented filling, EOF, CRLF, bounds, raw/text alternation, malformed/split UTF8 and OS.ExecuteWithPipe integration. Text capacity includes one terminating boundary (minimum 2); C# strings retain NUL and invalid UTF8 raises a typed exception after consumption. Linux native evidence; Windows unverified, other host adapters unavailable explicitly."
+    },
+    {
+      "godot": "OS::enum_value:StdHandleType.STD_HANDLE_CONSOLE",
+      "electron2d": "enumValue:Electron2D.OS.StdHandleType.Console()",
+      "reason": "Retained static OS standard-input slice under ADR 0004/0020/0045/0051/0095: native standard-device types, borrowed serialized raw buffers and bounded strict-UTF8 lines execute, with uppercase STDIN/STDOUT/STDERR member names. OSStandardInputTests checks actual pipe/file/PTY/null/closed handles, fragmented filling, EOF, CRLF, bounds, raw/text alternation, malformed/split UTF8 and OS.ExecuteWithPipe integration. Text capacity includes one terminating boundary (minimum 2); C# strings retain NUL and invalid UTF8 raises a typed exception after consumption. Linux native evidence; Windows unverified, other host adapters unavailable explicitly."
+    },
+    {
+      "godot": "OS::enum_value:StdHandleType.STD_HANDLE_FILE",
+      "electron2d": "enumValue:Electron2D.OS.StdHandleType.File()",
+      "reason": "Retained static OS standard-input slice under ADR 0004/0020/0045/0051/0095: native standard-device types, borrowed serialized raw buffers and bounded strict-UTF8 lines execute, with uppercase STDIN/STDOUT/STDERR member names. OSStandardInputTests checks actual pipe/file/PTY/null/closed handles, fragmented filling, EOF, CRLF, bounds, raw/text alternation, malformed/split UTF8 and OS.ExecuteWithPipe integration. Text capacity includes one terminating boundary (minimum 2); C# strings retain NUL and invalid UTF8 raises a typed exception after consumption. Linux native evidence; Windows unverified, other host adapters unavailable explicitly."
+    },
+    {
+      "godot": "OS::enum_value:StdHandleType.STD_HANDLE_INVALID",
+      "electron2d": "enumValue:Electron2D.OS.StdHandleType.Invalid()",
+      "reason": "Retained static OS standard-input slice under ADR 0004/0020/0045/0051/0095: native standard-device types, borrowed serialized raw buffers and bounded strict-UTF8 lines execute, with uppercase STDIN/STDOUT/STDERR member names. OSStandardInputTests checks actual pipe/file/PTY/null/closed handles, fragmented filling, EOF, CRLF, bounds, raw/text alternation, malformed/split UTF8 and OS.ExecuteWithPipe integration. Text capacity includes one terminating boundary (minimum 2); C# strings retain NUL and invalid UTF8 raises a typed exception after consumption. Linux native evidence; Windows unverified, other host adapters unavailable explicitly."
+    },
+    {
+      "godot": "OS::enum_value:StdHandleType.STD_HANDLE_PIPE",
+      "electron2d": "enumValue:Electron2D.OS.StdHandleType.Pipe()",
+      "reason": "Retained static OS standard-input slice under ADR 0004/0020/0045/0051/0095: native standard-device types, borrowed serialized raw buffers and bounded strict-UTF8 lines execute, with uppercase STDIN/STDOUT/STDERR member names. OSStandardInputTests checks actual pipe/file/PTY/null/closed handles, fragmented filling, EOF, CRLF, bounds, raw/text alternation, malformed/split UTF8 and OS.ExecuteWithPipe integration. Text capacity includes one terminating boundary (minimum 2); C# strings retain NUL and invalid UTF8 raises a typed exception after consumption. Linux native evidence; Windows unverified, other host adapters unavailable explicitly."
+    },
+    {
+      "godot": "OS::enum_value:StdHandleType.STD_HANDLE_UNKNOWN",
+      "electron2d": "enumValue:Electron2D.OS.StdHandleType.Unknown()",
+      "reason": "Retained static OS standard-input slice under ADR 0004/0020/0045/0051/0095: native standard-device types, borrowed serialized raw buffers and bounded strict-UTF8 lines execute, with uppercase STDIN/STDOUT/STDERR member names. OSStandardInputTests checks actual pipe/file/PTY/null/closed handles, fragmented filling, EOF, CRLF, bounds, raw/text alternation, malformed/split UTF8 and OS.ExecuteWithPipe integration. Text capacity includes one terminating boundary (minimum 2); C# strings retain NUL and invalid UTF8 raises a typed exception after consumption. Linux native evidence; Windows unverified, other host adapters unavailable explicitly."
+    },
+    {
+      "godot": "OS::method:get_stderr_type()",
+      "electron2d": "method:Electron2D.OS.GetSTDERRType()",
+      "reason": "Retained static OS standard-input slice under ADR 0004/0020/0045/0051/0095: native standard-device types, borrowed serialized raw buffers and bounded strict-UTF8 lines execute, with uppercase STDIN/STDOUT/STDERR member names. OSStandardInputTests checks actual pipe/file/PTY/null/closed handles, fragmented filling, EOF, CRLF, bounds, raw/text alternation, malformed/split UTF8 and OS.ExecuteWithPipe integration. Text capacity includes one terminating boundary (minimum 2); C# strings retain NUL and invalid UTF8 raises a typed exception after consumption. Linux native evidence; Windows unverified, other host adapters unavailable explicitly."
+    },
+    {
+      "godot": "OS::method:get_stdin_type()",
+      "electron2d": "method:Electron2D.OS.GetSTDINType()",
+      "reason": "Retained static OS standard-input slice under ADR 0004/0020/0045/0051/0095: native standard-device types, borrowed serialized raw buffers and bounded strict-UTF8 lines execute, with uppercase STDIN/STDOUT/STDERR member names. OSStandardInputTests checks actual pipe/file/PTY/null/closed handles, fragmented filling, EOF, CRLF, bounds, raw/text alternation, malformed/split UTF8 and OS.ExecuteWithPipe integration. Text capacity includes one terminating boundary (minimum 2); C# strings retain NUL and invalid UTF8 raises a typed exception after consumption. Linux native evidence; Windows unverified, other host adapters unavailable explicitly."
+    },
+    {
+      "godot": "OS::method:get_stdout_type()",
+      "electron2d": "method:Electron2D.OS.GetSTDOUTType()",
+      "reason": "Retained static OS standard-input slice under ADR 0004/0020/0045/0051/0095: native standard-device types, borrowed serialized raw buffers and bounded strict-UTF8 lines execute, with uppercase STDIN/STDOUT/STDERR member names. OSStandardInputTests checks actual pipe/file/PTY/null/closed handles, fragmented filling, EOF, CRLF, bounds, raw/text alternation, malformed/split UTF8 and OS.ExecuteWithPipe integration. Text capacity includes one terminating boundary (minimum 2); C# strings retain NUL and invalid UTF8 raises a typed exception after consumption. Linux native evidence; Windows unverified, other host adapters unavailable explicitly."
+    },
+    {
+      "godot": "OS::method:read_buffer_from_stdin(int:)",
+      "electron2d": "method:Electron2D.OS.ReadBufferFromSTDIN(System.Int32)",
+      "reason": "Retained static OS standard-input slice under ADR 0004/0020/0045/0051/0095: native standard-device types, borrowed serialized raw buffers and bounded strict-UTF8 lines execute, with uppercase STDIN/STDOUT/STDERR member names. OSStandardInputTests checks actual pipe/file/PTY/null/closed handles, fragmented filling, EOF, CRLF, bounds, raw/text alternation, malformed/split UTF8 and OS.ExecuteWithPipe integration. Text capacity includes one terminating boundary (minimum 2); C# strings retain NUL and invalid UTF8 raises a typed exception after consumption. Linux native evidence; Windows unverified, other host adapters unavailable explicitly."
+    },
+    {
+      "godot": "OS::method:read_string_from_stdin(int:)",
+      "electron2d": "method:Electron2D.OS.ReadStringFromSTDIN(System.Int32)",
+      "reason": "Retained static OS standard-input slice under ADR 0004/0020/0045/0051/0095: native standard-device types, borrowed serialized raw buffers and bounded strict-UTF8 lines execute, with uppercase STDIN/STDOUT/STDERR member names. OSStandardInputTests checks actual pipe/file/PTY/null/closed handles, fragmented filling, EOF, CRLF, bounds, raw/text alternation, malformed/split UTF8 and OS.ExecuteWithPipe integration. Text capacity includes one terminating boundary (minimum 2); C# strings retain NUL and invalid UTF8 raises a typed exception after consumption. Linux native evidence; Windows unverified, other host adapters unavailable explicitly."
     }
   ],
   "extras": [
@@ -2076,6 +2131,23 @@
       ],
       "state": "Implemented",
       "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": [
+        "OS::enum:StdHandleType",
+        "OS::enum_value:StdHandleType.STD_HANDLE_CONSOLE",
+        "OS::enum_value:StdHandleType.STD_HANDLE_FILE",
+        "OS::enum_value:StdHandleType.STD_HANDLE_INVALID",
+        "OS::enum_value:StdHandleType.STD_HANDLE_PIPE",
+        "OS::enum_value:StdHandleType.STD_HANDLE_UNKNOWN",
+        "OS::method:get_stderr_type()",
+        "OS::method:get_stdin_type()",
+        "OS::method:get_stdout_type()",
+        "OS::method:read_buffer_from_stdin(int:)",
+        "OS::method:read_string_from_stdin(int:)"
+      ],
+      "state": "Implemented",
+      "reason": "Retained static OS standard-input slice under ADR 0004/0020/0045/0051/0095: native standard-device types, borrowed serialized raw buffers and bounded strict-UTF8 lines execute, with uppercase STDIN/STDOUT/STDERR member names. OSStandardInputTests checks actual pipe/file/PTY/null/closed handles, fragmented filling, EOF, CRLF, bounds, raw/text alternation, malformed/split UTF8 and OS.ExecuteWithPipe integration. Text capacity includes one terminating boundary (minimum 2); C# strings retain NUL and invalid UTF8 raises a typed exception after consumption. Linux native evidence; Windows unverified, other host adapters unavailable explicitly."
     }
   ]
 }

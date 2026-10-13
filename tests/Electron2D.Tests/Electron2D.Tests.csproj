@@ -9,6 +9,7 @@
     <TieredCompilation Condition="'$(Configuration)' == 'Release'">false</TieredCompilation>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Fixtures/StandardInputHost.py" CopyToOutputDirectory="PreserveNewest" />
     <EmbeddedResource Include="Fixtures/ImporterMeshOracle.json" LogicalName="Electron2D.Mesh.ImporterOracle" />
     <EmbeddedResource Include="Fixtures/MeshCompressionOracle.json" LogicalName="Electron2D.Mesh.CompressionOracle" />
     <EmbeddedResource Include="TestData/Noise/image-reference.json" LogicalName="TestNoise.image-reference.json" />

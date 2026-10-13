@@ -7022,6 +7022,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.OS.StdHandleType",
+    "kind": "type",
+    "declaringType": "Electron2D.OS.StdHandleType",
+    "name": "StdHandleType",
+    "signature": "public enum Electron2D.OS.StdHandleType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.OS.SystemDir",
     "kind": "type",
     "declaringType": "Electron2D.OS.SystemDir",
@@ -37316,6 +37334,71 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.NoiseType",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.OS.StdHandleType.Console()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OS.StdHandleType",
+    "name": "Console",
+    "signature": "public const Electron2D.OS.StdHandleType Console = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OS.StdHandleType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.OS.StdHandleType.File()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OS.StdHandleType",
+    "name": "File",
+    "signature": "public const Electron2D.OS.StdHandleType File = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OS.StdHandleType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.OS.StdHandleType.Invalid()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OS.StdHandleType",
+    "name": "Invalid",
+    "signature": "public const Electron2D.OS.StdHandleType Invalid = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OS.StdHandleType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.OS.StdHandleType.Pipe()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OS.StdHandleType",
+    "name": "Pipe",
+    "signature": "public const Electron2D.OS.StdHandleType Pipe = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OS.StdHandleType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.OS.StdHandleType.Unknown()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OS.StdHandleType",
+    "name": "Unknown",
+    "signature": "public const Electron2D.OS.StdHandleType Unknown = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OS.StdHandleType",
     "value": "4"
   },
   {
@@ -120680,6 +120763,45 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.GetSTDERRType()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetSTDERRType",
+    "signature": "public static Electron2D.OS.StdHandleType GetSTDERRType()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OS.StdHandleType",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetSTDINType()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetSTDINType",
+    "signature": "public static Electron2D.OS.StdHandleType GetSTDINType()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OS.StdHandleType",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetSTDOUTType()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetSTDOUTType",
+    "signature": "public static Electron2D.OS.StdHandleType GetSTDOUTType()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OS.StdHandleType",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.GetSystemDir(Electron2D.OS.SystemDir,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -120899,6 +121021,44 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.ReadBufferFromSTDIN(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "ReadBufferFromSTDIN",
+    "signature": "public static System.Byte[] ReadBufferFromSTDIN(System.Int32 bufferSize = 1024)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bufferSize",
+        "type": "System.Int32",
+        "default": "1024"
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.ReadStringFromSTDIN(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "ReadStringFromSTDIN",
+    "signature": "public static System.String ReadStringFromSTDIN(System.Int32 bufferSize = 1024)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bufferSize",
+        "type": "System.Int32",
+        "default": "1024"
+      }
+    ],
+    "returnType": "System.String",
     "value": null
   },
   {

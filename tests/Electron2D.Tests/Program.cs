@@ -9,6 +9,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length == 2 && args[0] == "--os-stdio-child") { OSStandardInputTests.Child(args); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OS_STDIO") == "1") { OSStandardInputTests.Run(); return; }
 if (args.Length == 3 && args[0] == "--os-environment-child") { OSEnvironmentTests.Child(args); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OS_ENVIRONMENT") == "1") { OSEnvironmentTests.Run(); return; }
 if (args.Length > 1 && args[0] == "--os-process-child") { OSProcessTests.Child(args); return; }
@@ -925,6 +927,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW") == "1")
     return;
 }
 
+OSStandardInputTests.Run();
 OSEnvironmentTests.Run();
 StaticServiceTests.Run();
 SceneDiagnosticsTests.Run();
