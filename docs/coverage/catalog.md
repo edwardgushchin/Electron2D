@@ -466,7 +466,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [MultiplayerPeerExtension](classes/MultiplayerPeerExtension.md) | MultiplayerPeer | Implemented | 23 |
 | [MultiplayerSpawner](classes/MultiplayerSpawner.md) | Node | Implemented | 10 |
 | [MultiplayerSynchronizer](classes/MultiplayerSynchronizer.md) | Node | Implemented | 18 |
-| [Mutex](classes/Mutex.md) | RefCounted | Blocked | 3 |
+| [Mutex](classes/Mutex.md) | RefCounted | Implemented | 3 |
 | [NativeMenu](classes/NativeMenu.md) | Object | Blocked | 82 |
 | [NavigationAgent2D](classes/NavigationAgent2D.md) | Node | Partial | 56 |
 | [NavigationAgent3D](classes/NavigationAgent3D.md) | Node | Excluded | 59 |
@@ -761,7 +761,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ScrollBar](classes/ScrollBar.md) | Range | Implemented | 15 |
 | [ScrollContainer](classes/ScrollContainer.md) | Container | Implemented | 39 |
 | [SegmentShape2D](classes/SegmentShape2D.md) | Shape2D | Implemented | 2 |
-| [Semaphore](classes/Semaphore.md) | RefCounted | Blocked | 3 |
+| [Semaphore](classes/Semaphore.md) | RefCounted | Implemented | 3 |
 | [SeparationRayShape2D](classes/SeparationRayShape2D.md) | Shape2D | Implemented | 2 |
 | [SeparationRayShape3D](classes/SeparationRayShape3D.md) | Shape3D | Excluded | 2 |
 | [Separator](classes/Separator.md) | Control | Blocked | 2 |

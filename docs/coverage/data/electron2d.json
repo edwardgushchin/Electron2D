@@ -6649,6 +6649,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Mutex",
+    "kind": "type",
+    "declaringType": "Electron2D.Mutex",
+    "name": "Mutex",
+    "signature": "public sealed class Electron2D.Mutex",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.NavigationAgent",
     "kind": "type",
     "declaringType": "Electron2D.NavigationAgent",
@@ -10154,6 +10169,21 @@
     "signature": "public sealed class Electron2D.SegmentShape",
     "visibility": "public",
     "baseType": "Electron2D.Shape",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Semaphore",
+    "kind": "type",
+    "declaringType": "Electron2D.Semaphore",
+    "name": "Semaphore",
+    "signature": "public sealed class Electron2D.Semaphore",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -18108,6 +18138,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.Mutex..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Mutex",
+    "name": ".ctor",
+    "signature": "public Mutex()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.NavigationAgent..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.NavigationAgent",
@@ -21025,6 +21068,19 @@
     "declaringType": "Electron2D.SegmentShape",
     "name": ".ctor",
     "signature": "public SegmentShape()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.Semaphore..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Semaphore",
+    "name": ".ctor",
+    "signature": "public Semaphore()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -114467,6 +114523,58 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Mutex.Lock()",
+    "kind": "method",
+    "declaringType": "Electron2D.Mutex",
+    "name": "Lock",
+    "signature": "public System.Void Lock()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mutex.TryLock()",
+    "kind": "method",
+    "declaringType": "Electron2D.Mutex",
+    "name": "TryLock",
+    "signature": "public System.Boolean TryLock()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mutex.Unlock()",
+    "kind": "method",
+    "declaringType": "Electron2D.Mutex",
+    "name": "Unlock",
+    "signature": "public System.Void Unlock()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mutex.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.Mutex",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationAgent.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.NavigationAgent",
@@ -156666,6 +156774,83 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Semaphore.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Semaphore",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Semaphore.Post(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Semaphore",
+    "name": "Post",
+    "signature": "public System.Void Post(System.Int32 count = 1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "count",
+        "type": "System.Int32",
+        "default": "1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Semaphore.TryWait()",
+    "kind": "method",
+    "declaringType": "Electron2D.Semaphore",
+    "name": "TryWait",
+    "signature": "public System.Boolean TryWait()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Semaphore.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.Semaphore",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Semaphore.Wait()",
+    "kind": "method",
+    "declaringType": "Electron2D.Semaphore",
+    "name": "Wait",
+    "signature": "public System.Void Wait()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {

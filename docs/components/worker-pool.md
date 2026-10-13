@@ -27,3 +27,7 @@ ResourceLoader threaded requests now implement staged graph ownership, progress,
 Invalid submission arguments are checked before lazy startup. Completion/progress/wait calls with no pending runtime reject their ID without starting workers or freezing startup settings. The cold public API test checks both boundaries before a later valid configured submission.
 
 Internal loader waits select only the dependency group. Older root-task waits verify the active worker stack and retain a non-consuming preparation wait until publication retires its owner ticket. Public WorkerThreadPool wait/older guards retain their behavior and warmed allocation budget.
+
+## Caller-owned synchronization
+
+[Mutex](../classes/Mutex.md) and [Semaphore](../classes/Semaphore.md) now provide recursive protected data and counted worker signals. See [synchronization](synchronization.md) for ownership, blocking dependencies, failures and verified public scene consumers. These primitives grant no off-owner scene/native access and do not replace the requirement to wait every accepted task ID.

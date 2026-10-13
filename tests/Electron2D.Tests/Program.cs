@@ -17,6 +17,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "1")
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_INTERNAL") == "1") { NodeInternalProcessingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_INTERNAL_NATIVE") is { } internalBackend) { NodeInternalProcessingTests.RunNative(internalBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYNCHRONIZATION") == "1") { SynchronizationTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYNCHRONIZATION_NATIVE") is { } syncBackend) { SynchronizationTests.RunNative(syncBackend); return; }
 if (args.Length == 2 && args[0] == "--image-decoder-child") { ImageLoaderExtensionTests.Child(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_EXTENSIONS") == "1") { ImageLoaderExtensionTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_EXTENSIONS_NATIVE") is { } imageBackend) { ImageLoaderExtensionTests.RunNative(imageBackend); return; }

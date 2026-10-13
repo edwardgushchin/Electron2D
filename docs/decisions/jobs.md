@@ -1,6 +1,6 @@
 # Worker execution decisions
 
-Last updated: 2026-10-10
+Last updated: 2026-10-13
 
 <a id="adr-0104"></a>
 ## ADR 0104: Retained typed worker pool with explicit completion ownership
@@ -41,3 +41,11 @@ ResourceLoader may use internal waits restricted to one dependency group, and ma
 Navigation iteration teardown and deterministic host synchronization may use a target-only older-job wait for pure captured geometry jobs. Those workers cannot call user callbacks or live scene/server code, so this does not relax public older/self dependency guards.
 
 NoiseTexture uses target-only retirement while keeping the public older/self wait guards. Custom sampler callbacks may execute, so recursive generation/disposal and worker disposal of unfinished generation reject before mutation. Owner teardown waits outside the texture gate; built-in snapshots and file-graph leases survive through completion/retirement.
+
+### Caller-owned synchronization
+
+The accepted managed worker foundation also provides sealed `Mutex : ElectronObject` and `Semaphore : ElectronObject`, with managed lifetime replacing reference counting under ADR 0014. `Mutex` uses a recursive .NET monitor: `Lock`, immediate `TryLock` and same-thread `Unlock`; each successful acquisition requires one release. `Semaphore` uses a monitor-backed UInt32 token count initialized to zero: `Post(int count = 1)`, `Wait` and `TryWait`. Positive post validation and overflow reject before publication; wait handles spurious wake-ups. Both operations publish shared managed data through the monitor boundary; they grant no off-owner scene/render access. No named/process-shared handles, async/task policy, cancellation or forced thread termination is exposed.
+
+Callers retain the objects, finish and join participants, then dispose them. Disposal validation rejects observed held/pending mutex acquisitions or semaphore waits before starting this caller's disposal. This validation does not grant permission to race new calls with disposal. Raced semaphore waiters are pulsed and reject disposed state; a raced mutex acquisition releases its monitor before throwing, and an already accepted owner can still Unlock after disposal starts. Failed validation preserves ordinary operation. Browser constructors explicitly reject until shared-memory/threaded runtime bootstrap exists; desktop/mobile .NET is the foundation and only exercised profiles count as verified.
+
+These primitives provide the typed synchronization prerequisite for user worker pipelines and future explicit Thread ownership. Waiting inside a pool consumes a worker slot: callers must guarantee that producers can execute without depending on every blocked worker or the blocked scene owner. Dedicated Thread result/priority/join ownership remains a separate slice.

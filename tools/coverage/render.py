@@ -397,8 +397,8 @@ def reason_for_type(item, lookup):
         ({"OggPacketSequence", "OggPacketSequencePlayback"}, "first audio decoding and playback slice"),
         ({"Crypto", "CryptoKey", "X509Certificate"}, "first typed networking-security integration slice with a portable crypto backend (ADR 0021)"),
         ({"RID"}, "first executable shared server resource-identity and lifetime slice under ADR 0063; renderer and navigation consumers retain their own domain gates"),
-        ({"Thread", "Mutex", "Semaphore"},
-         "typed portable synchronization/explicit thread ownership over the accepted worker foundation (ADRs 0021 and 0104)"),
+        ({"Thread"},
+         "caller-owned thread start/result, priority, identity and join/retirement contract over the executable Mutex/Semaphore and worker foundation (ADRs 0021 and 0104)"),
         ({"WeakRef"},
          "an accepted public weak-reference contract beyond System.WeakReference<T>; Resource currently uses only an internal weak path cache (ADR 0013)"),
     )
