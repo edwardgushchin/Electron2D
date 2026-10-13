@@ -1350,4 +1350,6 @@ PackedScene.PackForSave executes detached RESET property/Bézier preparation wit
 
 The existing Engine and RenderingServer types now own the [explicit native frame contract](components/manual-render-frames.md): manual draw, GPU synchronization, ordered one-shot callbacks and process-lifetime completed-frame accounting. No new production type is added.
 
+The existing CPUPhysicsWorldBackend cast/CCD helper, internal B2Distances geometric query policy and resident GPU query/motion shaders now preserve geometric first touch; [the compound checks](components/physics-registered-adapter.md#compound-slot-numerics) record scope and limits. No new production type or public signature is added.
+
 `SceneConnectionBinding<TPublisher, TSubscriber, TBindings>` implements compiled authored event connections with typed payloads, dual endpoint cleanup and PackedScene file reconstruction (ADR 0010).

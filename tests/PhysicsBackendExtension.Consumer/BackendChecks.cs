@@ -11,6 +11,7 @@ public static partial class BackendChecks
         RunContactResponse();
         RunContinuousResponse();
         RunContactFrames();
+        RunCompound();
         Solver? solver = null;
         RunShapeResources();
         RunShapeGeometry();

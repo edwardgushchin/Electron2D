@@ -26,14 +26,21 @@ internal sealed partial class CPUPhysicsWorldBackend
         {
             hit.state = B2TOIState.b2_toiStateOverlapped; hit.fraction = 0; return true;
         }
-        var length = (double)motion.X * motion.X + (double)motion.Y * motion.Y;
-        var projection = (double)point.X * motion.X + (double)point.Y * motion.Y;
-        var discriminant = projection * projection - length * (distance - radius * radius);
-        if (length == 0 || projection >= 0 || discriminant < 0) return true;
-        var fraction = (-projection - Math.Sqrt(discriminant)) / length;
-        if (fraction < 0 || fraction > input.maxFraction) return true;
+        if (!DiskFraction(point, motion, radius, input.maxFraction, out var fraction)) return true;
         hit.state = B2TOIState.b2_toiStateHit; hit.fraction = (float)fraction;
         var normal = point + (float)fraction * motion; hit.normal = b2Normalize(normal);
         return true;
+    }
+    private static bool DiskFraction(in B2Vec2 point, in B2Vec2 motion, double radius, float maximum, out float fraction)
+    {
+        fraction = maximum;
+        var distance = (double)point.X * point.X + (double)point.Y * point.Y;
+        var length = (double)motion.X * motion.X + (double)motion.Y * motion.Y;
+        var projection = (double)point.X * motion.X + (double)point.Y * motion.Y;
+        var discriminant = projection * projection - length * (distance - radius * radius);
+        if (length == 0 || projection >= 0 || discriminant < 0) return false;
+        var time = (-projection - Math.Sqrt(discriminant)) / length;
+        if (time < 0 || time > maximum) return false;
+        fraction = (float)time; return true;
     }
 }

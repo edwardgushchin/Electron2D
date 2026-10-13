@@ -213,3 +213,5 @@ and encounter-order ties. The independent fixture retains bounded per-peer
 numerical rows and frozen velocities; 128 replay cycles and 768 changed-policy
 frames each measure 0/0 owner/all-thread bytes. Arbitrary shape features, coupled
 geometry and final network/native/performance/platform acceptance remain open.
+
+[Compound slot numerics](../components/physics-registered-adapter.md#compound-slot-numerics) now verify independent multiple-circle/annulus placements and logical indices through the typed hook family, including Area/CCD/contact/private-history use. General geometry and coupled angular acceptance remain open.

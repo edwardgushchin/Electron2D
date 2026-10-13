@@ -16,7 +16,7 @@ public static partial class BackendChecks
             foreach (var joint in Joints.Values) if (joint.Connects(a, b)) return true;
             return a.Shapes > 0 && b.Shapes > 0 && ((a.Mask & b.Layer) != 0 || (b.Mask & a.Layer) != 0) &&
                 !Exceptions.Contains((a.RID, b.RID)) && !Exceptions.Contains((b.RID, a.RID)) &&
-                AllowsContact(a.RID, b.RID) && Contact(a, b, out _, out _, out _);
+                Contact(a, b, out _, out _, out _);
         }
         private void Group(Body seed, List<Body> group)
         {

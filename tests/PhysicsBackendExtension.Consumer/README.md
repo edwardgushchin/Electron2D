@@ -145,3 +145,7 @@ independent fixture owns retained per-peer numerical rows and flat private
 history; arbitrary shape features/coupled geometry and final acceptance remain open.
 
 Use `--project-selection` for typed implicit-world selection: real independent-provider motion, lazy aliases, immutable DEFAULT priorities and factory errors with project fallback enabled. After 128 warmups, 128 complete frames require zero owner/all-thread managed bytes. The profile also runs with actual GPU capability denied; it uses only the public API.
+
+Use `--compound` (optionally `--cpu` or `--gpu`) for rotated multiple-circle slots, disabled indices, all query families, scene/raw/Area ownership, compound inertia, per-feature momentum, deepest same-peer caps, CCD and private history. 128 full warm frame/query/restore cycles require 0/0 managed bytes. `--compound-native` checks all three physics choices with actual window pixels; add `--gpu-renderer` for GPU rendering. General polygon/capsule/piece and coupled angular CCD acceptance remains open.
+
+The built-in compound profile also checks ten circle/segment query combinations against rounded/sharp represented targets. CastMotion must bracket analytic first touch within 1/256, with 128 allocation-free warm queries per case. The CPU query policy and resident GPU query/motion paths use geometric boundaries; ordinary native solver policy retains its existing settings.

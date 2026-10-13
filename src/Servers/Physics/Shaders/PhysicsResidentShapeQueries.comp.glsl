@@ -83,7 +83,7 @@ bool piecesContact(Hull a,Hull b,Geometry ga,Geometry gb,vec2 motion,bool emit,u
     float fraction=0;
     if(!initial)
     {
-        if(motion==vec2(0)||!querySweep(a,b,motion,vec2(0),max(0.5,radii-0.5),0.25,fraction,normal))return false;
+        if(motion==vec2(0)||!querySweep(a,b,motion,vec2(0),radii,0.00001,fraction,normal))return false;
         a.pose.xy+=min(1,fraction+1/length(motion))*motion;
     }
     activeFraction=fraction;

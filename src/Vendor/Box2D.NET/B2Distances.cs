@@ -663,16 +663,17 @@ namespace Box2D.NET
         /// Perform a linear shape cast of shape B moving and shape A fixed. Determines the hit point, normal, and translation fraction.
         /// Initially touching shapes are treated as a miss.
         // Shape cast using conservative advancement
-        public static B2CastOutput b2ShapeCast(in B2ShapeCastPairInput input)
+        public static B2CastOutput b2ShapeCast(in B2ShapeCastPairInput input, bool geometricRadii = false)
         {
             if (input.proxyA.isBoundary || input.proxyB.isBoundary) return B2Boundaries.Cast(input);
             // Compute tolerance
             float linearSlop = B2_LINEAR_SLOP;
             float totalRadius = input.proxyA.radius + input.proxyB.radius;
-            float target = b2MaxFloat(linearSlop, totalRadius - linearSlop);
-            float tolerance = 0.25f * linearSlop;
+            // Library queries use geometric contact rather than a solver penetration target.
+            float target = geometricRadii ? totalRadius : b2MaxFloat(linearSlop, totalRadius - linearSlop);
+            float tolerance = geometricRadii ? 1e-7f : 0.25f * linearSlop;
 
-            B2_ASSERT(target > tolerance);
+            B2_ASSERT(geometricRadii || target > tolerance);
 
             // Prepare input for distance query
             B2SimplexCache cache = new B2SimplexCache();
@@ -689,6 +690,7 @@ namespace Box2D.NET
             B2Vec2 delta2 = input.translationB;
             B2CastOutput output = new B2CastOutput();
 
+            B2Vec2 previousNormal = new B2Vec2();
             int iteration = 0;
             const int maxIterations = 20;
             for (; iteration < maxIterations; ++iteration)
@@ -720,10 +722,11 @@ namespace Box2D.NET
                     else
                     {
                         // Regular hit
-                        B2_ASSERT(distanceOutput.distance > 0.0f && b2IsNormalized(distanceOutput.normal));
+                        B2Vec2 normal = geometricRadii && distanceOutput.distance == 0.0f ? previousNormal : distanceOutput.normal;
+                        B2_ASSERT((geometricRadii || distanceOutput.distance > 0.0f) && b2IsNormalized(normal));
                         output.fraction = fraction;
-                        output.point = b2MulAdd(distanceOutput.pointA, input.proxyA.radius, distanceOutput.normal);
-                        output.normal = distanceOutput.normal;
+                        output.point = b2MulAdd(distanceOutput.pointA, input.proxyA.radius, normal);
+                        output.normal = normal;
                         output.hit = true;
                         return output;
                     }
@@ -740,6 +743,7 @@ namespace Box2D.NET
                     return output;
                 }
 
+                previousNormal = distanceOutput.normal;
                 // Advance sweep
                 fraction += (target - distanceOutput.distance) / denominator;
                 if (fraction >= input.maxFraction)

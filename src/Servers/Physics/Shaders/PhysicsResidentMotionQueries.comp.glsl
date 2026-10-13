@@ -142,7 +142,7 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
             }
             if(safe==0)return;
             float fraction;
-            if(!querySweep(a,b,motion*safe,vec2(0),max(0.5,a.radius+b.radius-0.5),0.25,fraction,normal))return;
+            if(!querySweep(a,b,motion*safe,vec2(0),a.radius+b.radius,0.00001,fraction,normal))return;
             low=max(0,ceil(fraction*256)-1)/256*safe;high=min(safe,low+safe/256);
             if(low>=safe)return;
             safe=low;unsafeFraction=high;

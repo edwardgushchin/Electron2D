@@ -989,6 +989,8 @@ NodeTreeDiagnosticsTests.Run();
 NodeUniqueNameTests.Run();
 NodeReplacementTests.Run();
 PhysicsProjectSelectionTests.Run(true);
+BackendChecks.RunCompound(PhysicsServer.Backend.CPU);
+BackendChecks.RunCompound(PhysicsServer.Backend.GPU);
 PhysicsInterpolationTests.Run();
 PhysicsViewportInterpolationTests.Run(PhysicsServer.Backend.CPU);
 PhysicsViewportInterpolationTests.Run(PhysicsServer.Backend.GPU);

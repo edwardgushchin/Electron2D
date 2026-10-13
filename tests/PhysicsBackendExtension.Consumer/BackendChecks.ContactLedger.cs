@@ -2,22 +2,22 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    private readonly record struct FrameContact(RID Peer, Vector2 Point, Vector2 Normal, Vector2 Impulse, float Depth,
+    private readonly record struct FrameContact(RID Peer, int LocalShape, int PeerShape, Vector2 Point, Vector2 Normal, Vector2 Impulse, float Depth,
         Vector2 LocalVelocity = default, Vector2 PeerVelocity = default);
 
     private sealed partial class Body
     {
         internal readonly List<FrameContact> Contacts = [];
         internal float ReportedDepth;
-        internal void RecordContact(Body peer, Vector2 point, Vector2 normal, Vector2 impulse, float depth)
+        internal void RecordContact(Body peer, int localShape, int peerShape, Vector2 point, Vector2 normal, Vector2 impulse, float depth)
         {
             if (ReportedLimit == 0) return;
             for (var i = 0; i < Contacts.Count; i++)
-                if (Contacts[i].Peer == peer.RID)
+                if (Contacts[i].Peer == peer.RID && Contacts[i].LocalShape == localShape && Contacts[i].PeerShape == peerShape)
                 {
-                    var old = Contacts[i]; Contacts[i] = new(peer.RID, point, normal, old.Impulse + impulse, MathF.Max(old.Depth, depth)); return;
+                    var old = Contacts[i]; Contacts[i] = new(peer.RID, localShape, peerShape, point, normal, old.Impulse + impulse, MathF.Max(old.Depth, depth)); return;
                 }
-            Contacts.Add(new(peer.RID, point, normal, impulse, depth));
+            Contacts.Add(new(peer.RID, localShape, peerShape, point, normal, impulse, depth));
         }
         internal void FreezeContacts()
         {
@@ -42,7 +42,7 @@ public static partial class BackendChecks
                     if (contact.Depth <= output[slot].Depth) continue;
                 }
                 else count++;
-                output[slot] = new(rid, 0, contact.Peer, 0, contact.Point, contact.Point, contact.Normal,
+                output[slot] = new(rid, contact.LocalShape, contact.Peer, contact.PeerShape, contact.Point, contact.Point, contact.Normal,
                     contact.LocalVelocity, contact.PeerVelocity, contact.Impulse, contact.Depth);
             }
             return count;

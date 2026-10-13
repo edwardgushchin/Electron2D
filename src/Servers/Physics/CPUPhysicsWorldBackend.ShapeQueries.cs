@@ -266,6 +266,16 @@ internal sealed partial class CPUPhysicsWorldBackend
     internal static B2CastOutput Cast(in B2ShapeProxy query, in B2ShapeProxy other,
         in B2Transform otherTransform, in B2Vec2 motion, float maxFraction)
     {
+        // Query fractions must bracket disk geometry before solver penetration allowances.
+        if (!query.isBoundary && !other.isBoundary && query.count == 1 && other.count == 1 && query.radius + other.radius > 0)
+        {
+            var target = b2TransformPoint(otherTransform, other.points[0]); var offset = query.points[0] - target;
+            var radius = (double)query.radius + other.radius;
+            if ((double)offset.X * offset.X + (double)offset.Y * offset.Y <= radius * radius ||
+                !DiskFraction(offset, motion, radius, maxFraction, out var fraction)) return default;
+            var normal = b2Normalize(offset + fraction * motion);
+            return new() { hit = true, fraction = fraction, normal = normal, point = target + other.radius * normal };
+        }
         var cast = new B2ShapeCastPairInput
         {
             proxyA = other,
@@ -275,6 +285,6 @@ internal sealed partial class CPUPhysicsWorldBackend
             translationB = motion,
             maxFraction = maxFraction
         };
-        return b2ShapeCast(cast);
+        return b2ShapeCast(cast, geometricRadii: true);
     }
 }

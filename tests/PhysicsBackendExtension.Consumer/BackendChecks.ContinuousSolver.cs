@@ -35,14 +35,14 @@ public static partial class BackendChecks
                 {
                     if (a.RID.GetID() >= b.RID.GetID() || a.IsArea || b.IsArea || a.Shapes == 0 || b.Shapes == 0 ||
                         a.InvMass + b.InvMass == 0 || (a.Mask & b.Layer) == 0 && (b.Mask & a.Layer) == 0 ||
-                        Exceptions.Contains((a.RID, b.RID)) || Exceptions.Contains((b.RID, a.RID)) || !AllowsContact(a.RID, b.RID)) continue;
+                        Exceptions.Contains((a.RID, b.RID)) || Exceptions.Contains((b.RID, a.RID))) continue;
                     var motion = Motion(a) - Motion(b); var speed = motion.Length();
                     if (speed == 0) continue;
                     var hit = false; var fraction = 1f;
                     if (a.Dynamic && a.ContinuousMode != CCDMode.Disabled && SweptContact(a, b, motion * duration, out var first)) { hit = true; fraction = first; }
                     if (b.Dynamic && b.ContinuousMode != CCDMode.Disabled && SweptContact(b, a, -motion * duration, out var second)) { hit = true; fraction = MathF.Min(fraction, second); }
                     if (!hit) continue;
-                    var extent = MathF.Min(a.Radius - a.Hole, b.Radius - b.Hole);
+                    var extent = MathF.Min(a.MinimumThickness, b.MinimumThickness);
                     interval = MathF.Min(interval, .25f * extent / speed);
                     if (fraction > 0) interval = MathF.Min(interval, fraction * duration + .0001f * extent / speed);
                 }
@@ -50,14 +50,23 @@ public static partial class BackendChecks
         }
         private static Vector2 Motion(Body body) => body.IsArea || body.Mode == PhysicsServer.BodyMode.Static ||
             body.Dynamic && !body.Awake ? Vector2.Zero : body.Velocity;
-        private static bool SweptContact(Body a, Body b, Vector2 motion, out float fraction)
+        private bool SweptContact(Body a, Body b, Vector2 motion, out float fraction)
         {
-            var point = a.Position - b.Position; var outer = a.Radius + b.Radius;
-            var inner = MathF.Max(0, a.Hole > 0 ? a.Hole - b.Radius : b.Hole - a.Radius);
-            if (a.ContinuousMode == CCDMode.CastRay)
-            {
-                point += motion.Normalized() * a.Radius; outer = b.Radius; inner = b.Hole;
-            }
+            fraction = 1; var hit = false;
+            for (var i = 0; i < a.Shapes; i++) for (var j = 0; j < b.Shapes; j++)
+                {
+                    var first = a.Parts[i]; var second = b.Parts[j];
+                    if (!AllowsContact(a.RID, first.Index, b.RID, second.Index)) continue;
+                    var point = a.PartCenter(first) - b.PartCenter(second); var outer = first.Outer + second.Outer;
+                    var inner = MathF.Max(0, first.Inner > 0 ? first.Inner - second.Outer : second.Inner - first.Outer);
+                    if (a.ContinuousMode == CCDMode.CastRay)
+                    { point += motion.Normalized() * first.Outer; outer = second.Outer; inner = second.Inner; }
+                    if (SweepPart(point, motion, inner, outer, out var current)) { hit = true; fraction = MathF.Min(fraction, current); }
+                }
+            return hit;
+        }
+        private static bool SweepPart(Vector2 point, Vector2 motion, float inner, float outer, out float fraction)
+        {
             var distance = (double)point.X * point.X + (double)point.Y * point.Y;
             fraction = 0;
             if (distance >= (double)inner * inner && distance <= (double)outer * outer) return true;
@@ -67,8 +76,8 @@ public static partial class BackendChecks
             var discriminant = projection * projection - length * (distance - (double)radius * radius);
             if (length == 0 || discriminant < 0) return false;
             var root = Math.Sqrt(discriminant); var near = (-projection - root) / length; var far = (-projection + root) / length;
-            var hit = near >= 0 ? near : far; fraction = (float)hit;
-            return hit >= 0 && hit <= 1;
+            var value = near >= 0 ? near : far; fraction = (float)value;
+            return value >= 0 && value <= 1;
         }
     }
 }

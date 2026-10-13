@@ -122,7 +122,7 @@ public static partial class BackendChecks
             }
             Steps++;
         }
-        private readonly HashSet<(RID, RID)> _framePairs = [];
+        private readonly HashSet<(RID, int, RID, int)> _framePairs = [];
         private void SolveContacts()
         {
             foreach (var a in Bodies.Values)
@@ -130,30 +130,35 @@ public static partial class BackendChecks
                 {
                     if (a.RID.GetID() >= b.RID.GetID() || a.IsArea || b.IsArea || a.Shapes == 0 || b.Shapes == 0 ||
                         (a.Mask & b.Layer) == 0 && (b.Mask & a.Layer) == 0 || Exceptions.Contains((a.RID, b.RID)) || Exceptions.Contains((b.RID, a.RID))) continue;
-                    if (!AllowsContact(a.RID, b.RID) || a.Mode == PhysicsServer.BodyMode.Static && b.Mode == PhysicsServer.BodyMode.Static ||
-                        a.InvMass + b.InvMass == 0 && a.ReportedLimit == 0 && b.ReportedLimit == 0 ||
-                        !Contact(a, b, out var normal, out var depth, out var diagnosticPoint)) continue;
-                    if (depth > 0 && (a.Awake || b.Awake))
-                    {
-                        var half = normal * (depth * .5f);
-                        AddDebugPoint(diagnosticPoint - half); AddDebugPoint(diagnosticPoint + half);
-                    }
-                    var inverse = a.InvMass + b.InvMass;
-                    var active = a.Dynamic && a.Awake || b.Dynamic && b.Awake ||
-                        a.Mode == PhysicsServer.BodyMode.Kinematic && (a.Velocity != Vector2.Zero || a.Angular != 0) ||
-                        b.Mode == PhysicsServer.BodyMode.Kinematic && (b.Velocity != Vector2.Zero || b.Angular != 0);
-                    var impulse = Vector2.Zero;
-                    if (active && inverse > 0)
-                    {
-                        a.Position -= normal * depth * (a.InvMass / inverse);
-                        b.Position += normal * depth * (b.InvMass / inverse);
-                        Contact(a, b, out _, out _, out var solvedPoint);
-                        impulse = SolveContact(a, b, normal, solvedPoint);
-                    }
-                    Contact(a, b, out _, out _, out var contactPoint);
-                    a.RecordContact(b, contactPoint, -normal, -impulse, depth);
-                    b.RecordContact(a, contactPoint, normal, impulse, depth);
-                    if (_framePairs.Add((a.RID, b.RID))) Pairs++;
+                    if (a.Mode == PhysicsServer.BodyMode.Static && b.Mode == PhysicsServer.BodyMode.Static ||
+                        a.InvMass + b.InvMass == 0 && a.ReportedLimit == 0 && b.ReportedLimit == 0) continue;
+                    for (var i = 0; i < a.Shapes; i++) for (var j = 0; j < b.Shapes; j++)
+                        {
+                            var first = a.Parts[i]; var second = b.Parts[j];
+                            if (!AllowsContact(a.RID, first.Index, b.RID, second.Index) ||
+                                !PartContact(a, first, b, second, out var normal, out var depth, out var diagnosticPoint)) continue;
+                            if (depth > 0 && (a.Awake || b.Awake))
+                            {
+                                var half = normal * (depth * .5f);
+                                AddDebugPoint(diagnosticPoint - half); AddDebugPoint(diagnosticPoint + half);
+                            }
+                            var inverse = a.InvMass + b.InvMass;
+                            var active = a.Dynamic && a.Awake || b.Dynamic && b.Awake ||
+                                a.Mode == PhysicsServer.BodyMode.Kinematic && (a.Velocity != Vector2.Zero || a.Angular != 0) ||
+                                b.Mode == PhysicsServer.BodyMode.Kinematic && (b.Velocity != Vector2.Zero || b.Angular != 0);
+                            var impulse = Vector2.Zero;
+                            if (active && inverse > 0)
+                            {
+                                a.Position -= normal * depth * (a.InvMass / inverse);
+                                b.Position += normal * depth * (b.InvMass / inverse);
+                                PartContact(a, first, b, second, out _, out _, out var solvedPoint);
+                                impulse = SolveContact(a, b, normal, solvedPoint);
+                            }
+                            PartContact(a, first, b, second, out _, out _, out var contactPoint);
+                            a.RecordContact(b, first.Index, second.Index, contactPoint, -normal, -impulse, depth);
+                            b.RecordContact(a, second.Index, first.Index, contactPoint, normal, impulse, depth);
+                            if (_framePairs.Add((a.RID, first.Index, b.RID, second.Index))) Pairs++;
+                        }
                 }
             if (FailSolve) throw new InvalidOperationException("Injected independent solver failure.");
         }
@@ -174,22 +179,19 @@ public static partial class BackendChecks
         {
             var self = Bodies[area]; var count = 0;
             foreach (var other in Bodies.Values)
-                if (other != self && other.Shapes > 0 && self.Shapes > 0 && (self.Mask & other.Layer) != 0 &&
-                    (!other.IsArea || other.Monitorable) && Overlap(self, other))
-                { if (count < output.Length) output[count] = new(other.RID, 0, 0); count++; }
+            {
+                if (other == self || (self.Mask & other.Layer) == 0 || other.IsArea && !other.Monitorable) continue;
+                for (var i = 0; i < self.Shapes; i++) for (var j = 0; j < other.Shapes; j++)
+                        if (PartOverlap(self, self.Parts[i], other, other.Parts[j]))
+                        { if (count < output.Length) output[count] = new(other.RID, other.Parts[j].Index, self.Parts[i].Index); count++; }
+            }
             return count;
         }
-        protected override bool AreaContainsPoint(RID area, Vector2 point, uint mask) { var b = Bodies[area]; return (b.Layer & mask) != 0 && Annulus.Contains(point, b.Position, b.Hole, b.Radius); }
-        private static bool Overlap(Body a, Body b)
+        protected override bool AreaContainsPoint(RID area, Vector2 point, uint mask)
         {
-            var d = a.Position.DistanceTo(b.Position);
-            return d <= a.Radius + b.Radius && d + b.Radius >= a.Hole && d + a.Radius >= b.Hole;
-        }
-        private static bool Contact(Body a, Body b, out Vector2 normal, out float depth, out Vector2 point)
-        {
-            if (a.Hole > 0 && b.Hole > 0) throw new NotSupportedException("The fixture exercises custom annulus/circle contacts.");
-            if (b.Hole > 0) { var hit = Annulus.Contact(b.Position, b.Hole, b.Radius, a.Position, a.Radius, out normal, out depth, out point); normal = -normal; return hit; }
-            return Annulus.Contact(a.Position, a.Hole, a.Radius, b.Position, b.Radius, out normal, out depth, out point);
+            var b = Bodies[area]; if ((b.Layer & mask) == 0) return false;
+            for (var i = 0; i < b.Shapes; i++) { var p = b.Parts[i]; if (Annulus.Contains(point, b.PartCenter(p), p.Inner, p.Outer)) return true; }
+            return false;
         }
         protected override void EndStep(Exception? failure) { }
         protected override void FlushQueries() { LifecycleHook?.Invoke(LifecyclePhase.Flush); Flushes++; FlushHook?.Invoke(); }
@@ -205,12 +207,6 @@ public static partial class BackendChecks
         protected override void ApplyPortableSleep(RID collider, float time, bool canSleep, bool sleeping)
         { var b = Bodies[collider]; b.SleepTime = time; b.Awake = !sleeping; b.CanSleep = canSleep; }
         protected override void BeginPortableRestore() { }
-        private bool AllowsContact(RID a, RID b)
-        {
-            foreach (var pair in OneWays)
-                if (pair.A == a && pair.B == b || pair.A == b && pair.B == a) return pair.Allowed;
-            return true;
-        }
         internal readonly List<PhysicsBackendOneWay> OneWays = [];
         internal int OneWayCapacity = -1, OneWayReturn = -1, OneWaySpanLength;
         protected override void CompletePortableRestore(ReadOnlySpan<PhysicsBackendOneWay> pairs, ulong tick)
@@ -226,7 +222,6 @@ public static partial class BackendChecks
     }
     private sealed partial class Body(Solver solver, RID rid, bool area)
     {
-        internal float Hole;
         internal RID RID => rid;
         internal float InvMass => InverseMass;
         internal float InvInertia => InverseInertia;
@@ -248,7 +243,7 @@ public static partial class BackendChecks
         internal ulong Canvas, ObjectID;
         internal float Priority;
         internal Vector2 Position, Velocity, Force, Surface;
-        internal float Rotation, Angular, Torque, SurfaceAngular, Mass = 1, Inertia = 1, Radius, SleepTime;
+        internal float Rotation, Angular, Torque, SurfaceAngular, Mass = 1, Inertia = 1, SleepTime;
         internal float Friction = 1, Bounce;
         internal CCDMode ContinuousMode;
         internal bool Awake = true, CanSleep = true, Locked, Detached, Omit;
@@ -322,8 +317,7 @@ public static partial class BackendChecks
             Shapes = 0; Layer = layer; Mask = mask;
             Friction = friction; Bounce = bounce;
             LastShape = slots.IsEmpty ? default : slots[^1];
-            foreach (ref readonly var s in slots)
-                if (s.Enabled) { var dimensions = Annulus.Dimensions(s.Shape.GetGeometryData()); Radius = dimensions.Outer; Hole = dimensions.Inner; Shapes++; }
+            RebuildParts(slots);
         }
         protected override (Vector2 Position, float Rotation) GetPose() => (Position, Rotation);
         protected override Transform GetTransform()
@@ -355,7 +349,7 @@ public static partial class BackendChecks
         protected override float InverseMass => Dynamic ? 1 / Mass : 0;
         protected override float InverseInertia => Dynamic && !Locked ? 1 / Inertia : 0;
         protected override PhysicsMassProperties ApplyMassProfile(float mass, float inertia, Vector2? center)
-        { Mass = mass; Inertia = inertia > 0 ? inertia : MathF.Max(.001f, mass * (Radius * Radius + Hole * Hole) / 2); _center = center ?? default; return new(Mass, Inertia, _center); }
+        => PartMass(mass, inertia, center);
         protected override void WakeTouching() => solver.WakeConnected(this);
         protected override Vector2 GetPointVelocity(Vector2 offset) => LinearVelocity + new Vector2(-offset.Y, offset.X) * AngularVelocity;
         protected override Vector2 GetWorldPointVelocity(Vector2 point) => GetPointVelocity(point - CenterOfMass);

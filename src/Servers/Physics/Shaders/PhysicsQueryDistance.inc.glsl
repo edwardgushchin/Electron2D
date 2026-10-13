@@ -68,6 +68,16 @@ float queryDistance(Hull a,Hull b,vec2 sweepA,vec2 sweepB,out vec2 normal)
 bool querySweep(Hull a,Hull b,vec2 motion,vec2 sweptB,float target,float tolerance,out float fraction,out vec2 normal)
 {
     fraction=0;normal=vec2(0);float time=0;
+    // Disk queries preserve geometric radii instead of a solver penetration target.
+    if(!a.boundary&&!b.boundary&&a.count==1u&&b.count==1u&&sweptB==vec2(0)&&a.extension==vec2(0)&&b.extension==vec2(0)&&a.radius+b.radius>0)
+    {
+        vec2 offset=vertex(a,0u)-vertex(b,0u);float radius=a.radius+b.radius,distance=dot2(offset,offset);
+        if(distance<=radius*radius){normal=normalized(-offset);return true;}
+        float size=dot2(motion,motion),projection=dot2(offset,motion),disc=projection*projection-size*(distance-radius*radius);
+        if(size==0||projection>=0||disc<0)return false;
+        float at=(-projection-sqrt(disc))/size;if(at<0||at>1)return false;
+        fraction=at;normal=normalized(-offset-at*motion);return true;
+    }
     [[dont_unroll]] for(uint i=0u;i<128u;i++)
     {
         Hull moved=a;moved.pose.xy+=time*motion;

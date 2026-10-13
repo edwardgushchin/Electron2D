@@ -42,7 +42,7 @@ public static partial class BackendChecks
             Check(restoredLater == 2 && temporary is { IsDisposed: true }, "Rollback attempts later borrowers and retires the rejected private geometry");
             using var point = new PhysicsPointQueryParameters { Position = new(5, 0), CollideWithAreas = true };
             var hits = new PhysicsPointResult[4];
-            Check(world.DirectSpaceState.IntersectPoint(point, hits) == 0 && solver.Bodies.Values.All(body => body.Radius == 3),
+            Check(world.DirectSpaceState.IntersectPoint(point, hits) == 0 && solver.Bodies.Values.All(body => body.Shapes == 1 && body.Parts[0].Outer == 3),
                 "Public query preparation retries incomplete rollback before returning original geometry");
             PhysicsServer.ShapeSetData(shape, next);
             Check(world.DirectSpaceState.IntersectPoint(point, hits) == 4, "A later successful replacement reaches every borrower after rollback failure");

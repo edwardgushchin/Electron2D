@@ -818,3 +818,5 @@ and nested native presentation checks. Project engine/thread contracts and
 inherited/provider acceptance remain open.
 
 [Implicit physics world selection](../components/physics-backends.md#project-physics-selection) now captures typed project engine/fallback settings and manager DEFAULT priority independently of rendering. Caller parameterless and explicit creation retain their policies. CPU/GPU/registered motion, no-device startup and native pixels have scoped checks; separate-thread scheduling and complete physics/performance acceptance remain open.
+
+[Compound slot numerics](../components/physics-registered-adapter.md#compound-slot-numerics) now exercise independent multiple circle/annulus placements, disabled index preservation, query/contact/Area/CCD/private history and deepest same-peer caps against CPU/GPU. Disk and general rounded/sharp CastMotion regressions fix both built-in query/motion paths to bracket geometric first touch. General geometry, coupled angular CCD, separate-thread scheduling and final platform/performance acceptance remain open.
