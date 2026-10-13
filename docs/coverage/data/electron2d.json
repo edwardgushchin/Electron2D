@@ -180314,6 +180314,83 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TranslationServer.GetAllCountries()",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "GetAllCountries",
+    "signature": "public static System.String[] GetAllCountries()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.GetAllLanguages()",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "GetAllLanguages",
+    "signature": "public static System.String[] GetAllLanguages()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.GetAllScripts()",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "GetAllScripts",
+    "signature": "public static System.String[] GetAllScripts()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.GetCountryName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "GetCountryName",
+    "signature": "public static System.String GetCountryName(System.String country)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "country",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.GetLanguageName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "GetLanguageName",
+    "signature": "public static System.String GetLanguageName(System.String language)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TranslationServer.GetLoadedLocales()",
     "kind": "method",
     "declaringType": "Electron2D.TranslationServer",
@@ -180324,6 +180401,25 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.GetLocaleName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "GetLocaleName",
+    "signature": "public static System.String GetLocaleName(System.String locale)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -180357,6 +180453,44 @@
     "parameters": [
       {
         "name": "locale",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.GetPluralRules(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "GetPluralRules",
+    "signature": "public static System.String GetPluralRules(System.String locale)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.GetScriptName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "GetScriptName",
+    "signature": "public static System.String GetScriptName(System.String script)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "script",
         "type": "System.String",
         "default": null
       }
@@ -180568,6 +180702,30 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.StandardizeLocale(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "StandardizeLocale",
+    "signature": "public static System.String StandardizeLocale(System.String locale, System.Boolean addDefaults = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "addDefaults",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.String",
     "value": null
   },
   {

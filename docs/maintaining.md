@@ -108,3 +108,5 @@ consumer helpers share AllocationWarmupCheck, whose controlled second finalizer
 pass detects premature return without changing allocation gates. This follows
 [GC.WaitForPendingFinalizers](https://learn.microsoft.com/en-us/dotnet/api/system.gc.waitforpendingfinalizers?view=net-10.0).
 Production hosts retain their ordinary GC policy under ADR 0014.
+
+For fixed locale-table or selector changes, run `python3 -B tools/localization/generate.py PINNED_LOCALES_H --check` and `python3 -B tools/localization/check.py PINNED_LOCALES_H --runner RELEASE_TEST_DLL`. The oracle additionally requires the matching pinned `translation_server.cpp` alongside the table; both input hashes are enforced. It compiles the original locale constructor over a bounded standard-library shim and evaluates plural expressions directly in C++, independently of generated C# selectors. Include source data/algorithm notices under the existing ReferenceData license. Native language-menu tests exercise GPU and compatibility, while foreign globalization and general catalog-import gates remain separate.

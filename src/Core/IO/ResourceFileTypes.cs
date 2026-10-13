@@ -92,6 +92,7 @@ public static partial class ResourceFileTypes
         RegisterResource("CanvasItemMaterial", CreateCanvasItemMaterialResource);
         RegisterResource("Shader", CreateShaderFileResource);
         RegisterResource("ShaderInclude", CreateShaderIncludeFileResource);
+        RegisterResource("Translation", CreateTranslationFileResource);
         RegisterResource("ShaderMaterial", CreateShaderMaterialFileResource);
         RegisterResource("CircleShape", CreateCircleFileResource);
         RegisterResource("CapsuleShape", CreateCapsuleFileResource);
@@ -109,6 +110,7 @@ public static partial class ResourceFileTypes
     private static AnimationLibrary CreateAnimationLibraryResource() => new();
     private static Shader CreateShaderFileResource() => new();
     private static ShaderInclude CreateShaderIncludeFileResource() => new();
+    private static Translation CreateTranslationFileResource() => new();
     private static ShaderMaterial CreateShaderMaterialFileResource() => new();
     private static Node CreateNode() => new();
     private static Entity CreateEntity() => new();

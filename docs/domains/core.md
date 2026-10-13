@@ -239,3 +239,5 @@ OS restart-on-exit configuration is a process-wide, desktop-only request with a 
 ## Managed synchronization
 
 [Mutex](../classes/Mutex.md) and [Semaphore](../classes/Semaphore.md) are caller-owned synchronization primitives over the worker foundation. Their recursive critical sections, counted signals, typed failures and joined cleanup support actual worker-to-scene publication; they grant no thread-affine scene or renderer access. See [synchronization](../components/synchronization.md) and ADR 0104.
+
+The fixed locale catalog exposes language/script/country names, aliases, script/regional defaults and gettext definitions through TranslationServer. Translation resources without a caller PluralSelector use these prepared integer rules; copying and archive loading restore the automatic locale policy. Unknown multi-form rules require a caller selector. Runtime Culture remains CultureInfo. Decimal CLDR category selection and general PO/MO import are separate capabilities.

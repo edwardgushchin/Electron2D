@@ -1,6 +1,6 @@
 # Translation
 
-Last updated: 2026-09-24
+Last updated: 2026-10-13
 
 **Inherits:** [Resource](Resource.md)
 
@@ -62,18 +62,18 @@ The snippet assumes `using System.Globalization;` and leaves any prior process-w
 | [`protected virtual string? OnGetPluralMessage(string source, string plural, long count, string context)`](#ongetpluralmessage) | Derived plural lookup before local storage. |
 | [`protected override Resource CreateDuplicateInstance()`](#createduplicateinstance) | Creates an exact-type duplication target. |
 | [`protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)`](#copycustomstateto) | Copies catalog state for `Resource.Duplicate` and `CopyFromResource`. |
-| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Adds the stored `Locale` descriptor. |
+| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Adds stored `Locale` and typed `Messages` descriptors. |
 | [`protected override void Dispose(bool disposing)`](#dispose) | Clears catalog storage during deterministic disposal. |
 
 ## Property Descriptions
 
 ### Locale
 
-`Locale` starts at `en`. Assignment normalizes underscores to hyphens and resolves the name through `CultureInfo`; a null or unsupported locale throws before mutation. The committed change raises `Resource.Changed`. The locale determines which server culture tier may use this catalog and whether English fallback plural selection applies.
+`Locale` starts at `en`. Assignment normalizes underscores to hyphens and resolves the name through `CultureInfo`; a null or unsupported locale throws before mutation. The committed change raises `Resource.Changed`. The locale determines which server culture tier may use this catalog and selects the fixed automatic plural rule.
 
 ### PluralSelector
 
-`PluralSelector` returns a zero-based index into an entry's translated forms. Assigning null restores the default: English locales choose form zero for one and form one otherwise; a one-form entry always uses zero. Non-English multi-form entries require an explicit selector and throw `InvalidOperationException` without one. The selector runs outside the catalog and server locks and can propagate its own exception. A returned index outside the entry throws `InvalidOperationException`.
+`PluralSelector` returns a zero-based index into translated forms. Null selects the fixed locale/region gettext rule; unknown multi-form catalogs require a caller selector. The optional delegate is borrowed and copied by reference. Automatic rule state follows Locale on edits, copying and archive loads. Selector errors or out-of-range results propagate without changing catalog state.
 
 ## Method Descriptions
 
@@ -99,7 +99,7 @@ Calls `OnGetMessage` first. A non-null result is returned even when it is empty;
 
 ### GetPluralMessage
 
-Calls `OnGetPluralMessage` first. Without a custom result, negative counts and missing entries return an empty string. For present entries, `PluralSelector` or the English fallback chooses a form; unsupported or invalid selection throws. The source plural text is passed to the override but does not change the storage key. Null arguments throw.
+Calls `OnGetPluralMessage` first. Without a custom result, negative counts and missing entries return an empty string. For present entries, `PluralSelector` or the fixed locale rule chooses a form; unsupported or invalid selection throws. The source plural text is passed to the override but does not change the storage key. Null arguments throw.
 
 ### GetMessageCount
 
@@ -131,7 +131,7 @@ Copies locale, selector reference, and independently cloned message/form contain
 
 ### GetPropertyDescriptors
 
-Adds `Locale` as a stored typed descriptor to the inherited `Resource` properties.
+Adds `Locale` and `Messages` as stored typed descriptors to the inherited `Resource` properties.
 
 ### Dispose
 
@@ -145,3 +145,7 @@ Clears stored entries. Registered catalogs are detached by the server's disposal
 
 - [ADR 0007: Typed localization](../decisions/localization.md#adr-0007)
 - [ADR 0013: Managed Resource](../decisions/resources.md#adr-0013)
+
+The fixed locale catalog exposes language/script/country names, aliases, script/regional defaults and gettext definitions through TranslationServer. Translation resources without a caller PluralSelector use these prepared integer rules; copying and archive loading restore the automatic locale policy. Unknown multi-form rules require a caller selector. Runtime Culture remains CultureInfo. Decimal CLDR category selection and general PO/MO import are separate capabilities.
+
+Resource archives support exact Translation catalogs. The stored Messages descriptor is a copied string-array record stream of context/source/form-count/forms. Its setter validates non-null forms and unique complete records before replacing state. Arbitrary PluralSelector delegates cannot be archived and cause failure before file replacement. OptimizedTranslation hash-payload persistence remains a separate codec dependency.

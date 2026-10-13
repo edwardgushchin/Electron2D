@@ -8,7 +8,7 @@ namespace Electron2D;
 /// Lookups use exact, case-sensitive domain, context, and source-message keys, then search the selected culture,
 /// its parents, close resource locale matches, and a configured fallback. Direct entries precede borrowed resource
 /// catalogs at each exact locale; later resource registrations win equal scores. This service does not load catalog
-/// files or implement CLDR rules.
+/// files. Fixed locale metadata and integer plural rules support resource catalogs.
 /// </remarks>
 public static partial class TranslationServer
 {
@@ -54,12 +54,11 @@ public static partial class TranslationServer
         set { lock (Gate) _fallbackCulture = value; }
     }
 
-    /// <summary>Scores how closely two supported locale names match.</summary>
+    /// <summary>Scores how closely two default-aware catalog locale identities match.</summary>
     /// <param name="localeA">The requested locale.</param>
     /// <param name="localeB">The candidate locale.</param>
     /// <returns>Ten for the same normalized locale, zero for different languages, or a score around five adjusted for matching script, region, and variant.</returns>
     /// <exception cref="ArgumentNullException">A locale is null.</exception>
-    /// <exception cref="CultureNotFoundException">A nonidentical locale is not supported by .NET globalization.</exception>
     public static int CompareLocales(string localeA, string localeB)
     {
         ArgumentNullException.ThrowIfNull(localeA);
@@ -129,21 +128,7 @@ public static partial class TranslationServer
         }
     }
 
-    private static (string Language, string Script, string Region, string Variant) ParseLocale(string locale)
-    {
-        if (locale.Length == 0) return (string.Empty, string.Empty, string.Empty, string.Empty);
-        var parts = CultureInfo.GetCultureInfo(locale.Replace('_', '-')).Name.Split('-');
-        var script = string.Empty;
-        var region = string.Empty;
-        var variant = string.Empty;
-        foreach (var part in parts.Skip(1))
-        {
-            if (part.Length == 4 && script.Length == 0) script = part;
-            else if ((part.Length == 2 || part.Length == 3) && region.Length == 0) region = part;
-            else if (variant.Length == 0) variant = part;
-        }
-        return (parts[0], script, region, variant);
-    }
+    private static (string Language, string Script, string Region, string Variant) ParseLocale(string locale) => ParseCatalogLocale(locale, true);
 
     /// <summary>Adds or replaces one singular translation.</summary>
     /// <param name="culture">The culture whose name forms part of the lookup key.</param>

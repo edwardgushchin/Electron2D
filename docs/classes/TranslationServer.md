@@ -1,6 +1,6 @@
 # TranslationServer
 
-Last updated: 2026-10-06
+Last updated: 2026-10-13
 
 **Inherits:** —
 
@@ -235,3 +235,17 @@ FormatNumber, ParseNumber and GetPercentSign now execute generated-numeric local
 | `public static System.String FormatNumber(System.String number, System.String locale)` | FormatNumber, ParseNumber and GetPercentSign now execute generated-numeric localization through nine immutable rune/exponent/percent systems and 92 exact locale identities. Managed hyphen spelling is normalized to underscore. Unknown identifiers preserve text/default percent, while empty locale arguments fail validation. This does not implement CLDR negotiation, broad locale aliases or global locale-change notification. |
 | `public static System.String GetPercentSign(System.String locale)` | FormatNumber, ParseNumber and GetPercentSign now execute generated-numeric localization through nine immutable rune/exponent/percent systems and 92 exact locale identities. Managed hyphen spelling is normalized to underscore. Unknown identifiers preserve text/default percent, while empty locale arguments fail validation. This does not implement CLDR negotiation, broad locale aliases or global locale-change notification. |
 | `public static System.String ParseNumber(System.String number, System.String locale)` | FormatNumber, ParseNumber and GetPercentSign now execute generated-numeric localization through nine immutable rune/exponent/percent systems and 92 exact locale identities. Managed hyphen spelling is normalized to underscore. Unknown identifiers preserve text/default percent, while empty locale arguments fail validation. This does not implement CLDR negotiation, broad locale aliases or global locale-change notification. |
+
+The fixed locale catalog exposes language/script/country names, aliases, script/regional defaults and gettext definitions through TranslationServer. Translation resources without a caller PluralSelector use these prepared integer rules; copying and archive loading restore the automatic locale policy. Unknown multi-form rules require a caller selector. Runtime Culture remains CultureInfo. Decimal CLDR category selection and general PO/MO import are separate capabilities.
+
+## Locale catalog API
+
+| Method | Result |
+| --- | --- |
+| `GetAllLanguages()` / `GetAllScripts()` / `GetAllCountries()` | Copied code arrays in fixed catalog order. |
+| `GetLanguageName(code)` / `GetScriptName(code)` / `GetCountryName(code)` | English display name; an unknown code is returned unchanged. |
+| `GetLocaleName(locale)` | Language, optional parenthesized script and country label. |
+| `StandardizeLocale(locale, addDefaults = false)` | Alias/separator/modifier normalization; optional ambiguous script/country defaults. |
+| `GetPluralRules(locale)` | Fixed gettext definition; direct key, region override, then language fallback. Empty for an unknown rule. |
+
+Catalog operations reject null text. Standardization preserves catalog casing and accepts unknown language codes without a platform culture lookup; runtime Culture and catalog Locale continue to use CultureInfo. CompareLocales applies the same defaults for script/region scoring. Four inverted two-form singular predicates are corrected; fixed integer gettext selection does not claim arbitrary CLDR decimal categories. Enumeration allocates copied arrays; these authoring/discovery calls are not frame primitives. Automatic resource plural lookup uses a prepared selector and allocates no managed storage when warmed.

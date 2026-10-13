@@ -47,6 +47,8 @@ This profile does not introduce a manager-owned shared native payload. An `Image
 
 ShaderInclude source files (`.hlslinc`/`.glslinc`) use the same ordered format-loader/saver and cache lifecycle; typed archives store its Code descriptor. Source edits are authored data under ADR 0028: save and rebuild dependent shaders to produce new SPIR-V, rather than compile during runtime property assignment. The build compiler evaluates nested/conditional dependencies each import.
 
+Translation catalog archives register the exact Translation factory and store Locale plus a typed copied Messages string-array descriptor containing context/source/form records. The reader validates complete records, non-null forms and unique identities before commitment. Automatic integer rules are derived from Locale after load; arbitrary caller selector delegates are rejected before file replacement. Optimized hash-only catalogs retain their separate generated-payload/file-codec dependency.
+
 ### Typed resource archives and format extensions
 
 ResourceSaver and ResourceUID expose static public operations through permanent retained internal objects under ADR 0095. ResourceFormatSaver/ResourceFormatLoader are ordinary caller-owned managed extension objects; ordered registration borrows them, deduplicates identity, supports front priority and uses invocation snapshots so callbacks cannot corrupt iteration. Typed exceptions replace heterogeneous Error values. Save uses the explicit path or current ResourcePath, validates flags, and restores a temporary ChangePath even on failure. File replacement commits complete encoded data atomically; no failed encode truncates an existing file.

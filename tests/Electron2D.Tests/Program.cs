@@ -9,6 +9,10 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length == 2 && args[0] == "--locale-archive-child") { LocaleCatalogTests.ReadArchive(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOCALE_NATIVE") is { } localeBackend) { LocaleCatalogTests.RunNative(localeBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOCALE_CATALOG") == "1") { LocaleCatalogTests.Run(); VerifyTranslations(); LocalizationProjectSettingsTests.Run(); return; }
+if (args.Length == 2 && args[0] == "--locale-oracle") { LocaleCatalogTests.Oracle(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_INCLUDE") == "1") { ShaderIncludeTests.Run(); return; }
 if (args.Length == 3 && args[0] == "--shader-include-write") { ShaderIncludeTests.WriteSource(args[1], args[2]); return; }
 if (args.Length == 4 && args[0] == "--shader-include-render") { ShaderIncludeTests.Render(args[1], args[2], float.Parse(args[3], CultureInfo.InvariantCulture)); return; }
@@ -9266,8 +9270,8 @@ static void VerifyTranslations()
             "A plural catalog entry must contain at least one form.");
         using var noRule = new Translation { Locale = "fr" };
         noRule.AddPluralMessage("pear", ["poire", "poires"]);
-        Expect<InvalidOperationException>(() => noRule.GetPluralMessage("pear", "pears", 2),
-            "Non-English plural lookup must fail explicitly when no selector has been supplied.");
+        Require(noRule.GetPluralMessage("pear", "pears", 0) == "poire" && noRule.GetPluralMessage("pear", "pears", 2) == "poires",
+            "Known non-English catalogs use their automatic locale rule.");
 
         using var source = new Translation { Locale = "fr" };
         var longValue = string.Concat(Enumerable.Repeat("économie locale ", 40));

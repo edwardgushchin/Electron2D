@@ -11025,7 +11025,7 @@
         "Node::method:duplicate(int:)"
       ],
       "state": "Unimplemented",
-      "reason": "Authored typed connections now capture and rebind under ADRs 0010/0023. Remaining runtime duplication prerequisites: complete runtime groups/script state and subtree factory/resource/node-reference remapping, including UseInstantiation and InternalState policies. Owner-selected stored-property Pack cannot substitute for full runtime duplication."
+      "reason": "Authored typed connections now capture and rebind under ADRs 0010/0023. Remaining runtime duplication prerequisites: resolve ADR0091 live script binding/identity first so the Scripts bit is executable, then implement complete runtime groups and subtree factory/resource/node-reference remapping, including UseInstantiation and InternalState policies. Owner-selected stored-property Pack cannot substitute for full runtime duplication."
     },
     {
       "godot": [

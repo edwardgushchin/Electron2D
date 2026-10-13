@@ -1,6 +1,6 @@
 # Electron2D localization decisions
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 This bounded log owns the complete architectural records for localization. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0007](#adr-0007).
 <a id="adr-0007"></a>
 ## ADR 0007: Use a typed process-wide translation service
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 - Status: Accepted
 - Scope: Runtime message translation
@@ -30,13 +30,13 @@ Godot `Object` provides per-object translation enablement, a domain, and `tr`/`t
 - Missing messages return the source text.
 - Each domain offers configurable singular-message pseudolocalization: accents, doubled vowels, fake bidirectional controls, placeholder preservation, override, expansion, prefix, and suffix. The main domain is exposed through server convenience members. Plural results are not pseudolocalized, matching the pinned reference behavior. Locale matching and Unicode transformations are tracked as Partial where exact reference parity is not yet established.
 - Eleven typed built-in `ProjectSettings` definitions configure locale selection and main-domain pseudolocalization; a twelfth configures initial root-node automatic translation and two more configure root/forced layout direction. `Engine.Start` and `Engine.Run` sample the catalog settings at startup, while `SceneTree` samples the root mode at construction. `TranslationServer.ReloadPseudolocalization()` reapplies the eight transformation options but preserves the current runtime enabled flag; enabling or disabling during a run is an explicit server operation. Already constructed scene trees may have completed ready callbacks before a manual `Engine.Start`. Asset remaps and automatic translation-change notification on global locale changes remain deferred.
-- Direct plural registrations receive `Func<long, string>`. Resource catalogs use copied plural-form lists and a typed `Func<long, int>` selector; English catalogs use the source English fallback when no selector is assigned. Non-English catalogs with multiple forms require a selector and fail explicitly without one. This projects the plural-rule capability without exposing a string-expression evaluator; built-in rules for other locales and the reference textual override remain coverage gaps.
+- Direct plural registrations receive `Func<long, string>`. Resource catalogs use copied plural-form lists and an optional typed `Func<long, int>` selector. Known locales use fixed language/region gettext rules when no caller selector is assigned; unknown multi-form rules fail explicitly. Locale assignment prepares the rule, duplication preserves the optional caller override and recomputes automatic state, and warm selection allocates no managed storage. Caller delegates remain borrowed and copied by reference.
 - Catalog state is lock-protected; resource lookup and its overridable callbacks run outside the server lock. Direct plural selectors retain their existing locked-lookup contract. The global enabled flag is internal and uses volatile access. Applications control translation per object through `ElectronObject`.
 
 ### Consequences
 
 - The current runtime supports deterministic direct and resource-backed translation lookup without `Variant` or another package. Typed resource copying preserves independent message containers.
-- Catalog loading, locale negotiation and CLDR rules remain separate future concerns. The numeric-input consumer now implements FormatNumber/ParseNumber/GetPercentSign using the pinned numeral-system table; this current formatting capability does not imply broader locale negotiation.
+- The locale catalog supplies copied language/script/country code arrays, English names, aliases, supported-script/regional defaults and gettext definitions. StandardizeLocale preserves pinned parsing/casing/modifiers without requiring a .NET culture entry; CompareLocales uses its default script/country identity. Runtime catalog Locale still uses the accepted CultureInfo role. Fixed typed rule selectors replace runtime expression evaluation. Four two-form predicates that incorrectly returned index one for singular are corrected against integer cardinal examples in CLDR48. This is a fixed gettext table, not arbitrary CLDR decimal-category support. General catalog-file import and full locale negotiation remain separate concerns. The numeric-input consumer now implements FormatNumber/ParseNumber/GetPercentSign using the pinned numeral-system table; this current formatting capability does not imply broader locale negotiation.
 - Direct plural selectors run during locked lookup and should be short; resource selectors run after snapshotting state. Recursive selector logic remains the caller's responsibility.
 - Global catalog state must be restored or cleared by isolated tests and applications that replace languages.
 

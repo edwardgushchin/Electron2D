@@ -5,18 +5,20 @@ namespace Electron2D;
 /// <summary>Stores contextual translated messages for one locale.</summary>
 /// <remarks>Messages are copied into this resource and can be registered with <see cref="TranslationServer"/>.
 /// Reads and writes are serialized; change handlers and plural selectors run after the state lock is released.</remarks>
-public class Translation : Resource
+public partial class Translation : Resource
 {
     private static readonly IReadOnlyList<PropertyDescriptor> TranslationProperties = Array.AsReadOnly<PropertyDescriptor>(
     [
         new PropertyDescriptor<Translation, string>(nameof(Locale), translation => translation.Locale,
             (translation, value) => translation.Locale = value, _ => "en", stored: true),
+        new PropertyDescriptor<Translation, string[]>("Messages", translation => translation.CaptureMessages(), (translation, value) => translation.RestoreMessages(value), _ => [], stored: true),
     ]);
 
     private readonly object _gate = new();
     private readonly Dictionary<(string Context, string Source), string[]> _messages = new();
     private string _locale = "en";
     private Func<long, int>? _pluralSelector;
+    private Func<long, int>? _defaultPluralSelector = TranslationServer.FindPluralRule("en").Select;
 
     /// <summary>Creates an empty English translation catalog.</summary>
     public Translation() { }
@@ -33,14 +35,15 @@ public class Translation : Resource
         {
             ArgumentNullException.ThrowIfNull(value);
             var normalized = CultureInfo.GetCultureInfo(value.Replace('_', '-')).Name;
-            lock (_gate) { ThrowIfDisposed(); _locale = normalized; }
+            var defaultSelector = TranslationServer.FindPluralRule(normalized).Select;
+            lock (_gate) { ThrowIfDisposed(); _locale = normalized; _defaultPluralSelector = defaultSelector; }
             EmitChanged();
         }
     }
 
     /// <summary>Gets or sets the locale-specific plural-form index selector.</summary>
-    /// <value>A selector returning an index into registered forms; null uses English rules only for English locales.</value>
-    /// <remarks>Supply a selector before resolving plural messages in other locales. The delegate is borrowed and copied by reference.</remarks>
+    /// <value>A selector returning an index into registered forms; null uses the fixed locale-specific catalog rule.</value>
+    /// <remarks>Supply a selector to override known rules or resolve an unknown locale. The delegate is borrowed and copied by reference.</remarks>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
     public Func<long, int>? PluralSelector
     {
@@ -120,18 +123,15 @@ public class Translation : Resource
 
         string[]? forms;
         Func<long, int>? selector;
-        string locale;
         lock (_gate)
         {
             ThrowIfDisposed();
             if (!_messages.TryGetValue((context, source), out forms)) return string.Empty;
-            selector = _pluralSelector;
-            locale = _locale;
+            selector = _pluralSelector ?? _defaultPluralSelector;
         }
 
         var index = selector is not null ? selector(count) : forms.Length == 1 ? 0 :
-            locale is "en" || locale.StartsWith("en-", StringComparison.OrdinalIgnoreCase) ? count == 1 ? 0 : 1 :
-            throw new InvalidOperationException("A plural selector is required for this locale.");
+            throw new InvalidOperationException("A plural selector is required for an unknown locale rule.");
         if ((uint)index >= (uint)forms.Length)
             throw new InvalidOperationException("The plural selector returned an index outside the registered forms.");
         return forms[index];
@@ -213,6 +213,7 @@ public class Translation : Resource
             copy.ThrowIfDisposed();
             copy._locale = locale;
             copy._pluralSelector = selector;
+            copy._defaultPluralSelector = TranslationServer.FindPluralRule(locale).Select;
             copy._messages.Clear();
             foreach (var entry in entries) copy._messages.Add(entry.Key, entry.Value);
         }
