@@ -149,13 +149,15 @@ public sealed partial class RenderingServer : ElectronObject
     {
         CaptureScene(node);
         foreach (var viewport in _sceneViewports)
-        {
-            if (!ReferenceEquals(viewport, _window) && viewport is not SubViewport && viewport is not Window { Embedder: not null }) continue;
-            if (!_canvasFrames.TryGetValue(viewport, out var frame)) _canvasFrames.Add(viewport, frame = new(viewport));
-            viewport.RenderingOwner = this; frame.State = 0; frame.Wanted = frame.Drawn = false; _activeFrames.Add(frame);
-            var size = viewport is SubViewport sub ? sub.Size : ((Window)viewport).ContentRenderSize;
-            if (size.X > 0 && size.Y > 0 || ReferenceEquals(viewport, _window)) _backend.Target(viewport, size.Max(Vector2i.One), FrameClear(viewport));
-        }
+            if (ReferenceEquals(viewport, _window) || viewport is SubViewport or Window { Embedder: not null }) CaptureViewport(viewport);
+        foreach (var pair in _serverViewports) if (pair.Value.Owned) CaptureViewport(pair.Key);
+    }
+    private void CaptureViewport(Viewport viewport)
+    {
+        if (!_canvasFrames.TryGetValue(viewport, out var frame)) _canvasFrames.Add(viewport, frame = new(viewport));
+        viewport.RenderingOwner = this; frame.State = 0; frame.Wanted = frame.Drawn = false; _activeFrames.Add(frame);
+        var size = TargetSize(viewport);
+        if (ViewportActive(viewport) && (size.X > 1 && size.Y > 1 || ReferenceEquals(viewport, _window) && size.X > 0 && size.Y > 0)) _backend.Target(viewport, size.Max(Vector2i.One), FrameClear(viewport));
     }
     internal void InvalidateViewportRecordings(Viewport viewport)
     { EnsureOwner(); InvalidateViewportRecordings(_window, viewport); }
@@ -163,8 +165,8 @@ public sealed partial class RenderingServer : ElectronObject
     { if (node is CanvasItem item && ReferenceEquals(item.CanvasViewport, viewport)) item.QueueRedraw(); for (var i = 0; i < node.GetChildCount(includeInternal: true); i++) InvalidateViewportRecordings(node.GetChild(i, includeInternal: true), viewport); }
     internal void SetWindowVisible(DisplayServer display, bool visible) { EnsureViewportMutation(); _backend.SetWindowVisible(display, visible); }
     internal void EnsureViewportMutation() { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport targets cannot mutate during native submission."); }
-    internal void ReleaseViewport(Viewport viewport) { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport targets cannot be released during native submission."); _backend.ReleaseTarget(viewport); _canvasFrames.Remove(viewport); viewport.RenderingOwner = null; }
-    internal Vector2i ViewportDimensions(Viewport viewport) { EnsureOwner(); return viewport is SubViewport sub ? sub.Size : ((Window)viewport).ContentRenderSize; }
+    internal void ReleaseViewport(Viewport viewport) { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport targets cannot be released during native submission."); _backend.ReleaseTarget(viewport); _canvasFrames.Remove(viewport); RemoveViewportState(viewport); viewport.RenderingOwner = null; }
+    internal Vector2i ViewportDimensions(Viewport viewport) { EnsureOwner(); return TargetSize(viewport); }
     internal Image? ReadbackViewport(Viewport viewport)
     { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport readback cannot reenter native submission."); if (viewport is Window w && (w.ContentLayout.TargetSize.X == 0 || w.ContentLayout.TargetSize.Y == 0)) return null; var target = _backend.FindTarget(viewport); return target?.HasFrame == true ? _backend.Readback(target) : null; }
     internal void Render(SceneTree tree, double step, bool force = false, bool swapBuffers = true)
@@ -185,11 +187,12 @@ public sealed partial class RenderingServer : ElectronObject
             _activeFrames.Clear(); CaptureViewports(tree.Root);
             if (_activeFrames.Count != 0) { UseFrame(_activeFrames[0]); _nodes.Clear(); CaptureCanvasScene(tree.Root); foreach (var node in _nodes) if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.RenderVisible && node.RenderCanvas() is not null && node.ServerState is not { Owned: true }) node.PrepareCanvas(); }
             _activeFrames.Clear(); CaptureViewports(tree.Root);
-            foreach (var viewport in _canvasFrames.Keys) if (viewport.IsDisposed || !ReferenceEquals(viewport.Tree, tree)) { _backend.ReleaseTarget(viewport); viewport.RenderingOwner = null; _canvasFrames.Remove(viewport); }
+            _staleViewports.Clear(); foreach (var viewport in _canvasFrames.Keys) if (!ViewportLive(viewport, tree)) _staleViewports.Add(viewport);
+            foreach (var viewport in _staleViewports) ReleaseViewport(viewport); _staleViewports.Clear();
             _renderingDevice?.FlushRendererCommands();
             _backend.BeginFrame();
             if (_window.Visible && _canvasFrames.TryGetValue(_window, out var root)) { root.Wanted = true; SubmitFrame(root, tree); }
-            for (var i = 0; i < _activeFrames.Count; i++) { var frame = _activeFrames[i]; if (frame.Viewport is SubViewport sub && sub.RenderTargetUpdateMode is ViewportUpdateMode.Always or ViewportUpdateMode.Once) { frame.Wanted = true; SubmitFrame(frame, tree); } }
+            for (var i = 0; i < _activeFrames.Count; i++) { var frame = _activeFrames[i]; if (UpdateMode(frame.Viewport) is ViewportUpdateMode.Always or ViewportUpdateMode.Once) { frame.Wanted = true; SubmitFrame(frame, tree); } }
             _backend.EndFrame();
             _frameSubmitted = true;
             Engine.Service.RecordDrawnFrame();
@@ -217,14 +220,15 @@ public sealed partial class RenderingServer : ElectronObject
         {
             SubmitTexture(channels.DiffuseTexture, tree); SubmitTexture(channels.NormalTexture, tree); SubmitTexture(channels.SpecularTexture, tree); return;
         }
-        if (texture is not ViewportTexture view || view.Bound is not { } viewport || !_canvasFrames.TryGetValue(viewport, out var frame) || !ReferenceEquals(viewport.Tree, tree)) return;
+        if (texture is not ViewportTexture view || view.Bound is not { } viewport || !_canvasFrames.TryGetValue(viewport, out var frame) || !ViewportLive(viewport, tree)) return;
         if (viewport is SubViewport { RenderTargetUpdateMode: ViewportUpdateMode.Disabled } || viewport is Window { Visible: false }) return;
+        if (UpdateMode(viewport) == ViewportUpdateMode.WhenParentVisible && (RenderParent(viewport) is not { } parent || !ViewportScheduled(parent))) return;
         frame.Wanted = true; SubmitFrame(frame, tree);
     }
     private void SubmitFrame(CanvasFrame frame, SceneTree tree)
     {
-        if (frame.State != 0 || !frame.Wanted || frame.Viewport.IsDisposed || !ReferenceEquals(frame.Viewport.Tree, tree)) return;
-        if (frame.Viewport is SubViewport { RenderTargetUpdateMode: ViewportUpdateMode.Disabled } || frame.Viewport is Window { Visible: false }) return;
+        if (frame.State != 0 || !frame.Wanted || !ViewportLive(frame.Viewport, tree) || !ViewportActive(frame.Viewport) || TargetSize(frame.Viewport).X < (ReferenceEquals(frame.Viewport, _window) ? 1 : 2) || TargetSize(frame.Viewport).Y < (ReferenceEquals(frame.Viewport, _window) ? 1 : 2) || _backend.FindTarget(frame.Viewport) is null) return;
+        if (UpdateMode(frame.Viewport) == ViewportUpdateMode.Disabled || frame.Viewport is Window { Visible: false }) return;
         frame.State = 1; BuildFrame(frame, tree);
         foreach (var batch in frame.Batches)
         {
@@ -237,14 +241,14 @@ public sealed partial class RenderingServer : ElectronObject
             }
         }
         foreach (var mask in frame.Lighting.Masks) SubmitTexture(mask.Texture, tree);
-        foreach (var child in _activeFrames) if (child.Viewport is SubViewport { RenderTargetUpdateMode: ViewportUpdateMode.WhenParentVisible } && ReferenceEquals(child.Viewport.Parent?.GetViewport(), frame.Viewport)) { child.Wanted = true; SubmitFrame(child, tree); }
+        foreach (var child in _activeFrames) if (UpdateMode(child.Viewport) == ViewportUpdateMode.WhenParentVisible && ReferenceEquals(RenderParent(child.Viewport), frame.Viewport)) { child.Wanted = true; SubmitFrame(child, tree); }
         var target = _backend.FindTarget(frame.Viewport); if (target is null) return;
         _submittingTextures = true;
         var content = _window.ContentLayout;
         _backend.PresentationRect = content.TargetSize.X > 0 && content.TargetSize.Y > 0 ? content.ScreenRect : default;
-        try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), FrameClear(frame.Viewport), frame.Viewport is not SubViewport sub || sub.RenderTargetClearMode != ViewportClearMode.Never, ReferenceEquals(frame.Viewport, _window) && _window.Visible && _swapBuffers, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting); }
+        try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), FrameClear(frame.Viewport), ClearMode(frame.Viewport) != ViewportClearMode.Never, ReferenceEquals(frame.Viewport, _window) && _window.Visible && _swapBuffers, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting); }
         finally { _submittingTextures = false; }
-        if (frame.Viewport is SubViewport completed) completed.Submitted();
+        ViewportSubmitted(frame.Viewport);
         frame.State = 2; frame.Drawn = true;
     }
     private void BuildFrame(CanvasFrame frame, SceneTree tree)
@@ -254,7 +258,7 @@ public sealed partial class RenderingServer : ElectronObject
         var framebufferTransform = viewport is Window embedded ? new Transform(0, Vector2.One * embedded.RenderDensity, 0, Vector2.Zero) : Transform.Identity;
         // Drawing callbacks may change parenting, visibility or sibling order.
         _nodes.Clear();
-        CaptureCanvasScene(tree.Root);
+        if (!_serverViewports.TryGetValue(viewport, out var viewportState) || !viewportState.DisableCanvas) CaptureCanvasScene(tree.Root);
         var visibleCount = 0;
         for (var index = 0; index < _nodes.Count; index++)
         {
@@ -509,6 +513,7 @@ public sealed partial class RenderingServer : ElectronObject
             {
                 try { ReleaseOwnedMultiMeshes(); } catch (Exception error) { (errors ??= []).Add(error); }
                 ReleaseOwnedSkeletons();
+                ReleaseServerViewports();
                 ReleaseOwnedCanvasGraph();
                 ReleaseOwnedLighting();
                 ReleaseOwnedPrograms();

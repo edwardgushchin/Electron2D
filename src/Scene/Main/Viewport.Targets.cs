@@ -3,6 +3,7 @@ namespace Electron2D;
 public abstract partial class Viewport
 {
     private RID _viewportRID;
+    internal RID RegisteredViewportRID => _viewportRID;
     internal RenderingCanvasRuntime DefaultCanvasRuntime => FindWorld()!.Runtime.Canvas;
     private static readonly object ViewportRIDGate = new();
     private static readonly Dictionary<RID, WeakReference<Viewport>> ViewportRIDs = [];
@@ -27,10 +28,11 @@ public abstract partial class Viewport
             _viewportRID = RID.Allocate(); ViewportRIDs.Add(_viewportRID, new(this)); return _viewportRID;
         }
     }
-    internal static Viewport ResolveViewportRID(RID rid)
+    internal static Viewport? FindViewportRID(RID rid)
     {
-        lock (ViewportRIDGate) { if (ViewportRIDs.TryGetValue(rid, out var entry) && entry.TryGetTarget(out var viewport) && !viewport.IsDisposed) return viewport; ViewportRIDs.Remove(rid); throw new ArgumentException("The RID does not identify a live viewport.", nameof(rid)); }
+        lock (ViewportRIDGate) { if (ViewportRIDs.TryGetValue(rid, out var entry) && entry.TryGetTarget(out var viewport) && !viewport.IsDisposed) return viewport; ViewportRIDs.Remove(rid); return null; }
     }
+    internal static Viewport ResolveViewportRID(RID rid) => FindViewportRID(rid) ?? throw new ArgumentException("The RID does not identify a live viewport.", nameof(rid));
     private void ReleaseViewportRID() { lock (ViewportRIDGate) { ViewportRIDs.Remove(_viewportRID); _viewportRID = default; } }
     private ViewportTexture? _texture;
     internal RenderingServer? RenderingOwner;
@@ -40,7 +42,7 @@ public abstract partial class Viewport
     internal virtual Transform WindowTransform => Transform.Identity;
     internal Transform RenderFinalTransform => StretchTransform * GlobalCanvasTransform;
     internal float FontRasterScale { get { var scale = StretchTransform.Scale; var value = MathF.Min(MathF.Abs(scale.X), MathF.Abs(scale.Y)) * (this is Window window ? window.RenderDensity : 1); return value > 0 ? value : 1; } }
-    internal Vector2i TextureDimensions => this is SubViewport sub ? sub.Size : RenderingOwner?.ViewportDimensions(this) ?? (this is Window window ? window.ContentRenderSize : default);
+    internal Vector2i TextureDimensions => RenderingOwner?.ViewportDimensions(this) ?? (this is SubViewport sub ? sub.Size : (this is Window window ? window.ContentRenderSize : default));
     /// <summary>Returns this viewport's live scene-local texture view.</summary>
     /// <returns>A borrowed resource retaining stable RID identity while the target image changes.</returns>
     /// <remarks>The view remains independent of native target allocation. Ordinary drawing samples native images;

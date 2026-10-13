@@ -223,3 +223,5 @@ SubViewportTests verifies guards/defaults/clamps, stable RID/texture identity, o
 ## Renderer allocation interop
 
 RenderingServer.TextureGetRDTexture exposes actual uploaded ordinary/array storage and completed viewport images to the retained device. Compatible updates keep identity; source allocation replacement/disposal or viewport target retirement expires it. Device writes affect GPU pixels while authored CPU snapshots remain unchanged. TextureRD/TextureArrayRD can sample an exported RID directly. Wrapper disposal does not own the source. See [ordering, lifetime and executed checks](../components/local-compute.md#renderer-texture-export-checkpoint).
+
+RenderingServer.ViewportGetTexture also exposes server-owned offscreen targets. Their logical texture identity survives resize; freeing the owned viewport or shutting down its renderer disposes the borrowed texture view and expires its RID. Zero-size targets have dimensions but no completed image.

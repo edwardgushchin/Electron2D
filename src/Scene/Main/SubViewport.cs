@@ -70,6 +70,7 @@ public sealed class SubViewport : Viewport
     internal void Submitted() { if (_clear == ViewportClearMode.Once) _clear = ViewportClearMode.Never; if (_update == ViewportUpdateMode.Once) _update = ViewportUpdateMode.Disabled; }
     internal override Transform StretchTransform => _stretch && _override.X > 0 && _override.Y > 0 ? new(new Vector2((float)_size.X / _override.X, 0), new(0, (float)_size.Y / _override.Y), Vector2.Zero) : Transform.Identity;
     internal void SetContainerSize(Vector2i value) { Check(); value = new(Math.Max(2, value.X), Math.Max(2, value.Y)); if (_size == value) return; _size = value; ChangedSize(); }
+    internal void SetServerSize(Vector2i value) { Check(); if (_size == value) return; _size = value; ChangedSize(); }
     private void ChangedSize()
     {
         InvalidateViewportRecording();

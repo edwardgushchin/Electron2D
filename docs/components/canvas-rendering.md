@@ -1,11 +1,21 @@
 # Canvas rendering
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
 [Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
+
+## Server-owned offscreen viewport targets
+
+The static viewport family creates an inactive zero-size RID target without attaching a node to the user scene. `ViewportCreate`, `ViewportSetActive`, `ViewportSetSize`, `ViewportGetUpdateMode`, `ViewportSetUpdateMode`, `ViewportSetClearMode`, `ViewportSetTransparentBackground`, `ViewportSetDisable2D` and `ViewportSetParentViewport` share the existing native GPU/compatibility compositor. Attach an owned or borrowed canvas, record its items, set dimensions and activate the target. The existing `ViewportGetTexture` and `Texture2DGet` supply stable sampling identity and explicit copied pixel readback.
+
+Defaults are Always clear, WhenVisible update, opaque background, canvas enabled and one image layer. Exact nonnegative dimensions smaller than two or zero layers suspend submission without consuming Once. Active=false and Disabled retain the last completed image; resize retires its allocation and pixels while keeping logical viewport/texture identities. Once policies transition only after successful draw. Never clear retains completed pixels. Disable2D submits only the clear/retention result. WhenVisible follows submitted texture dependencies; WhenParentVisible follows an independently selected active rendering parent, including raw RID parents. Sampling alone does not update a target whose rendering parent is detached, inactive or has suspended dimensions. Parenting rejects cycles and does not alter the authored hierarchy. Freeing a parent detaches its rendering children; freeing an owned viewport also disposes its texture view, removes canvas attachments and retires native images. Shutdown retires leaked owned identities. FreeRID rejects scene-owned viewport and texture identities.
+
+Borrowed attached scene viewports use the same owner/session guards. SubViewport update, clear, transparency and size writes remain observable through their scene properties; low-level exact dimensions can be zero or one, while a subsequent ordinary Size write still clamps to two. Stretched containers continue to own their child size. Low-level Window target sizing does not resize its native window. Mutations are owner-only and reject canvas capture, native submission or shutdown; FramePreDraw and completed FramePostDraw remain usable policy boundaries.
+
+The current backend profile implements one RGBA8 image layer. ViewportSetSize rejects counts above one explicitly; layered/multiview targets require layer-aware canvas targets, layer selection and matching texture/device exports and remain Partial in coverage. Native screen attachment, HDR, hardware MSAA and VRS remain separate capabilities. Current verification covers Linux Wayland GPU and hardware compatibility, real root/offscreen pixels, dependent canvases, clear/update/resize/parent policies, stale/session identities and prepared managed allocations. Other platforms, native allocator counts and human visual acceptance remain unverified.
 
 ## Low-level primitive commands
 
@@ -491,3 +501,5 @@ Built-in lighting accepts float, raw signed and raw unsigned device-image channe
 ShaderMaterial now participates in [automatic scene lighting](shader-materials.md#automatic-scene-lighting) before blend through cached composed fragment programs and private vertex variants; normal/specular/mask slots share native capacity and retain prepared storage.
 
 Window content scaling now separates logical visible coordinates, raster target dimensions and client presentation. Both native renderers fit the completed content into a client-sized presentation surface with black margins; the borrowed viewport texture keeps its own raster resolution. Window/embedded input removes the complete presentation transform, while rendering excludes that transform and uses raster scale/density. Automatic text raster scale follows the viewport; explicit oversampling remains authoritative. See [Window content scale](../classes/Window.md#content-scale) and the dedicated unit/native checks for the exact policies and platform limits.
+
+The internal server viewport audit uses the pinned [viewport storage defaults](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/rendering/renderer_viewport.h) and [size/activity/update/clear/canvas submission behavior](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/rendering/renderer_viewport.cpp). Typed ownership/errors, cycle rejection and the exact single-layer dependency are recorded in coverage.

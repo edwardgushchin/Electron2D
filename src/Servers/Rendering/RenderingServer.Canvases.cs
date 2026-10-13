@@ -25,7 +25,7 @@ public sealed partial class RenderingServer
     private RenderingCanvasRuntime CanvasChange(RID rid) { EnsureTextureChange(); var canvas = RenderingCanvasRegistry.Resolve(rid); if (canvas.Owner is not null && !ReferenceEquals(canvas.Owner, this) || canvas.Layer is not null && canvas.Layer.TryGetTarget(out var layer) && layer.Tree is not null && !ReferenceEquals(layer.Tree, _window.Tree)) throw new InvalidOperationException("Canvas belongs to another renderer or scene owner."); if (canvas.World is not null && canvas.World.TryGetTarget(out var world) && world.SceneOwner is { } worldOwner && !ReferenceEquals(worldOwner, _window.Tree)) throw new InvalidOperationException("World canvas belongs to another scene owner."); if (canvas.Owner is null) { if (canvas.SessionOwner is not null && !ReferenceEquals(canvas.SessionOwner, this)) throw new InvalidOperationException("Canvas overrides belong to another session."); if (canvas.SessionOwner is null) { canvas.SessionOwner = this; _serverSceneCanvases.Add(canvas); } } return canvas; }
     private RenderingCanvasRuntime.Attachment ViewChange(RID viewport, RID canvas, out RenderingCanvasRuntime data)
     {
-        data = CanvasChange(canvas); var view = Viewport.ResolveViewportRID(viewport); if (!view.IsInsideTree || !ReferenceEquals(view.Tree, _window.Tree)) throw new InvalidOperationException("Viewport must be active in this rendering tree.");
+        data = CanvasChange(canvas); var view = ServerViewport(viewport);
         if (!data.Attachments.TryGetValue(viewport, out var attachment)) { attachment = new() { Attached = data.View(view, out _, out _, out _) }; data.Attachments.Add(viewport, attachment); }
         return attachment;
     }

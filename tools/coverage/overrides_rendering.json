@@ -3157,27 +3157,27 @@
     {
       "godot": "CanvasItem::method:get_canvas()",
       "electron2d": "method:Electron2D.CanvasItem.GetCanvas()",
-      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance. ServerViewportTests additionally verifies these viewport canvas/texture operations on server-owned detached targets on GPU/compatibility, including native pixel output, parent scheduling, resize, release and shutdown."
     },
     {
       "godot": "CanvasLayer::method:get_canvas()",
       "electron2d": "method:Electron2D.CanvasLayer.GetCanvas()",
-      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance. ServerViewportTests additionally verifies server-owned detached viewport targets on GPU/compatibility, including canvas attachment/transforms, real pixel readback, resize and lifetime."
     },
     {
       "godot": "RenderingServer::method:canvas_create()",
       "electron2d": "method:Electron2D.RenderingServer.CanvasCreate()",
-      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance. ServerViewportTests additionally verifies server-owned detached viewport targets on GPU/compatibility, including canvas attachment/transforms, real pixel readback, resize and lifetime."
     },
     {
       "godot": "RenderingServer::method:canvas_item_add_mesh(RID:,RID:,Transform2D:,Color:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddMesh(Electron2D.RID,Electron2D.RID,System.Nullable<Electron2D.Transform>,System.Nullable<Electron2D.Color>,Electron2D.RID)",
-      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance. ServerViewportTests additionally verifies server-owned detached viewport targets on GPU/compatibility, including canvas attachment/transforms, real pixel readback, resize and lifetime."
     },
     {
       "godot": "RenderingServer::method:canvas_item_add_multimesh(RID:,RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddMultiMesh(Electron2D.RID,Electron2D.RID,Electron2D.RID)",
-      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance. ServerViewportTests additionally verifies server-owned detached viewport targets on GPU/compatibility, including canvas attachment/transforms, real pixel readback, resize and lifetime."
     },
     {
       "godot": "RenderingServer::method:canvas_item_clear(RID:)",
@@ -4446,6 +4446,51 @@
       "godot": "RenderingServer::method:request_frame_drawn_callback(Callable:)",
       "electron2d": "method:Electron2D.RenderingServer.RequestFrameDrawnCallback(System.Action)",
       "reason": "Executable owner-thread native frame driver under ADR 0028/0095: ForceDraw reuses the retained scene/material/viewport/device pipeline, bypasses the automatic loop and supports non-presenting root texture output. ForceSync waits for real GPU completion and queued readbacks. Typed Action requests run once after native commitment, with ordered phase boundaries, error aggregation and capture release; Engine counts completed intervals once across targets. ManualRenderFrameTests exercises Linux Wayland GPU/hardware compatibility pixels, clocks/scene separation, device readback, guards, errors, lifetime and prepared callback/draw allocation. Foreign platforms and full batch/editor tooling acceptance remain separate gates."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_create()",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportCreate()",
+      "reason": "Executable server-owned single-layer canvas targets under ADRs 0028/0095, without scene hierarchy attachment. Shared GPU/compatibility targets support stable viewport/texture RIDs, exact dimensions, activation, clear/update/Once transitions, transparency, canvas suppression, independent rendering parents and texture dependency submission. FreeRID/shutdown retire targets and borrowed texture views; borrowed attached scene policies remain synchronized. ServerViewportTests exercises Linux Wayland GPU/hardware compatibility real pixels, defaults, invalid/stale/session/owner/capture guards, resize, zero/one axes, zero layers, child parents, hidden root and prepared managed allocation. Foreign platforms, native allocation and human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_get_update_mode(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportGetUpdateMode(Electron2D.RID)",
+      "reason": "Executable server-owned single-layer canvas targets under ADRs 0028/0095, without scene hierarchy attachment. Shared GPU/compatibility targets support stable viewport/texture RIDs, exact dimensions, activation, clear/update/Once transitions, transparency, canvas suppression, independent rendering parents and texture dependency submission. FreeRID/shutdown retire targets and borrowed texture views; borrowed attached scene policies remain synchronized. ServerViewportTests exercises Linux Wayland GPU/hardware compatibility real pixels, defaults, invalid/stale/session/owner/capture guards, resize, zero/one axes, zero layers, child parents, hidden root and prepared managed allocation. Foreign platforms, native allocation and human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_set_active(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetActive(Electron2D.RID,System.Boolean)",
+      "reason": "Executable server-owned single-layer canvas targets under ADRs 0028/0095, without scene hierarchy attachment. Shared GPU/compatibility targets support stable viewport/texture RIDs, exact dimensions, activation, clear/update/Once transitions, transparency, canvas suppression, independent rendering parents and texture dependency submission. FreeRID/shutdown retire targets and borrowed texture views; borrowed attached scene policies remain synchronized. ServerViewportTests exercises Linux Wayland GPU/hardware compatibility real pixels, defaults, invalid/stale/session/owner/capture guards, resize, zero/one axes, zero layers, child parents, hidden root and prepared managed allocation. Foreign platforms, native allocation and human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_set_clear_mode(RID:,int:RenderingServer.ViewportClearMode)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetClearMode(Electron2D.RID,Electron2D.ViewportClearMode)",
+      "reason": "Executable server-owned single-layer canvas targets under ADRs 0028/0095, without scene hierarchy attachment. Shared GPU/compatibility targets support stable viewport/texture RIDs, exact dimensions, activation, clear/update/Once transitions, transparency, canvas suppression, independent rendering parents and texture dependency submission. FreeRID/shutdown retire targets and borrowed texture views; borrowed attached scene policies remain synchronized. ServerViewportTests exercises Linux Wayland GPU/hardware compatibility real pixels, defaults, invalid/stale/session/owner/capture guards, resize, zero/one axes, zero layers, child parents, hidden root and prepared managed allocation. Foreign platforms, native allocation and human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_set_disable_2d(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetDisable2D(Electron2D.RID,System.Boolean)",
+      "reason": "Executable server-owned single-layer canvas targets under ADRs 0028/0095, without scene hierarchy attachment. Shared GPU/compatibility targets support stable viewport/texture RIDs, exact dimensions, activation, clear/update/Once transitions, transparency, canvas suppression, independent rendering parents and texture dependency submission. FreeRID/shutdown retire targets and borrowed texture views; borrowed attached scene policies remain synchronized. ServerViewportTests exercises Linux Wayland GPU/hardware compatibility real pixels, defaults, invalid/stale/session/owner/capture guards, resize, zero/one axes, zero layers, child parents, hidden root and prepared managed allocation. Foreign platforms, native allocation and human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_set_parent_viewport(RID:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetParentViewport(Electron2D.RID,Electron2D.RID)",
+      "reason": "Executable server-owned single-layer canvas targets under ADRs 0028/0095, without scene hierarchy attachment. Shared GPU/compatibility targets support stable viewport/texture RIDs, exact dimensions, activation, clear/update/Once transitions, transparency, canvas suppression, independent rendering parents and texture dependency submission. FreeRID/shutdown retire targets and borrowed texture views; borrowed attached scene policies remain synchronized. ServerViewportTests exercises Linux Wayland GPU/hardware compatibility real pixels, defaults, invalid/stale/session/owner/capture guards, resize, zero/one axes, zero layers, child parents, hidden root and prepared managed allocation. Foreign platforms, native allocation and human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_set_size(RID:,int:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetSize(Electron2D.RID,System.Int32,System.Int32,System.Int32)",
+      "reason": "Executable server-owned single-layer canvas targets under ADRs 0028/0095, without scene hierarchy attachment. Shared GPU/compatibility targets support stable viewport/texture RIDs, exact dimensions, activation, clear/update/Once transitions, transparency, canvas suppression, independent rendering parents and texture dependency submission. FreeRID/shutdown retire targets and borrowed texture views; borrowed attached scene policies remain synchronized. ServerViewportTests exercises Linux Wayland GPU/hardware compatibility real pixels, defaults, invalid/stale/session/owner/capture guards, resize, zero/one axes, zero layers, child parents, hidden root and prepared managed allocation. Foreign platforms, native allocation and human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_set_transparent_background(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetTransparentBackground(Electron2D.RID,System.Boolean)",
+      "reason": "Executable server-owned single-layer canvas targets under ADRs 0028/0095, without scene hierarchy attachment. Shared GPU/compatibility targets support stable viewport/texture RIDs, exact dimensions, activation, clear/update/Once transitions, transparency, canvas suppression, independent rendering parents and texture dependency submission. FreeRID/shutdown retire targets and borrowed texture views; borrowed attached scene policies remain synchronized. ServerViewportTests exercises Linux Wayland GPU/hardware compatibility real pixels, defaults, invalid/stale/session/owner/capture guards, resize, zero/one axes, zero layers, child parents, hidden root and prepared managed allocation. Foreign platforms, native allocation and human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_set_update_mode(RID:,int:RenderingServer.ViewportUpdateMode)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetUpdateMode(Electron2D.RID,Electron2D.ViewportUpdateMode)",
+      "reason": "Executable server-owned single-layer canvas targets under ADRs 0028/0095, without scene hierarchy attachment. Shared GPU/compatibility targets support stable viewport/texture RIDs, exact dimensions, activation, clear/update/Once transitions, transparency, canvas suppression, independent rendering parents and texture dependency submission. FreeRID/shutdown retire targets and borrowed texture views; borrowed attached scene policies remain synchronized. ServerViewportTests exercises Linux Wayland GPU/hardware compatibility real pixels, defaults, invalid/stale/session/owner/capture guards, resize, zero/one axes, zero layers, child parents, hidden root and prepared managed allocation. Foreign platforms, native allocation and human acceptance remain unverified."
     }
   ],
   "statusGroups": [
@@ -5590,7 +5635,7 @@
         "RenderingServer::method:free_rid(RID:)"
       ],
       "state": "Partial",
-      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Owned texture lifetime executes; resource-owned identities reject caller free. Material/shader/canvas/drawable RID registration and cleanup enter each family’s first actual server-resource slice."
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Owned texture lifetime executes; resource-owned identities reject caller free. Owned textures, meshes, multimeshes, skeletons, programs, materials, canvases/items, lights/occluders and now detached viewports execute family-specific release. ServerViewportTests verifies viewport target/view retirement and leaked-session cleanup on GPU/compatibility. Remaining raw RID owners, including GPU particle simulation/process-material storage, require their first executable resource producer and consumer before FreeRID can release them."
     },
     {
       "godot": [
@@ -6275,6 +6320,27 @@
       ],
       "state": "Unimplemented",
       "reason": "Exact executable prerequisite: an owned raw particle RID simulation/context and typed process-material binding must drive the complete 2D particle state family, native stepping/restart/lifetime, canvas_item_add_particles submission and resource teardown. Existing scene-owned particle nodes do not supply a detached server RID implementation; connect that owner and canvas consumer before exposing these operations."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:viewport_create()",
+        "RenderingServer::method:viewport_get_update_mode(RID:)",
+        "RenderingServer::method:viewport_set_active(RID:,bool:)",
+        "RenderingServer::method:viewport_set_clear_mode(RID:,int:RenderingServer.ViewportClearMode)",
+        "RenderingServer::method:viewport_set_disable_2d(RID:,bool:)",
+        "RenderingServer::method:viewport_set_parent_viewport(RID:,RID:)",
+        "RenderingServer::method:viewport_set_transparent_background(RID:,bool:)",
+        "RenderingServer::method:viewport_set_update_mode(RID:,int:RenderingServer.ViewportUpdateMode)"
+      ],
+      "state": "Implemented",
+      "reason": "Executable server-owned single-layer canvas targets under ADRs 0028/0095, without scene hierarchy attachment. Shared GPU/compatibility targets support stable viewport/texture RIDs, exact dimensions, activation, clear/update/Once transitions, transparency, canvas suppression, independent rendering parents and texture dependency submission. FreeRID/shutdown retire targets and borrowed texture views; borrowed attached scene policies remain synchronized. ServerViewportTests exercises Linux Wayland GPU/hardware compatibility real pixels, defaults, invalid/stale/session/owner/capture guards, resize, zero/one axes, zero layers, child parents, hidden root and prepared managed allocation. Foreign platforms, native allocation and human acceptance remain unverified."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:viewport_set_size(RID:,int:,int:,int:)"
+      ],
+      "state": "Partial",
+      "reason": "Executable server-owned single-layer canvas targets under ADRs 0028/0095, without scene hierarchy attachment. Shared GPU/compatibility targets support stable viewport/texture RIDs, exact dimensions, activation, clear/update/Once transitions, transparency, canvas suppression, independent rendering parents and texture dependency submission. FreeRID/shutdown retire targets and borrowed texture views; borrowed attached scene policies remain synchronized. ServerViewportTests exercises Linux Wayland GPU/hardware compatibility real pixels, defaults, invalid/stale/session/owner/capture guards, resize, zero/one axes, zero layers, child parents, hidden root and prepared managed allocation. Foreign platforms, native allocation and human acceptance remain unverified. Exact remaining prerequisite: layer-aware canvas render targets, selected layer submission and matching ordinary/layered texture/device exports for view_count greater than one. Counts zero/one execute; unsupported layered output rejects before mutation."
     }
   ],
   "extras": [

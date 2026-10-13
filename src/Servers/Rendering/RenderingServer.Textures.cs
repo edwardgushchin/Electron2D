@@ -4,7 +4,7 @@ public sealed partial class RenderingServer
 {
     private readonly List<RID> _ownedTextureRIDs = [];
 
-    internal RID ViewportGetTextureCore(RID viewport) { EnsureOwner(); return Viewport.ResolveViewportRID(viewport).GetTexture().GetRID(); }
+    internal RID ViewportGetTextureCore(RID viewport) { EnsureOwner(); return ServerViewport(viewport).GetTexture().GetRID(); }
 
     internal RID Texture2DCreateCore(Image image)
     {
@@ -161,7 +161,7 @@ public sealed partial class RenderingServer
 
     internal void FreeRIDCore(RID rid)
     {
-        EnsureTextureChange(); if (ReleaseLightingRID(rid) || ReleaseProgramRID(rid) || ReleaseCanvasRID(rid)) return; if (RenderingSkeletonRegistry.Contains(rid)) { RenderingSkeletonRegistry.Owned(rid, this).EnsureWritable(); _ownedSkeletonRIDs.Remove(rid); RenderingSkeletonRegistry.Remove(rid); return; }
+        EnsureTextureChange(); if (ReleaseViewportRID(rid) || ReleaseLightingRID(rid) || ReleaseProgramRID(rid) || ReleaseCanvasRID(rid)) return; if (RenderingSkeletonRegistry.Contains(rid)) { RenderingSkeletonRegistry.Owned(rid, this).EnsureWritable(); _ownedSkeletonRIDs.Remove(rid); RenderingSkeletonRegistry.Remove(rid); return; }
         if (RenderingMultiMeshRegistry.Contains(rid)) { var resource = RenderingMultiMeshRegistry.Owned(rid, this); _ownedMultiMeshRIDs.Remove(rid); RenderingMultiMeshRegistry.Remove(rid); resource.Dispose(); return; }
         if (RenderingMeshRegistry.Contains(rid)) { var mesh = RenderingMeshRegistry.Owned(rid, this); _ownedMeshRIDs.Remove(rid); RenderingMeshRegistry.Remove(rid); mesh.Dispose(); return; }
         var texture = RenderingTextureRegistry.OwnedResource(rid, this);

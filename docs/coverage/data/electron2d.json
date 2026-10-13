@@ -148870,6 +148870,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.ViewportCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportCreate",
+    "signature": "public static Electron2D.RID ViewportCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.ViewportGetTexture(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -148886,6 +148899,25 @@
       }
     ],
     "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ViewportGetUpdateMode(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportGetUpdateMode",
+    "signature": "public static Electron2D.ViewportUpdateMode ViewportGetUpdateMode(Electron2D.RID viewport)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ViewportUpdateMode",
     "value": null
   },
   {
@@ -148906,6 +148938,30 @@
       {
         "name": "canvas",
         "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ViewportSetActive(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetActive",
+    "signature": "public static System.Void ViewportSetActive(Electron2D.RID viewport, System.Boolean active)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "active",
+        "type": "System.Boolean",
         "default": null
       }
     ],
@@ -148976,6 +149032,78 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.ViewportSetClearMode(Electron2D.RID,Electron2D.ViewportClearMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetClearMode",
+    "signature": "public static System.Void ViewportSetClearMode(Electron2D.RID viewport, Electron2D.ViewportClearMode clearMode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "clearMode",
+        "type": "Electron2D.ViewportClearMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ViewportSetDisable2D(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetDisable2D",
+    "signature": "public static System.Void ViewportSetDisable2D(Electron2D.RID viewport, System.Boolean disable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "disable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ViewportSetParentViewport(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetParentViewport",
+    "signature": "public static System.Void ViewportSetParentViewport(Electron2D.RID viewport, Electron2D.RID parentViewport)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "parentViewport",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.ViewportSetSDFOversizeAndScale(Electron2D.RID,Electron2D.CanvasSDFOversize,Electron2D.CanvasSDFScale)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -148998,6 +149126,88 @@
       {
         "name": "scale",
         "type": "Electron2D.CanvasSDFScale",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ViewportSetSize(Electron2D.RID,System.Int32,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetSize",
+    "signature": "public static System.Void ViewportSetSize(Electron2D.RID viewport, System.Int32 width, System.Int32 height, System.Int32 viewCount = 1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "height",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "viewCount",
+        "type": "System.Int32",
+        "default": "1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ViewportSetTransparentBackground(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetTransparentBackground",
+    "signature": "public static System.Void ViewportSetTransparentBackground(Electron2D.RID viewport, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ViewportSetUpdateMode(Electron2D.RID,Electron2D.ViewportUpdateMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetUpdateMode",
+    "signature": "public static System.Void ViewportSetUpdateMode(Electron2D.RID viewport, Electron2D.ViewportUpdateMode updateMode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "updateMode",
+        "type": "Electron2D.ViewportUpdateMode",
         "default": null
       }
     ],

@@ -9,6 +9,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_VIEWPORTS_NATIVE") == "1") { ServerViewportTests.RunNative(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_VIEWPORTS") == "1") { ServerViewportTests.RunManaged(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MANUAL_FRAMES_NATIVE") == "1") { ManualRenderFrameTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MANUAL_FRAMES") == "1") { ManualRenderFrameTests.RunManaged(); ManualRenderFrameTests.RunHeadless(); return; }
 if (args.Length == 2 && args[0] == "--os-stdio-child") { OSStandardInputTests.Child(args); return; }
@@ -930,6 +932,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW") == "1")
 }
 
 ManualRenderFrameTests.RunManaged();
+ServerViewportTests.RunManaged();
 OSStandardInputTests.Run();
 OSEnvironmentTests.Run();
 StaticServiceTests.Run();
