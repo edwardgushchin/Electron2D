@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-13
 
+[Capture topology verification](../components/physics-snapshots.md#capture-after-topology-edits)
+now rejects retained links to removed logical slots before packet publication,
+preserving previous bytes and ordinary refresh/recapture. CPU/registered serial/
+separate cases execute; wider topology and current GPU/native acceptance stay open.
+
 [Portable contact/motion history](../components/physics-snapshots.md#portable-contact-and-motion-history)
 now preserves moved character query/solver state and rejects impossible contact,
 overlap and slide indices before apply. CPU/registered real contact transfers

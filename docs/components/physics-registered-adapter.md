@@ -1353,3 +1353,9 @@ enabled logical slots survive; malformed slot indices reject before state or eve
 change. Query-prepared character replay and complete serial/separate warm cycles
 execute without managed allocation. General geometry/joint/current GPU acceptance
 remains open.
+
+[Capture after topology edits](physics-snapshots.md#capture-after-topology-edits)
+also guards the producer: invalid contact/overlap/slide references reject before
+replacing a previous complete packet. Five real removal/clear cases on CPU and
+registered owners pass in serial/separate modes, followed by successful history
+refresh and recapture. This does not establish general topology correspondence.

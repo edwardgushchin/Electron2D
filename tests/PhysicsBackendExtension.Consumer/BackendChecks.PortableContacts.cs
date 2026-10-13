@@ -189,6 +189,7 @@ public static partial class BackendChecks
             Tree.PhysicsFrame(.01); Character.Velocity = new(1000, 0); Character.MoveAndSlide();
         }
         internal void Separate() { Mover.Position = new(50, 0); Mover.LinearVelocity = Vector2.Zero; Tree.PhysicsFrame(.01); }
+        internal void RemoveAreaShape() => PhysicsServer.AreaRemoveShape(_area, 1);
         internal void VerifyCharacterQuery()
         {
             _point.Position = Character.GlobalPosition;

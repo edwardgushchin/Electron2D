@@ -231,6 +231,11 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   supported; version 3 retains its preparation flag. Invalid local/remote logical
   slots reject before state/event mutation, with zero warm full-frame transfer
   allocation. Wider geometry/joint/current GPU/native/network acceptance remains open.
+- [Capture topology verification](physics-snapshots.md#capture-after-topology-edits)
+  now guards source contact/overlap/slide links before packet replacement. Five real
+  removal/clear cases preserve previous packets and recapture after ordinary
+  history refresh on CPU/registered serial/separate owners. General replacement/
+  reindex and current GPU/native/network/performance acceptance remain open.
 - Shared inherited Object/Node/Resource/CanvasItem and skeletal editor requirements
   remain with their typed-API, scheduling, script/editor or rendering prerequisites.
   Existing built-in physics tests do not establish those separate declaring APIs.

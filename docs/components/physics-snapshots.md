@@ -188,6 +188,25 @@ payload; both endpoints must use the same supported version.
 
 ## Portable contact and motion history
 
+### Capture after topology edits
+
+Capture now uses the same logical-range predicate as apply for contact, body/Area
+observer and collided character-slide references. Its measurement pass validates
+both endpoints and the moving-body identity before destination storage is changed.
+After an authoring edit removes a referenced slot, capture rejects with
+InvalidOperationException and preserves the previous complete encoding. Preparation
+may still flush the caller's existing authoring edits; it does not undo that edit.
+
+The public-only --portable-capture fixture begins with real contacts and character
+slides, then removes the mover's slot, the peer's distant slot, the character's
+slot, the raw Area's slot or all peer slots. Five cases on CPU and registered owners
+pass in serial/separate modes. They verify rejection, preserved bytes and no history
+events during capture. A real physics interval and character movement refresh the
+retired histories; capture then succeeds again. Existing --portable-contacts warm
+cycles continue to require 0/0 owner/all-thread bytes with the added preflight.
+Same-count replacement/reindex correspondence, wider topology, GPU/native and full
+network/performance acceptance remain separate gates.
+
 The public-only --portable-contacts consumer creates real CPU contacts, a character
 slide and raw Area history, then transfers them to the independent registered
 owner and back. Disabled slot zero precedes enabled slot one; the character hits

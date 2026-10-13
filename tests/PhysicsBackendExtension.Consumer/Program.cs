@@ -1,6 +1,7 @@
 if (args.Contains("--separate-thread")) BackendChecks.RunSeparateThread();
 else if (args.Contains("--portable-roles")) BackendChecks.RunPortableRoles(args.Contains("--threaded"));
 else if (args.Contains("--portable-contacts")) BackendChecks.RunPortableContacts(args.Contains("--threaded"));
+else if (args.Contains("--portable-capture")) BackendChecks.RunPortableCapture(args.Contains("--threaded"));
 else if (args.Contains("--mass-roles")) BackendChecks.RunMassRoles(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--curved-annulus")) BackendChecks.RunCurvedAnnulus(args.Contains("--threaded"));

@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-13
 
+[Capture after topology edits](../components/physics-snapshots.md#capture-after-topology-edits)
+validates retained contact/overlap/slide links before replacing destination bytes.
+An authoring edit that removes a referenced logical slot rejects capture while
+leaving the previous complete packet available. Refreshing affected histories by
+ordinary physics/movement allows recapture; authoring edits themselves are retained.
+
 [Contact and motion history](../components/physics-snapshots.md#portable-contact-and-motion-history)
 now validates logical slot ranges before apply for contacts, body/Area pairs and
 character slides, while retaining completed history of still-existing disabled

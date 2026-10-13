@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-13
 
+Portable common-entry writers now share logical shape-range checks with readers.
+The capture measurement pass rejects stale references after slot removal before
+replacing a complete packet; ordinary history refresh permits recapture. See
+[topology verification](../components/physics-snapshots.md#capture-after-topology-edits).
+
 Common CharacterBody replay retains prepared query state with its solver pose;
 capture/validation no longer reject that mutable flag. The backend point and common
 entry restore it together. Portable contact/history links additionally validate
