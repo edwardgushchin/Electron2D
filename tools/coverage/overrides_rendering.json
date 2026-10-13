@@ -4561,6 +4561,81 @@
       "godot": "RenderingServer::method:viewport_set_global_canvas_transform(RID:,Transform2D:)",
       "state": "Implemented",
       "reason": "ADRs 0028/0095: independent renderer-session viewport cull masks, outer canvas transforms and concrete sampler defaults execute on scene/caller-owned viewports and shared canvas attachments without rewriting authored getters or input transforms. Matching source assignments republish. CanvasViewportConfigurationTests verifies native GPU/compatibility pixels, two offscreen targets, high mask bit, item sampler precedence, singular/invalid matrices, owner/capture/stale RID guards, cleanup and 64 active/64 idle warmed zero-managed-byte frames. Mip/anisotropic filtering and mirrored addressing retain the existing GPU-only capability gate; foreign/native allocator and human acceptance are separate."
+    },
+    {
+      "godot": "Viewport::enum:MSAA",
+      "electron2d": "T:Electron2D.Viewport.MSAA",
+      "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
+    },
+    {
+      "godot": "Viewport::enum_value:MSAA.MSAA_2X",
+      "electron2d": "enumValue:Electron2D.Viewport.MSAA.Samples2X()",
+      "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
+    },
+    {
+      "godot": "Viewport::enum_value:MSAA.MSAA_4X",
+      "electron2d": "enumValue:Electron2D.Viewport.MSAA.Samples4X()",
+      "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
+    },
+    {
+      "godot": "Viewport::enum_value:MSAA.MSAA_8X",
+      "electron2d": "enumValue:Electron2D.Viewport.MSAA.Samples8X()",
+      "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
+    },
+    {
+      "godot": "Viewport::enum_value:MSAA.MSAA_DISABLED",
+      "electron2d": "enumValue:Electron2D.Viewport.MSAA.Disabled()",
+      "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
+    },
+    {
+      "godot": "Viewport::enum_value:MSAA.MSAA_MAX",
+      "electron2d": "enumValue:Electron2D.Viewport.MSAA.Max()",
+      "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
+    },
+    {
+      "godot": "RenderingServer::enum:ViewportMSAA",
+      "electron2d": "T:Electron2D.Viewport.MSAA",
+      "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportMSAA.VIEWPORT_MSAA_2X",
+      "electron2d": "enumValue:Electron2D.Viewport.MSAA.Samples2X()",
+      "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportMSAA.VIEWPORT_MSAA_4X",
+      "electron2d": "enumValue:Electron2D.Viewport.MSAA.Samples4X()",
+      "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportMSAA.VIEWPORT_MSAA_8X",
+      "electron2d": "enumValue:Electron2D.Viewport.MSAA.Samples8X()",
+      "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportMSAA.VIEWPORT_MSAA_DISABLED",
+      "electron2d": "enumValue:Electron2D.Viewport.MSAA.Disabled()",
+      "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportMSAA.VIEWPORT_MSAA_MAX",
+      "electron2d": "enumValue:Electron2D.Viewport.MSAA.Max()",
+      "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
+    },
+    {
+      "godot": "Viewport::property:msaa_2d",
+      "electron2d": "property:Electron2D.Viewport.MSAA2D()",
+      "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_set_msaa_2d(RID:,int:RenderingServer.ViewportMSAA)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetMSAA2D(Electron2D.RID,Electron2D.Viewport.MSAA)",
+      "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:rendering/anti_aliasing/quality/msaa_2d",
+      "electron2d": "property:Electron2D.ProjectSettings.MSAA2D()",
+      "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
     }
   ],
   "statusGroups": [
@@ -6463,6 +6538,27 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0028/0095: independent renderer-session viewport cull masks, outer canvas transforms and concrete sampler defaults execute on scene/caller-owned viewports and shared canvas attachments without rewriting authored getters or input transforms. Matching source assignments republish. CanvasViewportConfigurationTests verifies native GPU/compatibility pixels, two offscreen targets, high mask bit, item sampler precedence, singular/invalid matrices, owner/capture/stale RID guards, cleanup and 64 active/64 idle warmed zero-managed-byte frames. Mip/anisotropic filtering and mirrored addressing retain the existing GPU-only capability gate; foreign/native allocator and human acceptance are separate."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:rendering/anti_aliasing/quality/msaa_2d",
+        "RenderingServer::enum:ViewportMSAA",
+        "RenderingServer::enum_value:ViewportMSAA.VIEWPORT_MSAA_2X",
+        "RenderingServer::enum_value:ViewportMSAA.VIEWPORT_MSAA_4X",
+        "RenderingServer::enum_value:ViewportMSAA.VIEWPORT_MSAA_8X",
+        "RenderingServer::enum_value:ViewportMSAA.VIEWPORT_MSAA_DISABLED",
+        "RenderingServer::enum_value:ViewportMSAA.VIEWPORT_MSAA_MAX",
+        "RenderingServer::method:viewport_set_msaa_2d(RID:,int:RenderingServer.ViewportMSAA)",
+        "Viewport::enum:MSAA",
+        "Viewport::enum_value:MSAA.MSAA_2X",
+        "Viewport::enum_value:MSAA.MSAA_4X",
+        "Viewport::enum_value:MSAA.MSAA_8X",
+        "Viewport::enum_value:MSAA.MSAA_DISABLED",
+        "Viewport::enum_value:MSAA.MSAA_MAX",
+        "Viewport::property:msaa_2d"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0028/0051/0095: one typed Viewport.MSAA contract executes RGBA8 GPU geometry coverage at 1/2/4/8 samples, per-sample retained targets and pipeline variants, resolve-and-store at frame/screen/mask/group boundaries, shared-canvas independent targets, resize/clear history, root project startup and source republishing. CanvasMSAATests verifies quantized native edge coverage, typed scene file/in-memory storage, 64 active plus 64 idle warmed zero-managed-byte frames and compatibility rejection/cleanup. Existing composition and GPU light/SDF/occlusion tests execute with MSAA enabled. Unsupported GPU counts reject before replacing targets; foreign profiles, native allocator totals and human acceptance remain separate."
     }
   ],
   "extras": [

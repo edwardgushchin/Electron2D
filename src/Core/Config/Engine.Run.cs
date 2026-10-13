@@ -94,6 +94,7 @@ public sealed partial class Engine
             AudioServer.LoadDefaultLayout();
             Input.IgnoreJoypadOnUnfocusedApplication = ProjectSettings.GetWithOverride(ProjectSettings.IgnoreJoypadOnUnfocusedApplication);
             window.OpenNative();
+            window.ApplyProjectMSAA();
             tree = new SceneTree(window, attachToEngine: true);
             Volatile.Write(ref _mainLoop, tree);
             tree.StartForEngine();

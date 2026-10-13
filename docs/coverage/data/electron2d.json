@@ -12685,6 +12685,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Viewport.MSAA",
+    "kind": "type",
+    "declaringType": "Electron2D.Viewport.MSAA",
+    "name": "MSAA",
+    "signature": "public enum Electron2D.Viewport.MSAA",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ViewportClearMode",
     "kind": "type",
     "declaringType": "Electron2D.ViewportClearMode",
@@ -48578,6 +48596,71 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Viewport.DefaultCanvasItemTextureRepeat",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.Viewport.MSAA.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Viewport.MSAA",
+    "name": "Disabled",
+    "signature": "public const Electron2D.Viewport.MSAA Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Viewport.MSAA",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Viewport.MSAA.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Viewport.MSAA",
+    "name": "Max",
+    "signature": "public const Electron2D.Viewport.MSAA Max = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Viewport.MSAA",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.Viewport.MSAA.Samples2X()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Viewport.MSAA",
+    "name": "Samples2X",
+    "signature": "public const Electron2D.Viewport.MSAA Samples2X = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Viewport.MSAA",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Viewport.MSAA.Samples4X()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Viewport.MSAA",
+    "name": "Samples4X",
+    "signature": "public const Electron2D.Viewport.MSAA Samples4X = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Viewport.MSAA",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Viewport.MSAA.Samples8X()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Viewport.MSAA",
+    "name": "Samples8X",
+    "signature": "public const Electron2D.Viewport.MSAA Samples8X = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Viewport.MSAA",
     "value": "3"
   },
   {
@@ -150325,6 +150408,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.ViewportSetMSAA2D(Electron2D.RID,Electron2D.Viewport.MSAA)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetMSAA2D",
+    "signature": "public static System.Void ViewportSetMSAA2D(Electron2D.RID viewport, Electron2D.Viewport.MSAA mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.Viewport.MSAA",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.ViewportSetParentViewport(Electron2D.RID,Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -222050,6 +222157,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.MSAA2D()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "MSAA2D",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Viewport.MSAA\u003E MSAA2D { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Viewport.MSAA\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.MaxPhysicsStepsPerFrame()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -231537,6 +231657,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.MSAA2D()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "MSAA2D",
+    "signature": "public Electron2D.Viewport.MSAA MSAA2D { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Viewport.MSAA",
     "value": null
   },
   {

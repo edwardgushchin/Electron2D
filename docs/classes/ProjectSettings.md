@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Inherits:** [ProjectSettingsRegistry](ProjectSettingsRegistry.md)
 
@@ -13,6 +13,11 @@ Last updated: 2026-10-13
 > Stores globally accessible, strongly typed project settings and resolves project virtual paths.
 
 Public static declarations are in [`ProjectSettings.API.cs`](../../src/Core/Config/ProjectSettings.API.cs).
+
+## Root canvas antialiasing
+
+`ProjectSettings.MSAA2D` is a typed `ProjectSetting<Viewport.MSAA>` for `rendering/anti_aliasing/quality/msaa_2d`. Disabled is the default; Max and undefined values reject. Engine startup reads active feature overrides for an unconfigured root window. Explicit window and offscreen viewport selections remain independent. Enabled values require GPU RGBA8 support for the requested sample count; compatibility fails explicitly. See [canvas MSAA](../components/canvas-rendering.md#canvas-multisample-antialiasing).
+
 
 ## Description
 

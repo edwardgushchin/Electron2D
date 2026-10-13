@@ -4,8 +4,10 @@ internal sealed class CanvasRenderTarget(RenderHandle current, RenderHandle next
 {
     internal RenderHandle Current = current, Next = next;
     internal readonly Vector2i Size = size;
+    internal Viewport.MSAA MSAA;
+    internal RenderHandle? Multisample, MultisampleBackBuffer;
     internal bool HasFrame, BackBufferMipmaps, IsDisposed;
     internal RenderHandle? BackBuffer, MaskBuffer;
     internal void Commit() { (Current, Next) = (Next, Current); HasFrame = true; }
-    public void Dispose() { IsDisposed = true; try { Current.Dispose(); } finally { try { Next.Dispose(); } finally { try { BackBuffer?.Dispose(); } finally { MaskBuffer?.Dispose(); } } } }
+    public void Dispose() { IsDisposed = true; try { Current.Dispose(); } finally { try { Next.Dispose(); } finally { try { BackBuffer?.Dispose(); } finally { try { MaskBuffer?.Dispose(); } finally { try { Multisample?.Dispose(); } finally { MultisampleBackBuffer?.Dispose(); } } } } } }
 }

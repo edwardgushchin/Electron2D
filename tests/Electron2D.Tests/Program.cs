@@ -9,6 +9,11 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length == 2 && args[0] == "--msaa-scene") { CanvasMSAATests.ReadFile(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MSAA_OWNED") == "1") { ProjectSettings.Set(ProjectSettings.MSAA2D, Viewport.MSAA.Samples4X); RenderingCanvasTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MSAA") is { } msaaBackend) { if (msaaBackend == "managed") CanvasMSAATests.RunManaged(); else CanvasMSAATests.RunNative(msaaBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MSAA_LIGHTING") == "1") { ProjectSettings.Set(ProjectSettings.MSAA2D, Viewport.MSAA.Samples4X); LightingTests.RunNative(includeCompatibility: false); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MSAA_COMPOSITION") == "1") { ProjectSettings.Set(ProjectSettings.MSAA2D, Viewport.MSAA.Samples4X); CanvasCompositionTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_VIEW_CONFIG") is { } viewportBackend) { CanvasViewportConfigurationTests.Run(viewportBackend); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POINT_GRAVITY") is { } pointGravityBackend) { if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1") ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, true); PhysicsPointGravityRangeTests.Run(pointGravityBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for point fields.") }); return; }

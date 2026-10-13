@@ -82,6 +82,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(PhysicsJitterFix, isBasic: false);
         RegisterInternal(RenderingMethod, isBasic: true);
         RegisterInternal(RenderingFallback, isBasic: false);
+        RegisterInternal(MSAA2D, isBasic: false);
         RegisterInternal(NavigationMapAsyncIterations, isBasic: false);
         RegisterInternal(NavigationRegionAsyncIterations, isBasic: false);
         RegisterInternal(WorkerPoolMaxThreads, isBasic: false);
@@ -1188,6 +1189,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, PhysicsJitterFix) ||
         ReferenceEquals(setting, RenderingMethod) ||
         ReferenceEquals(setting, RenderingFallback) ||
+        ReferenceEquals(setting, MSAA2D) ||
         ReferenceEquals(setting, WorkerPoolMaxThreads) ||
         ReferenceEquals(setting, WorkerPoolLowPriorityThreadRatio) ||
         ReferenceEquals(setting, WorkerPoolMaxPendingTasks) ||

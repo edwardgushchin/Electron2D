@@ -2,11 +2,11 @@ using Electron2D;
 
 internal static partial class LightingTests
 {
-    internal static void RunNative()
+    internal static void RunNative(bool includeCompatibility = true)
     {
         var method = ProjectSettings.Get(ProjectSettings.RenderingMethod); var fps = Engine.MaxFPS;
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); Engine.MaxFPS = 60;
-        try { NativePixels(); NativeSDF(); NativeRIDs(); NativeNormals(); NativeInterpolation(); NativeCompatibility(); }
+        try { NativePixels(); NativeSDF(); NativeRIDs(); NativeNormals(); NativeInterpolation(); if (includeCompatibility) NativeCompatibility(); }
         finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, method); Engine.MaxFPS = fps; }
     }
     private sealed class Surface : Entity

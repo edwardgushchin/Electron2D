@@ -1,11 +1,22 @@
 # Canvas rendering
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
 [Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
+
+## Canvas multisample antialiasing
+
+`Viewport.MSAA` is the single public coverage-sample contract shared by scene viewports, RenderingServer and the root project setting: Disabled=0, Samples2X=1, Samples4X=2, Samples8X=3 and the nonselectable Max=4. `Viewport.MSAA2D` is stored scene authoring. `RenderingServer.ViewportSetMSAA2D(RID, Viewport.MSAA)` is renderer-session state; it preserves the scene getter and an equal valid scene assignment republishes it. Root startup samples `ProjectSettings.MSAA2D` (`rendering/anti_aliasing/quality/msaa_2d`, Disabled by default) unless the supplied window already has an explicit selection. Other viewports retain their own selection.
+
+GPU rendering prepares matching RGBA8 multisample targets and pipeline variants. Geometry coverage is resolved to the ordinary sampled/readback texture when each pass ends; per-sample data remains available when the next pass or a Never-clear frame loads it. Screen snapshots, ordinary materials, masks and transparent groups therefore consume resolved pixels while geometry in their render passes uses the selected coverage count. Entering the shared group/mask backbuffer seeds every sample from its resolved snapshot before drawing. Lighting/SDF atlases and presentation targets retain their own single-sample roles. MSAA smooths geometry edges; texture filtering and addressing remain independent.
+
+A viewport can share one retained canvas with other viewports using different sample counts. Changing the mode or target dimensions recreates native storage while preserving logical texture RID identity, and retires prior completed pixels. Invalid values reject without changing authored/server state. Compatibility rejects enabled MSAA; unsupported GPU RGBA8 sample counts reject before replacing existing targets. Disposal/shutdown releases all multisample targets and pipeline variants.
+
+`CanvasMSAATests` verifies native coverage quantization at 1/2/4/8 samples, simultaneous root/scene/server targets, mode changes and source republishing, stable RID identity, resize, Never-clear sample history, invalid/off-owner identities and teardown. In-memory and file scene reconstruction retain the authored enum. Compatibility checks both an explicit selection and configured root startup. After dimension-aware warmup, 64 active and 64 idle MSAA render intervals allocate zero managed bytes. Existing screen/group/clip shader and GPU light, occlusion, normals, interpolation and SDF hosts execute with MSAA enabled. Linux Wayland evidence is local; foreign profiles, native allocator totals and human visual acceptance remain separate.
+
 
 ## Viewport canvas configuration
 

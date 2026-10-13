@@ -504,3 +504,5 @@ The built-in WorkerThreadPool registry entry retains its typed object identity w
 ## Completed rendering frames
 
 GetFramesDrawn() returns a thread-safe ulong process-lifetime count of completed canvas intervals, including explicit non-presenting frames. Each interval counts once across all targets. Headless processing and disabled automatic rendering add no frames; ForceDraw still executes a frame. Native completion remains counted if a later observer/action fails. See [explicit canvas execution](../components/manual-render-frames.md).
+
+Root startup applies ProjectSettings.MSAA2D when the supplied window has no explicit selection. Scene/offscreen values remain separate; capability rejection balances native teardown. See [canvas MSAA](../components/canvas-rendering.md#canvas-multisample-antialiasing).

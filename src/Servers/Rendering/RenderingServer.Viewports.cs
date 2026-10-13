@@ -13,6 +13,7 @@ public sealed partial class RenderingServer
         internal Transform? GlobalCanvasTransform;
         internal TextureFilter? CanvasFilter;
         internal TextureRepeat? CanvasRepeat;
+        internal Viewport.MSAA? MSAA;
         internal ViewportUpdateMode Update = ViewportUpdateMode.Always;
         internal ViewportClearMode Clear;
     }
@@ -46,6 +47,20 @@ public sealed partial class RenderingServer
     { if (filter <= TextureFilter.ParentNode || filter >= TextureFilter.Max) throw new ArgumentOutOfRangeException(nameof(filter)); ChangeViewport(rid, out _).CanvasFilter = filter; }
     private void ViewportSetDefaultCanvasItemTextureRepeatCore(RID rid, TextureRepeat repeat)
     { if (repeat <= TextureRepeat.ParentNode || repeat >= TextureRepeat.Max) throw new ArgumentOutOfRangeException(nameof(repeat)); ChangeViewport(rid, out _).CanvasRepeat = repeat; }
+    internal Viewport.MSAA ViewportMSAA(Viewport view) => _serverViewports.TryGetValue(view, out var state) && state.MSAA is { } mode ? mode : view.MSAA2D;
+    internal void PublishViewportMSAA(Viewport view) { if (_serverViewports.TryGetValue(view, out var state)) state.MSAA = null; }
+    private void ViewportSetMSAA2DCore(RID rid, Viewport.MSAA mode)
+    { if ((uint)mode >= (uint)Viewport.MSAA.Max) throw new ArgumentOutOfRangeException(nameof(mode)); ChangeViewport(rid, out _).MSAA = mode; }
+    /// <summary>Sets canvas multisample antialiasing for a live scene or caller-owned viewport.</summary>
+    /// <param name="viewport">The live viewport identity.</param><param name="mode">A concrete coverage sample count or Disabled.</param>
+    /// <remarks>Renderer-session state preserves scene getters; valid scene MSAA2D assignments republish.
+    /// The next submission prepares matching GPU targets and pipelines. Unsupported sample counts or compatibility
+    /// rendering reject enabled MSAA before replacing native targets. Texture RID identity remains stable.</remarks>
+    /// <exception cref="ArgumentException">The viewport identity is invalid.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The mode is undefined or Max.</exception>
+    /// <exception cref="InvalidOperationException">The renderer is unavailable or mutation violates owner/capture/submission rules.</exception>
+    public static void ViewportSetMSAA2D(RID viewport, Viewport.MSAA mode) => RequireService().ViewportSetMSAA2DCore(viewport, mode);
+
     private RID ViewportCreateCore()
     {
         EnsureServerViewportChange(); var view = new SubViewport(); view.SetServerSize(default); view.RenderingOwner = this;

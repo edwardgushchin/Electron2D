@@ -46,13 +46,18 @@ internal abstract class CanvasBackend : IDisposable
     internal abstract Vector2i GetPixelSize();
     private readonly Dictionary<Viewport, CanvasRenderTarget> _targets = new(ReferenceEqualityComparer.Instance);
     internal abstract RenderHandle CreateTarget(Vector2i size, Color clear, bool mipmaps = false);
+    internal virtual void ValidateMSAA(Viewport.MSAA mode) { if (mode != Viewport.MSAA.Disabled) throw new NotSupportedException("The compatibility renderer cannot use canvas multisample antialiasing."); }
+    internal virtual RenderHandle CreateMultisampleTarget(Vector2i size, Color clear, Viewport.MSAA mode) => throw new NotSupportedException("Multisample canvas targets require GPU rendering.");
     internal CanvasRenderTarget Target(Viewport viewport, Vector2i size, Color clear)
     {
-        if (_targets.TryGetValue(viewport, out var target) && target.Size == size) return target;
+        var mode = viewport.RenderingOwner?.ViewportMSAA(viewport) ?? viewport.MSAA2D; ValidateMSAA(mode);
+        if (_targets.TryGetValue(viewport, out var target) && target.Size == size && target.MSAA == mode) return target;
         if (size.X is < 1 or > 16384 || size.Y is < 1 or > 16384) throw new NotSupportedException("Canvas targets require 1..16384 pixels per axis on this backend profile.");
         var current = CreateTarget(size, clear); RenderHandle next;
         try { next = CreateTarget(size, clear); } catch { current.Dispose(); throw; }
-        var replacement = new CanvasRenderTarget(current, next, size); target?.Dispose(); _targets[viewport] = replacement; return replacement;
+        var replacement = new CanvasRenderTarget(current, next, size) { MSAA = mode };
+        try { if (mode != Viewport.MSAA.Disabled) replacement.Multisample = CreateMultisampleTarget(size, clear, mode); } catch { replacement.Dispose(); throw; }
+        target?.Dispose(); _targets[viewport] = replacement; return replacement;
     }
     internal RenderHandle BackBuffer(CanvasRenderTarget target, bool mipmaps)
     {

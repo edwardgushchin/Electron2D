@@ -1,6 +1,6 @@
 # Viewport
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Inherits:** [Node](Node.md)
 
@@ -9,6 +9,11 @@ Last updated: 2026-10-13
 - **Source:** [Viewport.cs](../../src/Scene/Main/Viewport.cs), [Viewport.Targets.cs](../../src/Scene/Main/Viewport.Targets.cs), [Viewport.Drag.cs](../../src/Scene/Main/Viewport.Drag.cs), [Viewport.PhysicsInterpolation.cs](../../src/Scene/Main/Viewport.PhysicsInterpolation.cs), [Viewport.Audio.cs](../../src/Scene/Main/Viewport.Audio.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public abstract partial class Viewport : Node`
+
+## Canvas MSAA
+
+`Viewport.MSAA` defines Disabled, Samples2X, Samples4X, Samples8X and nonselectable Max. `MSAA2D` stores the viewport's authored coverage selection, defaulting to Disabled. Valid assignments republish the matching renderer override, including equal values. The root applies the project default at startup unless explicitly configured; offscreen viewports keep their own values. Native target preparation uses matching GPU pipelines and resolves pixels for sampling/readback; mode changes and resize retire completed pixels while retaining texture RID identity. Compatibility and unsupported GPU counts reject enabled MSAA. See [behavior and executable checks](../components/canvas-rendering.md#canvas-multisample-antialiasing).
+
 
 ## Viewport canvas configuration
 

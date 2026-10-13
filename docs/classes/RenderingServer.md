@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -8,6 +8,11 @@ Last updated: 2026-10-13
 - Component: [Canvas rendering](../components/canvas-rendering.md)
 
 Public static declarations are in [`RenderingServer.API.cs`](../../src/Servers/Rendering/RenderingServer.API.cs).
+
+## Viewport MSAA
+
+`ViewportSetMSAA2D(RID viewport, Viewport.MSAA mode)` selects per-viewport GPU geometry coverage independently of scene authoring and other attachments of a shared canvas. Valid scene MSAA2D assignments republish. The next submitted image prepares matching multisample targets and pipelines, preserving logical texture identity; invalid identities/modes and off-owner/capture mutations reject. Native capability and lifecycle details are in [canvas MSAA](../components/canvas-rendering.md#canvas-multisample-antialiasing).
+
 
 ## Viewport canvas configuration
 

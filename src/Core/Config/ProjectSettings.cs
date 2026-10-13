@@ -281,6 +281,12 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<bool> RenderingFallback { get; } =
         new("rendering/rendering_device/fallback_to_opengl3", true);
 
+    /// <summary>Selects canvas multisample antialiasing for the root window at engine startup.</summary>
+    /// <value>rendering/anti_aliasing/quality/msaa_2d; Disabled initially.</value>
+    /// <remarks>Scene and caller-owned offscreen viewports keep their own selections. Enabled MSAA requires a GPU backend with the requested sample count.</remarks>
+    public static ProjectSetting<Viewport.MSAA> MSAA2D { get; } =
+        new("rendering/anti_aliasing/quality/msaa_2d", Viewport.MSAA.Disabled, value => (uint)value < (uint)Viewport.MSAA.Max);
+
     internal static ProjectSetting<bool> NavigationMapAsyncIterations { get; } = new("navigation/world/map_use_async_iterations", true);
     internal static ProjectSetting<bool> NavigationRegionAsyncIterations { get; } = new("navigation/world/region_use_async_iterations", true);
 
