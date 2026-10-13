@@ -1436,3 +1436,10 @@ Seven forms include both bias-one endpoints; 128 measured edited full steps requ
 resident/stage controls remain distinct from hardware/performance acceptance.
 
 Retained canvas item copy settings now share the existing screen-snapshot compositor with BackBufferCopy, including source republishing and session-only storage. See [copy settings](components/canvas-rendering.md#retained-backbuffer-copy-settings).
+
+[Shared public priority verification](components/physics-contact-policy.md#shared-public-priority-2026-10-14)
+now exercises weighted recovery, scene/server/CharacterBody motion, packing and
+lifetime through explicit CPU/GPU worlds in both numerical-thread modes. Changing
+priority preserves sleep and fixture identity over 128 measured full frames at
+0/0 owner/all-thread managed bytes; query brackets retain the same zero budget.
+Software Vulkan execution does not establish hardware or broader acceptance.

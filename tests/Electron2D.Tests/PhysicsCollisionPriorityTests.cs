@@ -3,7 +3,7 @@ using Electron2D;
 using Store = Electron2D.GPUPhysicsBodyStore;
 using Mode = Electron2D.PhysicsServer.BodyMode;
 
-internal static class PhysicsCollisionPriorityTests
+internal sealed class PhysicsCollisionPriorityTests(PhysicsServer.Backend backend)
 {
     internal static void MeasurePipeline(string path)
     {
@@ -15,10 +15,12 @@ internal static class PhysicsCollisionPriorityTests
         try { Console.WriteLine($"Compute pipeline {System.IO.Path.GetFileName(path)}: {Stopwatch.GetElapsedTime(start).TotalMilliseconds:F2} ms; {device.Driver}/{device.DeviceName}."); }
         finally { SDL3.SDL.ReleaseGPUComputePipeline(device.Device, pipeline); }
     }
-    internal static void Run(bool resident = false)
+    internal static void Run(bool resident = false) => new PhysicsCollisionPriorityTests(PhysicsServer.Backend.CPU).RunCore(resident);
+    internal static void Run(PhysicsServer.Backend backend) => new PhysicsCollisionPriorityTests(backend).RunCore(false);
+    private void RunCore(bool resident)
     {
         if (!resident) { SceneAndServer(); SceneMovement(); }
-        using var rig = new Rig(resident);
+        using var rig = new Rig(backend, resident);
         foreach (var pair in new[] { (1f, 1f), (9f, 1f), (1f, 9f), (90f, 10f), (float.MaxValue, float.MaxValue),
             (float.MaxValue, 1f), (5e-6f, 5e-6f), (1e-7f, 1e-7f), (float.Epsilon, float.Epsilon) })
         {
@@ -37,7 +39,7 @@ internal static class PhysicsCollisionPriorityTests
             Reject<ArgumentOutOfRangeException>(() => rig.Set(invalid, 9));
         Near(rig.Test(), strongBottom, .0001f, "Invalid edit preserves recovery");
         rig.VerifyLifetime(); rig.VerifyCapacity(); Measure(rig);
-        Console.WriteLine($"Collision priority passed on {(resident ? "independent GPU" : "public CPU")}.");
+        Console.WriteLine($"Collision priority passed on {(resident ? "resident GPU" : $"public {backend}")}.");
     }
 
     private sealed class Rig : IDisposable
@@ -50,7 +52,7 @@ internal static class PhysicsCollisionPriorityTests
         private readonly WorldBoundaryShape _bottomShape = new() { Normal = Vector2.Up, Distance = -3 };
         private readonly PhysicsTestMotionParameters _query = new() { RecoveryAsCollision = true };
         private readonly PhysicsTestMotionResult _result = new();
-        internal Rig(bool resident)
+        internal Rig(PhysicsServer.Backend backend, bool resident)
         {
             if (resident)
             {
@@ -62,11 +64,13 @@ internal static class PhysicsCollisionPriorityTests
             }
             else
             {
-                _space = PhysicsServer.SpaceCreate();
+                _space = PhysicsServer.SpaceCreate(backend);
+                Check(PhysicsServer.SpaceGetBackend(_space) == backend, "Priority queries use the selected public backend.");
                 _body = Add(_circle, new(500, 500)); _wall = Add(_leftShape, default); _floor = Add(_bottomShape, default);
                 Check(PhysicsServer.BodyGetCollisionPriority(_wall) == 1, "Server default priority.");
             }
         }
+        internal Store? SelectedStore => GPU ?? (_space.IsValid() ? PhysicsServer.Service.GetSceneSpace(_space).GPUStore : null);
         private RID Add(Shape shape, Vector2 position)
         {
             var body = PhysicsServer.BodyCreate(); PhysicsServer.BodySetMode(body, Mode.Static); PhysicsServer.BodyAddShape(body, shape.GetRID());
@@ -85,7 +89,7 @@ internal static class PhysicsCollisionPriorityTests
                 gpu.TestMotion([new(_mover, Transform.Identity, Vector2.Zero, RecoveryAsCollision: true)], [], [], result);
                 Check(result[0].Collided, "GPU recovery reports an actual boundary contact."); return result[0].Travel;
             }
-            Check(PhysicsServer.BodyTestMotion(_body, _query, _result), "CPU recovery reports an actual boundary contact."); return _result.GetTravel();
+            Check(PhysicsServer.BodyTestMotion(_body, _query, _result), "Public recovery reports an actual boundary contact."); return _result.GetTravel();
         }
         internal void VerifyLifetime()
         {
@@ -114,7 +118,7 @@ internal static class PhysicsCollisionPriorityTests
                 PhysicsServer.BodySetSpace(_wall, default); PhysicsServer.BodySetCollisionPriority(_wall, 7);
                 PhysicsServer.BodySetMode(_wall, Mode.Kinematic); PhysicsServer.BodySetSpace(_wall, _space);
                 Check(PhysicsServer.BodyGetCollisionPriority(_wall) == 7, "Detach and role edits preserve priority.");
-                Check(PhysicsServer.BodyGetTransform(_body).Origin == new Vector2(500, 500), "Supplied-pose query preserves CPU pose.");
+                Check(PhysicsServer.BodyGetTransform(_body).Origin == new Vector2(500, 500), "Supplied-pose query preserves public body pose.");
             }
         }
         internal void VerifyCapacity()
@@ -152,9 +156,9 @@ internal static class PhysicsCollisionPriorityTests
         }
     }
 
-    private static void SceneAndServer()
+    private void SceneAndServer()
     {
-        using var root = new Node(); var body = new RigidBody { Name = "Body", GravityScale = 0 }; var area = new Area { Name = "Area" };
+        using var world = new World(backend); using var root = new SubViewport { World = world }; var body = new RigidBody { Name = "Body", GravityScale = 0 }; var area = new Area { Name = "Area" };
         root.AddChild(body); root.AddChild(area); body.Owner = area.Owner = root;
         Check(body.CollisionPriority == 1 && area.CollisionPriority == 1, "Inherited defaults.");
         PhysicsServer.BodySetCollisionPriority(body.GetRID(), 7); Check(body.CollisionPriority == 7, "Server edits project into the scene.");
@@ -169,25 +173,36 @@ internal static class PhysicsCollisionPriorityTests
         }
         using var shape = new CircleShape { Radius = 5 }; body.AddChild(new CollisionShape { Shape = shape });
         using var tree = new SceneTree(root); tree.PhysicsFrame(.01); body.Sleeping = true;
-        var fixture = ((CPUPhysicsColliderImplementation)body.Backend.Implementation!).Shapes[0]; var rid = body.GetRID(); body.CollisionPriority = 9;
-        Check(body.Sleeping && body.GetRID() == rid && ((CPUPhysicsColliderImplementation)body.Backend.Implementation!).Shapes[0].Equals(fixture), "Live priority preserves sleep, RID and fixture.");
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Priority scene uses the selected public backend.");
+        var fixture = Fixture(body); var rid = body.GetRID(); body.CollisionPriority = 9;
+        Check(body.Sleeping && body.GetRID() == rid && Fixture(body).Equals(fixture), "Live priority preserves sleep, RID and fixture.");
         Task.Run(() => Reject<InvalidOperationException>(() => _ = body.CollisionPriority)).GetAwaiter().GetResult();
         var guarded = false; body.NotifyLocalTransformChanges = true;
-        body.LocalTransformChanged += _ => { Reject<InvalidOperationException>(() => body.CollisionPriority = 2); guarded = true; };
+        Action<CanvasItem> guard = _ => { Reject<InvalidOperationException>(() => body.CollisionPriority = 2); guarded = true; };
+        body.LocalTransformChanged += guard;
         body.LinearVelocity = new(1, 0); body.Sleeping = false; tree.PhysicsFrame(.01); Check(guarded, "In-step priority mutation is rejected.");
+        body.LocalTransformChanged -= guard; body.LinearVelocity = Vector2.Zero; body.Sleeping = true;
+        for (var i = 0; i < 128; i++) { body.CollisionPriority = (i & 1) + 1; tree.PhysicsFrame(.01); Check(body.Sleeping, "Priority edits preserve sleep through full frames."); }
+        var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var allBefore = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < 128; i++) { body.CollisionPriority = (i & 1) + 1; tree.PhysicsFrame(.01); Check(body.Sleeping, "Priority edits preserve sleep through full frames."); }
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore; var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        Check(ownerBytes == 0 && allBytes == 0, "Warmed priority edits and complete sleeping frames allocate zero owner/all-thread managed bytes.");
+        Check(body.GetRID() == rid && Fixture(body).Equals(fixture), "Full-frame priority edits preserve collider and fixture identity.");
+        Console.WriteLine($"Priority full frames ({backend}): 128 warmup/128 sleeping frames with changing priority, ownerBytes={ownerBytes}, allBytes={allBytes}.");
         var detached = PhysicsServer.BodyCreate(); PhysicsServer.FreeRID(detached); Reject<ArgumentException>(() => PhysicsServer.BodySetCollisionPriority(detached, 1));
     }
 
-    private static void SceneMovement()
+    private void SceneMovement()
     {
         using var leftShape = new WorldBoundaryShape { Normal = Vector2.Right, Distance = -3 };
         using var bottomShape = new WorldBoundaryShape { Normal = Vector2.Up, Distance = -3 };
-        using var circle = new CircleShape { Radius = 5 }; using var root = new Node();
+        using var circle = new CircleShape { Radius = 5 }; using var world = new World(backend); using var root = new SubViewport { World = world };
         var left = new StaticBody { Name = "Left", CollisionPriority = 9 }; left.AddChild(new CollisionShape { Shape = leftShape }); root.AddChild(left);
         var bottom = new StaticBody { Name = "Bottom" }; bottom.AddChild(new CollisionShape { Shape = bottomShape }); root.AddChild(bottom);
         var area = new Area { Name = "Sensor", CollisionPriority = float.MaxValue }; area.AddChild(new CollisionShape { Shape = circle }); root.AddChild(area);
         var actor = new CharacterBody { Name = "Actor", MotionMode = CharacterMotionMode.Floating }; actor.AddChild(new CollisionShape { Shape = circle }); root.AddChild(actor);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Character priority uses the selected public backend.");
         using var hit = actor.MoveAndCollide(Vector2.Zero, testOnly: true, recoveryAsCollision: true);
         Check(hit is not null && actor.Position == Vector2.Zero, "Test-only recovery retains pose and ignores high-priority sensors.");
         var expected = hit!.GetTravel(); Check(expected.X > 2 && expected.Y is < -.5f and > -.7f, "Scene motion uses obstacle priority.");
@@ -196,17 +211,24 @@ internal static class PhysicsCollisionPriorityTests
         Near(actor.Position, expected, .002f, "Ordinary move applies priority recovery");
     }
 
-    private static void Measure(Rig rig)
+    private void Measure(Rig rig)
     {
         for (var i = 0; i < 128; i++) { rig.Set((i & 1) + 1, 1); rig.Test(); }
-        var samples = new long[128]; var uploads = rig.GPU?.UploadBytes ?? 0; var reads = rig.GPU?.ReadbackBytes ?? 0; var waits = rig.GPU?.WaitMS ?? 0;
-        var before = GC.GetTotalAllocatedBytes(true);
+        var selected = rig.SelectedStore;
+        var samples = new long[128]; var uploads = selected?.UploadBytes ?? 0; var reads = selected?.ReadbackBytes ?? 0; var waits = selected?.WaitMS ?? 0;
+        var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var before = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < samples.Length; i++) { var start = Stopwatch.GetTimestamp(); rig.Set((i & 1) + 1, 1); rig.Test(); samples[i] = Stopwatch.GetTimestamp() - start; }
-        var allocated = GC.GetTotalAllocatedBytes(true) - before; Array.Sort(samples); var ms = 1000d / Stopwatch.Frequency;
-        Console.WriteLine($"Priority {(rig.GPU is null ? "CPU" : "GPU")}: 128 warmup/128 edited recovery queries, p50/p95/p99={samples[64] * ms:F4}/{samples[121] * ms:F4}/{samples[126] * ms:F4} ms; {allocated} all-thread managed B.");
-        if (rig.GPU is { } gpu) Console.WriteLine($"Priority traffic/query: upload={(gpu.UploadBytes - uploads) / 128} B, readback={(gpu.ReadbackBytes - reads) / 128} B, wait={(gpu.WaitMS - waits) / 128:F4} ms; {gpu.Driver}/{gpu.DeviceName}.");
-        Check(allocated == 0, "Warmed edits and motion recovery allocate zero managed bytes.");
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore; var allocated = GC.GetTotalAllocatedBytes(true) - before; Array.Sort(samples); var ms = 1000d / Stopwatch.Frequency;
+        Console.WriteLine($"Priority {(rig.GPU is null ? $"public {backend}" : "resident GPU")}: 128 warmup/128 edited recovery queries, p50/p95/p99={samples[64] * ms:F4}/{samples[121] * ms:F4}/{samples[126] * ms:F4} ms; {ownerBytes}/{allocated} owner/all-thread managed B.");
+        if (selected is { } gpu) Console.WriteLine($"Priority traffic/query: upload={(gpu.UploadBytes - uploads) / 128} B, readback={(gpu.ReadbackBytes - reads) / 128} B, wait={(gpu.WaitMS - waits) / 128:F4} ms; {gpu.Driver}/{gpu.DeviceName}.");
+        Check(ownerBytes == 0 && allocated == 0, "Warmed edits and motion recovery allocate zero owner/all-thread managed bytes.");
     }
+    private static object Fixture(PhysicsBody body) => body.Backend.Implementation switch
+    {
+        CPUPhysicsColliderImplementation cpu => cpu.Shapes[0],
+        GPUPhysicsColliderImplementation gpu => gpu.GPUShapes[0].Handle,
+        _ => throw new InvalidOperationException("The selected fixture is missing.")
+    };
     private static void Near(Vector2 actual, Vector2 expected, float tolerance, string message) => Check(actual.DistanceTo(expected) <= tolerance, $"{message}: {actual} vs {expected} (tolerance {tolerance} u).");
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action operation) where T : Exception { try { operation(); } catch (T) { return; } throw new InvalidOperationException($"Expected {typeof(T).Name}."); }

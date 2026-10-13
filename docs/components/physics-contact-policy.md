@@ -358,3 +358,38 @@ contention from independent verification commands and are diagnostic; they estab
 no hardware throughput or scheduling advantage. Contact-history, solver-iteration,
 priority, arbitrary registered geometry, network/native/platform and final
 performance acceptance retain their separate gates.
+
+
+## Shared public priority, 2026-10-14
+
+`ELECTRON2D_TEST_PUBLIC_PRIORITY=cpu|gpu` runs PhysicsCollisionPriorityTests
+through explicit public scene Worlds and server spaces. The early entry also
+accepts `ELECTRON2D_TEST_THREADED_COLLIDER=1` before world creation. The ordinary
+full runner includes both selected backends; the direct resident control remains
+separate. All five profiles pass with the current software Vulkan setup.
+
+The unchanged analytic matrix covers nine equal/unequal/scaled/maximum/subnormal
+weight pairs, invalid writes, 41 incident contacts with a 32-point cap, preserved
+supplied-pose bodies, detach/role edits and off-owner access. Scene checks exercise
+inherited RigidBody/Area values and packing, exact borrowed collider/fixture identity,
+phase rejection, nonblocking high-priority Areas, test-only/applied motion and actual
+CharacterBody recovery. CPU and GPU fixture diagnostics retain their own identities;
+they do not require equal backend storage or tied contact ordering. Normal recovery
+retains 0.002 scene-unit error and tiny motion 0.0000001.
+
+A new bracket alternates priority over 128 warmed/128 measured complete sleeping
+scene frames. Each frame must preserve sleep; the final collider/fixture identity
+must remain unchanged. Both serial and separate CPU/GPU profiles require 0/0
+owner/all-thread managed bytes. The original 128/128 edited recovery-query bracket
+now requires the same exact zero budget on both public paths and the resident
+control. Actual selected public GPU traffic is 280 B upload and 148 B readback per
+query, with no full-state mirror added by this change.
+
+The frozen runtime/source manifest belongs to the current main integration,
+including its retained canvas-copy changes. CPU processes load no graphics driver;
+GPU processes load llvmpipe without NVIDIA, and retained numerical threads are
+observed only in separate public profiles. Logs, device proofs and manifests live
+under `bin/physics-public-priority/2026-10-14/final/`. Software timing is diagnostic,
+not hardware performance evidence. Contact history/iterations, general registered
+geometry, native allocation, foreign platforms, networking, massive throughput and
+real-window FPS remain separate acceptance gates.

@@ -1033,3 +1033,10 @@ suite on explicitly selected CPU/GPU worlds in serial/separate numerical modes.
 Seven forms include both bias-one endpoints; 128 measured edited full steps require
 0/0 owner/all-thread managed bytes. Software Vulkan execution and historical direct
 resident/stage controls remain distinct from hardware/performance acceptance.
+
+[Shared public priority verification](../components/physics-contact-policy.md#shared-public-priority-2026-10-14)
+now exercises weighted recovery, scene/server/CharacterBody motion, packing and
+lifetime through explicit CPU/GPU worlds in both numerical-thread modes. Changing
+priority preserves sleep and fixture identity over 128 measured full frames at
+0/0 owner/all-thread managed bytes; query brackets retain the same zero budget.
+Software Vulkan execution does not establish hardware or broader acceptance.

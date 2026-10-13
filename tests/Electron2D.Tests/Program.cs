@@ -28,6 +28,18 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_VIEW_CONFIG") is 
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POINT_GRAVITY") is { } pointGravityBackend) { if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1") ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, true); PhysicsPointGravityRangeTests.Run(pointGravityBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for point fields.") }); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PUBLIC_PRIORITY") is { } priorityBackend)
+{
+    ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1");
+    PhysicsCollisionPriorityTests.Run(priorityBackend switch
+    {
+        "cpu" => PhysicsServer.Backend.CPU,
+        "gpu" => PhysicsServer.Backend.GPU,
+        _ => throw new ArgumentException("Use cpu or gpu for collision priority.")
+    });
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTACT_CORRECTION") is { } correctionBackend)
 {
     ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1");
@@ -1104,7 +1116,7 @@ RenderHandleReplacementTests.Run();
 PhysicsSleepPolicyTests.Run();
 PhysicsContactPolicyTests.Run(); PhysicsContactPolicyTests.Run(PhysicsServer.Backend.GPU);
 PhysicsSolverIterationTests.Run();
-PhysicsContactPersistenceTests.Run(); PhysicsCollisionPriorityTests.Run();
+PhysicsContactPersistenceTests.Run(); PhysicsCollisionPriorityTests.Run(); PhysicsCollisionPriorityTests.Run(PhysicsServer.Backend.GPU);
 CapsuleShapeTests.Run(); CapsuleShapeTests.Run(PhysicsServer.Backend.GPU);
 SegmentShapeTests.Run(); SegmentShapeTests.Run(PhysicsServer.Backend.GPU);
 SeparationRayShapeTests.Run(); SeparationRayShapeTests.Run(PhysicsServer.Backend.GPU);

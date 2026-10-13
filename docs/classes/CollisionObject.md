@@ -241,3 +241,10 @@ managed bytes. Complete geometry/disable and final acceptance remain open.
 Child-owner entry compares the complete transform/disabled/one-way descriptors and all server slot overrides before synchronization. An unchanged entry keeps existing geometry and sleep state; real descriptor or slot overrides still resynchronize. Shared CPU/GPU Area conformance checks initial sleep and field-change wake, while ShapeOwnerTests checks CollisionShape/CollisionPolygon slot-override reset on reentry.
 
 The complete PhysicsBodyTests, RigidBodyForceTests, RigidBodyContactTests and ShapePairEventTests now execute on explicitly selected public CPU/GPU worlds, with actual backend assertions in every numerical scene. The ordinary full suite runs both variants; ELECTRON2D_TEST_SCENE_PHYSICS=cpu|gpu selects the same complete set. Existing force/impulse/center units and numerical bounds, freeze/lock/mass/geometry recovery, persistent force packing, sleep/wake notification policy, contact caps/deduplication and object-before-shape entry/departure ordering are unchanged. Scene/raw nullable payloads, compound logical slots, handler mutation/errors and committed-event no-replay remain asserted. All existing 64-frame warm gates now require 0/0 owner/all-thread managed bytes for resting/active/moving bodies, forces, monitored/no-contact frames and steady/transitioning shape pairs. Box2D SIMD and worker scheduling probes remain CPU diagnostics; they do not establish independent GPU acceptance. Native allocations, wider inherited/extension, foreign platforms, full networking and final GPU/window performance acceptance remain open.
+
+[Shared public priority verification](../components/physics-contact-policy.md#shared-public-priority-2026-10-14)
+now exercises weighted recovery, scene/server/CharacterBody motion, packing and
+lifetime through explicit CPU/GPU worlds in both numerical-thread modes. Changing
+priority preserves sleep and fixture identity over 128 measured full frames at
+0/0 owner/all-thread managed bytes; query brackets retain the same zero budget.
+Software Vulkan execution does not establish hardware or broader acceptance.
