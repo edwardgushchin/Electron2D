@@ -50,7 +50,8 @@ including transient impacts. Public callbacks and object events still run once
 in the outer step's normal order. One-way contact epochs advance with actual
 solver intervals so retired contacts cannot keep a stale side decision.
 
-CPU geometry/response stays in Box2D.NET. The trajectory pass reuses its swept
+CPU geometry uses Box2D.NET proxies; the owner computes exact fixed-rotation
+disk/point entry times, and physical response stays in Box2D.NET. The trajectory pass reuses its swept
 shape queries and dynamic tree, including center-aware translation, current
 logical filters, and a disk envelope for intermediate rotation. Buffers retain
 peak capacity. It snapshots engine body attachments and proposed sweeps already
@@ -197,3 +198,32 @@ The ordinary full runner executes the complete PhysicsCCDTests on CPU and GPU;
 assert the actual backend. After 64 warmup steps, 128 reset-active steps require
 0/0 owner/all-thread managed bytes. Existing numerical and error bounds remain;
 native allocations, foreign platforms and final performance acceptance stay open.
+
+
+[Independent numerical CCD](physics-registered-adapter.md#independent-numerical-ccd)
+now advances the bounded circle/annulus model through current relative swept
+intervals, consumes remaining time and retains full signed contact impulses.
+Shared registered/CPU/GPU --continuous-response checks verify actual ray/shape
+stopping, discrete control, relative impact, elastic remaining motion, filtering,
+one outer callback/tick, force duration and 128 replay cycles at strict 0/0 bytes.
+The registered controls also exercise hollow inner-wall rebounds and terminal
+interval-budget failure. General geometry/rotation/coupled extension, network,
+native totals and final performance acceptance remain open.
+
+
+## Linear disk grazing impacts
+
+The CPU owner now solves exact linear disk/point TOI in double precision when both
+proxies have one point, a positive combined radius and fixed rotations. This
+avoids the general native TOI target's radius reduction by linear slop, which
+missed a shallow full-shape circle impact. Rotating/compound/other proxies keep
+the existing general path. Leading-point CastRay retains its zero-radius proxy
+and its approximate off-ray behavior; native contact response, remaining time,
+filters, one-way policy and frame reporting remain in the same coordinator.
+
+The common public continuous-response fixture places a radius-1 target at
+(20,1.99) against a radius-1 circle moving at 3000 units/s for .02 s. CastShape
+must produce Y velocity below -10; CastRay remains a pass-through approximation.
+The old CPU CastShape returned approximately (60,0)/(3000,0); the corrected
+CPU, GPU and independent consumer pass the same mode-qualified assertions.
+128 full reset/replay cycles remain at strict 0/0 owner/all-thread bytes.

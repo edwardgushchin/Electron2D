@@ -195,3 +195,12 @@ extension and platform/performance acceptance remain open.
 exercise real pin/groove response through immutable settings and selected
 attachments on registered/CPU/GPU worlds, including strict warmed allocation and
 private next-step replay. Complete numerical-extension acceptance remains open.
+
+
+[Independent numerical CCD](../components/physics-registered-adapter.md#independent-numerical-ccd)
+now verifies actual registered/CPU/GPU ray/shape motion, relative impact, remaining
+time, full impulse and force/callback/tick budgets through common public checks.
+128 warmed complete replay cycles require 0/0 owner/all-thread bytes. Registered
+explicit-space controls check custom hollow geometry and terminal numerical
+budget failure. This bounded fixture does not establish general geometry/rotation,
+full extension, network or native/performance acceptance.

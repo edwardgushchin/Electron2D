@@ -788,3 +788,10 @@ and replay through common registered/CPU/GPU public assertions. Shared indexed
 shape preparation and CPU in-place material updates provide strict 0/0 bytes over
 128 edited contact/replay cycles; general geometry/CCD/network/native/performance
 acceptance remains open.
+
+
+[Shared numerical CCD](../components/physics-registered-adapter.md#independent-numerical-ccd)
+now verifies actual primitive impacts, remaining time, full impulses and replay on
+registered/CPU/GPU paths. The shared grazing case fixes CPU linear-disk TOI while
+preserving approximate CastRay policy. General extension, native/platform, network
+and final performance gates remain open.

@@ -123,3 +123,13 @@ editing the borrowed material and typed coefficients/surface, stepping and
 capturing/restoring require strict 0/0 owner/all-thread bytes. The fixture remains
 bounded primitive geometry; complete CCD/network/native/performance acceptance
 remains open.
+
+
+`--continuous-response`, optionally `--cpu` or `--gpu`, checks actual discrete,
+ray and shape motion, relative moving-body impacts, elastic remaining time, full
+signed impulse, filters/exceptions, one outer callback/tick and force duration.
+128 warmed reset/full-step/capture/restore cycles require strict 0/0 bytes.
+Registered explicit-space controls also check custom inner-wall rebounds and
+terminal numerical interval-budget failure. General rotated/coupled geometry,
+multiple-peer contact history, networking and final native/performance acceptance
+remain open.

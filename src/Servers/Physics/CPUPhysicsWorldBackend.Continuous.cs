@@ -176,7 +176,7 @@ internal sealed partial class CPUPhysicsWorldBackend
     private void TestContinuousCast(B2TOIInput input, ContinuousShape a, ContinuousShape b, PhysicsFixtureTag ta, PhysicsFixtureTag tb)
     {
         ContinuousQueryCount++;
-        var hit = b2TimeOfImpact(input);
+        var hit = LinearDiskCast(input, out var diskHit) ? diskHit : b2TimeOfImpact(input);
         if (hit.state == B2TOIState.b2_toiStateFailed) throw new InvalidOperationException("Continuous collision did not converge.");
         if (hit.state is B2TOIState.b2_toiStateSeparated or B2TOIState.b2_toiStateUnknown) return;
         var bodies = CollectionsMarshal.AsSpan(_continuousBodies);

@@ -9,6 +9,7 @@ public static partial class BackendChecks
         RunHistory();
         RunSleep();
         RunContactResponse();
+        RunContinuousResponse();
         Solver? solver = null;
         RunShapeResources();
         RunShapeGeometry();

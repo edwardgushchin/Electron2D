@@ -1141,3 +1141,14 @@ capture/restore full-frame cycles at strict 0/0 owner/all-thread bytes. Shared
 shape preparation uses indexed traversal; CPU keeps unchanged native fixtures
 while updating material. General geometry/CCD, network, native totals and final
 performance acceptance remain open.
+
+
+[Independent numerical CCD](physics-registered-adapter.md#independent-numerical-ccd)
+now advances the bounded circle/annulus model through current relative swept
+intervals, consumes remaining time and retains full signed contact impulses.
+Shared registered/CPU/GPU --continuous-response checks verify actual ray/shape
+stopping, discrete control, relative impact, elastic remaining motion, filtering,
+one outer callback/tick, force duration and 128 replay cycles at strict 0/0 bytes.
+The registered controls also exercise hollow inner-wall rebounds and terminal
+interval-budget failure. General geometry/rotation/coupled extension, network,
+native totals and final performance acceptance remain open.

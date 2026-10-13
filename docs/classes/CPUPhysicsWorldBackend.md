@@ -1,6 +1,6 @@
 # CPUPhysicsWorldBackend
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Declaration:** `internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend` · **Source:** [CPUPhysicsWorldBackend.cs](../../src/Servers/Physics/CPUPhysicsWorldBackend.cs) · **Component:** [Physics backends](../components/physics-backends.md)
 
@@ -91,3 +91,11 @@ The internal resource/resource and body-slot/resource bridge now executes throug
 
 
 [Selected diagnostic preparation](../components/physics-registered-adapter.md#diagnostic-capacity-and-publication) passes the contact-point cap to the numerical owner before solving, including registered implementations. Zero disables capture and remains available for failed-world cleanup; synchronized point/count reads retain the bounded shared snapshot. Full numerical and platform acceptance remain separate.
+
+
+[Linear disk CCD](../components/cpu-continuous-collision.md#linear-disk-grazing-impacts)
+uses exact double-precision entry roots for fixed-rotation disk/point pairs before
+ordinary native response. It preserves leading-point ray policy and routes other
+geometry through the existing general TOI. Shared grazing, impulse, remaining-time
+and warmed replay checks execute CPU/GPU/registered variants; full native/platform
+and performance acceptance remain open.

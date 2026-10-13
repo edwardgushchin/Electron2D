@@ -38,3 +38,12 @@ The ordinary full runner executes the complete PhysicsCCDTests on CPU and GPU;
 assert the actual backend. After 64 warmup steps, 128 reset-active steps require
 0/0 owner/all-thread managed bytes. Existing numerical and error bounds remain;
 native allocations, foreign platforms and final performance acceptance stay open.
+
+
+[Independent numerical CCD](../components/physics-registered-adapter.md#independent-numerical-ccd)
+now verifies actual registered/CPU/GPU ray/shape motion, relative impact, remaining
+time, full impulse and force/callback/tick budgets through common public checks.
+128 warmed complete replay cycles require 0/0 owner/all-thread bytes. Registered
+explicit-space controls check custom hollow geometry and terminal numerical
+budget failure. This bounded fixture does not establish general geometry/rotation,
+full extension, network or native/performance acceptance.

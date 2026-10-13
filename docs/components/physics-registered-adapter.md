@@ -1105,3 +1105,74 @@ environment and hashes are under bin/physics-registered-contact-response/2026-10
 mandatory build/API/wiki logs are under current-checks/. The earlier final/ suite
 passed executable checks, but its source/revision guard rejected concurrent OS
 changes; it is not evidence for the resulting main state.
+
+
+## Independent numerical CCD
+
+The public-only bounded circle/annulus solver now consumes its per-body CCD policy
+in actual motion. Discrete-only worlds retain the existing one-interval path.
+Continuous worlds prepare force eligibility and joint impulse budgets once, then
+choose bounded intervals from current solved relative motion and swept circular
+geometry. Analytic double-precision entry/exit roots shorten a near-hit interval,
+including grazing contact that uniform sampling missed; a .0001-feature advance
+ensures a representable contact without losing the remaining tick. Late-woken bodies receive their still-unapplied forces for remaining
+time. Contacts/joints resolve again as positions change, while joint accumulated
+budgets stay qualified by the full outer interval. Sleep ages by elapsed intervals.
+CastRay sweeps the leading radial support point without its own radius; CastShape
+sweeps the complete circular/ring geometry. The explicit grazing control preserves
+that leading-point/full-geometry distinction.
+
+Contact impulses accumulate for repeated observations of the same peer, including
+impacts that separate before final publication. A retained frame-pair set avoids
+counting internal intervals as new collision pairs. Private history already owns
+completed numerical motion/forces/sleep/contact state; force eligibility and the
+pair set are regenerated interval scratch. The fixture's single-peer contact
+storage and general multiple-peer/coupled geometry acceptance remain bounded.
+
+--continuous-response, optionally --cpu or --gpu, exercises the same public
+scene/raw assertions without fallback. Mass-2 circles at 3000 scene units/s and
+.02 s cross a circle at x=20 when disabled, stop in either continuous mode, and
+exchange equal-mass momentum with a -3000-unit/s peer. Elastic response returns
+-3000 within 2 units/s and x < -15, requiring actual remaining-time integration.
+The stopped/full-bounce impulses are -6000/-12000 kg-scene-unit/s within 10;
+this small relative allowance covers native contact skin and interval correction.
+Momentum velocity-sum uses .1 units/s; private same-backend replay uses .001
+position/velocity and .01 impulse. No bitwise or substep-count equality is required.
+
+An unrelated mass-2 body receives force 6 for the full .02 s and changes speed by
+.06 within .001. Exactly one state callback and public tick occur per outer frame.
+A circle at y=1.99 relative to the moving radius-1 circle must deflect below
+-10 scene units/s in Y for CastShape. CastRay may miss that off-leading-point
+contact and must retain its approximate policy; this preserves the accepted
+mode distinction rather than equating ray detection to full shape detection. Masks and explicit exceptions allow real pass-through. Each path warms 128 then
+measures 128 reset/step/capture/restore cycles with an actual impact assertion at
+strict 0/0 owner/all-thread managed bytes.
+
+Registered explicit SpaceCreate/SpaceStep controls exercise the custom annulus
+hole: stopping at x=4 and repeated opposite elastic rebounds within [-4,4], with
+signed impulse matching final momentum within .01. They use true explicitly owned
+spaces; a scene-owned World space cannot be stepped through SpaceStep. More than
+4096 fixture intervals fails explicitly. A distant obstacle at 1,000,000 and speed
+100,000,000 reaches that numerical budget, publishes no sync result, retains the
+selected implementation with no fallback, and rejects later queries/steps. The
+control checks the actual aggregate's numerical cause, not an authoring rejection.
+Evidence is retained under bin/physics-registered-continuous-response/2026-10-13/.
+General geometry/rotation/coupled joints, portable/network replay, native totals and
+final performance acceptance remain open.
+
+
+The shared grazing case also exposed a CPU production defect: general TOI's
+linear-slop radius reduction discarded that shallow circle intersection. The
+CPU world owner now supplies exact linear disk/point roots for fixed rotations,
+then retains its normal contact/remaining-time coordinator. The mode-qualified
+CPU/GPU/registered suite passes; this closes the observed disk regression without
+claiming complete arbitrary-geometry/coupled extension acceptance.
+
+
+Final linux-x64 Release/native-source checks on main 3101b954 plus this change
+passed registered/CPU no-GPU numerical CCD, explicit GPU CCD, the full consumer
+and the complete executable suite (five profiles, all exit 0). Source and every
+frozen runtime hash remained identical before/after. Exact commands, environment
+and hashes are under bin/physics-registered-continuous-response/2026-10-13/final/;
+mandatory format/build/API/wiki logs are under final-checks/. Earlier controls
+and RED runs remain separate; none substitutes for this final source binding.

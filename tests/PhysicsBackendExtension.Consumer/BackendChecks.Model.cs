@@ -107,12 +107,23 @@ public static partial class BackendChecks
         {
             LifecycleHook?.Invoke(LifecyclePhase.Solve); StepHook?.Invoke();
             Pairs = 0; DebugPointCount = 0; Delta = (float)delta;
-            // shortcut: pose integration uses one outer interval; add substeps/CCD before coupled stability acceptance.
+            _framePairs.Clear();
             foreach (var b in Bodies.Values)
             {
                 if (!b.IsArea) b.ReportedLimit = PhysicsServer.BodyGetMaxContactsReported(b.RID);
-                b.ContactPeer = default; b.Advance((float)delta);
+                b.ContactPeer = default;
             }
+            if (HasContinuousBodies()) SolveContinuous((float)delta);
+            else
+            {
+                foreach (var b in Bodies.Values) b.Advance((float)delta);
+                SolveContacts(); SolveJoints((float)delta, true); UpdateSleep((float)delta);
+            }
+            Steps++;
+        }
+        private readonly HashSet<(RID, RID)> _framePairs = [];
+        private void SolveContacts()
+        {
             foreach (var a in Bodies.Values)
                 foreach (var b in Bodies.Values)
                 {
@@ -138,15 +149,19 @@ public static partial class BackendChecks
                     }
                     Contact(a, b, out _, out _, out var contactPoint); a.ContactPoint = b.ContactPoint = contactPoint;
                     a.ContactDepth = b.ContactDepth = depth;
-                    a.ContactPeer = b.RID; a.ContactNormal = -normal; a.ContactImpulse = -impulse;
-                    b.ContactPeer = a.RID; b.ContactNormal = normal; b.ContactImpulse = impulse; Pairs++;
+                    a.ContactImpulse = a.ContactPeer == b.RID ? a.ContactImpulse - impulse : -impulse;
+                    b.ContactImpulse = b.ContactPeer == a.RID ? b.ContactImpulse + impulse : impulse;
+                    a.ContactPeer = b.RID; a.ContactNormal = -normal;
+                    b.ContactPeer = a.RID; b.ContactNormal = normal;
+                    if (_framePairs.Add((a.RID, b.RID))) Pairs++;
                 }
             if (FailSolve) throw new InvalidOperationException("Injected independent solver failure.");
-            foreach (var j in Joints.Values) j.BeginSolve();
+        }
+        private void SolveJoints(float delta, bool begin)
+        {
+            if (begin) foreach (var j in Joints.Values) j.BeginSolve();
             for (var i = 0; i < Iterations; i++)
-                foreach (var j in Joints.Values) j.Solve((float)delta, i == 0);
-            UpdateSleep((float)delta);
-            Steps++;
+                foreach (var j in Joints.Values) j.Solve(delta, begin && i == 0);
         }
         protected override void SyncResults() { Ready = true; LifecycleHook?.Invoke(LifecyclePhase.Sync); }
         protected override void CompleteBody(RID body) { }
@@ -246,18 +261,24 @@ public static partial class BackendChecks
         private PhysicsBodyFields _fields;
         internal PhysicsAreaFieldConfiguration AreaFields;
         internal bool Dynamic => !area && Mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear;
-        internal void Advance(float dt)
+        internal void Advance(float dt) { if (PrepareAdvance(dt)) Move(dt); }
+        internal bool PrepareAdvance(float dt)
         {
-            if (!Awake || area || Mode == PhysicsServer.BodyMode.Static) return;
+            if (!Awake || area || Mode == PhysicsServer.BodyMode.Static) return false;
             if (Dynamic && !Omit)
             {
                 Velocity += (_fields.Gravity + Force / Mass) * dt;
                 if (!Locked) Angular += Torque / Inertia * dt;
                 Velocity /= 1 + _fields.LinearDamp * dt; Angular /= 1 + _fields.AngularDamp * dt;
             }
-            Position += Velocity * dt; if (!Locked) Rotation += Angular * dt;
-            Force = default; Torque = 0;
+            Force = default; Torque = 0; return true;
         }
+        internal void Move(float dt)
+        {
+            if (!Awake || area || Mode == PhysicsServer.BodyMode.Static) return;
+            Position += Velocity * dt; if (!Locked) Rotation += Angular * dt;
+        }
+        internal bool FrameForcesApplied;
         protected override int ShapeCount => Shapes;
         internal int Shapes;
         protected override void Attach(Vector2 position, float rotation, in PhysicsBodyConfiguration configuration)
