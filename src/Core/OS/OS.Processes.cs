@@ -147,7 +147,7 @@ public sealed partial class OS
                 var output = pipes ? SDL.ProcessIO.App : SDL.ProcessIO.Inherited;
                 var error = pipes ? capture ? SDL.ProcessIO.Null : SDL.ProcessIO.App : SDL.ProcessIO.Inherited;
                 if (!SDL.SetPointerProperty(properties, SDL.Props.ProcessCreateArgsPointer, (nint)argv) || !SDL.SetNumberProperty(properties, SDL.Props.ProcessCreateSTDInNumber, (long)input) || !SDL.SetNumberProperty(properties, SDL.Props.ProcessCreateSTDOutNumber, (long)output) || !(mergeError ? SDL.SetBooleanProperty(properties, SDL.Props.ProcessCreateSTDErrToSTDOutBoolean, true) : SDL.SetNumberProperty(properties, SDL.Props.ProcessCreateSTDErrNumber, (long)error))) throw new IOException(SDL.GetError());
-                native = SDL.CreateProcessWithProperties(properties); if (native == 0) throw new IOException("Cannot start executable: " + SDL.GetError());
+                lock (_environmentGate) native = SDL.CreateProcessWithProperties(properties); if (native == 0) throw new IOException("Cannot start executable: " + SDL.GetError());
             }
             var owner = new OSProcess(native); native = 0; return owner;
         }

@@ -1,6 +1,6 @@
 # OS
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.OS`. **Inherits:** `ElectronObject`. **Inherited By:** —. **Source:** [source](../../src/Core/OS/OS.cs). **Component:** [File dialogs](../components/file-dialogs.md).
 
@@ -123,3 +123,15 @@ Queries a positive PID. Tracked children are polled/reaped before native lookup;
 `public static System.Void Kill(System.Int32 pid)`
 
 Forces termination of one positive native PID; descendants survive. Owned BCL/native handles and external native process lookup execute. Missing/denied targets throw. A later poll reaps exit status; PID reuse is an OS race callers must consider.
+
+## Process environment and directories
+
+GetEnvironment, HasEnvironment, SetEnvironment and UnsetEnvironment manage process-local variables, including empty values, with native SDL child inheritance. GetConfigDir, GetDataDir, GetCacheDir and GetTempDir expose host paths; GetUserDataDir returns the current user:// root. GetSystemDir accepts the nested SystemDir enum and native user-directory policy. Queries do not create directories or grant access. See [behavior, failures and executable verification](../components/os-environment.md).
+
+| API | Contract |
+| --- | --- |
+| GetEnvironment(string variable) / HasEnvironment(string variable) | Empty result for absent variables; existence distinguishes an empty value. |
+| SetEnvironment(string variable, string value) / UnsetEnvironment(string variable) | Update managed and SDL environments for subsequent children; process-local, validated names and literal values. |
+| GetConfigDir() / GetDataDir() / GetCacheDir() / GetTempDir() | Global host paths, with absolute XDG overrides on Linux. |
+| GetUserDataDir() | Exact active ProjectSettings.UserDataRoot. |
+| GetSystemDir(SystemDir dir, bool sharedStorage = true) | Native Desktop, DCIM, Documents, Downloads, Movies, Music, Pictures and Ringtones roles; explicit unsupported-host/role errors. |

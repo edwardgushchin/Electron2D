@@ -1,6 +1,6 @@
 # Independent processes and pipes
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 ## Scope and flow
 
@@ -35,3 +35,5 @@ var pid = child.PID;
 ## Dependencies and decisions
 
 Uses BCL Windows process launch and the approved internal SDL process/IO backend with POSIX status observation, without new packages or vendor edits. ADRs 0004/0020/0095 define typed result/error, stream and service ownership. ADR 0090 separates the runtime primitives from a complete agent/editor workflow. Native SDL pipe streams must retain their process until closure; their native cleanup removes process stream properties before process destruction. [SDL process creation](https://wiki.libsdl.org/SDL3/SDL_CreateProcessWithProperties) and [input](https://wiki.libsdl.org/SDL3/SDL_GetProcessInput) describe native stream readiness/partial writes.
+
+Process-local environment changes through OS.SetEnvironment/UnsetEnvironment are inherited by subsequent launches through both managed and SDL native paths. See [environment ownership and directory queries](os-environment.md).

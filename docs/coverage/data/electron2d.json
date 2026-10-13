@@ -7022,6 +7022,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.OS.SystemDir",
+    "kind": "type",
+    "declaringType": "Electron2D.OS.SystemDir",
+    "name": "SystemDir",
+    "signature": "public enum Electron2D.OS.SystemDir",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.OccluderCullMode",
     "kind": "type",
     "declaringType": "Electron2D.OccluderCullMode",
@@ -37299,6 +37317,110 @@
     "parameters": [],
     "returnType": "Electron2D.NoiseType",
     "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.OS.SystemDir.DCIM()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OS.SystemDir",
+    "name": "DCIM",
+    "signature": "public const Electron2D.OS.SystemDir DCIM = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OS.SystemDir",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.OS.SystemDir.Desktop()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OS.SystemDir",
+    "name": "Desktop",
+    "signature": "public const Electron2D.OS.SystemDir Desktop = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OS.SystemDir",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.OS.SystemDir.Documents()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OS.SystemDir",
+    "name": "Documents",
+    "signature": "public const Electron2D.OS.SystemDir Documents = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OS.SystemDir",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.OS.SystemDir.Downloads()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OS.SystemDir",
+    "name": "Downloads",
+    "signature": "public const Electron2D.OS.SystemDir Downloads = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OS.SystemDir",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.OS.SystemDir.Movies()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OS.SystemDir",
+    "name": "Movies",
+    "signature": "public const Electron2D.OS.SystemDir Movies = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OS.SystemDir",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.OS.SystemDir.Music()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OS.SystemDir",
+    "name": "Music",
+    "signature": "public const Electron2D.OS.SystemDir Music = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OS.SystemDir",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.OS.SystemDir.Pictures()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OS.SystemDir",
+    "name": "Pictures",
+    "signature": "public const Electron2D.OS.SystemDir Pictures = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OS.SystemDir",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.OS.SystemDir.Ringtones()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OS.SystemDir",
+    "name": "Ringtones",
+    "signature": "public const Electron2D.OS.SystemDir Ringtones = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OS.SystemDir",
+    "value": "7"
   },
   {
     "id": "enumValue:Electron2D.OccluderCullMode.Clockwise()",
@@ -120429,6 +120551,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.GetCacheDir()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetCacheDir",
+    "signature": "public static System.String GetCacheDir()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.GetCommandLineArgs()",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -120452,6 +120587,51 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetConfigDir()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetConfigDir",
+    "signature": "public static System.String GetConfigDir()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetDataDir()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetDataDir",
+    "signature": "public static System.String GetDataDir()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetEnvironment(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetEnvironment",
+    "signature": "public static System.String GetEnvironment(System.String variable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "variable",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -120497,6 +120677,30 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetSystemDir(Electron2D.OS.SystemDir,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetSystemDir",
+    "signature": "public static System.String GetSystemDir(Electron2D.OS.SystemDir dir, System.Boolean sharedStorage = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "dir",
+        "type": "Electron2D.OS.SystemDir",
+        "default": null
+      },
+      {
+        "name": "sharedStorage",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -120596,6 +120800,51 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.GetTempDir()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetTempDir",
+    "signature": "public static System.String GetTempDir()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetUserDataDir()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetUserDataDir",
+    "signature": "public static System.String GetUserDataDir()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.HasEnvironment(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "HasEnvironment",
+    "signature": "public static System.Boolean HasEnvironment(System.String variable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "variable",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.IsProcessRunning(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -120653,6 +120902,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.SetEnvironment(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "SetEnvironment",
+    "signature": "public static System.Void SetEnvironment(System.String variable, System.String value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "variable",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.ShellOpen(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -120690,6 +120963,25 @@
         "name": "openFolder",
         "type": "System.Boolean",
         "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.UnsetEnvironment(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "UnsetEnvironment",
+    "signature": "public static System.Void UnsetEnvironment(System.String variable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "variable",
+        "type": "System.String",
+        "default": null
       }
     ],
     "returnType": "System.Void",

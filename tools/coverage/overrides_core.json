@@ -769,6 +769,101 @@
       "electron2d": "method:Electron2D.OS.Kill(System.Int32)",
       "state": "Implemented",
       "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Native executable/ID and cloned argv queries execute; user args follow the first --/++ separator. PID reuse resolves current native process for running/kill, while exit history belongs to the most recently created child. Foreign host acceptance is not claimed."
+    },
+    {
+      "godot": "OS::enum:SystemDir",
+      "electron2d": "T:Electron2D.OS.SystemDir",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::enum_value:SystemDir.SYSTEM_DIR_DCIM",
+      "electron2d": "enumValue:Electron2D.OS.SystemDir.DCIM()",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::enum_value:SystemDir.SYSTEM_DIR_DESKTOP",
+      "electron2d": "enumValue:Electron2D.OS.SystemDir.Desktop()",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::enum_value:SystemDir.SYSTEM_DIR_DOCUMENTS",
+      "electron2d": "enumValue:Electron2D.OS.SystemDir.Documents()",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::enum_value:SystemDir.SYSTEM_DIR_DOWNLOADS",
+      "electron2d": "enumValue:Electron2D.OS.SystemDir.Downloads()",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::enum_value:SystemDir.SYSTEM_DIR_MOVIES",
+      "electron2d": "enumValue:Electron2D.OS.SystemDir.Movies()",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::enum_value:SystemDir.SYSTEM_DIR_MUSIC",
+      "electron2d": "enumValue:Electron2D.OS.SystemDir.Music()",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::enum_value:SystemDir.SYSTEM_DIR_PICTURES",
+      "electron2d": "enumValue:Electron2D.OS.SystemDir.Pictures()",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::enum_value:SystemDir.SYSTEM_DIR_RINGTONES",
+      "electron2d": "enumValue:Electron2D.OS.SystemDir.Ringtones()",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::method:get_cache_dir()",
+      "electron2d": "method:Electron2D.OS.GetCacheDir()",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::method:get_config_dir()",
+      "electron2d": "method:Electron2D.OS.GetConfigDir()",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::method:get_data_dir()",
+      "electron2d": "method:Electron2D.OS.GetDataDir()",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::method:get_environment(String:)",
+      "electron2d": "method:Electron2D.OS.GetEnvironment(System.String)",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::method:get_system_dir(int:OS.SystemDir,bool:)",
+      "electron2d": "method:Electron2D.OS.GetSystemDir(Electron2D.OS.SystemDir,System.Boolean)",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::method:get_temp_dir()",
+      "electron2d": "method:Electron2D.OS.GetTempDir()",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::method:get_user_data_dir()",
+      "electron2d": "method:Electron2D.OS.GetUserDataDir()",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::method:has_environment(String:)",
+      "electron2d": "method:Electron2D.OS.HasEnvironment(System.String)",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::method:set_environment(String:,String:)",
+      "electron2d": "method:Electron2D.OS.SetEnvironment(System.String,System.String)",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+    },
+    {
+      "godot": "OS::method:unset_environment(String:)",
+      "electron2d": "method:Electron2D.OS.UnsetEnvironment(System.String)",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
     }
   ],
   "extras": [
@@ -1956,6 +2051,31 @@
       ],
       "state": "Partial",
       "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Remaining exact dependencies: macOS .app helper selection and Android native process/pipe adapter. General named-pipe connections are a separate FileAccess.Open producer; owned process-pipe streams execute."
+    },
+    {
+      "godot": [
+        "OS::enum:SystemDir",
+        "OS::enum_value:SystemDir.SYSTEM_DIR_DCIM",
+        "OS::enum_value:SystemDir.SYSTEM_DIR_DESKTOP",
+        "OS::enum_value:SystemDir.SYSTEM_DIR_DOCUMENTS",
+        "OS::enum_value:SystemDir.SYSTEM_DIR_DOWNLOADS",
+        "OS::enum_value:SystemDir.SYSTEM_DIR_MOVIES",
+        "OS::enum_value:SystemDir.SYSTEM_DIR_MUSIC",
+        "OS::enum_value:SystemDir.SYSTEM_DIR_PICTURES",
+        "OS::enum_value:SystemDir.SYSTEM_DIR_RINGTONES",
+        "OS::method:get_cache_dir()",
+        "OS::method:get_config_dir()",
+        "OS::method:get_data_dir()",
+        "OS::method:get_environment(String:)",
+        "OS::method:get_system_dir(int:OS.SystemDir,bool:)",
+        "OS::method:get_temp_dir()",
+        "OS::method:get_user_data_dir()",
+        "OS::method:has_environment(String:)",
+        "OS::method:set_environment(String:,String:)",
+        "OS::method:unset_environment(String:)"
+      ],
+      "state": "Implemented",
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
     }
   ]
 }
