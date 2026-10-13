@@ -1,6 +1,6 @@
 # ElectronObject
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Inherits:** —
 
@@ -71,6 +71,7 @@ Console.WriteLine(value.InstanceID);
 
 | Member | Description |
 | --- | --- |
+| [`public bool IsClass(string className)`](#m-electron2d-electronobject-isclass-system-string) | Tests the actual compiled class and engine base-class names. |
 | [`public void Notify(int what)`](#m-electron2d-electronobject-notify-system-int32) | Synchronously delivers a numeric engine notification to this object. |
 | [`public IReadOnlyList<PropertyDescriptor> GetPropertyList()`](#m-electron2d-electronobject-getpropertylist) | Builds the current validated list of typed properties exposed to tooling. |
 | [`public bool PropertyCanRevert(PropertyDescriptor property)`](#m-electron2d-electronobject-propertycanrevert-electron2d-propertydescriptor) | Reports whether a tooling property currently differs from its revert value. |
@@ -161,6 +162,22 @@ Gets or sets the translation domain used by this object.
 - `ObjectDisposedException`: The object is disposing on another thread or has finished disposing.
 
 ## Method Descriptions
+
+<a id="m-electron2d-electronobject-isclass-system-string"></a>
+### `public bool IsClass(string className)`
+
+Returns true for the actual unqualified CLR class name or an ElectronObject ancestor,
+using ordinal case-sensitive comparison. Compiled subclasses participate. Interfaces,
+System.Object, script/file registry aliases and qualified names do not. Null rejects
+with ArgumentNullException; empty, whitespace and unknown names return false. Like
+ClassName/InstanceID, this metadata remains readable during/after disposal and from
+another thread; it neither prepares nor reads numerical state.
+
+```csharp
+using var body = new RigidBody();
+bool physical = body.IsClass(nameof(PhysicsBody)); // true
+bool resource = body.IsClass(nameof(Resource));    // false
+```
 
 <a id="m-electron2d-electronobject-notify-system-int32"></a>
 ### `public void Notify(int what)`
@@ -486,3 +503,11 @@ The class has no finalizer. Derived SDL resource types must put native handles i
 
 
 Internal BorrowIdentity lazily caches one weak reference per used object. Borrowers copy its immutable instance ID and weak reference without rooting the target; disposal makes resolution null immediately. [ObjectIdentity](ObjectIdentity.md) introduces no public registry or finalizer.
+
+ObjectIdentityTests and the existing instance/lifetime checks exercise concurrent
+nonzero identity, diagnostic override dispatch, cleanup errors, registered script
+names and the full scene-body/resource ancestry on CPU/GPU, serial/separate.
+128 warm/128 measured full frames plus repeated hierarchy reads require 0/0
+owner/all-thread managed bytes. Identity stays readable after actual scene retirement.
+Software Vulkan execution does not establish hardware/native/foreign or wider
+inherited API acceptance.

@@ -173,7 +173,8 @@ operations remain open in the ledger.
 The complete generated ledger remains the per-declaration list. Current own
 physics families contain 686 Implemented, 151 Partial and 55 Excluded rows,
 with no own Blocked or Unimplemented rows. Shared inherited declarations still
-contain 142 Partial, 19 Blocked and 87 Unimplemented rows after typed indexed property projections; cross-domain consumers
+contain 141 Partial, 17 Blocked and 71 Unimplemented rows after the current typed
+class-identity, glyph-region and indexed-property projections; cross-domain consumers
 now contain 76 Implemented, two Partial and no Unimplemented rows after the
 captured numerical-thread implementation. These are declaration counts,
 not a claim that all numerical behaviors pass. The exact inherited names and
@@ -1046,3 +1047,10 @@ suite on explicit CPU/GPU worlds in both numerical-thread modes. All six profile
 retain 64 active or wake/sleep-cycling bodies at 0/0 warm owner/all-thread bytes.
 The public-only CPU/GPU/registered consumer additionally verifies connected groups
 and quiet-clock restoration. Hardware and broader acceptance remain open.
+
+[Object identity and class ancestry](../classes/ElectronObject.md#m-electron2d-electronobject-isclass-system-string)
+now execute through IsClass, immutable InstanceID/ClassName and the existing C#
+Dispose/ToString projections. Shared CPU/GPU serial/separate scene tests retain
+Body/Area/Resource branches, compiled subclasses, alias rejection and post-retirement
+metadata, with 0/0 warm full-frame bytes. Other inherited APIs and final acceptance
+remain separate gates.

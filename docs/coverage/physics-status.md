@@ -222,11 +222,11 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
 | [Node](classes/Node.md) | [Object](classes/Object.md) | 99 | 66 | 6 | 42 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
-| [Object](classes/Object.md) | — | 4 | 23 | 2 | 30 | 15 |
+| [Object](classes/Object.md) | — | 10 | 20 | 2 | 27 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 4 | 21 | 0 | 2 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 233 | 144 | 17 | 74 | 23 |
+| **Total** | | 239 | 141 | 17 | 71 | 23 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -403,15 +403,11 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Object::method:_property_can_revert(StringName:)`](classes/Object.md) | Partial | Typed notification/property callback adaptation (ADRs 0005 and 0009). |
 | [`Object::method:_property_get_revert(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:_set(StringName:,Variant:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
-| [`Object::method:_to_string()`](classes/Object.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Object::method:_validate_property(Dictionary:)`](classes/Object.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. Return type differs: void → Electron2D.PropertyDescriptor; audit observable contract. |
 | [`Object::method:call_deferred(StringName:)`](classes/Object.md) | Partial | Typed Action scheduling replaces dynamic deferred call; ADRs 0001/0006. Return type differs: Variant → System.Void; audit observable contract. |
 | [`Object::method:can_translate_messages()`](classes/Object.md) | Partial | C# property form of upstream Object operation (ADRs 0005 and 0007). |
 | [`Object::method:cancel_free()`](classes/Object.md) | Partial | Deletion cancellation under ADR 0006; verify atomicity. Return type differs: void → System.Boolean; audit observable contract. |
-| [`Object::method:free()`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
-| [`Object::method:get_class()`](classes/Object.md) | Partial | C# property form of upstream Object operation (ADRs 0005 and 0007). |
 | [`Object::method:get_incoming_connections()`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
-| [`Object::method:get_instance_id()`](classes/Object.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. Return type differs: int → System.UInt64; audit observable contract. |
 | [`Object::method:get_method_argument_count(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:get_property_list()`](classes/Object.md) | Partial | Typed PropertyDescriptor list replaces Variant dictionaries (ADR 0005). |
 | [`Object::method:get_script()`](classes/Object.md) | Blocked | Trigger: ADR 0091 Script resource/type-catalog slice and executable owner-to-script metadata association for supported C# objects. The single concrete Script identity is accepted, but neither the resource nor this getter is implemented; a Node subtype or reserved ScriptChanged event is not that association. |
@@ -422,7 +418,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Object::method:has_signal(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:has_user_signal(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:is_blocking_signals()`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
-| [`Object::method:is_class(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:is_connected(StringName:,Callable:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:is_queued_for_deletion()`](classes/Object.md) | Partial | The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit. |
 | [`Object::method:notification(int:,bool:)`](classes/Object.md) | Partial | Typed notification/property callback adaptation (ADRs 0005 and 0009). |
@@ -435,7 +430,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Object::method:set_message_translation(bool:)`](classes/Object.md) | Partial | C# property form of upstream Object operation (ADRs 0005 and 0007). Return type differs: void → System.Boolean; audit observable contract. |
 | [`Object::method:set_script(Variant:)`](classes/Object.md) | Blocked | Trigger: accepted typed live script-attachment contract for owner identity, instance ownership, replacement, callback ordering and failure rollback, followed by its first executable binding slice under ADR 0091. A factory-created CLR subtype does not change the type of an existing owner. Applicable behavior remains pending; no inert setter or implicit exclusion is accepted. |
 | [`Object::method:set_translation_domain(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
-| [`Object::method:to_string()`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:tr(StringName:,StringName:)`](classes/Object.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Object::method:tr_n(StringName:,StringName:,int:,StringName:)`](classes/Object.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Object::signal:property_list_changed()`](classes/Object.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |

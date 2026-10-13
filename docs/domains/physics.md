@@ -988,3 +988,10 @@ continued constraints retain their bounds; all six warm cases require 0/0 bytes.
 [Off-center spring checks](../components/physics-registered-adapter.md#off-center-spring-anchors-and-portable-joints)
 also retain force/moment/cap and stable damping bounds. GPU executes on llvmpipe;
 hardware, broader geometry/graphs and network acceptance remain open.
+
+[Object identity and class ancestry](../classes/ElectronObject.md#m-electron2d-electronobject-isclass-system-string)
+now execute through IsClass, immutable InstanceID/ClassName and the existing C#
+Dispose/ToString projections. Shared CPU/GPU serial/separate scene tests retain
+Body/Area/Resource branches, compiled subclasses, alias rejection and post-retirement
+metadata, with 0/0 warm full-frame bytes. Other inherited APIs and final acceptance
+remain separate gates.

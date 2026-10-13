@@ -962,6 +962,21 @@
       "electron2d": "method:Electron2D.OS.GetRestartOnExitArguments()",
       "state": "Implemented",
       "reason": "ADR 0020/0095: retained desktop OS configuration atomically copies literal arguments; normal managed process exit captures one CreateInstance launch after standalone host cleanup. OSRestartTests verifies snapshot/validation, replacement, cancellation, dotnet/apphost identity, original exit status and actual GPU/compatibility frames in both applications. Non-desktop process profiles fail explicitly; crash/forced termination and editor behavior retain their limits."
+    },
+    {
+      "electron2d": "method:Electron2D.ElectronObject.IsClass(System.String)",
+      "godot": "Object::method:is_class(StringName:)",
+      "reason": "Readonly class names follow existing ClassName C# projection under ADR 0005."
+    },
+    {
+      "electron2d": "method:Electron2D.ElectronObject.Dispose()",
+      "godot": "Object::method:free()",
+      "reason": "Deterministic IDisposable projection under ADR 0003; no Free alias."
+    },
+    {
+      "electron2d": "method:Electron2D.ElectronObject.ToString()",
+      "godot": "Object::method:to_string()",
+      "reason": "Ordinary virtual C# diagnostic projection; customization and calls share one method."
     }
   ],
   "extras": [
@@ -1078,11 +1093,6 @@
     {
       "electron2d": "property:Electron2D.ElectronObject.IsDisposed()",
       "reason": "Managed logical lifetime differs from queued deletion.",
-      "adr": "adr-0003"
-    },
-    {
-      "electron2d": "method:Electron2D.ElectronObject.Dispose()",
-      "reason": "IDisposable logical cleanup.",
       "adr": "adr-0003"
     },
     {
@@ -2264,6 +2274,18 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0020/0095: retained desktop OS configuration atomically copies literal arguments; normal managed process exit captures one CreateInstance launch after standalone host cleanup. OSRestartTests verifies snapshot/validation, replacement, cancellation, dotnet/apphost identity, original exit status and actual GPU/compatibility frames in both applications. Non-desktop process profiles fail explicitly; crash/forced termination and editor behavior retain their limits."
+    },
+    {
+      "godot": [
+        "Object::method:is_class(StringName:)",
+        "Object::method:free()",
+        "Object::method:to_string()",
+        "Object::method:_to_string()",
+        "Object::method:get_class()",
+        "Object::method:get_instance_id()"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0003/0005: immutable process identity, CLR class-name/ancestor metadata and C# ToString/Dispose projections. ObjectIdentityTests verifies exact/base/sibling/case/generic/script-alias checks, virtual diagnostics, successful/failed retirement and selected CPU/GPU body/resource branches. Four serial/separate software-Vulkan profiles retain 128 warm/128 full-frame inspections at strict 0/0 owner/all-thread bytes. Constructor concurrency and exactly-once cleanup retain existing tests; this does not certify other inherited or native/network/platform contracts."
     }
   ]
 }

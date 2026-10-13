@@ -1,6 +1,6 @@
 # Electron2D core object and runtime decisions
 
-Last updated: 2026-09-23
+Last updated: 2026-10-14
 
 This bounded log owns the complete architectural records for core object and runtime. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -51,7 +51,7 @@ The base uses atomic state transitions so concurrent disposal runs cleanup at mo
 <a id="adr-0005"></a>
 ## ADR 0005: Use numeric notifications and typed property descriptors
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 - Status: Accepted
 - Scope: Engine lifecycle notifications and tooling property exposure
@@ -69,6 +69,7 @@ Godot's `Object` exposes numeric notifications plus Variant-based property disco
 - Discovery returns heterogeneous descriptors through the non-generic `PropertyDescriptor` base, but value access remains generic and typed.
 - Indexed property access composes these same typed descriptors rather than resolving arbitrary runtime names. `ElectronObject.GetIndexed`/`SetIndexed` accept a compiled descriptor. `PropertyDescriptor.Through`, `Member`, `Element` and `Key` build owner/value-typed object, struct-component, array and dictionary projections. Names are metadata only. Reads follow current references; writes propagate through the supplied setters and validators. Struct updates copy values; collection updates copy their containers and retain dictionary comparers before committing the parent. Readonly parents/children remain readonly. Synthetic projections are not stored and do not manufacture revert defaults; revert the original owning property. Use them with the existing typed Tween/property tooling. Null/disposed links, wrong owners, invalid bounds/keys and callback errors are explicit. No new path/name wrapper or universal value container is introduced.
 - Derived classes may filter or replace descriptors with `ValidateProperty`; they notify tooling of structural changes through a typed event.
+- Readonly class identity follows the existing CLR projection: `ClassName` is the unqualified actual compiled type name, and `IsClass(string)` compares it and its ElectronObject ancestors ordinally. Compiled subclasses participate; script/file registration aliases, interfaces, qualified names and System.Object do not. Null names reject, empty/unknown names return false. These observations and InstanceID remain available during/after disposal without numerical owner access. This preserves the C# class-name policy rather than introducing a dynamic class resolver. The pinned Object is_class/get_class family ignores script aliases; ordinary compiled inheritance is the accepted C# representation. ToString uses ordinary C# virtual dispatch and keeps the existing ClassName#InstanceID default. Dispose is the free capability under ADR 0003, not a second public alias.
 
 ### Consequences
 

@@ -10,6 +10,18 @@ using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_GLYPH") is { } glyphProfile) { if (glyphProfile == "managed") CanvasGlyphTests.RunManaged(); else if (glyphProfile == "modules") CanvasGlyphTests.RunModules(); else CanvasGlyphTests.RunNative(glyphProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OBJECT_IDENTITY") is { } identityProfile)
+{
+    VerifyInstanceIds(); VerifyLifetime();
+    ObjectIdentityTests.Run(identityProfile switch
+    {
+        "cpu" => PhysicsServer.Backend.CPU,
+        "gpu" => PhysicsServer.Backend.GPU,
+        _ => throw new ArgumentException("Use cpu or gpu for object identity.")
+    });
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES_CHILD") is { } particlesPath) { CPUParticlesTests.RunChild(particlesPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES_HOST") == "1") { CPUParticlesTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES") == "1") { CPUParticlesTests.Run(); return; }
@@ -1376,6 +1388,7 @@ CanvasStrokeTests.Run();
 CanvasTimingTests.Run();
 VerifyInstanceIds();
 VerifyLifetime();
+ObjectIdentityTests.Run(PhysicsServer.Backend.CPU); ObjectIdentityTests.Run(PhysicsServer.Backend.GPU);
 WeakRefTests.Run();
 VerifyNotificationsAndProperties();
 VerifyEventConnections();

@@ -70,6 +70,28 @@ public abstract partial class ElectronObject : IDisposable
     /// <value>The <c>Name</c> of the <see cref="Type"/> returned by <see cref="object.GetType"/>.</value>
     public string ClassName => GetType().Name;
 
+    /// <summary>Checks this object's runtime class and engine-object base classes by name.</summary>
+    /// <param name="className">An unqualified, case-sensitive C# class name.</param>
+    /// <returns><see langword="true"/> for this class or an <see cref="ElectronObject"/> ancestor; otherwise <see langword="false"/>.</returns>
+    /// <remarks>
+    /// Names follow <see cref="ClassName"/> and include compiled subclasses. Registered script aliases, interfaces,
+    /// assembly-qualified names and the CLR root class are not class names in this query. Like other identity
+    /// observations, this operation remains available during and after disposal and does not inspect solver state.
+    /// </remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="className"/> is <see langword="null"/>.</exception>
+    public bool IsClass(string className)
+    {
+        ArgumentNullException.ThrowIfNull(className);
+        for (var type = GetType(); type is not null; type = type.BaseType)
+        {
+            if (string.Equals(type.Name, className, StringComparison.Ordinal))
+                return true;
+            if (type == typeof(ElectronObject))
+                break;
+        }
+        return false;
+    }
+
     /// <summary>Gets whether deterministic disposal has started.</summary>
     /// <value><see langword="true"/> from the moment a caller wins the disposal transition; otherwise <see langword="false"/>.</value>
     public bool IsDisposed => Volatile.Read(ref _disposeState) != Alive;
