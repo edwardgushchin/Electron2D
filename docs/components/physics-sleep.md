@@ -1,12 +1,12 @@
 # World sleep policy
 
-Last updated: 2026-10-09
+Last updated: 2026-10-13
 
 ## Contract and ownership
 
 PhysicsServer exposes concrete getter/setter pairs for a world's linear quiet
 threshold, angular quiet threshold and quiet duration. [PhysicsSleepSettings](../classes/PhysicsSleepSettings.md)
-is the shared internal policy used by CPU PhysicsSpace and independent GPUPhysicsBodyStore.
+is the shared authored policy used by CPU PhysicsSpace and independent GPUPhysicsBodyStore.
 Defaults come from three typed ProjectSettings keys when the world is created:
 2 scene units/s, 0.13962634 rad/s and 0.5 s. Later project edits affect new worlds.
 
@@ -78,3 +78,13 @@ Logs: `/tmp/electron2d-sleep-cpu.log`, `/tmp/electron2d-sleep-stages.log`,
 These small workloads establish policy behavior and managed allocation, not GPU
 speedup on large worlds. Native allocation, other devices/platforms, real-window FPS,
 networking and public independent-GPU binding remain outside this acceptance.
+
+
+[Independent automatic sleep](physics-registered-adapter.md#independent-automatic-sleep)
+now consumes actual world thresholds and duration in the public-only numerical
+fixture. Dynamic contact/joint groups sleep together; static supports do not
+merge groups. Shared registered/CPU/GPU --sleep checks cover strict boundaries,
+zero thresholds/duration, CanSleep, policy/impulse wake, inactive intervals and
+quiet-clock rollback. Each path measures 1920 replay frames and 896 actual group
+sleep/wake frames at strict 0/0 owner/all-thread managed bytes. General geometry,
+CCD, portable networking, native totals and final performance remain open.

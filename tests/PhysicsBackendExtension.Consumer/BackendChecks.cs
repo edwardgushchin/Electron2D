@@ -7,6 +7,7 @@ public static partial class BackendChecks
         AllocationWarmupCheck.Verify(Collect);
         RunJointResponse();
         RunHistory();
+        RunSleep();
         Solver? solver = null;
         RunShapeResources();
         RunShapeGeometry();

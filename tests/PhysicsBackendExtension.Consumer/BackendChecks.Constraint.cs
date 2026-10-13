@@ -9,8 +9,9 @@ public static partial class BackendChecks
         internal void BeginSolve() { _linear = default; _motor = _stop = 0; }
         internal void Solve(float dt, bool firstIteration)
         {
-            if (Settings.Type == PhysicsServer.JointType.DampedSpring) { if (firstIteration) SolveSpring(dt); return; }
             var a = solver.Bodies[_first]; var b = _second.IsValid() ? solver.Bodies[_second] : null;
+            if (Dormant(a) && Dormant(b)) return;
+            if (Settings.Type == PhysicsServer.JointType.DampedSpring) { if (firstIteration) SolveSpring(dt); return; }
             var frameA = a.Pose * Settings.FrameA; var frameB = b is null ? Settings.FrameB : b.Pose * Settings.FrameB;
             var pointA = frameA.Origin; var pointB = frameB.Origin;
             var ra = pointA - a.Center; var rb = b is null ? Vector2.Zero : pointB - b.Center;
@@ -78,6 +79,7 @@ public static partial class BackendChecks
             }
         }
         private static Vector2 Motion(Body? b) => b is null || b.Mode == PhysicsServer.BodyMode.Static ? Vector2.Zero : b.Velocity;
+        private static bool Dormant(Body? b) => b is null || (b.Dynamic ? !b.Awake : Motion(b) == Vector2.Zero && Spin(b) == 0);
         private static float Spin(Body? b) => b is null || b.Mode == PhysicsServer.BodyMode.Static ? 0 : b.Angular;
         private static float Cross(Vector2 a, Vector2 b) => a.X * b.Y - a.Y * b.X;
         private static Vector2 Limit(Vector2 value, float limit)

@@ -70,7 +70,12 @@ public static partial class BackendChecks
             if (disposing && FailDisposal) throw new InvalidOperationException("Disposal failure");
         }
         protected override void SetActive(bool active) { LifecycleHook?.Invoke(LifecyclePhase.Active); WorldPolicy(); }
-        protected override void SetSleepSettings(in PhysicsSleepSettings settings) => WorldPolicy();
+        private PhysicsSleepSettings _sleepSettings;
+        protected override void SetSleepSettings(in PhysicsSleepSettings settings)
+        {
+            WorldPolicy(); _sleepSettings = settings;
+            foreach (var body in Bodies.Values) if (!body.IsArea && body.Mode != PhysicsServer.BodyMode.Static) { body.Awake = true; body.SleepTime = 0; }
+        }
         protected override void SetContactSettings(in PhysicsContactSettings settings) => WorldPolicy();
         internal int Iterations = 16;
         internal float ConstraintBias = .2f;
@@ -120,10 +125,17 @@ public static partial class BackendChecks
                         AddDebugPoint(diagnosticPoint - half); AddDebugPoint(diagnosticPoint + half);
                     }
                     var inverse = a.InvMass + b.InvMass;
-                    a.Position -= normal * depth * (a.InvMass / inverse);
-                    b.Position += normal * depth * (b.InvMass / inverse);
-                    var impulse = normal * MathF.Max(0, -(b.Velocity - a.Velocity).Dot(normal) / inverse);
-                    a.AddImpulse(-impulse, 0); b.AddImpulse(impulse, 0);
+                    var active = a.Dynamic && a.Awake || b.Dynamic && b.Awake ||
+                        a.Mode == PhysicsServer.BodyMode.Kinematic && (a.Velocity != Vector2.Zero || a.Angular != 0) ||
+                        b.Mode == PhysicsServer.BodyMode.Kinematic && (b.Velocity != Vector2.Zero || b.Angular != 0);
+                    var impulse = Vector2.Zero;
+                    if (active)
+                    {
+                        a.Position -= normal * depth * (a.InvMass / inverse);
+                        b.Position += normal * depth * (b.InvMass / inverse);
+                        impulse = normal * MathF.Max(0, -(b.Velocity - a.Velocity).Dot(normal) / inverse);
+                        a.AddImpulse(-impulse, 0); b.AddImpulse(impulse, 0);
+                    }
                     Contact(a, b, out _, out _, out var contactPoint); a.ContactPoint = b.ContactPoint = contactPoint;
                     a.ContactDepth = b.ContactDepth = depth;
                     a.ContactPeer = b.RID; a.ContactNormal = -normal; a.ContactImpulse = -impulse;
@@ -133,6 +145,7 @@ public static partial class BackendChecks
             foreach (var j in Joints.Values) j.BeginSolve();
             for (var i = 0; i < Iterations; i++)
                 foreach (var j in Joints.Values) j.Solve((float)delta, i == 0);
+            UpdateSleep((float)delta);
             Steps++;
         }
         protected override void SyncResults() { Ready = true; LifecycleHook?.Invoke(LifecyclePhase.Sync); }
@@ -209,7 +222,11 @@ public static partial class BackendChecks
         internal PhysicsBodyFields Fields => _fields;
         internal int ReportedLimit;
         internal Transform Pose => GetTransform();
-        internal void AddImpulse(Vector2 impulse, float moment) => ApplyImpulse(impulse, moment);
+        internal void AddImpulse(Vector2 impulse, float moment)
+        {
+            Velocity += impulse * InverseMass; Angular += moment * InverseInertia;
+            if (Dynamic && (impulse != Vector2.Zero || moment != 0) && !Awake) { Awake = true; SleepTime = 0; }
+        }
         internal Vector2 PointVelocity(Vector2 point) => GetWorldPointVelocity(point);
         internal bool IsArea => area;
         internal bool Monitoring, Monitorable = true;
@@ -221,6 +238,7 @@ public static partial class BackendChecks
         internal float Rotation, Angular, Torque, SurfaceAngular, Mass = 1, Inertia = 1, Radius, SleepTime;
         internal CCDMode ContinuousMode;
         internal bool Awake = true, CanSleep = true, Locked, Detached, Omit;
+        internal bool SleepVisited;
         internal PhysicsServer.BodyMode Mode;
         private Vector2 _center;
         private Transform _saved;
@@ -304,8 +322,8 @@ public static partial class BackendChecks
         protected override void SetLinearVelocity(Vector2 velocity) { solver.BodyHook?.Invoke(rid); Velocity = velocity; }
         protected override void SetAngularVelocity(float velocity) => Angular = velocity;
         protected override void ClearVelocity() { Velocity = default; Angular = 0; }
-        protected override void SetAwake(bool awake) { Awake = awake; if (!awake) ClearVelocity(); }
-        protected override void SetCanSleep(bool canSleep) => CanSleep = canSleep;
+        protected override void SetAwake(bool awake) { Awake = awake; SleepTime = 0; if (!awake) ClearVelocity(); else solver.WakeConnected(this); }
+        protected override void SetCanSleep(bool canSleep) { CanSleep = canSleep; if (!canSleep) { Awake = true; SleepTime = 0; solver.WakeConnected(this); } }
         protected override void SetRotationLocked(bool locked) => Locked = locked;
         protected override void SetGravityScale(float scale) { }
         protected override void ApplyCentralForce(Vector2 force, bool wake) { Force += force; Awake |= wake; }
@@ -317,10 +335,10 @@ public static partial class BackendChecks
         protected override float InverseInertia => Dynamic && !Locked ? 1 / Inertia : 0;
         protected override PhysicsMassProperties ApplyMassProfile(float mass, float inertia, Vector2? center)
         { Mass = mass; Inertia = inertia > 0 ? inertia : MathF.Max(.001f, mass * (Radius * Radius + Hole * Hole) / 2); _center = center ?? default; return new(Mass, Inertia, _center); }
-        protected override void WakeTouching() { }
+        protected override void WakeTouching() => solver.WakeConnected(this);
         protected override Vector2 GetPointVelocity(Vector2 offset) => LinearVelocity + new Vector2(-offset.Y, offset.X) * AngularVelocity;
         protected override Vector2 GetWorldPointVelocity(Vector2 point) => GetPointVelocity(point - CenterOfMass);
-        protected override void ApplyImpulse(Vector2 impulse, float moment) { Velocity += impulse * InverseMass; Angular += moment * InverseInertia; Awake = true; }
+        protected override void ApplyImpulse(Vector2 impulse, float moment) { AddImpulse(impulse, moment); if (Dynamic) { Awake = true; SleepTime = 0; solver.WakeConnected(this); } }
         protected override void SetSurfaceVelocity(Vector2 linear, float angular) { Surface = linear; SurfaceAngular = angular; }
         protected override int ReadContacts(Span<PhysicsBodyContact> contacts)
         {

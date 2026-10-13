@@ -1,6 +1,6 @@
 # PhysicsSleepSettings
 
-Last updated: 2026-10-09
+Last updated: 2026-10-13
 
 **Declaration:** `public readonly record struct PhysicsSleepSettings(float LinearThreshold, float AngularThreshold, float TimeToSleep)`
 
@@ -17,7 +17,14 @@ angular/time fields. GPUPhysicsBodyStore retains the same record and uploads it
 through existing sleep uniforms. Changed policy wakes bodies through each backend's
 ordinary ordered authoring path. Equal/invalid writes preserve the old state.
 
-PhysicsSleepPolicyTests verifies both consumers; public GPU world selection remains
-open. See [ADR 0089](../decisions/physics-activity.md#adr-0089).
+PhysicsSleepPolicyTests verifies both built-in consumers through public world selection. See [ADR 0089](../decisions/physics-activity.md#adr-0089).
 
 This immutable value is now public and crosses the [registered implementation boundary](../components/physics-registered-adapter.md); complete sampled fields retain the contracts above. No backend storage or native handles are exposed.
+
+
+The independent public-only numerical fixture also consumes all three fields.
+Shared --sleep checks verify actual strict sleep boundaries, policy and impulse
+wake, dynamic groups, static-support separation, inactive intervals and quiet-clock
+rollback on registered/CPU/GPU worlds. Two 128-cycle full-frame brackets measure
+0/0 owner/all-thread managed bytes. This bounded fixture does not establish
+complete geometry, CCD, network or native/performance acceptance.

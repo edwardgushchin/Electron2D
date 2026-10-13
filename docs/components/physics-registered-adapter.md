@@ -16,7 +16,7 @@ Same-backend private history stays with the implementation. Portable state trans
 
 ## Verification boundary
 
-The separate [public-only consumer](../../tests/PhysicsBackendExtension.Consumer/PhysicsBackendExtension.Consumer.csproj) implements a bounded circle/constraint model, with actual integration, queries, overlap and contact output and spring response. It is not a production physics option. The fixture runs 64 warmup and 64 measured complete PhysicsFrame cycles, including raw state callbacks, and measures zero owner/all-thread managed bytes. Scene/raw mass2/4 and constant forces12/24 both yield .1 scene units/s after the first 1/60-second interval within .000001 float tolerance; retained checkpoint and portable poses compare exactly. Contact/Area events, real circle queries, bounded spring response, receiver-failure continuation, reuse rejection and terminal solve failure cover their named paths. The fixture proves these exercised adapter paths. All currently applicable built-in shape/body/Area/joint behavior still requires its existing shared CPU/GPU checks.
+The separate [public-only consumer](../../tests/PhysicsBackendExtension.Consumer/PhysicsBackendExtension.Consumer.csproj) implements a bounded circle/constraint model, with actual integration, queries, overlap/contact output, constraints, automatic sleep and private replay. It is not a production physics option. The fixture runs 64 warmup and 64 measured complete PhysicsFrame cycles, including raw state callbacks, and measures zero owner/all-thread managed bytes. Scene/raw mass2/4 and constant forces12/24 both yield .1 scene units/s after the first 1/60-second interval within .000001 float tolerance; retained checkpoint and portable poses compare exactly. Contact/Area events, real circle queries, bounded spring response, receiver-failure continuation, reuse rejection and terminal solve failure cover their named paths. The fixture proves these exercised adapter paths. All currently applicable built-in shape/body/Area/joint behavior still requires its existing shared CPU/GPU checks.
 
 PhysicsServerManager.RegisterServer and SetDefaultServer now execute through a retained static facade. Factories return fresh PhysicsServerBackend objects, typically derived from PhysicsServerExtension. Duplicate/reserved names, null/disposed/reused implementations and recursive creation reject. DEFAULT uses strictly greater priorities; World(string) captures its selection before lazy startup, while SpaceCreate(string) initializes an owned inactive space immediately. Resource aliases retain one runtime. Requested and actual names accompany Backend.Extension; explicit CPU/GPU and parameterless CPU remain independent of the default. Factories execute outside the lock, including registration from another thread. World release calls Finish and disposes the implementation; direct caller disposal of a bound implementation rejects.
 
@@ -1007,8 +1007,7 @@ Each path warms 128 then measures 128 full-step/capture/restore cycles at strict
 0/0 owner/all-thread managed bytes. The registered episode case separately
 measures 128 capture/changed-decision/contact-step/restore cycles at the same zero
 budget. Cold topology growth and setup are outside those intervals. Evidence is
-under bin/physics-registered-history/2026-10-13/. Full coupled geometry/CCD/automatic
-sleeping, portable network replay, native allocations and final performance
+under bin/physics-registered-history/2026-10-13/. Full coupled geometry/CCD, portable network replay, native allocations and final performance
 acceptance remain open.
 
 
@@ -1017,3 +1016,47 @@ passed registered/CPU no-GPU history, explicit GPU history, the full consumer an
 the complete executable suite (five profiles, all exit 0). Source and all frozen
 runtime hashes remained identical before/after. Exact commands, environment and
 provenance are retained under bin/physics-registered-history/2026-10-13/final/.
+
+
+## Independent automatic sleep
+
+The bounded public-only solver now retains PhysicsSleepSettings and applies actual
+numerical automatic sleep. A dynamic contact/joint group must remain strictly below
+both speed thresholds for strictly longer than the quiet duration. CanSleep=false
+vetoes group sleep. Zero thresholds disable automatic sleep; zero duration allows
+the first positive quiet interval. Static supports are excluded from dynamic group
+traversal, so separate bodies resting on one support keep independent clocks.
+
+Changed settings reset quiet clocks and wake bodies immediately. Explicit impulses,
+wake requests and disabling sleep propagate through connected dynamic members.
+Dormant contacts retain observations without pose correction; dormant joints skip
+numerical corrections. Zero internal impulses no longer wake a resting group or
+reset quiet time. Group lists are retained scratch; private history already owns
+sleep flags and quiet clocks, while visitation is rebuilt on demand.
+
+--sleep, optionally --cpu or --gpu, exercises the same public contract on scene/raw
+bodies without fallback. Exact binary 1/32 s intervals verify equality at .125 s
+remains awake, threshold equality prevents sleep, pause does not age clocks, and
+restored .5 s history reaches the same later sleep boundary. Pin/contact groups
+verify actual sleep and impulse wake, CanSleep veto removal, and independent groups
+on one static support. One group candidate failed because residual pin bias woke
+an already sleeping group; skipping dormant correction fixes that behavior.
+
+Each path warms then measures 128 replay cycles (15 full frames each, 1920 measured
+frames) and 128 actual joint/contact sleep/wake cycles (7 frames each, 896 measured
+frames). Both brackets require strict 0/0 owner/all-thread managed bytes, including
+state assertions on every measured group cycle. Cold setup and scratch growth are
+outside measurement. This closes the former no-op sleep policy in this fixture;
+its one-interval primitive geometry, generic CCD, portable/network replay, native
+allocation totals and final performance acceptance remain open. Evidence is retained
+under bin/physics-registered-sleep/2026-10-13/.
+
+
+Final linux-x64 Release/native-source checks on main dd0aba2f plus this change
+passed registered/CPU no-GPU sleep, explicit GPU sleep, the complete consumer and
+the full executable suite (five profiles, all exit 0). Source and every frozen
+runtime hash remained identical before/after. Commands, environment and hashes
+are retained under bin/physics-registered-sleep/2026-10-13/final-current/; mandatory
+build/API/wiki logs are under current-checks/. The earlier final/ suite also
+passed, but its source/revision guard rejected concurrent monitor changes; that
+run does not confirm the resulting main state.

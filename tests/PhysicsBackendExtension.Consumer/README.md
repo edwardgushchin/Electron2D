@@ -101,5 +101,15 @@ grow/shrink recapture, real pending force/torque replay, immediate contact value
 and 128 warmed full-step/capture/restore cycles at 0/0 owner/all-thread bytes.
 The registered case also checks uncached numerical contacts/step and retained
 one-way decisions, with a separate 128-cycle zero budget. Private history captures
-typed state and releases retired references; generic CCD/automatic sleep and
+typed state and releases retired references; generic CCD and
 portable/network acceptance remain open.
+
+
+`--sleep`, optionally `--cpu` or `--gpu`, verifies actual automatic sleep on
+scene/raw bodies, strict thresholds/duration, zero policy, CanSleep, immediate
+policy/impulse wake, inactive intervals and restored quiet clocks. Dynamic
+contact/joint groups sleep and wake together; a shared static support does not
+merge independent groups. After 128 warmups, 128 replay cycles (1920 frames) and
+128 actual group sleep/wake cycles (896 frames) each require strict 0/0
+owner/all-thread managed bytes. General geometry/CCD, portable networking and
+final native/performance acceptance remain open.

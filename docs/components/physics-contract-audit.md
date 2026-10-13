@@ -781,3 +781,13 @@ registered/CPU/GPU public suite checks real force/torque replay, sleep and immed
 contacts at 0/0 bytes over 128 full-step/capture/restore cycles; registered decision
 replay has its own 128-cycle zero budget. This bounded fixture does not close
 arbitrary CCD/sleep/contact algorithms, portable networking or final acceptance.
+
+
+[Independent automatic sleep](physics-registered-adapter.md#independent-automatic-sleep)
+now consumes actual world thresholds and duration in the public-only numerical
+fixture. Dynamic contact/joint groups sleep together; static supports do not
+merge groups. Shared registered/CPU/GPU --sleep checks cover strict boundaries,
+zero thresholds/duration, CanSleep, policy/impulse wake, inactive intervals and
+quiet-clock rollback. Each path measures 1920 replay frames and 896 actual group
+sleep/wake frames at strict 0/0 owner/all-thread managed bytes. General geometry,
+CCD, portable networking, native totals and final performance remain open.
