@@ -133,8 +133,8 @@ public static partial class BackendChecks
                     {
                         a.Position -= normal * depth * (a.InvMass / inverse);
                         b.Position += normal * depth * (b.InvMass / inverse);
-                        impulse = normal * MathF.Max(0, -(b.Velocity - a.Velocity).Dot(normal) / inverse);
-                        a.AddImpulse(-impulse, 0); b.AddImpulse(impulse, 0);
+                        Contact(a, b, out _, out _, out var solvedPoint);
+                        impulse = SolveContact(a, b, normal, solvedPoint);
                     }
                     Contact(a, b, out _, out _, out var contactPoint); a.ContactPoint = b.ContactPoint = contactPoint;
                     a.ContactDepth = b.ContactDepth = depth;
@@ -236,6 +236,7 @@ public static partial class BackendChecks
         internal float Priority;
         internal Vector2 Position, Velocity, Force, Surface;
         internal float Rotation, Angular, Torque, SurfaceAngular, Mass = 1, Inertia = 1, Radius, SleepTime;
+        internal float Friction = 1, Bounce;
         internal CCDMode ContinuousMode;
         internal bool Awake = true, CanSleep = true, Locked, Detached, Omit;
         internal bool SleepVisited;
@@ -300,6 +301,7 @@ public static partial class BackendChecks
             solver.ShapeHook?.Invoke(rid);
             if (solver.ShapeFailure == rid) throw new InvalidOperationException("Shape retirement failure");
             Shapes = 0; Layer = layer; Mask = mask;
+            Friction = friction; Bounce = bounce;
             LastShape = slots.IsEmpty ? default : slots[^1];
             foreach (ref readonly var s in slots)
                 if (s.Enabled) { var dimensions = Annulus.Dimensions(s.Shape.GetGeometryData()); Radius = dimensions.Outer; Hole = dimensions.Inner; Shapes++; }
@@ -312,8 +314,8 @@ public static partial class BackendChecks
         }
         protected override Transform SampleJointLocalFrame(Vector2 point, float angle) => GetTransform().AffineInverse() * new Transform(angle, point);
         protected override (Vector2 LinearVelocity, float AngularVelocity, bool Sleeping) GetSolverMotion() => (Velocity, Angular, !Awake);
-        protected override Vector2 LinearVelocity => Mode == PhysicsServer.BodyMode.Static ? Surface : Velocity;
-        protected override float AngularVelocity => Mode == PhysicsServer.BodyMode.Static ? SurfaceAngular : Angular;
+        protected override Vector2 LinearVelocity => Mode == PhysicsServer.BodyMode.Static ? Surface : Velocity + (Mode == PhysicsServer.BodyMode.Kinematic ? Surface : Vector2.Zero);
+        protected override float AngularVelocity => Mode == PhysicsServer.BodyMode.Static ? SurfaceAngular : Angular + (Mode == PhysicsServer.BodyMode.Kinematic ? SurfaceAngular : 0);
         protected override bool IsAwake => Awake;
         protected override void SetPose(Vector2 position, float rotation) { Position = position; Rotation = rotation; }
         protected override void SetTargetPose(Transform pose, double delta) { Velocity = (pose.Origin - Position) / (float)delta; Angular = (pose.Rotation - Rotation) / (float)delta; }
@@ -339,7 +341,8 @@ public static partial class BackendChecks
         protected override Vector2 GetPointVelocity(Vector2 offset) => LinearVelocity + new Vector2(-offset.Y, offset.X) * AngularVelocity;
         protected override Vector2 GetWorldPointVelocity(Vector2 point) => GetPointVelocity(point - CenterOfMass);
         protected override void ApplyImpulse(Vector2 impulse, float moment) { AddImpulse(impulse, moment); if (Dynamic) { Awake = true; SleepTime = 0; solver.WakeConnected(this); } }
-        protected override void SetSurfaceVelocity(Vector2 linear, float angular) { Surface = linear; SurfaceAngular = angular; }
+        protected override void SetSurfaceVelocity(Vector2 linear, float angular)
+        { if (Surface == linear && SurfaceAngular == angular) return; Surface = linear; SurfaceAngular = angular; solver.WakeConnected(this); }
         protected override int ReadContacts(Span<PhysicsBodyContact> contacts)
         {
             if (solver.ContactFailure == rid) throw new InvalidOperationException("Injected contact publication failure.");

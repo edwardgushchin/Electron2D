@@ -780,3 +780,11 @@ Twelve exact cases, 512 seeded boundary cases and 128 warmed standalone/selected
 cycles retain the .0001 scene-unit boundary tolerance and 0/0 managed-byte gate.
 See [custom collision geometry](../components/physics-custom-geometry.md) for the
 analytic model and remaining numerical-extension limits.
+
+
+[Independent contact response](../components/physics-registered-adapter.md#independent-contact-response)
+now verifies real signed materials, static/inherited surfaces, full contact impulses
+and replay through common registered/CPU/GPU public assertions. Shared indexed
+shape preparation and CPU in-place material updates provide strict 0/0 bytes over
+128 edited contact/replay cycles; general geometry/CCD/network/native/performance
+acceptance remains open.

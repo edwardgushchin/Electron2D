@@ -21,8 +21,9 @@ internal sealed partial class PhysicsColliderBackend
         var count = slots.Count; BeginShapeInputs(count);
         try
         {
-            foreach (var slot in slots)
+            for (var index = 0; index < count; index++)
             {
+                var slot = slots[index];
                 if (!slot.Active) continue;
                 _ = slot.Shape.GetGeometryData();
                 if (!slot.Transform.IsFinite() || !slot.Transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(slot.Transform.Skew))
@@ -43,12 +44,15 @@ internal sealed partial class PhysicsColliderBackend
         var count = slots.Count; BeginShapeInputs(count);
         try
         {
-            foreach (var slot in slots)
+            for (var index = 0; index < count; index++)
+            {
+                var slot = slots[index];
                 if (!slot.Disabled)
                 {
                     PhysicsServerCollider.ValidateTransform(slot.LocalTransform);
                     if (!slot.Shape.Geometry.IsDisposed) _ = slot.Shape.Geometry.GetGeometryData();
                 }
+            }
             for (var index = 0; index < count; index++)
             {
                 var slot = slots[index]; var shape = slot.Shape.Geometry;

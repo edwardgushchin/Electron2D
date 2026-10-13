@@ -1,6 +1,6 @@
 # PhysicsMaterial
 
-Last updated: 2026-10-05
+Last updated: 2026-10-13
 
 **Inherits:** [Resource](Resource.md), ElectronObject
 
@@ -83,3 +83,12 @@ Returns: The descriptor sequence. The base sequence exposes identity, lifetime, 
 
 
 [Shared material response and allocation evidence](../components/gpu-physics.md#shared-material-response-and-allocation-evidence) verifies the full common CPU/GPU material matrix, including low-impact bounce and zero owner/all-thread warm frame allocations. The former GPU driver threshold is removed; the historical isolated CPU allocation failure remains an unproven limit.
+
+
+[Shared contact response](../components/physics-registered-adapter.md#independent-contact-response)
+now checks actual signed material response on the independent public-only,
+CPU and GPU paths. Resource edits, typed body overrides, surface motion and
+capture/restore execute 128 warmed full-frame cycles at 0/0 owner/all-thread
+managed bytes. CPU retains unchanged native geometry while updating material;
+actual geometry edits still rebuild. Native allocation totals and wider
+geometry/performance acceptance remain unverified.

@@ -1,6 +1,6 @@
 # PhysicsBackendCollider
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Declaration:** `public abstract class PhysicsBackendCollider` · **Source:** [PhysicsBackendCollider.cs](../../src/Servers/Physics/PhysicsBackendCollider.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
 
@@ -110,3 +110,12 @@ Force preparation receives retained pending/persistent totals and already resolv
 
 
 ReadContacts must return the deepest signed scene-unit candidates fitting the supplied borrowed span, retaining earlier encounters at equal depth. Its PhysicsBodyContact values preserve explicit numerical frame depth; common publication applies retained reporting policy without changing solving.
+
+
+The public-only independent consumer now retains material coefficients,
+combines static/kinematic point surface velocities, solves normal plus tangent
+impulses with mass/inertia, wakes touching bodies and restores numerical material
+history. [Shared contact response](../components/physics-registered-adapter.md#independent-contact-response)
+verifies scene/raw and inherited surface behavior, actual impulse/momentum and
+128 edited replay cycles at 0/0 bytes. General geometry/CCD and full extension
+acceptance remain open.

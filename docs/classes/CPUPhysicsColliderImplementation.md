@@ -1,6 +1,6 @@
 # CPUPhysicsColliderImplementation
 
-Last updated: 2026-10-11
+Last updated: 2026-10-13
 
 **Declaration:** `internal sealed partial class CPUPhysicsColliderImplementation : PhysicsColliderImplementation` · **Source:** [CPUPhysicsColliderImplementation.cs](../../src/Servers/Physics/CPUPhysicsColliderImplementation.cs) · **Component:** [Physics backends](../components/physics-backends.md#runtime-flow-and-ownership)
 
@@ -53,3 +53,13 @@ Resolved fields and exception invalidation dispatch through the selected collide
 [Force and policy inputs](../components/physics-backends.md#value-only-body-integration-inputs) now separate engine-owned authoring/command state from numerical preparation. Default forces use PhysicsBodyForceConfiguration; CPU fields and GPU parameters use PhysicsBodyIntegrationConfiguration. Pending command retirement and GPU dirty flags stay in the binding layer; numerical methods receive finite authored values and return complete field/preparation results. CPU/GPU/no-device, replay, parameter and full operation checks remain the acceptance boundaries; public registration stays open.
 
 [Custom collision geometry](../components/physics-custom-geometry.md) now provides copied canonical data, exact mass/bounds, diagnostic segments and standalone pair callbacks to registered implementations. Built-in compilation rejects unsupported custom geometry before mutation. Portable schema covers the custom authoring payload; detached force preparation resolves exact custom mass while automatic getters retain cached-resolution semantics.
+
+
+Material updates retain native fixture identity when every logical slot,
+geometry value identity, transform, bias, filter, sensor and density value matches.
+A retained ShapeInput array compares authored metadata; actual geometry changes
+use the complete creation path. Existing material fields are preserved while
+friction/restitution/flags update, and touching bodies wake. Retired cache suffixes
+and detach clear references. [Contact verification](../components/physics-registered-adapter.md#independent-contact-response)
+checks changed geometry, signed material response, replay and 128 changed-material
+full-frame cycles at 0/0 managed bytes on CPU; native totals remain unmeasured.

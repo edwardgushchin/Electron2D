@@ -113,3 +113,13 @@ merge independent groups. After 128 warmups, 128 replay cycles (1920 frames) and
 128 actual group sleep/wake cycles (896 frames) each require strict 0/0
 owner/all-thread managed bytes. General geometry/CCD, portable networking and
 final native/performance acceptance remain open.
+
+
+`--contact-response`, optionally `--cpu` or `--gpu`, checks actual signed material
+mixing, normal/tangential/angular static surfaces, inherited AnimatableBody
+surface motion, dynamic lever arms, complete impulse versus momentum, geometry
+edits, surface wake and private response replay. After 128 warmups, 128 cycles
+editing the borrowed material and typed coefficients/surface, stepping and
+capturing/restoring require strict 0/0 owner/all-thread bytes. The fixture remains
+bounded primitive geometry; complete CCD/network/native/performance acceptance
+remains open.

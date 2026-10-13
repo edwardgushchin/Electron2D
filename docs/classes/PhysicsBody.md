@@ -116,3 +116,10 @@ The complete PhysicsMotionTests, PhysicsQueryTests and PhysicsShapeQueryTests no
 The complete PhysicsCollisionExceptionTests now runs on explicitly selected public CPU/GPU worlds for scene/raw owners. It checks unilateral filtering in both motion directions and actual solver response, duplicate edits, server-only/null and freed-target slots, live contacts and reentry. Sixty-four warm active exception frames and 64 changed raw-exception/step cycles require 0/0 owner/all-thread managed bytes. Internal GPU store probes remain diagnostics; broader inherited/extension, native/platform and final performance acceptance stays open.
 
 The complete PhysicsBodyTests, RigidBodyForceTests, RigidBodyContactTests and ShapePairEventTests now execute on explicitly selected public CPU/GPU worlds, with actual backend assertions in every numerical scene. The ordinary full suite runs both variants; ELECTRON2D_TEST_SCENE_PHYSICS=cpu|gpu selects the same complete set. Existing force/impulse/center units and numerical bounds, freeze/lock/mass/geometry recovery, persistent force packing, sleep/wake notification policy, contact caps/deduplication and object-before-shape entry/departure ordering are unchanged. Scene/raw nullable payloads, compound logical slots, handler mutation/errors and committed-event no-replay remain asserted. All existing 64-frame warm gates now require 0/0 owner/all-thread managed bytes for resting/active/moving bodies, forces, monitored/no-contact frames and steady/transitioning shape pairs. Box2D SIMD and worker scheduling probes remain CPU diagnostics; they do not establish independent GPU acceptance. Native allocations, wider inherited/extension, foreign platforms, full networking and final GPU/window performance acceptance remain open.
+
+
+Material-driven shape preparation retains indexed logical-slot validation
+and applied revision tracking without boxed list enumerators.
+[Shared edited contact checks](../components/physics-registered-adapter.md#independent-contact-response)
+exercise scene/raw bodies, actual surface transfer, complete impulses and replay
+at 0/0 owner/all-thread managed bytes on registered/CPU/GPU implementations.

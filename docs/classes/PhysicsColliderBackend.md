@@ -1,6 +1,6 @@
 # PhysicsColliderBackend
 
-Last updated: 2026-10-11
+Last updated: 2026-10-13
 
 **Declaration:** `internal sealed partial class PhysicsColliderBackend`
 
@@ -192,3 +192,10 @@ Resolved fields and exception invalidation dispatch through the selected collide
 
 
 Object/canvas/priority writes reject a borrowed extension scope before changing retained values. Registered attachments publish current metadata after numerical Attach, before shape preparation; [the metadata protocol](../components/physics-registered-adapter.md#initial-collider-metadata) preserves detached authoring and fresh-world transfer.
+
+
+Scene/raw shape input preflight now uses indexed IReadOnlyList traversal,
+retaining the same full validation and finally cleanup without boxed enumerators.
+The scene body likewise records applied shape revisions by index.
+[Changed material/full-frame checks](../components/physics-registered-adapter.md#independent-contact-response)
+verify strict 0/0 owner/all-thread bytes on registered/CPU/GPU paths.

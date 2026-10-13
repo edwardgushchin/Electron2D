@@ -1130,3 +1130,14 @@ zero thresholds/duration, CanSleep, policy/impulse wake, inactive intervals and
 quiet-clock rollback. Each path measures 1920 replay frames and 896 actual group
 sleep/wake frames at strict 0/0 owner/all-thread managed bytes. General geometry,
 CCD, portable networking, native totals and final performance remain open.
+
+
+[Independent contact response](physics-registered-adapter.md#independent-contact-response)
+now exercises signed bounce/friction, static normal/tangent/angular surface motion,
+AnimatableBody inheritance, dynamic lever arms, full contact impulses and replay
+through the same registered/CPU/GPU public assertions. Geometry edits and immediate
+surface wake are checked. All three paths measure 128 edited material/surface and
+capture/restore full-frame cycles at strict 0/0 owner/all-thread bytes. Shared
+shape preparation uses indexed traversal; CPU keeps unchanged native fixtures
+while updating material. General geometry/CCD, network, native totals and final
+performance acceptance remain open.

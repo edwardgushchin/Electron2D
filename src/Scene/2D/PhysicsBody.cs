@@ -343,7 +343,7 @@ public abstract partial class PhysicsBody : CollisionObject
 
         OnShapesRebuilt();
         _appliedShapeRevisions.Clear();
-        foreach (var node in ShapeSlots) _appliedShapeRevisions.Add(node.Revision);
+        for (var index = 0; index < ShapeSlots.Count; index++) _appliedShapeRevisions.Add(ShapeSlots[index].Revision);
         _appliedMaterialRevision = _materialOverride?.Revision ?? 0;
         _shapesDirty = false;
     }

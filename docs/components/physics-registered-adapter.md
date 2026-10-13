@@ -1060,3 +1060,48 @@ are retained under bin/physics-registered-sleep/2026-10-13/final-current/; manda
 build/API/wiki logs are under current-checks/. The earlier final/ suite also
 passed, but its source/revision guard rejected concurrent monitor changes; that
 run does not confirm the resulting main state.
+
+
+## Independent contact response
+
+The bounded circle/annulus consumer now retains signed friction/bounce in its
+numerical collider and private history. Contacts use endpoint point velocities,
+including virtual static/kinematic surface motion. A normal restitution impulse
+and Coulomb-limited tangent impulse use both masses and angular lever arms; the
+reported world-axis impulse contains both components. Surface edits wake touching
+dynamics. AnimatableBody adds inherited virtual motion to its actual target motion
+without integrating virtual motion into its pose.
+
+--contact-response, optionally --cpu or --gpu, checks the same public scene/raw
+invariants without fallback. Equal mass-2 bodies at +/-30 scene units/s exercise
+ordinary summed/clamped bounce, absorbent and negative coefficients, with .5
+scene-unit/s velocity tolerance and .02 kg-scene-unit/s momentum-sum bound. Signed/rough friction
+must produce the expected stronger response. Static normal, tangent and +/-angular
+surface cases use .2 scene-unit/s bounds; an unlocked mass/inertia-2 circle checks
+8 scene-unit/s and 4 rad/s within .5. Reported complete contact impulse must match
+mass times the observed full-step velocity change within .1 kg-scene-unit/s.
+The velocity bounds allow one-pass/substep and contact-point differences while
+remaining small against the 20/30-unit incoming speed; momentum and peer identity
+are separate stricter checks. Radius 2 -> 3 changes the angular surface result from 9 -> 11 scene units/s and
+therefore checks that a material optimization cannot hide changed geometry.
+
+Private next-step response uses .001 velocity and .01 impulse replay bounds.
+After 128 warmups, 128 changed-resource/typed-material/surface/step/capture/restore
+cycles require strict 0/0 owner/all-thread managed bytes. Each cycle checks actual
+surface transfer inside the measured interval. Shared indexed shape traversals
+remove the observed 400 B/cycle enumerator cost. CPU additionally updates materials
+in place for unchanged logical geometry, removing 600 B/cycle fixture metadata
+recreation; geometry/transform/filter/density/one-way/bias changes still take the
+full shape path. These are numerical and managed allocation checks, not native
+allocation totals, full custom geometry/CCD, networking or final GPU performance.
+Evidence is retained under bin/physics-registered-contact-response/2026-10-13/.
+
+
+Final linux-x64 Release/native-source verification on main 0b7dc576 plus this
+change passed registered/CPU no-GPU contact response, explicit GPU response,
+the full consumer and the complete executable suite (five profiles, all exit 0).
+Source and all frozen runtime hashes were identical before/after. Exact commands,
+environment and hashes are under bin/physics-registered-contact-response/2026-10-13/final-current/;
+mandatory build/API/wiki logs are under current-checks/. The earlier final/ suite
+passed executable checks, but its source/revision guard rejected concurrent OS
+changes; it is not evidence for the resulting main state.

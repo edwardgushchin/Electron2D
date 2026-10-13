@@ -4,19 +4,20 @@ public static partial class BackendChecks
 {
     private readonly record struct BodyHistory(Body Body, Vector2 Position, float Rotation, Vector2 Velocity, float Angular,
         Vector2 Force, float Torque, bool Awake, bool CanSleep, float SleepTime, bool Locked, bool Omit,
-        Vector2 Surface, float SurfaceAngular, PhysicsBodyFields Fields, Transform Saved,
+        Vector2 Surface, float SurfaceAngular, float Friction, float Bounce, PhysicsBodyFields Fields, Transform Saved,
         RID ContactPeer, Vector2 ContactPoint, Vector2 ContactNormal, Vector2 ContactImpulse, float ContactDepth, int ContactLimit);
 
     private sealed partial class Body
     {
         internal BodyHistory CaptureHistory() => new(this, Position, Rotation, Velocity, Angular, Force, Torque, Awake,
-            CanSleep, SleepTime, Locked, Omit, Surface, SurfaceAngular, _fields, _saved,
+            CanSleep, SleepTime, Locked, Omit, Surface, SurfaceAngular, Friction, Bounce, _fields, _saved,
             ContactPeer, ContactPoint, ContactNormal, ContactImpulse, ContactDepth, ReportedLimit);
         internal void RestoreHistory(in BodyHistory state)
         {
             Position = state.Position; Rotation = state.Rotation; Velocity = state.Velocity; Angular = state.Angular;
             Force = state.Force; Torque = state.Torque; Awake = state.Awake; CanSleep = state.CanSleep; SleepTime = state.SleepTime;
             Locked = state.Locked; Omit = state.Omit; Surface = state.Surface; SurfaceAngular = state.SurfaceAngular;
+            Friction = state.Friction; Bounce = state.Bounce;
             _fields = state.Fields; _saved = state.Saved;
             ContactPeer = state.ContactPeer; ContactPoint = state.ContactPoint; ContactNormal = state.ContactNormal;
             ContactImpulse = state.ContactImpulse; ContactDepth = state.ContactDepth; ReportedLimit = state.ContactLimit;

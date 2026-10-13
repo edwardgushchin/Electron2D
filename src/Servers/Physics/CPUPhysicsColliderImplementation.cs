@@ -54,7 +54,7 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
     internal override void Detach()
     {
         try { if (B2Worlds.b2Body_IsValid(BodyID) && !Space.HasBackendFailure) b2DestroyBody(BodyID); }
-        finally { _shapes.Clear(); _world = null; _body = null; _savedPose = default; BodyID = default; _contactReporting = false; WorldOwner.RetireCollider(Owner, this); }
+        finally { _shapes.Clear(); _shapeInputs = []; _shapeInputCount = -1; _world = null; _body = null; _savedPose = default; BodyID = default; _contactReporting = false; WorldOwner.RetireCollider(Owner, this); }
     }
 
     private bool _contactReporting;
@@ -82,10 +82,13 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
                 throw new InvalidOperationException("Physics shapes require unit scale and zero skew.");
             if (!slot.Shape.IsDisposed) PhysicsShapeBackend.RequireBuiltIn(slot.Shape);
         }
+        if (UpdateMaterials(slots, layer, mask, sensor, density, friction, bounce)) return;
+        _shapeInputCount = -1;
         var definition = BeginShapeUpdate(layer, mask, sensor, density, friction, bounce);
         foreach (ref readonly var slot in slots)
             if (slot.Enabled && !slot.Shape.IsDisposed)
                 AppendShape(slot.Shape, slot.Transform, slot.Index, sensor ? null : slot.OneWay, ref definition);
+        CaptureShapeInputs(slots, layer, mask, sensor, density);
     }
 
     private B2ShapeDef BeginShapeUpdate(uint layer, uint mask, bool sensor, float density, float friction, float bounce)
