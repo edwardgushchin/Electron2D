@@ -732,6 +732,8 @@ Occurs after pending transform delivery and before eligible node physics-process
 
 **Remarks:** A throwing subscriber stops later subscribers of this invocation; node callbacks, timers, tweens, and the deferred safe point are still attempted.
 
+[`PhysicsClockTests`](../../tests/Electron2D.Tests/PhysicsClockTests.cs) verifies one event before node fixed callbacks and actual CPU solving, including zero scaled delta and a throwing handler. A handler failure is aggregated after the physical interval completes; the next frame does not replay that interval. Engine-driven active frames also retain the strict zero managed-byte gate.
+
 <a id="e-electron2d-scenetree-treechanged"></a>
 ### `public event Action<SceneTree> TreeChanged`
 

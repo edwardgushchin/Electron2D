@@ -11018,6 +11018,13 @@
       ],
       "state": "Excluded",
       "reason": "Pinned doc/classes/Viewport.xml at ed1daf0bf001b61586d9930840f2f1394092c079 has deprecated=\"Use [method push_input] instead.\" ADR 0004 excludes deprecated declarations; use Viewport.PushInput. No implementation trigger."
+    },
+    {
+      "godot": [
+        "SceneTree::signal:physics_frame()"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0002/0006: typed PhysicsFrameStarted event occurs once after pending transforms and before scheduled node fixed callbacks and numerical world stepping. PhysicsClockTests checks real CPU ticks/integration, tree identity/counters, zero-delta frames, error aggregation with completed-tick no-replay and strict 0/0 warmed full Engine frames. Ordinary C# multicast failure semantics remain the accepted adaptation; separate-thread and native/GPU scheduling acceptance remain open."
     }
   ]
 }

@@ -828,3 +828,5 @@ physical/publication gates and 0/0 warmed managed bytes; serial contact capture
 costs 53.2847 ms versus 17.7884 ms in the default parallel path. This diagnoses a
 host-stage cost without establishing a GPU improvement. GPU mass/window trials
 await power-cable verification; all broader acceptance requirements remain open.
+
+[Common fixed-clock conformance](../components/engine-runtime.md#verification) now exercises real CPU motion/ticks through the ordinary Engine scheduler with graphics denied. Frequency, catch-up, jitter, scaling, live settings and frame-event order have explicit acceptance evidence and zero warmed active-frame managed bytes. These common clock rows no longer have a structural-only audit reason; the separate physics-thread setting, numerical GPU/provider and final performance requirements remain open.

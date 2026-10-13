@@ -2194,6 +2194,22 @@
       ],
       "state": "Implemented",
       "reason": "Executable typed indexed property projection under ADRs 0001/0004/0005: compiled PropertyDescriptor object/component/array/dictionary compositions replace dynamic property names and Variant. Reads resolve current links; writes propagate typed setters/validators, preserve readonly/lifetime/owner/capture guards, value-copy behavior and visible committed inner writes after outer failure. Array/dictionary writes copy containers and retain comparers. IndexedPropertyTests verifies boundaries, live rebinding, errors, copied containers, Tween and saved scenes, warmed zero-allocation scalar/object access and actual Linux Wayland GPU/hardware compatibility atlas/position pixels. Synthetic projections are not stored and have no manufactured revert defaults. Foreign platforms/editor/native allocation/human gates remain explicit."
+    },
+    {
+      "godot": [
+        "Engine::property:physics_ticks_per_second",
+        "Engine::property:max_physics_steps_per_frame",
+        "Engine::property:physics_jitter_fix",
+        "Engine::property:time_scale",
+        "Engine::method:get_physics_frames()",
+        "Engine::method:get_physics_interpolation_fraction()",
+        "Engine::method:is_in_physics_frame()",
+        "ProjectSettings::property:physics/common/max_physics_steps_per_frame",
+        "ProjectSettings::property:physics/common/physics_jitter_fix",
+        "ProjectSettings::property:physics/common/physics_ticks_per_second"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0016: process-wide host-driven fixed clock with positive frequency/catch-up limits, finite nonnegative scaling and clamped jitter. Settings are sampled once per frame; frequency changes discard old fractional history. UInt64 projects the nonnegative process-lifetime started-frame count; interpolation is a bounded double fraction and IsInPhysicsFrame is the global fixed-lane snapshot, not caller-thread authorization. VerifyEngine and PhysicsClockTests cover defaults, validation, actual CPU motion/ticks, feature/live settings, zero-scale cadence, catch-up/remainder, frame/callback errors and strict 0/0 warmed full frames. Native cadence, other platforms and complete numerical GPU/provider acceptance remain separate."
     }
   ]
 }

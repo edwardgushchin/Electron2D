@@ -71,7 +71,8 @@ public sealed partial class Engine
     /// <remarks>
     /// Limiting catch-up avoids an unbounded spiral after a long host stall. Excess whole fixed steps are discarded;
     /// the remaining fractional time is preserved for interpolation. Assignment writes
-    /// <see cref="ProjectSettings.MaxPhysicsStepsPerFrame"/>.
+    /// <see cref="ProjectSettings.MaxPhysicsStepsPerFrame"/>. The effective value is sampled once at the start
+    /// of each host frame; a callback edit affects the next host frame.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is less than or equal to zero.</exception>
     public static int MaxPhysicsStepsPerFrame
@@ -86,6 +87,7 @@ public sealed partial class Engine
     /// A value of zero disables tolerance-based clock adjustment. Values above <c>2</c> are accepted but can make
     /// timing noticeably less responsive. Custom interpolation commonly uses zero. Assignment writes
     /// <see cref="ProjectSettings.PhysicsJitterFix"/>; negative input is clamped to zero before storage.
+    /// The effective value is sampled once at the start of each host frame.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is NaN or infinite.</exception>
     public static double PhysicsJitterFix
@@ -98,7 +100,8 @@ public sealed partial class Engine
     /// <value>A finite non-negative multiplier. The default is <c>1</c>; zero freezes callback deltas.</value>
     /// <remarks>
     /// This multiplier changes the deltas supplied to process and fixed-step callbacks. It does not change how often
-    /// those callbacks are scheduled. Extremely large values reduce temporal precision and should be avoided.
+    /// those callbacks are scheduled. It is sampled once per host frame, so all catch-up callbacks retain the same
+    /// multiplier even when a callback edits it. Extremely large values reduce temporal precision and should be avoided.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is negative, NaN, or infinite.</exception>
     public static double TimeScale
@@ -148,8 +151,9 @@ public sealed partial class Engine
         get => Service.PhysicsInterpolationFractionCore;
     }
 
-    /// <summary>Gets whether the current thread is executing a fixed-step callback.</summary>
+    /// <summary>Gets whether the engine is executing a fixed-step callback.</summary>
     /// <value><see langword="true"/> only during a call to <see cref="MainLoop.PhysicsProcess"/>.</value>
+    /// <remarks>This process-wide phase snapshot does not grant the calling thread access to owner-thread scene or physics operations.</remarks>
     public static bool IsInPhysicsFrame
     {
         get => Service.IsInPhysicsFrameCore;

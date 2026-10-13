@@ -1,6 +1,6 @@
 # Engine runtime component
 
-Last updated: 2026-10-10
+Last updated: 2026-10-13
 
 ## Scope
 
@@ -51,6 +51,10 @@ The component depends on Core object lifecycle, MainLoop, ProjectSettings, Trans
 Managed scheduling, lifecycle integration, timing properties, metrics, architecture/version reporting, and registry behavior are implemented and verified. Engine.Run and Engine.RunAsync supply the monotonic clock, event pumping through Window, MaxFPS waiting and complete scene/window lifetime. Rendering/draw counts, logging flags, generated attribution/license data, script debugging/languages, movie writing, and editor hints remain absent. Their exact reference-API disposition is in the [`Engine` class inventory](../coverage/classes/Engine.md).
 
 ## Verification
+
+The [physics clock fixture](../../tests/Electron2D.Tests/PhysicsClockTests.cs) connects this scheduler to an actual CPU world with graphics unavailable. It checks 100/200/400 Hz, real 100-unit/s travel, zero-scale callback cadence without a positive-duration world tick, feature overrides, re-baselining, a three-step stall cap and fractional interpolation. Editing frequency, cap, jitter and scale in the first catch-up callback affects the next host frame, while remaining callbacks retain captured values. Frame events precede node processing and solving; their errors preserve the completed tick. IsInPhysicsFrame is a process-wide phase snapshot, not thread-access permission. A 128-warmup/128-measured active frame bracket requires 0/0 owner/all-thread managed bytes. This closes the corresponding common clock audit rows, not separate-thread simulation or native/GPU timing acceptance.
+
+Run ELECTRON2D_TEST_PHYSICS_CLOCK=1 against the Release test executable; this also runs the existing complete managed Engine checks. The Linux x64 denied-graphics profile used dummy video, an invalid GPU driver, missing Vulkan driver files and no display/session paths. Source/runtime fingerprints, exact commands, ten successful build/test/format/API/wiki outcomes and the interrupted prior runner are retained under bin/physics-clock/2026-10-13. Final evidence is in final-recovered; source and saved runtime stayed unchanged throughout that sequence. GPU/native-window/network runs were not added by this slice.
 
 Executable checks cover success, invalid values/order, wrong threads, lifecycle and frame re-entry, stop requests, long stalls, callback and lifecycle failures, `SceneTree` attachment, locale/fallback and pseudolocalization startup sampling, original process-step Timer behavior at zero scale in both lanes, permanent Input service registration, registry concurrency, metadata, counters/FPS/interpolation, and warmed idle allocation. The separate SDL host checks verify locale and pseudolocalization settings before scene ready, loop ordering, bounded waiting, and cleanup under the dummy driver; they do not prove hard real-time cadence or rendering.
 

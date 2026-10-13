@@ -2,6 +2,14 @@
 
 Last updated: 2026-10-13
 
+[Common physics clock acceptance](../components/engine-runtime.md#verification)
+reconciles eleven previously structural rows: effective project frequency/cap/
+jitter keys, four Engine timing settings, three fixed-phase/count/fraction reads
+and the scene fixed-frame event. Public CPU body travel/ticks, captured live edits,
+feature overrides, capped stalls and zero warmed active-frame allocation execute
+with graphics denied. The separate-thread setting and final GPU/native scheduling
+acceptance remain open.
+
 [Completion-stage CPU controls](../components/physics-scene-performance.md#completion-stage-cpu-control-2026-10-13)
 separate host publication costs without changing declarations or closing any
 physical contract row. Both complete 16,384-body CPU trials retain 0/0 warmed

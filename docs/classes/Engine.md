@@ -55,7 +55,7 @@ int exitCode = Engine.Run(window);
 | [`public static ulong PhysicsFrames { get; }`](#p-electron2d-engine-physicsframes) | Gets the number of fixed-step callbacks started since the process-wide engine was created. |
 | [`public static double FramesPerSecond { get; }`](#p-electron2d-engine-framespersecond) | Gets the most recently measured process-frame rate. |
 | [`public static double PhysicsInterpolationFraction { get; }`](#p-electron2d-engine-physicsinterpolationfraction) | Gets the fraction of the current fixed interval remaining after the latest scheduling decision. |
-| [`public static bool IsInPhysicsFrame { get; }`](#p-electron2d-engine-isinphysicsframe) | Gets whether the current thread is executing a fixed-step callback. |
+| [`public static bool IsInPhysicsFrame { get; }`](#p-electron2d-engine-isinphysicsframe) | Gets whether the engine is executing a fixed-step callback. |
 | [`public static MainLoop MainLoop { get; }`](#p-electron2d-engine-mainloop) | Gets the currently attached application loop. |
 | [`public static string ArchitectureName { get; }`](#p-electron2d-engine-architecturename) | Gets the architecture targeted by the current Electron2D process. |
 | [`public static EngineVersionInfo VersionInfo { get; }`](#p-electron2d-engine-versioninfo) | Gets immutable version information for the loaded Electron2D assembly. |
@@ -115,6 +115,7 @@ Gets or sets the maximum number of fixed-step callbacks run during one process f
 **Remarks:** Limiting catch-up avoids an unbounded spiral after a long host stall. Excess whole fixed steps are discarded;
 the remaining fractional time is preserved for interpolation. Assignment writes
 [`ProjectSettings.MaxPhysicsStepsPerFrame`](ProjectSettings.md#p-electron2d-projectsettings-maxphysicsstepsperframe).
+The effective value is sampled once at the start of each host frame; a callback edit affects the next host frame.
 
 <a id="p-electron2d-engine-physicsjitterfix"></a>
 ### `public static double PhysicsJitterFix { get; set; }`
@@ -130,6 +131,7 @@ Gets or sets the tolerance used to smooth fixed-step boundaries against variable
 **Remarks:** A value of zero disables tolerance-based clock adjustment. Values above `2` are accepted but can make
 timing noticeably less responsive. Custom interpolation commonly uses zero. Assignment writes
 [`ProjectSettings.PhysicsJitterFix`](ProjectSettings.md#p-electron2d-projectsettings-physicsjitterfix); negative input is clamped to zero before storage.
+The effective value is sampled once at the start of each host frame.
 
 <a id="p-electron2d-engine-timescale"></a>
 ### `public static double TimeScale { get; set; }`
@@ -143,7 +145,8 @@ Gets or sets the rate at which game time advances relative to unscaled host time
 - `ArgumentOutOfRangeException`: The assigned value is negative, NaN, or infinite.
 
 **Remarks:** This multiplier changes the deltas supplied to process and fixed-step callbacks. It does not change how often
-those callbacks are scheduled. Extremely large values reduce temporal precision and should be avoided.
+those callbacks are scheduled. It is sampled once per host frame, so all catch-up callbacks retain the same
+multiplier even when a callback edits it. Extremely large values reduce temporal precision and should be avoided.
 
 <a id="p-electron2d-engine-processframes"></a>
 ### `public static ulong ProcessFrames { get; }`
@@ -179,9 +182,11 @@ Gets the fraction of the current fixed interval remaining after the latest sched
 <a id="p-electron2d-engine-isinphysicsframe"></a>
 ### `public static bool IsInPhysicsFrame { get; }`
 
-Gets whether the current thread is executing a fixed-step callback.
+Gets whether the engine is executing a fixed-step callback.
 
 **Value:** `true` only during a call to [`MainLoop.PhysicsProcess(Double)`](MainLoop.md#m-electron2d-mainloop-physicsprocess-system-double).
+
+**Remarks:** This process-wide phase snapshot can be read from another thread. It does not grant that thread access to owner-thread scene or physics operations.
 
 <a id="p-electron2d-engine-mainloop"></a>
 ### `public static MainLoop MainLoop { get; }`
@@ -460,6 +465,8 @@ The class depends on `ElectronObject`, `MainLoop`, `EngineVersionInfo`, `Project
 ## Verification and known limitations
 
 `tests/Electron2D.Tests/Program.cs` verifies singleton lifetime, all four permanent service registrations, project-setting defaults/feature overrides/event flushing, invalid configuration, typed property discovery, architecture/version data, registry validation/type/ownership/order/concurrency, loop publication during initialization/finalization, automatic initialization, existing `SceneTree` attachment, owner-thread enforcement, re-entry rejection, fixed-before-process order, scaling, original process-step Timer delivery at zero scale in both lanes, input transition-lane completion, jitter/interpolation boundaries, catch-up cap, stop combination, process and physics callback failures, failed initialization/finalization cleanup, counters, FPS, and zero steady-state allocation across a warmed empty frame path.
+
+[`PhysicsClockTests`](../../tests/Electron2D.Tests/PhysicsClockTests.cs) additionally checks real CPU body travel and world ticks through Engine.Start/AdvanceFrame/Stop with graphics denied. It covers 100/200/400 Hz, half/zero/double/quarter time scale, live feature values, all four settings edited inside a callback, capped stalls and residual interpolation, frame-event ordering/failure and the global phase read from another thread. After 128 warmup frames, 128 complete active frames require zero owner/all-thread managed bytes. This common clock check does not establish separate-thread simulation, native cadence or new GPU numerical acceptance.
 
 The original scheduling checks use deterministic supplied deltas. WindowRuntimeTests additionally exercises Run with native SDL dummy and Wayland windows, event queues, monotonic waiting, quit/close, failure cleanup and reopening. Wayland events are injected and repeated initialization emits a GTK locale warning. No renderer or loaded game benchmark is covered. They establish managed scheduling behavior, not hard real-time guarantees or visual acceptance.
 

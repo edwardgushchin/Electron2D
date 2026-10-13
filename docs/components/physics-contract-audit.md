@@ -174,8 +174,8 @@ The complete generated ledger remains the per-declaration list. Current own
 physics families contain 686 Implemented, 151 Partial and 55 Excluded rows,
 with no own Blocked or Unimplemented rows. Shared inherited declarations still
 contain 142 Partial, 19 Blocked and 87 Unimplemented rows after typed indexed property projections; cross-domain consumers
-now contain 65 Implemented, 12 Partial and one Unimplemented row after completing
-the viewport default and project engine setting. These are declaration counts,
+now contain 76 Implemented, one Partial and one Unimplemented row after completing
+the common fixed-clock audit. These are declaration counts,
 not a claim that all numerical behaviors pass. The exact inherited names and
 prerequisites remain in the ledger rather than disappearing from this audit.
 
@@ -193,6 +193,15 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   closes that omission. run_on_separate_thread remains unimplemented: retained CPU
   workers do not provide separate simulation scheduling, ownership, callback
   barriers and teardown.
+- Common frequency/catch-up/jitter project keys, Engine clock settings and physical
+  frame/count/fraction/phase observations now have audited public CPU evidence.
+  [Clock conformance](engine-runtime.md#verification) uses actual world ticks and
+  travel, live frame-boundary capture, feature overrides, zero scale, event ordering/
+  failure and strict 0/0 warmed full frames. The eleven declaration rows no longer
+  have structural-only reasons. This does not implement the separate-thread
+  setting or certify numerical GPU/native cadence.
+  The compared source is the pinned [clock member/reference document](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Engine.xml)
+  and [fixed-frame signal document](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SceneTree.xml), retaining the accepted typed clock and event adaptations.
 - Independent registered multiple-circle/annulus slots now retain transformed
   placement and original indices, with shared query/response/Area/CCD/private-history
   and same-peer cap checks. The former last-shape/slot-zero model is removed.
@@ -214,7 +223,7 @@ coverage of its stated cases, not proof of arbitrary external algorithms.
 | Independent selection, CPU without GPU, startup fallback, requested/actual identity and terminal started-GPU failure | physics-backends; WorldTests, PhysicsBackendOwnershipTests; named registry and lifecycle consumer | Wider platform/device profiles and complete external owner semantics. |
 | Resident broad phase, contacts, constraints/joints, integration, sleep and CCD | Resident store/kernel components; GPUPhysicsTests and public CPU/GPU suites | Coupled long workloads and cost/capacity accounting for required publication/query/network reads. |
 | CCD modes; stationary static linear/angular surfaces; boundary and directed-ray response | ContinuousPhysicsTests, BoundaryShapeTests, SeparationRayShapeTests, PhysicsSurfaceVelocityTests; shared response/grazing controls | Provider multi-slot/rotated/coupled numerical cases; no bitwise equality condition. |
-| Joint bias/softness/force, impulse and correction caps; shape bias/priority; world policies | Shared PhysicsJointPolicyTests, PhysicsContactPolicyTests, PhysicsCollisionPriorityTests, PhysicsSleepPolicyTests and typed space operations | Project selection/thread settings and external numerical policy coverage. |
+| Joint bias/softness/force, impulse and correction caps; shape bias/priority; world policies | Shared PhysicsJointPolicyTests, PhysicsContactPolicyTests, PhysicsCollisionPriorityTests, PhysicsSleepPolicyTests and typed space operations | Separate-thread simulation and external numerical policy coverage. |
 | Picking, canvas filtering, shape/debug drawing, colors and hints | Picking/debug/native suites, direct-space and tile tests | Unverified native platforms and applicable inherited renderer/editor rows remain separate. |
 | Full frame tangent impulses, deepest caps/ties, tile owners and logical identities | PhysicsContactImpulseTests, body/direct-state tests, TileMapLayerTests, registered contact frames | General polygon/capsule/multiple-piece provider geometry; bounded multiple-circle slots and private history are verified. |
 | Scene/raw server states, axis velocity, layers/masks, shape type, process info, object/canvas IDs and registration | Shared state/force/binding/query suites plus complete selected operation hooks and public-only consumer | Exact open inherited/extension rows in the ledger; no placeholder exemption. |

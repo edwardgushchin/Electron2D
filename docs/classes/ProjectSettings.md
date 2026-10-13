@@ -236,6 +236,8 @@ Defines the maximum fixed-step callbacks processed during one frame.
 
 Defines the finite non-negative fixed-step boundary tolerance.
 
+The three common frequency, catch-up and jitter keys feed Engine's effective frame settings, including feature overrides. [`PhysicsClockTests`](../../tests/Electron2D.Tests/PhysicsClockTests.cs) checks their real CPU world effects and callback-boundary capture. Positive frequency/catch-up and finite nonnegative tolerance validation remain the typed setting contract.
+
 <a id="p-electron2d-projectsettings-renderingmethod"></a>
 ### `public static ProjectSetting<string> RenderingMethod { get; }`
 
