@@ -190,6 +190,14 @@ public static partial class BackendChecks
         }
         internal void Separate() { Mover.Position = new(50, 0); Mover.LinearVelocity = Vector2.Zero; Tree.PhysicsFrame(.01); }
         internal void RemoveAreaShape() => PhysicsServer.AreaRemoveShape(_area, 1);
+        internal void SetAreaShape(RID shape) => PhysicsServer.AreaSetShape(_area, 1, shape.IsValid() ? shape : _region.GetRID());
+        internal void SetCircleBias(float bias) => _circle.CustomSolverBias = bias;
+        internal void VerifyMoverQuery()
+        {
+            _point.Position = Mover.GlobalPosition;
+            Check(_direct.IntersectPoint(_point, _hits) == 1 && _hits[0].ColliderRID == Mover.GetRID() && _hits[0].ShapeIndex == 1,
+                "The restored mover geometry remains queryable in its active logical slot");
+        }
         internal void VerifyCharacterQuery()
         {
             _point.Position = Character.GlobalPosition;

@@ -236,6 +236,12 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   removal/clear cases preserve previous packets and recapture after ordinary
   history refresh on CPU/registered serial/separate owners. General replacement/
   reindex and current GPU/native/network/performance acceptance remain open.
+- [Same-count authoring validation](physics-snapshots.md#same-count-authoring-validation)
+  now checks seven actual mismatched geometry/slot profiles in CPU/registered
+  serial/separate transfers, unchanged destination state/events/input, and recovery
+  with real queries and continued contact/Area history. Disabled primitive-kind
+  validation does not establish active rectangle simulation. Producer history after
+  same-count edits and wider geometry/GPU/native/network/performance gates stay open.
 - Shared inherited Object/Node/Resource/CanvasItem and skeletal editor requirements
   remain with their typed-API, scheduling, script/editor or rendering prerequisites.
   Existing built-in physics tests do not establish those separate declaring APIs.

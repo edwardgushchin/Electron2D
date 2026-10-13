@@ -1359,3 +1359,11 @@ also guards the producer: invalid contact/overlap/slide references reject before
 replacing a previous complete packet. Five real removal/clear cases on CPU and
 registered owners pass in serial/separate modes, followed by successful history
 refresh and recapture. This does not establish general topology correspondence.
+
+[Same-count authoring validation](physics-snapshots.md#same-count-authoring-validation)
+checks seven mismatched geometry/slot profiles in both CPU/registered transfer
+directions and serial/separate execution. Rejection preserves complete destination
+state and events; restoring all authored fields permits unchanged-packet correction,
+real point queries and ordinary contact/Area continuation. Disabled rectangle data
+is covered, not active rectangle simulation. Producer history correspondence after
+same-count edits, arbitrary geometry and current GPU/native acceptance remain open.

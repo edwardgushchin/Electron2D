@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-13
 
+[Same-count authoring validation](../components/physics-snapshots.md#same-count-authoring-validation)
+now exercises radius, disabled primitive kind, local pose, enablement, actual
+remove/reappend order, solver bias and raw Area geometry in CPU/registered serial/
+separate profiles. Validation preserves state/events and permits recovery with the
+same packet; producer same-count history correspondence remains open.
+
 [Capture topology verification](../components/physics-snapshots.md#capture-after-topology-edits)
 now rejects retained links to removed logical slots before packet publication,
 preserving previous bytes and ordinary refresh/recapture. CPU/registered serial/

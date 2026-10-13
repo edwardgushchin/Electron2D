@@ -188,6 +188,32 @@ payload; both endpoints must use the same supported version.
 
 ## Portable contact and motion history
 
+### Same-count authoring validation
+
+The public-only --portable-geometry consumer verifies seven incompatible authored
+profiles with unchanged logical shape counts: active circle radius, disabled slot
+primitive kind, character slot pose, distant slot enablement, removal/reappend
+that reorders active/disabled slots, shared geometry solver bias and raw Area
+geometry. CPU and the independent registered owner alternate as source/destination;
+serial/separate execution covers 28 cases. The registered fixture only solves
+circles/annuli, so the rectangle-kind case deliberately uses a disabled slot.
+
+Each source supplies real contact impulse, body/raw Area overlap and character
+slide history. Apply rejects incompatible authoring with InvalidDataException;
+complete destination bytes, history/transform events and the input packet remain
+unchanged. Restoring the full profile, including inactive one-way margin/direction,
+allows that same packet to apply silently. Independent local shape RIDs match by
+geometry data, not resource identity. Actual mover/character point queries, a real
+following interval without repeated enters, and ordinary separation exits verify
+continued physical use. Stored impulse values copy exactly; subsequent solver
+continuation does not require bitwise equality.
+
+These checks exercise existing authoring-schema guards, with no runtime/API or
+wire-format change. They do not establish producer history correspondence after
+same-count edits, geometrically indistinguishable slot/owner replacement, arbitrary
+active geometry, GPU/native, cross-process or performance acceptance. Structural
+edits and this cold validation matrix have no zero-allocation claim.
+
 ### Capture after topology edits
 
 Capture now uses the same logical-range predicate as apply for contact, body/Area

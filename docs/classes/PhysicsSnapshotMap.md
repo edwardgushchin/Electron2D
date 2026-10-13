@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-13
 
+[Same-count authoring validation](../components/physics-snapshots.md#same-count-authoring-validation)
+verifies seven geometry/slot-policy mismatches before state or event mutation.
+Restoring compatible geometry with independent local resource identities permits
+the unchanged packet to apply and continue real contact/slide history.
+
 [Capture after topology edits](../components/physics-snapshots.md#capture-after-topology-edits)
 validates retained contact/overlap/slide links before replacing destination bytes.
 An authoring edit that removes a referenced logical slot rejects capture while
