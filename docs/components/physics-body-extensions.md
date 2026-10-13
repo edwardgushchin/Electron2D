@@ -1,6 +1,6 @@
 # Caller-created body-state extensions
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 ## Responsibility and types
 
@@ -45,3 +45,10 @@ Public named server factories/full operation bridge and custom algorithms remain
 
 
 [Registered factory-selected views](physics-registered-adapter.md#factory-selected-direct-views) now have a public-only check of body/query factory dispatch, cache identity, initially empty contact snapshots, immutable publication before callbacks, failed factories and retry, attachment retirement and zero warm managed allocations. Wider numerical-extension acceptance stays open.
+
+[Retained slot history](physics-snapshots.md#capture-after-topology-edits) now samples
+private logical-slot lifetimes for contacts, overlaps and collided motion. Capture
+rejects removal/reindex/readdition before replacing bytes while preserving sampled
+public data and events. In-slot replacement stays valid. CPU/registered serial/
+separate twelve-case verification executes; destination apply remaps tokens, which
+never enter wire data. Current GPU/native and broader topology acceptance stay open.

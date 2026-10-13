@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-13
 
+[Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
+keeps sampled public values while rejecting portable capture of retired/reindexed
+slots before replacing packet bytes. In-slot replacement and disabled history stay
+valid; portable apply remaps private slot lifetimes to destination authoring.
+
 **Inherits:** [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
 - **Source:** [Area.cs](../../src/Scene/2D/Area.cs), [Area.Fields.cs](../../src/Scene/2D/Area.Fields.cs)

@@ -1,6 +1,6 @@
 # Physics server and direct queries component
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 The [typed result family](../classes/PhysicsRayResult.md#constructor) now has public construction for ray, point, shape and rest results, plus reusable [motion result filling](../classes/PhysicsTestMotionResult.md#setcollision). One shared engine path validates collider RID/kind, logical shape resource and owner/solver/failure access, then samples the current weak object association. Supplied finite geometry is preserved; construction performs no collision calculation. Motion collisions additionally require different bodies in the same live space and a valid fraction bracket. Invalid writes preserve previous output; SetMotion clears collision state. The separate [public API consumer](../../examples/PhysicsResultConstruction/README.md) exercises both built-ins with zero warmed managed allocation. The [runtime probe](../../tests/Electron2D.Tests/PhysicsResultConstructionTests.cs) additionally verifies rejection across the complete result family while the CPU solver owns the world. This implements a required result boundary under ADR 0103; manager registration, custom geometry and extension dispatch remain open.
 
@@ -177,3 +177,10 @@ The complete PhysicsMotionTests, PhysicsQueryTests and PhysicsShapeQueryTests no
 Built-in shape casts now target geometric boundaries in CPU conservative advancement and independent resident GPU query/motion sweeps, rather than a penetration-reduced solver target. Disk queries and linear-disk CCD share the CPU analytic fraction kernel; other represented proxies use geometric distance with 1e-5 scene-unit convergence tolerance. The internal CPU cast explicitly selects this query policy while native solver callers retain their existing policy. Sharp zero-radius contact retains the preceding finite normal. CastMotion keeps eight refinements: analytic first touch must lie between safe/unsafe with maximum width 1/256. The rejected disk 10/12 case returned .87109375/.875; the rejected rectangle .4 case returned .421875/.42578125. Ten circle/segment query combinations against rectangle, capsule, segment, convex and concave targets now verify rounded and sharp boundaries; each runs 128 warm queries at strict 0/0 managed bytes. Bit equality across backends is not required.
 
 See [the shared compound checks](physics-registered-adapter.md#compound-slot-numerics) for independent-provider and CPU/GPU response, identity, Area, CCD and zero warm allocation evidence.
+
+[Retained slot history](physics-snapshots.md#capture-after-topology-edits) now samples
+private logical-slot lifetimes for contacts, overlaps and collided motion. Capture
+rejects removal/reindex/readdition before replacing bytes while preserving sampled
+public data and events. In-slot replacement stays valid. CPU/registered serial/
+separate twelve-case verification executes; destination apply remaps tokens, which
+never enter wire data. Current GPU/native and broader topology acceptance stay open.

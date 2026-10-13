@@ -3,7 +3,11 @@ namespace Electron2D;
 internal readonly record struct MotionResultData(
     RID OwnerRID, RID ColliderRID, ulong ColliderID, int LocalShape, int ColliderShape,
     Vector2 Point, Vector2 Normal, float Depth, Vector2 ColliderVelocity,
-    Vector2 Travel, Vector2 Remainder, float SafeFraction, float UnsafeFraction, bool Collided, ObjectIdentity ColliderIdentity = default);
+    Vector2 Travel, Vector2 Remainder, float SafeFraction, float UnsafeFraction, bool Collided, ObjectIdentity ColliderIdentity = default)
+{
+    internal object? LocalSlotIdentity { get; init; }
+    internal object? OtherSlotIdentity { get; init; }
+}
 
 /// <summary>Configures a body motion test in a registered two-dimensional physics space.</summary>
 public sealed class PhysicsTestMotionParameters : ElectronObject

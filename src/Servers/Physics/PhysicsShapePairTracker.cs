@@ -3,6 +3,8 @@ namespace Electron2D;
 internal readonly record struct PhysicsShapePair(RID RID, ObjectIdentity Identity, bool IsArea,
     int OtherShape, int LocalShape)
 {
+    internal object? LocalSlotIdentity { get; init; }
+    internal object? OtherSlotIdentity { get; init; }
     internal bool InTree { get; init; } = Identity.Target is Node { IsInsideTree: true };
     internal ElectronObject? Other => Identity.Target;
     internal ulong InstanceID => Identity.ID;
@@ -30,7 +32,11 @@ internal sealed class PhysicsShapePairTracker
     }
 
     internal void Begin() => _next.Clear();
-    internal void Observe(PhysicsShapePair pair) => _next.Add(pair);
+    internal void Observe(PhysicsShapePair pair, RID local) => _next.Add(pair with
+    {
+        LocalSlotIdentity = pair.LocalSlotIdentity ?? PhysicsServer.Service.HistoryShapeIdentity(local, pair.LocalShape),
+        OtherSlotIdentity = pair.OtherSlotIdentity ?? PhysicsServer.Service.HistoryShapeIdentity(pair.RID, pair.OtherShape)
+    });
     internal bool Contains(PhysicsShapePair pair) => _current.TryGetValue(pair, out var current) && current.InTree == pair.InTree;
     internal HashSet<PhysicsShapePair> Current => _current;
 

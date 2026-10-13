@@ -8,7 +8,7 @@ internal sealed partial class PhysicsReplayEntry
         foreach (var pair in pairs.Current)
         {
             var id = map.NetworkID(pair.RID); var other = map.Collider(id);
-            PhysicsReplayCopy.Require(other != this && other.IsArea == pair.IsArea && PortableShapesExist(other, pair.LocalShape, pair.OtherShape));
+            PhysicsReplayCopy.Require(other != this && other.IsArea == pair.IsArea && PortableShapesMatch(other, pair.LocalShape, pair.OtherShape, pair.LocalSlotIdentity, pair.OtherSlotIdentity));
             writer.U64(id); writer.Bool(pair.IsArea);
             writer.I32(pair.OtherShape); writer.I32(pair.LocalShape); writer.Bool(pair.InTree);
         }
@@ -21,7 +21,8 @@ internal sealed partial class PhysicsReplayEntry
             var other = map.Collider(reader.U64()); var area = reader.Bool(); var remote = reader.I32(); var local = reader.I32(); var inTree = reader.Bool();
             PhysicsSnapshotReader.Require(other != this && other.IsArea == area);
             PhysicsSnapshotReader.Require(PortableShapesExist(other, local, remote));
-            var pair = new PhysicsShapePair(other.Backend.RID, other.Backend.ObjectIdentity, area, remote, local) { InTree = inTree };
+            var pair = new PhysicsShapePair(other.Backend.RID, other.Backend.ObjectIdentity, area, remote, local)
+            { InTree = inTree, LocalSlotIdentity = _shapes[local].Identity, OtherSlotIdentity = other._shapes[remote].Identity };
             PhysicsSnapshotReader.Require(pairs.Current.Add(pair));
         }
     }
@@ -31,7 +32,7 @@ internal sealed partial class PhysicsReplayEntry
         foreach (ref readonly var contact in contacts)
         {
             var id = map.NetworkID(contact.Collider); var other = map.Collider(id);
-            PhysicsReplayCopy.Require(other != this && !other.IsArea && PortableShapesExist(other, contact.LocalShape, contact.ColliderShape));
+            PhysicsReplayCopy.Require(other != this && !other.IsArea && PortableShapesMatch(other, contact.LocalShape, contact.ColliderShape, contact.LocalSlotIdentity, contact.OtherSlotIdentity));
             writer.U64(id); writer.I32(contact.LocalShape); writer.I32(contact.ColliderShape);
             writer.Vector(contact.LocalPoint); writer.Vector(contact.ColliderPoint); writer.Vector(contact.Normal);
             writer.Vector(contact.LocalVelocity); writer.Vector(contact.ColliderVelocity); writer.Vector(contact.Impulse); writer.F32(contact.Depth);
@@ -51,7 +52,8 @@ internal sealed partial class PhysicsReplayEntry
             PhysicsSnapshotReader.Require(PortableShapesExist(other, local, remote));
             var identity = other.Backend.ObjectIdentity;
             state.Contacts[i] = new(other.Backend.RID, identity.ID, local, remote, point, colliderPoint, normal,
-                velocity, colliderVelocity, impulse, depth, other.Backend.SceneOwnerReference, identity);
+                velocity, colliderVelocity, impulse, depth, other.Backend.SceneOwnerReference, identity)
+            { LocalSlotIdentity = _shapes[local].Identity, OtherSlotIdentity = other._shapes[remote].Identity };
         }
     }
     private void WriteSlides(ref PhysicsSnapshotWriter writer, PhysicsSnapshotMap map, List<MotionResultData> slides)
@@ -63,7 +65,7 @@ internal sealed partial class PhysicsReplayEntry
             if (slide.Collided)
             {
                 var other = map.Collider(map.NetworkID(slide.ColliderRID));
-                PhysicsReplayCopy.Require(other != this && !other.IsArea && PortableShapesExist(other, slide.LocalShape, slide.ColliderShape));
+                PhysicsReplayCopy.Require(other != this && !other.IsArea && PortableShapesMatch(other, slide.LocalShape, slide.ColliderShape, slide.LocalSlotIdentity, slide.OtherSlotIdentity));
             }
             writer.U64(map.NetworkID(slide.OwnerRID)); writer.U64(map.NetworkID(slide.ColliderRID));
             writer.I32(slide.LocalShape); writer.I32(slide.ColliderShape);
@@ -84,7 +86,8 @@ internal sealed partial class PhysicsReplayEntry
             if (collided) PhysicsSnapshotReader.Require(PortableShapesExist(other!, local, remote));
             var identity = other?.Backend.ObjectIdentity ?? default;
             slides.Add(new(owner, other?.Backend.RID ?? default, identity.ID, local, remote, point, normal, depth, velocity,
-                travel, remainder, safe, unsafeFraction, collided, identity));
+                travel, remainder, safe, unsafeFraction, collided, identity)
+            { LocalSlotIdentity = collided ? _shapes[local].Identity : null, OtherSlotIdentity = collided ? other!._shapes[remote].Identity : null });
         }
     }
     internal bool IsArea => _areaRuntime is not null;
@@ -93,6 +96,9 @@ internal sealed partial class PhysicsReplayEntry
         // Completed histories may refer to disabled slots; their logical indices must still exist.
         return (uint)local < (uint)_shapeCount && (uint)remote < (uint)other._shapeCount;
     }
+    private bool PortableShapesMatch(PhysicsReplayEntry other, int local, int remote, object? localIdentity, object? otherIdentity) =>
+        PortableShapesExist(other, local, remote) && localIdentity is not null && otherIdentity is not null &&
+        ReferenceEquals(localIdentity, _shapes[local].Identity) && ReferenceEquals(otherIdentity, other._shapes[remote].Identity);
     internal void ApplyPortableMotion()
     {
         var surface = _surface?._constantLinearVelocity ?? _bodyRuntime?.Surface ?? default;

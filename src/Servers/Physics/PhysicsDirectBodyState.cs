@@ -32,6 +32,8 @@ public class PhysicsDirectBodyState : ElectronObject
         Vector2 LocalPoint, Vector2 ColliderPoint, Vector2 Normal, Vector2 LocalVelocity, Vector2 ColliderVelocity, Vector2 Impulse,
         float Depth, WeakReference<CollisionObject>? ColliderOwner, ObjectIdentity Identity = default)
     {
+        internal object? LocalSlotIdentity { get; init; }
+        internal object? OtherSlotIdentity { get; init; }
         internal CollisionObject? SceneCollider => ColliderOwner is { } weak && weak.TryGetTarget(out var node) && !node.IsDisposed ? node : null;
     }
     internal ReadOnlySpan<Contact> CapturedContacts => _readingBackendContacts
@@ -410,5 +412,9 @@ public class PhysicsDirectBodyState : ElectronObject
         return depth > _contacts[slot].Depth ? slot : -1;
     }
 
-    internal void StoreContact(int slot, in Contact contact) => _contacts[slot] = contact;
+    internal void StoreContact(int slot, in Contact contact) => _contacts[slot] = contact with
+    {
+        LocalSlotIdentity = contact.LocalSlotIdentity ?? PhysicsServer.Service.HistoryShapeIdentity(_runtime.RID, contact.LocalShape),
+        OtherSlotIdentity = contact.OtherSlotIdentity ?? PhysicsServer.Service.HistoryShapeIdentity(contact.Collider, contact.ColliderShape)
+    };
 }

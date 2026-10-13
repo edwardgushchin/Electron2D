@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-13
 
+[Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
+keeps sampled public values while rejecting portable capture of retired/reindexed
+slots before replacing packet bytes. In-slot replacement and disabled history stay
+valid; portable apply remaps private slot lifetimes to destination authoring.
+
 [Angular compound verification](../components/physics-registered-adapter.md#angular-compound-motion)
 now exercises the independent factory's rotated mass offset and origin-relative
 point velocity with real translating/rotating bodies. Numerical circle-slot CCD,

@@ -232,16 +232,17 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   slots reject before state/event mutation, with zero warm full-frame transfer
   allocation. Wider geometry/joint/current GPU/native/network acceptance remains open.
 - [Capture topology verification](physics-snapshots.md#capture-after-topology-edits)
-  now guards source contact/overlap/slide links before packet replacement. Five real
-  removal/clear cases preserve previous packets and recapture after ordinary
-  history refresh on CPU/registered serial/separate owners. General replacement/
-  reindex and current GPU/native/network/performance acceptance remain open.
+  now guards source contact/overlap/slide links before packet replacement. Twelve real
+  removal/clear/reindex/readdition cases preserve previous packets and sampled
+  public values, then recapture after ordinary refresh on CPU/registered serial/
+  separate owners. In-slot replacement stays valid; broader association/topology
+  and current GPU/native/network/performance acceptance remain open.
 - [Same-count authoring validation](physics-snapshots.md#same-count-authoring-validation)
   now checks seven actual mismatched geometry/slot profiles in CPU/registered
   serial/separate transfers, unchanged destination state/events/input, and recovery
   with real queries and continued contact/Area history. Disabled primitive-kind
-  validation does not establish active rectangle simulation. Producer history after
-  same-count edits and wider geometry/GPU/native/network/performance gates stay open.
+  validation does not establish active rectangle simulation. Broader association/topology and wider geometry/GPU/native/network/performance
+  gates stay open.
 - Shared inherited Object/Node/Resource/CanvasItem and skeletal editor requirements
   remain with their typed-API, scheduling, script/editor or rendering prerequisites.
   Existing built-in physics tests do not establish those separate declaring APIs.

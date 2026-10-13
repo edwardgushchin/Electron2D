@@ -1365,5 +1365,12 @@ checks seven mismatched geometry/slot profiles in both CPU/registered transfer
 directions and serial/separate execution. Rejection preserves complete destination
 state and events; restoring all authored fields permits unchanged-packet correction,
 real point queries and ordinary contact/Area continuation. Disabled rectangle data
-is covered, not active rectangle simulation. Producer history correspondence after
-same-count edits, arbitrary geometry and current GPU/native acceptance remain open.
+is covered, not active rectangle simulation. Broader collider/object association lifetimes, arbitrary geometry and current
+GPU/native acceptance remain open.
+
+[Retained slot history](physics-snapshots.md#capture-after-topology-edits) now samples
+private logical-slot lifetimes for contacts, overlaps and collided motion. Capture
+rejects removal/reindex/readdition before replacing bytes while preserving sampled
+public data and events. In-slot replacement stays valid. CPU/registered serial/
+separate twelve-case verification executes; destination apply remaps tokens, which
+never enter wire data. Current GPU/native and broader topology acceptance stay open.

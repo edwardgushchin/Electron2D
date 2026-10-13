@@ -67,7 +67,7 @@ public sealed partial class PhysicsSnapshotMap : IDisposable
     /// <summary>Captures compatible local physical state and its tick into reusable portable storage.</summary>
     /// <param name="snapshot">Caller-owned destination storage.</param>
     /// <remarks>Prepared character query poses retain their separate solver pose and pending target state without advancing simulation.
-    /// Retained contact/overlap/motion references must resolve to existing logical shape slots; an invalid link rejects before replacing a previous complete payload.
+    /// Retained contact/overlap/motion references must resolve to the original logical slots at their sampled indices; a retired or reindexed link rejects before replacing a previous complete payload.
     /// GPU capture batches the complete bound object set explicitly; ordinary unobserved steps do not require that transfer.</remarks>
     /// <exception cref="ArgumentNullException">The destination is null.</exception>
     /// <exception cref="InvalidOperationException">The world/bindings are incomplete or busy, access is off-owner, the budget is insufficient, or retained history/implementation continuation is invalid.</exception>

@@ -41,12 +41,27 @@ public sealed partial class PhysicsServer
                 remote.Identity.ID != 0 && excludedObjects.AsSpan().Contains(remote.Identity.ID))
                 throw new InvalidOperationException("A selected motion query returned an excluded body or disabled moving shape.");
             ValidateQueryResult(data.ColliderRID, data.ColliderShape, space, mask, bodies: true, areas: false, canvas: null, excludedBodies);
-            return data with { ColliderID = remote.Identity.ID, ColliderIdentity = remote.Identity };
+            return data with
+            {
+                ColliderID = remote.Identity.ID,
+                ColliderIdentity = remote.Identity,
+                LocalSlotIdentity = HistoryShapeIdentity(body, data.LocalShape),
+                OtherSlotIdentity = HistoryShapeIdentity(data.ColliderRID, data.ColliderShape)
+            };
         }
         catch (Exception error) when (error is ArgumentException or ObjectDisposedException)
         {
             throw new InvalidOperationException("A selected motion query returned an invalid body or logical shape identity.", error);
         }
+    }
+
+    internal object? HistoryShapeIdentity(RID rid, int index)
+    {
+        // Contact workers sample immutable authored slots before the owner joins and permits edits.
+        if (ResolveSceneObject(rid) is { } scene)
+            return (uint)index < (uint)scene.ShapeSlots.Count ? scene.ShapeSlots[index].HistoryIdentity : null;
+        lock (_registryGate)
+            return _serverColliders.TryGetValue(rid, out var server) && (uint)index < (uint)server.ShapeCount ? server.GetShapeHistoryIdentity(index) : null;
     }
 
     internal (CollisionObject? Scene, ObjectIdentity Identity, PhysicsSpace? Space, long Attachment) CaptureResultCollider(RID collider, int shapeIndex, bool bodyOnly = false, bool contactResult = false)

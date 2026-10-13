@@ -26,7 +26,7 @@ internal sealed partial class PhysicsReplayEntry
     private SceneTree? _tree;
     private Transform _pose;
     internal int Depth { get; private set; }
-    internal readonly record struct ShapeState(Shape Shape, Transform Pose, bool Active, int Index, bool OneWay, float Margin, Vector2 Direction, ulong Revision, float Bias, ulong Owner = 0);
+    internal readonly record struct ShapeState(Shape Shape, Transform Pose, bool Active, int Index, bool OneWay, float Margin, Vector2 Direction, ulong Revision, float Bias, ulong Owner = 0, object? Identity = null);
     private readonly record struct Configuration(uint Layer, uint Mask, ulong Object, ulong Canvas, float Priority, PhysicsServer.BodyMode Mode,
         bool MadeStatic, bool TopLevel, PhysicsMaterial? Material, ulong MaterialRevision, bool Monitorable, PhysicsAreaFieldConfiguration Fields,
         Action<PhysicsServer.AreaBodyStatus, RID, ulong, int, int>? BodyCallback,
@@ -66,7 +66,7 @@ internal sealed partial class PhysicsReplayEntry
         var margin = slot.OneWayOverride.HasValue ? slot.MarginOverride : slot.Owner.Margin;
         var direction = slot.OneWayOverride.HasValue ? slot.DirectionOverride : slot.Owner.Direction;
         return new(slot.Shape, slot.Transform, slot.Active, slot.Index, oneWay, margin, direction, slot.Revision,
-            slot.Shape.IsDisposed ? 0 : slot.Shape.CustomSolverBias, Scene.GetShapeOwnerObject(index)?.InstanceID ?? 0);
+            slot.Shape.IsDisposed ? 0 : slot.Shape.CustomSolverBias, Scene.GetShapeOwnerObject(index)?.InstanceID ?? 0, slot.HistoryIdentity);
     }
     internal void Capture()
     {

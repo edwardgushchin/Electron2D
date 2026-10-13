@@ -101,7 +101,8 @@ public abstract partial class PhysicsDirectBodyStateExtension : PhysicsDirectBod
             if (Runtime.ContactsReportedDepthThreshold > 0 && contact.Depth < Runtime.ContactsReportedDepthThreshold) continue;
             output[written++] = new(contact.ColliderRID, contact.ColliderID, contact.LocalShape, contact.ColliderShape,
                 contact.LocalPosition, contact.ColliderPosition, contact.Normal, contact.LocalVelocity, contact.ColliderVelocity,
-                contact.Impulse, contact.Depth, contact.ColliderOwner, contact.Identity);
+                contact.Impulse, contact.Depth, contact.ColliderOwner, contact.Identity)
+            { LocalSlotIdentity = contact.LocalSlotIdentity, OtherSlotIdentity = contact.OtherSlotIdentity };
         }
         return written;
     }

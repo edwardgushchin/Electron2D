@@ -26,7 +26,10 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     internal PhysicsBodyRuntime Runtime => _runtime ??= PhysicsServer.Service.BodyRuntime(RID);
 
     internal readonly record struct ShapeSlot(PhysicsServerShape Shape, Transform LocalTransform, bool Disabled,
-        bool OneWay = false, float Margin = 0, Vector2 Direction = default);
+        bool OneWay = false, float Margin = 0, Vector2 Direction = default)
+    {
+        internal object HistoryIdentity { get; init; } = new();
+    }
 
     internal RID RID { get; } = rid;
     internal PhysicsColliderBackend Backend => _backend;
@@ -123,6 +126,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
         throw new ArgumentOutOfRangeException(nameof(index));
 
     internal PhysicsServerShape GetShape(int index) => Slot(index).Shape;
+    internal object GetShapeHistoryIdentity(int index) => Slot(index).HistoryIdentity;
     internal Transform GetShapeTransform(int index) => Slot(index).LocalTransform;
     internal bool IsShapeDisabled(int index) => Slot(index).Disabled;
 

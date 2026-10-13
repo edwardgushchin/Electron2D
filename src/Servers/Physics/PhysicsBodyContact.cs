@@ -3,6 +3,7 @@ namespace Electron2D;
 /// <summary>Retains immutable solved body-contact values with engine-sampled weak collider identity.</summary>
 /// <remarks>Construct while both bodies and their logical slots are live in the same world. Values and sampled IDs
 /// survive later shape edits, rebinds or collider release; the weak object target expires on disposal or collection.
+/// Portable capture additionally requires the sampled logical slots to retain their identity and index; ordinary in-slot replacement retains that identity.
 /// Positions, normals and velocities use global axes. Local identifies this body, not a coordinate system.
 /// Construction also runs inside an engine-qualified selected contact-publication hook after solving;
 /// this grants only immutable contact identity capture, while ordinary solver queries and state mutation remain forbidden.</remarks>
@@ -62,6 +63,8 @@ public readonly struct PhysicsBodyContact
         LocalPosition = localPosition; ColliderPosition = colliderPosition; Normal = normal; LocalVelocity = localVelocity;
         ColliderVelocity = colliderVelocity; Impulse = impulse;
         ColliderOwner = second.Scene?.Backend.SceneOwnerReference;
+        LocalSlotIdentity = PhysicsServer.Service.HistoryShapeIdentity(body, localShape);
+        OtherSlotIdentity = PhysicsServer.Service.HistoryShapeIdentity(collider, colliderShape);
     }
     internal PhysicsBodyContact(RID body, long attachment, in PhysicsDirectBodyState.Contact contact)
     {
@@ -69,6 +72,7 @@ public readonly struct PhysicsBodyContact
         ColliderRID = contact.Collider; ColliderShape = contact.ColliderShape; Identity = contact.Identity; ColliderOwner = contact.ColliderOwner;
         LocalPosition = contact.LocalPoint; ColliderPosition = contact.ColliderPoint; Normal = contact.Normal;
         LocalVelocity = contact.LocalVelocity; ColliderVelocity = contact.ColliderVelocity; Impulse = contact.Impulse;
+        LocalSlotIdentity = contact.LocalSlotIdentity; OtherSlotIdentity = contact.OtherSlotIdentity;
     }
     /// <summary>Gets sampled signed penetration depth in scene units.</summary>
     /// <value>Positive for penetration, negative for separation; an explicit frame sample may retain the greatest interval depth.</value>
@@ -92,6 +96,8 @@ public readonly struct PhysicsBodyContact
     /// <value>The sampled object, or null after disposal/collection or when unassigned.</value>
     public ElectronObject? ColliderObject => Identity.Target;
     internal ObjectIdentity Identity { get; }
+    internal object? LocalSlotIdentity { get; }
+    internal object? OtherSlotIdentity { get; }
     internal WeakReference<CollisionObject>? ColliderOwner { get; }
     internal long BodyAttachment { get; }
     /// <summary>Gets this body's global contact position.</summary>

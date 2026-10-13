@@ -222,7 +222,7 @@ public sealed partial class Area : CollisionObject
     internal void BeginOverlapScan() => _shapePairs.Begin();
     internal void Observe(PhysicsShapePair pair)
     {
-        _shapePairs.Observe(pair);
+        _shapePairs.Observe(pair, GetRID());
     }
     internal void CommitOverlapScan(List<PhysicsSpace.OverlapEvent> events)
     {

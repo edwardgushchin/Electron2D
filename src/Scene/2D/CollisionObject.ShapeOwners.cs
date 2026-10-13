@@ -21,6 +21,7 @@ public abstract partial class CollisionObject
 
     internal sealed class ShapeSlot(ShapeOwner owner, Shape shape, int index)
     {
+        internal object HistoryIdentity { get; } = new();
         internal ShapeOwner Owner { get; } = owner;
         internal PhysicsServerShape? ServerShape;
         internal Shape Shape => ServerShape?.Geometry ?? shape;

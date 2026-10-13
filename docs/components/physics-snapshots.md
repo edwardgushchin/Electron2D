@@ -209,29 +209,46 @@ continued physical use. Stored impulse values copy exactly; subsequent solver
 continuation does not require bitwise equality.
 
 These checks exercise existing authoring-schema guards, with no runtime/API or
-wire-format change. They do not establish producer history correspondence after
-same-count edits, geometrically indistinguishable slot/owner replacement, arbitrary
-active geometry, GPU/native, cross-process or performance acceptance. Structural
+wire-format change. Producer lifetime/index correspondence is checked separately below; wider object
+associations, arbitrary active geometry, GPU/native, cross-process and performance
+acceptance remain open. Structural
 edits and this cold validation matrix have no zero-allocation claim.
 
 ### Capture after topology edits
 
-Capture now uses the same logical-range predicate as apply for contact, body/Area
-observer and collided character-slide references. Its measurement pass validates
-both endpoints and the moving-body identity before destination storage is changed.
-After an authoring edit removes a referenced slot, capture rejects with
-InvalidOperationException and preserves the previous complete encoding. Preparation
-may still flush the caller's existing authoring edits; it does not undo that edit.
+Retained contacts, body/Area pairs and collided character slides now sample both
+logical-slot lifetimes as well as their indices. Each scene/raw slot owns a small
+private lifetime token, created only on structural addition. In-slot resource,
+pose, disabled or policy edits retain the token. Removing and readding identical
+geometry creates a new lifetime; moving a surviving slot to another index also
+makes its old indexed history unsuitable for portable capture.
 
-The public-only --portable-capture fixture begins with real contacts and character
-slides, then removes the mover's slot, the peer's distant slot, the character's
-slot, the raw Area's slot or all peer slots. Five cases on CPU and registered owners
-pass in serial/separate modes. They verify rejection, preserved bytes and no history
-events during capture. A real physics interval and character movement refresh the
-retired histories; capture then succeeds again. Existing --portable-contacts warm
-cycles continue to require 0/0 owner/all-thread bytes with the added preflight.
-Same-count replacement/reindex correspondence, wider topology, GPU/native and full
-network/performance acceptance remain separate gates.
+The capture measurement pass requires the original slot lifetimes at both sampled
+indices before changing destination storage. Retired/reindexed history rejects
+with InvalidOperationException and preserves the previous complete encoding.
+Public sampled contact/slide values remain unchanged; capture does not discard
+history or deliver events. Preparation may flush existing authoring edits and does
+not roll them back. A real physics interval and character movement refresh the
+retired histories so capture can succeed again.
+
+The public-only --portable-capture fixture starts with real contacts/slides and
+performs twelve removal/clear/reindex/readdition cases on CPU and registered owners
+in serial/separate modes, covering 48 cases. The five original removals are joined
+by remove/reappend of mover, peer, character and raw Area slots and an identical
+active-slot removal/readdition. The unchanged-count CPU case failed before the
+fix. Two additional local/remote contact cases disable the body monitor, so direct
+contact validation rejects independently of observer-pair validation. Completed disabled-slot history and ordinary in-slot body/Area resource
+replacement remain transferable in --portable-contacts.
+
+Tokens hold no resource/owner reference and never enter wire format/schema data.
+Apply seeds history with the destination's existing slot lifetimes; private replay
+copies preserve them. Selected contact projections keep the initially sampled
+tokens, avoiding resampling an old cached contact as current. Common CPU/GPU/
+registered producers share this rule; current GPU execution remains unverified.
+Warm full-frame transfers retain strict 0/0 owner/all-thread managed-byte checks.
+Structural addition may allocate. Broader collider/object associations, topology
+lifecycle, active geometry/joints, native/network and performance acceptance remain
+separate gates.
 
 The public-only --portable-contacts consumer creates real CPU contacts, a character
 slide and raw Area history, then transfers them to the independent registered

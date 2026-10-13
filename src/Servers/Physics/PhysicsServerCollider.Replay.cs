@@ -14,6 +14,6 @@ internal sealed partial class PhysicsServerCollider
     {
         var slot = _slots[index]; return new(slot.Shape.Geometry, slot.LocalTransform, !slot.Disabled, index, slot.OneWay,
             slot.Margin, slot.Direction, slot.Shape.Geometry.IsDisposed ? ulong.MaxValue : slot.Shape.Geometry.GeometryRevision,
-            slot.Shape.Geometry.IsDisposed ? 0 : slot.Shape.Geometry.CustomSolverBias);
+            slot.Shape.Geometry.IsDisposed ? 0 : slot.Shape.Geometry.CustomSolverBias, Identity: slot.HistoryIdentity);
     }
 }

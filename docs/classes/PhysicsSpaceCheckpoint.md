@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-13
 
+[Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
+keeps sampled public values while rejecting portable capture of retired/reindexed
+slots before replacing packet bytes. In-slot replacement and disabled history stay
+valid; portable apply remaps private slot lifetimes to destination authoring.
+
 Portable common-entry writers now share logical shape-range checks with readers.
 The capture measurement pass rejects stale references after slot removal before
 replacing a complete packet; ordinary history refresh permits recapture. See

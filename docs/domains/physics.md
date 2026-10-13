@@ -6,10 +6,10 @@ Last updated: 2026-10-13
 now exercises radius, disabled primitive kind, local pose, enablement, actual
 remove/reappend order, solver bias and raw Area geometry in CPU/registered serial/
 separate profiles. Validation preserves state/events and permits recovery with the
-same packet; producer same-count history correspondence remains open.
+same packet; broader collider/object association lifetimes remain open.
 
 [Capture topology verification](../components/physics-snapshots.md#capture-after-topology-edits)
-now rejects retained links to removed logical slots before packet publication,
+now rejects retained links to retired/reindexed slot lifetimes before packet publication,
 preserving previous bytes and ordinary refresh/recapture. CPU/registered serial/
 separate cases execute; wider topology and current GPU/native acceptance stay open.
 

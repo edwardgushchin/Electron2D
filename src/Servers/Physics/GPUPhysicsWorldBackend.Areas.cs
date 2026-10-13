@@ -53,7 +53,7 @@ internal sealed partial class GPUPhysicsWorldBackend
                     }
                     var pair = new PhysicsShapePair(other.RID, other.ObjectIdentity, GPUStore.NativeCollider(other).GPUSensor, hit.LogicalShape, local.Slot);
                     if (sceneMonitoring) scene!.Observe(pair);
-                    if (GPUStore.NativeCollider(other).GPUSensor ? runtime?.AreaCallback is not null : runtime?.BodyCallback is not null) runtime!.Pairs.Observe(pair);
+                    if (GPUStore.NativeCollider(other).GPUSensor ? runtime?.AreaCallback is not null : runtime?.BodyCallback is not null) runtime!.Pairs.Observe(pair, backend.RID);
                 }
             }
         }

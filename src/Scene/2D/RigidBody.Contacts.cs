@@ -115,7 +115,8 @@ public partial class RigidBody
         _shapePairs.Begin();
         if (_contactMonitor)
             foreach (ref readonly var contact in state.CapturedContacts)
-                _shapePairs.Observe(new(contact.Collider, contact.Identity, false, contact.ColliderShape, contact.LocalShape));
+                _shapePairs.Observe(new(contact.Collider, contact.Identity, false, contact.ColliderShape, contact.LocalShape)
+                { LocalSlotIdentity = contact.LocalSlotIdentity, OtherSlotIdentity = contact.OtherSlotIdentity }, GetRID());
 
         _pairChanges.Clear(); _shapePairs.Commit(_pairChanges);
         _contactCount = state.CapturedContacts.Length;

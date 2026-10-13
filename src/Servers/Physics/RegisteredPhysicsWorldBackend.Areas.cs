@@ -33,7 +33,7 @@ internal sealed partial class RegisteredPhysicsWorldBackend
         for (var i = 0; i < count; i++)
         {
             var pair = _validatedOverlaps[i];
-            if (pair.IsArea ? runtime.AreaCallback is not null : runtime.BodyCallback is not null) runtime.Pairs.Observe(pair);
+            if (pair.IsArea ? runtime.AreaCallback is not null : runtime.BodyCallback is not null) runtime.Pairs.Observe(pair, rid);
         }
         runtime.Changes.Clear(); runtime.Pairs.Commit(runtime.Changes); Space.QueueMonitorChanges(runtime);
     }

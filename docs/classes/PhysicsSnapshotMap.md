@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-13
 
+[Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
+keeps sampled public values while rejecting portable capture of retired/reindexed
+slots before replacing packet bytes. In-slot replacement and disabled history stay
+valid; portable apply remaps private slot lifetimes to destination authoring.
+
 [Same-count authoring validation](../components/physics-snapshots.md#same-count-authoring-validation)
 verifies seven geometry/slot-policy mismatches before state or event mutation.
 Restoring compatible geometry with independent local resource identities permits

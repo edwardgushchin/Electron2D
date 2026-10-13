@@ -76,6 +76,15 @@ public static partial class BackendChecks
             Check(registered.State.GetContactCount() == cpu.State.GetContactCount(),
                 "A completed history can retain a currently disabled logical slot until the next interval");
             PhysicsServer.BodySetShapeDisabled(cpu.Mover.GetRID(), 1, false); PhysicsServer.BodySetShapeDisabled(registered.Mover.GetRID(), 1, false);
+            using (var replacement = new CircleShape { Radius = 1.5f })
+            {
+                var cpuShape = PhysicsServer.BodyGetShape(cpu.Mover.GetRID(), 1); var registeredShape = PhysicsServer.BodyGetShape(registered.Mover.GetRID(), 1);
+                PhysicsServer.BodySetShape(cpu.Mover.GetRID(), 1, replacement.GetRID()); PhysicsServer.BodySetShape(registered.Mover.GetRID(), 1, replacement.GetRID());
+                cpu.SetAreaShape(replacement.GetRID()); registered.SetAreaShape(replacement.GetRID());
+                Transfer(cpu, registered); Imported(cpu, registered);
+                PhysicsServer.BodySetShape(cpu.Mover.GetRID(), 1, cpuShape); PhysicsServer.BodySetShape(registered.Mover.GetRID(), 1, registeredShape);
+                cpu.SetAreaShape(default); registered.SetAreaShape(default);
+            }
             cpu.Separate(); registered.Separate();
             Collect(); for (var i = 0; i < 128; i++) Cycle();
             var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
@@ -190,6 +199,11 @@ public static partial class BackendChecks
         }
         internal void Separate() { Mover.Position = new(50, 0); Mover.LinearVelocity = Vector2.Zero; Tree.PhysicsFrame(.01); }
         internal void RemoveAreaShape() => PhysicsServer.AreaRemoveShape(_area, 1);
+        internal void ReindexAreaShapes()
+        {
+            PhysicsServer.AreaRemoveShape(_area, 0);
+            PhysicsServer.AreaAddShape(_area, _region.GetRID(), disabled: true);
+        }
         internal void SetAreaShape(RID shape) => PhysicsServer.AreaSetShape(_area, 1, shape.IsValid() ? shape : _region.GetRID());
         internal void SetCircleBias(float bias) => _circle.CustomSolverBias = bias;
         internal void VerifyMoverQuery()
