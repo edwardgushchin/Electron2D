@@ -225,3 +225,5 @@ WorkerThreadPool schedules synchronized or independently owned data computations
 The [independent-process component](../components/processes.md) adds static launch/capture/current-app identity and argv, retained child exit/kill observations and owned typed native pipe results. It supplies runtime primitives for external tools; project orchestration, deadline/cancellation policy and full agent acceptance remain consumer/tooling work.
 
 [Runtime diagnostics](../components/runtime-diagnostics.md) now includes typed application custom monitors on the retained Performance service: exact callback values, unit/name snapshots, elapsed mutation ticks, explicit removal and captured-provider lifetime. Calls are available without a native runtime; provider execution stays on the caller thread outside the registry lock. Existing physical producers retain their completed-snapshot contract.
+
+Engine.GetFramesDrawn now accounts for completed [native canvas intervals](../components/manual-render-frames.md), independently of process and physics callbacks.

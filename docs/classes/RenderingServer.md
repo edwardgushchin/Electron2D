@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -1255,3 +1255,7 @@ Uses the initialized process service on its owner thread. Invalid/disposed ident
 ## Compressed attribute storage
 
 `Mesh.ArrayFormat.CompressAttributes` retains float XY positions, four-byte UNORM16 primary/secondary UVs and a six-byte joint normal/tangent axis/angle record. UVs outside [0,1] use copied per-component scale metadata; zero axes remain zero and overflowing scale rejects before mutation. Normal-only imports synthesize a tangent; tangent-only compressed input rejects. Frame packing normalizes/projects numerical directions, so it does not retain arbitrary magnitude/nonorthogonality. Partial updates preserve untouched canonical bytes. Tangent regeneration retains exact UV bytes/scale and reencodes the coupled frame. Copies, saved scenes and morph output retain the format and exact base records. AMS7 persists metadata and canonical bytes and reads AMS1–6. See [compressed attributes](../components/meshes.md#compressed-attributes) for layout, precision and verification limits.
+
+## Explicit frame execution
+
+ForceDraw(bool swapBuffers = true, double frameStep = 0) executes the current native scene even when RenderLoopEnabled is false; non-presenting frames still update viewport textures. ForceSync submits pending renderer device work and waits for prior GPU operations without drawing. RequestFrameDrawnCallback(Action) schedules an ordered one-shot owner-thread action after a completed frame, with capture release and error cleanup. See [clock, ownership, failure and actual pixel verification](../components/manual-render-frames.md).

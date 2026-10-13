@@ -40,6 +40,8 @@ public sealed partial class RenderingServer : ElectronObject
     private bool _renderLoopEnabled = true;
     private bool _closing;
     private bool _rendering;
+    private bool _frameSubmitted;
+    private bool _swapBuffers = true;
     private bool _submittingTextures;
     private RenderingDevice? _renderingDevice;
     private Color _clearColor;
@@ -165,17 +167,19 @@ public sealed partial class RenderingServer : ElectronObject
     internal Vector2i ViewportDimensions(Viewport viewport) { EnsureOwner(); return viewport is SubViewport sub ? sub.Size : ((Window)viewport).ContentRenderSize; }
     internal Image? ReadbackViewport(Viewport viewport)
     { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport readback cannot reenter native submission."); if (viewport is Window w && (w.ContentLayout.TargetSize.X == 0 || w.ContentLayout.TargetSize.Y == 0)) return null; var target = _backend.FindTarget(viewport); return target?.HasFrame == true ? _backend.Readback(target) : null; }
-    internal void Render(SceneTree tree, double step)
+    internal void Render(SceneTree tree, double step, bool force = false, bool swapBuffers = true)
     {
-        EnsureOwner(); if (!_renderLoopEnabled) return;
+        EnsureOwner(); if (!_renderLoopEnabled && !force) return;
         if (_rendering) throw new InvalidOperationException("Canvas rendering cannot be re-entered.");
+        if (!double.IsFinite(step) || step < 0 || !double.IsFinite(CanvasTime + step)) throw new ArgumentOutOfRangeException(nameof(step));
         _rendering = true;
+        _swapBuffers = swapBuffers;
+        Exception? frameError = null;
         try
         {
             AnimatedTexture.AdvanceAll(this, Stopwatch.GetTimestamp(), _animatedChanges);
             FramePreDrawCore?.Invoke();
             UpdatePhysicsContacts(tree);
-            if (!double.IsFinite(step) || step < 0 || !double.IsFinite(CanvasTime + step)) throw new InvalidOperationException("The render clock step is invalid.");
             CanvasTime = (CanvasTime + step) % ProjectSettings.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
             _interpolationFraction = tree.PhysicsInterpolation ? (float)Engine.PhysicsInterpolationFraction : 1f;
             _activeFrames.Clear(); CaptureViewports(tree.Root);
@@ -187,15 +191,24 @@ public sealed partial class RenderingServer : ElectronObject
             if (_window.Visible && _canvasFrames.TryGetValue(_window, out var root)) { root.Wanted = true; SubmitFrame(root, tree); }
             for (var i = 0; i < _activeFrames.Count; i++) { var frame = _activeFrames[i]; if (frame.Viewport is SubViewport sub && sub.RenderTargetUpdateMode is ViewportUpdateMode.Always or ViewportUpdateMode.Once) { frame.Wanted = true; SubmitFrame(frame, tree); } }
             _backend.EndFrame();
+            _frameSubmitted = true;
+            Engine.Service.RecordDrawnFrame();
+            CaptureFrameCallbacks();
             foreach (var frame in _activeFrames) if (frame.Drawn) { UseFrame(frame); DispatchScreenVisibility(tree); }
             _renderingDevice?.CompleteRendererReadbacks();
             FramePostDrawCore?.Invoke();
         }
+        catch (Exception error) { frameError = error; }
         finally
         {
-            foreach (var frame in _activeFrames) { frame.Nodes.Clear(); frame.Vertices.Clear(); frame.Instances.Clear(); frame.Batches.Clear(); Array.Clear(frame.TextureScratch); frame.Order.Clear(); frame.Repeats.Clear(); frame.Transforms.Clear(); frame.YSort.Clear(); }
-            _activeFrames.Clear(); _submittingTextures = false; _rendering = false;
+            try { if (_frameSubmitted) DeliverFrameCallbacks(ref frameError); }
+            finally
+            {
+                foreach (var frame in _activeFrames) { frame.Nodes.Clear(); frame.Vertices.Clear(); frame.Instances.Clear(); frame.Batches.Clear(); Array.Clear(frame.TextureScratch); frame.Order.Clear(); frame.Repeats.Clear(); frame.Transforms.Clear(); frame.YSort.Clear(); }
+                _activeFrames.Clear(); _submittingTextures = false; _rendering = false; _frameSubmitted = false; _swapBuffers = true;
+            }
         }
+        if (frameError is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(frameError).Throw();
     }
     private void SubmitTexture(Texture? texture, SceneTree tree)
     {
@@ -229,7 +242,7 @@ public sealed partial class RenderingServer : ElectronObject
         _submittingTextures = true;
         var content = _window.ContentLayout;
         _backend.PresentationRect = content.TargetSize.X > 0 && content.TargetSize.Y > 0 ? content.ScreenRect : default;
-        try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), FrameClear(frame.Viewport), frame.Viewport is not SubViewport sub || sub.RenderTargetClearMode != ViewportClearMode.Never, ReferenceEquals(frame.Viewport, _window) && _window.Visible, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting); }
+        try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), FrameClear(frame.Viewport), frame.Viewport is not SubViewport sub || sub.RenderTargetClearMode != ViewportClearMode.Never, ReferenceEquals(frame.Viewport, _window) && _window.Visible && _swapBuffers, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting); }
         finally { _submittingTextures = false; }
         if (frame.Viewport is SubViewport completed) completed.Submitted();
         frame.State = 2; frame.Drawn = true;
@@ -506,7 +519,7 @@ public sealed partial class RenderingServer : ElectronObject
             }
             finally
             {
-                FramePreDrawCore = FramePostDrawCore = null; foreach (var viewport in _canvasFrames.Keys) viewport.RenderingOwner = null; _canvasFrames.Clear(); _activeFrames.Clear();
+                FramePreDrawCore = FramePostDrawCore = null; _queuedFrameCallbacks.Clear(); _completedFrameCallbacks.Clear(); foreach (var viewport in _canvasFrames.Keys) viewport.RenderingOwner = null; _canvasFrames.Clear(); _activeFrames.Clear();
                 _nodes.Clear(); _vertices.Clear(); _instances.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
                 _contactCanvases.Clear();
                 _sceneCanvasItems.Clear(); _sceneViewports.Clear(); _capturedTree = null;

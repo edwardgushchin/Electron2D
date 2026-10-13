@@ -284,6 +284,19 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         Check(SDL.RenderPresent(renderer), "present canvas");
     }
 
+    internal override void Sync(CanvasRenderTarget? target)
+    {
+        var renderer = _renderer.DangerousGetHandle();
+        var previous = SDL.GetRenderTarget(renderer);
+        if (target?.HasFrame == true) Check(SDL.SetRenderTarget(renderer, target.Current.DangerousGetHandle()), "bind synchronization target");
+        try
+        {
+            // A bounded readback waits for prior driver work on every compatibility backend.
+            using var pixel = new RenderHandle(SDL.RenderReadPixels(renderer, new SDL.Rect { W = 1, H = 1 }), SDL.DestroySurface);
+        }
+        finally { Check(SDL.SetRenderTarget(renderer, previous), "restore synchronization target"); }
+    }
+
     internal override void BeginFrame() => _usedTextures.Clear();
     internal override void EndFrame() { foreach (var pair in _textures) if (!_usedTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Handle.Dispose(); _textures.Remove(pair.Key); } }
     private static Texture CanvasSample(Texture texture)

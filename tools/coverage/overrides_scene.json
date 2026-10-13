@@ -10863,6 +10863,29 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0093 executable RESET save preparation. Stored ResetOnSave defaults true and executes through separate allocating PackedScene.PackForSave: guarded source capture, detached exact factories, isolated deep resource copies, RESET value/Bezier at zero, coupled property/resource capture, original factory metadata and owned copied assets. Preview values/clocks/queues remain untouched; ordinary Pack stays actual-pose. Method/audio/nested events, scene activation/instantiation notification and local-resource setup are suppressed. AnimationResetSaveTests verifies all controller families, disabled/missing/inactive policies, setter failures, source/hierarchy guards, asset lifetime and fresh-process files; Linux native GPU/compatibility checks are recorded separately."
+    },
+    {
+      "godot": [
+        "Node::enum:ProcessThreadGroup",
+        "Node::enum:ProcessThreadMessages",
+        "Node::enum_value:ProcessThreadGroup.PROCESS_THREAD_GROUP_INHERIT",
+        "Node::enum_value:ProcessThreadGroup.PROCESS_THREAD_GROUP_MAIN_THREAD",
+        "Node::enum_value:ProcessThreadGroup.PROCESS_THREAD_GROUP_SUB_THREAD",
+        "Node::enum_value:ProcessThreadMessages.FLAG_PROCESS_THREAD_MESSAGES",
+        "Node::enum_value:ProcessThreadMessages.FLAG_PROCESS_THREAD_MESSAGES_ALL",
+        "Node::enum_value:ProcessThreadMessages.FLAG_PROCESS_THREAD_MESSAGES_PHYSICS",
+        "Node::method:call_deferred_thread_group(StringName:)",
+        "Node::method:call_thread_safe(StringName:)",
+        "Node::method:notify_deferred_thread_group(int:)",
+        "Node::method:notify_thread_safe(int:)",
+        "Node::method:set_deferred_thread_group(StringName:,Variant:)",
+        "Node::method:set_thread_safe(StringName:,Variant:)",
+        "Node::property:process_thread_group",
+        "Node::property:process_thread_group_order",
+        "Node::property:process_thread_messages"
+      ],
+      "state": "Unimplemented",
+      "reason": "Exact executable prerequisite: Node process-group ownership/isolation, inherited group discovery and order, a real group scheduler with frame barriers, typed cross-group mailboxes and deferred/safe call/property/notification dispatch. ADR 0104 worker dispatch alone grants no off-owner scene/render access; metadata-only properties or forwarding everything to ordinary Defer would not implement this family."
     }
   ]
 }

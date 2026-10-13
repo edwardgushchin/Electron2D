@@ -1347,3 +1347,5 @@ The public-only custom annulus/circle consumer now verifies independent swept-re
 AnimationMixer/Player scene storage now restores authored namespaces, shared libraries, callback/mixing/playback options and next/blend policy through exact factories. AnimationControllerPersistenceTests exercises fresh processes and actual loaded-scene pixels; graph and RESET save preparation now executes.
 
 PackedScene.PackForSave executes detached RESET property/Bézier preparation with deep resource isolation and ownership transfer; inherited AnimationMixer.ResetOnSave stores the policy across Mixer/Player/Tree. Runtime Pack retains the actual-pose capture contract.
+
+The existing Engine and RenderingServer types now own the [explicit native frame contract](components/manual-render-frames.md): manual draw, GPU synchronization, ordered one-shot callbacks and process-lifetime completed-frame accounting. No new production type is added.

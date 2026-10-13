@@ -72,6 +72,7 @@ public sealed partial class Engine : ElectronObject
     private MainLoop? _mainLoop;
     private long _processFrames;
     private long _physicsFrames;
+    private long _drawnFrames;
     private double _physicsInterpolationFraction;
     private int _inPhysicsFrame;
     private double _framesPerSecond;

@@ -88260,6 +88260,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Engine.GetFramesDrawn()",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "GetFramesDrawn",
+    "signature": "public static System.UInt64 GetFramesDrawn()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Engine.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.Engine",
@@ -146641,6 +146654,43 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.ForceDraw(System.Boolean,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ForceDraw",
+    "signature": "public static System.Void ForceDraw(System.Boolean swapBuffers = true, System.Double frameStep = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "swapBuffers",
+        "type": "System.Boolean",
+        "default": "true"
+      },
+      {
+        "name": "frameStep",
+        "type": "System.Double",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ForceSync()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ForceSync",
+    "signature": "public static System.Void ForceSync()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.FreeRID(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -148109,6 +148159,25 @@
       {
         "name": "visible",
         "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.RequestFrameDrawnCallback(System.Action)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "RequestFrameDrawnCallback",
+    "signature": "public static System.Void RequestFrameDrawnCallback(System.Action callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "callback",
+        "type": "System.Action",
         "default": null
       }
     ],

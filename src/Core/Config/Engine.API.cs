@@ -107,6 +107,14 @@ public sealed partial class Engine
         set => Service.TimeScaleCore = value;
     }
 
+    /// <summary>Gets the number of completed canvas frames since this process-wide engine was created.</summary>
+    /// <returns>A thread-safe process-lifetime count, including manual frames and all viewports in one frame.</returns>
+    /// <remarks>Headless processing and a disabled automatic render loop add no frames. Explicit ForceDraw still executes and counts a frame.
+    /// A completed native frame remains counted when a subsequent observer or callback throws.</remarks>
+    public static ulong GetFramesDrawn() => unchecked((ulong)Interlocked.Read(ref Service._drawnFrames));
+
+    internal void RecordDrawnFrame() => Interlocked.Increment(ref _drawnFrames);
+
     /// <summary>Gets the number of process callbacks completed since the process-wide engine was created.</summary>
     /// <value>A monotonically increasing process-lifetime count. A callback that throws is not counted.</value>
     public static ulong ProcessFrames

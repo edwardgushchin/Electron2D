@@ -1,6 +1,6 @@
 # Rendering domain
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 Private native runtime binaries come from versioned Linux/macOS packages in ordinary desktop builds; `Electron2DBuildNativeFromSource=true` rebuilds those libraries. Source builds separately prepare pinned host shader tools on first use and generate built-in shaders under `obj/`. [Shader delivery](../components/shader-materials.md#built-in-shader-delivery) keeps these tools out of game packages. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
@@ -265,3 +265,5 @@ Compressed mesh attribute import now executes through copied canonical UV/frame 
 [ImporterMesh](../classes/ImporterMesh.md) now turns raw resource/scene authoring into drawable ArrayMesh snapshots and actual automatic LODs. The cold native simplifier is independent of SDL/GPU initialization; ordinary render replay retains existing allocation contracts. [The component](../components/meshes.md#importer-mesh) records raw precision, resource graph/storage, transformed merge and tested native/package boundaries.
 
 Renderer-managed texture uploads, image arrays and completed viewport targets now export borrowed retained-device identities for native read/copy/update/compute consumers. Allocation expiry and queued read lifetime execute on the shared renderer timeline; see [renderer texture export](../components/local-compute.md#renderer-texture-export-checkpoint). Distinct sRGB views remain a native format-view dependency.
+
+The [explicit-frame component](../components/manual-render-frames.md) adds owner-thread manual native drawing, real GPU synchronization, one-shot completion actions and Engine frame accounting on the existing retained canvas path.

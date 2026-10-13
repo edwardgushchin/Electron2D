@@ -1,6 +1,6 @@
 # Engine
 
-Last updated: 2026-10-10
+Last updated: 2026-10-13
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -493,3 +493,7 @@ The permanent named service list includes `PhysicsServer` and `Performance` afte
 samples without starting the renderer or acquiring a world owner thread.
 
 The built-in WorkerThreadPool registry entry retains its typed object identity without starting threads. Static worker submissions lazily prepare its portable runtime; completion ownership and target-threading limits follow [ADR 0104](../decisions/jobs.md#adr-0104). Scene owners publish worker results through SceneTree.Defer.
+
+## Completed rendering frames
+
+GetFramesDrawn() returns a thread-safe ulong process-lifetime count of completed canvas intervals, including explicit non-presenting frames. Each interval counts once across all targets. Headless processing and disabled automatic rendering add no frames; ForceDraw still executes a frame. Native completion remains counted if a later observer/action fails. See [explicit canvas execution](../components/manual-render-frames.md).

@@ -4431,6 +4431,21 @@
       "godot": "RenderingServer::method:canvas_item_get_instance_shader_parameter_list(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.CanvasItemGetInstanceShaderParameterList(Electron2D.RID)",
       "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger."
+    },
+    {
+      "godot": "RenderingServer::method:force_draw(bool:,float:)",
+      "electron2d": "method:Electron2D.RenderingServer.ForceDraw(System.Boolean,System.Double)",
+      "reason": "Executable owner-thread native frame driver under ADR 0028/0095: ForceDraw reuses the retained scene/material/viewport/device pipeline, bypasses the automatic loop and supports non-presenting root texture output. ForceSync waits for real GPU completion and queued readbacks. Typed Action requests run once after native commitment, with ordered phase boundaries, error aggregation and capture release; Engine counts completed intervals once across targets. ManualRenderFrameTests exercises Linux Wayland GPU/hardware compatibility pixels, clocks/scene separation, device readback, guards, errors, lifetime and prepared callback/draw allocation. Foreign platforms and full batch/editor tooling acceptance remain separate gates."
+    },
+    {
+      "godot": "RenderingServer::method:force_sync()",
+      "electron2d": "method:Electron2D.RenderingServer.ForceSync()",
+      "reason": "Executable owner-thread native frame driver under ADR 0028/0095: ForceDraw reuses the retained scene/material/viewport/device pipeline, bypasses the automatic loop and supports non-presenting root texture output. ForceSync waits for real GPU completion and queued readbacks. Typed Action requests run once after native commitment, with ordered phase boundaries, error aggregation and capture release; Engine counts completed intervals once across targets. ManualRenderFrameTests exercises Linux Wayland GPU/hardware compatibility pixels, clocks/scene separation, device readback, guards, errors, lifetime and prepared callback/draw allocation. Foreign platforms and full batch/editor tooling acceptance remain separate gates."
+    },
+    {
+      "godot": "RenderingServer::method:request_frame_drawn_callback(Callable:)",
+      "electron2d": "method:Electron2D.RenderingServer.RequestFrameDrawnCallback(System.Action)",
+      "reason": "Executable owner-thread native frame driver under ADR 0028/0095: ForceDraw reuses the retained scene/material/viewport/device pipeline, bypasses the automatic loop and supports non-presenting root texture output. ForceSync waits for real GPU completion and queued readbacks. Typed Action requests run once after native commitment, with ordered phase boundaries, error aggregation and capture release; Engine counts completed intervals once across targets. ManualRenderFrameTests exercises Linux Wayland GPU/hardware compatibility pixels, clocks/scene separation, device readback, guards, errors, lifetime and prepared callback/draw allocation. Foreign platforms and full batch/editor tooling acceptance remain separate gates."
     }
   ],
   "statusGroups": [
@@ -6217,6 +6232,49 @@
       "godot": [
         "RenderingServer::method:canvas_item_get_instance_shader_parameter_list(RID:)"
       ]
+    },
+    {
+      "godot": [
+        "RenderingServer::method:force_draw(bool:,float:)",
+        "RenderingServer::method:force_sync()",
+        "RenderingServer::method:request_frame_drawn_callback(Callable:)"
+      ],
+      "state": "Implemented",
+      "reason": "Executable owner-thread native frame driver under ADR 0028/0095: ForceDraw reuses the retained scene/material/viewport/device pipeline, bypasses the automatic loop and supports non-presenting root texture output. ForceSync waits for real GPU completion and queued readbacks. Typed Action requests run once after native commitment, with ordered phase boundaries, error aggregation and capture release; Engine counts completed intervals once across targets. ManualRenderFrameTests exercises Linux Wayland GPU/hardware compatibility pixels, clocks/scene separation, device readback, guards, errors, lifetime and prepared callback/draw allocation. Foreign platforms and full batch/editor tooling acceptance remain separate gates."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:particles_create()",
+        "RenderingServer::method:particles_get_emitting(RID:)",
+        "RenderingServer::method:particles_is_inactive(RID:)",
+        "RenderingServer::method:particles_request_process(RID:)",
+        "RenderingServer::method:particles_request_process_time(RID:,float:,float:)",
+        "RenderingServer::method:particles_restart(RID:)",
+        "RenderingServer::method:particles_set_amount(RID:,int:)",
+        "RenderingServer::method:particles_set_amount_ratio(RID:,float:)",
+        "RenderingServer::method:particles_set_collision_base_size(RID:,float:)",
+        "RenderingServer::method:particles_set_emitting(RID:,bool:)",
+        "RenderingServer::method:particles_set_explosiveness_ratio(RID:,float:)",
+        "RenderingServer::method:particles_set_fixed_fps(RID:,int:)",
+        "RenderingServer::method:particles_set_fractional_delta(RID:,bool:)",
+        "RenderingServer::method:particles_set_interp_to_end(RID:,float:)",
+        "RenderingServer::method:particles_set_interpolate(RID:,bool:)",
+        "RenderingServer::method:particles_set_lifetime(RID:,float:)",
+        "RenderingServer::method:particles_set_mode(RID:,int:RenderingServer.ParticlesMode)",
+        "RenderingServer::method:particles_set_one_shot(RID:,bool:)",
+        "RenderingServer::method:particles_set_pre_process_time(RID:,float:)",
+        "RenderingServer::method:particles_set_process_material(RID:,RID:)",
+        "RenderingServer::method:particles_set_randomness_ratio(RID:,float:)",
+        "RenderingServer::method:particles_set_speed_scale(RID:,float:)",
+        "RenderingServer::method:particles_set_subemitter(RID:,RID:)",
+        "RenderingServer::method:particles_set_trails(RID:,bool:,float:)",
+        "RenderingServer::method:particles_set_transform_align(RID:,int:RenderingServer.ParticlesTransformAlign)",
+        "RenderingServer::method:particles_set_transform_align_axis(RID:,int:RenderingServer.ParticlesTransformAlignAxis)",
+        "RenderingServer::method:particles_set_transform_align_channel_filter(RID:,int:RenderingServer.ParticlesTransformAlignCustomSrc)",
+        "RenderingServer::method:particles_set_use_local_coordinates(RID:,bool:)"
+      ],
+      "state": "Unimplemented",
+      "reason": "Exact executable prerequisite: an owned raw particle RID simulation/context and typed process-material binding must drive the complete 2D particle state family, native stepping/restart/lifetime, canvas_item_add_particles submission and resource teardown. Existing scene-owned particle nodes do not supply a detached server RID implementation; connect that owner and canvas consumer before exposing these operations."
     }
   ],
   "extras": [

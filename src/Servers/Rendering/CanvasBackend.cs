@@ -66,6 +66,7 @@ internal abstract class CanvasBackend : IDisposable
     internal virtual void SetWindowVisible(DisplayServer display, bool visible) => display.SetWindowVisible(visible);
     internal virtual void BeginFrame() { }
     internal virtual void EndFrame() { }
+    internal abstract void Sync(CanvasRenderTarget? target);
     internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting);
     internal abstract Image Readback(CanvasRenderTarget target, bool backBuffer = false);
     internal virtual nint GetNativeHandle(DisplayServer.HandleType type) =>

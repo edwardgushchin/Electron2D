@@ -919,6 +919,11 @@
       "godot": "OS::method:read_string_from_stdin(int:)",
       "electron2d": "method:Electron2D.OS.ReadStringFromSTDIN(System.Int32)",
       "reason": "Retained static OS standard-input slice under ADR 0004/0020/0045/0051/0095: native standard-device types, borrowed serialized raw buffers and bounded strict-UTF8 lines execute, with uppercase STDIN/STDOUT/STDERR member names. OSStandardInputTests checks actual pipe/file/PTY/null/closed handles, fragmented filling, EOF, CRLF, bounds, raw/text alternation, malformed/split UTF8 and OS.ExecuteWithPipe integration. Text capacity includes one terminating boundary (minimum 2); C# strings retain NUL and invalid UTF8 raises a typed exception after consumption. Linux native evidence; Windows unverified, other host adapters unavailable explicitly."
+    },
+    {
+      "godot": "Engine::method:get_frames_drawn()",
+      "electron2d": "method:Electron2D.Engine.GetFramesDrawn()",
+      "reason": "Executable owner-thread native frame driver under ADR 0028/0095: ForceDraw reuses the retained scene/material/viewport/device pipeline, bypasses the automatic loop and supports non-presenting root texture output. ForceSync waits for real GPU completion and queued readbacks. Typed Action requests run once after native commitment, with ordered phase boundaries, error aggregation and capture release; Engine counts completed intervals once across targets. ManualRenderFrameTests exercises Linux Wayland GPU/hardware compatibility pixels, clocks/scene separation, device readback, guards, errors, lifetime and prepared callback/draw allocation. Foreign platforms and full batch/editor tooling acceptance remain separate gates."
     }
   ],
   "extras": [
@@ -2148,6 +2153,13 @@
       ],
       "state": "Implemented",
       "reason": "Retained static OS standard-input slice under ADR 0004/0020/0045/0051/0095: native standard-device types, borrowed serialized raw buffers and bounded strict-UTF8 lines execute, with uppercase STDIN/STDOUT/STDERR member names. OSStandardInputTests checks actual pipe/file/PTY/null/closed handles, fragmented filling, EOF, CRLF, bounds, raw/text alternation, malformed/split UTF8 and OS.ExecuteWithPipe integration. Text capacity includes one terminating boundary (minimum 2); C# strings retain NUL and invalid UTF8 raises a typed exception after consumption. Linux native evidence; Windows unverified, other host adapters unavailable explicitly."
+    },
+    {
+      "godot": [
+        "Engine::method:get_frames_drawn()"
+      ],
+      "state": "Implemented",
+      "reason": "Executable owner-thread native frame driver under ADR 0028/0095: ForceDraw reuses the retained scene/material/viewport/device pipeline, bypasses the automatic loop and supports non-presenting root texture output. ForceSync waits for real GPU completion and queued readbacks. Typed Action requests run once after native commitment, with ordered phase boundaries, error aggregation and capture release; Engine counts completed intervals once across targets. ManualRenderFrameTests exercises Linux Wayland GPU/hardware compatibility pixels, clocks/scene separation, device readback, guards, errors, lifetime and prepared callback/draw allocation. Foreign platforms and full batch/editor tooling acceptance remain separate gates."
     }
   ]
 }
