@@ -244,3 +244,7 @@ A successful scene instance retains its decoded resource graph after template di
 `public static System.Void SetAbortOnMissingResources(System.Boolean abort)`
 
 Selects whether newly loaded archive graphs reject absent resource factories/dependencies. See [missing-resource recovery](../components/resource-files.md#missing-resource-recovery) for strict/tolerant policy, lifetime and actual verification limits.
+
+## Resource directory discovery
+
+ListDirectory(string directoryPath) returns recognized resource filenames and slash-suffixed immediate directory names using current format loaders and DirAccess path policy. The caller owns the sorted snapshot; discovery does not decode files. See [resource loading](../components/resource-loading.md#resource-directory-discovery) for behavior, errors, current import/remapping limits and executable checks.

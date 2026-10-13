@@ -404,6 +404,12 @@
       "godot": "Mesh::method:create_placeholder()",
       "electron2d": "method:Electron2D.Mesh.CreatePlaceholder()",
       "reason": "ADRs 0013/0014/0092: version-2 role-aware typed missing resources preserve scalar byte order, actual references/aliases/cycles and original factory identity; copied and restored mesh bounds use the accepted Rect2 projection. Strict/default policy, corruption/cache rollback, duplicate/local/fresh reconstruction and actual GPU/compatibility recovery are verified separately from foreign/native-allocation/owner gates."
+    },
+    {
+      "godot": "ResourceLoader::method:list_directory(String:)",
+      "electron2d": "method:Electron2D.ResourceLoader.ListDirectory(System.String)",
+      "state": "Partial",
+      "reason": "Resource-aware copied sorted leaf names and immediate subdirectories execute with current RecognizePath plugins/built-in formats, path policy and fresh-process scene/resource loading. Exact remaining trigger: import/export metadata resolver supplying original names and an executing loader for remapped files; native archives currently retain their names."
     }
   ],
   "statusGroups": [
@@ -447,8 +453,8 @@
       "godot": [
         "ResourceLoader::method:list_directory(String:)"
       ],
-      "state": "Unimplemented",
-      "reason": "Directory access exists; trigger: resource-aware directory listing with type/extension filtering and path policy."
+      "state": "Partial",
+      "reason": "Resource-aware copied sorted leaf names and immediate subdirectories execute with current RecognizePath plugins/built-in formats, path policy and fresh-process scene/resource loading. Exact remaining trigger: import/export metadata resolver supplying original names and an executing loader for remapped files; native archives currently retain their names."
     },
     {
       "godot": [

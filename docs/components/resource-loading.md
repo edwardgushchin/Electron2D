@@ -18,7 +18,7 @@ The GPU payload is managed by the existing texture renderer when the resource is
 - Cache modes have their pinned numeric identities. Deep modes equal ordinary modes for dependency-free image files.
 - Malformed input, unsupported types/extensions and invalid paths fail explicitly. Failed decoding preserves a cached texture and its pixels; callback failure can propagate after committed replacement.
 - `Exists` may return true for a cached resource after its source file is removed. Discovery returns caller-owned extension arrays.
-- Further concrete resource formats, tolerant missing-resource policy and resource-aware directory listing have separate coverage triggers. Generic load/exists/discovery remain Partial across the full applicable asset API.
+- Further concrete resource formats, tolerant missing-resource policy retains its own coverage trigger. Generic load/exists/discovery remain Partial across the full applicable asset API.
 
 ## Verification
 
@@ -55,3 +55,11 @@ Ordered borrowed format extensions support front priority, deduplication, metada
 Registered `.cs` sources load as Script resources through portable-PDB source/type and checksum validation. Reuse/Ignore/Replace retain ordinary weak-cache policy; malformed, changed or unknown compiled associations fail before compatible cache replacement. Source saving is atomic UTF-8 and does not reload CLR code. Host registration shares ResourceFileTypes exact factories and typed schemas with scene/resource reconstruction. See [Scripting](scripting.md) for the executable workflow, symbol prerequisites and live reload boundary.
 
 [Threaded resource loading](threaded-resource-loading.md) executes the WorkerThreadPool prerequisite under ADR 0013/0104. Preparation does not mutate registered cache objects; owner publication preserves cache modes and graph leases, and private remapping handles stored/PackedScene/shader references. AsyncGallery verifies separately authored scenes with real background dependencies and native rendered output.
+
+## Resource directory discovery
+
+ResourceLoader.ListDirectory returns a caller-owned, ordinally sorted snapshot of recognized resource leaf names and immediate subdirectories ending in `/`. It uses DirAccess path roots and hides hidden/navigational entries. Native relative paths, res://, user:// and registered directory UID paths follow the existing directory policy; invalid/root-escaping paths and enumeration errors propagate.
+
+Live format-loader RecognizePath overrides participate alongside built-in image/font/audio/key/certificate support. Registration is captured once; removed/disposed loaders do not participate in later calls. Recognition does not decode, validate contents or consult the weak cache. Files removed from disk are absent even if a cached resource remains. The accepted native resource format preserves its filenames in deployment; no foreign import/remap sidecar generates a synthetic loadable name. An import/export resolver must own original-name reconstruction when that format exists.
+
+ResourceDirectoryTests saves a scene and curve, discovers them and loads/runs the scene in a fresh process. It checks virtual roots, hidden entries, case-insensitive built-in extensions, plugin path overrides/removal/disposal/failure, result independence, invalid paths and missing directories. This is blocking authoring/discovery work and allocates; it is not a frame-loop operation.

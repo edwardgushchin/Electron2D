@@ -1357,3 +1357,5 @@ The existing CPUPhysicsWorldBackend cast/CCD helper, internal B2Distances geomet
 Viewport.UpdateMouseCursorState and Input default-cursor changes execute internal stationary-pointer motion through existing GUI routing, with safe-point coalescing and passive physics hover.
 
 RenderingServer.CanvasItemSetVisibilityNotifier supplies typed retained-canvas enter/exit callbacks with multi-viewport sampling, cull/clip bounds and deterministic runtime callback ownership.
+
+ResourceLoader.ListDirectory discovers recognized resource leaf names and immediate directory names for current loaders and native formats, with fresh-process discovery/load verification.

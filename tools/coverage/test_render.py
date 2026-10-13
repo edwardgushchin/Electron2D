@@ -520,7 +520,10 @@ def main():
     assert len(loader_rows) == 26
     assert {state: sum(f" | {state} | " in row for row in loader_rows)
             for state in ("Implemented", "Partial", "Blocked", "Unimplemented")} == {
-                "Implemented": 21, "Partial": 4, "Blocked": 0, "Unimplemented": 1}
+                "Implemented": 21, "Partial": 5, "Blocked": 0, "Unimplemented": 0}
+    listing = next(row for row in loader_rows if "method list_directory(" in row)
+    assert "ListDirectory(System.String directoryPath)" in listing and " | Partial | " in listing
+    assert "import/export metadata resolver" in listing
     for row in loader_rows:
         if "load_threaded_" in row or "ThreadLoadStatus" in row:
             assert " | Implemented | " in row, row

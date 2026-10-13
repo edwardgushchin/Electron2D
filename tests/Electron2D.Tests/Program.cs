@@ -9,6 +9,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_DIRECTORY_CHILD") is { Length: > 0 } resourceDirectory) { ResourceDirectoryTests.RunChild(resourceDirectory); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_DIRECTORY") == "1") { ResourceDirectoryTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_VISIBILITY_NATIVE") == "1") { CanvasVisibilityTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_VISIBILITY") == "1") { CanvasVisibilityTests.RunManaged(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CURSOR_REFRESH_NATIVE") == "1") { CursorRefreshTests.RunNative(); return; }
