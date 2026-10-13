@@ -1,6 +1,6 @@
 # World and shape contact policy
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 ## Authored policy
 
@@ -68,7 +68,8 @@ the same layout. Its correction channel also keeps inherited joint bias separate
 from the contact default. Unspecified diagnostic arguments use the captured contact
 policy and project constraint bias; an explicit correctionFactor retains the internal
 diagnostic override for both. No host physical pose or contact calculation is added.
-Public independent-GPU world binding remains open.
+Public CPU/GPU world binding now executes the common correction suite; current
+hardware, general extension and performance acceptance remain open.
 
 ## Verification and limits
 
@@ -321,3 +322,39 @@ original priority rollout measured 134,340.63 ms before priority support and
 that cost without changing weighted recovery or its device-only scratch. See the
 [current cold-pipeline measurements](gpu-resident-motion-queries.md#cold-pipeline-preparation)
 for the comparison method, rejected candidates and remaining startup limits.
+
+
+## Shared public correction, 2026-10-14
+
+`ELECTRON2D_TEST_CONTACT_CORRECTION=cpu|gpu` runs the complete correction suite
+through explicit PhysicsServer spaces and scene Worlds. Adding
+`ELECTRON2D_TEST_THREADED_COLLIDER=1` selects separate numerical execution before
+world creation; the focused entry precedes the generic CPU-thread suite. The
+ordinary full runner includes both public backends. Direct resident and older
+CPU-hosted stage controls remain separate.
+
+All six profiles pass on Linux/.NET 10 with the software Vulkan setup documented
+in [backend verification](physics-backends.md#software-vulkan-functional-checks).
+Process maps confirm llvmpipe without NVIDIA loading; CPU profiles use no graphics
+device, and the retained numerical thread is observed only in separate profiles.
+The frozen runtime and source manifests remain unchanged across the runs.
+
+Seven geometries now run seven mixed shape/world cases each, including zero bias,
+world bias one and shape bias one. The independent expectations retain 0.003 scene
+unit isolated error, 0.01 dense error, 0.004 CCD correction error and 0.03 impulse
+error. Raw and scene checks cover captured defaults, invalid/off-owner/phase edits,
+resource copy/storage, throwing Changed observers, unchanged geometry/RID/mass,
+role changes, sleep/contact membership, static-neighbour waking and physical
+normal/tangent momentum. Both public backends execute the same cases without
+trajectory or contact-feature identity requirements.
+
+The unchanged 256-warmup/128-measured edited full-step bracket now requires zero
+owner-thread and all-thread managed bytes in every profile. Public GPU diagnostics
+read traffic counters from its actual selected store, outside measured steps:
+576 B buffer upload, 14,980 B uniforms and 3,372 B readback per step in this fixture.
+The direct resident control remains distinct. Logs and manifests are retained under
+`bin/physics-contact-correction/2026-10-14/final/`. Software timings include host
+contention from independent verification commands and are diagnostic; they establish
+no hardware throughput or scheduling advantage. Contact-history, solver-iteration,
+priority, arbitrary registered geometry, network/native/platform and final
+performance acceptance retain their separate gates.

@@ -2,14 +2,17 @@ using System.Diagnostics;
 using Electron2D;
 using IOPath = System.IO.Path;
 
-internal static class PhysicsContactPolicyTests
+internal sealed class PhysicsContactPolicyTests(PhysicsServer.Backend backend)
 {
-    internal static void Run(bool stages = false)
+    internal static void Run(bool stages = false) => new PhysicsContactPolicyTests(PhysicsServer.Backend.CPU).RunCore(stages);
+    internal static void Run(PhysicsServer.Backend backend) => new PhysicsContactPolicyTests(backend).RunCore(false);
+    private void RunCore(bool stages)
     {
         VerifyResources(); VerifyDefaults(false); VerifyCorrection(false, stages); VerifyLiveEdits(false, stages); VerifyScene(stages); Measure(false, stages);
-        Console.WriteLine($"Contact policy passed on {(stages ? "CPU host/GPU stages" : "CPU")}: bias/slack, shape mixing, duration, resource state and live edits.");
+        Console.WriteLine($"Contact policy passed on {(stages ? "CPU host/GPU stages" : backend.ToString())}: bias/slack, shape mixing, duration, resource state and live edits.");
     }
-    internal static void RunResident()
+    internal static void RunResident() => new PhysicsContactPolicyTests(PhysicsServer.Backend.GPU).RunResidentCore();
+    private void RunResidentCore()
     {
         VerifyDefaults(true); VerifyCorrection(true, false); VerifyLiveEdits(true, false); Measure(true, false);
         Console.WriteLine("Resident contact policy passed: shared world defaults, shape mixing, duration, live metadata and allocation.");
@@ -24,7 +27,7 @@ internal static class PhysicsContactPolicyTests
         private readonly List<RID> _floors = [];
         private CircleShape? _bulletShape;
         internal readonly GPUPhysicsBodyStore.BodyHandle ResidentBody;
-        internal Rig(bool resident, bool stages = false, Shape? shape = null, int floors = 1)
+        internal Rig(PhysicsServer.Backend backend, bool resident, bool stages = false, Shape? shape = null, int floors = 1)
         {
             Shape = shape ?? new CircleShape { Radius = 5 };
             if (resident)
@@ -39,7 +42,7 @@ internal static class PhysicsContactPolicyTests
             }
             else
             {
-                Space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(Space, true);
+                Space = PhysicsServer.SpaceCreate(backend); Check(PhysicsServer.SpaceGetBackend(Space) == backend, "Contact policy uses the selected public backend."); PhysicsServer.SpaceSetActive(Space, true);
                 PhysicsServer.AreaSetGravity(Space, 0); PhysicsServer.AreaSetLinearDamp(Space, 0); PhysicsServer.AreaSetAngularDamp(Space, 0);
                 if (stages) PhysicsServer.Service.GetSceneSpace(Space).EnableGPUSolver();
                 for (var i = 0; i < floors; i++)
@@ -107,13 +110,13 @@ internal static class PhysicsContactPolicyTests
             Shape.Dispose(); FloorShape.Dispose(); _bulletShape?.Dispose();
         }
     }
-    private static void VerifyDefaults(bool resident)
+    private void VerifyDefaults(bool resident)
     {
         var old = PhysicsContactSettings.FromProject(); Check(old == new PhysicsContactSettings(.8f, .3f), "World contact defaults.");
         try
         {
             ProjectSettings.Set(ProjectSettings.Physics2DDefaultContactBias, .4f); ProjectSettings.Set(ProjectSettings.Physics2DContactMaxAllowedPenetration, .2f);
-            using var r = new Rig(resident); Check(r.Settings == new PhysicsContactSettings(.4f, .2f), "World captures both project values.");
+            using var r = new Rig(backend, resident); Check(r.Settings == new PhysicsContactSettings(.4f, .2f), "World captures both project values.");
             ProjectSettings.Set(ProjectSettings.Physics2DDefaultContactBias, .6f); Check(r.Settings.Bias == .4f, "Existing world retains captured settings.");
             foreach (var invalid in new[] { -1f, float.NaN, float.PositiveInfinity })
             {
@@ -129,12 +132,12 @@ internal static class PhysicsContactPolicyTests
     private static Shape[] Family() => [new CircleShape { Radius = 5 }, new RectangleShape { Size = new(10, 10) }, new CapsuleShape { Radius = 2, Height = 10 },
         new SegmentShape { A = new(-5, 5), B = new(5, 5) }, new ConvexPolygonShape { Points = [new(-5, -5), new(5, -5), new(5, 5), new(-5, 5)] },
         new ConcavePolygonShape { Segments = [new(-5, 5), new(5, 5)] }, new SeparationRayShape { Length = 5 }];
-    private static void VerifyCorrection(bool resident, bool stages)
+    private void VerifyCorrection(bool resident, bool stages)
     {
         foreach (var shape in Family())
         {
-            using var r = new Rig(resident, stages, shape);
-            foreach (var (own, floor, world, effective) in new[] { (0f, 0f, .8f, .8f), (.25f, 0f, .8f, .25f), (0f, .5f, .8f, .5f), (.25f, .75f, .8f, .5f), (0f, 0f, 0f, 0f) })
+            using var r = new Rig(backend, resident, stages, shape);
+            foreach (var (own, floor, world, effective) in new[] { (0f, 0f, .8f, .8f), (.25f, 0f, .8f, .25f), (0f, .5f, .8f, .5f), (.25f, .75f, .8f, .5f), (0f, 0f, 0f, 0f), (0f, 0f, 1f, 1f), (1f, 0f, .8f, 1f) })
             {
                 r.Shape.CustomSolverBias = own; r.FloorShape.CustomSolverBias = floor; r.Set(new(world, .3f)); r.Reset(); r.Step();
                 var state = r.Read();
@@ -145,11 +148,11 @@ internal static class PhysicsContactPolicyTests
                 Check(state.Contacts > 0, "Zero bias retains collision reporting.");
             }
         }
-        using (var r = new Rig(resident, stages, floors: 12))
+        using (var r = new Rig(backend, resident, stages, floors: 12))
         {
             r.Set(new(.5f, .3f)); r.Step(); Near(r.Read().Y, .65f, .01f, "Dense incident contacts include CPU scalar overflow and preserve correction");
         }
-        using (var r = new Rig(resident, stages))
+        using (var r = new Rig(backend, resident, stages))
         {
             foreach (var dt in new[] { .01f, .04f }) foreach (var substeps in resident ? new[] { 1, 4, 8 } : new[] { 4 })
                 {
@@ -159,16 +162,17 @@ internal static class PhysicsContactPolicyTests
             // CCD clips a prepared correction velocity at impact, then resolves the remainder. One nominal-substep
             // linearization contributes at most .004 u here; it must not reapply a whole tick's .8 fraction per hit.
             Near(r.Read().Y, .44f, .004f, "CCD continuation retains the nominal contact correction budget");
-            Check(r.Store is { } gpu ? gpu.CCDIntervalCount > 0 : ((CPUPhysicsWorldBackend)PhysicsServer.Service.GetSceneSpace(r.Space).BackendImplementation).ContinuousQueryCount > 0, "CCD control actually executes.");
+            var selected = r.Store ?? PhysicsServer.Service.GetSceneSpace(r.Space).GPUStore;
+            Check(selected is { } gpu ? gpu.CCDIntervalCount > 0 : ((CPUPhysicsWorldBackend)PhysicsServer.Service.GetSceneSpace(r.Space).BackendImplementation).ContinuousQueryCount > 0, "CCD control actually executes.");
             r.Set(new(.8f, 1.2f)); r.Reset(); r.Step(); var within = r.Read(); Near(within.Y, 1, .002f, "Penetration within slack has no positional correction"); Check(within.Contacts > 0, "Slack does not filter contacts.");
             r.Set(new(.8f, .3f)); var velocity = new Vector2(30, 80); r.Reset(1, velocity); r.Step(); var impact = r.Read();
             Near(impact.Impulse, (impact.Velocity - velocity) * 2, .03f, "Friction and normal reports preserve full momentum with correction enabled");
             Check(impact.Impulse.Y < -1 && impact.Impulse.X < -1, "Both material impulse channels remain active.");
         }
     }
-    private static void VerifyLiveEdits(bool resident, bool stages)
+    private void VerifyLiveEdits(bool resident, bool stages)
     {
-        using var r = new Rig(resident, stages); r.Set(new(.8f, .3f)); r.Step();
+        using var r = new Rig(backend, resident, stages); r.Set(new(.8f, .3f)); r.Step();
         var revision = r.Shape.GeometryRevision; var bounds = r.Shape.GetRect();
         r.Shape.CustomSolverBias = .5f; Check(r.Shape.GeometryRevision == revision && r.Shape.GetRect() == bounds, "Bias edits preserve geometry.");
         r.Reset(); r.Step(); Near(r.Read().Y, .65f, .003f, "Live bias reaches existing body.");
@@ -188,10 +192,10 @@ internal static class PhysicsContactPolicyTests
             Check(r.Store.GeometryUploadBytes == uploads, "Bias edits do not upload vertex geometry.");
         }
     }
-    private static void VerifyScene(bool stages)
+    private void VerifyScene(bool stages)
     {
         using var shape = new CircleShape { Radius = 5 }; using var floorShape = new WorldBoundaryShape();
-        var root = new Node(); var floor = new StaticBody { Name = "Floor", Position = new(0, 5) };
+        using var world = new World(backend); using var root = new SubViewport { World = world }; var floor = new StaticBody { Name = "Floor", Position = new(0, 5) };
         floor.AddChild(new CollisionShape { Shape = floorShape }); root.AddChild(floor);
         var body = new RigidBody
         {
@@ -207,6 +211,7 @@ internal static class PhysicsContactPolicyTests
         };
         body.AddChild(new CollisionShape { Shape = shape }); root.AddChild(body);
         using var tree = new SceneTree(root); var space = body.GetWorld()!.Space;
+        Check(PhysicsServer.SpaceGetBackend(space) == backend, "Scene correction uses the selected public backend.");
         if (stages) body.Space!.EnableGPUSolver();
         PhysicsServer.SpaceSetContactDefaultBias(space, 0); PhysicsServer.SpaceSetContactMaxAllowedPenetration(space, 1.2f);
         var entered = 0; var exited = 0; body.BodyEntered += _ => entered++; body.BodyExited += _ => exited++;
@@ -246,20 +251,21 @@ internal static class PhysicsContactPolicyTests
         }
         finally { foreach (var shape in shapes) shape.Dispose(); Directory.Delete(folder, true); }
     }
-    private static void Measure(bool resident, bool stages)
+    private void Measure(bool resident, bool stages)
     {
-        using var r = new Rig(resident, stages); r.Set(new(0, 1.2f));
+        using var r = new Rig(backend, resident, stages); r.Set(new(0, 1.2f));
         for (var i = 0; i < 256; i++) { r.Shape.CustomSolverBias = (i & 1) == 0 ? .25f : .5f; r.Step(1f / 60); }
-        var upload = r.Store?.UploadBytes ?? 0; var uniforms = r.Store?.UniformBytes ?? 0; var readback = r.Store?.ReadbackBytes ?? 0; var wait = r.Store?.WaitMS ?? 0;
-        var samples = new long[128]; var before = GC.GetTotalAllocatedBytes(true);
+        var selected = r.Store ?? PhysicsServer.Service.GetSceneSpace(r.Space).GPUStore;
+        var upload = selected?.UploadBytes ?? 0; var uniforms = selected?.UniformBytes ?? 0; var readback = selected?.ReadbackBytes ?? 0; var wait = selected?.WaitMS ?? 0;
+        var samples = new long[128]; var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var before = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < samples.Length; i++)
         {
             var start = Stopwatch.GetTimestamp(); r.Shape.CustomSolverBias = (i & 1) == 0 ? .25f : .5f; r.Step(1f / 60); samples[i] = Stopwatch.GetTimestamp() - start;
         }
-        var bytes = GC.GetTotalAllocatedBytes(true) - before; Array.Sort(samples); var ms = 1000d / Stopwatch.Frequency;
-        Console.WriteLine($"Contact policy {(resident ? "resident GPU" : stages ? "CPU host/GPU stages" : "CPU")}: one active contact, changing shape bias, 256 warmup/128 whole 1/60 s steps; p50/p95/p99={samples[64] * ms:F4}/{samples[121] * ms:F4}/{samples[126] * ms:F4} ms; {bytes} all-thread managed B.");
-        if (r.Store is { } gpu) Console.WriteLine($"Resident contact policy traffic/frame: upload={(gpu.UploadBytes - upload) / 128}, uniforms={(gpu.UniformBytes - uniforms) / 128}, readback={(gpu.ReadbackBytes - readback) / 128} B; wait={(gpu.WaitMS - wait) / 128:F4} ms; {gpu.Driver}, {gpu.DeviceName}.");
-        Check(bytes == 0, "Warmed shape policy edits and active steps allocate zero managed memory.");
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore; var bytes = GC.GetTotalAllocatedBytes(true) - before; Array.Sort(samples); var ms = 1000d / Stopwatch.Frequency;
+        Console.WriteLine($"Contact policy {(resident ? "resident GPU" : stages ? "CPU host/GPU stages" : backend.ToString())}: one active contact, changing shape bias, 256 warmup/128 whole 1/60 s steps; p50/p95/p99={samples[64] * ms:F4}/{samples[121] * ms:F4}/{samples[126] * ms:F4} ms; {ownerBytes}/{bytes} owner/all-thread managed B.");
+        if (selected is { } gpu) Console.WriteLine($"Selected contact policy traffic/frame: upload={(gpu.UploadBytes - upload) / 128}, uniforms={(gpu.UniformBytes - uniforms) / 128}, readback={(gpu.ReadbackBytes - readback) / 128} B; wait={(gpu.WaitMS - wait) / 128:F4} ms; {gpu.Driver}, {gpu.DeviceName}.");
+        Check(ownerBytes == 0 && bytes == 0, "Warmed shape policy edits and active steps allocate zero owner/all-thread managed memory.");
     }
     private static void Near(float actual, float expected, float tolerance, string text) => Check(MathF.Abs(actual - expected) <= tolerance, $"{text}: {actual} vs {expected} (tolerance {tolerance}).");
     private static void Near(Vector2 actual, Vector2 expected, float tolerance, string text) => Check((actual - expected).Length() <= tolerance, $"{text}: {actual} vs {expected} (tolerance {tolerance}).");
