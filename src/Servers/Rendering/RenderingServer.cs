@@ -452,7 +452,7 @@ public sealed partial class RenderingServer : ElectronObject
             var size = _backend.FindTarget(_viewport)!.Size;
             if (!area.Intersects(new Rect2(Vector2.Zero, size), includeBorders: true)) return;
         }
-        _order.Add(new(item, _canvasTooltipOverlay, _canvasStacking, _canvasID, item.RenderZ, _order.Count, item.CanvasUsesWorldCoordinates ? _canvasBasis : transform, ParentGroup(item)));
+        _order.Add(new(item, _canvasTooltipOverlay, _canvasStacking, _canvasID, item.RenderZ, _order.Count, item.CanvasUsesWorldCoordinates ? _canvasBasis : transform, ParentGroup(item), transform));
     }
 
     private bool HasEmptyOwnClip(CanvasItem item, Vector2i pixels, CanvasItem? repeatSource = null) =>
@@ -569,6 +569,6 @@ public sealed partial class RenderingServer : ElectronObject
         if (_ownerThread != Environment.CurrentManagedThreadId) throw new InvalidOperationException("Rendering requires the scene owner thread.");
     }
 
-    private readonly record struct RenderEntry(CanvasItem Node, bool TooltipOverlay, long Stacking, ulong CanvasID, int Z, int Order, Transform Transform, CanvasItem? Group);
+    private readonly record struct RenderEntry(CanvasItem Node, bool TooltipOverlay, long Stacking, ulong CanvasID, int Z, int Order, Transform Transform, CanvasItem? Group, Transform CopyTransform);
     private readonly record struct YSortEntry(CanvasItem Node, Transform Transform, int Order);
 }

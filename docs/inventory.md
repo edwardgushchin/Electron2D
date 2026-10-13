@@ -1427,3 +1427,5 @@ being redirected to the general CPU suite. Both CPU/GPU profiles pass the same
 CCD, infinite-boundary and directed-ray cases on software Vulkan, with explicit
 0/0 owner/all-thread warm allocation gates. See [current software conformance](components/cpu-continuous-collision.md#software-vulkan-continuous-conformance-2026-10-14).
 Hardware performance, native allocation and foreign-platform acceptance remain open.
+
+Retained canvas item copy settings now share the existing screen-snapshot compositor with BackBufferCopy, including source republishing and session-only storage. See [copy settings](components/canvas-rendering.md#retained-backbuffer-copy-settings).

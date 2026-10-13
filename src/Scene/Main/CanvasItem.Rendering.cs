@@ -16,6 +16,11 @@ public abstract partial class CanvasItem
         if (ServerState is not { Owned: false } state) return;
         state.Interpolated = null; state.Interpolation.Reset(state.Transform ?? GetVisualTransform());
     }
+    internal Rect2? RenderCopyRect => ServerState?.Copy is { } retained
+        ? retained.Enabled ? retained.Rect : null
+        : this is BackBufferCopy copy && copy.CopyMode != BackBufferCopyMode.Disabled
+            ? copy.CopyMode == BackBufferCopyMode.Viewport ? default(Rect2) : copy.Rect
+            : null;
     internal Transform RenderGlobal(float fraction) => RenderParent is { } parent ? parent.RenderGlobal(fraction) * RenderLocal(fraction) : RenderLocal(fraction);
     internal Color RenderModulate => ServerState?.Modulate ?? _modulate;
     internal Color RenderSelfModulate => ServerState?.TileOwner is { } tiles ? tiles.RenderSelfModulate : ServerState?.SelfModulate ?? _selfModulate;

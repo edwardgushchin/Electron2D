@@ -22,21 +22,21 @@ public class BackBufferCopy : Entity
     public BackBufferCopy() { }
     /// <summary>Gets or sets the active buffering policy.</summary>
     /// <value>Rect initially.</value>
-    /// <remarks>Every valid assignment commits before notifying the property list, including equal assignments.</remarks>
+    /// <remarks>Every valid assignment republishes the authored copy policy before notifying the property list, including equal assignments.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The enumeration is undefined.</exception>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
     /// <exception cref="Exception">A property-list subscriber fails after commitment.</exception>
-    public BackBufferCopyMode CopyMode { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _mode; } set { EnsureMutable(); Animation.Valid(value); _mode = value; NotifyPropertyListChanged(); } }
+    public BackBufferCopyMode CopyMode { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _mode; } set { EnsureMutable(); Animation.Valid(value); _mode = value; if (ServerState is { } state) state.Copy = null; NotifyPropertyListChanged(); } }
     /// <summary>Gets or sets the finite local rectangle used by Rect mode.</summary>
     /// <value>-100,-100,200,200 initially; signed dimensions are retained.</value>
-    /// <remarks>Every assignment commits and raises ItemRectChanged. The zero-valued rectangle uses a complete
+    /// <remarks>Every valid assignment republishes the authored copy policy and raises ItemRectChanged. The zero-valued rectangle uses a complete
     /// viewport copy, matching the full-copy sentinel. Samples outside a nonempty copied region are unspecified.</remarks>
     /// <exception cref="ArgumentException">The rectangle is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
     /// <exception cref="Exception">An ItemRectChanged subscriber fails after commitment.</exception>
-    public Rect2 Rect { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _rect; } set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentException("Copy rectangles must be finite.", nameof(value)); _rect = value; NotifyItemRectChanged(); } }
+    public Rect2 Rect { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _rect; } set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentException("Copy rectangles must be finite.", nameof(value)); _rect = value; if (ServerState is { } state) state.Copy = null; NotifyItemRectChanged(); } }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(CopyProperties);
     /// <inheritdoc />

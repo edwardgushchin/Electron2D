@@ -1,6 +1,6 @@
 # BackBufferCopy
 
-Last updated: 2026-10-04
+Last updated: 2026-10-14
 
 **Namespace:** `Electron2D`. **Declaration:** `public class BackBufferCopy : Entity`.
 
@@ -130,3 +130,5 @@ Remarks: Overrides append or replace descriptors; they must not yield null entri
 [CanvasCompositionTests](../../tests/Electron2D.Tests/CanvasCompositionTests.cs) checks authoring, callbacks, typed packing/owner boundaries and actual native pixels. Linux Wayland GPU and hardware compatibility execute the baseline; GPU HLSL/GLSL additionally check custom screen reading and generated LOD. Stable-size warm active/idle intervals measure managed allocation; native allocator totals, other platforms, large scenes, editor inspector integration and human acceptance remain separate.
 
 Inherited ClipChildren uses the shared canvas mask contract; nongeometry owners can capture a range without visible final mask geometry. Editor inspector hiding remains dependent on the first editor inspector slice.
+
+Retained screen snapshots can be configured through RenderingServer.CanvasItemSetCopyToBackBuffer on live item identities. BackBufferCopy source assignments republish the authored policy; renderer-only settings stay outside scene getters/storage. See [retained copy contract](../components/canvas-rendering.md#retained-backbuffer-copy-settings).

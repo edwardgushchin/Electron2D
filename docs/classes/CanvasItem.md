@@ -1350,3 +1350,5 @@ A retained server visibility notification can extend command/custom culling boun
 GetScreenTransform now includes the outer containing native Window origin for embedded viewport/container chains. Viewport.GetScreenTransform retains its client-coordinate role. Wayland desktop placement remains explicitly unsupported. ControlPointerTests covers the shared nested origin contract.
 
 RenderingServer.CanvasItemSetCanvasGroupMode may override live composition without changing these authored properties. Changed ClipChildren values and CanvasGroup margin/mipmap assignments republish their scene policy; renderer teardown clears native overrides.
+
+Retained screen snapshots can be configured through RenderingServer.CanvasItemSetCopyToBackBuffer on live item identities. BackBufferCopy source assignments republish the authored policy; renderer-only settings stay outside scene getters/storage. See [retained copy contract](../components/canvas-rendering.md#retained-backbuffer-copy-settings).

@@ -79,10 +79,10 @@ public sealed partial class RenderingServer
             if ((item.Node.ServerState?.Group is not null || item.Node is CanvasGroup) && IsCompositor(item.Node) && GroupSettings(item.Node).Mode != CanvasGroupMode.ClipAndDraw) continue;
             if (active is not null && owner is not null && !ReferenceEquals(owner, active))
                 throw new NotSupportedException("Overlapping canvas-group ranges require separate nested backbuffers.");
-            if (item.Node is BackBufferCopy copy && copy.CopyMode != BackBufferCopyMode.Disabled && active is null)
+            if (item.Node.RenderCopyRect is { } copyRect && active is null)
             {
-                var rect = copy.CopyMode == BackBufferCopyMode.Viewport || copy.Rect == default ? new Rect2(Vector2.Zero, new(pixels.X, pixels.Y)) : item.Transform * copy.Rect;
-                _batches.Add(new(0, 0, null, Operation: CanvasOperation.Copy, Region: PixelRegion(rect, pixels, GetClip(copy, pixels))));
+                var rect = copyRect == default ? new Rect2(Vector2.Zero, new(pixels.X, pixels.Y)) : item.CopyTransform * copyRect;
+                _batches.Add(new(0, 0, null, Operation: CanvasOperation.Copy, Region: PixelRegion(rect, pixels, GetClip(item.Node, pixels))));
             }
             var startBatch = _batches.Count;
             _appendedInstanceBounds = null;

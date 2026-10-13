@@ -9,6 +9,10 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES_CHILD") is { } particlesPath) { CPUParticlesTests.RunChild(particlesPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES_HOST") == "1") { CPUParticlesTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES") == "1") { CPUParticlesTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_BACKBUFFER") is { } copyProfile) { if (copyProfile == "managed") CanvasBackBufferTests.RunManaged(); else CanvasBackBufferTests.RunNative(copyProfile); return; }
 if (args.Length == 2 && args[0] == "--msaa-scene") { CanvasMSAATests.ReadFile(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTERPOLATION_NATIVE") == "1")
 {
@@ -482,9 +486,6 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IK") == "1") { SkeletonI
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SKELETON_CHILD") is { } skeletonPath) { SkeletonTests.RunChild(skeletonPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SKELETON_HOST") == "1") { SkeletonTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SKELETON") == "1") { SkeletonTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES_CHILD") is { } particlesPath) { CPUParticlesTests.RunChild(particlesPath); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES_HOST") == "1") { CPUParticlesTests.RunHost(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES") == "1") { CPUParticlesTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_CATALOG") == "empty") { SystemFontTests.RunEmptyCatalog(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_CATALOG") == "collection") { SystemFontTests.RunCollectionCatalog(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_CATALOG") == "1") { SystemFontTests.RunCatalog(); return; }
