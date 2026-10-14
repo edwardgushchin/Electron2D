@@ -9,7 +9,7 @@ Last updated: 2026-10-14
 
 ## Description
 
-Owns a copied native font source, a public FreeType face, and HarfBuzz face/font/buffer handles on one serialized text owner: the native worker or nonthreaded browser execution thread. FontData serializes access from public Font resources. SFNT tables are obtained through FT_Load_Sfnt_Table, allowing the same path to shape compressed WOFF2 and ordinary TTF/OTF/TTC data without reading private library structures. HarfBuzz OT functions supply shaping, while explicit FreeType callbacks preserve unhinted advances, glyph extents and vertical origins.
+Owns a copied native font source, a public FreeType face, and HarfBuzz face/font/buffer handles on one serialized text owner: the native worker or nonthreaded browser execution thread. FontData serializes access from public Font resources. SFNT tables are obtained through FT_Load_Sfnt_Table, allowing the same path to shape compressed WOFF2 and ordinary TTF/OTF/TTC data without reading private library structures. HarfBuzz OT functions supply SFNT shaping, while explicit FreeType callbacks preserve unhinted advances, glyph extents and vertical origins. Scalable non-SFNT Type 1 sources set the HarfBuzz face glyph count/units and supply native nominal/selector mapping and unhinted pair kerning callbacks to the same shaper. Optional PFM/AFM bytes attach through FT_Attach_Stream before metrics and shaping configuration; attachment borrows pinned bytes only during the native call. SFNT introspection has no fabricated tables for these sources.
 
 C-long fields and arguments retain `CLong`/`CULong` widths. Native returns use integer registers (`nint`/`nuint`), with Windows results narrowed to its 32-bit C long. Returning the managed wrapper struct selected the wrong struct-return ABI on Android x86 and corrupted underline metrics; the shared regression retains exact metrics, character-map, shaping and raster assertions on the Android host.
 
@@ -17,7 +17,7 @@ C-long fields and arguments retain `CLong`/`CULong` widths. Native returns use i
 
 | Member | Contract |
 | --- | --- |
-| `NativeFontPrecision(byte[] immutableData, int faceIndex = 0)` | Copies bytes into owned native storage, validates the face/tables and initializes size 16. |
+| `NativeFontPrecision(byte[] immutableData, int faceIndex = 0, byte[]? auxiliaryMetrics = null)` | Copies bytes into owned native storage, validates the face/tables and initializes size 16. |
 | `FamilyName`, `StyleName`, `FaceCount`, `GlyphCount`, `UnitsPerEm`, `FaceFlags`, `FaceStyleFlags` | Copied face metadata. |
 | `Ascent`, `Descent`, `Height`, `LineHeight`, `UnderlinePosition`, `UnderlineThickness` | Metrics for the current size; Height is ascent plus descent. |
 | `SetSize(float pixels)` | Finite positive size converted to 26.6; updates FreeType and HarfBuzz scales together. |

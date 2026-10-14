@@ -87,7 +87,7 @@ internal sealed partial class NativeSystemFonts
             finally { if (coverage != 0) FcCharSetDestroy(coverage); if (fonts != 0) FcFontSetDestroy(fonts); if (characters != 0) FcCharSetDestroy(characters); if (pattern != 0) FcPatternDestroy(pattern); }
         }
     }
-    private static bool Supported(nint font) => String(font, "fontformat") is "TrueType" or "CFF";
+    private static bool Supported(nint font) => String(font, "fontformat") is "TrueType" or "CFF" or "Type 1";
     private static string String(nint pattern, string name) => FcPatternGetString(pattern, name, 0, out var value) == 0 ? Marshal.PtrToStringUTF8(value) ?? "" : "";
     private static void Require(nint value) { if (value == 0) throw new OutOfMemoryException("Font catalog allocation failed."); }
     private static void Check(int value) { if (value == 0) throw new InvalidOperationException("Font catalog rejected a request."); }

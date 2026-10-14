@@ -43,7 +43,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
     internal float UnderlinePosition { get; private set; }
     internal float UnderlineThickness { get; private set; }
 
-    internal NativeFontPrecision(byte[] immutableData, int faceIndex = 0)
+    internal NativeFontPrecision(byte[] immutableData, int faceIndex = 0, byte[]? auxiliaryMetrics = null)
     {
         ArgumentNullException.ThrowIfNull(immutableData);
         ArgumentOutOfRangeException.ThrowIfNegative(faceIndex);
@@ -55,7 +55,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
             immutableData.CopyTo(new Span<byte>(_data, immutableData.Length));
             CheckFT(FTNewMemoryFace(_library, _data, new CLong(immutableData.Length), new CLong(faceIndex), out _face));
             var face = (FaceRecord*)_face;
-            if ((face->Flags.Value & 8) == 0) throw new NotSupportedException("This font requires an SFNT table source.");
+            if ((face->Flags.Value & (8 | 1)) == 0) throw new NotSupportedException("This source requires a scalable outline or SFNT font face.");
             FaceCount = checked((int)face->Count.Value);
             GlyphCount = checked((int)face->GlyphCount.Value);
             UnitsPerEm = face->UnitsPerEm;
@@ -63,18 +63,22 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
             FaceStyleFlags = face->StyleFlags.Value;
             FamilyName = Marshal.PtrToStringUTF8(face->FamilyName) ?? string.Empty;
             StyleName = Marshal.PtrToStringUTF8(face->StyleName) ?? string.Empty;
+            AttachMetrics(auxiliaryMetrics);
+            FaceFlags = face->Flags.Value;
             _callbacks = (CallbackState*)NativeMemory.AllocZeroed((nuint)sizeof(CallbackState));
             _callbacks->Face = _face;
             _hbFace = HBFaceCreate((nint)(delegate* unmanaged[Cdecl]<nint, uint, nint, nint>)&ReferenceTable, (nint)_callbacks, 0);
+            if (_hbFace != 0 && !IsSFNT) { HBFaceSetGlyphCount(_hbFace, (uint)GlyphCount); HBFaceSetUPEM(_hbFace, (uint)UnitsPerEm); }
             if (_hbFace == 0 || HBFaceGetGlyphCount(_hbFace) == 0) throw new ArgumentException("Font has no usable shaping tables.", nameof(immutableData));
             SupportedScripts = ReadSupportedScripts();
             _parentFont = HBFontCreate(_hbFace);
-            HBOTFontSetFuncs(_parentFont);
+            if (IsSFNT) HBOTFontSetFuncs(_parentFont);
             _font = HBFontCreateSubFont(_parentFont);
             var funcs = HBFontFuncsCreate();
             if (funcs == 0 || _parentFont == 0 || _font == 0) throw new OutOfMemoryException();
             try
             {
+                if (!IsSFNT) ConfigureOutlineCallbacks(funcs);
                 HBFontFuncsSetHorizontalAdvance(funcs, (nint)(delegate* unmanaged[Cdecl]<nint, nint, uint, nint, int>)&HorizontalAdvance, 0, 0);
                 HBFontFuncsSetVerticalAdvance(funcs, (nint)(delegate* unmanaged[Cdecl]<nint, nint, uint, nint, int>)&VerticalAdvance, 0, 0);
                 HBFontFuncsSetGlyphExtents(funcs, (nint)(delegate* unmanaged[Cdecl]<nint, nint, uint, HBGlyphExtents*, nint, int>)&GlyphExtents, 0, 0);
@@ -205,7 +209,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
     internal byte[] GetSFNTTable(uint tag)
     {
         EnsureOwner();
-        if (_bitmap != null) return [];
+        if (_bitmap != null || !IsSFNT) return [];
         CULong size = default;
         var error = FTLoadSFNTTable(_face, new CULong(tag), default, null, ref size);
         if (error == 0x8E) return []; // The optional table is absent.

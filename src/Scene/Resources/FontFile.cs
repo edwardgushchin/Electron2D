@@ -78,7 +78,7 @@ public partial class FontFile : Font
     private void EnsureLoadedLocked()
     {
         if (!_deferred) return;
-        var replacement = CreateData(_bytes);
+        var replacement = CreateData(_bytes, _type1Metrics);
         try { CopyConfiguration(_fontData!, replacement); }
         catch { replacement.Dispose(); throw; }
         var previous = _fontData;
@@ -88,7 +88,8 @@ public partial class FontFile : Font
 
     /// <summary>Gets a copied font source or atomically replaces it with copied, validated scalable font data.</summary>
     /// <value>Empty initially. At most sixty-four MiB; an empty assignment clears the face while preserving configuration.</value>
-    /// <remarks>Nonempty bytes must contain a supported SFNT font, including decompressed TTF/OTF/TTC or WOFF/WOFF2.
+    /// <remarks>Nonempty bytes must contain a supported SFNT font (TTF/OTF/TTC or WOFF/WOFF2) or Type 1 PFB/PFA outlines.
+    /// Assigning bytes clears previously attached auxiliary metrics; archives and duplicates retain their complete source pair.
     /// Replacement refreshes intrinsic metadata. Failure preserves all previous state; success emits Changed even for equal bytes.
     /// Active readers retain the old native face until they finish; recorded glyph pixels remain independent canvas snapshots.</remarks>
     /// <exception cref="ArgumentNullException">The supplied array is null.</exception>
@@ -215,7 +216,9 @@ public partial class FontFile : Font
 
     /// <summary>Atomically loads a scalable font from an operating-system, res:// or user:// file.</summary>
     /// <param name="path">A supported dynamic-font source file.</param>
-    /// <remarks>Input is bounded to sixty-four MiB. Success resets hinting to Light, subpixel positioning to Disabled,
+    /// <remarks>Input is bounded to sixty-four MiB including auxiliary metrics. PFB/PFA sources attach the first existing
+    /// paired PFM or AFM file, with PFM taking precedence. A PFM/AFM path resolves a same-name PFB then PFA outline
+    /// file, accepting lowercase or uppercase extensions. Malformed pairs fail before publication. Success resets hinting to Light, subpixel positioning to Disabled,
     /// remainder preservation to true, modulation to false and oversampling to zero; feature overrides and fallbacks remain.
     /// Read or decode failures preserve the previous font. Success emits Changed after the replacement is committed.</remarks>
     /// <exception cref="InvalidDataException">The file is empty, malformed, unsupported or exceeds the size limit.</exception>
@@ -224,12 +227,8 @@ public partial class FontFile : Font
     public void LoadDynamicFont(string path)
     {
         ThrowIfDisposed();
-        using var file = FileAccess.Open(path, FileAccessModeFlags.Read);
-        var length = file.Length;
-        if (length is <= 0 or > MaximumFontBytes) throw new InvalidDataException("Font files must contain between one byte and sixty-four MiB.");
-        var bytes = file.ReadBytes((int)length);
-        if (bytes.Length != length || file.Length != length) throw new IOException("The font file changed while being read.");
-        ReplaceData(bytes, true);
+        var source = FontData.ReadSource(path); ValidateSourceBudget(source.Bytes, source.Metrics);
+        ReplaceData(source.Bytes, true, source.Metrics);
     }
 
     private T Read<T>(Func<FontData, T> getter, bool metadata = false)
@@ -258,15 +257,15 @@ public partial class FontFile : Font
         return result;
     }
 
-    private static FontData CreateData(byte[] bytes)
+    private static FontData CreateData(byte[] bytes, byte[]? auxiliaryMetrics = null)
     {
-        try { return new FontData(bytes); }
+        try { return new FontData(bytes, auxiliaryMetrics: auxiliaryMetrics); }
         catch (Exception error) when (error is InvalidOperationException or ArgumentException || error is NotSupportedException and not PlatformNotSupportedException)
         { throw new InvalidDataException("The font source could not be decoded.", error); }
     }
-    private void ReplaceData(byte[] bytes, bool reset)
+    private void ReplaceData(byte[] bytes, bool reset, byte[]? auxiliaryMetrics = null)
     {
-        var replacement = CreateData(bytes); if (reset) replacement.AllowSystemFallback = true; FontData? previous = null;
+        var replacement = CreateData(bytes, auxiliaryMetrics); if (reset) replacement.AllowSystemFallback = true; FontData? previous = null;
         try
         {
             lock (FontGate)
@@ -275,7 +274,7 @@ public partial class FontFile : Font
                 if (!reset) CopyConfiguration(_fontData!, replacement);
                 else { replacement.SubpixelPositioning = FontSubpixelPositioning.Disabled; _fixedSize = 0; _fixedScaleMode = global::Electron2D.FixedSizeScaleMode.Disable; }
                 replacement.SupportPolicy = _fontData!.SupportPolicy; replacement.OpenTypeFeatures = _fontData!.OpenTypeFeatures;
-                previous = _fontData; ClearAuthoredLocked(); _fontData = replacement; _bytes = bytes; _deferred = false; InvalidateFontStateLocked();
+                previous = _fontData; ClearAuthoredLocked(); _fontData = replacement; _bytes = bytes; _type1Metrics = auxiliaryMetrics ?? []; _deferred = false; InvalidateFontStateLocked();
             }
         }
         catch { replacement.Dispose(); throw; }
@@ -296,26 +295,26 @@ public partial class FontFile : Font
         if (failure is not null) ExceptionDispatchInfo.Capture(failure).Throw();
     }
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(FileProperties).Append(CacheProperty).Append(SupportProperty).Concat(RasterProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(FileProperties).Append(MetricsProperty).Append(CacheProperty).Append(SupportProperty).Concat(RasterProperties);
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => GetType() == typeof(FontFile) ? new FontFile() : base.CreateDuplicateInstance();
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
-        byte[] bytes, cacheSnapshot; Dictionary<string, int> features; FontSupportPolicy support; bool deferred; int fixedSize; FixedSizeScaleMode scaleMode;
+        byte[] bytes, metrics, cacheSnapshot; Dictionary<string, int> features; FontSupportPolicy support; bool deferred; int fixedSize; FixedSizeScaleMode scaleMode;
         (bool MSDF, int MSDFPixelRange, int MSDFSize, FontAntialiasing Antialiasing, FontHinting Hinting, FontSubpixelPositioning Subpixel, bool Remainders, float Oversampling, bool Modulate, bool SystemFallback,
             string Name, string Style, FontStyle Flags, int Weight, int Stretch, bool DisableBitmaps, bool AutoHint, bool MIPMaps) settings;
         lock (FontGate)
         {
-            ThrowIfDisposed(); fixedSize = _fixedSize; scaleMode = _fixedScaleMode; bytes = (byte[])_bytes.Clone(); features = new(_featureOverrides, StringComparer.Ordinal); deferred = _deferred;
+            ThrowIfDisposed(); fixedSize = _fixedSize; scaleMode = _fixedScaleMode; bytes = (byte[])_bytes.Clone(); metrics = (byte[])_type1Metrics.Clone(); features = new(_featureOverrides, StringComparer.Ordinal); deferred = _deferred;
             cacheSnapshot = SaveCaches(); support = _fontData!.SupportPolicy;
             var data = _fontData!;
             settings = (data.MultichannelSignedDistanceField, data.MSDFPixelRange, data.MSDFSize, data.Antialiasing, data.Hinting, data.SubpixelPositioning, data.KeepRoundingRemainders, data.Oversampling,
                 data.ModulateColorGlyphs, data.AllowSystemFallback, data.FamilyName, data.StyleName, data.FontStyle, data.FontWeight, data.FontStretch, data.DisableEmbeddedBitmaps, data.ForceAutohinter, data.GenerateMIPMaps);
         }
         var compiledFeatures = CompileFeatures(features);
-        var replacement = deferred ? new FontData([]) : CreateData(bytes);
+        var replacement = deferred ? new FontData([]) : CreateData(bytes, metrics);
         var copy = (FontFile)target; FontData? previous;
         try
         {
@@ -327,7 +326,7 @@ public partial class FontFile : Font
             base.CopyCustomStateTo(target, deep, subresourceMode, duplicateSubresource, forceDuplicateSubresource);
             lock (copy.FontGate)
             {
-                copy.ThrowIfDisposed(); previous = copy._fontData; copy.ClearAuthoredLocked(); copy._fontData = replacement; copy._bytes = bytes;
+                copy.ThrowIfDisposed(); previous = copy._fontData; copy.ClearAuthoredLocked(); copy._fontData = replacement; copy._bytes = bytes; copy._type1Metrics = metrics;
                 copy._fixedSize = fixedSize; copy._fixedScaleMode = scaleMode; copy._featureOverrides = features; copy._deferred = deferred; copy.InvalidateFontStateLocked();
             }
         }
@@ -345,7 +344,7 @@ public partial class FontFile : Font
     protected override void Dispose(bool disposing)
     {
         FontData? data;
-        lock (FontGate) { data = _fontData; ClearAuthoredLocked(); _fontData = null; _bytes = []; _deferred = false; _featureOverrides.Clear(); }
+        lock (FontGate) { data = _fontData; ClearAuthoredLocked(); _fontData = null; _bytes = []; _type1Metrics = []; _deferred = false; _featureOverrides.Clear(); }
         try { data?.Dispose(); }
         finally { base.Dispose(disposing); }
     }

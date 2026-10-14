@@ -13,6 +13,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_CHILD") is {
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_HOST") == "1") { FontRasterPolicyTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER") == "1") { FontRasterPolicyTests.Run(); return; }
 
+if (args.Length == 2 && args[0] == "--font-type1-archive") { Type1FontTests.RunArchive(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TYPE1") is { } type1Profile) { if (type1Profile == "managed") Type1FontTests.RunManaged(); else if (type1Profile == "raster") Type1FontTests.RunRaster(); else if (type1Profile == "catalog") Type1FontTests.RunCatalog(); else Type1FontTests.RunNative(type1Profile); return; }
 if (args.Length == 2 && args[0] == "--font-msdf-archive") { FontMSDFTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_MSDF") is { } fontMSDFProfile) { if (fontMSDFProfile == "color-fallback") FontMSDFTests.RunColorFallback(); else if (fontMSDFProfile == "managed") FontMSDFTests.RunManaged(); else if (fontMSDFProfile == "raster") FontMSDFTests.RunRaster(); else FontMSDFTests.RunNative(fontMSDFProfile); return; }
 

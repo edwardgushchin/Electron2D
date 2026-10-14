@@ -103,7 +103,7 @@ public partial class FontFile
     private List<FontData> PublishCachesLocked(List<FontCache> caches, Action<FontData>? configure = null)
     {
         List<FontData> created = [], retired = [];
-        try { foreach (var cache in caches) created.Add(BuildCacheData(cache)); if (created.Count == 0) { var data = new FontData(_bytes); CopyConfiguration(_fontData!, data); data.FamilyName = _fontData!.FamilyName; data.StyleName = _fontData.StyleName; data.FontStyle = _fontData.FontStyle; data.FontWeight = _fontData.FontWeight; data.FontStretch = _fontData.FontStretch; created.Add(data); } foreach (var data in created) configure?.Invoke(data); }
+        try { foreach (var cache in caches) created.Add(BuildCacheData(cache)); if (created.Count == 0) { var data = new FontData(_bytes, auxiliaryMetrics: _type1Metrics); CopyConfiguration(_fontData!, data); data.FamilyName = _fontData!.FamilyName; data.StyleName = _fontData.StyleName; data.FontStyle = _fontData.FontStyle; data.FontWeight = _fontData.FontWeight; data.FontStretch = _fontData.FontStretch; created.Add(data); } foreach (var data in created) configure?.Invoke(data); }
         catch { foreach (var data in created) data.Dispose(); throw; }
         retired.Add(_fontData!); retired.AddRange(_cacheData.Values); _cacheData.Clear(); _caches.Clear(); _caches.AddRange(caches);
         if (caches.Count > 0) { _fixedSize = caches[0].FixedSize; _fixedScaleMode = caches[0].ScaleMode; }

@@ -8,7 +8,7 @@ Last updated: 2026-10-12
 
 ## Runtime flow
 
-Linux enumeration filters scalable TrueType/CFF fonts and returns copied ordered family aliases. Style matching uses configured family preferences, OpenType weight conversion, width and slant. Text matching adds scalar coverage and locale, returning ordered file/face records contributing actual requested coverage. Fontconfig native pattern/charset/object/font-set handles are released on every path; the catalog retains its owned configuration. Missing optional library/catalog or unsupported providers produce absent query results.
+Linux enumeration filters scalable TrueType/CFF/Type 1 fonts and returns copied ordered family aliases. Style matching uses configured family preferences, OpenType weight conversion, width and slant. Text matching adds scalar coverage and locale, returning ordered file/face records contributing actual requested coverage. Fontconfig native pattern/charset/object/font-set handles are released on every path; the catalog retains its owned configuration. Missing optional library/catalog or unsupported providers produce absent query results.
 
 SystemFont loads bounded source bytes, scores all collection faces for family/weight/width/italic, retains tied logical faces, and applies supported variable axes when the match is not exact. Its independent native data uses the existing FontThread owner, unhinted shaping, rounding, phase-aware raster, clipping and retained texture lifecycle. Matching FontVariation instances map logical indices and merge system default coordinates with explicit override precedence. Unresolved requests clone native data from the borrowed theme font, watch it weakly and follow theme replacement without disposing the theme.
 

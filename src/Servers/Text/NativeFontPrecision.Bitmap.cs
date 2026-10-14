@@ -16,7 +16,7 @@ internal sealed unsafe partial class NativeFontPrecision
             _callbacks = (CallbackState*)NativeMemory.AllocZeroed((nuint)sizeof(CallbackState));
             _bitmapHandle = GCHandle.Alloc(this); _callbacks->Bitmap = GCHandle.ToIntPtr(_bitmapHandle);
             _hbFace = HBFaceCreate((nint)(delegate* unmanaged[Cdecl]<nint, uint, nint, nint>)&BitmapReferenceTable, 0, 0);
-            HBFaceSetGlyphCount(_hbFace, 0x110000); HBFaceSetUpem(_hbFace, 64);
+            HBFaceSetGlyphCount(_hbFace, 0x110000); HBFaceSetUPEM(_hbFace, 64);
             _font = HBFontCreate(_hbFace);
             var funcs = HBFontFuncsCreate();
             if (_font == 0 || funcs == 0) throw new OutOfMemoryException();
@@ -74,6 +74,6 @@ internal sealed unsafe partial class NativeFontPrecision
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
     private static nint BitmapReferenceTable(nint face, uint tag, nint data) => HBBlobGetEmpty();
     [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_face_set_glyph_count"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFaceSetGlyphCount(nint face, uint count);
-    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_face_set_upem"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFaceSetUpem(nint face, uint upem);
+    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_face_set_upem"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFaceSetUPEM(nint face, uint upem);
     [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_font_funcs_set_nominal_glyph_func"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFontFuncsSetNominalGlyph(nint funcs, nint callback, nint data, nint destroy);
 }

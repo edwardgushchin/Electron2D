@@ -69,7 +69,7 @@ public partial class FontFile
             replacement.SupportPolicy = _fontData!.SupportPolicy; replacement.OpenTypeFeatures = _fontData.OpenTypeFeatures; replacement.FamilyName = imported.Name; replacement.FontStyle = imported.Style;
             replacement.FontWeight = (imported.Style & FontStyle.Bold) != 0 ? 700 : 400;
             retired.Add(_fontData); retired.AddRange(_cacheData.Values); _cacheData.Clear(); _caches.Clear(); _caches.Add(imported.Cache);
-            _fixedSize = imported.Cache.FixedSize; _fixedScaleMode = imported.Cache.ScaleMode; _fontData = replacement; _bytes = []; _deferred = false; InvalidateFontStateLocked();
+            _fixedSize = imported.Cache.FixedSize; _fixedScaleMode = imported.Cache.ScaleMode; _fontData = replacement; _bytes = []; _type1Metrics = []; _deferred = false; InvalidateFontStateLocked();
         }
         try { EmitChanged(); } finally { foreach (var data in retired) data.Dispose(); }
     }

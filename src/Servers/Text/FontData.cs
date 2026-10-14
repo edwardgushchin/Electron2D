@@ -12,6 +12,7 @@ internal sealed partial class FontData : IDisposable
     private enum Operation { Create, Dispose, Metrics, Index, Advance, Shape, Glyph, Characters, Kerning, Names }
     private readonly object _gate = new();
     private byte[] _bytes = [];
+    private byte[] _auxiliaryMetrics = [];
     private readonly Action _execute;
     private readonly int _faceIndex;
     private readonly FontInstance? _instance;
@@ -74,10 +75,10 @@ internal sealed partial class FontData : IDisposable
     internal int GlyphCount { get; private set; }
     internal int UnitsPerEm { get; private set; }
 
-    internal FontData(byte[] immutableData, int faceIndex = 0, FontInstance? instance = null, FontCache? authored = null)
+    internal FontData(byte[] immutableData, int faceIndex = 0, FontInstance? instance = null, FontCache? authored = null, byte[]? auxiliaryMetrics = null)
     {
         ArgumentNullException.ThrowIfNull(immutableData);
-        _bitmapData = immutableData.Length == 0 && authored is { Sizes.Count: > 0 }; Authored = authored; _bytes = immutableData; _faceIndex = faceIndex; _instance = instance; _execute = Execute;
+        _bitmapData = immutableData.Length == 0 && authored is { Sizes.Count: > 0 }; Authored = authored; _bytes = immutableData; _auxiliaryMetrics = auxiliaryMetrics ?? []; _faceIndex = faceIndex; _instance = instance; _execute = Execute;
         if (HasData)
         {
             if ((!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsAndroid() && !OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS() && !OperatingSystem.IsBrowser()) ||
@@ -99,7 +100,7 @@ internal sealed partial class FontData : IDisposable
             }
             var cache = Authored?.Clone(discardGenerated: _bytes.Length > 0);
             if (cache != null && _bytes.Length > 0 && !Authored!.Matches(instance)) cache.Sizes.Clear();
-            var result = new FontData(_bytes, instance.FaceIndex, instance, cache);
+            var result = new FontData(_bytes, instance.FaceIndex, instance, cache, _auxiliaryMetrics);
             try
             {
                 result.MultichannelSignedDistanceField = MultichannelSignedDistanceField; result.MSDFPixelRange = MSDFPixelRange; result.MSDFSize = MSDFSize; result.Antialiasing = Antialiasing; result.Hinting = Hinting; result.SubpixelPositioning = SubpixelPositioning; result.KeepRoundingRemainders = KeepRoundingRemainders; result.Oversampling = Oversampling; result.ModulateColorGlyphs = ModulateColorGlyphs;
@@ -227,7 +228,7 @@ internal sealed partial class FontData : IDisposable
             case Operation.Create:
                 try
                 {
-                    _precision = _bytes.Length > 0 ? new NativeFontPrecision(_bytes, _faceIndex) : new NativeFontPrecision(Authored!);
+                    _precision = _bytes.Length > 0 ? new NativeFontPrecision(_bytes, _faceIndex, _auxiliaryMetrics) : new NativeFontPrecision(Authored!);
                     if (_instance != null && _bytes.Length > 0) _precision.ConfigureInstance(_instance);
                     _colorFont = (_precision.FaceFlags & (1L << 14)) != 0; _scalableFont = (_precision.FaceFlags & 1) != 0; SupportedScripts = _precision.SupportedScripts; VariationAxes = _precision.VariationAxes; Palettes = _precision.Palettes; PaletteNames = _precision.PaletteNames;
                     SupportedFeatures = _precision.SupportedFeatures; NameStrings = _precision.NameStrings;
@@ -313,7 +314,7 @@ internal sealed partial class FontData : IDisposable
         catch (Exception error) { (errors ??= []).Add(error); }
         finally
         {
-            _precision = null; _bytes = []; _characters = null; _glyphResult = default;
+            _precision = null; _bytes = []; _auxiliaryMetrics = []; _characters = null; _glyphResult = default;
             _metrics.Clear(); _indices.Clear(); _advances.Clear();
         }
         if (errors is not null) throw new AggregateException("Font native cleanup failed.", errors);

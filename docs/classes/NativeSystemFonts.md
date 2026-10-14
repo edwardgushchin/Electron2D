@@ -11,3 +11,5 @@ Owns lazy optional Linux Fontconfig configuration, serialized catalog queries, c
 ## Verification and limits
 
 SystemFontTests exercises host and isolated fixture/empty catalogs, native sources, lifecycle and current prepared consumers. Current installed discovery is Linux-only; platform provider, native allocator and foreign execution gates remain explicit under [ADR 0046](../decisions/rendering.md#adr-0046).
+
+Type 1 PFB/PFA sources share native shaping and raster/MSDF consumers. The common file reader resolves optional PFM/AFM metrics and preserves their byte snapshot in variations and reopened native faces. Linux catalog discovery admits scalable Type 1 sources. See [source-pair behavior and verification](../components/text.md#type-1-outline-and-auxiliary-metric-sources).

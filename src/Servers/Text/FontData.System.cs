@@ -68,11 +68,9 @@ internal sealed partial class FontData
     }
     internal static FontData LoadSystemSource(SystemFontMatch match)
     {
-        using var source = FileAccess.Open(match.Path, FileAccessModeFlags.Read); var length = source.Length;
-        if (length is <= 0 or > 64 * 1024 * 1024) throw new InvalidDataException("System font source exceeds its byte budget.");
-        var bytes = source.ReadBytes((int)length); if (bytes.Length != length || source.Length != length) throw new IOException("System font changed while being read.");
-        return new FontData(bytes, match.FaceIndex);
+        var source = ReadSource(match.Path); return new FontData(source.Bytes, match.FaceIndex, auxiliaryMetrics: source.Metrics);
     }
+    internal byte[] SourceMetrics { get { lock (_gate) { Check(); return _auxiliaryMetrics; } } }
     internal byte[] SourceBytes { get { lock (_gate) { Check(); return _bytes; } } }
     private readonly List<FontData> _retiredSystemSources = [];
     private void ReleaseRetiredSystemSources() { foreach (var source in _retiredSystemSources) source.Dispose(); _retiredSystemSources.Clear(); }

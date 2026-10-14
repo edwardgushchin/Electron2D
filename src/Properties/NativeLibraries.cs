@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Electron2D;
 
-internal static class NativeLibraries
+internal static partial class NativeLibraries
 {
 #if IOS || TVOS
     // Static native references are linked into the application executable.
@@ -124,7 +124,22 @@ internal static class NativeLibraries
     {
         var file = System.IO.Path.Combine(AppContext.BaseDirectory,
             "runtimes", RuntimeRID, "native", name);
+#if !IOS && !TVOS && !ANDROID && !ELECTRON2D_BROWSER_NATIVE
+        // Keep packaged font implementations isolated from Fontconfig dependency symbols on Linux.
+        if (OperatingSystem.IsLinux() && !OperatingSystem.IsAndroid() && name is "libfreetype.so" or "libHarfBuzzSharp.so")
+        {
+            var handle = DLOpen(File.Exists(file) ? file : name, 2 | 8); // NOW, LOCAL and DEEPBIND.
+            if (handle == 0) throw new DllNotFoundException(Marshal.PtrToStringUTF8(DLError()) ?? "Font library could not be loaded.");
+            return handle;
+        }
+#endif
         // Platform packages preserve this directory; ordinary resolution also supports older flat layouts.
         return NativeLibrary.Load(File.Exists(file) ? file : name, assembly, searchPath);
     }
+#if !IOS && !TVOS && !ANDROID && !ELECTRON2D_BROWSER_NATIVE
+    [LibraryImport("libdl.so.2", EntryPoint = "dlopen", StringMarshalling = StringMarshalling.Utf8), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial nint DLOpen(string path, int flags);
+    [LibraryImport("libdl.so.2", EntryPoint = "dlerror"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial nint DLError();
+#endif
 }

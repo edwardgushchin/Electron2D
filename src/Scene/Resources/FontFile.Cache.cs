@@ -35,7 +35,7 @@ public partial class FontFile
     }
     private FontData BuildCacheData(FontCache cache)
     {
-        var data = new FontData(_bytes, cache.Instance.FaceIndex, cache.Instance, cache);
+        var data = new FontData(_bytes, cache.Instance.FaceIndex, cache.Instance, cache, _type1Metrics);
         try { CopyConfiguration(_fontData!, data); data.FamilyName = _fontData!.FamilyName; data.StyleName = _fontData.StyleName; data.FontStyle = _fontData.FontStyle; data.FontWeight = _fontData.FontWeight; data.FontStretch = _fontData.FontStretch; return data; } catch { data.Dispose(); throw; }
     }
     private T Query<T>(int index, Func<FontCache, FontData, T> query)

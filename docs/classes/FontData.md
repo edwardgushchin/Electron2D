@@ -41,3 +41,5 @@ Antialiasing is copied into configured variants and owned automatic fallback sou
 ## MSDF integration
 
 MSDF source settings propagate through owned variants and applicable automatic fallbacks. Canonical source/zero-outline images reuse residency across drawn sizes; returned value snapshots carry range, scale and outline metadata. Authored metrics project to requested size, while unhinted shaping remains independent. Color/non-scalable owned fallbacks retain ordinary images.
+
+Type 1 PFB/PFA sources share native shaping and raster/MSDF consumers. The common file reader resolves optional PFM/AFM metrics and preserves their byte snapshot in variations and reopened native faces. Linux catalog discovery admits scalable Type 1 sources. See [source-pair behavior and verification](../components/text.md#type-1-outline-and-auxiliary-metric-sources).

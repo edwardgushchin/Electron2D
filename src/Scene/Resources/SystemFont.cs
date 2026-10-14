@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>Resolves installed font families and styles into ordinary owned native text sources.</summary>
 /// <remarks>Unresolved names use the borrowed theme fallback. Matching and source loading are cold operations;
-/// prepared shaping/raster caches use the same Font and canvas paths. Runtime source paths are not stored in resource archives.</remarks>
+/// prepared shaping/raster caches use the same Font and canvas paths. Linux Type 1 matches load paired PFM/AFM metrics through the shared native source reader.
+/// Runtime source paths are not stored in resource archives.</remarks>
 public partial class SystemFont : Font
 {
     private string[] _names = [];
@@ -54,7 +55,7 @@ public partial class SystemFont : Font
                     source = FontData.LoadSystemSource(match); var bytes = source.SourceBytes; var best = 0; var faces = new List<int>();
                     for (var face = 0; face < source.FaceCount; face++)
                     {
-                        using var candidate = new FontData(bytes, face);
+                        using var candidate = new FontData(bytes, face, auxiliaryMetrics: source.SourceMetrics);
                         var score = (candidate.FamilyName.Equals(family, StringComparison.OrdinalIgnoreCase) ? 80 : 0) + 20 - Math.Abs(candidate.FontWeight - _weight) / 50 + 20 - Math.Abs(candidate.FontStretch - _stretch) / 10 + (((candidate.FontStyle & FontStyle.Italic) != 0) == _italic ? 30 : 0);
                         if (score > best) faces.Clear(); if (score >= best) { best = score; faces.Add(face); }
                     }
@@ -66,7 +67,7 @@ public partial class SystemFont : Font
                         if (source.VariationAxes.ContainsKey(0x77647468)) coordinates[0x77647468] = _stretch;
                         if (_italic && source.VariationAxes.ContainsKey(0x6974616c)) coordinates[0x6974616c] = 1;
                     }
-                    var data = new FontData(bytes, faces[0], new(faces[0], coordinates, 0, Transform.Identity, 0, 0, []));
+                    var data = new FontData(bytes, faces[0], new(faces[0], coordinates, 0, Transform.Identity, 0, 0, []), auxiliaryMetrics: source.SourceMetrics);
                     _faces = faces.ToArray(); data.SystemFaces = _faces; data.AdvertisedFaceCount = _faces.Length; Configure(data); _data = data; return;
                 }
                 catch (Exception error) when (error is IOException or ArgumentException or InvalidOperationException or NotSupportedException) { }

@@ -13,7 +13,7 @@ Last updated: 2026-10-14
 
 ## Description and example
 
-Owns scalable font source bytes and independent native metric, shaping and glyph caches. Replacement retains retired native faces only until active readers finish, then explicitly releases their handles and encoded bytes. Already recorded immutable glyph images remain valid; their native renderer payload is released after the first unused frame. Use Data for copied in-memory data or LoadDynamicFont for an operating-system, res:// or user:// file. TTF, OTF, TTC, WOFF and WOFF2 use the SFNT loading path; Type 1 requires separate non-SFNT integration; bitmap font import and indexed authoring execute through the common path below. Font provides measurement, drawing and ordered borrowed fallbacks.
+Owns scalable font source bytes and independent native metric, shaping and glyph caches. Replacement retains retired native faces only until active readers finish, then explicitly releases their handles and encoded bytes. Already recorded immutable glyph images remain valid; their native renderer payload is released after the first unused frame. Use Data for copied in-memory data or LoadDynamicFont for an operating-system, res:// or user:// file. TTF, OTF, TTC, WOFF and WOFF2 use the SFNT loading path; Type 1 PFB/PFA uses native outline callbacks and optional paired PFM/AFM metrics; bitmap font import and indexed authoring execute through the common path below. Font provides measurement, drawing and ordered borrowed fallbacks.
 
 ```csharp
 using var font = new FontFile();
@@ -485,7 +485,7 @@ Uses the fixed bitmap-size and numeric scaling policy above. Equal property writ
 
 Uses the fixed bitmap-size and numeric scaling policy above. Equal property writes are silent; invalid sizes/modes fail before publication. Disposed resources reject access.
 
-Type 1 PFB/PFM dynamic sources remain unsupported by the SFNT-backed native source profile; their nominal/kerning callbacks and format fixtures are tracked as a separate source capability in coverage. BMFont loading uses the executable bitmap path above.
+Type 1 PFB/PFA sources execute through the shared native owner and text consumers. File imports attach the first existing same-name PFM, then AFM sidecar; lowercase and uppercase extensions are searched in that order. Explicit PFM/AFM imports resolve same-name PFB then PFA outlines. Missing outlines, malformed/empty metrics and a combined source above 64 MiB fail before publication. The private stored `_font_metrics` byte snapshot preserves attached metrics across duplicates, archives, variations and indexed cache rebuilds. Assigning Data replaces outlines and clears attached metrics. Linux system matches and automatic fallback use the same source-pair reader. See [Type 1 sources](../components/text.md#type-1-outline-and-auxiliary-metric-sources). BMFont loading uses the executable bitmap path above.
 
 ## System font integration
 

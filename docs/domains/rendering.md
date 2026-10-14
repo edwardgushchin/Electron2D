@@ -307,3 +307,5 @@ Retained canvas items can copy screen snapshots independently of scene node type
 ## Native font distance generation
 
 [MSDF font generation](../components/text.md#native-msdf-font-generation) completes six FontFile/SystemFont source settings through the serialized native outline owner, canonical indexed image cache and common GPU text path. Current Linux Wayland pixel, source-oracle, managed lifetime and prepared allocation checks are exercised; Compatibility rejects actual encoded submissions. Native package ABI/source/license checks accompany the closure; old native bundles, foreign execution and native allocator totals remain separate.
+
+Type 1 PFB/PFA outlines and paired PFM/AFM native metrics now execute through FontFile, FontVariation, Linux installed/automatic matching, existing text measurement and ordinary/LCD/MSDF canvas consumers. [Source rules and verification](../components/text.md#type-1-outline-and-auxiliary-metric-sources) distinguish byte storage, native images, actual hosts and foreign-platform limits.
