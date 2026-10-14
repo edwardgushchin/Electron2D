@@ -16,6 +16,7 @@ public sealed partial class PhysicsServer
     /// <remarks>Uses the same independent swept-region rules as Shape.CollideWithMotion. Shape resources need
     /// not be attached to the space. Output changes only after complete result validation; unused tails remain
     /// unchanged. Empty output still executes the query. Space owner, lifetime, solver and failure guards apply.
+    /// Both shape resources are borrowed through result validation; geometry/policy edits, reset/copy, RID replacement and retirement reject.
     /// Warmed engine staging is reused; implementation callbacks control their own allocations.</remarks>
     /// <exception cref="ArgumentException">A RID is invalid, a pose is unsupported, or output length is odd.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Motion or transformed geometry is nonfinite or exceeds calculation limits.</exception>

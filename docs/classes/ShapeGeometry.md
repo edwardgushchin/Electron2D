@@ -1,6 +1,6 @@
 # ShapeGeometry
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Declaration:** `public sealed class ShapeGeometry` · **Component:** [Collision shapes](../components/physics-shapes.md)
 
@@ -62,3 +62,10 @@ Twelve exact cases, 512 seeded boundary cases and 128 warmed standalone/selected
 cycles retain the .0001 scene-unit boundary tolerance and 0/0 managed-byte gate.
 See [custom collision geometry](../components/physics-custom-geometry.md) for the
 analytic model and remaining numerical-extension limits.
+
+
+[Shape-pair operand borrowing](../components/physics-shape-pairs.md#operand-borrowing-2026-10-14)
+now protects both resources through standalone and selected callbacks, including
+inherited copying/reset and owned RID replacement/retirement. Nested reads and
+error cleanup retain their existing contract; full numerical/foreign/hardware
+acceptance remains open.

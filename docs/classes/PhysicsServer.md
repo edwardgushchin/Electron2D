@@ -1078,3 +1078,10 @@ torque consumption and atomic authoring rejection. Original warm brackets retain
 0/0 managed bytes. GPU uses llvmpipe; hardware and broader acceptance stay open.
 
 The resident point-field reducer preserves guarded float operation order with GLSL precise intermediates and propagates reconstruction validity separately from the value. Values beyond the finite output range do not enter subsequent arithmetic as infinity sentinels. A later Replace/ReplaceCombine contribution resets validity with the channel; Combine retains an invalid earlier contribution. Final invalid fields fail before body-field publication or solver motion through the existing eight-byte status read and terminal GPU-world policy. Mantissa/exponent normalization avoids reciprocals outside the normal range for large/tiny coordinates. No CPU mirror, buffer growth, new readback or wait is introduced. See [hardware point-field guards](../components/physics-areas.md#hardware-point-field-guards-2026-10-14).
+
+
+[Shape-pair operand borrowing](../components/physics-shape-pairs.md#operand-borrowing-2026-10-14)
+now protects both resources through standalone and selected callbacks, including
+inherited copying/reset and owned RID replacement/retirement. Nested reads and
+error cleanup retain their existing contract; full numerical/foreign/hardware
+acceptance remains open.

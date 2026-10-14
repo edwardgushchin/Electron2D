@@ -22,6 +22,20 @@ internal static class PhysicsShapeCollision
         Transform secondPose, Vector2 secondMotion, Span<Vector2> contacts, out int count)
     {
         ArgumentNullException.ThrowIfNull(second);
+        first.BeginCollisionUse();
+        try
+        {
+            second.BeginCollisionUse();
+            try { return EvaluateBorrowed(first, firstPose, firstMotion, second, secondPose, secondMotion, contacts, out count); }
+            finally { second.EndCollisionUse(); }
+        }
+        finally { first.EndCollisionUse(); }
+    }
+
+    private static bool EvaluateBorrowed(Shape first, Transform firstPose, Vector2 firstMotion, Shape second,
+        Transform secondPose, Vector2 secondMotion, Span<Vector2> contacts, out int count)
+    {
+        ArgumentNullException.ThrowIfNull(second);
         if (first.IsDisposed) throw new ObjectDisposedException(first.GetType().Name);
         if (second.IsDisposed) throw new ObjectDisposedException(second.GetType().Name);
         Validate(firstPose, firstMotion);

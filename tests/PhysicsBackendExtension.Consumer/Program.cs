@@ -1,4 +1,5 @@
-if (args.Contains("--separate-thread")) BackendChecks.RunSeparateThread();
+if (args.Contains("--pair-lifetime")) BackendChecks.RunPairLifetime(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--separate-thread")) BackendChecks.RunSeparateThread();
 else if (args.Contains("--world-copies")) BackendChecks.RunWorldCopies(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--portable-roles")) BackendChecks.RunPortableRoles(args.Contains("--threaded"), args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :

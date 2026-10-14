@@ -1,6 +1,6 @@
 # Selected shape-pair queries
 
-Last updated: 2026-10-11
+Last updated: 2026-10-14
 
 The internal selected-owner bridge executes resource/resource and body-slot/resource
 collision for the pending complete server-extension family. No new public family is
@@ -65,3 +65,30 @@ must remain exactly zero. This is a small contract/overhead check, not final den
 GPU performance or window/FPS acceptance. CPU also runs in the existing fresh
 no-device ownership child. Native allocations, foreign platforms and public-only
 registered solver acceptance remain unverified.
+
+
+## Operand borrowing (2026-10-14)
+
+Standalone resource queries borrow both Shape operands before acquiring immutable
+geometry, through result validation and callback completion. Selected ShapeCollide
+and BodyCollideShape do the same around implementation hooks; detached body pairs
+use the standalone path. Geometry/policy writes, equal geometry writes, inherited
+copy/reset and disposal reject before mutation. Owned server ShapeSetData and
+FreeRID preflight the old geometry before duplicate/registry/attachment changes.
+Nested different pairs and same-resource pairs retain independent borrow counts;
+readonly geometry and resource duplication remain available. User callbacks run
+outside resource locks. Finally releases every acquired operand after success,
+invalid output or callback failure. Existing coordinated authoring/thread policies
+remain; this is not a general concurrent resource transaction protocol.
+
+The public-only --pair-lifetime fixture exercises all four standalone pair families,
+reverse ownership, shared nested custom operands, equal writes, inherited metadata,
+worker callback-time refusal, source disposal, selected hook nesting/owned RID
+replacement/retirement and caller output preservation after failure. CPU/GPU/
+registered serial/separate profiles retain actual primitive contact output and
+128 warm/128 measured complete scene frames plus resource/body pair queries at
+strict 0/0 owner/all-thread managed bytes. A moving raw body verifies 256 units
+over the 256 actual numerical ticks within .02 units; no idle-only thread claim
+is inferred from the requested setting. Pure standalone custom checks need no
+GPU; the selected GPU profile uses CPU-only Vulkan. Wider numerical extension,
+hardware/native/platform/network and full performance acceptance remain open.
