@@ -6,7 +6,9 @@ namespace Electron2D;
 /// before caller output changes. Nested calls have independent scratch and exclusions, restored in finally.
 /// This view owns no world and does not replace the server's cached built-in view. It cannot be disposed, step its world,
 /// release its world, or capture/restore its checkpoints during a query hook. Configuring a larger destination or deeper nesting may allocate;
-/// unchanged warmed calls reuse storage. Implementations must obey query geometry, filtering and ordering contracts.</remarks>
+/// unchanged warmed calls reuse storage. Shape-query resources are borrowed through geometry preparation, hooks and validated publication;
+/// geometry/policy writes, reset/copy, disposal and owned RID replacement/retirement reject during this borrow.
+/// Implementations must obey query geometry, filtering and ordering contracts.</remarks>
 public abstract partial class PhysicsDirectSpaceStateExtension : PhysicsDirectSpaceState
 {
     private readonly PhysicsSpace _space;
@@ -51,6 +53,7 @@ public abstract partial class PhysicsDirectSpaceStateExtension : PhysicsDirectSp
     private sealed class QueryFrame
     {
         internal RID[] Excluded = [];
+        internal Shape? BorrowedShape;
         internal uint Mask;
         internal bool Bodies, Areas;
         internal ulong? Canvas;
@@ -58,18 +61,32 @@ public abstract partial class PhysicsDirectSpaceStateExtension : PhysicsDirectSp
         internal PhysicsShapeResult[] Shapes = [];
         internal Vector2[] Contacts = [];
     }
-    private QueryFrame Begin(RID[] excluded, uint mask, bool bodies, bool areas, ulong? canvas = null)
+    private QueryFrame Begin(RID[] excluded, uint mask, bool bodies, bool areas, ulong? canvas = null, Shape? shape = null)
     {
         ThrowIfDisposed(); _space.EnsureQueryAccess();
         if (_frames.Count == _depth) _frames.Add(new());
         var frame = _frames[_depth];
         frame.Excluded = excluded; frame.Mask = mask; frame.Bodies = bodies; frame.Areas = areas; frame.Canvas = canvas;
-        _space.BeginExtensionCallback(); _depth++; return frame;
+        _space.BeginExtensionCallback(); _depth++;
+        try
+        {
+            if (shape is not null)
+            {
+                shape.BeginCollisionUse(); frame.BorrowedShape = shape;
+                _ = shape.GetGeometryData();
+            }
+            return frame;
+        }
+        catch { End(frame); throw; }
     }
     private void End(QueryFrame frame)
     {
-        frame.Excluded = []; Array.Clear(frame.Points); Array.Clear(frame.Shapes);
-        _depth--; _space.EndExtensionCallback();
+        try { frame.BorrowedShape?.EndCollisionUse(); }
+        finally
+        {
+            frame.BorrowedShape = null; frame.Excluded = []; Array.Clear(frame.Points); Array.Clear(frame.Shapes);
+            _depth--; _space.EndExtensionCallback();
+        }
     }
     private static void Grow<T>(ref T[] storage, int count)
     {
@@ -85,11 +102,11 @@ public abstract partial class PhysicsDirectSpaceStateExtension : PhysicsDirectSp
         if (comparison > 0 || comparison == 0 && previousSlot >= currentSlot)
             throw new InvalidOperationException("A query hook returned duplicate or unordered logical shapes.");
     }
-    private static RID QueryShapeRID(PhysicsShapeQueryParameters parameters)
+    private static (RID RID, Shape Geometry, Transform Transform, Vector2 Motion, float Margin) QueryShape(PhysicsShapeQueryParameters parameters)
     {
         var shape = parameters.Shape ?? PhysicsServer.Service.GetShapeGeometry(parameters.ShapeRID);
         if (shape.IsDisposed) throw new ObjectDisposedException(nameof(Shape));
-        return parameters.ShapeRID;
+        return (parameters.ShapeRID, shape, parameters.Transform, parameters.Motion, parameters.Margin);
     }
     private void ValidateCollider(QueryFrame frame, RID rid, int slot)
     {
@@ -128,13 +145,13 @@ public abstract partial class PhysicsDirectSpaceStateExtension : PhysicsDirectSp
     }
     internal int QueryShape(PhysicsShapeQueryParameters parameters, Span<PhysicsShapeResult> output)
     {
-        var shape = QueryShapeRID(parameters);
-        var frame = Begin(parameters.ExclusionsArray, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas);
+        var shape = QueryShape(parameters);
+        var frame = Begin(parameters.ExclusionsArray, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, shape: shape.Geometry);
         try
         {
             Grow(ref frame.Shapes, output.Length);
             var storage = frame.Shapes.AsSpan(0, output.Length);
-            var count = IntersectShapeCore(shape, parameters.Transform, parameters.Motion, parameters.Margin, frame.Mask, frame.Bodies, frame.Areas, storage);
+            var count = IntersectShapeCore(shape.RID, shape.Transform, shape.Motion, shape.Margin, frame.Mask, frame.Bodies, frame.Areas, storage);
             Count(count, storage.Length);
             for (var i = 0; i < count; i++)
             {
@@ -148,11 +165,11 @@ public abstract partial class PhysicsDirectSpaceStateExtension : PhysicsDirectSp
     }
     internal (float SafeFraction, float UnsafeFraction) QueryMotion(PhysicsShapeQueryParameters parameters)
     {
-        var shape = QueryShapeRID(parameters);
-        var frame = Begin(parameters.ExclusionsArray, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas);
+        var shape = QueryShape(parameters);
+        var frame = Begin(parameters.ExclusionsArray, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, shape: shape.Geometry);
         try
         {
-            var result = CastMotionCore(shape, parameters.Transform, parameters.Motion, parameters.Margin, frame.Mask, frame.Bodies, frame.Areas);
+            var result = CastMotionCore(shape.RID, shape.Transform, shape.Motion, shape.Margin, frame.Mask, frame.Bodies, frame.Areas);
             if (!float.IsFinite(result.SafeFraction) || !float.IsFinite(result.UnsafeFraction) || result.SafeFraction < 0 ||
                 result.UnsafeFraction > 1 || result.SafeFraction > result.UnsafeFraction)
                 throw new InvalidOperationException("A motion hook returned invalid safe/unsafe fractions.");
@@ -162,13 +179,13 @@ public abstract partial class PhysicsDirectSpaceStateExtension : PhysicsDirectSp
     }
     internal int QueryContacts(PhysicsShapeQueryParameters parameters, Span<Vector2> output)
     {
-        var shape = QueryShapeRID(parameters);
-        var frame = Begin(parameters.ExclusionsArray, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas);
+        var shape = QueryShape(parameters);
+        var frame = Begin(parameters.ExclusionsArray, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, shape: shape.Geometry);
         try
         {
             var length = output.Length / 2 * 2; Grow(ref frame.Contacts, length);
             var storage = frame.Contacts.AsSpan(0, length); storage.Fill(new(float.NaN, float.NaN));
-            var count = CollideShapeCore(shape, parameters.Transform, parameters.Motion, parameters.Margin, frame.Mask, frame.Bodies, frame.Areas, storage);
+            var count = CollideShapeCore(shape.RID, shape.Transform, shape.Motion, shape.Margin, frame.Mask, frame.Bodies, frame.Areas, storage);
             Count(count, length / 2);
             for (var i = 0; i < count * 2; i++)
                 if (!storage[i].IsFinite()) throw new InvalidOperationException("A contact hook returned a nonfinite point.");
@@ -178,11 +195,11 @@ public abstract partial class PhysicsDirectSpaceStateExtension : PhysicsDirectSp
     }
     internal PhysicsRestInfo? QueryRest(PhysicsShapeQueryParameters parameters)
     {
-        var shape = QueryShapeRID(parameters);
-        var frame = Begin(parameters.ExclusionsArray, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas);
+        var shape = QueryShape(parameters);
+        var frame = Begin(parameters.ExclusionsArray, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, shape: shape.Geometry);
         try
         {
-            var result = GetRestInfoCore(shape, parameters.Transform, parameters.Motion, parameters.Margin, frame.Mask, frame.Bodies, frame.Areas);
+            var result = GetRestInfoCore(shape.RID, shape.Transform, shape.Motion, shape.Margin, frame.Mask, frame.Bodies, frame.Areas);
             if (result is not { } hit) return null;
             ValidateCollider(frame, hit.ColliderRID, hit.ShapeIndex);
             return new PhysicsRestInfo(hit.ColliderRID, hit.ShapeIndex, hit.Point, hit.Normal, hit.LinearVelocity);

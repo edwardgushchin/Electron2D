@@ -1,6 +1,6 @@
 # Caller-created space-query extensions
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 ## Responsibility and owned types
 
@@ -24,7 +24,33 @@ CPU, GPU and a CPU process without display/GPU access are separate profiles. The
 
 The internal [selected-owner factory route](physics-backends.md#selected-direct-state-construction) now provides a cached extension to World, server acquisition and body-space consumers. Creation runs on the world owner outside the service registry lock; validation and recursive/lifetime guards precede cache publication. A disposed cache permits a new selected view; invalid foreign/null/disposed factory results leave it unchanged. CPU/GPU/no-device ownership fixtures execute actual queries through this route.
 
-Caller-created query extensions execute. Public named backend registration, its full server operation bridge, custom solver algorithms and platform/native acceptance remain open. Class coverage stays Partial. [ADR 0103](../decisions/physics-extensions.md#adr-0103) owns the complete boundary.
+Caller-created query extensions execute. Named backend registration and the shared operation bridge now execute under [ADR 0103](../decisions/physics-extensions.md#adr-0103); full numerical-extension and platform/native acceptance remain open. Class coverage stays Partial. [ADR 0103](../decisions/physics-extensions.md#adr-0103) owns the complete boundary.
 
 
 [Registered factory-selected views](physics-registered-adapter.md#factory-selected-direct-views) now have a public-only check of body/query factory dispatch, cache identity, initially empty contact snapshots, immutable publication before callbacks, failed factories and retry, attachment retirement and zero warm managed allocations. Wider numerical-extension acceptance stays open.
+
+
+## Query-shape borrowing (2026-10-14)
+
+All four shape-query hooks borrow the resolved resource or owned server geometry
+before its immutable geometry is prepared, through hook completion, output
+validation and publication. Equal/changed geometry or policy writes, inherited
+copy/reset, disposal and owned RID replacement/retirement reject before mutation.
+Nested calls retain independent frame/resource borrows; readonly access remains
+available. Finally clears the borrowed reference and restores the world/exclusion
+scope after geometry-supplier, hook or output-validation failures. The existing
+Shape authoring rules still apply; this is not a general concurrent transaction.
+Pose, motion, margin and filters are sampled before a procedural geometry supplier
+runs; supplier edits to query parameters affect only a later invocation.
+
+[ShapeLifetimeChecks](../../tests/PhysicsSpaceExtension.Consumer/ShapeLifetimeChecks.cs)
+checks resource and owned-RID inputs across array/span/scalar overloads, shared
+nested queries, worker-time refusal, inherited metadata/notification preservation,
+all four throwing hooks, invalid output, procedural geometry preparation failure
+and subsequent edits/queries. CPU/GPU serial/separate fresh processes retain the
+six-query analytic fixture and real motion. An additional 128 warm/128 measured
+complete frames plus four scalar/span shape queries require strict 0/0 owner/all-
+thread managed bytes; a moving raw body travels 256 units over 256 ticks within
+.02 units. Query geometry/fractions retain .0001 tolerances. Separate lanes are
+observed in process state. CPU has no display/GPU; GPU uses CPU-only Vulkan.
+Hardware/native/platform/full numerical-extension and performance gates stay open.

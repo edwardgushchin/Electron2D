@@ -1,6 +1,6 @@
 # PhysicsDirectSpaceStateExtension
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 **Declaration:** `public abstract partial class PhysicsDirectSpaceStateExtension : PhysicsDirectSpaceState` · **Inherits:** [PhysicsDirectSpaceState](PhysicsDirectSpaceState.md) · **Component:** [Space-query extensions](../components/physics-space-extensions.md)
 
@@ -99,3 +99,6 @@ The separate consumer exercises CPU/GPU and no-device CPU queries, every inherit
 
 
 [Registered factory-selected views](../components/physics-registered-adapter.md#factory-selected-direct-views) now execute through a separate public-only consumer: cache identity, an initially empty contact snapshot, synchronized immutable publication before callbacks, result/lifetime validation, recreation and zero warm managed allocations. Independent caller-created body views keep direct hook dispatch; wider numerical-extension acceptance stays open.
+
+
+[Query-shape borrowing](../components/physics-space-extensions.md#query-shape-borrowing-2026-10-14) retains resource/owned RID geometry through preparation, hooks and validated publication, with nested/error continuation and zero warmed full-frame allocations. Existing declarations and coverage states remain unchanged; full numerical/foreign/hardware acceptance stays open.

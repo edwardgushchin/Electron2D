@@ -37,7 +37,8 @@ public abstract partial class PhysicsDirectSpaceStateExtension
     /// <param name="results">Borrowed output for unique RID/shape-ordered hits; never retain this span.</param>
     /// <returns>The written count, between zero and the supplied output length; excess hits must retain the first RID/shape-ordered results.</returns>
     /// <remarks>Called synchronously on the bound world owner after preparation. Use the current scoped exclusions.
-    /// The library validates results and samples current associations before publication; hook exceptions leave caller output unchanged.</remarks>
+    /// The library validates results and samples current associations before publication; hook exceptions leave caller output unchanged.
+    /// The query shape remains borrowed through geometry preparation and validated publication; mutation, reset/copy, disposal and owned RID replacement/retirement reject.</remarks>
     protected abstract int IntersectShapeCore(RID shape, Transform transform, Vector2 motion, float margin, uint collisionMask, bool collideWithBodies, bool collideWithAreas, Span<PhysicsShapeResult> results);
 
     /// <summary>Computes the bracket around the first new shape collision, ignoring initial overlaps.</summary>
@@ -50,7 +51,8 @@ public abstract partial class PhysicsDirectSpaceStateExtension
     /// <param name="collideWithAreas">Whether Area colliders are eligible.</param>
     /// <returns>Finite ordered fractions in [0,1], or (1,1) on a miss.</returns>
     /// <remarks>Called synchronously on the bound world owner after preparation. Use the current scoped exclusions.
-    /// The library validates results and samples current associations before publication; hook exceptions leave caller output unchanged.</remarks>
+    /// The library validates results and samples current associations before publication; hook exceptions leave caller output unchanged.
+    /// The query shape remains borrowed through geometry preparation and validated publication; mutation, reset/copy, disposal and owned RID replacement/retirement reject.</remarks>
     protected abstract (float SafeFraction, float UnsafeFraction) CastMotionCore(RID shape, Transform transform, Vector2 motion, float margin, uint collisionMask, bool collideWithBodies, bool collideWithAreas);
 
     /// <summary>Computes contact-point pairs across a shape and its swept region.</summary>
@@ -64,7 +66,8 @@ public abstract partial class PhysicsDirectSpaceStateExtension
     /// <param name="results">Even-length borrowed point output, query point followed by collider point for each contact; never retain this span.</param>
     /// <returns>The complete pair count, between zero and half of the supplied output length.</returns>
     /// <remarks>Called synchronously on the bound world owner after preparation. Use the current scoped exclusions.
-    /// The library validates results and samples current associations before publication; hook exceptions leave caller output unchanged.</remarks>
+    /// The library validates results and samples current associations before publication; hook exceptions leave caller output unchanged.
+    /// The query shape remains borrowed through geometry preparation and validated publication; mutation, reset/copy, disposal and owned RID replacement/retirement reject.</remarks>
     protected abstract int CollideShapeCore(RID shape, Transform transform, Vector2 motion, float margin, uint collisionMask, bool collideWithBodies, bool collideWithAreas, Span<Vector2> results);
 
     /// <summary>Computes the deepest eligible contact across a shape and its swept region.</summary>
@@ -77,7 +80,8 @@ public abstract partial class PhysicsDirectSpaceStateExtension
     /// <param name="collideWithAreas">Whether Area colliders are eligible.</param>
     /// <returns>The closest typed contact and point velocity, or null on a miss.</returns>
     /// <remarks>Called synchronously on the bound world owner after preparation. Use the current scoped exclusions.
-    /// The library validates results and samples current associations before publication; hook exceptions leave caller output unchanged.</remarks>
+    /// The library validates results and samples current associations before publication; hook exceptions leave caller output unchanged.
+    /// The query shape remains borrowed through geometry preparation and validated publication; mutation, reset/copy, disposal and owned RID replacement/retirement reject.</remarks>
     protected abstract PhysicsRestInfo? GetRestInfoCore(RID shape, Transform transform, Vector2 motion, float margin, uint collisionMask, bool collideWithBodies, bool collideWithAreas);
 
 }

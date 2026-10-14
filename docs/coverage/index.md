@@ -773,3 +773,6 @@ hardware, native, foreign and full acceptance remain open.
 adds custom/selected callback, inherited copy/reset and owned RID preflight checks
 to the existing pair correspondence. No declaration or coverage state changes.
 Full numerical/foreign/hardware acceptance remains open.
+
+
+[Query-shape borrowing](../components/physics-space-extensions.md#query-shape-borrowing-2026-10-14) retains resource/owned RID geometry through preparation, hooks and validated publication, with nested/error continuation and zero warmed full-frame allocations. Existing declarations and coverage states remain unchanged; full numerical/foreign/hardware acceptance stays open.

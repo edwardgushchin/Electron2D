@@ -1,6 +1,7 @@
 using Electron2D;
 using System.Diagnostics;
 
+if (args.Contains("--threaded")) ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, true);
 var backend = args.FirstOrDefault() == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
 using var world = new World(backend); using var shape = new CircleShape { Radius = 5 }; using var queryShape = new CircleShape { Radius = 4 };
 using var root = new SubViewport { World = world };
@@ -28,6 +29,7 @@ try
     Check(view.IntersectPoint(point).Single().ColliderRID == raw && view.IntersectShape(overlap).Single().ColliderRID == raw &&
         view.CollideShape(overlap).Length == 2, "Inherited array queries invoke the supplied algorithms.");
     Evaluate();
+    ShapeLifetimeChecks.Run(world, tree, raw, queryShape, extension, overlap, sweep);
     using var areaPoint = new PhysicsPointQueryParameters { Position = new(60, 0), CollideWithBodies = false, CollideWithAreas = true, CanvasInstanceID = 7 };
     Check(view.IntersectPoint(areaPoint, points) == 1 && points[0].ColliderRID == area, "Area/canvas selection reaches the typed point hook.");
     areaPoint.CanvasInstanceID = 0; Check(view.IntersectPoint(areaPoint, points) == 0, "Zero is the default canvas filter.");

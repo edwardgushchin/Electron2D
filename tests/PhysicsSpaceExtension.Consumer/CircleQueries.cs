@@ -9,7 +9,8 @@ internal sealed class CircleQueries : PhysicsDirectSpaceStateExtension
     internal PhysicsPointResult? CachedPoint;
     internal int BadCount;
     internal bool BadFractions, BadPoints, Duplicate, Throw;
-    internal Action? OnQuery;
+    internal Action? OnQuery, OnShapeQuery;
+    internal RID OwnedQueryRID;
     internal CircleQueries(RID space, Actor[] actors, CircleShape? queryShape = null) : base(space)
     {
         _actors = actors; _queryShape = queryShape;
@@ -29,7 +30,7 @@ internal sealed class CircleQueries : PhysicsDirectSpaceStateExtension
         var fraction = (-b - MathF.Sqrt(discriminant)) / a;
         return fraction is >= 0 and <= 1 ? fraction : float.PositiveInfinity;
     }
-    private float Radius(RID shape) => _queryShape is not null && _queryShape.GetRID() == shape
+    private float Radius(RID shape) => _queryShape is not null && (_queryShape.GetRID() == shape || OwnedQueryRID == shape)
         ? _queryShape.Radius : throw new ArgumentException("The fixture query shape is not registered.", nameof(shape));
     private static Vector2 Closest(Vector2 from, Vector2 motion, Vector2 point) =>
         from + motion * (motion == Vector2.Zero ? 0 : Math.Clamp((point - from).Dot(motion) / motion.LengthSquared(), 0, 1));
@@ -63,6 +64,7 @@ internal sealed class CircleQueries : PhysicsDirectSpaceStateExtension
     }
     protected override int IntersectShapeCore(RID shape, Transform transform, Vector2 motion, float margin, uint collisionMask, bool collideWithBodies, bool collideWithAreas, Span<PhysicsShapeResult> results)
     {
+        OnShapeQuery?.Invoke();
         var count = 0; var radius = Radius(shape) + margin;
         foreach (var actor in _actors)
             if (Accept(actor, collisionMask, collideWithBodies, collideWithAreas) &&
@@ -72,6 +74,7 @@ internal sealed class CircleQueries : PhysicsDirectSpaceStateExtension
     }
     protected override (float SafeFraction, float UnsafeFraction) CastMotionCore(RID shape, Transform transform, Vector2 motion, float margin, uint collisionMask, bool collideWithBodies, bool collideWithAreas)
     {
+        OnShapeQuery?.Invoke();
         if (BadFractions) return (.8f, .2f);
         var fraction = 1f; var radius = Radius(shape) + margin;
         foreach (var actor in _actors)
@@ -81,6 +84,7 @@ internal sealed class CircleQueries : PhysicsDirectSpaceStateExtension
     }
     protected override int CollideShapeCore(RID shape, Transform transform, Vector2 motion, float margin, uint collisionMask, bool collideWithBodies, bool collideWithAreas, Span<Vector2> results)
     {
+        OnShapeQuery?.Invoke();
         if (BadPoints && results.Length >= 2) { results[0] = new(float.NaN, 0); return 1; }
         var count = 0; var radius = Radius(shape) + margin;
         foreach (var actor in _actors)
@@ -95,6 +99,7 @@ internal sealed class CircleQueries : PhysicsDirectSpaceStateExtension
     }
     protected override PhysicsRestInfo? GetRestInfoCore(RID shape, Transform transform, Vector2 motion, float margin, uint collisionMask, bool collideWithBodies, bool collideWithAreas)
     {
+        OnShapeQuery?.Invoke();
         PhysicsRestInfo? hit = null; var depth = float.NegativeInfinity; var radius = Radius(shape) + margin;
         foreach (var actor in _actors)
         {
