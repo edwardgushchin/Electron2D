@@ -1691,3 +1691,20 @@ existing continued-delivery aggregate. Overriding enables the lane at ready.
 Each idle/physics schedule captures only nodes whose public or internal callback is enabled for that lane. Enabling a previously absent participant during traversal starts it on the next frame. Disabling a captured participant suppresses its remaining delivery immediately; current process-mode/pause eligibility is still rechecked. An already captured internal participant may enable its own public callback before that callback in the same frame. Priority or hierarchy-order writes apply to the next captured schedule. A node that exits and reenters, even into the same tree, cannot revive an old entry or continue the old attachment after its internal callback. Both schedules retain capacity and rebuild after membership changes.
 
 [Public scheduling consumers](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.NodeScheduling.cs) exercise neutral, spatial and physical descendants, all four processing flags, priority changes, removal/reentry, error continuation and real selected solver frames/queries. Exact evidence and limits are in `bin/physics-node-scheduling/2026-10-15/validation.json`. Owned process-thread groups and cross-group deferred delivery remain their separate open coverage obligations.
+
+## Typed thread-safe and processing-group messages
+
+| Method | Contract |
+| --- | --- |
+| `CallThreadSafe<TNode>(Action<TNode> operation)` | Executes on an accessible owner, otherwise queues the operation. |
+| `SetThreadSafe<TNode, TValue>(Action<TNode, TValue> setter, TValue value)` | Same policy with a captured typed value and ordinary setter validation. |
+| `NotifyThreadSafe(int what)` | Same policy for ordinary numeric virtual notification dispatch. |
+| `CallDeferredThreadGroup<TNode>(Action<TNode> operation)` | Always queues to the attached node's processing owner. |
+| `SetDeferredThreadGroup<TNode, TValue>(Action<TNode, TValue> setter, TValue value)` | Same deferred policy for a typed property setter. |
+| `NotifyDeferredThreadGroup(int what)` | Same deferred policy for a numeric notification. |
+
+Every typed receiver parameter must accept this node (`TNode : Node`), and null delegates reject before queueing. These calls return no operation result. The current implicit main group drains FIFO before and after callbacks in both frame lanes, including disabled and paused nodes. Messages queued during a drain join that drain; failures are aggregated while later messages and frame work continue. A pre-group operation can enable processing before membership capture, and post-group changes precede physics integration. Ordinary `SceneTree.Defer`/`FlushDeferred` retain their separate captured-batch behavior.
+
+The receiver is an immutable weak identity; disposal/collection skips delivery without retaining or retargeting it. A live receiver moved to another tree owner is requeued there. Detached thread-safe calls execute under ordinary detached-node access and caller coordination; deferred group calls require membership. Finalization closes queue acceptance and discards retained values/delegates without delivery. Prepared generic slots avoid repeated capture allocation; first type/capacity growth and caller callback allocations remain separate. None of these operations grants direct off-owner access to physical or rendering state.
+
+[Public message consumers](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.ThreadMessages.cs) exercise all six members, live physical motion/queries, worker submissions, phase/order, recursive/error delivery, weak receiver retirement, transfer and closure. Current evidence: `bin/physics-thread-messages/2026-10-15/validation.json`. Explicit main/subthread group selection, ordering and message-lane masks remain open; these methods retain Partial coverage for that wider contract.

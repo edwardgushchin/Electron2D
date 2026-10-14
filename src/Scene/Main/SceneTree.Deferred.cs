@@ -20,12 +20,15 @@ public partial class SceneTree
         }
 
         public void Enqueue<T>(Action<T> callback, T value)
+            => Enqueue(callback, value, _tree._deferred);
+
+        internal void Enqueue<T>(Action<T> callback, T value, Queue<Action> queue)
         {
             lock (_tree._workGate)
             {
                 _tree.EnsureAcceptingWorkUnderLock();
                 var slot = Pool<T>().Rent(callback, value);
-                try { _tree._deferred.Enqueue(slot.Callback); }
+                try { queue.Enqueue(slot.Callback); }
                 catch { slot.Discard(); throw; }
             }
         }

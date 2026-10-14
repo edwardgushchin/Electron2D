@@ -123301,6 +123301,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.CallDeferredThreadGroup\u00601(Action\u003CTNode\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "CallDeferredThreadGroup",
+    "signature": "public System.Void CallDeferredThreadGroup\u003CTNode\u003E(Action\u003CTNode\u003E operation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "operation",
+        "type": "Action\u003CTNode\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.CallThreadSafe\u00601(Action\u003CTNode\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "CallThreadSafe",
+    "signature": "public System.Void CallThreadSafe\u003CTNode\u003E(Action\u003CTNode\u003E operation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "operation",
+        "type": "Action\u003CTNode\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.CanAutoTranslate()",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -123982,6 +124020,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.NotifyDeferredThreadGroup(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "NotifyDeferredThreadGroup",
+    "signature": "public System.Void NotifyDeferredThreadGroup(System.Int32 what)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.NotifyThreadSafe(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "NotifyThreadSafe",
+    "signature": "public System.Void NotifyThreadSafe(System.Int32 what)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.OnEnterTree()",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -124478,6 +124554,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.SetDeferredThreadGroup\u00602(Action\u003CTNode, TValue\u003E,TValue)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "SetDeferredThreadGroup",
+    "signature": "public System.Void SetDeferredThreadGroup\u003CTNode, TValue\u003E(Action\u003CTNode, TValue\u003E setter, TValue value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "setter",
+        "type": "Action\u003CTNode, TValue\u003E",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "TValue",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.SetMultiplayerAuthority(System.Int32,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -124496,6 +124596,30 @@
         "name": "recursive",
         "type": "System.Boolean",
         "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.SetThreadSafe\u00602(Action\u003CTNode, TValue\u003E,TValue)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "SetThreadSafe",
+    "signature": "public System.Void SetThreadSafe\u003CTNode, TValue\u003E(Action\u003CTNode, TValue\u003E setter, TValue value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "setter",
+        "type": "Action\u003CTNode, TValue\u003E",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "TValue",
+        "default": null
       }
     ],
     "returnType": "System.Void",

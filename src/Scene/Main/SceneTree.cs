@@ -1281,13 +1281,14 @@ public sealed partial class SceneTree : MainLoop
 
             if (physics) ProcessPhysicsPicking(ref errors);
             if (!physics) { PollMultiplayer(ref errors); FlushTransformNotifications(ref errors); }
-            var scheduledNodes = CaptureScheduledNodes(physics);
-
             if (physics)
             {
                 try { NavigationServer.Service.SynchronizeCore(); } catch (Exception error) { CollectException(ref errors, error); }
                 try { NavigationServer.Service.StepAvoidance(delta, this); } catch (Exception error) { CollectException(ref errors, error); }
             }
+
+            FlushProcessMessages(ref errors);
+            var scheduledNodes = CaptureScheduledNodes(physics);
 
             foreach (var item in scheduledNodes)
             {
@@ -1308,6 +1309,7 @@ public sealed partial class SceneTree : MainLoop
                 }
             }
 
+            FlushProcessMessages(ref errors);
             if (physics) StepPhysicsWorlds(delta, ref errors);
 
             if (!physics) FlushTransformNotifications(ref errors);
@@ -2021,6 +2023,7 @@ public sealed partial class SceneTree : MainLoop
     {
         _cursorRefreshWindows.Clear();
         DiscardDeferred(_deferred); if (_deferredSpare is not null) DiscardDeferred(_deferredSpare);
+        DiscardDeferred(_processMessages);
         _deletions = new ConcurrentQueue<DeletionRequest>();
         _uniqueGroupOperations.Clear();
         _transformChanges.Clear(); _nextTransformNotification = null;

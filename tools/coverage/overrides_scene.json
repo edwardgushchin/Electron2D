@@ -1,6 +1,36 @@
 {
   "mappings": [
     {
+      "godot": "Node::method:call_deferred_thread_group(StringName:)",
+      "electron2d": "method:Electron2D.Node.CallDeferredThreadGroup`1(Action<TNode>)",
+      "reason": "ADR 0006 typed Node target delegates/value setters/numeric notifications implement the complete six-member message family for the implicit main processing group. Pinned node.cpp wrappers return nil even for immediate calls, so void loses no result; string/Variant dispatch adapts to typed C#. Owner calls execute immediately, worker calls enqueue; deferred calls require membership and always enqueue. A distinct FIFO drains before callback capture and after callbacks in idle/physics, including disabled/paused targets; nested additions join the drain and failures preserve later work. Weak immutable receivers skip disposal/collection and follow current owner on transfer; shared typed slots discard atomically on tree closure. Public CPU/software-GPU/registered ordinary/separate JIT/NativeAOT consumers verify actual physical motion/queries and warmed sender/owner/all-thread zero bytes. Evidence: bin/physics-thread-messages/2026-10-15/validation.json. Explicit main/subthread group selection/order/message masks and cross-group execution remain unimplemented; all six rows stay Partial for that wider contract."
+    },
+    {
+      "godot": "Node::method:call_thread_safe(StringName:)",
+      "electron2d": "method:Electron2D.Node.CallThreadSafe`1(Action<TNode>)",
+      "reason": "ADR 0006 typed Node target delegates/value setters/numeric notifications implement the complete six-member message family for the implicit main processing group. Pinned node.cpp wrappers return nil even for immediate calls, so void loses no result; string/Variant dispatch adapts to typed C#. Owner calls execute immediately, worker calls enqueue; deferred calls require membership and always enqueue. A distinct FIFO drains before callback capture and after callbacks in idle/physics, including disabled/paused targets; nested additions join the drain and failures preserve later work. Weak immutable receivers skip disposal/collection and follow current owner on transfer; shared typed slots discard atomically on tree closure. Public CPU/software-GPU/registered ordinary/separate JIT/NativeAOT consumers verify actual physical motion/queries and warmed sender/owner/all-thread zero bytes. Evidence: bin/physics-thread-messages/2026-10-15/validation.json. Explicit main/subthread group selection/order/message masks and cross-group execution remain unimplemented; all six rows stay Partial for that wider contract."
+    },
+    {
+      "godot": "Node::method:notify_deferred_thread_group(int:)",
+      "electron2d": "method:Electron2D.Node.NotifyDeferredThreadGroup(System.Int32)",
+      "reason": "ADR 0006 typed Node target delegates/value setters/numeric notifications implement the complete six-member message family for the implicit main processing group. Pinned node.cpp wrappers return nil even for immediate calls, so void loses no result; string/Variant dispatch adapts to typed C#. Owner calls execute immediately, worker calls enqueue; deferred calls require membership and always enqueue. A distinct FIFO drains before callback capture and after callbacks in idle/physics, including disabled/paused targets; nested additions join the drain and failures preserve later work. Weak immutable receivers skip disposal/collection and follow current owner on transfer; shared typed slots discard atomically on tree closure. Public CPU/software-GPU/registered ordinary/separate JIT/NativeAOT consumers verify actual physical motion/queries and warmed sender/owner/all-thread zero bytes. Evidence: bin/physics-thread-messages/2026-10-15/validation.json. Explicit main/subthread group selection/order/message masks and cross-group execution remain unimplemented; all six rows stay Partial for that wider contract."
+    },
+    {
+      "godot": "Node::method:notify_thread_safe(int:)",
+      "electron2d": "method:Electron2D.Node.NotifyThreadSafe(System.Int32)",
+      "reason": "ADR 0006 typed Node target delegates/value setters/numeric notifications implement the complete six-member message family for the implicit main processing group. Pinned node.cpp wrappers return nil even for immediate calls, so void loses no result; string/Variant dispatch adapts to typed C#. Owner calls execute immediately, worker calls enqueue; deferred calls require membership and always enqueue. A distinct FIFO drains before callback capture and after callbacks in idle/physics, including disabled/paused targets; nested additions join the drain and failures preserve later work. Weak immutable receivers skip disposal/collection and follow current owner on transfer; shared typed slots discard atomically on tree closure. Public CPU/software-GPU/registered ordinary/separate JIT/NativeAOT consumers verify actual physical motion/queries and warmed sender/owner/all-thread zero bytes. Evidence: bin/physics-thread-messages/2026-10-15/validation.json. Explicit main/subthread group selection/order/message masks and cross-group execution remain unimplemented; all six rows stay Partial for that wider contract."
+    },
+    {
+      "godot": "Node::method:set_deferred_thread_group(StringName:,Variant:)",
+      "electron2d": "method:Electron2D.Node.SetDeferredThreadGroup`2(Action<TNode, TValue>,TValue)",
+      "reason": "ADR 0006 typed Node target delegates/value setters/numeric notifications implement the complete six-member message family for the implicit main processing group. Pinned node.cpp wrappers return nil even for immediate calls, so void loses no result; string/Variant dispatch adapts to typed C#. Owner calls execute immediately, worker calls enqueue; deferred calls require membership and always enqueue. A distinct FIFO drains before callback capture and after callbacks in idle/physics, including disabled/paused targets; nested additions join the drain and failures preserve later work. Weak immutable receivers skip disposal/collection and follow current owner on transfer; shared typed slots discard atomically on tree closure. Public CPU/software-GPU/registered ordinary/separate JIT/NativeAOT consumers verify actual physical motion/queries and warmed sender/owner/all-thread zero bytes. Evidence: bin/physics-thread-messages/2026-10-15/validation.json. Explicit main/subthread group selection/order/message masks and cross-group execution remain unimplemented; all six rows stay Partial for that wider contract."
+    },
+    {
+      "godot": "Node::method:set_thread_safe(StringName:,Variant:)",
+      "electron2d": "method:Electron2D.Node.SetThreadSafe`2(Action<TNode, TValue>,TValue)",
+      "reason": "ADR 0006 typed Node target delegates/value setters/numeric notifications implement the complete six-member message family for the implicit main processing group. Pinned node.cpp wrappers return nil even for immediate calls, so void loses no result; string/Variant dispatch adapts to typed C#. Owner calls execute immediately, worker calls enqueue; deferred calls require membership and always enqueue. A distinct FIFO drains before callback capture and after callbacks in idle/physics, including disabled/paused targets; nested additions join the drain and failures preserve later work. Weak immutable receivers skip disposal/collection and follow current owner on transfer; shared typed slots discard atomically on tree closure. Public CPU/software-GPU/registered ordinary/separate JIT/NativeAOT consumers verify actual physical motion/queries and warmed sender/owner/all-thread zero bytes. Evidence: bin/physics-thread-messages/2026-10-15/validation.json. Explicit main/subthread group selection/order/message masks and cross-group execution remain unimplemented; all six rows stay Partial for that wider contract."
+    },
+    {
       "godot": "Node::constant:NOTIFICATION_WM_MOUSE_ENTER",
       "electron2d": "constant:Electron2D.Node.NotificationWmMouseEnter()",
       "state": "Implemented",
@@ -7927,6 +7957,18 @@
   "statusGroups": [
     {
       "godot": [
+        "Node::method:call_deferred_thread_group(StringName:)",
+        "Node::method:call_thread_safe(StringName:)",
+        "Node::method:notify_deferred_thread_group(int:)",
+        "Node::method:notify_thread_safe(int:)",
+        "Node::method:set_deferred_thread_group(StringName:,Variant:)",
+        "Node::method:set_thread_safe(StringName:,Variant:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0006 typed Node target delegates/value setters/numeric notifications implement the complete six-member message family for the implicit main processing group. Pinned node.cpp wrappers return nil even for immediate calls, so void loses no result; string/Variant dispatch adapts to typed C#. Owner calls execute immediately, worker calls enqueue; deferred calls require membership and always enqueue. A distinct FIFO drains before callback capture and after callbacks in idle/physics, including disabled/paused targets; nested additions join the drain and failures preserve later work. Weak immutable receivers skip disposal/collection and follow current owner on transfer; shared typed slots discard atomically on tree closure. Public CPU/software-GPU/registered ordinary/separate JIT/NativeAOT consumers verify actual physical motion/queries and warmed sender/owner/all-thread zero bytes. Evidence: bin/physics-thread-messages/2026-10-15/validation.json. Explicit main/subthread group selection/order/message masks and cross-group execution remain unimplemented; all six rows stay Partial for that wider contract."
+    },
+    {
+      "godot": [
         "Node::method:is_processing()",
         "Node::method:set_process(bool:)",
         "Node::method:is_physics_processing()",
@@ -11113,12 +11155,6 @@
         "Node::enum_value:ProcessThreadMessages.FLAG_PROCESS_THREAD_MESSAGES",
         "Node::enum_value:ProcessThreadMessages.FLAG_PROCESS_THREAD_MESSAGES_ALL",
         "Node::enum_value:ProcessThreadMessages.FLAG_PROCESS_THREAD_MESSAGES_PHYSICS",
-        "Node::method:call_deferred_thread_group(StringName:)",
-        "Node::method:call_thread_safe(StringName:)",
-        "Node::method:notify_deferred_thread_group(int:)",
-        "Node::method:notify_thread_safe(int:)",
-        "Node::method:set_deferred_thread_group(StringName:,Variant:)",
-        "Node::method:set_thread_safe(StringName:,Variant:)",
         "Node::property:process_thread_group",
         "Node::property:process_thread_group_order",
         "Node::property:process_thread_messages"
