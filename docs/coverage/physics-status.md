@@ -223,9 +223,9 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
 | [Object](classes/Object.md) | — | 19 | 16 | 2 | 22 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
-| [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 7 | 18 | 0 | 2 | 2 |
+| [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 9 | 16 | 0 | 2 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 253 | 132 | 17 | 66 | 23 |
+| **Total** | | 255 | 130 | 17 | 66 | 23 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -430,7 +430,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Resource::method:duplicate(bool:)`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::method:duplicate_deep(int:Resource.DeepDuplicateMode)`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::method:emit_changed()`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
-| [`Resource::method:generate_scene_unique_id()`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::method:get_id_for_path(String:)`](classes/Resource.md) | Unimplemented | No mapped C# declaration; trigger: next complete Resource API slice. |
 | [`Resource::method:get_rid()`](classes/Resource.md) | Partial | Base empty managed identity, stable Shape physics identities (ADR 0088) and weak resource-owned Texture rendering identities (ADR 0028) execute. Remaining material/shader RID getters enter the first actual server material/shader registration/lifetime slice. TextureRD/external/drawable/layered resource families retain their exact backend integration triggers. |
 | [`Resource::method:is_built_in()`](classes/Resource.md) | Partial | Managed Resource query or virtual-hook adaptation (ADR 0013). |
@@ -440,7 +439,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Resource::method:take_over_path(String:)`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::property:resource_name`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::property:resource_path`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
-| [`Resource::property:resource_scene_unique_id`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::signal:changed()`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`class:SkeletonModification2D`](classes/SkeletonModification2D.md) | Partial | All runtime callbacks, setup/phase/configuration and angle constraints execute. Only editor gizmo callbacks/state require the first actual editor canvas-gizmo owner; no inert runtime switch. |
 | [`SkeletonModification2D::method:_draw_editor_gizmo()`](classes/SkeletonModification2D.md) | Blocked | Requires the actual editor canvas-gizmo registration/drawing owner, refresh lifecycle and visible authoring host; trigger its first editor skeletal authoring integration under ADR 0090. Runtime skeletal execution is already implemented. |

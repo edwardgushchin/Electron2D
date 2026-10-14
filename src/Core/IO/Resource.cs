@@ -192,7 +192,7 @@ public class Resource : ElectronObject
 
     /// <summary>Gets or sets the identifier used when this resource is embedded in a serialized scene.</summary>
     /// <value>An empty string, or an identifier containing only ASCII letters, digits, and underscores.</value>
-    /// <remarks>Assignments do not raise <see cref="Changed"/>. Scene saving and collision resolution are not implemented yet.</remarks>
+    /// <remarks>Assignments do not raise <see cref="Changed"/>. Successful graph saving assigns missing IDs and resolves duplicate IDs after atomic persistence; the first encountered authored ID is preserved.</remarks>
     /// <exception cref="ArgumentException">The assigned value contains a character outside ASCII letters, digits, and underscores.</exception>
     /// <exception cref="ArgumentNullException">The assigned value is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
@@ -376,7 +376,7 @@ public class Resource : ElectronObject
 
     /// <summary>Generates a compact scene-relative resource identifier.</summary>
     /// <returns>A five-character string composed of lowercase letters <c>a</c> through <c>y</c> and digits <c>0</c> through <c>8</c>.</returns>
-    /// <remarks>The result is probabilistically unique; a future scene saver must still detect and resolve collisions.</remarks>
+    /// <remarks>The result is probabilistically unique; graph saving reserves authored IDs and resolves collisions before persistence.</remarks>
     public static string GenerateSceneUniqueID()
     {
         return string.Create(

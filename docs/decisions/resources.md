@@ -33,7 +33,7 @@ Duplication is opt-in for every derived type through two protected hooks: constr
 
 `CopyFromResource` requires exact runtime types, preserves target identity, resets non-stored state, shallow-copies stored state, and coalesces notifications. It is non-transactional for arbitrary derived state and therefore emits one change even after a failed attempt.
 
-Invalid scene IDs throw without mutation. Automatic replacement by a random ID is rejected because silently discarding caller input is unsuitable for the typed C# boundary; `GenerateSceneUniqueID` remains explicit.
+Invalid scene-ID assignments throw without mutation; setters do not silently replace invalid caller input. Saving an internal resource graph stages unique IDs: the first encountered owner keeps a valid authored ID, missing/later duplicate IDs use GenerateSceneUniqueID while reserving all authored IDs. Successful atomic persistence commits these IDs independently of ReplaceSubresourcePaths, which alone changes source paths. Encode/write failure preserves source metadata. After persistence all planned IDs commit before path callbacks; every requested path update is attempted, then callback failures are aggregated without rolling back the committed file. Readers reject duplicate resolved embedded paths, including collisions with legacy numeric fallback IDs. Editor per-path ID mapping remains its separate authoring prerequisite.
 
 Renderer RID, further concrete file schemas, editor path-ID mapping and automatic reflection-based discovery remain deferred to their missing domains. The first synchronous image-texture loader and its cache modes follow the profile below. Packed-scene local duplication, root ownership, association and setup automation are implemented under ADR 0023.
 
