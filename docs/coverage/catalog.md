@@ -184,7 +184,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ColorPalette](classes/ColorPalette.md) | Resource | Implemented | 1 |
 | [ColorPicker](classes/ColorPicker.md) | VBoxContainer | Partial | 62 |
 | [ColorPickerButton](classes/ColorPickerButton.md) | Button | Partial | 10 |
-| [ColorRect](classes/ColorRect.md) | Control | Blocked | 1 |
+| [ColorRect](classes/ColorRect.md) | Control | Implemented | 1 |
 | [Compositor](classes/Compositor.md) | Resource | Excluded | 1 |
 | [CompositorEffect](classes/CompositorEffect.md) | Resource | Excluded | 15 |
 | [CompressedCubemap](classes/CompressedCubemap.md) | CompressedTextureLayered | Excluded | 0 |
@@ -362,7 +362,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [HFlowContainer](classes/HFlowContainer.md) | FlowContainer | Implemented | 0 |
 | [HMACContext](classes/HMACContext.md) | RefCounted | Implemented | 3 |
 | [HScrollBar](classes/HScrollBar.md) | ScrollBar | Implemented | 2 |
-| [HSeparator](classes/HSeparator.md) | Separator | Blocked | 0 |
+| [HSeparator](classes/HSeparator.md) | Separator | Implemented | 0 |
 | [HSlider](classes/HSlider.md) | Slider | Implemented | 0 |
 | [HSplitContainer](classes/HSplitContainer.md) | SplitContainer | Implemented | 0 |
 | [HTTPClient](classes/HTTPClient.md) | RefCounted | Implemented | 103 |
@@ -764,7 +764,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Semaphore](classes/Semaphore.md) | RefCounted | Implemented | 3 |
 | [SeparationRayShape2D](classes/SeparationRayShape2D.md) | Shape2D | Implemented | 2 |
 | [SeparationRayShape3D](classes/SeparationRayShape3D.md) | Shape3D | Excluded | 2 |
-| [Separator](classes/Separator.md) | Control | Blocked | 2 |
+| [Separator](classes/Separator.md) | Control | Implemented | 2 |
 | [Shader](classes/Shader.md) | Resource | Partial | 13 |
 | [ShaderGlobalsOverride](classes/ShaderGlobalsOverride.md) | Node | Blocked | 0 |
 | [ShaderInclude](classes/ShaderInclude.md) | Resource | Implemented | 1 |
@@ -904,7 +904,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VBoxContainer](classes/VBoxContainer.md) | BoxContainer | Implemented | 0 |
 | [VFlowContainer](classes/VFlowContainer.md) | FlowContainer | Implemented | 0 |
 | [VScrollBar](classes/VScrollBar.md) | ScrollBar | Implemented | 4 |
-| [VSeparator](classes/VSeparator.md) | Separator | Blocked | 0 |
+| [VSeparator](classes/VSeparator.md) | Separator | Implemented | 0 |
 | [VSlider](classes/VSlider.md) | Slider | Implemented | 2 |
 | [VSplitContainer](classes/VSplitContainer.md) | SplitContainer | Implemented | 0 |
 | [Variant](classes/Variant.md) | — | Excluded | 0 |

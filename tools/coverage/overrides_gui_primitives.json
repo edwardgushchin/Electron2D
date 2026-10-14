@@ -1,0 +1,226 @@
+{
+  "mappings": [
+    {
+      "godot": "class:ColorRect",
+      "electron2d": "T:Electron2D.ColorRect",
+      "reason": "ADRs 0008/0023/0083: concrete color backgrounds and abstract/fixed-axis themed separators execute typed scene/file factories, live authored/borrowed theme drawing, exact truncated integer centering, inherited layout/input and GPU/compatibility pixels. Warm managed frame/recording checks execute; native allocator, accessibility, other-platform and owner acceptance remain separate."
+    },
+    {
+      "godot": "ColorRect::property:color",
+      "electron2d": "property:Electron2D.ColorRect.Color()",
+      "reason": "ADRs 0008/0023/0083: concrete color backgrounds and abstract/fixed-axis themed separators execute typed scene/file factories, live authored/borrowed theme drawing, exact truncated integer centering, inherited layout/input and GPU/compatibility pixels. Warm managed frame/recording checks execute; native allocator, accessibility, other-platform and owner acceptance remain separate."
+    },
+    {
+      "godot": "class:Separator",
+      "electron2d": "T:Electron2D.Separator",
+      "reason": "ADRs 0008/0023/0083: concrete color backgrounds and abstract/fixed-axis themed separators execute typed scene/file factories, live authored/borrowed theme drawing, exact truncated integer centering, inherited layout/input and GPU/compatibility pixels. Warm managed frame/recording checks execute; native allocator, accessibility, other-platform and owner acceptance remain separate."
+    },
+    {
+      "godot": "Separator::theme_item:separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0023/0083: concrete color backgrounds and abstract/fixed-axis themed separators execute typed scene/file factories, live authored/borrowed theme drawing, exact truncated integer centering, inherited layout/input and GPU/compatibility pixels. Warm managed frame/recording checks execute; native allocator, accessibility, other-platform and owner acceptance remain separate."
+    },
+    {
+      "godot": "Separator::theme_item:separator",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0023/0083: concrete color backgrounds and abstract/fixed-axis themed separators execute typed scene/file factories, live authored/borrowed theme drawing, exact truncated integer centering, inherited layout/input and GPU/compatibility pixels. Warm managed frame/recording checks execute; native allocator, accessibility, other-platform and owner acceptance remain separate."
+    },
+    {
+      "godot": "class:HSeparator",
+      "electron2d": "T:Electron2D.HSeparator",
+      "reason": "ADRs 0008/0023/0083: concrete color backgrounds and abstract/fixed-axis themed separators execute typed scene/file factories, live authored/borrowed theme drawing, exact truncated integer centering, inherited layout/input and GPU/compatibility pixels. Warm managed frame/recording checks execute; native allocator, accessibility, other-platform and owner acceptance remain separate."
+    },
+    {
+      "godot": "class:VSeparator",
+      "electron2d": "T:Electron2D.VSeparator",
+      "reason": "ADRs 0008/0023/0083: concrete color backgrounds and abstract/fixed-axis themed separators execute typed scene/file factories, live authored/borrowed theme drawing, exact truncated integer centering, inherited layout/input and GPU/compatibility pixels. Warm managed frame/recording checks execute; native allocator, accessibility, other-platform and owner acceptance remain separate."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.ColorRect..ctor()",
+      "reason": "Typed construction, immutable separator axis and inherited scene/drawing/property hooks for the concrete GUI primitive family.",
+      "adr": "ADRs 0008/0023/0083"
+    },
+    {
+      "electron2d": "constructor:Electron2D.HSeparator..ctor()",
+      "reason": "Typed construction, immutable separator axis and inherited scene/drawing/property hooks for the concrete GUI primitive family.",
+      "adr": "ADRs 0008/0023/0083"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Separator..ctor(System.Boolean)",
+      "reason": "Typed construction, immutable separator axis and inherited scene/drawing/property hooks for the concrete GUI primitive family.",
+      "adr": "ADRs 0008/0023/0083"
+    },
+    {
+      "electron2d": "constructor:Electron2D.VSeparator..ctor()",
+      "reason": "Typed construction, immutable separator axis and inherited scene/drawing/property hooks for the concrete GUI primitive family.",
+      "adr": "ADRs 0008/0023/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorRect.CreateSceneInstanceFactory()",
+      "reason": "Typed construction, immutable separator axis and inherited scene/drawing/property hooks for the concrete GUI primitive family.",
+      "adr": "ADRs 0008/0023/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorRect.GetPropertyDescriptors()",
+      "reason": "Typed construction, immutable separator axis and inherited scene/drawing/property hooks for the concrete GUI primitive family.",
+      "adr": "ADRs 0008/0023/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorRect.OnNotification(System.Int32)",
+      "reason": "Typed construction, immutable separator axis and inherited scene/drawing/property hooks for the concrete GUI primitive family.",
+      "adr": "ADRs 0008/0023/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.HSeparator.CreateSceneInstanceFactory()",
+      "reason": "Typed construction, immutable separator axis and inherited scene/drawing/property hooks for the concrete GUI primitive family.",
+      "adr": "ADRs 0008/0023/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.Separator.OnGetMinimumSize()",
+      "reason": "Typed construction, immutable separator axis and inherited scene/drawing/property hooks for the concrete GUI primitive family.",
+      "adr": "ADRs 0008/0023/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.Separator.OnNotification(System.Int32)",
+      "reason": "Typed construction, immutable separator axis and inherited scene/drawing/property hooks for the concrete GUI primitive family.",
+      "adr": "ADRs 0008/0023/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.VSeparator.CreateSceneInstanceFactory()",
+      "reason": "Typed construction, immutable separator axis and inherited scene/drawing/property hooks for the concrete GUI primitive family.",
+      "adr": "ADRs 0008/0023/0083"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:ColorRect",
+        "ColorRect::property:color",
+        "class:Separator",
+        "Separator::theme_item:separation",
+        "Separator::theme_item:separator",
+        "class:HSeparator",
+        "class:VSeparator"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0008/0023/0083: concrete color backgrounds and abstract/fixed-axis themed separators execute typed scene/file factories, live authored/borrowed theme drawing, exact truncated integer centering, inherited layout/input and GPU/compatibility pixels. Warm managed frame/recording checks execute; native allocator, accessibility, other-platform and owner acceptance remain separate."
+    },
+    {
+      "godot": [
+        "class:DPITexture",
+        "DPITexture::method:create_from_string(String:,float:,float:,Dictionary:)",
+        "DPITexture::method:get_scaled_rid()",
+        "DPITexture::method:get_source()",
+        "DPITexture::method:set_size_override(Vector2i:)",
+        "DPITexture::method:set_source(String:)",
+        "DPITexture::property:base_scale",
+        "DPITexture::property:color_map",
+        "DPITexture::property:fix_alpha_border",
+        "DPITexture::property:premult_alpha",
+        "DPITexture::property:resource_local_to_scene",
+        "DPITexture::property:saturation"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: complete SVG Color-to-Color paint remapping in the native SVG path plus retained per-canvas/viewport oversampling variants and scaled RID ownership under ADRs 0028/0039/0083. Current Image SVG rasterization and static theme icons alone do not execute these contracts."
+    },
+    {
+      "godot": [
+        "class:TextLine",
+        "TextLine::method:add_object(Variant:,Vector2:,int:InlineAlignment,int:,float:)",
+        "TextLine::method:add_string(String:,Font:,int:,String:,Variant:)",
+        "TextLine::method:clear()",
+        "TextLine::method:draw(RID:,Vector2:,Color:,float:)",
+        "TextLine::method:draw_outline(RID:,Vector2:,int:,Color:,float:)",
+        "TextLine::method:duplicate()",
+        "TextLine::method:get_inferred_direction()",
+        "TextLine::method:get_line_ascent()",
+        "TextLine::method:get_line_descent()",
+        "TextLine::method:get_line_underline_position()",
+        "TextLine::method:get_line_underline_thickness()",
+        "TextLine::method:get_line_width()",
+        "TextLine::method:get_object_rect(Variant:)",
+        "TextLine::method:get_objects()",
+        "TextLine::method:get_rid()",
+        "TextLine::method:get_size()",
+        "TextLine::method:has_object(Variant:)",
+        "TextLine::method:hit_test(float:)",
+        "TextLine::method:resize_object(Variant:,Vector2:,int:InlineAlignment,float:)",
+        "TextLine::method:set_bidi_override(Array:)",
+        "TextLine::method:tab_align(PackedFloat32Array:)",
+        "TextLine::property:alignment",
+        "TextLine::property:direction",
+        "TextLine::property:ellipsis_char",
+        "TextLine::property:flags",
+        "TextLine::property:orientation",
+        "TextLine::property:preserve_control",
+        "TextLine::property:preserve_invalid",
+        "TextLine::property:text_overrun_behavior",
+        "TextLine::property:width",
+        "class:TextParagraph",
+        "TextParagraph::method:add_object(Variant:,Vector2:,int:InlineAlignment,int:,float:)",
+        "TextParagraph::method:add_string(String:,Font:,int:,String:,Variant:)",
+        "TextParagraph::method:clear()",
+        "TextParagraph::method:clear_dropcap()",
+        "TextParagraph::method:draw(RID:,Vector2:,Color:,Color:,float:)",
+        "TextParagraph::method:draw_dropcap(RID:,Vector2:,Color:,float:)",
+        "TextParagraph::method:draw_dropcap_outline(RID:,Vector2:,int:,Color:,float:)",
+        "TextParagraph::method:draw_line(RID:,Vector2:,int:,Color:,float:)",
+        "TextParagraph::method:draw_line_outline(RID:,Vector2:,int:,int:,Color:,float:)",
+        "TextParagraph::method:draw_outline(RID:,Vector2:,int:,Color:,Color:,float:)",
+        "TextParagraph::method:duplicate()",
+        "TextParagraph::method:get_dropcap_lines()",
+        "TextParagraph::method:get_dropcap_rid()",
+        "TextParagraph::method:get_dropcap_size()",
+        "TextParagraph::method:get_inferred_direction()",
+        "TextParagraph::method:get_line_ascent(int:)",
+        "TextParagraph::method:get_line_count()",
+        "TextParagraph::method:get_line_descent(int:)",
+        "TextParagraph::method:get_line_object_rect(int:,Variant:)",
+        "TextParagraph::method:get_line_objects(int:)",
+        "TextParagraph::method:get_line_range(int:)",
+        "TextParagraph::method:get_line_rid(int:)",
+        "TextParagraph::method:get_line_size(int:)",
+        "TextParagraph::method:get_line_underline_position(int:)",
+        "TextParagraph::method:get_line_underline_thickness(int:)",
+        "TextParagraph::method:get_line_width(int:)",
+        "TextParagraph::method:get_non_wrapped_size()",
+        "TextParagraph::method:get_range()",
+        "TextParagraph::method:get_rid()",
+        "TextParagraph::method:get_size()",
+        "TextParagraph::method:has_object(Variant:)",
+        "TextParagraph::method:hit_test(Vector2:)",
+        "TextParagraph::method:resize_object(Variant:,Vector2:,int:InlineAlignment,float:)",
+        "TextParagraph::method:set_bidi_override(Array:)",
+        "TextParagraph::method:set_dropcap(String:,Font:,int:,Rect2:,String:)",
+        "TextParagraph::method:tab_align(PackedFloat32Array:)",
+        "TextParagraph::property:alignment",
+        "TextParagraph::property:break_flags",
+        "TextParagraph::property:custom_punctuation",
+        "TextParagraph::property:direction",
+        "TextParagraph::property:ellipsis_char",
+        "TextParagraph::property:justification_flags",
+        "TextParagraph::property:line_spacing",
+        "TextParagraph::property:max_lines_visible",
+        "TextParagraph::property:orientation",
+        "TextParagraph::property:preserve_control",
+        "TextParagraph::property:preserve_invalid",
+        "TextParagraph::property:text_overrun_behavior",
+        "TextParagraph::property:width"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: first complete typed multi-segment/inline-object text builder with copied metadata/key/BIDI contracts and real shaped-text RID ownership, metrics/hit tests/draw/duplicate integration under ADRs 0001/0046. Current Font/TextLayout/RichText consumers do not expose this public text-object family."
+    },
+    {
+      "godot": [
+        "class:ReferenceRect",
+        "ReferenceRect::property:border_color",
+        "ReferenceRect::property:border_width",
+        "ReferenceRect::property:editor_only"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: actual editor execution-context reporting through Engine.IsEditorHint and editor/runtime border drawing under ADRs 0015/0027/0090. The current runtime has no editor-context producer; do not introduce a constant hint or inert EditorOnly switch."
+    }
+  ]
+}

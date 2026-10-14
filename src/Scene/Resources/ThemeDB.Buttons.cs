@@ -27,8 +27,23 @@ public sealed partial class ThemeDB
         _defaultTheme.SetColor("font_outline_color", type, Colors.Black);
         _defaultTheme.SetConstant("h_separation", type, 4); _defaultTheme.SetConstant("outline_size", type, 0);
     }
+    private void AddSeparatorDefaults()
+    {
+        var horizontal = new StyleBoxLine { Color = new(.5f, .5f, .5f) };
+        horizontal.ContentMarginLeft = horizontal.ContentMarginRight = 4;
+        horizontal.ContentMarginTop = horizontal.ContentMarginBottom = 0;
+        var vertical = new StyleBoxLine { Color = new(.5f, .5f, .5f), Vertical = true };
+        vertical.ContentMarginLeft = vertical.ContentMarginRight = 0;
+        vertical.ContentMarginTop = vertical.ContentMarginBottom = 4;
+        _owned.Add(horizontal); _owned.Add(vertical);
+        _defaultTheme.SetStyleBox("separator", "HSeparator", horizontal);
+        _defaultTheme.SetStyleBox("separator", "VSeparator", vertical);
+        _defaultTheme.SetConstant("separation", "HSeparator", 4);
+        _defaultTheme.SetConstant("separation", "VSeparator", 4);
+    }
     private void AddButtonDefaults()
     {
+        AddSeparatorDefaults();
         var normal = CreateButtonStyle(new(.1f, .1f, .1f, .6f));
         var hover = CreateButtonStyle(new(.225f, .225f, .225f, .6f));
         var pressed = CreateButtonStyle(new(0, 0, 0, .6f));

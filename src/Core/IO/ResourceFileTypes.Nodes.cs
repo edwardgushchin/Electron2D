@@ -20,10 +20,16 @@ public static partial class ResourceFileTypes
     private static GraphNode CreateGraphNodeFileNode() => new();
     private static GraphFrame CreateGraphFrameFileNode() => new();
     private static GraphEdit CreateGraphEditFileNode() => new();
+    private static ColorRect CreateColorRectFileNode() => new();
+    private static HSeparator CreateHSeparatorFileNode() => new();
+    private static VSeparator CreateVSeparatorFileNode() => new();
     private static LinkButton CreateLinkButtonFileNode() => new();
     private static ResourcePreloader CreateResourcePreloaderFileNode() => new();
     private static void RegisterBuiltInNodes()
     {
+        RegisterNode("ColorRect", CreateColorRectFileNode);
+        RegisterNode("HSeparator", CreateHSeparatorFileNode);
+        RegisterNode("VSeparator", CreateVSeparatorFileNode);
         RegisterNode("LinkButton", CreateLinkButtonFileNode);
         RegisterNode("ResourcePreloader", CreateResourcePreloaderFileNode);
         RegisterNode("GraphElement", CreateGraphElementFileNode);

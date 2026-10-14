@@ -3282,6 +3282,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ColorRect",
+    "kind": "type",
+    "declaringType": "Electron2D.ColorRect",
+    "name": "ColorRect",
+    "signature": "public class Electron2D.ColorRect",
+    "visibility": "public",
+    "baseType": "Electron2D.Control",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Colors",
     "kind": "type",
     "declaringType": "Electron2D.Colors",
@@ -4984,6 +4999,21 @@
     "signature": "public class Electron2D.HScrollBar",
     "visibility": "public",
     "baseType": "Electron2D.ScrollBar",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.HSeparator",
+    "kind": "type",
+    "declaringType": "Electron2D.HSeparator",
+    "name": "HSeparator",
+    "signature": "public class Electron2D.HSeparator",
+    "visibility": "public",
+    "baseType": "Electron2D.Separator",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -10522,6 +10552,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Separator",
+    "kind": "type",
+    "declaringType": "Electron2D.Separator",
+    "name": "Separator",
+    "signature": "public abstract class Electron2D.Separator",
+    "visibility": "public",
+    "baseType": "Electron2D.Control",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Shader",
     "kind": "type",
     "declaringType": "Electron2D.Shader",
@@ -12710,6 +12755,21 @@
     "signature": "public class Electron2D.VScrollBar",
     "visibility": "public",
     "baseType": "Electron2D.ScrollBar",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VSeparator",
+    "kind": "type",
+    "declaringType": "Electron2D.VSeparator",
+    "name": "VSeparator",
+    "signature": "public class Electron2D.VSeparator",
+    "visibility": "public",
+    "baseType": "Electron2D.Separator",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -17179,6 +17239,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.ColorRect..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ColorRect",
+    "name": ".ctor",
+    "signature": "public ColorRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.ConcavePolygonShape..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.ConcavePolygonShape",
@@ -17977,6 +18050,19 @@
     "declaringType": "Electron2D.HScrollBar",
     "name": ".ctor",
     "signature": "public HScrollBar()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.HSeparator..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.HSeparator",
+    "name": ".ctor",
+    "signature": "public HSeparator()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -21857,6 +21943,25 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.Separator..ctor(System.Boolean)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Separator",
+    "name": ".ctor",
+    "signature": "protected Separator(System.Boolean vertical)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "vertical",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Shader..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Shader",
@@ -23070,6 +23175,19 @@
     "declaringType": "Electron2D.VScrollBar",
     "name": ".ctor",
     "signature": "public VScrollBar()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VSeparator..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VSeparator",
+    "name": ".ctor",
+    "signature": "public VSeparator()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -81707,6 +81825,51 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ColorRect.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorRect",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorRect.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorRect",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorRect.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorRect",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ConcavePolygonShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.ConcavePolygonShape",
@@ -99904,6 +100067,19 @@
     "id": "method:Electron2D.HScrollBar.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.HScrollBar",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HSeparator.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.HSeparator",
     "name": "CreateSceneInstanceFactory",
     "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
     "visibility": "protected",
@@ -160887,6 +161063,38 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Separator.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Separator",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Separator.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Separator",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Shader.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.Shader",
@@ -189443,6 +189651,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VSeparator.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.VSeparator",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VSlider.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.VSlider",
@@ -210085,6 +210306,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ColorRect.Color()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorRect",
+    "name": "Color",
+    "signature": "public Electron2D.Color Color { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
     "value": null
   },
   {
