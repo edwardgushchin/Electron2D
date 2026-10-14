@@ -1,11 +1,130 @@
 # Complete scene physics measurements
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
-The [completion-stage CPU control](#completion-stage-cpu-control-2026-10-13)
-separates host publication costs in the complete monitored scene. The latest
-[frozen CPU/GPU pair](#frozen-complete-scene-at-7c37a291-2026-10-13) retains its
-actual executable revision. Older trials below keep their own revisions and workloads.
+The [scoped allocator profile](#scoped-native-allocation-profiling-2026-10-14)
+adds all-thread libc request accounting to the complete monitored scene, with
+separate ordinary timing and software-driver limits. Older trials below keep
+their own revisions and workloads.
+
+## Scoped native allocation profiling, 2026-10-14
+
+Schema 5 adds an optional calibrated Linux/glibc interposer and an explicit
+serial/separate numerical-thread selector to the existing full-scene benchmark.
+The runtime API and coverage classifications are unchanged. The focused selector
+runs before unrelated native-package inventory checks; the full test runner retains
+those checks. This establishes the exercised physics dependencies, not complete
+native-package acceptance. [Probe build and semantics](../../tools/physics/README.md)
+include its native calibration and precise counter boundaries.
+
+Eight fresh processes ran sequentially on the candidate based on main
+`3ac5b7129eb94fedf00fc4160a78ff6396c91302`, with 128 bodies, 512 warm ticks and
+128 measured ticks each. All retain the full monitored scene described below:
+144 Hz, four substeps, sixteen iterations, four walls, eight-point contact cap,
+entry/exit handlers, interpolation, materials and disabled sleeping. No stage
+control is enabled. This is a bounded diagnostic population, not the target mass
+workload. All frames require strict 0/0 owner/all-thread managed bytes.
+
+CPU processes have no display and an unavailable GPU driver/ICD. GPU processes
+use offscreen Vulkan with an explicitly pinned lavapipe ICD and four driver workers.
+Process maps confirmed lavapipe only on GPU profiles, no NVIDIA driver on any
+profile, probe presence only on instrumented profiles, and exactly zero/one
+retained Electron2D solver thread according to the setting. The physical device
+is not exercised: its power-cable compatibility remains unverified after Xid 79.
+
+### Complete frame costs
+
+Times are milliseconds; all eight physical/publication/contact gates passed.
+Ordinary timing profiles have neither LD_PRELOAD nor the probe flag. Instrumented
+profiles include the shared all-thread counter overhead and remain separate.
+These desktop samples are not isolated statistical repetitions.
+
+| Profile | Mean | p50 / p95 / p99 / max | Managed owner / all threads |
+| --- | ---: | --- | --- |
+| cpu-timing | 0.8113 | 0.8121 / 0.8207 / 0.8376 / 0.8439 | 0 / 0 |
+| cpu-thread-timing | 0.8838 | 0.8597 / 1.0079 / 1.0515 / 1.2998 | 0 / 0 |
+| gpu-timing | 20.2987 | 20.0453 / 22.2432 / 23.6950 / 24.1431 | 0 / 0 |
+| gpu-thread-timing | 20.6490 | 20.6743 / 22.9345 / 23.7647 / 23.9732 | 0 / 0 |
+| cpu-alloc | 0.8092 | 0.8081 / 0.8166 / 0.8304 / 0.8411 | 0 / 0 |
+| cpu-thread-alloc | 0.9068 | 0.8956 / 1.0008 / 1.0596 / 1.0676 | 0 / 0 |
+| gpu-alloc | 20.4077 | 20.3304 / 22.7175 / 23.6799 / 23.9740 | 0 / 0 |
+| gpu-thread-alloc | 21.2294 | 21.1172 / 23.4137 / 27.4503 / 27.6835 | 0 / 0 |
+
+| GPU profile | Upload / readback bytes per tick | Uniform bytes per tick | Submissions per tick | Summed waits p50 / p95 / p99 / max, ms |
+| --- | --- | ---: | ---: | --- |
+| gpu-timing | 2328 / 93824.625 | 44330.00 | 19.226562 | 19.0624 / 21.1426 / 22.5986 / 22.8798 |
+| gpu-thread-timing | 2328 / 93832.500 | 45148.00 | 19.281250 | 19.6339 / 21.7685 / 22.7132 / 22.7714 |
+| gpu-alloc | 2328 / 93840.375 | 45560.75 | 19.335938 | 19.3401 / 21.5417 / 22.4882 / 22.7271 |
+| gpu-thread-alloc | 2328 / 93829.125 | 45076.25 | 19.257812 | 19.8836 / 22.1022 / 26.0013 / 26.3142 |
+
+The readback serves live scene pose/motion fields and full monitored contact
+publication. Waits are already included in complete frame costs. These are complete
+CPU versus complete GPU-backend paths; lavapipe itself executes on the CPU. Their
+ratio establishes no physical-GPU advantage. No real window is opened and no FPS
+is reported. Maximum escape/penetration across all profiles are .006592/.002849
+scene units, below the unchanged .601 limit; maximum speed is 66.166 below 1000,
+and final energy remains below one percent of initial energy, within the 102-percent
+ceiling. Contact retention is 450–465 points with actual entry/exit delivery.
+Backend trajectories and hashes are diagnostics, not equality gates.
+
+### Native request traffic
+
+Totals below cover the 128 complete measured PhysicsFrame windows across all
+process threads. Allocations includes successful realloc requests; RequestedBytes
+includes their full requested size, even for in-place resize. Frees counts explicit
+non-null free and glibc realloc-to-zero releases. Reallocations includes failed and
+zero-size calls; all measured Failures are zero.
+
+| Instrumented profile | Allocations | Requested bytes | Frees | Reallocations | Failures |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| cpu-alloc | 0 | 0 | 0 | 0 | 0 |
+| cpu-thread-alloc | 0 | 0 | 0 | 0 | 0 |
+| gpu-alloc | 1190334 | 619391040 | 1178663 | 16621 | 0 |
+| gpu-thread-alloc | 1173586 | 612519776 | 1161992 | 16524 | 0 |
+
+CPU recorded zero tracked libc traffic in this warmed fixture, including the
+separate numerical thread. Software Vulkan recorded roughly 9,200–9,300 successful
+requests and 4.8 MB of requested allocator traffic per frame. The global process
+window includes CLR, SDL and driver work and does not attribute these requests to
+engine buffers. This is neither retained/peak memory nor a leak measurement;
+direct mappings, private allocator paths and device memory are outside the probe.
+Setup, teardown, window pumping and rendering are also outside these windows.
+A call completing after the bracket is outside its count. General native-memory
+and target-driver acceptance remain open.
+
+The native check verifies exact 4 allocations/131 requested bytes/3 frees/1 resize,
+worker-thread capture, nested-window refusal, inactive-end refusal, failed resize
+with retained original pointer and zero-size release. The managed preflight checks
+actual preload attachment, 40-byte counter ABI and the exact smoke calibration.
+A fresh process with the library discoverable but no LD_PRELOAD fails explicitly
+before scene setup, preventing false zero reports.
+
+### Frozen evidence and remaining gates
+
+The isolated runtime keeps its platform assets; unrelated stale root native
+libraries are excluded from the copy, without changing primary build outputs.
+The exercised mesh dependency is retained in its native asset directory.
+All loaded files and probe bytes remain unchanged across the eight processes.
+The sorted source manifest covers tracked/untracked nonignored src, tests, tools,
+examples and the runtime project; its fingerprint hashes path, NUL, contents, NUL.
+
+| Evidence | SHA-256 |
+| --- | --- |
+| 4170 source inputs | `a056c6e99c15d58e1d7333f17d3a273f84db14934302fa5d5ac14b1cbfa03031` |
+| Runtime DLL | `478663e9834c5c94bb28fdabada4ba647f6e6df0d4e8d22d1bc450b02d933e28` |
+| Test DLL | `c991f9e63ffed1fe7ccc10ed0e21b95881880a487782c1efdbef2bd4929b8946` |
+| Native probe | `9d981e6a9992fe5b131dd939462baa660c8fbb74a30b89a3e71f1c50e859eaa3` |
+
+Ignored evidence is under `bin/physics-native-profile/2026-10-14/final2`: eight
+reports/logs, process proofs, source-before/after, source/runtime/probe manifests,
+runner and missing-preload rejection. The probe uses gcc 16.2.1 with strict C11,
+O2, no builtins, all warnings as errors. Reproduction uses the documented probe
+build, fresh process, explicit backend/thread and 128/512/128 count/warm/sample
+settings; select a verified driver deliberately when exercising GPU.
+
+This closes scoped allocator instrumentation and this small software-driver
+measurement, preserving broader native-memory, target mass-scene advantage,
+current hardware/native-window FPS, complete API, network and platform gates.
 
 ## Workload and provenance
 

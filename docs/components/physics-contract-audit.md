@@ -4,6 +4,13 @@
 
 Last updated: 2026-10-14
 
+[Scoped native allocator profiling](physics-scene-performance.md#scoped-native-allocation-profiling-2026-10-14)
+now records all-process-thread libc request traffic in full PhysicsFrame windows,
+with calibrated attachment and separate uninstrumented timing. Eight bounded
+CPU/software-GPU serial/separate profiles retain 0/0 warm managed bytes. This
+preserves existing coverage states; retained/device memory, target hardware,
+real-window and complete contract/performance acceptance remain open.
+
 [Common space bindings](physics-registered-adapter.md#common-space-bindings) now execute all four Body/Area space
 operations on scene and raw RIDs, including explicit target simulation, scene
 reclaim, partial-attachment restoration, source preflight and lifetime guards.

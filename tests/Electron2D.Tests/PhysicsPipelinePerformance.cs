@@ -20,10 +20,16 @@ internal static partial class PhysicsPipelinePerformance
             "both" => new[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU },
             _ => throw new ArgumentException("Choose cpu, gpu or both.")
         };
+        var nativeAllocations = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_NATIVE_ALLOCATIONS") == "1";
+        if (nativeAllocations) NativeAllocationProbe.Prepare();
+        var previousThread = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        var threadChoice = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_THREADED");
+        if (threadChoice is not null && threadChoice is not "0" and not "1") throw new ArgumentException("Choose threaded 0 or 1.");
+        if (threadChoice is not null) ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threadChoice == "1");
         var previous = PhysicsSpace.ProfilingEnabled;
         PhysicsSpace.ProfilingEnabled = true;
-        try { foreach (var backend in backends) Measure(backend, count, warmup, samples); }
-        finally { PhysicsSpace.ProfilingEnabled = previous; }
+        try { foreach (var backend in backends) Measure(backend, count, warmup, samples, nativeAllocations); }
+        finally { PhysicsSpace.ProfilingEnabled = previous; ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previousThread); }
     }
 
     private static int Read(string suffix, int fallback, int min, int max)
@@ -33,7 +39,7 @@ internal static partial class PhysicsPipelinePerformance
         return value;
     }
 
-    private static void Measure(PhysicsServer.Backend backend, int count, int warmup, int samples)
+    private static void Measure(PhysicsServer.Backend backend, int count, int warmup, int samples, bool nativeAllocations)
     {
         var setupStart = Stopwatch.GetTimestamp();
         var lifecycleOnly = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_LIFECYCLE_ONLY") == "1";
@@ -108,6 +114,7 @@ internal static partial class PhysicsPipelinePerformance
             var tick = PhysicsServer.SpaceGetTick(world.Space);
             var total = GC.GetTotalAllocatedBytes(true); var allocated = GC.GetAllocatedBytesForCurrentThread();
             long physicsOwnerBytes = 0, physicsAllThreadsBytes = 0;
+            var nativeTraffic = new NativeAllocationProbe.Counts();
             long pumpOwnerBytes = 0, publishOwnerBytes = 0, processOwnerBytes = 0, renderOwnerBytes = 0;
             var frameStart = Stopwatch.GetTimestamp();
             for (var i = 0; i < samples; i++)
@@ -117,9 +124,11 @@ internal static partial class PhysicsPipelinePerformance
                 display?.Pump(tree);
                 pumpOwnerBytes += GC.GetAllocatedBytesForCurrentThread() - pumpOwner;
                 var physicalOwner = GC.GetAllocatedBytesForCurrentThread(); var physicalAll = GC.GetTotalAllocatedBytes(true);
-                var wait = gpu?.WaitMS ?? 0; var start = Stopwatch.GetTimestamp();
-                tree.PhysicsFrame(delta);
-                times[i] = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
+                var wait = gpu?.WaitMS ?? 0;
+                if (nativeAllocations) NativeAllocationProbe.Begin();
+                var start = Stopwatch.GetTimestamp();
+                try { tree.PhysicsFrame(delta); times[i] = Stopwatch.GetElapsedTime(start).TotalMilliseconds; }
+                finally { if (nativeAllocations) nativeTraffic.Add(NativeAllocationProbe.End()); }
                 physicsOwnerBytes += GC.GetAllocatedBytesForCurrentThread() - physicalOwner;
                 physicsAllThreadsBytes += GC.GetTotalAllocatedBytes(true) - physicalAll;
                 waits[i] = (gpu?.WaitMS ?? 0) - wait;
@@ -192,8 +201,19 @@ internal static partial class PhysicsPipelinePerformance
             var capture = display?.Capture(bodies);
             var report = JsonSerializer.Serialize(new
             {
-                schema = 4,
+                schema = 5,
                 backend = backend.ToString(),
+                threaded = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread),
+                nativeAllocations,
+                nativeLibcTraffic = nativeAllocations ? new
+                {
+                    nativeTraffic.Allocations,
+                    nativeTraffic.RequestedBytes,
+                    nativeTraffic.Frees,
+                    nativeTraffic.Reallocations,
+                    nativeTraffic.Failures,
+                    scope = "all process threads during complete PhysicsFrame; successful libc requests, not retained/device/mapped memory"
+                } : null,
                 bodies = count,
                 walls = 4,
                 hz = 144,

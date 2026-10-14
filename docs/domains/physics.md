@@ -2,6 +2,13 @@
 
 Last updated: 2026-10-14
 
+[Scoped native allocator profiling](../components/physics-scene-performance.md#scoped-native-allocation-profiling-2026-10-14)
+now records all-process-thread libc request traffic in full PhysicsFrame windows,
+with calibrated attachment and separate uninstrumented timing. Eight bounded
+CPU/software-GPU serial/separate profiles retain 0/0 warm managed bytes. This
+preserves existing coverage states; retained/device memory, target hardware,
+real-window and complete contract/performance acceptance remain open.
+
 [Portable joint continuation](../components/physics-snapshots.md#portable-joint-continuation)
 now verifies CPU/registered scene/raw sampled frames, silent correction, atomic
 policy guards, local replay and real pin/groove/spring response. Warm complete-frame
