@@ -1,7 +1,8 @@
 namespace Electron2D;
 
 /// <summary>Reusable friction and bounce settings for a two-dimensional physics body.</summary>
-/// <remarks>Bodies borrow this resource. Assigning a property raises <see cref="Resource.Changed"/> and updates attached body fixtures before their next physics step.</remarks>
+/// <remarks>Bodies borrow this resource. Property edits and resource copies raise <see cref="Resource.Changed"/>.
+/// Revision polling updates attached fixtures before their next physics step even when an earlier observer throws.</remarks>
 public sealed class PhysicsMaterial : Resource
 {
     private float _friction = 1f;
@@ -74,6 +75,7 @@ public sealed class PhysicsMaterial : Resource
         copy._bounce = _bounce;
         copy._rough = _rough;
         copy._absorbent = _absorbent;
+        copy._revision++;
     }
 
     private static void Finite(float value)

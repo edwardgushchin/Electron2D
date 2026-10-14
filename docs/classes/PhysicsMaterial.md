@@ -1,6 +1,6 @@
 # PhysicsMaterial
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Inherits:** [Resource](Resource.md), ElectronObject
 
@@ -92,3 +92,24 @@ capture/restore execute 128 warmed full-frame cycles at 0/0 owner/all-thread
 managed bytes. CPU retains unchanged native geometry while updating material;
 actual geometry edits still rebuild. Native allocation totals and wider
 geometry/performance acceptance remain unverified.
+
+## Copied material revision and failed observers
+
+CopyFromResource advances the target material revision once after all four
+coefficients/modifiers are copied. Body revision polling restores current material
+coefficients even if an earlier Changed observer threw before the body's callback.
+The copy remains committed and the original exception propagates under Resource's
+existing coalesced notification policy. This also applies to archive cache Replace;
+material/cache identity and scene borrowers remain unchanged. Duplicate targets
+retain independent copied values and their own revision.
+
+The public-only --contact-response consumer verifies four copied friction/bounce/
+rough/absorbent combinations, earlier observer failures, multiple scene borrowers,
+retirement of body-local overrides and actual bounce/complete contact impulse.
+A saved .e2dres cache replacement follows the same path. CPU, independent GPU and
+registered implementations run serial/separate profiles. The completed physical
+response uses the existing .5 velocity and .1 impulse bounds; copied values and
+identities are exact. Structural copies/file I/O are outside the 128 warm/128
+measured full-contact-frame bracket, which retains strict zero owner/all managed
+allocations. Native/platform/hardware/network and full extension acceptance remain
+separate gates.

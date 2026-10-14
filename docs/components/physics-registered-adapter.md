@@ -1491,3 +1491,20 @@ This verifies inherited authoring safety and leaves complete arbitrary provider
 geometry, native/platform/network and hardware performance acceptance open.
 
 Standalone Shape.ResetState uses the same preflight before OnResetState. The public-only regression rejects reset during numerical/access/geometry hooks, checks no custom-reset side effects, and preserves allowed quiescent reset without Changed. Copying invokes reset exactly once after its own accepted preflight.
+
+## Copied material revision (2026-10-14)
+
+Resource.CopyFromResource used to assign all PhysicsMaterial values without
+advancing its revision. If a preceding Changed observer threw, scene callbacks
+were skipped and public bodies retained stale fixture coefficients and body-local
+overrides. Copy now advances the target revision once, allowing the existing
+authored-read/preparation polling path to recover. No extra subscriber delivery or
+public API is introduced.
+
+The --contact-response consumer includes four copied coefficient/modifier sets,
+two shared scene borrowers, an unaffected contact peer, callback failure, archive
+Replace/cache identity and analytic real bounce plus full impulse. It also checks
+128 warm/128 measured contact-reset full frames at zero managed allocation. Both
+thread policies execute on CPU/GPU/registered owners. This closes missed copy
+publication rather than certifying arbitrary registered geometry or final native,
+platform, network or hardware performance acceptance.

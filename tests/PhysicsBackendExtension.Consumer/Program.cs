@@ -29,7 +29,7 @@ else if (args.Contains("--contact-frames")) BackendChecks.RunContactFrames(args.
 else if (args.Contains("--continuous-response")) BackendChecks.RunContinuousResponse(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
 else if (args.Contains("--contact-response")) BackendChecks.RunContactResponse(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
-    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded") ? true : null);
 else if (args.Contains("--sleep")) BackendChecks.RunSleep(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
 else if (args.Contains("--history")) BackendChecks.RunHistory(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :

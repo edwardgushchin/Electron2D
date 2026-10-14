@@ -2,7 +2,15 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunContactResponse(PhysicsServer.Backend? backend = null)
+    public static void RunContactResponse(PhysicsServer.Backend? backend = null, bool? threaded = null)
+    {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        if (threaded is { } separate) ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, separate);
+        try { RunContactResponseCore(backend); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
+
+    private static void RunContactResponseCore(PhysicsServer.Backend? backend)
     {
         if (backend is null) PhysicsServerManager.RegisterServer("ContactResponse", () => new Solver());
         using var world = backend is { } selected ? new World(selected) : new World("ContactResponse");
@@ -123,6 +131,7 @@ public static partial class BackendChecks
         }
         finally { PhysicsServer.FreeRID(raw); }
         InheritedSurface(backend);
+        VerifyMaterialCopy(backend);
     }
 
     private static void InheritedSurface(PhysicsServer.Backend? backend)
