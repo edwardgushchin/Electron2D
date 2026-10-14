@@ -181,3 +181,14 @@ physical momentum/stability, checkpoint replay and CPU-authoritative portable
 correction all use public API. The independent local-frame and full transport/frame
 128-sample brackets require zero owner/all-thread bytes. Packet transport is local;
 real multi-process networking and hardware GPU performance are separate gates.
+
+
+`--joint-contacts` selects CPU by default; add `--gpu` and `--threaded` as needed.
+A pin/groove/spring mechanism rests on a real frictional floor with virtual surface
+motion. Scene/raw receivers and joint owners verify full normal/tangent contact
+impulses, object/slot/velocity data, monitored checkpoint continuation and motion
+after clearing constraints. Missing-floor and missing-elastic controls reject;
+128 complete measured contact frames require zero owner/all-thread managed bytes.
+Finite-step damping bounds follow the accepted spring law, preserving nonzero
+damping on both backends. Hardware/native/foreign and larger workload gates remain
+separate.

@@ -296,3 +296,6 @@ profile retains 14 incompatible/restored cases across both directions. Rejection
 preserves complete packets, sampled values and events; real refresh/continuation
 recovers. These cold structural checks have no allocation claim. Hardware and
 broader geometry/joint/network acceptance remain open.
+
+
+[Joint and contact support](../components/physics-joints.md#joint-and-contact-support-2026-10-14) verifies spring-loaded pin/groove constraints, real floor friction, contact identity/normal/surface-velocity/impulse, monitored checkpoint continuation and post-clear motion on CPU/GPU. Warm full frames allocate no managed bytes; broader numerical/native/foreign/network/performance acceptance remains open and declaration states are unchanged.

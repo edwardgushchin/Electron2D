@@ -112,3 +112,44 @@ worlds run; GPU profiles observe those lanes with the software driver present.
 The bounded ring establishes this coupled path. Contact-rich graphs, larger or
 extreme-scale workloads, full inherited/extension contracts, native/foreign
 execution, routed networking and hardware/window performance remain open.
+
+
+## Joint and contact support (2026-10-14)
+
+The public-only --joint-contacts fixture combines a pin-connected pair of unit-mass
+linear rigid bodies, a finite vertical groove, a compressed spring (rest 50,
+stiffness 20, damping 4) and a real rectangle floor. Gravity is 980. The floor has
+friction .6 and virtual horizontal surface velocity 30 while its pose stays fixed.
+Both scene/raw contact receivers and scene/raw joint ownership execute on explicit
+CPU/GPU worlds. Negative controls remove floor collision or elastic stiffness;
+the unchanged support/impulse assertions reject both substitutions.
+
+After 300 settling frames the upper/lower centers remain near y 23/27, guide x stays
+near zero, and the pin separation remains 4. Tolerances are .15 units for the
+column position, .02 for separation and .1 units/s for resting speed. Contact
+snapshots verify the actual scene floor RID/object/instance identity, both logical
+shape slots, upward normal and surface point velocity 30 within .001. The scene
+receiver starts one monitored floor episode;32-step checkpoint replay keeps that
+episode and solved support, with .005 pose/velocity repeat tolerances. Clearing all
+three joints releases the body to travel more than 20 units in 60 frames while floor
+contact remains real.
+
+Complete contact impulse is compared with both weights plus spring load and the
+measured change in total vertical momentum. The undamped target is
+`(1960 + 20*(50-y_load))/60 - delta_momentum`. The accepted finite-interval spring
+law in ADR 0086 multiplies elastic impulse by exponential decay and damps axial
+speed; a continuous Hooke equilibrium is therefore not an exact frame oracle.
+The common permitted deficit is bounded by
+`(elastic/60 + abs(load_speed_before) + 980/60)*(1-exp(-4/60))`, plus .15 impulse
+units for position/rounding. This preserves nonzero damping on both backends while
+allowing their different native/device interval subdivisions. A missing spring,
+missing weight or final-substep-only impulse fails that bound. Tangential impulse
+must be positive and its ratio to normal impulse is .6 within .08.
+
+Each of four role/ownership variants runs 128 warm and 128 measured complete frames
+with full contact/public-state observation at strict 0/0 owner/all-thread managed
+bytes. CPU needs no display/GPU; GPU uses CPU-only Vulkan. Serial/separate fresh
+processes exercise the same contract and observe the numerical lane only when
+requested. This bounded contact-rich path does not certify larger/extreme graphs,
+complete extension/inherited behavior, native/foreign execution, real networking
+or hardware/window performance.

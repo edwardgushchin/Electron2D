@@ -1063,3 +1063,6 @@ acceptance remains open.
 
 
 [Closed coupled graph](../components/physics-joints.md#closed-coupled-graph-2026-10-14) verifies all three joint families together, scene/raw ownership, momentum/stability, private replay and CPU-authoritative portable correction on CPU/GPU with zero warmed managed allocation. Larger/contact-rich/native/foreign/network/performance acceptance remains open; declaration states are unchanged.
+
+
+[Joint and contact support](../components/physics-joints.md#joint-and-contact-support-2026-10-14) verifies spring-loaded pin/groove constraints, real floor friction, contact identity/normal/surface-velocity/impulse, monitored checkpoint continuation and post-clear motion on CPU/GPU. Warm full frames allocate no managed bytes; broader numerical/native/foreign/network/performance acceptance remains open and declaration states are unchanged.
