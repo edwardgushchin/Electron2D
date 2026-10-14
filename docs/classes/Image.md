@@ -1,12 +1,12 @@
 # Image
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Inherits:** [Resource](Resource.md) → [ElectronObject](ElectronObject.md)
 
 **Inherited By:** none
 
-- **Sources:** [`src/Core/IO/Image.cs`](../../src/Core/IO/Image.cs), [`src/Core/IO/Image.Processing.cs`](../../src/Core/IO/Image.Processing.cs), [`src/Core/IO/Image.Codecs.cs`](../../src/Core/IO/Image.Codecs.cs), [`src/Core/IO/Image.SVG.cs`](../../src/Core/IO/Image.SVG.cs)
+- **Sources:** [`src/Core/IO/Image.cs`](../../src/Core/IO/Image.cs), [`src/Core/IO/Image.Processing.cs`](../../src/Core/IO/Image.Processing.cs), [`src/Core/IO/Image.Codecs.cs`](../../src/Core/IO/Image.Codecs.cs), [`src/Core/IO/Image.SVG.cs`](../../src/Core/IO/Image.SVG.cs), [`src/Core/IO/Image.BCn.cs`](../../src/Core/IO/Image.BCn.cs), [`src/Core/IO/Image.DDS.cs`](../../src/Core/IO/Image.DDS.cs), [`src/Core/IO/Image.DDS.Pixels.cs`](../../src/Core/IO/Image.DDS.Pixels.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public sealed partial class Image : Resource`
 
@@ -16,13 +16,19 @@ Last updated: 2026-10-13
 
 `Image` stores one positive-sized base level and, optionally, its complete mip chain in one managed byte buffer. A newly constructed instance is the canonical empty state: zero width, zero height, `L8`, no mipmaps, and no data. Static factories validate dimensions, format, pixel count, and exact byte length before publishing an image.
 
-All 47 raw [`Image.Format`](Image.Format.md) identities are accepted for storage. Twenty-five uncompressed formats support pixel access and processing. The 22 block-compressed formats support exact buffer ownership, sizing, copying, mip offsets, duplication, and metadata-only alpha inspection, but not CPU pixel decoding or encoding.
+All 47 raw [`Image.Format`](Image.Format.md) identities are accepted for storage. Twenty-five uncompressed formats support pixel access and processing. The 22 block-compressed formats support exact buffer ownership, sizing, copying, mip offsets, duplication, and metadata-only alpha inspection, and BC1–BC7 compression/decompression through explicit operations. Pixel access and ordinary processing still require an uncompressed image.
 
 Pixel coordinates use a top-left origin: X increases rightward and Y increases downward. Rectangles are half-open. Stored multi-byte components use little-endian order. `GetData` and data-taking APIs copy their arrays, so callers never share mutable buffer ownership with an image.
 
 The browser platform package statically links the existing SDL core/image codecs. Its contract app executes PNG/JPEG/WebP/BMP/TGA/SVG loading and PNG/JPEG saving through this same API, including decoder rejection and state preservation. Canvas presentation and additional codec formats remain outside that check.
 
 Every state read and mutation is synchronized per instance. Bulk mutations prepare and commit a complete replacement state; `SetPixel` updates only the addressed pixel under serialization. Both raise inherited [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) after releasing locks. A throwing subscriber observes committed state and propagates its exception. Calls involving multiple images snapshot sources before changing the destination; no cross-image lock is held during callbacks.
+
+DDS loading validates the complete source before publication and returns the first image of an array/cube, or the first slice at every volume mip. Canonical complete mip chains and tightly packed raw layouts are required; truncated, partial-chain and inconsistent payloads fail atomically. Legacy masks, numeric float/unorm FourCC and applicable DX10 raw/HDR/BC formats are supported. Saving preserves exact supported raw/block bytes and uses atomic file replacement. Signed RGTC and formats with no DDS storage representation fail explicitly.
+
+`Compress` and `CompressFromChannels` consume S3TC (BC1/BC3/BC4/BC5) or BPTC (BC7; BC6 for HDR RGB). Explicit RGB drops alpha in BC1. Normal sources choose RG channels. Existing mips are compressed individually; none are synthesized. HDR BC6 requires finite colors and preserves sign/range. `Decompress` returns RGBA8 or RGB float while preserving every mip; an uncompressed image is a silent no-op. Source bytes and the conservative RGBA-float expansion must each fit 64 MiB, checked before codec allocation. ETC/EAC/ASTC remain unavailable and throw before mutation.
+
+BC1–BC7 sources retain their original format, complete mip chain and exact block bytes. Prepared CPU sampling decodes BC1–BC5/BC7 to RGBA8 and signed/unsigned BC6 to RGB floating point. GPU allocates native BC storage when the device supports it; otherwise it uploads prepared decoded pixels. Compatibility uses the decoded snapshot; BC6 requires an HDR-capable driver and the current Linux driver rejects that role. The RA-as-RG role uses decoded upload to preserve channel semantics. Integer sampling and ETC/EAC/ASTC codecs remain separate dependencies.
 
 ## Examples
 
@@ -62,8 +68,13 @@ byte[] ownedCopy = image.GetData();
 | Member | Description |
 | --- | --- |
 | [`public static Image CreateEmpty(int width, int height, bool useMipmaps, Image.Format format)`](#createempty) | Creates zero-filled storage. |
-| [`public static Image Create(int width, int height, bool useMipmaps, Image.Format format)`](#create) | Obsolete alias of `CreateEmpty`. |
 | [`public static Image CreateFromData(int width, int height, bool useMipmaps, Image.Format format, byte[] data)`](#createfromdata) | Creates an image from an exact copied raw buffer. |
+| [`public void Compress(Image.CompressMode mode, Image.CompressSource source = Image.CompressSource.Generic, Image.ASTCFormat astcFormat = Image.ASTCFormat.Format4X4)`](#compress) | Atomically compresses all stored mips with detected channels. |
+| [`public void CompressFromChannels(Image.CompressMode mode, Image.UsedChannels channels, Image.ASTCFormat astcFormat = Image.ASTCFormat.Format4X4)`](#compressfromchannels) | Compresses with an explicit channel role. |
+| [`public void Decompress()`](#decompress) | Decodes BC1–BC7, preserving mips. |
+| [`public void LoadDDSFromBuffer(ReadOnlySpan<byte> buffer)`](#loadddsfrombuffer) | Validates and loads copied DDS pixels. |
+| [`public byte[] SaveDDSToBuffer()`](#saveddstobuffer) | Returns an independent DDS container without recompressing blocks. |
+| [`public void SaveDDS(string path)`](#savedds) | Atomically saves DDS to an existing parent directory. |
 | [`public void SetData(int width, int height, bool useMipmaps, Image.Format format, byte[] data)`](#setdata) | Atomically replaces all pixel state. |
 | [`public byte[] GetData()`](#getdata) | Returns an independent raw-buffer copy. |
 | [`public int GetMIPMapOffset(int mipmap)`](#getmipmapoffset) | Gets a stored level's byte offset. |
@@ -124,9 +135,9 @@ byte[] ownedCopy = image.GetData();
 | [`Image.Interpolation`](Image.Interpolation.md) | Reconstruction filters. |
 | [`Image.AlphaMode`](Image.AlphaMode.md) | Detected alpha-use classes. |
 | [`Image.UsedChannels`](Image.UsedChannels.md) | Minimal meaningful channel sets. |
-| [`Image.CompressSource`](Image.CompressSource.md) | Source semantics used during channel detection and future compression. |
-| [`Image.CompressMode`](Image.CompressMode.md) | Future block-compression family selection. |
-| [`Image.ASTCFormat`](Image.ASTCFormat.md) | Future ASTC block-footprint selection. |
+| [`Image.CompressSource`](Image.CompressSource.md) | Source semantics used during channel detection and compression. |
+| [`Image.CompressMode`](Image.CompressMode.md) | Block-compression family selection. |
+| [`Image.ASTCFormat`](Image.ASTCFormat.md) | Validated ASTC footprint selection; codec remains separate. |
 
 ## Constants
 
@@ -219,11 +230,6 @@ Creates an empty `L8` image with no allocated pixel buffer. It raises no events.
 ### `public static Image CreateEmpty(int width, int height, bool useMipmaps, Image.Format format)`
 
 Returns a new zero-filled image. Width and height must be positive, fit `MaxWidth`/`MaxHeight`, remain within the 268,435,456-pixel safety ceiling, and produce a managed-array-sized buffer. Invalid dimensions or formats throw `ArgumentOutOfRangeException`.
-
-<a id="create"></a>
-### `public static Image Create(int width, int height, bool useMipmaps, Image.Format format)`
-
-Obsolete source-compatibility alias of [`CreateEmpty`](#createempty). New code should use `CreateEmpty`.
 
 <a id="createfromdata"></a>
 ### `public static Image CreateFromData(int width, int height, bool useMipmaps, Image.Format format, byte[] data)`
@@ -553,9 +559,9 @@ Public state reads and writes are safe for concurrent calls on the same image. M
 
 The implemented surface covers all backend-independent CPU operations in the audited reference API, adapted to typed C# properties, exceptions, arrays, and `ImageMetrics`. The following members are intentionally absent, not stubs:
 
-- PNG/JPEG/WebP/BMP/TGA/SVG file and buffer loading and PNG/JPEG saving are executable under the codec profile above. SVG raster dimensions use the documented XML preflight and may differ from SVG renderers with other CSS sizing rules. DDS/KTX/EXR, WebP saving, source channel layouts and complete color/metadata semantics remain unfinished. SDL_image 3.4.6 changes opaque colors when saving WebP at its lossless setting, so no public lossless encoder is claimed.
-- `compress` and `compress_from_channels` start with the editor plus primary SDL3 GPU renderer and its selected offline texture-compression toolchain; they belong in the first approved texture import/compression slice.
-- `decompress` starts when a portable CPU decoder or renderer readback path is selected; it belongs in the first compressed-CPU-consumption slice.
+- PNG/JPEG/WebP/BMP/TGA/SVG file and buffer loading and PNG/JPEG saving are executable under the codec profile above. SVG raster dimensions use the documented XML preflight and may differ from SVG renderers with other CSS sizing rules. KTX/EXR, WebP saving, source channel layouts and complete color/metadata semantics remain unfinished. SDL_image 3.4.6 changes opaque colors when saving WebP at its lossless setting, so no public lossless encoder is claimed.
+- Compress/CompressFromChannels execute S3TC/BPTC; ETC/EAC/ASTC require selected portable encoders and complete texture consumers.
+- `Decompress` executes BC1–BC7 and RA-as-RG; ETC/EAC/ASTC require separate portable decoders.
 - ImageTexture converts copied pixels for GPU sampling in the first rendering slice; ordinary texture drawing and additional formats remain unfinished.
 - Loader/import cache leases start with the typed loader/import domain and first native-backed texture resource.
 - Dynamic dictionaries, universal values, integer error codes, and untyped format loaders are permanently replaced by typed return values, arrays, and exceptions.
@@ -570,3 +576,33 @@ Non-renormalized mipmap generation for L8/LA8/R8/RG8/RGB8/RGBA8 uses encoded byt
 ## Custom image decoder integration
 
 [ImageFormatLoader](ImageFormatLoader.md) and [ImageFormatLoaderExtension](ImageFormatLoaderExtension.md) provide caller-owned file decoder registration. Custom suffixes participate in Image loading, resource extension/existence/directory discovery, synchronous/threaded ImageTexture loading and cache replacement. Ordered callbacks execute outside the registry lock with borrowed temporary Image/FileAccess objects; false means unrecognized content, exceptions preserve the destination, and success copies pixels before one Changed notification. Encoded input retains the 64 MiB limit. Registration is process-local and must precede fresh-host file loading. Keep decoders alive through pending worker calls; removal affects subsequent snapshots. Built-in buffer codecs and their channel/color metadata limits remain separate.
+
+<a id="compress"></a>
+### Compress
+
+Uses detected base-level channels, then compresses each stored mip under the serialized mutation boundary. Color/data source policy uses channel detection; normal policy selects RG. Invalid enums, empty/compressed inputs, unavailable families and work-budget failures preserve the old state. Changed runs after publication and outside image locks.
+
+<a id="compressfromchannels"></a>
+### CompressFromChannels
+
+Explicit Red/RedGreen choose BC4/BC5 in S3TC; alpha roles choose BC3, RGB/luminance choose opaque BC1. BPTC uses BC7 for ordinary/alpha data and BC6 for finite HDR RGB, with signed storage when needed. Compression is lossy.
+
+<a id="decompress"></a>
+### Decompress
+
+BC1–BC5/BC7 and RA-as-RG decode to RGBA8; signed/unsigned BC6 decodes to RGB float. The complete stored chain is retained. Calling on uncompressed data emits no change.
+
+<a id="loadddsfrombuffer"></a>
+### LoadDDSFromBuffer
+
+Requires bounded header, dimensions, supported color layout and exact complete container payload before invoking the reader or layout adapter. Array/cube/volume selection does not bypass validation of remaining images. Failures preserve prior state; observer errors occur after publication.
+
+<a id="saveddstobuffer"></a>
+### SaveDDSToBuffer
+
+Writes supported raw precision/channel layouts or exact BC blocks and all mips. The caller owns the returned buffer. RGBH, RGB16/RGB16I, RA-as-RG and other compressed families have no accepted DDS mapping and throw.
+
+<a id="savedds"></a>
+### SaveDDS
+
+Uses FileAccess path resolution and existing atomic replacement. The parent directory must exist. Encoding failure preserves an existing destination.

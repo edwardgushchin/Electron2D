@@ -1,6 +1,6 @@
 # Image.ASTCFormat
 
-Last updated: 2026-09-24
+Last updated: 2026-10-14
 
 **Inherits:** `System.Enum`
 
@@ -43,7 +43,7 @@ Requests 8×8 blocks, matching `Image.Format.Astc8X8` or `Image.Format.Astc8X8Hd
 
 ## Invariants and threading
 
-The enum is immutable and thread-safe. A future encoder must reject undefined values; no current API consumes it.
+The enum is immutable and thread-safe. Image compression validates this footprint even when a different family is requested. ASTC encoding requires a separate codec.
 
 ## Dependencies, verification, and limitations
 

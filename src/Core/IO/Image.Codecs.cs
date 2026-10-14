@@ -140,6 +140,7 @@ public sealed partial class Image
         ArgumentException.ThrowIfNullOrEmpty(path);
         return IOPath.GetExtension(path).ToLowerInvariant() switch
         {
+            ".dds" => "DDS",
             ".png" => "PNG",
             ".jpg" or ".jpeg" => "JPG",
             ".webp" => "WEBP",

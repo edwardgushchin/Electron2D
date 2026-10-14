@@ -1,6 +1,6 @@
 # Image.CompressMode
 
-Last updated: 2026-09-24
+Last updated: 2026-10-14
 
 **Inherits:** `System.Enum`
 
@@ -10,11 +10,11 @@ Last updated: 2026-09-24
 - **Namespace:** `Electron2D`
 - **Declaration:** `public enum Image.CompressMode`
 
-> Identifies the block-compression family requested from a future texture encoder.
+> Identifies the block-compression family requested by Image.Compress.
 
 ## Description
 
-The enum completes the public image type family without pretending that an encoder exists. It can be stored and compared today, but no `Image` method consumes it until the compression trigger in ADR 0039 is met.
+Image.Compress and CompressFromChannels accept S3tc and Bptc. Etc, Etc2 and Astc require separate codecs and fail before publication. Max is a sentinel, not a valid request.
 
 ## Examples
 
@@ -67,7 +67,7 @@ Counts valid families and is not a usable compression mode.
 
 ## Invariants and threading
 
-The enum is immutable and thread-safe. A future encoder must reject undefined values and `Max`; no current API accepts the enum, so it performs no work by itself.
+The enum is immutable and thread-safe. Image compression rejects undefined values and Max; S3tc/Bptc execute, and unavailable families fail before publication.
 
 ## Dependencies, verification, and limitations
 

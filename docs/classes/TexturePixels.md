@@ -1,6 +1,6 @@
 # TexturePixels
 
-Last updated: 2026-10-01
+Last updated: 2026-10-14
 
 - Declaration: `internal sealed class TexturePixels`
 - Source: [Texture.cs](../../src/Scene/Resources/Texture.cs)
@@ -43,7 +43,7 @@ Copied original dimensions, format, mip flag and bytes.
 
 `internal readonly Image.State Upload`
 
-Byte formats convert to RGBA8; other supported normalized/float formats convert to RGBA32Float, retaining HDR values.
+Byte formats and BC1–BC5/BC7 decode to RGBA8; BC6 and other supported normalized/float formats convert to RGBA32Float, retaining HDR values. Source retains original blocks; CPU opacity uses the prepared decoded payload. No decode runs during retained drawing.
 
 ### Levels
 

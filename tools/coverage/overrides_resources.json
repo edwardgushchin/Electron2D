@@ -1,13 +1,53 @@
 {
   "mappings": [
-    {"godot": "ImageFormatLoader::enum:LoaderFlags", "electron2d": "T:Electron2D.ImageFormatLoader.LoaderFlags", "state": "Implemented", "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."},
-    {"godot": "ImageFormatLoader::enum_value:LoaderFlags.FLAG_NONE", "electron2d": "enumValue:Electron2D.ImageFormatLoader.LoaderFlags.None()", "state": "Implemented", "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."},
-    {"godot": "ImageFormatLoader::enum_value:LoaderFlags.FLAG_FORCE_LINEAR", "electron2d": "enumValue:Electron2D.ImageFormatLoader.LoaderFlags.ForceLinear()", "state": "Implemented", "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."},
-    {"godot": "ImageFormatLoader::enum_value:LoaderFlags.FLAG_CONVERT_COLORS", "electron2d": "enumValue:Electron2D.ImageFormatLoader.LoaderFlags.ConvertColors()", "state": "Implemented", "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."},
-    {"godot": "ImageFormatLoaderExtension::method:_get_recognized_extensions()", "electron2d": "method:Electron2D.ImageFormatLoaderExtension.GetRecognizedExtensions()", "state": "Implemented", "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."},
-    {"godot": "ImageFormatLoaderExtension::method:_load_image(Image:,FileAccess:,int:ImageFormatLoader.LoaderFlags,float:)", "electron2d": "method:Electron2D.ImageFormatLoaderExtension.LoadImage(Electron2D.Image,Electron2D.FileAccess,Electron2D.ImageFormatLoader.LoaderFlags,System.Single)", "state": "Implemented", "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."},
-    {"godot": "ImageFormatLoaderExtension::method:add_format_loader()", "electron2d": "method:Electron2D.ImageFormatLoaderExtension.AddFormatLoader()", "state": "Implemented", "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."},
-    {"godot": "ImageFormatLoaderExtension::method:remove_format_loader()", "electron2d": "method:Electron2D.ImageFormatLoaderExtension.RemoveFormatLoader()", "state": "Implemented", "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."},
+    {
+      "godot": "ImageFormatLoader::enum:LoaderFlags",
+      "electron2d": "T:Electron2D.ImageFormatLoader.LoaderFlags",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."
+    },
+    {
+      "godot": "ImageFormatLoader::enum_value:LoaderFlags.FLAG_NONE",
+      "electron2d": "enumValue:Electron2D.ImageFormatLoader.LoaderFlags.None()",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."
+    },
+    {
+      "godot": "ImageFormatLoader::enum_value:LoaderFlags.FLAG_FORCE_LINEAR",
+      "electron2d": "enumValue:Electron2D.ImageFormatLoader.LoaderFlags.ForceLinear()",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."
+    },
+    {
+      "godot": "ImageFormatLoader::enum_value:LoaderFlags.FLAG_CONVERT_COLORS",
+      "electron2d": "enumValue:Electron2D.ImageFormatLoader.LoaderFlags.ConvertColors()",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."
+    },
+    {
+      "godot": "ImageFormatLoaderExtension::method:_get_recognized_extensions()",
+      "electron2d": "method:Electron2D.ImageFormatLoaderExtension.GetRecognizedExtensions()",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."
+    },
+    {
+      "godot": "ImageFormatLoaderExtension::method:_load_image(Image:,FileAccess:,int:ImageFormatLoader.LoaderFlags,float:)",
+      "electron2d": "method:Electron2D.ImageFormatLoaderExtension.LoadImage(Electron2D.Image,Electron2D.FileAccess,Electron2D.ImageFormatLoader.LoaderFlags,System.Single)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."
+    },
+    {
+      "godot": "ImageFormatLoaderExtension::method:add_format_loader()",
+      "electron2d": "method:Electron2D.ImageFormatLoaderExtension.AddFormatLoader()",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."
+    },
+    {
+      "godot": "ImageFormatLoaderExtension::method:remove_format_loader()",
+      "electron2d": "method:Electron2D.ImageFormatLoaderExtension.RemoveFormatLoader()",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."
+    },
     {
       "godot": "ResourceLoader::method:exists(String:,String:)",
       "electron2d": "method:Electron2D.ResourceLoader.Exists`1(System.String)",
@@ -429,10 +469,55 @@
       "electron2d": "method:Electron2D.Resource.ResetState()",
       "state": "Partial",
       "reason": "ADR 0013: invokes custom non-stored reset without changing stored properties or manufacturing Changed. Shape targets preflight all borrowers and geometry/access hooks before OnResetState; denied calls retain custom and base state. Public-only --shape-geometry exercises every represented family plus an application Shape on CPU/GPU/registered serial/separate profiles, permitted quiescent reset and zero warm frames. Arbitrary resource hooks and broader inherited/numerical/platform acceptance remain open."
+    },
+    {
+      "godot": "Image::method:compress(int:Image.CompressMode,int:Image.CompressSource,int:Image.ASTCFormat)",
+      "electron2d": "method:Electron2D.Image.Compress(Electron2D.Image.CompressMode,Electron2D.Image.CompressSource,Electron2D.Image.ASTCFormat)",
+      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; remaining ETC/EAC/ASTC channel/HDR families require selected portable encoders/decoders and texture sampling integration. Foreign platforms and native allocation are separate gates."
+    },
+    {
+      "godot": "Image::method:compress_from_channels(int:Image.CompressMode,int:Image.UsedChannels,int:Image.ASTCFormat)",
+      "electron2d": "method:Electron2D.Image.CompressFromChannels(Electron2D.Image.CompressMode,Electron2D.Image.UsedChannels,Electron2D.Image.ASTCFormat)",
+      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; remaining ETC/EAC/ASTC channel/HDR families require selected portable encoders/decoders and texture sampling integration. Foreign platforms and native allocation are separate gates."
+    },
+    {
+      "godot": "Image::method:decompress()",
+      "electron2d": "method:Electron2D.Image.Decompress()",
+      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; remaining ETC/EAC/ASTC channel/HDR families require selected portable encoders/decoders and texture sampling integration. Foreign platforms and native allocation are separate gates."
+    },
+    {
+      "godot": "Image::method:load_dds_from_buffer(PackedByteArray:)",
+      "electron2d": "method:Electron2D.Image.LoadDDSFromBuffer(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. Typed span/owned bytes and exception projection; complete tightly packed container is required. Other codec families and foreign-platform/native allocation gates remain separate."
+    },
+    {
+      "godot": "Image::method:save_dds(String:)",
+      "electron2d": "method:Electron2D.Image.SaveDDS(System.String)",
+      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. Typed span/owned bytes and exception projection; complete tightly packed container is required. Other codec families and foreign-platform/native allocation gates remain separate."
+    },
+    {
+      "godot": "Image::method:save_dds_to_buffer()",
+      "electron2d": "method:Electron2D.Image.SaveDDSToBuffer()",
+      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. Typed span/owned bytes and exception projection; complete tightly packed container is required. Other codec families and foreign-platform/native allocation gates remain separate."
     }
   ],
   "statusGroups": [
-    {"godot": ["class:ImageFormatLoader", "class:ImageFormatLoaderExtension", "ImageFormatLoader::enum:LoaderFlags", "ImageFormatLoader::enum_value:LoaderFlags.FLAG_NONE", "ImageFormatLoader::enum_value:LoaderFlags.FLAG_FORCE_LINEAR", "ImageFormatLoader::enum_value:LoaderFlags.FLAG_CONVERT_COLORS", "ImageFormatLoaderExtension::method:_get_recognized_extensions()", "ImageFormatLoaderExtension::method:_load_image(Image:,FileAccess:,int:ImageFormatLoader.LoaderFlags,float:)", "ImageFormatLoaderExtension::method:add_format_loader()", "ImageFormatLoaderExtension::method:remove_format_loader()"], "state": "Implemented", "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."},
+    {
+      "godot": [
+        "class:ImageFormatLoader",
+        "class:ImageFormatLoaderExtension",
+        "ImageFormatLoader::enum:LoaderFlags",
+        "ImageFormatLoader::enum_value:LoaderFlags.FLAG_NONE",
+        "ImageFormatLoader::enum_value:LoaderFlags.FLAG_FORCE_LINEAR",
+        "ImageFormatLoader::enum_value:LoaderFlags.FLAG_CONVERT_COLORS",
+        "ImageFormatLoaderExtension::method:_get_recognized_extensions()",
+        "ImageFormatLoaderExtension::method:_load_image(Image:,FileAccess:,int:ImageFormatLoader.LoaderFlags,float:)",
+        "ImageFormatLoaderExtension::method:add_format_loader()",
+        "ImageFormatLoaderExtension::method:remove_format_loader()"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."
+    },
     {
       "godot": [
         "class:ResourceLoader"
@@ -587,24 +672,75 @@
     },
     {
       "godot": [
-        "Image::method:compress(int:Image.CompressMode,int:Image.CompressSource,int:Image.ASTCFormat)",
-        "Image::method:compress_from_channels(int:Image.CompressMode,int:Image.UsedChannels,int:Image.ASTCFormat)",
-        "Image::method:decompress()",
-        "Image::method:load_dds_from_buffer(PackedByteArray:)",
         "Image::method:load_exr_from_buffer(PackedByteArray:)",
         "Image::method:load_ktx_from_buffer(PackedByteArray:)",
-        "Image::method:save_dds(String:)",
-        "Image::method:save_dds_to_buffer()",
         "Image::method:save_exr(String:,bool:,bool:,float:)",
         "Image::method:save_exr_to_buffer(bool:,bool:,float:)"
       ],
       "state": "Unimplemented",
-      "reason": "Exact executable dependency under ADR 0039: the approved SDL_image 3.4.6 backend has no DDS/EXR/KTX or GPU-block compression/decompression codec API. Select and integrate mature codecs within that decision, including channel/HDR/mipmap semantics, format-specific encoders, bounded file/buffer paths, native packaging and compressed-image texture consumers. Raw Image format storage and SDL GPU upload capability do not supply a codec; no placeholder or manual codec rewrite is accepted."
+      "reason": "ADR 0039: EXR requires a selected mature portable codec with HDR/channel/save semantics; KTX requires complete container validation, orientation/mip/format role mapping and public file/buffer/texture consumers. The pinned BCn closure now supplies KTX1 primitives and BC blocks, but those public KTX paths are not yet integrated. ETC/EAC/ASTC remain separate codec dependencies; raw storage is not implementation."
+    },
+    {
+      "godot": [
+        "Image::method:create(int:,int:,bool:,int:Image.Format)"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned Image.xml at ed1daf0bf001b61586d9930840f2f1394092c079 declares create deprecated=\"Use [method create_empty].\"; use Image.CreateEmpty. Deprecated Create alias, its XML/class section and consumer surface assertion are removed. No implementation trigger."
+    },
+    {
+      "godot": [
+        "Image::method:compress(int:Image.CompressMode,int:Image.CompressSource,int:Image.ASTCFormat)"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; remaining ETC/EAC/ASTC channel/HDR families require selected portable encoders/decoders and texture sampling integration. Foreign platforms and native allocation are separate gates."
+    },
+    {
+      "godot": [
+        "Image::method:compress_from_channels(int:Image.CompressMode,int:Image.UsedChannels,int:Image.ASTCFormat)"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; remaining ETC/EAC/ASTC channel/HDR families require selected portable encoders/decoders and texture sampling integration. Foreign platforms and native allocation are separate gates."
+    },
+    {
+      "godot": [
+        "Image::method:decompress()"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; remaining ETC/EAC/ASTC channel/HDR families require selected portable encoders/decoders and texture sampling integration. Foreign platforms and native allocation are separate gates."
+    },
+    {
+      "godot": [
+        "Image::method:load_dds_from_buffer(PackedByteArray:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. Typed span/owned bytes and exception projection; complete tightly packed container is required. Other codec families and foreign-platform/native allocation gates remain separate."
+    },
+    {
+      "godot": [
+        "Image::method:save_dds(String:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. Typed span/owned bytes and exception projection; complete tightly packed container is required. Other codec families and foreign-platform/native allocation gates remain separate."
+    },
+    {
+      "godot": [
+        "Image::method:save_dds_to_buffer()"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. Typed span/owned bytes and exception projection; complete tightly packed container is required. Other codec families and foreign-platform/native allocation gates remain separate."
     }
   ],
   "extras": [
-    {"electron2d": "method:Electron2D.ImageFormatLoaderExtension.Dispose(System.Boolean)", "state": "Implemented", "reason": "ADR 0014 deterministic managed teardown unregisters borrowed decoder identity; pending calls must finish before caller disposal. ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."},
-    {"electron2d": "constructor:Electron2D.ImageFormatLoaderExtension..ctor()", "state": "Implemented", "reason": "Typed construction projects the managed image decoder instance; ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."},
+    {
+      "electron2d": "method:Electron2D.ImageFormatLoaderExtension.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0014 deterministic managed teardown unregisters borrowed decoder identity; pending calls must finish before caller disposal. ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."
+    },
+    {
+      "electron2d": "constructor:Electron2D.ImageFormatLoaderExtension..ctor()",
+      "state": "Implemented",
+      "reason": "Typed construction projects the managed image decoder instance; ADRs 0013/0014/0039: ordered caller-owned image decoder registration, protected typed extension hooks, temporary borrowed Image/FileAccess, bool success/unrecognized fallback and typed exceptions, 64 MiB input and atomic copied publication. Image/resource discovery, synchronous/threaded texture loading, cache replacement, fresh public host and native GPU/compatibility sampling are checked by ImageLoaderExtensionTests; foreign/native-allocation/import gates remain separate."
+    },
     {
       "electron2d": "T:Electron2D.ResourceFileTypes",
       "state": "Implemented",
@@ -818,7 +954,7 @@
     {
       "electron2d": "method:Electron2D.ResourceFileTypes.RegisterAnimationProperty`2(System.String,PropertyDescriptor<TOwner, TValue>,Func<TValue, TValue, System.Double, TValue>)",
       "state": "Implemented",
-      "reason": "ADRs 0093/0013/0090: immutable compiled property/interpolator binding IDs reconstruct exact typed value and scalar Bézier tracks in resource files; no CLR member lookup or delegate serialization. Validation, aliases, endian/cache replacement, atomic write failure and fresh-process playback execute; registered clip pixels verified on Linux Wayland GPU/compatibility."
+      "reason": "ADRs 0093/0013/0090: immutable compiled property/interpolator binding IDs reconstruct exact typed value and scalar B\u00e9zier tracks in resource files; no CLR member lookup or delegate serialization. Validation, aliases, endian/cache replacement, atomic write failure and fresh-process playback execute; registered clip pixels verified on Linux Wayland GPU/compatibility."
     },
     {
       "electron2d": "method:Electron2D.ResourceFileTypes.RegisterAnimationMethod`2(System.String,Action<TOwner, TArguments>)",

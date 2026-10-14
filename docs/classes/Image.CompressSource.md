@@ -10,7 +10,7 @@ Last updated: 2026-09-21
 - **Namespace:** `Electron2D`
 - **Declaration:** `public enum Image.CompressSource`
 
-> Supplies source semantics to channel detection and the future texture-compression pipeline.
+> Supplies source semantics to channel detection and Image compression.
 
 ## Description
 
@@ -42,12 +42,12 @@ Requests ordinary value-based channel detection without additional semantic assu
 <a id="srgb"></a>
 ### `Srgb = 1`
 
-Marks nonlinear sRGB color. Current channel detection uses the same component-presence rules as `Generic`; future compressors may choose color-specific encodings.
+Marks nonlinear sRGB color. Current channel detection uses the same component-presence rules as `Generic`; compression retains the requested stored color values without implicit color-space conversion.
 
 <a id="normal"></a>
 ### `Normal = 2`
 
-Marks tangent-space normal data and selects `UsedChannels.RedGreen`, because X and Y are sufficient to reconstruct Z in the intended future compression path.
+Marks tangent-space normal data and selects `UsedChannels.RedGreen`, because X and Y are sufficient to reconstruct Z in the normal-map compression path.
 
 ## Invariants and errors
 

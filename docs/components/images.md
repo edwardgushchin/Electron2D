@@ -1,10 +1,10 @@
 # Images component
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 ## Scope
 
-This Resources component owns portable managed 2D pixel buffers, binary masks, raw format identity, mipmap layout, CPU image processing, and typed image metrics. It also owns file/buffer decoding and PNG/JPEG saving. Importing, textures, renderer handles, GPU compression and presentation remain separate integrations.
+This Resources component owns portable managed 2D pixel buffers, binary masks, raw format identity, mipmap layout, CPU image processing, and typed image metrics. It also owns file/buffer decoding, PNG/JPEG/DDS saving and BC1–BC7 CPU block codecs. Texture sampling and renderer handles consume prepared immutable snapshots; importing remains separate.
 
 ## Owned types
 
@@ -18,7 +18,7 @@ This Resources component owns portable managed 2D pixel buffers, binary masks, r
 | [`Image.AlphaMode`](../classes/Image.AlphaMode.md) | Detected alpha classification | [`Image.cs`](../../src/Core/IO/Image.cs) |
 | [`Image.UsedChannels`](../classes/Image.UsedChannels.md) | Detected minimal channel set | [`Image.cs`](../../src/Core/IO/Image.cs) |
 | [`Image.CompressSource`](../classes/Image.CompressSource.md) | Channel-detection source semantics | [`Image.cs`](../../src/Core/IO/Image.cs) |
-| [`Image.CompressMode`](../classes/Image.CompressMode.md) | Future block-compression family selection | [`Image.cs`](../../src/Core/IO/Image.cs) |
+| [`Image.CompressMode`](../classes/Image.CompressMode.md) | Block-compression family selection | [`Image.cs`](../../src/Core/IO/Image.cs) |
 | [`Image.ASTCFormat`](../classes/Image.ASTCFormat.md) | Future ASTC footprint selection | [`Image.cs`](../../src/Core/IO/Image.cs) |
 | [`ImageMetrics`](../classes/ImageMetrics.md) | Typed absolute-error and peak-SNR result | [`Image.cs`](../../src/Core/IO/Image.cs) |
 | [`ClockDirection`](../classes/ClockDirection.md) | Stable 2D rotation direction | [`ClockDirection.cs`](../../src/Core/Math/ClockDirection.cs) |
@@ -64,7 +64,7 @@ BitMap's complete declared 2D mask surface is implemented: alpha thresholding, b
 
 The dynamic image-data dictionary is permanently replaced by typed properties plus `GetData`/`SetData`; error-code returns are replaced by exceptions; metric dictionaries are replaced by `ImageMetrics`.
 
-PNG/JPEG/WebP/BMP/TGA/SVG loading and PNG/JPEG saving are executable; GPU compression/decompression, importing, resource loading and native-backed asset leases are absent. Texture upload belongs to the in-progress shader-material component. The native codec API currently normalizes to RGBA8, without mipmaps, with a 64 MiB encoded-input/output limit and preflight dimension checks. DDS/KTX/EXR, WebP saving, format discovery, channel-layout and color/metadata parity remain pending. No lossless WebP encoder is exposed after the pinned native encoder failed exact opaque-color round trips. [ADR 0039](../decisions/resources.md#deferred-coverage-and-exact-implementation-triggers) gives each row a concrete prerequisite and first required vertical slice. Raw DXT/RGTC/BPTC/ETC/ASTC bytes can be held but not decoded or encoded.
+PNG/JPEG/WebP/BMP/TGA/SVG loading and PNG/JPEG saving are executable; BC1–BC7 compression/decompression and DDS file/buffer load/save execute with existing resource and texture consumers. Importing and additional codec families remain separate. The native codec API currently normalizes to RGBA8, without mipmaps, with a 64 MiB encoded-input/output limit and preflight dimension checks. KTX/EXR, WebP saving, format discovery, channel-layout and color/metadata parity remain pending. No lossless WebP encoder is exposed after the pinned native encoder failed exact opaque-color round trips. [ADR 0039](../decisions/resources.md#deferred-coverage-and-exact-implementation-triggers) gives each row a concrete prerequisite and first required vertical slice. BC1–BC7 and RA-as-RG decode; S3TC/BPTC encode. ETC/EAC/ASTC remain raw storage with explicit unavailable-codec failures.
 
 ## Verification
 
@@ -88,3 +88,9 @@ The managed checks are Linux/.NET 8 only. Native `ImageCodecTests` separately ve
 ## Custom image decoder integration
 
 [ImageFormatLoader](../classes/ImageFormatLoader.md) and [ImageFormatLoaderExtension](../classes/ImageFormatLoaderExtension.md) provide caller-owned file decoder registration. Custom suffixes participate in Image loading, resource extension/existence/directory discovery, synchronous/threaded ImageTexture loading and cache replacement. Ordered callbacks execute outside the registry lock with borrowed temporary Image/FileAccess objects; false means unrecognized content, exceptions preserve the destination, and success copies pixels before one Changed notification. Encoded input retains the 64 MiB limit. Registration is process-local and must precede fresh-host file loading. Keep decoders alive through pending worker calls; removal affects subsequent snapshots. Built-in buffer codecs and their channel/color metadata limits remain separate.
+
+## BC and DDS integration
+
+BC1–BC7 sources retain their original format, complete mip chain and exact block bytes. Prepared CPU sampling decodes BC1–BC5/BC7 to RGBA8 and signed/unsigned BC6 to RGB floating point. GPU allocates native BC storage when the device supports it; otherwise it uploads prepared decoded pixels. Compatibility uses the decoded snapshot. The RA-as-RG role uses decoded upload to preserve channel semantics. Integer sampling and ETC/EAC/ASTC codecs remain separate dependencies.
+
+See [the complete block-codec slice](image-bcn.md) for bounded source/expansion rules, source provenance, independent fixtures and current platform evidence. The buffer-tool closure exists only to compile the selected codec APIs inside Electron2D.dll; consumers receive no backend types or managed dependency DLLs.

@@ -1,0 +1,315 @@
+#define NETSTANDARD2_1_OR_GREATER
+#nullable enable annotations
+#nullable disable warnings
+#pragma warning disable CS1591, CS1570, CS1572, CS1573, CS1574, CS1584, CS1658, CS1587, CS8500, CS0162, CA2022
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+#if !NETSTANDARD2_1_OR_GREATER
+using System.Buffers;
+#endif
+using System.Threading;
+using System.Threading.Tasks;
+#if NETSTANDARD2_1_OR_GREATER
+using System.ComponentModel;
+#endif
+
+namespace Electron2DBufferTools;
+
+/// <summary>
+/// Helpers for working with the <see cref="Stream"/> type.
+/// </summary>
+internal static class StreamExtensions
+{
+    /// <summary>
+    /// Asynchronously reads a sequence of bytes from a given <see cref="Stream"/> instance.
+    /// </summary>
+    /// <param name="stream">The source <see cref="Stream"/> to read data from.</param>
+    /// <param name="buffer">The destination <see cref="Memory{T}"/> to write data to.</param>
+    /// <param name="cancellationToken">The optional <see cref="CancellationToken"/> for the operation.</param>
+    /// <returns>A <see cref="ValueTask"/> representing the operation being performed.</returns>
+#if NETSTANDARD2_1_OR_GREATER
+    [Obsolete("This API is only available for binary compatibility, but Stream.ReadAsync should be used instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+    public static ValueTask<int> ReadAsync(this Stream stream, Memory<byte> buffer, CancellationToken cancellationToken = default)
+    {
+#if NETSTANDARD2_1_OR_GREATER
+        return stream.ReadAsync(buffer, cancellationToken);
+#else
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return new(Task.FromCanceled<int>(cancellationToken));
+        }
+
+        // If the memory wraps an array, extract it and use it directly
+        if (MemoryMarshal.TryGetArray(buffer, out ArraySegment<byte> segment))
+        {
+            return new(stream.ReadAsync(segment.Array!, segment.Offset, segment.Count, cancellationToken));
+        }
+
+        // Local function used as the fallback path. This happens when the input memory
+        // doesn't wrap an array instance we can use. We use a local function as we need
+        // the body to be asynchronous, in order to execute the finally block after the
+        // write operation has been completed. By separating the logic, we can keep the
+        // main method as a synchronous, value-task returning function. This fallback
+        // path should hopefully be pretty rare, as memory instances are typically just
+        // created around arrays, often being rented from a memory pool in particular.
+        static async Task<int> ReadAsyncFallback(Stream stream, Memory<byte> buffer, CancellationToken cancellationToken)
+        {
+            byte[] rent = ArrayPool<byte>.Shared.Rent(buffer.Length);
+
+            try
+            {
+                int bytesRead = await stream.ReadAsync(rent, 0, buffer.Length, cancellationToken).ConfigureAwait(false);
+
+                if (bytesRead > 0)
+                {
+                    rent.AsSpan(0, bytesRead).CopyTo(buffer.Span);
+                }
+
+                return bytesRead;
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(rent);
+            }
+        }
+
+        return new(ReadAsyncFallback(stream, buffer, cancellationToken));
+#endif
+    }
+
+    /// <summary>
+    /// Asynchronously writes a sequence of bytes to a given <see cref="Stream"/> instance.
+    /// </summary>
+    /// <param name="stream">The destination <see cref="Stream"/> to write data to.</param>
+    /// <param name="buffer">The source <see cref="ReadOnlyMemory{T}"/> to read data from.</param>
+    /// <param name="cancellationToken">The optional <see cref="CancellationToken"/> for the operation.</param>
+    /// <returns>A <see cref="ValueTask"/> representing the operation being performed.</returns>
+#if NETSTANDARD2_1_OR_GREATER
+    [Obsolete("This API is only available for binary compatibility, but Stream.WriteAsync should be used instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+    public static ValueTask WriteAsync(this Stream stream, ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
+    {
+#if NETSTANDARD2_1_OR_GREATER
+        return stream.WriteAsync(buffer, cancellationToken);
+#else
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return new(Task.FromCanceled(cancellationToken));
+        }
+
+        if (MemoryMarshal.TryGetArray(buffer, out ArraySegment<byte> segment))
+        {
+            return new(stream.WriteAsync(segment.Array!, segment.Offset, segment.Count, cancellationToken));
+        }
+
+        // Local function, same idea as above
+        static async Task WriteAsyncFallback(Stream stream, ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken)
+        {
+            byte[] rent = ArrayPool<byte>.Shared.Rent(buffer.Length);
+
+            try
+            {
+                buffer.Span.CopyTo(rent);
+
+                await stream.WriteAsync(rent, 0, buffer.Length, cancellationToken).ConfigureAwait(false);
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(rent);
+            }
+        }
+
+        return new(WriteAsyncFallback(stream, buffer, cancellationToken));
+#endif
+    }
+
+    /// <summary>
+    /// Reads a sequence of bytes from a given <see cref="Stream"/> instance.
+    /// </summary>
+    /// <param name="stream">The source <see cref="Stream"/> to read data from.</param>
+    /// <param name="buffer">The target <see cref="Span{T}"/> to write data to.</param>
+    /// <returns>The number of bytes that have been read.</returns>
+#if NETSTANDARD2_1_OR_GREATER
+    [Obsolete("This API is only available for binary compatibility, but Stream.Read should be used instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+    public static int Read(this Stream stream, Span<byte> buffer)
+    {
+#if NETSTANDARD2_1_OR_GREATER
+        return stream.Read(buffer);
+#else
+        byte[] rent = ArrayPool<byte>.Shared.Rent(buffer.Length);
+
+        try
+        {
+            int bytesRead = stream.Read(rent, 0, buffer.Length);
+
+            if (bytesRead > 0)
+            {
+                rent.AsSpan(0, bytesRead).CopyTo(buffer);
+            }
+
+            return bytesRead;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(rent);
+        }
+#endif
+    }
+
+    /// <summary>
+    /// Writes a sequence of bytes to a given <see cref="Stream"/> instance.
+    /// </summary>
+    /// <param name="stream">The destination <see cref="Stream"/> to write data to.</param>
+    /// <param name="buffer">The source <see cref="Span{T}"/> to read data from.</param>
+#if NETSTANDARD2_1_OR_GREATER
+    [Obsolete("This API is only available for binary compatibility, but Stream.Write should be used instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+    public static void Write(this Stream stream, ReadOnlySpan<byte> buffer)
+    {
+#if NETSTANDARD2_1_OR_GREATER
+        stream.Write(buffer);
+#else
+        byte[] rent = ArrayPool<byte>.Shared.Rent(buffer.Length);
+
+        try
+        {
+            buffer.CopyTo(rent);
+
+            stream.Write(rent, 0, buffer.Length);
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(rent);
+        }
+#endif
+    }
+
+    /// <summary>
+    /// Reads a value of a specified type from a source <see cref="Stream"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The type of value to read.</typeparam>
+    /// <param name="stream">The source <see cref="Stream"/> instance to read from.</param>
+    /// <returns>The <typeparamref name="T"/> value read from <paramref name="stream"/>.</returns>
+    /// <exception cref="EndOfStreamException">Thrown if <paramref name="stream"/> reaches the end.</exception>
+#if NETSTANDARD2_1_OR_GREATER
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+    public static unsafe T Read<T>(this Stream stream)
+        where T : unmanaged
+    {
+#if NET7_0_OR_GREATER
+        T result;
+
+        stream.ReadExactly(new Span<byte>(&result, sizeof(T)));
+
+        return result;
+#elif NETSTANDARD2_1_OR_GREATER
+        T result;
+        int bytesOffset = 0;
+
+        // As per Stream.Read's documentation:
+        // "The total number of bytes read into the buffer. This can be less than the number of bytes allocated in the
+        // buffer if that many bytes are not currently available, or zero (0) if the end of the stream has been reached."
+        // Because of this, we have to loop until all requires bytes have been read, and only throw if the return is 0.
+        do
+        {
+            int bytesRead = stream.Read(new Span<byte>((byte*)&result + bytesOffset, sizeof(T) - bytesOffset));
+
+            // A return value of 0 indicates that the end of the stream has been reached
+            if (bytesRead == 0)
+            {
+                ThrowEndOfStreamException();
+            }
+
+            bytesOffset += bytesRead;
+        }
+        while (bytesOffset < sizeof(T));
+
+        return result;
+#else
+        int bytesOffset = 0;
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(sizeof(T));
+
+        try
+        {
+            do
+            {
+                int bytesRead = stream.Read(buffer, bytesOffset, sizeof(T) - bytesOffset);
+
+                if (bytesRead == 0)
+                {
+                    ThrowEndOfStreamException();
+                }
+
+                bytesOffset += bytesRead;
+            }
+            while (bytesOffset < sizeof(T));
+
+            return Unsafe.ReadUnaligned<T>(ref buffer[0]);
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
+#endif
+    }
+
+    /// <summary>
+    /// Writes a value of a specified type into a target <see cref="Stream"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The type of value to write.</typeparam>
+    /// <param name="stream">The target <see cref="Stream"/> instance to write to.</param>
+    /// <param name="value">The input value to write to <paramref name="stream"/>.</param>
+#if NETSTANDARD2_1_OR_GREATER
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+    public static unsafe void Write<T>(this Stream stream, in T value)
+        where T : unmanaged
+    {
+#if NETSTANDARD2_1_OR_GREATER
+        ref T r0 = ref Unsafe.AsRef(in value);
+        ref byte r1 = ref Unsafe.As<T, byte>(ref r0);
+        int length = sizeof(T);
+
+        ReadOnlySpan<byte> span = MemoryMarshal.CreateReadOnlySpan(ref r1, length);
+
+        stream.Write(span);
+#else
+        int length = sizeof(T);
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(length);
+
+        try
+        {
+            Unsafe.WriteUnaligned(ref buffer[0], value);
+
+            stream.Write(buffer, 0, length);
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
+#endif
+    }
+
+#if !NET7_0_OR_GREATER
+    /// <summary>
+    /// Throws an <see cref="EndOfStreamException"/> when <see cref="Read{T}"/> fails.
+    /// </summary>
+    private static void ThrowEndOfStreamException()
+    {
+        throw new EndOfStreamException("The stream didn't contain enough data to read the requested item.");
+    }
+#endif
+}

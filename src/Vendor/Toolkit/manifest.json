@@ -1,0 +1,291 @@
+{
+  "repository": "https://github.com/CommunityToolkit/dotnet",
+  "commit": "657c6971a8d42655c648336b781639ed96c2c49f",
+  "adaptations": "Private namespaces/types, target symbols and annotation/diagnostic policy; BCn Half identifier and explicit writable Span casts. Algorithms unchanged.",
+  "files": {
+    "Buffers/ArrayPoolBufferWriter{T}.cs": {
+      "sha256": "4e25a748a007f674d3e276c3a1fa4cbcab0370677c772b4fca4f4f4ef99137d9",
+      "upstream_sha256": "93c800e80628392584528ce656298e452db6e1fb26b9eb1304d1f45011b55710"
+    },
+    "Buffers/Enums/AllocationMode.cs": {
+      "sha256": "3647a1db70026be7991cf5c10c0e8569d36e1b8f150f8b77e8799835eea74bde",
+      "upstream_sha256": "8788fd1e84cce38495be16a0c645a00cc89d9d14bb3660f0b1c227674c790c2b"
+    },
+    "Buffers/Interfaces/IBuffer{T}.cs": {
+      "sha256": "31ae3d01927d7d8f847ab0b7a977e16f3ac541b0f0df2ea9bf3d91122cd71e0b",
+      "upstream_sha256": "18d13e721c48bcd35d669d86453c6741b50c7f9e695c7768b9f916728f0a246e"
+    },
+    "Buffers/Internals/ArrayMemoryManager{TFrom,TTo}.cs": {
+      "sha256": "dbc26a37444a1c09ff0374970499a21bb58bd9714b097edb3a9ab394c6547cee",
+      "upstream_sha256": "1eca7432967ac9b9610a72bd5eada306e2dd8325ad9c689ae94bb1f2be077d8c"
+    },
+    "Buffers/Internals/Interfaces/IMemoryManager.cs": {
+      "sha256": "e4bc590bf2326c902946cc672884a2b92c6a0a7596060cc090c49a5972faeddb",
+      "upstream_sha256": "3e4a536489d8a25d02a0766294184f89a2b3884fa0d02c2f4669b67ca59ce02a"
+    },
+    "Buffers/Internals/ProxyMemoryManager{TFrom,TTo}.cs": {
+      "sha256": "b9213e75b49ae1263ae78b2cbc8ad317314799875d843faa835b16172b7c0719",
+      "upstream_sha256": "4a65bbdacbf96b3e98aeb99782e4e0107f0f1fcecf97b729961262e741ea9006"
+    },
+    "Buffers/Internals/RawObjectMemoryManager{T}.cs": {
+      "sha256": "6b532cc8a0287d2d171ad44ab709144f62e177465075c65783a330d7c54e3d46",
+      "upstream_sha256": "0be8d39a030759840f94a5f28f9f48525200cacea44d9a27a0fe88b4ed45192c"
+    },
+    "Buffers/Internals/StringMemoryManager{TTo}.cs": {
+      "sha256": "9756bd73fd9b8ecce586ecc786f2778f4e64297e78a3713f66ec17e3c5aed8e1",
+      "upstream_sha256": "85e784021580b1083253d808f3af202759ec9fb5d20546a5d63a7f14faad08c3"
+    },
+    "Buffers/MemoryBufferWriter{T}.cs": {
+      "sha256": "c3b8d83c94271e35c4b13326d11406c18048b181abaa9dc94113723fa6269f61",
+      "upstream_sha256": "ef38ac2dc41e172e86ff842687db83aed0d0f58be5d1023974f389122f1597df"
+    },
+    "Buffers/MemoryOwner{T}.cs": {
+      "sha256": "5ffe0c3fc9cc0fe22d9ded34028187849dc62a01a56006a118091c7a25139340",
+      "upstream_sha256": "6428c2f43acb06b2982d8bbb6189173cd9225d1e0159bfb77c85ccb87146a599"
+    },
+    "Buffers/SpanOwner{T}.cs": {
+      "sha256": "5711259aa4859d8bb563f6e851502437d29b32ab4e2d46fab2902e27275ca868",
+      "upstream_sha256": "36678e969efffd9affbedabc134fce7e13d15bcc425b929bef24a26e5a4710ac"
+    },
+    "Buffers/StringPool.cs": {
+      "sha256": "b1487a1988819e8eedefa4d731f853f0cd4c29d67c4e6dc3d64cf4f7b94f2359",
+      "upstream_sha256": "87533e5e1ade2290136b679cd64054421180eae07ca7ef42b756474a7ab956c4"
+    },
+    "Buffers/Views/MemoryDebugView{T}.cs": {
+      "sha256": "6ce6e95af90762f7d7f06bb83668078e253c41769f995a91a3bf75d24383c7cd",
+      "upstream_sha256": "0adeb490f7816c17df793bd47874d884d314c9a6fba678575f9fafd6b53b4b13"
+    },
+    "Enumerables/ReadOnlyRefEnumerable{T}.cs": {
+      "sha256": "fc4b44b04ecfe9a0df70c10ff111664a854d4887fdabf04f148eb00a3416d626",
+      "upstream_sha256": "b119af1ed3b761e87923151727f1d88b17a284af80e659bfeb2c8f01e9a6caf6"
+    },
+    "Enumerables/ReadOnlySpanEnumerable{T}.cs": {
+      "sha256": "6d84de7dd0b8be21c28d4f231000f1439c4d36e0e0bdc2cda578fa341a2f3868",
+      "upstream_sha256": "3504f32afd320e99cca717aa2d2e7cf60e4b99371c9528f5a5629a1888718ec6"
+    },
+    "Enumerables/ReadOnlySpanTokenizer{T}.cs": {
+      "sha256": "cf766919b7589737a3d23af5db349603652be40a9147778b3a20de0a52901cef",
+      "upstream_sha256": "257cb63059874fb7fc44f976a7507fa63d57f871c891fcc77b8ca6422d96fed3"
+    },
+    "Enumerables/RefEnumerable{T}.cs": {
+      "sha256": "44ab456d298f41b64771600e85e42d020477acc8fb30088c702562998160e248",
+      "upstream_sha256": "d86907bf7a11180bb7eb396c0811ae6fa6c5d7bda3248f2efe77bc6038b53bd1"
+    },
+    "Enumerables/SpanEnumerable{T}.cs": {
+      "sha256": "405f8dda9dbac567d869db5871be718d41e6463bd05edb486c8b6754da739d38",
+      "upstream_sha256": "090224a95acd5ebc8e3ad9a347ca900b7f28df370dfe36270d44b602e4ad5771"
+    },
+    "Enumerables/SpanTokenizer{T}.cs": {
+      "sha256": "07bf714e177451730786770e59bdd36222d65d6515fc06c8e60b305401008a6d",
+      "upstream_sha256": "cdb71bd9425eed3c570d11b810d2a0e904adb247a45a56a63caf9295ef2d9292"
+    },
+    "Extensions/ArrayExtensions.1D.cs": {
+      "sha256": "9daa2a36de0ae87dfb88405a4a12cdbd82c716b94ac38a85f5c728bc74b5b9c0",
+      "upstream_sha256": "982b0204f458397036c81d13aac8f01dbd1dea0d6d8d20e826e37775316fe3d1"
+    },
+    "Extensions/ArrayExtensions.2D.cs": {
+      "sha256": "31fa21b4075fa83e5e64da35d6ad75d985d5b236e5b58da3d3158ca57f2f9191",
+      "upstream_sha256": "a9bd8b98c9f7634ab397121b99a0621add1f12b588f3705d0e79d3224c4b0021"
+    },
+    "Extensions/ArrayExtensions.3D.cs": {
+      "sha256": "980048a540777206e55eb3fe5281fba9dce8aed6faaa4b2d458a04dcf2f92c47",
+      "upstream_sha256": "1852d0564b0c0a1339fec562e82f6f6f6a3f317844d51754ee90284f369ff2ea"
+    },
+    "Extensions/ArrayPoolExtensions.cs": {
+      "sha256": "da4f1bf75bac498fde1c26733af1220d07865814476c510a26d5c8ebff4055d8",
+      "upstream_sha256": "a0e5780086b4e7c40d99bdcde98f000d2f9c3055a00efbffcb751314b4f6ab2b"
+    },
+    "Extensions/BoolExtensions.cs": {
+      "sha256": "d7025bc27b69ca7ca9e50867a4fa9ca6f31afeb4e87057879cffb8a2173510dc",
+      "upstream_sha256": "6e5ca4506a7a169a6ced410d4168c2818c2c2fba14e7ff8dfe076f5fc2e4d546"
+    },
+    "Extensions/HashCodeExtensions.cs": {
+      "sha256": "aeec790a990f1588fbc635a3fee8b742d59cc46f3fe2b398848e93df831e270a",
+      "upstream_sha256": "c9e816f746e5a86622a446fcb9c57a7fabab0bd4a4c1376723e9b3802d4f7954"
+    },
+    "Extensions/IBufferWriterExtensions.cs": {
+      "sha256": "f58e468204e759d3a2b3197b7740213c9a0bdb6c2c1e38cc5d5bf6ac1981ba7d",
+      "upstream_sha256": "b373c44ff18febcc320325114f0d2bfc7af714cc4261c5fd0999cb5843f73f8e"
+    },
+    "Extensions/MemoryExtensions.cs": {
+      "sha256": "f9a1c26c4960e0bcde9ba5c011c8c414486827164437dc57ad40eadf1e45a8ab",
+      "upstream_sha256": "77dbd55479a1361821628138e5fbdc13bb7305d1d662e31b46af99f7ee44c477"
+    },
+    "Extensions/ReadOnlyMemoryExtensions.cs": {
+      "sha256": "2257924162cfa23208eebf9ea7dc5fd224ee711df980287af97ff262d027191b",
+      "upstream_sha256": "f174af72977b9f9bfa541c597f6659c3a3dbd22989d82a7fefaec99eec5a8fe8"
+    },
+    "Extensions/ReadOnlySpanExtensions.cs": {
+      "sha256": "195a25e36061d87dd9a54101dee4050a2b1e9fb4b156897d775d5fd29f815b66",
+      "upstream_sha256": "5aab0cc9929af3d8cc530d3760845ed43a50d50e053fbb27d7ae3f94fab1c5c6"
+    },
+    "Extensions/SpanExtensions.cs": {
+      "sha256": "36c8a85842cd70258627e95627539bdaca7d5c8afcb50c64001ef97fbba6b11a",
+      "upstream_sha256": "60d1b520e43effdda59a987308cc6e58cbe5920d1f20fd2d8c88646f4e330bd5"
+    },
+    "Extensions/StreamExtensions.cs": {
+      "sha256": "76ef5e0d71609ee348182e6cd0436d17acfd9dbdb13fa62faf7858b0b268c37e",
+      "upstream_sha256": "f5342042ae4288f6e790230ba6af61e4be4967082b97f0bd8af03b9713585874"
+    },
+    "Extensions/StringExtensions.cs": {
+      "sha256": "60c4bb0473dddcd64da51202a8119a930eae9a6bbf47222dcdaf306f9148cccc",
+      "upstream_sha256": "ac21803ea7f868e2d133593ffda3ee269f4948dfe4884b3c89ff793ef724589e"
+    },
+    "Helpers/BitHelper.cs": {
+      "sha256": "a6b7cedefe6a981cfedb4792a3b5c1c8da850f08f94ffc063954adb6f5ebda0e",
+      "upstream_sha256": "0b69b84265d41167b99856eaaa95e3d5b63652222140b1956ab617606abd5199"
+    },
+    "Helpers/HashCode{T}.cs": {
+      "sha256": "7b28c7b00eebcbbb8e5cf1b68d8daa3f6d011081b863cd0ce9ebd48e279204ff",
+      "upstream_sha256": "a74f30a55f85227b740b74d2e5bbeab9eee12b0fb8c817d35f3a82c81f325eb8"
+    },
+    "Helpers/Internals/BitOperations.cs": {
+      "sha256": "68f3a198d56fe6e737328ec928e3fe246e62db45aa7d80a166a3034af4862505",
+      "upstream_sha256": "7401aa72bc10ee8ddff809685676f96bbeee24e842725af086da6bac529c4073"
+    },
+    "Helpers/Internals/RefEnumerableHelper.cs": {
+      "sha256": "c59d790f9fa1259ad331c8f678d7364b7477e9ffff3b21278c7fb356f25aa59c",
+      "upstream_sha256": "ef4e7f5f3e9a4f3ee6861efa89b11acaa6a240d38fe01d7bd05bbf61d27b9b6b"
+    },
+    "Helpers/Internals/RuntimeHelpers.cs": {
+      "sha256": "2e53f6ac1791b880ac49c045c07d57e094c5dd3e08463e90a329052eb7765678",
+      "upstream_sha256": "64e08a86168e199af0f540cf9c5ef7563f4096db53bae36ede2c40aacad7f962"
+    },
+    "Helpers/Internals/SpanHelper.Count.cs": {
+      "sha256": "040318321344c00c727f221b7e7d1a865154498b7296b7c5f1cf9ad2584a9a0a",
+      "upstream_sha256": "80b297def9c09d3a1a356cc8c9cd02c1796904d4217ddba0c7f48773b386d6ce"
+    },
+    "Helpers/Internals/SpanHelper.Hash.cs": {
+      "sha256": "e83f98d8ef1d37d3bff964a64b07cfc1ee15189307fcb92aa6fd1bbf65e166a0",
+      "upstream_sha256": "eead955610227b43a6c10f6569d07cb8addc57f72ec6d2a64c2e87ed56a6b4ae"
+    },
+    "Helpers/ObjectMarshal.cs": {
+      "sha256": "a16c5d402c00bd8d6e6f3c2c2d49d78d13c61738bd9f9f952580bbeb897b2e84",
+      "upstream_sha256": "553af5239469f7ee26c43f567003bb4fa6be9b44c628999439f1d1b475d444b2"
+    },
+    "Helpers/ParallelHelper.For.IAction.cs": {
+      "sha256": "8cf672f45fcd7aa830d404b72cfb42ba3bd2534c1510e33e40baa5f3970259a0",
+      "upstream_sha256": "3a0dfece2e8f2896454873d7c35001d862b54b08761553cc0018912d1ffe1984"
+    },
+    "Helpers/ParallelHelper.For.IAction2D.cs": {
+      "sha256": "ec4d7074812e6e6c2416a5f4ed8446b94476b0882525325fea3919b3d1ebf5f7",
+      "upstream_sha256": "167237956279b2c89f13f120e598319f582b419aa37b2c7abed4844f28cb32ab"
+    },
+    "Helpers/ParallelHelper.ForEach.IInAction.cs": {
+      "sha256": "88a426247fc9ce32d8759be5da4df0d8a7b761c1616a01aa353f361fb1548de4",
+      "upstream_sha256": "11ad5b2758e17b9a57173a4e90870738cc30c73b811beaed52d0bec21f3bafc7"
+    },
+    "Helpers/ParallelHelper.ForEach.IInAction2D.cs": {
+      "sha256": "7954d7713308ab1a278279b9983da791b7c7aed18fc0b789b1798e92fb042249",
+      "upstream_sha256": "d1c40d5ce97a3bae3d37fe59da81022e8113d6a5ee69d81e62795494c0800fa0"
+    },
+    "Helpers/ParallelHelper.ForEach.IRefAction.cs": {
+      "sha256": "450ff754f7d16d82889ab4a48e16c4fb9ebfe8b3cc368569bab8488474688749",
+      "upstream_sha256": "f2db1170224215592c7ac00e62a2f646d56961f4badf4767f0068358a998f31d"
+    },
+    "Helpers/ParallelHelper.ForEach.IRefAction2D.cs": {
+      "sha256": "71d0666bf89edf51e6360711caaf04e6ae23f7a878ec103b5607cf23cf7d5eae",
+      "upstream_sha256": "ad4cf63b39e222147493a23225c065ad19dbd3a36f0282ed59d38f8f22d91be2"
+    },
+    "Helpers/ParallelHelper.ThrowExceptions.cs": {
+      "sha256": "9fd7054881745d99f4b22724d736e7323e34c262d95fa0dee892cccf16d93b48",
+      "upstream_sha256": "a7265fad117ecf38fb925fd8b2632d2210c09d86ac80ec6768da6a26c423a472"
+    },
+    "Memory/Internals/OverflowHelper.cs": {
+      "sha256": "50ff8812511ab56a463a593769a7d087fa651accae05db8b5c87ffcf03068cb7",
+      "upstream_sha256": "d8044ae8eeae2a42fb8af99935addc7f49f0c0347a90a0df393bab36a5b93162"
+    },
+    "Memory/Internals/ThrowHelper.cs": {
+      "sha256": "b3ed2f5deefb357d68bc2f540b5b8299fd966e4de5f202f61cba84d63f229845",
+      "upstream_sha256": "b87ddc9da778a5700a17775bc32054d1763731f8ca727086152535ba66f946a2"
+    },
+    "Memory/Memory2D{T}.cs": {
+      "sha256": "4fa573e04270bb05727f446b58b7278f53b30cd15d030e89704028f146e32498",
+      "upstream_sha256": "18d6fb741c81984245295c375215a03f4eb8e8a8115d9cbd6c52b1ceb5ec9300"
+    },
+    "Memory/ReadOnlyMemory2D{T}.cs": {
+      "sha256": "bfd5e9734f6abdac9770d3a083ac1dc24e26aac6adc9b5a24b787e35254d13a9",
+      "upstream_sha256": "99ced2728c670abaa1aa97e04b13d839b6e9ed8f24be8ecf0b23618ba4f67eb6"
+    },
+    "Memory/ReadOnlySpan2D{T}.Enumerator.cs": {
+      "sha256": "218c7aa469dac76dceb2ba9a3b3262ba2b3764f0796f15382b2aae358375ec68",
+      "upstream_sha256": "a067805caca5ac39c0c271ba8cca6ae01af5c1f7f37fa55ba256405164f88627"
+    },
+    "Memory/ReadOnlySpan2D{T}.cs": {
+      "sha256": "f25c3795a708fdf49e0a2a5c1cda0bd9dbb121845f5c645ca6c0201511539a6e",
+      "upstream_sha256": "59b3de86e6aa13188d87d6f580755df9a1c01f4c70758bfb30c16a48c7d26702"
+    },
+    "Memory/Span2D{T}.Enumerator.cs": {
+      "sha256": "723b984fffe5f0b44de345f1d5ca59953e5b2e095dac2874820f539656a1a4b7",
+      "upstream_sha256": "9ee1eacfb17b96dd812d9488853dfe050442fe0f026ab4ac74644f502d5dd353"
+    },
+    "Memory/Span2D{T}.cs": {
+      "sha256": "19fb13e45d0e848918b9606a1de7300b9973514ecc7acf8f1a40239a8d47e9d7",
+      "upstream_sha256": "3f46cfbd7c984e8f43a7dc90bdd9d958decc145165f77011126927d817b7378b"
+    },
+    "Memory/Views/MemoryDebugView2D{T}.cs": {
+      "sha256": "8c9a43c6889f36032a23421a5ee43f9a1ee53051884910b8710df0489b51af70",
+      "upstream_sha256": "1dab2531b8f292fb31d09e59399483f1e7c9732ade64b05169546b24db03eb49"
+    },
+    "Streams/IBufferWriterStream{TWriter}.Memory.cs": {
+      "sha256": "7c159af61d3e6b612a8b3e62eedbe37a608bbff16fc5aec4ff443c816cf6895c",
+      "upstream_sha256": "aa40f750f4bdec9d49dd19ce79bdfcf0f2fd8adecc75b5c9bdd4f7221b21c513"
+    },
+    "Streams/IBufferWriterStream{TWriter}.cs": {
+      "sha256": "a47f6ba9848f0d708e0158d433fbb74241a117d763e68b2734d36e8b4a0b2002",
+      "upstream_sha256": "d99cced890917799b1e3c23f73e00d2645ce70866df44a5b8226f38bcc7ed2a6"
+    },
+    "Streams/IMemoryOwnerStream{TSource}.cs": {
+      "sha256": "f799a9331562031cd9e159aa3f2c7165dfd9c6a2f89eb220576c633e942f64d1",
+      "upstream_sha256": "3497aeaafc50a78393b4e190a7519099bba7cb46ababbd6717be9f7147cafb6d"
+    },
+    "Streams/MemoryStream.ThrowExceptions.cs": {
+      "sha256": "121e788c662d59638a3bf3f2c48920fb46474f426de9dffb3616a0795327ed0c",
+      "upstream_sha256": "21babe3060e435762d9509accf6e9c3ff7134d31f61fd46ea4cce1df7d503980"
+    },
+    "Streams/MemoryStream.Validate.cs": {
+      "sha256": "1942f5c496faf71ecfa79eb4239b45b14b8cd536a9c29958feca8c3d5dd10a5e",
+      "upstream_sha256": "f469e02536f8a2c02782cadfc0d699ce1d20ed0154e308930f7245e9ee23e423"
+    },
+    "Streams/MemoryStream.cs": {
+      "sha256": "0fb6710e9a6c02c33fb8fa903e35fab2ecf39fdd475dc6e7a9b553dc506469a3",
+      "upstream_sha256": "778484a0dbfee2f9d9285797fe352cfd5a4b8c365378bb8d953078f453ef891a"
+    },
+    "Streams/MemoryStream{TSource}.Memory.cs": {
+      "sha256": "a6c191a121c7b3742be4c8bccbb364a7ffe7fd3e72f5433bacbe7d64cac9b1a0",
+      "upstream_sha256": "49002160e6c0005aacc278962c52cb1cdfcb0de4b08805111cb93d7febd9cb40"
+    },
+    "Streams/MemoryStream{TSource}.cs": {
+      "sha256": "83c8c9e6a87bb018db2baea75bb792e6b725d57e3d70765d8d99d32da5b024c9",
+      "upstream_sha256": "343a582e40b69a057f9dd0331a58c508179089e357ec5dfc2e51e97cf768358a"
+    },
+    "Streams/ReadOnlySequenceStream.cs": {
+      "sha256": "fcd6026fa5d31669c5b30d48b1891dab7c18490a3cf79bbf79b00f22554a4cb3",
+      "upstream_sha256": "d2297ec5c239bd38d6634e8afb1a4333f8e5904d045ecfc781ab42619a44a35f"
+    },
+    "Streams/Sources/ArrayBufferWriterOwner.cs": {
+      "sha256": "8c446138febad3744c85a12694c377306d562048ab26773777c46e6d3b49e301",
+      "upstream_sha256": "9a25e08faa01e0e3e5983bae535c32a77b2fc43fb024b86d53e0a4fe22ba9a13"
+    },
+    "Streams/Sources/ArrayOwner.cs": {
+      "sha256": "eca4ce334c774dfa4737f05ba13ce9f0a4999127f2679e708bcf46a7578ecae6",
+      "upstream_sha256": "194dd580627bcdf8943dbc06c686f8ba58dd92509c70272e010ea4072c20162b"
+    },
+    "Streams/Sources/IBufferWriterOwner.cs": {
+      "sha256": "4e9c36c9fe41be19d065a82c5662d7c92f497d9139cf6a4fddb7e3181164e516",
+      "upstream_sha256": "4c90e86af4b4ac7cd1a83f2876e3d52cf6d4df170fe3088b2f8a971ae3c50791"
+    },
+    "Streams/Sources/Interfaces/ISpanOwner.cs": {
+      "sha256": "01386b168157bf127dbddd97bf0165b21eeaa8a4811c1a0c2625fffcd550d5ab",
+      "upstream_sha256": "41e0ff6ec3c06959de88019c471b0e7e7a9c48fe41ddb5728d0fd6ac51782fb0"
+    },
+    "Streams/Sources/MemoryManagerOwner.cs": {
+      "sha256": "e48d6ab7ed59df10bfd5546a7e52a5ccb18f6a5fa8660c62ff15c49efcc0120d",
+      "upstream_sha256": "580ca3fe5899aa1cee97c46e66e5bcf8475d5d77b65b9c384ce65b1f1df166dc"
+    },
+    "LICENSE": {
+      "sha256": "1e1101b893f295b4526da2c167e4234610f1078e2fe43a0e814c1a883656877b",
+      "upstream_sha256": "1e1101b893f295b4526da2c167e4234610f1078e2fe43a0e814c1a883656877b"
+    }
+  }
+}

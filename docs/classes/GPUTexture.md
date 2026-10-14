@@ -7,11 +7,15 @@ Last updated: 2026-10-12
 - Component: [shader-materials](../components/shader-materials.md)
 - Visibility: internal; unavailable to engine consumers.
 
-[Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
+[Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. BC1–BC7 and decoded fallback are implemented; integer/ETC/EAC/ASTC and foreign/native-allocation acceptance retain exact dependencies.
 
 ## Description
 
 Owns a sampled native 2D texture or image-array texture and upload transfer buffer under a retained GPU device. It holds managed TexturePixels snapshots but never owns the public Texture resource. GPUCanvasBackend replaces this allocation when the snapshot allocation identity changes; a compatible ImageTexture.Update or RenderingServer.Texture2DUpdate replaces Pixels instead. TextureReplace transfers a different allocation token when needed and triggers ordinary backend replacement.
+
+BC1–BC7 sources retain their original format, complete mip chain and exact block bytes. Prepared CPU sampling decodes BC1–BC5/BC7 to RGBA8 and signed/unsigned BC6 to RGB floating point. GPU allocates native BC storage when the device supports it; otherwise it uploads prepared decoded pixels. Compatibility uses the decoded snapshot; BC6 requires an HDR-capable driver and the current Linux driver rejects that role. The RA-as-RG role uses decoded upload to preserve channel semantics. Integer sampling and ETC/EAC/ASTC codecs remain separate dependencies.
+
+NativeTextureFormat reports the actual allocation to RenderingDevice exports. Compressed transfer offsets use each format’s block sizes across layers/mips. Update retains allocation identity and upload version commits after submission.
 
 ## Internal usage
 

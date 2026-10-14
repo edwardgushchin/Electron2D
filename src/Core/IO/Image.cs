@@ -6,7 +6,7 @@ namespace Electron2D;
 /// <remarks>
 /// Image state is held in a managed byte buffer. Reads and writes are serialized per image, mutations commit atomically,
 /// and <see cref="Resource.Changed"/> is raised synchronously after a successful commit. File and buffer codecs
-/// copy decoded native pixels into managed storage. VRAM compression and renderer handles require separate integration.
+/// copy decoded native pixels into managed storage. BC1–BC7 compression/decompression and DDS preserve stored mip chains. Renderer handles remain separate.
 /// </remarks>
 public sealed partial class Image : Resource
 {
@@ -282,17 +282,6 @@ public sealed partial class Image : Resource
         return image;
     }
 
-    /// <summary>Creates a zero-filled image of the requested dimensions and format.</summary>
-    /// <param name="width">The positive width in pixels.</param>
-    /// <param name="height">The positive height in pixels.</param>
-    /// <param name="useMipmaps">Whether to allocate the complete mip chain.</param>
-    /// <param name="format">The raw storage format.</param>
-    /// <returns>A new independent image.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">A dimension or format is invalid, the pixel limit is exceeded, or the required buffer cannot be represented by a managed array.</exception>
-    [Obsolete("Use CreateEmpty instead.")]
-    public static Image Create(int width, int height, bool useMipmaps, Format format) =>
-        CreateEmpty(width, height, useMipmaps, format);
-
     /// <summary>Creates an image by copying a complete raw base-level and optional mipmap buffer.</summary>
     /// <param name="width">The positive width in pixels.</param>
     /// <param name="height">The positive height in pixels.</param>
@@ -522,6 +511,7 @@ public sealed partial class Image : Resource
             return CaptureState(copyData: true);
         }
     }
+    internal static int TextureLevelByteSize(int width, int height, Format format) => GetLevelByteCount(width, height, format);
     internal static int TexturePixelByteSize(Format format) => GetBytesPerPixel(format);
     internal static State ConvertPixels(State state, Format format) => ConvertState(state, format);
     internal static Color ReadTexturePixel(State state, int x, int y) => ReadColor(state.Data,

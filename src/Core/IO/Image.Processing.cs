@@ -64,7 +64,11 @@ public sealed partial class Image
         if (source < CompressSource.Generic || source > CompressSource.Normal)
             throw new ArgumentOutOfRangeException(nameof(source));
 
-        var state = RequireReadablePixels();
+        return DetectUsedChannels(RequireReadablePixels(), source);
+    }
+
+    private static UsedChannels DetectUsedChannels(State state, CompressSource source)
+    {
         if (source == CompressSource.Normal)
             return UsedChannels.RedGreen;
         if (state.Format == Format.L8)

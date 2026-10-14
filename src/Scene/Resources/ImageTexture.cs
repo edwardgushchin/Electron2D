@@ -3,7 +3,8 @@ namespace Electron2D;
 /// <summary>A two-dimensional texture owning a snapshot of an Image's pixel data.</summary>
 /// <remarks>Construction is independent of an active renderer. GPU data is uploaded when first used. Image inputs
 /// and outputs are copies; modifying the original Image never changes this texture. SetImage replaces allocation
-/// parameters; Update preserves them. Compressed and integer-sampled formats are not integrated yet.</remarks>
+/// parameters; Update preserves them. BC1–BC7 sources preserve compressed snapshots, use supported native GPU block sampling and decoded Compatibility pixels; BC6 requires a driver retaining HDR precision.
+/// Integer-sampled and other block codec families retain their separate integration dependencies.</remarks>
 public sealed class ImageTexture : Texture
 {
     private readonly object _gate = new();

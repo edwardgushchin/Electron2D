@@ -1,0 +1,295 @@
+{
+  "repository": "https://github.com/Nominom/BCnEncoder.NET",
+  "commit": "51d3199b3bc374e0bdda3947d9f347cb6235a9a0",
+  "adaptations": "Private namespaces/types, target symbols and annotation/diagnostic policy; BCn Half identifier and explicit writable Span casts. Algorithms unchanged.",
+  "files": {
+    "AssemblyInfo.cs": {
+      "sha256": "a3e2f0cc77ca7f0b2ae33ad165c2dfd5ed9a050ae4059589265a07bfb2876293",
+      "upstream_sha256": "5d21e0fedc176343f89c10e753687b4c40587c0fb0981de6f703a38dbf36c6c0"
+    },
+    "Decoder/BcBlockDecoder.cs": {
+      "sha256": "0c4f1ce925c4d72314acf806ffe4de779d98ee1e8c3d8eddb8d5fe0773f9abc0",
+      "upstream_sha256": "9cf46902a4915757073bb0d0d705f6ad9decf68cbeb36cd18099fb58f98af075"
+    },
+    "Decoder/BcDecoder.cs": {
+      "sha256": "047a8f87d7b19f2d324c64ea9b7ad19a81a69a1d32441b7eddf4c94f3e0e2215",
+      "upstream_sha256": "e347e310174a0fea00b6c9a959aaadea4b364e1608980fcf232ddbe1a65ff40e"
+    },
+    "Decoder/BcFloatBlockDecoder.cs": {
+      "sha256": "09b3797eb64de06364e08cdbfde0ea507ad70c46d3641db63e4a23660cff4baf",
+      "upstream_sha256": "9660a34af309775f1e7566597d28cc8900b72868ecd6235fc9c2ef250319f91e"
+    },
+    "Decoder/Options/DecoderInputOptions.cs": {
+      "sha256": "94de20e6e47709a460f78f5b2e74e83ad0f52c450c69ce759d63ab6aa514dc8d",
+      "upstream_sha256": "2ab528986ba18f3f6803057ac6ed9193f1111235f3c64d6d81aceada11bd6e3a"
+    },
+    "Decoder/Options/DecoderOptions.cs": {
+      "sha256": "333dae6cac380ca013839f3fb39f188974079516b4c4253ba6949d0769deb9e3",
+      "upstream_sha256": "339e85de67f51c3185a9f6206200c532c77050a4e2250804221d8bc9f7228d7d"
+    },
+    "Decoder/Options/DecoderOutputOptions.cs": {
+      "sha256": "bd4a3c533eeb94aed9df72250f26ce334cfb5b9fd898f9ad7e7a22cd7bfc76f8",
+      "upstream_sha256": "d4efeba4e933e491ceec7776d5d6356ea19dd00185c025293853a25ddcb9bfe3"
+    },
+    "Decoder/RawDecoder.cs": {
+      "sha256": "d96d1b07522c02020ac85b60f85968a1168fb04d3e490fe66e10e8744eb1c136",
+      "upstream_sha256": "21aca4523c44e2492ac6dd0f29762954befb9838d0503af9eb7f5a7dc9c86236"
+    },
+    "Encoder/AtcBlockEncoder.cs": {
+      "sha256": "918754fda197b5ae6501e0c7a3893b884b5fda285f2497b3b94d8d2c98424593",
+      "upstream_sha256": "4c5d4939f40005fc4662d8a130a88e05e2fe00c8f03696cc236b0ab483e61d4a"
+    },
+    "Encoder/BaseBcBlockEncoder.cs": {
+      "sha256": "64f070bf39e47240a43d5815ffe1d96d9dccc67a96e1b48ebba0394eb4d7d80e",
+      "upstream_sha256": "cbea0af288a00ba38c0db17c42247026a62e17b5f6bb116c2de60a3a784f301d"
+    },
+    "Encoder/Bc1BlockEncoder.cs": {
+      "sha256": "3131164d8aef84378762d4d5d4f378f2722805f879271b5816c83c140043086f",
+      "upstream_sha256": "1ab3da7d8a5b9a89c4ca2c3ac344b1531bbc8daa257032af9ee44711f94b7ea6"
+    },
+    "Encoder/Bc2BlockEncoder.cs": {
+      "sha256": "ad318d548d06198626589181bbb95d59c1f687b5ecd352162c347accca7570de",
+      "upstream_sha256": "62ef8d9db3368ac409e0dbe788baf62e6cfa657a61d0d475e3a42f97af56f913"
+    },
+    "Encoder/Bc3BlockEncoder.cs": {
+      "sha256": "062a4faaf7c544a3471e68c79f410c1c56db7d90c3a80223a81846ca84366fbc",
+      "upstream_sha256": "d6b71dff989f5028c363f7966e0b53c275a14532bb99aab43e2f3d1aeca348d1"
+    },
+    "Encoder/Bc4BlockEncoder.cs": {
+      "sha256": "496e97849c9eede768173c53033ed9dc2f459df2c58a86fd7716bae415a77224",
+      "upstream_sha256": "2dc0523063a974ad89f6344cb057a9019d2d807416779c70694ff8de267890af"
+    },
+    "Encoder/Bc5BlockEncoder.cs": {
+      "sha256": "b165d99836054688594a8bb015a015177805da659ed884d56e9a79a3773138cd",
+      "upstream_sha256": "42eedc9f363e23465daf2198856bbc9daf921105ca2abde387087cba5394d8e9"
+    },
+    "Encoder/BcEncoder.cs": {
+      "sha256": "87953e990492aa1afb1bf97422d86b15b8af6bb9acace13be3fa59283fbcc10f",
+      "upstream_sha256": "a040217220b231ea1321ebeb4e0fa7757103b5a0d730ce41a90956b447bae5da"
+    },
+    "Encoder/Bptc/Bc6Encoder.cs": {
+      "sha256": "4f71e07d4f3b9ac2a5dc53a7244c1a35d080f720a3d322f18703ca50866b4336",
+      "upstream_sha256": "33903d8bdbc59b7bb0266c73ffe7a5a0ef1bfedd92d5ae305432121c1757a078"
+    },
+    "Encoder/Bptc/Bc6EncodingHelpers.cs": {
+      "sha256": "9b540da259ef37a8d8e1720a0a74d3ccc8f08171e9423f162627ff86805b0d84",
+      "upstream_sha256": "6fc7dd423778f9ac11e292768eb277b02b8a3df6f657b13a855c2c9d6cb43965"
+    },
+    "Encoder/Bptc/Bc6ModeEncoder.cs": {
+      "sha256": "7f4928a21242e40152d1090172e1d7270daf737553239b7bebdd5f17917a4d32",
+      "upstream_sha256": "3da685948f3fb3ee495946cf3dabda2855d2f7b1a5e1c7445b8c94e528adeaff"
+    },
+    "Encoder/Bptc/Bc7Encoder.cs": {
+      "sha256": "03805fe2ca634923965da9d5d4932a0912287556ef1482cd9976469ba14f52da",
+      "upstream_sha256": "00ad4b69b794a09796a6be5213ee84287ea27e82eda53c528dbe8cd8c3881b3d"
+    },
+    "Encoder/Bptc/Bc7EncodingHelpers.cs": {
+      "sha256": "67c888c5c0ba2529aa3f98d2f79f9521fbbc032dd8546dd2981c5830a20ab84d",
+      "upstream_sha256": "0672252d2e4ab00bb5bd8f3ede201227e37f869f86d5bb762343bf323194088d"
+    },
+    "Encoder/Bptc/Bc7Mode0Encoder.cs": {
+      "sha256": "3b95d3af8a571e5feb766adb26ca51678715698e56bf34558f2541ed6ab5b1a3",
+      "upstream_sha256": "b133010fd9e769d6b3ed07e2013aa1e696690a418b03dfbb9d2ad7e99202e586"
+    },
+    "Encoder/Bptc/Bc7Mode1Encoder.cs": {
+      "sha256": "4d27c4954ee7c5984c4a24904f31a166bbfa157d51a509ba1b788b5775be7741",
+      "upstream_sha256": "3120c265f9266c70cbfa0a1ddca2c6243744fab4e2fa159f3fc5ab1b6a048902"
+    },
+    "Encoder/Bptc/Bc7Mode2Encoder.cs": {
+      "sha256": "f8e88eff9546b760c61c2a60f8c871f4f3e6997391697f89110fb95743c7df1c",
+      "upstream_sha256": "56393b18c6d0d427609866ee9bbfaa2d610b8f0cabae450f34616a805d2280b4"
+    },
+    "Encoder/Bptc/Bc7Mode3Encoder.cs": {
+      "sha256": "afa64c842bebf38d91783b179a929e1e96c84766d5bef550ad10b3606738a353",
+      "upstream_sha256": "09f5c0c78c055743d13e28649f9fb66adda6cb35c3a98a2199b89bf75065c1d8"
+    },
+    "Encoder/Bptc/Bc7Mode4Encoder.cs": {
+      "sha256": "9b9dd28fdaef86b169f7fce633c445b7a302495a6195adf2290a09792f8bf7a7",
+      "upstream_sha256": "4bc3412782537160cc9cc9e353992e85605866436053eeaa3b306aad130853d7"
+    },
+    "Encoder/Bptc/Bc7Mode5Encoder.cs": {
+      "sha256": "7923503bdae6ea8eb85c9279c0a3017fceca42b10b0b54f1eac1d356c0ef6b76",
+      "upstream_sha256": "9a5f6178b608fcf1bfd371ef3c4039f291bb3cb73c2af84686010645e46a0175"
+    },
+    "Encoder/Bptc/Bc7Mode6Encoder.cs": {
+      "sha256": "6bdf1fbaeca683fe50ac2b481c0eb0604ce0c3c63c8aa9ba7d8620d01386daaa",
+      "upstream_sha256": "3db0bf4a6773466e30b87605b03eb10ceb1adb33a903629d9b42f86f6c5e71c9"
+    },
+    "Encoder/Bptc/Bc7Mode7Encoder.cs": {
+      "sha256": "2fb54e5303823e60a68b365b0a4c57aa1d8b89369ecf8163d75a13dbe9dbc556",
+      "upstream_sha256": "2a6e220fbd732d5f80f2d5c3dff0267db6f0448f0ca43b4d8fa4fd562a673a98"
+    },
+    "Encoder/Bptc/BptcEncodingHelpers.cs": {
+      "sha256": "97580cc26b3b18ad2f9c6e26c4456d10e1e2fa527a6bac22a107fc64cb168830",
+      "upstream_sha256": "5dea4a36ac60c76ccb9c8b6424b84fedae4d74a29c978e82cdbfb691b8740ea3"
+    },
+    "Encoder/ColorChooser.cs": {
+      "sha256": "2b8300187ade05c86b4a0d9124a5915fdf64ce52070d68edc50fc9089db046a7",
+      "upstream_sha256": "e4c00555ba88947dabe5fd1294d991dc4bc7bea0c8ae4388b041ddcfd7015fd4"
+    },
+    "Encoder/ColorVariationGenerator.cs": {
+      "sha256": "96e7e71f43d48c3bcec0b03de0d8ba45b7b435a771974ff5d964f82607fac89a",
+      "upstream_sha256": "25f6ce2574119cf34fc707b89fae0b1b5dbe7554d28fc0d50099b6030c9d01b6"
+    },
+    "Encoder/CompressionQuality.cs": {
+      "sha256": "aecbf5a0449f3167c59e7c834e445942d9fc3be555235832ac76a4d87c554861",
+      "upstream_sha256": "a31c28c329217dd6056191773ac9d79fd53b56fb2e5b61057e24619b231df185"
+    },
+    "Encoder/IBcBlockEncoder.cs": {
+      "sha256": "fb47319cfcc13a49a5a0bb3f6e24f8030853cda35e9d99fce4f24dc33ae16a59",
+      "upstream_sha256": "bf7947eae71d033ff8133f7a6f6c1c8bf34d9c4b48272bdd0acbeae51b6a7663"
+    },
+    "Encoder/LeastSquares.cs": {
+      "sha256": "86681d298675087593261bc19ac873e893ba4f4a1cf3f39656ae136572860ad0",
+      "upstream_sha256": "90a95790214a8a289e3a73e9d790dce79049aa1567c963a8947d122ec3de9db9"
+    },
+    "Encoder/Options/EncoderInputOptions.cs": {
+      "sha256": "d73a72874d69273d4395806bf5ad1a24a4ae8f37348865e7daf5cc7beb4e9897",
+      "upstream_sha256": "76e831e33eae66a887f2f6a01a16db86c3c238ff075e7e2d2b63819437d01687"
+    },
+    "Encoder/Options/EncoderOptions.cs": {
+      "sha256": "180a85e49bb3a420d12a611f2ffdcebc9124980300bdd0831a3e14769cdd05bc",
+      "upstream_sha256": "594a39f08fa59ad3711c4d7af5c04329099f0a9b091d4058e0bf57abb43fac17"
+    },
+    "Encoder/Options/EncoderOutputOptions.cs": {
+      "sha256": "c2be79609c435c0ed6527ff02733f5a534b655ab0155db0b12826a95c8e848b0",
+      "upstream_sha256": "f31c0546706c2217aa324cff2ebce93d150d2d408649e9e808a20904e81756e9"
+    },
+    "Encoder/RawEncoders.cs": {
+      "sha256": "bb3d1ddda1de75858c669256577c8c5e6992f4c19406435b486f49184721d48d",
+      "upstream_sha256": "5791c6929b5f660d2e719d1fc556f3f1fb9322a003ca0653d9b9e5af81054fce"
+    },
+    "Shared/Bc6Block.cs": {
+      "sha256": "c1bd5776bd4e743a0d73d4fee8bdce49ff4dcb868282846216a9b2ee5aea0e5e",
+      "upstream_sha256": "ad43da893b790b05a540ffe5deb15bca20f9715841aae182aa3325c486231a44"
+    },
+    "Shared/Bc7Block.cs": {
+      "sha256": "bb374a4af4f36e7ec2480984f9ffa2849d49357e14d8b606c15fcd81ac84753a",
+      "upstream_sha256": "bda9a3ec9af44c6a215340eb939ac13d745f63af6ba7d34d1dd4fce4398b28fd"
+    },
+    "Shared/BinaryReaderWriterExtensions.cs": {
+      "sha256": "c26450ee38626e03514424091bcda31781288cbac8537e40a40d9f228de90e5b",
+      "upstream_sha256": "2d17fb1091cef6b8b661824ac8b77511394b146af9d4d39cea45a125521f40ef"
+    },
+    "Shared/ByteHelper.cs": {
+      "sha256": "e77449f8b685a5be803c9006931a7a07bef89167609ce4c36fe6c300e8c1ab37",
+      "upstream_sha256": "1939b045093057573be05f370c6571b12381aa1b29fd7e8fc220fcb2ade02943"
+    },
+    "Shared/ColorComponent.cs": {
+      "sha256": "ad2c619e1337fd58e8ff153131dcfb409ba45450fe8dc7cba3987366853adab7",
+      "upstream_sha256": "f1f8226a8fb8535f9f3bd3992de05e6da7006aa6f9ea017919653c2a33cfc485"
+    },
+    "Shared/Colors.cs": {
+      "sha256": "ad0117b3e78a4234b1d871c930f6d92f8918cf01736012996f3fed547515d8e2",
+      "upstream_sha256": "3a4f854d82702d0a97c6758c10ea8e2601174ef04abcdf1139c8cb2acba81e82"
+    },
+    "Shared/ComponentHelper.cs": {
+      "sha256": "e2e8387e667ae60c498f7b9a26410609173d6c2a6b291ee12b13682eadd14b94",
+      "upstream_sha256": "bb51fae1418563dcc2c3c4c4513325dde5b777d609fe630576b8d6e7159db97f"
+    },
+    "Shared/CompressionFormat.cs": {
+      "sha256": "d7b0d25eec0d2911ebbda3679e3a1842d95db4fab24e6d3bb143a90c52c69b33",
+      "upstream_sha256": "c075c4b2e52913719881cd0b7e0e9787e6cea28b94ecad676444b1fbea4c6c58"
+    },
+    "Shared/EncodedBlocks.cs": {
+      "sha256": "de8c9cd9b602eed8e930f9635c724e11bd58bb9db31ac0ef41fd7e55b9d9925a",
+      "upstream_sha256": "1b622132ef695be2aeb2f909df8ec8f837ae5bad7c23afd66d7c9b0b5621e6f5"
+    },
+    "Shared/GLFormat.cs": {
+      "sha256": "0a6b344193107d799b01b2753ad5edfc61491973ad73fa6daf39d8674a9733e7",
+      "upstream_sha256": "ec9d3782c5a3645b46145a9c5fdaa20ec277e098070bd229597a8d7a1e15022f"
+    },
+    "Shared/Half.cs": {
+      "sha256": "5d648e1a663831664593625158d096c245a111d7b9faf0991b4ec3223bab5716",
+      "upstream_sha256": "0827048733b998b42980c8a6e1b3ca87bd0e36c6373a2d552778e99a87a5d586"
+    },
+    "Shared/HdrImage.cs": {
+      "sha256": "5ff11d591e2a4a7b1006012b43b2038213d928a6ee224d85b1be44a2b9eb6e83",
+      "upstream_sha256": "ecf0ed71d2f608f397294f523924f75ee926d4e1f28fe07300c0c51ea5e5184e"
+    },
+    "Shared/ImageFiles/DdsFile.cs": {
+      "sha256": "faf6dbc9a1d333576ff32f56da50cd5876f5e7f9ada7484ee769c03d2d67e6c5",
+      "upstream_sha256": "7e4472965e15b2068eec50aa6d8b9789d1b2cfc21eb8a73e13e9021ba479d4de"
+    },
+    "Shared/ImageFiles/ImageFile.cs": {
+      "sha256": "7e74c201a1f5827896fad0a550987b0f7f7a4291d89523959082923c454219c7",
+      "upstream_sha256": "7aded869ed332f285f4b80e0c9d724f85170d831087336fa36a21b5526070ed5"
+    },
+    "Shared/ImageFiles/KtxFile.cs": {
+      "sha256": "9e3fb76611a5705093c32e63fbeb2809c82bbadefb756bd0a6b5b1023059b1b8",
+      "upstream_sha256": "5885e46a460d4663ac0058a81d1c4853660ee7194d9c34785e0610a97e22360e"
+    },
+    "Shared/ImageQuality.cs": {
+      "sha256": "8e2db1e84fc61b665a0779e5d70cf67aed4cd258e1ecfe411ec5c8c6117465c7",
+      "upstream_sha256": "c61ca04fbc0bed92303dbb9429a07aa90e189dad2a9e4fcb30c724e87d9f4e37"
+    },
+    "Shared/ImageToBlocks.cs": {
+      "sha256": "1856cf207e92021cb7397036cd7badcc325f79ccb993a6b6610c45d0a1ceeb0b",
+      "upstream_sha256": "93c979c2c33d6d5dcc795c348ea22b2a3194befa245d8a0b2fb98f4d9f0189b5"
+    },
+    "Shared/IntHelper.cs": {
+      "sha256": "576734449b89d086c461aa1ba19ec47164383a040b7d2a7b5b4854efcd29e0ad",
+      "upstream_sha256": "912319f7fcd57206c8cd0891067a1f75ec7a4e2dac243c3ff3e9bd406c49f7c9"
+    },
+    "Shared/InternalUtils.cs": {
+      "sha256": "cbfd6c49fbc30610cadff4ed33cab52b8013527fc831086bf115e5fc08e979f1",
+      "upstream_sha256": "3ba7d7451cad33a2ec291859af74ce280e56e51c0b7bbb3d821b9f82af4e859b"
+    },
+    "Shared/Interpolation.cs": {
+      "sha256": "92264bfdf5b847fda3d0798875f0c9a54ff69cef7da42ad7b1d56d3e73720d42",
+      "upstream_sha256": "8872fbbd0ee79b45ccc77d6052a77b7d21e74b24f450e8b16cd61deecda0d491"
+    },
+    "Shared/LinearClustering.cs": {
+      "sha256": "31e12582c8a30b318fd0a1a11e2e9fdbdf4c983f4fb90ce1fc93e6fc3d9a3cc5",
+      "upstream_sha256": "089330219c7f5a945eab94dcde86d99a8aa75216238940f1ec3f701ce676f919"
+    },
+    "Shared/MathHelper.cs": {
+      "sha256": "a03d38f561637b9b863e56fde08a2b3edadf45096cf4393633aad2fa7ad87cc9",
+      "upstream_sha256": "0f9b41ae4f03ea1d8e4432ea793256dc716a02383cffb5125cf0ca0df5fcab12"
+    },
+    "Shared/MipMapper.cs": {
+      "sha256": "8b24716023d315a15b280bab295083d20e2fabc3ce7c560c93975c9398a4b6a9",
+      "upstream_sha256": "993f23fe0481a6cdb799bccfd91125c3fe4916a679cab0bd9bceb8e31fab9ceb"
+    },
+    "Shared/NetStdPolyfills.cs": {
+      "sha256": "388a97c0062bdc6ded83b6966decfdbb7f1396063e5b7e5b41c291db938b007d",
+      "upstream_sha256": "7515de12b22e7f734753b7f9efc7d4c7af493bf329bf9210ee764ba69802ae21"
+    },
+    "Shared/OperationContext.cs": {
+      "sha256": "48744c0a20032c4742d1d0060e6e64538211b9f1159ec2850198bc570cf949bf",
+      "upstream_sha256": "443d459aaa010e1ba234798f1e0bf87d1636d8761439f0d1363b6a937940a7e8"
+    },
+    "Shared/OperationProgress.cs": {
+      "sha256": "11ede78a5239a8a8ea4b201310ac753f1d3ba91efd2974dbd5e334e97310f4bc",
+      "upstream_sha256": "b12cc87dea3a49f10a9a2697701dbb4bf4e56503ee071742be2656991151ca96"
+    },
+    "Shared/OutputFileFormat.cs": {
+      "sha256": "930d96673c9191a8d70dc02b605defaf5f689263a6107768f88e4f5986a45aeb",
+      "upstream_sha256": "cf2462410676231dbeaf071b5f5aacd688bd10e9cfacc9fda7ecd5aacc5ce273"
+    },
+    "Shared/PcaVectors.cs": {
+      "sha256": "cb509afe552b9bafb9599ff4d8c48fd1e84e49b57ff1d857af7f41fa15ef39a9",
+      "upstream_sha256": "bfb7830b2fc7705f82c5a35806b85aad855121178fef604bb19542127713cc3f"
+    },
+    "Shared/ProgressElement.cs": {
+      "sha256": "6d51ab2b6b2a528af2eb149ed962a08f6f79cab1f5687ab7f3be47722e8f5198",
+      "upstream_sha256": "e31ce79f2ccf7e13fc31fadacf4e300b70ef8535a220f7f9792cedf6dd72bb0f"
+    },
+    "Shared/RawBlocks.cs": {
+      "sha256": "fbd07bfca29d5a5473edbb8db79ee1c42334395c4e2636c6657530e2b02b8b85",
+      "upstream_sha256": "523b2fd1293bc3e1158957ea11a5d7d0e2fdbe854cc94b4c25532a342865e833"
+    },
+    "Shared/RgbBoundingBox.cs": {
+      "sha256": "2aa7b9868348d544899169c96cd0a41220ce328998ac7f5f7538d98cd6dae25c",
+      "upstream_sha256": "b11b2a93cbef02faa428c3b255ca9b2d78e99d1afe2ed1a8f7b56bba0bfbff52"
+    },
+    "LICENSE-MIT": {
+      "sha256": "e2b6a70c0a540789d0d312c248d67bc571e3e84eaa191a391974bc0443e17ee0",
+      "upstream_sha256": "e2b6a70c0a540789d0d312c248d67bc571e3e84eaa191a391974bc0443e17ee0"
+    },
+    "UNLICENSE": {
+      "sha256": "ca2abdf695884c77ea4b4a5b64ca7b732d9d9dbade4eebc1c2e76c53e9e3bc83",
+      "upstream_sha256": "ca2abdf695884c77ea4b4a5b64ca7b732d9d9dbade4eebc1c2e76c53e9e3bc83"
+    }
+  }
+}

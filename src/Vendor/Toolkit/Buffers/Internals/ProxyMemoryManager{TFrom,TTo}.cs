@@ -1,0 +1,127 @@
+#define NETSTANDARD2_1_OR_GREATER
+#nullable enable annotations
+#nullable disable warnings
+#pragma warning disable CS1591, CS1570, CS1572, CS1573, CS1574, CS1584, CS1658, CS1587, CS8500, CS0162, CA2022
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+using System.Buffers;
+using System.Runtime.InteropServices;
+using Electron2DBufferTools.Buffers.Internals.Interfaces;
+using RuntimeHelpers = Electron2DBufferTools.Helpers.Internals.RuntimeHelpers;
+
+namespace Electron2DBufferTools.Buffers.Internals;
+
+/// <summary>
+/// A custom <see cref="MemoryManager{T}"/> that casts data from a <see cref="MemoryManager{T}"/> of <typeparamref name="TFrom"/>, to <typeparamref name="TTo"/> values.
+/// </summary>
+/// <typeparam name="TFrom">The source type of items to read.</typeparam>
+/// <typeparam name="TTo">The target type to cast the source items to.</typeparam>
+internal sealed class ProxyMemoryManager<TFrom, TTo> : MemoryManager<TTo>, IMemoryManager
+    where TFrom : unmanaged
+    where TTo : unmanaged
+{
+    /// <summary>
+    /// The source <see cref="MemoryManager{T}"/> to read data from.
+    /// </summary>
+    private readonly MemoryManager<TFrom> memoryManager;
+
+    /// <summary>
+    /// The starting offset within <see name="memoryManager"/>.
+    /// </summary>
+    private readonly int offset;
+
+    /// <summary>
+    /// The original used length for <see name="memoryManager"/>.
+    /// </summary>
+    private readonly int length;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ProxyMemoryManager{TFrom, TTo}"/> class.
+    /// </summary>
+    /// <param name="memoryManager">The source <see cref="MemoryManager{T}"/> to read data from.</param>
+    /// <param name="offset">The starting offset within <paramref name="memoryManager"/>.</param>
+    /// <param name="length">The original used length for <paramref name="memoryManager"/>.</param>
+    public ProxyMemoryManager(MemoryManager<TFrom> memoryManager, int offset, int length)
+    {
+        this.memoryManager = memoryManager;
+        this.offset = offset;
+        this.length = length;
+    }
+
+    /// <inheritdoc/>
+    public override Span<TTo> GetSpan()
+    {
+        Span<TFrom> span = this.memoryManager.GetSpan().Slice(this.offset, this.length);
+
+        return MemoryMarshal.Cast<TFrom, TTo>(span);
+    }
+
+    /// <inheritdoc/>
+    public override unsafe MemoryHandle Pin(int elementIndex = 0)
+    {
+        if ((uint)elementIndex >= (uint)(this.length * sizeof(TFrom) / sizeof(TTo)))
+        {
+            ThrowArgumentExceptionForInvalidIndex();
+        }
+
+        int bytePrefix = this.offset * sizeof(TFrom);
+        int byteSuffix = elementIndex * sizeof(TTo);
+        int byteOffset = bytePrefix + byteSuffix;
+        int shiftedOffset = Math.DivRem(byteOffset, sizeof(TFrom), out int remainder);
+
+        if (remainder != 0)
+        {
+            ThrowArgumentExceptionForInvalidAlignment();
+        }
+
+        return this.memoryManager.Pin(shiftedOffset);
+    }
+
+    /// <inheritdoc/>
+    public override void Unpin()
+    {
+        this.memoryManager.Unpin();
+    }
+
+    /// <inheritdoc/>
+    protected override void Dispose(bool disposing)
+    {
+        ((IDisposable)this.memoryManager).Dispose();
+    }
+
+    /// <inheritdoc/>
+    public Memory<T> GetMemory<T>(int offset, int length)
+        where T : unmanaged
+    {
+        // Like in the other memory manager, calculate the absolute offset and length
+        int absoluteOffset = this.offset + RuntimeHelpers.ConvertLength<TTo, TFrom>(offset);
+        int absoluteLength = RuntimeHelpers.ConvertLength<TTo, TFrom>(length);
+
+        // Skip one indirection level and slice the original memory manager, if possible
+        if (typeof(T) == typeof(TFrom))
+        {
+            return (Memory<T>)(object)this.memoryManager.Memory.Slice(absoluteOffset, absoluteLength);
+        }
+
+        return new ProxyMemoryManager<TFrom, T>(this.memoryManager, absoluteOffset, absoluteLength).Memory;
+    }
+
+    /// <summary>
+    /// Throws an <see cref="ArgumentOutOfRangeException"/> when the target index for <see cref="Pin"/> is invalid.
+    /// </summary>
+    private static void ThrowArgumentExceptionForInvalidIndex()
+    {
+        throw new ArgumentOutOfRangeException("elementIndex", "The input index is not in the valid range");
+    }
+
+    /// <summary>
+    /// Throws an <see cref="ArgumentOutOfRangeException"/> when <see cref="Pin"/> receives an invalid target index.
+    /// </summary>
+    private static void ThrowArgumentExceptionForInvalidAlignment()
+    {
+        throw new ArgumentOutOfRangeException("elementIndex", "The input index doesn't result in an aligned item access");
+    }
+}

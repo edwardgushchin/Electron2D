@@ -12,7 +12,19 @@ public sealed unsafe partial class RenderingDevice
         if (_rendererTextures.TryGetValue(source, out var cached) && _entries.TryGetValue(cached, out var existing) && existing.Borrowed?.Alive == true) { PrepareRendererTexture(existing); return cached; }
         var width = (uint)(target?.Size.X ?? pixels!.Pixels.Source.Width); var height = (uint)(target?.Size.Y ?? pixels!.Pixels.Source.Height);
         var mips = (uint)(target is not null ? 1 : pixels!.Pixels.Levels); var layers = (uint)(pixels?.ArrayPixels?.Layers.Length ?? 1);
-        var format = pixels?.Pixels.Upload.Format == Image.Format.Rgbaf ? DataFormat.R32G32B32A32SFLOAT : DataFormat.R8G8B8A8UNORM;
+        var format = pixels?.NativeTextureFormat switch
+        {
+            SDL.GPUTextureFormat.BC1RGBAUnorm => DataFormat.BC1RGBAUNORMBLOCK,
+            SDL.GPUTextureFormat.BC2RGBAUnorm => DataFormat.BC2UNORMBLOCK,
+            SDL.GPUTextureFormat.BC3RGBAUnorm => DataFormat.BC3UNORMBLOCK,
+            SDL.GPUTextureFormat.BC4RUnorm => DataFormat.BC4UNORMBLOCK,
+            SDL.GPUTextureFormat.BC5RGUnorm => DataFormat.BC5UNORMBLOCK,
+            SDL.GPUTextureFormat.BC7RGBAUnorm => DataFormat.BC7UNORMBLOCK,
+            SDL.GPUTextureFormat.BC6HRGBFloat => DataFormat.BC6HSFLOATBLOCK,
+            SDL.GPUTextureFormat.BC6HRGBUFloat => DataFormat.BC6HUFLOATBLOCK,
+            SDL.GPUTextureFormat.R32G32B32A32Float => DataFormat.R32G32B32A32SFLOAT,
+            _ => DataFormat.R8G8B8A8UNORM
+        };
         var usage = pixels?.DeviceUsage ?? TextureUsageBits.Sampling | TextureUsageBits.ColorAttachment | TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.CanUpdate;
         if (target is not null && TextureIsFormatSupportedForUsage(format, usage | TextureUsageBits.Storage)) usage |= TextureUsageBits.Storage;
         var native = NativeFormat(format); var offsets = new uint[mips]; var packed = new uint[mips]; var sizes = new uint[mips]; uint total = 0, transferSize = 0; var alignment = Math.Max(4u, SDL.GPUTextureFormatTexelBlockSize(native));

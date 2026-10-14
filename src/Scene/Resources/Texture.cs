@@ -152,7 +152,7 @@ public abstract class Texture : Resource
         if (pixels is null || size.X <= 0 || size.Y <= 0) return true;
         x = (int)Math.Clamp((long)x * pixels.Source.Width / size.X, 0, pixels.Source.Width - 1);
         y = (int)Math.Clamp((long)y * pixels.Source.Height / size.Y, 0, pixels.Source.Height - 1);
-        return Image.ReadTexturePixel(pixels.Source, x, y).A > 0.1f;
+        return Image.ReadTexturePixel(Image.IsBCFormat(pixels.Source.Format) ? pixels.Upload : pixels.Source, x, y).A > 0.1f;
     }
 
     private void InvalidatePixels(Resource _) { lock (_snapshotGate) _snapshot = null; }
@@ -206,14 +206,15 @@ internal sealed class TexturePixels
     {
         if (source.Width is <= 0 or > 16384 || source.Height is <= 0 or > 16384 || source.Data.Length == 0)
             throw new ArgumentException("A texture requires a nonempty image no larger than 16384 pixels per axis.");
-        if (source.Format is >= Image.Format.Dxt1 and <= Image.Format.Astc8X8Hdr ||
+        if (source.Format is >= Image.Format.Dxt1 and <= Image.Format.Astc8X8Hdr && !Image.IsBCFormat(source.Format) ||
             source.Format is Image.Format.R16I or Image.Format.Rg16I or Image.Format.Rgb16I or Image.Format.Rgba16I)
-            throw new NotSupportedException("Compressed and integer-sampled texture formats are not integrated yet.");
+            throw new NotSupportedException("This block-codec family or integer sampling role requires a separate texture integration.");
         Source = source;
+        var sampling = Image.IsBCFormat(source.Format) ? Image.DecompressBCPixels(source) : source;
         // Preserve high-precision/HDR values; 8-bit formats can use the portable RGBA8 sampling path.
-        var format = source.Format is Image.Format.L8 or Image.Format.La8 or Image.Format.R8 or Image.Format.Rg8 or Image.Format.Rgb8 or Image.Format.Rgba8
+        var format = sampling.Format is Image.Format.L8 or Image.Format.La8 or Image.Format.R8 or Image.Format.Rg8 or Image.Format.Rgb8 or Image.Format.Rgba8
             ? Image.Format.Rgba8 : Image.Format.Rgbaf;
-        Upload = Image.ConvertPixels(source, format);
+        Upload = Image.ConvertPixels(sampling, format);
         Levels = 1;
         if (source.HasMIPMaps)
             for (int width = source.Width, height = source.Height; width > 1 || height > 1; width = Math.Max(1, width / 2), height = Math.Max(1, height / 2)) Levels++;

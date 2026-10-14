@@ -4,7 +4,7 @@ public sealed partial class Image
 {
     private static readonly object FormatLoaderGate = new();
     private static readonly List<ImageFormatLoaderExtension> FormatLoaders = [];
-    private static readonly string[] BuiltInExtensions = ["png", "jpg", "jpeg", "webp", "bmp", "tga", "svg"];
+    private static readonly string[] BuiltInExtensions = ["png", "jpg", "jpeg", "webp", "bmp", "tga", "svg", "dds"];
 
     internal static void AddFormatLoader(ImageFormatLoaderExtension loader)
     {
@@ -75,7 +75,7 @@ public sealed partial class Image
             CheckEncodedLength(length);
             var bytes = file.ReadBytes((int)length);
             if (bytes.Length != length || file.Length != length) throw new IOException("The encoded image changed while it was read.");
-            DecodeAndCommit(bytes, codec);
+            if (codec == "DDS") LoadDDSFromBuffer(bytes); else DecodeAndCommit(bytes, codec);
         }
         finally { file?.Dispose(); }
     }

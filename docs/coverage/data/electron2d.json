@@ -99277,6 +99277,64 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Image.Compress(Electron2D.Image.CompressMode,Electron2D.Image.CompressSource,Electron2D.Image.ASTCFormat)",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "Compress",
+    "signature": "public System.Void Compress(Electron2D.Image.CompressMode mode, Electron2D.Image.CompressSource source = Generic, Electron2D.Image.ASTCFormat astcFormat = Format4X4)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mode",
+        "type": "Electron2D.Image.CompressMode",
+        "default": null
+      },
+      {
+        "name": "source",
+        "type": "Electron2D.Image.CompressSource",
+        "default": "Generic"
+      },
+      {
+        "name": "astcFormat",
+        "type": "Electron2D.Image.ASTCFormat",
+        "default": "Format4X4"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Image.CompressFromChannels(Electron2D.Image.CompressMode,Electron2D.Image.UsedChannels,Electron2D.Image.ASTCFormat)",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "CompressFromChannels",
+    "signature": "public System.Void CompressFromChannels(Electron2D.Image.CompressMode mode, Electron2D.Image.UsedChannels channels, Electron2D.Image.ASTCFormat astcFormat = Format4X4)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mode",
+        "type": "Electron2D.Image.CompressMode",
+        "default": null
+      },
+      {
+        "name": "channels",
+        "type": "Electron2D.Image.UsedChannels",
+        "default": null
+      },
+      {
+        "name": "astcFormat",
+        "type": "Electron2D.Image.ASTCFormat",
+        "default": "Format4X4"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Image.ComputeImageMetrics(Electron2D.Image,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
@@ -99375,40 +99433,6 @@
       }
     ],
     "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Image.Create(System.Int32,System.Int32,System.Boolean,Electron2D.Image.Format)",
-    "kind": "method",
-    "declaringType": "Electron2D.Image",
-    "name": "Create",
-    "signature": "public static Electron2D.Image Create(System.Int32 width, System.Int32 height, System.Boolean useMipmaps, Electron2D.Image.Format format)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "width",
-        "type": "System.Int32",
-        "default": null
-      },
-      {
-        "name": "height",
-        "type": "System.Int32",
-        "default": null
-      },
-      {
-        "name": "useMipmaps",
-        "type": "System.Boolean",
-        "default": null
-      },
-      {
-        "name": "format",
-        "type": "Electron2D.Image.Format",
-        "default": null
-      }
-    ],
-    "returnType": "Electron2D.Image",
     "value": null
   },
   {
@@ -99518,6 +99542,19 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Image.Decompress()",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "Decompress",
+    "signature": "public System.Void Decompress()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -99845,6 +99882,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Image.LoadDDSFromBuffer(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "LoadDDSFromBuffer",
+    "signature": "public System.Void LoadDDSFromBuffer(System.ReadOnlySpan\u003CSystem.Byte\u003E buffer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "buffer",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Image.LoadFromFile(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
@@ -100122,6 +100178,38 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Image.SaveDDS(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "SaveDDS",
+    "signature": "public System.Void SaveDDS(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Image.SaveDDSToBuffer()",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "SaveDDSToBuffer",
+    "signature": "public System.Byte[] SaveDDSToBuffer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte[]",
     "value": null
   },
   {

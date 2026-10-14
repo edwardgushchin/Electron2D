@@ -332,3 +332,5 @@ The enum is immutable and thread-safe. [`Image`](Image.md) rejects undefined val
 ## Verification and known limitations
 
 The executable checks cover numeric identities, byte counts and pixel round trips for all 25 uncompressed formats, structural size and access rejection for all 22 compressed formats, and mip sizing across compressed block boundaries. CPU block codecs remain deferred under [ADR 0039](../decisions/resources.md#adr-0039).
+
+BC1–BC7 and RA-as-RG have explicit Image.Decompress support; CPU pixel operations require that uncompressed result. S3TC/BPTC compression selects an applicable BC storage role. ImageTexture and TextureArray preserve original blocks and prepare decoded sampling with native BC GPU upload when supported. Other block families remain storage identities with separate codec dependencies.
