@@ -1884,3 +1884,95 @@ bin/physics-segment-provider/2026-10-14/final; the six commit gates pass under g
 API counts remain 13,842 declarations, 10,585 mapped, 3,257 reviewed extras and zero
 unmapped; wiki check has 821 public types, 839 files and zero updates/removals.
 The pinned shape source digest is `a63404db6e58924946ad9dc0848a54dd95ff4678df5c0f661951cbd6a6f3681d`.
+
+## Registered convex numerics
+
+The independent public-only solver now reads the complete accepted ConvexPolygon
+perimeter. It normalizes winding and a repeated closing vertex, prepares immutable
+centered vertices and exact mass samples once, and weakly caches those samples by
+immutable ShapeGeometry identity. There is no eight-vertex numerical limit, native
+piece copy, circumscribed disk or rectangular substitution. Empty contours retire
+all numerical fixtures while retaining the authored logical slot and resource.
+Local/global poses retain the shared unit-scale/zero-skew contract.
+
+Area, centroid and polar integral use double accumulators around the first input
+vertex, avoiding subtraction of large origin-dependent moments. The final polar
+moment is central; compound mass retains area weighting and parallel-axis terms.
+Rotation/offset preserve that centroid. Polygon projection has distinct lower and
+upper bounds rather than a symmetric radius. Every edge contributes separating
+axes; rounded partners add both vertex-to-edge directions. Support clipping
+selects actual extreme vertices. Point containment and ray half-space clipping use
+the real facets. Query margin expands the round offset without replacing the core.
+Hollow custom-ring tests retain the outer support and farthest-vertex inner rule.
+
+Angular CCD now streams every core vertex into the existing speed/acceleration
+certificate rather than storing four corners. Standalone independent sweeps test
+all candidate hull chords and rounded vertex-to-chord axes with streamed support
+bounds; no array or fixed-axis capacity is allocated per warmed query. Candidate
+chords include every hull edge and remain valid projection certificates. This
+correctness-oriented consumer is quadratic/cubic in vertex count in those scans;
+large-contour throughput is not established by its functional check. Final target
+GPU performance remains an independent requirement of the engine's resident path.
+
+The --convex-geometry profile (optional --cpu/--gpu and --threaded) uses an actual
+12-vertex 120×15 contour in the full query/Area frame bracket, including one disabled
+slot, real overlap transition, six query families, body motion, deepest rest,
+mask/exclusion checks and a bounds-corner point outside the actual facets. A
+12-vertex 320×40 contour rotates through an intermediate CastShape contact at
+30 rad/s over .015 seconds. Four-vertex contours supply six actual polygon/circle
+or polygon/polygon contact/replay cases for all CCD modes, plus an unlocked corner
+impulse/energy case. Each of those eight brackets warms 128 complete frames and
+measures 128 at strict 0/0 owner/all-thread managed bytes. The 12-vertex rotational
+control is cold functional evidence, not a separate warmed allocation claim.
+
+Cold mass controls use a 60×15 four-vertex contour plus a radius-five circle with
+area weighting and an independently computed box moment. A translated right
+triangle with legs six and three has centroid (6,-6), including its authoring
+translation, and mass-three central inertia 7.5. Child rotation/offset, reversed
+winding, repeated closing vertex, true interior versus bounding-box miss, ray face,
+live empty removal and subsequent identity-preserving replacement are exercised.
+Standalone independent regions, rounded misses and registered hollow-ring response
+are additional cold controls. Existing rectangle/capsule/segment/compound/joint/
+private-history profiles remain regression checks.
+
+Initial twelve-entry small fixtures contained collinear vertices and fell below
+accepted CPU polygon-piece size tolerance. They were rejected during authoring,
+not used as successful twelve-vertex evidence. The final twelve-vertex contours
+are noncollinear and large enough for actual native fixture partitioning. Smaller
+four-vertex checks stay above native welding tolerance; the thin wall remains an
+ordinary RectangleShape counterpart. Numeric bounds remain .002 scene units for
+point/ray/rest coordinates, normal dot above .999, cast fraction 1/256 plus .00002,
+centroid .0002, central inertia .0002 relative for the large compound sample and
+.0002 absolute for the analytic triangle, momentum .002 and full impulses .02–.03.
+Angular moment permits .005 plus interval × maximum linear speed × total impulse
+for publication/integration lever sampling. The rotating contour retains at most
+102 percent initial energy; the 2.2-wide moving polygon at the thin wall must keep
+center below 8.65+.501 and residual horizontal speed below .1. That allowance uses
+accepted .5 CPU linear tolerance plus .001 float slack. Custom-ring radius/energy
+controls retain their prior 5.301 and 50.1 bounds, using the actual 2.2-square corners
+and the reported automatic inertia.
+
+The frozen previous segment consumer rejects convex attachment in real primitive
+decoding; the new solver executes it without built-in numerical delegation or
+engine internals. Evidence is under bin/physics-convex-provider/2026-10-14. CPU
+lavapipe is functional GPU evidence only. General concave/boundary/directed-ray,
+arbitrary custom/coupled geometry, complete extension/inherited/network/native/
+platform and target-device performance acceptance remain open. Production API/XML
+and the accepted geometry-policy ADRs are unchanged; coverage reasons expand while
+current Partial states are retained.
+
+Final evidence uses main `f2a681ed3e7da99aa1bf9e7f10d0f95e1721cf67` and this consumer slice. Its 4,187
+source inputs fingerprint is `cd1bfc173f0d9c1e34552741316742da855c12796eb5ad227718c64c4c8aefb3`; runtime/consumer DLLs are
+`26ed5c96a2c0851688d95afdbf6cf2b313571828855d6f2ba8b390931b7d6fc7` and `10ce74c53a5f322ee7dd9e1fdd8506d5ed6ee938547f70ca334417225d9e32c8`.
+All 17 fresh processes pass: six CPU/GPU/registered serial/separate numerical
+profiles and eleven default/custom/curved/statistics/rectangle/compound/capsule/
+segment/joint/private-history regressions. Source-before/source-after identities
+agree; all 61 runtime-file identities stay unchanged and the precommit runtime
+matches the loaded DLL. GPU loads CPU lavapipe only, no NVIDIA library; CPU/provider
+have unavailable graphics drivers and solver-lane counts are exactly 0/1. Eight
+warmed brackets per numerical profile still measure strict 0/0 managed bytes.
+Independent processes share the host concurrently for functional proof only.
+Results/manifests are under bin/physics-convex-provider/2026-10-14/final; all six
+commit gates pass under gates. API stays at 13,842 declarations, 10,585 mapped,
+3,257 reviewed extras and zero unmapped; wiki verifies 821 public types and 839
+files with zero updates/removals.

@@ -177,3 +177,9 @@ The [registered segment consumer](physics-registered-adapter.md#registered-segme
 now verifies actual two-sided lines, rod mass, queries, contacts and CCD behind the
 existing extension boundary. It preserves empty point interiors and accepted short
 midpoint fixtures. General provider contours and final acceptance remain open.
+
+[Registered convex numerics](physics-registered-adapter.md#registered-convex-numerics)
+now consume every accepted perimeter vertex through the public immutable payload.
+They retain logical shape identity across whole contours while CPU may partition
+native fixtures, and verify winding, asymmetric mass and live empty replacement.
+Other provider families and final numerical acceptance remain open.

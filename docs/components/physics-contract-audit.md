@@ -1188,3 +1188,12 @@ own compound mass before zero-area rods; unshaped bodies retain mass with zero
 inertia and finite torque/impulse handling. Shared CPU/software-GPU serial/separate
 checks extend evidence without closing the wider numerical/inherited/network/
 native/performance gates.
+
+[Registered convex numerics](physics-registered-adapter.md#registered-convex-numerics)
+now execute whole accepted contours, signed support intervals, stable area/centroid/
+inertia, six direct-query families, body motion, independently swept regions,
+contacts and linear/angular CCD. Shared CPU/software-GPU/registered serial/separate
+profiles retain eight full-frame/replay warmed brackets at strict 0/0 managed bytes.
+Actual twelve-vertex query/rotational controls, asymmetric analytic triangle mass,
+both windings and live empty/replacement cases extend this numerical evidence.
+Related extension rows remain Partial for wider geometry and final acceptance.

@@ -229,3 +229,12 @@ silent private replay. Eight 128-frame warmed brackets require 0/0 managed bytes
 Cold controls cover unshaped zero inertia, short/coincident edits, independent
 swept pairs, collinear/opposite-side rays and rotational arcs. Wider contours,
 provider/native/network/hardware and performance acceptance remain open.
+
+`--convex-geometry`, with optional `--cpu`/`--gpu` and `--threaded`, verifies whole
+accepted contours, asymmetric/closed/reversed winding, exact mass, live empty and
+replacement behavior, six query families, body motion, contacts and linear/angular
+CCD. Actual twelve-vertex query/Area and rotational cases preserve one logical slot.
+Eight warmed frame/replay brackets measure 128 frames each at 0/0 managed bytes.
+The independent provider streams all vertices without delegating to built-in
+solvers. Its large-contour throughput and complete provider/native/network/target-
+device acceptance remain open.

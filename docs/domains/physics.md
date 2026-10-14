@@ -2,6 +2,13 @@
 
 Last updated: 2026-10-14
 
+[Registered convex numerics](../components/physics-registered-adapter.md#registered-convex-numerics)
+now preserve whole accepted convex contours in the independent public-only provider,
+with signed projections, centroid/inertia, queries, contacts and linear/angular CCD.
+Shared CPU/software-GPU serial/separate profiles retain zero warmed managed bytes.
+Asymmetric/winding/live-empty and twelve-vertex controls extend evidence; concave,
+boundary/ray, inherited/network/native/hardware and final acceptance remain open.
+
 [Registered segment numerics](../components/physics-registered-adapter.md#registered-segment-numerics)
 now execute two-sided line contours, length-weighted zero-area mass, queries,
 contacts and linear/angular CCD in the independent public-only provider. Shared

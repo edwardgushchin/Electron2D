@@ -1563,3 +1563,7 @@ This introduces no shipped backend type or runtime API.
 The [registered segment consumer](components/physics-registered-adapter.md#registered-segment-numerics)
 adds independent line/zero-area numerics behind the existing extension family;
 no shipped backend type or runtime API is introduced.
+
+The [registered convex consumer](components/physics-registered-adapter.md#registered-convex-numerics)
+adds independent whole-contour numerics behind the existing extension family.
+No shipped backend type or runtime public API is introduced.

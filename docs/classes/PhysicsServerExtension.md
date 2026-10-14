@@ -100,3 +100,10 @@ contacts and linear/angular CCD in the independent public-only provider. Shared
 CPU/software-GPU serial/separate checks retain full impulses, silent private replay
 and zero warmed managed allocation. Wider contours, extension/inherited/network/
 native/hardware and performance acceptance remain open.
+
+[Registered convex numerics](../components/physics-registered-adapter.md#registered-convex-numerics)
+now preserve whole accepted convex contours in the independent public-only provider,
+with signed projections, centroid/inertia, queries, contacts and linear/angular CCD.
+Shared CPU/software-GPU serial/separate profiles retain zero warmed managed bytes.
+Asymmetric/winding/live-empty and twelve-vertex controls extend evidence; concave,
+boundary/ray, inherited/network/native/hardware and final acceptance remain open.

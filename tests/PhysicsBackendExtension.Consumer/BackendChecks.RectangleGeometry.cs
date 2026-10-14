@@ -4,6 +4,11 @@ public static partial class BackendChecks
 {
     private static Part GeometryPart(ShapeGeometry geometry, Transform transform, int index = 0)
     {
+        if (geometry.Type == PhysicsServer.ShapeType.ConvexPolygon)
+        {
+            var polygon = Polygons.GetValue(geometry, static data => new Polygon(data));
+            return new(index, transform * polygon.Center, 0, polygon.Radius, transform.X, transform.Y, 0, false, false, polygon);
+        }
         if (geometry.Type == PhysicsServer.ShapeType.Rectangle)
         {
             var half = geometry.GetRectangleSize() / 2;
@@ -41,6 +46,7 @@ public static partial class BackendChecks
     private static bool ContainsPart(in Part part, Transform pose, Vector2 point)
     {
         var center = PartAt(part, pose);
+        if (part.Polygon is not null) return PolygonContains(part, pose, point);
         if (part.Segment) return false;
         if (part.Capsule) return point.DistanceSquaredTo(ClosestContour(part, pose, point)) <= part.Inflation * part.Inflation;
         if (!part.Contour) return Annulus.Contains(point, center, part.Inner, part.Outer);
@@ -59,6 +65,17 @@ public static partial class BackendChecks
     }
     private static Vector2 ClosestContour(in Part part, Transform pose, Vector2 point)
     {
+        if (part.Polygon is not null)
+        {
+            var nearest = PartAt(part, pose); var distanceToEdge = float.PositiveInfinity;
+            for (var i = 0; i < CoreCount(part); i++)
+            {
+                var candidate = ClosestEdge(point, CoreVertex(part, pose, i), CoreVertex(part, pose, (i + 1) % CoreCount(part)));
+                var squared = candidate.DistanceSquaredTo(point);
+                if (squared < distanceToEdge) { nearest = candidate; distanceToEdge = squared; }
+            }
+            return nearest;
+        }
         Span<Vector2> corners = stackalloc Vector2[4]; Corners(part, pose, corners);
         var best = corners[0]; var distance = float.PositiveInfinity;
         for (var i = 0; i < 4; i++)
@@ -73,12 +90,20 @@ public static partial class BackendChecks
         : part.Outer;
     private static Vector2 LeadingPart(in Part part, Transform pose, Vector2 direction)
     {
+        if (part.Polygon is not null)
+        {
+            var point = PartAt(part, pose); var maximum = float.NegativeInfinity;
+            for (var i = 0; i < CoreCount(part); i++)
+            { var vertex = CoreVertex(part, pose, i); var along = vertex.Dot(direction); if (along > maximum) { maximum = along; point = vertex; } }
+            return point + direction * part.Inflation;
+        }
         if (!part.Contour) return PartAt(part, pose) + direction * part.Outer;
         var x = EdgeX(part, pose); var y = EdgeY(part, pose);
         return PartAt(part, pose) + x * MathF.Sign(x.Dot(direction)) + y * MathF.Sign(y.Dot(direction)) + direction * part.Inflation;
     }
     private static void SupportRange(in Part part, Transform pose, Vector2 normal, Vector2 tangent, out float minimum, out float maximum)
     {
+        if (part.Polygon is not null) { PolygonSupport(part, pose, normal, tangent, out minimum, out maximum); return; }
         var center = PartAt(part, pose);
         if (!part.Contour) { minimum = maximum = center.Dot(tangent); return; }
         var x = EdgeX(part, pose); var y = EdgeY(part, pose);
@@ -93,6 +118,7 @@ public static partial class BackendChecks
     private static float ContourGap(in Part first, Transform a, in Part second, Transform b,
         out Vector2 normal, out Vector2 pointA, out Vector2 pointB)
     {
+        if (first.Polygon is not null || second.Polygon is not null) return PolygonGap(first, a, second, b, out normal, out pointA, out pointB);
         Span<Vector2> axes = stackalloc Vector2[40]; var count = 0;
         if (first.Contour) { var x = EdgeX(first, a); var y = EdgeY(first, a); axes[count++] = new(-x.Y, x.X); axes[count++] = new(-y.Y, y.X); }
         if (second.Contour) { var x = EdgeX(second, b); var y = EdgeY(second, b); axes[count++] = new(-x.Y, x.X); axes[count++] = new(-y.Y, y.X); }
@@ -129,6 +155,7 @@ public static partial class BackendChecks
     private static float PartGap(in Part first, Transform a, in Part second, Transform b,
         out Vector2 normal, out Vector2 pointA, out Vector2 pointB)
     {
+        if (CoreCount(first) == 0 || CoreCount(second) == 0) { normal = pointA = pointB = default; return float.PositiveInfinity; }
         if (first.Contour || second.Contour)
         {
             if (first.Inner > 0 || second.Inner > 0)
@@ -154,9 +181,9 @@ public static partial class BackendChecks
         var box = first.Contour ? first : second; var boxPose = first.Contour ? a : b;
         var ring = first.Contour ? second : first; var ringPose = first.Contour ? b : a;
         var center = PartAt(ring, ringPose); var closest = ClosestContour(box, boxPose, center);
-        Span<Vector2> vertices = stackalloc Vector2[4]; Corners(box, boxPose, vertices);
-        var farthest = vertices[0];
-        for (var i = 1; i < 4; i++) if (vertices[i].DistanceSquaredTo(center) > farthest.DistanceSquaredTo(center)) farthest = vertices[i];
+        var farthest = CoreVertex(box, boxPose, 0);
+        for (var i = 1; i < CoreCount(box); i++)
+        { var vertex = CoreVertex(box, boxPose, i); if (vertex.DistanceSquaredTo(center) > farthest.DistanceSquaredTo(center)) farthest = vertex; }
         var inner = ring.Inner - farthest.DistanceTo(center) - box.Inflation;
         var outer = (ContainsPart(box, boxPose, center) ? 0 : closest.DistanceTo(center)) - ring.Outer - box.Inflation;
         if (inner > outer)
@@ -171,6 +198,7 @@ public static partial class BackendChecks
     private static bool SweepParts(in Part first, Transform a, Vector2 motion, in Part second, Transform b, out float fraction)
     {
         fraction = 0;
+        if (CoreCount(first) == 0 || CoreCount(second) == 0) return false;
         var gap = PartGap(first, a, second, b, out _, out _, out _);
         if (gap <= 0) return true;
         var speed = motion.Length(); if (speed == 0) return false;
@@ -193,6 +221,7 @@ public static partial class BackendChecks
         ShapeGeometry second, Transform secondPose, Vector2 secondMotion, Span<Vector2> output, out int count)
     {
         var a = GeometryPart(first, firstPose); var b = GeometryPart(second, secondPose);
+        if (a.Polygon is not null || b.Polygon is not null) return CollidePolygonRegions(a, firstMotion, b, secondMotion, output, out count);
         Span<Vector2> av = stackalloc Vector2[8]; Span<Vector2> bv = stackalloc Vector2[8];
         var ac = Vertices(a, firstMotion, av); var bc = Vertices(b, secondMotion, bv);
         Span<Vector2> axes = stackalloc Vector2[584]; var axisCount = 1; axes[0] = Vector2.Right;
@@ -275,7 +304,7 @@ public static partial class BackendChecks
             MathF.Abs(spinB) * (armB.Length() + (second.Contour ? second.Outer : 0));
         var ray = full ? first : new Part(first.Index, LeadingPart(first, initialA, (linearA - linearB).Normalized()), 0, 0);
         var tolerance = .0001f * MathF.Min(first.Thickness, second.Thickness);
-        var time = 0f; Span<Vector2> ap = stackalloc Vector2[4]; Span<Vector2> bp = stackalloc Vector2[4];
+        var time = 0f;
         for (var iteration = 0; iteration < 1024; iteration++)
         {
             var poseA = MovingPose(a, linearA, spinA, time); var poseB = MovingPose(b, linearB, spinB, time);
@@ -285,17 +314,18 @@ public static partial class BackendChecks
             var advance = gap / (double)speed;
             if (first.Inner == 0 && second.Inner == 0)
             {
-                var ac = Points(ray, full ? poseA : Transform.Identity.Translated(linearA * time), ap);
-                var bc = Points(second, poseB, bp); advance = double.PositiveInfinity;
+                var rayPose = full ? poseA : Transform.Identity.Translated(linearA * time);
+                var ac = CoreCount(ray); var bc = CoreCount(second); advance = double.PositiveInfinity;
                 var radius = (ray.Contour ? ray.Inflation : ray.Outer) + (second.Contour ? second.Inflation : second.Outer);
                 var centerA = a.Center + linearA * time; var centerB = b.Center + linearB * time;
                 for (var i = 0; i < ac; i++) for (var j = 0; j < bc; j++)
                     {
-                        var ra = ap[i] - centerA; var rb = bp[j] - centerB;
+                        var ap = CoreVertex(ray, rayPose, i); var bp = CoreVertex(second, poseB, j);
+                        var ra = ap - centerA; var rb = bp - centerB;
                         var wa = full ? spinA : 0;
                         var va = linearA + new Vector2(-ra.Y, ra.X) * wa;
                         var vb = linearB + new Vector2(-rb.Y, rb.X) * spinB;
-                        var separation = MathF.Max(0, (bp[j] - ap[i]).Dot(axis) - radius);
+                        var separation = MathF.Max(0, (bp - ap).Dot(axis) - radius);
                         var closing = (va - vb).Dot(axis);
                         var acceleration = (double)wa * wa * ra.Length() + (double)spinB * spinB * rb.Length();
                         double bound;
@@ -314,8 +344,6 @@ public static partial class BackendChecks
             time = next;
         }
         throw new InvalidOperationException("A rotating contour sweep exceeded its advancement budget.");
-        static int Points(in Part part, Transform pose, Span<Vector2> points)
-        { if (part.Contour) { Corners(part, pose, points); return 4; } points[0] = PartAt(part, pose); return 1; }
         static Vector2 MotionForContour(Body body) => body.IsArea || body.Mode == PhysicsServer.BodyMode.Static || body.Dynamic && !body.Awake ? Vector2.Zero : body.Velocity;
         static Transform MovingPose(Body body, Vector2 linear, float spin, float time)
         {
@@ -325,6 +353,7 @@ public static partial class BackendChecks
     }
     private static bool RayPart(in Part part, Transform pose, Vector2 from, Vector2 motion, out float fraction, out Vector2 normal)
     {
+        if (part.Polygon is not null) return RayPolygon(part, pose, from, motion, out fraction, out normal);
         if (part.Segment && part.EdgeY != Vector2.Zero) return RaySegment(part, pose, from, motion, out fraction, out normal);
         if (part.Capsule || part.Segment) return RayCapsule(part, pose, from, motion, out fraction, out normal);
         if (!part.Contour)

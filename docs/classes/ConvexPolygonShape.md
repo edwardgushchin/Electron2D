@@ -91,3 +91,10 @@ retain their existing behavior.
 ## Rotating geometry acceptance
 
 [Public rotating geometry checks](../components/gpu-resident-ccd.md#public-rotating-geometry-verification-2026-10-14) cover full selected CPU/GPU frames with rectangle, capsule, a 12-vertex polygon split into native pieces and separate compound slots. All three CCD policies, static/moving targets, exact logical identity, full impulse/momentum and one tick/callback per frame are checked. Eight active cases each retain 128 warm/128 measured frames at 0/0 owner/all-thread bytes in serial/separate numerical profiles. Software Vulkan provides functional evidence; provider geometry, wider coupling/network/native/hardware acceptance remain open.
+
+[Registered convex numerics](../components/physics-registered-adapter.md#registered-convex-numerics)
+now preserve whole accepted convex contours in the independent public-only provider,
+with signed projections, centroid/inertia, queries, contacts and linear/angular CCD.
+Shared CPU/software-GPU serial/separate profiles retain zero warmed managed bytes.
+Asymmetric/winding/live-empty and twelve-vertex controls extend evidence; concave,
+boundary/ray, inherited/network/native/hardware and final acceptance remain open.
