@@ -1038,3 +1038,24 @@ The exact SceneTree.Defer scheduler and SceneTree.SetDeferred now use a Scene-ow
 Prepared standard-scene delivery and typed setters have zero invocation allocation, including prepared one-shot first delivery. First type/capacity growth, subscription and allocations performed by handlers/accessors remain separate; native multicast removal with multiple listeners can allocate. Arbitrary custom schedulers preserve their independent captured Actions and may allocate. Deferred delivery never extends a borrowed input event lifetime.
 
 EventConnectionPhysicsTests verifies mixed typed/untyped FIFO order, next-batch work, failures followed by later work, closed-scheduler subscription/emission policy, 256 concurrent producers, reference release on execution/failure/finalization/activation rollback, and 640 first one-shot callbacks for immediate and scene-deferred profiles with singleton accessors. Selected CPU/GPU full frames retain 128 callbacks per immediate and deferred arity plus body/shape transitions at strict zero owner/all-thread bytes. Real picking and legacy custom-scheduler/concurrency/error checks remain included. Software Vulkan is functional evidence; hardware/native/foreign/network/performance acceptance stays open.
+
+## Shared node frame time (2026-10-14)
+
+Node process/physics delta observations now read the attached tree's current or
+most recent lane duration, including nodes without callbacks and disabled/paused
+nodes. The tree commits time before frame-start observers; detachment returns zero
+and reattachment adopts the receiving tree. Owner/lifetime checks apply. Manual
+notifications do not advance time. CharacterBody.MoveAndSlide uses physics time
+only during a physics frame and process time otherwise, with no cross-lane or
+first-frame guess. Zero duration contributes no velocity travel; penetration
+recovery remains executable.
+
+PhysicsNodeDeltaTests uses controller-driven public character movement on selected
+CPU/GPU ordinary/separate modes, node lifecycle/error observations and scaled/zero
+Engine time. Two complete-frame brackets warm 128 and measure 128 at strict 0/0
+owner/all-thread managed bytes. Existing CharacterBody, internal-lane/hierarchy,
+surface, ray, snapshot and checkpoint checks retain their numerical assertions;
+external callers explicitly prepare their process lane rather than relying on the
+removed fallback. The initial CPU/GPU regression moved zero instead of three scene
+units. Evidence is retained under bin/physics-node-delta/2026-10-14. Full inherited,
+native, foreign and hardware/window/performance acceptance remains open.

@@ -416,6 +416,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PERFORMANCE") == "1") { PhysicsPipelinePerformance.Run(); return; }
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_DELTA") is { } nodeDelta)
+{
+    PhysicsNodeDeltaTests.Run(nodeDelta == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU,
+        Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1"); return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MOVING_ONEWAY") is { } movingOneWay)
 {
     PhysicsMovingOneWayTests.Run(movingOneWay == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU,

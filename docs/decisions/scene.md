@@ -1,6 +1,6 @@
 # Electron2D scene decisions
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 This bounded document owns the current architectural decisions for scene. Node is the neutral scene-tree base and Entity is the spatial canvas base under ADR 0008; current class pages describe the implemented API. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -23,6 +23,7 @@ Godot's object surface includes deferred calls and queued deletion, but both req
 - `Node` owns ordered child relationships and lifecycle callbacks; `SceneTree` owns one active root hierarchy.
 - `SceneTree.Root` stays stable for the tree lifetime. `CurrentScene` selects one optional direct child of that root; assigning it does not reparent nodes. `ChangeSceneToNode` accepts a detached scene, removes the selected old scene immediately, and installs the new scene at the next deferred safe point. `ChangeSceneToPacked` instantiates before replacement. The tree owns accepted pending scenes, disposes superseded and old scenes before entry, and releases pending scenes during finalization. `SceneChanged` follows successful entry. `UnloadCurrentScene` disposes only the selected child. File-based change and reload await a scene loader.
 - SceneTree-managed enter runs parent-first, ready runs child-first once per node lifetime, and exit runs child-first. Manual notification dispatch remains possible but does not mutate lifecycle state.
+- Node process/physics delta properties read the attached tree's current or most recent duration for that lane, including disabled/paused nodes and frame-start observers. SceneTree commits the supplied scaled duration after frame validation and execution preflight, before frame-start work. Detachment returns zero; reattachment adopts the receiving tree. Manual notifications do not advance time. Owner-thread/lifetime guards remain explicit. This follows the pinned Node tree-time getters; callback enablement controls delivery rather than observation.
 - Attached hierarchy mutation, flushing, and disposal run on the thread that created the tree; invalid disposal is rejected before object state begins changing.
 - `SceneTree.Defer(Action)` and `SetDeferred<T>` accept typed work without string method lookup.
 - Core's `EventConnection` can receive `SceneTree.Defer` as its scheduler for cancellable deferred event delivery.

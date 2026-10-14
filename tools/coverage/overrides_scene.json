@@ -5465,6 +5465,16 @@
       "electron2d": "property:Electron2D.Control.TranslationContext()",
       "state": "Implemented",
       "reason": "ADR 0007/0004: stored local Control default context is applied only by automatic Atr/AtrN for null/empty arguments; explicit arguments override it and ordinary Tr/TrN remain unchanged. Setter sends no translation notification. GUITranslationContextTests checks real cached consumers, policies, base references, descriptors, fresh scene files, owner/disposal and warmed zero managed bytes; native Linux GPU/compatibility compares actual contextual glyph pixels."
+    },
+    {
+      "godot": "Node::method:get_process_delta_time()",
+      "electron2d": "property:Electron2D.Node.ProcessDeltaTime()",
+      "reason": "ADR 0006/0067: both typed delta properties read the attached tree lane time independently of callback enablement. PhysicsNodeDeltaTests covers disabled/paused nodes, frame-start publication, separate lane/zero duration, detach/new-tree adoption, scaled/zero Engine time, callback error/rejected frame, owner guards and controller-driven CharacterBody motion on CPU/GPU serial/separate. Two 128-warm/128-measured full-frame brackets retain strict 0/0 owner/all-thread managed bytes. Native/foreign/hardware performance acceptance remains open."
+    },
+    {
+      "godot": "Node::method:get_physics_process_delta_time()",
+      "electron2d": "property:Electron2D.Node.PhysicsProcessDeltaTime()",
+      "reason": "ADR 0006/0067: both typed delta properties read the attached tree lane time independently of callback enablement. PhysicsNodeDeltaTests covers disabled/paused nodes, frame-start publication, separate lane/zero duration, detach/new-tree adoption, scaled/zero Engine time, callback error/rejected frame, owner guards and controller-driven CharacterBody motion on CPU/GPU serial/separate. Two 128-warm/128-measured full-frame brackets retain strict 0/0 owner/all-thread managed bytes. Native/foreign/hardware performance acceptance remains open."
     }
   ],
   "extras": [
@@ -11184,6 +11194,14 @@
       ],
       "state": "Partial",
       "reason": "Implemented root-window/input behavior is exercised by WindowRuntimeTests with dummy and Wayland. Root rendering/canvas transforms are integrated; full parity still depends on multiwindow, content scaling and GUI; native platform-specific requests retain DisplayServer limits. ADRs 0008, 0021 and 0028. On the current Linux Wayland Vulkan profile, remapping a previously presented root surface rejects with NotSupportedException before native/managed visibility changes. Wayland protocol traces show buffer state retained at xdg_surface recreation even after GPU idle, swapchain release and SDL.SyncWindow; trigger: an SDL-owned native presentation-completion/unmap acknowledgement bridge or verified backend/compositor correction. Hiding succeeds, offscreen targets continue, compatibility remapping executes. This is an explicit platform capability gap, not a completed Show path. PackedScene now omits an unrequested Window.Position, preserving automatic placement; an explicit zero remains authored. CanvasModulateTests and the published native saved-scene consumer exercise this policy without changing the existing native coordinate limits."
+    },
+    {
+      "godot": [
+        "Node::method:get_process_delta_time()",
+        "Node::method:get_physics_process_delta_time()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0006/0067: both typed delta properties read the attached tree lane time independently of callback enablement. PhysicsNodeDeltaTests covers disabled/paused nodes, frame-start publication, separate lane/zero duration, detach/new-tree adoption, scaled/zero Engine time, callback error/rejected frame, owner guards and controller-driven CharacterBody motion on CPU/GPU serial/separate. Two 128-warm/128-measured full-frame brackets retain strict 0/0 owner/all-thread managed bytes. Native/foreign/hardware performance acceptance remains open."
     }
   ]
 }

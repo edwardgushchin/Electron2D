@@ -45,7 +45,7 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
               !character.IsOnFloor() && character.GetSlideCollisionCount() == 0,
             "The character exposes the pinned grounded defaults before moving.");
         character.PhysicsProcessEnabled = true;
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         Check(character.GetGravity().Y is > 979 and < 981,
             "The inherited gravity query reads the resolved world field for a kinematic character.");
         character.Velocity = new(0, 6000);
@@ -106,7 +106,7 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
         ceiling.AddChild(new CollisionShape { Shape = ceilingShape });
         root.AddChild(character); root.AddChild(wall); root.AddChild(ceiling);
         using var tree = new SceneTree(root);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         character.Velocity = new(6000, 0);
         Check(character.MoveAndSlide() && character.IsOnWallOnly() &&
               character.GetWallNormal().X < -0.9f && character.GlobalPosition.X is > 70 and < 85,
@@ -147,12 +147,12 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
         platform.AddChild(new CollisionShape { Shape = floorShape });
         root.AddChild(character); root.AddChild(platform);
         using var tree = new SceneTree(root);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         character.ApplyFloorSnap();
         Check(character.IsOnFloor() && character.GlobalPosition.Y is > 79 and < 82,
             "A forced floor snap moves a nearby character down and stores floor state.");
         platform.Position = new(10, 100);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         character.Velocity = Vector2.Zero;
         character.MoveAndSlide();
         Check(character.GlobalPosition.X is > 8 and < 12 && character.IsOnFloor() &&
@@ -160,7 +160,7 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
             "A grounded character follows a moving kinematic platform's point velocity.");
         character.PlatformFloorLayers = 0;
         platform.Position = new(20, 100);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         var before = character.GlobalPosition.X;
         character.MoveAndSlide();
         Check(MathF.Abs(character.GlobalPosition.X - before) < 1,
@@ -243,7 +243,7 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
         floor.AddChild(new CollisionShape { Shape = floorShape });
         root.AddChild(character); root.AddChild(floor);
         using var tree = new SceneTree(root);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         using var point = new PhysicsPointQueryParameters
         {
             Position = character.GlobalPosition,
@@ -290,10 +290,10 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
         platform.AddChild(new CollisionShape { Shape = floorShape });
         root.AddChild(character); root.AddChild(platform);
         using var tree = new SceneTree(root);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         character.ApplyFloorSnap();
         platform.Position += platformShift;
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         character.Velocity = platformShift.Y > 0 ? new(0, -1200) : new(0, -600);
         character.MoveAndSlide();
         character.MoveAndSlide();
@@ -326,7 +326,7 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
         wall.AddChild(new CollisionShape { Shape = wallShape });
         root.AddChild(character); root.AddChild(wall);
         using var tree = new SceneTree(root);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         character.MoveAndSlide();
         return (character.GlobalPosition.Y, character.GetSlideCollisionCount());
     }
@@ -365,7 +365,7 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
         floor.AddChild(new CollisionShape { Shape = slope });
         root.AddChild(character); root.AddChild(floor);
         using var tree = new SceneTree(root);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         character.ApplyFloorSnap();
         character.MoveAndSlide();
         return (character.GlobalPosition.X, character.GlobalPosition.Y, character.IsOnFloor());
@@ -393,7 +393,7 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
         wall.AddChild(new CollisionShape { Shape = wallShape });
         root.AddChild(character); root.AddChild(wall);
         using var tree = new SceneTree(root);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         character.MoveAndSlide();
         Check(character.IsOnFloor() && character.GetFloorNormal().X > 0.9f,
             "A rightward up direction treats the left wall as a floor.");
@@ -416,7 +416,7 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
         floor.AddChild(new CollisionShape { Shape = slope });
         root.AddChild(character); root.AddChild(floor);
         using var tree = new SceneTree(root);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         character.MoveAndSlide();
         return (character.IsOnFloor(), character.IsOnWall());
     }
@@ -451,10 +451,10 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
         wall.AddChild(new CollisionShape { Shape = wallShape });
         root.AddChild(character); root.AddChild(wall);
         using var tree = new SceneTree(root);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         character.MoveAndSlide();
         wall.Position = new(100, 10);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         character.Velocity = Vector2.Zero;
         character.MoveAndSlide();
         return character.GlobalPosition.Y;
@@ -477,12 +477,12 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
         area.AddChild(new CollisionShape { Shape = fieldShape });
         root.AddChild(character); root.AddChild(area);
         using var tree = new SceneTree(root);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         Check(character.GetGravity().X is > 399 and < 401 &&
               MathF.Abs(character.GetGravity().Y) < 1,
             "The inherited gravity query applies a prioritized Area field to a CharacterBody.");
         area.GravitySpaceOverride = Area.SpaceOverride.Disabled;
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         Check(character.GetGravity().Y is > 979 and < 981,
             "Disabling the field restores the sampled world gravity for a character.");
     }
@@ -523,7 +523,7 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
         wall.AddChild(new CollisionShape { Shape = wallShape });
         root.AddChild(character); root.AddChild(floor); root.AddChild(wall);
         using var tree = new SceneTree(root);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         character.ApplyFloorSnap();
         character.MoveAndSlide();
         return (character.IsOnFloor(), character.GetLastMotion());
@@ -549,7 +549,7 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
         wall.AddChild(new CollisionShape { Shape = wallShape });
         root.AddChild(character); root.AddChild(floor); root.AddChild(wall);
         using var tree = new SceneTree(root);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         character.MoveAndSlide();
         return character.GetSlideCollisionCount();
     }
@@ -584,7 +584,7 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
         ceiling.AddChild(new CollisionShape { Shape = ceilingShape });
         root.AddChild(character); root.AddChild(ceiling);
         using var tree = new SceneTree(root);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         character.MoveAndSlide();
         return (character.IsOnCeiling(), character.Velocity);
     }
@@ -597,11 +597,15 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
         character.AddChild(new CollisionShape { Shape = circle });
         root.AddChild(character);
         using var tree = new SceneTree(root);
-        Check(!character.MoveAndSlide() && character.GlobalPosition.X is > 0.9f and < 1.1f &&
+        Check(!character.MoveAndSlide() && character.GlobalPosition == Vector2.Zero &&
               character.GetSlideCollisionCount() == 0 && character.GetLastSlideCollision() is null &&
+              character.GetRealVelocity() == Vector2.Zero,
+            "Before the first frame a free character has no lane duration or guessed travel.");
+        tree.ProcessFrame(1d / 60);
+        Check(!character.MoveAndSlide() && character.GlobalPosition.X is > 0.9f and < 1.1f &&
               MathF.Abs(character.GetRealVelocity().X - 60) < 1,
-            "Before the first frame a free character uses the initial fixed delta and returns no contact.");
-        tree.PhysicsFrame(1d / 60);
+            "An external call uses the explicitly supplied process duration.");
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         character.ApplyFloorSnap();
         Check(!character.IsOnFloor(), "Floor snap is inert when no floor is reachable.");
         Reject<InvalidOperationException>(() => Task.Run(character.MoveAndSlide).GetAwaiter().GetResult());

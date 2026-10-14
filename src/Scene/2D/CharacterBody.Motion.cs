@@ -7,6 +7,7 @@ public partial class CharacterBody
 
     /// <summary>Moves the body by Velocity over the current frame, sliding and classifying contacts.</summary>
     /// <returns>True when this movement recorded at least one body contact.</returns>
+    /// <remarks>Uses the attached tree's physical duration during a physics frame and its process duration otherwise, independent of this body's callback enablement. Zero duration contributes no velocity travel.</remarks>
     /// <exception cref="InvalidOperationException">The body is detached or is called off the scene owner thread.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Velocity times frame delta exceeds the finite physics range.</exception>
     public bool MoveAndSlide()
@@ -294,8 +295,6 @@ public partial class CharacterBody
     {
         var tree = Tree!;
         var delta = tree.IsInPhysicsFrame ? PhysicsProcessDeltaTime : ProcessDeltaTime;
-        if (delta == 0) delta = PhysicsProcessDeltaTime;
-        if (delta == 0 && tree.PhysicsFrameCount == 0) delta = 1d / 60d;
         return (float)delta;
     }
 
