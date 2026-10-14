@@ -1,6 +1,6 @@
 # NativeFontPrecision
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 - Declaration: `internal sealed unsafe partial class NativeFontPrecision : IDisposable`
 - Sources: [NativeFontPrecision.cs](../../src/Servers/Text/NativeFontPrecision.cs), [NativeFontPrecision.Raster.cs](../../src/Servers/Text/NativeFontPrecision.Raster.cs), [OpenTypeFeatureTags.cs](../../src/Servers/Text/OpenTypeFeatureTags.cs)
@@ -79,3 +79,7 @@ Rasterize accepts internal monochrome bitmap bypass and forced-autohinter argume
 The primary realized face supplies OpenType metadata through `GetSupportedFeatureList()` and `GetOTNameStrings()`. The feature snapshot contains numeric tags and typed optional labels, boolean/integer selection and hidden flags. GSUB is read before GPOS, whose duplicate descriptions win. Name strings are copied by native language spelling and standard role; unknown IDs retain `unknown_N` keys. These cold snapshots allocate independently and omit fallback metadata or authored family overrides. Feature labels retain the tool locale sampled during native realization; source replacement or cache retirement rebuilds metadata.
 
 Localized name capture is lazy, runs on the existing serialized FontThread operation slot, publishes only a completed map and enforces a 64 MiB expanded-text boundary. Required feature descriptions are captured with the native face.
+
+## MSDF integration
+
+`RasterizeMSDF(uint glyph, FontHinting hinting, int pixelRange, bool forceAutohinter)` requires the captured owner and a scalable outline face. It decomposes public FreeType outlines using bounded linear/quadratic/cubic edge records, copies the private native generator result and releases both callback handle and native bytes on success/failure. Source size is selected with SetSize. Range/image-budget failures cannot publish a partial image. FontMSDFTests compares 216 exact native oracle cases, including cubic CFF and native variation transforms.

@@ -3,6 +3,7 @@ using Electron2D;
 
 internal static class FontTestFixtures
 {
+    internal static readonly byte[] MSDF = Read(typeof(FontTestFixtures).Assembly, "TestFonts.MSDFTest.otf");
     internal static readonly byte[] Metadata = Read(typeof(FontTestFixtures).Assembly, "TestFonts.MetadataTest.ttf");
     internal static readonly byte[] MetadataBudget = Read(typeof(FontTestFixtures).Assembly, "TestFonts.MetadataBudgetTest.ttf");
     internal static readonly byte[] MetadataDuplicate = Read(typeof(FontTestFixtures).Assembly, "TestFonts.MetadataDuplicateTest.ttf");

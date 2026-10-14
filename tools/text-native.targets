@@ -25,7 +25,7 @@
     <_Electron2DTextNativeToolchainArg Condition="'$(Electron2DTextNativeToolchain)' != ''">-DCMAKE_TOOLCHAIN_FILE=&quot;$(Electron2DTextNativeToolchain)&quot;</_Electron2DTextNativeToolchainArg>
   </PropertyGroup>
   <ItemGroup>
-    <_Electron2DTextNativeInput Include="$(MSBuildThisFileDirectory)../src/Vendor/ICU/**/*.cpp;$(MSBuildThisFileDirectory)../src/Vendor/ICU/**/*.h;$(MSBuildThisFileDirectory)../src/Vendor/ICU/manifest.json;$(MSBuildThisFileDirectory)../src/Servers/Text/Native/*;$(MSBuildThisFileDirectory)native-package.props;$(MSBuildThisFileFullPath)" />
+    <_Electron2DTextNativeInput Include="$(MSBuildThisFileDirectory)../src/Vendor/ICU/**/*.cpp;$(MSBuildThisFileDirectory)../src/Vendor/ICU/**/*.h;$(MSBuildThisFileDirectory)../src/Vendor/ICU/manifest.json;$(MSBuildThisFileDirectory)../src/Vendor/MSDFGen/**/*;$(MSBuildThisFileDirectory)../src/Servers/Text/Native/*;$(MSBuildThisFileDirectory)native-package.props;$(MSBuildThisFileFullPath)" />
     <None Include="$(_Electron2DTextNativeLibrary)" Condition="'$(Electron2DTextNativeEnabled)' == 'true'" Link="runtimes/$(Electron2DTextNativeRID)/native/$(_Electron2DTextNativeName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" PackagePath="runtimes/$(Electron2DTextNativeRID)/native/" Visible="false" />
   </ItemGroup>
   <Target Name="ValidateElectron2DTextNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DTextNativeEnabled)' == 'true'">
@@ -36,6 +36,7 @@
   </Target>
   <Target Name="BuildElectron2DTextNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" DependsOnTargets="ValidateElectron2DTextNative" Condition="'$(Electron2DTextNativeEnabled)' == 'true' and '$(Electron2DTextNativeLibrary)' == ''" Inputs="@(_Electron2DTextNativeInput);$(Electron2DTextNativeToolchain)" Outputs="$(_Electron2DTextNativeLibrary)">
     <MakeDir Directories="$(_Electron2DTextNativeBuild)" />
+    <Exec Command="$(Electron2DNativePython) -B &quot;$(MSBuildThisFileDirectory)coverage/check_msdf_sources.py&quot;" />
     <Exec Command="cmake -S &quot;$(_Electron2DTextNativeSource)&quot; -B &quot;$(_Electron2DTextNativeBuild)&quot; -G Ninja -DCMAKE_BUILD_TYPE=Release -DELECTRON2D_ICU_BUILD_TOOL=OFF -DELECTRON2D_TEXT_TARGET_ARCH=$(_Electron2DTextNativeArch) $(_Electron2DTextNativeToolchainArg)" />
     <Exec Command="cmake --build &quot;$(_Electron2DTextNativeBuild)&quot; --target Electron2DTextBreak --config Release --parallel $(Electron2DTextNativeJobs)" />
   </Target>

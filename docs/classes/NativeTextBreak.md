@@ -1,6 +1,6 @@
 # NativeTextBreak
 
-Last updated: 2026-10-05
+Last updated: 2026-10-14
 
 **Declaration:** `internal static unsafe partial class NativeTextBreak` · **Source:** [NativeTextBreak.cs](../../src/Servers/Text/NativeTextBreak.cs) · **Component:** [Text](../components/text.md)
 
@@ -27,3 +27,7 @@ The private library has its own identity and hides ICU symbols. It must not repl
 [NativeTextBreakTests](../../tests/Electron2D.Tests/NativeTextBreakTests.cs) checks dictionary boundaries, locale tailoring, scalar positions, bounded cache eviction, concurrent use and warmed allocations. Text-layout tests additionally verify that those boundaries affect actual wrapping and justification. A Unicode default-rule conformance result alone does not prove dictionary segmentation.
 
 Android's private `.so` and embedded ICU data are now connected to the SDK application bundle and resolver. The Android native host checks actual dictionary-driven wrapping; local x64/ARM64 runs passed. The remaining 32-bit execution and Apple/Web static-link gates are recorded in the platform matrix.
+
+## MSDF integration
+
+The existing private text library also contains the immutable MSDF core and its bounded generation/release exports. Break iterator initialization/data/lifetime remains independent of cold font generation. Native publish checks require the complete combined export closure and forbid global ICU imports.

@@ -9,5 +9,7 @@
         e2d_break_next;
         e2d_break_status;
         e2d_break_close;
+        e2d_font_msdf_generate;
+        e2d_font_msdf_free;
     local: *;
 };

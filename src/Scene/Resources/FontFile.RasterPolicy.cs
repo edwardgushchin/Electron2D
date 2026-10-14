@@ -4,11 +4,38 @@ public partial class FontFile
 {
     private static readonly PropertyDescriptor[] RasterProperties =
     [
+        new PropertyDescriptor<FontFile, bool>(nameof(MultichannelSignedDistanceField), f => f.MultichannelSignedDistanceField, (f, v) => f.MultichannelSignedDistanceField = v, _ => false, stored: true),
+        new PropertyDescriptor<FontFile, int>(nameof(MSDFPixelRange), f => f.MSDFPixelRange, (f, v) => f.MSDFPixelRange = v, _ => 16, stored: true),
+        new PropertyDescriptor<FontFile, int>(nameof(MSDFSize), f => f.MSDFSize, (f, v) => f.MSDFSize = v, _ => 48, stored: true),
         new PropertyDescriptor<FontFile, FontAntialiasing>(nameof(Antialiasing), f => f.Antialiasing, (f, v) => f.Antialiasing = v, _ => FontAntialiasing.Gray, stored: true),
         new PropertyDescriptor<FontFile, bool>(nameof(DisableEmbeddedBitmaps), f => f.DisableEmbeddedBitmaps, (f, v) => f.DisableEmbeddedBitmaps = v, _ => true, stored: true),
         new PropertyDescriptor<FontFile, bool>(nameof(ForceAutohinter), f => f.ForceAutohinter, (f, v) => f.ForceAutohinter = v, _ => false, stored: true),
         new PropertyDescriptor<FontFile, bool>(nameof(GenerateMIPMaps), f => f.GenerateMIPMaps, (f, v) => f.GenerateMIPMaps = v, _ => false, stored: true)
     ];
+    /// <summary>Gets or sets native multichannel signed distance generation.</summary>
+    /// <value>false initially. Values are stored preferences; generation requires positive bounded size and range.</value>
+    /// <remarks>Changes retire generated images after active readers, preserve authored entries and invalidate
+    /// dependent text and variations. MSDF shares source pixels across drawn sizes, ignores oversampling and
+    /// subpixel phases, and requires the GPU canvas profile. Data assignment preserves preferences;
+    /// file imports and ResetState restore defaults. Equal assignments are silent.</remarks>
+    /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
+    public bool MultichannelSignedDistanceField { get => Read(static d => d.MultichannelSignedDistanceField); set => SetRasterConfiguration(static d => d.MultichannelSignedDistanceField, static (d, v) => d.MultichannelSignedDistanceField = v, value); }
+    /// <summary>Gets or sets the distance range encoded into MSDF glyph pixels.</summary>
+    /// <value>16 initially. Values are stored preferences; generation requires positive bounded size and range.</value>
+    /// <remarks>Changes retire generated images after active readers, preserve authored entries and invalidate
+    /// dependent text and variations. MSDF shares source pixels across drawn sizes, ignores oversampling and
+    /// subpixel phases, and requires the GPU canvas profile. Data assignment preserves preferences;
+    /// file imports and ResetState restore defaults. Equal assignments are silent.</remarks>
+    /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
+    public int MSDFPixelRange { get => Read(static d => d.MSDFPixelRange); set => SetRasterConfiguration(static d => d.MSDFPixelRange, static (d, v) => d.MSDFPixelRange = v, value); }
+    /// <summary>Gets or sets the source size used for a shared MSDF glyph image.</summary>
+    /// <value>48 initially. Values are stored preferences; generation requires positive bounded size and range.</value>
+    /// <remarks>Changes retire generated images after active readers, preserve authored entries and invalidate
+    /// dependent text and variations. MSDF shares source pixels across drawn sizes, ignores oversampling and
+    /// subpixel phases, and requires the GPU canvas profile. Data assignment preserves preferences;
+    /// file imports and ResetState restore defaults. Equal assignments are silent.</remarks>
+    /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
+    public int MSDFSize { get => Read(static d => d.MSDFSize); set => SetRasterConfiguration(static d => d.MSDFSize, static (d, v) => d.MSDFSize = v, value); }
     /// <summary>Gets or sets native glyph coverage generation.</summary>
     /// <value>Gray initially. Unknown numeric values are retained and use grayscale rendering.</value>
     /// <remarks>Changes retire native glyph caches after active reads, preserve authored bitmap entries and invalidate

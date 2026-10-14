@@ -146,7 +146,7 @@ def configuration():
 
 def source_hash():
     files = set()
-    for directory in ("src/Vendor/ICU", "src/Vendor/FAudio", "src/Vendor/ENet",
+    for directory in ("src/Vendor/ICU", "src/Vendor/MSDFGen", "src/Vendor/FAudio", "src/Vendor/ENet",
                       "src/Vendor/FastLZ", "src/Vendor/meshoptimizer", "src/Servers/Text/Native",
                       "tools/audio-native", "tools/enet-native", "tools/mesh-native", "tools/font-native", "tools/native"):
         files.update(p for p in (ROOT / directory).rglob("*") if p.is_file()

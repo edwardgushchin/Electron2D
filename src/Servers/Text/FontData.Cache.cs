@@ -2,7 +2,7 @@ namespace Electron2D;
 
 internal sealed partial class FontData
 {
-    private FontCacheSize? SelectAuthored(int size, int outline = 0) => _bytes.Length > 0 ? Authored?.Sizes.GetValueOrDefault(new(size, outline)) : Authored?.Select(size, outline);
+    private FontCacheSize? SelectAuthored(int size, int outline = 0) => MultichannelSignedDistanceField ? Authored?.Sizes.GetValueOrDefault(CacheSize(new(size, outline))) : _bytes.Length > 0 ? Authored?.Sizes.GetValueOrDefault(new(size, outline)) : Authored?.Select(size, outline);
     internal Vector2 GetKerning(Vector2i pair, int size)
     {
         ValidateSize(size);
@@ -14,7 +14,7 @@ internal sealed partial class FontData
         }
     }
     internal FontCache? Authored { get; set; }
-    private float BitmapScale(int size) => _bytes.Length == 0 && Authored is { FixedSize: > 0 } cache ? cache.Factor(size) : 1;
+    private float BitmapScale(int size) => MultichannelSignedDistanceField ? MSDFScale(size) : _bytes.Length == 0 && Authored is { FixedSize: > 0 } cache ? cache.Factor(size) : 1;
     private FontMetrics AuthoredMetrics(int size, FontMetrics metrics)
     {
         if (SelectAuthored(size) is not { } cache) return metrics;
@@ -31,8 +31,8 @@ internal sealed partial class FontData
         if (SelectAuthored(size, outline) is not { } cache || !cache.Glyphs.TryGetValue(glyph, out var record) || !record.Authored) return false;
         var page = record.Page >= 0 && record.Page < cache.Pages.Count ? cache.Pages[record.Page] : null;
         var factor = BitmapScale(size) * cache.Scale;
-        var lcd = _bytes.Length > 0 && Antialiasing == FontAntialiasing.LCD && FontThread.LCDLayout != FontLCDSubpixelLayout.None;
-        result = new(page?.Texture(GenerateMIPMaps), record.Offset * factor, record.Size * factor, record.Colored, record.Region, lcd); return true;
+        var lcd = !MultichannelSignedDistanceField && _bytes.Length > 0 && Antialiasing == FontAntialiasing.LCD && FontThread.LCDLayout != FontLCDSubpixelLayout.None;
+        result = new(page?.Texture(GenerateMIPMaps), record.Offset * factor, record.Size * factor, record.Colored, record.Region, lcd, MultichannelSignedDistanceField ? MSDFPixelRange : 0, MSDFScale(size), MultichannelSignedDistanceField ? Math.Max(0, outline) : 0); return true;
     }
     private FontGlyph CacheRaster(uint glyph, Vector2i key, NativeRasterGlyph raster)
     {

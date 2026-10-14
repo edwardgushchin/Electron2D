@@ -23,6 +23,7 @@ Electron2D-authored code is licensed under the [MIT license](Electron2D-LICENSE.
 | Adapted CPU particle timing, emission and scalar/color simulation | MIT | [runtime adaptation notice](CanvasStyleGeometry-LICENSE.txt) |
 | Avalonia Unicode algorithms and generated Unicode 17 data | MIT, Apache-2.0 and retained component terms | [Avalonia MIT](UnicodeText-MIT.txt), [Apache-2.0](UnicodeText-Apache-2.0.txt), [Unicode](UnicodeText-Unicode.txt), [.NET](UnicodeText-DotNet.txt), [line breaking](UnicodeText-foliojs-linebreak.txt), [Unicode trie](UnicodeText-foliojs-unicode-trie.txt) |
 | meshoptimizer 1.1.1 attribute-aware structural simplification | MIT | [Meshoptimizer-LICENSE](Meshoptimizer-LICENSE.txt) |
+| msdfgen 1.13 core for native font distance generation | MIT | [MSDFGen license](MSDFGen-LICENSE.txt) |
 | ICU 78.3 private text break runtime and dictionary data | Unicode-3.0 and retained ICU/component terms | [ICU and dictionary notices](ICUText-LICENSE.txt) |
 | Full Unicode uppercase data and locale casing rules | Unicode-3.0 and retained ICU terms | [Unicode and ICU notice](TextCase-LICENSE.txt) |
 | Embedded Open Sans SemiBold font | SIL Open Font License 1.1 | [Open Sans](OpenSans.txt) |

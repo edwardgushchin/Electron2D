@@ -745,7 +745,7 @@ internal sealed partial class TextLayout
 
     internal static void DrawGlyph(CanvasItem canvas, FontGlyph glyph, Vector2 baseline, Color color, bool modulateColor = false, Rect2? clipRect = null)
     {
-        if (glyph.Colored && !glyph.LCD && !modulateColor) color = new Color(1, 1, 1, color.A);
+        if (glyph.Colored && !glyph.LCD && glyph.MSDFPixelRange == 0 && !modulateColor) color = new Color(1, 1, 1, color.A);
         if (glyph.Texture is not null && glyph.Size.X > 0 && glyph.Size.Y > 0)
         {
             var rect = new Rect2(baseline + glyph.Offset, glyph.Size);
@@ -755,9 +755,11 @@ internal sealed partial class TextLayout
                 var region = glyph.Region ?? new Rect2(Vector2.Zero, glyph.Texture.GetSize());
                 var scale = region.Size / glyph.Size;
                 var source = new Rect2(region.Position + (clipped.Position - rect.Position) * scale, clipped.Size * scale);
-                if (glyph.LCD) canvas.DrawLCDTextureRectRegion(glyph.Texture, clipped, source, color);
+                if (glyph.MSDFPixelRange > 0) canvas.DrawMSDFTextureRectRegion(glyph.Texture, clipped, source, color, glyph.MSDFOutline, glyph.MSDFPixelRange, glyph.MSDFScale);
+                else if (glyph.LCD) canvas.DrawLCDTextureRectRegion(glyph.Texture, clipped, source, color);
                 else canvas.DrawTextureRectRegion(glyph.Texture, clipped, source, color, clipUV: false);
             }
+            else if (glyph.MSDFPixelRange > 0) canvas.DrawMSDFTextureRectRegion(glyph.Texture, rect, glyph.Region ?? new Rect2(Vector2.Zero, glyph.Texture.GetSize()), color, glyph.MSDFOutline, glyph.MSDFPixelRange, glyph.MSDFScale);
             else if (glyph.LCD) canvas.DrawLCDTextureRectRegion(glyph.Texture, rect, glyph.Region ?? new Rect2(Vector2.Zero, glyph.Texture.GetSize()), color);
             else if (glyph.Region is { } region) canvas.DrawTextureRectRegion(glyph.Texture, rect, region, color, clipUV: false);
             else canvas.DrawTextureRect(glyph.Texture, rect, false, color);

@@ -53,7 +53,7 @@
     <EmbeddedResource Include="Fixtures/Audio/Phaser/reference.json" LogicalName="TestAudio.PhaserReference.json" />
     <EmbeddedResource Include="Fixtures/Tiles/*.json" LogicalName="TestTiles.%(Filename)%(Extension)" />
     <EmbeddedResource Include="Fixtures/Navigation/*.json" LogicalName="TestNavigation.%(Filename)%(Extension)" />
-    <EmbeddedResource Include="Fixtures/Fonts/*.woff2;Fixtures/Fonts/*.ttf;Fixtures/Fonts/*.ttc" LogicalName="TestFonts.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Fixtures/Fonts/*.woff2;Fixtures/Fonts/*.ttf;Fixtures/Fonts/*.ttc;Fixtures/Fonts/*.otf" LogicalName="TestFonts.%(Filename)%(Extension)" />
   </ItemGroup>
   <Import Project="../../tools/native-consumer.props" />
   <ItemGroup><Electron2DComputeShader Include="Shaders/LocalSpecialization.comp.glsl;Shaders/LocalSpecializationLayout.comp.glsl;Shaders/LocalPushCapacity.comp.glsl;Shaders/LocalPushOverCapacity.comp.glsl;Shaders/LocalPushGLSL.comp.glsl;Shaders/LocalPushHLSL.comp.hlsl;Shaders/LocalDepthGLSL.comp.glsl;Shaders/LocalDepthHLSL.comp.hlsl;Shaders/LocalCompute.comp.glsl;Shaders/LocalComputeHLSL.comp.hlsl;Shaders/IndirectArguments.comp.glsl;Shaders/DeviceArguments.comp.glsl;Shaders/LocalTextureInteger.comp.glsl;Shaders/LocalTextureModes.comp.glsl;Shaders/LocalTexture.comp.glsl;Shaders/LocalTextureHLSL.comp.hlsl" /></ItemGroup>

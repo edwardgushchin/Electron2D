@@ -4,6 +4,32 @@ public partial class SystemFont
 {
     private bool _disableEmbeddedBitmaps = true, _forceAutohinter, _generateMipmaps;
     private FontAntialiasing _antialiasing = FontAntialiasing.Gray;
+    private bool _msdf;
+    private int _msdfRange = 16, _msdfSize = 48;
+    /// <summary>Gets or sets native multichannel signed distance generation.</summary>
+    /// <value>false initially. Values are stored preferences; generation requires positive bounded size and range.</value>
+    /// <remarks>Changes retire generated images after active readers, preserve authored entries and invalidate
+    /// dependent text and variations. MSDF shares source pixels across drawn sizes, ignores oversampling and
+    /// subpixel phases, and requires the GPU canvas profile. Preference archives rematch the host;
+    /// ResetState restores defaults. Equal assignments are silent.</remarks>
+    /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
+    public bool MultichannelSignedDistanceField { get { lock (FontGate) { ThrowIfDisposed(); return _msdf; } } set => Set(ref _msdf, value); }
+    /// <summary>Gets or sets the distance range encoded into MSDF glyph pixels.</summary>
+    /// <value>16 initially. Values are stored preferences; generation requires positive bounded size and range.</value>
+    /// <remarks>Changes retire generated images after active readers, preserve authored entries and invalidate
+    /// dependent text and variations. MSDF shares source pixels across drawn sizes, ignores oversampling and
+    /// subpixel phases, and requires the GPU canvas profile. Preference archives rematch the host;
+    /// ResetState restores defaults. Equal assignments are silent.</remarks>
+    /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
+    public int MSDFPixelRange { get { lock (FontGate) { ThrowIfDisposed(); return _msdfRange; } } set => Set(ref _msdfRange, value); }
+    /// <summary>Gets or sets the source size used for a shared MSDF glyph image.</summary>
+    /// <value>48 initially. Values are stored preferences; generation requires positive bounded size and range.</value>
+    /// <remarks>Changes retire generated images after active readers, preserve authored entries and invalidate
+    /// dependent text and variations. MSDF shares source pixels across drawn sizes, ignores oversampling and
+    /// subpixel phases, and requires the GPU canvas profile. Preference archives rematch the host;
+    /// ResetState restores defaults. Equal assignments are silent.</remarks>
+    /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
+    public int MSDFSize { get { lock (FontGate) { ThrowIfDisposed(); return _msdfSize; } } set => Set(ref _msdfSize, value); }
     /// <summary>Gets or sets coverage generation for realized primary and automatic fallback font sources.</summary>
     /// <value>Gray initially. Unknown values are stored and use grayscale coverage.</value>
     /// <remarks>Changes invalidate realized faces, dependent text and variations after active readers.
@@ -27,6 +53,9 @@ public partial class SystemFont
     public bool GenerateMIPMaps { get { lock (FontGate) { ThrowIfDisposed(); return _generateMipmaps; } } set => Set(ref _generateMipmaps, value); }
     private static readonly PropertyDescriptor[] RasterProperties =
     [
+        new PropertyDescriptor<SystemFont, bool>(nameof(MultichannelSignedDistanceField), f => f.MultichannelSignedDistanceField, (f, v) => f.MultichannelSignedDistanceField = v, _ => false, stored: true),
+        new PropertyDescriptor<SystemFont, int>(nameof(MSDFPixelRange), f => f.MSDFPixelRange, (f, v) => f.MSDFPixelRange = v, _ => 16, stored: true),
+        new PropertyDescriptor<SystemFont, int>(nameof(MSDFSize), f => f.MSDFSize, (f, v) => f.MSDFSize = v, _ => 48, stored: true),
         new PropertyDescriptor<SystemFont, FontAntialiasing>(nameof(Antialiasing), f => f.Antialiasing, (f, v) => f.Antialiasing = v, _ => FontAntialiasing.Gray, stored: true),
         new PropertyDescriptor<SystemFont, bool>(nameof(DisableEmbeddedBitmaps), f => f.DisableEmbeddedBitmaps, (f, v) => f.DisableEmbeddedBitmaps = v, _ => true, stored: true),
         new PropertyDescriptor<SystemFont, bool>(nameof(ForceAutohinter), f => f.ForceAutohinter, (f, v) => f.ForceAutohinter = v, _ => false, stored: true),

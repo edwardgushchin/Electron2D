@@ -38,6 +38,9 @@ label.AddThemeFontOverride("font", font);
 | Signature | Contract |
 | --- | --- |
 | `public class Electron2D.SystemFont` | Owned source resource over installed matching. |
+| `public bool MultichannelSignedDistanceField { get; set; }` | False; native or explicitly authored distance glyphs. |
+| `public int MSDFSize { get; set; }` | 48; canonical source resolution. |
+| `public int MSDFPixelRange { get; set; }` | 16; encoded distance interval. |
 | `public SystemFont()` | See member description. |
 | `protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)` | See member description. |
 | `protected override Electron2D.Resource CreateDuplicateInstance()` | See member description. |
@@ -147,7 +150,7 @@ Auto initially. Existing half/quarter/threshold policy controls raster phases; u
 
 [SystemFontTests](../../tests/Electron2D.Tests/SystemFontTests.cs) exercises host matching, independent variable/collection/empty Fontconfig child catalogs, logical face/default coordinate mapping, explicit override precedence, active fallback retirement, theme replacement, copied preferences, resource duplication/fresh process and prepared measurement. Native canvas/Label/RichTextLabel and automatic Arabic fallback produce verified pixels and zero managed bytes over 64 prepared intervals on current Linux GPU/compatibility.
 
-CoreText/DirectWrite providers, extra antialiasing/embedded-bitmap/autohinter/mipmap and MSDF policies remain exact [coverage](../coverage/classes/SystemFont.md) dependencies. Native allocator counts, foreign/device/editor and owner acceptance remain unverified. Unsupported provider profiles use the documented theme behavior; they do not claim native installed discovery. [ADR 0046](../decisions/rendering.md#adr-0046) and [ADR 0095](../decisions/singleton-services.md#adr-0095) own resource/native and retained static service boundaries.
+CoreText/DirectWrite providers and other missing service APIs remain exact [coverage](../coverage/classes/SystemFont.md) dependencies. Native allocator counts, foreign/device/editor and owner acceptance remain unverified. Unsupported provider profiles use the documented theme behavior; they do not claim native installed discovery. [ADR 0046](../decisions/rendering.md#adr-0046) and [ADR 0095](../decisions/singleton-services.md#adr-0095) own resource/native and retained static service boundaries.
 
 ## Native strike, autohinter and MIP policy
 
@@ -174,3 +177,32 @@ All three properties reject disposed resources. Equal assignments are silent. No
 Installed matching and unresolved theme realization apply the preferences to independent owned sources. Changes retire realized data after active reads and invalidate dependent variations. Duplication/archives preserve requested preferences; loading rematches the current host. ResetState restores defaults.
 
 The primary realized face supplies OpenType metadata through `GetSupportedFeatureList()` and `GetOTNameStrings()`. The feature snapshot contains numeric tags and typed optional labels, boolean/integer selection and hidden flags. GSUB is read before GPOS, whose duplicate descriptions win. Name strings are copied by native language spelling and standard role; unknown IDs retain `unknown_N` keys. These cold snapshots allocate independently and omit fallback metadata or authored family overrides. Feature labels retain the tool locale sampled during native realization; source replacement or cache retirement rebuilds metadata.
+
+## MSDF property descriptions
+
+### MultichannelSignedDistanceField
+
+`public bool MultichannelSignedDistanceField { get; set; }` defaults to false. True generates native multichannel signed distances with true distance in alpha, then draws them through the shared GPU canvas. One source image serves different drawn sizes and shader outlines. Oversampling and subpixel phase preferences remain stored but do not alter this mode. Native generation requires a scalable outline face; caller-authored canonical pages can explicitly contain encoded distances. Owned color or non-scalable automatic fallbacks retain ordinary image sampling. Compatibility rejects actual MSDF glyph submission and cleans up the host.
+
+### MSDFSize
+
+`public int MSDFSize { get; set; }` defaults to 48 and chooses the canonical source pixel size. Realized source images normalize to this size and zero outline; FontFile exposes the associated indexed source-pixel API. Drawing multiplies size and baseline bearings by drawn size divided by MSDFSize. Authored ascent, descent, underline metrics, advances, kerning and cache scale project their canonical values to the requested size.
+
+### MSDFPixelRange
+
+`public int MSDFPixelRange { get; set; }` defaults to 16 and supplies the encoded distance interval to both generation and sampling. Select sufficient range for the desired outline within the source rectangle. Integer values remain stored preferences; source size/range outside 1..16384 fail when canonical cache/generation is used, and oversized generated images fail before publication under the 64 MiB image-byte budget.
+
+All three properties use the existing committed publication and reader retirement contract, preserve authored entries, propagate to configured variations and owned native sources, and invalidate dependent text. Equal assignments are silent; disposed resources reject access. Duplicate/archive/reset preserve requested preferences and rematch fresh native ownership. Borrowed fallback resources retain their independent preferences.
+
+```csharp
+using var font = new SystemFont
+{
+    FontNames = ["sans-serif"],
+    MultichannelSignedDistanceField = true,
+    MSDFSize = 48,
+    MSDFPixelRange = 16
+};
+// Borrow font through LabelSettings or the canvas Font drawing API on the GPU profile.
+```
+
+FontMSDFTests verifies publication, geometry, canonical caches, active source snapshots, configured and variable variants, authored distance pages, mipmaps, actual isolated color fallback, storage and native failure boundaries. The independent stock FreeType/msdfgen oracle compares 216 exact images/bounds, including quadratic and cubic outlines, hinting, range, size, emboldening and shear. Linux Wayland pixel hosts exercise scalar/string/variation/outline/clip/Label consumers at three source resolutions, MSAA and Compatibility capability cleanup, with 64 active/64 idle zero-managed-byte prepared intervals. Native allocator totals, foreign execution and owner acceptance remain unverified.

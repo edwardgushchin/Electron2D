@@ -37,3 +37,7 @@ Localized name capture is lazy, runs on the existing serialized FontThread opera
 Retirement clears supported-feature and localized-name maps only after the final retained reader releases the source. Returned public snapshots remain independent of that cleanup.
 
 Antialiasing is copied into configured variants and owned automatic fallback sources. Native raster results publish actual LCD coverage flags into ordinary and packed glyph snapshots. Source replacement discards generated pages while preserving authored records and active old readers.
+
+## MSDF integration
+
+MSDF source settings propagate through owned variants and applicable automatic fallbacks. Canonical source/zero-outline images reuse residency across drawn sizes; returned value snapshots carry range, scale and outline metadata. Authored metrics project to requested size, while unhinted shaping remains independent. Color/non-scalable owned fallbacks retain ordinary images.

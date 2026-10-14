@@ -28,6 +28,9 @@ Vector2 size = font.GetStringSize("Hello", fontSize: 20);
 
 | Signature | Contract/default |
 | --- | --- |
+| `public bool MultichannelSignedDistanceField { get; set; }` | False; native or explicitly authored distance glyphs. |
+| `public int MSDFSize { get; set; }` | 48; canonical source resolution. |
+| `public int MSDFPixelRange { get; set; }` | 16; encoded distance interval. |
 | `public FontFile()` | Empty bytes, no native initialization. |
 | `public byte[] Data { get; set; }` | Copied array; empty initially; maximum 64 MiB. |
 | `public string FontName { get; set; }` | Intrinsic family name after loading, empty initially; silent descriptive override. |
@@ -42,7 +45,7 @@ Vector2 size = font.GetStringSize("Hello", fontSize: 20);
 | `public bool ModulateColorGlyphs { get; set; }` | False; controls requested RGB modulation of intrinsic-color glyphs. |
 | `public Dictionary<string, int> OpenTypeFeatureOverrides { get; set; }` | Independent dictionary snapshot, initially empty. |
 | `public void LoadDynamicFont(string path)` | Validates a new face before committing bytes and reset settings. |
-| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Inherited properties plus all fifteen typed stored properties and the internal cache snapshot. |
+| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Inherited properties plus the complete typed stored source/raster properties and the internal cache snapshot. |
 | `protected override Resource CreateDuplicateInstance()` | Creates an exact FontFile; unhandled derived factories are rejected. |
 | `protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)` | Copies bytes, configuration, metadata and fallback graph policy. |
 | `protected override void OnResetState()` | Clears source/native state and resets raster settings; preserves features/fallbacks. |
@@ -77,7 +80,7 @@ Nonnegative integer values are passed to HarfBuzz; zero disables a boolean featu
 ## Copying, storage and verification
 
 <a id="getpropertydescriptors"></a><a id="createduplicateinstance"></a><a id="copycustomstateto"></a><a id="onresetstate"></a><a id="dispose"></a>
-All fifteen scalar/source properties plus the internal typed cache snapshot have typed stored descriptors. Data precedes metadata/settings during restoration. The positioning revert value is the constructor default Auto. Copies own independent native caches and byte views; feature dictionaries are independent, while fallbacks follow Resource's shallow/deep graph policy and preserve repeated aliases. ResetState clears bytes/native state and applies file-load reset settings without discarding fallbacks/features. Disposal releases owned data and does not dispose borrowed fallback resources.
+All scalar/source/raster properties plus the internal typed cache snapshot have typed stored descriptors. Data precedes metadata/settings during restoration. The positioning revert value is the constructor default Auto. Copies own independent native caches and byte views; feature dictionaries are independent, while fallbacks follow Resource's shallow/deep graph policy and preserve repeated aliases. ResetState clears bytes/native state and applies file-load reset settings without discarding fallbacks/features. Disposal releases owned data and does not dispose borrowed fallback resources.
 
 [FontFileTests](../../tests/Electron2D.Tests/FontFileTests.cs) passes defaults, readable/raw feature equivalence, native glyph effects, negative-feature omission, deferred realization, data/file rollback, 64 MiB limits, metadata, callback ordering/failures, exact copies, graph aliases and typed descriptors. Sixty-four measured scalar configuration cycles after sixty-four warmup cycles allocate zero managed bytes. [NativeFontPrecisionTests](../../tests/Electron2D.Tests/NativeFontPrecisionTests.cs) adds exact metric and raster oracles. These focused results are Linux x64 checks; they do not establish other native platforms, all font/color formats or owner visual acceptance.
 
@@ -569,3 +572,32 @@ All three properties reject disposed resources. Equal assignments are silent. No
 Data assignment preserves policy; LoadDynamicFont, LoadBitmapFont and ResetState restore defaults. Deferred built-in fonts retain lazy native initialization. Policy publication clones configured/indexed snapshots, discards generated glyph records/pages and preserves authored image ownership. Native packing uses separate pages when authored content is present.
 
 The primary realized face supplies OpenType metadata through `GetSupportedFeatureList()` and `GetOTNameStrings()`. The feature snapshot contains numeric tags and typed optional labels, boolean/integer selection and hidden flags. GSUB is read before GPOS, whose duplicate descriptions win. Name strings are copied by native language spelling and standard role; unknown IDs retain `unknown_N` keys. These cold snapshots allocate independently and omit fallback metadata or authored family overrides. Feature labels retain the tool locale sampled during native realization; source replacement or cache retirement rebuilds metadata.
+
+## MSDF property descriptions
+
+### MultichannelSignedDistanceField
+
+`public bool MultichannelSignedDistanceField { get; set; }` defaults to false. True generates native multichannel signed distances with true distance in alpha, then draws them through the shared GPU canvas. One source image serves different drawn sizes and shader outlines. Oversampling and subpixel phase preferences remain stored but do not alter this mode. Native generation requires a scalable outline face; caller-authored canonical pages can explicitly contain encoded distances. Owned color or non-scalable automatic fallbacks retain ordinary image sampling. Compatibility rejects actual MSDF glyph submission and cleans up the host.
+
+### MSDFSize
+
+`public int MSDFSize { get; set; }` defaults to 48 and chooses the canonical source pixel size. Image/glyph cache operations normalize to this size and zero outline; indexed geometry remains in source pixels. Drawing multiplies size and baseline bearings by drawn size divided by MSDFSize. Authored ascent, descent, underline metrics, advances, kerning and cache scale project their canonical values to the requested size.
+
+### MSDFPixelRange
+
+`public int MSDFPixelRange { get; set; }` defaults to 16 and supplies the encoded distance interval to both generation and sampling. Select sufficient range for the desired outline within the source rectangle. Integer values remain stored preferences; source size/range outside 1..16384 fail when canonical cache/generation is used, and oversized generated images fail before publication under the 64 MiB image-byte budget.
+
+All three properties use the existing committed publication and reader retirement contract, preserve authored entries, propagate to configured variations and owned native sources, and invalidate dependent text. Equal assignments are silent; disposed resources reject access. Duplicate/archive/reset follow their ordinary resource contracts.
+
+```csharp
+using var font = new FontFile
+{
+    Data = File.ReadAllBytes("ui.woff2"),
+    MultichannelSignedDistanceField = true,
+    MSDFSize = 48,
+    MSDFPixelRange = 16
+};
+// Borrow font through LabelSettings or the canvas Font drawing API on the GPU profile.
+```
+
+FontMSDFTests verifies publication, geometry, canonical caches, active source snapshots, configured and variable variants, authored distance pages, mipmaps, actual isolated color fallback, storage and native failure boundaries. The independent stock FreeType/msdfgen oracle compares 216 exact images/bounds, including quadratic and cubic outlines, hinting, range, size, emboldening and shear. Linux Wayland pixel hosts exercise scalar/string/variation/outline/clip/Label consumers at three source resolutions, MSAA and Compatibility capability cleanup, with 64 active/64 idle zero-managed-byte prepared intervals. Native allocator totals, foreign execution and owner acceptance remain unverified.

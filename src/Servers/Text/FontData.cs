@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Electron2D;
 
 internal readonly record struct FontMetrics(float Ascent, float Descent, float Height, float UnderlinePosition, float UnderlineThickness);
-internal readonly record struct FontGlyph(Texture? Texture, Vector2 Offset, Vector2 Size, bool Colored = false, Rect2? Region = null, bool LCD = false);
+internal readonly record struct FontGlyph(Texture? Texture, Vector2 Offset, Vector2 Size, bool Colored = false, Rect2? Region = null, bool LCD = false, int MSDFPixelRange = 0, float MSDFScale = 1, int MSDFOutline = 0);
 
 // Immutable source bytes and portable glyph textures; mutable native state is confined to FontThread.
 internal sealed partial class FontData : IDisposable
@@ -45,7 +45,7 @@ internal sealed partial class FontData : IDisposable
 
     internal FontSupportPolicy SupportPolicy { get; set; } = FontSupportPolicy.Empty;
     internal HashSet<uint> SupportedScripts { get; private set; } = [];
-    private bool _colorFont;
+    private bool _colorFont, _scalableFont;
     internal int FallbackPriority(string language, uint script, bool emoji) { lock (_gate) { Check(); return emoji && _colorFont ? 0 : SupportPolicy.Priority(language, script, SupportedScripts); } }
     internal bool IsLanguageSupported(string language) { lock (_gate) { Check(); return SupportPolicy.SupportsLanguage(language); } }
     internal bool IsScriptSupported(string script) { lock (_gate) { Check(); return SupportPolicy.SupportsScript(script, SupportedScripts); } }
@@ -57,6 +57,9 @@ internal sealed partial class FontData : IDisposable
     internal int FontWeight { get; set; } = 400;
     internal int FontStretch { get; set; } = 100;
     internal FontStyle FontStyle { get; set; }
+    internal bool MultichannelSignedDistanceField { get; set; }
+    internal int MSDFPixelRange { get; set; } = 16;
+    internal int MSDFSize { get; set; } = 48;
     internal FontAntialiasing Antialiasing { get; set; } = FontAntialiasing.Gray;
     internal bool DisableEmbeddedBitmaps { get; set; } = true;
     internal bool ForceAutohinter { get; set; }
@@ -99,7 +102,7 @@ internal sealed partial class FontData : IDisposable
             var result = new FontData(_bytes, instance.FaceIndex, instance, cache);
             try
             {
-                result.Antialiasing = Antialiasing; result.Hinting = Hinting; result.SubpixelPositioning = SubpixelPositioning; result.KeepRoundingRemainders = KeepRoundingRemainders; result.Oversampling = Oversampling; result.ModulateColorGlyphs = ModulateColorGlyphs;
+                result.MultichannelSignedDistanceField = MultichannelSignedDistanceField; result.MSDFPixelRange = MSDFPixelRange; result.MSDFSize = MSDFSize; result.Antialiasing = Antialiasing; result.Hinting = Hinting; result.SubpixelPositioning = SubpixelPositioning; result.KeepRoundingRemainders = KeepRoundingRemainders; result.Oversampling = Oversampling; result.ModulateColorGlyphs = ModulateColorGlyphs;
                 result.DisableEmbeddedBitmaps = DisableEmbeddedBitmaps; result.ForceAutohinter = ForceAutohinter; result.GenerateMIPMaps = GenerateMIPMaps; result.SupportPolicy = SupportPolicy; result.OpenTypeFeatures = OpenTypeFeatures; result.AllowSystemFallback = AllowSystemFallback; result.AdvertisedFaceCount = AdvertisedFaceCount; return result;
             }
             catch { result.Dispose(); throw; }
@@ -182,6 +185,7 @@ internal sealed partial class FontData : IDisposable
         lock (_gate)
         {
             Check();
+            if (MultichannelSignedDistanceField) { rasterPosition = position; return GetMSDFGlyph(glyph, fontSize, outline); }
             if (TryAuthoredGlyph(glyph, fontSize, outline, out var authoredGlyph)) { rasterPosition = position; return authoredGlyph; }
             if (_bytes.Length == 0) { rasterPosition = position; return default; }
             var requested = oversampling > 0 ? oversampling : Oversampling > 0 ? Oversampling : automaticOversampling;
@@ -225,7 +229,7 @@ internal sealed partial class FontData : IDisposable
                 {
                     _precision = _bytes.Length > 0 ? new NativeFontPrecision(_bytes, _faceIndex) : new NativeFontPrecision(Authored!);
                     if (_instance != null && _bytes.Length > 0) _precision.ConfigureInstance(_instance);
-                    _colorFont = (_precision.FaceFlags & (1L << 14)) != 0; SupportedScripts = _precision.SupportedScripts; VariationAxes = _precision.VariationAxes; Palettes = _precision.Palettes; PaletteNames = _precision.PaletteNames;
+                    _colorFont = (_precision.FaceFlags & (1L << 14)) != 0; _scalableFont = (_precision.FaceFlags & 1) != 0; SupportedScripts = _precision.SupportedScripts; VariationAxes = _precision.VariationAxes; Palettes = _precision.Palettes; PaletteNames = _precision.PaletteNames;
                     SupportedFeatures = _precision.SupportedFeatures; NameStrings = _precision.NameStrings;
                     FamilyName = _precision.FamilyName; StyleName = _precision.StyleName; FaceCount = _precision.FaceCount; GlyphCount = _precision.GlyphCount; UnitsPerEm = _precision.UnitsPerEm;
                     FontStyle = (_precision.FaceStyleFlags & 2) != 0 ? FontStyle.Bold : 0;
@@ -285,14 +289,16 @@ internal sealed partial class FontData : IDisposable
     private FontGlyph RasterGlyph()
     {
         _precision!.SetSize(_size * _oversampling);
-        var raster = _precision.Rasterize(_glyph, Hinting, _phase, checked((int)(_outline * _oversampling) * 16), DisableEmbeddedBitmaps, ForceAutohinter, Antialiasing, FontThread.LCDLayout);
+        var raster = MultichannelSignedDistanceField
+            ? _precision.RasterizeMSDF(_glyph, Hinting, MSDFPixelRange, ForceAutohinter)
+            : _precision.Rasterize(_glyph, Hinting, _phase, checked((int)(_outline * _oversampling) * 16), DisableEmbeddedBitmaps, ForceAutohinter, Antialiasing, FontThread.LCDLayout);
         if (raster.Width == 0 || raster.Height == 0) return default;
-        if (Authored != null && _oversampling == 1 && _phase == 0) return CacheRaster(_glyph, new(_size, _outline), raster);
+        if (Authored != null && _oversampling == 1 && _phase == 0) return CacheRaster(_glyph, new(_size, _outline), raster) with { MSDFPixelRange = MultichannelSignedDistanceField ? MSDFPixelRange : 0 };
         using var image = Image.CreateFromData(raster.Width, raster.Height, false, Image.Format.Rgba8, raster.Pixels);
         if (GenerateMIPMaps) image.GenerateMIPMaps();
         var texture = ImageTexture.CreateFromImage(image); texture.RetainRendererCache = true;
         var result = new FontGlyph(texture, new Vector2(raster.Left, -raster.Top) / _oversampling,
-            new Vector2(raster.Width, raster.Height) / _oversampling, raster.Colored, LCD: raster.LCD);
+            new Vector2(raster.Width, raster.Height) / _oversampling, raster.Colored, LCD: raster.LCD, MSDFPixelRange: MultichannelSignedDistanceField ? MSDFPixelRange : 0);
         return result;
     }
     private static int Round26(double value) => checked((int)Math.Round(value, MidpointRounding.AwayFromZero) * 64);

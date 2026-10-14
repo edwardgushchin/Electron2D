@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Electron2D;
 
-internal readonly record struct NativeRasterGlyph(byte[] Pixels, int Width, int Height, int Left, int Top, bool Colored, bool LCD = false);
+internal readonly record struct NativeRasterGlyph(byte[] Pixels, int Width, int Height, float Left, float Top, bool Colored, bool LCD = false);
 
 internal sealed unsafe partial class NativeFontPrecision
 {

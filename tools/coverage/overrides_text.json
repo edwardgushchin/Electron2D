@@ -1,6 +1,36 @@
 {
   "mappings": [
     {
+      "godot": "SystemFont::property:multichannel_signed_distance_field",
+      "electron2d": "property:Electron2D.SystemFont.MultichannelSignedDistanceField()",
+      "reason": "ADR 0046: immutable native MSDF core executes configured scalable outlines through the retained text-native ABI, canonical source/zero-outline cache and common GPU canvas. Requested source size/range and mode are stored, copied/reset/imported and validated on use; source/range or 64 MiB image-budget failure publishes no pixels. Variants, actual variable outlines, authored encoded pages, mipmaps, active source snapshots, owned color/non-scalable fallback role and fresh-process resources are verified. 216 independent packaged FreeType/core images and bounds cover linear/quadratic/cubic outlines, hinting, size/range, emboldening and shear. Linux Wayland scalar/string/variation/outline/clip/Label pixels match explicit sampling at three source resolutions; GPU/MSAA prepared 64 active/64 idle intervals allocate zero managed bytes; Compatibility rejects actual MSDF submission with cleanup. Native ABI/source/license closure is checked; old native bundles, foreign execution, native allocator totals and owner acceptance remain separate."
+    },
+    {
+      "godot": "SystemFont::property:msdf_size",
+      "electron2d": "property:Electron2D.SystemFont.MSDFSize()",
+      "reason": "ADR 0046: immutable native MSDF core executes configured scalable outlines through the retained text-native ABI, canonical source/zero-outline cache and common GPU canvas. Requested source size/range and mode are stored, copied/reset/imported and validated on use; source/range or 64 MiB image-budget failure publishes no pixels. Variants, actual variable outlines, authored encoded pages, mipmaps, active source snapshots, owned color/non-scalable fallback role and fresh-process resources are verified. 216 independent packaged FreeType/core images and bounds cover linear/quadratic/cubic outlines, hinting, size/range, emboldening and shear. Linux Wayland scalar/string/variation/outline/clip/Label pixels match explicit sampling at three source resolutions; GPU/MSAA prepared 64 active/64 idle intervals allocate zero managed bytes; Compatibility rejects actual MSDF submission with cleanup. Native ABI/source/license closure is checked; old native bundles, foreign execution, native allocator totals and owner acceptance remain separate."
+    },
+    {
+      "godot": "SystemFont::property:msdf_pixel_range",
+      "electron2d": "property:Electron2D.SystemFont.MSDFPixelRange()",
+      "reason": "ADR 0046: immutable native MSDF core executes configured scalable outlines through the retained text-native ABI, canonical source/zero-outline cache and common GPU canvas. Requested source size/range and mode are stored, copied/reset/imported and validated on use; source/range or 64 MiB image-budget failure publishes no pixels. Variants, actual variable outlines, authored encoded pages, mipmaps, active source snapshots, owned color/non-scalable fallback role and fresh-process resources are verified. 216 independent packaged FreeType/core images and bounds cover linear/quadratic/cubic outlines, hinting, size/range, emboldening and shear. Linux Wayland scalar/string/variation/outline/clip/Label pixels match explicit sampling at three source resolutions; GPU/MSAA prepared 64 active/64 idle intervals allocate zero managed bytes; Compatibility rejects actual MSDF submission with cleanup. Native ABI/source/license closure is checked; old native bundles, foreign execution, native allocator totals and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontFile::property:multichannel_signed_distance_field",
+      "electron2d": "property:Electron2D.FontFile.MultichannelSignedDistanceField()",
+      "reason": "ADR 0046: immutable native MSDF core executes configured scalable outlines through the retained text-native ABI, canonical source/zero-outline cache and common GPU canvas. Requested source size/range and mode are stored, copied/reset/imported and validated on use; source/range or 64 MiB image-budget failure publishes no pixels. Variants, actual variable outlines, authored encoded pages, mipmaps, active source snapshots, owned color/non-scalable fallback role and fresh-process resources are verified. 216 independent packaged FreeType/core images and bounds cover linear/quadratic/cubic outlines, hinting, size/range, emboldening and shear. Linux Wayland scalar/string/variation/outline/clip/Label pixels match explicit sampling at three source resolutions; GPU/MSAA prepared 64 active/64 idle intervals allocate zero managed bytes; Compatibility rejects actual MSDF submission with cleanup. Native ABI/source/license closure is checked; old native bundles, foreign execution, native allocator totals and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontFile::property:msdf_size",
+      "electron2d": "property:Electron2D.FontFile.MSDFSize()",
+      "reason": "ADR 0046: immutable native MSDF core executes configured scalable outlines through the retained text-native ABI, canonical source/zero-outline cache and common GPU canvas. Requested source size/range and mode are stored, copied/reset/imported and validated on use; source/range or 64 MiB image-budget failure publishes no pixels. Variants, actual variable outlines, authored encoded pages, mipmaps, active source snapshots, owned color/non-scalable fallback role and fresh-process resources are verified. 216 independent packaged FreeType/core images and bounds cover linear/quadratic/cubic outlines, hinting, size/range, emboldening and shear. Linux Wayland scalar/string/variation/outline/clip/Label pixels match explicit sampling at three source resolutions; GPU/MSAA prepared 64 active/64 idle intervals allocate zero managed bytes; Compatibility rejects actual MSDF submission with cleanup. Native ABI/source/license closure is checked; old native bundles, foreign execution, native allocator totals and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontFile::property:msdf_pixel_range",
+      "electron2d": "property:Electron2D.FontFile.MSDFPixelRange()",
+      "reason": "ADR 0046: immutable native MSDF core executes configured scalable outlines through the retained text-native ABI, canonical source/zero-outline cache and common GPU canvas. Requested source size/range and mode are stored, copied/reset/imported and validated on use; source/range or 64 MiB image-budget failure publishes no pixels. Variants, actual variable outlines, authored encoded pages, mipmaps, active source snapshots, owned color/non-scalable fallback role and fresh-process resources are verified. 216 independent packaged FreeType/core images and bounds cover linear/quadratic/cubic outlines, hinting, size/range, emboldening and shear. Linux Wayland scalar/string/variation/outline/clip/Label pixels match explicit sampling at three source resolutions; GPU/MSAA prepared 64 active/64 idle intervals allocate zero managed bytes; Compatibility rejects actual MSDF submission with cleanup. Native ABI/source/license closure is checked; old native bundles, foreign execution, native allocator totals and owner acceptance remain separate."
+    },
+    {
       "godot": "FontFile::property:antialiasing",
       "electron2d": "property:Electron2D.FontFile.Antialiasing()",
       "reason": "ADRs 0046/0051: native Mono/Gray/LCD FreeType coverage executes for FontFile/SystemFont, configured variants and owned system fallbacks. Typed project None/horizontal/vertical RGB/BGR layout is captured at first text-owner startup, with restart metadata and a nonselectable Max. Generated caches retire after active readers; authored bitmap roles, callbacks, metrics, imports, duplicate and fresh-process storage are verified. GPU scalar/string/variation/Label/clip/outline pixels, all layouts and MSAA pass with 64 active/64 idle zero managed bytes; compatibility executes ordinary coverage and rejects actual component glyph submission. 60 independent packaged FreeType raster cases verify exact component bytes, phases/hinting/outline. Intrinsic-color/bitmap-only image roles remain explicit adaptations; MSDF/native allocator/foreign/owner acceptance remain separate."
@@ -4252,6 +4282,18 @@
     {
       "state": "Implemented",
       "godot": [
+        "FontFile::property:msdf_pixel_range",
+        "FontFile::property:msdf_size",
+        "FontFile::property:multichannel_signed_distance_field",
+        "SystemFont::property:msdf_pixel_range",
+        "SystemFont::property:msdf_size",
+        "SystemFont::property:multichannel_signed_distance_field"
+      ],
+      "reason": "ADR 0046: immutable native MSDF core executes configured scalable outlines through the retained text-native ABI, canonical source/zero-outline cache and common GPU canvas. Requested source size/range and mode are stored, copied/reset/imported and validated on use; source/range or 64 MiB image-budget failure publishes no pixels. Variants, actual variable outlines, authored encoded pages, mipmaps, active source snapshots, owned color/non-scalable fallback role and fresh-process resources are verified. 216 independent packaged FreeType/core images and bounds cover linear/quadratic/cubic outlines, hinting, size/range, emboldening and shear. Linux Wayland scalar/string/variation/outline/clip/Label pixels match explicit sampling at three source resolutions; GPU/MSAA prepared 64 active/64 idle intervals allocate zero managed bytes; Compatibility rejects actual MSDF submission with cleanup. Native ABI/source/license closure is checked; old native bundles, foreign execution, native allocator totals and owner acceptance remain separate."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
         "FontFile::property:antialiasing",
         "SystemFont::property:antialiasing",
         "TextServer::enum:FontAntialiasing",
@@ -4426,7 +4468,7 @@
     },
     {
       "state": "Partial",
-      "reason": "FontFile executes scalable/bitmap loading, indexed glyph/size/texture/kerning/instance authoring, language/script overrides, Linux automatic system fallback and real shared shaping/rendering/storage. Remaining applicable mechanisms: non-SFNT Type 1 sources, MSDF generation, plus foreign installed-font providers. Exact dependencies stay on their own rows; no inert settings are exposed.",
+      "reason": "FontFile executes scalable/bitmap loading, indexed glyph/size/texture/kerning/instance authoring, language/script overrides, Linux automatic system fallback and real shared shaping/rendering/storage. Remaining applicable mechanisms: non-SFNT Type 1 sources, foreign installed-font providers. Exact dependencies stay on their own rows; no inert settings are exposed.",
       "godot": [
         "class:FontFile"
       ]
@@ -4464,15 +4506,6 @@
       "reason": "ADR 0046: native monochrome strike bypass, forced FreeType autohinting and complete glyph/page MIP chains execute through FontFile/SystemFont, indexed caches, FontVariation and owned automatic fallback. FontRasterPolicyTests verifies exact mono/color strikes, an independent public FreeType raster oracle, active old readers, callbacks/concurrent publication, bounded mixed pages, legacy cache decoding and fresh-process policy storage. Native canvas/Label/rich/variation output runs on current GPU/compatibility; GPU MIP sampling is verified. Compatibility MIP filtering retains its existing explicit backend gate. Foreign execution/native allocation counts remain separate.",
       "godot": [
         "FontFile::property:generate_mipmaps"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Multichannel signed-distance-field generation, stored atlas pixels and the matching canvas sampling/material path are not implemented. Ordinary grayscale/color glyph rasterization does not satisfy MSDF settings.",
-      "godot": [
-        "FontFile::property:msdf_pixel_range",
-        "FontFile::property:msdf_size",
-        "FontFile::property:multichannel_signed_distance_field"
       ]
     },
     {
@@ -5353,7 +5386,7 @@
         "class:SystemFont"
       ],
       "state": "Partial",
-      "reason": "SystemFont resolves and owns Linux system faces, styles/variables, logical collection faces, common text consumers and typed storage; absent catalogs use a borrowed theme source. Exact remaining dependencies: CoreText and DirectWrite providers on their owning targets; MSDF generation from the FontFile foundation. No inert policies are exposed."
+      "reason": "SystemFont resolves and owns Linux system faces, styles/variables, logical collection faces, common text consumers and typed storage; absent catalogs use a borrowed theme source. Exact remaining dependencies: CoreText and DirectWrite providers on their owning targets. No inert policies are exposed."
     },
     {
       "godot": [
@@ -5375,27 +5408,6 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0046: native monochrome strike bypass, forced FreeType autohinting and complete glyph/page MIP chains execute through FontFile/SystemFont, indexed caches, FontVariation and owned automatic fallback. FontRasterPolicyTests verifies exact mono/color strikes, an independent public FreeType raster oracle, active old readers, callbacks/concurrent publication, bounded mixed pages, legacy cache decoding and fresh-process policy storage. Native canvas/Label/rich/variation output runs on current GPU/compatibility; GPU MIP sampling is verified. Compatibility MIP filtering retains its existing explicit backend gate. Foreign execution/native allocation counts remain separate."
-    },
-    {
-      "godot": [
-        "SystemFont::property:msdf_pixel_range"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: first executable FontFile native raster policy/MSDF slice must apply this same policy across SystemFont-owned primary/fallback faces, duplication/storage and both applicable canvas backend contracts. Platform discovery is implemented separately; no passive setting is exposed."
-    },
-    {
-      "godot": [
-        "SystemFont::property:msdf_size"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: first executable FontFile native raster policy/MSDF slice must apply this same policy across SystemFont-owned primary/fallback faces, duplication/storage and both applicable canvas backend contracts. Platform discovery is implemented separately; no passive setting is exposed."
-    },
-    {
-      "godot": [
-        "SystemFont::property:multichannel_signed_distance_field"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: first executable FontFile native raster policy/MSDF slice must apply this same policy across SystemFont-owned primary/fallback faces, duplication/storage and both applicable canvas backend contracts. Platform discovery is implemented separately; no passive setting is exposed."
     },
     {
       "godot": [

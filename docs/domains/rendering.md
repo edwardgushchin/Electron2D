@@ -303,3 +303,7 @@ The shared Viewport.MSAA enum, stored MSAA2D scene property, static server selec
 Retained canvas item interpolation now executes through scene physics boundaries, native hierarchy composition, typed reset/rebase and source policy publication. Shared history logic also preserves canonical light/occluder rebases. See [canvas interpolation](../components/canvas-rendering.md#retained-canvas-item-interpolation) for pixel, lifetime and warmed allocation evidence.
 
 Retained canvas items can copy screen snapshots independently of scene node type through the static server API. [Copy settings](../components/canvas-rendering.md#retained-backbuffer-copy-settings) documents source publication, backend execution and verification limits.
+
+## Native font distance generation
+
+[MSDF font generation](../components/text.md#native-msdf-font-generation) completes six FontFile/SystemFont source settings through the serialized native outline owner, canonical indexed image cache and common GPU text path. Current Linux Wayland pixel, source-oracle, managed lifetime and prepared allocation checks are exercised; Compatibility rejects actual encoded submissions. Native package ABI/source/license checks accompany the closure; old native bundles, foreign execution and native allocator totals remain separate.

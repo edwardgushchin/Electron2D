@@ -26,4 +26,13 @@
     <Copy SourceFiles="$(Electron2DENetNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerENetName)" />
     <Copy SourceFiles="$(Electron2DENetNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerENetName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
   </Target>
+  <Target Name="CopyElectron2DConsumerTextOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DTextNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS' or '$(Electron2DConsumerPlatform)' == 'Windows')">
+    <PropertyGroup>
+      <_Electron2DConsumerTextName>libElectron2DTextBreak.so</_Electron2DConsumerTextName>
+      <_Electron2DConsumerTextName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DTextBreak.dylib</_Electron2DConsumerTextName>
+      <_Electron2DConsumerTextName Condition="'$(Electron2DConsumerPlatform)' == 'Windows'">Electron2DTextBreak.dll</_Electron2DConsumerTextName>
+    </PropertyGroup>
+    <Copy SourceFiles="$(Electron2DTextNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerTextName)" />
+    <Copy SourceFiles="$(Electron2DTextNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerTextName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
+  </Target>
 </Project>

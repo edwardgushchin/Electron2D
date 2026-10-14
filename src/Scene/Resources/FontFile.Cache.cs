@@ -81,9 +81,10 @@ public partial class FontFile
     private static int PageKey(int index) { if ((uint)index >= 65536) throw new ArgumentOutOfRangeException(nameof(index)); return index; }
     private static FontCachePage? Page(FontCacheSize size, int index) => index < size.Pages.Count ? size.Pages[index] : null;
     private static void PutPage(FontCacheSize size, int index, FontCachePage? page) { while (size.Pages.Count <= index) size.Pages.Add(null); size.Pages[index] = page; }
-    private static void PutGlyph(FontCache cache, Vector2i size, uint glyph, Func<FontCacheGlyph, FontCacheGlyph> edit)
+    private FontCacheSize CacheSize(FontCache cache, Vector2i size) => cache.Size(_fontData!.CacheSize(size));
+    private void PutGlyph(FontCache cache, Vector2i size, uint glyph, Func<FontCacheGlyph, FontCacheGlyph> edit)
     {
-        var record = cache.Size(size); var value = record.Glyphs.GetValueOrDefault(glyph, new(default, default, default, -1)); record.Glyphs[glyph] = edit(value);
+        var record = CacheSize(cache, size); var value = record.Glyphs.GetValueOrDefault(glyph, new(default, default, default, -1)); record.Glyphs[glyph] = edit(value);
     }
     /// <summary>Returns number of the font cache entries.</summary>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
@@ -112,32 +113,32 @@ public partial class FontFile
     public void ClearSizeCache(int cacheIndex) => Edit(cacheIndex, static cache => cache.Sizes.Clear());
     /// <summary>Removes specified font size from the cache entry.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public void RemoveSizeCache(int cacheIndex, Vector2i size) { SizeKey(size); Edit(cacheIndex, cache => cache.Sizes.Remove(size)); }
+    public void RemoveSizeCache(int cacheIndex, Vector2i size) { SizeKey(size); Edit(cacheIndex, cache => cache.Sizes.Remove(_fontData!.CacheSize(size))); }
     /// <summary>Removes all rendered glyph information from the cache entry.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public void ClearGlyphs(int cacheIndex, Vector2i size) { SizeKey(size); Edit(cacheIndex, cache => { cache.Size(size).Glyphs.Clear(); if (size.Y == 0) cache.Size(size).Advances.Clear(); }); }
+    public void ClearGlyphs(int cacheIndex, Vector2i size) { SizeKey(size); Edit(cacheIndex, cache => { CacheSize(cache, size).Glyphs.Clear(); if (size.Y == 0) CacheSize(cache, size).Advances.Clear(); }); }
     /// <summary>Removes specified rendered glyph information from the cache entry.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="glyph">Nonnegative source glyph index.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public void RemoveGlyph(int cacheIndex, Vector2i size, int glyph) { SizeKey(size); var key = GlyphKey(glyph); Edit(cacheIndex, cache => { cache.Size(size).Glyphs.Remove(key); if (size.Y == 0) cache.Size(size).Advances.Remove(key); }); }
+    public void RemoveGlyph(int cacheIndex, Vector2i size, int glyph) { SizeKey(size); var key = GlyphKey(glyph); Edit(cacheIndex, cache => { CacheSize(cache, size).Glyphs.Remove(key); if (size.Y == 0) CacheSize(cache, size).Advances.Remove(key); }); }
     /// <summary>Returns list of rendered glyphs in the cache entry.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public int[] GetGlyphList(int cacheIndex, Vector2i size) { SizeKey(size); return Query(cacheIndex, (cache, _) => cache.Size(size).Glyphs.Keys.Select(glyph => checked((int)glyph)).ToArray()); }
+    public int[] GetGlyphList(int cacheIndex, Vector2i size) { SizeKey(size); return Query(cacheIndex, (cache, _) => CacheSize(cache, size).Glyphs.Keys.Select(glyph => checked((int)glyph)).ToArray()); }
     /// <summary>Returns the glyph index of a the character, optionally modified by the the variation selector.</summary>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="character">Valid Unicode scalar.</param>
     /// <param name="variationSelector">Zero or a valid Unicode variation selector.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
@@ -145,7 +146,7 @@ public partial class FontFile
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
     public int GetGlyphIndex(int size, int character, int variationSelector) { SizeKey(size); return Query(0, (_, data) => checked((int)data.GetGlyphIndex((uint)character, (uint)variationSelector))); }
     /// <summary>Returns character code associated with the glyph index, or [code]0[/code] if the glyph index is invalid.</summary>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="glyph">Nonnegative source glyph index.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
@@ -153,7 +154,7 @@ public partial class FontFile
     public int GetCharFromGlyphIndex(int size, int glyph) { SizeKey(size); var key = GlyphKey(glyph); return Query(0, (_, data) => data.CharacterFromGlyph(key)); }
     /// <summary>Returns glyph advance (offset of the next glyph).</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="glyph">Nonnegative source glyph index.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
@@ -161,22 +162,22 @@ public partial class FontFile
     public Vector2 GetGlyphAdvance(int cacheIndex, int size, int glyph) { SizeKey(size); var key = GlyphKey(glyph); return Query(cacheIndex, (_, data) => new Vector2(data.GetGlyphAdvance(key, size), data.GetGlyphAdvance(key, size, true))); }
     /// <summary>Sets glyph advance (offset of the next glyph).</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="glyph">Nonnegative source glyph index.</param>
     /// <param name="advance">Finite horizontal and vertical advances in pixels.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public void SetGlyphAdvance(int cacheIndex, int size, int glyph, Vector2 advance) { SizeKey(size); var key = GlyphKey(glyph); Finite(advance); Edit(cacheIndex, cache => cache.Size(new(size, 0)).Advances[key] = advance); }
+    public void SetGlyphAdvance(int cacheIndex, int size, int glyph, Vector2 advance) { SizeKey(size); var key = GlyphKey(glyph); Finite(advance); Edit(cacheIndex, cache => CacheSize(cache, new(size, 0)).Advances[key] = advance); }
     /// <summary>Renders specified glyph to the font cache texture.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="glyph">Nonnegative source glyph index.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
     public void RenderGlyph(int cacheIndex, Vector2i size, int glyph) { SizeKey(size); var key = GlyphKey(glyph); Query(cacheIndex, (_, data) => data.GetGlyph(key, size.X, size.Y, 1)); }
     /// <summary>Renders the range of characters to the font cache texture.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="start">Typed start value.</param>
     /// <param name="end">Typed end value.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
@@ -184,67 +185,67 @@ public partial class FontFile
     public void RenderRange(int cacheIndex, Vector2i size, int start, int end) { SizeKey(size); if (!System.Text.Rune.IsValid(start) || !System.Text.Rune.IsValid(end) || end < start || (long)end - start > 65536) throw new ArgumentOutOfRangeException(nameof(end)); Query(cacheIndex, (_, data) => { for (var scalar = start; scalar <= end; scalar++) if (System.Text.Rune.IsValid(scalar)) { var glyph = data.GetGlyphIndex((uint)scalar); if (glyph != 0) data.GetGlyph(glyph, size.X, size.Y, 1); } return 0; }); }
     /// <summary>Returns number of textures used by font cache entry.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public int GetTextureCount(int cacheIndex, Vector2i size) { SizeKey(size); return Query(cacheIndex, (cache, _) => cache.Size(size).Pages.Count); }
+    public int GetTextureCount(int cacheIndex, Vector2i size) { SizeKey(size); return Query(cacheIndex, (cache, _) => CacheSize(cache, size).Pages.Count); }
     /// <summary>Removes all textures from font cache entry.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public void ClearTextures(int cacheIndex, Vector2i size) { SizeKey(size); Edit(cacheIndex, cache => cache.Size(size).Pages.Clear()); }
+    public void ClearTextures(int cacheIndex, Vector2i size) { SizeKey(size); Edit(cacheIndex, cache => CacheSize(cache, size).Pages.Clear()); }
     /// <summary>Removes specified texture from the cache entry.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="textureIndex">Texture slot between zero and 65535.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public void RemoveTexture(int cacheIndex, Vector2i size, int textureIndex) { SizeKey(size); PageKey(textureIndex); Edit(cacheIndex, cache => { var pages = cache.Size(size).Pages; if (textureIndex >= pages.Count) throw new ArgumentOutOfRangeException(nameof(textureIndex)); pages.RemoveAt(textureIndex); }); }
+    public void RemoveTexture(int cacheIndex, Vector2i size, int textureIndex) { SizeKey(size); PageKey(textureIndex); Edit(cacheIndex, cache => { var pages = CacheSize(cache, size).Pages; if (textureIndex >= pages.Count) throw new ArgumentOutOfRangeException(nameof(textureIndex)); pages.RemoveAt(textureIndex); }); }
     /// <summary>Returns a copy of the font cache texture image.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="textureIndex">Texture slot between zero and 65535.</param>
     /// <returns>Independent caller-owned image copy, or null for an absent page.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public Image? GetTextureImage(int cacheIndex, Vector2i size, int textureIndex) { SizeKey(size); PageKey(textureIndex); return Query(cacheIndex, (cache, _) => Page(cache.Size(size), textureIndex)?.Image()); }
+    public Image? GetTextureImage(int cacheIndex, Vector2i size, int textureIndex) { SizeKey(size); PageKey(textureIndex); return Query(cacheIndex, (cache, _) => Page(CacheSize(cache, size), textureIndex)?.Image()); }
     /// <summary>Sets font cache texture image.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="textureIndex">Texture slot between zero and 65535.</param>
     /// <param name="image">Image copied immediately; ownership remains with the caller.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public void SetTextureImage(int cacheIndex, Vector2i size, int textureIndex, Image image) { SizeKey(size); PageKey(textureIndex); ArgumentNullException.ThrowIfNull(image); using var copy = (Image)image.Duplicate(); copy.Convert(Image.Format.Rgba8); var pixels = copy.GetData(); var width = copy.Width; var height = copy.Height; if (width <= 0 || width > 16384 || height <= 0 || height > 16384 || pixels.Length > MaximumFontBytes || copy.HasMIPMaps) throw new ArgumentException("A cache page must have nonempty base-level pixels.", nameof(image)); Edit(cacheIndex, cache => { var record = cache.Size(size); PutPage(record, textureIndex, new(width, height, pixels, Page(record, textureIndex)?.Offsets ?? [])); foreach (var key in record.Glyphs.Keys) if (record.Glyphs[key].Page == textureIndex) record.Glyphs[key] = record.Glyphs[key] with { Authored = true }; }); }
+    public void SetTextureImage(int cacheIndex, Vector2i size, int textureIndex, Image image) { SizeKey(size); PageKey(textureIndex); ArgumentNullException.ThrowIfNull(image); using var copy = (Image)image.Duplicate(); copy.Convert(Image.Format.Rgba8); var pixels = copy.GetData(); var width = copy.Width; var height = copy.Height; if (width <= 0 || width > 16384 || height <= 0 || height > 16384 || pixels.Length > MaximumFontBytes || copy.HasMIPMaps) throw new ArgumentException("A cache page must have nonempty base-level pixels.", nameof(image)); Edit(cacheIndex, cache => { var record = CacheSize(cache, size); PutPage(record, textureIndex, new(width, height, pixels, Page(record, textureIndex)?.Offsets ?? [])); foreach (var key in record.Glyphs.Keys) if (record.Glyphs[key].Page == textureIndex) record.Glyphs[key] = record.Glyphs[key] with { Authored = true }; }); }
     /// <summary>Returns a copy of the array containing glyph packing data.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="textureIndex">Texture slot between zero and 65535.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public int[] GetTextureOffsets(int cacheIndex, Vector2i size, int textureIndex) { SizeKey(size); PageKey(textureIndex); return Query(cacheIndex, (cache, _) => (int[])(Page(cache.Size(size), textureIndex)?.Offsets.Clone() ?? Array.Empty<int>())); }
+    public int[] GetTextureOffsets(int cacheIndex, Vector2i size, int textureIndex) { SizeKey(size); PageKey(textureIndex); return Query(cacheIndex, (cache, _) => (int[])(Page(CacheSize(cache, size), textureIndex)?.Offsets.Clone() ?? Array.Empty<int>())); }
     /// <summary>Sets array containing glyph packing data.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="textureIndex">Texture slot between zero and 65535.</param>
     /// <param name="offsets">Typed offsets value.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public void SetTextureOffsets(int cacheIndex, Vector2i size, int textureIndex, int[] offsets) { SizeKey(size); PageKey(textureIndex); ArgumentNullException.ThrowIfNull(offsets); var copy = (int[])offsets.Clone(); if (copy.Any(value => value < 0)) throw new ArgumentOutOfRangeException(nameof(offsets)); Edit(cacheIndex, cache => { var page = Page(cache.Size(size), textureIndex) ?? throw new ArgumentOutOfRangeException(nameof(textureIndex)); ValidateShelves(copy, page.Width, page.Height); page.Offsets = copy; page.AllowPacking = true; }); }
+    public void SetTextureOffsets(int cacheIndex, Vector2i size, int textureIndex, int[] offsets) { SizeKey(size); PageKey(textureIndex); ArgumentNullException.ThrowIfNull(offsets); var copy = (int[])offsets.Clone(); if (copy.Any(value => value < 0)) throw new ArgumentOutOfRangeException(nameof(offsets)); Edit(cacheIndex, cache => { var page = Page(CacheSize(cache, size), textureIndex) ?? throw new ArgumentOutOfRangeException(nameof(textureIndex)); ValidateShelves(copy, page.Width, page.Height); page.Offsets = copy; page.AllowPacking = true; }); }
     /// <summary>Returns glyph offset from the baseline.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="glyph">Nonnegative source glyph index.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public Vector2 GetGlyphOffset(int cacheIndex, Vector2i size, int glyph) { SizeKey(size); var key = GlyphKey(glyph); return Query(cacheIndex, (cache, data) => { data.GetGlyph(key, size.X, size.Y, 1); return cache.Size(size).Glyphs.GetValueOrDefault(key).Offset; }); }
+    public Vector2 GetGlyphOffset(int cacheIndex, Vector2i size, int glyph) { SizeKey(size); var key = GlyphKey(glyph); return Query(cacheIndex, (cache, data) => { data.GetGlyph(key, size.X, size.Y, 1); return CacheSize(cache, size).Glyphs.GetValueOrDefault(key).Offset; }); }
     /// <summary>Sets glyph offset from the baseline.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="glyph">Nonnegative source glyph index.</param>
     /// <param name="offset">Finite offset from the baseline in pixels.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
@@ -252,15 +253,15 @@ public partial class FontFile
     public void SetGlyphOffset(int cacheIndex, Vector2i size, int glyph, Vector2 offset) { SizeKey(size); var key = GlyphKey(glyph); Finite(offset); Edit(cacheIndex, cache => PutGlyph(cache, size, key, entry => entry with { Authored = true, Offset = offset })); }
     /// <summary>Returns glyph size.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="glyph">Nonnegative source glyph index.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public Vector2 GetGlyphSize(int cacheIndex, Vector2i size, int glyph) { SizeKey(size); var key = GlyphKey(glyph); return Query(cacheIndex, (cache, data) => { data.GetGlyph(key, size.X, size.Y, 1); return cache.Size(size).Glyphs.GetValueOrDefault(key).Size; }); }
+    public Vector2 GetGlyphSize(int cacheIndex, Vector2i size, int glyph) { SizeKey(size); var key = GlyphKey(glyph); return Query(cacheIndex, (cache, data) => { data.GetGlyph(key, size.X, size.Y, 1); return CacheSize(cache, size).Glyphs.GetValueOrDefault(key).Size; }); }
     /// <summary>Sets glyph size.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="glyph">Nonnegative source glyph index.</param>
     /// <param name="glyphSize">Finite nonnegative glyph dimensions in pixels.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
@@ -268,15 +269,15 @@ public partial class FontFile
     public void SetGlyphSize(int cacheIndex, Vector2i size, int glyph, Vector2 glyphSize) { SizeKey(size); var key = GlyphKey(glyph); Finite(glyphSize); if (glyphSize.X < 0 || glyphSize.Y < 0) throw new ArgumentOutOfRangeException(nameof(glyphSize)); Edit(cacheIndex, cache => PutGlyph(cache, size, key, entry => entry with { Authored = true, Size = glyphSize })); }
     /// <summary>Returns index of the cache texture containing the glyph.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="glyph">Nonnegative source glyph index.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public int GetGlyphTextureIndex(int cacheIndex, Vector2i size, int glyph) { SizeKey(size); var key = GlyphKey(glyph); return Query(cacheIndex, (cache, data) => { data.GetGlyph(key, size.X, size.Y, 1); return cache.Size(size).Glyphs.GetValueOrDefault(key, new(default, default, default, -1)).Page; }); }
+    public int GetGlyphTextureIndex(int cacheIndex, Vector2i size, int glyph) { SizeKey(size); var key = GlyphKey(glyph); return Query(cacheIndex, (cache, data) => { data.GetGlyph(key, size.X, size.Y, 1); return CacheSize(cache, size).Glyphs.GetValueOrDefault(key, new(default, default, default, -1)).Page; }); }
     /// <summary>Sets index of the cache texture containing the glyph.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="glyph">Nonnegative source glyph index.</param>
     /// <param name="textureIndex">Texture slot between zero and 65535.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
@@ -284,15 +285,15 @@ public partial class FontFile
     public void SetGlyphTextureIndex(int cacheIndex, Vector2i size, int glyph, int textureIndex) { SizeKey(size); var key = GlyphKey(glyph); if (textureIndex < -1 || textureIndex >= 65536) throw new ArgumentOutOfRangeException(nameof(textureIndex)); Edit(cacheIndex, cache => PutGlyph(cache, size, key, entry => entry with { Authored = true, Page = textureIndex })); }
     /// <summary>Returns rectangle in the cache texture containing the glyph.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="glyph">Nonnegative source glyph index.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public Rect2 GetGlyphUVRect(int cacheIndex, Vector2i size, int glyph) { SizeKey(size); var key = GlyphKey(glyph); return Query(cacheIndex, (cache, data) => { data.GetGlyph(key, size.X, size.Y, 1); return cache.Size(size).Glyphs.GetValueOrDefault(key).Region; }); }
+    public Rect2 GetGlyphUVRect(int cacheIndex, Vector2i size, int glyph) { SizeKey(size); var key = GlyphKey(glyph); return Query(cacheIndex, (cache, data) => { data.GetGlyph(key, size.X, size.Y, 1); return CacheSize(cache, size).Glyphs.GetValueOrDefault(key).Region; }); }
     /// <summary>Sets rectangle in the cache texture containing the glyph.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="glyph">Nonnegative source glyph index.</param>
     /// <param name="uvRect">Finite nonnegative pixel rectangle within the page.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
@@ -300,77 +301,77 @@ public partial class FontFile
     public void SetGlyphUVRect(int cacheIndex, Vector2i size, int glyph, Rect2 uvRect) { SizeKey(size); var key = GlyphKey(glyph); if (!uvRect.Position.IsFinite() || !uvRect.Size.IsFinite() || uvRect.Size.X < 0 || uvRect.Size.Y < 0) throw new ArgumentOutOfRangeException(nameof(uvRect)); Edit(cacheIndex, cache => PutGlyph(cache, size, key, entry => entry with { Authored = true, Region = uvRect })); }
     /// <summary>Returns the font ascent (number of pixels above the baseline).</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
     public float GetCacheAscent(int cacheIndex, int size) { SizeKey(size); return Query(cacheIndex, (_, data) => data.GetMetrics(size).Ascent); }
     /// <summary>Sets the font ascent (number of pixels above the baseline).</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="value">New typed value.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public void SetCacheAscent(int cacheIndex, int size, float value) { SizeKey(size); Finite(value); Edit(cacheIndex, cache => cache.Size(new(size, 0)).Metrics[0] = value); }
+    public void SetCacheAscent(int cacheIndex, int size, float value) { SizeKey(size); Finite(value); Edit(cacheIndex, cache => CacheSize(cache, new(size, 0)).Metrics[0] = value); }
     /// <summary>Returns the font descent (number of pixels below the baseline).</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
     public float GetCacheDescent(int cacheIndex, int size) { SizeKey(size); return Query(cacheIndex, (_, data) => data.GetMetrics(size).Descent); }
     /// <summary>Sets the font descent (number of pixels below the baseline).</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="value">New typed value.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public void SetCacheDescent(int cacheIndex, int size, float value) { SizeKey(size); Finite(value); Edit(cacheIndex, cache => cache.Size(new(size, 0)).Metrics[1] = value); }
+    public void SetCacheDescent(int cacheIndex, int size, float value) { SizeKey(size); Finite(value); Edit(cacheIndex, cache => CacheSize(cache, new(size, 0)).Metrics[1] = value); }
     /// <summary>Returns pixel offset of the underline below the baseline.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
     public float GetCacheUnderlinePosition(int cacheIndex, int size) { SizeKey(size); return Query(cacheIndex, (_, data) => data.GetMetrics(size).UnderlinePosition); }
     /// <summary>Sets pixel offset of the underline below the baseline.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="value">New typed value.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public void SetCacheUnderlinePosition(int cacheIndex, int size, float value) { SizeKey(size); Finite(value); Edit(cacheIndex, cache => cache.Size(new(size, 0)).Metrics[2] = value); }
+    public void SetCacheUnderlinePosition(int cacheIndex, int size, float value) { SizeKey(size); Finite(value); Edit(cacheIndex, cache => CacheSize(cache, new(size, 0)).Metrics[2] = value); }
     /// <summary>Returns thickness of the underline in pixels.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
     public float GetCacheUnderlineThickness(int cacheIndex, int size) { SizeKey(size); return Query(cacheIndex, (_, data) => data.GetMetrics(size).UnderlineThickness); }
     /// <summary>Sets thickness of the underline in pixels.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="value">New typed value.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public void SetCacheUnderlineThickness(int cacheIndex, int size, float value) { SizeKey(size); Finite(value); Edit(cacheIndex, cache => cache.Size(new(size, 0)).Metrics[3] = value); }
+    public void SetCacheUnderlineThickness(int cacheIndex, int size, float value) { SizeKey(size); Finite(value); Edit(cacheIndex, cache => CacheSize(cache, new(size, 0)).Metrics[3] = value); }
     /// <summary>Returns scaling factor of the color bitmap font.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public float GetCacheScale(int cacheIndex, int size) { SizeKey(size); return Query(cacheIndex, (cache, _) => cache.Size(new(size, 0)).Scale); }
+    public float GetCacheScale(int cacheIndex, int size) { SizeKey(size); return Query(cacheIndex, (cache, data) => CacheSize(cache, new(size, 0)).Scale * data.MSDFScale(size)); }
     /// <summary>Sets scaling factor of the color bitmap font.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="value">New typed value.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public void SetCacheScale(int cacheIndex, int size, float value) { SizeKey(size); Finite(value); if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value)); Edit(cacheIndex, cache => { var record = cache.Size(new(size, 0)); record.Scale = value; foreach (var key in record.Glyphs.Keys) record.Glyphs[key] = record.Glyphs[key] with { Authored = true }; }); }
+    public void SetCacheScale(int cacheIndex, int size, float value) { SizeKey(size); Finite(value); if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value)); Edit(cacheIndex, cache => { var record = CacheSize(cache, new(size, 0)); record.Scale = value; foreach (var key in record.Glyphs.Keys) record.Glyphs[key] = record.Glyphs[key] with { Authored = true }; }); }
     /// <summary>Returns kerning for the pair of glyphs.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="glyphPair">Pair of nonnegative source glyph indices.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
@@ -378,32 +379,32 @@ public partial class FontFile
     public Vector2 GetKerning(int cacheIndex, int size, Vector2i glyphPair) { SizeKey(size); PairKey(glyphPair); return Query(cacheIndex, (_, data) => data.GetKerning(glyphPair, size)); }
     /// <summary>Sets kerning for the pair of glyphs.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="glyphPair">Pair of nonnegative source glyph indices.</param>
     /// <param name="value">New typed value.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public void SetKerning(int cacheIndex, int size, Vector2i glyphPair, Vector2 value) { SizeKey(size); PairKey(glyphPair); Finite(value); Edit(cacheIndex, cache => cache.Size(new(size, 0)).Kerning[glyphPair] = value); }
+    public void SetKerning(int cacheIndex, int size, Vector2i glyphPair, Vector2 value) { SizeKey(size); PairKey(glyphPair); Finite(value); Edit(cacheIndex, cache => CacheSize(cache, new(size, 0)).Kerning[glyphPair] = value); }
     /// <summary>Returns list of the kerning overrides.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public Vector2i[] GetKerningList(int cacheIndex, int size) { SizeKey(size); return Query(cacheIndex, (cache, _) => cache.Size(new(size, 0)).Kerning.Keys.ToArray()); }
+    public Vector2i[] GetKerningList(int cacheIndex, int size) { SizeKey(size); return Query(cacheIndex, (cache, _) => CacheSize(cache, new(size, 0)).Kerning.Keys.ToArray()); }
     /// <summary>Removes all kerning overrides.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public void ClearKerningMap(int cacheIndex, int size) { SizeKey(size); Edit(cacheIndex, cache => cache.Size(new(size, 0)).Kerning.Clear()); }
+    public void ClearKerningMap(int cacheIndex, int size) { SizeKey(size); Edit(cacheIndex, cache => CacheSize(cache, new(size, 0)).Kerning.Clear()); }
     /// <summary>Removes kerning override for the pair of glyphs.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
-    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness.</param>
+    /// <param name="size">Positive pixel size, or pixel size and nonnegative outline thickness. MSDF image/geometry operations share the configured source size and zero-outline cache.</param>
     /// <param name="glyphPair">Pair of nonnegative source glyph indices.</param>
     /// <remarks>Authored edits invalidate text and emit Changed after committing. Image and collection queries return independent copies; invalid geometry or indices fail before publication.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public void RemoveKerning(int cacheIndex, int size, Vector2i glyphPair) { SizeKey(size); PairKey(glyphPair); Edit(cacheIndex, cache => cache.Size(new(size, 0)).Kerning.Remove(glyphPair)); }
+    public void RemoveKerning(int cacheIndex, int size, Vector2i glyphPair) { SizeKey(size); PairKey(glyphPair); Edit(cacheIndex, cache => CacheSize(cache, new(size, 0)).Kerning.Remove(glyphPair)); }
     /// <summary>Returns an active face index in the TrueType / OpenType collection.</summary>
     /// <param name="cacheIndex">Nonnegative cache index; absent entries are created, up to 4095.</param>
     /// <returns>A typed value or independent snapshot of the current cache state.</returns>

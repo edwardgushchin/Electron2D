@@ -7,3 +7,5 @@ _e2d_break_first
 _e2d_break_next
 _e2d_break_status
 _e2d_break_close
+_e2d_font_msdf_generate
+_e2d_font_msdf_free

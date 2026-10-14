@@ -13,6 +13,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_CHILD") is {
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_HOST") == "1") { FontRasterPolicyTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER") == "1") { FontRasterPolicyTests.Run(); return; }
 
+if (args.Length == 2 && args[0] == "--font-msdf-archive") { FontMSDFTests.RunArchive(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_MSDF") is { } fontMSDFProfile) { if (fontMSDFProfile == "color-fallback") FontMSDFTests.RunColorFallback(); else if (fontMSDFProfile == "managed") FontMSDFTests.RunManaged(); else if (fontMSDFProfile == "raster") FontMSDFTests.RunRaster(); else FontMSDFTests.RunNative(fontMSDFProfile); return; }
+
 if (args.Length == 2 && args[0] == "--font-aa-archive") { FontAntialiasingTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_AA") is { } fontAAProfile) { if (fontAAProfile == "managed") FontAntialiasingTests.RunManaged(); else if (fontAAProfile == "raster") FontAntialiasingTests.RunRaster(); else FontAntialiasingTests.RunNative(fontAAProfile); return; }
 
