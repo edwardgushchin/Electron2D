@@ -306,14 +306,18 @@ internal sealed partial class CPUPhysicsWorldBackend
         return proxy;
     }
 
-    private static bool AcceptOneWay(in MotionCandidate candidate, in B2Vec2 normal,
+    private bool AcceptOneWay(in MotionCandidate candidate, in B2Vec2 normal,
         float depth, float queryMargin)
     {
         var data = candidate.Tag.OneWay;
         if (data is null) return true;
         var rotation = b2Body_GetRotation(b2Shape_GetBody(candidate.ShapeID));
         var pass = b2RotateVector(rotation, new(data.LocalDirection.X, data.LocalDirection.Y));
-        return b2Dot(normal, pass) < 0 && depth <= MathF.Max(data.Margin * MetersPerUnit, queryMargin);
+        var body = b2Shape_GetBody(candidate.ShapeID);
+        var allowance = MathF.Max(data.Margin * MetersPerUnit, queryMargin);
+        if (b2Body_GetType(body) is B2BodyType.b2_kinematicBody or B2BodyType.b2_dynamicBody)
+            allowance += Space.LastStep * MathF.Max(0, -b2Dot(b2Body_GetLinearVelocity(body), pass));
+        return b2Dot(normal, pass) < 0 && depth <= allowance;
     }
 
     private static bool AcceptOneWayMotion(in MotionCandidate candidate, in B2Vec2 motion,

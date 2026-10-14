@@ -1343,7 +1343,7 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live scene or server body RID.</param>
     /// <param name="index">Zero-based global logical slot.</param>
     /// <param name="enable">Whether the slot permits directional pass-through.</param>
-    /// <param name="margin">Finite nonnegative recovery depth in scene units.</param>
+    /// <param name="margin">Finite nonnegative base recovery depth in scene units; current kinematic/dynamic linear approach over the last physical step extends it.</param>
     /// <param name="direction">Finite slot-local direction, normalized once; null selects downward and zero remains zero.</param>
     /// <exception cref="ArgumentOutOfRangeException">The index is absent or margin is invalid.</exception>
     /// <exception cref="ArgumentException">Direction is nonfinite, or the RID is stale/wrong-kind.</exception>

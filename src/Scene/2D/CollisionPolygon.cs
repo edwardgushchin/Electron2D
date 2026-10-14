@@ -108,8 +108,8 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
         set { EnsureMutable(); if (_oneWayCollision == value) return; _oneWayCollision = value; InvalidateCanvas(); _owner?.ChildOneWayChanged(this); UpdateConfigurationWarnings(); }
     }
 
-    /// <summary>Gets or sets the maximum accepted one-way recovery depth in scene units.</summary>
-    /// <value>One by default; body motion uses at least its own recovery margin.</value>
+    /// <summary>Gets or sets the base accepted one-way recovery depth in scene units.</summary>
+    /// <value>One by default; body motion uses at least its own recovery margin, extended by a moving obstacle's linear approach over the last physical step.</value>
     /// <exception cref="ArgumentOutOfRangeException">The value is negative or nonfinite.</exception>
     public float OneWayCollisionMargin
     {

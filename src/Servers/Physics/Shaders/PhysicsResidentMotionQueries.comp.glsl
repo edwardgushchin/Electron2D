@@ -98,7 +98,11 @@ Contact evaluate(Hull a,Hull b,Geometry ga,Geometry gb,vec2 extension,float marg
 vec2 passDirection(){return rotate(bodyB.pose.zw,rotate(shapeB.pose.zw,shapeB.oneWay.xy));}
 bool oneWayContact(Contact c)
 {
-    return (shapeB.policy.w&4u)==0u||(dot2(c.normal,passDirection())<0&&c.depth<=max(shapeB.oneWay.z,q.motionMargin.z));
+    if((shapeB.policy.w&4u)==0u)return true;
+    vec2 direction=passDirection();
+    float allowance=max(shapeB.oneWay.z,q.motionMargin.z);
+    if(bodyB.flags.y!=0u)allowance+=q.motionMargin.w*max(0,-dot2(bodyB.velocity.xy+bodyB.surface.xy,direction));
+    return dot2(c.normal,direction)<0&&c.depth<=allowance;
 }
 Result snapshot(Contact c)
 {

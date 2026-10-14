@@ -162,3 +162,47 @@ despite returning success and valid bytecode; no compiler-policy change is shipp
 The focused geometry matrix, collision-priority checks and complete GPU suite pass
 without changing tolerances, iteration counts or workload sizes. Cold creation still
 takes seconds on this device. Public independent-GPU binding and startup selection now execute. The [shared scene checks](physics-backends.md#public-scene-motion-conformance) exercise character sliding, platforms and ray snap on both backends. Full-world performance and networking remain open acceptance work.
+
+## Moving one-way recovery
+
+Body motion now extends a kinematic/dynamic obstacle's accepted one-way depth by
+its linear displacement towards the solid face over the last physical step,
+including the locked-rotation dynamic role. This is added to the larger of the
+shape and query margins. Static virtual surface velocity, receding/tangential
+movement and angular-only motion do not add depth. Source normal/direction,
+filters, logical slots, exclusions and supplied-pose semantics are unchanged.
+CPU recovery/impact validation and resident GPU recovery/impact share this policy
+under the updated ADR 0065. Fixed-step one-way episode selection is unchanged.
+
+The scene/server GPU bridge explicitly supplies PhysicsSpace.LastStep, preserving
+private and portable restoration even when numerical warm history is reset. Direct
+store queries default to the retained outer simulation duration rather than a
+substep/CCD duration. The existing unused fourth motion-margin lane carries this
+value; request/result strides, scratch, uploads and readbacks are unchanged. No
+host pose mirror, CPU geometry fallback or added GPU wait is introduced.
+
+PhysicsMovingOneWayTests runs explicitly selected CPU/GPU worlds in ordinary and
+separate numerical-thread modes. Raw BodyTestMotion and scene CharacterBody.TestMove
+exercise all four obstacle roles, local/body rotations, six finite source families,
+zero history, approach/recede/tangent/angular controls, actual duration changes,
+private/portable restore, live margins, disabled index gaps and unchanged live
+poses. Eight brackets each warm 128 complete frames and measure 128 at strict
+0/0 owner/all-thread managed bytes. Numerical caller travel comparison uses .003
+scene units; identity/role/direction/report and allocation decisions are exact.
+The initial CPU/GPU build rejected the rising kinematic platform; evidence is
+retained under bin/physics-moving-oneway/2026-10-14. A segment control now uses a
+thicker obstacle with the same three-unit penetration so its zero-width edge is
+inside the solid rather than beyond its underside. Temporary diagnostics are
+removed from production source. Native allocation, other platforms and target-
+hardware/window/performance acceptance remain open.
+
+The final retained Release runtime passes ten fresh processes: four moving-platform
+profiles (CPU/GPU, ordinary/separate numerical thread), CPU/GPU query and filter
+contracts, resident motion and resident one-way suites. CPU profiles map no graphics
+driver; GPU profiles map only CPU Vulkan lavapipe, with no NVIDIA driver. All eight
+new allocation brackets per moving profile report 0/0 bytes. Release build, scoped
+runtime/test format, compiled coverage and wiki test/generate/check gates pass.
+The compiled surface remains 13,961 declarations; wiki output has 832 public types
+and 850 files. Source/runtime manifests, process driver/thread proofs and logs are
+retained in bin/physics-moving-oneway/2026-10-14/validation.json. These software
+results establish functional regression evidence, not target-GPU speed or FPS.

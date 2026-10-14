@@ -1114,3 +1114,12 @@ contact/pin convergence use nineteen complete 128-warmup/128-measured brackets
 at zero managed allocation. Registered contact-cache, arbitrary coupled/custom,
 full inherited/extension/network and native/platform/performance acceptance remain
 open.
+
+
+[Moving one-way recovery](../components/gpu-resident-motion-queries.md#moving-one-way-recovery)
+now includes kinematic/dynamic linear approach over the last physical step on
+both production backends, including private/portable restoration. Static surface,
+receding/tangent and angular-only velocities do not enlarge recovery depth.
+PhysicsMovingOneWayTests checks raw/scene callers, roles, rotated slots, six finite
+source families and eight 128-warmup/128-measured complete-frame brackets at zero
+managed allocation. Native/platform/hardware/performance acceptance remains open.
