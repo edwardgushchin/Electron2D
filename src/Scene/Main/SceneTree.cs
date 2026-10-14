@@ -1295,7 +1295,7 @@ public sealed partial class SceneTree : MainLoop
                 if (!node.HasProcessCallback(physics))
                     continue;
 
-                if (node.IsDisposed || !ReferenceEquals(node.Tree, this) || !node.CanProcess())
+                if (node.IsDisposed || !ReferenceEquals(node.Tree, this) || node.TreeAttachmentVersion != item.Attachment || !node.CanProcess())
                     continue;
 
                 try
@@ -1416,13 +1416,13 @@ public sealed partial class SceneTree : MainLoop
             var last = _scheduleTraversal.Count - 1;
             var node = _scheduleTraversal[last];
             _scheduleTraversal.RemoveAt(last);
-            var priority = physics ? node.PhysicsProcessPriority : node.ProcessPriority;
-            if (priority < previousPriority) sorted = false;
-            previousPriority = priority;
-            schedule.Add(new ScheduledNode(
-                node,
-                priority,
-                order++));
+            if (node.HasProcessCallback(physics))
+            {
+                var priority = physics ? node.PhysicsProcessPriority : node.ProcessPriority;
+                if (priority < previousPriority) sorted = false;
+                previousPriority = priority;
+                schedule.Add(new ScheduledNode(node, priority, order++, node.TreeAttachmentVersion));
+            }
 
             var children = node.AllChildren;
             for (var index = children.Count - 1; index >= 0; index--)
@@ -2088,7 +2088,7 @@ public sealed partial class SceneTree : MainLoop
             throw new AggregateException(message, errors);
     }
 
-    private readonly record struct ScheduledNode(Node Node, int Priority, int Order) : IComparable<ScheduledNode>
+    private readonly record struct ScheduledNode(Node Node, int Priority, int Order, ulong Attachment) : IComparable<ScheduledNode>
     {
         public int CompareTo(ScheduledNode other)
         {

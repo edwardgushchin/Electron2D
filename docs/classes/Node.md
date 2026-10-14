@@ -1,6 +1,6 @@
 # Node
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -1685,3 +1685,9 @@ Receives the live borrowed event when the shortcut stage remains unhandled. The
 caller owns its lifetime. Call Tree.SetInputAsHandled to suppress later stages.
 Ordinary typed virtual dispatch runs on the scene owner; exceptions join the
 existing continued-delivery aggregate. Overriding enables the lane at ready.
+
+## Captured processing membership
+
+Each idle/physics schedule captures only nodes whose public or internal callback is enabled for that lane. Enabling a previously absent participant during traversal starts it on the next frame. Disabling a captured participant suppresses its remaining delivery immediately; current process-mode/pause eligibility is still rechecked. An already captured internal participant may enable its own public callback before that callback in the same frame. Priority or hierarchy-order writes apply to the next captured schedule. A node that exits and reenters, even into the same tree, cannot revive an old entry or continue the old attachment after its internal callback. Both schedules retain capacity and rebuild after membership changes.
+
+[Public scheduling consumers](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.NodeScheduling.cs) exercise neutral, spatial and physical descendants, all four processing flags, priority changes, removal/reentry, error continuation and real selected solver frames/queries. Exact evidence and limits are in `bin/physics-node-scheduling/2026-10-15/validation.json`. Owned process-thread groups and cross-group deferred delivery remain their separate open coverage obligations.

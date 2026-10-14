@@ -352,3 +352,5 @@ retained under bin/physics-auto-callbacks/2026-10-14; full inherited, native/for
 and hardware/window/performance acceptance remains open.
 
 The NativeAOT prerequisite slice uses bound virtual delegates for CodeEdit/GraphEdit, exact existing types for empty custom-data arrays and prepared string JSON metadata. Script source registration retains its explicit file/PDB and untrimmed metadata prerequisites; metadata is captured once and queried through copied snapshots. Public-only executable evidence is recorded in bin/physics-aot-prerequisites/2026-10-14; this does not establish native rendering, foreign-platform or complete scripting acceptance.
+
+Node scheduling now captures actual enabled public/internal lane membership, with next-frame activation of absent participants and immediate suppression of disabled captured callbacks. Exit/reentry cannot revive a stale entry. Public neutral/spatial/physical consumers exercise this alongside real selected frames and queries; the scene-tree component retains the open process-thread-group/mailbox and wider acceptance gates.

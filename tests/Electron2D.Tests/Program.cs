@@ -209,6 +209,7 @@ if (args.Length == 3 && args[0] == "--file-compression-child") { FileCompression
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_COMPRESSION_NATIVE") is { } fileBackend) { FileCompressionTests.RunNative(fileBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_CODEC_ENET") == "1") { ENetTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_ACCESS") == "1") { VerifyFileAccess(); FileCompressionTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_SCHEDULING") == "1") { SceneHierarchyTests.Run(); NodeInternalProcessingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_INTERNAL") == "1") { NodeInternalProcessingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_INTERNAL_NATIVE") is { } internalBackend) { NodeInternalProcessingTests.RunNative(internalBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYNCHRONIZATION") == "1") { SynchronizationTests.Run(); return; }

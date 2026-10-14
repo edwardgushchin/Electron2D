@@ -1,6 +1,6 @@
 # Scene tree component
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 ## Scope
 
@@ -202,3 +202,9 @@ hashes remain unchanged. Parallel hostname-resolver integration is preserved;
 the current total is 13,999 declarations, 836 public types and 854 wiki files.
 Exact manifests, profile proofs, NativeAOT limits and gate results are retained in
 bin/physics-auto-callbacks/2026-10-14/validation.json.
+
+## Captured callback participants
+
+The retained priority snapshots contain only public/internal participants of their selected lane. All four Node enablement setters invalidate subsequent capture when their value changes, including built-in internal switches and automatic ready preparation. A newly enabled absent node waits for the next capture; current flags and process-mode eligibility still gate an existing captured entry. Priority/order changes likewise wait for the next capture. Exit/reentry retires an old entry, including same-tree reentry and a node reentering from its own internal callback. Internal and public delivery remain per-node phases; callback failures continue later applicable callbacks and the physical step.
+
+Public neutral/spatial/RigidBody consumers verify four-lane activation/deactivation, next-frame cached membership and priority, same-tree and self reentry, current eligibility, paired internal/public failure delivery and actual selected movement/query identity. Warm cycles repeatedly rebuild both lane snapshots while executing idle, physics and point queries with zero owner/all-thread managed bytes. The existing hierarchy fixture now explicitly disables its initially ready-enabled node before testing late activation; its old immediate-activation expectation is withdrawn. Evidence: `bin/physics-node-scheduling/2026-10-15/validation.json`. Process-thread groups/mailboxes, native allocator totals, hardware/window timing and wider inherited acceptance stay open.

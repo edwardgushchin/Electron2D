@@ -552,6 +552,7 @@ public partial class Node : ElectronObject
     /// <summary>Gets the active scene tree containing this node.</summary>
     /// <value>The owning tree, or <see langword="null"/> while detached.</value>
     public SceneTree? Tree { get; private set; }
+    internal ulong TreeAttachmentVersion { get; private set; }
 
     /// <summary>Gets whether this node currently belongs to a scene tree.</summary>
     /// <value><see langword="true"/> when <see cref="Tree"/> is non-null.</value>
@@ -636,6 +637,8 @@ public partial class Node : ElectronObject
 
     /// <summary>Gets or sets whether this node participates in host-driven process frames.</summary>
     /// <value>False initially; ready notification enables an overridden callback before OnReady.</value>
+    /// <remarks>A node absent from the captured idle schedule starts on the next idle frame. Disabling a captured
+    /// node suppresses later delivery immediately. An existing internal participant may enable its public callback in that frame.</remarks>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool ProcessEnabled
@@ -648,12 +651,16 @@ public partial class Node : ElectronObject
         set
         {
             EnsureMutable();
+            if (_processEnabled == value) return;
             _processEnabled = value;
+            Tree?.InvalidateProcessOrder();
         }
     }
 
     /// <summary>Gets or sets whether this node participates in host-driven physics-process frames.</summary>
     /// <value>False initially; ready notification enables an overridden callback before OnReady.</value>
+    /// <remarks>A node absent from the captured physics schedule starts on the next physics frame. Disabling a captured
+    /// node suppresses later delivery immediately. An existing internal participant may enable its public callback in that frame.</remarks>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool PhysicsProcessEnabled
@@ -666,7 +673,9 @@ public partial class Node : ElectronObject
         set
         {
             EnsureMutable();
+            if (_physicsProcessEnabled == value) return;
             _physicsProcessEnabled = value;
+            Tree?.InvalidateProcessOrder();
         }
     }
 
@@ -674,26 +683,30 @@ public partial class Node : ElectronObject
     /// <value>False for a plain Node. Built-in subclasses may enable their own internal work.</value>
     /// <remarks>This lane is independent of ProcessEnabled and runs before ordinary processing. The resolved
     /// ProcessMode and tree pause state still gate both lanes. Changes are runtime state, not stored scene data.
-    /// Disabling a built-in node's internal work can suspend animation, timers or other implementation logic.</remarks>
+    /// Disabling a built-in node's internal work can suspend animation, timers or other implementation logic.
+    /// Participation is captured together with ordinary idle processing. A newly enabled node waits for
+    /// the next idle snapshot; a node already included through its ordinary callback can enable internal delivery in this frame.</remarks>
     /// <exception cref="InvalidOperationException">An attached node is mutated off its owner thread or during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public bool InternalProcessEnabled
     {
         get { ThrowIfDisposed(); return _internalProcessEnabled; }
-        set { EnsureMutable(); _internalProcessEnabled = value; }
+        set { EnsureMutable(); if (_internalProcessEnabled == value) return; _internalProcessEnabled = value; Tree?.InvalidateProcessOrder(); }
     }
 
     /// <summary>Gets or sets whether this node receives internal fixed-frame notifications.</summary>
     /// <value>False for a plain Node. Built-in subclasses may enable their own internal work.</value>
     /// <remarks>This lane is independent of PhysicsProcessEnabled and runs before ordinary physics processing.
     /// The resolved ProcessMode and tree pause state still apply. This runtime switch is not stored in scenes.
-    /// Disabling built-in internal physics can suspend casts, timers or other implementation logic.</remarks>
+    /// Disabling built-in internal physics can suspend casts, timers or other implementation logic.
+    /// Participation is captured together with ordinary physics processing. A newly enabled node waits for
+    /// the next physics snapshot; a node already included through its ordinary callback can enable internal delivery in this frame.</remarks>
     /// <exception cref="InvalidOperationException">An attached node is mutated off its owner thread or during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public bool InternalPhysicsProcessEnabled
     {
         get { ThrowIfDisposed(); return _internalPhysicsProcessEnabled; }
-        set { EnsureMutable(); _internalPhysicsProcessEnabled = value; }
+        set { EnsureMutable(); if (_internalPhysicsProcessEnabled == value) return; _internalPhysicsProcessEnabled = value; Tree?.InvalidateProcessOrder(); }
     }
 
     /// <summary>Gets or sets whether this node receives the first input-propagation stage.</summary>
@@ -2069,8 +2082,10 @@ public partial class Node : ElectronObject
             return;
         }
         EnsureMutable();
+        if (_internalProcessEnabled == processEnabled && _internalPhysicsProcessEnabled == physicsProcessEnabled) return;
         _internalProcessEnabled = processEnabled;
         _internalPhysicsProcessEnabled = physicsProcessEnabled;
+        Tree?.InvalidateProcessOrder();
     }
 
     internal double GetUnscaledProcessDelta(bool physics) =>
@@ -2089,6 +2104,7 @@ public partial class Node : ElectronObject
 
         var internalEnabled = physics ? _internalPhysicsProcessEnabled : _internalProcessEnabled;
         var expectedTree = Tree;
+        var expectedAttachment = TreeAttachmentVersion;
         List<Exception>? errors = null;
 
         if (internalEnabled)
@@ -2103,7 +2119,7 @@ public partial class Node : ElectronObject
             }
         }
 
-        if (!IsDisposed && ReferenceEquals(Tree, expectedTree) &&
+        if (!IsDisposed && ReferenceEquals(Tree, expectedTree) && TreeAttachmentVersion == expectedAttachment &&
             (physics ? _physicsProcessEnabled : _processEnabled))
         {
             try
@@ -2150,6 +2166,7 @@ public partial class Node : ElectronObject
     {
 
         Tree = tree;
+        TreeAttachmentVersion++;
         List<Exception>? errors = null;
         try { OnTreeMembershipChanged(entering: true); }
         catch (Exception error) { CollectException(ref errors, error); }

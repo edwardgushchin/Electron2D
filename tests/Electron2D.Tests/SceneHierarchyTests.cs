@@ -34,9 +34,10 @@ internal static class SceneHierarchyTests
         var added = new ScheduleNode(3, order) { Name = "Added", ProcessEnabled = true, PhysicsProcessEnabled = true };
         root.AddChild(first); root.AddChild(later);
         using var tree = new SceneTree(root);
+        later.ProcessEnabled = false;
         first.Next = () => { later.ProcessEnabled = true; later.ProcessPriority = -10; root.AddChild(added); first.Next = null; };
         tree.ProcessFrame(.01);
-        Check(order.SequenceEqual([1, 2]), "Late enabling is immediate; priority changes and additions wait for the next captured schedule.");
+        Check(order.SequenceEqual([1]), "Newly enabled membership, priority changes and additions wait for the next captured schedule.");
         order.Clear(); tree.ProcessFrame(.01);
         Check(order.SequenceEqual([2, 1, 3]), "Priority and membership changes invalidate the idle schedule.");
         first.PhysicsProcessPriority = 5; later.PhysicsProcessPriority = -5; added.PhysicsProcessPriority = 1;

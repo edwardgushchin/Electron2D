@@ -8,6 +8,7 @@ if (args.Contains("--resource-identity-child"))
 PhysicsAOTPrerequisiteTests.Run();
 
 var backend = args.Length > 0 && args[0] == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
-if (args.Contains("--resource-identity")) BackendChecks.RunResourceIdentity(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));
+if (args.Contains("--node-scheduling")) BackendChecks.RunNodeScheduling(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));
+else if (args.Contains("--resource-identity")) BackendChecks.RunResourceIdentity(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));
 else if (args.Contains("--local-scenes")) BackendChecks.RunLocalScenes(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));
 else PhysicsAutomaticCallbackTests.Run(backend, args.Length > 1 && args[1] == "threaded");
