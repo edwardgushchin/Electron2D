@@ -15,6 +15,10 @@ import package as native_package
 
 ROOT = Path(__file__).resolve().parents[2]
 PROGRAM = '''using Electron2D;
+using var webpSource = Image.CreateFromData(2, 1, false, Image.Format.Rgba8, [17, 91, 203, 0, 255, 6, 118, 127]);
+using var webpDecoded = new Image();
+webpDecoded.LoadWebPFromBuffer(webpSource.SaveWebPToBuffer());
+if (!webpDecoded.GetData().AsSpan().SequenceEqual(webpSource.GetData())) throw new Exception("Native WebP exact RGBA consumer failed");
 using var importer = new ImporterMesh();
 var cells = 8;
 var points = new Vector2[(cells + 1) * (cells + 1)];
@@ -62,7 +66,7 @@ try
         }
         finally { System.IO.File.Delete(compressedPath); }
     }
-    Console.WriteLine("Public text, audio, ENet, file codecs and mesh consumer passed");
+    Console.WriteLine("Public text, audio, ENet, WebP, file codecs and mesh consumer passed");
 }
 finally { Engine.Stop(); }
 '''
@@ -130,7 +134,7 @@ def check(feed, rid):
         environment.pop("LD_LIBRARY_PATH", None)
         environment.pop("Electron2DBuildNativeFromSource", None)
         run([dotnet, "build", "Electron2D.csproj", "-c", "Release", "--nologo"], engine, environment)
-        if any((engine / "obj" / name).exists() for name in ("text-native", "audio-native", "enet-native", "tls-native", "font-native", "mesh-native", "native-windows", "native-cross")):
+        if any((engine / "obj" / name).exists() for name in ("text-native", "audio-native", "enet-native", "tls-native", "font-native", "mesh-native", "webp-native", "native-windows", "native-cross")):
             raise RuntimeError("Consumer build created native compilation directories")
         # A package consumer has no reference to the engine source or its private build targets.
         engine_feed = work / "feed"

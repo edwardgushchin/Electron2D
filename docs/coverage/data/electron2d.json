@@ -100288,6 +100288,59 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Image.SaveWebP(System.String,System.Boolean,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "SaveWebP",
+    "signature": "public System.Void SaveWebP(System.String path, System.Boolean lossy = false, System.Single quality = 0.75f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "lossy",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "quality",
+        "type": "System.Single",
+        "default": "0.75f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Image.SaveWebPToBuffer(System.Boolean,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "SaveWebPToBuffer",
+    "signature": "public System.Byte[] SaveWebPToBuffer(System.Boolean lossy = false, System.Single quality = 0.75f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "lossy",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "quality",
+        "type": "System.Single",
+        "default": "0.75f"
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Image.SetData(System.Int32,System.Int32,System.Boolean,Electron2D.Image.Format,System.Byte[])",
     "kind": "method",
     "declaringType": "Electron2D.Image",
@@ -223492,6 +223545,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WebPCompressionMethod()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WebPCompressionMethod",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E WebPCompressionMethod { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WebPLosslessCompressionFactor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WebPLosslessCompressionFactor",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E WebPLosslessCompressionFactor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
     "value": null
   },
   {

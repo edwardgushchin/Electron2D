@@ -217,7 +217,7 @@ This revision changes architecture and documentation only; it does not establish
 <a id="adr-0039"></a>
 ## ADR 0039: Managed image buffers and codec boundaries
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 ### Status
 
@@ -227,9 +227,11 @@ Accepted; managed buffers implemented, native codec integration partially execut
 
 The first concrete asset must provide useful CPU-side image behavior before textures, rendering, importing, or an editor exist. The current official 4.7.2 image contract includes raw storage in 47 uncompressed and GPU-block-compressed formats, mipmaps, pixel access and conversion, region composition, filtering, color processing, normal-map helpers, metrics, file codecs, and editor/GPU compression hooks.
 
-Electron2D owns `Color`, `Vector2i`, `Rect2i`, `Resource`, typed duplication, blocking `FileAccess`, and an SDL host. Texture and GPU integration is in progress. The user selected SDL_image through SDL3-CS for encoded images, including the `SDL3-CS.Linux.Image` native package. Importing and general resource loading/saving remain unfinished. Image has six native loaders and PNG/JPEG saving; the full codec family and semantics remain unfinished. Reimplementing PNG, JPEG, WebP, SVG, DDS, KTX, and EXR would duplicate mature codec libraries.
+Electron2D owns `Color`, `Vector2i`, `Rect2i`, `Resource`, typed duplication, blocking `FileAccess`, and an SDL host. Texture and GPU integration is in progress. The user selected SDL_image through SDL3-CS for encoded images, including the `SDL3-CS.Linux.Image` native package. Importing and general resource loading/saving remain unfinished. Image has six native loaders plus DDS and PNG/JPEG/WebP saving; the full codec family and semantics remain unfinished. Reimplementing PNG, JPEG, WebP, SVG, DDS, KTX, and EXR would duplicate mature codec libraries.
 
 ### Decision
+
+The WebP save slice selects the advanced libwebp encoder behind a private C ABI: ARGB input and `exact=1` preserve transparent RGB; mode remains separate from quality. Typed settings preserve compression method 2 and lossless effort 25. A managed snapshot converts uncompressed and supported BC input to base RGBA8; dimensions/expanded input/emitted output are bounded. Native producer/ownership details and target limits are in [WebP saving](../components/image-webp.md), under ADR 0012 and ADR 0014.
 
 `Image` is the first concrete managed `Resource`. It owns a private portable little-endian byte buffer, dimensions, one `Image.Format`, and an optional complete mip chain.
 
@@ -258,13 +260,13 @@ Electron2D owns `Color`, `Vector2i`, `Rect2i`, `Resource`, typed duplication, bl
 | Format/interpolation/alpha/channel/compression/source/ASTC enums and size constants | Implemented as seven nested enums plus `MaxWidth`/`MaxHeight`; encoder-oriented enums are stable types but do not imply an encoder |
 | Inherited change signal, naming/path identity, duplication, descriptors, disposal | Implemented through `Resource`/`ElectronObject`; image duplication owns an independent buffer |
 | Dynamic `data` property and integer error codes | Permanently adapted to typed state properties, copied arrays, and exceptions |
-| Codec load/save, compression/decompression, textures/importing | Six native file/buffer loaders, including scaled SVG rasterization, and PNG/JPEG saving execute; source-layout/color/metadata semantics and further formats remain pending. Texture sampling is partially integrated; further work is listed below. |
+| Codec load/save, compression/decompression, textures/importing | Six native file/buffer loaders, including scaled SVG rasterization, and PNG/JPEG/WebP saving execute; source-layout/color/metadata semantics and further formats remain pending. Texture sampling is partially integrated; further work is listed below. |
 
 ### Deferred coverage and exact implementation triggers
 
 | Deferred official counterpart | Missing prerequisite and exact trigger | Required slice |
 | --- | --- | --- |
-| `load`, `load_from_file`, buffer loaders, and PNG/JPEG/WebP/EXR/DDS save methods | SDL_image and its Linux native package are selected and authorized above. The six selected loaders and PNG/JPEG saves now have executable file/buffer paths, preflight size checks and native tests. Supported-format discovery, remaining formats, complete channel/color/metadata adaptation and AOT delivery remain unfinished; another dependency approval is not required for this integration. SDL_image 3.4.6 WebP saving at quality 100 failed an exact opaque-color lossless round trip; WebP saving requires a verified native correction before being exposed. | The first image-codec vertical slice must add capability discovery, bounded/untrusted-input validation, all selected codec buffer and `FileAccess` paths, malformed/cancellation/failure tests, and native/AOT verification for each claimed target. Formats SDL_image cannot supply need their own implementation decision; unsupported formats remain absent, not success stubs. |
+| `load`, `load_from_file`, buffer loaders, and PNG/JPEG/WebP/EXR/DDS save methods | SDL_image and its Linux native package are selected and authorized above. The selected loaders, DDS and PNG/JPEG/WebP saves now have executable file/buffer paths, preflight size checks and native tests. Supported-format discovery, remaining formats, complete channel/color/metadata adaptation and AOT delivery remain unfinished; another dependency approval is not required for this integration. SDL_image 3.4.6 WebP saving at quality 100 failed an exact opaque-color lossless round trip; WebP saving requires a verified native correction before being exposed. | The first image-codec vertical slice must add capability discovery, bounded/untrusted-input validation, all selected codec buffer and `FileAccess` paths, malformed/cancellation/failure tests, and native/AOT verification for each claimed target. Formats SDL_image cannot supply need their own implementation decision; unsupported formats remain absent, not success stubs. |
 | `compress` and `compress_from_channels` | S3TC/BPTC CPU authoring is executable through the selected private codec; no editor prerequisite is needed for public Image compression. ETC/EAC/ASTC need selected portable encoders with source/channel/mip semantics and source delivery. | Complete each remaining codec family with CPU authoring, malformed/budget checks and real texture consumers; importer/editor authoring remains separate. |
 | `decompress` for BC/ETC/BPTC/ASTC | BC1–BC7 and RA-as-RG portable CPU decode execute. ETC/EAC/ASTC require selected portable decoders with all channel/HDR/mip roles. | The first vertical slice that consumes compressed image pixels on CPU. Raw upload-only texture work does not trigger CPU decompression. |
 | `ImageTexture` conversion and renderer upload | The texture API and first SDL3 GPU/compatibility renderer slices execute with copied Image pixels and documented format limits. | Remaining ETC/EAC/ASTC/integer sampling, device-loss and target-platform verification stay on their specific renderer rows. |

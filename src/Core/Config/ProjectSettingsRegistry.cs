@@ -53,6 +53,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         (_projectRoot, _userDataRoot) = NormalizeRoots(projectRoot, userDataRoot);
         _processWide = processWide;
         AddBuiltInFeatures(_builtInFeatures);
+        RegisterInternal(WebPCompressionMethod, isBasic: false);
+        RegisterInternal(WebPLosslessCompressionFactor, isBasic: false);
         RegisterInternal(ApplicationName, isBasic: true);
         RegisterInternal(ApplicationVersion, isBasic: true);
         RegisterInternal(AudioDriverEnableInput, isBasic: true);

@@ -124,6 +124,8 @@ byte[] ownedCopy = image.GetData();
 | [`public void LoadSVGFromString(string svg, float scale = 1f)`](#loadsvgfromstring) | Rasterizes an SVG string at the requested scale. |
 | [`public byte[] SavePNGToBuffer()`](#savepngtobuffer) | Encodes a stable base-level snapshot as PNG. |
 | [`public byte[] SaveJPGToBuffer(float quality = 0.75f)`](#savejpgtobuffer) | Encodes the base level as lossy JPEG without alpha. |
+| [`public byte[] SaveWebPToBuffer(bool lossy = false, float quality = 0.75f)`](#savewebptobuffer) | Encodes the base image as exact or lossy WebP. |
+| [`public void SaveWebP(string path, bool lossy = false, float quality = 0.75f)`](#savewebp) | Atomically saves WebP bytes. |
 | [`public void SavePNG(string path)`](#savepng) | Atomically replaces a file with encoded PNG bytes. |
 | [`public void SaveJPG(string path, float quality = 0.75f)`](#savejpg) | Atomically replaces a file with JPEG bytes without alpha. |
 
@@ -528,6 +530,16 @@ Atomically replaces a file with encoded PNG bytes. Empty and compressed images a
 ### `public void SaveJPG(string path, float quality = 0.75f)`
 
 Atomically replaces a file with JPEG bytes without alpha. Empty and compressed images are rejected. Encoding reads an independent snapshot and neither mutates pixels nor emits `Changed`. Only the base level is encoded; output is capped at 64 MiB. JPEG converts to RGB8, discards alpha and remains lossy at maximum quality. Quality must be finite and in `[0.01, 1]`; invalid values throw `ArgumentOutOfRangeException`. Encoding completes before `AtomicFile` replaces the destination in the same directory. Parent directories must exist; failures before replacement preserve an existing file. Paths use the same `res://`/`user://` resolution as loading.
+
+<a id="savewebptobuffer"></a>
+### `public byte[] SaveWebPToBuffer(bool lossy = false, float quality = 0.75f)`
+
+Returns independent encoded WebP bytes from a stable RGBA8 base-level snapshot. Lossless preserves all RGB and alpha bytes, including transparent RGB. Lossy quality is finite `[0, 1]`; one remains lossy. Valid quality is ignored for lossless output, which uses `ProjectSettings.WebPLosslessCompressionFactor`; both modes use `WebPCompressionMethod`. Invalid quality rejects in both modes. Supported BC data decompresses without modifying source blocks or mipmaps. Empty/disposed images and unavailable compressed codecs reject. Dimensions are limited to 16383; base RGBA8 input and emitted bytes each have a 64 MiB budget. See [complete codec and delivery contract](../components/image-webp.md).
+
+<a id="savewebp"></a>
+### `public void SaveWebP(string path, bool lossy = false, float quality = 0.75f)`
+
+Encodes with `SaveWebPToBuffer`, then atomically replaces the destination through the existing file writer. Operating-system, `res://` and `user://` paths are accepted; parent directories must exist. Encoding failure preserves an existing file and source image. No `Changed` event is emitted.
 
 ## Lifecycle and state transitions
 

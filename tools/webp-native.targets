@@ -1,0 +1,22 @@
+<Project>
+  <PropertyGroup>
+    <Electron2DWebPNativeRID Condition="'$(Electron2DWebPNativeRID)' == ''">$(_Electron2DPrivateNativeRID)</Electron2DWebPNativeRID>
+    <_Electron2DWebPName>libElectron2DWebP.so</_Electron2DWebPName>
+    <_Electron2DWebPName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libElectron2DWebP.dylib</_Electron2DWebPName>
+    <_Electron2DWebPName Condition="'$(Electron2DNativePlatform)' == 'Windows'">Electron2DWebP.dll</_Electron2DWebPName>
+    <_Electron2DWebPBuild>$(MSBuildThisFileDirectory)../obj/webp-native/$(Electron2DWebPNativeRID)</_Electron2DWebPBuild>
+    <_Electron2DWebPLibrary>$(_Electron2DWebPBuild)/$(_Electron2DWebPName)</_Electron2DWebPLibrary>
+    <_Electron2DWebPLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true'">$(PkgElectron2D_Linux)/runtimes/$(Electron2DWebPNativeRID)/native/$(_Electron2DWebPName)</_Electron2DWebPLibrary>
+    <_Electron2DWebPLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_MacOS)/runtimes/$(Electron2DWebPNativeRID)/native/$(_Electron2DWebPName)</_Electron2DWebPLibrary>
+    <_Electron2DWebPLibrary Condition="'$(Electron2DWebPNativeLibrary)' != ''">$(Electron2DWebPNativeLibrary)</_Electron2DWebPLibrary>
+  </PropertyGroup>
+  <ItemGroup>
+    <_Electron2DWebPInput Include="$(MSBuildThisFileDirectory)webp-native/*;$(MSBuildThisFileFullPath)" />
+    <None Include="$(_Electron2DWebPLibrary)" Condition="('$(Electron2DNativePlatform)' == 'Linux' or '$(Electron2DNativePlatform)' == 'MacOS') and ('$(Electron2DBuildNativeFromSource)' == 'true' or Exists('$(_Electron2DWebPLibrary)'))" Link="runtimes/$(Electron2DWebPNativeRID)/native/$(_Electron2DWebPName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" Visible="false" />
+  </ItemGroup>
+  <Target Name="BuildElectron2DWebPNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DWebPNativeLibrary)' == '' and ('$(Electron2DNativePlatform)' == 'Linux' or '$(Electron2DNativePlatform)' == 'MacOS')" Inputs="@(_Electron2DWebPInput)" Outputs="$(_Electron2DWebPLibrary)">
+    <Error Condition="'$(Electron2DWebPNativeRID)' != '$(NETCoreSdkRuntimeIdentifier)'" Text="Private mesh compilation requires the matching target host; foreign profiles use the native bundle producers." />
+    <Exec Command="cmake -S &quot;$(MSBuildThisFileDirectory)webp-native&quot; -B &quot;$(_Electron2DWebPBuild)&quot; -G Ninja -DCMAKE_BUILD_TYPE=Release" />
+    <Exec Command="cmake --build &quot;$(_Electron2DWebPBuild)&quot; --target Electron2DWebP --parallel 2" />
+  </Target>
+</Project>

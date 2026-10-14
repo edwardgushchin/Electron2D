@@ -1490,3 +1490,7 @@ Built-in MSAA and LCD subpixel settings retain compiled JSON metadata for hosts
 with JSON reflection disabled. The public PhysicsNetwork startup check initializes
 the complete registry and round-trips both enum schemas before its process run.
 This verifies ordinary reflection-disabled managed execution, not a NativeAOT publish.
+
+## WebP codec settings
+
+The built-in `ProjectSettings.WebPCompressionMethod` and `WebPLosslessCompressionFactor` definitions default to 2 and 25, with ranges 0–6 and finite 0–100. Every independent registry registers them too. They control executable cold image saving and support ordinary typed persistence and feature overrides. See [WebP saving](../components/image-webp.md).

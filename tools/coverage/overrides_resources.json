@@ -678,7 +678,7 @@
         "Image::method:save_exr_to_buffer(bool:,bool:,float:)"
       ],
       "state": "Unimplemented",
-      "reason": "ADR 0039: EXR requires a selected mature portable codec with HDR/channel/save semantics; KTX requires complete container validation, orientation/mip/format role mapping and public file/buffer/texture consumers. The pinned BCn closure now supplies KTX1 primitives and BC blocks, but those public KTX paths are not yet integrated. ETC/EAC/ASTC remain separate codec dependencies; raw storage is not implementation."
+      "reason": "ADR 0039: EXR requires a selected mature portable codec with HDR/channel/save semantics; KTX requires a mature KTX2/Basis-aware container/transcoder integration, complete container validation, orientation/mip/format role mapping and public file/buffer/texture consumers; the pinned loader consumes both KTX generations through libktx. The pinned BCn closure now supplies KTX1 primitives and BC blocks, but KTX1 alone does not satisfy the complete pinned loader and those public KTX paths are not yet integrated. ETC/EAC/ASTC remain separate codec dependencies; raw storage is not implementation."
     },
     {
       "godot": [

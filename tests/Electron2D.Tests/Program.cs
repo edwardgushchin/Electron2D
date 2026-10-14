@@ -13,6 +13,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_CHILD") is {
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_HOST") == "1") { FontRasterPolicyTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER") == "1") { FontRasterPolicyTests.Run(); return; }
 
+if (args.Length == 2 && args[0] == "--image-webp-archive") { ImageWebPTests.RunArchive(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_WEBP") is { } webpProfile) { if (webpProfile == "managed") { VerifyImages(); ImageWebPTests.RunManaged(); } else ImageWebPTests.RunNative(webpProfile); return; }
 if (args.Length == 2 && args[0] == "--image-bcn-archive") { ImageBCnTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_BCN") is { } bcnProfile) { if (bcnProfile == "managed") { VerifyImages(); ImageBCnTests.RunManaged(); } else ImageBCnTests.RunNative(bcnProfile); return; }
 if (args.Length == 2 && args[0] == "--font-type1-archive") { Type1FontTests.RunArchive(args[1]); return; }
@@ -179,6 +181,7 @@ if (args.Length == 4 && args[0] == "--shader-include-render") { ShaderIncludeTes
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "1")
 {
     ImageCodecTests.Run();
+    ImageWebPTests.RunManaged();
     return;
 }
 
@@ -2718,6 +2721,8 @@ static void VerifyImages()
         [nameof(Image.CompressFromChannels)] = 1,
         [nameof(Image.Decompress)] = 1,
         [nameof(Image.LoadDDSFromBuffer)] = 1,
+        [nameof(Image.SaveWebP)] = 1,
+        [nameof(Image.SaveWebPToBuffer)] = 1,
         [nameof(Image.SaveDDS)] = 1,
         [nameof(Image.SaveDDSToBuffer)] = 1,
         [nameof(Image.Convert)] = 1,

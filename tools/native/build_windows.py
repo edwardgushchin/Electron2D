@@ -24,6 +24,7 @@ def build(rid, sdl, artifacts):
                 "-DELECTRON2D_SDL_VERSION=" + package.configuration()["sdlVersion"],
                 "-DSDL3_LIBRARIES=" + str(output / "sdl/SDL3.lib")]),
             ("tools/enet-native", "Electron2DENet", "Electron2DENet.dll", []),
+            ("tools/webp-native", "Electron2DWebP", "Electron2DWebP.dll", []),
             ("tools/mesh-native", "Electron2DMesh", "Electron2DMesh.dll", []),
             ("tools/font-native", "freetype", "Electron2DFreeType.dll", [])):
         directory = output / target

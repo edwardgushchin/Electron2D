@@ -2039,6 +2039,16 @@
       "godot": "Vector4i::enum_value:Axis.AXIS_Z",
       "electron2d": "enumValue:Electron2D.Vector4Axis.Z()",
       "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Image::method:save_webp(String:,bool:,float:)",
+      "electron2d": "method:Electron2D.Image.SaveWebP(System.String,System.Boolean,System.Single)",
+      "reason": "Executable lossless/lossy WebP file and buffer encoding through the private libwebp bridge; exact RGBA8 including transparent RGB, lossy quality 0..1, typed effort settings, snapshot/BC/base-level conversion, bounded writer and atomic files. ImageWebPTests verifies source formats, mip/source preservation, limits, concurrency, fresh resource archives and real Linux GPU/Compatibility texture/capture. Other target execution remains unverified under ADR 0021. See docs/components/image-webp.md and ADR 0039."
+    },
+    {
+      "godot": "Image::method:save_webp_to_buffer(bool:,float:)",
+      "electron2d": "method:Electron2D.Image.SaveWebPToBuffer(System.Boolean,System.Single)",
+      "reason": "Executable lossless/lossy WebP file and buffer encoding through the private libwebp bridge; exact RGBA8 including transparent RGB, lossy quality 0..1, typed effort settings, snapshot/BC/base-level conversion, bounded writer and atomic files. ImageWebPTests verifies source formats, mip/source preservation, limits, concurrency, fresh resource archives and real Linux GPU/Compatibility texture/capture. Other target execution remains unverified under ADR 0021. See docs/components/image-webp.md and ADR 0039."
     }
   ],
   "extras": [
@@ -3396,12 +3406,12 @@
       "reason": "Executable native PNG/JPEG/WebP/BMP/TGA/SVG loading and PNG/JPEG saving with file/buffer paths, RGBA8 copied base pixels, size preflight, atomic replacement and Linux x64 tests in ImageCodecTests; decoded PNG texture output verified on Wayland/Vulkan. SVG CSS sizing, source channel layouts, color/profile metadata, full codec variants, additional Load formats and AOT remain unaudited or unfinished. See docs/classes/Image.md and ADR 0039."
     },
     {
-      "state": "Blocked",
+      "state": "Implemented",
       "godot": [
         "Image::method:save_webp(String:,bool:,float:)",
         "Image::method:save_webp_to_buffer(bool:,float:)"
       ],
-      "reason": "The authorized SDL_image 3.4.6 encoder at quality 100 changes opaque colors in a lossless round trip. Native encoder correction with exact color/alpha verification is required before the public lossless/lossy WebP save contract can be exposed (ADR 0039); no additional package was selected."
+      "reason": "Executable lossless/lossy WebP file and buffer encoding through the private libwebp bridge; exact RGBA8 including transparent RGB, lossy quality 0..1, typed effort settings, snapshot/BC/base-level conversion, bounded writer and atomic files. ImageWebPTests verifies source formats, mip/source preservation, limits, concurrency, fresh resource archives and real Linux GPU/Compatibility texture/capture. Other target execution remains unverified under ADR 0021. See docs/components/image-webp.md and ADR 0039."
     },
     {
       "state": "Implemented",

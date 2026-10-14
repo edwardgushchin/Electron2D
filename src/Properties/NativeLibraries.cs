@@ -9,16 +9,16 @@ internal static partial class NativeLibraries
     // Static native references are linked into the application executable.
     internal const string SDLLibrary = "__Internal", SDLImageLibrary = "__Internal", SDLShaderCrossLibrary = "__Internal",
         AudioLibrary = "__Internal", FreeTypeLibrary = "__Internal", HarfBuzzLibrary = "__Internal",
-        SSLLibrary = "__Internal", CryptoLibrary = "__Internal", ENetLibrary = "__Internal", TextBreakLibrary = "__Internal", MeshLibrary = "__Internal";
+        SSLLibrary = "__Internal", CryptoLibrary = "__Internal", ENetLibrary = "__Internal", TextBreakLibrary = "__Internal", WebPLibrary = "__Internal", MeshLibrary = "__Internal";
 #elif ELECTRON2D_BROWSER_NATIVE
     // Mono/WASM resolves the archive modules through generated P/Invoke tables, not dlopen(self).
     internal const string SDLLibrary = "libSDL3", SDLImageLibrary = "libSDL3_image", SDLShaderCrossLibrary = "libSDL3_shadercross",
         AudioLibrary = "libFAudio", FreeTypeLibrary = "libElectron2DFreeType", HarfBuzzLibrary = "libElectron2DHarfBuzz",
-        SSLLibrary = "libElectron2DSSL", CryptoLibrary = "libElectron2DCrypto", ENetLibrary = "libElectron2DENet", TextBreakLibrary = "libElectron2DTextBreak", MeshLibrary = "libElectron2DMesh";
+        SSLLibrary = "libElectron2DSSL", CryptoLibrary = "libElectron2DCrypto", ENetLibrary = "libElectron2DENet", TextBreakLibrary = "libElectron2DTextBreak", WebPLibrary = "libElectron2DWebP", MeshLibrary = "libElectron2DMesh";
 #else
     internal const string SDLLibrary = "SDL3", SDLImageLibrary = "SDL3_image", SDLShaderCrossLibrary = "SDL3_shadercross",
         AudioLibrary = "FAudio", FreeTypeLibrary = "freetype", HarfBuzzLibrary = "HarfBuzzSharp",
-        SSLLibrary = "Electron2DSSL", CryptoLibrary = "Electron2DCrypto", ENetLibrary = "Electron2DENet", TextBreakLibrary = "Electron2DTextBreak", MeshLibrary = "Electron2DMesh";
+        SSLLibrary = "Electron2DSSL", CryptoLibrary = "Electron2DCrypto", ENetLibrary = "Electron2DENet", TextBreakLibrary = "Electron2DTextBreak", WebPLibrary = "Electron2DWebP", MeshLibrary = "Electron2DMesh";
 #endif
     // Distribution runtimes may report arch-x64 or another nonportable RID.
     private static readonly string? DesktopPlatform = OperatingSystem.IsWindows() ? "win" :
@@ -51,7 +51,7 @@ internal static partial class NativeLibraries
                     NativeLibrary.Load("libElectron2DCrypto.so", assembly, path);
                     return NativeLibrary.Load("libElectron2DSSL.so", assembly, path);
                 }
-                if (name is "Electron2DCrypto" or "Electron2DENet" or "Electron2DTextBreak" or "Electron2DMesh")
+                if (name is "Electron2DCrypto" or "Electron2DENet" or "Electron2DTextBreak" or "Electron2DMesh" or "Electron2DWebP")
                     return NativeLibrary.Load("lib" + name + ".so", assembly, path);
                 if (name is not ("SDL3" or "SDL3_image" or "SDL3_shadercross" or "FAudio")) return 0;
                 var androidCore = Sdl.Value;
@@ -70,6 +70,7 @@ internal static partial class NativeLibraries
                 if (name == "Electron2DENet") return LoadRuntime("Electron2DENet.dll", assembly, path);
                 if (name == "Electron2DTextBreak") return LoadRuntime("Electron2DTextBreak.dll", assembly, path);
                 if (name == "Electron2DMesh") return LoadRuntime("Electron2DMesh.dll", assembly, path);
+                if (name == "Electron2DWebP") return LoadRuntime("Electron2DWebP.dll", assembly, path);
                 if (name is not ("SDL3" or "SDL3_image" or "SDL3_shadercross" or "FAudio")) return 0;
                 var windowsCore = Sdl.Value;
                 return name switch
@@ -89,6 +90,7 @@ internal static partial class NativeLibraries
                 if (name == "Electron2DENet") return LoadRuntime("libElectron2DENet.dylib", assembly, path);
                 if (name == "Electron2DTextBreak") return LoadRuntime("libElectron2DTextBreak.dylib", assembly, path);
                 if (name == "Electron2DMesh") return LoadRuntime("libElectron2DMesh.dylib", assembly, path);
+                if (name == "Electron2DWebP") return LoadRuntime("libElectron2DWebP.dylib", assembly, path);
                 if (name is not ("SDL3" or "SDL3_image" or "SDL3_shadercross" or "FAudio")) return 0;
                 var macCore = Sdl.Value;
                 return name switch
@@ -106,6 +108,7 @@ internal static partial class NativeLibraries
             if (name == "Electron2DENet") return LoadRuntime("libElectron2DENet.so", assembly, path);
             if (name == "Electron2DTextBreak") return LoadRuntime("libElectron2DTextBreak.so", assembly, path);
             if (name == "Electron2DMesh") return LoadRuntime("libElectron2DMesh.so", assembly, path);
+            if (name == "Electron2DWebP") return LoadRuntime("libElectron2DWebP.so", assembly, path);
             if (name is not ("SDL3" or "SDL3_image" or "SDL3_shadercross" or "FAudio")) return 0;
             // NuGet aliases are separate files. Use the same SONAME as native dependents and load core first,
             // otherwise two SDL copies disagree about the ownership of surfaces, windows and GPU objects.

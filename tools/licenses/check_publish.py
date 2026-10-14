@@ -27,13 +27,14 @@ NATIVE_GROUPS = {
     "HarfBuzz": ("libHarfBuzzSharp.so",),
     "FAudio": ("libFAudio.so.0",),
     "ENet": ("libElectron2DENet.so",),
+    "meshoptimizer": ("libElectron2DMesh.so",),
     "ICUText": ("libElectron2DTextBreak.so",),
     "libaom": ("libaom.so*",),
     "libavif": ("libavif.so*",),
     "dav1d": ("libdav1d.so*",),
     "libpng": ("libpng16.so*",),
     "libtiff": ("libtiff.so*",),
-    "libwebp": ("libwebp.so*", "libwebpdemux.so*", "libwebpmux.so*"),
+    "libwebp": ("libwebp.so*", "libwebpdemux.so*", "libwebpmux.so*", "libElectron2DWebP.so"),
     "SDL_shadercross": ("libSDL3_shadercross.so*",),
     "SPIRV-Cross": ("libspirv-cross-c-shared.so*",),
     "DirectXShaderCompiler": ("libdxcompiler.so", "libdxil.so"),
@@ -54,7 +55,7 @@ def check(publish: Path, application_licenses=()) -> None:
     assert PACKAGES <= packages, f"Unreviewed native package versions: {PACKAGES - packages}"
 
     elf = [p.name for p in publish.rglob("*") if p.is_file() and p.open("rb").read(4) == b"\x7fELF"]
-    assert len(elf) == 68, f"Expected 68 audited ELF files, found {len(elf)}"
+    assert len(elf) == 70, f"Expected 70 audited ELF files, found {len(elf)}"
     assert app in elf, "Expected the native application host"
     for name in elf:
         groups = [group for group, patterns in NATIVE_GROUPS.items()

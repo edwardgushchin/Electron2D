@@ -14,3 +14,5 @@ The platform package version is the minimum supported Electron2D version, includ
 Publish for a specific RID to include only its native assets under `runtimes/<RID>/native`. Platform package installation does not establish target execution or complete game hosting; refer to the repository platform report for current verification limits. Native archives for Apple and Web still follow their SDK's static-link rules.
 
 Native producers keep source receipts, binary SHA-256 values, architecture/loader/export checks and bundled notices. The maintainer source-build mode and CI prepare packages; game developers do not compile the native backends.
+
+The WebP bridge producer in `tools/webp-native` statically links the pinned mature codec for exact/lossy image saving. Source builds and native receipts require `Electron2DWebP` on desktop/Android and its bridge/codec archives on Apple device/browser profiles. Older prebuilt bundles do not contain it. Its sole C export is `e2d_webp_encode`; Linux execution is verified separately from foreign targets and publication.

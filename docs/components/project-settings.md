@@ -97,3 +97,7 @@ The permanent `ProjectSettings.RootNodeLayoutDirection` integer selector accepts
 ## Physics implementation defaults
 
 `Physics2DEngine` registers physics/2d/physics_engine as nonempty exact text, default DEFAULT. `Physics2DAllowCPUFallback` registers physics/2d/allow_cpu_fallback as a boolean, default false. Both persist base/feature values; a provider name may be loaded before registration. Implicit scene worlds capture active-feature values before lazy startup; explicit and caller parameterless creation keep their choices. [The selection contract](physics-backends.md#project-physics-selection) defines priority, reset/expiration and startup-only fallback with actual motion, no-device and rendered evidence.
+
+## WebP codec settings
+
+The built-in `ProjectSettings.WebPCompressionMethod` and `WebPLosslessCompressionFactor` definitions default to 2 and 25, with ranges 0–6 and finite 0–100. Every independent registry registers them too. They control executable cold image saving and support ordinary typed persistence and feature overrides. See [WebP saving](../components/image-webp.md).

@@ -869,3 +869,7 @@ Six permanent input/ui_filedialog definitions participate in the ordinary builti
 The built-in physics catalog also registers Physics2DDefaultConstraintBias (physics/2d/solver/default_constraint_bias), finite [0,1], default 0.2; spaces sample its feature-resolved value at construction. See [ProjectSettings](ProjectSettings.md#physics2ddefaultconstraintbias).
 
 Built-in worker definitions include ProjectSettings.WorkerPoolMaxThreads, WorkerPoolLowPriorityThreadRatio and WorkerPoolMaxPendingTasks. Both isolated and process-wide registries validate/store them. Only the process-wide WorkerThreadPool consumes feature overrides on first submission; editing an isolated registry neither starts workers nor resizes the retained runtime. See [worker execution](../components/worker-pool.md).
+
+## WebP codec settings
+
+The built-in `ProjectSettings.WebPCompressionMethod` and `WebPLosslessCompressionFactor` definitions default to 2 and 25, with ranges 0–6 and finite 0–100. Every independent registry registers them too. They control executable cold image saving and support ordinary typed persistence and feature overrides. See [WebP saving](../components/image-webp.md).

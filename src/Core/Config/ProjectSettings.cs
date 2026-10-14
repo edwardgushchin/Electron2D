@@ -272,6 +272,15 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<double> PhysicsJitterFix { get; } =
         new("physics/common/physics_jitter_fix", 0.5d, value => double.IsFinite(value) && value >= 0d);
 
+    /// <summary>Selects WebP encoding effort from zero (fastest) through six (smallest output).</summary>
+    public static ProjectSetting<int> WebPCompressionMethod { get; } =
+        new("rendering/textures/webp_compression/compression_method", 2, value => value is >= 0 and <= 6);
+
+    /// <summary>Selects lossless WebP compression effort from zero through one hundred.</summary>
+    /// <remarks>This changes encoding cost and size, while preserving exact RGBA8 pixels.</remarks>
+    public static ProjectSetting<float> WebPLosslessCompressionFactor { get; } =
+        new("rendering/textures/webp_compression/lossless_compression_factor", 25f, value => float.IsFinite(value) && value is >= 0 and <= 100);
+
     /// <summary>Selects the canvas rendering method sampled when Engine.Run opens its window.</summary>
     public static ProjectSetting<string> RenderingMethod { get; } =
         new("rendering/renderer/rendering_method", "gpu", value => value is "gpu" or "compatibility");
