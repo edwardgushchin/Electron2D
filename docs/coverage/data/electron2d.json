@@ -99901,6 +99901,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Image.LoadEXRFromBuffer(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "LoadEXRFromBuffer",
+    "signature": "public System.Void LoadEXRFromBuffer(System.ReadOnlySpan\u003CSystem.Byte\u003E buffer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "buffer",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Image.LoadFromFile(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
@@ -100209,6 +100228,69 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Image.SaveEXR(System.String,System.Boolean,System.Boolean,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "SaveEXR",
+    "signature": "public System.Void SaveEXR(System.String path, System.Boolean grayscale = false, System.Boolean colorImage = false, System.Single maxLinearValue = -1f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "grayscale",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "colorImage",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "maxLinearValue",
+        "type": "System.Single",
+        "default": "-1f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Image.SaveEXRToBuffer(System.Boolean,System.Boolean,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "SaveEXRToBuffer",
+    "signature": "public System.Byte[] SaveEXRToBuffer(System.Boolean grayscale = false, System.Boolean colorImage = false, System.Single maxLinearValue = -1f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "grayscale",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "colorImage",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "maxLinearValue",
+        "type": "System.Single",
+        "default": "-1f"
+      }
+    ],
     "returnType": "System.Byte[]",
     "value": null
   },

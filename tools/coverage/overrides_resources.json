@@ -499,6 +499,21 @@
       "godot": "Image::method:save_dds_to_buffer()",
       "electron2d": "method:Electron2D.Image.SaveDDSToBuffer()",
       "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. Typed span/owned bytes and exception projection; complete tightly packed container is required. Other codec families and foreign-platform/native allocation gates remain separate."
+    },
+    {
+      "godot": "Image::method:load_exr_from_buffer(PackedByteArray:)",
+      "electron2d": "method:Electron2D.Image.LoadEXRFromBuffer(System.ReadOnlySpan<System.Byte>)",
+      "reason": "Executable pure managed EXR file/buffer load and PIZ save, with 12 source roles, HALF/FLOAT/channel preservation, monochrome Y, numeric UINT input, raw negative/nonfinite data and color/upper clamps. Bounded metadata/materialization/output, failure atomicity, resource archive ownership and native GPU/Compatibility consumers under ADR 0039. Deep/multipart and unsupported compression reject consistently with the flat Image role; foreign/AOT execution remains unverified. See docs/components/image-exr.md."
+    },
+    {
+      "godot": "Image::method:save_exr(String:,bool:,bool:,float:)",
+      "electron2d": "method:Electron2D.Image.SaveEXR(System.String,System.Boolean,System.Boolean,System.Single)",
+      "reason": "Executable pure managed EXR file/buffer load and PIZ save, with 12 source roles, HALF/FLOAT/channel preservation, monochrome Y, numeric UINT input, raw negative/nonfinite data and color/upper clamps. Bounded metadata/materialization/output, failure atomicity, resource archive ownership and native GPU/Compatibility consumers under ADR 0039. Deep/multipart and unsupported compression reject consistently with the flat Image role; foreign/AOT execution remains unverified. See docs/components/image-exr.md."
+    },
+    {
+      "godot": "Image::method:save_exr_to_buffer(bool:,bool:,float:)",
+      "electron2d": "method:Electron2D.Image.SaveEXRToBuffer(System.Boolean,System.Boolean,System.Single)",
+      "reason": "Executable pure managed EXR file/buffer load and PIZ save, with 12 source roles, HALF/FLOAT/channel preservation, monochrome Y, numeric UINT input, raw negative/nonfinite data and color/upper clamps. Bounded metadata/materialization/output, failure atomicity, resource archive ownership and native GPU/Compatibility consumers under ADR 0039. Deep/multipart and unsupported compression reject consistently with the flat Image role; foreign/AOT execution remains unverified. See docs/components/image-exr.md."
     }
   ],
   "statusGroups": [
@@ -672,13 +687,10 @@
     },
     {
       "godot": [
-        "Image::method:load_exr_from_buffer(PackedByteArray:)",
-        "Image::method:load_ktx_from_buffer(PackedByteArray:)",
-        "Image::method:save_exr(String:,bool:,bool:,float:)",
-        "Image::method:save_exr_to_buffer(bool:,bool:,float:)"
+        "Image::method:load_ktx_from_buffer(PackedByteArray:)"
       ],
       "state": "Unimplemented",
-      "reason": "ADR 0039: EXR requires a selected mature portable codec with HDR/channel/save semantics; KTX requires a mature KTX2/Basis-aware container/transcoder integration, complete container validation, orientation/mip/format role mapping and public file/buffer/texture consumers; the pinned loader consumes both KTX generations through libktx. The pinned BCn closure now supplies KTX1 primitives and BC blocks, but KTX1 alone does not satisfy the complete pinned loader and those public KTX paths are not yet integrated. ETC/EAC/ASTC remain separate codec dependencies; raw storage is not implementation."
+      "reason": "ADR 0039: KTX requires a mature KTX2/Basis-aware container/transcoder integration, complete container validation, orientation/mip/format roles and file/buffer/texture consumers. BCn supplies KTX1 primitives and BC blocks, but KTX1 alone does not satisfy the complete pinned loader. ETC/EAC/ASTC remain separate codec dependencies."
     },
     {
       "godot": [
@@ -728,6 +740,15 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. Typed span/owned bytes and exception projection; complete tightly packed container is required. Other codec families and foreign-platform/native allocation gates remain separate."
+    },
+    {
+      "godot": [
+        "Image::method:load_exr_from_buffer(PackedByteArray:)",
+        "Image::method:save_exr(String:,bool:,bool:,float:)",
+        "Image::method:save_exr_to_buffer(bool:,bool:,float:)"
+      ],
+      "state": "Implemented",
+      "reason": "Executable pure managed EXR file/buffer load and PIZ save, with 12 source roles, HALF/FLOAT/channel preservation, monochrome Y, numeric UINT input, raw negative/nonfinite data and color/upper clamps. Bounded metadata/materialization/output, failure atomicity, resource archive ownership and native GPU/Compatibility consumers under ADR 0039. Deep/multipart and unsupported compression reject consistently with the flat Image role; foreign/AOT execution remains unverified. See docs/components/image-exr.md."
     }
   ],
   "extras": [

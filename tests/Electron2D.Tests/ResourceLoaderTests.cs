@@ -26,8 +26,8 @@ internal static class ResourceLoaderTests
               (int)ResourceLoader.CacheMode.ReplaceDeep == 4,
             "All cache-mode identities retain pinned numeric values.");
         var extensions = ResourceLoader.GetRecognizedExtensionsForType<Texture>();
-        Check(extensions.SequenceEqual(["png", "jpg", "jpeg", "webp", "bmp", "tga", "svg"]),
-            "Extension discovery reports every integrated image decoder.");
+        Check(extensions.SequenceEqual(["png", "jpg", "jpeg", "webp", "bmp", "tga", "svg", "dds", "exr", "e2dres"]),
+            "Extension discovery reports every integrated image decoder: " + string.Join(",", extensions));
         extensions[0] = "changed";
         Check(ResourceLoader.GetRecognizedExtensionsForType<ImageTexture>()[0] == "png",
             "Extension results are caller-owned.");
@@ -92,9 +92,9 @@ internal static class ResourceLoaderTests
         Reject<ArgumentOutOfRangeException>(() => ResourceLoader.Load<ImageTexture>(path, (ResourceLoader.CacheMode)99));
         Reject<NotSupportedException>(() => ResourceLoader.Load<Curve>(path));
         Check(!ResourceLoader.Exists<Curve>(path) &&
-              ResourceLoader.GetRecognizedExtensionsForType<Curve>().Length == 0 &&
+              ResourceLoader.GetRecognizedExtensionsForType<Curve>().SequenceEqual(["e2dres"]) &&
               ResourceLoader.GetCachedRef<Curve>(path) is null,
-            "An unsupported file type has no false loader capability or typed cached reference.");
+            "An image path has no curve loader capability or typed cached reference; curve archive discovery remains available.");
         Reject<NotSupportedException>(() => ResourceLoader.Load<ImageTexture>(IOPath.Combine(root, "unsupported.bin")));
         Reject<ArgumentException>(() => ResourceLoader.HasCached(string.Empty));
         using (var invalidCache = new ImageTexture { ResourcePath = "res://../escape.png" })

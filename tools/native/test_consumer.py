@@ -19,6 +19,13 @@ using var webpSource = Image.CreateFromData(2, 1, false, Image.Format.Rgba8, [17
 using var webpDecoded = new Image();
 webpDecoded.LoadWebPFromBuffer(webpSource.SaveWebPToBuffer());
 if (!webpDecoded.GetData().AsSpan().SequenceEqual(webpSource.GetData())) throw new Exception("Native WebP exact RGBA consumer failed");
+var exrPixels = new byte[16];
+var exrValues = new[] { -2f, 3.5f, 0.25f, 1f };
+for (var i = 0; i < exrValues.Length; i++) System.Buffers.Binary.BinaryPrimitives.WriteSingleLittleEndian(exrPixels.AsSpan(i * 4), exrValues[i]);
+using var exrSource = Image.CreateFromData(1, 1, false, Image.Format.Rgbaf, exrPixels);
+using var exrDecoded = new Image();
+exrDecoded.LoadEXRFromBuffer(exrSource.SaveEXRToBuffer());
+if (exrDecoded.PixelFormat != Image.Format.Rgbaf || !exrDecoded.GetData().AsSpan().SequenceEqual(exrPixels)) throw new Exception("Managed EXR HDR consumer failed");
 using var importer = new ImporterMesh();
 var cells = 8;
 var points = new Vector2[(cells + 1) * (cells + 1)];
@@ -66,7 +73,7 @@ try
         }
         finally { System.IO.File.Delete(compressedPath); }
     }
-    Console.WriteLine("Public text, audio, ENet, WebP, file codecs and mesh consumer passed");
+    Console.WriteLine("Public text, audio, ENet, WebP, EXR, file codecs and mesh consumer passed");
 }
 finally { Engine.Stop(); }
 '''

@@ -117,6 +117,9 @@ byte[] ownedCopy = image.GetData();
 | [`public static Image LoadFromFile(string path)`](#loadfromfile) | Returns an independent caller-owned image decoded from a file. |
 | [`public void LoadPNGFromBuffer(ReadOnlySpan<byte> buffer)`](#loadpngfrombuffer) | Replaces pixels from PNG bytes. |
 | [`public void LoadJPGFromBuffer(ReadOnlySpan<byte> buffer)`](#loadjpgfrombuffer) | Replaces pixels from JPEG bytes. |
+| [`public void LoadEXRFromBuffer(ReadOnlySpan<byte> buffer)`](#loadexrfrombuffer) | Loads flat HDR channels and half/float precision. |
+| [`public byte[] SaveEXRToBuffer(bool grayscale = false, bool colorImage = false, float maxLinearValue = -1f)`](#saveexrtobuffer) | Encodes lossless HDR data with channel and clamp options. |
+| [`public void SaveEXR(string path, bool grayscale = false, bool colorImage = false, float maxLinearValue = -1f)`](#saveexr) | Atomically saves lossless EXR bytes. |
 | [`public void LoadWebPFromBuffer(ReadOnlySpan<byte> buffer)`](#loadwebpfrombuffer) | Replaces pixels from WebP bytes. |
 | [`public void LoadBMPFromBuffer(ReadOnlySpan<byte> buffer)`](#loadbmpfrombuffer) | Replaces pixels from BMP bytes. |
 | [`public void LoadTGAFromBuffer(ReadOnlySpan<byte> buffer)`](#loadtgafrombuffer) | Replaces pixels from TGA bytes. |
@@ -541,6 +544,21 @@ Returns independent encoded WebP bytes from a stable RGBA8 base-level snapshot. 
 
 Encodes with `SaveWebPToBuffer`, then atomically replaces the destination through the existing file writer. Operating-system, `res://` and `user://` paths are accepted; parent directories must exist. Encoding failure preserves an existing file and source image. No `Changed` event is emitted.
 
+<a id="loadexrfrombuffer"></a>
+### `public void LoadEXRFromBuffer(ReadOnlySpan<byte> buffer)`
+
+Loads a flat scanline/tiled EXR base image with one through four channels and half/float precision; Y expands to RGB. UINT channels convert numerically to float. Decoding and budgets finish before publication; failure preserves state, success emits Changed. Deep/multipart and unavailable compression reject. Input and decoded storage are bounded to 64 MiB. See [complete HDR codec contract](../components/image-exr.md).
+
+<a id="saveexrtobuffer"></a>
+### `public byte[] SaveEXRToBuffer(bool grayscale = false, bool colorImage = false, float maxLinearValue = -1f)`
+
+Returns owned lossless PIZ EXR bytes. The twelve R/RG/RGB/RGBA byte/half/float formats are accepted; byte inputs become HALF. Grayscale names one channel Y and rejects multichannel input. colorImage clamps negative components to zero; a nonnegative maxLinearValue caps stored components, including alpha. NaN bounds reject. Unclamped raw data preserves its numerical range and special float values. Encoding reads a stable base snapshot, preserving all source mipmaps and events. Source channel storage and output are each bounded to 64 MiB.
+
+<a id="saveexr"></a>
+### `public void SaveEXR(string path, bool grayscale = false, bool colorImage = false, float maxLinearValue = -1f)`
+
+Uses SaveEXRToBuffer, then atomically replaces the file at an operating-system path, res:// path or user:// path. Parent directories must exist; encoding failure preserves the destination.
+
 ## Lifecycle and state transitions
 
 `new Image()` starts empty. A factory or `SetData` establishes nonempty storage. Processing operations preserve or replace format, size, and mipmap policy as documented. `Dispose` clears the buffer and closes inherited resource state; all later public state access fails with `ObjectDisposedException`.
@@ -571,7 +589,7 @@ Public state reads and writes are safe for concurrent calls on the same image. M
 
 The implemented surface covers all backend-independent CPU operations in the audited reference API, adapted to typed C# properties, exceptions, arrays, and `ImageMetrics`. The following members are intentionally absent, not stubs:
 
-- PNG/JPEG/WebP/BMP/TGA/SVG file and buffer loading and PNG/JPEG saving are executable under the codec profile above. SVG raster dimensions use the documented XML preflight and may differ from SVG renderers with other CSS sizing rules. KTX/EXR, WebP saving, source channel layouts and complete color/metadata semantics remain unfinished. SDL_image 3.4.6 changes opaque colors when saving WebP at its lossless setting, so no public lossless encoder is claimed.
+- PNG/JPEG/WebP/BMP/TGA/SVG/DDS/EXR file and buffer loading and PNG/JPEG/WebP/EXR saving are executable under their documented codec profiles. WebP saving uses the private exact/lossy encoder; EXR retains HDR channels and precision. SVG raster dimensions use the documented XML preflight and may differ from SVG renderers with other CSS sizing rules. KTX and complete color/metadata semantics remain unfinished.
 - Compress/CompressFromChannels execute S3TC/BPTC; ETC/EAC/ASTC require selected portable encoders and complete texture consumers.
 - `Decompress` executes BC1–BC7 and RA-as-RG; ETC/EAC/ASTC require separate portable decoders.
 - ImageTexture converts copied pixels for GPU sampling in the first rendering slice; ordinary texture drawing and additional formats remain unfinished.

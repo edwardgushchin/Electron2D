@@ -252,3 +252,5 @@ ListDirectory(string directoryPath) returns recognized resource filenames and sl
 ShaderInclude source (`.hlslinc`/`.glslinc`) participates in the existing ordered format and cache lifecycle. Source saves use atomic replacement; typed archives store Code. See [ShaderInclude](ShaderInclude.md) for byte limits and build-time dependency consumption.
 
 UTF-8 PO and ordinary MO string-table files load as Translation through the built-in format registration, including typed discovery, all root cache modes and threaded preparation. Imported plural definitions persist when saved as `.e2dres`. See [localization import](../components/localization.md#po-and-mo-catalog-import) for malformed-input rejection and limits.
+
+The [EXR I/O slice](../components/image-exr.md) supplies precision-preserving HDR file/buffer load and lossless save. Image and texture resource discovery includes DDS and EXR alongside PNG/JPEG/WebP/BMP/TGA/SVG; typed archives also expose their registered extensions. GPU float sampling, explicit Compatibility byte conversion and float-driver rejection are separate exercised profiles.

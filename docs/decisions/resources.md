@@ -231,6 +231,9 @@ Electron2D owns `Color`, `Vector2i`, `Rect2i`, `Resource`, typed duplication, bl
 
 ### Decision
 
+EXR I/O selects the private managed TinyEXR.NET codec under ADR 0012. The complete flat Image projection preserves channel/half/float roles, PIZ saving, monochrome naming and raw/color/upper-bound semantics, with metadata/materialization/stream budgets and atomic publication. Numeric UINT conversion and safe defaults for sparse alpha-bearing RGB replace unsafe native interpretations. The selected codec/source, renderer consumers and verification limits are in [EXR I/O](../components/image-exr.md).
+
+
 The WebP save slice selects the advanced libwebp encoder behind a private C ABI: ARGB input and `exact=1` preserve transparent RGB; mode remains separate from quality. Typed settings preserve compression method 2 and lossless effort 25. A managed snapshot converts uncompressed and supported BC input to base RGBA8; dimensions/expanded input/emitted output are bounded. Native producer/ownership details and target limits are in [WebP saving](../components/image-webp.md), under ADR 0012 and ADR 0014.
 
 `Image` is the first concrete managed `Resource`. It owns a private portable little-endian byte buffer, dimensions, one `Image.Format`, and an optional complete mip chain.
