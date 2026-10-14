@@ -9979,6 +9979,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ResourcePreloader",
+    "kind": "type",
+    "declaringType": "Electron2D.ResourcePreloader",
+    "name": "ResourcePreloader",
+    "signature": "public class Electron2D.ResourcePreloader",
+    "visibility": "public",
+    "baseType": "Electron2D.Node",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ResourceSaver",
     "kind": "type",
     "declaringType": "Electron2D.ResourceSaver",
@@ -21557,6 +21572,19 @@
     "name": ".ctor",
     "signature": "protected ResourceFormatSaver()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ResourcePreloader..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ResourcePreloader",
+    "name": ".ctor",
+    "signature": "public ResourcePreloader()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -154927,6 +154955,169 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourcePreloader.AddResource(System.String,Electron2D.Resource)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourcePreloader",
+    "name": "AddResource",
+    "signature": "public System.Void AddResource(System.String name, Electron2D.Resource resource)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "resource",
+        "type": "Electron2D.Resource",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourcePreloader.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourcePreloader",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourcePreloader.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourcePreloader",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourcePreloader.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourcePreloader",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourcePreloader.GetResource(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourcePreloader",
+    "name": "GetResource",
+    "signature": "public Electron2D.Resource GetResource(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourcePreloader.GetResourceList()",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourcePreloader",
+    "name": "GetResourceList",
+    "signature": "public System.String[] GetResourceList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourcePreloader.HasResource(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourcePreloader",
+    "name": "HasResource",
+    "signature": "public System.Boolean HasResource(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourcePreloader.RemoveResource(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourcePreloader",
+    "name": "RemoveResource",
+    "signature": "public System.Void RemoveResource(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourcePreloader.RenameResource(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourcePreloader",
+    "name": "RenameResource",
+    "signature": "public System.Void RenameResource(System.String name, System.String newname)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "newname",
+        "type": "System.String",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },

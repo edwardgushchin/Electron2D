@@ -1705,3 +1705,11 @@ and hardware/window/performance acceptance remains open.
 | [Networking](domains/networking.md) | [JSON-RPC](components/jsonrpc.md) | [JSONRPCErrorCode](classes/JSONRPCErrorCode.md) | [JSONRPCErrorCode.cs](../src/Core/Networking/JSONRPCErrorCode.cs) | Current | Five standard protocol failure identities. |
 
 JSONRPC.API.cs supplies copied document and concrete-schema makers. JSON supplies the dedicated document/native schema boundary; transport and scene consumers own actual I/O and callback scheduling.
+
+## Named scene resources
+
+| Domain | Component | Type | Source | State | Responsibility |
+| --- | --- | --- | --- | --- | --- |
+| [Resources](domains/resources.md) | [Named scene resources](components/resource-preloading.md) | [ResourcePreloader](classes/ResourcePreloader.md) | [ResourcePreloader.cs](../src/Scene/Resources/ResourcePreloader.cs) | Current | Borrowed named assets, numbered edit policy and typed scene/file graph slots. |
+
+ResourceFileTypes.Nodes supplies the compiled node factory; PackedScene and ResourceArchive recover the exact reserved Resource descriptor family. Internal Unicode ordering reuses the existing JSON scalar comparer without changing the public JSON surface.

@@ -298,7 +298,7 @@ public sealed class JSON : Resource
         text.Append('"');
     }
 
-    private static int CompareKeys(string left, string right)
+    internal static int CompareKeys(string left, string right)
     {
         var leftRunes = left.EnumerateRunes();
         var rightRunes = right.EnumerateRunes();

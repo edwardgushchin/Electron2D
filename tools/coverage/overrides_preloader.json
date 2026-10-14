@@ -1,0 +1,72 @@
+{
+  "mappings": [
+    {
+      "godot": "class:ResourcePreloader",
+      "electron2d": "T:Electron2D.ResourcePreloader",
+      "reason": "ADR 0013/0014/0023: typed borrowed named resources, exact suffix/rename/order policy and canonical reserved Resource slots integrate with local/shared aliases and scene/file graph leases. Managed/file tests and actual GPU/compatibility texture lookup/render/cleanup execute; fresh/foreign/native allocation/owner gates remain separate."
+    },
+    {
+      "godot": "ResourcePreloader::method:add_resource(StringName:,Resource:)",
+      "electron2d": "method:Electron2D.ResourcePreloader.AddResource(System.String,Electron2D.Resource)",
+      "reason": "ADR 0013/0014/0023: typed borrowed named resources, exact suffix/rename/order policy and canonical reserved Resource slots integrate with local/shared aliases and scene/file graph leases. Managed/file tests and actual GPU/compatibility texture lookup/render/cleanup execute; fresh/foreign/native allocation/owner gates remain separate."
+    },
+    {
+      "godot": "ResourcePreloader::method:get_resource(StringName:)",
+      "electron2d": "method:Electron2D.ResourcePreloader.GetResource(System.String)",
+      "reason": "ADR 0013/0014/0023: typed borrowed named resources, exact suffix/rename/order policy and canonical reserved Resource slots integrate with local/shared aliases and scene/file graph leases. Managed/file tests and actual GPU/compatibility texture lookup/render/cleanup execute; fresh/foreign/native allocation/owner gates remain separate."
+    },
+    {
+      "godot": "ResourcePreloader::method:get_resource_list()",
+      "electron2d": "method:Electron2D.ResourcePreloader.GetResourceList()",
+      "reason": "ADR 0013/0014/0023: typed borrowed named resources, exact suffix/rename/order policy and canonical reserved Resource slots integrate with local/shared aliases and scene/file graph leases. Managed/file tests and actual GPU/compatibility texture lookup/render/cleanup execute; fresh/foreign/native allocation/owner gates remain separate."
+    },
+    {
+      "godot": "ResourcePreloader::method:has_resource(StringName:)",
+      "electron2d": "method:Electron2D.ResourcePreloader.HasResource(System.String)",
+      "reason": "ADR 0013/0014/0023: typed borrowed named resources, exact suffix/rename/order policy and canonical reserved Resource slots integrate with local/shared aliases and scene/file graph leases. Managed/file tests and actual GPU/compatibility texture lookup/render/cleanup execute; fresh/foreign/native allocation/owner gates remain separate."
+    },
+    {
+      "godot": "ResourcePreloader::method:remove_resource(StringName:)",
+      "electron2d": "method:Electron2D.ResourcePreloader.RemoveResource(System.String)",
+      "reason": "ADR 0013/0014/0023: typed borrowed named resources, exact suffix/rename/order policy and canonical reserved Resource slots integrate with local/shared aliases and scene/file graph leases. Managed/file tests and actual GPU/compatibility texture lookup/render/cleanup execute; fresh/foreign/native allocation/owner gates remain separate."
+    },
+    {
+      "godot": "ResourcePreloader::method:rename_resource(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.ResourcePreloader.RenameResource(System.String,System.String)",
+      "reason": "ADR 0013/0014/0023: typed borrowed named resources, exact suffix/rename/order policy and canonical reserved Resource slots integrate with local/shared aliases and scene/file graph leases. Managed/file tests and actual GPU/compatibility texture lookup/render/cleanup execute; fresh/foreign/native allocation/owner gates remain separate."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.ResourcePreloader..ctor()",
+      "reason": "ADR 0013/0023 typed Node constructor, stored named Resource descriptors, exact static scene factory and inherited deterministic table cleanup; these project the existing named scene resource role."
+    },
+    {
+      "electron2d": "method:Electron2D.ResourcePreloader.CreateSceneInstanceFactory()",
+      "reason": "ADR 0013/0023 typed Node constructor, stored named Resource descriptors, exact static scene factory and inherited deterministic table cleanup; these project the existing named scene resource role."
+    },
+    {
+      "electron2d": "method:Electron2D.ResourcePreloader.Dispose(System.Boolean)",
+      "reason": "ADR 0013/0023 typed Node constructor, stored named Resource descriptors, exact static scene factory and inherited deterministic table cleanup; these project the existing named scene resource role."
+    },
+    {
+      "electron2d": "method:Electron2D.ResourcePreloader.GetPropertyDescriptors()",
+      "reason": "ADR 0013/0023 typed Node constructor, stored named Resource descriptors, exact static scene factory and inherited deterministic table cleanup; these project the existing named scene resource role."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:ResourcePreloader",
+        "ResourcePreloader::method:add_resource(StringName:,Resource:)",
+        "ResourcePreloader::method:get_resource(StringName:)",
+        "ResourcePreloader::method:get_resource_list()",
+        "ResourcePreloader::method:has_resource(StringName:)",
+        "ResourcePreloader::method:remove_resource(StringName:)",
+        "ResourcePreloader::method:rename_resource(StringName:,StringName:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0013/0014/0023: typed borrowed named resources, exact suffix/rename/order policy and canonical reserved Resource slots integrate with local/shared aliases and scene/file graph leases. Managed/file tests and actual GPU/compatibility texture lookup/render/cleanup execute; fresh/foreign/native allocation/owner gates remain separate."
+    }
+  ]
+}

@@ -325,6 +325,7 @@ public sealed partial class ThemeDB
         ["ResourceFormatLoader"] = ["ResourceFormatLoader", "ElectronObject"],
         ["ResourceFormatSaver"] = ["ResourceFormatSaver", "ElectronObject"],
         ["ResourceLoader"] = ["ResourceLoader", "ElectronObject"],
+        ["ResourcePreloader"] = ["ResourcePreloader", "Node", "ElectronObject"],
         ["ResourceSaver"] = ["ResourceSaver", "ElectronObject"],
         ["ResourceUID"] = ["ResourceUID", "ElectronObject"],
         ["RichTextEffect"] = ["RichTextEffect", "Resource", "ElectronObject"],

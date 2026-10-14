@@ -417,6 +417,7 @@ public sealed partial class PackedScene : Resource
                 descriptor = ThemeOwner.StoredOverride(node, property.Name, property.Value.ValueType) ?? InstanceUniformState.StoredParameter(node, property.Name, property.Value.ValueType);
             if (descriptor?.ValueType != property.Value.ValueType) descriptor = InstanceUniformState.StoredParameter(node, property.Name, property.Value.ValueType) ?? descriptor;
             if (descriptor is null && node is FoldableContainer) descriptor = FoldableContainer.StoredTitleControl(property.Name, property.Value.ValueType);
+            if (descriptor is null && node is ResourcePreloader) descriptor = ResourcePreloader.StoredResource(property.Name, property.Value.ValueType);
             if (descriptor is null || !descriptor.IsStored ||
                 descriptor.ValueType != property.Value.ValueType)
             {

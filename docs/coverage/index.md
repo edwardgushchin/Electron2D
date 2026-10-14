@@ -941,3 +941,7 @@ and hardware/window/performance acceptance remains open.
 ## JSON-RPC documents (2026-10-14)
 
 The [JSON-RPC document/typed-dispatch slice](../components/jsonrpc.md) closes all fourteen JSONRPC own rows. Document/native makers, concrete/compiled callbacks, strict wire validation, exact numeric/string/null IDs, all standard errors, root batches, notification suppression and deterministic input/result/registration ownership execute in JSONRPCTests. A public Node/SceneTree/TCP/PacketPeerStream scenario performs actual framed request, notification and correlated response. Allocating JSON work and external/foreign/routed/rendered/editor acceptance remain separate.
+
+## Named scene resources (2026-10-14)
+
+[ResourcePreloader](../components/resource-preloading.md) closes all seven own class/method rows. Typed borrowed lookup, first-free suffix editing, canonical Unicode storage, local/shared aliases, ordinary/compressed/big-endian files and graph retirement execute. Prepared Get/Has cycles allocate zero owner managed bytes. Author/save/load and Ready resource lookup produce actual blue pixels on current GPU/compatibility Window backends. Inherited Node gaps remain on Node; fresh/foreign/native allocator and human/owner acceptance retain their own gates.
