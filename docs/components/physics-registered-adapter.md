@@ -1780,3 +1780,24 @@ Evidence manifests/results are under bin/physics-capsule-provider/2026-10-14/fin
 with six precommit gates under gates2. Production API remains 13,835 declarations
 with 10,583 mappings, 3,252 reviewed extras and zero unmapped; wiki check covers
 820 public types and 838 pages with zero updates/removals.
+
+The Final2 receipt is the frozen pre-canvas-modulation cohort, not verification of
+the later integrated main. Concurrent commit d8036b6ae8933c66d3e1c194e98d07448c9ebc4a
+changed runtime/coverage inputs before the capsule commit. The precommit source
+comparison detected that change, but the shell sequence incorrectly continued to
+commit. History is retained: the implementation is 73a377557b0e7ea63961db066460314a1cc61323,
+followed by complete current-main revalidation and this evidence correction.
+
+Final3 now verifies integrated main `73a377557b0e7ea63961db066460314a1cc61323` with all 13 fresh processes and
+all six commit gates passing again. Its 4,184 source inputs fingerprint is
+`fed6b45f535d3539b8874f1ce8d22cb1ac5c2e155551289b53ce1b5fc39f6518`; runtime/consumer DLLs are
+`4716f42e5343d9c03be6fb5a05dcae3497d1262bde86ab5a9cab27cd1e397e64` and `4595175250c4e25d2d879ffe0ba8f1847c2a49391ae7993633a7007de7cbd5a3`.
+All 61 runtime-file identities and source-before/source-after identities agree,
+and the runtime built by the commit gates matches the loaded DLL. CPU/provider
+remain device-free, GPU loads only CPU lavapipe, and serial/separate solver-lane
+counts are exactly 0/1. Every warmed bracket still measures strict 0/0 managed
+bytes. Final3 process/files/results and gates3 logs are the authoritative integrated
+receipts. The compiled API now has 13,842 declarations, 10,585 mappings, 3,257
+reviewed extras and zero unmapped; wiki verification has 821 public types and
+839 pages with zero updates/removals. The changed counts belong to the preserved
+canvas-modulation integration, not a physics API addition.
