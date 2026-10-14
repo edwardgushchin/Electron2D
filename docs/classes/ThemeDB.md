@@ -45,6 +45,7 @@ There is no public static constructor or GetProjectTheme null stub.
 | DefaultBaseScale / DefaultFontSize | 1 / 16. |
 | DefaultFont | Service-owned embedded Open Sans SemiBold, initially also FallbackFont. |
 | Label font/font_size | Null/-1 slots resolve the defaults. |
+| ProgressBar | Background (0.1,0.1,0.1,0.3), fill (1,1,1,0.4), two-pixel margins, six-pixel corners; font/font_size null/-1, font color (0.95,0.95,0.95,1), black outline and outline_size zero. |
 | Label styles | Empty `normal`; hollow `focus` with BGColor white alpha0.75, default border gray0.8 alpha1, margins4, radius3, detail5, borders2 and expansion2. |
 | Label text colors/constants | White font, transparent shadow, black outline; shadow offsets1/1, outline0, shadow-outline1 and line-spacing3; absent paragraph spacing resolves constant fallback0. |
 | `Panel/panel` and `PanelContainer/panel` styles | Separate StyleBoxFlat instances; BGColor `(0.1, 0.1, 0.1, 0.6)`, zero content margins, corner radius 3, detail 5. |

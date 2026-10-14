@@ -62,7 +62,7 @@ tree.ProcessFrame(1.0 / 60.0);
 | Member | Description |
 | --- | --- |
 | [`public bool DebugPathsHint { get; set; }`](#diagnostics-debugpathshint) | Gets or sets whether paths draw their curves and tangent direction markers. |
-| [`public Node? EditedSceneRoot { get; set; }`](#diagnostics-editedsceneroot) | Gets or selects the root of the scene whose configuration warnings are being inspected. |
+| [`public Node? EditedSceneRoot { get; set; }`](#diagnostics-editedsceneroot) | Gets or selects the root of the scene selected for configuration warnings and control authoring previews. |
 | [`public bool AutoAcceptQuit { get; set; }`](#p-electron2d-scenetree-autoacceptquit) | True by default. |
 | [`public Node Root { get; }`](#p-electron2d-scenetree-root) | Gets the root node owned by this tree. |
 | [`public Node? CurrentScene { get; set; }`](#p-electron2d-scenetree-currentscene) | Gets or selects an existing direct scene child of the root. |
@@ -167,11 +167,11 @@ InvalidOperationException: The caller is not the scene owner thread.
 <a id="diagnostics-editedsceneroot"></a>
 ### `public Node? EditedSceneRoot { get; set; }`
 
-Gets or selects the root of the scene whose configuration warnings are being inspected.
+Gets or selects the root of the scene selected for configuration warnings and control authoring previews.
 
 Value: Null initially. A nonnull value must be a live node in this tree; this tree's Root is allowed.
 
-Contract: This is a borrowed tooling selection, independent of packed-scene ownership. It enables warning change events only for the selected subtree, without enabling an editor or changing processing. Exiting the tree clears the selection before NodeRemoved. Selection itself emits no warning-change event.
+Contract: This is a borrowed tooling selection, independent of packed-scene ownership. It enables warning change events only for the selected subtree, without enabling an editor or changing general processing policy; ProgressBar uses this selection for its indeterminate preview. Exiting the tree clears the selection before NodeRemoved. Selection itself emits no warning-change event.
 
 ArgumentException: The selected node belongs to another tree or is detached.
 
@@ -181,6 +181,7 @@ InvalidOperationException: The caller is not the scene owner thread.
 
 
 <a id="p-electron2d-scenetree-autoacceptquit"></a>
+
 ### `public bool AutoAcceptQuit { get; set; }`
 
 True by default. The root Window raises CloseRequested, then requests quit if this property remains true and quit is not already requested. A handler may disable it or request its own exit code. Read/write requires the owner thread and a live tree; closed trees throw ObjectDisposedException.

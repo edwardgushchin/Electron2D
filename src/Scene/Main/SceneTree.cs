@@ -314,10 +314,11 @@ public sealed partial class SceneTree : MainLoop
         }
     }
 
-    /// <summary>Gets or selects the root of the scene whose configuration warnings are being inspected.</summary>
+    /// <summary>Gets or selects the root of the scene selected for configuration warnings and control authoring previews.</summary>
     /// <value>Null initially. A nonnull value must be a live node in this tree; this tree's Root is allowed.</value>
     /// <remarks>This is a borrowed tooling selection, independent of packed-scene ownership. It enables warning
-    /// change events only for the selected subtree, without enabling an editor or changing processing. Exiting the
+    /// change events and control-specific authoring previews only for the selected subtree, without enabling an editor
+    /// or changing general scene processing policy. Exiting the
     /// tree clears the selection before NodeRemoved. Selection itself emits no warning-change event.</remarks>
     /// <exception cref="ArgumentException">The selected node belongs to another tree or is detached.</exception>
     /// <exception cref="ObjectDisposedException">The tree or selected node is disposed.</exception>

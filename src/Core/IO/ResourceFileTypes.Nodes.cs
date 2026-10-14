@@ -4,6 +4,7 @@ public static partial class ResourceFileTypes
 {
     private static ColorPicker CreateColorPickerFileNode() => new();
     private static ColorPickerButton CreateColorPickerButtonFileNode() => new();
+    private static ProgressBar CreateProgressBarFileNode() => new();
     private static SpinBox CreateSpinBoxFileNode() => new();
     private static FileDialog CreateFileDialogFileNode() => new();
     private static MenuBar CreateMenuBarFileNode() => new();
@@ -25,6 +26,7 @@ public static partial class ResourceFileTypes
         RegisterNode("GraphNode", CreateGraphNodeFileNode);
         RegisterNode("GraphFrame", CreateGraphFrameFileNode);
         RegisterNode("GraphEdit", CreateGraphEditFileNode);
+        RegisterNode("ProgressBar", CreateProgressBarFileNode);
         RegisterNode("SpinBox", CreateSpinBoxFileNode);
         RegisterNode("ColorPicker", CreateColorPickerFileNode);
         RegisterNode("ColorPickerButton", CreateColorPickerButtonFileNode);

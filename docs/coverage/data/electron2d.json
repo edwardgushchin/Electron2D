@@ -8519,6 +8519,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ProgressBar",
+    "kind": "type",
+    "declaringType": "Electron2D.ProgressBar",
+    "name": "ProgressBar",
+    "signature": "public class Electron2D.ProgressBar",
+    "visibility": "public",
+    "baseType": "Electron2D.Range",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ProgressFillMode",
+    "kind": "type",
+    "declaringType": "Electron2D.ProgressFillMode",
+    "name": "ProgressFillMode",
+    "signature": "public enum Electron2D.ProgressFillMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ProjectSetting\u003CT\u003E",
     "kind": "type",
     "declaringType": "Electron2D.ProjectSetting\u003CT\u003E",
@@ -20050,6 +20083,19 @@
     "declaringType": "Electron2D.PopupPanel",
     "name": ".ctor",
     "signature": "public PopupPanel()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ProgressBar..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ProgressBar",
+    "name": ".ctor",
+    "signature": "public ProgressBar()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -38740,6 +38786,58 @@
     "parameters": [],
     "returnType": "Electron2D.ProcessPhase",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ProgressFillMode.BeginToEnd()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ProgressFillMode",
+    "name": "BeginToEnd",
+    "signature": "public const Electron2D.ProgressFillMode BeginToEnd = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProgressFillMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ProgressFillMode.BottomToTop()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ProgressFillMode",
+    "name": "BottomToTop",
+    "signature": "public const Electron2D.ProgressFillMode BottomToTop = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProgressFillMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ProgressFillMode.EndToBegin()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ProgressFillMode",
+    "name": "EndToBegin",
+    "signature": "public const Electron2D.ProgressFillMode EndToBegin = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProgressFillMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ProgressFillMode.TopToBottom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ProgressFillMode",
+    "name": "TopToBottom",
+    "signature": "public const Electron2D.ProgressFillMode TopToBottom = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProgressFillMode",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.RPCMode.AnyPeer()",
@@ -139530,6 +139628,64 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ProgressBar.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.ProgressBar",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ProgressBar.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ProgressBar",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ProgressBar.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.ProgressBar",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ProgressBar.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ProgressBar",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ProjectSettings.AddCustomFeature(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.ProjectSettings",
@@ -221833,6 +221989,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.FileAccess",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProgressBar.EditorPreviewIndeterminate()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProgressBar",
+    "name": "EditorPreviewIndeterminate",
+    "signature": "public System.Boolean EditorPreviewIndeterminate { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProgressBar.FillMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProgressBar",
+    "name": "FillMode",
+    "signature": "public Electron2D.ProgressFillMode FillMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProgressFillMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProgressBar.Indeterminate()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProgressBar",
+    "name": "Indeterminate",
+    "signature": "public System.Boolean Indeterminate { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProgressBar.ShowPercentage()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProgressBar",
+    "name": "ShowPercentage",
+    "signature": "public System.Boolean ShowPercentage { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

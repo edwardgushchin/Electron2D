@@ -1942,7 +1942,7 @@
       "godot": "SceneTree::property:edited_scene_root",
       "electron2d": "property:Electron2D.SceneTree.EditedSceneRoot()",
       "state": "Implemented",
-      "reason": "Borrowed nullable selected scene root, null by default; scopes configuration-warning delivery. Accepts any live member including Root, rejects detached/foreign/disposed references, clears before NodeRemoved, does not auto-restore on reentry. Selection and its descriptor are executable in SceneDiagnosticsTests. Single-assembly tooling availability and lifetime validation follow ADRs 0011/0012/0027."
+      "reason": "Borrowed nullable selected scene root, null by default; scopes configuration-warning delivery and ProgressBar indeterminate authoring preview under ADR 0080. Accepts any live member including Root, rejects detached/foreign/disposed references, clears before NodeRemoved, does not auto-restore on reentry. Selection and its descriptor are executable in SceneDiagnosticsTests. Single-assembly tooling availability and lifetime validation follow ADRs 0011/0012/0027."
     },
     {
       "godot": "SceneTree::property:debug_paths_hint",
@@ -10043,7 +10043,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "Borrowed nullable selected scene root, null by default; scopes configuration-warning delivery. Accepts any live member including Root, rejects detached/foreign/disposed references, clears before NodeRemoved, does not auto-restore on reentry. Selection and its descriptor are executable in SceneDiagnosticsTests. Single-assembly tooling availability and lifetime validation follow ADRs 0011/0012/0027.",
+      "reason": "Borrowed nullable selected scene root, null by default; scopes configuration-warning delivery and ProgressBar indeterminate authoring preview under ADR 0080. Accepts any live member including Root, rejects detached/foreign/disposed references, clears before NodeRemoved, does not auto-restore on reentry. Selection and its descriptor are executable in SceneDiagnosticsTests. Single-assembly tooling availability and lifetime validation follow ADRs 0011/0012/0027.",
       "godot": [
         "SceneTree::property:edited_scene_root"
       ]

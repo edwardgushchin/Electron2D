@@ -148,7 +148,7 @@ Path/PathFollow preserve runtime sampling and policy timing through the existing
 <a id="adr-0011"></a>
 ## ADR 0011: Exception-safe SceneTree lifecycle, typed groups, and frame timers
 
-Last updated: 2026-09-24
+Last updated: 2026-10-14
 
 - Status: Accepted; timer scheduling extended by [0036](scene.md#adr-0036), the original tween absence superseded by [0037](scene.md#adr-0037), and input execution barriers extended by [0038](input.md#adr-0038)
 - Scope: `SceneTree`, `SceneTreeTimer`, `GroupCallFlags`, and their `Node` lifecycle integration
@@ -169,7 +169,7 @@ Electron2D must keep typed C# calls, deterministic ownership, its managed runtim
 - Frame, flush, and typed input execution are non-reentrant and cannot begin during entry/exit delivery. Tree disposal from frame, flush, input, or lifecycle callbacks is rejected before the disposal transition.
 - Cancellable node deletion continues through disposal after detach failures or detachment, while a stale request in an old tree cannot consume deletion now owned by a new tree.
 - Pause traversal visits each still-attached node at most once; opposite re-entrant and teardown-time pause transitions are rejected.
-- Reusable configuration diagnostics live on Node and SceneTree: a typed virtual warning query, explicit refresh request, selected live EditedSceneRoot and a synchronous event limited to that selected subtree. Selection clears on exit; errors and thread affinity follow the existing tree contract. Under ADRs 0012/0027 the single runtime assembly makes these capabilities available to a consuming editor in every build configuration. Selecting a subtree opts into diagnostic delivery; it does not create an editor or enable tool scripts.
+- Reusable configuration diagnostics live on Node and SceneTree: a typed virtual warning query, explicit refresh request, selected live EditedSceneRoot and a synchronous event limited to that selected subtree. Selection clears on exit; errors and thread affinity follow the existing tree contract. Under ADRs 0012/0027 the single runtime assembly makes these capabilities available to a consuming editor in every build configuration. Selecting a subtree opts into diagnostic delivery; it does not create an editor or enable tool scripts. ProgressBar uses the same selected subtree for its executable indeterminate authoring preview under ADR 0080; selection does not activate a visual editor or change general scene processing policy.
 - DebugPathsHint controls executable Path canvas visualization using a typed project color sampled at tree construction. Live toggles invalidate retained geometry rather than retaining stale commands. This pre-release correction follows ADR 0034 and the existing canvas redraw contract. Sampling is bounded to 1,048,576 points with explicit recording failure; no native mesh dependency or private editor API is introduced.
 - Node/tree/frame signals are typed C# events. Group calls and setters accept delegates; group ordering, deferral, and uniqueness use `GroupCallFlags`.
 - `Unique` requires `Deferred`, uses operation kind/group/delegate-or-notification identity, ignores setter values, and retains the first accepted operation until its wrapper begins.

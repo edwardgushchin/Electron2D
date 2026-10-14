@@ -217,6 +217,7 @@
     "ResourceFormatLoader.CacheMode": "ResourceLoader.CacheMode",
     "PhysicsServer2D.ShapeType": "PhysicsServer.ShapeType",
     "RenderingServer.TextureLayeredType": "TextureLayered.LayeredType",
-    "TileSetAtlasSource.TileAnimationMode": "Electron2D.TileSetAtlasSource.TileAnimationMode"
+    "TileSetAtlasSource.TileAnimationMode": "Electron2D.TileSetAtlasSource.TileAnimationMode",
+    "ProgressBar.FillMode": "ProgressFillMode"
   }
 }

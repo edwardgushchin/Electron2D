@@ -660,7 +660,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PrimitiveMesh](classes/PrimitiveMesh.md) | Mesh | Blocked | 8 |
 | [PrismMesh](classes/PrismMesh.md) | PrimitiveMesh | Excluded | 5 |
 | [ProceduralSkyMaterial](classes/ProceduralSkyMaterial.md) | Material | Excluded | 14 |
-| [ProgressBar](classes/ProgressBar.md) | Range | Blocked | 16 |
+| [ProgressBar](classes/ProgressBar.md) | Range | Implemented | 16 |
 | [ProjectSettings](classes/ProjectSettings.md) | Object | Partial | 963 |
 | [Projection](classes/Projection.md) | — | Excluded | 48 |
 | [PropertyTweener](classes/PropertyTweener.md) | Tweener | Implemented | 7 |

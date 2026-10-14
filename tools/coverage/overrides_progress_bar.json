@@ -1,0 +1,141 @@
+{
+  "mappings": [
+    {
+      "godot": "class:ProgressBar",
+      "electron2d": "T:Electron2D.ProgressBar",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    },
+    {
+      "godot": "ProgressBar::enum:FillMode",
+      "electron2d": "T:Electron2D.ProgressFillMode",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    },
+    {
+      "godot": "ProgressBar::property:fill_mode",
+      "electron2d": "property:Electron2D.ProgressBar.FillMode()",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    },
+    {
+      "godot": "ProgressBar::property:show_percentage",
+      "electron2d": "property:Electron2D.ProgressBar.ShowPercentage()",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    },
+    {
+      "godot": "ProgressBar::property:indeterminate",
+      "electron2d": "property:Electron2D.ProgressBar.Indeterminate()",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    },
+    {
+      "godot": "ProgressBar::property:editor_preview_indeterminate",
+      "electron2d": "property:Electron2D.ProgressBar.EditorPreviewIndeterminate()",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    },
+    {
+      "godot": "ProgressBar::enum_value:FillMode.FILL_BEGIN_TO_END",
+      "electron2d": "enumValue:Electron2D.ProgressFillMode.BeginToEnd()",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    },
+    {
+      "godot": "ProgressBar::enum_value:FillMode.FILL_END_TO_BEGIN",
+      "electron2d": "enumValue:Electron2D.ProgressFillMode.EndToBegin()",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    },
+    {
+      "godot": "ProgressBar::enum_value:FillMode.FILL_TOP_TO_BOTTOM",
+      "electron2d": "enumValue:Electron2D.ProgressFillMode.TopToBottom()",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    },
+    {
+      "godot": "ProgressBar::enum_value:FillMode.FILL_BOTTOM_TO_TOP",
+      "electron2d": "enumValue:Electron2D.ProgressFillMode.BottomToTop()",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    },
+    {
+      "godot": "ProgressBar::theme_item:background",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    },
+    {
+      "godot": "ProgressBar::theme_item:fill",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    },
+    {
+      "godot": "ProgressBar::theme_item:font",
+      "electron2d": "method:Electron2D.Control.GetThemeFont(System.String,System.String)",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    },
+    {
+      "godot": "ProgressBar::theme_item:font_size",
+      "electron2d": "method:Electron2D.Control.GetThemeFontSize(System.String,System.String)",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    },
+    {
+      "godot": "ProgressBar::theme_item:font_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    },
+    {
+      "godot": "ProgressBar::theme_item:font_outline_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    },
+    {
+      "godot": "ProgressBar::theme_item:outline_size",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.ProgressBar..ctor()",
+      "reason": "Typed progress construction or inherited layout/notification/property/scene factory extension point.",
+      "adr": "ADR 0004/0080/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ProgressBar.OnGetMinimumSize()",
+      "reason": "Typed progress construction or inherited layout/notification/property/scene factory extension point.",
+      "adr": "ADR 0004/0080/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ProgressBar.OnNotification(System.Int32)",
+      "reason": "Typed progress construction or inherited layout/notification/property/scene factory extension point.",
+      "adr": "ADR 0004/0080/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ProgressBar.GetPropertyDescriptors()",
+      "reason": "Typed progress construction or inherited layout/notification/property/scene factory extension point.",
+      "adr": "ADR 0004/0080/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ProgressBar.CreateSceneInstanceFactory()",
+      "reason": "Typed progress construction or inherited layout/notification/property/scene factory extension point.",
+      "adr": "ADR 0004/0080/0083"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:ProgressBar",
+        "ProgressBar::enum:FillMode",
+        "ProgressBar::property:fill_mode",
+        "ProgressBar::property:show_percentage",
+        "ProgressBar::property:indeterminate",
+        "ProgressBar::property:editor_preview_indeterminate",
+        "ProgressBar::enum_value:FillMode.FILL_BEGIN_TO_END",
+        "ProgressBar::enum_value:FillMode.FILL_END_TO_BEGIN",
+        "ProgressBar::enum_value:FillMode.FILL_TOP_TO_BOTTOM",
+        "ProgressBar::enum_value:FillMode.FILL_BOTTOM_TO_TOP",
+        "ProgressBar::theme_item:background",
+        "ProgressBar::theme_item:fill",
+        "ProgressBar::theme_item:font",
+        "ProgressBar::theme_item:font_size",
+        "ProgressBar::theme_item:font_color",
+        "ProgressBar::theme_item:font_outline_color",
+        "ProgressBar::theme_item:outline_size"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0080/0083: executable themed shared Range indicator with four directions/RTL, source pixel rounding, percentage/outline/localized numerals, clipped indeterminate animation, pause/visibility and selected-subtree authoring preview. Exact scene factories restore settings in a fresh process; custom Theme archive loading/storage retains its own ADR 0083 gate. GPU/Compatibility masks and prepared active frames verify local Linux behavior; native semantic accessibility and foreign platforms remain separate services."
+    }
+  ]
+}
