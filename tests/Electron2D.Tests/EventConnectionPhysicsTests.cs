@@ -6,7 +6,7 @@ internal static class EventConnectionPhysicsTests
     {
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread,
             Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1");
-        Immediate(); DeferredPair(); HigherArities();
+        DeferredZero(); Immediate(); DeferredPair(); HigherArities();
         using var world = new World(backend); using var root = new SubViewport { World = world };
         using var shape = new CircleShape { Radius = 1 }; using var sensorShape = new CircleShape { Radius = 5 };
         var body = new PublisherBody { Position = new(100, 0), CanSleep = false, GravityScale = 0, LinearDampMode = RigidBody.DampMode.Replace, LinearDamp = 0 };
@@ -15,6 +15,8 @@ internal static class EventConnectionPhysicsTests
         Check(world.PhysicsBackend == backend && world.PhysicsFallbackReason is null, "Actual selected physical backend without fallback.");
         var pulses = 0; var values = 0; var pairs = 0; var triples = 0; var quadruples = 0; var enters = 0; var exits = 0; var shapeEnters = 0; var shapeExits = 0;
         using var pulse = EventConnection.Subscribe(h => body.Pulse += h, h => body.Pulse -= h, () => pulses++);
+        var deferredPulses = 0;
+        using var deferredPulse = EventConnection.Subscribe(h => body.Pulse += h, h => body.Pulse -= h, () => deferredPulses++, defer: tree.Defer);
         using var value = EventConnection.Subscribe<PublisherBody>(h => body.Value += h, h => body.Value -= h, sender => { Check(ReferenceEquals(sender, body), "One-argument source identity."); values++; });
         using var pair = EventConnection.Subscribe<PublisherBody, int>(h => body.Pair += h, h => body.Pair -= h,
             (sender, tick) => { Check(ReferenceEquals(sender, body) && tick == body.Ticks, "Two-argument source and current tick."); pairs++; });
@@ -44,13 +46,14 @@ internal static class EventConnectionPhysicsTests
         root.PhysicsObjectPicking = false; body.InputPickable = false; Frame(1);
         GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
         for (var i = 0; i < 128; i++) Frame(i);
-        var first = (pulses, values, pairs, triples, quadruples, enters, exits, shapeEnters, shapeExits); var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+        var first = (pulses, values, pairs, triples, quadruples, enters, exits, shapeEnters, shapeExits); var firstDeferred = deferredPulses; var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < 128; i++) Frame(i);
         var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; var allBytes = GC.GetTotalAllocatedBytes(true) - all;
         Check(ownerBytes == 0 && allBytes == 0, "Warmed full physics frames with immediate typed event connections allocate zero owner/all-thread bytes.");
+        Check(deferredPulses - firstDeferred == 128, "The real scene safe point retains every deferred zero-argument physical callback.");
         Check(pulses - first.pulses == 128 && values - first.values == 128 && pairs - first.pairs == 128 && triples - first.triples == 128 && quadruples - first.quadruples == 128 && shapeEnters - first.shapeEnters == 64 && shapeExits - first.shapeExits == 64 && enters - first.enters == 64 && exits - first.exits == 64,
             "Every measured frame simulates and publishes all event arities; overlap events retain exact alternating transitions.");
-        pulse.Dispose(); value.Dispose(); pair.Dispose(); triple.Dispose(); quadruple.Dispose(); enter.Dispose(); exit.Dispose(); shapeEnter.Dispose(); shapeExit.Dispose();
+        pulse.Dispose(); deferredPulse.Dispose(); value.Dispose(); pair.Dispose(); triple.Dispose(); quadruple.Dispose(); enter.Dispose(); exit.Dispose(); shapeEnter.Dispose(); shapeExit.Dispose();
         var counts = (pulses, values, pairs, triples, quadruples, enters, exits, shapeEnters, shapeExits); Frame(0); Frame(1); Check(counts == (pulses, values, pairs, triples, quadruples, enters, exits, shapeEnters, shapeExits), "Disposed physical subscriptions do not deliver later events.");
         var calls = 0;
         using (var failure = EventConnection.Subscribe<PublisherBody, int>(h => body.Pair += h, h => body.Pair -= h, (_, _) => { calls++; throw new ArithmeticException(); }))
@@ -62,6 +65,21 @@ internal static class EventConnectionPhysicsTests
         void ShapePayload(RID rid, Entity? other, int otherShape, int localShape)
         { Check(rid == body.GetRID() && ReferenceEquals(other, body) && otherShape == 1 && localShape == 0, "Shape event preserves RID, owner and stable disabled-first indices."); }
         void Frame(int i) { body.Position = new(i % 2 == 0 ? 0 : 100, 0); body.LinearVelocity = new(1, 0); tree.PhysicsFrame(.01); Check(body.Position.X > (i % 2 == 0 ? 0 : 100), "The event fixture retains actual body integration."); }
+    }
+
+    private static void DeferredZero()
+    {
+        using var source = new PublisherBody(); var queue = new Queue<Action>(); var calls = 0;
+        using var connection = EventConnection.Subscribe(h => source.Pulse += h, h => source.Pulse -= h, () => calls++, defer: queue.Enqueue);
+        source.Raise(); source.Raise(); source.Raise(); Check(calls == 0 && queue.Count == 3, "Each zero-argument emission creates a separate queue entry.");
+        while (queue.TryDequeue(out var action)) action(); Check(calls == 3, "A zero-argument batch retains every emission.");
+        GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
+        for (var i = 0; i < 128; i++) Cycle(); var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < 128; i++) Cycle(); var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; var allBytes = GC.GetTotalAllocatedBytes(true) - all;
+        Console.WriteLine($"Deferred zero-argument bracket: {ownerBytes}/{allBytes} B for 128 prepared emissions/queue drains.");
+        Check(ownerBytes == 0 && allBytes == 0 && calls == 259, "Prepared deferred zero-argument delivery has no per-emission delegate allocation.");
+        source.Raise(); connection.Dispose(); while (queue.TryDequeue(out var action)) action(); Check(calls == 259, "Cancellation leaves a queued callback inert.");
+        void Cycle() { source.Raise(); Check(queue.Count == 1, "Deferred scheduling occurs for each emission."); while (queue.TryDequeue(out var action)) action(); }
     }
 
     private static void Immediate()

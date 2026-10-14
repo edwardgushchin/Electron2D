@@ -1347,7 +1347,7 @@
     },
     {
       "electron2d": "method:Electron2D.EventConnection.Subscribe(System.Action<System.Action>,System.Action<System.Action>,System.Action,System.Boolean,System.Action<System.Action>)",
-      "reason": "Typed event subscription/disconnection replacing dynamic signals.",
+      "reason": "ADRs 0002/0010: owned typed zero-argument subscription/disconnection. Prepared reusable deferred delivery submits one cached immutable callback for every emission, preserving distinct queue entries, cancellation and scheduler/handler error policy. EventConnectionPhysicsTests verifies triple batches, strict zero warm emit/drain bytes and actual SceneTree.Defer callbacks in selected CPU/GPU full frames. Deferred argument/one-shot captures, subscription/growth and broader acceptance remain separate.",
       "adr": "adr-0010"
     },
     {

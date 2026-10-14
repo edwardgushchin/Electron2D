@@ -8,7 +8,8 @@ namespace Electron2D;
 /// Disposing the connection removes its wrapper and cancels deferred callbacks that have not started. A callback that
 /// has already started can finish concurrently with disposal.
 /// Prepared reusable synchronous delivery with zero through four arguments creates no per-emission capture.
-/// Subscription, one-shot capture and deferred scheduling remain separate allocation paths; supplied handlers
+/// Prepared reusable deferred delivery with no arguments reuses an immutable callback; schedulers still receive
+/// one submission per emission. Subscription, one-shot and argument capture remain separate allocation paths; supplied handlers
 /// and accessors retain their own allocation behavior.
 /// Capturing a reference preserves identity, not ownership or lifetime. Borrowed callback values must remain
 /// valid under their owning API; deferred delivery does not extend a borrowed input event lifetime.
@@ -28,6 +29,7 @@ public sealed class EventConnection : IDisposable
     internal bool Deferred { get; }
     private readonly object _gate = new();
     private readonly bool _oneShot;
+    private readonly Action? _deferredZeroCallback;
     private Action<Action>? _defer;
     private Delegate? _handler;
     private Action? _unsubscribe;
@@ -39,6 +41,8 @@ public sealed class EventConnection : IDisposable
         _oneShot = oneShot;
         _defer = defer;
         Deferred = defer is not null;
+        if (!oneShot && defer is not null && handler is Action)
+            _deferredZeroCallback = InvokeDeferred;
     }
 
     /// <summary>Gets whether this connection still accepts event emissions.</summary>
@@ -335,7 +339,7 @@ public sealed class EventConnection : IDisposable
             return;
         }
 
-        defer(InvokeDeferred);
+        defer(_deferredZeroCallback!);
     }
 
     private void Dispatch<T>(T value)
