@@ -44,3 +44,5 @@ FontFile/SystemFont use the shared top-level FontAntialiasing contract (None/Gra
 ### Consequences
 
 Moving or unifying public enum types breaks source and binary compatibility. The value-contract rule governs new enum identities; it does not move unrelated owner-specific types. ADR 0045 continues to govern acronyms in function, method and property names, not enum type names.
+
+ZIPAppend (Create=0, CreateAfter=1, AddInZIP=2) is distinct from file access flags and archive open/append policies of other formats. ZIPCompressionLevel supplies the -1/0/1/9 named deflate levels; it is distinct from FileCompressionMode codec selection. ZIPPacker.CompressionLevel remains an integer to preserve valid intermediate deflate levels. Both domains use top-level names to avoid the owning CompressionLevel property collision.

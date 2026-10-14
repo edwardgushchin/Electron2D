@@ -1079,8 +1079,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [XRServer](classes/XRServer.md) | Object | Excluded | 40 |
 | [XRTracker](classes/XRTracker.md) | RefCounted | Excluded | 3 |
 | [XRVRS](classes/XRVRS.md) | Object | Excluded | 4 |
-| [ZIPPacker](classes/ZIPPacker.md) | RefCounted | Blocked | 16 |
-| [ZIPReader](classes/ZIPReader.md) | RefCounted | Blocked | 6 |
+| [ZIPPacker](classes/ZIPPacker.md) | RefCounted | Implemented | 16 |
+| [ZIPReader](classes/ZIPReader.md) | RefCounted | Implemented | 6 |
 | [bool](classes/bool.md) | — | Excluded | 8 |
 | [float](classes/float.md) | — | Excluded | 37 |
 | [int](classes/int.md) | — | Excluded | 44 |

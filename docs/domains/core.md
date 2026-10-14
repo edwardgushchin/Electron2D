@@ -269,3 +269,7 @@ Each emission leases an ordered immutable handler snapshot. Duplicate handlers a
 EventHandlerTests compares 1,024 mixed delegate add/remove operations with native delegate lists, checks nested snapshot changes/errors, 256 concurrent producers and weak-reference release from disposed publishers. All 18 physical accessors each deliver 128 prepared first one-shot callbacks at strict zero owner/all-thread managed bytes. EventConnectionPhysicsTests adds a real full selected CPU/GPU Area transition with 128 one-shot listeners and a permanent listener. Serial/separate numerical profiles use CPU-only Vulkan for GPU kernels; native allocations, hardware performance, real-window FPS and foreign acceptance remain open.
 
 See [typed handler storage](../classes/EventHandlers.Generic.md) and [ADR 0010](../decisions/core-object-runtime.md#adr-0010).
+
+## ZIP asset preparation
+
+[ZIP archives](../components/zip-archives.md) add owned ZIPReader/ZIPPacker sessions, streamed full-level deflate, ZIP64/prefix/append preservation, portable permission/time metadata and complete length/CRC validation. Bundled scene/resource ZIP round trips execute real GPU/compatibility rendering; they do not introduce automatic extraction or pack mounts.

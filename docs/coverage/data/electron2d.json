@@ -13141,6 +13141,72 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ZIPAppend",
+    "kind": "type",
+    "declaringType": "Electron2D.ZIPAppend",
+    "name": "ZIPAppend",
+    "signature": "public enum Electron2D.ZIPAppend",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ZIPCompressionLevel",
+    "kind": "type",
+    "declaringType": "Electron2D.ZIPCompressionLevel",
+    "name": "ZIPCompressionLevel",
+    "signature": "public enum Electron2D.ZIPCompressionLevel",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ZIPPacker",
+    "kind": "type",
+    "declaringType": "Electron2D.ZIPPacker",
+    "name": "ZIPPacker",
+    "signature": "public sealed class Electron2D.ZIPPacker",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ZIPReader",
+    "kind": "type",
+    "declaringType": "Electron2D.ZIPReader",
+    "name": "ZIPReader",
+    "signature": "public sealed class Electron2D.ZIPReader",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constant:Electron2D.AnimatedTexture.MaxFrames()",
     "kind": "constant",
     "declaringType": "Electron2D.AnimatedTexture",
@@ -23153,6 +23219,32 @@
     "declaringType": "Electron2D.XMLParser",
     "name": ".ctor",
     "signature": "public XMLParser()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ZIPPacker..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ZIPPacker",
+    "name": ".ctor",
+    "signature": "public ZIPPacker()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ZIPReader..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ZIPReader",
+    "name": ".ctor",
+    "signature": "public ZIPReader()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -49575,6 +49667,97 @@
     "parameters": [],
     "returnType": "Electron2D.XMLParser.NodeType",
     "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.ZIPAppend.AddInZIP()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ZIPAppend",
+    "name": "AddInZIP",
+    "signature": "public const Electron2D.ZIPAppend AddInZIP = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ZIPAppend",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ZIPAppend.Create()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ZIPAppend",
+    "name": "Create",
+    "signature": "public const Electron2D.ZIPAppend Create = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ZIPAppend",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ZIPAppend.CreateAfter()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ZIPAppend",
+    "name": "CreateAfter",
+    "signature": "public const Electron2D.ZIPAppend CreateAfter = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ZIPAppend",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ZIPCompressionLevel.Best()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ZIPCompressionLevel",
+    "name": "Best",
+    "signature": "public const Electron2D.ZIPCompressionLevel Best = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ZIPCompressionLevel",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.ZIPCompressionLevel.Default()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ZIPCompressionLevel",
+    "name": "Default",
+    "signature": "public const Electron2D.ZIPCompressionLevel Default = -1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ZIPCompressionLevel",
+    "value": "-1"
+  },
+  {
+    "id": "enumValue:Electron2D.ZIPCompressionLevel.Fast()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ZIPCompressionLevel",
+    "name": "Fast",
+    "signature": "public const Electron2D.ZIPCompressionLevel Fast = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ZIPCompressionLevel",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ZIPCompressionLevel.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ZIPCompressionLevel",
+    "name": "None",
+    "signature": "public const Electron2D.ZIPCompressionLevel None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ZIPCompressionLevel",
+    "value": "0"
   },
   {
     "id": "event:Electron2D.AcceptDialog.Canceled()",
@@ -194884,6 +195067,288 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ZIPPacker.AddDirectory(System.String,Electron2D.UnixPermissionFlags,System.UInt64)",
+    "kind": "method",
+    "declaringType": "Electron2D.ZIPPacker",
+    "name": "AddDirectory",
+    "signature": "public System.Void AddDirectory(System.String path, Electron2D.UnixPermissionFlags permissions = ExecuteOther, ReadOther, ExecuteGroup, ReadGroup, ExecuteOwner, WriteOwner, ReadOwner, System.UInt64 modifiedTime = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "permissions",
+        "type": "Electron2D.UnixPermissionFlags",
+        "default": "ExecuteOther, ReadOther, ExecuteGroup, ReadGroup, ExecuteOwner, WriteOwner, ReadOwner"
+      },
+      {
+        "name": "modifiedTime",
+        "type": "System.UInt64",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ZIPPacker.Close()",
+    "kind": "method",
+    "declaringType": "Electron2D.ZIPPacker",
+    "name": "Close",
+    "signature": "public System.Void Close()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ZIPPacker.CloseFile()",
+    "kind": "method",
+    "declaringType": "Electron2D.ZIPPacker",
+    "name": "CloseFile",
+    "signature": "public System.Void CloseFile()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ZIPPacker.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ZIPPacker",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ZIPPacker.Open(System.String,Electron2D.ZIPAppend)",
+    "kind": "method",
+    "declaringType": "Electron2D.ZIPPacker",
+    "name": "Open",
+    "signature": "public System.Void Open(System.String path, Electron2D.ZIPAppend append = Create)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "append",
+        "type": "Electron2D.ZIPAppend",
+        "default": "Create"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ZIPPacker.StartFile(System.String,Electron2D.UnixPermissionFlags,System.UInt64)",
+    "kind": "method",
+    "declaringType": "Electron2D.ZIPPacker",
+    "name": "StartFile",
+    "signature": "public System.Void StartFile(System.String path, Electron2D.UnixPermissionFlags permissions = ReadOther, ReadGroup, WriteOwner, ReadOwner, System.UInt64 modifiedTime = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "permissions",
+        "type": "Electron2D.UnixPermissionFlags",
+        "default": "ReadOther, ReadGroup, WriteOwner, ReadOwner"
+      },
+      {
+        "name": "modifiedTime",
+        "type": "System.UInt64",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ZIPPacker.WriteFile(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ZIPPacker",
+    "name": "WriteFile",
+    "signature": "public System.Void WriteFile(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ZIPReader.Close()",
+    "kind": "method",
+    "declaringType": "Electron2D.ZIPReader",
+    "name": "Close",
+    "signature": "public System.Void Close()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ZIPReader.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ZIPReader",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ZIPReader.FileExists(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ZIPReader",
+    "name": "FileExists",
+    "signature": "public System.Boolean FileExists(System.String path, System.Boolean caseSensitive = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "caseSensitive",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ZIPReader.GetCompressionLevel(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ZIPReader",
+    "name": "GetCompressionLevel",
+    "signature": "public System.Int32 GetCompressionLevel(System.String path, System.Boolean caseSensitive = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "caseSensitive",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ZIPReader.GetFiles()",
+    "kind": "method",
+    "declaringType": "Electron2D.ZIPReader",
+    "name": "GetFiles",
+    "signature": "public System.String[] GetFiles()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ZIPReader.Open(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ZIPReader",
+    "name": "Open",
+    "signature": "public System.Void Open(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ZIPReader.ReadFile(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ZIPReader",
+    "name": "ReadFile",
+    "signature": "public System.Byte[] ReadFile(System.String path, System.Boolean caseSensitive = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "caseSensitive",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
     "id": "operator:Electron2D.Color.op_Addition(Electron2D.Color,Electron2D.Color)",
     "kind": "operator",
     "declaringType": "Electron2D.Color",
@@ -234366,6 +234831,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ZIPPacker.CompressionLevel()",
+    "kind": "property",
+    "declaringType": "Electron2D.ZIPPacker",
+    "name": "CompressionLevel",
+    "signature": "public System.Int32 CompressionLevel { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   }
 ]

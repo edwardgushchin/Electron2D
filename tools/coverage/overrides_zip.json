@@ -1,0 +1,174 @@
+{
+  "mappings": [
+    {
+      "godot": "class:ZIPPacker",
+      "electron2d": "T:Electron2D.ZIPPacker",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPPacker::enum:CompressionLevel",
+      "electron2d": "T:Electron2D.ZIPCompressionLevel",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPPacker::enum:ZipAppend",
+      "electron2d": "T:Electron2D.ZIPAppend",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPPacker::enum_value:CompressionLevel.COMPRESSION_BEST",
+      "electron2d": "enumValue:Electron2D.ZIPCompressionLevel.Best()",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPPacker::enum_value:CompressionLevel.COMPRESSION_DEFAULT",
+      "electron2d": "enumValue:Electron2D.ZIPCompressionLevel.Default()",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPPacker::enum_value:CompressionLevel.COMPRESSION_FAST",
+      "electron2d": "enumValue:Electron2D.ZIPCompressionLevel.Fast()",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPPacker::enum_value:CompressionLevel.COMPRESSION_NONE",
+      "electron2d": "enumValue:Electron2D.ZIPCompressionLevel.None()",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPPacker::enum_value:ZipAppend.APPEND_ADDINZIP",
+      "electron2d": "enumValue:Electron2D.ZIPAppend.AddInZIP()",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPPacker::enum_value:ZipAppend.APPEND_CREATE",
+      "electron2d": "enumValue:Electron2D.ZIPAppend.Create()",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPPacker::enum_value:ZipAppend.APPEND_CREATEAFTER",
+      "electron2d": "enumValue:Electron2D.ZIPAppend.CreateAfter()",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPPacker::method:add_directory(String:,int:FileAccess.UnixPermissionFlags,int:)",
+      "electron2d": "method:Electron2D.ZIPPacker.AddDirectory(System.String,Electron2D.UnixPermissionFlags,System.UInt64)",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPPacker::method:close()",
+      "electron2d": "method:Electron2D.ZIPPacker.Close()",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPPacker::method:close_file()",
+      "electron2d": "method:Electron2D.ZIPPacker.CloseFile()",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPPacker::method:open(String:,int:ZIPPacker.ZipAppend)",
+      "electron2d": "method:Electron2D.ZIPPacker.Open(System.String,Electron2D.ZIPAppend)",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPPacker::method:start_file(String:,int:FileAccess.UnixPermissionFlags,int:)",
+      "electron2d": "method:Electron2D.ZIPPacker.StartFile(System.String,Electron2D.UnixPermissionFlags,System.UInt64)",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPPacker::method:write_file(PackedByteArray:)",
+      "electron2d": "method:Electron2D.ZIPPacker.WriteFile(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPPacker::property:compression_level",
+      "electron2d": "property:Electron2D.ZIPPacker.CompressionLevel()",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "class:ZIPReader",
+      "electron2d": "T:Electron2D.ZIPReader",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPReader::method:close()",
+      "electron2d": "method:Electron2D.ZIPReader.Close()",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPReader::method:file_exists(String:,bool:)",
+      "electron2d": "method:Electron2D.ZIPReader.FileExists(System.String,System.Boolean)",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPReader::method:get_compression_level(String:,bool:)",
+      "electron2d": "method:Electron2D.ZIPReader.GetCompressionLevel(System.String,System.Boolean)",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPReader::method:get_files()",
+      "electron2d": "method:Electron2D.ZIPReader.GetFiles()",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPReader::method:open(String:)",
+      "electron2d": "method:Electron2D.ZIPReader.Open(System.String)",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    },
+    {
+      "godot": "ZIPReader::method:read_file(String:,bool:)",
+      "electron2d": "method:Electron2D.ZIPReader.ReadFile(System.String,System.Boolean)",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.ZIPPacker..ctor()",
+      "reason": "Typed C# constructor and protected deterministic disposal for the owned ZIP session under ADR 0003/0020."
+    },
+    {
+      "electron2d": "constructor:Electron2D.ZIPReader..ctor()",
+      "reason": "Typed C# constructor and protected deterministic disposal for the owned ZIP session under ADR 0003/0020."
+    },
+    {
+      "electron2d": "method:Electron2D.ZIPPacker.Dispose(System.Boolean)",
+      "reason": "Typed C# constructor and protected deterministic disposal for the owned ZIP session under ADR 0003/0020."
+    },
+    {
+      "electron2d": "method:Electron2D.ZIPReader.Dispose(System.Boolean)",
+      "reason": "Typed C# constructor and protected deterministic disposal for the owned ZIP session under ADR 0003/0020."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:ZIPPacker",
+        "ZIPPacker::enum:CompressionLevel",
+        "ZIPPacker::enum:ZipAppend",
+        "ZIPPacker::enum_value:CompressionLevel.COMPRESSION_BEST",
+        "ZIPPacker::enum_value:CompressionLevel.COMPRESSION_DEFAULT",
+        "ZIPPacker::enum_value:CompressionLevel.COMPRESSION_FAST",
+        "ZIPPacker::enum_value:CompressionLevel.COMPRESSION_NONE",
+        "ZIPPacker::enum_value:ZipAppend.APPEND_ADDINZIP",
+        "ZIPPacker::enum_value:ZipAppend.APPEND_CREATE",
+        "ZIPPacker::enum_value:ZipAppend.APPEND_CREATEAFTER",
+        "ZIPPacker::method:add_directory(String:,int:FileAccess.UnixPermissionFlags,int:)",
+        "ZIPPacker::method:close()",
+        "ZIPPacker::method:close_file()",
+        "ZIPPacker::method:open(String:,int:ZIPPacker.ZipAppend)",
+        "ZIPPacker::method:start_file(String:,int:FileAccess.UnixPermissionFlags,int:)",
+        "ZIPPacker::method:write_file(PackedByteArray:)",
+        "ZIPPacker::property:compression_level",
+        "class:ZIPReader",
+        "ZIPReader::method:close()",
+        "ZIPReader::method:file_exists(String:,bool:)",
+        "ZIPReader::method:get_compression_level(String:,bool:)",
+        "ZIPReader::method:get_files()",
+        "ZIPReader::method:open(String:)",
+        "ZIPReader::method:read_file(String:,bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0003/0004/0020/0051: executable UTF-8 ZIP/ZIP64 file sessions, full -1..9 streaming deflate, typed append/permissions/time, preserved old entries/metadata/comments/prefix, ordinal lookup, complete read/CRC and deterministic closure. Standard .NET interoperability, corruption/lifetime/virtual paths and sparse >4 GiB offsets pass; bundled resource/scene ZIP reads execute real GPU/compatibility rendering on Linux Wayland. Blocking/allocating asset preparation; no automatic extraction/mount, split archive or encryption promise; foreign-host acceptance remains separate."
+    }
+  ]
+}

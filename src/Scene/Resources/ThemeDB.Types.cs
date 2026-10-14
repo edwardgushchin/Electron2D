@@ -431,5 +431,7 @@ public sealed partial class ThemeDB
         ["WorldBoundaryShape"] = ["WorldBoundaryShape", "Shape", "Resource", "ElectronObject"],
         ["X509Certificate"] = ["X509Certificate", "Resource", "ElectronObject"],
         ["XMLParser"] = ["XMLParser", "ElectronObject"],
+        ["ZIPPacker"] = ["ZIPPacker", "ElectronObject"],
+        ["ZIPReader"] = ["ZIPReader", "ElectronObject"],
     };
 }

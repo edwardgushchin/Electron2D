@@ -73,3 +73,7 @@ The file-codec slice additionally exercises 110 random/repeated empty, tiny, blo
 - [0022: Typed directory access](../decisions/core-data-io.md#adr-0022)
 
 [Process pipes](processes.md) now add owned non-seekable stdin/stdout/stderr, blocking/nonblocking reads/writes, exact temporary readiness versus EOF and consumed-prefix exceptions. These streams retain native process lifetime and close independently of child termination.
+
+## ZIP asset preparation
+
+[ZIP archives](zip-archives.md) add owned ZIPReader/ZIPPacker sessions, streamed full-level deflate, ZIP64/prefix/append preservation, portable permission/time metadata and complete length/CRC validation. Bundled scene/resource ZIP round trips execute real GPU/compatibility rendering; they do not introduce automatic extraction or pack mounts.

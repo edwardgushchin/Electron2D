@@ -1587,3 +1587,5 @@ use ordinary sine/cosine; the far rotated query retains its .005-unit bound rath
 than absorbing the former approximate-angle drift. Directed-ray, arbitrary/coupled,
 complete inherited/extension/network/native/platform and hardware-performance
 acceptance remain open; coverage states are unchanged.
+
+| [Core](domains/core.md) | [ZIP archives](components/zip-archives.md) | [ZIPPacker](classes/ZIPPacker.md), [ZIPReader](classes/ZIPReader.md), [ZIPAppend](classes/ZIPAppend.md), [ZIPCompressionLevel](classes/ZIPCompressionLevel.md) | [writer](../src/Core/IO/ZIPPacker.cs), [reader](../src/Core/IO/ZIPReader.cs), [directory](../src/Core/IO/ZIPDirectory.cs), [enums](../src/Core/IO/ZIPAppend.cs) | Current | Owned UTF-8 ZIP/ZIP64 sessions, full-level deflate, append/prefix/metadata, CRC reads and real bundled resource consumers. |
