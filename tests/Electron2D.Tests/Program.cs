@@ -201,6 +201,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_CONTEXT_NATIVE") == 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_CONTEXT") == "1") { GUITranslationContextTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_POINTER_NATIVE") == "1") { ControlPointerTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_POINTER") == "1") { ControlPointerTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_BASE") == "1") { VerifyResources(); Console.WriteLine("Resource base: copying/reset/errors, path/scene identity, graph duplication and lifetime passed."); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_DIRECTORY_CHILD") is { Length: > 0 } resourceDirectory) { ResourceDirectoryTests.RunChild(resourceDirectory); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_DIRECTORY") == "1") { ResourceDirectoryTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_VISIBILITY_NATIVE") == "1") { CanvasVisibilityTests.RunNative(); return; }

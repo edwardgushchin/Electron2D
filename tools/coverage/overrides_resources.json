@@ -418,6 +418,17 @@
       "electron2d": "method:Electron2D.ResourceLoader.ListDirectory(System.String)",
       "state": "Partial",
       "reason": "Resource-aware copied sorted leaf names and immediate subdirectories execute with current RecognizePath plugins/built-in formats, path policy and fresh-process scene/resource loading. Exact remaining trigger: import/export metadata resolver supplying original names and an executing loader for remapped files; native archives currently retain their names."
+    },
+    {
+      "godot": "Resource::method:copy_from_resource(Resource:)",
+      "electron2d": "method:Electron2D.Resource.CopyFromResource(Electron2D.Resource)",
+      "reason": "ADR 0013 preserves exact runtime type, target path/scene identity, reset/shallow copy and coalesced changes, with exceptions replacing error codes. Shape targets now preflight all borrowers and geometry/access hooks before base/reset/ownership/events. Public-only --shape-geometry checks all nine represented families and an application Shape on CPU/GPU/registered serial/separate profiles, late callback/query continuation and zero warm frames. This bounded inherited safety slice does not certify arbitrary Resource copy hooks or full numerical/platform acceptance."
+    },
+    {
+      "godot": "Resource::method:reset_state()",
+      "electron2d": "method:Electron2D.Resource.ResetState()",
+      "state": "Partial",
+      "reason": "ADR 0013: invokes custom non-stored reset without changing stored properties or manufacturing Changed. Shape targets preflight all borrowers and geometry/access hooks before OnResetState; denied calls retain custom and base state. Public-only --shape-geometry exercises every represented family plus an application Shape on CPU/GPU/registered serial/separate profiles, permitted quiescent reset and zero warm frames. Arbitrary resource hooks and broader inherited/numerical/platform acceptance remain open."
     }
   ],
   "statusGroups": [

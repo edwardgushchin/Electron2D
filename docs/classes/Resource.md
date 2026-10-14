@@ -1,6 +1,6 @@
 # Resource
 
-Last updated: 2026-10-10
+Last updated: 2026-10-14
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -58,7 +58,9 @@ resource.Changed += _ => Console.WriteLine("Changed");
 | Member | Description |
 | --- | --- |
 | [`public Node GetLocalScene()`](#m-electron2d-resource-getlocalscene) | Gets the root node whose scene instance owns this scene-local resource. |
-| [`public void CopyFromResource(Resource source)`](#m-electron2d-resource-copyfromresource-electron2d-resource) | Copies stored data from another resource of the exact same runtime type while preserving this resource's path and scene ID. |
+| [`public void CopyFromResource(Resource source)`](#m-electron2d-resource-copyfromresource-electron2d-resource) | Copies stored data from another resource of the exact same runtime type while preserving this resource's path and scene ID.
+
+Shape targets preflight all borrowers and geometry/access hooks before reset, base name/locality, file ownership or change batching. A rejected operation leaves all those values and subscribers unchanged; ordinary allowed copying retains its existing non-transactional callback-failure behavior. |
 | [`public Resource Duplicate(bool deep = false)`](#m-electron2d-resource-duplicate-system-boolean) | Creates a shallow or internally deep duplicate of this resource. |
 | [`public Resource DuplicateDeep(DeepDuplicateMode subresourceMode = DeepDuplicateMode.Internal)`](#m-electron2d-resource-duplicatedeep-electron2d-deepduplicatemode) | Creates a deep duplicate with explicit nested-resource policy. |
 | [`public void EmitChanged()`](#m-electron2d-resource-emitchanged) | Synchronously reports that this resource's meaningful content changed. |
@@ -194,6 +196,7 @@ Copies stored data from another resource of the exact same runtime type while pr
 - `ArgumentException`: `source` has a different runtime type.
 - `ArgumentNullException`: `source` is `null`.
 - `ObjectDisposedException`: Either resource is disposing or disposed.
+- `InvalidOperationException`: An engine resource authoring policy rejects copying before state or notifications change.
 - `Exception`: A reset, copy, setter, or final change handler fails.
 
 **Remarks:** Copying is shallow: nested resources and collection instances remain shared unless a derived override explicitly
@@ -271,6 +274,7 @@ Clears non-stored state through [`Resource.OnResetState`](Resource.md#m-electron
 **Exceptions**
 
 - `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
+- `InvalidOperationException`: An engine resource authoring policy rejects the reset before its hook runs.
 - `Exception`: [`Resource.OnResetState`](Resource.md#m-electron2d-resource-onresetstate) throws.
 
 **Remarks:** The base implementation does not change stored properties and does not raise [`Resource.Changed`](Resource.md#e-electron2d-resource-changed).
@@ -503,3 +507,5 @@ AudioBusLayout and AudioServer use the existing private file graph retention to 
 ## Prepared reference publication
 
 The protected `RemapResourceReferences(Func<Resource, Resource> remap)` hook maps freshly prepared references to final cached/new identities before owner publication under ADR 0013. Resource defaults to stored resource descriptors; PackedScene includes its node model; Shader includes default texture bindings. Opaque application storage overrides this hook and calls base for descriptor state. Primitive descriptors are not rewritten by the default remapper. This is a typed graph-publication extension, not a dynamic property API.
+
+Shape targets use the same authoring preflight for standalone ResetState. CopyFromResource invokes the reset hook once under its already accepted preflight; denied calls enter neither reset hooks nor change batching. Base Resources retain their ordinary reset/copy policy.

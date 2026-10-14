@@ -140,6 +140,8 @@ public abstract partial class Shape : Resource
     /// <exception cref="InvalidOperationException">An owner, phase or borrowed geometry/authoring hook rejects this edit.</exception>
     protected void EnsureGeometryChangeAccess() => EnsureAuthoringAccess(observeBackend: true, resourceGeometry: true);
 
+    internal override void ValidateStateMutation() => EnsureGeometryChangeAccess();
+
     private void EnsureAuthoringAccess(bool observeBackend, bool resourceGeometry)
     {
         if (Volatile.Read(ref _readingGeometry)) throw new InvalidOperationException("Shape authoring cannot change during its geometry construction hook.");

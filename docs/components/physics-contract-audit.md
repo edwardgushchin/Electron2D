@@ -1107,3 +1107,7 @@ user effects. Serial/separate numerical profiles retain these same operations.
 The fixture reports full-frame p50/p95/p99, uploads, readback, mean wait and submission
 count. Its CPU-only Vulkan values are transfer/function evidence, not hardware
 speedup, native allocator totals, real-window FPS or final performance acceptance.
+
+[Inherited shape copying](../components/physics-registered-adapter.md#inherited-shape-copying-2026-10-14) now preflights every target borrower before Resource reset, name/locality, ownership and Changed effects. Public-only CPU/GPU/registered serial/separate checks cover nine shape families plus an application Shape, ordinary callback/query continuation and strict zero warmed frame allocations. Remaining inherited and complete numerical/native/performance gates stay open.
+
+Standalone Shape.ResetState uses the same preflight before OnResetState. The public-only regression rejects reset during numerical/access/geometry hooks, checks no custom-reset side effects, and preserves allowed quiescent reset without Changed. Copying invokes reset exactly once after its own accepted preflight.

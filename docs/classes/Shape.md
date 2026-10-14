@@ -1,6 +1,6 @@
 # Shape
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Inherits:** [Resource](Resource.md) · **Inherited By:** [CircleShape](CircleShape.md), [CapsuleShape](CapsuleShape.md), [SegmentShape](SegmentShape.md), [SeparationRayShape](SeparationRayShape.md), [ConvexPolygonShape](ConvexPolygonShape.md), [ConcavePolygonShape](ConcavePolygonShape.md), [RectangleShape](RectangleShape.md), [WorldBoundaryShape](WorldBoundaryShape.md)
 
@@ -174,3 +174,9 @@ suite on explicitly selected CPU/GPU worlds in serial/separate numerical modes.
 Seven forms include both bias-one endpoints; 128 measured edited full steps require
 0/0 owner/all-thread managed bytes. Software Vulkan execution and historical direct
 resident/stage controls remain distinct from hardware/performance acceptance.
+
+## Inherited resource-copy guards
+
+CopyFromResource checks the existing geometry authoring policy before changing any target state. All built-in and application Shape subclasses inherit this internal Resource preflight. Rejected borrowed geometry/numerical/access-hook copies preserve name, scene locality, RID, cached geometry and Changed subscribers without entering OnResetState. Allowed owner/quiescent and post-solver copies retain path/scene identity and one coalesced change; subsequent queries use copied geometry. No new public or protected hook is introduced.
+
+Standalone Shape.ResetState uses the same preflight before OnResetState. The public-only regression rejects reset during numerical/access/geometry hooks, checks no custom-reset side effects, and preserves allowed quiescent reset without Changed. Copying invokes reset exactly once after its own accepted preflight.

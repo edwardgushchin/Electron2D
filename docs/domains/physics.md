@@ -1024,3 +1024,7 @@ speedup, native allocator totals, real-window FPS or final performance acceptanc
 ## Compact callback activity (2026-10-14)
 
 GPU callback preparation reads compact initial activity rather than full raw-body snapshots. Ordered descriptors retain late receiver registration, newly sleeping eligibility and fresh fields. Completion reads actual consumers; explicit getters remain selected operations. Private replay retains activity epochs. Hardware speed, native memory and real-window performance remain separate open gates.
+
+[Inherited shape copying](../components/physics-registered-adapter.md#inherited-shape-copying-2026-10-14) now preflights every target borrower before Resource reset, name/locality, ownership and Changed effects. Public-only CPU/GPU/registered serial/separate checks cover nine shape families plus an application Shape, ordinary callback/query continuation and strict zero warmed frame allocations. Remaining inherited and complete numerical/native/performance gates stay open.
+
+Standalone Shape.ResetState uses the same preflight before OnResetState. The public-only regression rejects reset during numerical/access/geometry hooks, checks no custom-reset side effects, and preserves allowed quiescent reset without Changed. Copying invokes reset exactly once after its own accepted preflight.

@@ -273,6 +273,7 @@ public class Resource : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="source"/> has a different runtime type.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">Either resource is disposing or disposed.</exception>
+    /// <exception cref="InvalidOperationException">An engine resource's current authoring policy rejects the copy before any state or notification changes.</exception>
     /// <exception cref="Exception">A reset, copy, setter, or final change handler fails.</exception>
     public void CopyFromResource(Resource source)
     {
@@ -286,6 +287,7 @@ public class Resource : ElectronObject
         if (GetType() != source.GetType())
             throw new ArgumentException("Resources must have the same runtime type.", nameof(source));
 
+        ValidateStateMutation();
         var retention = source._fileOwnership is { } owner && !owner.Contains(this) ? owner.RetainOwner() : null;
         try
         {
@@ -297,7 +299,7 @@ public class Resource : ElectronObject
                     {
                         source.ThrowIfDisposed();
                         var (name, localToScene) = source.GetCopyableBaseState();
-                        EmitChanged(); ResetState(); ResourceName = name; ResourceLocalToScene = localToScene;
+                        EmitChanged(); ThrowIfDisposed(); OnResetState(); ResourceName = name; ResourceLocalToScene = localToScene;
                         source.CopyCustomStateTo(this, deep: false, DeepDuplicateMode.None, static resource => resource, static resource => resource);
                         copied = true;
                     }
@@ -310,6 +312,8 @@ public class Resource : ElectronObject
         }
         finally { retention?.ReleaseOwner(); }
     }
+
+    internal virtual void ValidateStateMutation() { }
 
     /// <summary>Creates a shallow or internally deep duplicate of this resource.</summary>
     /// <param name="deep">
@@ -386,10 +390,12 @@ public class Resource : ElectronObject
     /// <summary>Clears non-stored state through <see cref="OnResetState"/>.</summary>
     /// <remarks>The base implementation does not change stored properties and does not raise <see cref="Changed"/>.</remarks>
     /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
+    /// <exception cref="InvalidOperationException">An engine resource's authoring policy rejects resetting before its custom hook runs.</exception>
     /// <exception cref="Exception"><see cref="OnResetState"/> throws.</exception>
     public void ResetState()
     {
         ThrowIfDisposed();
+        ValidateStateMutation();
         OnResetState();
     }
 

@@ -1464,3 +1464,30 @@ This covers the named public built-in trajectories. Arbitrary provider polygon/
 capsule algorithms, larger coupled graphs, numerical-scale extremes, networking,
 native allocations and hardware/window performance retain separate acceptance.
 GPU kernels execute through CPU-only Vulkan; software timing is not hardware evidence.
+
+## Inherited shape copying (2026-10-14)
+
+Resource.CopyFromResource previously entered reset/change batching and assigned
+base name/scene locality before Shape's policy copy discovered a forbidden
+borrow. During a shape's own geometry supplier, private custom data could also
+change before final geometry publication rejected it. Resource now invokes its
+internal target preflight before retaining source file ownership or entering the
+batch; Shape delegates to the existing complete geometry authoring guard.
+Every application Shape inherits that dispatch without an extra public hook.
+
+The public-only --shape-geometry consumer tests nine represented shape families
+and one application Shape: circle, capsule, rectangle, segment, convex/concave
+polygon, boundary, directed ray and custom geometry. Numerical creation/live/step
+hooks, reentrant selected-status reads and geometry construction reject copying
+before base/custom/reset/events/RID/cache change. Quiescent and post-solver copies
+remain usable, preserve target path/scene ID and coalesce Changed; a real point
+query observes the copied radius. Exact runtime-type/null/disposed/self-copy and
+arbitrary post-preflight error policy remain owned by Resource.
+
+--cpu, --gpu and registered profiles each support --threaded. The existing 128
+warm/128 measured preflight/full-frame loop retains the strict zero owner/all
+managed-byte gate; accepted copying is structural work outside that bracket.
+This verifies inherited authoring safety and leaves complete arbitrary provider
+geometry, native/platform/network and hardware performance acceptance open.
+
+Standalone Shape.ResetState uses the same preflight before OnResetState. The public-only regression rejects reset during numerical/access/geometry hooks, checks no custom-reset side effects, and preserves allowed quiescent reset without Changed. Copying invokes reset exactly once after its own accepted preflight.

@@ -4,7 +4,15 @@ public static partial class BackendChecks
 {
     private sealed record GeometryEdit(Shape Shape, Action Change, Action Equal, Func<string> Read);
 
-    public static void RunShapeGeometry(PhysicsServer.Backend? backend = null)
+    public static void RunShapeGeometry(PhysicsServer.Backend? backend = null, bool threaded = false)
+    {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { RunShapeGeometryCore(backend); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
+
+    private static void RunShapeGeometryCore(PhysicsServer.Backend? backend)
     {
         using var circle = new CircleShape { Radius = 3 };
         using var capsule = new CapsuleShape { Radius = 2, Height = 8 };
@@ -37,6 +45,8 @@ public static partial class BackendChecks
             new(probe, () => probe.Radius = 4, () => probe.Radius = probe.Radius, () => probe.Radius.ToString())
         ];
         var shapes = edits.Select(edit => edit.Shape).Distinct().ToArray();
+        var copySources = shapes.Select(shape => (Shape)shape.Duplicate()).ToArray();
+        foreach (var source in copySources) { source.ResourceName = "replacement"; source.ResourceLocalToScene = true; }
         var data = shapes.Select(shape => shape.GetGeometryData()).ToArray();
         var values = edits.Select(edit => edit.Read()).ToArray();
         var ids = shapes.Select(shape => shape.GetRID()).ToArray();
@@ -81,6 +91,9 @@ public static partial class BackendChecks
                 {
                     reads++; Check(circle.Radius == 3, "Every selected access hook runs before geometric authoring commits");
                     Reject<InvalidOperationException>(() => circle.Radius = 4);
+                    Reject<InvalidOperationException>(() => circle.CopyFromResource(copySources[Array.IndexOf(shapes, circle)]));
+                    Reject<InvalidOperationException>(circle.ResetState);
+                    Check(circle.ResourceName.Length == 0 && !circle.ResourceLocalToScene, "Reentrant copy rejection preserves base state");
                     Reject<InvalidOperationException>(() => circle.Dispose());
                 };
                 try { circle.Radius = 4; }
@@ -89,13 +102,16 @@ public static partial class BackendChecks
                 circle.Radius = 3;
             }
             var before = changes; var callbacks = 0;
-            PhysicsServer.BodySetStateSyncCallback(raw, _ => { callbacks++; circle.Radius = 4; });
+            var circleSource = (CircleShape)copySources[Array.IndexOf(shapes, circle)]; circleSource.Radius = 4;
+            PhysicsServer.BodySetStateSyncCallback(raw, _ => { callbacks++; circle.CopyFromResource(circleSource); });
             tree.PhysicsFrame(1d / 120); PhysicsServer.BodySetStateSyncCallback(raw, null);
-            Check(callbacks == 1 && circle.Radius == 4 && changes == before + 1, "Ordinary post-solver geometry editing remains available");
+            Check(callbacks == 1 && circle.Radius == 4 && changes == before + 1 && circle.ResourceName == "replacement" && circle.ResourceLocalToScene,
+                "Ordinary post-solver copying commits base/geometry state with one coalesced change");
             using var point = new PhysicsPointQueryParameters { Position = new(3.5f, 0) };
             var hits = new PhysicsPointResult[1];
             Check(world.DirectSpaceState.IntersectPoint(point, hits) == 1 && hits[0].ColliderRID == body.GetRID(), "Lazy geometry preparation changes real selected point-query results");
             circle.Radius = 3;
+            circle.ResourceName = string.Empty; circle.ResourceLocalToScene = false;
             foreach (var edit in edits)
             {
                 var previous = edit.Shape.GetGeometryData(); edit.Change();
@@ -125,7 +141,13 @@ public static partial class BackendChecks
                     Check(edits[i].Read() == currentValues[i], "Numerical geometry preparation rejects every edit before private mutation");
                 }
                 for (var i = 0; i < shapes.Length; i++)
+                {
+                    Reject<InvalidOperationException>(shapes[i].ResetState);
+                    Reject<InvalidOperationException>(() => shapes[i].CopyFromResource(copySources[i]));
+                    Check(shapes[i].ResourceName.Length == 0 && !shapes[i].ResourceLocalToScene,
+                        "Geometry supplier rejection preserves inherited copy metadata");
                     if (!ReferenceEquals(shapes[i], probe)) Check(ReferenceEquals(shapes[i].GetGeometryData(), currentData[i]), "Other exact data remains unchanged during a geometry supplier");
+                }
                 Check(changes == count, "Numerical geometry rejection emits no Changed");
             };
             try { tree.PhysicsFrame(1d / 120); }
@@ -137,11 +159,32 @@ public static partial class BackendChecks
             for (var i = 0; i < 128; i++) { probe.Preflight(); tree.PhysicsFrame(1d / 120); }
             own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
             Check(own == 0 && all == 0, $"Geometry preflight and warmed full frames allocated {own}/{all} bytes");
-            Console.WriteLine($"Geometry authoring {backend?.ToString() ?? "registered"}: {edits.Length} paths, owner/numerical/step/reentry/callback/query/observer checks and 128 full frames {own}/{all} B passed.");
+            for (var i = 0; i < shapes.Length; i++)
+            {
+                var target = shapes[i]; var id = target.GetRID(); var changed = changes;
+                target.ResourceSceneUniqueID = "copy1"; target.SetPathCache($"local://copy-target-{i}");
+                target.CopyFromResource(copySources[i]);
+                Check(target.ResourceName == "replacement" && target.ResourceLocalToScene && target.GetRID() == id &&
+                    target.ResourceSceneUniqueID == "copy1" && target.ResourcePath == $"local://copy-target-{i}" && changes == changed + 1,
+                    "Allowed copying preserves target identity/path/scene ID and coalesces every shape family");
+                Check(target.GetGeometryData().Type == copySources[i].GetGeometryData().Type, "Allowed copying retains represented geometry kind");
+            }
+            Check(probe.Resets == 1, "Allowed copy resets custom non-stored state once after preflight");
+            var resetChanges = changes; foreach (var shape in shapes) shape.ResetState();
+            Check(probe.Resets == 2 && changes == resetChanges, "Allowed standalone reset reaches the custom hook without manufacturing Changed");
+            Console.WriteLine($"Geometry authoring {backend?.ToString() ?? "registered"}, threaded={ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread)}: {edits.Length} paths, {shapes.Length} inherited copy guards, callback/query/observer checks and 128 full frames {own}/{all} B passed.");
         }
-        finally { PhysicsServer.FreeRID(raw); PhysicsServer.FreeRID(area); }
+        finally { PhysicsServer.FreeRID(raw); PhysicsServer.FreeRID(area); foreach (var source in copySources) source.Dispose(); }
         using var constructing = new GeometryProbe();
-        constructing.OnBuild = () => Reject<InvalidOperationException>(() => constructing.Radius = 4);
+        using var constructingSource = new GeometryProbe { Radius = 4, ResourceName = "replacement", ResourceLocalToScene = true };
+        constructing.OnBuild = () =>
+        {
+            Reject<InvalidOperationException>(() => constructing.Radius = 4);
+            Reject<InvalidOperationException>(constructing.ResetState);
+            Reject<InvalidOperationException>(() => constructing.CopyFromResource(constructingSource));
+            Check(constructing.ResourceName.Length == 0 && !constructing.ResourceLocalToScene && constructing.Radius == 2 && constructing.Resets == 0,
+                "Rejected copying during geometry construction preserves all base and custom state");
+        };
         _ = constructing.GetGeometryData();
         Check(constructing.Radius == 2, "A resource geometry supplier cannot change its private authored data");
 
@@ -154,8 +197,15 @@ public static partial class BackendChecks
                 Check(edits[i].Read() == values[i], "Rejected geometric write preserves private authoring, including coupled capsule fields");
             }
             for (var i = 0; i < shapes.Length; i++)
+            {
+                Reject<InvalidOperationException>(shapes[i].ResetState);
+                Reject<InvalidOperationException>(() => shapes[i].CopyFromResource(copySources[i]));
+                Check(shapes[i].ResourceName.Length == 0 && !shapes[i].ResourceLocalToScene,
+                    "Rejected inherited resource copying preserves shape base state");
                 Check(shapes[i].GetRID() == ids[i] && ReferenceEquals(shapes[i].GetGeometryData(), data[i]), "Rejected geometric write preserves RID and immutable cache");
+            }
             Check(changes == count, "Rejected geometric writes emit no Changed event");
+            Check(probe.Resets == 0, "Rejected copying never enters the custom reset hook");
         }
     }
 
@@ -163,6 +213,7 @@ public static partial class BackendChecks
     {
         private float _radius = 2;
         internal Action? OnBuild;
+        internal int Resets;
         internal float Radius
         {
             get => _radius;
@@ -171,5 +222,13 @@ public static partial class BackendChecks
         internal void Preflight() => EnsureGeometryChangeAccess();
         internal void Invalidate() { EnsureGeometryChangeAccess(); EmitGeometryChanged(); }
         protected override ShapeGeometry GetGeometryCore() { OnBuild?.Invoke(); return ShapeGeometry.Circle(_radius); }
+        protected override Resource CreateDuplicateInstance() => new GeometryProbe();
+        protected override void OnResetState() => Resets++;
+        protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
+            Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
+        {
+            base.CopyCustomStateTo(target, deep, subresourceMode, duplicateSubresource, forceDuplicateSubresource);
+            ((GeometryProbe)target)._radius = _radius; ((GeometryProbe)target).EmitGeometryChanged();
+        }
     }
 }

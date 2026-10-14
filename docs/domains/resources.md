@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 [Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
@@ -236,3 +236,7 @@ The primary realized face supplies OpenType metadata through `GetSupportedFeatur
 ## Custom image decoder integration
 
 [ImageFormatLoader](../classes/ImageFormatLoader.md) and [ImageFormatLoaderExtension](../classes/ImageFormatLoaderExtension.md) provide caller-owned file decoder registration. Custom suffixes participate in Image loading, resource extension/existence/directory discovery, synchronous/threaded ImageTexture loading and cache replacement. Ordered callbacks execute outside the registry lock with borrowed temporary Image/FileAccess objects; false means unrecognized content, exceptions preserve the destination, and success copies pixels before one Changed notification. Encoded input retains the 64 MiB limit. Registration is process-local and must precede fresh-host file loading. Keep decoders alive through pending worker calls; removal affects subsequent snapshots. Built-in buffer codecs and their channel/color metadata limits remain separate.
+
+[Inherited shape copying](../components/physics-registered-adapter.md#inherited-shape-copying-2026-10-14) now preflights every target borrower before Resource reset, name/locality, ownership and Changed effects. Public-only CPU/GPU/registered serial/separate checks cover nine shape families plus an application Shape, ordinary callback/query continuation and strict zero warmed frame allocations. Remaining inherited and complete numerical/native/performance gates stay open.
+
+Standalone Shape.ResetState uses the same preflight before OnResetState. The public-only regression rejects reset during numerical/access/geometry hooks, checks no custom-reset side effects, and preserves allowed quiescent reset without Changed. Copying invokes reset exactly once after its own accepted preflight.

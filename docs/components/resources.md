@@ -1,6 +1,6 @@
 # Resource base component
 
-Last updated: 2026-10-10
+Last updated: 2026-10-14
 
 [Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
@@ -20,7 +20,7 @@ Both types are production members of `Electron2D.dll`.
 1. A resource starts with empty name/path/scene ID and scene-local behavior disabled.
 2. Ordinary path assignment claims one process-wide ordinal path; takeover is explicit, while raw cache assignment bypasses ownership.
 3. Custom setters call `EmitChanged` only after committing meaningful content.
-4. Copying resets the target, shallow-copies stored state, preserves target identity, and emits one coalesced change.
+4. Copying first validates the target engine resource authoring policy, then resets it, shallow-copies stored state, preserves target identity, and emits one coalesced change. Shape preflight checks geometry/access hooks and all live borrowers before any base-state, reset, ownership or Changed effects. Arbitrary failures after accepted preflight retain the documented non-transactional behavior.
 5. Duplication creates and validates exact-type targets, registers them before recursive copying, and therefore preserves aliases and cycles.
 6. Packed-scene instantiation uses the same graph machinery to duplicate local resource graphs. It assigns the new scene root before setup, invokes setup once per local duplicate, and transfers every created resource to root ownership.
 7. Failure disposes every partial duplicate in reverse order; normal resource disposal unregisters its path, clears local-scene association, and clears subscribers.
@@ -67,3 +67,5 @@ See [resource-file contracts](resource-files.md) for registered typed schemas, c
 ## Background loading
 
 [Threaded resource loading](threaded-resource-loading.md) executes typed requests on WorkerThreadPool under ADR 0013/0104. Isolated preparation does not mutate registered cache objects; owner publication preserves cache modes and shared graph leases. Protected remapping handles stored/PackedScene/shader references. AsyncGallery verifies separately authored scenes with real background dependencies and native rendered output. Further import/pack/editor/schema work retains its own coverage dependencies.
+
+Standalone Shape.ResetState uses the same preflight before OnResetState. The public-only regression rejects reset during numerical/access/geometry hooks, checks no custom-reset side effects, and preserves allowed quiescent reset without Changed. Copying invokes reset exactly once after its own accepted preflight.
