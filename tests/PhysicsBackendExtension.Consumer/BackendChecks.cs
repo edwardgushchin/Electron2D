@@ -13,6 +13,7 @@ public static partial class BackendChecks
         RunContactFrames();
         RunCompound();
         RunAngularCompound();
+        RunAngularGeometry(PhysicsServer.Backend.CPU);
         RunCurvedAnnulus();
         RunMassRoles();
         RunPortableRoles();

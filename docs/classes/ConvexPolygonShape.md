@@ -1,6 +1,6 @@
 # ConvexPolygonShape
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -87,3 +87,7 @@ owner/phase without repeating selected status hooks; ordinary post-solver edits
 retain their existing behavior.
 
 [ConvexPolygonShapeTests](../../tests/Electron2D.Tests/ConvexPolygonShapeTests.cs) now runs the full existing resource/solver/Area/lifetime suite on explicitly selected CPU/GPU worlds, including a real ray query after PackedScene instantiation and warmed zero owner/all-thread managed allocation. Original numerical tolerances remain unchanged. Native allocations, other platforms and visual acceptance remain unverified.
+
+## Rotating geometry acceptance
+
+[Public rotating geometry checks](../components/gpu-resident-ccd.md#public-rotating-geometry-verification-2026-10-14) cover full selected CPU/GPU frames with rectangle, capsule, a 12-vertex polygon split into native pieces and separate compound slots. All three CCD policies, static/moving targets, exact logical identity, full impulse/momentum and one tick/callback per frame are checked. Eight active cases each retain 128 warm/128 measured frames at 0/0 owner/all-thread bytes in serial/separate numerical profiles. Software Vulkan provides functional evidence; provider geometry, wider coupling/network/native/hardware acceptance remain open.

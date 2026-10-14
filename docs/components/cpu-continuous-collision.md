@@ -1,6 +1,6 @@
 # Per-body continuous collision
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 ## Public contract
 
@@ -261,3 +261,37 @@ CPU/GPU/registered worlds in serial/separate modes. Exact slots, opposite frame
 impulses, authored CCD modes and one callback/tick retain their contract; both
 128-warm/128-measured impact brackets require 0/0 managed bytes. GPU executes on
 CPU-only llvmpipe; hardware, broader geometry and final acceptance remain open.
+
+## Public rotating geometry verification (2026-10-14)
+
+The public-only consumer --angular-geometry runs the same scene/raw fixture on
+explicit CPU/GPU worlds, with serial and --threaded numerical policy. Four authored
+geometries cover a 320 by .5 rectangle, radius-.25/height-320 rotated capsule,
+a 12-vertex ellipse with semiaxes 160 and 4 (multiple native convex pieces), and
+two 160 by .5 rectangles at local x=-80/+80 (separate logical slots).
+Each body uses mass 2, inertia 20,000 and a custom zero local mass center.
+A disabled slot precedes its active geometry; the raw radius-.25 target also has
+a disabled slot before its active shape.
+
+At 30 rad/s over .02 s, the active arm crosses a target at radius 160 and angle
+.225 radians while initial/final and quarter-step poses remain clear. The Disabled
+control retains zero reported contacts and unchanged angular speed within .01 rad/s.
+CastRay remains an approximate finite-state control; it is not a full rotational
+protection claim. CastShape must publish a real contact and reduce angular speed
+below 24 rad/s without reversal below -1 rad/s. A second CastShape case moves and
+rotates the target's offset collider, preserving its Disabled CCD policy.
+
+Every active full frame checks its world tick and state callback once, exact RID
+and nonzero logical shape indices (including native pieces sharing one logical index), full
+contact impulse against body momentum within .02 kg-scene-unit/s, and equal opposite
+momentum/angular response on the moving target. The momentum bound accounts for
+float contact sums and velocity products at this scene scale, rather than requiring
+equal CPU/GPU poses or contact counts. Static and moving target cases for all four
+geometries each retain 128 warm/128 measured frames at strict 0/0 owner/all-thread
+managed bytes: 1,024 measured active full frames per profile. Contact and momentum
+checks execute inside every measured interval, not only on its final sample.
+
+This covers the named public built-in trajectories. Arbitrary provider polygon/
+capsule algorithms, larger coupled graphs, numerical-scale extremes, networking,
+native allocations and hardware/window performance retain separate acceptance.
+GPU kernels execute through CPU-only Vulkan; software timing is not hardware evidence.

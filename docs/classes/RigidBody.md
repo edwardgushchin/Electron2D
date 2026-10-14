@@ -332,3 +332,7 @@ Each emission leases an ordered immutable handler snapshot. Duplicate handlers a
 EventHandlerTests compares 1,024 mixed delegate add/remove operations with native delegate lists, checks nested snapshot changes/errors, 256 concurrent producers and weak-reference release from disposed publishers. All 18 physical accessors each deliver 128 prepared first one-shot callbacks at strict zero owner/all-thread managed bytes. EventConnectionPhysicsTests adds a real full selected CPU/GPU Area transition with 128 one-shot listeners and a permanent listener. Serial/separate numerical profiles use CPU-only Vulkan for GPU kernels; native allocations, hardware performance, real-window FPS and foreign acceptance remain open.
 
 See [typed handler storage](../classes/EventHandlers.Generic.md) and [ADR 0010](../decisions/core-object-runtime.md#adr-0010).
+
+## Rotating geometry acceptance
+
+[Public rotating geometry checks](../components/gpu-resident-ccd.md#public-rotating-geometry-verification-2026-10-14) cover full selected CPU/GPU frames with rectangle, capsule, a 12-vertex polygon split into native pieces and separate compound slots. All three CCD policies, static/moving targets, exact logical identity, full impulse/momentum and one tick/callback per frame are checked. Eight active cases each retain 128 warm/128 measured frames at 0/0 owner/all-thread bytes in serial/separate numerical profiles. Software Vulkan provides functional evidence; provider geometry, wider coupling/network/native/hardware acceptance remain open.

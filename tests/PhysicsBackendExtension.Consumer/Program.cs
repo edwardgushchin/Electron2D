@@ -16,6 +16,7 @@ else if (args.Contains("--portable-joints")) BackendChecks.RunPortableJoints(arg
 else if (args.Contains("--mass-roles")) BackendChecks.RunMassRoles(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--curved-annulus")) BackendChecks.RunCurvedAnnulus(args.Contains("--threaded"));
+else if (args.Contains("--angular-geometry")) BackendChecks.RunAngularGeometry(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : Electron2D.PhysicsServer.Backend.CPU, args.Contains("--threaded"));
 else if (args.Contains("--angular-compound")) BackendChecks.RunAngularCompound(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--compound-native")) BackendChecks.RunCompoundNative(args.Contains("--gpu-renderer") ? "gpu" : "compatibility");

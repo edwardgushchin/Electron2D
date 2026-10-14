@@ -995,3 +995,7 @@ Dispose/ToString projections. Shared CPU/GPU serial/separate scene tests retain
 Body/Area/Resource branches, compiled subclasses, alias rejection and post-retirement
 metadata, with 0/0 warm full-frame bytes. Other inherited APIs and final acceptance
 remain separate gates.
+
+## Rotating geometry acceptance
+
+[Public rotating geometry checks](../components/gpu-resident-ccd.md#public-rotating-geometry-verification-2026-10-14) cover full selected CPU/GPU frames with rectangle, capsule, a 12-vertex polygon split into native pieces and separate compound slots. All three CCD policies, static/moving targets, exact logical identity, full impulse/momentum and one tick/callback per frame are checked. Eight active cases each retain 128 warm/128 measured frames at 0/0 owner/all-thread bytes in serial/separate numerical profiles. Software Vulkan provides functional evidence; provider geometry, wider coupling/network/native/hardware acceptance remain open.
