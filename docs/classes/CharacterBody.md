@@ -138,3 +138,12 @@ profile retains 14 incompatible/restored cases across both directions. Rejection
 preserves complete packets, sampled values and events; real refresh/continuation
 recovers. These cold structural checks have no allocation claim. Hardware and
 broader geometry/joint/network acceptance remain open.
+
+
+[Registered priority recovery](../components/physics-registered-adapter.md#registered-priority-recovery)
+now exercises weighted motion recovery independently through the public API,
+including finite/directed families, bounded contact planes, exclusions, one-way
+controls, character movement and unchanged rigid momentum. The shared CPU/GPU/
+registered profile covers five 128-warmup/128-measured full-frame brackets at zero
+managed allocation. Wider registered contact settings and complete numerical,
+native/network/platform/performance acceptance remain open.

@@ -256,3 +256,12 @@ Each emission leases an ordered immutable handler snapshot. Duplicate handlers a
 EventHandlerTests compares 1,024 mixed delegate add/remove operations with native delegate lists, checks nested snapshot changes/errors, 256 concurrent producers and weak-reference release from disposed publishers. All 18 physical accessors each deliver 128 prepared first one-shot callbacks at strict zero owner/all-thread managed bytes. EventConnectionPhysicsTests adds a real full selected CPU/GPU Area transition with 128 one-shot listeners and a permanent listener. Serial/separate numerical profiles use CPU-only Vulkan for GPU kernels; native allocations, hardware performance, real-window FPS and foreign acceptance remain open.
 
 See [typed handler storage](../classes/EventHandlers.Generic.md) and [ADR 0010](../decisions/core-object-runtime.md#adr-0010).
+
+
+[Registered priority recovery](../components/physics-registered-adapter.md#registered-priority-recovery)
+now exercises weighted motion recovery independently through the public API,
+including finite/directed families, bounded contact planes, exclusions, one-way
+controls, character movement and unchanged rigid momentum. The shared CPU/GPU/
+registered profile covers five 128-warmup/128-measured full-frame brackets at zero
+managed allocation. Wider registered contact settings and complete numerical,
+native/network/platform/performance acceptance remain open.

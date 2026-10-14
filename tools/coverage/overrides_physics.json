@@ -1238,17 +1238,17 @@
     {
       "godot": "CollisionObject2D::property:collision_priority",
       "electron2d": "property:Electron2D.CollisionObject.CollisionPriority()",
-      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; resident GPU uses metadata and bounded device scratch. PhysicsCollisionPriorityTests verifies selected public paths, packing, lifecycle, capacity, sleep and zero warmed allocation under ADR 0098. The public-only --priority-geometry consumer now independently verifies normalized finite/directed recovery, filters/one-way controls, character movement and unchanged rigid impulses in both solver thread modes; five complete 128-frame brackets allocate 0/0 managed bytes. General registered contact settings, native/network/platform/performance acceptance remain open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_collision_priority(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetCollisionPriority(Electron2D.RID)",
-      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; resident GPU uses metadata and bounded device scratch. PhysicsCollisionPriorityTests verifies selected public paths, packing, lifecycle, capacity, sleep and zero warmed allocation under ADR 0098. The public-only --priority-geometry consumer now independently verifies normalized finite/directed recovery, filters/one-way controls, character movement and unchanged rigid impulses in both solver thread modes; five complete 128-frame brackets allocate 0/0 managed bytes. General registered contact settings, native/network/platform/performance acceptance remain open."
     },
     {
       "godot": "PhysicsServer2D::method:body_set_collision_priority(RID:,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetCollisionPriority(Electron2D.RID,System.Single)",
-      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; resident GPU uses metadata and bounded device scratch. PhysicsCollisionPriorityTests verifies selected public paths, packing, lifecycle, capacity, sleep and zero warmed allocation under ADR 0098. The public-only --priority-geometry consumer now independently verifies normalized finite/directed recovery, filters/one-way controls, character movement and unchanged rigid impulses in both solver thread modes; five complete 128-frame brackets allocate 0/0 managed bytes. General registered contact settings, native/network/platform/performance acceptance remain open."
     },
     {
       "godot": "PhysicsServer2D::method:body_attach_canvas_instance_id(RID:,int:)",
@@ -1818,12 +1818,12 @@
     {
       "godot": "PhysicsServer2DExtension::method:_body_set_collision_priority(RID:,float:)",
       "electron2d": "method:Electron2D.PhysicsBackendCollider.SetCollisionPriority(System.Single)",
-      "reason": "ADR 0103: attachment-scoped SetCollisionPriority receives the retained finite positive value after initial identity publication and on live edits; BodyGetCollisionPriority projects authoritative facade metadata. The separate public-only consumer verifies initial/live/transfer delivery and failed-initial-hook cleanup. Numerical priority response in an arbitrary third-party solver and complete extension-operation acceptance remain open."
+      "reason": "ADR 0103: attachment-scoped SetCollisionPriority receives the retained finite positive value after initial identity publication and on live edits; BodyGetCollisionPriority projects authoritative facade metadata. The separate public-only consumer verifies initial/live/transfer delivery and failed-initial-hook cleanup. Numerical priority response in an arbitrary third-party solver and complete extension-operation acceptance remain open. The independent public-only priority profile exercises actual finite/directed motion recovery with 32-plane capacity, normalized extreme weights, one-way/exclusion/character controls and unchanged physical momentum; complete contact-setting/numerical-extension acceptance remains open."
     },
     {
       "godot": "PhysicsServer2DExtension::method:_body_get_collision_priority(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetCollisionPriority(Electron2D.RID)",
-      "reason": "ADR 0103: attachment-scoped SetCollisionPriority receives the retained finite positive value after initial identity publication and on live edits; BodyGetCollisionPriority projects authoritative facade metadata. The separate public-only consumer verifies initial/live/transfer delivery and failed-initial-hook cleanup. Numerical priority response in an arbitrary third-party solver and complete extension-operation acceptance remain open."
+      "reason": "ADR 0103: attachment-scoped SetCollisionPriority receives the retained finite positive value after initial identity publication and on live edits; BodyGetCollisionPriority projects authoritative facade metadata. The separate public-only consumer verifies initial/live/transfer delivery and failed-initial-hook cleanup. Numerical priority response in an arbitrary third-party solver and complete extension-operation acceptance remain open. The independent public-only priority profile exercises actual finite/directed motion recovery with 32-plane capacity, normalized extreme weights, one-way/exclusion/character controls and unchanged physical momentum; complete contact-setting/numerical-extension acceptance remains open."
     },
     {
       "godot": "PhysicsServer2DExtension::method:_area_add_shape(RID:,RID:,Transform2D:,bool:)",
@@ -7519,7 +7519,7 @@
         "PhysicsServer2DExtension::method:_body_get_collision_priority(RID:)"
       ],
       "state": "Partial",
-      "reason": "ADR 0103: body/Area associations are projected through one attachment-scoped RefreshIdentity hook, supplied after Attach before shape preparation and on live edits. Typed borrowed object associations and exact UInt64 canvas IDs remain engine-owned; getters project retained facade metadata. PhysicsBackendExtension.Consumer verifies detached authoring, scene canvas membership, world transfer, weak sampled identities, cleanup after failed initial hooks, owner/borrow guards and warmed zero-allocation edits/point queries. Complete extension-operation and numerical acceptance remain open. Collision-priority numerical response remains the implementation author's responsibility and is not certified by metadata delivery."
+      "reason": "ADR 0103: body/Area associations are projected through one attachment-scoped RefreshIdentity hook, supplied after Attach before shape preparation and on live edits. Typed borrowed object associations and exact UInt64 canvas IDs remain engine-owned; getters project retained facade metadata. PhysicsBackendExtension.Consumer verifies detached authoring, scene canvas membership, world transfer, weak sampled identities, cleanup after failed initial hooks, owner/borrow guards and warmed zero-allocation edits/point queries. Complete extension-operation and numerical acceptance remain open. Collision-priority numerical response remains the implementation author's responsibility and is not certified by metadata delivery. Independent weighted finite/directed body-motion recovery now executes in the public-only priority profile; broader numerical-extension/contact-setting acceptance remains open."
     },
     {
       "godot": [

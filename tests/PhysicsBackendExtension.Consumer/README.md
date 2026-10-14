@@ -274,3 +274,13 @@ The provider uses actual directed geometry and double circular-sweep intermediat
 no built-in numerical delegation or solid-segment substitution is used. Larger
 custom/coupled, inherited/complete extension/native/network/platform and target
 GPU performance gates remain open.
+
+
+`--priority-geometry` accepts `--cpu`, `--gpu` and `--threaded`; omitting the backend
+selects the independent public-only solver. It verifies normalized motion recovery
+for finite shapes and directed rays, large/subnormal priority values, bounded
+contact capacity, exclusions, one-way controls, character movement and rigid
+momentum. Five 128-warmup/128-measured full-frame brackets require zero owner and
+all-thread managed allocations. GPU execution needs its renderer/driver setup;
+software-driver checks establish functional behavior only. This profile leaves
+general registered contact correction/cache/iteration acceptance open.

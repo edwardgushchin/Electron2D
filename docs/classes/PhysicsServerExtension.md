@@ -137,3 +137,12 @@ profile require 128 warmup/128 measured frames at 0/0 managed bytes. Directional
 response and stable long-ray/circle roots are corrected in the shared consumer.
 Arbitrary custom/coupled, complete inherited/extension/network/native/platform
 and hardware-performance acceptance remain open; coverage states are unchanged.
+
+
+[Registered priority recovery](../components/physics-registered-adapter.md#registered-priority-recovery)
+now exercises weighted motion recovery independently through the public API,
+including finite/directed families, bounded contact planes, exclusions, one-way
+controls, character movement and unchanged rigid momentum. The shared CPU/GPU/
+registered profile covers five 128-warmup/128-measured full-frame brackets at zero
+managed allocation. Wider registered contact settings and complete numerical,
+native/network/platform/performance acceptance remain open.

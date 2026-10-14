@@ -2288,3 +2288,76 @@ These same-source functional results leave native allocation, physical GPU
 performance, real-window FPS, cross-platform and complete physics/network
 acceptance open. Earlier angular candidates, including cohorts before the
 resident entry refinement fix, remain failed or preliminary evidence.
+
+
+<a id="registered-priority-recovery"></a>
+## Registered priority recovery
+
+The independent public-only provider now uses one body-motion operation for all
+prepared shape families, including directed rays. Each of four recovery passes
+recomputes geometry, retains up to 32 deepest accepted contact planes and sums
+positive obstacle priorities in double precision. Weights normalize to mean one;
+a total below .00001 retains unnormalized weights. Sequential projection applies
+40 percent of each remaining excess above five percent of the recovery margin.
+Maximum finite and subnormal inputs remain finite without clamping authored values.
+Area sensors, moving-body masks, body/object exclusions, exceptions, disabled slots
+and one-way direction/depth acceptance run before weights are normalized. Per-slot
+one-way metadata survives preparation, including separate numerical pieces.
+
+Margin expands ordinary recovery geometry and extends directed rays. Infinite
+boundary precedence expands a ray perpendicular to the boundary instead, retaining
+the analytic half-plane meaning. Motion sweeps use original geometry; recovery
+margin does not enlarge the solid being swept. Sliding/non-sliding ray participation,
+safe/unsafe fractions, logical source/target indices, point velocity and supplied
+pose remain in the shared public operation. Zero-motion recovery can publish travel
+without a collision when RecoveryAsCollision is false. Ordinary character and
+PhysicsBody movement now consume this same operation; the former ordinary-provider
+path reported an initial hit with zero recovery/depth and was rejected by the new
+public profile. The former ray-only path selected one deepest point and ignored
+stored priority; it has been replaced rather than retained as another algorithm.
+
+The --priority-geometry profile accepts --cpu/--gpu and --threaded. Its analytic
+matrix uses nine equal/unequal/scaled/maximum/tiny/subnormal weight pairs for a
+circle and two perpendicular directed rays against half-planes. It exercises
+invalid writes, thread/kind rejection, detach/reentry, exclusions and exceptions,
+nonblocking maximum-priority Areas, recovery reporting, disabled logical slots,
+41 contacts competing for the 32-plane cap, all six finite source families,
+one-way shallow/backface/deep and swept controls, test-only/applied movement and
+real CharacterBody recovery. An isolated rigid circle collision alternates maximum
+priorities, verifies unchanged inverse mass, full physical momentum/impulse and
+unique events with private silent restore. Explicit zero replacement damping keeps
+that momentum oracle independent of the world's default damping.
+
+Five complete brackets each warm 128 frames and measure 128: edited circle query,
+41-contact recovery, edited two-ray query, sleeping scene policy edits and active
+rigid contact/replay. All frames include PhysicsFrame and the exercised public
+operation, with strict 0/0 owner/all-thread managed bytes. The initial capacity
+fixture allocated formatted success strings; formatting now occurs only on failure,
+without excluding query/frame work or changing the zero budget. Analytic recovery
+uses .002 scene-unit tolerance (.0000001 for tiny weights); rigid momentum/impulse
+uses .003 and mass .0001. Geometry, identity, filtering, sleep and event counts use
+exact assertions. Evidence lives under bin/physics-priority-provider/2026-10-14.
+
+Production public API/XML and ADRs are unchanged. Priority affects motion recovery,
+not rigid mass or impulses. General registered contact bias/slack/iterations/cache
+settings, arbitrary coupled/custom solver behavior, complete inherited/extension
+contract, native/network/platform and target-device performance acceptance remain
+open. The provider's SetContactSettings still has no numerical effect; this priority
+result does not claim correction-policy completion. Software Vulkan is functional
+evidence, with physical GPU performance and real-window FPS unverified.
+
+
+Final priority evidence uses the unchanged compiled runtime over local main
+f9e89ab5bcb58480cd5c78d70a310f51fb5026da and 4,209 present source files with
+SHA-256 c471269cb55939e757488be5d2d400f064e58c90d25f4342d182df5c9322976a.
+The pre-commit path catalog includes one retired tracked filename; the source
+manifest and digest include only present files. All 32 fresh final processes
+passed: six priority profiles and 26 independent/common regressions, including
+both directed solver-thread modes and shape policy/owners. The six commit gates
+passed Release build, scoped formatting, compiled API coverage, wiki tests,
+generation and generation --check. Coverage retained 13,906 declarations with
+zero unmapped members; wiki retained 827 public types and 845 files. All 61
+loaded runtime files were rehashed. CPU/registered profiles loaded no graphics
+driver, GPU profiles loaded only software Vulkan, and numerical thread counts
+matched zero/one. No native-memory, hardware throughput or window acceptance
+is inferred from these results.

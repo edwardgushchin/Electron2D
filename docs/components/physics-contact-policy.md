@@ -466,3 +466,12 @@ are observed only in separate public profiles. Software timings include independ
 verification contention and establish no hardware or scheduling advantage. Native
 allocation, arbitrary registered constraint geometry, foreign platforms, networking,
 massive GPU throughput and real-window FPS remain separate acceptance gates.
+
+
+[Registered priority recovery](../components/physics-registered-adapter.md#registered-priority-recovery)
+now exercises weighted motion recovery independently through the public API,
+including finite/directed families, bounded contact planes, exclusions, one-way
+controls, character movement and unchanged rigid momentum. The shared CPU/GPU/
+registered profile covers five 128-warmup/128-measured full-frame brackets at zero
+managed allocation. Wider registered contact settings and complete numerical,
+native/network/platform/performance acceptance remain open.

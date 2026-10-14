@@ -238,40 +238,7 @@ public static partial class BackendChecks
         protected override bool TestBodyMotion(RID body, Transform from, Vector2 motion, float margin, bool recoveryAsCollision,
             ReadOnlySpan<RID> excludedBodies, ReadOnlySpan<ulong> excludedObjects, bool collideSeparationRay, PhysicsTestMotionResult result)
         {
-            var local = Bodies[body];
-            if (HasDirectedMotionParts(local)) return TestDirectedBodyMotion(body, from, motion, margin, recoveryAsCollision, collideSeparationRay, result);
-            Body? best = null; Part source = default, target = default; var fraction = 1f;
-            MotionHook?.Invoke(body);
-            foreach (var other in Bodies.Values)
-            {
-                if (other.RID == body || !Eligible(other, local.Mask, true, false, []) || IsBodyExcludedFromMotionTest(other.RID) ||
-                    other.ObjectID != 0 && IsObjectExcludedFromMotionTest(other.ObjectID) ||
-                    Exceptions.Contains((body, other.RID)) || Exceptions.Contains((other.RID, body))) continue;
-                for (var i = 0; i < local.Shapes; i++) for (var j = 0; j < other.Shapes; j++)
-                    {
-                        var a = local.Parts[i]; var b = other.Parts[j]; var start = from.Origin + a.Offset.Rotated(from.Rotation);
-                        float f;
-                        if (a.Boundary || b.Boundary || a.Contour || b.Contour)
-                        {
-                            var expanded = a.Contour ? a with { Inflation = a.Inflation + margin } : a with { Outer = a.Outer + margin };
-                            if (!SweepParts(expanded, from, motion, b, other.Pose, out f)) continue;
-                        }
-                        else if (!Annulus.Sweep(start, motion, other.PartCenter(b), MathF.Max(0, b.Inner - a.Outer - margin), a.Outer + b.Outer + margin, out f)) continue;
-                        if (f > fraction) continue;
-                        best = other; source = a; target = b; fraction = f;
-                    }
-            }
-            if (best is null) { result.SetMotion(motion); return false; }
-            var travel = motion * fraction; var center = from.Origin + source.Offset.Rotated(from.Rotation) + travel; var at = best.PartCenter(target);
-            var normal = PartNormal(center, at, target); var point = at + normal * (center.DistanceTo(at) < target.Inner ? -target.Inner : target.Outer);
-            if (source.Boundary || target.Boundary || source.Contour || target.Contour)
-            {
-                var pose = from; pose.Origin += travel;
-                PartGap(source.Contour ? source with { Inflation = source.Inflation + margin } : source with { Outer = source.Outer + margin }, pose,
-                    target, best.Pose, out var towardTarget, out _, out point); normal = -towardTarget;
-            }
-            result.SetCollision(body, source.Index, best.RID, target.Index, point, normal, 0, best.PointVelocity(point), travel, motion - travel, fraction, fraction);
-            MotionResultHook?.Invoke(body, result); return true;
+            return TestGeometryBodyMotion(body, from, motion, margin, recoveryAsCollision, collideSeparationRay, result);
         }
     }
 }

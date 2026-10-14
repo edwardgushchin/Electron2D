@@ -129,3 +129,12 @@ at 0/0 owner/all-thread managed bytes on registered/CPU/GPU implementations.
 Base collider disposal clears publisher-owned pointer and derived contact/sleep handler lists after scene teardown. Body space-detachment failures still reach base disposal, and material subscriptions release in the same cleanup path. Independent detach and scene-exit errors are preserved together; a sole failure retains its original exception. Area follows the same guaranteed base cleanup boundary for its overlap lists. See [prepared physical events](../components/event-connections.md#prepared-physical-event-delivery).
 
 Public-only registered resource checks inject combined collider-detachment and TreeExiting callback failures for StaticBody, AnimatableBody, CharacterBody, RigidBody, PhysicalBone and Area. They assert both errors remain observable, disposal completes, scene membership clears and subscriber payloads become collectible. This covers the guaranteed base cleanup path, separately from numerical acceptance.
+
+
+[Registered priority recovery](../components/physics-registered-adapter.md#registered-priority-recovery)
+now exercises weighted motion recovery independently through the public API,
+including finite/directed families, bounded contact planes, exclusions, one-way
+controls, character movement and unchanged rigid momentum. The shared CPU/GPU/
+registered profile covers five 128-warmup/128-measured full-frame brackets at zero
+managed allocation. Wider registered contact settings and complete numerical,
+native/network/platform/performance acceptance remain open.
