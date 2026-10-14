@@ -350,3 +350,5 @@ owner/all-thread managed bytes. A public-only standalone consumer supports the
 same compiled test in ordinary and NativeAOT hosts. Evidence and exact limits are
 retained under bin/physics-auto-callbacks/2026-10-14; full inherited, native/foreign
 and hardware/window/performance acceptance remains open.
+
+The NativeAOT prerequisite slice uses bound virtual delegates for CodeEdit/GraphEdit, exact existing types for empty custom-data arrays and prepared string JSON metadata. Script source registration retains its explicit file/PDB and untrimmed metadata prerequisites; metadata is captured once and queried through copied snapshots. Public-only executable evidence is recorded in bin/physics-aot-prerequisites/2026-10-14; this does not establish native rendering, foreign-platform or complete scripting acceptance.

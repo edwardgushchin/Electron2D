@@ -1217,3 +1217,5 @@ Sources now include TileSetScenesCollectionSource. Ownership transfer/copy/stora
 ## Canvas lighting integration
 
 [Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.
+
+Custom-data array defaults use the already known exact CLR array type. Application, jagged and multidimensional arrays can reset to empty without a portable codec; persistence retains its separate codec prerequisite. Array-to-text conversion uses prepared string JSON metadata and retains quoted escaping.

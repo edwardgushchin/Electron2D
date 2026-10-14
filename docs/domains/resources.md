@@ -244,3 +244,5 @@ Standalone Shape.ResetState uses the same preflight before OnResetState. The pub
 WebP lossless/lossy saving, live codec settings, compressed-source conversion, atomic files and texture/capture consumers are described in [the executable codec contract](../components/image-webp.md). Foreign-target native execution and prebuilt bundle publication remain unverified.
 
 The [EXR I/O slice](../components/image-exr.md) supplies precision-preserving HDR file/buffer load and lossless save. Image and texture resource discovery includes DDS and EXR alongside PNG/JPEG/WebP/BMP/TGA/SVG; typed archives also expose their registered extensions. GPU float sampling, explicit Compatibility byte conversion and float-driver rejection are separate exercised profiles.
+
+Typed tile array defaults use an existing exact array type without dynamic element-type construction or an archive codec. Script source association still requires a file-backed assembly, matching PDB and complete project metadata; its registration APIs now declare those prerequisites, and metadata queries copy the registration-time declarations. See the tiles and scripting components for executable scope.

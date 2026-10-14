@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
 using System.Reflection.PortableExecutable;
@@ -8,7 +9,7 @@ namespace Electron2D;
 
 internal sealed record ScriptDocument(string Path, Guid Algorithm, byte[] Hash);
 internal sealed record ScriptRegistration(string ID, Type Type, string Path, Guid Module, ScriptDocument[] Documents,
-    Func<ElectronObject>? Factory, PropertyDescriptor[] Properties);
+    Func<ElectronObject>? Factory, PropertyDescriptor[] Properties, MethodInfo[] Methods, EventInfo[] Events, FieldInfo[] Constants);
 
 public sealed partial class Script
 {
@@ -25,6 +26,9 @@ public sealed partial class Script
     /// <param name="properties">User-defined typed properties; native inherited properties are discovered separately.</param>
     /// <exception cref="ArgumentException">Factory or schema is invalid.</exception><exception cref="InvalidOperationException">Identity is already registered.</exception>
     /// <exception cref="NotSupportedException">Matching compiled assembly and portable source symbols are unavailable.</exception>
+    /// <remarks>Requires a file-backed assembly, matching portable PDB and untrimmed project declarations. Method, event and literal-field metadata is captured once during registration.</remarks>
+    [RequiresAssemblyFiles("Compiled source registration requires a file-backed assembly and matching portable PDB.")]
+    [RequiresUnreferencedCode("Compiled source registration inspects the complete project method, event and constant declarations.")]
     public static void RegisterNode<TNode>(string id, string sourcePath, Func<TNode> factory, params PropertyDescriptor[] properties) where TNode : Node
     {
         ArgumentNullException.ThrowIfNull(factory);
@@ -36,6 +40,9 @@ public sealed partial class Script
     /// <param name="properties">User-defined typed property schema.</param>
     /// <exception cref="ArgumentException">Factory or schema is invalid.</exception><exception cref="InvalidOperationException">Identity is already registered.</exception>
     /// <exception cref="NotSupportedException">Matching assembly/source symbols are unavailable.</exception>
+    /// <remarks>Requires a file-backed assembly, matching portable PDB and untrimmed project declarations. Method, event and literal-field metadata is captured once during registration.</remarks>
+    [RequiresAssemblyFiles("Compiled source registration requires a file-backed assembly and matching portable PDB.")]
+    [RequiresUnreferencedCode("Compiled source registration inspects the complete project method, event and constant declarations.")]
     public static void RegisterResource<TResource>(string id, string sourcePath, Func<TResource> factory, params PropertyDescriptor[] properties) where TResource : Resource
     {
         ArgumentNullException.ThrowIfNull(factory);
@@ -45,11 +52,16 @@ public sealed partial class Script
     /// <typeparam name="T">Abstract project Node or Resource type.</typeparam><param name="id">Stable script identity.</param>
     /// <param name="sourcePath">Portable-PDB source path.</param><param name="properties">User-defined typed schema.</param>
     /// <exception cref="ArgumentException">The type is concrete or does not derive from Node/Resource.</exception>
+    /// <remarks>Requires a file-backed assembly, matching portable PDB and untrimmed project declarations. Method, event and literal-field metadata is captured once during registration.</remarks>
+    [RequiresAssemblyFiles("Compiled source registration requires a file-backed assembly and matching portable PDB.")]
+    [RequiresUnreferencedCode("Compiled source registration inspects the complete project method, event and constant declarations.")]
     public static void RegisterAbstract<T>(string id, string sourcePath, params PropertyDescriptor[] properties) where T : ElectronObject
     {
         if (!typeof(T).IsAbstract) throw new ArgumentException("The script type must be abstract.");
         Register(typeof(T), id, sourcePath, null, properties, null, null);
     }
+    [RequiresAssemblyFiles("Compiled source registration requires a file-backed assembly and matching portable PDB.")]
+    [RequiresUnreferencedCode("Compiled source registration inspects the complete project method, event and constant declarations.")]
     private static void Register(Type type, string id, string path, Func<ElectronObject>? factory, PropertyDescriptor[] properties, Action? registerFileType, object? factoryTarget)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id); ArgumentNullException.ThrowIfNull(properties);
@@ -61,13 +73,20 @@ public sealed partial class Script
         foreach (var property in copy) if (property == null || property.OwnerType.Assembly == typeof(Script).Assembly || !property.OwnerType.IsAssignableFrom(type) || !names.Add(property.Name)) throw new ArgumentException("Invalid script property schema.", nameof(properties));
         var documents = ReadDocuments(type);
         if (!documents.Any(d => ByPath.Comparer.Equals(d.Path, path))) throw new ArgumentException("The compiled type does not belong to this source document.", nameof(path));
-        var record = new ScriptRegistration(id, type, path, type.Module.ModuleVersionId, documents, factory, copy);
+        var projectTypes = new List<Type>();
+        for (var current = type; current is not null && current.Assembly != typeof(Script).Assembly; current = current.BaseType) projectTypes.Add(current);
+        const BindingFlags members = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
+        var methods = projectTypes.SelectMany(t => t.GetMethods(members)).Where(m => !m.IsSpecialName && !m.IsDefined(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute))).OrderBy(m => m.Name, StringComparer.Ordinal).ThenBy(m => m.ToString(), StringComparer.Ordinal).ToArray();
+        var events = projectTypes.SelectMany(t => t.GetEvents(members)).OrderBy(e => e.Name, StringComparer.Ordinal).ToArray();
+        var constants = projectTypes.SelectMany(t => t.GetFields(members)).Where(f => f.IsLiteral).ToArray();
+        var record = new ScriptRegistration(id, type, path, type.Module.ModuleVersionId, documents, factory, copy, methods, events, constants);
         lock (CatalogGate)
         {
             if (ByID.ContainsKey(id) || ByType.ContainsKey(type) || ByPath.ContainsKey(path)) throw new InvalidOperationException("Script ID, type or primary source is already registered.");
             registerFileType?.Invoke(); ByID.Add(id, record); ByType.Add(type, record); ByPath.Add(path, record);
         }
     }
+    [RequiresAssemblyFiles("Portable source association requires the compiled assembly file and its PDB.")]
     private static ScriptDocument[] ReadDocuments(Type type)
     {
         var location = type.Assembly.Location;

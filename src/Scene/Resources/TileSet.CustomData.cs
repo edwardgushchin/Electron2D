@@ -50,7 +50,7 @@ public sealed partial class TileSet
     /// <summary>Changes the configured type using a previously prepared typed factory; null clears values to nil.</summary>
     /// <param name="layerIndex">Layer index.</param><param name="type">CLR type prepared by a typed setter or registered portable codec/resource, or null.</param>
     /// <remarks>All value conversions prepare before definition/value commitment and callbacks.
-    /// Unconvertible values reset to the type's default. Conversion overflow rejects the complete edit.</remarks>
+    /// Unconvertible values reset to the type's default. Array defaults use the existing exact array type, including application, jagged and multidimensional arrays, without requiring a portable codec. Conversion overflow rejects the complete edit.</remarks>
     /// <exception cref="NotSupportedException">No direct typed factory was prepared for this type.</exception>
     public void SetCustomDataLayerType(int layerIndex, Type? type)
     {

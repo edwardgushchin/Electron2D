@@ -19,6 +19,10 @@ internal static class ScriptTests
         using var script = ResourceLoader.Load<Script>(ScriptActor.SourcePath);
         Check(script.CanInstantiate() && script.IsTool() && !script.IsAbstract() && script.HasSourceCode() && script.GetGlobalName() == "ScriptActor" && script.GetInstanceBaseType() == typeof(Node), "compiled source/type metadata");
         Check(script.SourceCode.Contains("class ScriptActor") && script.HasScriptMethod("Twice") && script.HasScriptMethod("Ping") && script.HasScriptSignal("Pulse") && !script.HasScriptMethod("missing"), "source and inherited CLR metadata");
+        var methods = script.GetScriptMethodList(); var signals = script.GetScriptSignalList();
+        Check(methods.Length > 0 && signals.Length > 0, "Project metadata snapshots are populated");
+        methods[0] = null!; signals[0] = null!;
+        Check(script.GetScriptMethodList().All(m => m is not null) && script.GetScriptSignalList().All(e => e is not null), "Metadata snapshots do not mutate the registration catalog");
         Check(script.GetScriptConstantMap<int>()["Limit"] == 12 && script.GetScriptConstantMap<string>()["Category"] == "Actor" && script.GetScriptPropertyList().Length == 3, "typed constants and explicit inherited schema");
         var basis = script.GetBaseScript()!; Check(basis.IsAbstract() && !basis.CanInstantiate(), "abstract source association");
         using var actor = script.New<ScriptActor>(); Check(actor.Count == 3 && script.GetPropertyDefaultValue(ScriptActor.CountProperty, actor) == 3, "typed factory/default");

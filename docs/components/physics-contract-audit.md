@@ -1311,3 +1311,5 @@ owner/all-thread managed bytes. A public-only standalone consumer supports the
 same compiled test in ordinary and NativeAOT hosts. Evidence and exact limits are
 retained under bin/physics-auto-callbacks/2026-10-14; full inherited, native/foreign
 and hardware/window/performance acceptance remains open.
+
+The complete current-source automatic-callback consumer now passes strict NativeAOT publication and all four CPU/software-GPU ordinary/separate profiles, including PackedScene and weak retirement. Its connected GUI/array/catalog/process prerequisites are verified in ten managed profiles. All eight physics brackets retain 0/0 managed bytes. See [scene-tree verification](../components/scene-tree.md) and bin/physics-aot-prerequisites/2026-10-14/validation.json for exact scope; full inherited/native/foreign and hardware/window/performance acceptance remains open.

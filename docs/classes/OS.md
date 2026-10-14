@@ -169,3 +169,5 @@ The fragment assumes an authored root Window and a standalone desktop entry poin
 A restart attempt clears its retained flag and arguments before subsequent managed shutdown handlers run. Shutdown capture rejects later setters. A controlled Linux apphost fixture removes only its copied executable and verifies actual launch-failure reporting without changing the original exit status.
 
 The native host check covers both an explicit SceneTree.Quit and a queued native WM-close event. In either case the old host has completed Engine.Run cleanup before normal process shutdown launches the replacement.
+
+CreateInstance resolves a framework-dependent entry DLL by assembly name in AppContext.BaseDirectory, verifies that the file exists, and launches with literal arguments. Application executables relaunch directly. The path no longer depends on Assembly.Location.

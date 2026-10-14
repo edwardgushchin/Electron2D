@@ -1283,7 +1283,7 @@
     {
       "godot": "TileSet::method:set_custom_data_layer_type(int:,int:Variant.Type)",
       "electron2d": "method:Electron2D.TileSet.SetCustomDataLayerType(System.Int32,System.Type)",
-      "reason": "ADRs 0001/0034/0095/0101: ordered typed custom layer definitions, independent actual per-T values, coherent name/value remapping, direct factories and checked conversion/default policies; runtime callbacks consume actual drawing and CPU/GPU collision/navigation. TileCustomDataTests verifies 30 pinned stages with documented stale-lookup/string-constructor corrections, failure/reentry/overflow, independent holders, arrays/resources, cache/standalone/fresh-process graph storage, native pixels and warmed managed allocation intervals."
+      "reason": "ADRs 0001/0034/0095/0101: ordered typed custom layer definitions, independent actual per-T values, coherent name/value remapping, direct factories and checked conversion/default policies; runtime callbacks consume actual drawing and CPU/GPU collision/navigation. TileCustomDataTests verifies 30 pinned stages with documented stale-lookup/string-constructor corrections, failure/reentry/overflow, independent holders, arrays/resources, cache/standalone/fresh-process graph storage, native pixels and warmed managed allocation intervals. Exact existing array types preserve empty application/jagged/multidimensional defaults without codecs; prepared string JSON metadata preserves array text escaping in managed and NativeAOT hosts."
     },
     {
       "godot": "TileData::property:material",
@@ -1944,7 +1944,7 @@
         "TileSet::method:set_custom_data_layer_type(int:,int:Variant.Type)"
       ],
       "state": "Implemented",
-      "reason": "ADRs 0001/0034/0095/0101: ordered typed custom layer definitions, independent actual per-T values, coherent name/value remapping, direct factories and checked conversion/default policies; runtime callbacks consume actual drawing and CPU/GPU collision/navigation. TileCustomDataTests verifies 30 pinned stages with documented stale-lookup/string-constructor corrections, failure/reentry/overflow, independent holders, arrays/resources, cache/standalone/fresh-process graph storage, native pixels and warmed managed allocation intervals."
+      "reason": "ADRs 0001/0034/0095/0101: ordered typed custom layer definitions, independent actual per-T values, coherent name/value remapping, direct factories and checked conversion/default policies; runtime callbacks consume actual drawing and CPU/GPU collision/navigation. TileCustomDataTests verifies 30 pinned stages with documented stale-lookup/string-constructor corrections, failure/reentry/overflow, independent holders, arrays/resources, cache/standalone/fresh-process graph storage, native pixels and warmed managed allocation intervals. Exact existing array types preserve empty application/jagged/multidimensional defaults without codecs; prepared string JSON metadata preserves array text escaping in managed and NativeAOT hosts."
     },
     {
       "godot": [

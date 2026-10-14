@@ -75,13 +75,12 @@ public sealed partial class Script : Resource
         if (CompiledType?.IsInstanceOfType(owner) != true || !GetScriptPropertyList().Contains(property)) throw new ArgumentException("Default query requires a registered descriptor and compatible owner.");
         if (!property.TryGetRevertValue(owner, out var value)) throw new InvalidOperationException("The property has no declared default."); return value;
     }
-    private IEnumerable<Type> ProjectTypes() { var type = CompiledType; while (type != null && type.Assembly != typeof(Script).Assembly) { yield return type; type = type.BaseType; } }
-    /// <summary>Returns declared project methods and inherited project methods without invoking them.</summary><returns>Copied CLR method metadata, ordered by name/signature.</returns>
-    public MethodInfo[] GetScriptMethodList() => ProjectTypes().SelectMany(t => t.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly)).Where(m => !m.IsSpecialName && !m.IsDefined(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute))).OrderBy(m => m.Name, StringComparer.Ordinal).ThenBy(m => m.ToString(), StringComparer.Ordinal).ToArray();
+    /// <summary>Returns declared project methods and inherited project methods without invoking them.</summary><returns>Copied registration-time CLR method metadata, ordered by name/signature.</returns>
+    public MethodInfo[] GetScriptMethodList() { lock (_gate) { ThrowIfDisposed(); return _registration is null ? [] : (MethodInfo[])_registration.Methods.Clone(); } }
     /// <summary>Reports a project method name across the compiled script inheritance chain.</summary><param name="methodName">Nonnull metadata name.</param><returns>Whether such a method is declared.</returns>
     public bool HasScriptMethod(string methodName) { ArgumentNullException.ThrowIfNull(methodName); return GetScriptMethodList().Any(m => m.Name == methodName); }
-    /// <summary>Returns copied CLR event metadata for project-defined signals.</summary><returns>Project event declarations including project bases.</returns>
-    public EventInfo[] GetScriptSignalList() => ProjectTypes().SelectMany(t => t.GetEvents(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly)).OrderBy(e => e.Name, StringComparer.Ordinal).ToArray();
+    /// <summary>Returns copied registration-time CLR event metadata for project-defined signals.</summary><returns>Project event declarations including project bases.</returns>
+    public EventInfo[] GetScriptSignalList() { lock (_gate) { ThrowIfDisposed(); return _registration is null ? [] : (EventInfo[])_registration.Events.Clone(); } }
     /// <summary>Reports a project event name across script inheritance.</summary><param name="signalName">Nonnull event name.</param><returns>Whether the signal is declared.</returns>
     public bool HasScriptSignal(string signalName) { ArgumentNullException.ThrowIfNull(signalName); return GetScriptSignalList().Any(e => e.Name == signalName); }
     /// <summary>Copies constants of one exact caller-selected value type.</summary><typeparam name="TValue">Requested constant type.</typeparam><returns>Names and typed values, including project bases.</returns>
@@ -89,7 +88,8 @@ public sealed partial class Script : Resource
     {
         if (typeof(TValue) == typeof(object)) throw new ArgumentException("Constant queries require a concrete value type.");
         var result = new Dictionary<string, TValue>(StringComparer.Ordinal);
-        foreach (var type in ProjectTypes()) foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)) if (field.IsLiteral && field.FieldType == typeof(TValue) && !result.ContainsKey(field.Name)) result.Add(field.Name, (TValue)(field.FieldType.IsEnum ? Enum.ToObject(field.FieldType, field.GetRawConstantValue()!) : field.GetRawConstantValue())!);
+        FieldInfo[] fields; lock (_gate) { ThrowIfDisposed(); fields = _registration?.Constants ?? []; }
+        foreach (var field in fields) if (field.FieldType == typeof(TValue) && !result.ContainsKey(field.Name)) result.Add(field.Name, (TValue)(field.FieldType.IsEnum ? Enum.ToObject(field.FieldType, field.GetRawConstantValue()!) : field.GetRawConstantValue())!);
         return result;
     }
     internal static string DecodeSource(byte[] bytes) => SourceEncoding.GetString(bytes.AsSpan(bytes.Length >= 3 && bytes[0] == 0xef && bytes[1] == 0xbb && bytes[2] == 0xbf ? 3 : 0));

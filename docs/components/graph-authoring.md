@@ -47,3 +47,5 @@ Native event construction and transformed-event dispatch require a complete scop
 ## Next connected candidates
 
 FontVariation unlocks its 15 own rows plus the existing rich-text advanced font-tag dependencies through one native instance/cache layer. Script/CSharpScript still requires the source/build/loader and live attachment decisions. VisualShader-family consumers can now reuse graph authoring, but require an applicable canvas-only typed node/resource graph and shader code generation through the accepted shader compiler/import pipeline; its raw reference census is 112 types and 719 own rows, including excluded 3D domains, so that raw count is not an applicable implementation count. FontVariation is the next preferred reachable connected slice; its owning ADR/native-instance audit must precede implementation.
+
+GraphEdit detects custom connection curves through the strongly bound virtual delegate at construction. Inherited overrides participate; hidden non-virtual methods preserve the ordinary curve. Returned points remain copied. The public-only prerequisite fixture exercises these rules in managed and NativeAOT hosts.
