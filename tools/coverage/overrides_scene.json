@@ -11202,6 +11202,17 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0006/0067: both typed delta properties read the attached tree lane time independently of callback enablement. PhysicsNodeDeltaTests covers disabled/paused nodes, frame-start publication, separate lane/zero duration, detach/new-tree adoption, scaled/zero Engine time, callback error/rejected frame, owner guards and controller-driven CharacterBody motion on CPU/GPU serial/separate. Two 128-warm/128-measured full-frame brackets retain strict 0/0 owner/all-thread managed bytes. Native/foreign/hardware performance acceptance remains open."
+    },
+    {
+      "godot": [
+        "Node::method:_process(float:)",
+        "Node::method:_physics_process(float:)",
+        "Node::method:_input(InputEvent:)",
+        "Node::method:_unhandled_input(InputEvent:)",
+        "Node::method:_unhandled_key_input(InputEvent:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0006: ready enables the actual six bound typed virtual callback targets before OnReady, including inherited overrides; hidden methods/plain nodes stay off. PhysicsAutomaticCallbackTests verifies full selected CPU/GPU physical and input delivery, explicit disabling, requested/manual ready, reentry, packed state, pause, weak retirement and 128-warm/128-measured zero owner/all-thread byte frames in ordinary/separate modes. Bound metadata is cached under weak Type keys; no reflection invocation or dynamic name dispatch. Wider callback/default/lifecycle and full inherited/native/foreign/hardware acceptance remain open."
     }
   ]
 }

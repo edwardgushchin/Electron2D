@@ -326,3 +326,27 @@ Each emission leases an ordered immutable handler snapshot. Duplicate handlers a
 EventHandlerTests compares 1,024 mixed delegate add/remove operations with native delegate lists, checks nested snapshot changes/errors, 256 concurrent producers and weak-reference release from disposed publishers. All 18 physical accessors each deliver 128 prepared first one-shot callbacks at strict zero owner/all-thread managed bytes. EventConnectionPhysicsTests adds a real full selected CPU/GPU Area transition with 128 one-shot listeners and a permanent listener. Serial/separate numerical profiles use CPU-only Vulkan for GPU kernels; native allocations, hardware performance, real-window FPS and foreign acceptance remain open.
 
 See [typed handler storage](../classes/EventHandlers.Generic.md) and [ADR 0010](../decisions/core-object-runtime.md#adr-0010).
+
+## Automatic typed callbacks (2026-10-14)
+
+Ready notification now enables each overridden process, physics, input, shortcut,
+unhandled-key and unhandled-input callback before OnReady. Detached defaults are
+false; OnReady and later setters can disable the lanes. Consumed ready does not
+repeat on ordinary reentry; RequestReady re-arms it. Manual ready notification
+runs the same preparation without consuming managed readiness. Inherited overrides
+participate, while hidden non-virtual methods and plain nodes stay disabled.
+
+The runtime inspects only six strongly bound virtual delegate targets on cold
+first-type preparation and caches a bit mask under weak CLR Type keys. It retains
+no node/delegate, performs no name lookup/assembly scan/reflection invocation and
+adds no frame work. Ordinary typed dispatch, pause/membership/owner/error guards,
+internal lanes and selected CPU/GPU numerical ownership stay in place.
+
+PhysicsAutomaticCallbackTests uses real public character motion and all input
+stages, detached/ready flags, inherited/individual/hidden overrides, live disabling,
+reentry, requested/manual ready, packed reconstruction, pause and weak retirement.
+A complete physics/idle/input bracket warms 128 and measures 128 at strict zero
+owner/all-thread managed bytes. A public-only standalone consumer supports the
+same compiled test in ordinary and NativeAOT hosts. Evidence and exact limits are
+retained under bin/physics-auto-callbacks/2026-10-14; full inherited, native/foreign
+and hardware/window/performance acceptance remains open.

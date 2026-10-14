@@ -29,6 +29,7 @@ internal static partial class NodeInternalProcessingTests
         Check(!probe.InternalProcessEnabled && !probe.InternalPhysicsProcessEnabled, "Plain defaults disabled even with notification override.");
         probe.InternalProcessEnabled = true; probe.InternalPhysicsProcessEnabled = true;
         using var tree = new SceneTree(root);
+        probe.ProcessEnabled = probe.PhysicsProcessEnabled = false;
         tree.ProcessFrame(.02); tree.PhysicsFrame(.01);
         Check(probe.Idle == 1 && probe.Physics == 1 && probe.OrdinaryIdle == 0 && probe.OrdinaryPhysics == 0, "Independent internal lanes run with ordinary callbacks disabled.");
         Check(probe.ProcessDeltaTime == .02 && probe.PhysicsProcessDeltaTime == .01, "Notification deltas use the selected frame lane.");

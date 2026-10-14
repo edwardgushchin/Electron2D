@@ -1,4 +1,5 @@
 using System.IO.Enumeration;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 
@@ -8,6 +9,9 @@ namespace Electron2D;
 /// <remarks>Children may be any Node subtype. Spatial and drawing behavior belongs to CanvasItem and Entity.</remarks>
 public partial class Node : ElectronObject
 {
+    private sealed class CallbackMask(byte bits) { internal readonly byte Bits = bits; }
+    private static readonly ConditionalWeakTable<Type, CallbackMask> CallbackMasks = new();
+
     private static readonly PropertyDescriptor[] SceneNodeProperties =
     [
         new PropertyDescriptor<Node, MultiplayerAPI>(nameof(Multiplayer), node => node.Multiplayer),
@@ -631,7 +635,7 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Gets or sets whether this node participates in host-driven process frames.</summary>
-    /// <value><see langword="false"/> by default.</value>
+    /// <value>False initially; ready notification enables an overridden callback before OnReady.</value>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool ProcessEnabled
@@ -649,7 +653,7 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Gets or sets whether this node participates in host-driven physics-process frames.</summary>
-    /// <value><see langword="false"/> by default.</value>
+    /// <value>False initially; ready notification enables an overridden callback before OnReady.</value>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool PhysicsProcessEnabled
@@ -693,7 +697,7 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Gets or sets whether this node receives the first input-propagation stage.</summary>
-    /// <value><see langword="false"/> by default.</value>
+    /// <value>False initially; ready notification enables an overridden callback before OnReady.</value>
     /// <remarks>Eligible nodes are visited in reverse depth-first order before unhandled-input stages.</remarks>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
@@ -712,7 +716,7 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Gets or sets whether this node receives keyboard, gamepad-button and shortcut events after GUI handling.</summary>
-    /// <value>False initially; overriding the callback does not enable it automatically.</value>
+    /// <value>False initially; ready notification enables an overridden callback before OnReady.</value>
     /// <remarks>The stage precedes unhandled-key and general unhandled input and obeys the node's process policy.</remarks>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node has finished disposing.</exception>
@@ -723,7 +727,7 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Gets or sets whether this node receives input left unhandled by earlier stages.</summary>
-    /// <value><see langword="false"/> by default.</value>
+    /// <value>False initially; ready notification enables an overridden callback before OnReady.</value>
     /// <remarks>This final stage runs for every event that remains unhandled.</remarks>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
@@ -742,7 +746,7 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Gets or sets whether this node receives unhandled keyboard events before general unhandled input.</summary>
-    /// <value><see langword="false"/> by default.</value>
+    /// <value>False initially; ready notification enables an overridden callback before OnReady.</value>
     /// <remarks>The stage is skipped for non-keyboard events and after <see cref="SceneTree.SetInputAsHandled"/>.</remarks>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
@@ -1657,7 +1661,7 @@ public partial class Node : ElectronObject
     /// <summary>Called during an eligible host-driven process frame.</summary>
     /// <param name="delta">The finite non-negative frame delta in seconds.</param>
     /// <remarks>
-    /// The callback is not auto-enabled by overriding it; <see cref="ProcessEnabled"/> must be true. It executes on
+    /// Ready notification enables an override before OnReady; later <see cref="ProcessEnabled"/> writes control delivery. It executes on
     /// the tree owner thread after <see cref="ProcessDeltaTime"/> is updated.
     /// </remarks>
     protected virtual void OnProcess(double delta)
@@ -1667,7 +1671,7 @@ public partial class Node : ElectronObject
     /// <summary>Called during an eligible host-driven physics-process frame.</summary>
     /// <param name="delta">The finite non-negative physics-step delta in seconds.</param>
     /// <remarks>
-    /// The callback is not auto-enabled by overriding it; <see cref="PhysicsProcessEnabled"/> must be true. It executes
+    /// Ready notification enables an override before OnReady; later <see cref="PhysicsProcessEnabled"/> writes control delivery. It executes
     /// on the tree owner thread after <see cref="PhysicsProcessDeltaTime"/> is updated and does not perform simulation.
     /// </remarks>
     protected virtual void OnPhysicsProcess(double delta)
@@ -1712,6 +1716,34 @@ public partial class Node : ElectronObject
     {
     }
 
+    private void EnableOverriddenCallbacks()
+    {
+        var type = GetType();
+        if (!CallbackMasks.TryGetValue(type, out var mask))
+        {
+            lock (CallbackMasks)
+            {
+                if (!CallbackMasks.TryGetValue(type, out mask))
+                {
+                    byte bits = 0;
+                    if (((Action<double>)OnProcess).Method.DeclaringType != typeof(Node)) bits |= 1;
+                    if (((Action<double>)OnPhysicsProcess).Method.DeclaringType != typeof(Node)) bits |= 2;
+                    if (((Action<InputEvent>)OnInput).Method.DeclaringType != typeof(Node)) bits |= 4;
+                    if (((Action<InputEvent>)OnShortcutInput).Method.DeclaringType != typeof(Node)) bits |= 8;
+                    if (((Action<InputEventKey>)OnUnhandledKeyInput).Method.DeclaringType != typeof(Node)) bits |= 16;
+                    if (((Action<InputEvent>)OnUnhandledInput).Method.DeclaringType != typeof(Node)) bits |= 32;
+                    mask = new CallbackMask(bits); CallbackMasks.Add(type, mask);
+                }
+            }
+        }
+        if ((mask.Bits & 1) != 0) ProcessEnabled = true;
+        if ((mask.Bits & 2) != 0) PhysicsProcessEnabled = true;
+        if ((mask.Bits & 4) != 0) InputEnabled = true;
+        if ((mask.Bits & 8) != 0) ShortcutInputEnabled = true;
+        if ((mask.Bits & 16) != 0) UnhandledKeyInputEnabled = true;
+        if ((mask.Bits & 32) != 0) UnhandledInputEnabled = true;
+    }
+
     /// <inheritdoc />
     /// <remarks>
     /// Calls the base implementation, then maps enter, exit, ready, process, and physics-process notification IDs to
@@ -1732,6 +1764,7 @@ public partial class Node : ElectronObject
                 OnExitTree();
                 break;
             case NotificationReady:
+                EnableOverriddenCallbacks();
                 OnReady();
                 break;
             case NotificationProcess:

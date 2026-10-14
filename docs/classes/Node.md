@@ -28,7 +28,7 @@ SubtreeResourceAuthoringTests verifies path/error/null/last-resource semantics, 
 
 ## Description
 
-The neutral base of every object in a scene tree. Owns ordered children, paths, groups, lifecycle, process/input participation, queued deletion, packed-scene ownership and inherited localization policy. It has no transform, visibility, material or drawing API. Parent/child relationships and callbacks accept Node, so timers and spatial objects share one tree. Attached mutation runs on the tree owner thread; frame callbacks remain explicitly enabled. Tree entry is parent-first, readiness is child-first, and teardown continues through callback failures.
+The neutral base of every object in a scene tree. Owns ordered children, paths, groups, lifecycle, process/input participation, queued deletion, packed-scene ownership and inherited localization policy. It has no transform, visibility, material or drawing API. Parent/child relationships and callbacks accept Node, so timers and spatial objects share one tree. Attached mutation runs on the tree owner thread; ready notification enables overridden frame/input callbacks before OnReady, and callers can disable them explicitly. Tree entry is parent-first, readiness is child-first, and teardown continues through callback failures.
 
 `UniqueNameInOwner` allows an owned node to be resolved through `%Name` from its owner or another node with that same owner. The first node to claim a name keeps it; a later conflicting claim is cleared. Owner and name changes update the claim, and packed scenes restore it after ownership is assigned. `GetPathTo(node, useUniquePath: true)` uses the eligible unique node on the destination side first, or a unique node on the source side when no destination shortcut exists.
 
@@ -78,6 +78,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public string SceneFilePath { get; }`](#p-electron2d-node-scenefilepath) | Gets the external resource path from which this scene root was instantiated. |
 | [`public SceneTree? Tree { get; }`](#p-electron2d-node-tree) | Gets the active scene tree containing this node. |
 | [`public override string TranslationDomain { get; set; }`](#p-electron2d-node-translationdomain) | Gets or explicitly overrides the inherited translation domain. |
+| [`public bool ShortcutInputEnabled { get; set; }`](#p-electron2d-node-shortcutinputenabled) | Selects the post-GUI shortcut stage; ready enables an overridden callback. |
 | [`public bool UnhandledInputEnabled { get; set; }`](#p-electron2d-node-unhandledinputenabled) | Gets or sets whether this node receives input left unhandled by earlier stages. |
 | [`public bool UnhandledKeyInputEnabled { get; set; }`](#p-electron2d-node-unhandledkeyinputenabled) | Gets or sets whether this node receives unhandled keyboard events before general unhandled input. |
 
@@ -133,6 +134,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`protected virtual void OnPhysicsProcess(double delta)`](#m-electron2d-node-onphysicsprocess-system-double) | Called during an eligible host-driven physics-process frame. |
 | [`protected virtual void OnProcess(double delta)`](#m-electron2d-node-onprocess-system-double) | Called during an eligible host-driven process frame. |
 | [`protected virtual void OnReady()`](#m-electron2d-node-onready) | Called synchronously when this node receives SceneTree-managed ready delivery. |
+| [`protected virtual void OnShortcutInput(InputEvent event)`](#m-electron2d-node-onshortcutinput-electron2d-inputevent) | Receives eligible post-GUI key, gamepad-button and shortcut events. |
 | [`protected virtual void OnUnhandledInput(InputEvent event)`](#m-electron2d-node-onunhandledinput-electron2d-inputevent) | Receives an event that remains unhandled after earlier scene-input stages. |
 | [`protected virtual void OnUnhandledKeyInput(InputEventKey event)`](#m-electron2d-node-onunhandledkeyinput-electron2d-inputeventkey) | Receives a keyboard event that remains unhandled after the first input stage. |
 | [`public void PrintTree()`](#m-electron2d-node-printtree) | Prints relative subtree paths. |
@@ -244,7 +246,7 @@ Gets a live read-only view of ordinary direct children. Internal children remain
 
 Gets or sets whether this node receives the first input-propagation stage.
 
-**Value:** `false` by default.
+**Value:** False initially; ready notification enables an overridden callback before OnReady.
 
 **Remarks:** Eligible nodes are visited in reverse depth-first order before unhandled-input stages.
 
@@ -350,7 +352,7 @@ Gets the current or most recent physics-frame duration of the attached scene tre
 
 Gets or sets whether this node participates in host-driven physics-process frames.
 
-**Value:** `false` by default.
+**Value:** False initially; ready notification enables an overridden callback before OnReady.
 
 **System.InvalidOperationException:** An attached node is mutated off the owner thread.
 
@@ -383,7 +385,7 @@ Gets the current or most recent process-frame duration of the attached scene tre
 
 Gets or sets whether this node participates in host-driven process frames.
 
-**Value:** `false` by default.
+**Value:** False initially; ready notification enables an overridden callback before OnReady.
 
 **System.InvalidOperationException:** An attached node is mutated off the owner thread.
 
@@ -438,7 +440,7 @@ Gets the active scene tree containing this node.
 
 Gets or sets whether this node receives input left unhandled by earlier stages.
 
-**Value:** `false` by default.
+**Value:** False initially; ready notification enables an overridden callback before OnReady.
 
 **Remarks:** This final stage runs for every event that remains unhandled.
 
@@ -451,7 +453,7 @@ Gets or sets whether this node receives input left unhandled by earlier stages.
 
 Gets or sets whether this node receives unhandled keyboard events before general unhandled input.
 
-**Value:** `false` by default.
+**Value:** False initially; ready notification enables an overridden callback before OnReady.
 
 **Remarks:** The stage is skipped for non-keyboard events and after `SceneTree.SetInputAsHandled`.
 
@@ -1005,7 +1007,7 @@ Called during an eligible host-driven physics-process frame.
 
 **Parameter `delta`:** The finite non-negative physics-step delta in seconds.
 
-**Remarks:** The callback is not auto-enabled by overriding it; `Node.PhysicsProcessEnabled` must be true. It executes on the tree owner thread after `Node.PhysicsProcessDeltaTime` is updated and does not perform simulation.
+**Remarks:** Ready notification enables an override before OnReady; later `Node.PhysicsProcessEnabled` writes control delivery. It executes on the tree owner thread after `Node.PhysicsProcessDeltaTime` is updated and does not perform simulation.
 
 <a id="m-electron2d-node-onprocess-system-double"></a>
 ### `protected virtual void OnProcess(double delta)`
@@ -1014,7 +1016,7 @@ Called during an eligible host-driven process frame.
 
 **Parameter `delta`:** The finite non-negative frame delta in seconds.
 
-**Remarks:** The callback is not auto-enabled by overriding it; `Node.ProcessEnabled` must be true. It executes on the tree owner thread after `Node.ProcessDeltaTime` is updated.
+**Remarks:** Ready notification enables an override before OnReady; later `Node.ProcessEnabled` writes control delivery. It executes on the tree owner thread after `Node.ProcessDeltaTime` is updated.
 
 <a id="m-electron2d-node-onready"></a>
 ### `protected virtual void OnReady()`
@@ -1666,3 +1668,20 @@ their independent event scopes. Callback errors preserve remaining receivers and
 typed delegates, then aggregate. The same hierarchy barrier protects child lists
 as PropagateNotification. See WindowNotificationTests for embedded, dummy native,
 physical receivers, failure/teardown and 1024 zero-allocation operations.
+
+<a id="p-electron2d-node-shortcutinputenabled"></a>
+### `public bool ShortcutInputEnabled { get; set; }`
+
+Selects the keyboard, gamepad-button and direct-shortcut stage after GUI handling,
+before unhandled-key and general unhandled input. False while detached; ready
+enables an overridden OnShortcutInput before OnReady. Callers can disable it in
+OnReady or later. The resolved process mode, pause policy, lifetime and scene owner
+still apply. The switch uses the existing stored typed Node descriptor.
+
+<a id="m-electron2d-node-onshortcutinput-electron2d-inputevent"></a>
+### `protected virtual void OnShortcutInput(InputEvent event)`
+
+Receives the live borrowed event when the shortcut stage remains unhandled. The
+caller owns its lifetime. Call Tree.SetInputAsHandled to suppress later stages.
+Ordinary typed virtual dispatch runs on the scene owner; exceptions join the
+existing continued-delivery aggregate. Overriding enables the lane at ready.

@@ -162,3 +162,51 @@ remains 13,961 declarations, with 832 public types and 850 wiki files. Current
 source/runtime manifests and process proofs are retained in
 bin/physics-node-delta/2026-10-14/validation.json. These checks establish functional
 behavior; native memory and hardware/window performance acceptance remain open.
+
+## Automatic typed callbacks (2026-10-14)
+
+Ready notification now enables each overridden process, physics, input, shortcut,
+unhandled-key and unhandled-input callback before OnReady. Detached defaults are
+false; OnReady and later setters can disable the lanes. Consumed ready does not
+repeat on ordinary reentry; RequestReady re-arms it. Manual ready notification
+runs the same preparation without consuming managed readiness. Inherited overrides
+participate, while hidden non-virtual methods and plain nodes stay disabled.
+
+The runtime inspects only six strongly bound virtual delegate targets on cold
+first-type preparation and caches a bit mask under weak CLR Type keys. It retains
+no node/delegate, performs no name lookup/assembly scan/reflection invocation and
+adds no frame work. Ordinary typed dispatch, pause/membership/owner/error guards,
+internal lanes and selected CPU/GPU numerical ownership stay in place.
+
+PhysicsAutomaticCallbackTests uses real public character motion and all input
+stages, detached/ready flags, inherited/individual/hidden overrides, live disabling,
+reentry, requested/manual ready, packed reconstruction, pause and weak retirement.
+A complete physics/idle/input bracket warms 128 and measures 128 at strict zero
+owner/all-thread managed bytes. A public-only standalone consumer supports the
+same compiled test in ordinary and NativeAOT hosts. Evidence and exact limits are
+retained under bin/physics-auto-callbacks/2026-10-14; full inherited, native/foreign
+and hardware/window/performance acceptance remains open.
+
+The extended current-source NativeAOT consumer is not accepted: strict source
+analysis reports ten pre-existing issues in TileCustomDataType, CodeEdit, GraphEdit,
+Script and OS process/catalog paths. A fresh RID runtime plus BuildProjectReferences=false
+published an earlier bounded consumer and all four CPU/software-GPU ordinary/separate
+profiles passed, proving the six bound virtual targets execute without a name-based
+reflection scanner. Adding PackedScene reaches existing catalog callbacks and tile
+code; the current full consumer fails native compilation on those remaining paths.
+No warning suppression or test omission is shipped. An older RID DLL initially
+failed on missing Viewport.MSAA JSON metadata; current source already had the codec,
+and rebuilding the RID removed that stale-binary failure. This evidence does not
+claim full trimming/NativeAOT engine acceptance.
+
+The current retained JIT runtime passes ten fresh profiles, including four automatic
+CPU/GPU ordinary/separate variants, paired delta/internal/hierarchy/character and
+complete shared-physics suites, authored connections and paired physical picking.
+The separate public-only consumer passes the complete extended fixture in four
+more processes. Eight required runtime/test/consumer format, build, compiled
+coverage and wiki test/generate/check gates pass. All eight new JIT allocation
+brackets retain 0/0 owner/all-thread bytes; current sources and retained runtime
+hashes remain unchanged. Parallel hostname-resolver integration is preserved;
+the current total is 13,999 declarations, 836 public types and 854 wiki files.
+Exact manifests, profile proofs, NativeAOT limits and gate results are retained in
+bin/physics-auto-callbacks/2026-10-14/validation.json.

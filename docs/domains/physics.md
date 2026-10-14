@@ -1194,3 +1194,27 @@ external callers explicitly prepare their process lane rather than relying on th
 removed fallback. The initial CPU/GPU regression moved zero instead of three scene
 units. Evidence is retained under bin/physics-node-delta/2026-10-14. Full inherited,
 native, foreign and hardware/window/performance acceptance remains open.
+
+## Automatic typed callbacks (2026-10-14)
+
+Ready notification now enables each overridden process, physics, input, shortcut,
+unhandled-key and unhandled-input callback before OnReady. Detached defaults are
+false; OnReady and later setters can disable the lanes. Consumed ready does not
+repeat on ordinary reentry; RequestReady re-arms it. Manual ready notification
+runs the same preparation without consuming managed readiness. Inherited overrides
+participate, while hidden non-virtual methods and plain nodes stay disabled.
+
+The runtime inspects only six strongly bound virtual delegate targets on cold
+first-type preparation and caches a bit mask under weak CLR Type keys. It retains
+no node/delegate, performs no name lookup/assembly scan/reflection invocation and
+adds no frame work. Ordinary typed dispatch, pause/membership/owner/error guards,
+internal lanes and selected CPU/GPU numerical ownership stay in place.
+
+PhysicsAutomaticCallbackTests uses real public character motion and all input
+stages, detached/ready flags, inherited/individual/hidden overrides, live disabling,
+reentry, requested/manual ready, packed reconstruction, pause and weak retirement.
+A complete physics/idle/input bracket warms 128 and measures 128 at strict zero
+owner/all-thread managed bytes. A public-only standalone consumer supports the
+same compiled test in ordinary and NativeAOT hosts. Evidence and exact limits are
+retained under bin/physics-auto-callbacks/2026-10-14; full inherited, native/foreign
+and hardware/window/performance acceptance remains open.
