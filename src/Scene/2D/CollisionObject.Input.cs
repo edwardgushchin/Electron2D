@@ -2,6 +2,12 @@ namespace Electron2D;
 
 public abstract partial class CollisionObject
 {
+    private EventHandlers<Action<Node, InputEvent, int>>? _eventInputEvent;
+    private EventHandlers<Action>? _eventMouseEntered;
+    private EventHandlers<Action>? _eventMouseExited;
+    private EventHandlers<Action<int>>? _eventMouseShapeEntered;
+    private EventHandlers<Action<int>>? _eventMouseShapeExited;
+
     private bool _inputPickable = true;
     /// <summary>Gets or sets whether unhandled viewport pointer events can pick this object's shapes.</summary>
     /// <value>True for collision objects and areas; physics bodies default to false.</value>
@@ -13,16 +19,40 @@ public abstract partial class CollisionObject
 
     /// <summary>Occurs after the virtual input callback for a picked logical shape.</summary>
     /// <remarks>Arguments are the receiving viewport node, its borrowed local event and the sampled global shape index.
-    /// The event is valid only during delivery; duplicate it to retain it. Mark the viewport input handled to stop later hits.</remarks>
-    public event Action<Node, InputEvent, int>? InputEvent;
+    /// The event is valid only during delivery; duplicate it to retain it. Mark the viewport input handled to stop later hits. Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action<Node, InputEvent, int>? InputEvent
+    {
+        add => EventHandlers<Action<Node, InputEvent, int>>.Add(ref _eventInputEvent, value);
+        remove => _eventInputEvent?.Remove(value);
+    }
     /// <summary>Occurs when the pointer first enters this object's shapes.</summary>
-    public event Action? MouseEntered;
+    /// <remarks>Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action? MouseEntered
+    {
+        add => EventHandlers<Action>.Add(ref _eventMouseEntered, value);
+        remove => _eventMouseEntered?.Remove(value);
+    }
     /// <summary>Occurs when the pointer leaves all of this object's shapes.</summary>
-    public event Action? MouseExited;
+    /// <remarks>Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action? MouseExited
+    {
+        add => EventHandlers<Action>.Add(ref _eventMouseExited, value);
+        remove => _eventMouseExited?.Remove(value);
+    }
     /// <summary>Occurs when the pointer enters a logical shape; the argument is its global shape index.</summary>
-    public event Action<int>? MouseShapeEntered;
+    /// <remarks>Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action<int>? MouseShapeEntered
+    {
+        add => EventHandlers<Action<int>>.Add(ref _eventMouseShapeEntered, value);
+        remove => _eventMouseShapeEntered?.Remove(value);
+    }
     /// <summary>Occurs when the pointer leaves a logical shape; the argument is its previously sampled global index.</summary>
-    public event Action<int>? MouseShapeExited;
+    /// <remarks>Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action<int>? MouseShapeExited
+    {
+        add => EventHandlers<Action<int>>.Add(ref _eventMouseShapeExited, value);
+        remove => _eventMouseShapeExited?.Remove(value);
+    }
 
     /// <summary>Receives an unhandled pointer event during the viewport's physics picking pass.</summary>
     /// <param name="viewport">The viewport delivering the event.</param>
@@ -56,18 +86,25 @@ public abstract partial class CollisionObject
         }
         catch (Exception error) { CollectException(ref errors, error); }
         if (IsDisposed || !IsInsideTree) return;
-        if (kind == 0 && input is { IsDisposed: false } && InputEvent is { } inputs)
-            foreach (var callback in Delegate.EnumerateInvocationList(inputs))
+        if (kind == 0 && input is { IsDisposed: false })
+        {
+            using var inputs = _eventInputEvent?.Acquire() ?? default;
+            for (var i = 0; i < inputs.Count; i++)
             {
                 if (IsDisposed || !IsInsideTree || input.IsDisposed) break;
-                try { callback(viewport, input, shape); } catch (Exception error) { CollectException(ref errors, error); }
+                try { inputs[i](viewport, input, shape); } catch (Exception error) { CollectException(ref errors, error); }
             }
-        var simple = kind == 1 ? MouseEntered : kind == 2 ? MouseExited : null;
-        if (simple is not null) foreach (var callback in Delegate.EnumerateInvocationList(simple))
-            { if (IsDisposed || !IsInsideTree) break; try { callback(); } catch (Exception error) { CollectException(ref errors, error); } }
-        var shapes = kind == 3 ? MouseShapeEntered : kind == 4 ? MouseShapeExited : null;
-        if (shapes is not null) foreach (var callback in Delegate.EnumerateInvocationList(shapes))
-            { if (IsDisposed || !IsInsideTree) break; try { callback(shape); } catch (Exception error) { CollectException(ref errors, error); } }
+        }
+        using var simple = (kind == 1 ? _eventMouseEntered : kind == 2 ? _eventMouseExited : null)?.Acquire() ?? default;
+        for (var i = 0; i < simple.Count; i++)
+        { if (IsDisposed || !IsInsideTree) break; try { simple[i](); } catch (Exception error) { CollectException(ref errors, error); } }
+        using var shapes = (kind == 3 ? _eventMouseShapeEntered : kind == 4 ? _eventMouseShapeExited : null)?.Acquire() ?? default;
+        for (var i = 0; i < shapes.Count; i++)
+        { if (IsDisposed || !IsInsideTree) break; try { shapes[i](shape); } catch (Exception error) { CollectException(ref errors, error); } }
     }
-    private void ClearPhysicsInputHandlers() { InputEvent = null; MouseEntered = null; MouseExited = null; MouseShapeEntered = null; MouseShapeExited = null; }
+    internal virtual void ClearPhysicsEventHandlers()
+    {
+        _eventInputEvent?.Clear(); _eventMouseEntered?.Clear(); _eventMouseExited?.Clear();
+        _eventMouseShapeEntered?.Clear(); _eventMouseShapeExited?.Clear();
+    }
 }

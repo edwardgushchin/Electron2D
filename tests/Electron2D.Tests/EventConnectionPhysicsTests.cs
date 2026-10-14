@@ -6,7 +6,8 @@ internal static class EventConnectionPhysicsTests
     {
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread,
             Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1");
-        DeferredZero(); Immediate(); DeferredPair(); HigherArities(); TypedSceneQueue(); DeferredLifetime(); OneShotAllocations();
+        EventHandlerTests.Run();
+        DeferredZero(); Immediate(); DeferredPair(); HigherArities(); TypedSceneQueue(); DeferredLifetime(); OneShotAllocations(); PhysicalOneShotListeners(backend);
         using var world = new World(backend); using var root = new SubViewport { World = world };
         using var shape = new CircleShape { Radius = 1 }; using var sensorShape = new CircleShape { Radius = 5 };
         var body = new PublisherBody { Position = new(100, 0), CanSleep = false, GravityScale = 0, LinearDampMode = RigidBody.DampMode.Replace, LinearDamp = 0 };
@@ -216,6 +217,26 @@ internal static class EventConnectionPhysicsTests
             foreach (var source in sources) source.Raise(); tree.FlushDeferred(); Check(calls == 640 && tokens.All(t => !t.IsConnected), "Consumed one-shot sources stay inert.");
             foreach (var token in tokens) token.Dispose(); foreach (var source in sources) source.Dispose();
         }
+    }
+
+    private static void PhysicalOneShotListeners(PhysicsServer.Backend backend)
+    {
+        using var world = new World(backend); using var root = new SubViewport { World = world };
+        using var shape = new CircleShape { Radius = 2 }; var area = new Area { Monitoring = true }; area.AddChild(new CollisionShape { Shape = shape });
+        var body = new RigidBody { Position = new(100, 0), GravityScale = 0, CanSleep = false }; body.AddChild(new CollisionShape { Shape = shape }); root.AddChild(area); root.AddChild(body);
+        using var tree = new SceneTree(root); var permanent = 0; var onceCalls = 0; area.BodyEntered += _ => permanent++;
+        for (var i = 0; i < 128; i++) { body.Position = new(i % 2 == 0 ? 0 : 100, 0); tree.PhysicsFrame(.01); }
+        var tokens = new EventConnection[128];
+        for (var i = 0; i < tokens.Length; i++) tokens[i] = EventConnection.Subscribe<Entity>(h => area.BodyEntered += h, h => area.BodyEntered -= h, other => { Check(ReferenceEquals(other, body), "Actual one-shot collider identity."); onceCalls++; }, oneShot: true);
+        GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
+        var before = permanent; var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+        body.Position = Vector2.Zero; tree.PhysicsFrame(.01);
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; var allBytes = GC.GetTotalAllocatedBytes(true) - all;
+        Console.WriteLine($"Physical multi-listener one-shot {backend}: {ownerBytes}/{allBytes} B, {onceCalls} consumed callbacks.");
+        Check(ownerBytes == 0 && allBytes == 0 && onceCalls == 128 && permanent == before + 1, "Prepared full physical one-shot delivery/removal with multiple listeners allocates zero bytes.");
+        body.Position = new(100, 0); tree.PhysicsFrame(.01); body.Position = Vector2.Zero; tree.PhysicsFrame(.01);
+        Check(onceCalls == 128 && permanent == before + 2 && tokens.All(t => !t.IsConnected), "Permanent listener remains while consumed tokens do not repeat.");
+        foreach (var token in tokens) token.Dispose();
     }
 
     private static void DeferredLifetime()

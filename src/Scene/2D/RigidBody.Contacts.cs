@@ -2,6 +2,12 @@ namespace Electron2D;
 
 public partial class RigidBody
 {
+    private EventHandlers<Action<Node>>? _eventBodyEntered;
+    private EventHandlers<Action<Node>>? _eventBodyExited;
+    private EventHandlers<Action<RID, Node, int, int>>? _eventBodyShapeEntered;
+    private EventHandlers<Action<RID, Node, int, int>>? _eventBodyShapeExited;
+    private EventHandlers<Action<RigidBody>>? _eventSleepingStateChanged;
+
     private static readonly PropertyDescriptor[] ContactProperties =
     [
         new PropertyDescriptor<RigidBody, bool>(nameof(ContactMonitor), body => body.ContactMonitor,
@@ -61,21 +67,44 @@ public partial class RigidBody
     }
 
     /// <summary>Occurs when a physics body begins contributing a reported contact.</summary>
-    public event Action<Node>? BodyEntered;
+    /// <remarks>Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action<Node>? BodyEntered
+    {
+        add => EventHandlers<Action<Node>>.Add(ref _eventBodyEntered, value);
+        remove => _eventBodyEntered?.Remove(value);
+    }
 
     /// <summary>Occurs when a physics body stops contributing reported contacts.</summary>
-    public event Action<Node>? BodyExited;
+    /// <remarks>Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action<Node>? BodyExited
+    {
+        add => EventHandlers<Action<Node>>.Add(ref _eventBodyExited, value);
+        remove => _eventBodyExited?.Remove(value);
+    }
 
     /// <summary>Occurs when a retained logical body-shape pair starts contributing monitored contact.</summary>
     /// <remarks>Arguments are collider RID, scene Node, collider global logical shape index and this body's global index.
-    /// Requires ContactMonitor and a positive reported-contact cap. Compound fixtures are deduplicated by logical pair.</remarks>
-    public event Action<RID, Node, int, int>? BodyShapeEntered;
+    /// Requires ContactMonitor and a positive reported-contact cap. Compound fixtures are deduplicated by logical pair. Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action<RID, Node, int, int>? BodyShapeEntered
+    {
+        add => EventHandlers<Action<RID, Node, int, int>>.Add(ref _eventBodyShapeEntered, value);
+        remove => _eventBodyShapeEntered?.Remove(value);
+    }
     /// <summary>Occurs when a retained logical body-shape pair stops contributing monitored contact.</summary>
-    /// <remarks>The sampled indices and departed RID are preserved; object exit precedes its last shape exit.</remarks>
-    public event Action<RID, Node, int, int>? BodyShapeExited;
+    /// <remarks>The sampled indices and departed RID are preserved; object exit precedes its last shape exit. Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action<RID, Node, int, int>? BodyShapeExited
+    {
+        add => EventHandlers<Action<RID, Node, int, int>>.Add(ref _eventBodyShapeExited, value);
+        remove => _eventBodyShapeExited?.Remove(value);
+    }
 
     /// <summary>Occurs when the solver, rather than a direct property assignment, changes sleep state.</summary>
-    public event Action<RigidBody>? SleepingStateChanged;
+    /// <remarks>Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action<RigidBody>? SleepingStateChanged
+    {
+        add => EventHandlers<Action<RigidBody>>.Add(ref _eventSleepingStateChanged, value);
+        remove => _eventSleepingStateChanged?.Remove(value);
+    }
 
     /// <summary>Returns the number of contact points retained from the last fixed step.</summary>
     /// <returns>Zero when <see cref="MaxContactsReported"/> is zero or the body is detached.</returns>
@@ -166,12 +195,33 @@ public partial class RigidBody
         try
         {
             if (!change.Pair.InTree || change.Node is not { } other) return;
-            if (change.ObjectEvent) { if (change.Entered) BodyEntered?.Invoke(other); else BodyExited?.Invoke(other); }
-            else if (change.Entered) BodyShapeEntered?.Invoke(change.Pair.RID, other, change.Pair.OtherShape, change.Pair.LocalShape);
-            else BodyShapeExited?.Invoke(change.Pair.RID, other, change.Pair.OtherShape, change.Pair.LocalShape);
+            if (change.ObjectEvent)
+            {
+                using var listeners = (change.Entered ? _eventBodyEntered : _eventBodyExited)?.Acquire() ?? default;
+                for (var i = 0; i < listeners.Count; i++) listeners[i](other);
+            }
+            else
+            {
+                using var listeners = (change.Entered ? _eventBodyShapeEntered : _eventBodyShapeExited)?.Acquire() ?? default;
+                for (var i = 0; i < listeners.Count; i++) listeners[i](change.Pair.RID, other, change.Pair.OtherShape, change.Pair.LocalShape);
+            }
         }
         finally { _dispatchingContact = false; }
     }
 
-    internal void RaiseSleepingStateChanged() => SleepingStateChanged?.Invoke(this);
+    internal void RaiseSleepingStateChanged()
+    {
+        using var listeners = _eventSleepingStateChanged?.Acquire() ?? default;
+        for (var i = 0; i < listeners.Count; i++) listeners[i](this);
+    }
+
+    internal override void ClearPhysicsEventHandlers()
+    {
+        base.ClearPhysicsEventHandlers();
+        _eventBodyEntered?.Clear();
+        _eventBodyExited?.Clear();
+        _eventBodyShapeEntered?.Clear();
+        _eventBodyShapeExited?.Clear();
+        _eventSleepingStateChanged?.Clear();
+    }
 }

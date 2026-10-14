@@ -321,9 +321,11 @@ public abstract partial class PhysicsBody : CollisionObject
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
+        List<Exception>? errors = null;
         if (disposing)
         {
-            Space?.Remove(this);
+            try { Space?.Remove(this); }
+            catch (Exception error) { CollectException(ref errors, error); }
             if (_materialOverride is { } material)
             {
                 material.Changed -= OnMaterialChanged;
@@ -331,7 +333,9 @@ public abstract partial class PhysicsBody : CollisionObject
                 _materialOverride = null;
             }
         }
-        base.Dispose(disposing);
+        try { base.Dispose(disposing); }
+        catch (Exception error) { CollectException(ref errors, error); }
+        PhysicsSpace.FinishCleanup(errors);
     }
 
     private void RebuildShapes()

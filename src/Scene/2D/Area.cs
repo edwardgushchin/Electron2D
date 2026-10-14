@@ -5,6 +5,15 @@ namespace Electron2D;
 /// Overlap snapshots update after each nonzero fixed physics step; changing a transform does not update a snapshot immediately.</remarks>
 public sealed partial class Area : CollisionObject
 {
+    private EventHandlers<Action<Area>>? _eventAreaEntered;
+    private EventHandlers<Action<Area>>? _eventAreaExited;
+    private EventHandlers<Action<Entity>>? _eventBodyEntered;
+    private EventHandlers<Action<Entity>>? _eventBodyExited;
+    private EventHandlers<Action<RID, Area?, int, int>>? _eventAreaShapeEntered;
+    private EventHandlers<Action<RID, Area?, int, int>>? _eventAreaShapeExited;
+    private EventHandlers<Action<RID, Entity?, int, int>>? _eventBodyShapeEntered;
+    private EventHandlers<Action<RID, Entity?, int, int>>? _eventBodyShapeExited;
+
     private static readonly PropertyDescriptor[] AreaProperties =
     [
         new PropertyDescriptor<Area, bool>(nameof(Monitoring), area => area.Monitoring,
@@ -79,30 +88,66 @@ public sealed partial class Area : CollisionObject
     }
 
     /// <summary>Occurs after a fixed step when another area begins overlapping this area.</summary>
-    public event Action<Area>? AreaEntered;
+    /// <remarks>Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action<Area>? AreaEntered
+    {
+        add => EventHandlers<Action<Area>>.Add(ref _eventAreaEntered, value);
+        remove => _eventAreaEntered?.Remove(value);
+    }
 
     /// <summary>Occurs after a fixed step when another area stops overlapping this area.</summary>
-    public event Action<Area>? AreaExited;
+    /// <remarks>Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action<Area>? AreaExited
+    {
+        add => EventHandlers<Action<Area>>.Add(ref _eventAreaExited, value);
+        remove => _eventAreaExited?.Remove(value);
+    }
 
     /// <summary>Occurs after a fixed step when a physics body begins overlapping this area.</summary>
-    public event Action<Entity>? BodyEntered;
+    /// <remarks>Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action<Entity>? BodyEntered
+    {
+        add => EventHandlers<Action<Entity>>.Add(ref _eventBodyEntered, value);
+        remove => _eventBodyEntered?.Remove(value);
+    }
 
     /// <summary>Occurs after a fixed step when a physics body stops overlapping this area.</summary>
-    public event Action<Entity>? BodyExited;
+    /// <remarks>Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action<Entity>? BodyExited
+    {
+        add => EventHandlers<Action<Entity>>.Add(ref _eventBodyExited, value);
+        remove => _eventBodyExited?.Remove(value);
+    }
 
     /// <summary>Occurs when a logical Area shape pair starts overlapping.</summary>
     /// <remarks>Arguments are collider RID, nullable scene Area, collider global shape index and local global shape index.
-    /// Server-only colliders have a null scene object. Monitoring must be enabled.</remarks>
-    public event Action<RID, Area?, int, int>? AreaShapeEntered;
+    /// Server-only colliders have a null scene object. Monitoring must be enabled. Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action<RID, Area?, int, int>? AreaShapeEntered
+    {
+        add => EventHandlers<Action<RID, Area?, int, int>>.Add(ref _eventAreaShapeEntered, value);
+        remove => _eventAreaShapeEntered?.Remove(value);
+    }
     /// <summary>Occurs when a retained logical Area shape pair stops overlapping.</summary>
-    /// <remarks>Arguments preserve the departed RID and both sampled global shape indices.</remarks>
-    public event Action<RID, Area?, int, int>? AreaShapeExited;
+    /// <remarks>Arguments preserve the departed RID and both sampled global shape indices. Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action<RID, Area?, int, int>? AreaShapeExited
+    {
+        add => EventHandlers<Action<RID, Area?, int, int>>.Add(ref _eventAreaShapeExited, value);
+        remove => _eventAreaShapeExited?.Remove(value);
+    }
     /// <summary>Occurs when a logical body/Area shape pair starts overlapping.</summary>
-    /// <remarks>Arguments are body RID, nullable spatial body, body global shape index and local global shape index.</remarks>
-    public event Action<RID, Entity?, int, int>? BodyShapeEntered;
+    /// <remarks>Arguments are body RID, nullable spatial body, body global shape index and local global shape index. Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action<RID, Entity?, int, int>? BodyShapeEntered
+    {
+        add => EventHandlers<Action<RID, Entity?, int, int>>.Add(ref _eventBodyShapeEntered, value);
+        remove => _eventBodyShapeEntered?.Remove(value);
+    }
     /// <summary>Occurs when a retained logical body/Area shape pair stops overlapping.</summary>
-    /// <remarks>Server-only bodies have a null scene object; departure preserves sampled indices.</remarks>
-    public event Action<RID, Entity?, int, int>? BodyShapeExited;
+    /// <remarks>Server-only bodies have a null scene object; departure preserves sampled indices. Handler order and duplicate entries are preserved in an emission snapshot. Subscription changes affect later emissions; prepared one-shot removal reuses handler capacity. Disposal clears publisher-owned handlers.</remarks>
+    public event Action<RID, Entity?, int, int>? BodyShapeExited
+    {
+        add => EventHandlers<Action<RID, Entity?, int, int>>.Add(ref _eventBodyShapeExited, value);
+        remove => _eventBodyShapeExited?.Remove(value);
+    }
 
     /// <summary>Returns the current area-overlap snapshot.</summary>
     /// <returns>A caller-owned array updated from the last nonzero fixed step.</returns>
@@ -265,18 +310,26 @@ public sealed partial class Area : CollisionObject
             var other = change.Node;
             if (change.ObjectEvent)
             {
-                if (pair.IsArea && other is Area area) { if (change.Entered) AreaEntered?.Invoke(area); else AreaExited?.Invoke(area); }
-                else if (!pair.IsArea && other is Entity body) { if (change.Entered) BodyEntered?.Invoke(body); else BodyExited?.Invoke(body); }
+                if (pair.IsArea && other is Area area)
+                {
+                    using var listeners = (change.Entered ? _eventAreaEntered : _eventAreaExited)?.Acquire() ?? default;
+                    for (var i = 0; i < listeners.Count; i++) listeners[i](area);
+                }
+                else if (!pair.IsArea && other is Entity body)
+                {
+                    using var listeners = (change.Entered ? _eventBodyEntered : _eventBodyExited)?.Acquire() ?? default;
+                    for (var i = 0; i < listeners.Count; i++) listeners[i](body);
+                }
             }
             else if (pair.IsArea)
             {
-                if (change.Entered) AreaShapeEntered?.Invoke(pair.RID, other as Area, pair.OtherShape, pair.LocalShape);
-                else AreaShapeExited?.Invoke(pair.RID, other as Area, pair.OtherShape, pair.LocalShape);
+                using var listeners = (change.Entered ? _eventAreaShapeEntered : _eventAreaShapeExited)?.Acquire() ?? default;
+                for (var i = 0; i < listeners.Count; i++) listeners[i](pair.RID, other as Area, pair.OtherShape, pair.LocalShape);
             }
             else
             {
-                if (change.Entered) BodyShapeEntered?.Invoke(pair.RID, other as Entity, pair.OtherShape, pair.LocalShape);
-                else BodyShapeExited?.Invoke(pair.RID, other as Entity, pair.OtherShape, pair.LocalShape);
+                using var listeners = (change.Entered ? _eventBodyShapeEntered : _eventBodyShapeExited)?.Acquire() ?? default;
+                for (var i = 0; i < listeners.Count; i++) listeners[i](pair.RID, other as Entity, pair.OtherShape, pair.LocalShape);
             }
         }
         finally { _dispatchingOverlap = false; }
@@ -320,12 +373,16 @@ public sealed partial class Area : CollisionObject
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
+        List<Exception>? errors = null;
         if (disposing)
         {
-            Space?.Remove(this);
+            try { Space?.Remove(this); }
+            catch (Exception error) { CollectException(ref errors, error); }
             ClearOverlaps();
         }
-        base.Dispose(disposing);
+        try { base.Dispose(disposing); }
+        catch (Exception error) { CollectException(ref errors, error); }
+        PhysicsSpace.FinishCleanup(errors);
     }
 
     private void RebuildShapes()
@@ -341,5 +398,18 @@ public sealed partial class Area : CollisionObject
         var transform = GlobalTransform;
         if (!transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(transform.Skew))
             throw new InvalidOperationException("Physics areas require unit global scale and zero skew.");
+    }
+
+    internal override void ClearPhysicsEventHandlers()
+    {
+        base.ClearPhysicsEventHandlers();
+        _eventAreaEntered?.Clear();
+        _eventAreaExited?.Clear();
+        _eventBodyEntered?.Clear();
+        _eventBodyExited?.Clear();
+        _eventAreaShapeEntered?.Clear();
+        _eventAreaShapeExited?.Clear();
+        _eventBodyShapeEntered?.Clear();
+        _eventBodyShapeExited?.Clear();
     }
 }

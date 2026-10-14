@@ -2,6 +2,45 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
+    private static void PhysicalPublisherReleaseFailures(Solver? solver, SubViewport root)
+    {
+        if (solver is null) return;
+        CollisionObject[] publishers = [new StaticBody(), new AnimatableBody(), new CharacterBody(), new RigidBody(), new PhysicalBone(), new Area()];
+        var references = new WeakReference[publishers.Length]; var initialChildren = root.GetChildCount();
+        for (var i = 0; i < publishers.Length; i++)
+        {
+            publishers[i].Name = $"RetiredPublisher{i}"; root.AddChild(publishers[i]);
+            references[i] = AttachPublisherReference(publishers[i]);
+            publishers[i].TreeExiting += _ => throw new ApplicationException("Publisher exit failure");
+        }
+        solver.FailBodyDetach = true;
+        try
+        {
+            foreach (var publisher in publishers)
+            {
+                var errors = ReleaseErrors(publisher.Dispose);
+                Check(errors.Any(error => error.Message == "Collider detach failure") &&
+                    errors.Any(error => error.Message == "Publisher exit failure") && publisher.IsDisposed,
+                    "All body siblings and Area preserve detach/exit errors and finish publisher disposal.");
+            }
+        }
+        finally { solver.FailBodyDetach = false; }
+        GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
+        Check(references.All(reference => !reference.IsAlive) && root.GetChildCount() == initialChildren,
+            "Failed detachment still releases physical event subscribers and scene membership.");
+        GC.KeepAlive(publishers);
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static WeakReference AttachPublisherReference(CollisionObject publisher)
+    {
+        var target = new byte[4096];
+        publisher.MouseEntered += () => GC.KeepAlive(target);
+        if (publisher is RigidBody body) body.SleepingStateChanged += _ => GC.KeepAlive(target);
+        if (publisher is Area area) area.BodyEntered += _ => GC.KeepAlive(target);
+        return new WeakReference(target);
+    }
+
     private static void ResourceReleaseGuards(Solver? solver, RID space, RID first, RID second, RID area, RID shape, RID[] joints)
     {
         RID[] bound = [space, first, second, area, shape, .. joints];

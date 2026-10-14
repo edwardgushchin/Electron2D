@@ -27,6 +27,7 @@ public static partial class BackendChecks
         Joint[] nodes = [new PinJoint(), new GrooveJoint(), new DampedSpringJoint()];
         foreach (var node in nodes) root.AddChild(node);
         using var tree = new SceneTree(root);
+        PhysicalPublisherReleaseFailures(sceneSolver, root);
         var space = backend is { } chosen ? PhysicsServer.SpaceCreate(chosen) : PhysicsServer.SpaceCreate("ResourcesOwned");
         var first = PhysicsServer.BodyCreate(); var second = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate();
         var shape = PhysicsServer.CircleShapeCreate();

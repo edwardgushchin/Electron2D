@@ -45,7 +45,7 @@ This rule does not prohibit a dedicated JSON document model. JSON syntax trees a
 <a id="adr-0002"></a>
 ## ADR 0002: Represent game signals with typed C# events
 
-Last updated: 2026-09-23
+Last updated: 2026-10-14
 
 - Status: Accepted; connection lifecycle extended by [0010](core-object-runtime.md#adr-0010)
 - Scope: Public event and callback APIs
@@ -72,7 +72,7 @@ A shorter-lived subscriber must unsubscribe from a longer-lived publisher as par
 - Renames are refactorable and discoverable by the IDE.
 - There is no `Connect`, `Disconnect`, `EmitSignal`, `SignalName`, or `Callable` compatibility layer.
 - Original decision: deferred and one-shot delivery were not signal features. ADR 0010 supersedes this point with typed `EventConnection` wrappers while deferred scheduling remains a separate `SceneTree` responsibility under ADR 0006.
-- Exceptions from handlers follow normal multicast delegate behavior.
+- Exceptions from handlers normally stop the current multicast emission. Physics pointer delivery follows its owning ADR 0099 per-handler collection/eligibility policy. Prepared physical handler snapshots under ADR 0010 preserve these policies without rebuilding delegates on one-shot removal.
 
 ### Rejected alternatives
 

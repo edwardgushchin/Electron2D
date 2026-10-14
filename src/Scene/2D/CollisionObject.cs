@@ -177,7 +177,7 @@ public abstract partial class CollisionObject : Entity
         try { base.Dispose(disposing); }
         finally
         {
-            if (disposing) { ClearPhysicsInputHandlers(); _shapeOwners.Clear(); _shapeSlots.Clear(); _childOwners.Clear(); PhysicsServer.Service.UnregisterSceneObject(_rid); }
+            if (disposing) { ClearPhysicsEventHandlers(); _shapeOwners.Clear(); _shapeSlots.Clear(); _childOwners.Clear(); PhysicsServer.Service.UnregisterSceneObject(_rid); }
         }
     }
 
