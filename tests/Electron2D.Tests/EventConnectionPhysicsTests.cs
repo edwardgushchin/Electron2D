@@ -6,7 +6,7 @@ internal static class EventConnectionPhysicsTests
     {
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread,
             Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1");
-        DeferredZero(); Immediate(); DeferredPair(); HigherArities();
+        DeferredZero(); Immediate(); DeferredPair(); HigherArities(); TypedSceneQueue(); DeferredLifetime(); OneShotAllocations();
         using var world = new World(backend); using var root = new SubViewport { World = world };
         using var shape = new CircleShape { Radius = 1 }; using var sensorShape = new CircleShape { Radius = 5 };
         var body = new PublisherBody { Position = new(100, 0), CanSleep = false, GravityScale = 0, LinearDampMode = RigidBody.DampMode.Replace, LinearDamp = 0 };
@@ -17,6 +17,15 @@ internal static class EventConnectionPhysicsTests
         using var pulse = EventConnection.Subscribe(h => body.Pulse += h, h => body.Pulse -= h, () => pulses++);
         var deferredPulses = 0;
         using var deferredPulse = EventConnection.Subscribe(h => body.Pulse += h, h => body.Pulse -= h, () => deferredPulses++, defer: tree.Defer);
+        var deferredValues = 0; var deferredPairs = 0; var deferredTriples = 0; var deferredQuads = 0;
+        using var deferredValue = EventConnection.Subscribe<PublisherBody>(h => body.Value += h, h => body.Value -= h,
+            sender => { Check(ReferenceEquals(sender, body), "Deferred sender identity."); deferredValues++; }, defer: tree.Defer);
+        using var deferredPair = EventConnection.Subscribe<PublisherBody, int>(h => body.Pair += h, h => body.Pair -= h,
+            (sender, tick) => { Check(ReferenceEquals(sender, body) && tick == body.Ticks, "Deferred pair snapshot."); deferredPairs++; }, defer: tree.Defer);
+        using var deferredTriple = EventConnection.Subscribe<PublisherBody, int, Vector2>(h => body.Triple += h, h => body.Triple -= h,
+            (sender, tick, position) => { Check(ReferenceEquals(sender, body) && tick == body.Ticks && position == body.Position, "Deferred triple snapshot."); deferredTriples++; }, defer: tree.Defer);
+        using var deferredQuad = EventConnection.Subscribe<PublisherBody, int, Vector2, float>(h => body.Quadruple += h, h => body.Quadruple -= h,
+            (sender, tick, position, mass) => { Check(ReferenceEquals(sender, body) && tick == body.Ticks && position == body.Position && mass == body.Mass, "Deferred quadruple snapshot."); deferredQuads++; }, defer: tree.Defer);
         using var value = EventConnection.Subscribe<PublisherBody>(h => body.Value += h, h => body.Value -= h, sender => { Check(ReferenceEquals(sender, body), "One-argument source identity."); values++; });
         using var pair = EventConnection.Subscribe<PublisherBody, int>(h => body.Pair += h, h => body.Pair -= h,
             (sender, tick) => { Check(ReferenceEquals(sender, body) && tick == body.Ticks, "Two-argument source and current tick."); pairs++; });
@@ -46,14 +55,14 @@ internal static class EventConnectionPhysicsTests
         root.PhysicsObjectPicking = false; body.InputPickable = false; Frame(1);
         GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
         for (var i = 0; i < 128; i++) Frame(i);
-        var first = (pulses, values, pairs, triples, quadruples, enters, exits, shapeEnters, shapeExits); var firstDeferred = deferredPulses; var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+        var first = (pulses, values, pairs, triples, quadruples, enters, exits, shapeEnters, shapeExits); var firstDeferred = (deferredPulses, deferredValues, deferredPairs, deferredTriples, deferredQuads); var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < 128; i++) Frame(i);
         var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; var allBytes = GC.GetTotalAllocatedBytes(true) - all;
         Check(ownerBytes == 0 && allBytes == 0, "Warmed full physics frames with immediate typed event connections allocate zero owner/all-thread bytes.");
-        Check(deferredPulses - firstDeferred == 128, "The real scene safe point retains every deferred zero-argument physical callback.");
+        Check(deferredPulses - firstDeferred.deferredPulses == 128 && deferredValues - firstDeferred.deferredValues == 128 && deferredPairs - firstDeferred.deferredPairs == 128 && deferredTriples - firstDeferred.deferredTriples == 128 && deferredQuads - firstDeferred.deferredQuads == 128, "The real scene safe point retains every deferred physical callback arity.");
         Check(pulses - first.pulses == 128 && values - first.values == 128 && pairs - first.pairs == 128 && triples - first.triples == 128 && quadruples - first.quadruples == 128 && shapeEnters - first.shapeEnters == 64 && shapeExits - first.shapeExits == 64 && enters - first.enters == 64 && exits - first.exits == 64,
             "Every measured frame simulates and publishes all event arities; overlap events retain exact alternating transitions.");
-        pulse.Dispose(); deferredPulse.Dispose(); value.Dispose(); pair.Dispose(); triple.Dispose(); quadruple.Dispose(); enter.Dispose(); exit.Dispose(); shapeEnter.Dispose(); shapeExit.Dispose();
+        pulse.Dispose(); deferredPulse.Dispose(); deferredValue.Dispose(); deferredPair.Dispose(); deferredTriple.Dispose(); deferredQuad.Dispose(); value.Dispose(); pair.Dispose(); triple.Dispose(); quadruple.Dispose(); enter.Dispose(); exit.Dispose(); shapeEnter.Dispose(); shapeExit.Dispose();
         var counts = (pulses, values, pairs, triples, quadruples, enters, exits, shapeEnters, shapeExits); Frame(0); Frame(1); Check(counts == (pulses, values, pairs, triples, quadruples, enters, exits, shapeEnters, shapeExits), "Disposed physical subscriptions do not deliver later events.");
         var calls = 0;
         using (var failure = EventConnection.Subscribe<PublisherBody, int>(h => body.Pair += h, h => body.Pair -= h, (_, _) => { calls++; throw new ArithmeticException(); }))
@@ -152,6 +161,97 @@ internal static class EventConnectionPhysicsTests
         var removalFailure = EventConnection.Subscribe<int, int, int, int>(h => retained += h, _ => throw new ArithmeticException(), (_, _, _, _) => retainedCalls++);
         Reject<ArithmeticException>(removalFailure.Dispose); retained?.Invoke(1, 2, 3, 4); removalFailure.Dispose();
         Check(!removalFailure.IsConnected && retainedCalls == 0, "Quadruple failed removal keeps the retained wrapper terminal and inert.");
+    }
+
+    private static void TypedSceneQueue()
+    {
+        using var tree = new SceneTree(new Node()); var order = new List<int>(); var value = 0;
+        Action<int> setter = v => { value = v; order.Add(v); };
+        tree.Defer(() => order.Add(10)); tree.SetDeferred(setter, 1); tree.Defer(() => order.Add(20)); tree.SetDeferred(setter, 2);
+        Check(value == 0, "Typed deferred setters wait for the safe point."); tree.FlushDeferred(); Check(order.SequenceEqual([10, 1, 20, 2]) && value == 2, "Typed and untyped work retain one FIFO order.");
+        Action<int> next = v => { order.Add(v); tree.SetDeferred(setter, v + 1); };
+        tree.SetDeferred(next, 30); tree.FlushDeferred(); Check(order[^1] == 30, "Typed work emitted during a captured batch waits."); tree.FlushDeferred(); Check(order[^1] == 31, "The following flush receives the new typed work.");
+        tree.SetDeferred<int>(_ => throw new ArithmeticException(), 0); tree.SetDeferred(setter, 40); Reject<AggregateException>(tree.FlushDeferred);
+        Check(value == 40, "Later work still executes after an earlier typed failure.");
+        Action<int> scalar = v => value = v;
+        GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
+        for (var i = 0; i < 128; i++) Cycle(); var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < 128; i++) Cycle(); var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; var allBytes = GC.GetTotalAllocatedBytes(true) - all;
+        Console.WriteLine($"Typed scene setter bracket: {ownerBytes}/{allBytes} B for 128 prepared submissions/flushes.");
+        Check(ownerBytes == 0 && allBytes == 0 && value == 7, "Typed scene setters retain exact values with zero warm allocation.");
+        tree.SetDeferred(scalar, 99); tree.Dispose(); Check(value == 7, "Finalization discards accepted typed work without invoking it.");
+        Reject<ObjectDisposedException>(() => tree.SetDeferred(scalar, 1));
+        using var publisher = new PublisherBody();
+        using var closed = EventConnection.Subscribe<PublisherBody>(h => publisher.Value += h, h => publisher.Value -= h, _ => { }, defer: tree.Defer);
+        Check(closed.IsConnected, "Subscription to a closed scheduler retains delayed acceptance checks.");
+        Reject<ObjectDisposedException>(publisher.Raise); Check(closed.IsConnected, "Reusable scheduling failure leaves the token active."); closed.Dispose();
+        using var closedOnce = EventConnection.Subscribe<PublisherBody>(h => publisher.Value += h, h => publisher.Value -= h, _ => { }, oneShot: true, defer: tree.Defer);
+        Reject<ObjectDisposedException>(publisher.Raise); Check(!closedOnce.IsConnected, "A closed-scheduler one-shot remains consumed.");
+        void Cycle() { tree.SetDeferred(scalar, 7); tree.FlushDeferred(); }
+    }
+
+    private static void OneShotAllocations()
+    {
+        foreach (var deferred in new[] { false, true })
+        {
+            using var tree = new SceneTree(new Node()); var sources = new PublisherBody[128]; var tokens = new EventConnection[640]; var calls = 0;
+            Action<Action>? scheduler = deferred ? tree.Defer : null;
+            for (var i = 0; i < sources.Length; i++)
+            {
+                var source = sources[i] = new PublisherBody(); var at = i * 5;
+                tokens[at] = EventConnection.Subscribe(h => source.Pulse += h, h => source.Pulse -= h, () => calls++, oneShot: true, defer: scheduler);
+                tokens[at + 1] = EventConnection.Subscribe<PublisherBody>(h => source.Value += h, h => source.Value -= h, _ => calls++, oneShot: true, defer: scheduler);
+                tokens[at + 2] = EventConnection.Subscribe<PublisherBody, int>(h => source.Pair += h, h => source.Pair -= h, (_, tick) => { Check(tick == 1, "One-shot pair captures its first value."); calls++; }, oneShot: true, defer: scheduler);
+                tokens[at + 3] = EventConnection.Subscribe<PublisherBody, int, Vector2>(h => source.Triple += h, h => source.Triple -= h, (_, tick, position) => { Check(tick == 1 && position == Vector2.Zero, "One-shot triple payload."); calls++; }, oneShot: true, defer: scheduler);
+                tokens[at + 4] = EventConnection.Subscribe<PublisherBody, int, Vector2, float>(h => source.Quadruple += h, h => source.Quadruple -= h, (_, tick, position, mass) => { Check(tick == 1 && position == Vector2.Zero && mass == 1, "One-shot quadruple payload."); calls++; }, oneShot: true, defer: scheduler);
+            }
+            Action noop = static () => { };
+            for (var batch = 0; batch < 2; batch++) { for (var i = 0; i < 640; i++) tree.Defer(noop); tree.FlushDeferred(); }
+            GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
+            var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+            foreach (var source in sources) source.Raise(); tree.FlushDeferred();
+            var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; var allBytes = GC.GetTotalAllocatedBytes(true) - all;
+            Console.WriteLine($"Prepared one-shot {(deferred ? "scene-deferred" : "immediate")}: {ownerBytes}/{allBytes} B, {calls} delivered callbacks.");
+            Check(ownerBytes == 0 && allBytes == 0 && calls == 640, "Prepared first one-shot delivery has zero invocation allocation across all arities with singleton accessors.");
+            foreach (var source in sources) source.Raise(); tree.FlushDeferred(); Check(calls == 640 && tokens.All(t => !t.IsConnected), "Consumed one-shot sources stay inert.");
+            foreach (var token in tokens) token.Dispose(); foreach (var source in sources) source.Dispose();
+        }
+    }
+
+    private static void DeferredLifetime()
+    {
+        using var tree = new SceneTree(new Node()); var delivered = QueueReference(tree); tree.FlushDeferred(); Collect();
+        Check(!delivered.IsAlive, "Recycled typed slots release completed reference values.");
+        var failed = QueueReference(tree, failure: true); Reject<AggregateException>(tree.FlushDeferred); Collect();
+        Check(!failed.IsAlive, "Failed typed callbacks still release their payloads.");
+        var seen = new HashSet<int>(); Action<int> accept = v => Check(seen.Add(v), "Concurrent typed work is not duplicated.");
+        Parallel.For(0, 256, i => tree.SetDeferred(accept, i)); tree.FlushDeferred(); Check(seen.Count == 256, "Concurrent producers deliver every accepted typed value.");
+        var discarded = QueueReference(tree); tree.Dispose(); Collect(); Check(!discarded.IsAlive, "Finalization clears pending reference values."); GC.KeepAlive(tree);
+        using var root = new FailedActivation(); Reject<AggregateException>(() => new SceneTree(root)); Collect();
+        Check(root.Captured is { IsDisposed: true } && root.Payload is { IsAlive: false } && !root.IsDisposed, "Activation rollback discards typed arguments and preserves caller root ownership."); GC.KeepAlive(root.Captured);
+        using var churnTree = new SceneTree(new Node()); using var publisher = new PublisherBody();
+        for (var i = 0; i < 1024; i++)
+        {
+            using var token = EventConnection.Subscribe<PublisherBody>(h => publisher.Value += h, h => publisher.Value -= h, _ => { }, oneShot: true, defer: churnTree.Defer);
+            publisher.Raise(); churnTree.FlushDeferred();
+        }
+        Check(churnTree.PreparedDeferredSlots<PublisherBody>() == 1, "Completed subscription churn retains peak simultaneous slots, not total historical tokens.");
+        static void Collect() { GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers(); }
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static WeakReference QueueReference(SceneTree tree, bool failure = false)
+    {
+        var value = new byte[1024]; var weak = new WeakReference(value);
+        if (failure) tree.SetDeferred<byte[]>(static _ => throw new ArithmeticException(), value);
+        else tree.SetDeferred<byte[]>(static _ => { }, value);
+        return weak;
+    }
+
+    private sealed class FailedActivation : Node
+    {
+        internal SceneTree? Captured; internal WeakReference? Payload;
+        protected override void OnReady() { Captured = Tree!; Payload = QueueReference(Captured); throw new ArithmeticException(); }
     }
 
     private sealed class PublisherBody : RigidBody

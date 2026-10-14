@@ -9,7 +9,7 @@ Decisions in this log: [0006](#adr-0006), [0008](#adr-0008), [0011](#adr-0011), 
 <a id="adr-0006"></a>
 ## ADR 0006: Own hierarchy, deferred work, and queued deletion in SceneTree
 
-Last updated: 2026-09-24
+Last updated: 2026-10-14
 
 - Status: Accepted; frame scheduling refined by [0008](scene.md#adr-0008), lifecycle and queue safety refined by [0011](scene.md#adr-0011)
 - Scope: `Node` hierarchy and `SceneTree` scheduling
@@ -27,6 +27,7 @@ Godot's object surface includes deferred calls and queued deletion, but both req
 - `SceneTree.Defer(Action)` and `SetDeferred<T>` accept typed work without string method lookup.
 - Core's `EventConnection` can receive `SceneTree.Defer` as its scheduler for cancellable deferred event delivery.
 - A flush atomically captures one action batch. Work enqueued during execution waits for the next flush.
+- Typed setter/event work uses retained invocation slots under the same work gate. Each slot has independent strongly typed values and one immutable Action in the ordinary FIFO queue. Prepare/growth happens before the warm claim; a slot is recycled only after execution or explicit discard and releases captured references. Finalization/activation rollback discards queued typed slots without invoking user handlers. The exact bound Defer delegate registers an internal provider under ADR 0010; custom schedulers and existing public signatures keep their prior contracts. Subscription reservations are released at token completion/disposal; retained capacity follows the peak simultaneous subscriptions/pending invocations rather than total historical token churn.
 - Node deletion is a separate atomic request processed after deferred actions. It detaches and disposes the full subtree; it can be cancelled before processing.
 - The normal `Engine.Run` entry point owns time and the safe point. An embedding application may instead call `ProcessFrame`, `PhysicsFrame`, or `FlushDeferred`; the frame methods run their callback lane and then flush. `SceneTree` does not create a hidden thread or clock.
 

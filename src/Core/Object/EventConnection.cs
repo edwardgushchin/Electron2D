@@ -7,10 +7,11 @@ namespace Electron2D;
 /// This type wraps ordinary C# event accessors without introducing string-addressed signals or untyped arguments.
 /// Disposing the connection removes its wrapper and cancels deferred callbacks that have not started. A callback that
 /// has already started can finish concurrently with disposal.
-/// Prepared reusable synchronous delivery with zero through four arguments creates no per-emission capture.
-/// Prepared reusable deferred delivery with no arguments reuses an immutable callback; schedulers still receive
-/// one submission per emission. Subscription, one-shot and argument capture remain separate allocation paths; supplied handlers
-/// and accessors retain their own allocation behavior.
+/// Prepared synchronous delivery and delivery through the exact SceneTree.Defer scheduler use typed invokers
+/// without per-emission argument capture. Scene-owned slots retain independent values until completion/discard;
+/// their first capacity growth, subscription and supplied handler/accessor allocations remain separate paths.
+/// Arbitrary custom schedulers retain their independent captured-action behavior. Reusable zero-argument
+/// custom delivery reuses an immutable callback and still submits once per emission.
 /// Capturing a reference preserves identity, not ownership or lifetime. Borrowed callback values must remain
 /// valid under their owning API; deferred delivery does not extend a borrowed input event lifetime.
 /// </remarks>
@@ -32,6 +33,10 @@ public sealed class EventConnection : IDisposable
     private readonly Action? _deferredZeroCallback;
     private Action<Action>? _defer;
     private Delegate? _handler;
+    private Delegate? _apply;
+    private IDeferredScheduler? _typedScheduler;
+    private Delegate? _typedCallback;
+    private Action? _releaseTyped;
     private Action? _unsubscribe;
     private ConnectionState _state = ConnectionState.Active;
 
@@ -96,7 +101,11 @@ public sealed class EventConnection : IDisposable
             subscribe,
             unsubscribe,
             handler,
-            connection => connection.Dispatch,
+            connection =>
+            {
+                connection.PrepareInvocation<Action, ValueTuple>(static (handler, _) => handler());
+                return connection.Dispatch;
+            },
             oneShot,
             defer);
     }
@@ -134,7 +143,11 @@ public sealed class EventConnection : IDisposable
             subscribe,
             unsubscribe,
             handler,
-            connection => connection.Dispatch,
+            connection =>
+            {
+                connection.PrepareInvocation<Action<T>, T>(static (handler, value) => handler(value));
+                return connection.Dispatch;
+            },
             oneShot,
             defer);
     }
@@ -173,7 +186,11 @@ public sealed class EventConnection : IDisposable
             subscribe,
             unsubscribe,
             handler,
-            connection => connection.Dispatch,
+            connection =>
+            {
+                connection.PrepareInvocation<Action<T1, T2>, ValueTuple<T1, T2>>(static (handler, value) => handler(value.Item1, value.Item2));
+                return connection.Dispatch;
+            },
             oneShot,
             defer);
     }
@@ -213,7 +230,11 @@ public sealed class EventConnection : IDisposable
             subscribe,
             unsubscribe,
             handler,
-            connection => connection.Dispatch,
+            connection =>
+            {
+                connection.PrepareInvocation<Action<T1, T2, T3>, ValueTuple<T1, T2, T3>>(static (handler, value) => handler(value.Item1, value.Item2, value.Item3));
+                return connection.Dispatch;
+            },
             oneShot,
             defer);
     }
@@ -254,7 +275,11 @@ public sealed class EventConnection : IDisposable
             subscribe,
             unsubscribe,
             handler,
-            connection => connection.Dispatch,
+            connection =>
+            {
+                connection.PrepareInvocation<Action<T1, T2, T3, T4>, ValueTuple<T1, T2, T3, T4>>(static (handler, value) => handler(value.Item1, value.Item2, value.Item3, value.Item4));
+                return connection.Dispatch;
+            },
             oneShot,
             defer);
     }
@@ -278,10 +303,10 @@ public sealed class EventConnection : IDisposable
             unsubscribe = _unsubscribe;
             _unsubscribe = null;
             _defer = null;
-            _handler = null;
+            _handler = null; _typedScheduler = null; _typedCallback = null;
         }
 
-        try { unsubscribe?.Invoke(); } finally { Interlocked.Exchange(ref Finished, null)?.Invoke(); }
+        try { ReleaseTyped(); unsubscribe?.Invoke(); } finally { Interlocked.Exchange(ref Finished, null)?.Invoke(); }
     }
 
     private static EventConnection Create<TDelegate>(
@@ -325,11 +350,11 @@ public sealed class EventConnection : IDisposable
     {
         if (_oneShot)
         {
-            DispatchOneShot<Action>(handler => handler());
+            DispatchOneShot<Action, ValueTuple>(default);
             return;
         }
 
-        if (!TryGetScheduler(out var defer))
+        if (!TryGetScheduler(out var defer, out var typedScheduler, out var typedCallback))
             return;
 
         if (defer is null)
@@ -346,16 +371,17 @@ public sealed class EventConnection : IDisposable
     {
         if (_oneShot)
         {
-            DispatchOneShotValue(value);
+            DispatchOneShot<Action<T>, T>(value);
             return;
         }
 
-        if (!TryGetScheduler(out var defer))
+        if (!TryGetScheduler(out var defer, out var typedScheduler, out var typedCallback))
             return;
 
         if (defer is not null)
         {
-            DispatchDeferred(defer, value);
+            if (typedScheduler is null) DispatchDeferred(defer, value);
+            else QueueTyped(typedScheduler, typedCallback!, value);
             return;
         }
 
@@ -367,16 +393,17 @@ public sealed class EventConnection : IDisposable
     {
         if (_oneShot)
         {
-            DispatchOneShotPair(first, second);
+            DispatchOneShot<Action<T1, T2>, ValueTuple<T1, T2>>((first, second));
             return;
         }
 
-        if (!TryGetScheduler(out var defer))
+        if (!TryGetScheduler(out var defer, out var typedScheduler, out var typedCallback))
             return;
 
         if (defer is not null)
         {
-            DispatchDeferred(defer, first, second);
+            if (typedScheduler is null) DispatchDeferred(defer, first, second);
+            else QueueTyped(typedScheduler, typedCallback!, (first, second));
             return;
         }
 
@@ -388,16 +415,17 @@ public sealed class EventConnection : IDisposable
     {
         if (_oneShot)
         {
-            DispatchOneShotTriple(first, second, third);
+            DispatchOneShot<Action<T1, T2, T3>, ValueTuple<T1, T2, T3>>((first, second, third));
             return;
         }
 
-        if (!TryGetScheduler(out var defer))
+        if (!TryGetScheduler(out var defer, out var typedScheduler, out var typedCallback))
             return;
 
         if (defer is not null)
         {
-            DispatchDeferred(defer, first, second, third);
+            if (typedScheduler is null) DispatchDeferred(defer, first, second, third);
+            else QueueTyped(typedScheduler, typedCallback!, (first, second, third));
             return;
         }
 
@@ -409,16 +437,17 @@ public sealed class EventConnection : IDisposable
     {
         if (_oneShot)
         {
-            DispatchOneShotQuadruple(first, second, third, fourth);
+            DispatchOneShot<Action<T1, T2, T3, T4>, ValueTuple<T1, T2, T3, T4>>((first, second, third, fourth));
             return;
         }
 
-        if (!TryGetScheduler(out var defer))
+        if (!TryGetScheduler(out var defer, out var typedScheduler, out var typedCallback))
             return;
 
         if (defer is not null)
         {
-            DispatchDeferred(defer, first, second, third, fourth);
+            if (typedScheduler is null) DispatchDeferred(defer, first, second, third, fourth);
+            else QueueTyped(typedScheduler, typedCallback!, (first, second, third, fourth));
             return;
         }
 
@@ -426,98 +455,84 @@ public sealed class EventConnection : IDisposable
             handler(first, second, third, fourth);
     }
 
-    private void DispatchOneShotValue<T>(T value) =>
-        DispatchOneShot<Action<T>>(handler => handler(value));
-
-    private void DispatchOneShotPair<T1, T2>(T1 first, T2 second) =>
-        DispatchOneShot<Action<T1, T2>>(handler => handler(first, second));
-
     private void DispatchDeferred<T>(Action<Action> defer, T value) =>
         defer(() => InvokeDeferred(value));
 
     private void DispatchDeferred<T1, T2>(Action<Action> defer, T1 first, T2 second) =>
         defer(() => InvokeDeferred(first, second));
 
-    private void DispatchOneShotTriple<T1, T2, T3>(T1 first, T2 second, T3 third) =>
-        DispatchOneShot<Action<T1, T2, T3>>(handler => handler(first, second, third));
-
     private void DispatchDeferred<T1, T2, T3>(Action<Action> defer, T1 first, T2 second, T3 third) =>
         defer(() => InvokeDeferred(first, second, third));
-
-    private void DispatchOneShotQuadruple<T1, T2, T3, T4>(T1 first, T2 second, T3 third, T4 fourth) =>
-        DispatchOneShot<Action<T1, T2, T3, T4>>(handler => handler(first, second, third, fourth));
 
     private void DispatchDeferred<T1, T2, T3, T4>(Action<Action> defer, T1 first, T2 second, T3 third, T4 fourth) =>
         defer(() => InvokeDeferred(first, second, third, fourth));
 
-    private void DispatchOneShot<TDelegate>(Action<TDelegate> invoke)
-        where TDelegate : Delegate
+    private void PrepareInvocation<TDelegate, TPayload>(Action<TDelegate, TPayload> apply) where TDelegate : Delegate
+    {
+        _apply = apply;
+        var scheduler = DeferredSchedulerRegistry.Find(_defer);
+        if (scheduler is null || !_oneShot && typeof(TDelegate) == typeof(Action)) return;
+        scheduler.Prepare<TPayload>();
+        _releaseTyped = scheduler.Release<TPayload>;
+        _typedScheduler = scheduler;
+        _typedCallback = new Action<TPayload>(InvokeTyped<TDelegate, TPayload>);
+    }
+
+    private static void QueueTyped<T>(IDeferredScheduler scheduler, Delegate callback, T value) => scheduler.Enqueue((Action<T>)callback, value);
+
+    private void DispatchOneShot<TDelegate, TPayload>(TPayload value) where TDelegate : Delegate
     {
         Action? unsubscribe;
         Action<Action>? defer;
+        IDeferredScheduler? typedScheduler;
+        Delegate? typedCallback;
         TDelegate handler;
-
         lock (_gate)
         {
-            if (_state != ConnectionState.Active)
-                return;
-
+            if (_state != ConnectionState.Active) return;
             handler = (TDelegate)_handler!;
-            defer = _defer;
+            defer = _defer; typedScheduler = _typedScheduler; typedCallback = _typedCallback;
             _defer = null;
             _state = defer is not null ? ConnectionState.Pending : ConnectionState.Completed;
-            unsubscribe = _unsubscribe;
-            _unsubscribe = null;
-
-            if (defer is null)
-                _handler = null;
+            unsubscribe = _unsubscribe; _unsubscribe = null;
+            if (defer is null) { _handler = null; _typedScheduler = null; _typedCallback = null; }
         }
-
         try
         {
             unsubscribe?.Invoke();
             if (defer is null) Interlocked.Exchange(ref Finished, null)?.Invoke();
         }
-        catch
-        {
-            CompletePending();
-            throw;
-        }
-
-        if (defer is null)
-        {
-            invoke(handler);
-            return;
-        }
-
-        lock (_gate)
-        {
-            if (_state != ConnectionState.Pending)
-                return;
-        }
-
+        catch { CompletePending(); throw; }
+        if (defer is null) { ((Action<TDelegate, TPayload>)_apply!)(handler, value); return; }
+        lock (_gate) { if (_state != ConnectionState.Pending) return; }
         try
         {
-            defer(() => InvokePending(invoke));
+            if (typedScheduler is not null) QueueTyped(typedScheduler, typedCallback!, value);
+            else ScheduleLegacyOneShot<TDelegate, TPayload>(defer, value);
         }
-        catch
-        {
-            CompletePending();
-            throw;
-        }
+        catch { CompletePending(); throw; }
     }
 
-    private bool TryGetScheduler(out Action<Action>? defer)
+    private void ScheduleLegacyOneShot<TDelegate, TPayload>(Action<Action> defer, TPayload value) where TDelegate : Delegate =>
+        defer(() => InvokePending<TDelegate, TPayload>(value));
+
+    private void InvokeTyped<TDelegate, TPayload>(TPayload value) where TDelegate : Delegate
+    {
+        if (_oneShot) InvokePending<TDelegate, TPayload>(value);
+        else if (TryGetHandler<TDelegate>(out var handler)) ((Action<TDelegate, TPayload>)_apply!)(handler, value);
+    }
+
+    private bool TryGetScheduler(out Action<Action>? defer, out IDeferredScheduler? typedScheduler, out Delegate? typedCallback)
     {
         lock (_gate)
         {
             if (_state != ConnectionState.Active)
             {
-                defer = null;
+                defer = null; typedScheduler = null; typedCallback = null;
                 return false;
             }
 
-            defer = _defer;
+            defer = _defer; typedScheduler = _typedScheduler; typedCallback = _typedCallback;
             return true;
         }
     }
@@ -568,22 +583,18 @@ public sealed class EventConnection : IDisposable
             handler(first, second, third, fourth);
     }
 
-    private void InvokePending<TDelegate>(Action<TDelegate> invoke)
-        where TDelegate : Delegate
+    private void InvokePending<TDelegate, TPayload>(TPayload value) where TDelegate : Delegate
     {
         TDelegate handler;
-
         lock (_gate)
         {
-            if (_state != ConnectionState.Pending || _handler is not TDelegate typedHandler)
-                return;
-
+            if (_state != ConnectionState.Pending || _handler is not TDelegate typedHandler) return;
             _state = ConnectionState.Completed;
-            _handler = null;
+            _handler = null; _typedScheduler = null; _typedCallback = null;
             handler = typedHandler;
         }
-
-        try { invoke(handler); } finally { Interlocked.Exchange(ref Finished, null)?.Invoke(); }
+        try { ReleaseTyped(); ((Action<TDelegate, TPayload>)_apply!)(handler, value); }
+        finally { Interlocked.Exchange(ref Finished, null)?.Invoke(); }
     }
 
     private void CompletePending()
@@ -593,11 +604,14 @@ public sealed class EventConnection : IDisposable
             if (_state == ConnectionState.Pending)
             {
                 _state = ConnectionState.Completed;
-                _handler = null;
+                _handler = null; _typedScheduler = null; _typedCallback = null;
             }
         }
+        ReleaseTyped();
         Interlocked.Exchange(ref Finished, null)?.Invoke();
     }
+
+    private void ReleaseTyped() => Interlocked.Exchange(ref _releaseTyped, null)?.Invoke();
 
     private enum ConnectionState
     {

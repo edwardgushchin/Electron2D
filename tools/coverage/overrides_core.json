@@ -1347,17 +1347,17 @@
     },
     {
       "electron2d": "method:Electron2D.EventConnection.Subscribe(System.Action<System.Action>,System.Action<System.Action>,System.Action,System.Boolean,System.Action<System.Action>)",
-      "reason": "ADRs 0002/0010: owned typed zero-argument subscription/disconnection. Prepared reusable deferred delivery submits one cached immutable callback for every emission, preserving distinct queue entries, cancellation and scheduler/handler error policy. EventConnectionPhysicsTests verifies triple batches, strict zero warm emit/drain bytes and actual SceneTree.Defer callbacks in selected CPU/GPU full frames. Deferred argument/one-shot captures, subscription/growth and broader acceptance remain separate.",
+      "reason": "ADRs 0002/0010/0006: owned typed current-arity subscription; exact SceneTree.Defer uses an internal weak-owner provider and independent typed invocation slots in the existing FIFO. Prepared reusable/deferred/one-shot invokers retain strict zero invocation bytes with nonallocating handlers/accessors. EventConnectionPhysicsTests verifies all arities, captured values/order/cancellation/errors, closure/finalization/rollback, concurrent producers, reference release and bounded subscription churn. Custom schedulers keep independent captured Actions; first capacity growth/user accessor allocation and broader acceptance remain separate.",
       "adr": "adr-0010"
     },
     {
       "electron2d": "method:Electron2D.EventConnection.Subscribe`1(Action<Action<T>>,Action<Action<T>>,Action<T>,System.Boolean,System.Action<System.Action>)",
-      "reason": "Typed event subscription/disconnection replacing dynamic signals.",
+      "reason": "ADRs 0002/0010/0006: owned typed current-arity subscription; exact SceneTree.Defer uses an internal weak-owner provider and independent typed invocation slots in the existing FIFO. Prepared reusable/deferred/one-shot invokers retain strict zero invocation bytes with nonallocating handlers/accessors. EventConnectionPhysicsTests verifies all arities, captured values/order/cancellation/errors, closure/finalization/rollback, concurrent producers, reference release and bounded subscription churn. Custom schedulers keep independent captured Actions; first capacity growth/user accessor allocation and broader acceptance remain separate.",
       "adr": "adr-0010"
     },
     {
       "electron2d": "method:Electron2D.EventConnection.Subscribe`2(Action<Action<T1, T2>>,Action<Action<T1, T2>>,Action<T1, T2>,System.Boolean,System.Action<System.Action>)",
-      "reason": "Typed event subscription/disconnection replacing dynamic signals.",
+      "reason": "ADRs 0002/0010/0006: owned typed current-arity subscription; exact SceneTree.Defer uses an internal weak-owner provider and independent typed invocation slots in the existing FIFO. Prepared reusable/deferred/one-shot invokers retain strict zero invocation bytes with nonallocating handlers/accessors. EventConnectionPhysicsTests verifies all arities, captured values/order/cancellation/errors, closure/finalization/rollback, concurrent producers, reference release and bounded subscription churn. Custom schedulers keep independent captured Actions; first capacity growth/user accessor allocation and broader acceptance remain separate.",
       "adr": "adr-0010"
     },
     {
@@ -1595,12 +1595,12 @@
     },
     {
       "electron2d": "method:Electron2D.EventConnection.Subscribe`3(Action<Action<T1, T2, T3>>,Action<Action<T1, T2, T3>>,Action<T1, T2, T3>,System.Boolean,System.Action<System.Action>)",
-      "reason": "ADR 0010: strongly typed subscription with complete three/four argument physical picking and shape payloads. Shared token preserves immediate/deferred/one-shot cancellation and failure policy. EventConnectionPhysicsTests verifies all current arities, real Area shape RID/owner/index payloads, deferred capture and strict zero warm reusable full-frame bytes. Deferred/one-shot allocation and broader acceptance remain separate.",
+      "reason": "ADRs 0002/0010/0006: owned typed current-arity subscription; exact SceneTree.Defer uses an internal weak-owner provider and independent typed invocation slots in the existing FIFO. Prepared reusable/deferred/one-shot invokers retain strict zero invocation bytes with nonallocating handlers/accessors. EventConnectionPhysicsTests verifies all arities, captured values/order/cancellation/errors, closure/finalization/rollback, concurrent producers, reference release and bounded subscription churn. Custom schedulers keep independent captured Actions; first capacity growth/user accessor allocation and broader acceptance remain separate.",
       "adr": "adr-0010"
     },
     {
       "electron2d": "method:Electron2D.EventConnection.Subscribe`4(Action<Action<T1, T2, T3, T4>>,Action<Action<T1, T2, T3, T4>>,Action<T1, T2, T3, T4>,System.Boolean,System.Action<System.Action>)",
-      "reason": "ADR 0010: strongly typed subscription with complete three/four argument physical picking and shape payloads. Shared token preserves immediate/deferred/one-shot cancellation and failure policy. EventConnectionPhysicsTests verifies all current arities, real Area shape RID/owner/index payloads, deferred capture and strict zero warm reusable full-frame bytes. Deferred/one-shot allocation and broader acceptance remain separate.",
+      "reason": "ADRs 0002/0010/0006: owned typed current-arity subscription; exact SceneTree.Defer uses an internal weak-owner provider and independent typed invocation slots in the existing FIFO. Prepared reusable/deferred/one-shot invokers retain strict zero invocation bytes with nonallocating handlers/accessors. EventConnectionPhysicsTests verifies all arities, captured values/order/cancellation/errors, closure/finalization/rollback, concurrent producers, reference release and bounded subscription churn. Custom schedulers keep independent captured Actions; first capacity growth/user accessor allocation and broader acceptance remain separate.",
       "adr": "adr-0010"
     }
   ],
@@ -2331,6 +2331,13 @@
       ],
       "state": "Partial",
       "reason": "ADR 0005 retains ordinary C# virtual OnNotification dispatch and explicit base calls. Notify has no reversed parameter or per-class reversal mechanism; reserved post-initialization 0 is not automatically emitted. These remain explicit inherited capability/ordering gaps, not completion inferred from the numeric callback declarations. Existing Node/Timer/SceneTree hooks retain their documented typed lifecycle behavior."
+    },
+    {
+      "godot": [
+        "Object::method:set_deferred(StringName:,Variant:)"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0001/0006: existing typed SceneTree.SetDeferred retains individual values in reusable Scene-owned slots, mixed Action FIFO/captured-batch order, atomic lifetime acceptance and error continuation. Warm typed setter and CPU/GPU deferred-event frames retain zero owner/all-thread bytes; execution/failure/discard release reference values. Dynamic property/name resolution remains excluded by the typed projection, and this does not establish arbitrary custom scheduler or full inherited/native/network/platform acceptance."
     }
   ]
 }

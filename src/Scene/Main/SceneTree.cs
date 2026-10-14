@@ -116,6 +116,8 @@ public sealed partial class SceneTree : MainLoop
             throw new ArgumentException("A SceneTree root cannot be queued for deletion.", nameof(root));
 
         Root = root;
+        _typedDeferredScheduler = new DeferredScheduler(this);
+        DeferredSchedulerRegistry.Register(_typedDeferredScheduler);
         _gui.Section = _gui;
         if (root is Viewport guiViewport) _gui = GUIState(guiViewport);
         var readied = new List<Node>();
@@ -414,13 +416,18 @@ public sealed partial class SceneTree : MainLoop
     /// <typeparam name="T">The value type accepted by the setter.</typeparam>
     /// <param name="setter">The setter to invoke.</param>
     /// <param name="value">The value captured for the deferred invocation.</param>
-    /// <remarks>Has the same atomic lifetime and captured-batch behavior as <see cref="Defer"/>.</remarks>
+    /// <remarks>
+    /// Has the same atomic lifetime and captured-batch behavior as <see cref="Defer"/>. A scene-owned typed slot
+    /// retains the supplied value until callback completion or discard, then clears references and is reused.
+    /// Value/reference ownership is unchanged. Prepared capacity avoids per-submission capture allocation;
+    /// first type/capacity growth and allocations performed by the setter remain separate.
+    /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="setter"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
     public void SetDeferred<T>(Action<T> setter, T value)
     {
         ArgumentNullException.ThrowIfNull(setter);
-        Defer(() => setter(value));
+        _typedDeferredScheduler.Enqueue(setter, value);
     }
 
     /// <summary>Creates a one-shot timer owned and processed by this tree.</summary>
@@ -2007,7 +2014,7 @@ public sealed partial class SceneTree : MainLoop
     private void ClearPendingWorkUnderLock()
     {
         _cursorRefreshWindows.Clear();
-        _deferred.Clear(); _deferredSpare?.Clear();
+        DiscardDeferred(_deferred); if (_deferredSpare is not null) DiscardDeferred(_deferredSpare);
         _deletions = new ConcurrentQueue<DeletionRequest>();
         _uniqueGroupOperations.Clear();
         _transformChanges.Clear(); _nextTransformNotification = null;

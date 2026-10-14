@@ -1520,3 +1520,15 @@ ElectronObject and its typed PropertyDescriptor family retain exact teardown-thr
 [Extended event arities](classes/EventConnection.md) cover current 3-argument picking and 4-argument body/Area shape signatures under ADR 0010 without altering event payloads. The shared physics fixture now retains 128 measured emissions of each arity, 64 body and 64 shape enters/exits and exact RID/owner/disabled-first shape indices at strict 0/0 warm bytes on selected CPU/GPU serial/separate profiles. Deferred/one-shot calls retain their separate capture allocation paths.
 
 EventConnection retains an immutable callback for reusable zero-argument deferred delivery; prepared scene queue/frame execution verifies zero per-emission managed allocation. [The connection component](components/event-connections.md) records argument capture, growth and acceptance limits.
+
+Prepared typed deferred delivery internals under ADRs 0010/0006:
+
+| Domain/component | Type | Source | Contract |
+| --- | --- | --- | --- |
+| [Core event connections](components/event-connections.md) | [IDeferredScheduler](classes/IDeferredScheduler.md) | [source](../src/Core/Object/DeferredSchedulerRegistry.cs) | Core protocol for a prepared strongly typed scheduler, registered by an owner. |
+| [Core event connections](components/event-connections.md) | [IDeferredInvocation](classes/IDeferredInvocation.md) | [source](../src/Core/Object/DeferredSchedulerRegistry.cs) | Internal discard hook for a typed invocation already queued in a Scene FIFO. |
+| [Core event connections](components/event-connections.md) | [DeferredSchedulerRegistry](classes/DeferredSchedulerRegistry.md) | [source](../src/Core/Object/DeferredSchedulerRegistry.cs) | Weak-owner lookup connecting the exact scheduler delegate to its Core protocol. |
+| [Scene queue](components/scene-tree.md) | [SceneTree.DeferredScheduler](classes/SceneTree.DeferredScheduler.md) | [source](../src/Scene/Main/SceneTree.Deferred.cs) | Scene-owned provider retaining typed pools under the existing work gate. |
+| [Scene queue](components/scene-tree.md) | [SceneTree.IDeferredPool](classes/SceneTree.IDeferredPool.md) | [source](../src/Scene/Main/SceneTree.Deferred.cs) | Memberless internal discriminator permitting a heterogeneous registry of strongly typed pools. |
+| [Scene queue](components/scene-tree.md) | [SceneTree.DeferredPool<T>](classes/SceneTree.DeferredPool.Generic.md) | [source](../src/Scene/Main/SceneTree.Deferred.cs) | One owner-scoped free-slot stack for an exact payload type. |
+| [Scene queue](components/scene-tree.md) | [SceneTree.DeferredInvocation<T>](classes/SceneTree.DeferredInvocation.Generic.md) | [source](../src/Scene/Main/SceneTree.Deferred.cs) | One reusable callback/value pair, independently owned by a queued emission until completion. |
