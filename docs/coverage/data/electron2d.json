@@ -89595,6 +89595,84 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.EventConnection.Subscribe\u00603(Action\u003CAction\u003CT1, T2, T3\u003E\u003E,Action\u003CAction\u003CT1, T2, T3\u003E\u003E,Action\u003CT1, T2, T3\u003E,System.Boolean,System.Action\u003CSystem.Action\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.EventConnection",
+    "name": "Subscribe",
+    "signature": "public static Electron2D.EventConnection Subscribe\u003CT1, T2, T3\u003E(Action\u003CAction\u003CT1, T2, T3\u003E\u003E subscribe, Action\u003CAction\u003CT1, T2, T3\u003E\u003E unsubscribe, Action\u003CT1, T2, T3\u003E handler, System.Boolean oneShot = false, System.Action\u003CSystem.Action\u003E defer = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "subscribe",
+        "type": "Action\u003CAction\u003CT1, T2, T3\u003E\u003E",
+        "default": null
+      },
+      {
+        "name": "unsubscribe",
+        "type": "Action\u003CAction\u003CT1, T2, T3\u003E\u003E",
+        "default": null
+      },
+      {
+        "name": "handler",
+        "type": "Action\u003CT1, T2, T3\u003E",
+        "default": null
+      },
+      {
+        "name": "oneShot",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "defer",
+        "type": "System.Action\u003CSystem.Action\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "Electron2D.EventConnection",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.EventConnection.Subscribe\u00604(Action\u003CAction\u003CT1, T2, T3, T4\u003E\u003E,Action\u003CAction\u003CT1, T2, T3, T4\u003E\u003E,Action\u003CT1, T2, T3, T4\u003E,System.Boolean,System.Action\u003CSystem.Action\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.EventConnection",
+    "name": "Subscribe",
+    "signature": "public static Electron2D.EventConnection Subscribe\u003CT1, T2, T3, T4\u003E(Action\u003CAction\u003CT1, T2, T3, T4\u003E\u003E subscribe, Action\u003CAction\u003CT1, T2, T3, T4\u003E\u003E unsubscribe, Action\u003CT1, T2, T3, T4\u003E handler, System.Boolean oneShot = false, System.Action\u003CSystem.Action\u003E defer = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "subscribe",
+        "type": "Action\u003CAction\u003CT1, T2, T3, T4\u003E\u003E",
+        "default": null
+      },
+      {
+        "name": "unsubscribe",
+        "type": "Action\u003CAction\u003CT1, T2, T3, T4\u003E\u003E",
+        "default": null
+      },
+      {
+        "name": "handler",
+        "type": "Action\u003CT1, T2, T3, T4\u003E",
+        "default": null
+      },
+      {
+        "name": "oneShot",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "defer",
+        "type": "System.Action\u003CSystem.Action\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "Electron2D.EventConnection",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.FastNoiseLite.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.FastNoiseLite",

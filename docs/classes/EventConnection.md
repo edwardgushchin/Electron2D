@@ -24,7 +24,7 @@ This type wraps ordinary C# event accessors without introducing string-addressed
 Disposing the connection removes its wrapper and cancels deferred callbacks that have not started. A callback that
 has already started can finish concurrently with disposal.
 
-Prepared reusable synchronous subscriptions with zero, one or two arguments create no per-emission capture. One-shot delivery and deferred scheduling retain their separate capture paths; no zero-allocation claim is made for them, subscription/accessor work or allocating user handlers. This preserves argument values, lock boundaries, detach-before-handler ordering, cancellation and exception policy under ADR 0010.
+Prepared reusable synchronous subscriptions with zero through four arguments create no per-emission capture. One-shot delivery and deferred scheduling retain their separate capture paths; no zero-allocation claim is made for them, subscription/accessor work or allocating user handlers. This preserves argument values, lock boundaries, detach-before-handler ordering, cancellation and exception policy under ADR 0010.
 
 ## Examples
 
@@ -51,6 +51,8 @@ using EventConnection connection = EventConnection.Subscribe<Resource>(
 | [`public static EventConnection Subscribe(Action<Action> subscribe, Action<Action> unsubscribe, Action handler, bool oneShot = false, Action<Action> defer = null)`](#m-electron2d-eventconnection-subscribe-system-action-system-action-system-action-system-action-system-action-system-boolean-system-action-system-action) | Creates a managed subscription to an event with no arguments. |
 | [`public static EventConnection Subscribe<T>(Action<Action<T>> subscribe, Action<Action<T>> unsubscribe, Action<T> handler, bool oneShot = false, Action<Action> defer = null)`](#m-electron2d-eventconnection-subscribe-1-system-action-system-action-0-system-action-system-action-0-system-action-0-system-boolean-system-action-system-action) | Creates a managed subscription to an event with one typed argument. |
 | [`public static EventConnection Subscribe<T1, T2>(Action<Action<T1, T2>> subscribe, Action<Action<T1, T2>> unsubscribe, Action<T1, T2> handler, bool oneShot = false, Action<Action> defer = null)`](#m-electron2d-eventconnection-subscribe-2-system-action-system-action-0-1-system-action-system-action-0-1-system-action-0-1-system-boolean-system-action-system-action) | Creates a managed subscription to an event with two typed arguments. |
+| [`public static EventConnection Subscribe<T1, T2, T3>(Action<Action<T1, T2, T3>> subscribe, Action<Action<T1, T2, T3>> unsubscribe, Action<T1, T2, T3> handler, bool oneShot = false, Action<Action> defer = null)`](#m-electron2d-eventconnection-subscribe-3-system-action-system-action-0-1-2-system-action-system-action-0-1-2-system-action-0-1-2-system-boolean-system-action-system-action) | Creates a managed subscription to an event with three typed arguments. |
+| [`public static EventConnection Subscribe<T1, T2, T3, T4>(Action<Action<T1, T2, T3, T4>> subscribe, Action<Action<T1, T2, T3, T4>> unsubscribe, Action<T1, T2, T3, T4> handler, bool oneShot = false, Action<Action> defer = null)`](#m-electron2d-eventconnection-subscribe-4-system-action-system-action-0-1-2-3-system-action-system-action-0-1-2-3-system-action-0-1-2-3-system-boolean-system-action-system-action) | Creates a managed subscription to an event with four typed arguments. |
 | [`public void Dispose()`](#m-electron2d-eventconnection-dispose) | Disconnects the wrapper and cancels deferred callbacks that have not started. |
 
 ## Property Descriptions
@@ -153,6 +155,72 @@ rollback is attempted; failures from both operations are reported as an `Aggrega
 **Remarks:** Event arguments are captured at emission time. For one-shot delivery, the wrapper is disconnected before the
 handler runs or is scheduled. Disposing a deferred connection cancels callbacks that have not started.
 
+
+<a id="m-electron2d-eventconnection-subscribe-3-system-action-system-action-0-1-2-system-action-system-action-0-1-2-system-action-0-1-2-system-boolean-system-action-system-action"></a>
+### `public static EventConnection Subscribe<T1, T2, T3>(Action<Action<T1, T2, T3>> subscribe, Action<Action<T1, T2, T3>> unsubscribe, Action<T1, T2, T3> handler, bool oneShot = false, Action<Action> defer = null)`
+
+Creates a managed subscription to an event with three typed arguments.
+
+**Type parameters**
+
+- `T1`: The first event argument type.
+- `T2`: The second event argument type.
+- `T3`: The third event argument type.
+
+**Parameters**
+
+- `subscribe`: Adds the supplied wrapper to the event.
+- `unsubscribe`: Removes the same wrapper from the event.
+- `handler`: Receives accepted event emissions.
+- `oneShot`: Whether only the first accepted emission can invoke the handler.
+- `defer`: An optional scheduler that accepts work for later execution. Pass [`SceneTree.Defer(Action)`](SceneTree.md#m-electron2d-scenetree-defer-system-action) for scene-tree
+deferred delivery; pass `null` for synchronous delivery.
+
+**Returns:** An idempotently disposable connection token.
+
+**Exceptions**
+
+- `ArgumentNullException`: A required delegate is `null`.
+- `Exception`: A supplied event accessor or scheduler throws. If subscription fails after partially attaching the wrapper,
+rollback is attempted; failures from both operations are reported as an `AggregateException`.
+
+**Remarks:** Event arguments are captured at emission time. For one-shot delivery, the wrapper is disconnected before the
+handler runs or is scheduled. Disposing a deferred connection cancels callbacks that have not started.
+
+
+<a id="m-electron2d-eventconnection-subscribe-4-system-action-system-action-0-1-2-3-system-action-system-action-0-1-2-3-system-action-0-1-2-3-system-boolean-system-action-system-action"></a>
+### `public static EventConnection Subscribe<T1, T2, T3, T4>(Action<Action<T1, T2, T3, T4>> subscribe, Action<Action<T1, T2, T3, T4>> unsubscribe, Action<T1, T2, T3, T4> handler, bool oneShot = false, Action<Action> defer = null)`
+
+Creates a managed subscription to an event with four typed arguments.
+
+**Type parameters**
+
+- `T1`: The first event argument type.
+- `T2`: The second event argument type.
+- `T3`: The third event argument type.
+- `T4`: The fourth event argument type.
+
+**Parameters**
+
+- `subscribe`: Adds the supplied wrapper to the event.
+- `unsubscribe`: Removes the same wrapper from the event.
+- `handler`: Receives accepted event emissions.
+- `oneShot`: Whether only the first accepted emission can invoke the handler.
+- `defer`: An optional scheduler that accepts work for later execution. Pass [`SceneTree.Defer(Action)`](SceneTree.md#m-electron2d-scenetree-defer-system-action) for scene-tree
+deferred delivery; pass `null` for synchronous delivery.
+
+**Returns:** An idempotently disposable connection token.
+
+**Exceptions**
+
+- `ArgumentNullException`: A required delegate is `null`.
+- `Exception`: A supplied event accessor or scheduler throws. If subscription fails after partially attaching the wrapper,
+rollback is attempted; failures from both operations are reported as an `AggregateException`.
+
+**Remarks:** Event arguments are captured at emission time. For one-shot delivery, the wrapper is disconnected before the
+handler runs or is scheduled. Disposing a deferred connection cancels callbacks that have not started.
+
+
 <a id="m-electron2d-eventconnection-dispose"></a>
 ### `public void Dispose()`
 
@@ -204,3 +272,7 @@ The token does not make the publisher, subscriber, handler state, or custom even
 Authored typed scene connections use registered compiled `SceneConnectionBinding` factories, copied payloads and dual endpoint cleanup. PackedScene captures/rebinds these subscriptions, including file archives v3. SceneState queries expose paths, diagnostic labels, flags, unbind count and typed payload snapshots. See [packed scenes](../components/packed-scenes.md) for ownership and persistence limits.
 
 [EventConnectionPhysicsTests](../../tests/Electron2D.Tests/EventConnectionPhysicsTests.cs) verifies all three prepared immediate arities and full selected CPU/GPU frames: 128 warm/128 measured frames, strict zero owner/all-thread managed bytes, 128 emissions of each arity and 64 Area body enters/exits. Identity, disposed subscriptions and collected callback-error recovery remain observable. Cold two-argument deferred/one-shot checks cover value capture, ordering, cancellation and recursion; the existing EventConnection suite retains concurrency, accessor rollback/removal/scheduler errors and all overloads. GPU execution uses CPU-only Vulkan; hardware/native/network/performance acceptance stays open.
+
+The three/four-argument overloads preserve the same connection token policy without reducing physical event payloads. EventConnectionPhysicsTests exercises all five immediate arities in full CPU/GPU frames at 0/0 warm owner/all-thread bytes, including Area shape RID/owner/index payloads with a disabled first body slot. Cold checks cover actual deferred shape one-shot capture, generic argument ordering/cancellation, recursive consumption, nulls, partial subscription rollback and failed removal.
+
+Captured reference arguments retain their original identity and ownership. Deferred delivery does not extend a borrowed input event lifetime; physical input subscriptions can inspect it synchronously, and independent deferred work must capture an owned copy during that callback. The three-argument picking fixture verifies the receiving viewport, live borrowed event and logical shape index through actual PushInput/PhysicsFrame.

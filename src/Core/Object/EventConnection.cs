@@ -7,9 +7,11 @@ namespace Electron2D;
 /// This type wraps ordinary C# event accessors without introducing string-addressed signals or untyped arguments.
 /// Disposing the connection removes its wrapper and cancels deferred callbacks that have not started. A callback that
 /// has already started can finish concurrently with disposal.
-/// Prepared reusable synchronous delivery with zero, one or two arguments creates no per-emission capture.
+/// Prepared reusable synchronous delivery with zero through four arguments creates no per-emission capture.
 /// Subscription, one-shot capture and deferred scheduling remain separate allocation paths; supplied handlers
 /// and accessors retain their own allocation behavior.
+/// Capturing a reference preserves identity, not ownership or lifetime. Borrowed callback values must remain
+/// valid under their owning API; deferred delivery does not extend a borrowed input event lifetime.
 /// </remarks>
 public sealed class EventConnection : IDisposable
 {
@@ -172,6 +174,87 @@ public sealed class EventConnection : IDisposable
             defer);
     }
 
+    /// <summary>Creates a managed subscription to an event with three typed arguments.</summary>
+    /// <typeparam name="T1">The first event argument type.</typeparam>
+    /// <typeparam name="T2">The second event argument type.</typeparam>
+    /// <typeparam name="T3">The third event argument type.</typeparam>
+    /// <param name="subscribe">Adds the supplied wrapper to the event.</param>
+    /// <param name="unsubscribe">Removes the same wrapper from the event.</param>
+    /// <param name="handler">Receives accepted event emissions.</param>
+    /// <param name="oneShot">Whether only the first accepted emission can invoke the handler.</param>
+    /// <param name="defer">
+    /// An optional scheduler that accepts work for later execution. Pass <see cref="SceneTree.Defer"/> for scene-tree
+    /// deferred delivery; pass <see langword="null"/> for synchronous delivery.
+    /// </param>
+    /// <returns>An idempotently disposable connection token.</returns>
+    /// <remarks>
+    /// Event arguments are captured at emission time. For one-shot delivery, the wrapper is disconnected before the
+    /// handler runs or is scheduled. Disposing a deferred connection cancels callbacks that have not started.
+    /// </remarks>
+    /// <exception cref="ArgumentNullException">A required delegate is <see langword="null"/>.</exception>
+    /// <exception cref="Exception">
+    /// A supplied event accessor or scheduler throws. If subscription fails after partially attaching the wrapper,
+    /// rollback is attempted; failures from both operations are reported as an <see cref="AggregateException"/>.
+    /// </exception>
+    public static EventConnection Subscribe<T1, T2, T3>(
+        Action<Action<T1, T2, T3>> subscribe,
+        Action<Action<T1, T2, T3>> unsubscribe,
+        Action<T1, T2, T3> handler,
+        bool oneShot = false,
+        Action<Action>? defer = null)
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+
+        return Create(
+            subscribe,
+            unsubscribe,
+            handler,
+            connection => connection.Dispatch,
+            oneShot,
+            defer);
+    }
+
+    /// <summary>Creates a managed subscription to an event with four typed arguments.</summary>
+    /// <typeparam name="T1">The first event argument type.</typeparam>
+    /// <typeparam name="T2">The second event argument type.</typeparam>
+    /// <typeparam name="T3">The third event argument type.</typeparam>
+    /// <typeparam name="T4">The fourth event argument type.</typeparam>
+    /// <param name="subscribe">Adds the supplied wrapper to the event.</param>
+    /// <param name="unsubscribe">Removes the same wrapper from the event.</param>
+    /// <param name="handler">Receives accepted event emissions.</param>
+    /// <param name="oneShot">Whether only the first accepted emission can invoke the handler.</param>
+    /// <param name="defer">
+    /// An optional scheduler that accepts work for later execution. Pass <see cref="SceneTree.Defer"/> for scene-tree
+    /// deferred delivery; pass <see langword="null"/> for synchronous delivery.
+    /// </param>
+    /// <returns>An idempotently disposable connection token.</returns>
+    /// <remarks>
+    /// Event arguments are captured at emission time. For one-shot delivery, the wrapper is disconnected before the
+    /// handler runs or is scheduled. Disposing a deferred connection cancels callbacks that have not started.
+    /// </remarks>
+    /// <exception cref="ArgumentNullException">A required delegate is <see langword="null"/>.</exception>
+    /// <exception cref="Exception">
+    /// A supplied event accessor or scheduler throws. If subscription fails after partially attaching the wrapper,
+    /// rollback is attempted; failures from both operations are reported as an <see cref="AggregateException"/>.
+    /// </exception>
+    public static EventConnection Subscribe<T1, T2, T3, T4>(
+        Action<Action<T1, T2, T3, T4>> subscribe,
+        Action<Action<T1, T2, T3, T4>> unsubscribe,
+        Action<T1, T2, T3, T4> handler,
+        bool oneShot = false,
+        Action<Action>? defer = null)
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+
+        return Create(
+            subscribe,
+            unsubscribe,
+            handler,
+            connection => connection.Dispatch,
+            oneShot,
+            defer);
+    }
+
     /// <summary>Disconnects the wrapper and cancels deferred callbacks that have not started.</summary>
     /// <remarks>
     /// The operation is idempotent and safe to race with event delivery. It does not wait for a handler that has already
@@ -297,6 +380,48 @@ public sealed class EventConnection : IDisposable
             handler(first, second);
     }
 
+    private void Dispatch<T1, T2, T3>(T1 first, T2 second, T3 third)
+    {
+        if (_oneShot)
+        {
+            DispatchOneShotTriple(first, second, third);
+            return;
+        }
+
+        if (!TryGetScheduler(out var defer))
+            return;
+
+        if (defer is not null)
+        {
+            DispatchDeferred(defer, first, second, third);
+            return;
+        }
+
+        if (TryGetHandler<Action<T1, T2, T3>>(out var handler))
+            handler(first, second, third);
+    }
+
+    private void Dispatch<T1, T2, T3, T4>(T1 first, T2 second, T3 third, T4 fourth)
+    {
+        if (_oneShot)
+        {
+            DispatchOneShotQuadruple(first, second, third, fourth);
+            return;
+        }
+
+        if (!TryGetScheduler(out var defer))
+            return;
+
+        if (defer is not null)
+        {
+            DispatchDeferred(defer, first, second, third, fourth);
+            return;
+        }
+
+        if (TryGetHandler<Action<T1, T2, T3, T4>>(out var handler))
+            handler(first, second, third, fourth);
+    }
+
     private void DispatchOneShotValue<T>(T value) =>
         DispatchOneShot<Action<T>>(handler => handler(value));
 
@@ -308,6 +433,18 @@ public sealed class EventConnection : IDisposable
 
     private void DispatchDeferred<T1, T2>(Action<Action> defer, T1 first, T2 second) =>
         defer(() => InvokeDeferred(first, second));
+
+    private void DispatchOneShotTriple<T1, T2, T3>(T1 first, T2 second, T3 third) =>
+        DispatchOneShot<Action<T1, T2, T3>>(handler => handler(first, second, third));
+
+    private void DispatchDeferred<T1, T2, T3>(Action<Action> defer, T1 first, T2 second, T3 third) =>
+        defer(() => InvokeDeferred(first, second, third));
+
+    private void DispatchOneShotQuadruple<T1, T2, T3, T4>(T1 first, T2 second, T3 third, T4 fourth) =>
+        DispatchOneShot<Action<T1, T2, T3, T4>>(handler => handler(first, second, third, fourth));
+
+    private void DispatchDeferred<T1, T2, T3, T4>(Action<Action> defer, T1 first, T2 second, T3 third, T4 fourth) =>
+        defer(() => InvokeDeferred(first, second, third, fourth));
 
     private void DispatchOneShot<TDelegate>(Action<TDelegate> invoke)
         where TDelegate : Delegate
@@ -413,6 +550,18 @@ public sealed class EventConnection : IDisposable
     {
         if (TryGetHandler<Action<T1, T2>>(out var handler))
             handler(first, second);
+    }
+
+    private void InvokeDeferred<T1, T2, T3>(T1 first, T2 second, T3 third)
+    {
+        if (TryGetHandler<Action<T1, T2, T3>>(out var handler))
+            handler(first, second, third);
+    }
+
+    private void InvokeDeferred<T1, T2, T3, T4>(T1 first, T2 second, T3 third, T4 fourth)
+    {
+        if (TryGetHandler<Action<T1, T2, T3, T4>>(out var handler))
+            handler(first, second, third, fourth);
     }
 
     private void InvokePending<TDelegate>(Action<TDelegate> invoke)

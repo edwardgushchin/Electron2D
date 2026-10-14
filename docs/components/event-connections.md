@@ -35,7 +35,7 @@ The component depends only on .NET delegates, `IDisposable`, locking, and except
 
 ## Current implementation status
 
-Implemented and covered by executable positive, negative, failure-injection, re-entrancy, and concurrency checks for the zero-, one-, and two-argument overloads.
+Implemented and covered by executable positive, negative, failure-injection, re-entrancy, and concurrency checks for the zero- through four-argument overloads.
 
 ## Exclusions
 
@@ -45,6 +45,8 @@ There is no dynamic event lookup, generic event registry, untyped argument list,
 
 `tests/Electron2D.Tests/Program.cs` verifies ordinary and one-shot connections, recursive/concurrent emission, deferred ordering and cancellation, exception policy, accessor rollback, removal failures, scheduler failures, null validation, native duplicate handler behavior, and sender-first two-argument preservation.
 
-Prepared reusable synchronous subscriptions with zero, one or two arguments create no per-emission capture. One-shot delivery and deferred scheduling retain their separate capture paths; no zero-allocation claim is made for them, subscription/accessor work or allocating user handlers. This preserves argument values, lock boundaries, detach-before-handler ordering, cancellation and exception policy under ADR 0010.
+Prepared reusable synchronous subscriptions with zero through four arguments create no per-emission capture. One-shot delivery and deferred scheduling retain their separate capture paths; no zero-allocation claim is made for them, subscription/accessor work or allocating user handlers. This preserves argument values, lock boundaries, detach-before-handler ordering, cancellation and exception policy under ADR 0010.
 
 [EventConnectionPhysicsTests](../../tests/Electron2D.Tests/EventConnectionPhysicsTests.cs) verifies all three prepared immediate arities and full selected CPU/GPU frames: 128 warm/128 measured frames, strict zero owner/all-thread managed bytes, 128 emissions of each arity and 64 Area body enters/exits. Identity, disposed subscriptions and collected callback-error recovery remain observable. Cold two-argument deferred/one-shot checks cover value capture, ordering, cancellation and recursion; the existing EventConnection suite retains concurrency, accessor rollback/removal/scheduler errors and all overloads. GPU execution uses CPU-only Vulkan; hardware/native/network/performance acceptance stays open.
+
+[Extended event arities](../classes/EventConnection.md) cover current 3-argument picking and 4-argument body/Area shape signatures under ADR 0010 without altering event payloads. The shared physics fixture now retains 128 measured emissions of each arity, 64 body and 64 shape enters/exits and exact RID/owner/disabled-first shape indices at strict 0/0 warm bytes on selected CPU/GPU serial/separate profiles. Deferred/one-shot calls retain their separate capture allocation paths.

@@ -121,7 +121,7 @@ ADR 0003 publishes `IsDisposed` as soon as disposal starts so concurrent callers
 <a id="adr-0010"></a>
 ## ADR 0010: Add owned one-shot and deferred wrappers for typed events
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 - Status: Accepted
 - Scope: Typed event subscription lifecycle and delivery policy
@@ -136,7 +136,7 @@ These capabilities are useful independently of scripting and serialization. They
 ### Decision
 
 - `EventConnection` wraps typed event add/remove accessors and implements `IDisposable`.
-- Public overloads support the zero-, one-, and two-argument event shapes used by the engine.
+- Public overloads support every current Action event arity from zero through four arguments. Three arguments cover physical input picking; four retain complete Area/RigidBody shape RID, owner and shape-index payloads. Existing event signatures and ownership are unchanged. Each overload provides the same reusable, one-shot, deferred, cancellation and failure semantics, and prepared reusable synchronous delivery has no per-emission capture. Higher arity overloads use the same retained connection state machine rather than an untyped argument wrapper or a second signal system.
 - `oneShot: true` atomically consumes and disconnects the wrapper before invoking or scheduling the handler.
 - An optional `Action<Action>` scheduler provides deferred delivery without making Core depend on Scene; callers normally pass `SceneTree.Defer`.
 - Disposing a connection cancels deferred callbacks that have not begun, but does not wait for running callbacks.

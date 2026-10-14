@@ -1592,6 +1592,16 @@
     {
       "electron2d": "method:Electron2D.PropertyDescriptor.Through`3(PropertyDescriptor<TOwner, TChild>,PropertyDescriptor<TChild, TValue>)",
       "reason": "Typed compound/indexed-property construction projects the reference Object get_indexed/set_indexed path roles under ADR 0005, without a path wrapper, reflection dispatch or universal values. Executable typed indexed property projection under ADRs 0001/0004/0005: compiled PropertyDescriptor object/component/array/dictionary compositions replace dynamic property names and Variant. Reads resolve current links; writes propagate typed setters/validators, preserve readonly/lifetime/owner/capture guards, value-copy behavior and visible committed inner writes after outer failure. Array/dictionary writes copy containers and retain comparers. IndexedPropertyTests verifies boundaries, live rebinding, errors, copied containers, Tween and saved scenes, warmed zero-allocation scalar/object access and actual Linux Wayland GPU/hardware compatibility atlas/position pixels. Synthetic projections are not stored and have no manufactured revert defaults. Foreign platforms/editor/native allocation/human gates remain explicit."
+    },
+    {
+      "electron2d": "method:Electron2D.EventConnection.Subscribe`3(Action<Action<T1, T2, T3>>,Action<Action<T1, T2, T3>>,Action<T1, T2, T3>,System.Boolean,System.Action<System.Action>)",
+      "reason": "ADR 0010: strongly typed subscription with complete three/four argument physical picking and shape payloads. Shared token preserves immediate/deferred/one-shot cancellation and failure policy. EventConnectionPhysicsTests verifies all current arities, real Area shape RID/owner/index payloads, deferred capture and strict zero warm reusable full-frame bytes. Deferred/one-shot allocation and broader acceptance remain separate.",
+      "adr": "adr-0010"
+    },
+    {
+      "electron2d": "method:Electron2D.EventConnection.Subscribe`4(Action<Action<T1, T2, T3, T4>>,Action<Action<T1, T2, T3, T4>>,Action<T1, T2, T3, T4>,System.Boolean,System.Action<System.Action>)",
+      "reason": "ADR 0010: strongly typed subscription with complete three/four argument physical picking and shape payloads. Shared token preserves immediate/deferred/one-shot cancellation and failure policy. EventConnectionPhysicsTests verifies all current arities, real Area shape RID/owner/index payloads, deferred capture and strict zero warm reusable full-frame bytes. Deferred/one-shot allocation and broader acceptance remain separate.",
+      "adr": "adr-0010"
     }
   ],
   "statusGroups": [
