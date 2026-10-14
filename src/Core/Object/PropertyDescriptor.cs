@@ -62,7 +62,7 @@ public abstract partial class PropertyDescriptor
     /// <returns><see langword="true"/> when the property can currently be reverted; otherwise <see langword="false"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="owner"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="owner"/> is not assignable to <see cref="OwnerType"/>.</exception>
-    /// <exception cref="ObjectDisposedException">Disposal of <paramref name="owner"/> has started.</exception>
+    /// <exception cref="ObjectDisposedException">The owner is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">A configured getter or revert-value delegate throws.</exception>
     public abstract bool CanRevert(ElectronObject owner);
 
@@ -103,7 +103,11 @@ public abstract partial class PropertyDescriptor
 /// <typeparam name="TValue">The property's value type.</typeparam>
 /// <remarks>
 /// Delegate execution is synchronous on the caller's thread. The descriptor is immutable, but access to an owner
-/// follows that owner's threading rules. Packed-scene storage accepts unmanaged values, strings, resources,
+/// follows that owner's threading rules. Reads, revert-value factories and comparison may run on the exact
+/// thread performing pre-delete or cleanup; writes and restoration reject once disposal starts. Owner callbacks
+/// retain their own thread, capture and physics-phase checks. Revert-value availability is reported separately
+/// by TryGetRevertValue; CanRevert compares the current and default values. Factory results are borrowed according
+/// to the configured delegate, with no implicit copy. Packed-scene storage accepts unmanaged values, strings, resources,
 /// node references on node owners, and the explicit vector, color, float, string and polygon-index array profiles. Node references
 /// are stored as relative paths and resolved after scene construction. Stored arrays are cloned
 /// during capture and restoration, and their revert comparison uses element values.
@@ -158,7 +162,7 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     /// <param name="owner">The owner passed to the configured getter.</param>
     /// <returns>The current property value.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="owner"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ObjectDisposedException">Disposal of <paramref name="owner"/> has started.</exception>
+    /// <exception cref="ObjectDisposedException">The owner is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">The configured getter throws.</exception>
     public TValue GetValue(TOwner owner)
     {
@@ -176,7 +180,8 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     /// <exception cref="Exception">The configured validator or setter throws.</exception>
     public void SetValue(TOwner owner, TValue value)
     {
-        EnsureAlive(owner);
+        ArgumentNullException.ThrowIfNull(owner);
+        ObjectDisposedException.ThrowIf(owner.IsDisposed, owner);
 
         if (_setter is null)
             throw new InvalidOperationException($"Property '{Name}' is read-only.");
@@ -192,7 +197,7 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     /// <param name="value">Receives the revert value, or <see langword="default"/> when no factory exists.</param>
     /// <returns><see langword="true"/> when a revert-value factory exists; otherwise <see langword="false"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="owner"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ObjectDisposedException">Disposal of <paramref name="owner"/> has started.</exception>
+    /// <exception cref="ObjectDisposedException">The owner is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">The configured revert-value factory throws.</exception>
     public bool TryGetRevertValue(TOwner owner, out TValue value)
     {
@@ -219,6 +224,7 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     public override void Revert(ElectronObject owner)
     {
         var typedOwner = GetOwner(owner);
+        ObjectDisposedException.ThrowIf(typedOwner.IsDisposed, typedOwner);
 
         if (!TryGetRevertValue(typedOwner, out var value))
             throw new InvalidOperationException($"Property '{Name}' has no revert value.");
@@ -286,7 +292,7 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     private static void EnsureAlive(TOwner owner)
     {
         ArgumentNullException.ThrowIfNull(owner);
-        ObjectDisposedException.ThrowIf(owner.IsDisposed, owner);
+        owner.EnsurePropertyInspection();
     }
 
     internal override void WriteFileValue(ElectronObject owner, StoredPropertyValue value, ResourceArchiveWrite context, StreamPeerBuffer stream)
@@ -308,7 +314,7 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     private TOwner GetOwner(ElectronObject owner)
     {
         EnsureCompatible(owner);
-        ObjectDisposedException.ThrowIf(owner.IsDisposed, owner);
+        owner.EnsurePropertyInspection();
         return (TOwner)owner;
     }
 

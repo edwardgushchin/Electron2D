@@ -977,6 +977,26 @@
       "electron2d": "method:Electron2D.ElectronObject.ToString()",
       "godot": "Object::method:to_string()",
       "reason": "Ordinary virtual C# diagnostic projection; customization and calls share one method."
+    },
+    {
+      "godot": "Object::method:_get(StringName:)",
+      "electron2d": "method:Electron2D.PropertyDescriptor<TOwner, TValue>.GetValue(TOwner)",
+      "reason": "ADRs 0001/0005/0009: explicit typed descriptors and live getter/setter/revert factories replace the name/Variant callback boundary. ObjectPropertyTests checks immutable discovery snapshots, compatible replacement/filtering and invalid lists, custom owner policy, default presence including null versus value-difference inspection, live factories, readonly/range/callback errors and committed writes. Exact teardown-thread inspection is retained while writes, foreign-thread and terminal access reject. Selected CPU/GPU full frames retain physical setters, owner/capture guards, permitted post-solver edits and callback-error recovery; warmed inspection/write/revert intervals enforce zero owner/all-thread bytes. This is the typed C# tooling projection, not an arbitrary dynamic-name property resolver or editor/native acceptance."
+    },
+    {
+      "godot": "Object::method:_set(StringName:,Variant:)",
+      "electron2d": "method:Electron2D.PropertyDescriptor<TOwner, TValue>.SetValue(TOwner,TValue)",
+      "reason": "ADRs 0001/0005/0009: explicit typed descriptors and live getter/setter/revert factories replace the name/Variant callback boundary. ObjectPropertyTests checks immutable discovery snapshots, compatible replacement/filtering and invalid lists, custom owner policy, default presence including null versus value-difference inspection, live factories, readonly/range/callback errors and committed writes. Exact teardown-thread inspection is retained while writes, foreign-thread and terminal access reject. Selected CPU/GPU full frames retain physical setters, owner/capture guards, permitted post-solver edits and callback-error recovery; warmed inspection/write/revert intervals enforce zero owner/all-thread bytes. This is the typed C# tooling projection, not an arbitrary dynamic-name property resolver or editor/native acceptance."
+    },
+    {
+      "godot": "Object::method:_property_get_revert(StringName:)",
+      "electron2d": "method:Electron2D.PropertyDescriptor<TOwner, TValue>.TryGetRevertValue(TOwner,ref TValue)",
+      "reason": "ADRs 0001/0005/0009: explicit typed descriptors and live getter/setter/revert factories replace the name/Variant callback boundary. ObjectPropertyTests checks immutable discovery snapshots, compatible replacement/filtering and invalid lists, custom owner policy, default presence including null versus value-difference inspection, live factories, readonly/range/callback errors and committed writes. Exact teardown-thread inspection is retained while writes, foreign-thread and terminal access reject. Selected CPU/GPU full frames retain physical setters, owner/capture guards, permitted post-solver edits and callback-error recovery; warmed inspection/write/revert intervals enforce zero owner/all-thread bytes. This is the typed C# tooling projection, not an arbitrary dynamic-name property resolver or editor/native acceptance."
+    },
+    {
+      "godot": "Object::method:property_get_revert(StringName:)",
+      "electron2d": "method:Electron2D.PropertyDescriptor<TOwner, TValue>.TryGetRevertValue(TOwner,ref TValue)",
+      "reason": "ADRs 0001/0005/0009: explicit typed descriptors and live getter/setter/revert factories replace the name/Variant callback boundary. ObjectPropertyTests checks immutable discovery snapshots, compatible replacement/filtering and invalid lists, custom owner policy, default presence including null versus value-difference inspection, live factories, readonly/range/callback errors and committed writes. Exact teardown-thread inspection is retained while writes, foreign-thread and terminal access reject. Selected CPU/GPU full frames retain physical setters, owner/capture guards, permitted post-solver edits and callback-error recovery; warmed inspection/write/revert intervals enforce zero owner/all-thread bytes. This is the typed C# tooling projection, not an arbitrary dynamic-name property resolver or editor/native acceptance."
     }
   ],
   "extras": [
@@ -1401,22 +1421,7 @@
       "adr": "adr-0005"
     },
     {
-      "electron2d": "method:Electron2D.PropertyDescriptor<TOwner, TValue>.GetValue(TOwner)",
-      "reason": "Typed owner/value descriptor replacing Variant dictionaries.",
-      "adr": "adr-0005"
-    },
-    {
       "electron2d": "method:Electron2D.PropertyDescriptor<TOwner, TValue>.Revert(Electron2D.ElectronObject)",
-      "reason": "Typed owner/value descriptor replacing Variant dictionaries.",
-      "adr": "adr-0005"
-    },
-    {
-      "electron2d": "method:Electron2D.PropertyDescriptor<TOwner, TValue>.SetValue(TOwner,TValue)",
-      "reason": "Typed owner/value descriptor replacing Variant dictionaries.",
-      "adr": "adr-0005"
-    },
-    {
-      "electron2d": "method:Electron2D.PropertyDescriptor<TOwner, TValue>.TryGetRevertValue(TOwner,ref TValue)",
       "reason": "Typed owner/value descriptor replacing Variant dictionaries.",
       "adr": "adr-0005"
     },
@@ -2286,6 +2291,21 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0003/0005: immutable process identity, CLR class-name/ancestor metadata and C# ToString/Dispose projections. ObjectIdentityTests verifies exact/base/sibling/case/generic/script-alias checks, virtual diagnostics, successful/failed retirement and selected CPU/GPU body/resource branches. Four serial/separate software-Vulkan profiles retain 128 warm/128 full-frame inspections at strict 0/0 owner/all-thread bytes. Constructor concurrency and exactly-once cleanup retain existing tests; this does not certify other inherited or native/network/platform contracts."
+    },
+    {
+      "godot": [
+        "Object::method:_get(StringName:)",
+        "Object::method:_set(StringName:,Variant:)",
+        "Object::method:_get_property_list()",
+        "Object::method:_property_can_revert(StringName:)",
+        "Object::method:_property_get_revert(StringName:)",
+        "Object::method:_validate_property(Dictionary:)",
+        "Object::method:get_property_list()",
+        "Object::method:property_can_revert(StringName:)",
+        "Object::method:property_get_revert(StringName:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0001/0005/0009: explicit typed descriptors and live getter/setter/revert factories replace the name/Variant callback boundary. ObjectPropertyTests checks immutable discovery snapshots, compatible replacement/filtering and invalid lists, custom owner policy, default presence including null versus value-difference inspection, live factories, readonly/range/callback errors and committed writes. Exact teardown-thread inspection is retained while writes, foreign-thread and terminal access reject. Selected CPU/GPU full frames retain physical setters, owner/capture guards, permitted post-solver edits and callback-error recovery; warmed inspection/write/revert intervals enforce zero owner/all-thread bytes. This is the typed C# tooling projection, not an arbitrary dynamic-name property resolver or editor/native acceptance."
     }
   ]
 }

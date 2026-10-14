@@ -1513,3 +1513,5 @@ Dispose/ToString projections. Shared CPU/GPU serial/separate scene tests retain
 Body/Area/Resource branches, compiled subclasses, alias rejection and post-retirement
 metadata, with 0/0 warm full-frame bytes. Other inherited APIs and final acceptance
 remain separate gates.
+
+ElectronObject and its typed PropertyDescriptor family retain exact teardown-thread inspection and strict disposal-time writes. [ObjectPropertyTests](../tests/Electron2D.Tests/ObjectPropertyTests.cs) verifies discovery/defaults/errors and selected CPU/GPU full-frame property flows; [the owning lifecycle component](components/object-lifecycle.md) records the verification limits.

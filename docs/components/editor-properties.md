@@ -1,6 +1,6 @@
 # Typed editor properties component
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 ## Compiled indexed properties
 
@@ -79,3 +79,5 @@ The executable test verifies discovery, storage metadata, typed reads and writes
 Node.GetNodeAndResource reads resource references through the same typed descriptors, including read-only/derived schemas, without reflection-driven property invocation or an untyped public value accessor. Scalar/null properties delimit the returned remainder; getter failures retain their normal error behavior.
 
 The internal indexed-property correspondence was inspected against pinned [object indexed reads and back-propagated writes](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/object.cpp). Compiled descriptors preserve typed access under ADRs 0001/0004/0005; dynamic property-name dispatch remains excluded.
+
+Typed GetValue/TryGetRevertValue/CanRevert inspection follows ADR 0009 during exact-thread teardown; SetValue and Revert reject once disposal starts, before restoration invokes a factory. Default availability is separate from CanRevert's retained value-difference policy. Null defaults are available values, factory results retain delegate ownership, validators reject before writing and committed setter changes remain visible after a callback throws. [ObjectPropertyTests](../../tests/Electron2D.Tests/ObjectPropertyTests.cs) exercises discovery snapshots, filtering/replacement/errors, dynamic defaults, custom owner policy and actual CPU/GPU serial/separate full-frame property flows at zero warmed owner/all-thread bytes. It preserves permitted post-solver mass edits, owner/capture rejection and recovery after a collected callback failure. Software Vulkan is functional evidence only; hardware/editor/native/platform gates remain open.

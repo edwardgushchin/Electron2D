@@ -10,6 +10,17 @@ using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_GLYPH") is { } glyphProfile) { if (glyphProfile == "managed") CanvasGlyphTests.RunManaged(); else if (glyphProfile == "modules") CanvasGlyphTests.RunModules(); else CanvasGlyphTests.RunNative(glyphProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OBJECT_PROPERTIES") is { } propertyProfile)
+{
+    ObjectPropertyTests.Run(propertyProfile switch
+    {
+        "cpu" => PhysicsServer.Backend.CPU,
+        "gpu" => PhysicsServer.Backend.GPU,
+        _ => throw new ArgumentException("Use cpu or gpu for object properties.")
+    });
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OBJECT_IDENTITY") is { } identityProfile)
 {
     VerifyInstanceIds(); VerifyLifetime();
@@ -1389,6 +1400,7 @@ CanvasTimingTests.Run();
 VerifyInstanceIds();
 VerifyLifetime();
 ObjectIdentityTests.Run(PhysicsServer.Backend.CPU); ObjectIdentityTests.Run(PhysicsServer.Backend.GPU);
+ObjectPropertyTests.Run(PhysicsServer.Backend.CPU); ObjectPropertyTests.Run(PhysicsServer.Backend.GPU);
 WeakRefTests.Run();
 VerifyNotificationsAndProperties();
 VerifyEventConnections();

@@ -1,6 +1,6 @@
 # Core domain
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 ## Skeletal schema policy
 
@@ -241,3 +241,7 @@ OS restart-on-exit configuration is a process-wide, desktop-only request with a 
 [Mutex](../classes/Mutex.md) and [Semaphore](../classes/Semaphore.md) are caller-owned synchronization primitives over the worker foundation. Their recursive critical sections, counted signals, typed failures and joined cleanup support actual worker-to-scene publication; they grant no thread-affine scene or renderer access. See [synchronization](../components/synchronization.md) and ADR 0104.
 
 The fixed locale catalog exposes language/script/country names, aliases, script/regional defaults and gettext definitions through TranslationServer. Translation resources without a caller PluralSelector use these prepared integer rules; copying and archive loading restore the automatic locale policy. Unknown multi-form rules require a caller selector. Runtime Culture remains CultureInfo. Decimal CLDR category selection and general PO/MO import are separate capabilities.
+
+Typed property inspection uses the exact teardown-thread exception from ADR 0009: GetValue, TryGetRevertValue and CanRevert remain usable in pre-delete/cleanup on that thread; foreign-thread and terminal access fail. SetValue and Revert reject once disposal starts. TryGetRevertValue reports factory presence even for a null or unchanged default, while CanRevert and PropertyCanRevert retain the current value-difference policy. Factories run on each request; their results follow delegate ownership with no implicit copy. Validators reject before the setter, and an exception after a setter commits does not undo that write. Ordinary owner setters and getters retain thread, capture and numerical-phase rules.
+
+[ObjectPropertyTests](../../tests/Electron2D.Tests/ObjectPropertyTests.cs) executes discovery snapshots, compatible replacement/filtering and invalid lists, owner policy, live/default/null/array values, readonly/validation/delegate errors and teardown inspection. Explicit CPU/GPU serial and separate-thread profiles use real RigidBody properties, permitted post-solver mass edits, owner/capture rejection and callback-error recovery. Each retains 128 warm/128 measured full frames with typed inspection, velocity writes and reversion at strict zero owner/all-thread managed bytes. GPU runs use CPU-only Vulkan; this does not establish hardware performance, editor automation or native/platform acceptance.

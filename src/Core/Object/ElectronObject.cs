@@ -218,7 +218,7 @@ public abstract partial class ElectronObject : IDisposable
     /// <exception cref="ArgumentNullException"><paramref name="property"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="property"/> is not compatible with this object.</exception>
     /// <exception cref="InvalidOperationException">The descriptor has no writable revert value.</exception>
-    /// <exception cref="ObjectDisposedException">The object is disposing on another thread or has finished disposing.</exception>
+    /// <exception cref="ObjectDisposedException">Disposal of the object has started.</exception>
     /// <exception cref="Exception">A descriptor delegate throws.</exception>
     public void RevertProperty(PropertyDescriptor property)
     {
@@ -417,6 +417,8 @@ public abstract partial class ElectronObject : IDisposable
         ScriptChanged = null;
         GC.SuppressFinalize(this);
     }
+
+    internal void EnsurePropertyInspection() => ThrowIfDisposed();
 
     /// <summary>Rejects access after disposal starts, except on the thread currently running disposal callbacks.</summary>
     /// <exception cref="ObjectDisposedException">The object is disposing on another thread or has finished disposing.</exception>

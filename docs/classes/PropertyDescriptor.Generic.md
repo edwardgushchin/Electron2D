@@ -1,6 +1,6 @@
 # PropertyDescriptor\<TOwner, TValue\>
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Inherits:** [PropertyDescriptor](PropertyDescriptor.md)
 
@@ -40,6 +40,9 @@ The generic descriptor provides compile-time typed property reads, optional writ
 
 Delegate execution is synchronous on the caller's thread. The descriptor is immutable, but access to an owner
 follows that owner's threading rules.
+
+
+Typed property inspection uses the exact teardown-thread exception from ADR 0009: GetValue, TryGetRevertValue and CanRevert remain usable in pre-delete/cleanup on that thread; foreign-thread and terminal access fail. SetValue and Revert reject once disposal starts. TryGetRevertValue reports factory presence even for a null or unchanged default, while CanRevert and PropertyCanRevert retain the current value-difference policy. Factories run on each request; their results follow delegate ownership with no implicit copy. Validators reject before the setter, and an exception after a setter commits does not undo that write. Ordinary owner setters and getters retain thread, capture and numerical-phase rules.
 
 ## Examples
 
@@ -107,7 +110,7 @@ Reads the property's current value from a compatible live owner.
 **Exceptions**
 
 - `ArgumentNullException`: `owner` is `null`.
-- `ObjectDisposedException`: Disposal of `owner` has started.
+- `ObjectDisposedException`: The owner is disposing on another thread or has finished disposing.
 - `Exception`: The configured getter throws.
 
 <a id="m-electron2d-propertydescriptor-2-setvalue-0-1"></a>
@@ -143,7 +146,7 @@ Attempts to compute the property's current revert value.
 **Exceptions**
 
 - `ArgumentNullException`: `owner` is `null`.
-- `ObjectDisposedException`: Disposal of `owner` has started.
+- `ObjectDisposedException`: The owner is disposing on another thread or has finished disposing.
 - `Exception`: The configured revert-value factory throws.
 
 <a id="m-electron2d-propertydescriptor-2-canrevert-electron2d-electronobject"></a>
@@ -161,7 +164,7 @@ Determines whether a compatible live owner's value currently differs from its re
 
 - `ArgumentNullException`: `owner` is `null`.
 - `ArgumentException`: `owner` is not assignable to [`PropertyDescriptor.OwnerType`](PropertyDescriptor.md#p-electron2d-propertydescriptor-ownertype).
-- `ObjectDisposedException`: Disposal of `owner` has started.
+- `ObjectDisposedException`: The owner is disposing on another thread or has finished disposing.
 - `Exception`: A configured getter or revert-value delegate throws.
 
 <a id="m-electron2d-propertydescriptor-2-revert-electron2d-electronobject"></a>
@@ -191,7 +194,7 @@ The descriptor is immutable after construction. Revert values are not snapshots:
 
 ## Invariants and errors
 
-- Null owners throw `ArgumentNullException`; disposed owners throw `ObjectDisposedException`.
+- Null owners throw `ArgumentNullException`; terminal or foreign-thread disposal access throws `ObjectDisposedException`. Inspection on the exact teardown thread is permitted; writes reject every disposing owner.
 - An owner of the wrong runtime type passed through the base API throws `ArgumentException`.
 - Writes to a read-only descriptor and reverts without a revert factory throw `InvalidOperationException`.
 - A validator returning `false` causes `ArgumentOutOfRangeException` before the setter runs.
@@ -224,3 +227,5 @@ File values use the exact TValue schema with registered codecs, graph-aware reso
 ## Terrain graph restoration
 
 The internal stored-restore delegate can stage terrain indices before graph association, without exposing a second public setter. Ordinary typed writes keep their configured setter and validation; portable codecs still validate owner/value types and copied values. Terrain file/scene tests verify this distinction, including inactive peering values.
+
+[ObjectPropertyTests](../../tests/Electron2D.Tests/ObjectPropertyTests.cs) executes discovery snapshots, compatible replacement/filtering and invalid lists, owner policy, live/default/null/array values, readonly/validation/delegate errors and teardown inspection. Explicit CPU/GPU serial and separate-thread profiles use real RigidBody properties, permitted post-solver mass edits, owner/capture rejection and callback-error recovery. Each retains 128 warm/128 measured full frames with typed inspection, velocity writes and reversion at strict zero owner/all-thread managed bytes. GPU runs use CPU-only Vulkan; this does not establish hardware performance, editor automation or native/platform acceptance.

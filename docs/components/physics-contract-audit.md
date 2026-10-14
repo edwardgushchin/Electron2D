@@ -173,8 +173,8 @@ operations remain open in the ledger.
 The complete generated ledger remains the per-declaration list. Current own
 physics families contain 686 Implemented, 151 Partial and 55 Excluded rows,
 with no own Blocked or Unimplemented rows. Shared inherited declarations still
-contain 141 Partial, 17 Blocked and 71 Unimplemented rows after the current typed
-class-identity, glyph-region and indexed-property projections; cross-domain consumers
+contain 136 Partial, 17 Blocked and 67 Unimplemented rows after the current typed
+property, class-identity, glyph-region and indexed-property projections; cross-domain consumers
 now contain 76 Implemented, two Partial and no Unimplemented rows after the
 captured numerical-thread implementation. These are declaration counts,
 not a claim that all numerical behaviors pass. The exact inherited names and
@@ -1054,3 +1054,5 @@ Dispose/ToString projections. Shared CPU/GPU serial/separate scene tests retain
 Body/Area/Resource branches, compiled subclasses, alias rejection and post-retirement
 metadata, with 0/0 warm full-frame bytes. Other inherited APIs and final acceptance
 remain separate gates.
+
+[ObjectPropertyTests](../../tests/Electron2D.Tests/ObjectPropertyTests.cs) executes discovery snapshots, compatible replacement/filtering and invalid lists, owner policy, live/default/null/array values, readonly/validation/delegate errors and teardown inspection. Explicit CPU/GPU serial and separate-thread profiles use real RigidBody properties, permitted post-solver mass edits, owner/capture rejection and callback-error recovery. Each retains 128 warm/128 measured full frames with typed inspection, velocity writes and reversion at strict zero owner/all-thread managed bytes. GPU runs use CPU-only Vulkan; this does not establish hardware performance, editor automation or native/platform acceptance.

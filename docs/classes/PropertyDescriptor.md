@@ -1,6 +1,6 @@
 # PropertyDescriptor
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Inherits:** —
 
@@ -44,6 +44,9 @@ Describes a typed property exposed to Electron2D tooling.
 
 This is the non-generic discovery surface used in property lists. It contains immutable metadata and revert
 operations but deliberately exposes no Variant-like untyped getter or setter.
+
+
+Typed property inspection uses the exact teardown-thread exception from ADR 0009: GetValue, TryGetRevertValue and CanRevert remain usable in pre-delete/cleanup on that thread; foreign-thread and terminal access fail. SetValue and Revert reject once disposal starts. TryGetRevertValue reports factory presence even for a null or unchanged default, while CanRevert and PropertyCanRevert retain the current value-difference policy. Factories run on each request; their results follow delegate ownership with no implicit copy. Validators reject before the setter, and an exception after a setter commits does not undo that write. Ordinary owner setters and getters retain thread, capture and numerical-phase rules.
 
 ## Examples
 
@@ -153,7 +156,7 @@ Determines whether a compatible live owner's value currently differs from its re
 
 - `ArgumentNullException`: `owner` is `null`.
 - `ArgumentException`: `owner` is not assignable to [`PropertyDescriptor.OwnerType`](PropertyDescriptor.md#p-electron2d-propertydescriptor-ownertype).
-- `ObjectDisposedException`: Disposal of `owner` has started.
+- `ObjectDisposedException`: The owner is disposing on another thread or has finished disposing.
 - `Exception`: A configured getter or revert-value delegate throws.
 
 <a id="m-electron2d-propertydescriptor-revert-electron2d-electronobject"></a>
@@ -203,3 +206,5 @@ There are no categories, ranges, hints, file-format flags, reflection-based acce
 ## Typed file integration
 
 See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.
+
+[ObjectPropertyTests](../../tests/Electron2D.Tests/ObjectPropertyTests.cs) executes discovery snapshots, compatible replacement/filtering and invalid lists, owner policy, live/default/null/array values, readonly/validation/delegate errors and teardown inspection. Explicit CPU/GPU serial and separate-thread profiles use real RigidBody properties, permitted post-solver mass edits, owner/capture rejection and callback-error recovery. Each retains 128 warm/128 measured full frames with typed inspection, velocity writes and reversion at strict zero owner/all-thread managed bytes. GPU runs use CPU-only Vulkan; this does not establish hardware performance, editor automation or native/platform acceptance.

@@ -41,6 +41,9 @@ Provides the common identity, notification, property, localization, and lifetime
 The contract uses typed properties and events and deliberately omits dynamic calls, untyped metadata, generic signal
 registration, and script storage. Instances have deterministic `IDisposable` lifetime.
 
+
+Typed property inspection uses the exact teardown-thread exception from ADR 0009: GetValue, TryGetRevertValue and CanRevert remain usable in pre-delete/cleanup on that thread; foreign-thread and terminal access fail. SetValue and Revert reject once disposal starts. TryGetRevertValue reports factory presence even for a null or unchanged default, while CanRevert and PropertyCanRevert retain the current value-difference policy. Factories run on each request; their results follow delegate ownership with no implicit copy. Validators reject before the setter, and an exception after a setter commits does not undo that write. Ordinary owner setters and getters retain thread, capture and numerical-phase rules.
+
 ## Examples
 
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
@@ -243,7 +246,7 @@ Restores a tooling property to its current typed revert value.
 - `ArgumentNullException`: `property` is `null`.
 - `ArgumentException`: `property` is not compatible with this object.
 - `InvalidOperationException`: The descriptor has no writable revert value.
-- `ObjectDisposedException`: The object is disposing on another thread or has finished disposing.
+- `ObjectDisposedException`: Disposal of the object has started.
 - `Exception`: A descriptor delegate throws.
 
 <a id="m-electron2d-electronobject-tr-system-string-system-string"></a>
@@ -511,3 +514,5 @@ names and the full scene-body/resource ancestry on CPU/GPU, serial/separate.
 owner/all-thread managed bytes. Identity stays readable after actual scene retirement.
 Software Vulkan execution does not establish hardware/native/foreign or wider
 inherited API acceptance.
+
+[ObjectPropertyTests](../../tests/Electron2D.Tests/ObjectPropertyTests.cs) executes discovery snapshots, compatible replacement/filtering and invalid lists, owner policy, live/default/null/array values, readonly/validation/delegate errors and teardown inspection. Explicit CPU/GPU serial and separate-thread profiles use real RigidBody properties, permitted post-solver mass edits, owner/capture rejection and callback-error recovery. Each retains 128 warm/128 measured full frames with typed inspection, velocity writes and reversion at strict zero owner/all-thread managed bytes. GPU runs use CPU-only Vulkan; this does not establish hardware performance, editor automation or native/platform acceptance.
