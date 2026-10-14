@@ -3,10 +3,11 @@ using Electron2D;
 public static partial class BackendChecks
 {
     private readonly record struct Part(int Index, Vector2 Offset, float Inner, float Outer,
-        Vector2 EdgeX = default, Vector2 EdgeY = default, float Inflation = 0, bool Capsule = false)
+        Vector2 EdgeX = default, Vector2 EdgeY = default, float Inflation = 0, bool Capsule = false, bool Segment = false)
     {
         internal bool Rectangle => EdgeX != Vector2.Zero;
-        internal bool Contour => Rectangle || Capsule;
+        internal bool Contour => Rectangle || Capsule || Segment;
+        internal float LineLength => Segment || Capsule && Inflation == 0 ? 2 * EdgeY.Length() : 0;
         internal float CapsuleArea => 4 * Inflation * EdgeY.Length() + MathF.PI * Inflation * Inflation;
         internal float CapsuleMoment
         {
@@ -18,9 +19,9 @@ public static partial class BackendChecks
                 return CapsuleArea > 0 ? integral / CapsuleArea : h * h / 3;
             }
         }
-        internal float Area => Capsule ? CapsuleArea : Rectangle ? 4 * MathF.Abs(CrossEdges(EdgeX, EdgeY)) : MathF.PI * (Outer * Outer - Inner * Inner);
-        internal float Moment => Capsule ? CapsuleMoment : Rectangle ? (EdgeX.LengthSquared() + EdgeY.LengthSquared()) / 3 : (Outer * Outer + Inner * Inner) / 2;
-        internal float Thickness => Capsule ? MathF.Max(Inflation, .001f) : Rectangle ? MathF.Abs(CrossEdges(EdgeX, EdgeY)) / MathF.Max(EdgeX.Length(), EdgeY.Length()) : Outer - Inner;
+        internal float Area => Segment ? 0 : Capsule ? CapsuleArea : Rectangle ? 4 * MathF.Abs(CrossEdges(EdgeX, EdgeY)) : MathF.PI * (Outer * Outer - Inner * Inner);
+        internal float Moment => Segment ? EdgeY.LengthSquared() / 3 : Capsule ? CapsuleMoment : Rectangle ? (EdgeX.LengthSquared() + EdgeY.LengthSquared()) / 3 : (Outer * Outer + Inner * Inner) / 2;
+        internal float Thickness => Segment ? .5f : Capsule ? Inflation > 0 ? Inflation : .5f : Rectangle ? MathF.Abs(CrossEdges(EdgeX, EdgeY)) / MathF.Max(EdgeX.Length(), EdgeY.Length()) : Outer - Inner;
     }
     private sealed partial class Body
     {
@@ -37,24 +38,30 @@ public static partial class BackendChecks
             foreach (ref readonly var slot in slots)
             {
                 if (!slot.Enabled) continue;
-                Parts[Shapes++] = GeometryPart(slot.Shape.GetGeometryData(), slot.Transform, slot.Index);
+                var part = GeometryPart(slot.Shape.GetGeometryData(), slot.Transform, slot.Index);
+                if (part.Segment && part.LineLength <= .5f) part = part with { EdgeY = default, Outer = 0 };
+                Parts[Shapes++] = part;
             }
             Parts.AsSpan(Shapes).Clear();
         }
         private PhysicsMassProperties PartMass(float mass, float inertia, Vector2? center)
         {
-            var area = 0f; var weighted = Vector2.Zero;
+            var weight = 0f; var weighted = Vector2.Zero;
             for (var i = 0; i < Shapes; i++)
-            { var p = Parts[i]; var weight = p.Area; area += weight; weighted += p.Offset * weight; }
-            Mass = mass; _center = center ?? (area > 0 ? weighted / area : Vector2.Zero);
+            { var p = Parts[i]; weight += p.Area; weighted += p.Offset * p.Area; }
+            var rods = weight == 0;
+            if (rods)
+                for (var i = 0; i < Shapes; i++)
+                { var p = Parts[i]; weight += p.LineLength; weighted += p.Offset * p.LineLength; }
+            Mass = mass; _center = center ?? (weight > 0 ? weighted / weight : Vector2.Zero);
             var automatic = 0f;
-            if (area > 0)
+            if (weight > 0)
                 for (var i = 0; i < Shapes; i++)
                 {
-                    var p = Parts[i];
-                    automatic += p.Area / area * mass * (p.Moment + p.Offset.DistanceSquaredTo(_center));
+                    var p = Parts[i]; var sample = rods ? p.LineLength : p.Area;
+                    automatic += sample / weight * mass * (p.Moment + p.Offset.DistanceSquaredTo(_center));
                 }
-            Inertia = inertia > 0 ? inertia : MathF.Max(.001f, automatic);
+            Inertia = inertia > 0 ? inertia : automatic;
             return new(Mass, Inertia, _center);
         }
     }

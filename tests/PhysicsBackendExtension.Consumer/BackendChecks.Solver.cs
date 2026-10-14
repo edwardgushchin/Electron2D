@@ -157,7 +157,7 @@ public static partial class BackendChecks
             PairQueries++;
             var a = GetShapeGeometry(first); var b = GetShapeGeometry(second);
             bool hit;
-            if (a.Type is PhysicsServer.ShapeType.Rectangle or PhysicsServer.ShapeType.Capsule || b.Type is PhysicsServer.ShapeType.Rectangle or PhysicsServer.ShapeType.Capsule)
+            if (a.Type is PhysicsServer.ShapeType.Rectangle or PhysicsServer.ShapeType.Capsule or PhysicsServer.ShapeType.Segment || b.Type is PhysicsServer.ShapeType.Rectangle or PhysicsServer.ShapeType.Capsule or PhysicsServer.ShapeType.Segment)
                 hit = CollideContourGeometry(a, firstPose, firstMotion, b, secondPose, secondMotion, contacts, out count);
             else if (a.Type == PhysicsServer.ShapeType.Custom)
                 hit = Annulus.Collide(a, firstPose, firstMotion, b, secondPose, secondMotion, contacts, out count);

@@ -13,6 +13,12 @@ public static partial class BackendChecks
                 throw new NotSupportedException("The rectangle requires finite nondegenerate transformed edges.");
             return new(index, transform.Origin, 0, radius, x, y);
         }
+        if (geometry.Type == PhysicsServer.ShapeType.Segment)
+        {
+            var endpoints = geometry.GetSegmentEndpoints(); var a = transform * endpoints.A; var b = transform * endpoints.B;
+            var edge = (b - a) / 2;
+            return new(index, (a + b) / 2, 0, edge.Length(), default, edge, 0, false, true);
+        }
         var scale = transform.Scale.Abs();
         if (!Mathf.IsEqualApprox(scale.X, scale.Y) || !Mathf.IsZeroApprox(transform.Skew))
             throw new NotSupportedException("Round fixtures require uniform local scale.");
@@ -35,6 +41,7 @@ public static partial class BackendChecks
     private static bool ContainsPart(in Part part, Transform pose, Vector2 point)
     {
         var center = PartAt(part, pose);
+        if (part.Segment) return false;
         if (part.Capsule) return point.DistanceSquaredTo(ClosestContour(part, pose, point)) <= part.Inflation * part.Inflation;
         if (!part.Contour) return Annulus.Contains(point, center, part.Inner, part.Outer);
         var v = Coefficients(point - center, EdgeX(part, pose), EdgeY(part, pose));
@@ -318,7 +325,8 @@ public static partial class BackendChecks
     }
     private static bool RayPart(in Part part, Transform pose, Vector2 from, Vector2 motion, out float fraction, out Vector2 normal)
     {
-        if (part.Capsule) return RayCapsule(part, pose, from, motion, out fraction, out normal);
+        if (part.Segment && part.EdgeY != Vector2.Zero) return RaySegment(part, pose, from, motion, out fraction, out normal);
+        if (part.Capsule || part.Segment) return RayCapsule(part, pose, from, motion, out fraction, out normal);
         if (!part.Contour)
         { var hit = Annulus.Sweep(from, motion, PartAt(part, pose), part.Inner, part.Outer, out fraction); normal = Solver.PartNormal(from + motion * fraction, PartAt(part, pose), part); return hit; }
         var x = EdgeX(part, pose); var y = EdgeY(part, pose); var start = Coefficients(from - PartAt(part, pose), x, y);

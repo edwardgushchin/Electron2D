@@ -1559,3 +1559,7 @@ production type inventory. This adds no shipped backend type or runtime API.
 The [registered capsule consumer](components/physics-registered-adapter.md#registered-capsule-numerics)
 adds independent rounded-segment numerics behind the existing extension family.
 This introduces no shipped backend type or runtime API.
+
+The [registered segment consumer](components/physics-registered-adapter.md#registered-segment-numerics)
+adds independent line/zero-area numerics behind the existing extension family;
+no shipped backend type or runtime API is introduced.

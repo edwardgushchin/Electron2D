@@ -2,6 +2,13 @@
 
 Last updated: 2026-10-14
 
+[Registered segment numerics](../components/physics-registered-adapter.md#registered-segment-numerics)
+now execute two-sided line contours, length-weighted zero-area mass, queries,
+contacts and linear/angular CCD in the independent public-only provider. Shared
+CPU/software-GPU serial/separate checks retain full impulses, silent private replay
+and zero warmed managed allocation. Wider contours, extension/inherited/network/
+native/hardware and performance acceptance remain open.
+
 [Registered capsule numerics](../components/physics-registered-adapter.md#registered-capsule-numerics) now extend the independent public-only provider with rounded segments,
 analytic area/inertia, side and cap queries, margin-preserving sweeps, contacts and
 linear/angular CCD. Shared CPU/software-GPU serial/separate profiles retain full

@@ -289,7 +289,7 @@ public static partial class BackendChecks
             if (Dynamic && !Omit)
             {
                 Velocity += (_fields.Gravity + Force / Mass) * dt;
-                if (!Locked) Angular += Torque / Inertia * dt;
+                if (!Locked) Angular += Torque * InverseInertia * dt;
                 Velocity /= 1 + _fields.LinearDamp * dt; Angular /= 1 + _fields.AngularDamp * dt;
             }
             Force = default; Torque = 0; return true;
@@ -377,7 +377,7 @@ public static partial class BackendChecks
         protected override Vector2 CenterOfMass => _center.Rotated(Rotation);
         protected override Vector2 CenterOfMassLocal => _center;
         protected override float InverseMass => Dynamic ? 1 / Mass : 0;
-        protected override float InverseInertia => Dynamic && !Locked ? 1 / Inertia : 0;
+        protected override float InverseInertia => Dynamic && !Locked && Inertia > 0 ? 1 / Inertia : 0;
         protected override PhysicsMassProperties ApplyMassProfile(float mass, float inertia, Vector2? center)
         => PartMass(mass, inertia, center);
         protected override void WakeTouching() => solver.WakeConnected(this);

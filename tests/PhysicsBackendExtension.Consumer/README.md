@@ -221,3 +221,11 @@ standalone zero-radius limits, live edits, independent sweeps, false circumscrib
 contacts, thin walls and intermediate rotational arcs. Registered-only custom-ring
 checks retain the hollow boundary. Geometry uses public API only; complete
 provider/zero-area dynamic/native/network/target-device acceptance stays open.
+
+`--segment-geometry`, with optional `--cpu`/`--gpu` and `--threaded`, checks actual
+two-sided lines, empty point interiors, transverse rays, real line sensors, all
+shape queries/body motion, rod and mixed mass, all CCD modes, full impulses and
+silent private replay. Eight 128-frame warmed brackets require 0/0 managed bytes.
+Cold controls cover unshaped zero inertia, short/coincident edits, independent
+swept pairs, collinear/opposite-side rays and rotational arcs. Wider contours,
+provider/native/network/hardware and performance acceptance remain open.

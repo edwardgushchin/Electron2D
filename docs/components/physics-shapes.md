@@ -172,3 +172,8 @@ being redirected to the general CPU suite. Both CPU/GPU profiles pass the same
 CCD, infinite-boundary and directed-ray cases on software Vulkan, with explicit
 0/0 owner/all-thread warm allocation gates. See [current software conformance](cpu-continuous-collision.md#software-vulkan-continuous-conformance-2026-10-14).
 Hardware performance, native allocation and foreign-platform acceptance remain open.
+
+The [registered segment consumer](physics-registered-adapter.md#registered-segment-numerics)
+now verifies actual two-sided lines, rod mass, queries, contacts and CCD behind the
+existing extension boundary. It preserves empty point interiors and accepted short
+midpoint fixtures. General provider contours and final acceptance remain open.

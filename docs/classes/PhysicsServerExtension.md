@@ -1,6 +1,6 @@
 # PhysicsServerExtension
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 Caller-derived scoped numerical implementation base inheriting the full protected PhysicsServerBackend family. Implement real body, joint, geometry, query, observation and history operations; the world supplies engine identities and owns lifetime.
 
@@ -93,3 +93,10 @@ linear/angular CCD. Shared CPU/software-GPU serial/separate profiles retain full
 frame impulses and silent replay at zero warmed managed bytes. Wider geometry,
 coupling, inherited/network/native/hardware and performance acceptance remain open.
 Production signatures and the accepted geometry/lifetime decisions are unchanged.
+
+[Registered segment numerics](../components/physics-registered-adapter.md#registered-segment-numerics)
+now execute two-sided line contours, length-weighted zero-area mass, queries,
+contacts and linear/angular CCD in the independent public-only provider. Shared
+CPU/software-GPU serial/separate checks retain full impulses, silent private replay
+and zero warmed managed allocation. Wider contours, extension/inherited/network/
+native/hardware and performance acceptance remain open.

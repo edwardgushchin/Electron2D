@@ -1,6 +1,6 @@
 # SegmentShape
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -100,3 +100,10 @@ owner/phase without repeating selected status hooks; ordinary post-solver edits
 retain their existing behavior.
 
 [SegmentShapeTests](../../tests/Electron2D.Tests/SegmentShapeTests.cs) now runs the full existing resource/solver/Area/lifetime suite on explicitly selected CPU/GPU worlds, including a real ray query after PackedScene instantiation and warmed zero owner/all-thread managed allocation. Original numerical tolerances remain unchanged. Native allocations, other platforms and visual acceptance remain unverified.
+
+[Registered segment numerics](../components/physics-registered-adapter.md#registered-segment-numerics)
+now execute two-sided line contours, length-weighted zero-area mass, queries,
+contacts and linear/angular CCD in the independent public-only provider. Shared
+CPU/software-GPU serial/separate checks retain full impulses, silent private replay
+and zero warmed managed allocation. Wider contours, extension/inherited/network/
+native/hardware and performance acceptance remain open.

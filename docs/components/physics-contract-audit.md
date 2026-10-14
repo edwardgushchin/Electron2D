@@ -1178,3 +1178,13 @@ profiles retain strict 0/0 warmed managed bytes. Circle and zero-radius standalo
 limits, live segment rebuilds, independent swept regions and hollow custom-ring
 controls are separate cold checks. These extend numerical evidence without
 closing complete extension, inherited, network, native or performance acceptance.
+
+[Registered segment numerics](physics-registered-adapter.md#registered-segment-numerics)
+retain actual zero-width lines, empty point interiors, transverse ray normals,
+shape queries, body motion, rod mass and private contact replay through the
+public-only provider. Short/point attachment limits preserve the accepted midpoint
+fixture, while standalone regions retain exact endpoints. Positive-area shapes
+own compound mass before zero-area rods; unshaped bodies retain mass with zero
+inertia and finite torque/impulse handling. Shared CPU/software-GPU serial/separate
+checks extend evidence without closing the wider numerical/inherited/network/
+native/performance gates.

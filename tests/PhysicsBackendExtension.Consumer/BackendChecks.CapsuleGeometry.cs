@@ -2,6 +2,17 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
+    private static bool RaySegment(in Part part, Transform pose, Vector2 from, Vector2 motion,
+        out float fraction, out Vector2 normal)
+    {
+        var center = PartAt(part, pose); var edge = EdgeY(part, pose);
+        var point = Geometry.SegmentIntersectsSegment(from, from + motion, center - edge, center + edge);
+        if (point is null) { fraction = 1; normal = default; return false; }
+        fraction = (point.Value - from).Dot(motion) / motion.LengthSquared();
+        normal = new Vector2(-edge.Y, edge.X).Normalized();
+        if (normal.Dot(motion) > 0) normal = -normal;
+        return true;
+    }
     private static bool RayCapsule(in Part part, Transform pose, Vector2 from, Vector2 motion,
         out float fraction, out Vector2 normal)
     {
@@ -18,7 +29,7 @@ public static partial class BackendChecks
             {
                 var t = (sign * r - start.X) / delta.X;
                 if (t < 0 || t > fraction || MathF.Abs(start.Y + delta.Y * t) > half) continue;
-                fraction = t; normal = side * sign; hit = true;
+                fraction = t; normal = side * (r == 0 ? delta.X > 0 ? -1 : 1 : sign); hit = true;
             }
         }
         for (var sign = -1; sign <= 1; sign += 2)

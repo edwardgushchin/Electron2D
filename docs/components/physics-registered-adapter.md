@@ -1801,3 +1801,86 @@ receipts. The compiled API now has 13,842 declarations, 10,585 mappings, 3,257
 reviewed extras and zero unmapped; wiki verification has 821 public types and
 839 pages with zero updates/removals. The changed counts belong to the preserved
 canvas-modulation integration, not a physics API addition.
+
+## Registered segment numerics
+
+The independent solver reads immutable Segment endpoints into an exact transformed
+midpoint and half-edge. The contour path uses zero rounding radius; no thick disk
+substitution is introduced. Edge/support projections, circle/rounded endpoint axes,
+actual two-sided ray intersections, shape contacts, body motion and linear/angular
+CCD share the existing contour machinery. Collinear segment rays have no transverse
+crossing. Ordinary line/Area point queries have no filled interior, matching the
+[pinned contains_point implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/godot_physics_2d/godot_shape_2d.cpp).
+The initial point oracle incorrectly expected a filled segment; the reference and
+CPU implementation both reject that expectation. Point-query filtering still
+resolves an actual circle peer, independently of line containment.
+
+Attached segments at or below .5 scene-unit length use the accepted zero-radius
+midpoint fixture under ADR 0061. Source endpoints and standalone collision regions
+remain exact. A transverse ray .08 from a .2-length segment midpoint misses the
+point fixture, whereas a circle shape at the midpoint still queries it. A live
+coincident-endpoint edit preserves a valid shifted point. An initial microscopic
+shape-overlap miss oracle was unsuitable under CPU query tolerance and was replaced
+by this geometric transverse ray check, not by a looser success threshold.
+
+For bodies with positive-area shapes, area weighting owns center/inertia and rods
+contribute zero area. If all shapes have zero area, rod lengths own weights and
+moments use length²/12 plus the parallel-axis term. Zero-radius capsules participate
+in that rod fallback. No shape or only coincident points gives zero automatic
+inertia while retaining requested mass; explicit positive inertia still overrides.
+The former .001 automatic inertia floor is removed, and torque integration uses
+guarded inverse inertia so zero no longer produces division by zero. Segment and
+zero-radius contour CCD use a nonzero .5 interval-planning scale; it does not add
+physical thickness or change the actual collision boundary.
+
+The public-only --segment-geometry profile (optional --cpu/--gpu and --threaded)
+checks one rotated/offset static line with disabled slot zero, a real segment Area
+sensor and separate circle peer, all six query families, body motion, deepest rest,
+masks and exclusions. Six segment/circle or segment/rectangle contact cases cover
+Disabled, CastRay and CastShape with one contact entry per restored frame, full
+impulse accounting and paired momentum. An unlocked off-center line contact checks
+angular moment and energy. Those eight brackets warm 128 complete frames each,
+then measure 128 at strict 0/0 owner/all-thread managed bytes, including queries,
+Area publication, restore and contact effects. Cold controls verify compound rod
+mass/torque, solid-plus-rod mass precedence, unshaped finite impulse response,
+collinear/opposite-side rays, short/coincident live limits, independent swept
+segment/circle regions, false circumscribed contacts, a thin wall and an intermediate
+rotational CastShape arc. Their work is outside warmed allocation measurement.
+
+The line's contact setup uses transverse extent: cold Disabled centers start at
+.475 and continuous centers at 2.1, giving an actual collision within .4 seconds.
+The earlier rectangle-specific 3.1 spacing never reached this line/circle pair in
+that interval and was corrected without weakening the impulse/event assertions.
+Unshaped impulse checks explicitly replace world damping with zero; they do not
+interpret ordinary damping as a mass defect. Position/ray/rest bounds are .002
+scene units, normals dot above .999, cast fraction 1/256 plus .00002, mass/center
+.0002, momentum .002 and full impulses .02–.03. Angular moment permits .005 plus
+interval × maximum linear speed × impulse magnitude for publication/integration
+lever sampling. The .015-second, 30-rad/s rotating 320-length line retains at most
+102 percent initial energy. Thin-wall center stays below 9.75+.501 with residual
+horizontal speed below .1; .5 is accepted CPU linear tolerance and .001 float slack.
+The shared unit-scale/zero-skew pose contract is unchanged.
+
+The retained previous capsule consumer rejects Segment attachment in real
+primitive decoding; this provider executes it through public APIs only. Evidence
+is under bin/physics-segment-provider/2026-10-14. Explicit CPU lavapipe provides
+functional GPU proof, with no target-device/native-memory/performance inference.
+General convex/concave/boundary/directed-ray integration, arbitrary custom algorithms,
+complete extension/inherited/network/platform and target-GPU acceptance remain open.
+Production declarations/XML and the accepted geometry/mass ADRs are unchanged;
+coverage reasons expand while their current Partial states remain.
+
+Final evidence uses main `9d55d1b1cf9f89f1bb95b83280d500b79563fab4` and this consumer slice. Its 4,185
+source inputs fingerprint is `15e5b39f558c0707496c87d28dc481273beb7eb04a9d889450d74d21e6b1e147`; loaded runtime/consumer DLLs
+are `f5fa8921e0f5c4eca8c430afac7ec35228f2d9993813f8651f1ed0b1c2c49cff` and `8cd6404166454fd6e00d5b988f26c3ed84716066b25c7131f3b5bafe104e134d`.
+The six CPU/GPU/registered serial/separate processes and nine default/custom/curved/
+statistics/rectangle/compound/capsule/joint regressions all exit zero. Source-before/
+source-after agree, all 61 runtime-file identities stay unchanged, and the precommit
+runtime build matches the loaded DLL. GPU processes load CPU lavapipe only and no
+NVIDIA library; CPU/provider use unavailable graphical drivers. Retained solver-lane
+counts are exactly 0/1. Independent processes run concurrently for functional proof,
+not timing or native-memory measurement. Results/manifests are under
+bin/physics-segment-provider/2026-10-14/final; the six commit gates pass under gates.
+API counts remain 13,842 declarations, 10,585 mapped, 3,257 reviewed extras and zero
+unmapped; wiki check has 821 public types, 839 files and zero updates/removals.
+The pinned shape source digest is `a63404db6e58924946ad9dc0848a54dd95ff4678df5c0f661951cbd6a6f3681d`.
