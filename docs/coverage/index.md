@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-14
 
+[Registered rectangle numerics](../components/physics-registered-adapter.md#registered-rectangle-numerics)
+now execute actual contours, six queries, mass, contacts and linear/angular CCD
+through the independent public-only provider. Shared CPU/software-GPU checks cover
+full impulses and silent private replay at zero warm managed allocation. General
+shape families, arbitrary custom algorithms and complete acceptance remain open.
+
 [Completed numerical statistics](../components/physics-registered-adapter.md#completed-numerical-statistics)
 now verify real constraint groups, kinematic activity, sensor candidates, sleep,
 pause and diagnostic replay on CPU/software-GPU/registered serial/separate modes.

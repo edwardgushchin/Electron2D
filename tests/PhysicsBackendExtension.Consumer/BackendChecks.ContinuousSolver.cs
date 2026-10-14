@@ -55,7 +55,8 @@ public static partial class BackendChecks
         private static float AngularShapeSpeed(Body body)
         {
             var radius = 0f;
-            for (var i = 0; i < body.Shapes; i++) radius = MathF.Max(radius, RotationArm(body, body.Parts[i]).Length());
+            for (var i = 0; i < body.Shapes; i++) radius = MathF.Max(radius, RotationArm(body, body.Parts[i]).Length() +
+                (body.Parts[i].Rectangle ? body.Parts[i].Outer : 0));
             return MathF.Abs(RotationMotion(body)) * radius;
         }
         private bool SweptContact(Body a, Body b, Vector2 motion, float duration, out float fraction)
@@ -67,6 +68,12 @@ public static partial class BackendChecks
                 {
                     var first = a.Parts[i]; var second = b.Parts[j];
                     if (!AllowsContact(a.RID, first.Index, b.RID, second.Index)) continue;
+                    if (first.Rectangle || second.Rectangle)
+                    {
+                        if (SweptContour(a, first, b, second, duration, full, spinA, spinB, out var contour))
+                        { hit = true; fraction = MathF.Min(fraction, contour); }
+                        continue;
+                    }
                     if (spinA * RotationArm(a, first).Length() != 0 || spinB * RotationArm(b, second).Length() != 0)
                     {
                         if (CurvedPart(a, first, b, second, duration, full, spinA, spinB, out var curved))

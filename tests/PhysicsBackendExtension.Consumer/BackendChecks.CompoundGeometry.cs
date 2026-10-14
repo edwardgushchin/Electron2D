@@ -2,14 +2,21 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    private readonly record struct Part(int Index, Vector2 Offset, float Inner, float Outer);
+    private readonly record struct Part(int Index, Vector2 Offset, float Inner, float Outer,
+        Vector2 EdgeX = default, Vector2 EdgeY = default, float Inflation = 0)
+    {
+        internal bool Rectangle => EdgeX != Vector2.Zero;
+        internal float Area => Rectangle ? 4 * MathF.Abs(CrossEdges(EdgeX, EdgeY)) : MathF.PI * (Outer * Outer - Inner * Inner);
+        internal float Moment => Rectangle ? (EdgeX.LengthSquared() + EdgeY.LengthSquared()) / 3 : (Outer * Outer + Inner * Inner) / 2;
+        internal float Thickness => Rectangle ? MathF.Abs(CrossEdges(EdgeX, EdgeY)) / MathF.Max(EdgeX.Length(), EdgeY.Length()) : Outer - Inner;
+    }
     private sealed partial class Body
     {
         internal Part[] Parts = [];
         internal Vector2 PartCenter(in Part part) => Position + part.Offset.Rotated(Rotation);
         internal float MinimumThickness
         {
-            get { var minimum = float.PositiveInfinity; for (var i = 0; i < Shapes; i++) minimum = MathF.Min(minimum, Parts[i].Outer - Parts[i].Inner); return minimum; }
+            get { var minimum = float.PositiveInfinity; for (var i = 0; i < Shapes; i++) minimum = MathF.Min(minimum, Parts[i].Thickness); return minimum; }
         }
         private void RebuildParts(ReadOnlySpan<PhysicsColliderShape> slots)
         {
@@ -18,11 +25,7 @@ public static partial class BackendChecks
             foreach (ref readonly var slot in slots)
             {
                 if (!slot.Enabled) continue;
-                var scale = slot.Transform.Scale.Abs();
-                if (!Mathf.IsEqualApprox(scale.X, scale.Y) || !Mathf.IsZeroApprox(slot.Transform.Skew))
-                    throw new NotSupportedException("The independent circle/annulus fixture requires uniform local scale.");
-                var dimensions = Annulus.Dimensions(slot.Shape.GetGeometryData());
-                Parts[Shapes++] = new(slot.Index, slot.Transform.Origin, dimensions.Inner * scale.X, dimensions.Outer * scale.X);
+                Parts[Shapes++] = GeometryPart(slot.Shape.GetGeometryData(), slot.Transform, slot.Index);
             }
             Parts.AsSpan(Shapes).Clear();
         }
@@ -30,14 +33,14 @@ public static partial class BackendChecks
         {
             var area = 0f; var weighted = Vector2.Zero;
             for (var i = 0; i < Shapes; i++)
-            { var p = Parts[i]; var weight = p.Outer * p.Outer - p.Inner * p.Inner; area += weight; weighted += p.Offset * weight; }
+            { var p = Parts[i]; var weight = p.Area; area += weight; weighted += p.Offset * weight; }
             Mass = mass; _center = center ?? (area > 0 ? weighted / area : Vector2.Zero);
             var automatic = 0f;
             if (area > 0)
                 for (var i = 0; i < Shapes; i++)
                 {
-                    var p = Parts[i]; var outer = p.Outer * p.Outer; var inner = p.Inner * p.Inner;
-                    automatic += (outer - inner) / area * mass * ((outer + inner) / 2 + p.Offset.DistanceSquaredTo(_center));
+                    var p = Parts[i];
+                    automatic += p.Area / area * mass * (p.Moment + p.Offset.DistanceSquaredTo(_center));
                 }
             Inertia = inertia > 0 ? inertia : MathF.Max(.001f, automatic);
             return new(Mass, Inertia, _center);
@@ -47,11 +50,18 @@ public static partial class BackendChecks
     {
         private static bool PartOverlap(Body a, in Part first, Body b, in Part second)
         {
+            if (first.Rectangle || second.Rectangle)
+                return PartGap(first, new(a.Rotation, a.Position), second, new(b.Rotation, b.Position), out _, out _, out _) <= 0;
             var d = a.PartCenter(first).DistanceTo(b.PartCenter(second));
             return d <= first.Outer + second.Outer && d + second.Outer >= first.Inner && d + first.Outer >= second.Inner;
         }
         private static bool PartContact(Body a, in Part first, Body b, in Part second, out Vector2 normal, out float depth, out Vector2 point)
         {
+            if (first.Rectangle || second.Rectangle)
+            {
+                var gap = PartGap(first, new(a.Rotation, a.Position), second, new(b.Rotation, b.Position), out normal, out var firstPoint, out var secondPoint);
+                depth = MathF.Max(0, -gap); point = (firstPoint + secondPoint) / 2; return gap <= 0;
+            }
             if (first.Inner > 0 && second.Inner > 0) throw new NotSupportedException("The fixture exercises custom annulus/circle contacts.");
             if (second.Inner > 0)
             {

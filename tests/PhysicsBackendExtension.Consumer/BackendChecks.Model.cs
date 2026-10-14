@@ -218,7 +218,7 @@ public static partial class BackendChecks
         protected override bool AreaContainsPoint(RID area, Vector2 point, uint mask)
         {
             var b = Bodies[area]; if ((b.Layer & mask) == 0) return false;
-            for (var i = 0; i < b.Shapes; i++) { var p = b.Parts[i]; if (Annulus.Contains(point, b.PartCenter(p), p.Inner, p.Outer)) return true; }
+            for (var i = 0; i < b.Shapes; i++) if (ContainsPart(b.Parts[i], new(b.Rotation, b.Position), point)) return true;
             return false;
         }
         protected override void EndStep(Exception? failure) { }

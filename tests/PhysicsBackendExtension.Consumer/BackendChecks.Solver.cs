@@ -40,16 +40,17 @@ public static partial class BackendChecks
                 for (var i = 0; i < b.Shapes; i++)
                 {
                     var p = b.Parts[i]; var center = b.PartCenter(p);
-                    if (!hitFromInside && Annulus.Contains(from, center, p.Inner, p.Outer) ||
-                        !Annulus.Sweep(from, motion, center, p.Inner, p.Outer, out var f) || f > fraction) continue;
+                    if (!hitFromInside && ContainsPart(p, new(b.Rotation, b.Position), from) ||
+                        !RayPart(p, new(b.Rotation, b.Position), from, motion, out var f, out _) || f > fraction) continue;
                     best = b; part = p; fraction = f;
                 }
             }
             if (best is null) return null;
             var point = from + motion * fraction;
-            return new(best.RID, part.Index, point, PartNormal(point, best.PartCenter(part), part));
+            RayPart(part, new(best.Rotation, best.Position), from, motion, out _, out var hitNormal);
+            return new(best.RID, part.Index, point, hitNormal);
         }
-        private static Vector2 PartNormal(Vector2 point, Vector2 center, in Part part)
+        internal static Vector2 PartNormal(Vector2 point, Vector2 center, in Part part)
         {
             var delta = point - center; var normal = delta.Normalized();
             return part.Inner > 0 && delta.Length() < (part.Inner + part.Outer) / 2 ? -normal : normal;
@@ -61,42 +62,61 @@ public static partial class BackendChecks
             {
                 if (!Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded) || b.Canvas != parameters.CanvasInstanceID) continue;
                 for (var i = 0; i < b.Shapes; i++)
-                { var p = b.Parts[i]; if (Annulus.Contains(parameters.Position, b.PartCenter(p), p.Inner, p.Outer)) _pointHits.Add(new(b.RID, p.Index)); }
+                { var p = b.Parts[i]; if (ContainsPart(p, new(b.Rotation, b.Position), parameters.Position)) _pointHits.Add(new(b.RID, p.Index)); }
             }
             _pointHits.Sort(static (a, b) => a.ColliderRID == b.ColliderRID ? a.ShapeIndex.CompareTo(b.ShapeIndex) : a.ColliderRID.GetID().CompareTo(b.ColliderRID.GetID())); return _pointHits;
         }
-        private float Radius(RID rid) => Annulus.Dimensions(GetShapeGeometry(rid)).Outer;
+        private Part QueryPart(PhysicsShapeQueryParameters parameters)
+        {
+            var part = GeometryPart(GetShapeGeometry(parameters.ShapeRID), parameters.Transform);
+            return part.Rectangle ? part with { Inflation = parameters.Margin } : part with
+            { Outer = part.Outer + parameters.Margin, Inner = MathF.Max(0, part.Inner - parameters.Margin) };
+        }
         protected override List<PhysicsShapeResult> CollectShapeHits(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
-            _shapeHits.Clear(); var radius = Radius(parameters.ShapeRID) + parameters.Margin;
+            _shapeHits.Clear(); var query = QueryPart(parameters); var radius = query.Outer;
             foreach (var b in Bodies.Values)
             {
                 if (!Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded)) continue;
                 for (var i = 0; i < b.Shapes; i++)
-                { var p = b.Parts[i]; if (Annulus.Sweep(parameters.Transform.Origin, parameters.Motion, b.PartCenter(p), MathF.Max(0, p.Inner - radius), p.Outer + radius, out _)) _shapeHits.Add(new(b.RID, p.Index)); }
+                { var p = b.Parts[i]; if (query.Rectangle || p.Rectangle ? SweepParts(query, Transform.Identity, parameters.Motion, p, b.Pose, out _) : Annulus.Sweep(parameters.Transform.Origin, parameters.Motion, b.PartCenter(p), MathF.Max(0, p.Inner - radius), p.Outer + radius, out _)) _shapeHits.Add(new(b.RID, p.Index)); }
             }
             _shapeHits.Sort(static (a, b) => a.ColliderRID == b.ColliderRID ? a.ShapeIndex.CompareTo(b.ShapeIndex) : a.ColliderRID.GetID().CompareTo(b.ColliderRID.GetID())); return _shapeHits;
         }
         protected override (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
-            var fraction = 1f; var radius = Radius(parameters.ShapeRID) + parameters.Margin;
+            var fraction = 1f; var query = QueryPart(parameters); var radius = query.Outer;
             foreach (var b in Bodies.Values)
             {
                 if (!Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded)) continue;
                 for (var i = 0; i < b.Shapes; i++)
-                { var p = b.Parts[i]; if (Annulus.Sweep(parameters.Transform.Origin, parameters.Motion, b.PartCenter(p), MathF.Max(0, p.Inner - radius), p.Outer + radius, out var f)) fraction = MathF.Min(fraction, f); }
+                {
+                    var p = b.Parts[i]; if (query.Rectangle || p.Rectangle)
+                    {
+                        if (PartGap(query, Transform.Identity, p, b.Pose, out _, out _, out _) <= 0) continue;
+                        if (SweepParts(query, Transform.Identity, parameters.Motion, p, b.Pose, out var f)) fraction = MathF.Min(fraction, f);
+                    }
+                    else if (Annulus.Sweep(parameters.Transform.Origin, parameters.Motion, b.PartCenter(p), MathF.Max(0, p.Inner - radius), p.Outer + radius, out var f)) fraction = MathF.Min(fraction, f);
+                }
             }
             return (fraction, fraction);
         }
         protected override List<PhysicsBackendShapeContact> CollectShapeContacts(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded, int limit)
         {
-            _shapeContacts.Clear(); var radius = Radius(parameters.ShapeRID) + parameters.Margin;
+            _shapeContacts.Clear(); var query = QueryPart(parameters); var radius = query.Outer;
             foreach (var b in Bodies.Values)
             {
                 if (!Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded)) continue;
                 for (var i = 0; i < b.Shapes && _shapeContacts.Count < limit; i++)
                 {
                     var p = b.Parts[i]; var at = b.PartCenter(p);
+                    if (query.Rectangle || p.Rectangle)
+                    {
+                        if (!SweepParts(query, Transform.Identity, parameters.Motion, p, b.Pose, out var contourFraction)) continue;
+                        var pose = Transform.Identity; pose.Origin = parameters.Motion * contourFraction;
+                        PartGap(query, pose, p, b.Pose, out _, out var firstPoint, out var secondPoint);
+                        _shapeContacts.Add(new(b.RID, p.Index, 0, firstPoint, secondPoint)); continue;
+                    }
                     if (!Annulus.Sweep(parameters.Transform.Origin, parameters.Motion, at, MathF.Max(0, p.Inner - radius), p.Outer + radius, out var f)) continue;
                     var center = parameters.Transform.Origin + parameters.Motion * f; var normal = PartNormal(center, at, p);
                     _shapeContacts.Add(new(b.RID, p.Index, 0, center - normal * radius, at + normal * (center.DistanceTo(at) < p.Inner ? -p.Inner : p.Outer)));
@@ -106,11 +126,27 @@ public static partial class BackendChecks
         }
         protected override PhysicsRestInfo? GetRestInfo(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
-            var hits = CollectShapeContacts(parameters, excluded, 1); if (hits.Count == 0) return null;
-            var h = hits[0]; var b = Bodies[h.RID];
-            for (var i = 0; i < b.Shapes; i++) if (b.Parts[i].Index == h.ShapeIndex)
-                    return new(h.RID, h.ShapeIndex, h.ColliderPoint, PartNormal(h.QueryPoint, b.PartCenter(b.Parts[i]), b.Parts[i]), b.PointVelocity(h.ColliderPoint));
-            throw new InvalidOperationException("A selected shape contact lost its logical slot.");
+            var hits = CollectShapeContacts(parameters, excluded, int.MaxValue); if (hits.Count == 0) return null;
+            PhysicsRestInfo? result = null; var deepest = float.NegativeInfinity; var query = QueryPart(parameters);
+            foreach (var h in hits)
+            {
+                var body = Bodies[h.RID];
+                for (var i = 0; i < body.Shapes; i++)
+                {
+                    var part = body.Parts[i]; if (part.Index != h.ShapeIndex) continue;
+                    var normal = PartNormal(h.QueryPoint, body.PartCenter(part), part);
+                    var depth = h.QueryPoint.DistanceTo(h.ColliderPoint);
+                    if (query.Rectangle || part.Rectangle)
+                    {
+                        SweepParts(query, Transform.Identity, parameters.Motion, part, body.Pose, out var fraction);
+                        var pose = Transform.Identity; pose.Origin = parameters.Motion * fraction;
+                        depth = -PartGap(query, pose, part, body.Pose, out var inward, out _, out _); normal = -inward;
+                    }
+                    if (depth > deepest)
+                    { deepest = depth; result = new(h.RID, h.ShapeIndex, h.ColliderPoint, normal, body.PointVelocity(h.ColliderPoint)); }
+                }
+            }
+            return result;
         }
         internal Action? PairHook;
         internal int PairQueries, PairFault;
@@ -121,7 +157,9 @@ public static partial class BackendChecks
             PairQueries++;
             var a = GetShapeGeometry(first); var b = GetShapeGeometry(second);
             bool hit;
-            if (a.Type == PhysicsServer.ShapeType.Custom)
+            if (a.Type == PhysicsServer.ShapeType.Rectangle || b.Type == PhysicsServer.ShapeType.Rectangle)
+                hit = CollideRectangleGeometry(a, firstPose, firstMotion, b, secondPose, secondMotion, contacts, out count);
+            else if (a.Type == PhysicsServer.ShapeType.Custom)
                 hit = Annulus.Collide(a, firstPose, firstMotion, b, secondPose, secondMotion, contacts, out count);
             else if (b.Type == PhysicsServer.ShapeType.Custom)
             {
@@ -176,13 +214,26 @@ public static partial class BackendChecks
                 for (var i = 0; i < local.Shapes; i++) for (var j = 0; j < other.Shapes; j++)
                     {
                         var a = local.Parts[i]; var b = other.Parts[j]; var start = from.Origin + a.Offset.Rotated(from.Rotation);
-                        if (!Annulus.Sweep(start, motion, other.PartCenter(b), MathF.Max(0, b.Inner - a.Outer - margin), a.Outer + b.Outer + margin, out var f) || f > fraction) continue;
+                        float f;
+                        if (a.Rectangle || b.Rectangle)
+                        {
+                            var expanded = a.Rectangle ? a with { Inflation = margin } : a with { Outer = a.Outer + margin };
+                            if (!SweepParts(expanded, from, motion, b, other.Pose, out f)) continue;
+                        }
+                        else if (!Annulus.Sweep(start, motion, other.PartCenter(b), MathF.Max(0, b.Inner - a.Outer - margin), a.Outer + b.Outer + margin, out f)) continue;
+                        if (f > fraction) continue;
                         best = other; source = a; target = b; fraction = f;
                     }
             }
             if (best is null) { result.SetMotion(motion); return false; }
             var travel = motion * fraction; var center = from.Origin + source.Offset.Rotated(from.Rotation) + travel; var at = best.PartCenter(target);
             var normal = PartNormal(center, at, target); var point = at + normal * (center.DistanceTo(at) < target.Inner ? -target.Inner : target.Outer);
+            if (source.Rectangle || target.Rectangle)
+            {
+                var pose = from; pose.Origin += travel;
+                PartGap(source.Rectangle ? source with { Inflation = margin } : source with { Outer = source.Outer + margin }, pose,
+                    target, best.Pose, out var towardTarget, out _, out point); normal = -towardTarget;
+            }
             result.SetCollision(body, source.Index, best.RID, target.Index, point, normal, 0, best.PointVelocity(point), travel, motion - travel, fraction, fraction);
             MotionResultHook?.Invoke(body, result); return true;
         }

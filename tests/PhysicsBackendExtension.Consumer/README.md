@@ -202,3 +202,12 @@ reads after 128 warm frames and collection at zero owner/all-thread managed byte
 `--lifecycle` additionally rejects negative samples and Islands greater than Active,
 retaining the previous successful publication and terminal error cleanup.
 The registered geometry remains bounded to its implemented circle/annulus model.
+
+`--rectangle-geometry`, with optional `--cpu`/`--gpu` and `--threaded`, checks
+actual rotated/offset unit-pose rectangular contours, Area monitoring and point
+queries, all six direct queries, body motion, deepest rest, mass/inertia, all CCD
+modes, full linear/angular impulse response and private replay. Each warmed query
+and contact/replay bracket measures 128 complete frames at 0/0 managed bytes.
+Registered-only controls preserve the custom annulus hole and inner-boundary
+response. The shared pose precondition remains unit scale and zero skew; other
+primitive/contour families and target-device acceptance retain separate gates.

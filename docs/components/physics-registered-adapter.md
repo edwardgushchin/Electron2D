@@ -1613,3 +1613,80 @@ coverage metadata edits are documented separately; no compiled input changed.
 Process proofs observe exactly zero/one retained numerical thread for serial/separate,
 lavapipe only for GPU and no NVIDIA driver. The lifecycle regression and complete
 default registered consumer also return zero on that same frozen runtime.
+
+## Registered rectangle numerics
+
+The independent public-only implementation now retains each enabled rectangle's
+actual transformed half-edges and logical slot. Circle/annulus paths remain active.
+Rectangle/circle and rectangle/rectangle contacts use separating axes, nearest
+rounded-corner axes and clipped support ranges. Areas, point/ray queries, all four
+shape-query families, body motion and selected shape-pair dispatch use those same
+contours. The existing shared unit-scale/zero-skew physics-pose precondition is
+retained; dimensions come from RectangleShape.Size. No built-in world or numerical
+solver is invoked by this implementation.
+
+Mass combines actual rectangle area and centroidal moment with existing circular
+areas and parallel-axis offsets. Standalone pair dispatch tests independent swept
+convex regions, including rectangles whose synchronized trajectories never meet.
+Custom annulus/rectangle tests retain the hollow region and its inner boundary.
+Continuous rectangle motion follows relative linear and angular motion. A fixed
+separating-axis certificate considers each vertex-pair gap, closing speed and a
+bound on rotational acceleration; it avoids exhausting global-speed microsteps
+near tangency without skipping a possible support change. Explicit advancement
+and interval-budget failures remain errors, not a fallback or silent miss.
+
+The --rectangle-geometry consumer shares CPU/GPU/registered scenes in serial and
+separate numerical modes. It verifies rotated/offset thin rectangles and disabled
+index gaps, point misses within the long-side envelope, physical ray points/normals,
+circle and rectangle casts, body motion, real contact pairs, deepest rest selection,
+exclusions and masks. A compound rectangle/circle body checks area-weighted center
+and inertia. Elastic rectangle/circle and rectangle/rectangle contacts run all
+three CCD modes with actual scene contact monitoring and private replay. Entry
+fires once per replayed frame; restore itself remains silent. Full step impulses
+must explain both bodies' velocity changes. A corner contact exercises angular
+leverage and inelastic energy; thin-wall and rotational-bar controls exercise
+translational and angular CastShape response. Registered annulus checks verify
+that all completed rectangle corners remain within the inner-boundary allowance,
+with actual contacts and no added kinetic energy; tangential motion is permitted.
+
+Each query/frame and six contact/replay cases plus the angular-contact case warm
+128 intervals and measure another 128 at strict 0/0 owner/all-thread managed bytes.
+Point/ray/rest coordinates permit .002 scene units, cast fractions 1/256 plus .00002
+for the shared eight-refinement bracket, mass/center reads .0002, paired momentum
+.002 and full impulse .02–.03. Angular moment comparison permits .005 plus step
+duration × maximum before/after linear speed × total impulse magnitude: published
+contact coordinates may precede final pose integration. This is a bound on the
+lever's sampling interval, not a subtracted allocation allowance. The angular
+corner runs at 1/2048 s with positive angular response and energy at most 400.1;
+the rotating 320×.5 bar at 30 rad/s uses .015 s and a 102-percent energy ceiling.
+The custom ring's radius limit is inner radius 5 plus the accepted .3 contact
+allowance and .001 float slack; its energy ceiling is initial 50 plus .1.
+
+The isolated baseline probe calls the old public statistics scenario to register
+its real factory, then attaches a rectangle through ordinary public scene API.
+The preserved baseline consumer rejects it in primitive decoding; the candidate
+executes it. Evidence is under bin/physics-rectangle-provider/2026-10-14, with the
+final source/runtime manifest and serial/separate process proofs in final2.
+Software Vulkan uses explicitly pinned CPU lavapipe and excludes NVIDIA hardware.
+No target-GPU advantage or real-window FPS is inferred. General capsule/segment/
+polygon/boundary/directed-ray numerical integration, arbitrary custom algorithms,
+complete extension/inherited/network/native-memory and platform gates stay open.
+
+Final evidence is based on main `3e948e73aea113d80389544dba624f931b72e662` and
+this consumer slice. The 4,180 source inputs fingerprint is
+`46dbbd710bcc502aafc236e6e88abd73e4e07b836942e0e4745f17065f4a3875`;
+loaded runtime/consumer DLLs are respectively
+`aa4b0dedab294af9ac4159ead2e36cfd6b76a718b6b4e2ff3d911771c67b4b5c` and
+`9a86c6e425429c9402db4df6144c5223de34dae428cbcdfcfcf86e7fcb1126b2`.
+The final2 cohort checks six numerical profiles plus default registered, custom,
+curved-annulus and statistics regressions. All process/file proofs are retained;
+only noncompiled README/coverage evidence changes afterward. Real rectangle Area
+monitoring has one entry transition and repeated overlap/point reads inside the
+query/frame zero-byte bracket. Production API and geometry-policy decisions are
+unchanged; existing coverage states remain bounded by broader family acceptance.
+
+Deepest-selection/mask/exclusion topology changes, standalone pairs, the thin-wall/
+rotational-bar controls and the custom ring are separate functional controls.
+Their construction/first-use costs are not labelled allocation-free. The warmed
+brackets include all six direct query reads or complete contact/replay frames;
+Area overlap and point filtering are also inside the measured query bracket.

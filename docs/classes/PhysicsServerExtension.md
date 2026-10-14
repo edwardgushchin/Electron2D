@@ -80,3 +80,9 @@ now verifies scene Body/Area policy through selected point queries, numerical
 guards and 128 changed-policy full frames at zero managed allocation. Native
 CPU/GPU/registered worlds each pass with both renderers and target pixel checks;
 full registered geometry and final acceptance remain open.
+
+[Registered rectangle numerics](../components/physics-registered-adapter.md#registered-rectangle-numerics)
+now exercise transformed rectangular regions in the independent provider through
+scene/raw queries, contacts, mass, CCD and replay. This is executable evidence for
+its owned implementation boundary; broader shape families and numerical acceptance
+remain open. The runtime declaration family and signatures are unchanged.

@@ -1549,3 +1549,8 @@ WebP lossless/lossy saving, live codec settings, compressed-source conversion, a
 The [EXR I/O slice](components/image-exr.md) supplies precision-preserving HDR file/buffer load and lossless save. Image and texture resource discovery includes DDS and EXR alongside PNG/JPEG/WebP/BMP/TGA/SVG; typed archives also expose their registered extensions. GPU float sampling, explicit Compatibility byte conversion and float-driver rejection are separate exercised profiles.
 
 Theme archive/startup integration adds Theme.Persistence.cs and ThemeDB.Project.cs to the existing Theme/ThemeDB types, with typed project settings and shared Control/Window lookup. It introduces no runtime assembly or backend type.
+
+The [registered rectangle consumer](components/physics-registered-adapter.md#registered-rectangle-numerics)
+now verifies actual rectangle/circle regions, mass, contacts, queries and CCD behind
+PhysicsServerExtension, retaining its public-only implementation and current
+production type inventory. This adds no shipped backend type or runtime API.
