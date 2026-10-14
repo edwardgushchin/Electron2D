@@ -36,6 +36,9 @@ public sealed partial class SceneTree : MainLoop
             (tree, value) => tree.PhysicsInterpolation = value, _ => false)
     ]);
 
+    internal double ProcessDelta { get; private set; }
+    internal double PhysicsDelta { get; private set; }
+
     private readonly object _workGate = new();
     private readonly int _ownerThreadId = Environment.CurrentManagedThreadId;
     private readonly HashSet<GroupOperationKey> _uniqueGroupOperations = [];
@@ -1251,6 +1254,7 @@ public sealed partial class SceneTree : MainLoop
 
         BeginExecution();
         _inPhysicsFrame = physics;
+        if (physics) PhysicsDelta = delta; else ProcessDelta = delta;
         var captureInterpolation = physics && _physicsInterpolation;
         List<Exception>? errors = null;
 
@@ -1296,7 +1300,7 @@ public sealed partial class SceneTree : MainLoop
 
                 try
                 {
-                    node.RunProcess(delta, unscaledDelta, physics);
+                    node.RunProcess(unscaledDelta, physics);
                 }
                 catch (Exception error)
                 {

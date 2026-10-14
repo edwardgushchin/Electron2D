@@ -68,10 +68,10 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public bool UniqueNameInOwner { get; set; }`](#p-electron2d-node-uniquenameinowner) | Enables owner-scoped `%Name` lookup when this name is unclaimed. |
 | [`public Node? Parent { get; }`](#p-electron2d-node-parent) | Gets the direct parent. |
 | [`public PhysicsInterpolationMode PhysicsInterpolationMode { get; set; }`](#p-electron2d-node-physicsinterpolationmode) | Inherits, enables or disables physics presentation interpolation. |
-| [`public double PhysicsProcessDeltaTime { get; }`](#p-electron2d-node-physicsprocessdeltatime) | Gets the delta from the most recent SceneTree-managed physics-process frame delivered to this node. |
+| [`public double PhysicsProcessDeltaTime { get; }`](#p-electron2d-node-physicsprocessdeltatime) | Gets the current or most recent physics-frame duration of the attached scene tree. |
 | [`public bool PhysicsProcessEnabled { get; set; }`](#p-electron2d-node-physicsprocessenabled) | Gets or sets whether this node participates in host-driven physics-process frames. |
 | [`public int PhysicsProcessPriority { get; set; }`](#p-electron2d-node-physicsprocesspriority) | Gets or sets this node's ascending physics-process order key. |
-| [`public double ProcessDeltaTime { get; }`](#p-electron2d-node-processdeltatime) | Gets the delta from the most recent SceneTree-managed process frame delivered to this node. |
+| [`public double ProcessDeltaTime { get; }`](#p-electron2d-node-processdeltatime) | Gets the current or most recent process-frame duration of the attached scene tree. |
 | [`public bool ProcessEnabled { get; set; }`](#p-electron2d-node-processenabled) | Gets or sets whether this node participates in host-driven process frames. |
 | [`public ProcessMode ProcessMode { get; set; }`](#p-electron2d-node-processmode) | Gets or sets the pause policy used by both process callback lanes. |
 | [`public int ProcessPriority { get; set; }`](#p-electron2d-node-processpriority) | Gets or sets this node's ascending process-frame order key. |
@@ -337,13 +337,13 @@ Defaults to `Inherit` for ordinary nodes, with a root resolving to On. `Control`
 <a id="p-electron2d-node-physicsprocessdeltatime"></a>
 ### `public double PhysicsProcessDeltaTime { get; }`
 
-Gets the delta from the most recent SceneTree-managed physics-process frame delivered to this node.
+Gets the current or most recent physics-frame duration of the attached scene tree.
 
-**Value:** The last delivered physics-process delta in seconds, or zero before the first managed delivery.
+**Value:** The tree's scaled physics duration in seconds, or zero while detached or before its first physics frame.
 
 **Remarks:** `Engine` applies `Engine.TimeScale` before an Engine-driven delivery.
 
-**Remarks:** Manual `ElectronObject.Notify(int)` delivery does not update this value.
+**Remarks:** All attached nodes observe the same lane duration, including disabled/paused nodes. SceneTree commits it before frame-start callbacks. Manual `ElectronObject.Notify(int)` does not advance it. Attached reads require the owner thread; disposed reads reject.
 
 <a id="p-electron2d-node-physicsprocessenabled"></a>
 ### `public bool PhysicsProcessEnabled { get; set; }`
@@ -370,13 +370,13 @@ Gets or sets this node's ascending physics-process order key.
 <a id="p-electron2d-node-processdeltatime"></a>
 ### `public double ProcessDeltaTime { get; }`
 
-Gets the delta from the most recent SceneTree-managed process frame delivered to this node.
+Gets the current or most recent process-frame duration of the attached scene tree.
 
-**Value:** The last delivered process delta in seconds, or zero before the first managed delivery.
+**Value:** The tree's scaled process duration in seconds, or zero while detached or before its first process frame.
 
 **Remarks:** `Engine` applies `Engine.TimeScale` before an Engine-driven delivery.
 
-**Remarks:** Manual `ElectronObject.Notify(int)` delivery does not update this value.
+**Remarks:** All attached nodes observe the same lane duration, including disabled/paused nodes. SceneTree commits it before frame-start callbacks. Manual `ElectronObject.Notify(int)` does not advance it. Attached reads require the owner thread; disposed reads reject.
 
 <a id="p-electron2d-node-processenabled"></a>
 ### `public bool ProcessEnabled { get; set; }`

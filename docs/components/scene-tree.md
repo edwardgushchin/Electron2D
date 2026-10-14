@@ -75,7 +75,7 @@ The component depends on Core's `MainLoop` and `EventConnection`, typed Input ev
 
 ## Current implementation status and exclusions
 
-Implemented and covered by executable checks. Core Engine supplies host-driven time scaling, original process-step delivery for `Timer.IgnoreTimeScale` and original lane-delta delivery for `SceneTreeTimer` and `Tween.SetIgnoreTimeScale`, fixed-step scheduling, and the fraction used by the executable 2D interpolation path. Engine.Run supplies an owner-thread window clock/pump and frame wait. There is no background game-loop thread, permission request implementation, operating-system focus synchronization, scene file loader/reload, complete GUI input consumption, multiplayer polling, accessibility backend, editor behavior, or wider physics server/area/joint simulation. In-memory current-scene replacement is available through detached nodes and PackedScene. The root viewport GUI input and focus path runs in this component. Blocked reference APIs and their missing domains are enumerated in the [`SceneTree`](../coverage/classes/SceneTree.md), [`Timer`](../coverage/classes/Timer.md), [`Tween`](../coverage/classes/Tween.md), and [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers); no placeholder surface is exposed for them.
+Implemented and covered by executable checks. Core Engine supplies host-driven time scaling, original process-step delivery for `Timer.IgnoreTimeScale` and original lane-delta delivery for `SceneTreeTimer` and `Tween.SetIgnoreTimeScale`, fixed-step scheduling, and the fraction used by the executable 2D interpolation path. Engine.Run supplies an owner-thread window clock/pump and frame wait. The owner-driven game loop uses the current GUI/input, multiplayer polling and selected body/Area/joint paths. Their complete contracts and platform limits remain on the owning domain pages. There is no background game-loop thread; permission requests, scene file reload, accessibility and editor capabilities retain their explicit dependency gates. In-memory current-scene replacement is available through detached nodes and PackedScene. The root viewport GUI input and focus path runs in this component. Blocked reference APIs and their missing domains are enumerated in the [`SceneTree`](../coverage/classes/SceneTree.md), [`Timer`](../coverage/classes/Timer.md), [`Tween`](../coverage/classes/Tween.md), and [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers); no placeholder surface is exposed for them.
 
 ## Verification
 
@@ -130,3 +130,35 @@ The exact SceneTree.Defer scheduler and SceneTree.SetDeferred now use a Scene-ow
 Prepared standard-scene delivery and typed setters have zero invocation allocation, including prepared one-shot first delivery. First type/capacity growth, subscription and allocations performed by handlers/accessors remain separate; native multicast removal with multiple listeners can allocate. Arbitrary custom schedulers preserve their independent captured Actions and may allocate. Deferred delivery never extends a borrowed input event lifetime.
 
 EventConnectionPhysicsTests verifies mixed typed/untyped FIFO order, next-batch work, failures followed by later work, closed-scheduler subscription/emission policy, 256 concurrent producers, reference release on execution/failure/finalization/activation rollback, and 640 first one-shot callbacks for immediate and scene-deferred profiles with singleton accessors. Selected CPU/GPU full frames retain 128 callbacks per immediate and deferred arity plus body/shape transitions at strict zero owner/all-thread bytes. Real picking and legacy custom-scheduler/concurrency/error checks remain included. Software Vulkan is functional evidence; hardware/native/foreign/network/performance acceptance stays open.
+
+## Shared node frame time (2026-10-14)
+
+Node process/physics delta observations now read the attached tree's current or
+most recent lane duration, including nodes without callbacks and disabled/paused
+nodes. The tree commits time before frame-start observers; detachment returns zero
+and reattachment adopts the receiving tree. Owner/lifetime checks apply. Manual
+notifications do not advance time. CharacterBody.MoveAndSlide uses physics time
+only during a physics frame and process time otherwise, with no cross-lane or
+first-frame guess. Zero duration contributes no velocity travel; penetration
+recovery remains executable.
+
+PhysicsNodeDeltaTests uses controller-driven public character movement on selected
+CPU/GPU ordinary/separate modes, node lifecycle/error observations and scaled/zero
+Engine time. Two complete-frame brackets warm 128 and measure 128 at strict 0/0
+owner/all-thread managed bytes. Existing CharacterBody, internal-lane/hierarchy,
+surface, ray, snapshot and checkpoint checks retain their numerical assertions;
+external callers explicitly prepare their process lane rather than relying on the
+removed fallback. The initial CPU/GPU regression moved zero instead of three scene
+units. Evidence is retained under bin/physics-node-delta/2026-10-14. Full inherited,
+native, foreign and hardware/window/performance acceptance remains open.
+
+The final retained Release runtime passes eleven fresh profiles: four node-delta
+CPU/GPU ordinary/separate modes, paired complete shared-physics and state/surface
+contracts, portable CPU/GPU snapshots, GPU common checkpoints and resident motion.
+All eight new warm brackets report zero owner/all-thread managed bytes. CPU maps
+no graphics driver; GPU maps only CPU Vulkan lavapipe. Seven build, scoped-format,
+compiled-coverage and wiki test/generate/check gates pass. The compiled surface
+remains 13,961 declarations, with 832 public types and 850 wiki files. Current
+source/runtime manifests and process proofs are retained in
+bin/physics-node-delta/2026-10-14/validation.json. These checks establish functional
+behavior; native memory and hardware/window performance acceptance remain open.

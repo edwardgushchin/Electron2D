@@ -141,7 +141,7 @@ internal static class PhysicsSnapshotTests
     {
         using var a = new Rig(from); using var b = new Rig(to);
         var (platform, rider, character) = Build(a); var (otherPlatform, otherRider, otherCharacter) = Build(b);
-        a.Step(30); for (var i = 0; i < 8; i++) { character.Velocity = new(15, 40); character.MoveAndSlide(); a.Step(); }
+        a.Tree.ProcessFrame(1d / 60); a.Step(30); for (var i = 0; i < 8; i++) { character.Velocity = new(15, 40); character.MoveAndSlide(); a.Step(); }
         b.Step(2);
         platform.Position += new Vector2(20, -5); character.MoveAndSlide();
         Transfer(a, b);

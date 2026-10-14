@@ -1,6 +1,6 @@
 # Electron2D physics decisions
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 This bounded document owns executable two-dimensional bodies, shapes and areas. [The decision index](index.md) routes other domains.
 
@@ -260,7 +260,7 @@ One node now supplies solid concave terrain, hollow closed boundaries or sensors
 <a id="adr-0067"></a>
 ## ADR 0067: Character sliding and platform following
 
-Last updated: 2026-09-30
+Last updated: 2026-10-14
 
 - Status: Accepted
 - Scope: Caller-driven CharacterBody grounded/floating motion and typed slide snapshots
@@ -273,6 +273,7 @@ The shared PhysicsBody motion test, typed KinematicCollision result, RID excepti
 ### Decision
 
 - Map the spatial character to `CharacterBody : PhysicsBody`, keeping the Entity and CollisionObject branches intact. Keep `MotionMode` and `PlatformOnLeave` as properties; name their typed C# enum types `CharacterMotionMode` and `CharacterPlatformOnLeave` because C# cannot give a nested enum and property the same identifier. Preserve numeric enum values, applicable defaults and PackedScene state. Do not store transient contacts, flags or platform RID in PackedScene.
+- MoveAndSlide selects the attached tree's physical duration during a physics frame and the process duration otherwise, independent of the character's own callback enablement. The pinned [phase selection](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/character_body_2d.cpp#L40) uses shared tree time. Zero is a real duration and is never replaced with another lane or a guessed first-frame interval; it contributes no velocity travel. Numerical recovery may still resolve initial penetration. The former documented pre-first/outside-physics fallback is withdrawn as an unaccepted implementation deviation. Existing callers/tests must supply the intended frame lane.
 - Reuse the current server body-motion test for each slide without constructing a public result per fixed frame. In grounded mode classify normals against normalized UpDirection and FloorMaxAngle, apply stop/constant-speed/block-on-wall/ceiling controls, and snap a previously grounded body down only when not facing upward. Floating mode treats contacts as walls and applies WallMinSlideAngle. MaxSlides bounds the loop; copied KinematicCollision objects expose individual and last contacts. Desired Velocity remains caller-owned; the body reports Area/world gravity but game code chooses whether to add it. Validate finite motion and public options before mutation.
 - Sample the last floor or wall body's point velocity and collision layer before movement. Floor/wall layer masks gate carry; movement caused by a platform excludes that platform RID, then a departure policy adds all, only upward, or none of its velocity to Velocity. Keep these operations on the space owner thread and use the existing body/Area field and RID lifetimes.
 - After character scene movement, direct queries prepare its backend fixture at the new pose immediately. Retain the previous solved pose separately; before the next fixed step reset a temporarily prepared query pose and send the final scene pose through the backend kinematic target operation. This preserves contact velocity and same-frame query identity. The current registered-body scan for platform point velocity is linear; replace it only after measured large-world cost. Fix the shared body-motion kernel to report initial contact when movement points inward along a touching slope rather than skipping that pair. Warmed unchanged movement reuses candidate, platform-exclusion and slide-result storage.

@@ -246,3 +246,24 @@ receding/tangent and angular-only velocities do not enlarge recovery depth.
 PhysicsMovingOneWayTests checks raw/scene callers, roles, rotated slots, six finite
 source families and eight 128-warmup/128-measured complete-frame brackets at zero
 managed allocation. Native/platform/hardware/performance acceptance remains open.
+
+## Shared node frame time (2026-10-14)
+
+Node process/physics delta observations now read the attached tree's current or
+most recent lane duration, including nodes without callbacks and disabled/paused
+nodes. The tree commits time before frame-start observers; detachment returns zero
+and reattachment adopts the receiving tree. Owner/lifetime checks apply. Manual
+notifications do not advance time. CharacterBody.MoveAndSlide uses physics time
+only during a physics frame and process time otherwise, with no cross-lane or
+first-frame guess. Zero duration contributes no velocity travel; penetration
+recovery remains executable.
+
+PhysicsNodeDeltaTests uses controller-driven public character movement on selected
+CPU/GPU ordinary/separate modes, node lifecycle/error observations and scaled/zero
+Engine time. Two complete-frame brackets warm 128 and measure 128 at strict 0/0
+owner/all-thread managed bytes. Existing CharacterBody, internal-lane/hierarchy,
+surface, ray, snapshot and checkpoint checks retain their numerical assertions;
+external callers explicitly prepare their process lane rather than relying on the
+removed fallback. The initial CPU/GPU regression moved zero instead of three scene
+units. Evidence is retained under bin/physics-node-delta/2026-10-14. Full inherited,
+native, foreign and hardware/window/performance acceptance remains open.

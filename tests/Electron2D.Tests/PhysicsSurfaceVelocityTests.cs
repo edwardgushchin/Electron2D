@@ -59,7 +59,7 @@ internal sealed class PhysicsSurfaceVelocityTests(bool gpu, PhysicsServer.Backen
         if (gpu) floor.Space!.EnableGPUSolver();
         if (mode == 0)
         {
-            for (var i = 0; i < 100; i++) tree.PhysicsFrame(1d / 60);
+            for (var i = 0; i < 100; i++) tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
             body.Sleeping = true;
             floor.ConstantLinearVelocity = new(120, 0);
             Check(!body.Sleeping, "A changed belt wakes its touching sleeping body.");
@@ -70,20 +70,20 @@ internal sealed class PhysicsSurfaceVelocityTests(bool gpu, PhysicsServer.Backen
             if (mode == 1) floor.ConstantLinearVelocity = new(0, -120);
             else floor.ConstantAngularVelocity = 2;
         }
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         using var view = PhysicsServer.BodyGetDirectState(body.GetRID())!;
         Check(view.GetContactCount() > 0, "The surface creates real contacts.");
         var point = view.GetContactColliderPosition(0) - floor.GlobalPosition;
         var expected = floor.ConstantLinearVelocity + new Vector2(-point.Y, point.X) * floor.ConstantAngularVelocity;
         Near(view.GetContactColliderVelocityAtPosition(0), expected);
-        for (var i = 0; i < 90; i++) tree.PhysicsFrame(1d / 60);
+        for (var i = 0; i < 90; i++) tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         Check(floor.Position == new Vector2(0, 100) && floor.Rotation == 0, "Virtual velocity never moves the surface pose.");
         if (mode == 0)
         {
             Check(body.LinearVelocity.X > 70 && body.Position.X > 50, $"Belt response: {body.LinearVelocity}, {body.Position}.");
-            for (var i = 0; i < 96; i++) tree.PhysicsFrame(1d / 60);
+            for (var i = 0; i < 96; i++) tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
             var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var before = GC.GetTotalAllocatedBytes(true);
-            for (var i = 0; i < 64; i++) tree.PhysicsFrame(1d / 60);
+            for (var i = 0; i < 64; i++) tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
             var bytes = GC.GetTotalAllocatedBytes(true) - before;
             var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore;
             Check(ownerBytes == 0 && bytes == 0, $"Surface contact frames allocated {ownerBytes}/{bytes} owner/all-thread bytes.");
@@ -127,20 +127,20 @@ internal sealed class PhysicsSurfaceVelocityTests(bool gpu, PhysicsServer.Backen
         floor.AddChild(new CollisionShape { Shape = floorShape }); character.AddChild(new CollisionShape { Shape = circle });
         root.AddChild(floor); root.AddChild(character); using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Surface fixture uses the explicitly selected backend.");
         if (gpu) floor.Space!.EnableGPUSolver();
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         character.MoveAndSlide(); Check(character.IsOnFloor(), "Character finds the conveyor floor.");
         Near(character.GetPlatformVelocity(), new(60, 0));
         character.Velocity = Vector2.Zero; var oldX = character.Position.X;
         character.MoveAndSlide(); Check(character.Position.X > oldX + .5f, "Character inherits belt motion.");
-        floor.Position = new(10, 100); tree.PhysicsFrame(1d / 60);
+        floor.Position = new(10, 100); tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         Near(floor.Position, new(10, 100));
         using var state = PhysicsServer.BodyGetDirectState(floor.GetRID())!;
         Near(state.LinearVelocity.X, 660, .1f);
         state.LinearVelocity = new(80, 0); Near(state.LinearVelocity, new(80, 0));
         state.AngularVelocity = .2f; Near(state.AngularVelocity, .2f);
-        floor.Rotation = .1f; tree.PhysicsFrame(1d / 60);
+        floor.Rotation = .1f; tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         Near(floor.Rotation, .1f, .01f); Near(state.AngularVelocity, 6.2f, .15f);
-        tree.PhysicsFrame(1d / 60); Near(state.LinearVelocity, new(80, 0)); Near(state.AngularVelocity, .2f);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60); Near(state.LinearVelocity, new(80, 0)); Near(state.AngularVelocity, .2f);
         Near(floor.Position, new(10, 100)); Near(floor.Rotation, .1f, .01f);
     }
 

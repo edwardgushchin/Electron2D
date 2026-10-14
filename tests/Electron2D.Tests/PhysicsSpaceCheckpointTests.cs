@@ -106,7 +106,7 @@ internal static class PhysicsSpaceCheckpointTests
         moving.AddChild(new CollisionShape { Shape = r.Circle }); r.Root.AddChild(moving);
         var character = new CharacterBody { Name = "Character", Position = new(200, 0), Velocity = new(30, 5) };
         character.AddChild(new CollisionShape { Shape = r.Circle }); r.Root.AddChild(character);
-        r.Step(90); Check(body.Sleeping, "Scene body sleeps before checkpoint");
+        r.Tree.ProcessFrame(1d / 60); r.Step(90); Check(body.Sleeping, "Scene body sleeps before checkpoint");
         body.ApplyCentralForce(new(120, 30)); body.ConstantForce = new(6, -3); body.ConstantTorque = 2;
         moving.Position = new(-60, 20); character.MoveAndSlide();
         using var saved = r.Space.CreateCheckpoint(); var start = Read(body); var target = moving.Position; var characterStart = character.Position;

@@ -162,7 +162,7 @@ internal sealed class SeparationRayShapeTests(PhysicsServer.Backend backend)
         ray.SlideOnSlope = true;
         Check(PhysicsServer.BodyTestMotion(mover.GetRID(), parameters, result), "Sliding rays participate without the flag.");
         mover.PhysicsProcessEnabled = true;
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         mover.Velocity = new(0, 600);
         Check(mover.MoveAndSlide() && mover.IsOnFloor() && mover.Velocity.Y == 0 &&
             mover.GetSlideCollision(0).GetColliderRID() == floor.GetRID(),
@@ -203,14 +203,14 @@ internal sealed class SeparationRayShapeTests(PhysicsServer.Backend backend)
         body.AddChild(new CollisionShape { Shape = rectangle });
         root.AddChild(area); root.AddChild(body);
         using var tree = new SceneTree(root);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         Check(area.OverlapsBody(body), "Area ray detects a directed surface crossing.");
-        for (var index = 0; index < 64; index++) tree.PhysicsFrame(1d / 60);
+        for (var index = 0; index < 64; index++) tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         var before = GC.GetTotalAllocatedBytes(true);
-        for (var index = 0; index < 64; index++) tree.PhysicsFrame(1d / 60);
+        for (var index = 0; index < 64; index++) tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         Check(GC.GetTotalAllocatedBytes(true) == before, "Warmed directed Area frames allocate no managed bytes.");
         area.Position = new(0, 23);
-        tree.PhysicsFrame(1d / 60);
+        tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60);
         Check(!area.OverlapsBody(body), "Area ray starting inside solid does not overlap.");
     }
 

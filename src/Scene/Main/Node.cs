@@ -800,17 +800,25 @@ public partial class Node : ElectronObject
         }
     }
 
-    /// <summary>Gets the delta from the most recent SceneTree-managed process frame delivered to this node.</summary>
-    /// <value>The last delivered process delta in seconds, or zero before the first managed delivery.</value>
-    /// <remarks><see cref="Engine"/> applies <see cref="Engine.TimeScale"/> before an Engine-driven delivery.</remarks>
-    /// <remarks>Manual <see cref="ElectronObject.Notify(int)"/> delivery does not update this value.</remarks>
-    public double ProcessDeltaTime { get; private set; }
+    /// <summary>Gets the current or most recent process-frame duration of the attached scene tree.</summary>
+    /// <value>The tree's scaled process duration in seconds, or zero while detached or before its first process frame.</value>
+    /// <remarks>All attached nodes observe the same lane duration, including disabled or paused nodes. It is committed before frame-start callbacks. Manual notification does not advance it.</remarks>
+    /// <exception cref="InvalidOperationException">An attached node is read off the scene owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
+    public double ProcessDeltaTime
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return Tree?.ProcessDelta ?? 0; }
+    }
 
-    /// <summary>Gets the delta from the most recent SceneTree-managed physics-process frame delivered to this node.</summary>
-    /// <value>The last delivered physics-process delta in seconds, or zero before the first managed delivery.</value>
-    /// <remarks><see cref="Engine"/> applies <see cref="Engine.TimeScale"/> before an Engine-driven delivery.</remarks>
-    /// <remarks>Manual <see cref="ElectronObject.Notify(int)"/> delivery does not update this value.</remarks>
-    public double PhysicsProcessDeltaTime { get; private set; }
+    /// <summary>Gets the current or most recent physics-frame duration of the attached scene tree.</summary>
+    /// <value>The tree's scaled physics duration in seconds, or zero while detached or before its first physics frame.</value>
+    /// <remarks>All attached nodes observe the same lane duration, including disabled or paused nodes. It is committed before frame-start callbacks. Manual notification does not advance it.</remarks>
+    /// <exception cref="InvalidOperationException">An attached node is read off the scene owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
+    public double PhysicsProcessDeltaTime
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return Tree?.PhysicsDelta ?? 0; }
+    }
 
     /// <summary>Occurs on the parent after a direct child is structurally attached and child order is reported.</summary>
     /// <remarks>
@@ -2035,16 +2043,14 @@ public partial class Node : ElectronObject
     internal double GetUnscaledProcessDelta(bool physics) =>
         physics ? _unscaledPhysicsProcessDeltaTime : _unscaledProcessDeltaTime;
 
-    internal void RunProcess(double delta, double unscaledDelta, bool physics)
+    internal void RunProcess(double unscaledDelta, bool physics)
     {
         if (physics)
         {
-            PhysicsProcessDeltaTime = delta;
             _unscaledPhysicsProcessDeltaTime = unscaledDelta;
         }
         else
         {
-            ProcessDeltaTime = delta;
             _unscaledProcessDeltaTime = unscaledDelta;
         }
 
