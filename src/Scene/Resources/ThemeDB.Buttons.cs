@@ -37,6 +37,11 @@ public sealed partial class ThemeDB
         _defaultTheme.SetStyleBox("normal", "Button", normal); _defaultTheme.SetStyleBox("hover", "Button", hover);
         _defaultTheme.SetStyleBox("pressed", "Button", pressed); _defaultTheme.SetStyleBox("disabled", "Button", disabled);
         _defaultTheme.SetStyleBox("focus", "Button", focus); AddButtonTextDefaults("Button");
+        AddButtonTextDefaults("LinkButton");
+        _defaultTheme.SetColor("font_disabled_color", "LinkButton", Colors.Black);
+        _defaultTheme.SetColor("font_hover_pressed_color", "LinkButton", Colors.Black);
+        _defaultTheme.SetConstant("underline_spacing", "LinkButton", 2);
+        _defaultTheme.SetStyleBox("focus", "LinkButton", focus);
         _defaultTheme.SetIcon("arrow", "OptionButton", CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"><path d="M1 2L4 6L7 2" fill="none" stroke="#ddd" stroke-width="2"/></svg>"""u8));
         _defaultTheme.SetConstant("arrow_margin", "OptionButton", 4); _defaultTheme.SetConstant("modulate_arrow", "OptionButton", 0);
 

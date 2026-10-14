@@ -1,0 +1,227 @@
+{
+  "mappings": [
+    {
+      "godot": "class:LinkButton",
+      "electron2d": "T:Electron2D.LinkButton",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::enum:UnderlineMode",
+      "electron2d": "T:Electron2D.LinkButton.UnderlineMode",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::enum_value:UnderlineMode.UNDERLINE_MODE_ALWAYS",
+      "electron2d": "enumValue:Electron2D.LinkButton.UnderlineMode.Always()",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::enum_value:UnderlineMode.UNDERLINE_MODE_NEVER",
+      "electron2d": "enumValue:Electron2D.LinkButton.UnderlineMode.Never()",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::enum_value:UnderlineMode.UNDERLINE_MODE_ON_HOVER",
+      "electron2d": "enumValue:Electron2D.LinkButton.UnderlineMode.OnHover()",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::property:ellipsis_char",
+      "electron2d": "property:Electron2D.LinkButton.EllipsisChar()",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::property:focus_mode",
+      "electron2d": "property:Electron2D.Control.FocusMode()",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::property:language",
+      "electron2d": "property:Electron2D.LinkButton.Language()",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::property:mouse_default_cursor_shape",
+      "electron2d": "property:Electron2D.Control.MouseDefaultCursorShape()",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::property:structured_text_bidi_override",
+      "electron2d": "property:Electron2D.LinkButton.StructuredTextBIDIOverride()",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::property:structured_text_bidi_override_options",
+      "electron2d": "property:Electron2D.LinkButton.StructuredTextBIDIOverrideOptions()",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::property:text",
+      "electron2d": "property:Electron2D.LinkButton.Text()",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::property:text_direction",
+      "electron2d": "property:Electron2D.LinkButton.TextDirection()",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::property:text_overrun_behavior",
+      "electron2d": "property:Electron2D.LinkButton.TextOverrunBehavior()",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::property:underline",
+      "electron2d": "property:Electron2D.LinkButton.Underline()",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::property:uri",
+      "electron2d": "property:Electron2D.LinkButton.URI()",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::theme_item:focus",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::theme_item:font",
+      "electron2d": "method:Electron2D.Control.GetThemeFont(System.String,System.String)",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::theme_item:font_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::theme_item:font_disabled_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::theme_item:font_focus_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::theme_item:font_hover_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::theme_item:font_hover_pressed_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::theme_item:font_outline_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::theme_item:font_pressed_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::theme_item:font_size",
+      "electron2d": "method:Electron2D.Control.GetThemeFontSize(System.String,System.String)",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::theme_item:outline_size",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": "LinkButton::theme_item:underline_spacing",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.LinkButton..ctor()",
+      "reason": "Typed construction and inherited drawing, lifetime, cursor, activation, scene and notification hooks for the LinkButton consumer.",
+      "adr": "ADRs 0008/0023/0038/0046/0083"
+    },
+    {
+      "electron2d": "constructor:Electron2D.LinkButton..ctor(System.String)",
+      "reason": "Typed construction and inherited drawing, lifetime, cursor, activation, scene and notification hooks for the LinkButton consumer.",
+      "adr": "ADRs 0008/0023/0038/0046/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.LinkButton.CreateSceneInstanceFactory()",
+      "reason": "Typed construction and inherited drawing, lifetime, cursor, activation, scene and notification hooks for the LinkButton consumer.",
+      "adr": "ADRs 0008/0023/0038/0046/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.LinkButton.Dispose(System.Boolean)",
+      "reason": "Typed construction and inherited drawing, lifetime, cursor, activation, scene and notification hooks for the LinkButton consumer.",
+      "adr": "ADRs 0008/0023/0038/0046/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.LinkButton.GetPropertyDescriptors()",
+      "reason": "Typed construction and inherited drawing, lifetime, cursor, activation, scene and notification hooks for the LinkButton consumer.",
+      "adr": "ADRs 0008/0023/0038/0046/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.LinkButton.OnGetCursorShape(Electron2D.Vector2)",
+      "reason": "Typed construction and inherited drawing, lifetime, cursor, activation, scene and notification hooks for the LinkButton consumer.",
+      "adr": "ADRs 0008/0023/0038/0046/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.LinkButton.OnGetMinimumSize()",
+      "reason": "Typed construction and inherited drawing, lifetime, cursor, activation, scene and notification hooks for the LinkButton consumer.",
+      "adr": "ADRs 0008/0023/0038/0046/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.LinkButton.OnNotification(System.Int32)",
+      "reason": "Typed construction and inherited drawing, lifetime, cursor, activation, scene and notification hooks for the LinkButton consumer.",
+      "adr": "ADRs 0008/0023/0038/0046/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.LinkButton.OnPressed()",
+      "reason": "Typed construction and inherited drawing, lifetime, cursor, activation, scene and notification hooks for the LinkButton consumer.",
+      "adr": "ADRs 0008/0023/0038/0046/0083"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:LinkButton",
+        "LinkButton::enum:UnderlineMode",
+        "LinkButton::enum_value:UnderlineMode.UNDERLINE_MODE_ALWAYS",
+        "LinkButton::enum_value:UnderlineMode.UNDERLINE_MODE_NEVER",
+        "LinkButton::enum_value:UnderlineMode.UNDERLINE_MODE_ON_HOVER",
+        "LinkButton::property:ellipsis_char",
+        "LinkButton::property:focus_mode",
+        "LinkButton::property:language",
+        "LinkButton::property:mouse_default_cursor_shape",
+        "LinkButton::property:structured_text_bidi_override",
+        "LinkButton::property:structured_text_bidi_override_options",
+        "LinkButton::property:text",
+        "LinkButton::property:text_direction",
+        "LinkButton::property:text_overrun_behavior",
+        "LinkButton::property:underline",
+        "LinkButton::property:uri",
+        "LinkButton::theme_item:focus",
+        "LinkButton::theme_item:font",
+        "LinkButton::theme_item:font_color",
+        "LinkButton::theme_item:font_disabled_color",
+        "LinkButton::theme_item:font_focus_color",
+        "LinkButton::theme_item:font_hover_color",
+        "LinkButton::theme_item:font_hover_pressed_color",
+        "LinkButton::theme_item:font_outline_color",
+        "LinkButton::theme_item:font_pressed_color",
+        "LinkButton::theme_item:font_size",
+        "LinkButton::theme_item:outline_size",
+        "LinkButton::theme_item:underline_spacing"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    }
+  ]
+}

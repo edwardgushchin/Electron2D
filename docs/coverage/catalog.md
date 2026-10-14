@@ -433,7 +433,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [LimitAngularVelocityModifier3D](classes/LimitAngularVelocityModifier3D.md) | SkeletonModifier3D | Excluded | 14 |
 | [Line2D](classes/Line2D.md) | Node2D | Partial | 32 |
 | [LineEdit](classes/LineEdit.md) | Control | Partial | 131 |
-| [LinkButton](classes/LinkButton.md) | BaseButton | Blocked | 27 |
+| [LinkButton](classes/LinkButton.md) | BaseButton | Implemented | 27 |
 | [Logger](classes/Logger.md) | RefCounted | Blocked | 7 |
 | [LookAtModifier3D](classes/LookAtModifier3D.md) | SkeletonModifier3D | Excluded | 37 |
 | [MainLoop](classes/MainLoop.md) | Object | Partial | 17 |

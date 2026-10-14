@@ -1,8 +1,8 @@
 # GUI buttons and shortcuts
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
-The component turns pointer, touch, action and shortcut input into themed application actions. It owns [BaseButton](../classes/BaseButton.md), [ButtonGroup](../classes/ButtonGroup.md), [Button](../classes/Button.md), [CheckBox](../classes/CheckBox.md), [CheckButton](../classes/CheckButton.md) and [TextureButton](../classes/TextureButton.md). [Shortcut](../classes/Shortcut.md) and [InputEventShortcut](../classes/InputEventShortcut.md) integrate the input-resource and scene-routing boundary. It reuses Control, Theme, Font, StyleBox, Texture and BitMap; it adds no backend or managed dependency.
+The component turns pointer, touch, action and shortcut input into themed application actions. It owns [BaseButton](../classes/BaseButton.md), [ButtonGroup](../classes/ButtonGroup.md), [Button](../classes/Button.md), [CheckBox](../classes/CheckBox.md), [CheckButton](../classes/CheckButton.md) and [TextureButton](../classes/TextureButton.md) and [LinkButton](../classes/LinkButton.md). [Shortcut](../classes/Shortcut.md) and [InputEventShortcut](../classes/InputEventShortcut.md) integrate the input-resource and scene-routing boundary. It reuses Control, Theme, Font, StyleBox, Texture and BitMap; it adds no backend or managed dependency.
 
 ## Runtime flow
 
@@ -24,7 +24,7 @@ The focused managed suites cover shortcut identity and alternatives, weak contex
 
 Warmed local button/group state, routed shortcuts and reusable hover buffers allocate zero managed bytes in their measured checks. Full routed pointer input deliberately retains the existing temporary Resource-copy ownership contract under [ADR 0038](../decisions/input.md#adr-0038): 64 measured cycles allocate 180,736 bytes, exactly equal to independently measuring their three localized event copies per cycle. The test rejects allocations beyond those copies; this is not a zero-allocation claim for complete pointer dispatch. Native allocations, broad-GUI performance, other-platform execution and owner acceptance remain separate gates.
 
-MenuButton and OptionButton require a real PopupMenu; LinkButton URI activation requires the OS URL-opening service. Independent native popup windows, accessibility semantics, drag/drop and scroll gesture ownership remain separate domains. The current root tooltip host does not claim those APIs. [ADR 0083](../decisions/rendering.md#adr-0083) owns themes, [ADR 0046](../decisions/rendering.md#adr-0046) owns text and [ADR 0023](../decisions/scene.md#adr-0023) owns typed scene storage.
+MenuButton and OptionButton use their owned PopupMenu. LinkButton URI activation uses the existing OS URL-opening service. Independent native popup windows, accessibility semantics, drag/drop and scroll gesture ownership remain separate domains. The current root tooltip host does not claim those APIs. [ADR 0083](../decisions/rendering.md#adr-0083) owns themes, [ADR 0046](../decisions/rendering.md#adr-0046) owns text and [ADR 0023](../decisions/scene.md#adr-0023) owns typed scene storage.
 
 Embedded Controls now reuse the same button/focus/tooltip hooks in independent viewport contexts. Connected SubViewportContainer sections forward input and share drag targets/previews; native cursor/keyboard focus pixels are checked by SubViewportContainerTests. Temporary input Resource-copy and native/other-platform limits remain unchanged.
 
@@ -39,3 +39,9 @@ Embedded Controls now reuse the same button/focus/tooltip hooks in independent v
 FileDialog exercises tooltip ownership under embedded Window GUI sections. Once SceneTree closes its work queues, CancelTooltip clears presenter state and leaves attached layers to recursive root disposal instead of requesting deferred deletion; detached layers still dispose directly. Context-pointer and active-tooltip teardown regressions cover both embedding policies.
 
 `Control.TranslationContext` is a stored local string, empty by default. `Atr`/`AtrN` use it when the call's context is null or empty; a nonempty call argument overrides it. `Tr`/`TrN` retain their explicit context. The property is not inherited from a parent. Set it before assigning text: changing the context alone sends no notification and preserves already prepared captions. `Notify(Node.NotificationTranslationChanged)` refreshes that control; `PropagateNotification` can refresh its subtree. Existing automatic mode, object enablement and inherited domain rules still apply.
+
+## Text links
+
+LinkButton is a distinct BaseButton consumer with a single shaped line, typed structured BiDi options, scalar ellipsis, natural/trimmed size, RTL placement, font outline, state colors, focus style and three underline policies. Its full typed authored state and specialized accessibility-focus/pointing-cursor defaults survive PackedScene and the registered file factory. URI activation precedes Pressed through OS.ShellOpen; empty URI keeps ordinary application actions. Borrowed font edits poll content generation and defer worker invalidation onto the current owner; subscriptions retire without disposing the font.
+
+LinkButtonTests verifies typed/runtime/file behavior and 64 warm active caption/toggle/layout/recording and idle polling cycles with zero managed bytes. Fresh compressed big-endian scene loading runs in a new process and checks actual SDL launch into an isolated xdg-open executable. LinkButtonRenderingTests exercises real text/underline/hover/pressed/released/disabled/focus/RTL-ellipsis pixels and native pointer input on GPU/compatibility; each backend passes 64 warm full rendered frames at zero managed bytes from ProcessFrameStarted through FramePostDraw. Captures are retained in the slice proof. Native allocators, accessibility host integration, ordinary browser acceptance, other platforms and final owner acceptance remain unverified.

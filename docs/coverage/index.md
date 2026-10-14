@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-14
 
+[Text links](../classes/LinkButton.md) now execute shaped captions, typed BiDi/ellipsis, underline/state/focus themes, native pointer activation and persisted URI opening through the OS service. Real GPU/compatibility pixels and warmed managed allocation checks pass; native allocator, accessibility and ordinary desktop/browser acceptance retain separate gates.
+
 [Registered concave numerics](../components/physics-registered-adapter.md#registered-concave-numerics)
 now preserve paired hollow edges, one logical shape slot, rod mass, queries,
 contacts and linear/angular CCD in the independent public-only provider. Shared

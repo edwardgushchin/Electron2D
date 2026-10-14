@@ -327,3 +327,5 @@ Theme resource archives and scenes now persist complete typed theme data, resour
 ## Touch game consumers
 
 [Touch game controls](../components/touch-game-controls.md) connects TouchScreenButton scene-space masks/textures with VirtualJoystick themed analog gestures. Independent action contributions, queued button event delivery, lifecycle cancellation, typed fresh-process scenes and Linux rendered input checks are documented in the component. Physical mobile, foreign backend, inherited semantic accessibility and native allocation acceptance remain separate.
+
+[LinkButton](../classes/LinkButton.md) adds executable text links through the existing font/theme/canvas and BaseButton input paths. Typed BiDi, scalar ellipsis, state underline and scene-file authoring are integrated; URI activation delegates the existing OS opener. Its exact inherited accessibility-focus value does not claim an accessibility service. See GUI buttons for actual rendered/allocation checks and remaining host gates.

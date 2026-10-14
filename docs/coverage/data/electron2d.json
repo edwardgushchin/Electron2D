@@ -6390,6 +6390,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.LinkButton",
+    "kind": "type",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "LinkButton",
+    "signature": "public class Electron2D.LinkButton",
+    "visibility": "public",
+    "baseType": "Electron2D.BaseButton",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.LinkButton.UnderlineMode",
+    "kind": "type",
+    "declaringType": "Electron2D.LinkButton.UnderlineMode",
+    "name": "UnderlineMode",
+    "signature": "public enum Electron2D.LinkButton.UnderlineMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.MainLoop",
     "kind": "type",
     "declaringType": "Electron2D.MainLoop",
@@ -18547,6 +18580,38 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.LinkButton..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.LinkButton",
+    "name": ".ctor",
+    "signature": "public LinkButton()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.LinkButton..ctor(System.String)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.LinkButton",
+    "name": ".ctor",
+    "signature": "public LinkButton(System.String text)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -37106,6 +37171,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.LineTextureMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.LinkButton.UnderlineMode.Always()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.LinkButton.UnderlineMode",
+    "name": "Always",
+    "signature": "public const Electron2D.LinkButton.UnderlineMode Always = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.LinkButton.UnderlineMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.LinkButton.UnderlineMode.Never()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.LinkButton.UnderlineMode",
+    "name": "Never",
+    "signature": "public const Electron2D.LinkButton.UnderlineMode Never = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.LinkButton.UnderlineMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.LinkButton.UnderlineMode.OnHover()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.LinkButton.UnderlineMode",
+    "name": "OnHover",
+    "signature": "public const Electron2D.LinkButton.UnderlineMode OnHover = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.LinkButton.UnderlineMode",
     "value": "1"
   },
   {
@@ -110355,6 +110459,115 @@
     "name": "Unedit",
     "signature": "public System.Void Unedit()",
     "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.LinkButton.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.LinkButton.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.LinkButton.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.LinkButton.OnGetCursorShape(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "OnGetCursorShape",
+    "signature": "protected override Electron2D.CursorShape OnGetCursorShape(Electron2D.Vector2 atPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.CursorShape",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.LinkButton.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.LinkButton.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.LinkButton.OnPressed()",
+    "kind": "method",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "OnPressed",
+    "signature": "protected override System.Void OnPressed()",
+    "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -218803,6 +219016,123 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.LinkButton.EllipsisChar()",
+    "kind": "property",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "EllipsisChar",
+    "signature": "public System.String EllipsisChar { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.LinkButton.Language()",
+    "kind": "property",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "Language",
+    "signature": "public System.String Language { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.LinkButton.StructuredTextBIDIOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "StructuredTextBIDIOverride",
+    "signature": "public Electron2D.StructuredTextParser StructuredTextBIDIOverride { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StructuredTextParser",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.LinkButton.StructuredTextBIDIOverrideOptions()",
+    "kind": "property",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "StructuredTextBIDIOverrideOptions",
+    "signature": "public System.String[] StructuredTextBIDIOverrideOptions { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.LinkButton.Text()",
+    "kind": "property",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "Text",
+    "signature": "public System.String Text { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.LinkButton.TextDirection()",
+    "kind": "property",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "TextDirection",
+    "signature": "public Electron2D.TextDirection TextDirection { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.LinkButton.TextOverrunBehavior()",
+    "kind": "property",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "TextOverrunBehavior",
+    "signature": "public Electron2D.TextOverrunBehavior TextOverrunBehavior { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextOverrunBehavior",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.LinkButton.URI()",
+    "kind": "property",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "URI",
+    "signature": "public System.String URI { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.LinkButton.Underline()",
+    "kind": "property",
+    "declaringType": "Electron2D.LinkButton",
+    "name": "Underline",
+    "signature": "public Electron2D.LinkButton.UnderlineMode Underline { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.LinkButton.UnderlineMode",
     "value": null
   },
   {

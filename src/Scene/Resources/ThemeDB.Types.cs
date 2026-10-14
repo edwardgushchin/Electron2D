@@ -219,6 +219,7 @@ public sealed partial class ThemeDB
         ["LightOccluder"] = ["LightOccluder", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["Line"] = ["Line", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["LineEdit"] = ["LineEdit", "Control", "CanvasItem", "Node", "ElectronObject"],
+        ["LinkButton"] = ["LinkButton", "BaseButton", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["MainLoop"] = ["MainLoop", "ElectronObject"],
         ["MarginContainer"] = ["MarginContainer", "Container", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["Material"] = ["Material", "Resource", "ElectronObject"],
