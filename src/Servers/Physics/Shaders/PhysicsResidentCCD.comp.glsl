@@ -83,6 +83,27 @@ float closingSpeed(Hull a,Hull b,vec3 va,vec3 vb,vec2 ca,vec2 cb,vec2 n,bool ray
     }
     return speed;
 }
+float boundaryCurvature(Hull a,Hull b,vec3 va,vec3 vb,vec2 ca,vec2 cb,bool rayA,bool rayB)
+{
+    bool flip=b.boundary;Hull other=flip?a:b;vec3 plane=boundaryPlane(flip?b:a);
+    vec2 centerA=rotate(bodyA.pose.zw,ca),centerB=bodyB.pose.xy-bodyA.pose.xy+rotate(bodyB.pose.zw,cb);
+    vec2 finiteCenter=flip?centerA:centerB,relative=flip?centerA-centerB:centerB-centerA;
+    vec2 velocity=flip?va.xy-vb.xy:vb.xy-va.xy;
+    float spin=flip?(rayB?0:vb.z):(rayA?0:va.z);
+    float finiteSpin=flip?(rayA?0:va.z):(rayB?0:vb.z),difference=finiteSpin-spin;
+    vec2 tangent=vec2(-plane.y,plane.x);float duration=tolerances.w,bound=0;
+    float speed=length(velocity),distance=length(relative)+duration*speed;
+    for(uint i=0u;i<other.count;i++)
+    {
+        vec2 arm=vertex(other,i)-finiteCenter;
+        float acceleration=spin*spin*dot2(plane.xy,relative)-2*spin*dot2(tangent,velocity)+difference*difference*dot2(plane.xy,arm);
+        float jerk=3*spin*spin*dot2(plane.xy,velocity)+spin*spin*spin*dot2(tangent,relative)-difference*difference*difference*dot2(tangent,arm);
+        float fourth=4*abs(spin*spin*spin)*speed+spin*spin*spin*spin*distance+pow(abs(difference),4)*length(arm);
+        // The convex quadratic remainder reaches its maximum at an interval endpoint.
+        bound=max(bound,acceleration+max(0,jerk*duration+0.5*fourth*duration*duration));
+    }
+    return max(0,bound)*duration*duration;
+}
 bool directed(Hull ray,Hull other)
 {
     vec2 from=vertex(ray,0u),d=vertex(ray,1u)-from;float t;vec2 n;uint feature;
@@ -162,7 +183,7 @@ float sweep(Shape sa,Geometry ga,Shape sb,Geometry gb,ResidentBody startA,Reside
                 bool responseA=startA.flags.y>=2u&&(sa.policy.z&sb.policy.y)!=0u;
                 bool responseB=startB.flags.y>=2u&&(sb.policy.z&sa.policy.y)!=0u;
                 if(!responseA&&!responseB)return 1;
-                float curvature=bound*tolerances.w*max(wa,wb);
+                float curvature=a.boundary||b.boundary?boundaryCurvature(testA,testB,va,vb,ca,cb,rayA,rayB):bound*tolerances.w*max(wa,wb);
                 // Residual closing is a contact constraint, so it includes prescribed surface motion.
                 // Geometric sampling and first-impact advancement above still use actual motion only.
                 float speed=closingSpeed(testA,testB,va+startA.surface.xyz,vb+startB.surface.xyz,ca,cb,axis.normal,rayA,rayB)*tolerances.w;

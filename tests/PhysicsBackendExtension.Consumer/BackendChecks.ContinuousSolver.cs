@@ -36,7 +36,8 @@ public static partial class BackendChecks
                     if (a.RID.GetID() >= b.RID.GetID() || a.IsArea || b.IsArea || a.Shapes == 0 || b.Shapes == 0 ||
                         a.InvMass + b.InvMass == 0 || (a.Mask & b.Layer) == 0 && (b.Mask & a.Layer) == 0 ||
                         Exceptions.Contains((a.RID, b.RID)) || Exceptions.Contains((b.RID, a.RID))) continue;
-                    var motion = Motion(a) - Motion(b); var speed = motion.Length() + AngularShapeSpeed(a) + AngularShapeSpeed(b);
+                    var motion = Motion(a) - Motion(b); var speed = motion.Length() + AngularShapeSpeed(a) + AngularShapeSpeed(b) +
+                        BoundaryRotationSpeed(a, b) + BoundaryRotationSpeed(b, a);
                     if (speed == 0) continue;
                     var hit = false; var fraction = 1f;
                     if (a.Dynamic && a.ContinuousMode != CCDMode.Disabled && SweptContact(a, b, motion * duration, duration, out var first)) { hit = true; fraction = first; }
@@ -48,7 +49,7 @@ public static partial class BackendChecks
                 }
             return interval;
         }
-        private static Vector2 Motion(Body body) => body.IsArea || body.Mode == PhysicsServer.BodyMode.Static ||
+        internal static Vector2 Motion(Body body) => body.IsArea || body.Mode == PhysicsServer.BodyMode.Static ||
             body.Dynamic && !body.Awake ? Vector2.Zero : body.Velocity;
         private static float RotationMotion(Body body) => body.IsArea || !body.Awake || body.Locked || body.Mode == PhysicsServer.BodyMode.Static ? 0 : body.Angular;
         private static Vector2 RotationArm(Body body, in Part part) => part.Offset - (body.Dynamic ? body.LocalCenter : Vector2.Zero);
@@ -59,6 +60,22 @@ public static partial class BackendChecks
                 (body.Parts[i].Contour ? body.Parts[i].Outer : 0));
             return MathF.Abs(RotationMotion(body)) * radius;
         }
+        private static float BoundaryRotationSpeed(Body planeBody, Body other)
+        {
+            var spin = MathF.Abs(RotationMotion(planeBody)); if (spin == 0) return 0;
+            var extent = 0f;
+            for (var i = 0; i < planeBody.Shapes; i++)
+            {
+                var plane = planeBody.Parts[i]; if (!plane.Boundary) continue;
+                for (var j = 0; j < other.Shapes; j++)
+                {
+                    var part = other.Parts[j]; if (part.Boundary) continue;
+                    extent = MathF.Max(extent, (other.Center - planeBody.Center).Length() +
+                        RotationArm(other, part).Length() + part.Outer + RotationArm(planeBody, plane).Length());
+                }
+            }
+            return spin * extent;
+        }
         private bool SweptContact(Body a, Body b, Vector2 motion, float duration, out float fraction)
         {
             fraction = 1; var hit = false;
@@ -68,6 +85,12 @@ public static partial class BackendChecks
                 {
                     var first = a.Parts[i]; var second = b.Parts[j];
                     if (!AllowsContact(a.RID, first.Index, b.RID, second.Index)) continue;
+                    if (first.Boundary || second.Boundary)
+                    {
+                        if (SweptBoundary(a, first, b, second, duration, full, spinA, spinB, out var boundary))
+                        { hit = true; fraction = MathF.Min(fraction, boundary); }
+                        continue;
+                    }
                     if (first.Contour || second.Contour)
                     {
                         if (SweptContour(a, first, b, second, duration, full, spinA, spinB, out var contour))

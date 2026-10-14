@@ -4,6 +4,14 @@ public static partial class BackendChecks
 {
     private static Part GeometryPart(ShapeGeometry geometry, Transform transform, int index = 0, int element = 0)
     {
+        if (geometry.Type == PhysicsServer.ShapeType.WorldBoundary)
+        {
+            var plane = geometry.GetWorldBoundaryPlane();
+            var determinant = CrossEdges(transform.X, transform.Y);
+            var normal = new Vector2(transform.Y.Y * plane.Normal.X - transform.X.Y * plane.Normal.Y,
+                transform.X.X * plane.Normal.Y - transform.Y.X * plane.Normal.X) / determinant;
+            return new(index, transform * (plane.Normal * plane.Distance), 0, 0, PlaneNormal: normal.Normalized());
+        }
         if (geometry.Type == PhysicsServer.ShapeType.ConvexPolygon)
         {
             var polygon = Polygons.GetValue(geometry, static data => new Polygon(data));
@@ -53,6 +61,7 @@ public static partial class BackendChecks
     private static bool ContainsPart(in Part part, Transform pose, Vector2 point)
     {
         var center = PartAt(part, pose);
+        if (part.Boundary) return (point - center).Dot(BoundaryNormal(part, pose)) <= 0;
         if (part.Polygon is not null) return PolygonContains(part, pose, point);
         if (part.Segment) return false;
         if (part.Capsule) return point.DistanceSquaredTo(ClosestContour(part, pose, point)) <= part.Inflation * part.Inflation;
@@ -162,6 +171,7 @@ public static partial class BackendChecks
     private static float PartGap(in Part first, Transform a, in Part second, Transform b,
         out Vector2 normal, out Vector2 pointA, out Vector2 pointB)
     {
+        if (first.Boundary || second.Boundary) return BoundaryGap(first, a, second, b, out normal, out pointA, out pointB);
         if (CoreCount(first) == 0 || CoreCount(second) == 0) { normal = pointA = pointB = default; return float.PositiveInfinity; }
         if (first.Contour || second.Contour)
         {
@@ -205,6 +215,7 @@ public static partial class BackendChecks
     private static bool SweepParts(in Part first, Transform a, Vector2 motion, in Part second, Transform b, out float fraction)
     {
         fraction = 0;
+        if (first.Boundary || second.Boundary) return SweepBoundary(first, a, motion, second, b, out fraction);
         if (CoreCount(first) == 0 || CoreCount(second) == 0) return false;
         var gap = PartGap(first, a, second, b, out _, out _, out _);
         if (gap <= 0) return true;
@@ -364,6 +375,7 @@ public static partial class BackendChecks
     }
     private static bool RayPart(in Part part, Transform pose, Vector2 from, Vector2 motion, out float fraction, out Vector2 normal)
     {
+        if (part.Boundary) return RayBoundary(part, pose, from, motion, out fraction, out normal);
         if (part.Polygon is not null) return RayPolygon(part, pose, from, motion, out fraction, out normal);
         if (part.Segment && part.EdgeY != Vector2.Zero) return RaySegment(part, pose, from, motion, out fraction, out normal);
         if (part.Capsule || part.Segment) return RayCapsule(part, pose, from, motion, out fraction, out normal);

@@ -1,6 +1,6 @@
 # Resident GPU physics stages
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 ## Implemented boundary
 
@@ -418,3 +418,14 @@ completed differs because the old version cannot keep up. Log:
 Resident storage/transfer growth now reuses private managed RenderHandle wrappers. It still creates native allocations, preserves data where required, waits for the copy, and retires the previous native allocation. The wrapper keeps its original device reference and release callback, so a larger contact batch after warmup no longer creates a new delegate and SafeHandle for each grown buffer. Published graphics resources and scene/body RID identities are unchanged. The 64-body full-scene control exercises twelve such late buffer increases with zero owner/all-thread managed bytes after the fix; this does not claim zero native allocation or eliminate growth waits.
 
 The existing PhysicsPipelinePerformance runner now compares CPU/GPU ordinary RigidBody scenes with contact monitoring and interpolation. Whole PhysicsFrame timing includes scene publication and observer work; solver phases, GPU transfers/waits and memory are separate report fields. All sampled bodies remain awake; physical/identity gates use public API rather than native CPU handles. This extends the raw-body performance evidence and keeps the complete extension/native/platform/window gates open.
+
+
+For resident CCD against a rotating plane, resting-contact advancement now bounds
+the actual plane-support acceleration and its third derivative, with a bounded
+fourth-derivative remainder over the remaining interval. A convex quadratic bound
+uses its endpoint maximum across all finite support vertices. The earlier
+radius-only curvature overestimate exhausted 128 intervals for a radius-one circle
+near a 20-rad/s dynamic plane despite representable contact motion. Interval and
+shader iteration budgets, .001 CCD tolerance, failure behavior and device-resident
+execution remain unchanged. The same new scenario and existing continuous suites
+verify the correction; no CPU numerical fallback or mass-state readback is added.

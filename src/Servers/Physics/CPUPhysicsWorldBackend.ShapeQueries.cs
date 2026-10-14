@@ -188,7 +188,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         if (geometry.Kind == PhysicsShapeGeometry.ShapeKind.SeparationRay && geometry.B.Y == 0) _queryProxies.Clear();
         _queryCompoundConvex = geometry.Kind == PhysicsShapeGeometry.ShapeKind.ConvexPolygon && _queryProxies.Count > 1;
         var transform = parameters.Transform;
-        var backendTransform = new B2Transform(PhysicsShapeBackend.ToBackend(transform.Origin), b2MakeRot(transform.Rotation));
+        var backendTransform = new B2Transform(PhysicsShapeBackend.ToBackend(transform.Origin), PhysicsShapeBackend.RotationToBackend(transform.Rotation));
         var margin = parameters.Margin * PhysicsSpace.MetersPerUnit;
         _queryMargin = margin;
         for (var index = 0; index < _queryProxies.Count; index++)

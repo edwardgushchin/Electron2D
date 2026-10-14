@@ -1,6 +1,6 @@
 # GPUPhysicsBodyStore
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable`
 
@@ -353,3 +353,14 @@ The original owner may grant one exact numerical thread a temporary exclusive bo
 ReadActivity returns one uint active flag per resident slot (zero for dead/static/sleeping), validates output capacity, applies queued edits and reuses the packed result buffer. It reads no body requests, poses or velocities. The independent stage-6 shader computes these flags on device; failure retains the same terminal submission policy as selected reads.
 
 The resident point-field reducer preserves guarded float operation order with GLSL precise intermediates and propagates reconstruction validity separately from the value. Values beyond the finite output range do not enter subsequent arithmetic as infinity sentinels. A later Replace/ReplaceCombine contribution resets validity with the channel; Combine retains an invalid earlier contribution. Final invalid fields fail before body-field publication or solver motion through the existing eight-byte status read and terminal GPU-world policy. Mantissa/exponent normalization avoids reciprocals outside the normal range for large/tiny coordinates. No CPU mirror, buffer growth, new readback or wait is introduced. [Hardware verification](../components/physics-areas.md#hardware-point-field-guards-2026-10-14).
+
+
+For resident CCD against a rotating plane, resting-contact advancement now bounds
+the actual plane-support acceleration and its third derivative, with a bounded
+fourth-derivative remainder over the remaining interval. A convex quadratic bound
+uses its endpoint maximum across all finite support vertices. The earlier
+radius-only curvature overestimate exhausted 128 intervals for a radius-one circle
+near a 20-rad/s dynamic plane despite representable contact motion. Interval and
+shader iteration budgets, .001 CCD tolerance, failure behavior and device-resident
+execution remain unchanged. The same new scenario and existing continuous suites
+verify the correction; no CPU numerical fallback or mass-state readback is added.

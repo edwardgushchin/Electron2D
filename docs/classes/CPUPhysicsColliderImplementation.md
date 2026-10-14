@@ -1,6 +1,6 @@
 # CPUPhysicsColliderImplementation
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Declaration:** `internal sealed partial class CPUPhysicsColliderImplementation : PhysicsColliderImplementation` · **Source:** [CPUPhysicsColliderImplementation.cs](../../src/Servers/Physics/CPUPhysicsColliderImplementation.cs) · **Component:** [Physics backends](../components/physics-backends.md#runtime-flow-and-ownership)
 
@@ -65,3 +65,12 @@ changes therefore avoid recreating unchanged fixtures and their tags. Retired ca
 and detach clear references. [Contact verification](../components/physics-registered-adapter.md#independent-contact-response)
 checks changed geometry, signed material response, replay and 128 changed-material
 full-frame cycles at 0/0 managed bytes on CPU; native totals remain unmeasured.
+
+
+Authored body, target, query/motion and joint-frame angles now use
+PhysicsShapeBackend.RotationToBackend (ordinary sine/cosine) at the CPU boundary.
+An approximate .37-rad conversion displaced a far analytic plane by about 7.3
+scene units; the shared public consumer now verifies the rotated plane at tangent
+distance 6,000 within .005 units. Numerical integration is unchanged. See
+[boundary verification](../components/physics-registered-adapter.md#registered-boundary-numerics)
+for the zero-allocation, lifecycle, impulse and remaining acceptance limits.

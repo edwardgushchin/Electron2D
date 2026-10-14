@@ -295,3 +295,14 @@ This covers the named public built-in trajectories. Arbitrary provider polygon/
 capsule algorithms, larger coupled graphs, numerical-scale extremes, networking,
 native allocations and hardware/window performance retain separate acceptance.
 GPU kernels execute through CPU-only Vulkan; software timing is not hardware evidence.
+
+
+For resident CCD against a rotating plane, resting-contact advancement now bounds
+the actual plane-support acceleration and its third derivative, with a bounded
+fourth-derivative remainder over the remaining interval. A convex quadratic bound
+uses its endpoint maximum across all finite support vertices. The earlier
+radius-only curvature overestimate exhausted 128 intervals for a radius-one circle
+near a 20-rad/s dynamic plane despite representable contact motion. Interval and
+shader iteration budgets, .001 CCD tolerance, failure behavior and device-resident
+execution remain unchanged. The same new scenario and existing continuous suites
+verify the correction; no CPU numerical fallback or mass-state readback is added.

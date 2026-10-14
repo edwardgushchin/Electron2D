@@ -22,13 +22,13 @@ internal sealed partial class CPUPhysicsJointImplementation(PhysicsSpace space, 
         return LocalFrame(local, b2Body_GetRotation(body), angle);
     }
     internal static Transform SampleDetachedLocalFrame(Transform pose, Vector2 point, float angle) =>
-        LocalFrame(PhysicsShapeBackend.ToBackend(pose.AffineInverse() * point), b2MakeRot(pose.Rotation), angle);
+        LocalFrame(PhysicsShapeBackend.ToBackend(pose.AffineInverse() * point), PhysicsShapeBackend.RotationToBackend(pose.Rotation), angle);
     private static Transform LocalFrame(B2Vec2 local, B2Rot rotation, float angle)
     {
         if (!float.IsFinite(local.X) || !float.IsFinite(local.Y) ||
             Math.Sqrt((double)local.X * local.X + (double)local.Y * local.Y) > B2_HUGE)
             throw new ArgumentOutOfRangeException("point", "The local joint anchor exceeds the backend extent.");
-        var relative = b2InvMulRot(rotation, b2MakeRot(angle));
+        var relative = b2InvMulRot(rotation, PhysicsShapeBackend.RotationToBackend(angle));
         // Keep the sampled basis instead of decoding and rebuilding its angle on reattachment.
         return new(new(relative.c, relative.s), new(-relative.s, relative.c),
             new(local.X * PhysicsSpace.UnitsPerMeter, local.Y * PhysicsSpace.UnitsPerMeter));

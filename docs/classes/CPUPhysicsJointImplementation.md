@@ -1,6 +1,6 @@
 # CPUPhysicsJointImplementation
 
-Last updated: 2026-10-11
+Last updated: 2026-10-14
 
 **Declaration:** `internal sealed partial class CPUPhysicsJointImplementation : PhysicsJointImplementation` · **Source:** [CPUPhysicsJointImplementation.cs](../../src/Servers/Physics/CPUPhysicsJointImplementation.cs) · **Component:** [Physics joints](../components/physics-joints.md#runtime-flow-and-invariants)
 
@@ -21,3 +21,12 @@ Creation failure attempts retirement before the retained wrapper is cleared; cle
 ## Limits and decisions
 
 This internal operation family is not public backend registration. Server/direct-state extension contexts and custom geometry remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103). Native allocator, foreign platform and real-window FPS remain separate gates.
+
+
+Authored body, target, query/motion and joint-frame angles now use
+PhysicsShapeBackend.RotationToBackend (ordinary sine/cosine) at the CPU boundary.
+An approximate .37-rad conversion displaced a far analytic plane by about 7.3
+scene units; the shared public consumer now verifies the rotated plane at tangent
+distance 6,000 within .005 units. Numerical integration is unchanged. See
+[boundary verification](../components/physics-registered-adapter.md#registered-boundary-numerics)
+for the zero-allocation, lifecycle, impulse and remaining acceptance limits.

@@ -40,11 +40,11 @@ internal sealed partial class CPUPhysicsColliderImplementation
 
     internal override void SetPose(Vector2 position, float rotation)
     {
-        b2Body_SetTransform(BodyID, PhysicsShapeBackend.ToBackend(position), b2MakeRot(rotation));
+        b2Body_SetTransform(BodyID, PhysicsShapeBackend.ToBackend(position), PhysicsShapeBackend.RotationToBackend(rotation));
     }
     internal override void SetTargetPose(Transform pose, double delta)
     {
-        b2Body_SetTargetTransform(BodyID, new(PhysicsShapeBackend.ToBackend(pose.Origin), b2MakeRot(pose.Rotation)), (float)delta, wake: true);
+        b2Body_SetTargetTransform(BodyID, new(PhysicsShapeBackend.ToBackend(pose.Origin), PhysicsShapeBackend.RotationToBackend(pose.Rotation)), (float)delta, wake: true);
     }
     internal override void SavePose() { _savedPose = b2Body_GetTransform(BodyID); }
     internal override void RestorePose() { b2Body_SetTransform(BodyID, _savedPose.p, _savedPose.q); }

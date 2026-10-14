@@ -114,3 +114,15 @@ contacts and linear/angular CCD in the independent public-only provider. Shared
 CPU/software-GPU serial/separate profiles retain zero warmed managed bytes, with
 two corner features and one logical event. Boundary/ray, inherited/network/native/
 hardware and final acceptance remain open.
+
+
+[Registered infinite-boundary numerics](../components/physics-registered-adapter.md#registered-boundary-numerics)
+now exercise analytic planes in the independent public-only provider, all six
+query families and reverse query source, Area/contacts, zero geometric mass,
+material/surface impulses, private replay, sleep/lifecycle and translating/rotating
+CCD. Twenty full-frame brackets per CPU/GPU/provider serial/separate profile
+require strict 0/0 warmed managed bytes. CPU authored body/query/joint angles now
+use ordinary sine/cosine; the far rotated query retains its .005-unit bound rather
+than absorbing the former approximate-angle drift. Directed-ray, arbitrary/coupled,
+complete inherited/extension/network/native/platform and hardware-performance
+acceptance remain open; coverage states are unchanged.

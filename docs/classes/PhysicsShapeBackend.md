@@ -1,6 +1,6 @@
 # PhysicsShapeBackend
 
-Last updated: 2026-10-10
+Last updated: 2026-10-14
 
 **Declaration:** `internal static class PhysicsShapeBackend`
 
@@ -55,3 +55,12 @@ bounds never substitute for the infinite half-plane. WorldBoundaryTests verifies
 far-away queries and scene/server response.
 
 [Custom collision geometry](../components/physics-custom-geometry.md) now provides copied canonical data, exact mass/bounds, diagnostic segments and standalone pair callbacks to registered implementations. Built-in compilation rejects unsupported custom geometry before mutation. Portable schema covers the custom authoring payload; detached force preparation resolves exact custom mass while automatic getters retain cached-resolution semantics.
+
+
+Authored body, target, query/motion and joint-frame angles now use
+PhysicsShapeBackend.RotationToBackend (ordinary sine/cosine) at the CPU boundary.
+An approximate .37-rad conversion displaced a far analytic plane by about 7.3
+scene units; the shared public consumer now verifies the rotated plane at tangent
+distance 6,000 within .005 units. Numerical integration is unchanged. See
+[boundary verification](../components/physics-registered-adapter.md#registered-boundary-numerics)
+for the zero-allocation, lifecycle, impulse and remaining acceptance limits.

@@ -247,3 +247,17 @@ delivered. Nine warmed brackets measure 128 complete frames each at 0/0 managed 
 Cold controls include short/point/empty edits, ignored standalone concave motion,
 two-concave exclusion, capped deepest pairs and custom annulus material. Larger
 coupling, provider/native/network/hardware and final performance gates remain open.
+
+
+`--boundary-geometry` (optional `--cpu`, `--gpu`, `--threaded`) checks infinite
+analytic planes, transformed nonunit authoring, six direct queries, reverse query
+source, Area/contact identity, zero geometric mass, sleep/edit/removal, standalone
+endpoint policy and two support contacts. Six finite families × three CCD modes
+plus query and corner replay each require 128 warmup/128 full measured frames at
+0/0 owner/all-thread managed bytes, including normal/tangent material impulses and
+static surface velocity. Cold linear/angular/rotating-plane CCD stays separate.
+The provider initializes captured sleep/iteration/bias policy through public world
+getters. CPU plane tests retain .005-unit point/ray/rest bounds at tangent distance
+6,000 after correcting authored rotation conversion. Software Vulkan establishes
+functional behavior; directed ray, broader coupled/custom, native/platform/network
+and target GPU performance gates remain open.

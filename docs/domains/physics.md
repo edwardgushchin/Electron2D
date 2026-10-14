@@ -1113,3 +1113,15 @@ acceptance remains open.
 
 
 [Joint and contact support](../components/physics-joints.md#joint-and-contact-support-2026-10-14) verifies spring-loaded pin/groove constraints, real floor friction, contact identity/normal/surface-velocity/impulse, monitored checkpoint continuation and post-clear motion on CPU/GPU. Warm full frames allocate no managed bytes; broader numerical/native/foreign/network/performance acceptance remains open and declaration states are unchanged.
+
+
+[Registered infinite-boundary numerics](../components/physics-registered-adapter.md#registered-boundary-numerics)
+now exercise analytic planes in the independent public-only provider, all six
+query families and reverse query source, Area/contacts, zero geometric mass,
+material/surface impulses, private replay, sleep/lifecycle and translating/rotating
+CCD. Twenty full-frame brackets per CPU/GPU/provider serial/separate profile
+require strict 0/0 warmed managed bytes. CPU authored body/query/joint angles now
+use ordinary sine/cosine; the far rotated query retains its .005-unit bound rather
+than absorbing the former approximate-angle drift. Directed-ray, arbitrary/coupled,
+complete inherited/extension/network/native/platform and hardware-performance
+acceptance remain open; coverage states are unchanged.

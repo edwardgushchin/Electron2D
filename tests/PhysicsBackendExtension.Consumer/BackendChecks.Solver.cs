@@ -69,12 +69,13 @@ public static partial class BackendChecks
         private Part QueryPart(PhysicsShapeQueryParameters parameters, ShapeGeometry geometry, int element)
         {
             var part = GeometryPart(geometry, parameters.Transform, 0, element);
+            if (part.Boundary) return part with { Offset = part.Offset + part.PlaneNormal * parameters.Margin };
             return part.Contour ? part with { Inflation = part.Inflation + parameters.Margin } : part with
             { Outer = part.Outer + parameters.Margin, Inner = MathF.Max(0, part.Inner - parameters.Margin) };
         }
         private static bool QuerySweep(in Part query, Vector2 motion, in Part target, Transform pose, out float fraction)
         {
-            if (query.Contour || target.Contour) return SweepParts(query, Transform.Identity, motion, target, pose, out fraction);
+            if (query.Boundary || target.Boundary || query.Contour || target.Contour) return SweepParts(query, Transform.Identity, motion, target, pose, out fraction);
             return Annulus.Sweep(query.Offset, motion, PartAt(target, pose), MathF.Max(0, target.Inner - query.Outer), target.Outer + query.Outer, out fraction);
         }
         protected override List<PhysicsShapeResult> CollectShapeHits(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
@@ -108,7 +109,7 @@ public static partial class BackendChecks
                 for (var i = 0; i < b.Shapes; i++) for (var piece = 0; piece < GeometryCount(geometry); piece++)
                     {
                         var p = b.Parts[i]; var query = QueryPart(parameters, geometry, piece);
-                        if ((query.Contour || p.Contour) && PartGap(query, Transform.Identity, p, b.Pose, out _, out _, out _) <= 0) continue;
+                        if ((query.Boundary || p.Boundary || query.Contour || p.Contour) && PartGap(query, Transform.Identity, p, b.Pose, out _, out _, out _) <= 0) continue;
                         if (QuerySweep(query, parameters.Motion, p, b.Pose, out var f)) fraction = MathF.Min(fraction, f);
                     }
             }
@@ -127,7 +128,7 @@ public static partial class BackendChecks
                         var p = b.Parts[i]; var query = QueryPart(parameters, geometry, piece);
                         if (!QuerySweep(query, parameters.Motion, p, b.Pose, out var f)) continue;
                         Vector2 firstPoint, secondPoint;
-                        if (query.Contour || p.Contour)
+                        if (query.Boundary || p.Boundary || query.Contour || p.Contour)
                         {
                             var pose = Transform.Identity; pose.Origin = parameters.Motion * f;
                             PartGap(query, pose, p, b.Pose, out _, out firstPoint, out secondPoint);
@@ -151,7 +152,7 @@ public static partial class BackendChecks
             {
                 var h = hits[i]; var body = Bodies[h.RID]; var query = _contactQueryParts[i]; var part = _contactColliderParts[i];
                 var normal = PartNormal(h.QueryPoint, body.PartCenter(part), part); var depth = h.QueryPoint.DistanceTo(h.ColliderPoint);
-                if (query.Contour || part.Contour)
+                if (query.Boundary || part.Boundary || query.Contour || part.Contour)
                 {
                     QuerySweep(query, parameters.Motion, part, body.Pose, out var fraction);
                     var pose = Transform.Identity; pose.Origin = parameters.Motion * fraction;
@@ -171,7 +172,9 @@ public static partial class BackendChecks
             PairQueries++;
             var a = GetShapeGeometry(first); var b = GetShapeGeometry(second);
             bool hit;
-            if (a.Type == PhysicsServer.ShapeType.ConcavePolygon || b.Type == PhysicsServer.ShapeType.ConcavePolygon)
+            if (a.Type == PhysicsServer.ShapeType.WorldBoundary || b.Type == PhysicsServer.ShapeType.WorldBoundary)
+                hit = CollideBoundaryGeometry(a, firstPose, firstMotion, b, secondPose, secondMotion, contacts, out count);
+            else if (a.Type == PhysicsServer.ShapeType.ConcavePolygon || b.Type == PhysicsServer.ShapeType.ConcavePolygon)
                 hit = CollideConcaveGeometry(a, firstPose, firstMotion, b, secondPose, secondMotion, contacts, out count);
             else if (a.Type is PhysicsServer.ShapeType.Rectangle or PhysicsServer.ShapeType.Capsule or PhysicsServer.ShapeType.Segment or PhysicsServer.ShapeType.ConvexPolygon || b.Type is PhysicsServer.ShapeType.Rectangle or PhysicsServer.ShapeType.Capsule or PhysicsServer.ShapeType.Segment or PhysicsServer.ShapeType.ConvexPolygon)
                 hit = CollideContourGeometry(a, firstPose, firstMotion, b, secondPose, secondMotion, contacts, out count);
@@ -231,7 +234,7 @@ public static partial class BackendChecks
                     {
                         var a = local.Parts[i]; var b = other.Parts[j]; var start = from.Origin + a.Offset.Rotated(from.Rotation);
                         float f;
-                        if (a.Contour || b.Contour)
+                        if (a.Boundary || b.Boundary || a.Contour || b.Contour)
                         {
                             var expanded = a.Contour ? a with { Inflation = a.Inflation + margin } : a with { Outer = a.Outer + margin };
                             if (!SweepParts(expanded, from, motion, b, other.Pose, out f)) continue;
@@ -244,7 +247,7 @@ public static partial class BackendChecks
             if (best is null) { result.SetMotion(motion); return false; }
             var travel = motion * fraction; var center = from.Origin + source.Offset.Rotated(from.Rotation) + travel; var at = best.PartCenter(target);
             var normal = PartNormal(center, at, target); var point = at + normal * (center.DistanceTo(at) < target.Inner ? -target.Inner : target.Outer);
-            if (source.Contour || target.Contour)
+            if (source.Boundary || target.Boundary || source.Contour || target.Contour)
             {
                 var pose = from; pose.Origin += travel;
                 PartGap(source.Contour ? source with { Inflation = source.Inflation + margin } : source with { Outer = source.Outer + margin }, pose,

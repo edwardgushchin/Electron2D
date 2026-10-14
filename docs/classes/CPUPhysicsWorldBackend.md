@@ -1,6 +1,6 @@
 # CPUPhysicsWorldBackend
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Declaration:** `internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend` · **Source:** [CPUPhysicsWorldBackend.cs](../../src/Servers/Physics/CPUPhysicsWorldBackend.cs) · **Component:** [Physics backends](../components/physics-backends.md)
 
@@ -107,3 +107,12 @@ Built-in shape casts now target geometric boundaries in CPU conservative advance
 [Compound slot checks](../components/physics-registered-adapter.md#compound-slot-numerics) exercise the physical first-touch invariant and retained logical identities.
 
 Solve may run on the captured retained numerical lane, using owner-prepared collider/joint inputs and the existing retained native workers. Started native discrete/CCD faults mark the CPU world failed, drain tasks and release lock/arena/context state before returning the error; pre-native validation keeps its existing retry policy. Owner publication follows the join, and failed world retirement still releases the lane and native world. [Thread checks](../components/physics-thread.md) preserve numerical and allocation gates.
+
+
+Authored body, target, query/motion and joint-frame angles now use
+PhysicsShapeBackend.RotationToBackend (ordinary sine/cosine) at the CPU boundary.
+An approximate .37-rad conversion displaced a far analytic plane by about 7.3
+scene units; the shared public consumer now verifies the rotated plane at tangent
+distance 6,000 within .005 units. Numerical integration is unchanged. See
+[boundary verification](../components/physics-registered-adapter.md#registered-boundary-numerics)
+for the zero-allocation, lifecycle, impulse and remaining acceptance limits.

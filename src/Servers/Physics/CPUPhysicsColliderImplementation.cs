@@ -20,7 +20,7 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
         var definition = b2DefaultBodyDef();
         definition.type = BodyType(configuration.Mode);
         definition.position = PhysicsShapeBackend.ToBackend(position);
-        definition.rotation = B2MathFunction.b2MakeRot(rotation);
+        definition.rotation = PhysicsShapeBackend.RotationToBackend(rotation);
         definition.linearVelocity = PhysicsShapeBackend.ToBackend(configuration.LinearVelocity);
         definition.angularVelocity = configuration.AngularVelocity;
         definition.gravityScale = configuration.GravityScale;

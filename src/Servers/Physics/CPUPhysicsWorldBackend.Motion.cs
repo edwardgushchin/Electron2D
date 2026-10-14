@@ -30,7 +30,7 @@ internal sealed partial class CPUPhysicsWorldBackend
                 AddMotionCandidates(NativeCollider(other.Backend).Shapes, other.Backend.CollisionPriority, ownerRID, ownShapes, excludedBodies, excludedObjects);
 
         var requested = PhysicsShapeBackend.ToBackend(motion);
-        var fromTransform = new B2Transform(PhysicsShapeBackend.ToBackend(from.Origin), b2MakeRot(from.Rotation));
+        var fromTransform = new B2Transform(PhysicsShapeBackend.ToBackend(from.Origin), PhysicsShapeBackend.RotationToBackend(from.Rotation));
         var recovery = new B2Vec2(0, 0);
         var recoveryHit = default(MotionContact);
         var hasRecoveryHit = false;

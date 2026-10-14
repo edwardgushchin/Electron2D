@@ -63,7 +63,14 @@ public static partial class BackendChecks
         protected override bool HasFailure { get { StatusHook?.Invoke(); return false; } }
         protected override bool ResultsReady => Ready;
         protected override int PreparedBodyCapacity => Bodies.Count;
-        protected override void Initialize() { LifecycleHook?.Invoke(LifecyclePhase.Initialize); InitHook?.Invoke(); if (FailInit) throw new InvalidOperationException("Initialization failure"); }
+        protected override void Initialize()
+        {
+            LifecycleHook?.Invoke(LifecyclePhase.Initialize); InitHook?.Invoke();
+            if (FailInit) throw new InvalidOperationException("Initialization failure");
+            _sleepSettings = new(PhysicsServer.SpaceGetBodyLinearVelocitySleepThreshold(SpaceRID),
+                PhysicsServer.SpaceGetBodyAngularVelocitySleepThreshold(SpaceRID), PhysicsServer.SpaceGetBodyTimeToSleep(SpaceRID));
+            Iterations = PhysicsServer.SpaceGetSolverIterations(SpaceRID); ConstraintBias = PhysicsServer.SpaceGetConstraintDefaultBias(SpaceRID);
+        }
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

@@ -3,8 +3,9 @@ using Electron2D;
 public static partial class BackendChecks
 {
     private readonly record struct Part(int Index, Vector2 Offset, float Inner, float Outer,
-        Vector2 EdgeX = default, Vector2 EdgeY = default, float Inflation = 0, bool Capsule = false, bool Segment = false, Polygon? Polygon = null, bool Concave = false)
+        Vector2 EdgeX = default, Vector2 EdgeY = default, float Inflation = 0, bool Capsule = false, bool Segment = false, Polygon? Polygon = null, bool Concave = false, Vector2 PlaneNormal = default)
     {
+        internal bool Boundary => PlaneNormal != Vector2.Zero;
         internal bool Rectangle => Polygon is null && EdgeX != Vector2.Zero;
         internal bool Contour => Rectangle || Capsule || Segment || Polygon is not null;
         internal float LineLength => Segment || Capsule && Inflation == 0 ? 2 * EdgeY.Length() : 0;
@@ -19,9 +20,9 @@ public static partial class BackendChecks
                 return CapsuleArea > 0 ? integral / CapsuleArea : h * h / 3;
             }
         }
-        internal float Area => Polygon is { } polygon ? polygon.Area : Segment ? 0 : Capsule ? CapsuleArea : Rectangle ? 4 * MathF.Abs(CrossEdges(EdgeX, EdgeY)) : MathF.PI * (Outer * Outer - Inner * Inner);
-        internal float Moment => Polygon is { } polygon ? polygon.Moment : Segment ? EdgeY.LengthSquared() / 3 : Capsule ? CapsuleMoment : Rectangle ? (EdgeX.LengthSquared() + EdgeY.LengthSquared()) / 3 : (Outer * Outer + Inner * Inner) / 2;
-        internal float Thickness => Polygon is { } polygon ? polygon.Thickness : Segment ? .5f : Capsule ? Inflation > 0 ? Inflation : .5f : Rectangle ? MathF.Abs(CrossEdges(EdgeX, EdgeY)) / MathF.Max(EdgeX.Length(), EdgeY.Length()) : Outer - Inner;
+        internal float Area => Boundary ? 0 : Polygon is { } polygon ? polygon.Area : Segment ? 0 : Capsule ? CapsuleArea : Rectangle ? 4 * MathF.Abs(CrossEdges(EdgeX, EdgeY)) : MathF.PI * (Outer * Outer - Inner * Inner);
+        internal float Moment => Boundary ? 0 : Polygon is { } polygon ? polygon.Moment : Segment ? EdgeY.LengthSquared() / 3 : Capsule ? CapsuleMoment : Rectangle ? (EdgeX.LengthSquared() + EdgeY.LengthSquared()) / 3 : (Outer * Outer + Inner * Inner) / 2;
+        internal float Thickness => Boundary ? float.PositiveInfinity : Polygon is { } polygon ? polygon.Thickness : Segment ? .5f : Capsule ? Inflation > 0 ? Inflation : .5f : Rectangle ? MathF.Abs(CrossEdges(EdgeX, EdgeY)) / MathF.Max(EdgeX.Length(), EdgeY.Length()) : Outer - Inner;
     }
     private sealed partial class Body
     {
@@ -77,14 +78,14 @@ public static partial class BackendChecks
     {
         internal static bool PartsOverlap(Body a, in Part first, Body b, in Part second)
         {
-            if (first.Contour || second.Contour)
+            if (first.Boundary || second.Boundary || first.Contour || second.Contour)
                 return PartGap(first, new(a.Rotation, a.Position), second, new(b.Rotation, b.Position), out _, out _, out _) <= 0;
             var d = a.PartCenter(first).DistanceTo(b.PartCenter(second));
             return d <= first.Outer + second.Outer && d + second.Outer >= first.Inner && d + first.Outer >= second.Inner;
         }
         private static bool PartContact(Body a, in Part first, Body b, in Part second, out Vector2 normal, out float depth, out Vector2 point)
         {
-            if (first.Contour || second.Contour)
+            if (first.Boundary || second.Boundary || first.Contour || second.Contour)
             {
                 var gap = PartGap(first, new(a.Rotation, a.Position), second, new(b.Rotation, b.Position), out normal, out var firstPoint, out var secondPoint);
                 depth = MathF.Max(0, -gap); point = (firstPoint + secondPoint) / 2; return gap <= 0;

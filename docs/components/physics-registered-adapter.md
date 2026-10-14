@@ -2071,3 +2071,103 @@ commit gates pass under gates. The integrated API has 13,878 declarations,
 10,604 mapped, 3,274 reviewed extras and zero unmapped; wiki verifies 823 public
 types and 841 files with zero updates/removals. These surface-count changes belong
 to the preserved GUI integration, not a new physics API.
+
+
+<a id="registered-boundary-numerics"></a>
+## Registered infinite-boundary numerics
+
+The public-only consumer now prepares WorldBoundaryShape as a normalized plane
+normal and a transformed point, never as its finite editing bounds. Point/ray,
+all six direct-space query families, body motion, Area overlap and solved contacts
+route through analytic support separation. Plane/plane pairs are empty. The
+boundary has zero geometric area, moment and rod weight; explicit body inertia
+and positive-area companions retain their mass roles. Live normal/distance edits,
+disable, replacement and disposal update borrowed geometry without changing the
+body RID. Empty contours remain empty when paired with a plane.
+
+Standalone resource collection keeps ADR 0069 precedence: ignore boundary motion,
+test finite or concave counterparts at their motion endpoint, reject exact touching
+without penetration and retain both ends of a support face in caller/other order.
+The independent custom-annulus callback uses the same plane algorithm. Direct
+shape casts use actual motion and ignore initial penetration; a boundary can also
+be the query source, with margin shifting its plane outward. Prepared geometry
+and reusable query/contact buffers allocate no temporary resources per frame.
+
+Continuous simulation evaluates finite support against translating/rotating
+planes. Candidate speed includes a rotating plane's distance to the finite
+counterpart, because a plane has no finite radius. It conservatively advances the
+analytic gap, preserving the existing iteration/error budgets and material/impulse
+solver. The consumer reads captured sleep thresholds, solver iterations and
+constraint bias through public getters at Initialize; the former zero-initialized
+sleep policy prevented an otherwise resting boundary body from sleeping.
+
+The common --boundary-geometry profile accepts --cpu/--gpu and --threaded. A
+rotated/offset nonunit plane at tangent distance 6,000 tests exact point/ray/rest,
+shape casts, logical slot one after disabled slot zero, body motion and one Area
+entry. An independent corner retains two plane normals and shape indices under
+one object entry. Six finite families (circle, rectangle, capsule, segment, convex
+and concave) exercise Disabled/CastRay/CastShape, friction/restitution, constant
+static surface velocity, complete normal/tangent frame impulses, exact contact
+payloads and silent checkpoint restore. These twenty full-frame brackets each
+warm 128 frames and measure 128 with strict 0/0 owner/all-thread managed bytes.
+Cold controls cover infinite sensing at 4,000,000, reverse/source queries, margins,
+inside-ray policy, exclusions/masks, mixed mass, sleeping/removal, two-support
+standalone contacts, custom callback, 1,000-unit/s translation, rotational finite
+support and a dynamically rotating plane. They do not add warmed or performance
+claims beyond the measured brackets.
+
+This profile exposed an existing CPU authoring conversion error: an approximate
+rotation changed .37 rad to about .3712164 rad, shifting a plane roughly 7.3 units
+at tangent distance 6,000. PhysicsShapeBackend.RotationToBackend now uses ordinary
+sine/cosine for initial body poses, pose/kinematic target edits, query/body-motion
+poses and joint frame angles. Local fixture rotation already used that conversion.
+The backend's private integration remains unchanged; no reference-internal
+identity or cross-backend bitwise equality is required. The far rotated query
+keeps .005-unit coordinates, normal dot above .999 and 1/256 + .00005 cast bounds.
+Mass uses .0002, frame impulse .03, rotation energy at most 102 percent initial,
+and rotating-plane penetration allows .5 solver slack plus .25 advancement.
+The authoring error is corrected rather than included in a looser tolerance.
+
+Evidence is under bin/physics-boundary-provider/2026-10-14. Graphics-disabled CPU
+and registered processes and CPU lavapipe Vulkan provide functional proof only.
+Directed ray, arbitrary custom/coupled geometry, complete extension/inherited/
+network/native/platform and target-device performance acceptance remain open.
+No public API, XML surface or accepted architectural decision changes; existing
+Partial coverage states remain while numerical evidence expands.
+
+
+For resident CCD against a rotating plane, resting-contact advancement now bounds
+the actual plane-support acceleration and its third derivative, with a bounded
+fourth-derivative remainder over the remaining interval. A convex quadratic bound
+uses its endpoint maximum across all finite support vertices. The earlier
+radius-only curvature overestimate exhausted 128 intervals for a radius-one circle
+near a 20-rad/s dynamic plane despite representable contact motion. Interval and
+shader iteration budgets, .001 CCD tolerance, failure behavior and device-resident
+execution remain unchanged. The same new scenario and existing continuous suites
+verify the correction; no CPU numerical fallback or mass-state readback is added.
+
+
+Final source base is `c6bb994472689890b1291134922848ba8853a55e` with this slice: 4,199
+source inputs, SHA-256 `9df8e9c12b6eb8f847d6117c4dc67f0eaf0f056646d59dbd51f0e9a1c6769d1a`. Runtime/consumer DLLs are
+`ce3d2d10732b245dff49f851d9d916d8f89207fec03204f8b8d27fa26fae6e86` and `6a3c77ae94d9cac7b71feb355cd86593485835fe437cfd837fb6087a18835107`; the built-in test DLL is
+`81cbcb517aa23ddd70d08941e0d42970ae8961c503d6f4771ccd7d532f006241`. All 30 fresh processes pass on that runtime: six boundary
+CPU/GPU/provider serial/separate profiles, eighteen consumer regressions, and six
+built-in continuous/shared/scene/conformance profiles. Native conformance runs the
+existing full CPU/GPU CCD, boundary and directed-ray suites in serial and separate
+mode; these remain separate from new provider directed-ray acceptance. All twenty
+boundary warmed brackets retain 0/0 owner/all-thread managed bytes. CPU/provider
+load no graphics implementation; GPU uses CPU lavapipe with no NVIDIA mappings.
+Retained solver lanes are exactly 0/1 for the selected mode. All 61 consumer and
+75 built-in runtime files remain unchanged; source-before/source-after and current
+source identities agree. These concurrent functional runs do not establish latency
+or hardware performance. All seven commit gates pass: runtime build, both scoped
+format checks, coverage and wiki test/generate/check. The API remains 13,878
+public/protected declarations with 0 unmapped; wiki generation checks 823 public
+types and 841 files with no drift. Evidence/manifests stay ignored under final,
+native-final and gates. The double-arithmetic curvature audit covers 5,000 seeded
+trajectories and 505,000 samples without an upper-bound violation, separately from
+device-float functional response. Its first candidate's finite-rotation jerk sign
+failed sample 25 and was corrected before final builds. A test-payload preparation
+initially omitted the unchanged WebP library; the final retained payload includes
+that prerequisite and passes native-path checks. Neither preliminary result is
+reported as final acceptance.

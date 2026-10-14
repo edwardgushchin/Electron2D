@@ -30,6 +30,9 @@ internal static class PhysicsShapeBackend
     }
     internal static B2Vec2 ToBackend(Vector2 value) => new(value.X * PhysicsSpace.MetersPerUnit, value.Y * PhysicsSpace.MetersPerUnit);
 
+    /// <summary>Converts authored angles without approximating an unbounded collider or query orientation.</summary>
+    internal static B2Rot RotationToBackend(float angle) => new(MathF.Cos(angle), MathF.Sin(angle));
+
     private sealed record PolygonCache(ulong Revision, B2Hull[] Hulls);
     internal static void ValidateAndCachePolygon(ConvexPolygonShape shape, ReadOnlySpan<Vector2> points) =>
         PolygonHulls.AddOrUpdate(shape, new(shape.GeometryRevision + 1, BuildHulls(points)));
