@@ -223,9 +223,9 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
 | [Object](classes/Object.md) | — | 19 | 16 | 2 | 22 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
-| [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 4 | 21 | 0 | 2 | 2 |
+| [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 7 | 18 | 0 | 2 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 250 | 135 | 17 | 66 | 23 |
+| **Total** | | 253 | 132 | 17 | 66 | 23 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -426,21 +426,18 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Resource::enum:DeepDuplicateMode`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::method:_reset_state()`](classes/Resource.md) | Partial | Managed Resource query or virtual-hook adaptation (ADR 0013). |
 | [`Resource::method:_set_path_cache(String:)`](classes/Resource.md) | Partial | Managed Resource query or virtual-hook adaptation (ADR 0013). |
-| [`Resource::method:_setup_local_to_scene()`](classes/Resource.md) | Partial | Managed Resource query or virtual-hook adaptation (ADR 0013). |
 | [`Resource::method:copy_from_resource(Resource:)`](classes/Resource.md) | Partial | ADR 0013 preserves exact runtime type, target path/scene identity, reset/shallow copy and coalesced changes, with exceptions replacing error codes. Shape targets now preflight all borrowers and geometry/access hooks before base/reset/ownership/events. Public-only --shape-geometry checks all nine represented families and an application Shape on CPU/GPU/registered serial/separate profiles, late callback/query continuation and zero warm frames. This bounded inherited safety slice does not certify arbitrary Resource copy hooks or full numerical/platform acceptance. World copies now preflight bound replacement, expired source and last-owner release before metadata/reset/ownership/events; public-only --world-copies executes CPU/GPU/registered serial/separate lifetime/alias/accepted-error and zero-allocation scene/query checks. Standalone reset and existing alias policy remain unchanged; broader inherited/numerical/platform/performance acceptance stays open. Return type differs: int → System.Void; audit observable contract. |
 | [`Resource::method:duplicate(bool:)`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::method:duplicate_deep(int:Resource.DeepDuplicateMode)`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::method:emit_changed()`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::method:generate_scene_unique_id()`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::method:get_id_for_path(String:)`](classes/Resource.md) | Unimplemented | No mapped C# declaration; trigger: next complete Resource API slice. |
-| [`Resource::method:get_local_scene()`](classes/Resource.md) | Partial | Managed Resource query or virtual-hook adaptation (ADR 0013). |
 | [`Resource::method:get_rid()`](classes/Resource.md) | Partial | Base empty managed identity, stable Shape physics identities (ADR 0088) and weak resource-owned Texture rendering identities (ADR 0028) execute. Remaining material/shader RID getters enter the first actual server material/shader registration/lifetime slice. TextureRD/external/drawable/layered resource families retain their exact backend integration triggers. |
 | [`Resource::method:is_built_in()`](classes/Resource.md) | Partial | Managed Resource query or virtual-hook adaptation (ADR 0013). |
 | [`Resource::method:reset_state()`](classes/Resource.md) | Partial | ADR 0013: invokes custom non-stored reset without changing stored properties or manufacturing Changed. Shape targets preflight all borrowers and geometry/access hooks before OnResetState; denied calls retain custom and base state. Public-only --shape-geometry exercises every represented family plus an application Shape on CPU/GPU/registered serial/separate profiles, permitted quiescent reset and zero warm frames. Arbitrary resource hooks and broader inherited/numerical/platform acceptance remain open. |
 | [`Resource::method:set_id_for_path(String:,String:)`](classes/Resource.md) | Unimplemented | No mapped C# declaration; trigger: next complete Resource API slice. |
 | [`Resource::method:set_path_cache(String:)`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::method:take_over_path(String:)`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
-| [`Resource::property:resource_local_to_scene`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::property:resource_name`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::property:resource_path`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::property:resource_scene_unique_id`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |

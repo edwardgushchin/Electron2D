@@ -198,7 +198,7 @@ Electron2D must keep typed C# calls, deterministic ownership, its managed runtim
 <a id="adr-0023"></a>
 ## ADR 0023: Typed in-memory packed scenes
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 ### Status
 
@@ -238,7 +238,7 @@ Instantiation creates nodes parent-first, restores typed properties and persiste
 
 During reconstruction, each captured property must match a writable stored descriptor on the fresh target with the exact captured value type. Control/Window theme overrides have one bounded extension under [ADR 0083](rendering.md#adr-0083): when a fresh target has no descriptor yet, the engine can reconstruct only the reserved `ThemeColorOverride/`, `ThemeConstantOverride/`, `ThemeFontSizeOverride/`, `ThemeIconOverride/`, `ThemeStyleBoxOverride/` and `ThemeFontOverride/` families with exact `Color?`, `int?`, `int?`, `Texture`, `StyleBox` and `Font` value types. The descriptor is newly bound to the target's typed theme API. Unknown prefixes, other node roles, non-stored entries and mismatched types still fail. Captured source-owner delegates are never reused, and this does not add Variant values or general string member dispatch.
 
-The returned root owns the created hierarchy and all resource duplicates created for that instance. External non-local resources remain shared. Resource duplication preserves aliases and cycles; `GetLocalScene()` is assigned before each local setup callback. Setup occurs once per local duplicate before notification `20`. Only the root receives that notification after complete hierarchy/resource restoration.
+The returned root owns the created hierarchy and all resource duplicates created for that instance. Non-local resources remain shared regardless of whether their path is built-in or external. Scene-local duplication follows the local flag through nested graphs; built-in classification remains the separate ordinary DuplicateDeep(Internal) policy. Explicit force-duplicate hooks and isolated authoring capture retain their existing rules. Resource duplication preserves aliases and cycles; `GetLocalScene()` is assigned before each local setup callback. This is a borrowed weak immutable object identity, not ownership of the hierarchy. Root disposal or collection makes the query return null; root replacement transfers the association and resource ownership together. Setup occurs once per local duplicate before notification `20`. Only the root receives that notification after complete hierarchy/resource restoration.
 
 Reconstruction validates topology before and after the final notification. An internal construction barrier prevents unfinished nodes from being disposed or entering any active tree, either as the root or as a child. Linear topology validation catches attachment to an unrelated detached hierarchy. Failure attempts to remove and dispose every returned node and resource duplicate acquired by the operation, then aggregates cleanup errors without disposing shared source resources. Factory-side allocations that are never returned cannot become engine-owned cleanup targets.
 
@@ -248,7 +248,7 @@ Reconstruction validates topology before and after the final notification. An in
 
 `PackedScene` lives in Scene and depends on Resources. To implement the established local-resource callback contract, `Resource.GetLocalScene()` now exposes the owning `Node`, so the Resource base has a narrow reciprocal dependency on the Scene node abstraction. This is an intentional in-assembly cycle, not a package or assembly cycle: both domains still ship in `Electron2D.dll`, and Resources does not depend on `SceneTree`, packed-scene internals, rendering, or editor code.
 
-The dependency is restricted to local-scene association and is cleared on resource disposal. Broad asset code should not add more Scene dependencies without a later ADR.
+The dependency is restricted to local-scene association, borrows the existing Core weak identity under [ADR 0050](core-object-runtime.md#adr-0050) and is cleared on resource disposal. Broad asset code should not add more Scene dependencies without a later ADR.
 
 #### Events and absent domains
 

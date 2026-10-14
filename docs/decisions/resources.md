@@ -1,6 +1,6 @@
 # Electron2D resources decisions
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 This bounded log owns the complete architectural records for resources. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -27,7 +27,7 @@ Electron2D already commits to typed C#, managed deterministic lifetime, C# event
 
 Resource base state is explicit and typed. Registered paths use a process-wide ordinal weak-reference cache. Ordinary assignment enforces one live owner, takeover is explicit, and `SetPathCache` deliberately stores an unregistered loader-oriented value.
 
-Signals are typed synchronous events. `Changed` is the content-change channel. Deprecated public setup entry/event are excluded under ADR 0004. Packed-scene infrastructure invokes the current protected OnSetupLocalToScene hook after assigning the owning scene, once per local duplicate, and aggregates setup failures across the graph.
+Signals are typed synchronous events. `Changed` is the content-change channel. Deprecated public setup entry/event are excluded under ADR 0004. Packed-scene infrastructure invokes the current protected OnSetupLocalToScene hook after assigning the owning scene, once per local duplicate, and aggregates setup failures across the graph. Scene instantiation duplicates nested resources according to their local flag, preserving non-local identities even for built-in paths; ordinary DuplicateDeep(Internal) remains independent. Explicit force/never-duplicate hooks and isolated authoring capture keep their policies. The resource borrows its scene root through the immutable weak ObjectIdentity under [ADR 0050](core-object-runtime.md#adr-0050); it does not retain the hierarchy. GetLocalScene returns null once root disposal begins or after collection. Changing ResourceLocalToScene affects future instantiation, preserving the existing association. Root replacement transfers the sample together with deterministic resource ownership.
 
 Duplication is opt-in for every derived type through two protected hooks: construct a fresh exact-type target and copy all stored typed state. A graph session registers targets before recursion, preserving aliases and cycles. Deep policy controls ordinary nested resources; the hook also receives a force-duplicate delegate, while direct assignment expresses a never-duplicate field. The derived type controls its collection containers. Path and scene IDs are never copied. Every created target is disposed if duplication fails.
 

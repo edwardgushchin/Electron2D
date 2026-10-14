@@ -180,7 +180,7 @@ Replacing a packed-scene root with `Node.ReplaceBy` transfers the association to
 
 - `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
 
-**Remarks:** The association is assigned before [`Resource.OnSetupLocalToScene`](Resource.md#m-electron2d-resource-onsetuplocaltoscene) runs and remains until disposal.
+**Remarks:** The association is assigned before [`Resource.OnSetupLocalToScene`](Resource.md#m-electron2d-resource-onsetuplocaltoscene) runs. It borrows immutable weak object identity without retaining the hierarchy; root disposal or collection makes the query return null.
 
 <a id="m-electron2d-resource-copyfromresource-electron2d-resource"></a>
 ### `public void CopyFromResource(Resource source)`
@@ -442,9 +442,9 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 
 ## Scene-local lifecycle and ownership
 
-[`PackedScene`](PackedScene.md) creates one graph-preserving duplication session per scene instance. A directly stored resource is duplicated when `ResourceLocalToScene` is true. Within a duplicated local graph, nested resources are duplicated when local-to-scene or built-in; external non-local resources remain shared. Repeated references and cycles resolve to the same duplicate.
+[`PackedScene`](PackedScene.md) creates one graph-preserving duplication session per scene instance. A directly stored resource is duplicated when `ResourceLocalToScene` is true. Within a duplicated local graph, nested resources are duplicated according to their local flag; non-local resources remain shared for both built-in and external paths. Ordinary deep duplication retains its separate built-in/internal policy. Repeated references and cycles resolve to the same duplicate.
 
-Every local duplicate receives the new root through `GetLocalScene()` before setup begins. The current `OnSetupLocalToScene()` hook runs once for each local duplicate. After successful setup, the root adopts every resource created by the session, including non-local built-in duplicates reached inside the graph. `Node.ReplaceBy` transfers those created resources and local-scene associations to the replacement root. Root disposal disposes owned resources after child-node cleanup and clears each resource's local-scene reference through resource disposal. Failed instantiation disposes the partial duplicate graph instead. Shared source/external resources are never owned or disposed by the instance.
+Every local duplicate receives the new root through `GetLocalScene()` before setup begins. The current `OnSetupLocalToScene()` hook runs once for each local duplicate. After successful setup, the root adopts every resource created by the session, including explicit force-duplicated resources. `Node.ReplaceBy` transfers those created resources and local-scene associations to the replacement root. Root disposal disposes owned resources after child-node cleanup and clears each resource's local-scene reference through resource disposal. Failed instantiation disposes the partial duplicate graph instead. Shared non-local resources are never owned or disposed by the instance.
 
 ## Path lifecycle and invariants
 
@@ -511,3 +511,5 @@ The protected `RemapResourceReferences(Func<Resource, Resource> remap)` hook map
 Shape targets use the same authoring preflight for standalone ResetState. CopyFromResource invokes the reset hook once under its already accepted preflight; denied calls enter neither reset hooks nor change batching. Base Resources retain their ordinary reset/copy policy.
 
 World targets also apply a copy-specific preflight to the incoming runtime before reset, base-state, source ownership or Changed effects. This preserves the existing standalone reset policy and permits copies between aliases of one bound runtime.
+
+The final active-body cohort also passes strict current-source NativeAOT publication and six native CPU/GPU/registered ordinary/separate profiles. Seven managed profiles cover the same local scenes plus base/packed/replacement/isolated authoring; the existing complete CPU/GPU physical suites pass against the identical retained runtime. Each of twelve local brackets drives two worlds with active rigid integration at 3 units/s and dt 1/60, position-increment tolerance 0.00005 for float accumulation, live queries and borrowed root reads: 128 warm/128 measured intervals remain 0/0 owner/all-thread managed bytes. Four native full-callback/PackedScene profiles also pass at zero warm bytes. GPU uses lavapipe only; separate local profiles observe two real solver threads for the two worlds. Source/runtime/ELF manifests and exact limits are retained in bin/physics-local-scenes/2026-10-14/validation.json.

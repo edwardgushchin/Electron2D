@@ -97,7 +97,7 @@ public class Resource : ElectronObject
     private string _resourceName = string.Empty;
     private string _resourcePath = string.Empty;
     private string _sceneUniqueId = string.Empty;
-    private Node? _localScene;
+    private ObjectIdentity _localScene;
     private bool _localToScene;
     private bool _pathIsRegistered;
     private int _changeBlockDepth;
@@ -240,9 +240,10 @@ public class Resource : ElectronObject
     }
 
     /// <summary>Gets the root node whose scene instance owns this scene-local resource.</summary>
-    /// <returns>The owning scene root after scene instantiation, or <see langword="null"/> for other resources.</returns>
+    /// <returns>The live owning scene root after scene instantiation, or <see langword="null"/> for other resources or retired roots.</returns>
     /// <remarks>The association is assigned before <see cref="OnSetupLocalToScene"/> runs. Replacing the owning
-    /// root through <see cref="Node.ReplaceBy"/> transfers it to the replacement; otherwise it remains until disposal.</remarks>
+    /// root through <see cref="Node.ReplaceBy"/> transfers it to the replacement. The association borrows immutable
+    /// object identity without retaining the root; it returns null once root disposal starts or the root is collected.</remarks>
     /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
     public Node? GetLocalScene()
     {
@@ -250,7 +251,7 @@ public class Resource : ElectronObject
         lock (_stateGate)
         {
             ThrowIfDisposed();
-            return _localScene;
+            return _localScene.Target as Node;
         }
     }
 
@@ -549,7 +550,7 @@ public class Resource : ElectronObject
 
                 lock (_stateGate)
                 {
-                    _localScene = null;
+                    _localScene = default;
                     Changed = null;
                     _changeBlockDepth = 0;
                     _changeBlockOwnerThreadId = 0;
@@ -810,7 +811,7 @@ public class Resource : ElectronObject
         {
             _isolateAllResources = isolateAllResources;
             _session = new(deep: true, isolateAllResources ? DeepDuplicateMode.All : DeepDuplicateMode.Internal,
-                isolateAllResources ? static _ => true : static resource => resource.ResourceLocalToScene || resource.IsBuiltIn);
+                isolateAllResources ? static _ => true : static resource => resource.ResourceLocalToScene);
         }
 
         internal Resource Resolve(Resource source)
@@ -870,7 +871,7 @@ public class Resource : ElectronObject
         lock (_stateGate)
         {
             ThrowIfDisposed();
-            _localScene = root;
+            _localScene = root.BorrowIdentity();
         }
     }
 
@@ -880,7 +881,7 @@ public class Resource : ElectronObject
         lock (_stateGate)
         {
             ThrowIfDisposed();
-            if (ReferenceEquals(_localScene, oldRoot)) _localScene = newRoot;
+            if (_localScene.ID == oldRoot.InstanceID) _localScene = newRoot.BorrowIdentity();
         }
     }
 

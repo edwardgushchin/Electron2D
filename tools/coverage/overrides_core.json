@@ -1,5 +1,10 @@
 {
   "mappings": [
+    {
+      "godot": "Resource::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "ADRs 0013/0023/0050: local instance graphs preserve aliases/cycles and borrow non-local built-in/external resources. Setup runs once after complete detached restoration, with rollback of created resources; scene identity is weak, returns null on root retirement and transfers with root replacement. Public-only --local-scenes executes CPU/GPU/registered serial/separate full physical frames and queries at 0/0 managed bytes, with GC retention regression and base/packed/replacement/isolated-authoring checks. Wider inherited/native/foreign/hardware acceptance remains open."
+    },
     {"godot": "TranslationServer::method:get_all_languages()", "electron2d": "method:Electron2D.TranslationServer.GetAllLanguages()", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},
     {"godot": "TranslationServer::method:get_all_scripts()", "electron2d": "method:Electron2D.TranslationServer.GetAllScripts()", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},
     {"godot": "TranslationServer::method:get_all_countries()", "electron2d": "method:Electron2D.TranslationServer.GetAllCountries()", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},
@@ -423,7 +428,7 @@
     {
       "electron2d": "method:Electron2D.Resource.GetLocalScene()",
       "godot": "Resource::method:get_local_scene()",
-      "reason": "Managed Resource query or virtual-hook adaptation (ADR 0013)."
+      "reason": "ADRs 0013/0023/0050: local instance graphs preserve aliases/cycles and borrow non-local built-in/external resources. Setup runs once after complete detached restoration, with rollback of created resources; scene identity is weak, returns null on root retirement and transfers with root replacement. Public-only --local-scenes executes CPU/GPU/registered serial/separate full physical frames and queries at 0/0 managed bytes, with GC retention regression and base/packed/replacement/isolated-authoring checks. Wider inherited/native/foreign/hardware acceptance remains open."
     },
     {
       "electron2d": "property:Electron2D.Resource.IsBuiltIn()",
@@ -443,7 +448,7 @@
     {
       "electron2d": "method:Electron2D.Resource.OnSetupLocalToScene()",
       "godot": "Resource::method:_setup_local_to_scene()",
-      "reason": "Managed Resource query or virtual-hook adaptation (ADR 0013)."
+      "reason": "ADRs 0013/0023/0050: local instance graphs preserve aliases/cycles and borrow non-local built-in/external resources. Setup runs once after complete detached restoration, with rollback of created resources; scene identity is weak, returns null on root retirement and transfers with root replacement. Public-only --local-scenes executes CPU/GPU/registered serial/separate full physical frames and queries at 0/0 managed bytes, with GC retention regression and base/packed/replacement/isolated-authoring checks. Wider inherited/native/foreign/hardware acceptance remains open."
     },
     {
       "electron2d": "method:Electron2D.Resource.GetPropertyDescriptors()",
@@ -1605,6 +1610,15 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "Resource::method:get_local_scene()",
+        "Resource::method:_setup_local_to_scene()",
+        "Resource::property:resource_local_to_scene"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0013/0023/0050: local instance graphs preserve aliases/cycles and borrow non-local built-in/external resources. Setup runs once after complete detached restoration, with rollback of created resources; scene identity is weak, returns null on root retirement and transfers with root replacement. Public-only --local-scenes executes CPU/GPU/registered serial/separate full physical frames and queries at 0/0 managed bytes, with GC retention regression and base/packed/replacement/isolated-authoring checks. Wider inherited/native/foreign/hardware acceptance remains open."
+    },
     {"godot": ["Translation::property:plural_rules_override"], "state": "Implemented", "reason": "Bounded prepared gettext integer expressions, precedence and short circuit execute; invalid definitions retain automatic locale fallback, duplication and archives preserve definitions, and imported PO/MO catalogs reach native pixels. TranslationCatalogTests covers trust boundaries and zero-byte warm lookup on Linux x64."},
     {"godot": ["TranslationServer::method:compare_locales(String:,String:)"], "state": "Implemented", "reason": "ADR0007: same fixed default-aware locale identity parser as StandardizeLocale; score retains exact/language/script/region/variant semantics. Original C++ constructor agrees on 2600 cases and LocalizationProjectSettingsTests retains scalar score checks; actual catalogs consume the provider."},
     {"godot": ["TranslationServer::method:get_all_languages()", "TranslationServer::method:get_all_scripts()", "TranslationServer::method:get_all_countries()", "TranslationServer::method:get_language_name(String:)", "TranslationServer::method:get_script_name(String:)", "TranslationServer::method:get_country_name(String:)", "TranslationServer::method:get_locale_name(String:)", "TranslationServer::method:standardize_locale(String:,bool:)", "TranslationServer::method:get_plural_rules(String:)"], "state": "Implemented", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},

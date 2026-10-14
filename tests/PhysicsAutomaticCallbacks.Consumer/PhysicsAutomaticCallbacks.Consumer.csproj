@@ -9,6 +9,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Electron2D.csproj" />
+    <ProjectReference Include="../PhysicsBackendExtension.Consumer/PhysicsBackendExtension.Consumer.csproj" />
     <Compile Include="../Electron2D.Tests/PhysicsAutomaticCallbackTests.cs" Link="PhysicsAutomaticCallbackTests.cs" />
     <Compile Include="../Electron2D.Tests/PhysicsAOTPrerequisiteTests.cs" Link="PhysicsAOTPrerequisiteTests.cs" />
   </ItemGroup>
