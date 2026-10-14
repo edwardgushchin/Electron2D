@@ -5952,6 +5952,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.JoystickVisibility",
+    "kind": "type",
+    "declaringType": "Electron2D.JoystickVisibility",
+    "name": "JoystickVisibility",
+    "signature": "public enum Electron2D.JoystickVisibility",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Key",
     "kind": "type",
     "declaringType": "Electron2D.Key",
@@ -12135,6 +12153,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TouchButtonVisibility",
+    "kind": "type",
+    "declaringType": "Electron2D.TouchButtonVisibility",
+    "name": "TouchButtonVisibility",
+    "signature": "public enum Electron2D.TouchButtonVisibility",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TouchScreenButton",
+    "kind": "type",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "TouchScreenButton",
+    "signature": "public class Electron2D.TouchScreenButton",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TransferMode",
     "kind": "type",
     "declaringType": "Electron2D.TransferMode",
@@ -12855,6 +12906,39 @@
     "declaringType": "Electron2D.ViewportUpdateMode",
     "name": "ViewportUpdateMode",
     "signature": "public enum Electron2D.ViewportUpdateMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VirtualJoystick",
+    "kind": "type",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "VirtualJoystick",
+    "signature": "public class Electron2D.VirtualJoystick",
+    "visibility": "public",
+    "baseType": "Electron2D.Control",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VirtualJoystickMode",
+    "kind": "type",
+    "declaringType": "Electron2D.VirtualJoystickMode",
+    "name": "VirtualJoystickMode",
+    "signature": "public enum Electron2D.VirtualJoystickMode",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -22455,6 +22539,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.TouchScreenButton..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": ".ctor",
+    "signature": "public TouchScreenButton()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Transform..ctor(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
     "kind": "constructor",
     "declaringType": "Electron2D.Transform",
@@ -23035,6 +23132,19 @@
     "declaringType": "Electron2D.ViewportTexture",
     "name": ".ctor",
     "signature": "public ViewportTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VirtualJoystick..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": ".ctor",
+    "signature": "public VirtualJoystick()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -33365,6 +33475,32 @@
     "parameters": [],
     "returnType": "Electron2D.JoyButton",
     "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.JoystickVisibility.Always()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.JoystickVisibility",
+    "name": "Always",
+    "signature": "public const Electron2D.JoystickVisibility Always = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.JoystickVisibility",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.JoystickVisibility.WhenTouched()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.JoystickVisibility",
+    "name": "WhenTouched",
+    "signature": "public const Electron2D.JoystickVisibility WhenTouched = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.JoystickVisibility",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.Key.A()",
@@ -47628,6 +47764,32 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.TouchButtonVisibility.Always()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TouchButtonVisibility",
+    "name": "Always",
+    "signature": "public const Electron2D.TouchButtonVisibility Always = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TouchButtonVisibility",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.TouchButtonVisibility.TouchscreenOnly()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TouchButtonVisibility",
+    "name": "TouchscreenOnly",
+    "signature": "public const Electron2D.TouchButtonVisibility TouchscreenOnly = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TouchButtonVisibility",
+    "value": "1"
+  },
+  {
     "id": "enumValue:Electron2D.TransferMode.Reliable()",
     "kind": "enumValue",
     "declaringType": "Electron2D.TransferMode",
@@ -49211,6 +49373,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ViewportUpdateMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.VirtualJoystickMode.Dynamic()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VirtualJoystickMode",
+    "name": "Dynamic",
+    "signature": "public const Electron2D.VirtualJoystickMode Dynamic = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VirtualJoystickMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.VirtualJoystickMode.Fixed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VirtualJoystickMode",
+    "name": "Fixed",
+    "signature": "public const Electron2D.VirtualJoystickMode Fixed = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VirtualJoystickMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.VirtualJoystickMode.Following()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VirtualJoystickMode",
+    "name": "Following",
+    "signature": "public const Electron2D.VirtualJoystickMode Following = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VirtualJoystickMode",
     "value": "2"
   },
   {
@@ -53114,6 +53315,32 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.TouchScreenButton.Pressed()",
+    "kind": "event",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "Pressed",
+    "signature": "public event System.Action Pressed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.TouchScreenButton.Released()",
+    "kind": "event",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "Released",
+    "signature": "public event System.Action Released",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.Tree.ButtonClicked()",
     "kind": "event",
     "declaringType": "Electron2D.Tree",
@@ -53379,6 +53606,71 @@
     "declaringType": "Electron2D.Viewport",
     "name": "SizeChanged",
     "signature": "public event System.Action SizeChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.VirtualJoystick.FlickCanceled()",
+    "kind": "event",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "FlickCanceled",
+    "signature": "public event System.Action FlickCanceled",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.VirtualJoystick.Flicked()",
+    "kind": "event",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "Flicked",
+    "signature": "public event System.Action\u003CElectron2D.Vector2\u003E Flicked",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.VirtualJoystick.Pressed()",
+    "kind": "event",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "Pressed",
+    "signature": "public event System.Action Pressed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.VirtualJoystick.Released()",
+    "kind": "event",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "Released",
+    "signature": "public event System.Action\u003CElectron2D.Vector2\u003E Released",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.VirtualJoystick.Tapped()",
+    "kind": "event",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "Tapped",
+    "signature": "public event System.Action Tapped",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -72789,6 +73081,19 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {
@@ -181261,6 +181566,115 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TouchScreenButton.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TouchScreenButton.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TouchScreenButton.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TouchScreenButton.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TouchScreenButton.IsPressed()",
+    "kind": "method",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "IsPressed",
+    "signature": "public System.Boolean IsPressed()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TouchScreenButton.OnInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "OnInput",
+    "signature": "protected override System.Void OnInput(Electron2D.InputEvent input)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "input",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TouchScreenButton.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Transform.AffineInverse()",
     "kind": "method",
     "declaringType": "Electron2D.Transform",
@@ -192059,6 +192473,102 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VirtualJoystick.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VirtualJoystick.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VirtualJoystick.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VirtualJoystick.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VirtualJoystick.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "OnGUIInput",
+    "signature": "protected override System.Void OnGUIInput(Electron2D.InputEvent input)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "input",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VirtualJoystick.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -232572,6 +233082,123 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.TouchScreenButton.Action()",
+    "kind": "property",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "Action",
+    "signature": "public System.String Action { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TouchScreenButton.Bitmask()",
+    "kind": "property",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "Bitmask",
+    "signature": "public Electron2D.BitMap Bitmask { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BitMap",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TouchScreenButton.PassbyPress()",
+    "kind": "property",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "PassbyPress",
+    "signature": "public System.Boolean PassbyPress { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TouchScreenButton.Shape()",
+    "kind": "property",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "Shape",
+    "signature": "public Electron2D.Shape Shape { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Shape",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TouchScreenButton.ShapeCentered()",
+    "kind": "property",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "ShapeCentered",
+    "signature": "public System.Boolean ShapeCentered { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TouchScreenButton.ShapeVisible()",
+    "kind": "property",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "ShapeVisible",
+    "signature": "public System.Boolean ShapeVisible { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TouchScreenButton.TextureNormal()",
+    "kind": "property",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "TextureNormal",
+    "signature": "public Electron2D.Texture TextureNormal { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TouchScreenButton.TexturePressed()",
+    "kind": "property",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "TexturePressed",
+    "signature": "public Electron2D.Texture TexturePressed { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TouchScreenButton.VisibilityMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.TouchScreenButton",
+    "name": "VisibilityMode",
+    "signature": "public Electron2D.TouchButtonVisibility VisibilityMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TouchButtonVisibility",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Transform.FlipX()",
     "kind": "property",
     "declaringType": "Electron2D.Transform",
@@ -234116,6 +234743,149 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VirtualJoystick.ActionDown()",
+    "kind": "property",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "ActionDown",
+    "signature": "public System.String ActionDown { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VirtualJoystick.ActionLeft()",
+    "kind": "property",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "ActionLeft",
+    "signature": "public System.String ActionLeft { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VirtualJoystick.ActionRight()",
+    "kind": "property",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "ActionRight",
+    "signature": "public System.String ActionRight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VirtualJoystick.ActionUp()",
+    "kind": "property",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "ActionUp",
+    "signature": "public System.String ActionUp { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VirtualJoystick.ClampzoneRatio()",
+    "kind": "property",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "ClampzoneRatio",
+    "signature": "public System.Single ClampzoneRatio { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VirtualJoystick.DeadzoneRatio()",
+    "kind": "property",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "DeadzoneRatio",
+    "signature": "public System.Single DeadzoneRatio { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VirtualJoystick.InitialOffsetRatio()",
+    "kind": "property",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "InitialOffsetRatio",
+    "signature": "public Electron2D.Vector2 InitialOffsetRatio { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VirtualJoystick.JoystickMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "JoystickMode",
+    "signature": "public Electron2D.VirtualJoystickMode JoystickMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VirtualJoystickMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VirtualJoystick.JoystickSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "JoystickSize",
+    "signature": "public System.Single JoystickSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VirtualJoystick.TipSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "TipSize",
+    "signature": "public System.Single TipSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VirtualJoystick.VisibilityMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.VirtualJoystick",
+    "name": "VisibilityMode",
+    "signature": "public Electron2D.JoystickVisibility VisibilityMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.JoystickVisibility",
     "value": null
   },
   {

@@ -18,6 +18,8 @@ public static partial class ResourceFileTypes
         RegisterNode("Entity", CreateEntity);
         RegisterNode("CanvasModulate", CreateCanvasModulate);
         RegisterNode("FoldableContainer", CreateFoldableContainer);
+        RegisterNode("TouchScreenButton", CreateTouchScreenButton);
+        RegisterNode("VirtualJoystick", CreateVirtualJoystick);
         RegisterResource("FoldableGroup", CreateFoldableGroup);
         RegisterNode("PointLight", CreatePointLight);
         RegisterNode("DirectionalLight", CreateDirectionalLight);
@@ -68,6 +70,7 @@ public static partial class ResourceFileTypes
         RegisterResource("RichTextEffect", CreateRichTextEffect);
         RegisterNode("Sprite", CreateSprite);
         RegisterNode("TileMapLayer", CreateTileMapLayer);
+        RegisterResource("BitMap", CreateBitMap);
         RegisterResource("Image", CreateImage);
         RegisterResource("ImageTexture", CreateImageTexture);
         RegisterResource("TextureArray", CreateTextureArray);
@@ -124,6 +127,8 @@ public static partial class ResourceFileTypes
     private static LightOccluder CreateLightOccluder() => new();
     private static CanvasModulate CreateCanvasModulate() => new();
     private static FoldableContainer CreateFoldableContainer() => new();
+    private static TouchScreenButton CreateTouchScreenButton() => new();
+    private static VirtualJoystick CreateVirtualJoystick() => new();
     private static FoldableGroup CreateFoldableGroup() => new();
     private static CanvasTexture CreateCanvasTexture() => new();
     private static OccluderPolygon CreateOccluderPolygon() => new();
@@ -173,6 +178,7 @@ public static partial class ResourceFileTypes
     private static TileMapLayer CreateTileMapLayer() => new();
     private static Sprite CreateSprite() => new();
     private static Image CreateImage() => new();
+    private static BitMap CreateBitMap() => new();
     private static ImageTexture CreateImageTexture() => new();
     private static TextureArray CreateTextureArray() => new();
     private static TextureRD CreateTextureRD() => new();

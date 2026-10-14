@@ -1609,3 +1609,16 @@ controls, character movement and unchanged rigid momentum. The shared CPU/GPU/
 registered profile covers five 128-warmup/128-measured full-frame brackets at zero
 managed allocation. Wider registered contact settings and complete numerical,
 native/network/platform/performance acceptance remain open.
+## Touch game controls
+
+| Domain | Component | Type | Source | State | Behavior |
+| --- | --- | --- | --- | --- | --- |
+| [Input](domains/input.md) | [Touch game controls](components/touch-game-controls.md) | [TouchScreenButton](classes/TouchScreenButton.md) | [src/Scene/2D/TouchScreenButton.cs](../src/Scene/2D/TouchScreenButton.cs) | Current | Scene-space masked button with independent touch/action lifetime. |
+| [Input](domains/input.md) | [Touch game controls](components/touch-game-controls.md) | [VirtualJoystick](classes/VirtualJoystick.md) | [src/Scene/GUI/VirtualJoystick.cs](../src/Scene/GUI/VirtualJoystick.cs) | Current | Themed fixed/dynamic/following analog gesture consumer. |
+| [Input](domains/input.md) | [Touch game controls](components/touch-game-controls.md) | [VirtualJoystickMode](classes/VirtualJoystickMode.md) | [src/Scene/GUI/VirtualJoystickMode.cs](../src/Scene/GUI/VirtualJoystickMode.cs) | Current | Base-placement value domain. |
+| [Input](domains/input.md) | [Touch game controls](components/touch-game-controls.md) | [JoystickVisibility](classes/JoystickVisibility.md) | [src/Scene/GUI/VirtualJoystickMode.cs](../src/Scene/GUI/VirtualJoystickMode.cs) | Current | Contact decoration policy. |
+| [Input](domains/input.md) | [Touch game controls](components/touch-game-controls.md) | [TouchButtonVisibility](classes/TouchButtonVisibility.md) | [src/Scene/GUI/VirtualJoystickMode.cs](../src/Scene/GUI/VirtualJoystickMode.cs) | Current | Touchscreen availability policy. |
+
+Input.VirtualControls.cs retains private owner/axis contributions; SceneTree.VirtualInput.cs queues discrete button transitions at a safe input boundary. The two Storage partials register authored typed descriptors and exact noncapturing scene factories; ResourceFileTypes registers their file names. ThemeDB.VirtualJoystick.cs adds four default style items with owned base/tip styles.
+
+BitMap now has a registered typed file factory and atomic packed-mask descriptor used by bundled touch scenes; dimensions and actual hit pixels survive fresh-process load.

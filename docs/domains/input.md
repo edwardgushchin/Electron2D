@@ -1,6 +1,6 @@
 # Input domain
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 ## Responsibility
 
@@ -92,3 +92,7 @@ for the CPU/GPU, embedded-view and callback/error contracts.
 Changed default cursor policy synthesizes internal mouse motion from the last parsed client pointer position. GUI routing and passive physics hover execute, while Node user input callbacks omit internal events. Same defaults are no-ops; active scene requests coalesce at a safe point. Viewport.UpdateMouseCursorState uses the current native pointer through the containing Window. See [input runtime](../components/input-runtime.md).
 
 Control pointer capture transfers now connect deferred internal button transitions to ordinary GUI motion/release routing. Control local pointer warping shares viewport/window validation and embedded transforms. See [Control](../classes/Control.md#pointer-capture-transfer-and-coordinates).
+
+## Touch game consumers
+
+[Touch game controls](../components/touch-game-controls.md) connects TouchScreenButton scene-space masks/textures with VirtualJoystick themed analog gestures. Independent action contributions, queued button event delivery, lifecycle cancellation, typed fresh-process scenes and Linux rendered input checks are documented in the component. Physical mobile, foreign backend, inherited semantic accessibility and native allocation acceptance remain separate.

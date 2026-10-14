@@ -1,10 +1,10 @@
 # Entity
 
-Last updated: 2026-10-11
+Last updated: 2026-10-14
 
 **Inherits:** [CanvasItem](CanvasItem.md)
 
-**Inherited By:** [CanvasGroup](CanvasGroup.md), [BackBufferCopy](BackBufferCopy.md), [AudioStreamEmitter](AudioStreamEmitter.md), [Camera](Camera.md), [Parallax](Parallax.md), [ParallaxLayer](ParallaxLayer.md), [Path](Path.md), [PathFollow](PathFollow.md), [Sprite](Sprite.md), [AnimatedSprite](AnimatedSprite.md), [Line](Line.md), [Polygon](Polygon.md), [RemoteTransform](RemoteTransform.md), [RayCast](RayCast.md)
+**Inherited By:** [TouchScreenButton](TouchScreenButton.md), [CanvasGroup](CanvasGroup.md), [BackBufferCopy](BackBufferCopy.md), [AudioStreamEmitter](AudioStreamEmitter.md), [Camera](Camera.md), [Parallax](Parallax.md), [ParallaxLayer](ParallaxLayer.md), [Path](Path.md), [PathFollow](PathFollow.md), [Sprite](Sprite.md), [AnimatedSprite](AnimatedSprite.md), [Line](Line.md), [Polygon](Polygon.md), [RemoteTransform](RemoteTransform.md), [RayCast](RayCast.md)
 
 - **Source:** [Entity.cs](../../src/Scene/2D/Entity.cs)
 - **Namespace:** `Electron2D`

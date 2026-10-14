@@ -1,6 +1,6 @@
 # BitMap
 
-Last updated: 2026-09-23
+Last updated: 2026-10-14
 
 **Inherits:** [Resource](Resource.md)
 
@@ -107,3 +107,7 @@ Scans the clipped `rect` in row-major order, joins touching opaque pixels, trace
 [BitMapTests](../../tests/Electron2D.Tests/BitMapTests.cs) checks bit order, clipped writes, alpha threshold equality, L8 output, resize, dilation and erosion, simple and diagonal contours, reduction termination, independent duplication, failures and disposal on managed Linux/.NET. Other platforms and physics integration are not verified. [Coverage](../coverage/classes/BitMap.md) accounts for the complete pinned class surface and C# lifecycle projections.
 
 The mask and contour behavior follows the [pinned implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/resources/bit_map.cpp); its [MIT notice](../../licence/ReferenceData-LICENSE.txt) is retained in this repository.
+
+## Typed resource storage
+
+The registered BitMap factory preserves mask dimensions and packed pixels in a single private typed byte-array descriptor. Capture takes one serialized snapshot; restoration validates dimension/payload agreement before atomic commit and Changed. Empty masks remain empty. Bundled TouchScreenButton scene loading verifies actual pixel contents in a fresh process; no public raw-storage property is introduced.

@@ -610,3 +610,7 @@ Server CanvasSetModulate remains an immediate retained canvas operation. Active 
 The published saved-scene workflow also preserves an untouched Window.Position as automatic placement. Explicit zero remains stored and retains its platform coordinate gate; loading a default root window no longer invents a global-position request on Wayland.
 
 [FoldableContainer](../classes/FoldableContainer.md) and [FoldableGroup](../classes/FoldableGroup.md) implement collapsible title/body panels, mutually exclusive expansion, shared BarPosition, owner-safe input/layout/themes and typed fresh scene/title-control storage. FoldableTests/FoldableNativeTests cover the connected workflow under ADR 0081/0083.
+
+## Touch game consumers
+
+[Touch game controls](../components/touch-game-controls.md) connects TouchScreenButton scene-space masks/textures with VirtualJoystick themed analog gestures. Independent action contributions, queued button event delivery, lifecycle cancellation, typed fresh-process scenes and Linux rendered input checks are documented in the component. Physical mobile, foreign backend, inherited semantic accessibility and native allocation acceptance remain separate.

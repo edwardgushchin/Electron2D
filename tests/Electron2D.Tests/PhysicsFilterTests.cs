@@ -5,6 +5,7 @@ internal static class PhysicsFilterTests
     internal static void Run(bool gpu = false)
     {
         var backend = gpu ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
+        AllocationWarmupCheck.Verify(Collect);
         MeasureRaw(backend); SceneAndServer(backend); ContactTransitions(backend); MeasureActive(backend); OneSidedResponse(backend); ContinuousResponse(backend); SensorTransitions(backend); WakeNeighbors(backend); Guards(backend); Callbacks(backend);
         Console.WriteLine($"Physics filters {backend} passed: scene/server access, all bits, queries, motion, contact/sensor transitions, lifetime, guards and zero warmed allocations.");
     }
@@ -279,7 +280,7 @@ internal static class PhysicsFilterTests
         finally { PhysicsServer.FreeRID(raw); PhysicsServer.FreeRID(area); }
         Reject<ArgumentException>(() => PhysicsServer.BodyGetCollisionLayer(raw)); Reject<ArgumentException>(() => PhysicsServer.BodyGetCollisionMask(raw));
     }
-    private static void Collect() { GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); }
+    private static void Collect() { GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); }
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
 }

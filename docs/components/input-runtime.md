@@ -1,6 +1,6 @@
 # Input runtime component
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 ## Scope
 
@@ -129,3 +129,7 @@ Input.SetDefaultCursorShape preserves immediate Control cursor precedence and, f
 Control.GrabClickFocus transfers current viewport mouse capture at a coalesced deferred boundary. Held primary buttons release the old control directly and press the new control in the next deferred batch with internal device identity. Keyboard focus, global Input state, parent bubbling and ordinary scene input stages are unaffected. Removal/disposal, real releases and retargeting cancel stale work; callback failures retain cleanup and continuation. Control pointer coordinates use the existing canvas/viewport/window transformations, including embedded native warp. See [Control](../classes/Control.md#pointer-capture-transfer-and-coordinates).
 
 ControlPointerTests checks coalescing, two deferred batches, primary buttons, transformed coordinates, keyboard-focus isolation, disposal/viewport removal, singular transforms, exceptions, physical-release cancellation and 64 warmed same-target requests with zero managed bytes. Native Wayland GPU/compatibility tests verify actual capture-driven pixels and explicit unavailable warp/desktop-position boundaries. Dummy compatibility uses nearest sampling for executable embedded warp coordinates. Other platform/hardware verification remains separate.
+
+## Touch game consumers
+
+[Touch game controls](../components/touch-game-controls.md) connects TouchScreenButton scene-space masks/textures with VirtualJoystick themed analog gestures. Independent action contributions, queued button event delivery, lifecycle cancellation, typed fresh-process scenes and Linux rendered input checks are documented in the component. Physical mobile, foreign backend, inherited semantic accessibility and native allocation acceptance remain separate.

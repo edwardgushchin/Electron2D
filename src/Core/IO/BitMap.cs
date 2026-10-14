@@ -3,9 +3,39 @@ using System.Numerics;
 namespace Electron2D;
 
 /// <summary>Stores a compact two-dimensional mask and extracts its opaque contours.</summary>
-/// <remarks>Coordinates are zero based. Mutations are serialized per instance and raise <see cref="Resource.Changed"/> after commitment.</remarks>
+/// <remarks>Coordinates are zero based. Mutations are serialized per instance and raise <see cref="Resource.Changed"/> after commitment. Typed scene/resource storage preserves packed dimensions and pixels as one validated atomic payload.</remarks>
 public class BitMap : Resource
 {
+    private static readonly PropertyDescriptor[] StoredMaskProperties =
+    [new PropertyDescriptor<BitMap, byte[]>("_Mask", bitmap => bitmap.CaptureMask(), (bitmap, data) => bitmap.RestoreMask(data), _ => new byte[8], stored: true)];
+
+    /// <inheritdoc />
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(StoredMaskProperties);
+
+    private byte[] CaptureMask()
+    {
+        lock (_gate)
+        {
+            ThrowIfDisposed(); var data = new byte[checked(8 + _bits.Length)];
+            System.Buffers.Binary.BinaryPrimitives.WriteInt32LittleEndian(data, _width);
+            System.Buffers.Binary.BinaryPrimitives.WriteInt32LittleEndian(data.AsSpan(4), _height);
+            _bits.CopyTo(data, 8); return data;
+        }
+    }
+    private void RestoreMask(byte[] data)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        if (data.Length < 8) throw new InvalidDataException("A stored mask requires dimensions and packed pixels.");
+        var width = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(data);
+        var height = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(data.AsSpan(4));
+        var count = (long)width * height;
+        if (width < 0 || height < 0 || (width == 0) != (height == 0) || count > int.MaxValue || data.Length != 8 + (count + 7) / 8)
+            throw new InvalidDataException("Stored mask dimensions and payload do not agree.");
+        var bits = data.AsSpan(8).ToArray();
+        lock (_gate) { ThrowIfDisposed(); _width = width; _height = height; _bits = bits; }
+        EmitChanged();
+    }
+
     private readonly object _gate = new();
     private byte[] _bits = [];
     private int _width;

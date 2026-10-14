@@ -950,6 +950,7 @@ public sealed partial class SceneTree : MainLoop
             if (!embedded && !executionOwned) EndExecution();
         }
 
+        DrainVirtualInput(ref errors);
         ThrowCollected("One or more scene input callbacks failed.", errors);
     }
 

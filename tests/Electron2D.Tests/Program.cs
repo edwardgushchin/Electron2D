@@ -13,6 +13,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_CHILD") is {
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_HOST") == "1") { FontRasterPolicyTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER") == "1") { FontRasterPolicyTests.Run(); return; }
 
+if (args.Length == 2 && args[0] == "--touch-archive") { TouchControlTests.RunArchive(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOUCH") is { } touchProfile) { if (touchProfile == "managed") TouchControlTests.RunManaged(); else TouchControlNativeTests.Run(touchProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ZIP") is { } zipProfile) { if (zipProfile == "managed") ZIPTests.RunManaged(); else ZIPTests.RunNative(zipProfile); return; }
 if (args.Length == 2 && args[0] == "--foldable-archive") { FoldableTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FOLDABLE") is { } foldableProfile) { if (foldableProfile == "managed") FoldableTests.RunManaged(); else FoldableNativeTests.Run(foldableProfile); return; }
@@ -1265,7 +1267,7 @@ PhysicsPointGravityRangeTests.Run(PhysicsServer.Backend.CPU); PhysicsPointGravit
 PhysicsServerAreaFieldTests.Run(); PhysicsServerAreaFieldTests.Run(PhysicsServer.Backend.GPU);
 ScreenVisibilityTests.Run();
 NinePatchTests.Run();
-ZIPTests.RunManaged(); RangeProgressTests.Run(); ProgressBarTests.RunManaged(); ProjectThemeTests.RunManaged(); FoldableTests.RunManaged();
+TouchControlTests.RunManaged(); ZIPTests.RunManaged(); RangeProgressTests.Run(); ProgressBarTests.RunManaged(); ProjectThemeTests.RunManaged(); FoldableTests.RunManaged();
 BoxContainerTests.Run();
 GridContainerTests.Run();
 FlowContainerTests.Run();

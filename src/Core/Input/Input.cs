@@ -724,7 +724,7 @@ public sealed partial class Input : ElectronObject
 
     private readonly record struct JoyButtonState(int Device, JoyButton Button);
     private readonly record struct JoyAxisState(int Device, JoyAxis Axis);
-    private readonly record struct ActionSource(int Device, int EventIndex);
+    private readonly record struct ActionSource(int Device, int EventIndex, ulong Owner = 0);
     private readonly record struct ActionContribution(float Strength, float RawStrength, bool Exact);
     private readonly record struct ActionSnapshot(bool Pressed, float Strength, float RawStrength, bool JustPressed, bool JustReleased);
 

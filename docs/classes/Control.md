@@ -1,6 +1,6 @@
 # Control
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Inherits:** [CanvasItem](CanvasItem.md) → [Node](Node.md) → [ElectronObject](ElectronObject.md)
 
@@ -480,3 +480,5 @@ caption.Notify(Node.NotificationTranslationChanged);
 Null assignment throws `ArgumentNullException`; disposed access throws `ObjectDisposedException`. Attached property access requires the scene owner thread and writes are rejected during scene capture. Equal writes are silent. Context values copy independently through PackedScene and file loading.
 
 `GUITranslationContextTests` exercises singular/plural lookup through base references, explicit overrides, policy disabling, descriptors, cached Label/RichTextLabel captions, Button/OptionButton consumers, owner/disposal checks, fresh file processes and zero warmed managed bytes. Its native profile compares actual initial/refreshed glyph pixels with independently authored expected labels on Linux Wayland GPU and compatibility. Other platforms and native allocations remain unverified.
+
+[VirtualJoystick](VirtualJoystick.md) consumes the inherited local GUI touch lane, ordinary themed StyleBoxes and owner/capture/lifetime rules for analog game controls.

@@ -1,0 +1,338 @@
+{
+  "mappings": [
+    {
+      "godot": "class:TouchScreenButton",
+      "electron2d": "T:Electron2D.TouchScreenButton",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "TouchScreenButton::enum:VisibilityMode",
+      "electron2d": "T:Electron2D.TouchButtonVisibility",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "TouchScreenButton::enum_value:VisibilityMode.VISIBILITY_ALWAYS",
+      "electron2d": "enumValue:Electron2D.TouchButtonVisibility.Always()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "TouchScreenButton::enum_value:VisibilityMode.VISIBILITY_TOUCHSCREEN_ONLY",
+      "electron2d": "enumValue:Electron2D.TouchButtonVisibility.TouchscreenOnly()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "TouchScreenButton::method:is_pressed()",
+      "electron2d": "method:Electron2D.TouchScreenButton.IsPressed()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "TouchScreenButton::property:action",
+      "electron2d": "property:Electron2D.TouchScreenButton.Action()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "TouchScreenButton::property:bitmask",
+      "electron2d": "property:Electron2D.TouchScreenButton.Bitmask()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "TouchScreenButton::property:passby_press",
+      "electron2d": "property:Electron2D.TouchScreenButton.PassbyPress()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "TouchScreenButton::property:shape",
+      "electron2d": "property:Electron2D.TouchScreenButton.Shape()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "TouchScreenButton::property:shape_centered",
+      "electron2d": "property:Electron2D.TouchScreenButton.ShapeCentered()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "TouchScreenButton::property:shape_visible",
+      "electron2d": "property:Electron2D.TouchScreenButton.ShapeVisible()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "TouchScreenButton::property:texture_normal",
+      "electron2d": "property:Electron2D.TouchScreenButton.TextureNormal()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "TouchScreenButton::property:texture_pressed",
+      "electron2d": "property:Electron2D.TouchScreenButton.TexturePressed()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "TouchScreenButton::property:visibility_mode",
+      "electron2d": "property:Electron2D.TouchScreenButton.VisibilityMode()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "TouchScreenButton::signal:pressed()",
+      "electron2d": "event:Electron2D.TouchScreenButton.Pressed()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "TouchScreenButton::signal:released()",
+      "electron2d": "event:Electron2D.TouchScreenButton.Released()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "class:VirtualJoystick",
+      "electron2d": "T:Electron2D.VirtualJoystick",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::enum:JoystickMode",
+      "electron2d": "T:Electron2D.VirtualJoystickMode",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::enum:VisibilityMode",
+      "electron2d": "T:Electron2D.JoystickVisibility",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::enum_value:JoystickMode.JOYSTICK_DYNAMIC",
+      "electron2d": "enumValue:Electron2D.VirtualJoystickMode.Dynamic()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::enum_value:JoystickMode.JOYSTICK_FIXED",
+      "electron2d": "enumValue:Electron2D.VirtualJoystickMode.Fixed()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::enum_value:JoystickMode.JOYSTICK_FOLLOWING",
+      "electron2d": "enumValue:Electron2D.VirtualJoystickMode.Following()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::enum_value:VisibilityMode.VISIBILITY_ALWAYS",
+      "electron2d": "enumValue:Electron2D.JoystickVisibility.Always()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::enum_value:VisibilityMode.VISIBILITY_WHEN_TOUCHED",
+      "electron2d": "enumValue:Electron2D.JoystickVisibility.WhenTouched()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::property:action_down",
+      "electron2d": "property:Electron2D.VirtualJoystick.ActionDown()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::property:action_left",
+      "electron2d": "property:Electron2D.VirtualJoystick.ActionLeft()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::property:action_right",
+      "electron2d": "property:Electron2D.VirtualJoystick.ActionRight()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::property:action_up",
+      "electron2d": "property:Electron2D.VirtualJoystick.ActionUp()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::property:clampzone_ratio",
+      "electron2d": "property:Electron2D.VirtualJoystick.ClampzoneRatio()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::property:deadzone_ratio",
+      "electron2d": "property:Electron2D.VirtualJoystick.DeadzoneRatio()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::property:initial_offset_ratio",
+      "electron2d": "property:Electron2D.VirtualJoystick.InitialOffsetRatio()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::property:joystick_mode",
+      "electron2d": "property:Electron2D.VirtualJoystick.JoystickMode()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::property:joystick_size",
+      "electron2d": "property:Electron2D.VirtualJoystick.JoystickSize()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::property:tip_size",
+      "electron2d": "property:Electron2D.VirtualJoystick.TipSize()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::property:visibility_mode",
+      "electron2d": "property:Electron2D.VirtualJoystick.VisibilityMode()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::signal:flick_canceled()",
+      "electron2d": "event:Electron2D.VirtualJoystick.FlickCanceled()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::signal:flicked(Vector2:)",
+      "electron2d": "event:Electron2D.VirtualJoystick.Flicked()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::signal:pressed()",
+      "electron2d": "event:Electron2D.VirtualJoystick.Pressed()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::signal:released(Vector2:)",
+      "electron2d": "event:Electron2D.VirtualJoystick.Released()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::signal:tapped()",
+      "electron2d": "event:Electron2D.VirtualJoystick.Tapped()",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::theme_item:normal_joystick",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::theme_item:normal_tip",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::theme_item:pressed_joystick",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    },
+    {
+      "godot": "VirtualJoystick::theme_item:pressed_tip",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.TouchScreenButton..ctor()",
+      "reason": "Typed constructor or inherited protected lifetime/input/storage hook for the executable touch-control consumer; no independent compatibility surface."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VirtualJoystick..ctor()",
+      "reason": "Typed constructor or inherited protected lifetime/input/storage hook for the executable touch-control consumer; no independent compatibility surface."
+    },
+    {
+      "electron2d": "method:Electron2D.TouchScreenButton.CreateSceneInstanceFactory()",
+      "reason": "Typed constructor or inherited protected lifetime/input/storage hook for the executable touch-control consumer; no independent compatibility surface."
+    },
+    {
+      "electron2d": "method:Electron2D.TouchScreenButton.Dispose(System.Boolean)",
+      "reason": "Typed constructor or inherited protected lifetime/input/storage hook for the executable touch-control consumer; no independent compatibility surface."
+    },
+    {
+      "electron2d": "method:Electron2D.TouchScreenButton.GetConfigurationWarnings()",
+      "reason": "Typed constructor or inherited protected lifetime/input/storage hook for the executable touch-control consumer; no independent compatibility surface."
+    },
+    {
+      "electron2d": "method:Electron2D.TouchScreenButton.GetPropertyDescriptors()",
+      "reason": "Typed constructor or inherited protected lifetime/input/storage hook for the executable touch-control consumer; no independent compatibility surface."
+    },
+    {
+      "electron2d": "method:Electron2D.TouchScreenButton.OnInput(Electron2D.InputEvent)",
+      "reason": "Typed constructor or inherited protected lifetime/input/storage hook for the executable touch-control consumer; no independent compatibility surface."
+    },
+    {
+      "electron2d": "method:Electron2D.TouchScreenButton.OnNotification(System.Int32)",
+      "reason": "Typed constructor or inherited protected lifetime/input/storage hook for the executable touch-control consumer; no independent compatibility surface."
+    },
+    {
+      "electron2d": "method:Electron2D.VirtualJoystick.CreateSceneInstanceFactory()",
+      "reason": "Typed constructor or inherited protected lifetime/input/storage hook for the executable touch-control consumer; no independent compatibility surface."
+    },
+    {
+      "electron2d": "method:Electron2D.VirtualJoystick.Dispose(System.Boolean)",
+      "reason": "Typed constructor or inherited protected lifetime/input/storage hook for the executable touch-control consumer; no independent compatibility surface."
+    },
+    {
+      "electron2d": "method:Electron2D.VirtualJoystick.GetConfigurationWarnings()",
+      "reason": "Typed constructor or inherited protected lifetime/input/storage hook for the executable touch-control consumer; no independent compatibility surface."
+    },
+    {
+      "electron2d": "method:Electron2D.VirtualJoystick.GetPropertyDescriptors()",
+      "reason": "Typed constructor or inherited protected lifetime/input/storage hook for the executable touch-control consumer; no independent compatibility surface."
+    },
+    {
+      "electron2d": "method:Electron2D.VirtualJoystick.OnGUIInput(Electron2D.InputEvent)",
+      "reason": "Typed constructor or inherited protected lifetime/input/storage hook for the executable touch-control consumer; no independent compatibility surface."
+    },
+    {
+      "electron2d": "method:Electron2D.VirtualJoystick.OnNotification(System.Int32)",
+      "reason": "Typed constructor or inherited protected lifetime/input/storage hook for the executable touch-control consumer; no independent compatibility surface."
+    },
+    {
+      "electron2d": "method:Electron2D.BitMap.GetPropertyDescriptors()",
+      "reason": "Inherited typed storage hook preserving atomic packed dimensions/pixels for the live touch-button mask consumer; no new raw public property."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:TouchScreenButton",
+        "TouchScreenButton::enum:VisibilityMode",
+        "TouchScreenButton::enum_value:VisibilityMode.VISIBILITY_ALWAYS",
+        "TouchScreenButton::enum_value:VisibilityMode.VISIBILITY_TOUCHSCREEN_ONLY",
+        "TouchScreenButton::method:is_pressed()",
+        "TouchScreenButton::property:action",
+        "TouchScreenButton::property:bitmask",
+        "TouchScreenButton::property:passby_press",
+        "TouchScreenButton::property:shape",
+        "TouchScreenButton::property:shape_centered",
+        "TouchScreenButton::property:shape_visible",
+        "TouchScreenButton::property:texture_normal",
+        "TouchScreenButton::property:texture_pressed",
+        "TouchScreenButton::property:visibility_mode",
+        "TouchScreenButton::signal:pressed()",
+        "TouchScreenButton::signal:released()",
+        "class:VirtualJoystick",
+        "VirtualJoystick::enum:JoystickMode",
+        "VirtualJoystick::enum:VisibilityMode",
+        "VirtualJoystick::enum_value:JoystickMode.JOYSTICK_DYNAMIC",
+        "VirtualJoystick::enum_value:JoystickMode.JOYSTICK_FIXED",
+        "VirtualJoystick::enum_value:JoystickMode.JOYSTICK_FOLLOWING",
+        "VirtualJoystick::enum_value:VisibilityMode.VISIBILITY_ALWAYS",
+        "VirtualJoystick::enum_value:VisibilityMode.VISIBILITY_WHEN_TOUCHED",
+        "VirtualJoystick::property:action_down",
+        "VirtualJoystick::property:action_left",
+        "VirtualJoystick::property:action_right",
+        "VirtualJoystick::property:action_up",
+        "VirtualJoystick::property:clampzone_ratio",
+        "VirtualJoystick::property:deadzone_ratio",
+        "VirtualJoystick::property:initial_offset_ratio",
+        "VirtualJoystick::property:joystick_mode",
+        "VirtualJoystick::property:joystick_size",
+        "VirtualJoystick::property:tip_size",
+        "VirtualJoystick::property:visibility_mode",
+        "VirtualJoystick::signal:flick_canceled()",
+        "VirtualJoystick::signal:flicked(Vector2:)",
+        "VirtualJoystick::signal:pressed()",
+        "VirtualJoystick::signal:released(Vector2:)",
+        "VirtualJoystick::signal:tapped()",
+        "VirtualJoystick::theme_item:normal_joystick",
+        "VirtualJoystick::theme_item:normal_tip",
+        "VirtualJoystick::theme_item:pressed_joystick",
+        "VirtualJoystick::theme_item:pressed_tip"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0038/0083/0051: executable one-contact scene button with shape/bitmap union, passby, visibility, queued action delivery and retained textures; themed fixed/dynamic/following joystick with finite analog scaling and gesture outcomes. Owner/axis contributions preserve other producers, cleanup precedes callbacks, exact typed scene factories and borrowed resources apply. Linux managed/native rendering verification is distinct from mobile hardware and foreign platform acceptance."
+    }
+  ]
+}
