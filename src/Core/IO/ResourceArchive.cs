@@ -302,12 +302,24 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
             else WriteProperties(stream, resource, null);
             _internal.Add(resource);
             var sceneID = resource.ResourceSceneUniqueID;
-            if (!ReferenceEquals(resource, root) && (flags & SaverFlags.ReplaceSubresourcePaths) != 0 && sceneID.Length == 0) sceneID = Resource.GenerateSceneUniqueID();
             _sceneIDs.Add(resource, sceneID);
             definitions.Add(new(type, resource.ResourceName, resource.ResourceLocalToScene, sceneID, "", -1, stream.DataArray, role, bounds));
         }
-        var sceneIDs = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var d in definitions.Skip(1).Where(d => d.Path.Length == 0 && d.SceneID.Length != 0)) if (!sceneIDs.Add(d.SceneID)) throw new InvalidDataException("Duplicate subresource scene ID.");
+        var reservedIDs = definitions.Skip(1).Where(d => d.Path.Length == 0 && d.SceneID.Length != 0).Select(d => d.SceneID).ToHashSet(StringComparer.Ordinal);
+        var assignedIDs = new HashSet<string>(StringComparer.Ordinal);
+        for (var i = 1; i < definitions.Count; i++)
+        {
+            var definition = definitions[i];
+            if (definition.Path.Length != 0) continue;
+            var id = definition.SceneID;
+            if (id.Length == 0 || !assignedIDs.Add(id))
+            {
+                do { id = Resource.GenerateSceneUniqueID(); } while (!reservedIDs.Add(id));
+                assignedIDs.Add(id);
+            }
+            _sceneIDs[_resources[i]] = id;
+            definitions[i] = definition with { SceneID = id };
+        }
         using var output = NewStream();
         output.Put32(definitions.Count);
         foreach (var d in definitions)
@@ -404,13 +416,15 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
     }
     internal void CommitPaths()
     {
+        foreach (var resource in _internal) if (!ReferenceEquals(resource, root)) resource.ResourceSceneUniqueID = _sceneIDs[resource];
         if ((flags & SaverFlags.ReplaceSubresourcePaths) == 0) return;
+        List<Exception>? errors = null;
         foreach (var resource in _internal) if (!ReferenceEquals(resource, root))
             {
-                var id = _sceneIDs[resource];
-                resource.ResourceSceneUniqueID = id;
-                resource.SetPathCache(path + "::" + id);
+                try { resource.SetPathCache(path + "::" + _sceneIDs[resource]); }
+                catch (Exception error) { (errors ??= []).Add(error); }
             }
+        if (errors is not null) throw new AggregateException("Saved resource path callbacks failed after persistence.", errors);
     }
 
 }
@@ -442,7 +456,13 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
         for (var i = 0; i < count; i++) _definitions[i] = ResourceArchive.ReadDefinition(stream, version, abortOnMissing);
         if (stream.GetAvailableBytes() != 0) throw new InvalidDataException("Trailing archive payload.");
         var sceneIDs = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var definition in _definitions.Skip(1)) { if (definition.UID < -1 || definition.Path.Length != 0 && definition.Payload.Length != 0) throw new InvalidDataException("Invalid external resource metadata."); if (definition.Path.Length == 0 && definition.SceneID.Length != 0 && !sceneIDs.Add(definition.SceneID)) throw new InvalidDataException("Duplicate subresource scene ID."); }
+        for (var i = 1; i < _definitions.Length; i++)
+        {
+            var definition = _definitions[i];
+            if (definition.UID < -1 || definition.Path.Length != 0 && definition.Payload.Length != 0) throw new InvalidDataException("Invalid external resource metadata.");
+            var id = definition.SceneID.Length != 0 ? definition.SceneID : i.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            if (definition.Path.Length == 0 && !sceneIDs.Add(id)) throw new InvalidDataException("Duplicate subresource scene ID.");
+        }
         if (_definitions[0].Path.Length != 0) throw new InvalidDataException("Archive root cannot be an external reference.");
         void LoadIdentity(int i)
         {

@@ -151,7 +151,7 @@ Gets or sets the identifier used when this resource is embedded in a serialized 
 - `ArgumentNullException`: The assigned value is `null`.
 - `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
 
-**Remarks:** Assignments do not raise [`Resource.Changed`](Resource.md#e-electron2d-resource-changed). Scene saving and collision resolution are not implemented yet.
+**Remarks:** Assignments do not raise [`Resource.Changed`](Resource.md#e-electron2d-resource-changed). Successful graph saving generates missing IDs and resolves duplicate IDs after atomic persistence; the first encountered authored ID is preserved.
 
 <a id="p-electron2d-resource-isbuiltin"></a>
 ### `public bool IsBuiltIn { get; }`
@@ -264,7 +264,7 @@ Generates a compact scene-relative resource identifier.
 
 **Returns:** A five-character string composed of lowercase letters `a` through `y` and digits `0` through `8`.
 
-**Remarks:** The result is probabilistically unique; a future scene saver must still detect and resolve collisions.
+**Remarks:** The result is probabilistically unique; graph saving reserves authored IDs and resolves collisions before persistence.
 
 <a id="m-electron2d-resource-resetstate"></a>
 ### `public void ResetState()`
@@ -513,3 +513,7 @@ Shape targets use the same authoring preflight for standalone ResetState. CopyFr
 World targets also apply a copy-specific preflight to the incoming runtime before reset, base-state, source ownership or Changed effects. This preserves the existing standalone reset policy and permits copies between aliases of one bound runtime.
 
 The final active-body cohort also passes strict current-source NativeAOT publication and six native CPU/GPU/registered ordinary/separate profiles. Seven managed profiles cover the same local scenes plus base/packed/replacement/isolated authoring; the existing complete CPU/GPU physical suites pass against the identical retained runtime. Each of twelve local brackets drives two worlds with active rigid integration at 3 units/s and dt 1/60, position-increment tolerance 0.00005 for float accumulation, live queries and borrowed root reads: 128 warm/128 measured intervals remain 0/0 owner/all-thread managed bytes. Four native full-callback/PackedScene profiles also pass at zero warm bytes. GPU uses lavapipe only; separate local profiles observe two real solver threads for the two worlds. Source/runtime/ELF manifests and exact limits are retained in bin/physics-local-scenes/2026-10-14/validation.json.
+
+Graph persistence stages scene-relative IDs for every internal subresource, preserves the first authored owner, avoids every reserved authored ID and repairs missing/later duplicate IDs. Successful writes commit IDs independently of ReplaceSubresourcePaths; that flag changes source paths. Failed encoding or writes preserve IDs and paths. After persistence all IDs commit before path hooks; later paths are attempted even when an earlier callback fails. Readers reject ambiguous embedded paths, including legacy numeric fallback collisions, before constructing resources. Editor per-path ID caches remain separate prerequisites.
+
+The current resource-identity cohort passes eight managed profiles and six strict NativeAOT profiles, including twelve real fresh-process physical scene consumers with changed local creation order. Repeated saves retain corrected IDs, names and physical aliases; failed writes preserve source metadata, and malformed resolved paths reject before factories/cache replacement. Twelve brackets warm 128 and measure 128 active full frames with queries and ID reads at 0/0 owner/all-thread managed bytes. GPU runs use explicit lavapipe; hardware performance and native allocations remain separate gates. Exact manifests/results are retained in bin/physics-resource-identity/2026-10-14/validation.json.

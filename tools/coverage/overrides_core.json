@@ -1612,6 +1612,14 @@
   "statusGroups": [
     {
       "godot": [
+        "Resource::method:generate_scene_unique_id()",
+        "Resource::property:resource_scene_unique_id"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0013: five-character a-y/0-8 generated IDs retain the accepted typed invalid-assignment policy. Archive saving preserves the first authored owner, reserves all authored IDs, repairs missing/later duplicates and commits IDs after atomic persistence independently of path replacement flags. Encode/write failures preserve metadata; post-write path hooks attempt later updates after all IDs commit. Readers reject duplicate resolved embedded paths before factories/cache replacement, including legacy numeric fallbacks. Public-only CPU/GPU/registered serial/separate profiles save/reload actual physical aliases, execute fresh processes and retain strict zero warm managed allocations; archive/base suites verify malformed input and callback failure. Editor per-path ID caches and wider inherited/native/foreign/hardware gates remain open."
+    },
+    {
+      "godot": [
         "Resource::method:get_local_scene()",
         "Resource::method:_setup_local_to_scene()",
         "Resource::property:resource_local_to_scene"

@@ -1,5 +1,5 @@
 using Electron2D;
-internal static class ResourceArchiveTests
+internal static partial class ResourceArchiveTests
 {
     private static void Check(bool value, string message)
     {
@@ -60,7 +60,8 @@ internal static class ResourceArchiveTests
             yield return new PropertyDescriptor<Actor, int>("Number", n => n.Number, (n, v) => n.Number = v, _ => 0, stored: true);
         }
     }
-    private static Data CreateData() => new();
+    private static int _dataFactoryCalls;
+    private static Data CreateData() { _dataFactoryCalls++; return new(); }
     private static Actor CreateActor() => new();
     internal static void Run()
     {
@@ -80,7 +81,7 @@ internal static class ResourceArchiveTests
             SceneFiles(folder);
             Composite(folder);
             SceneReplacement(folder); FileReplication(folder); CopyOwnership(folder); StateOwnership(folder); EmptyAndEditor(folder);
-            FailureBoundaries(folder);
+            FailureBoundaries(folder); SceneIDValidation(folder);
             FreshProcess(folder);
             Console.WriteLine("Typed resource graph and scene archive checks passed.");
         }
