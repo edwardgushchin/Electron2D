@@ -310,3 +310,10 @@ speedup, native allocator totals, real-window FPS or final performance acceptanc
 ## Compact callback activity (2026-10-14)
 
 CaptureGPUActivity reuses uint scratch sized for resident slots and updates collider activity only. PublishGPUCompletion selects raw callback receivers individually; a callback on one body no longer publishes unrelated raw states. Full callback descriptors preserve late registration. Newly enabled receivers publish fresh fields before GetView and retain active-before-step eligibility.
+
+
+[Mixed quiet observer publication](../components/gpu-body-publication.md#mixed-quiet-scene-observers-2026-10-14)
+selects current incremental or complete state by estimated transfer cost. Cached
+mode/sleep is a hint only; scalar values and wake/private/portable continuation
+retain authoritative device reads. Existing API and coverage states remain unchanged;
+hardware, native, foreign and full acceptance remain open.

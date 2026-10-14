@@ -760,3 +760,10 @@ Registered [collider metadata](../components/physics-registered-adapter.md#initi
 checks every pin/groove/spring authority/prediction/replay tick after impaired
 cross-backend portable correction. Coverage states retain their existing scope;
 full hardware/platform/network/performance acceptance remains open.
+
+
+[Mixed quiet observer publication](../components/gpu-body-publication.md#mixed-quiet-scene-observers-2026-10-14)
+selects current incremental or complete state by estimated transfer cost. Cached
+mode/sleep is a hint only; scalar values and wake/private/portable continuation
+retain authoritative device reads. Existing API and coverage states remain unchanged;
+hardware, native, foreign and full acceptance remain open.

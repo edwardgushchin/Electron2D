@@ -100,3 +100,10 @@ speedup, native allocator totals, real-window FPS or final performance acceptanc
 ## Compact callback activity (2026-10-14)
 
 AcceptGPUActivity retains a separate active flag and epoch; IsAwake can use it without reading a full Snapshot. Full-state invalidation also invalidates local activity, including explicit sleep writes without a space epoch change. AcceptGPUState refreshes activity from solved sleep. ReplayState captures/restores Active, ActivityValid and ActivityEpoch alongside existing pose/full-state caches.
+
+
+[Mixed quiet observer publication](../components/gpu-body-publication.md#mixed-quiet-scene-observers-2026-10-14)
+selects current incremental or complete state by estimated transfer cost. Cached
+mode/sleep is a hint only; scalar values and wake/private/portable continuation
+retain authoritative device reads. Existing API and coverage states remain unchanged;
+hardware, native, foreign and full acceptance remain open.

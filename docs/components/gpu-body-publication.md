@@ -1,6 +1,6 @@
 # Changed GPU body publication
 
-Last updated: 2026-10-11
+Last updated: 2026-10-14
 
 ## Contract and consumer
 
@@ -154,3 +154,53 @@ causal connection to the earlier uninstrumented escape has not been established,
 so its acceptance limitation remains open.
 
 [Current window checks](physics-current-performance.md#window-checks-at-567be307) add passing ordinary, NaN and finite-nonzero CPU-then-GPU sequences on 16,384 bodies with unchanged physical gates. The finite pattern is now included in the resident first-step regression. These passes strengthen initialization coverage without establishing the cause of the earlier uninstrumented escape.
+
+
+## Mixed quiet scene observers (2026-10-14)
+
+A mixed world's completion can use the existing changed-state publisher when its
+predicted result bytes are below the complete selected observer batch. The estimate
+counts every raw collider and scene Area conservatively; last scene body mode/sleep
+observations estimate likely changes. This is a cost hint, including after replay,
+not proof that any cached physics state is current. Both paths read and validate
+authoritative current device data before fields, motion, contacts and callbacks
+are published. Dense moving scenes retain selected complete snapshots. Raw-only
+unobserved worlds and scene-only publication retain their existing paths.
+
+The incremental path can include changed raw records even when those bodies have
+no current public observer. This bounded extra transfer avoids the much larger
+complete unchanged scene batch and its request upload. It maintains the existing
+single device history and does not add a CPU comparison mirror, shader, solver or
+public API. Observer scratch reserves the known scene demand before choosing a
+path, so waking those same bodies does not introduce deferred buffer growth.
+
+PhysicsGPUMixedPublicationTests uses 512 scene bodies plus one moving raw body.
+All 513 remain resident and step. Each quiet full frame reads every scene body's
+sleep/pose/velocity; the raw body advances 128 units over the measured 128 ticks,
+within .02 units. Identity/mode/sleep/cached scene state checks are exact. After
+128 warm/128 measured quiet frames, impulse waking, private checkpoint restore,
+portable correction and continued actual motion are checked. The same population
+then executes 128 warm/128 measured frames with every scene body awake. Both phases
+require strict 0/0 owner/all-thread managed bytes. Serial/separate profiles use
+CPU-only Vulkan llvmpipe. Hardware speed, real-window FPS, native allocation,
+foreign platforms and full physics/performance acceptance remain open.
+
+
+The earlier mixed batch downloaded 32848 bytes and uploaded 8264 bytes per frame.
+The changed path downloads 160 and uploads 72 bytes for the same quiet 513-body
+fixture: 99.51% less completed readback. It adds one submission (six versus five),
+because sparse device publication first reads the count and then its exact changed
+prefix. This is an explicit synchronization tradeoff, not a zero-cost optimization.
+When all 512 scene observers wake, selected complete reads remain 32848 bytes/frame,
+with unchanged population and 0/0 measured managed bytes in both phases.
+
+Final serial/separate software-Vulkan full-frame p50/p95/p99 was
+5.9573/12.5787/17.2979 ms and 1.5669/1.8539/2.0559 ms; mean wait was
+5.9869/1.2798 ms. Other verification overlapped these samples, so they cannot
+establish isolated scheduling benefit or hardware speed. An earlier control uses
+an identical test DLL with the retained pre-change runtime and intentionally fails
+the unchanged <1024-byte quiet readback gate. Its transfer counts establish the
+old unnecessary batch; its timings are not a matched CPU/GPU performance result.
+The final frozen revision additionally preserves an independently committed point
+field range fix. Evidence is under bin/physics-mixed-publication/2026-10-14/final;
+source/runtime manifests bind those results to the tested revision.

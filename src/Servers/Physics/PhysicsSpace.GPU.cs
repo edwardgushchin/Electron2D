@@ -118,6 +118,15 @@ internal sealed partial class PhysicsSpace
     internal void PublishGPUCompletion()
     {
         if (_serverColliders.Count == 0) { PublishGPU(); return; }
+        var observed = _bodies.Count;
+        var likelyChanges = _serverColliders.Count + _areas.Count;
+        foreach (var body in _bodies) if (GPUCollider(body.Backend).GPUChangeLikely) likelyChanges++;
+        foreach (var body in _serverColliders) if (RequiresGPUCompletion(body)) observed++;
+        PrepareGPUObservedCapacity(observed);
+        // Last observations predict cost only. Both paths acquire validated current device state.
+        var changedBytes = 8 + (long)likelyChanges * System.Runtime.CompilerServices.Unsafe.SizeOf<GPUPhysicsBodyStore.BodyChange>();
+        var selectedBytes = 16 + (long)observed * System.Runtime.CompilerServices.Unsafe.SizeOf<GPUPhysicsBodyStore.Snapshot>();
+        if (_bodies.Count > 0 && changedBytes < selectedBytes) { PublishGPU(); return; }
         PrepareGPUCapacity();
         var count = 0;
         foreach (var body in _bodies) Observe(body.Backend);
@@ -133,13 +142,16 @@ internal sealed partial class PhysicsSpace
         }
         void Observe(PhysicsColliderBackend backend)
         {
-            if (count == _gpuObservedStates.Length)
-            {
-                var capacity = Math.Max(8, count * 2);
-                Array.Resize(ref _gpuObservedBodies, capacity); Array.Resize(ref _gpuObservedStates, capacity); Array.Resize(ref _gpuObservedBackends, capacity);
-            }
+            if (count == _gpuObservedStates.Length) PrepareGPUObservedCapacity(count + 1);
             _gpuObservedBackends[count] = backend; _gpuObservedBodies[count++] = GPUCollider(backend).GPUHandle;
         }
+    }
+
+    private void PrepareGPUObservedCapacity(int count)
+    {
+        if (count <= _gpuObservedStates.Length) return;
+        var capacity = Math.Max(8, count * 2);
+        Array.Resize(ref _gpuObservedBodies, capacity); Array.Resize(ref _gpuObservedStates, capacity); Array.Resize(ref _gpuObservedBackends, capacity);
     }
 
     internal static GPUPhysicsBodyStore.FieldParameters GPUFields(PhysicsAreaFields fields) =>
