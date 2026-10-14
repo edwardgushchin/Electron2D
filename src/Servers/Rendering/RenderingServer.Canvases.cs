@@ -119,7 +119,7 @@ public sealed partial class RenderingServer
         foreach (var item in _ownedCanvasItems) { if (item.ServerState is { } state) state.TileOwner = null; RenderingCanvasItemRegistry.Remove(item.GetCanvasItem()); item.Dispose(); }
         _ownedCanvasItems.Clear();
         foreach (var rid in _ownedCanvasRIDs) RenderingCanvasRegistry.Remove(rid); _ownedCanvasRIDs.Clear();
-        foreach (var canvas in _serverSceneCanvases) { canvas.Modulate = Colors.White; canvas.Attachments.Clear(); canvas.SessionOwner = null; }
+        foreach (var canvas in _serverSceneCanvases) { canvas.RestoreSceneModulation(); canvas.Attachments.Clear(); canvas.SessionOwner = null; }
         _serverSceneCanvases.Clear();
         foreach (var weak in _serverSceneItems) if (weak.TryGetTarget(out var item) && !item.IsDisposed && ReferenceEquals(item.ServerState?.Owner, this)) { item.ServerState?.VisibilityNotifier?.Cancel(); item.ServerState?.Commands?.Dispose(); item.ServerState = null; }
         _serverSceneItems.Clear(); _capturedCanvasItems.Clear(); _canvasVisibilityItems.Clear(); _canvasVisibilityChanges.Clear();

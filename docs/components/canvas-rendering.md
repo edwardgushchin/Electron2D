@@ -598,3 +598,13 @@ CanvasBackBufferTests checks source publication/storage/observer commitment and 
 ## Project themes and portable authoring
 
 Theme resource archives and scenes now persist complete typed theme data, resource aliases and structural groups/variations. ThemeDB.GetProjectTheme returns the real resource prepared at startup from typed GUIThemeCustom/GUIThemeCustomFont settings. Branch overrides precede project items; built-in defaults remain behind them. Headless startup and fresh-process authoring checks are separate from GPU/Compatibility rendered verification. Project file failure preserves the prior selection, while successful replacement retires owned project snapshots. See ADR 0083 and the Theme/ThemeDB class pages.
+
+## Scene canvas modulation
+
+[CanvasModulate](../classes/CanvasModulate.md) publishes one visible node's Color to its entire logical canvas through the existing RenderingCanvasRuntime. Waiting nodes keep authored values; selection changes on actual visibility/entry/exit, disposal and World replacement. A last departure restores opaque white. Independent layers/worlds keep independent modulation; viewports sharing a World share its tint. Manually delivered canvas entry/exit notifications do not change actual registration. Weak registrations avoid keeping a scene alive through the global canvas identity registry. Color assignments update current submission without rebuilding sibling commands.
+
+Server CanvasSetModulate remains an immediate retained canvas operation. Active node assignment or selection changes publish authored color again, and native session cleanup restores the selected scene color while clearing other session overrides. Ordinary GPU/compatibility drawing consumes this color; existing GPU lighting uses it as ambient while unshaded materials retain their existing bypass. Compatibility lighting/shader limits remain explicit.
+
+[CanvasModulateTests](../../tests/Electron2D.Tests/CanvasModulateTests.cs) covers arbitration, independent/shared canvases, inherited visibility, reparent/TopLevel, World replacement, manual notification rejection, disposal, warning failures, owner/capture guards and exact scenes in a fresh process. Its native profiles inspect seven pixel phases and 64 warmed color-update/render frames. Native allocation, other platforms and human acceptance remain separate gates.
+
+The published saved-scene workflow also preserves an untouched Window.Position as automatic placement. Explicit zero remains stored and retains its platform coordinate gate; loading a default root window no longer invents a global-position request on Wayland.

@@ -313,3 +313,5 @@ ResourceSaver.Save(scene, "scene.e2dscene", SaverFlags.BundleResources);
 ```
 
 [AnimationResetSaveTests](../../tests/Electron2D.Tests/AnimationResetSaveTests.cs) covers policy, coupled values/resources, failure atomicity, ownership and files. Linux Wayland GPU/compatibility host verification is recorded in scene animation; foreign/editor/human acceptance remains separate.
+
+Window.Position is omitted while native placement is automatic. Explicit requests, including `(0,0)`, remain stored. Restoring a saved default Window therefore preserves its placement policy and does not invent a global-coordinate operation. This follows the existing conditional storage policy used by inherited TranslationDomain.

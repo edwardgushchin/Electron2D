@@ -2709,6 +2709,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CanvasModulate",
+    "kind": "type",
+    "declaringType": "Electron2D.CanvasModulate",
+    "name": "CanvasModulate",
+    "signature": "public class Electron2D.CanvasModulate",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CanvasSDFOversize",
     "kind": "type",
     "declaringType": "Electron2D.CanvasSDFOversize",
@@ -16342,6 +16357,19 @@
     "declaringType": "Electron2D.CanvasLayer",
     "name": ".ctor",
     "signature": "public CanvasLayer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.CanvasModulate..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CanvasModulate",
+    "name": ".ctor",
+    "signature": "public CanvasModulate()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -75874,6 +75902,64 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasModulate.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasModulate",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasModulate.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasModulate",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasModulate.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasModulate",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasModulate.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasModulate",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -205427,6 +205513,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasModulate.Color()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasModulate",
+    "name": "Color",
+    "signature": "public Electron2D.Color Color { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
     "value": null
   },
   {

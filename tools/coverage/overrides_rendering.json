@@ -2695,12 +2695,12 @@
     {
       "godot": "RenderingServer::method:texture_proxy_create(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "FlowContainer::theme_item:h_separation",
@@ -4701,6 +4701,16 @@
       "godot": "ProjectSettings::property:gui/theme/custom_font",
       "electron2d": "property:Electron2D.ProjectSettings.GUIThemeCustomFont()",
       "reason": "ADR 0083: actual Theme archive/fresh scene loading, six typed categories, empty groups/nulls/aliases/variation order and owned project snapshot/font startup through GUIThemeCustom and GUIThemeCustomFont. Branch/project/built-in/fallback priority, content invalidation, preparation failure and retirement are executable; native GPU/Compatibility project styles are verified locally. Nonunit built-in assets and native semantics/foreign runtime remain separate gates."
+    },
+    {
+      "godot": "class:CanvasModulate",
+      "electron2d": "T:Electron2D.CanvasModulate",
+      "reason": "ADR 0028: real whole-canvas scene modulation through one visible Entity per logical canvas, waiting-node promotion, layer/shared-World arbitration, actual membership and warning/failure handling. Typed Color and exact factories restore fresh scene files. CanvasModulateTests exercises managed ownership/lifetime/guards and native GPU/Compatibility pixels, with 64 warmed zero-allocation owner frames. Existing compatibility lighting/shader gates and other-platform/native allocator/owner acceptance remain separate."
+    },
+    {
+      "godot": "CanvasModulate::property:color",
+      "electron2d": "property:Electron2D.CanvasModulate.Color()",
+      "reason": "ADR 0028: real whole-canvas scene modulation through one visible Entity per logical canvas, waiting-node promotion, layer/shared-World arbitration, actual membership and warning/failure handling. Typed Color and exact factories restore fresh scene files. CanvasModulateTests exercises managed ownership/lifetime/guards and native GPU/Compatibility pixels, with 64 warmed zero-allocation owner frames. Existing compatibility lighting/shader gates and other-platform/native allocator/owner acceptance remain separate."
     }
   ],
   "statusGroups": [
@@ -5882,7 +5892,7 @@
         "RenderingServer::method:texture_proxy_update(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": [
@@ -6645,6 +6655,14 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0083: actual Theme archive/fresh scene loading, six typed categories, empty groups/nulls/aliases/variation order and owned project snapshot/font startup through GUIThemeCustom and GUIThemeCustomFont. Branch/project/built-in/fallback priority, content invalidation, preparation failure and retirement are executable; native GPU/Compatibility project styles are verified locally. Nonunit built-in assets and native semantics/foreign runtime remain separate gates."
+    },
+    {
+      "godot": [
+        "class:CanvasModulate",
+        "CanvasModulate::property:color"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0028: real whole-canvas scene modulation through one visible Entity per logical canvas, waiting-node promotion, layer/shared-World arbitration, actual membership and warning/failure handling. Typed Color and exact factories restore fresh scene files. CanvasModulateTests exercises managed ownership/lifetime/guards and native GPU/Compatibility pixels, with 64 warmed zero-allocation owner frames. Existing compatibility lighting/shader gates and other-platform/native allocator/owner acceptance remain separate."
     }
   ],
   "extras": [
@@ -7692,6 +7710,26 @@
     {
       "electron2d": "method:Electron2D.Shader.GetPropertyDescriptors()",
       "reason": "Typed portable Shader schema persists copied compiled bytecode and borrowed sampled defaults before restoring ShaderMaterial parameters in scene archives; required by the per-item uniform storage vertical slice under ADR 0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.CanvasModulate..ctor()",
+      "reason": "ADR 0028 with 0003/0013/0023: concrete constructor, typed scene descriptors/factory, inherited configuration warnings and mandatory canvas/visibility/World lifecycle projection for executable modulation; no independent public capability."
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasModulate.CreateSceneInstanceFactory()",
+      "reason": "ADR 0028 with 0003/0013/0023: concrete constructor, typed scene descriptors/factory, inherited configuration warnings and mandatory canvas/visibility/World lifecycle projection for executable modulation; no independent public capability."
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasModulate.GetConfigurationWarnings()",
+      "reason": "ADR 0028 with 0003/0013/0023: concrete constructor, typed scene descriptors/factory, inherited configuration warnings and mandatory canvas/visibility/World lifecycle projection for executable modulation; no independent public capability."
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasModulate.GetPropertyDescriptors()",
+      "reason": "ADR 0028 with 0003/0013/0023: concrete constructor, typed scene descriptors/factory, inherited configuration warnings and mandatory canvas/visibility/World lifecycle projection for executable modulation; no independent public capability."
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasModulate.OnNotification(System.Int32)",
+      "reason": "ADR 0028 with 0003/0013/0023: concrete constructor, typed scene descriptors/factory, inherited configuration warnings and mandatory canvas/visibility/World lifecycle projection for executable modulation; no independent public capability."
     }
   ]
 }

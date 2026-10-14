@@ -1390,7 +1390,7 @@
       "electron2d": "property:Electron2D.Window.Position()",
       "godot": "Window::property:position",
       "state": "Partial",
-      "reason": "Native desktop client origin under the neutral Window/Viewport hierarchy (ADR 0008), independent of Entity and viewport canvas transforms. Wayland rejects queries/requests explicitly, including preconfigured startup requests and CanvasItem.GetScreenTransform."
+      "reason": "Native desktop client origin under the neutral Window/Viewport hierarchy (ADR 0008), independent of Entity and viewport canvas transforms. Wayland rejects queries/requests explicitly, including preconfigured startup requests and CanvasItem.GetScreenTransform. PackedScene preserves unrequested automatic placement and stores explicit zero; the published CanvasModulate saved-scene workflow executes on Wayland."
     },
     {
       "electron2d": "T:Electron2D.WindowFlag",
@@ -9718,7 +9718,6 @@
         "Window::method:request_attention()",
         "Window::property:max_size",
         "Window::property:min_size",
-        "Window::property:position",
         "Window::property:size",
         "Window::property:title",
         "Window::property:visible",
@@ -11178,6 +11177,13 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0004: pinned doc/classes/Node.xml at ed1daf0bf001b61586d9930840f2f1394092c079 declares deprecated=\"This notification is no longer sent by the engine. Use [constant NOTIFICATION_CHILD_ORDER_CHANGED] instead.\" The current Node.NotificationChildOrderChanged/ChildOrderChanged lifecycle is the replacement. No public obsolete mirror or implementation trigger."
+    },
+    {
+      "godot": [
+        "Window::property:position"
+      ],
+      "state": "Partial",
+      "reason": "Implemented root-window/input behavior is exercised by WindowRuntimeTests with dummy and Wayland. Root rendering/canvas transforms are integrated; full parity still depends on multiwindow, content scaling and GUI; native platform-specific requests retain DisplayServer limits. ADRs 0008, 0021 and 0028. On the current Linux Wayland Vulkan profile, remapping a previously presented root surface rejects with NotSupportedException before native/managed visibility changes. Wayland protocol traces show buffer state retained at xdg_surface recreation even after GPU idle, swapchain release and SDL.SyncWindow; trigger: an SDL-owned native presentation-completion/unmap acknowledgement bridge or verified backend/compositor correction. Hiding succeeds, offscreen targets continue, compatibility remapping executes. This is an explicit platform capability gap, not a completed Show path. PackedScene now omits an unrequested Window.Position, preserving automatic placement; an explicit zero remains authored. CanvasModulateTests and the published native saved-scene consumer exercise this policy without changing the existing native coordinate limits."
     }
   ]
 }

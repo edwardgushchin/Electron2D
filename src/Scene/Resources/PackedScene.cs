@@ -171,6 +171,7 @@ public sealed partial class PackedScene : Resource
     /// <remarks>
     /// The root is always captured. A descendant branch is captured only when its first node is owned by
     /// <paramref name="root"/>; rejected branches are pruned. After capture starts, any failure leaves this resource empty.
+    /// Unrequested Window.Position is omitted to preserve automatic native placement; explicit zero remains stored.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="root"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">Capture is re-entered, the hierarchy changes, or a node factory is unsafe.</exception>
@@ -334,7 +335,8 @@ public sealed partial class PackedScene : Resource
             var ownerPath = ownerIndex < 0 ? string.Empty : ownerIndex == 0 ? "." : nodes[ownerIndex].Path;
             var properties = node.GetPropertyList()
                 .Where(property => property.IsStored && property.Name != nameof(Node.Name) &&
-                    !(property.Name == nameof(Node.TranslationDomain) && node.IsTranslationDomainInherited))
+                    !(property.Name == nameof(Node.TranslationDomain) && node.IsTranslationDomainInherited) &&
+                    !(node is Window window && property.Name == nameof(Window.Position) && !window.HasAuthoredPosition))
                 .Select(property => new ScenePropertyData(property.Name, property.CaptureStoredValue(node)))
                 .ToArray();
 

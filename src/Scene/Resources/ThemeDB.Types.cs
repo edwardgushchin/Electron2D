@@ -113,6 +113,7 @@ public sealed partial class ThemeDB
         ["CanvasItem"] = ["CanvasItem", "Node", "ElectronObject"],
         ["CanvasItemMaterial"] = ["CanvasItemMaterial", "Material", "Resource", "ElectronObject"],
         ["CanvasLayer"] = ["CanvasLayer", "Node", "ElectronObject"],
+        ["CanvasModulate"] = ["CanvasModulate", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["CanvasTexture"] = ["CanvasTexture", "Texture", "Resource", "ElectronObject"],
         ["CapsuleShape"] = ["CapsuleShape", "Shape", "Resource", "ElectronObject"],
         ["CenterContainer"] = ["CenterContainer", "Container", "Control", "CanvasItem", "Node", "ElectronObject"],

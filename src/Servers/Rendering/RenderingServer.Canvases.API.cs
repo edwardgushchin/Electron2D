@@ -32,7 +32,7 @@ public sealed partial class RenderingServer
     public static void CanvasItemSetVisible(RID item, bool visible) => RequireService().CanvasItemSetVisibleCore(item, visible);
     /// <summary>Sets finite native modulation inherited by render descendants.</summary>
     /// <param name="item">Live scene or caller-owned canvas item identity.</param>
-    /// <param name="color">Finite modulation color; null for mesh commands means opaque white.</param>
+    /// <param name="color">Finite canvas modulation color.</param>
     /// <exception cref="ArgumentException">An identity or typed value is invalid.</exception>
     /// <exception cref="InvalidOperationException">The service is unavailable or owner/capture/lifetime rules reject the operation.</exception>
     public static void CanvasItemSetModulate(RID item, Color color) => RequireService().CanvasItemSetModulateCore(item, color);

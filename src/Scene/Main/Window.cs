@@ -30,6 +30,7 @@ public partial class Window : Viewport
     private Vector2i _minSize;
     private Vector2i _maxSize;
     private Vector2i? _screenPosition;
+    internal bool HasAuthoredPosition => _screenPosition is not null;
     private bool _mouseInWindow, _mouseInContent;
 
     /// <summary>Creates a detached visible window with an empty title and a 100 by 100 client area.</summary>
@@ -130,7 +131,8 @@ public partial class Window : Viewport
     /// <summary>Gets or requests the client origin in native desktop coordinates.</summary>
     /// <value>The configured position before startup, or zero if no position was requested.</value>
     /// <remarks>Leaving it unset lets the system place
-    /// the window. A preconfigured position is applied at startup and can fail on an unsupported platform.</remarks>
+    /// the window. PackedScene preserves this unset policy; an explicit zero position remains an authored request.
+    /// A preconfigured position is applied at startup and can fail on an unsupported platform.</remarks>
     /// <exception cref="NotSupportedException">The active compositor does not expose or accept global window positions, including Wayland.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>

@@ -13,6 +13,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_CHILD") is {
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_HOST") == "1") { FontRasterPolicyTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER") == "1") { FontRasterPolicyTests.Run(); return; }
 
+if (args.Length == 2 && args[0] == "--canvas-modulate-archive") { CanvasModulateTests.RunArchive(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_MODULATE") is { } modulationProfile) { if (modulationProfile == "managed") CanvasModulateTests.RunManaged(); else CanvasModulateTests.RunNative(modulationProfile); return; }
 if (args.Length == 2 && args[0] == "--project-theme-archive") { ProjectThemeTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_THEME") is { } projectThemeProfile) { if (projectThemeProfile == "managed") ProjectThemeTests.RunManaged(); else ProjectThemeTests.RunNative(projectThemeProfile); return; }
 if (args.Length == 2 && args[0] == "--progress-bar-archive") { ProgressBarTests.RunArchive(args[1]); return; }
@@ -1238,7 +1240,7 @@ TileProxyTests.Run();
 TileCustomDataTests.Run();
 TileDrawingTests.Run();
 TileSceneTests.Run();
-LightingTests.Run();
+LightingTests.Run(); CanvasModulateTests.RunManaged();
 TileLayoutTests.Run();
 TileMapLayerTests.Run(PhysicsServer.Backend.CPU);
 PhysicsShapeQueryTests.Run(); PhysicsShapeQueryTests.Run(PhysicsServer.Backend.GPU);

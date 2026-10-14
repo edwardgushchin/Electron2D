@@ -749,3 +749,5 @@ mutation/thread errors, committed rectangles, all eight injected SDL dummy event
 later delegates/events after failure and teardown. Its 1024 warmed notification/event
 operations require zero owner/all-thread managed bytes. Real compositor, GPU and
 foreign-platform acceptance are not established by this check.
+
+PackedScene captures Position only after an authored position request. An untouched root Window restores automatic native placement instead of silently requesting `(0,0)`; explicit zero remains stored and retains the platform coordinate gate. This permits saved default root windows to start on Wayland. CanvasModulateTests checks both forms, and its published scene consumer executes actual native output.

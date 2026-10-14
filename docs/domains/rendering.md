@@ -319,3 +319,5 @@ Type 1 PFB/PFA outlines and paired PFM/AFM native metrics now execute through Fo
 ## Project themes and portable authoring
 
 Theme resource archives and scenes now persist complete typed theme data, resource aliases and structural groups/variations. ThemeDB.GetProjectTheme returns the real resource prepared at startup from typed GUIThemeCustom/GUIThemeCustomFont settings. Branch overrides precede project items; built-in defaults remain behind them. Headless startup and fresh-process authoring checks are separate from GPU/Compatibility rendered verification. Project file failure preserves the prior selection, while successful replacement retires owned project snapshots. See ADR 0083 and the Theme/ThemeDB class pages.
+
+[CanvasModulate](../classes/CanvasModulate.md) now applies scene-authored tint to a complete logical canvas, with visible-node selection, weak registration, layer/World isolation, fresh scene storage and current GPU/compatibility consumers. See [scene canvas modulation](../components/canvas-rendering.md#scene-canvas-modulation).

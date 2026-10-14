@@ -8,6 +8,16 @@ internal sealed class RenderingCanvasRuntime
     internal readonly WeakReference<CanvasLayer>? Layer;
     internal readonly WeakReference<WorldRuntime>? World;
     internal Color Modulate = Colors.White;
+    internal readonly List<WeakReference<CanvasModulate>> Modulators = [];
+    internal void RestoreSceneModulation()
+    {
+        while (Modulators.Count != 0)
+        {
+            if (Modulators[0].TryGetTarget(out var node) && !node.IsDisposed) { Modulate = node.AuthoredColor; return; }
+            Modulators.RemoveAt(0);
+        }
+        Modulate = Colors.White;
+    }
     internal readonly Dictionary<RID, Attachment> Attachments = [];
     internal sealed class Attachment { internal bool Attached = true; internal Transform? Transform; internal int? Layer, Sublayer; }
     internal RenderingCanvasRuntime(RID rid, RenderingServer? owner = null, CanvasLayer? layer = null, WorldRuntime? world = null) { RID = rid; Owner = owner; if (layer is not null) Layer = new(layer); if (world is not null) World = new(world); }

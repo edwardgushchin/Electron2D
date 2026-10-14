@@ -154,6 +154,7 @@ public abstract partial class CanvasItem : Node
     }
 
     private bool _inCanvas;
+    internal bool IsInsideCanvas => _inCanvas;
     private bool _parentVisible;
     private bool _rebindingCanvas;
     private CanvasLayer? _canvasLayer;
