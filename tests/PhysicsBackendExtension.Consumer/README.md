@@ -157,3 +157,10 @@ Standalone Shape.ResetState uses the same preflight before OnResetState. The pub
 `--contact-response` accepts `--cpu`, `--gpu` and `--threaded`, with the registered provider selected when no built-in is named. Besides existing material/surface/impulse checks it verifies copied and archive-reloaded material publication after an earlier Changed observer failure, shared borrowers, override retirement and 128 zero-allocation full contact frames. Cold copying and file I/O are outside that bracket.
 
 `--world-copies` accepts `--cpu`, `--gpu` and `--threaded`, with a registered provider by default. It verifies world resource-copy preflight, lifetime/release restrictions, alias and replacement behavior, accepted notification failures and zero-allocation warm simulation/point queries.
+
+
+`--pair-lifetime` verifies resource/body pair borrowing, custom callback geometry/
+policy/reset/copy/disposal guards, nested/error continuation and owned shape RID
+replacement/retirement. Add `--cpu` or `--gpu` to select a built-in owner and
+`--threaded` for its separate numerical lane. Prepared full frames/queries require
+zero owner/all-thread managed allocation.

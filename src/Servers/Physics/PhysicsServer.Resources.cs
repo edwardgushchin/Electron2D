@@ -79,6 +79,7 @@ public sealed partial class PhysicsServer
             throw new InvalidOperationException("A Shape resource owns this RID and must be edited through the resource.");
         if (entry.Geometry.GetType() != data.GetType())
             throw new ArgumentException("Shape data must have the server shape's concrete type.", nameof(data));
+        entry.Geometry.EnsureCollisionMutationAccess();
         var users = new List<PhysicsServerCollider>();
         foreach (var collider in SnapshotColliders())
             if (collider.UsesShape(entry))
@@ -331,6 +332,7 @@ public sealed partial class PhysicsServer
         {
             if (!shape.OwnsGeometry)
                 throw new InvalidOperationException("A Shape resource owns this RID and its lifetime.");
+            shape.Geometry.EnsureCollisionMutationAccess();
             var users = SnapshotColliders();
             foreach (var user in users)
                 if (user.UsesShape(shape)) EnsureColliderSpaceAccessible(user, writing: true);

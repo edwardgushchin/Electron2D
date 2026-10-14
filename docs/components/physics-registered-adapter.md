@@ -1524,3 +1524,10 @@ released source space/map. CPU/GPU/registered serial/separate profiles use
 zero owner/all-thread allocation. Copies are structural work outside that bracket;
 full inherited/provider geometry/native/platform/network/performance acceptance
 remains open.
+
+
+[Shape-pair operand borrowing](physics-shape-pairs.md#operand-borrowing-2026-10-14)
+now protects both resources through standalone and selected callbacks, including
+inherited copying/reset and owned RID replacement/retirement. Nested reads and
+error cleanup retain their existing contract; full numerical/foreign/hardware
+acceptance remains open.

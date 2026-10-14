@@ -1,6 +1,6 @@
 # Custom collision geometry
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 `ShapeGeometry.Custom` describes a caller-defined collision format with copied canonical bytes, finite local bounds, exact unit-density mass/central inertia/center, copied diagnostic line pairs and a typed standalone collision algorithm. `CustomShape` retains that immutable value, emits revision changes on replacement and preserves its RID. `PhysicsServer.CustomShapeCreate` requires initialized data; ShapeGetData returns an independent wrapper, while ShapeSetData replaces the server-owned wrapper and rebuilds users.
 
@@ -41,3 +41,10 @@ for float projection; truth in the twelve cases is exact. This fixes the consume
 synchronized-relative-path mismatch without changing the production API or solver.
 Arbitrary custom geometry, annulus/annulus contacts, complete numerical-extension
 and final performance/native/platform acceptance remain open.
+
+
+[Shape-pair operand borrowing](physics-shape-pairs.md#operand-borrowing-2026-10-14)
+now protects both resources through standalone and selected callbacks, including
+inherited copying/reset and owned RID replacement/retirement. Nested reads and
+error cleanup retain their existing contract; full numerical/foreign/hardware
+acceptance remains open.

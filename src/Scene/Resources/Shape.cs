@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>Defines reusable two-dimensional collision geometry.</summary>
 /// <remarks>A <see cref="CollisionShape"/> borrows caller-owned geometry. Geometry obtained from a server-backed
-/// scene owner slot is borrowed from that server RID and cannot be disposed separately; data replacement retires that view.</remarks>
+/// scene owner slot is borrowed from that server RID and cannot be disposed separately; data replacement retires that view.
+/// During a resource or selected shape-pair query, both operands reject geometry/policy mutation, inherited reset/copy and disposal.</remarks>
 public abstract partial class Shape : Resource
 {
     private float _customSolverBias;
@@ -77,7 +78,22 @@ public abstract partial class Shape : Resource
 
     private ShapeGeometry? _geometryData;
     private bool _readingGeometry;
+    private int _collisionUses;
     private readonly object _geometryGate = new();
+    internal void BeginCollisionUse()
+    {
+        lock (_geometryGate)
+        {
+            ThrowIfDisposed();
+            if (_checkingAuthoringAccess) throw new InvalidOperationException("Collision geometry cannot be borrowed during an authoring access hook.");
+            _collisionUses++;
+        }
+    }
+    internal void EndCollisionUse() { lock (_geometryGate) _collisionUses--; }
+    internal void EnsureCollisionMutationAccess()
+    {
+        if (Volatile.Read(ref _collisionUses) != 0) throw new InvalidOperationException("Collision geometry and lifetime cannot change while a shape pair is borrowed.");
+    }
     private ShapeGeometry GeometryData
     {
         get
@@ -123,9 +139,10 @@ public abstract partial class Shape : Resource
     }
 
     /// <summary>Preserves the lifetime of geometry borrowed from a caller-owned server shape.</summary>
-    /// <exception cref="InvalidOperationException">The server RID owns this geometry, or its geometry or policy access hook is borrowed.</exception>
+    /// <exception cref="InvalidOperationException">The server RID owns this geometry, or its geometry, policy access hook or shape-pair use is borrowed.</exception>
     protected override void ValidateDisposal()
     {
+        EnsureCollisionMutationAccess();
         lock (_geometryGate)
             if (_readingGeometry || _checkingAuthoringAccess) throw new InvalidOperationException("A shape cannot be disposed during its geometry or authoring access hook.");
         lock (_queryRIDGate)
@@ -137,13 +154,14 @@ public abstract partial class Shape : Resource
     /// <remarks>Call after validating input and before changing private data, including an equal assignment.
     /// Call <see cref="EmitGeometryChanged"/> after committing the edit. Access hooks run without resource locks.</remarks>
     /// <exception cref="ObjectDisposedException">This resource is disposed.</exception>
-    /// <exception cref="InvalidOperationException">An owner, phase or borrowed geometry/authoring hook rejects this edit.</exception>
+    /// <exception cref="InvalidOperationException">An owner, phase or borrowed geometry/authoring hook or shape-pair use rejects this edit.</exception>
     protected void EnsureGeometryChangeAccess() => EnsureAuthoringAccess(observeBackend: true, resourceGeometry: true);
 
     internal override void ValidateStateMutation() => EnsureGeometryChangeAccess();
 
     private void EnsureAuthoringAccess(bool observeBackend, bool resourceGeometry)
     {
+        EnsureCollisionMutationAccess();
         if (Volatile.Read(ref _readingGeometry)) throw new InvalidOperationException("Shape authoring cannot change during its geometry construction hook.");
         lock (_geometryGate)
         {
@@ -160,7 +178,7 @@ public abstract partial class Shape : Resource
     /// This publication checks owner/phase access without calling selected status hooks again. It cannot undo private subclass writes.
     /// The shape RID remains stable; the next query or step rebuilds affected attachments.</remarks>
     /// <exception cref="ObjectDisposedException">This resource is disposed.</exception>
-    /// <exception cref="InvalidOperationException">An owner, phase or borrowed geometry/authoring hook rejects publication.</exception>
+    /// <exception cref="InvalidOperationException">An owner, phase or borrowed geometry/authoring hook or shape-pair use rejects publication.</exception>
     protected internal void EmitGeometryChanged()
     {
         EnsureAuthoringAccess(observeBackend: false, resourceGeometry: true);
@@ -203,7 +221,7 @@ public sealed class CircleShape : Shape
     /// <summary>Gets or sets the positive finite radius in scene units.</summary>
     /// <value>Ten by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The value is not positive and finite, or its diameter would overflow.</exception>
-    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook or shape-pair use rejects the edit before mutation.</exception>
     public float Radius
     {
         get { ThrowIfDisposed(); return _radius; }
@@ -262,7 +280,7 @@ public sealed class CapsuleShape : Shape
     /// <summary>Gets or sets the nonnegative finite end-cap radius in scene units.</summary>
     /// <value>Ten by default; increasing it beyond half the height also increases the height.</value>
     /// <exception cref="ArgumentOutOfRangeException">The radius is negative, nonfinite, or its diameter overflows.</exception>
-    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook or shape-pair use rejects the edit before mutation.</exception>
     public float Radius
     {
         get { ThrowIfDisposed(); return _radius; }
@@ -282,7 +300,7 @@ public sealed class CapsuleShape : Shape
     /// <summary>Gets or sets the nonnegative finite full height, including both end caps.</summary>
     /// <value>Thirty by default; decreasing it below twice the radius also decreases the radius.</value>
     /// <exception cref="ArgumentOutOfRangeException">The height is negative or nonfinite.</exception>
-    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook or shape-pair use rejects the edit before mutation.</exception>
     public float Height
     {
         get { ThrowIfDisposed(); return _height; }
@@ -301,7 +319,7 @@ public sealed class CapsuleShape : Shape
     /// <summary>Gets or sets the center segment height between the two end-cap centers.</summary>
     /// <value>Ten by default; this is <see cref="Height"/> minus twice <see cref="Radius"/>.</value>
     /// <exception cref="ArgumentOutOfRangeException">The height is negative, nonfinite, or makes the full height overflow.</exception>
-    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook or shape-pair use rejects the edit before mutation.</exception>
     public float MidHeight
     {
         get { ThrowIfDisposed(); return _height - 2 * _radius; }
@@ -366,7 +384,7 @@ public sealed class SegmentShape : Shape
     /// <summary>Gets or sets the first finite local endpoint.</summary>
     /// <value>Zero by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The endpoint is nonfinite or produces unrepresentable bounds.</exception>
-    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook or shape-pair use rejects the edit before mutation.</exception>
     public Vector2 A
     {
         get { ThrowIfDisposed(); return _a; }
@@ -384,7 +402,7 @@ public sealed class SegmentShape : Shape
     /// <summary>Gets or sets the second finite local endpoint.</summary>
     /// <value>(0, 10) by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The endpoint is nonfinite or produces unrepresentable bounds.</exception>
-    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook or shape-pair use rejects the edit before mutation.</exception>
     public Vector2 B
     {
         get { ThrowIfDisposed(); return _b; }
@@ -453,7 +471,7 @@ public sealed class RectangleShape : Shape
     /// <summary>Gets or sets the finite positive width and height in scene units.</summary>
     /// <value>(20, 20) by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">Either component is not positive and finite.</exception>
-    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook rejects the edit before mutation.</exception>
+    /// <exception cref="InvalidOperationException">A borrower owner, phase or geometry/authoring hook or shape-pair use rejects the edit before mutation.</exception>
     public Vector2 Size
     {
         get { ThrowIfDisposed(); return _size; }

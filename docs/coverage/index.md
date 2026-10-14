@@ -767,3 +767,9 @@ selects current incremental or complete state by estimated transfer cost. Cached
 mode/sleep is a hint only; scalar values and wake/private/portable continuation
 retain authoritative device reads. Existing API and coverage states remain unchanged;
 hardware, native, foreign and full acceptance remain open.
+
+
+[Shape-pair operand lifetime](../components/physics-shape-pairs.md#operand-borrowing-2026-10-14)
+adds custom/selected callback, inherited copy/reset and owned RID preflight checks
+to the existing pair correspondence. No declaration or coverage state changes.
+Full numerical/foreign/hardware acceptance remains open.

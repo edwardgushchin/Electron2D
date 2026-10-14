@@ -180,3 +180,10 @@ resident/stage controls remain distinct from hardware/performance acceptance.
 CopyFromResource checks the existing geometry authoring policy before changing any target state. All built-in and application Shape subclasses inherit this internal Resource preflight. Rejected borrowed geometry/numerical/access-hook copies preserve name, scene locality, RID, cached geometry and Changed subscribers without entering OnResetState. Allowed owner/quiescent and post-solver copies retain path/scene identity and one coalesced change; subsequent queries use copied geometry. No new public or protected hook is introduced.
 
 Standalone Shape.ResetState uses the same preflight before OnResetState. The public-only regression rejects reset during numerical/access/geometry hooks, checks no custom-reset side effects, and preserves allowed quiescent reset without Changed. Copying invokes reset exactly once after its own accepted preflight.
+
+
+[Shape-pair operand borrowing](../components/physics-shape-pairs.md#operand-borrowing-2026-10-14)
+now protects both resources through standalone and selected callbacks, including
+inherited copying/reset and owned RID replacement/retirement. Nested reads and
+error cleanup retain their existing contract; full numerical/foreign/hardware
+acceptance remains open.

@@ -35,7 +35,8 @@ public sealed partial class ShapeGeometry
     /// <exception cref="ArgumentNullException">Identity or collision algorithm is null.</exception>
     /// <remarks>World implementations consume the same format and canonical data for their own solving and queries.
     /// Built-in physics rejects this geometry before mutation. Callbacks must preserve geometry and resource lifetime;
-    /// recursive evaluation of the same pair rejects. Portable compatibility hashes data rather than callback identity.</remarks>
+    /// Participating Shape resources remain borrowed through callback completion; geometry/policy edits, reset/copy and disposal reject.
+    /// Recursive evaluation of the same pair rejects. Portable compatibility hashes data rather than callback identity.</remarks>
     public static ShapeGeometry Custom(string formatID, ReadOnlySpan<byte> canonicalData, Rect2 bounds,
         PhysicsMassProperties massProperties, ReadOnlySpan<Vector2> drawingSegments, ShapeCollisionAlgorithm collision)
     {
