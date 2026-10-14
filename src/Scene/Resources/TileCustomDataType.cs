@@ -31,7 +31,7 @@ internal abstract class TileCustomDataType(Type type)
 }
 internal sealed class TileCustomDataType<T>() : TileCustomDataType(typeof(T))
 {
-    private static T DefaultValue() => typeof(T) == typeof(string) ? (T)(object)string.Empty : typeof(T) == typeof(Color) ? (T)(object)Colors.Black : typeof(T) == typeof(Transform) ? (T)(object)Transform.Identity : typeof(T).IsArray ? (T)(object)Array.CreateInstance(typeof(T).GetElementType()!, new int[typeof(T).GetArrayRank()]) : default!;
+    private static T DefaultValue() => typeof(T) == typeof(string) ? (T)(object)string.Empty : typeof(T) == typeof(Color) ? (T)(object)Colors.Black : typeof(T) == typeof(Transform) ? (T)(object)Transform.Identity : typeof(T).IsArray ? (T)(object)Array.CreateInstanceFromArrayType(typeof(T), new int[typeof(T).GetArrayRank()]) : default!;
     internal override TileCustomDataValue CreateDefault() => new TileCustomDataValue<T>(DefaultValue());
     private static string Text(object? value, int depth = 0)
     {
@@ -39,7 +39,7 @@ internal sealed class TileCustomDataType<T>() : TileCustomDataType(typeof(T))
         if (value is Array array)
         {
             var values = new List<string>(array.Length);
-            foreach (var entry in array) values.Add(entry is string text ? System.Text.Json.JsonSerializer.Serialize(text) : Text(entry, depth + 1));
+            foreach (var entry in array) values.Add(entry is string text ? System.Text.Json.JsonSerializer.Serialize(text, ConfigFile.GetJSONTypeInfo<string>()) : Text(entry, depth + 1));
             return "[" + string.Join(", ", values) + "]";
         }
         return value is null ? "null" : value is bool flag ? flag ? "true" : "false" : value is IFormattable number ? number.ToString(null, CultureInfo.InvariantCulture) : value.ToString() ?? string.Empty;

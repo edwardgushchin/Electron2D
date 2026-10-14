@@ -473,7 +473,7 @@
     {
       "godot": "GraphEdit::method:_get_connection_line(Vector2:,Vector2:)",
       "electron2d": "method:Electron2D.GraphEdit.OnGetConnectionLine(Electron2D.Vector2,Electron2D.Vector2)",
-      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate. Bound typed virtual delegate detection preserves inherited curves and ignores hidden non-virtual methods; copied results execute in managed and NativeAOT hosts."
     },
     {
       "godot": "GraphEdit::method:_is_in_input_hotzone(Object:,int:,Vector2:)",
@@ -558,7 +558,7 @@
     {
       "godot": "GraphEdit::method:get_connection_line(Vector2:,Vector2:)",
       "electron2d": "method:Electron2D.GraphEdit.GetConnectionLine(Electron2D.Vector2,Electron2D.Vector2)",
-      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate. Bound typed virtual delegate detection preserves inherited curves and ignores hidden non-virtual methods; copied results execute in managed and NativeAOT hosts."
     },
     {
       "godot": "GraphEdit::method:get_connection_list_from_node(StringName:)",
@@ -1411,7 +1411,7 @@
         "ProjectSettings::property:input/ui_graph_follow_right.macos"
       ],
       "state": "Implemented",
-      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate. Bound typed virtual delegate detection preserves inherited curves and ignores hidden non-virtual methods; copied results execute in managed and NativeAOT hosts."
     },
     {
       "godot": [

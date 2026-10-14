@@ -6,7 +6,8 @@ public readonly record struct GraphConnection(string FromNode, int FromPort, str
 
 /// <summary>Edits positioned graph elements, directed port connections and logical grouping frames.</summary>
 /// <remarks>Interactive connection and deletion gestures issue requests. Applications explicitly mutate
-/// Connections or scene children. Snapshot getters allocate outside the repeated pointer/render path.</remarks>
+/// Connections or scene children. Snapshot getters allocate outside the repeated pointer/render path.
+/// Inherited virtual connection curves participate; hidden non-virtual methods keep the ordinary curve. Override detection uses a bound typed delegate.</remarks>
 public partial class GraphEdit : Control
 {
     /// <summary>Selects the displayed graph grid.</summary>
@@ -73,7 +74,7 @@ public partial class GraphEdit : Control
     public GraphEdit()
     {
         FocusMode = FocusMode.All; ClipContents = true; MouseFilter = MouseFilter.Stop;
-        _customLine = GetType().GetMethod(nameof(OnGetConnectionLine), System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?.DeclaringType != typeof(GraphEdit);
+        _customLine = ((Func<Vector2, Vector2, Vector2[]>)OnGetConnectionLine).Method.DeclaringType != typeof(GraphEdit);
         _lines = new(this, false) { Name = "_graph_connections", ZIndex = 1, MouseFilter = MouseFilter.Ignore };
         _overlay = new(this, true) { Name = "_graph_overlay", ZIndex = 3, MouseFilter = MouseFilter.Pass };
         _menu = new(this) { Name = "_graph_menu", ZIndex = 4 }; _zoomLabel = new Label { Text = "100%", CustomMinimumSize = new(48, 0), Visible = false };

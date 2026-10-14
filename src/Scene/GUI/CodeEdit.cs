@@ -7,7 +7,8 @@ namespace Electron2D;
 /// <summary>Edits source text with indentation, delimiters, folding, markers and typed completion.</summary>
 /// <remarks>Logical lines and Unicode scalar columns share the TextEdit document/history. Fonts and option
 /// icons are borrowed; parsing, authoring and first shaping are cold. Required gutters and hover timer belong
-/// to this control. Completion providers are application callbacks rather than a built-in language parser.</remarks>
+/// to this control. Completion providers are application callbacks rather than a built-in language parser.
+/// Inherited virtual completion filters participate; hidden non-virtual methods keep the ordinary context filter. Override detection uses a bound typed delegate.</remarks>
 public partial class CodeEdit : TextEdit
 {
     /// <summary>Identifies a submitted completion candidate.</summary>
@@ -72,7 +73,7 @@ public partial class CodeEdit : TextEdit
     /// <summary>Creates an LTR empty code document with three required gutters and an owned hover timer.</summary>
     public CodeEdit()
     {
-        _customCompletionFilter = GetType().GetMethod(nameof(OnFilterCodeCompletionCandidates), System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.DeclaringType != typeof(CodeEdit);
+        _customCompletionFilter = ((Func<CodeCompletionOption[], CodeCompletionOption[]>)OnFilterCodeCompletionCandidates).Method.DeclaringType != typeof(CodeEdit);
         LayoutDirection = LayoutDirection.LTR; TextDirection = TextDirection.LTR;
         AddStringDelimiter("\"", "\""); AddStringDelimiter("'", "'");
         AddCodeGutter("main_gutter", DrawMainGutter, true); AddCodeGutter("line_numbers", DrawLineNumber, false); AddCodeGutter("fold_gutter", DrawFoldGutter, false); RefreshGutterIndices();

@@ -187,17 +187,9 @@ same compiled test in ordinary and NativeAOT hosts. Evidence and exact limits ar
 retained under bin/physics-auto-callbacks/2026-10-14; full inherited, native/foreign
 and hardware/window/performance acceptance remains open.
 
-The extended current-source NativeAOT consumer is not accepted: strict source
-analysis reports ten pre-existing issues in TileCustomDataType, CodeEdit, GraphEdit,
-Script and OS process/catalog paths. A fresh RID runtime plus BuildProjectReferences=false
-published an earlier bounded consumer and all four CPU/software-GPU ordinary/separate
-profiles passed, proving the six bound virtual targets execute without a name-based
-reflection scanner. Adding PackedScene reaches existing catalog callbacks and tile
-code; the current full consumer fails native compilation on those remaining paths.
-No warning suppression or test omission is shipped. An older RID DLL initially
-failed on missing Viewport.MSAA JSON metadata; current source already had the codec,
-and rebuilding the RID removed that stale-binary failure. This evidence does not
-claim full trimming/NativeAOT engine acceptance.
+The ten source-analysis blockers reached by the extended PackedScene consumer are now resolved. The current complete public-only consumer publishes with project references and strict NativeAOT analysis, without warning suppression or omitted tests. CodeEdit/GraphEdit inspect bound typed virtual delegates; tile defaults use exact existing array types for scalar, jagged and multidimensional application arrays, and string quoting uses prepared JSON metadata. Script source registration declares its actual file/PDB and untrimmed project metadata prerequisites and captures methods/events/literal fields once. OS instance launch no longer requires Assembly.Location.
+
+The final cohort passes ten managed profiles and four NativeAOT CPU/software-GPU ordinary/separate profiles. Every native process also executes the GUI/array prerequisite fixture before full callbacks, PackedScene reconstruction and weak retirement. All eight physics brackets warm 128 and measure 128 at strict 0/0 owner/all-thread managed bytes. CPU processes load no GPU provider; GPU processes load lavapipe and no NVIDIA library, with actual solver thread counts zero/one. The six connected managed suites cover prerequisites, custom tiles, code/graph authoring, Script fresh-process storage and real OS process launch/capture/kill/pipe ownership. Runtime/test/consumer formats, compiled API and wiki gates pass at 13,999 declarations, 836 public types and 854 wiki files. Exact manifests, publication logs and results are retained in bin/physics-aot-prerequisites/2026-10-14/validation.json. Embedded NativeAOT Script source registration, full inherited/native/foreign coverage, hardware/window/performance and owner acceptance remain open.
 
 The current retained JIT runtime passes ten fresh profiles, including four automatic
 CPU/GPU ordinary/separate variants, paired delta/internal/hierarchy/character and

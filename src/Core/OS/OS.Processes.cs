@@ -26,11 +26,12 @@ public sealed partial class OS
     /// <returns>The independent child process ID.</returns>
     /// <remarks>A framework-dependent host includes the current entry assembly before the supplied arguments.</remarks>
     /// <exception cref="PlatformNotSupportedException">The current application has no launchable executable/entry assembly.</exception>
+    /// <remarks>An application executable relaunches directly. A dotnet host uses its named entry DLL in the application base directory and rejects a missing file before launch.</remarks>
     public static int CreateInstance(ReadOnlySpan<string> arguments)
     {
         DesktopProcesses(); var path = Environment.ProcessPath ?? throw new PlatformNotSupportedException("This host has no executable path.");
         if (!string.Equals(System.IO.Path.GetFileNameWithoutExtension(path), "dotnet", StringComparison.OrdinalIgnoreCase)) return CreateProcess(path, arguments);
-        var assembly = Assembly.GetEntryAssembly()?.Location; if (string.IsNullOrEmpty(assembly)) throw new PlatformNotSupportedException("This managed host has no launchable entry assembly.");
+        var assembly = Assembly.GetEntryAssembly()?.GetName().Name is { Length: > 0 } entry ? System.IO.Path.Combine(AppContext.BaseDirectory, entry + ".dll") : null; if (string.IsNullOrEmpty(assembly) || !File.Exists(assembly)) throw new PlatformNotSupportedException("This managed host has no launchable entry assembly.");
         var values = new string[arguments.Length + 1]; values[0] = assembly; arguments.CopyTo(values.AsSpan(1)); return CreateProcess(path, values);
     }
     /// <summary>Runs an executable, waits for exit and optionally appends one complete UTF-8 output string.</summary>

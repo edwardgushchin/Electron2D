@@ -1327,3 +1327,5 @@ Attached widget operations require the scene owner thread and a live control. Mu
 The inherited cursor hook selects PointingHand only for a validated lookup symbol; validation never writes the stored MouseDefaultCursorShape setting. Code overlay drawing enters the shared TextEdit mutation guard, so inherited document operations also reject mutation from custom completion StyleBox callbacks before changing the document.
 
 `protected override Electron2D.CursorShape OnGetCursorShape(Electron2D.Vector2 atPosition)` projects the ordinary Control cursor hook for the current symbol.
+
+Completion-filter override detection uses a bound typed virtual delegate. Inherited overrides participate; hidden non-virtual methods preserve ordinary context filtering.
