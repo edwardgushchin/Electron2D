@@ -261,3 +261,16 @@ getters. CPU plane tests retain .005-unit point/ray/rest bounds at tangent dista
 6,000 after correcting authored rotation conversion. Software Vulkan establishes
 functional behavior; directed ray, broader coupled/custom, native/platform/network
 and target GPU performance gates remain open.
+
+
+`--directed-geometry` (optional `--cpu`, `--gpu`, `--threaded`) checks directed
+surface entry and containment/back-facing/zero/ray-pair rejection, axis/slope
+policy, six queries and reverse source, safe/unsafe casts, recovery/character snap,
+no rod inertia, exact indices/events, materials/surface velocity and coupled
+impulse replay. Twenty-three 128-warm/128-measured complete-frame brackets require
+0/0 managed bytes. Explicit cold edits, reversed target families, directional
+masks, sleeping/removal and linear/offset-center angular CCD remain separate.
+The provider uses actual directed geometry and double circular-sweep intermediates;
+no built-in numerical delegation or solid-segment substitution is used. Larger
+custom/coupled, inherited/complete extension/native/network/platform and target
+GPU performance gates remain open.

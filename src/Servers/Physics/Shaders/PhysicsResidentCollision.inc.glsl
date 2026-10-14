@@ -123,12 +123,17 @@ vec2 support(Hull h,vec2 n,vec2 toward,out uint feature)
 bool rayCircle(vec2 from,vec2 d,vec2 center,float radius,out float fraction,out vec2 normal)
 {
     fraction=0;normal=vec2(0);vec2 m=from-center;
-    float aa=dot2(d,d),b=dot2(m,d),c=dot2(m,m)-radius*radius,discriminant=b*b-aa*c;
-    if(!finite2(vec2(aa,b))||!finite2(vec2(c,discriminant))){fail();return false;}
-    if(c<0||discriminant<0||aa==0)return false;
-    fraction=(-b-sqrt(discriminant))/aa;
+    float aa=dot2(d,d),squared=dot2(m,m),rr=radius*radius;
+    if(!finite2(vec2(aa,squared))||!finite2(vec2(rr))){fail();return false;}
+    if(squared<rr||aa==0)return false;
+    float extent=sqrt(aa);vec2 axis=d/extent,side=vec2(-axis.y,axis.x);
+    float transverse=dot2(m,side),chord=rr-transverse*transverse;
+    if(!finite2(vec2(transverse,chord))){fail();return false;}
+    if(chord<0)return false;
+    float halfChord=sqrt(chord);fraction=(-dot2(m,axis)-halfChord)/extent;
     if(fraction<0||fraction>1)return false;
-    normal=normalized(from+fraction*d-center);
+    // Compute the entry normal in the ray basis without subtracting distant world points.
+    normal=normalized(-halfChord*axis+transverse*side);
     return normal!=vec2(0)&&dot2(normal,-d)>=0.0001;
 }
 bool rayHit(Hull h,vec2 from,vec2 d,out float fraction,out vec2 normal,out uint feature)

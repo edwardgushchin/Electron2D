@@ -2171,3 +2171,120 @@ failed sample 25 and was corrected before final builds. A test-payload preparati
 initially omitted the unchanged WebP library; the final retained payload includes
 that prerequisite and passes native-path checks. Neither preliminary result is
 reported as final acceptance.
+
+
+<a id="registered-directed-numerics"></a>
+## Registered directed-ray numerics
+
+The public-only provider now prepares exact SeparationRayShape origin/endpoint
+and SlideOnSlope policy independently of ordinary two-sided segments. Rays have
+no geometric area, centroid contribution or rod inertia, remain invisible to
+point/ray queries and reject zero length, ray/ray pairs, filled-origin containment
+and back-facing crossings. Analytic world-boundary precedence remains separate.
+The directed contact returns the authored/extended tip and boundary point; sliding
+uses the hit surface normal and otherwise separates opposite the ray axis.
+Ordinary material, surface velocity, contact history/events, inverse mass and
+explicit inertia retain the shared solver path.
+
+Direct queries extend margin and positive axial source motion, while transverse
+ray motion does not create a swept solid. Reverse ordinary-source queries test
+the actual convex swept region against the stationary ray, including rounded
+support edges. A streamed hull-edge scan avoids an eight-vertex cap; circular
+sweeps retain inner-hole intersections for the existing annulus format. Standalone
+resource pairs ignore counterpart motion and keep the nearest directed entry in
+caller/other order. Shape casts publish a safe low and unsafe high after eight
+refinements. Body motion always recovers ray penetration, includes sliding rays
+in motion and requires explicit CollideSeparationRay for other rays. Safe travel,
+unsafe contact geometry, masks/exclusions, logical shape indices and point velocity
+stay in the public result. Character movement and explicit non-sliding snap use
+this same registered operation.
+
+Continuous detection validates the complete directed ray after geometric proxy
+advancement and samples the configured mass-center trajectory. Actual contacts
+use original geometry rather than the candidate search allowance. The existing
+interval/refinement/error budgets stay unchanged. An intermediate 160-unit ray
+arc around an offset center initially missed a small circle because float
+quadratic intermediates cancelled the discriminant. The shared independent
+annulus/circle sweep now uses double intermediates, preserving the same inputs,
+root selection and output contract rather than widening contact tolerances.
+
+A cold mask control exposed symmetric response in the provider: a ray whose mask
+rejected the target still stopped at its tip. Contact positional correction and
+normal/tangent/angular effective masses now apply per endpoint's own mask, while
+retaining the passive endpoint's actual velocity. CCD is enabled only for matching
+response directions; filter edits wake the old connected group without rebuilding
+geometry. Pair admission and geometry reports remain separate from impulse
+response. Reverse roles, zero-layer receivers, rejected masks, exceptions,
+ray/ray and zero-length cases verify the accepted ADR 0102 behavior without
+changing actual body mass or inertia.
+
+The --directed-geometry profile accepts --cpu/--gpu and --threaded. Twenty-three
+full-frame brackets each warm 128 frames and measure 128 with strict 0/0
+owner/all-thread managed bytes: all six query families/Area, raw body recovery,
+six finite target families across all CCD modes, both slope policies and coupled
+mass/complete opposite impulses with silent private restore. Six reverse target
+family cases are cold controls, alongside margins/exclusions, zero/sub-slop/live
+edits, throwing Changed publication, boundary precedence, standalone motion,
+character/snap, sleep/support removal, directional masks and 6,000-unit/s thin-floor
+and offset-center angular CCD. Two immutable prebuilt query rays keep authoring
+outside the steady bracket; the initial length-editing query fixture allocated
+262,144 bytes per 128 frames and was rejected as a steady-state fixture. Geometry
+edits still execute as explicit cold cases. Queued scene impulses are checked
+after consumption, and character delta/snap state is prepared with a physics-
+processed node and a real floor departure, matching those public preconditions.
+
+Point/rest coordinates permit .003 scene units, normal dot above .999, cast
+fraction 1/256 plus .00005, mass/inertia .0001, full contact impulse .03,
+coupled momentum .02 and shared velocity .05. The thin floor retains .501
+solver/float allowance and angular energy at most 102 percent initial. Output
+order, geometry exclusions, stable identities, event uniqueness and zero warm
+allocations are exact assertions; no backend pose equality is required.
+
+Evidence remains under bin/physics-ray-provider/2026-10-14. Public API, production
+XML and accepted ADRs are unchanged. The provider now exercises directed geometry;
+arbitrary custom/coupled and complete inherited/extension/network/native/platform
+and target-device performance acceptance remain open. Software Vulkan establishes
+functional behavior only, and coverage Partial states remain.
+
+
+The offset-center directed arc also exposed the resident circle-entry quadratic:
+its float discriminant cancelled large products and retained an exit/tangent
+report without the required entry impulse. The shared resident ray-circle kernel
+now projects onto a normalized ray basis, computes the half chord from perpendicular
+distance and forms the entry normal in that basis. It retains the same facing
+threshold, geometry, budgets and device-float portability. All users of the shared
+kernel, including capsule caps, contacts, queries, motion and CCD, receive the
+same correction. No FP64 requirement, CPU geometry fallback or extra readback is
+introduced. Full continuous/query regressions remain separate from provider
+acceptance and hardware performance.
+
+
+The complete offset-center angular scenario still required a CCD correction after
+the stable circle-root change: a near separated proxy without a directed entry
+was incorrectly treated as no hit for the entire remaining interval. The resident
+CCD kernel now retains the containment exclusion and continues projected-velocity/
+curvature refinement until a real directed entry, keeping its existing 256-iteration
+and 128-interval budgets. The first speed-only continuation exhausted refinement
+and was rejected. A focused --directed-angular case uses only the public API and
+retains contact/energy assertions; its successful GPU probe records a real nonzero
+entry impulse. Earlier cohorts before this correction are not final acceptance.
+
+
+Final directed-ray validation on the working source over local main
+f01227723b01046792a7c5b466b74ecd5e80d47c retained 4,208 source files with SHA-256
+d3d3002bae46e851768e711cbf3032b769864262cc97c035d661255a1354ee89.
+The final3 consumer cohort passed 28 fresh processes, including all six
+directed profiles; native-final3 passed six built-in regression processes using
+the same runtime assembly. Each directed profile passed all 23 brackets with
+128 warmup and 128 measured frames and 0/0 owner/all-thread managed bytes. CPU
+and registered profiles had no available graphics device; GPU profiles loaded
+only explicit software Vulkan, with observed solver thread counts zero/one.
+All 61 consumer and 75 built-in retained runtime files were rehashed after runs.
+The six gates3 checks passed Release build, scoped consumer formatting, compiled
+API coverage, wiki generator tests, generation and generation --check. Coverage
+reported 13,906 declarations, no unmapped engine members; wiki reported 827
+public types and 845 files. Generated output remains unpublished and ignored.
+These same-source functional results leave native allocation, physical GPU
+performance, real-window FPS, cross-platform and complete physics/network
+acceptance open. Earlier angular candidates, including cohorts before the
+resident entry refinement fix, remain failed or preliminary evidence.

@@ -168,33 +168,44 @@ float sweep(Shape sa,Geometry ga,Shape sb,Geometry gb,ResidentBody startA,Reside
             if(next==time){atomicOr(summary.x,2u);return 1;}
             time=next;continue;
         }
+        bool needsEntry=false;
         if(gap<=4*tolerances.x)
         {
-            if(ga.data.z==6u&&gb.data.z!=7u&&!directed(a,b))return 1;
-            if(gb.data.z==6u&&ga.data.z!=7u&&!directed(b,a))return 1;
-            if(oneWay&&decision==0u)
+            bool missingA=ga.data.z==6u&&gb.data.z!=7u&&!directed(a,b);
+            bool missingB=gb.data.z==6u&&ga.data.z!=7u&&!directed(b,a);
+            if(missingA||missingB)
             {
-                decision=facesOneWay(sa,sb,bodyA,bodyB,axis.normal)?2u:1u;
-                if(decision==1u)continue;
+                Axis originAxis;Hull ray=missingA?a:b,target=missingA?b:a;
+                if(separatingAxis(asPoint(ray,vertex(ray,0u)),target,originAxis)&&originAxis.separation<0)return 1;
+                // Keep refining a separated search candidate until its directed surface entry.
+                needsEntry=true;
             }
-            // Existing contact is handled by the ordinary solver, including overlap recovery.
-            if(time==0)
+            if(!needsEntry)
             {
-                bool responseA=startA.flags.y>=2u&&(sa.policy.z&sb.policy.y)!=0u;
-                bool responseB=startB.flags.y>=2u&&(sb.policy.z&sa.policy.y)!=0u;
-                if(!responseA&&!responseB)return 1;
-                float curvature=a.boundary||b.boundary?boundaryCurvature(testA,testB,va,vb,ca,cb,rayA,rayB):bound*tolerances.w*max(wa,wb);
-                // Residual closing is a contact constraint, so it includes prescribed surface motion.
-                // Geometric sampling and first-impact advancement above still use actual motion only.
-                float speed=closingSpeed(testA,testB,va+startA.surface.xyz,vb+startB.surface.xyz,ca,cb,axis.normal,rayA,rayB)*tolerances.w;
-                float allowance=0.5*max(gap,0.25*tolerances.x);
-                float discriminant=speed*speed+2*curvature*allowance;
-                if(!finite2(vec2(curvature,discriminant))){fail();return 1;}
-                // Bound both residual contact closing and curvature before reevaluating the constraints.
-                float denominator=speed+sqrt(discriminant);
-                return denominator>0?min(1,2*allowance/denominator):1;
+                if(oneWay&&decision==0u)
+                {
+                    decision=facesOneWay(sa,sb,bodyA,bodyB,axis.normal)?2u:1u;
+                    if(decision==1u)continue;
+                }
+                // Existing contact is handled by the ordinary solver, including overlap recovery.
+                if(time==0)
+                {
+                    bool responseA=startA.flags.y>=2u&&(sa.policy.z&sb.policy.y)!=0u;
+                    bool responseB=startB.flags.y>=2u&&(sb.policy.z&sa.policy.y)!=0u;
+                    if(!responseA&&!responseB)return 1;
+                    float curvature=a.boundary||b.boundary?boundaryCurvature(testA,testB,va,vb,ca,cb,rayA,rayB):bound*tolerances.w*max(wa,wb);
+                    // Residual closing is a contact constraint, so it includes prescribed surface motion.
+                    // Geometric sampling and first-impact advancement above still use actual motion only.
+                    float speed=closingSpeed(testA,testB,va+startA.surface.xyz,vb+startB.surface.xyz,ca,cb,axis.normal,rayA,rayB)*tolerances.w;
+                    float allowance=0.5*max(gap,0.25*tolerances.x);
+                    float discriminant=speed*speed+2*curvature*allowance;
+                    if(!finite2(vec2(curvature,discriminant))){fail();return 1;}
+                    // Bound both residual contact closing and curvature before reevaluating the constraints.
+                    float denominator=speed+sqrt(discriminant);
+                    return denominator>0?min(1,2*allowance/denominator):1;
+                }
+                return time;
             }
-            return time;
         }
         float advance;
         if(!a.boundary&&!b.boundary)
@@ -202,7 +213,7 @@ float sweep(Shape sa,Geometry ga,Shape sb,Geometry gb,ResidentBody startA,Reside
             // Bound rotation against the current separating axis, including tangential and separating motion.
             float closing=axisClosing(testA,testB,va,vb,ca,cb,axis.normal,rayA,rayB);
             float curvature=tolerances.w*tolerances.w*(wa*wa*radiusA+wb*wb*radiusB);
-            float distance=gap-tolerances.x;
+            float distance=needsEntry?max(gap,0.000001):gap-tolerances.x;
             if(curvature==0)
             {
                 if(closing<=0)return 1;

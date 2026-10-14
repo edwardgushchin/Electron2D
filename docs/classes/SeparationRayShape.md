@@ -1,6 +1,6 @@
 # SeparationRayShape
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -105,3 +105,14 @@ being redirected to the general CPU suite. Both CPU/GPU profiles pass the same
 CCD, infinite-boundary and directed-ray cases on software Vulkan, with explicit
 0/0 owner/all-thread warm allocation gates. See [current software conformance](../components/cpu-continuous-collision.md#software-vulkan-continuous-conformance-2026-10-14).
 Hardware performance, native allocation and foreign-platform acceptance remain open.
+
+
+[Registered directed-ray numerics](../components/physics-registered-adapter.md#registered-directed-numerics)
+now execute surface entry, axis/slope separation, zero geometric mass, all query
+families and reverse source, raw recovery and character snap, material/surface
+impulses, silent replay and linear/angular CCD through an independent public-only
+provider. Twenty-three full-frame brackets per CPU/GPU/provider serial/separate
+profile require 128 warmup/128 measured frames at 0/0 managed bytes. Directional
+response and stable long-ray/circle roots are corrected in the shared consumer.
+Arbitrary custom/coupled, complete inherited/extension/network/native/platform
+and hardware-performance acceptance remain open; coverage states are unchanged.

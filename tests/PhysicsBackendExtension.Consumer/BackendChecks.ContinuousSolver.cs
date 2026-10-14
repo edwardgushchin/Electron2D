@@ -40,8 +40,8 @@ public static partial class BackendChecks
                         BoundaryRotationSpeed(a, b) + BoundaryRotationSpeed(b, a);
                     if (speed == 0) continue;
                     var hit = false; var fraction = 1f;
-                    if (a.Dynamic && a.ContinuousMode != CCDMode.Disabled && SweptContact(a, b, motion * duration, duration, out var first)) { hit = true; fraction = first; }
-                    if (b.Dynamic && b.ContinuousMode != CCDMode.Disabled && SweptContact(b, a, -motion * duration, duration, out var second)) { hit = true; fraction = MathF.Min(fraction, second); }
+                    if (a.Dynamic && a.ContinuousMode != CCDMode.Disabled && (a.Mask & b.Layer) != 0 && SweptContact(a, b, motion * duration, duration, out var first)) { hit = true; fraction = first; }
+                    if (b.Dynamic && b.ContinuousMode != CCDMode.Disabled && (b.Mask & a.Layer) != 0 && SweptContact(b, a, -motion * duration, duration, out var second)) { hit = true; fraction = MathF.Min(fraction, second); }
                     if (!hit) continue;
                     var extent = MathF.Min(a.MinimumThickness, b.MinimumThickness);
                     interval = MathF.Min(interval, .25f * extent / speed);
@@ -91,6 +91,20 @@ public static partial class BackendChecks
                         { hit = true; fraction = MathF.Min(fraction, boundary); }
                         continue;
                     }
+                    if (first.Directed || second.Directed)
+                    {
+                        var proxyA = first.Directed ? first with { Directed = false, Segment = true } : first;
+                        var proxyB = second.Directed ? second with { Directed = false, Segment = true } : second;
+                        if (SweptContour(a, proxyA, b, proxyB, duration, full, spinA, spinB, out var entry))
+                        {
+                            var time = entry * duration;
+                            var poseA = DirectedPose(a, spinA, time); var poseB = DirectedPose(b, spinB, time);
+                            if (DirectedContact(ExpandPart(first, .0001f), poseA, Vector2.Zero,
+                                ExpandPart(second, .0001f), poseB, Vector2.Zero, out _, out _, out _, out _))
+                            { hit = true; fraction = MathF.Min(fraction, entry); }
+                        }
+                        continue;
+                    }
                     if (first.Contour || second.Contour)
                     {
                         if (SweptContour(a, first, b, second, duration, full, spinA, spinB, out var contour))
@@ -110,6 +124,11 @@ public static partial class BackendChecks
                     if (SweepPart(point, motion, inner, outer, out var current)) { hit = true; fraction = MathF.Min(fraction, current); }
                 }
             return hit;
+        }
+        private static Transform DirectedPose(Body body, float spin, float time)
+        {
+            var rotation = body.Rotation + spin * time; var center = body.Dynamic ? body.LocalCenter : Vector2.Zero;
+            return new(rotation, body.Position + Motion(body) * time + center.Rotated(body.Rotation) - center.Rotated(rotation));
         }
         private static bool CurvedPart(Body a, in Part first, Body b, in Part second, float duration, bool full, float spinA, float spinB, out float fraction)
         {

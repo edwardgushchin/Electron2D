@@ -10,7 +10,7 @@ public static partial class BackendChecks
         if (first.Boundary && second.Boundary) return float.PositiveInfinity;
         var plane = first.Boundary ? first : second; var planePose = first.Boundary ? a : b;
         var finite = first.Boundary ? second : first; var finitePose = first.Boundary ? b : a;
-        if (CoreCount(finite) == 0) return float.PositiveInfinity;
+        if (finite.Directed && finite.EdgeY == Vector2.Zero || CoreCount(finite) == 0) return float.PositiveInfinity;
         var outward = BoundaryNormal(plane, planePose); var origin = PartAt(plane, planePose);
         var tip = LeadingPart(finite, finitePose, -outward); var gap = (tip - origin).Dot(outward);
         var onPlane = tip - outward * gap;

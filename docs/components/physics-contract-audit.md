@@ -1218,3 +1218,14 @@ use ordinary sine/cosine; the far rotated query retains its .005-unit bound rath
 than absorbing the former approximate-angle drift. Directed-ray, arbitrary/coupled,
 complete inherited/extension/network/native/platform and hardware-performance
 acceptance remain open; coverage states are unchanged.
+
+
+[Registered directed-ray numerics](../components/physics-registered-adapter.md#registered-directed-numerics)
+now execute surface entry, axis/slope separation, zero geometric mass, all query
+families and reverse source, raw recovery and character snap, material/surface
+impulses, silent replay and linear/angular CCD through an independent public-only
+provider. Twenty-three full-frame brackets per CPU/GPU/provider serial/separate
+profile require 128 warmup/128 measured frames at 0/0 managed bytes. Directional
+response and stable long-ray/circle roots are corrected in the shared consumer.
+Arbitrary custom/coupled, complete inherited/extension/network/native/platform
+and hardware-performance acceptance remain open; coverage states are unchanged.

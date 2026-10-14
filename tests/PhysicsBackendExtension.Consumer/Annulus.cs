@@ -39,17 +39,21 @@ internal static class Annulus
     {
         if (Contains(from, center, inner, outer)) { fraction = 0; return true; }
         var relative = from - center; var radius = relative.Length() < inner ? inner : outer;
-        var a = motion.LengthSquared(); var b = relative.Dot(motion); var c = relative.LengthSquared() - radius * radius;
+        var a = (double)motion.X * motion.X + (double)motion.Y * motion.Y;
+        var b = (double)relative.X * motion.X + (double)relative.Y * motion.Y;
+        var c = (double)relative.X * relative.X + (double)relative.Y * relative.Y - (double)radius * radius;
         var d = b * b - a * c;
         if (a == 0 || d < 0) { fraction = 1; return false; }
-        var root = MathF.Sqrt(d); var near = (-b - root) / a; var far = (-b + root) / a;
-        fraction = near >= 0 ? near : far; return fraction >= 0 && fraction <= 1;
+        var root = Math.Sqrt(d); var near = (-b - root) / a; var far = (-b + root) / a;
+        var value = near >= 0 ? near : far; fraction = (float)value; return value >= 0 && value <= 1;
     }
     internal static bool Collide(ShapeGeometry first, Transform firstPose, Vector2 firstMotion,
         ShapeGeometry second, Transform secondPose, Vector2 secondMotion, Span<Vector2> contacts, out int count)
     {
         if (second.Type == PhysicsServer.ShapeType.WorldBoundary)
             return BackendChecks.CollideBoundaryGeometry(first, firstPose, firstMotion, second, secondPose, secondMotion, contacts, out count);
+        if (second.Type == PhysicsServer.ShapeType.SeparationRay)
+            return BackendChecks.CollideDirectedGeometry(first, firstPose, firstMotion, second, secondPose, secondMotion, contacts, out count);
         if (second.Type == PhysicsServer.ShapeType.ConcavePolygon)
             return BackendChecks.CollideConcaveGeometry(first, firstPose, firstMotion, second, secondPose, secondMotion, contacts, out count);
         if (second.Type is PhysicsServer.ShapeType.Rectangle or PhysicsServer.ShapeType.Capsule or PhysicsServer.ShapeType.Segment or PhysicsServer.ShapeType.ConvexPolygon)

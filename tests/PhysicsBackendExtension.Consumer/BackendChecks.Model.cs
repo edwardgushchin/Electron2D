@@ -177,7 +177,9 @@ public static partial class BackendChecks
                                 var half = normal * (depth * .5f);
                                 AddDebugPoint(diagnosticPoint - half); AddDebugPoint(diagnosticPoint + half);
                             }
-                            var inverse = a.InvMass + b.InvMass;
+                            var massA = (a.Mask & b.Layer) != 0 ? a.InvMass : 0;
+                            var massB = (b.Mask & a.Layer) != 0 ? b.InvMass : 0;
+                            var inverse = massA + massB;
                             var active = a.Dynamic && a.Awake || b.Dynamic && b.Awake ||
                                 a.Mode == PhysicsServer.BodyMode.Kinematic && (a.Velocity != Vector2.Zero || a.Angular != 0) ||
                                 b.Mode == PhysicsServer.BodyMode.Kinematic && (b.Velocity != Vector2.Zero || b.Angular != 0);
@@ -185,8 +187,8 @@ public static partial class BackendChecks
                             var contactPoint = diagnosticPoint;
                             if (active && inverse > 0)
                             {
-                                a.Position -= normal * depth * (a.InvMass / inverse);
-                                b.Position += normal * depth * (b.InvMass / inverse);
+                                a.Position -= normal * depth * (massA / inverse);
+                                b.Position += normal * depth * (massB / inverse);
                                 if (PartContact(a, first, b, second, out _, out _, out var solvedPoint)) contactPoint = solvedPoint;
                                 impulse = SolveContact(a, b, normal, contactPoint);
                             }
@@ -346,7 +348,12 @@ public static partial class BackendChecks
         { solver.IdentityHook?.Invoke(rid); ObjectID = objectID; Canvas = canvasID; }
         protected override void SetCollisionPriority(float value)
         { solver.PriorityHook?.Invoke(); Priority = value; }
-        protected override void UpdateFilter(uint layer, uint mask, bool wakeBody) { solver.FilterHook?.Invoke(rid); Layer = layer; Mask = mask; }
+        protected override void UpdateFilter(uint layer, uint mask, bool wakeBody)
+        {
+            solver.FilterHook?.Invoke(rid);
+            if (wakeBody) solver.WakeConnected(this);
+            Layer = layer; Mask = mask;
+        }
         protected override void RebuildShapes(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce)
         {
             solver.ShapeHook?.Invoke(rid);

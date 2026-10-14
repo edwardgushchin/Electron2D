@@ -7,6 +7,9 @@ public static partial class BackendChecks
         private static Vector2 SolveContact(Body a, Body b, Vector2 normal, Vector2 point)
         {
             var ra = point - a.Center; var rb = point - b.Center;
+            var responseA = (a.Mask & b.Layer) != 0; var responseB = (b.Mask & a.Layer) != 0;
+            var massA = responseA ? a.InvMass : 0; var massB = responseB ? b.InvMass : 0;
+            var inertiaA = responseA ? a.InvInertia : 0; var inertiaB = responseB ? b.InvInertia : 0;
             var relative = b.PointVelocity(point) - a.PointVelocity(point);
             var speed = relative.Dot(normal);
             if (speed >= 0) return Vector2.Zero;
@@ -25,9 +28,9 @@ public static partial class BackendChecks
             float Effective(Vector2 axis)
             {
                 var ca = Cross(ra, axis); var cb = Cross(rb, axis);
-                return a.InvMass + b.InvMass + ca * ca * a.InvInertia + cb * cb * b.InvInertia;
+                return massA + massB + ca * ca * inertiaA + cb * cb * inertiaB;
             }
-            void Apply(Vector2 value) { a.AddImpulse(-value, -Cross(ra, value)); b.AddImpulse(value, Cross(rb, value)); }
+            void Apply(Vector2 value) { if (responseA) a.AddImpulse(-value, -Cross(ra, value)); if (responseB) b.AddImpulse(value, Cross(rb, value)); }
         }
         private static float Cross(Vector2 a, Vector2 b) => a.X * b.Y - a.Y * b.X;
     }

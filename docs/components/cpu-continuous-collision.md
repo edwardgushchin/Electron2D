@@ -306,3 +306,26 @@ near a 20-rad/s dynamic plane despite representable contact motion. Interval and
 shader iteration budgets, .001 CCD tolerance, failure behavior and device-resident
 execution remain unchanged. The same new scenario and existing continuous suites
 verify the correction; no CPU numerical fallback or mass-state readback is added.
+
+
+The offset-center directed arc also exposed the resident circle-entry quadratic:
+its float discriminant cancelled large products and retained an exit/tangent
+report without the required entry impulse. The shared resident ray-circle kernel
+now projects onto a normalized ray basis, computes the half chord from perpendicular
+distance and forms the entry normal in that basis. It retains the same facing
+threshold, geometry, budgets and device-float portability. All users of the shared
+kernel, including capsule caps, contacts, queries, motion and CCD, receive the
+same correction. No FP64 requirement, CPU geometry fallback or extra readback is
+introduced. Full continuous/query regressions remain separate from provider
+acceptance and hardware performance.
+
+
+The complete offset-center angular scenario still required a CCD correction after
+the stable circle-root change: a near separated proxy without a directed entry
+was incorrectly treated as no hit for the entire remaining interval. The resident
+CCD kernel now retains the containment exclusion and continues projected-velocity/
+curvature refinement until a real directed entry, keeping its existing 256-iteration
+and 128-interval budgets. The first speed-only continuation exhausted refinement
+and was rejected. A focused --directed-angular case uses only the public API and
+retains contact/energy assertions; its successful GPU probe records a real nonzero
+entry impulse. Earlier cohorts before this correction are not final acceptance.

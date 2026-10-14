@@ -69,9 +69,7 @@ public static partial class BackendChecks
         private Part QueryPart(PhysicsShapeQueryParameters parameters, ShapeGeometry geometry, int element)
         {
             var part = GeometryPart(geometry, parameters.Transform, 0, element);
-            if (part.Boundary) return part with { Offset = part.Offset + part.PlaneNormal * parameters.Margin };
-            return part.Contour ? part with { Inflation = part.Inflation + parameters.Margin } : part with
-            { Outer = part.Outer + parameters.Margin, Inner = MathF.Max(0, part.Inner - parameters.Margin) };
+            return ExpandPart(part, parameters.Margin);
         }
         private static bool QuerySweep(in Part query, Vector2 motion, in Part target, Transform pose, out float fraction)
         {
@@ -102,7 +100,7 @@ public static partial class BackendChecks
         }
         protected override (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
-            var fraction = 1f; var geometry = GetShapeGeometry(parameters.ShapeRID);
+            var fraction = 1f; var safeFraction = 1f; var geometry = GetShapeGeometry(parameters.ShapeRID);
             foreach (var b in Bodies.Values)
             {
                 if (!Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded)) continue;
@@ -110,10 +108,15 @@ public static partial class BackendChecks
                     {
                         var p = b.Parts[i]; var query = QueryPart(parameters, geometry, piece);
                         if ((query.Boundary || p.Boundary || query.Contour || p.Contour) && PartGap(query, Transform.Identity, p, b.Pose, out _, out _, out _) <= 0) continue;
-                        if (QuerySweep(query, parameters.Motion, p, b.Pose, out var f)) fraction = MathF.Min(fraction, f);
+                        if (query.Directed || p.Directed)
+                        {
+                            if (DirectedSweepRange(query, Transform.Identity, parameters.Motion, p, b.Pose, out var low, out var high) && high <= fraction)
+                            { safeFraction = low; fraction = high; }
+                        }
+                        else if (QuerySweep(query, parameters.Motion, p, b.Pose, out var f) && f <= fraction) { safeFraction = fraction = f; }
                     }
             }
-            return (fraction, fraction);
+            return (safeFraction, fraction);
         }
         private readonly List<Part> _contactQueryParts = [], _contactColliderParts = [];
         protected override List<PhysicsBackendShapeContact> CollectShapeContacts(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded, int limit)
@@ -128,7 +131,12 @@ public static partial class BackendChecks
                         var p = b.Parts[i]; var query = QueryPart(parameters, geometry, piece);
                         if (!QuerySweep(query, parameters.Motion, p, b.Pose, out var f)) continue;
                         Vector2 firstPoint, secondPoint;
-                        if (query.Boundary || p.Boundary || query.Contour || p.Contour)
+                        if (query.Directed || p.Directed)
+                        {
+                            if (!DirectedContact(query, Transform.Identity, parameters.Motion, p, b.Pose, Vector2.Zero,
+                                out _, out firstPoint, out secondPoint, out _)) continue;
+                        }
+                        else if (query.Boundary || p.Boundary || query.Contour || p.Contour)
                         {
                             var pose = Transform.Identity; pose.Origin = parameters.Motion * f;
                             PartGap(query, pose, p, b.Pose, out _, out firstPoint, out secondPoint);
@@ -152,7 +160,12 @@ public static partial class BackendChecks
             {
                 var h = hits[i]; var body = Bodies[h.RID]; var query = _contactQueryParts[i]; var part = _contactColliderParts[i];
                 var normal = PartNormal(h.QueryPoint, body.PartCenter(part), part); var depth = h.QueryPoint.DistanceTo(h.ColliderPoint);
-                if (query.Boundary || part.Boundary || query.Contour || part.Contour)
+                if (query.Directed || part.Directed)
+                {
+                    DirectedContact(query, Transform.Identity, parameters.Motion, part, body.Pose, Vector2.Zero,
+                        out var toward, out _, out _, out depth); normal = -toward;
+                }
+                else if (query.Boundary || part.Boundary || query.Contour || part.Contour)
                 {
                     QuerySweep(query, parameters.Motion, part, body.Pose, out var fraction);
                     var pose = Transform.Identity; pose.Origin = parameters.Motion * fraction;
@@ -174,6 +187,8 @@ public static partial class BackendChecks
             bool hit;
             if (a.Type == PhysicsServer.ShapeType.WorldBoundary || b.Type == PhysicsServer.ShapeType.WorldBoundary)
                 hit = CollideBoundaryGeometry(a, firstPose, firstMotion, b, secondPose, secondMotion, contacts, out count);
+            else if (a.Type == PhysicsServer.ShapeType.SeparationRay || b.Type == PhysicsServer.ShapeType.SeparationRay)
+                hit = CollideDirectedGeometry(a, firstPose, firstMotion, b, secondPose, secondMotion, contacts, out count);
             else if (a.Type == PhysicsServer.ShapeType.ConcavePolygon || b.Type == PhysicsServer.ShapeType.ConcavePolygon)
                 hit = CollideConcaveGeometry(a, firstPose, firstMotion, b, secondPose, secondMotion, contacts, out count);
             else if (a.Type is PhysicsServer.ShapeType.Rectangle or PhysicsServer.ShapeType.Capsule or PhysicsServer.ShapeType.Segment or PhysicsServer.ShapeType.ConvexPolygon || b.Type is PhysicsServer.ShapeType.Rectangle or PhysicsServer.ShapeType.Capsule or PhysicsServer.ShapeType.Segment or PhysicsServer.ShapeType.ConvexPolygon)
@@ -223,7 +238,9 @@ public static partial class BackendChecks
         protected override bool TestBodyMotion(RID body, Transform from, Vector2 motion, float margin, bool recoveryAsCollision,
             ReadOnlySpan<RID> excludedBodies, ReadOnlySpan<ulong> excludedObjects, bool collideSeparationRay, PhysicsTestMotionResult result)
         {
-            var local = Bodies[body]; Body? best = null; Part source = default, target = default; var fraction = 1f;
+            var local = Bodies[body];
+            if (HasDirectedMotionParts(local)) return TestDirectedBodyMotion(body, from, motion, margin, recoveryAsCollision, collideSeparationRay, result);
+            Body? best = null; Part source = default, target = default; var fraction = 1f;
             MotionHook?.Invoke(body);
             foreach (var other in Bodies.Values)
             {
