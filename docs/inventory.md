@@ -1106,7 +1106,7 @@ CanvasMesh retained geometry now has its [class page](classes/CanvasMesh.md); [C
 | [Rendering](domains/rendering.md) | [Text](components/text.md) | [FontVariationAxis](classes/FontVariationAxis.md) | [FontInstance.cs](../src/Servers/Text/FontInstance.cs) | Current | Typed font axis design bounds. |
 | [Rendering](domains/rendering.md) | [Text](components/text.md) | [`FontFeatureInfo`](classes/FontFeatureInfo.md) | [`FontFeatureInfo.cs`](../src/Servers/Text/FontFeatureInfo.cs) | Current | Immutable supported OpenType feature description: optional localized label, boolean/integer selector and hidden flag. |
 
-| [Resources](domains/resources.md) | [Scripting](components/scripting.md) | [Script](classes/Script.md) | [Script.cs](../src/Core/IO/Script.cs) | Current | Compiled source/type assets, registration-time copied metadata, explicit assembly/PDB prerequisites and fresh-process class reconstruction. |
+| [Resources](domains/resources.md) | [Scripting](components/scripting.md) | [Script](classes/Script.md) | [Script.cs](../src/Core/IO/Script.cs) | Current | Compiled source/type assets, ordinary shared/explicit copied graph identities, registration-time metadata, assembly/PDB prerequisites and fresh-process class reconstruction. |
 | [Resources](domains/resources.md) | [Scripting](components/scripting.md) | [ToolAttribute](classes/ToolAttribute.md) | [Script.cs](../src/Core/IO/Script.cs) | Current | Compiled project tool-class declaration. |
 | [Resources](domains/resources.md) | [Scripting](components/scripting.md) | [GlobalClassAttribute](classes/GlobalClassAttribute.md) | [Script.cs](../src/Core/IO/Script.cs) | Current | Compiled global script-class name declaration. |
 

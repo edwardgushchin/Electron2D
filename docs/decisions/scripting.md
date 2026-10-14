@@ -1,6 +1,6 @@
 # C# scripting decisions
 
-Last updated: 2026-10-07
+Last updated: 2026-10-14
 
 This bounded document owns the C# execution model and script-resource identity. [The decision index](index.md) routes other work; implemented behavior remains in class/component/domain documents and [coverage](../coverage/index.md).
 
@@ -9,7 +9,7 @@ Decisions in this log: [0091](#adr-0091).
 <a id="adr-0091"></a>
 ## ADR 0091: Use compiled C# nodes and one concrete Script resource
 
-Last updated: 2026-10-07
+Last updated: 2026-10-14
 
 - Status: Accepted by the user on 2026-10-01.
 - Scope: C# gameplay code, script resource naming/roles, project/editor integration and reference API adaptation.
@@ -36,6 +36,7 @@ The reference engine separates Script and CSharpScript resources and binds manag
 - When an executable loader, scene authoring or editor consumer needs code as an asset, implement one **concrete `Script : Resource`** for C#. Do not introduce an abstract language-independent Script base, a separate CSharpScript production type, or a compatibility alias.
 - Both reference `Script` and `CSharpScript` map to this single Electron2D `Script`. Keep every applicable inherited/own capability, including typed instance creation, source/type information, properties/methods/events/constants, defaults and diagnostics. The merge adapts type identity/inheritance; it does not authorize missing members or false implementation states.
 - The Script resource describes shared source, compiled-type/build association, metadata and typed instance creation. Mutable state of a particular player or other scene object remains in its Node instance. Resource sharing, duplication and disposal follow ADR 0013; script-source lifetime and compiled-type availability must be specified and tested by the first executable resource slice.
+- Ordinary nested Script edges retain the same asset for all deep-copy policies; explicit root/force duplication creates an independent source wrapper borrowing the compiled registration. Scene-local flags and isolated authoring retain their separate ADR 0013 policies. Visiting a forced edge first never converts ordinary non-local script references into acquired duplicates.
 - Compiled C# node execution does not require a Script wrapper per frame. Do not add an empty resource solely to reserve its name or hide Node execution behind an otherwise unused resource API. Introduce the resource with an actual loader/editor/authoring path and positive, failure, lifetime and fresh-process reconstruction evidence.
 - A scene's serialized type/script identity resolves to registered typed construction and property codecs. Serialized names are data addresses, not a universal `Get/Set/Call`, `Variant`, general `object` or `dynamic` value system. The concrete file format, registry schema, public signatures and build/error policy belong to their executable slices.
 

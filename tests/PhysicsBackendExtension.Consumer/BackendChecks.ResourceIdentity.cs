@@ -66,6 +66,7 @@ public static partial class BackendChecks
             using var world = backend is { } selected ? new World(selected) : RegisteredIdentityWorld();
             var host = new SubViewport { World = world }; host.AddChild(loadedRoot); using var tree = new SceneTree(host);
             ResourceStoredState(world);
+            ScriptGraphs(loadedRoot, world);
             ResourceFactoryOwnership(loadedRoot, world, loadedFirst, loadedRoot.GetNode<RigidBody>("Mover").PhysicsMaterialOverride!);
             var moving = loadedRoot.GetNode<RigidBody>("Mover"); var queriedBody = loadedRoot.GetNode<StaticBody>("Second"); using var query = new PhysicsPointQueryParameters { Position = new(35, 0) };
             Check(!loadedFirst.CanTranslateMessages && loadedFirst.TranslationDomain == StoredResourceDomain &&

@@ -5,7 +5,9 @@ namespace Electron2D;
 
 /// <summary>Describes a registered compiled C# Node or Resource and its source, typed schema and construction factory.</summary>
 /// <remarks>Project code remains in the consumer assembly and executes ordinary typed callbacks. Source edits do not
-/// replace CLR classes. Loading validates compiler source checksums; build/restart and live reassignment remain explicit.</remarks>
+/// replace CLR classes. Loading validates compiler source checksums; build/restart and live reassignment remain explicit.
+/// Ordinary nested resource duplication preserves this shared asset. Explicit root/force copies have
+/// independent source text with the same compiled registration. Scene-local resources follow their local flag.</remarks>
 public sealed partial class Script : Resource
 {
     internal const int MaximumSourceBytes = 8 * 1024 * 1024;

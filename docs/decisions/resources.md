@@ -9,7 +9,7 @@ Decisions in this log: [0013](#adr-0013), [0014](#adr-0014), [0039](#adr-0039).
 <a id="adr-0013"></a>
 ## ADR 0013: Managed typed Resource contract
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 ### Status
 
@@ -30,6 +30,8 @@ Resource base state is explicit and typed. Registered paths use a process-wide o
 Signals are typed synchronous events. `Changed` is the content-change channel. Deprecated public setup entry/event are excluded under ADR 0004. Packed-scene infrastructure invokes the current protected OnSetupLocalToScene hook after assigning the owning scene, once per local duplicate, and aggregates setup failures across the graph. Scene instantiation duplicates nested resources according to their local flag, preserving non-local identities even for built-in paths; ordinary DuplicateDeep(Internal) remains independent. Explicit force/never-duplicate hooks and isolated authoring capture keep their policies. The resource borrows its scene root through the immutable weak ObjectIdentity under [ADR 0050](core-object-runtime.md#adr-0050); it does not retain the hierarchy. GetLocalScene returns null once root disposal begins or after collection. Changing ResourceLocalToScene affects future instantiation, preserving the existing association. Root replacement transfers the sample together with deterministic resource ownership.
 
 Duplication is opt-in for every derived type through two protected hooks: construct a fresh exact-type target and copy all stored typed state. A graph session registers targets before recursion, preserving aliases and cycles. Deep policy controls ordinary nested resources; the hook also receives a force-duplicate delegate, while direct assignment expresses a never-duplicate field. The derived type controls its collection containers. Path and scene IDs are never copied. Every created target is disposed if duplication fails.
+
+Ordinary nested Script references are shared in every shallow/deep mode, including built-in and external paths. This per-edge rule applies before cached forced duplicates, preserving the original script on ordinary edges even when an always-duplicate edge was visited first. Explicit force copying still creates an independent Script wrapper with the same compiled registration; explicitly duplicating a Script root remains independent. Scene instantiation instead follows the script's local flag: non-local ordinary script references stay shared even after forced copies, while local scripts share one acquired wrapper per scene. Isolated authoring capture retains its independent snapshot policy. This preserves the pinned resource.cpp ordinary Script exclusion while retaining the typed C# source/type association under [ADR 0091](scripting.md#adr-0091).
 
 `CopyFromResource` requires exact runtime types, preserves target identity, resets non-stored state, shallow-copies stored state, and coalesces notifications. It is non-transactional for arbitrary derived state and therefore emits one change even after a failed attempt.
 

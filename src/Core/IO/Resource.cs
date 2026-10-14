@@ -326,7 +326,8 @@ public class Resource : ElectronObject
     /// derived resources clone containers and duplicate built-in nested resources.
     /// </param>
     /// <returns>A new live resource of the exact same runtime type with an empty path and scene ID.</returns>
-    /// <remarks>Stored base state includes inherited translation policy and domain. Resource identity and runtime subscribers are not copied.</remarks>
+    /// <remarks>Stored base state includes inherited translation policy and domain. Resource identity and runtime subscribers are not copied.
+    /// Ordinary nested <see cref="Script"/> assets stay shared, including built-in paths. Explicit force-copy properties retain their separate policy.</remarks>
     /// <exception cref="InvalidOperationException">A derived duplication factory returns an invalid instance.</exception>
     /// <exception cref="NotSupportedException">A derived resource does not explicitly implement the duplication hooks.</exception>
     /// <exception cref="ObjectDisposedException">This resource is disposing or disposed.</exception>
@@ -341,6 +342,8 @@ public class Resource : ElectronObject
     /// Repeated and cyclic resource references preserve graph identity. Derived resources remain responsible for
     /// cloning their typed collection containers and passing nested resources to the appropriate supplied duplication delegate.
     /// Inherited translation policy and domain are copied with stored resource base state.
+    /// Ordinary nested <see cref="Script"/> assets stay shared in every mode. Explicit root or force-copy
+    /// duplication may create an independent script wrapper; scene-local duplication follows its local flag.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="subresourceMode"/> is not defined.</exception>
     /// <exception cref="InvalidOperationException">A derived duplication factory returns an invalid instance.</exception>
@@ -826,6 +829,9 @@ public class Resource : ElectronObject
             ArgumentNullException.ThrowIfNull(source);
             source.ThrowIfDisposed();
 
+            if (!_isolateAllResources && source is Script && !source.ResourceLocalToScene)
+                return source;
+
             if (_session.TryGetDuplicate(source, out var duplicate))
                 return duplicate;
 
@@ -937,6 +943,10 @@ public class Resource : ElectronObject
         private Resource Duplicate(Resource source, bool isRoot = false, bool force = false)
         {
             source.ThrowIfDisposed();
+
+            if (!isRoot && !force && source is Script &&
+                (shouldDuplicate is null || !shouldDuplicate(source)))
+                return source;
 
             if (_duplicates.TryGetValue(source, out var existing))
                 return existing;

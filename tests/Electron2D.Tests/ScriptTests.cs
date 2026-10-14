@@ -17,6 +17,7 @@ internal static class ScriptTests
     {
         Register();
         using var script = ResourceLoader.Load<Script>(ScriptActor.SourcePath);
+        BackendChecks.VerifyNestedScript(script);
         Check(script.CanInstantiate() && script.IsTool() && !script.IsAbstract() && script.HasSourceCode() && script.GetGlobalName() == "ScriptActor" && script.GetInstanceBaseType() == typeof(Node), "compiled source/type metadata");
         Check(script.SourceCode.Contains("class ScriptActor") && script.HasScriptMethod("Twice") && script.HasScriptMethod("Ping") && script.HasScriptSignal("Pulse") && !script.HasScriptMethod("missing"), "source and inherited CLR metadata");
         var methods = script.GetScriptMethodList(); var signals = script.GetScriptSignalList();

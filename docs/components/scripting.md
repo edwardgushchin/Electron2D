@@ -1,6 +1,6 @@
 # Compiled C# source assets
 
-Last updated: 2026-10-07
+Last updated: 2026-10-14
 
 [Script](../classes/Script.md) describes a compiled project Node or Resource and its source/type/schema association under [ADR 0091](../decisions/scripting.md#adr-0091). C# callbacks execute directly on the constructed project class. Source text and shared resource metadata remain separate from the state of a player or effect instance.
 
@@ -11,6 +11,8 @@ Script.RegisterNode/RegisterResource combine stable portable IDs, static exact f
 ResourceLoader recognizes `.cs` and compatible Script/Resource views. Uncached loading validates all partial documents before publishing a resource into the weak path cache. Reuse returns the existing compiled resource; Ignore returns an independent wrapper. Replace validates first, so changed/uncompiled files preserve the previous live wrapper. Metadata discovery returns the exact registered project class and Script resource. Source setters and atomic UTF-8 source saving do not reload CLR code. Compiled class registration remains valid even when editable resource text differs; build/restart is the executable class replacement workflow.
 
 Script.New returns the exact project type through its static factory, or through a caller's typed constructor expression. It validates actual type, lifetime and user schema and disposes an incompatible returned instance. Native inherited descriptors use the existing object/property pipeline. Metadata query arrays/maps are copied and remain cold operations. Type/method/event discovery uses ordinary CLR metadata, without string invocation or an interpreter. Constants use caller-selected exact value types. Defaults use registered typed descriptors and a live owner context so borrowed resource defaults retain a meaningful lifetime.
+
+Ordinary nested resource copies keep the same Script asset for all deep modes, including builtin/external paths and scalar/array/dictionary references. Explicit force/root copies retain independent text with the same compiled association; their cached targets do not replace ordinary edges. Scene-local flags govern acquired per-scene wrappers and their disposal, while ordinary non-local code remains borrowed and observes source edits. The actual RESET save-authoring path isolates source snapshots. [Public graph consumers](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.ScriptGraphs.cs) exercise both force orders and these scene/physical lifetime paths; ScriptTests passes the real registered asset through the same matrix and constructs the actual compiled project Node.
 
 ## Storage, lifetime and consumers
 
