@@ -26,7 +26,7 @@ internal static partial class NetworkSockets
     {
         ArgumentException.ThrowIfNullOrEmpty(host);
         if (IPAddress.TryParse(host, out var ip)) return ip;
-        var addresses = Dns.GetHostAddresses(host);
+        var addresses = IP.Service.ResolveTransportAddresses(host, CancellationToken.None).GetAwaiter().GetResult();
         if (addresses.Length == 0) throw new SocketException((int)SocketError.HostNotFound);
         return addresses[0];
     }

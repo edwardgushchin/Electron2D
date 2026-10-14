@@ -371,7 +371,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [HeightMapShape3D](classes/HeightMapShape3D.md) | Shape3D | Excluded | 6 |
 | [HingeJoint3D](classes/HingeJoint3D.md) | Joint3D | Excluded | 28 |
 | [IKModifier3D](classes/IKModifier3D.md) | SkeletonModifier3D | Excluded | 5 |
-| [IP](classes/IP.md) | Object | Blocked | 22 |
+| [IP](classes/IP.md) | Object | Implemented | 22 |
 | [Image](classes/Image.md) | Resource | Partial | 159 |
 | [ImageFormatLoader](classes/ImageFormatLoader.md) | RefCounted | Implemented | 4 |
 | [ImageFormatLoaderExtension](classes/ImageFormatLoaderExtension.md) | ImageFormatLoader | Implemented | 4 |

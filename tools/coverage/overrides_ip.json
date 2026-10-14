@@ -1,0 +1,212 @@
+{
+  "mappings": [
+    {
+      "godot": "class:IP",
+      "electron2d": "T:Electron2D.IP",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::constant:RESOLVER_INVALID_ID",
+      "electron2d": "constant:Electron2D.IP.ResolverInvalidID()",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::constant:RESOLVER_MAX_QUERIES",
+      "electron2d": "constant:Electron2D.IP.ResolverMaxQueries()",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::enum:ResolverStatus",
+      "electron2d": "T:Electron2D.ResolverStatus",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::enum:Type",
+      "electron2d": "T:Electron2D.IPType",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::enum_value:ResolverStatus.RESOLVER_STATUS_DONE",
+      "electron2d": "enumValue:Electron2D.ResolverStatus.Done()",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::enum_value:ResolverStatus.RESOLVER_STATUS_ERROR",
+      "electron2d": "enumValue:Electron2D.ResolverStatus.Error()",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::enum_value:ResolverStatus.RESOLVER_STATUS_NONE",
+      "electron2d": "enumValue:Electron2D.ResolverStatus.None()",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::enum_value:ResolverStatus.RESOLVER_STATUS_WAITING",
+      "electron2d": "enumValue:Electron2D.ResolverStatus.Waiting()",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::enum_value:Type.TYPE_ANY",
+      "electron2d": "enumValue:Electron2D.IPType.Any()",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::enum_value:Type.TYPE_IPV4",
+      "electron2d": "enumValue:Electron2D.IPType.IPv4()",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::enum_value:Type.TYPE_IPV6",
+      "electron2d": "enumValue:Electron2D.IPType.IPv6()",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::enum_value:Type.TYPE_NONE",
+      "electron2d": "enumValue:Electron2D.IPType.None()",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::method:clear_cache(String:)",
+      "electron2d": "method:Electron2D.IP.ClearCache(System.String)",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::method:erase_resolve_item(int:)",
+      "electron2d": "method:Electron2D.IP.EraseResolveItem(System.Int32)",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::method:get_local_addresses()",
+      "electron2d": "method:Electron2D.IP.GetLocalAddresses()",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::method:get_local_interfaces()",
+      "electron2d": "method:Electron2D.IP.GetLocalInterfaces()",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::method:get_resolve_item_address(int:)",
+      "electron2d": "method:Electron2D.IP.GetResolveItemAddress(System.Int32)",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::method:get_resolve_item_addresses(int:)",
+      "electron2d": "method:Electron2D.IP.GetResolveItemAddresses(System.Int32)",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::method:get_resolve_item_status(int:)",
+      "electron2d": "method:Electron2D.IP.GetResolveItemStatus(System.Int32)",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::method:resolve_hostname(String:,int:IP.Type)",
+      "electron2d": "method:Electron2D.IP.ResolveHostname(System.String,Electron2D.IPType)",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::method:resolve_hostname_addresses(String:,int:IP.Type)",
+      "electron2d": "method:Electron2D.IP.ResolveHostnameAddresses(System.String,Electron2D.IPType)",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    },
+    {
+      "godot": "IP::method:resolve_hostname_queue_item(String:,int:IP.Type)",
+      "electron2d": "method:Electron2D.IP.ResolveHostnameQueueItem(System.String,Electron2D.IPType)",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.IPInterfaceInfo",
+      "reason": "Typed adapter dictionary projection and its ordinary record operations, or inherited retained-service lifetime hook under ADR 0001/0094/0095; no parallel public instance operations."
+    },
+    {
+      "electron2d": "constructor:Electron2D.IPInterfaceInfo..ctor(System.String,System.String,System.String,System.String[])",
+      "reason": "Typed adapter dictionary projection and its ordinary record operations, or inherited retained-service lifetime hook under ADR 0001/0094/0095; no parallel public instance operations."
+    },
+    {
+      "electron2d": "method:Electron2D.IP.Dispose(System.Boolean)",
+      "reason": "Typed adapter dictionary projection and its ordinary record operations, or inherited retained-service lifetime hook under ADR 0001/0094/0095; no parallel public instance operations."
+    },
+    {
+      "electron2d": "method:Electron2D.IP.ValidateDisposal()",
+      "reason": "Typed adapter dictionary projection and its ordinary record operations, or inherited retained-service lifetime hook under ADR 0001/0094/0095; no parallel public instance operations."
+    },
+    {
+      "electron2d": "method:Electron2D.IPInterfaceInfo.Deconstruct(ref System.String,ref System.String,ref System.String,ref System.String[])",
+      "reason": "Typed adapter dictionary projection and its ordinary record operations, or inherited retained-service lifetime hook under ADR 0001/0094/0095; no parallel public instance operations."
+    },
+    {
+      "electron2d": "method:Electron2D.IPInterfaceInfo.Equals(Electron2D.IPInterfaceInfo)",
+      "reason": "Typed adapter dictionary projection and its ordinary record operations, or inherited retained-service lifetime hook under ADR 0001/0094/0095; no parallel public instance operations."
+    },
+    {
+      "electron2d": "method:Electron2D.IPInterfaceInfo.Equals(System.Object)",
+      "reason": "Typed adapter dictionary projection and its ordinary record operations, or inherited retained-service lifetime hook under ADR 0001/0094/0095; no parallel public instance operations."
+    },
+    {
+      "electron2d": "method:Electron2D.IPInterfaceInfo.GetHashCode()",
+      "reason": "Typed adapter dictionary projection and its ordinary record operations, or inherited retained-service lifetime hook under ADR 0001/0094/0095; no parallel public instance operations."
+    },
+    {
+      "electron2d": "method:Electron2D.IPInterfaceInfo.ToString()",
+      "reason": "Typed adapter dictionary projection and its ordinary record operations, or inherited retained-service lifetime hook under ADR 0001/0094/0095; no parallel public instance operations."
+    },
+    {
+      "electron2d": "operator:Electron2D.IPInterfaceInfo.op_Equality(Electron2D.IPInterfaceInfo,Electron2D.IPInterfaceInfo)",
+      "reason": "Typed adapter dictionary projection and its ordinary record operations, or inherited retained-service lifetime hook under ADR 0001/0094/0095; no parallel public instance operations."
+    },
+    {
+      "electron2d": "operator:Electron2D.IPInterfaceInfo.op_Inequality(Electron2D.IPInterfaceInfo,Electron2D.IPInterfaceInfo)",
+      "reason": "Typed adapter dictionary projection and its ordinary record operations, or inherited retained-service lifetime hook under ADR 0001/0094/0095; no parallel public instance operations."
+    },
+    {
+      "electron2d": "property:Electron2D.IPInterfaceInfo.Addresses()",
+      "reason": "Typed adapter dictionary projection and its ordinary record operations, or inherited retained-service lifetime hook under ADR 0001/0094/0095; no parallel public instance operations."
+    },
+    {
+      "electron2d": "property:Electron2D.IPInterfaceInfo.Friendly()",
+      "reason": "Typed adapter dictionary projection and its ordinary record operations, or inherited retained-service lifetime hook under ADR 0001/0094/0095; no parallel public instance operations."
+    },
+    {
+      "electron2d": "property:Electron2D.IPInterfaceInfo.Index()",
+      "reason": "Typed adapter dictionary projection and its ordinary record operations, or inherited retained-service lifetime hook under ADR 0001/0094/0095; no parallel public instance operations."
+    },
+    {
+      "electron2d": "property:Electron2D.IPInterfaceInfo.Name()",
+      "reason": "Typed adapter dictionary projection and its ordinary record operations, or inherited retained-service lifetime hook under ADR 0001/0094/0095; no parallel public instance operations."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:IP",
+        "IP::constant:RESOLVER_INVALID_ID",
+        "IP::constant:RESOLVER_MAX_QUERIES",
+        "IP::enum:ResolverStatus",
+        "IP::enum:Type",
+        "IP::enum_value:ResolverStatus.RESOLVER_STATUS_DONE",
+        "IP::enum_value:ResolverStatus.RESOLVER_STATUS_ERROR",
+        "IP::enum_value:ResolverStatus.RESOLVER_STATUS_NONE",
+        "IP::enum_value:ResolverStatus.RESOLVER_STATUS_WAITING",
+        "IP::enum_value:Type.TYPE_ANY",
+        "IP::enum_value:Type.TYPE_IPV4",
+        "IP::enum_value:Type.TYPE_IPV6",
+        "IP::enum_value:Type.TYPE_NONE",
+        "IP::method:clear_cache(String:)",
+        "IP::method:erase_resolve_item(int:)",
+        "IP::method:get_local_addresses()",
+        "IP::method:get_local_interfaces()",
+        "IP::method:get_resolve_item_address(int:)",
+        "IP::method:get_resolve_item_addresses(int:)",
+        "IP::method:get_resolve_item_status(int:)",
+        "IP::method:resolve_hostname(String:,int:IP.Type)",
+        "IP::method:resolve_hostname_addresses(String:,int:IP.Type)",
+        "IP::method:resolve_hostname_queue_item(String:,int:IP.Type)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0094/0095/0051: retained static resolver with exact host/family successful-result cache, 256 retained queue slots, explicit erasure/cancellation and generation-safe late completion. Typed native interface snapshots preserve decimal indexes and scoped addresses. TCP/UDP/ENet helpers and HTTP async establishment share its backend/cache; prepared cache/queue/status/string/erase cycles and real Linux IPv4/IPv6/interface/public-scene transport workflows execute. Foreign/routed/native allocator gates remain separate."
+    }
+  ]
+}

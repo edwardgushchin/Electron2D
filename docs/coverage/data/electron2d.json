@@ -5193,6 +5193,54 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.IP",
+    "kind": "type",
+    "declaringType": "Electron2D.IP",
+    "name": "IP",
+    "signature": "public sealed class Electron2D.IP",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.IPInterfaceInfo",
+    "kind": "type",
+    "declaringType": "Electron2D.IPInterfaceInfo",
+    "name": "IPInterfaceInfo",
+    "signature": "public struct Electron2D.IPInterfaceInfo",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.IPInterfaceInfo\u003E"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.IPType",
+    "kind": "type",
+    "declaringType": "Electron2D.IPType",
+    "name": "IPType",
+    "signature": "public enum Electron2D.IPType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Image",
     "kind": "type",
     "declaringType": "Electron2D.Image",
@@ -9771,6 +9819,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ResolverStatus",
+    "kind": "type",
+    "declaringType": "Electron2D.ResolverStatus",
+    "name": "ResolverStatus",
+    "signature": "public enum Electron2D.ResolverStatus",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Resource",
     "kind": "type",
     "declaringType": "Electron2D.Resource",
@@ -13863,6 +13929,32 @@
     "value": "1"
   },
   {
+    "id": "constant:Electron2D.IP.ResolverInvalidID()",
+    "kind": "constant",
+    "declaringType": "Electron2D.IP",
+    "name": "ResolverInvalidID",
+    "signature": "public const System.Int32 ResolverInvalidID = -1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "-1"
+  },
+  {
+    "id": "constant:Electron2D.IP.ResolverMaxQueries()",
+    "kind": "constant",
+    "declaringType": "Electron2D.IP",
+    "name": "ResolverMaxQueries",
+    "signature": "public const System.Int32 ResolverMaxQueries = 256",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "256"
+  },
+  {
     "id": "constant:Electron2D.Image.MaxHeight()",
     "kind": "constant",
     "declaringType": "Electron2D.Image",
@@ -17873,6 +17965,40 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.IPInterfaceInfo..ctor(System.String,System.String,System.String,System.String[])",
+    "kind": "constructor",
+    "declaringType": "Electron2D.IPInterfaceInfo",
+    "name": ".ctor",
+    "signature": "public IPInterfaceInfo(System.String Name, System.String Friendly, System.String Index, System.String[] Addresses)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "Name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "Friendly",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "Index",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "Addresses",
+        "type": "System.String[]",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -31657,6 +31783,58 @@
     "value": "9"
   },
   {
+    "id": "enumValue:Electron2D.IPType.Any()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.IPType",
+    "name": "Any",
+    "signature": "public const Electron2D.IPType Any = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.IPType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.IPType.IPv4()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.IPType",
+    "name": "IPv4",
+    "signature": "public const Electron2D.IPType IPv4 = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.IPType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.IPType.IPv6()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.IPType",
+    "name": "IPv6",
+    "signature": "public const Electron2D.IPType IPv6 = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.IPType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.IPType.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.IPType",
+    "name": "None",
+    "signature": "public const Electron2D.IPType None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.IPType",
+    "value": "0"
+  },
+  {
     "id": "enumValue:Electron2D.Image.ASTCFormat.Format4X4()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Image.ASTCFormat",
@@ -44265,6 +44443,58 @@
     "parameters": [],
     "returnType": "Electron2D.ReplicationMode",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ResolverStatus.Done()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ResolverStatus",
+    "name": "Done",
+    "signature": "public const Electron2D.ResolverStatus Done = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ResolverStatus",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ResolverStatus.Error()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ResolverStatus",
+    "name": "Error",
+    "signature": "public const Electron2D.ResolverStatus Error = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ResolverStatus",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ResolverStatus.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ResolverStatus",
+    "name": "None",
+    "signature": "public const Electron2D.ResolverStatus None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ResolverStatus",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ResolverStatus.Waiting()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ResolverStatus",
+    "name": "Waiting",
+    "signature": "public const Electron2D.ResolverStatus Waiting = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ResolverStatus",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.ResourceLoader.CacheMode.Ignore()",
@@ -100194,6 +100424,329 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IP.ClearCache(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.IP",
+    "name": "ClearCache",
+    "signature": "public static System.Void ClearCache(System.String host = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "host",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IP.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.IP",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IP.EraseResolveItem(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.IP",
+    "name": "EraseResolveItem",
+    "signature": "public static System.Void EraseResolveItem(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IP.GetLocalAddresses()",
+    "kind": "method",
+    "declaringType": "Electron2D.IP",
+    "name": "GetLocalAddresses",
+    "signature": "public static System.String[] GetLocalAddresses()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IP.GetLocalInterfaces()",
+    "kind": "method",
+    "declaringType": "Electron2D.IP",
+    "name": "GetLocalInterfaces",
+    "signature": "public static Electron2D.IPInterfaceInfo[] GetLocalInterfaces()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.IPInterfaceInfo[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IP.GetResolveItemAddress(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.IP",
+    "name": "GetResolveItemAddress",
+    "signature": "public static System.String GetResolveItemAddress(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IP.GetResolveItemAddresses(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.IP",
+    "name": "GetResolveItemAddresses",
+    "signature": "public static System.String[] GetResolveItemAddresses(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IP.GetResolveItemStatus(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.IP",
+    "name": "GetResolveItemStatus",
+    "signature": "public static Electron2D.ResolverStatus GetResolveItemStatus(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ResolverStatus",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IP.ResolveHostname(System.String,Electron2D.IPType)",
+    "kind": "method",
+    "declaringType": "Electron2D.IP",
+    "name": "ResolveHostname",
+    "signature": "public static System.String ResolveHostname(System.String host, Electron2D.IPType type = Any)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "host",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "Electron2D.IPType",
+        "default": "Any"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IP.ResolveHostnameAddresses(System.String,Electron2D.IPType)",
+    "kind": "method",
+    "declaringType": "Electron2D.IP",
+    "name": "ResolveHostnameAddresses",
+    "signature": "public static System.String[] ResolveHostnameAddresses(System.String host, Electron2D.IPType type = Any)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "host",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "Electron2D.IPType",
+        "default": "Any"
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IP.ResolveHostnameQueueItem(System.String,Electron2D.IPType)",
+    "kind": "method",
+    "declaringType": "Electron2D.IP",
+    "name": "ResolveHostnameQueueItem",
+    "signature": "public static System.Int32 ResolveHostnameQueueItem(System.String host, Electron2D.IPType type = Any)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "host",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "Electron2D.IPType",
+        "default": "Any"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IP.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.IP",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IPInterfaceInfo.Deconstruct(ref System.String,ref System.String,ref System.String,ref System.String[])",
+    "kind": "method",
+    "declaringType": "Electron2D.IPInterfaceInfo",
+    "name": "Deconstruct",
+    "signature": "public System.Void Deconstruct(out System.String Name, out System.String Friendly, out System.String Index, out System.String[] Addresses)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "Name",
+        "type": "ref System.String",
+        "default": null
+      },
+      {
+        "name": "Friendly",
+        "type": "ref System.String",
+        "default": null
+      },
+      {
+        "name": "Index",
+        "type": "ref System.String",
+        "default": null
+      },
+      {
+        "name": "Addresses",
+        "type": "ref System.String[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IPInterfaceInfo.Equals(Electron2D.IPInterfaceInfo)",
+    "kind": "method",
+    "declaringType": "Electron2D.IPInterfaceInfo",
+    "name": "Equals",
+    "signature": "public virtual System.Boolean Equals(Electron2D.IPInterfaceInfo other)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "other",
+        "type": "Electron2D.IPInterfaceInfo",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IPInterfaceInfo.Equals(System.Object)",
+    "kind": "method",
+    "declaringType": "Electron2D.IPInterfaceInfo",
+    "name": "Equals",
+    "signature": "public override System.Boolean Equals(System.Object obj)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "obj",
+        "type": "System.Object",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IPInterfaceInfo.GetHashCode()",
+    "kind": "method",
+    "declaringType": "Electron2D.IPInterfaceInfo",
+    "name": "GetHashCode",
+    "signature": "public override System.Int32 GetHashCode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.IPInterfaceInfo.ToString()",
+    "kind": "method",
+    "declaringType": "Electron2D.IPInterfaceInfo",
+    "name": "ToString",
+    "signature": "public override System.String ToString()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -196401,6 +196954,54 @@
     "value": null
   },
   {
+    "id": "operator:Electron2D.IPInterfaceInfo.op_Equality(Electron2D.IPInterfaceInfo,Electron2D.IPInterfaceInfo)",
+    "kind": "operator",
+    "declaringType": "Electron2D.IPInterfaceInfo",
+    "name": "op_Equality",
+    "signature": "public static System.Boolean op_Equality(Electron2D.IPInterfaceInfo left, Electron2D.IPInterfaceInfo right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.IPInterfaceInfo",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.IPInterfaceInfo",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.IPInterfaceInfo.op_Inequality(Electron2D.IPInterfaceInfo,Electron2D.IPInterfaceInfo)",
+    "kind": "operator",
+    "declaringType": "Electron2D.IPInterfaceInfo",
+    "name": "op_Inequality",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.IPInterfaceInfo left, Electron2D.IPInterfaceInfo right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.IPInterfaceInfo",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.IPInterfaceInfo",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "operator:Electron2D.ImageMetrics.op_Equality(Electron2D.ImageMetrics,Electron2D.ImageMetrics)",
     "kind": "operator",
     "declaringType": "Electron2D.ImageMetrics",
@@ -214476,6 +215077,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.IPInterfaceInfo.Addresses()",
+    "kind": "property",
+    "declaringType": "Electron2D.IPInterfaceInfo",
+    "name": "Addresses",
+    "signature": "public System.String[] Addresses { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.IPInterfaceInfo.Friendly()",
+    "kind": "property",
+    "declaringType": "Electron2D.IPInterfaceInfo",
+    "name": "Friendly",
+    "signature": "public System.String Friendly { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.IPInterfaceInfo.Index()",
+    "kind": "property",
+    "declaringType": "Electron2D.IPInterfaceInfo",
+    "name": "Index",
+    "signature": "public System.String Index { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.IPInterfaceInfo.Name()",
+    "kind": "property",
+    "declaringType": "Electron2D.IPInterfaceInfo",
+    "name": "Name",
+    "signature": "public System.String Name { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

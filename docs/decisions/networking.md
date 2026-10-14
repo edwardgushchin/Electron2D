@@ -1,6 +1,6 @@
 # Electron2D networking decisions
 
-Last updated: 2026-10-10
+Last updated: 2026-10-14
 
 This bounded log owns native stream and packet transport behavior. The [decision index](index.md) routes other work; current classes and [networking](../domains/networking.md) describe the executable surface.
 
@@ -167,3 +167,11 @@ ENetConnection owns native host/transport state, ENetPacketPeer borrows native p
 ENetMultiplayerPeer provides actual server/client/mesh behavior for existing SceneMultiplayer/RPC/replication consumers. Preserve reserved zero-channel mode separation, positive negotiated channels, received metadata, uint32 connection identities, topology relay support and targeting. Fix server maxChannels/inBandwidth parameter forwarding. Mesh owns the borrowed host's active protocol lifetime and destroys it on Close while preserving the object. Commit membership/lifecycle before signals, aggregate callbacks, detect borrowed reset/disposal, suppress forced local events and invalidate iterations after callback Close/recreation. Existing DTLS sessions internally accept ENet datagrams/MTU without widening the standalone public 488-byte API.
 
 ENetTests verifies local native IPv4/IPV6, all codecs/fragmentation, DTLS, tuning/stats/budgets/refusal/loss retry, two-client modes/routing, mesh and public SceneTree/SceneMultiplayer workflows, plus the complete existing spawn/sync/delta/visibility/RPC/cleanup scenario on the ENet transport. A separate stock Unix ENet process checks wire/teardown independent of the socket adapter. Sixty-four prepared active/idle intervals allocate zero managed bytes. Native allocation/routed/browser/foreign/performance and human/editor/rendered acceptance stay separate. See the [complete ENet component](../components/enet.md).
+
+### Process-wide address resolution
+
+IP adds one permanent ElectronObject with static public operations and named Engine registration under ADR 0095. ResolverStatus and IPType are distinct top-level value domains. Typed IPInterfaceInfo snapshots replace adapter dictionaries with Name, Friendly, Index (decimal string) and caller-owned address arrays; host-provided IPv6 scope remains part of an address string. Native lookup and interface discovery use the private .NET host backend; browser native DNS/interface calls report the missing capability, while literal parsing is portable. Foreign execution remains a platform gate.
+
+The cache uses exact hostname spelling and requested family; successful results retain host order and remove duplicates. None and Any preserve unspecified-family lookup. Public blocking resolution returns an empty address/array on a native DNS failure, matching the source's no-address result; invalid arguments and unavailable host operations retain typed exceptions. Transport establishment still requires an address and raises its existing typed errors. TCP/UDP/ENet hostname helpers and HTTP asynchronous resolution share this cache/backend instead of resolving independently.
+
+All queue/status/cache operations are lock-serialized. The 256 prepared slots remain occupied through Done/Error until erased; capacity exhaustion returns ResolverInvalidID. Uncached lookups are cold asynchronous host work. Erasure retires slot identity before cancellation; generations prevent a late response from being published into a reused slot or under another hostname. This corrects the pinned status-only completion check. Clearing caches leaves queue results intact but prevents older in-flight work from repopulating removed cache entries. Snapshot arrays are caller-owned; prepared successful cache/string/status/queue/erase work does not allocate after warmup. DNS, cold tasks, interface discovery, snapshots and native allocator costs lie outside that interval.

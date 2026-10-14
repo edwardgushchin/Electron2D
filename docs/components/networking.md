@@ -1,6 +1,6 @@
 # Native streams and packets
 
-Last updated: 2026-10-06
+Last updated: 2026-10-14
 
 ## Scope and owned types
 
@@ -47,3 +47,7 @@ Consumer-defined transports inherit StreamPeer or PacketPeer and override typed 
 [Typed multiplayer transports](multiplayer.md) now extend PacketPeer with identity, next-packet metadata, managed extension hooks and offline/WS/WSS transport owners. Higher scene multiplayer dispatch and other transport backends remain separate.
 
 [Native ENet](enet.md) adds executable host/peer and server/client/mesh transport with real delivery modes, negotiated channels, DTLS and the existing scene consumers.
+
+## Shared address resolution
+
+The [IP service](../classes/IP.md) and [address-resolution component](../components/address-resolution.md) now retain the hostname/family cache and bounded asynchronous queue. Existing transport hostname helpers and HTTP asynchronous resolution use this common backend; cold DNS and connection setup remain outside warmed polling budgets. Engine named lookup includes the permanent IP object and rejects disposal/unregistration.

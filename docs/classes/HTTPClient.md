@@ -1,6 +1,6 @@
 # HTTPClient
 
-Last updated: 2026-10-04
+Last updated: 2026-10-14
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.HTTPClient`. **Inherits:** [ElectronObject](ElectronObject.md). **Source:** [HTTPClient.cs](../../src/Core/Networking/HTTPClient.cs).
 
@@ -340,3 +340,7 @@ Remarks: This method can run concurrently in multiple callers and can race with 
 [HTTPTests](../../tests/Electron2D.Tests/HTTPTests.cs) verifies the exercised native Linux IPv4/DNS/TLS/proxy and public scene/worker paths, fragmented binary/framing/codec/security edges and prepared managed-allocation intervals. Native codec internals, real routed throughput, other-platform/browser delivery and owner acceptance remain separate gates. See [coverage](../coverage/classes/HTTPClient.md).
 
 The WebSocket client consumer reuses this HTTP upgrade path and checks the parsed protocol version through an internal property; the public HTTP status/header/body contract stays as above. See [WebSocket](../components/websocket.md).
+
+## Shared address resolution
+
+The [IP service](../classes/IP.md) and [address-resolution component](../components/address-resolution.md) now retain the hostname/family cache and bounded asynchronous queue. Existing transport hostname helpers and HTTP asynchronous resolution use this common backend; cold DNS and connection setup remain outside warmed polling budgets. Engine named lookup includes the permanent IP object and rejects disposal/unregistration.

@@ -1,6 +1,6 @@
 # Networking
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 ## Responsibility and public surface
 
@@ -59,3 +59,7 @@ now draws remote interpolation and local correction smoothing in a real window
 while CPU authority/late client stay headless. Public snapshot and pixel checks
 verify visible separation without physical-state mutation; renderer choice and
 window FPS/allocation reporting remain separate from physics/replay metrics.
+
+## Shared address resolution
+
+The [IP service](../classes/IP.md) and [address-resolution component](../components/address-resolution.md) now retain the hostname/family cache and bounded asynchronous queue. Existing transport hostname helpers and HTTP asynchronous resolution use this common backend; cold DNS and connection setup remain outside warmed polling budgets. Engine named lookup includes the permanent IP object and rejects disposal/unregistration.

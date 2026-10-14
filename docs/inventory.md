@@ -1632,3 +1632,14 @@ contact/pin convergence use nineteen complete 128-warmup/128-measured brackets
 at zero managed allocation. Registered contact-cache, arbitrary coupled/custom,
 full inherited/extension/network and native/platform/performance acceptance remain
 open.
+
+## Address resolution
+
+| Domain | Component | Type | Source | State | Behavior |
+| --- | --- | --- | --- | --- | --- |
+| [Networking](domains/networking.md) | [Address resolution](components/address-resolution.md) | [IP](classes/IP.md) | [src/Core/Networking/IP.cs](../src/Core/Networking/IP.cs) | Current | Retained static DNS/cache/256-slot queue and native interface service. |
+| [Networking](domains/networking.md) | [Address resolution](components/address-resolution.md) | [IPType](classes/IPType.md) | [src/Core/Networking/IPType.cs](../src/Core/Networking/IPType.cs) | Current | None/IPv4/IPv6/Any family selection. |
+| [Networking](domains/networking.md) | [Address resolution](components/address-resolution.md) | [ResolverStatus](classes/ResolverStatus.md) | [src/Core/Networking/IPType.cs](../src/Core/Networking/IPType.cs) | Current | None/Waiting/Done/Error queue phases. |
+| [Networking](domains/networking.md) | [Address resolution](components/address-resolution.md) | [IPInterfaceInfo](classes/IPInterfaceInfo.md) | [src/Core/Networking/IPInterfaceInfo.cs](../src/Core/Networking/IPInterfaceInfo.cs) | Current | Typed caller-owned adapter snapshot. |
+
+IP.API.cs supplies the public static delegates; Engine registers the retained identity. NetworkSockets and HTTPClient consume the same backend/cache. Internal controlled resolver fixtures remain within runtime/tests.

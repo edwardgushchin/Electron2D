@@ -1,6 +1,6 @@
 # StreamPeerTCP
 
-Last updated: 2026-10-04
+Last updated: 2026-10-14
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.StreamPeerTCP`.
 
@@ -115,3 +115,7 @@ enabled: Whether to bypass Nagle aggregation.
 [NetworkingTests](../../tests/Electron2D.Tests/NetworkingTests.cs) verifies the exercised native Linux x64 IPv4/IPv6 loopback and UDS paths, binary/framing/queue edges, lifecycle, owner checks, scene request/reply and warmed allocation boundaries. Native allocator totals, other hosts/browser transport, real routed traffic, network throughput and owner acceptance remain unverified. Dynamic-value wire encoding is excluded under ADR 0001; raw typed bytes are executable. See [coverage](../coverage/classes/StreamPeerTCP.md).
 
 HTTP address-fallback verification fixes local-port capture during implicit binding: the native endpoint is queried before starting nonblocking connect, so later Poll retains the pending connection failure for candidate fallback. HTTPTests exercises localhost with an IPv4 listener; existing native TCP/IPv6 tests remain applicable.
+
+## Shared address resolution
+
+The [IP service](../classes/IP.md) and [address-resolution component](../components/address-resolution.md) now retain the hostname/family cache and bounded asynchronous queue. Existing transport hostname helpers and HTTP asynchronous resolution use this common backend; cold DNS and connection setup remain outside warmed polling budgets. Engine named lookup includes the permanent IP object and rejects disposal/unregistration.

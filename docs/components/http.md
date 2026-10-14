@@ -1,6 +1,6 @@
 # HTTP transfers and stream compression
 
-Last updated: 2026-10-04
+Last updated: 2026-10-14
 
 ## Public surface
 
@@ -37,3 +37,7 @@ Setup, request construction, DNS, TLS handshakes, parsing/header snapshots, aggr
 [HTTPTests](../../tests/Electron2D.Tests/HTTPTests.cs) exercises fragmented headers/fixed/chunked/close bodies, informational/headerless/HEAD/CONNECT behavior, chunk extensions/trailers, duplicate/ambiguous/injected fields, query escaping and caller-owned transport lifetime. Native TCP/DNS fallback, forward proxy, CONNECT tunnel and independent SslStream HTTPS server execute on loopback. Scene and worker tests verify owner-thread/idle completion, redirects, incremental gzip, zip-bomb limits, truncated gzip rejection, atomic file preservation/success, timeout/cancel/tree exit, reentry and PackedScene configuration. Independent BCL gzip/zlib decoding verifies compressed wire output; fragmented native decoding verifies checksums/end status. 64 HTTP body-span/poll and 64 gzip member/decode/read/reset cycles each measure zero managed bytes after preparation.
 
 Native codec allocator totals, routed network conditions/throughput, foreign targets/browser, authenticated real-world proxies and owner acceptance remain separate gates. Network checks do not establish rendered output, editor tooling or unified agent/project workflows.
+
+## Shared address resolution
+
+The [IP service](../classes/IP.md) and [address-resolution component](../components/address-resolution.md) now retain the hostname/family cache and bounded asynchronous queue. Existing transport hostname helpers and HTTP asynchronous resolution use this common backend; cold DNS and connection setup remain outside warmed polling budgets. Engine named lookup includes the permanent IP object and rejects disposal/unregistration.

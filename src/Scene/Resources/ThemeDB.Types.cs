@@ -181,6 +181,7 @@ public sealed partial class ThemeDB
         ["HTTPClient"] = ["HTTPClient", "ElectronObject"],
         ["HTTPRequest"] = ["HTTPRequest", "Node", "ElectronObject"],
         ["HashingContext"] = ["HashingContext", "ElectronObject"],
+        ["IP"] = ["IP", "ElectronObject"],
         ["Image"] = ["Image", "Resource", "ElectronObject"],
         ["ImageFormatLoader"] = ["ImageFormatLoader", "ElectronObject"],
         ["ImageFormatLoaderExtension"] = ["ImageFormatLoaderExtension", "ImageFormatLoader", "ElectronObject"],

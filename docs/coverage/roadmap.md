@@ -107,7 +107,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: compressed array-file parsing/decoding or direct compressed native upload, source format/mipmap ownership and reproducible sampling over the executable TextureArray pipeline (ADR 0028). | 2 |
 | Trigger: first compressed-texture import, decoder and verified GPU sampling slice (ADRs 0028 and 0039). | 2 |
 | Trigger: first typed missing-asset placeholder and loader slice (ADRs 0013 and 0023). | 2 |
-| Trigger: first typed networking, address-resolution and RPC slice. | 2 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
 | ADR 0094: Typed MultiplayerPeer now executes. Requires executable WebRTCPeerConnection/DataChannel SDP/ICE/DTLS/SCTP host integration and an owned WebRTC multiplayer cohort. | 1 |
@@ -129,6 +128,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed 2D mesh-data and MeshInstance2D rendering slice; audit 3D-only members individually (ADR 0028). | 1 |
 | Trigger: first typed 2D navigation and pathfinding slice. | 1 |
 | Trigger: first typed GUI DPI-scale and theme-texture slice (ADR 0028). | 1 |
+| Trigger: first typed networking, address-resolution and RPC slice. | 1 |
 | Separate product-scope decision for each of 1 currently unassigned families; see their catalog pages for exact names. | 1 |
 
 Each [catalog entry](catalog.md) opens the complete member table. Excluded rows have an accepted product reason and no implementation task.

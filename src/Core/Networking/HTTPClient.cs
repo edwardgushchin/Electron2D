@@ -73,7 +73,7 @@ public class HTTPClient : ElectronObject
         try
         {
             if (IPAddress.TryParse(_serverHost, out var address)) { _addresses = [address]; StartNextAddress(); }
-            else { _resolveCancel = new(); _resolve = Dns.GetHostAddressesAsync(_serverHost, AddressFamily.Unspecified, _resolveCancel.Token); _status = HTTPStatus.Resolving; }
+            else { _resolveCancel = new(); _resolve = IP.Service.ResolveTransportAddresses(_serverHost, _resolveCancel.Token); _status = HTTPStatus.Resolving; }
         }
         catch { Fail(HTTPStatus.CantConnect); throw; }
     }

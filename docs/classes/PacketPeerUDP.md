@@ -1,6 +1,6 @@
 # PacketPeerUDP
 
-Last updated: 2026-10-06
+Last updated: 2026-10-14
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.PacketPeerUDP`.
 
@@ -263,3 +263,7 @@ Queue overflow or traffic for another shared-server endpoint can leave this peer
 [NetworkingTests](../../tests/Electron2D.Tests/NetworkingTests.cs) verifies the exercised native Linux x64 IPv4/IPv6 loopback and UDS paths, binary/framing/queue edges, lifecycle, owner checks, scene request/reply and warmed allocation boundaries. Native allocator totals, other hosts/browser transport, real routed traffic, network throughput and owner acceptance remain unverified. Dynamic-value wire encoding is excluded under ADR 0001; raw typed bytes are executable. See [coverage](../coverage/classes/PacketPeerUDP.md).
 
 A [DTLS packet session](PacketPeerDTLS.md) may borrow this connected endpoint. It captures the internal connection generation; Close/listener detachment/reopening invalidates that session without transferring UDP disposal. The caller preserves exclusive raw packet access while DTLS is attached.
+
+## Shared address resolution
+
+The [IP service](../classes/IP.md) and [address-resolution component](../components/address-resolution.md) now retain the hostname/family cache and bounded asynchronous queue. Existing transport hostname helpers and HTTP asynchronous resolution use this common backend; cold DNS and connection setup remain outside warmed polling budgets. Engine named lookup includes the permanent IP object and rejects disposal/unregistration.

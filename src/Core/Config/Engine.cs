@@ -90,6 +90,8 @@ public sealed partial class Engine : ElectronObject
         _singletonNames.Add(nameof(WorkerThreadPool));
         _singletons.Add(nameof(ProjectSettings), ProjectSettings.Service);
         _singletonNames.Add(nameof(ProjectSettings));
+        _singletons.Add(nameof(IP), IP.Service);
+        _singletonNames.Add(nameof(IP));
         _singletons.Add(nameof(Input), Input.Service);
         _singletonNames.Add(nameof(Input));
         _singletons.Add(nameof(InputMap), InputMap.Service);
@@ -329,6 +331,7 @@ public sealed partial class Engine : ElectronObject
             string.Equals(name, nameof(WorkerThreadPool), StringComparison.Ordinal) ||
             string.Equals(name, nameof(Engine), StringComparison.Ordinal) ||
             string.Equals(name, nameof(ProjectSettings), StringComparison.Ordinal) ||
+            string.Equals(name, nameof(IP), StringComparison.Ordinal) ||
             string.Equals(name, nameof(Input), StringComparison.Ordinal) ||
             string.Equals(name, nameof(InputMap), StringComparison.Ordinal) ||
             string.Equals(name, nameof(ResourceLoader), StringComparison.Ordinal) ||

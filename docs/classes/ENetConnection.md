@@ -1,6 +1,6 @@
 # ENetConnection
 
-Last updated: 2026-10-04
+Last updated: 2026-10-14
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.ENetConnection`. **Source:** [ENetConnection.cs](../../src/Core/Networking/ENetConnection.cs).
 
@@ -288,3 +288,7 @@ This method can run concurrently in multiple callers and can race with another c
 ## Lifecycle, verification and limits
 
 ENetTests verifies native host/peer and multiplayer flows through public API, including the scene consumer. Connection/setup/snapshots allocate; prepared owner-thread packet/span/service/poll intervals reuse managed storage. Native core packet queues and codec internals allocate separately. Linux x64 execution and deployed native payload are checked; Linux ARM64, foreign/browser/routed performance and human/editor/rendered acceptance remain unverified.
+
+## Shared address resolution
+
+The [IP service](../classes/IP.md) and [address-resolution component](../components/address-resolution.md) now retain the hostname/family cache and bounded asynchronous queue. Existing transport hostname helpers and HTTP asynchronous resolution use this common backend; cold DNS and connection setup remain outside warmed polling budgets. Engine named lookup includes the permanent IP object and rejects disposal/unregistration.
