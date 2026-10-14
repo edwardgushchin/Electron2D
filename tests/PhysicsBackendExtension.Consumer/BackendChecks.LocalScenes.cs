@@ -22,6 +22,7 @@ public static partial class BackendChecks
         public Resource[] References { get; set; } = [];
         public LocalSceneData? Peer { get; set; }
         internal int SetupCount;
+        internal bool TranslationReadyAtSetup;
         internal static int Retirements;
         internal bool UnboundAtRetirement;
         internal bool ThrowOnSetup;
@@ -39,6 +40,8 @@ public static partial class BackendChecks
         protected override void OnSetupLocalToScene()
         {
             SetupCount++;
+            TranslationReadyAtSetup = !CanTranslateMessages && TranslationDomain == StoredResourceDomain &&
+                References.OfType<Shape>().All(s => !s.CanTranslateMessages && s.TranslationDomain == StoredResourceDomain);
             Check(GetLocalScene() is LocalSceneRoot root && ReferenceEquals(root.Data, this) && !root.IsInsideTree &&
                 ReferenceEquals(Peer, this), "Local setup sees the complete detached root and cyclic resource graph");
             if (ThrowOnSetup) throw new InvalidOperationException("Expected local resource setup failure.");
@@ -69,10 +72,10 @@ public static partial class BackendChecks
             Check(!retiredRoot.TryGetTarget(out _) && retained.GetLocalScene() is null,
                 "A retained local resource must not keep its unowned scene root alive");
         }
-        using var circle = new CircleShape { Radius = 3, ResourceLocalToScene = true };
+        using var circle = new CircleShape { Radius = 3, ResourceLocalToScene = true, CanTranslateMessages = false, TranslationDomain = StoredResourceDomain };
         using var shared = new PhysicsMaterial { Friction = .4f }; shared.ResourcePath = "local-scenes-material";
         using var builtInShared = new PhysicsMaterial { Friction = .6f };
-        using var data = new LocalSceneData { ResourceLocalToScene = true, References = [circle, shared, circle, builtInShared] };
+        using var data = new LocalSceneData { ResourceLocalToScene = true, References = [circle, shared, circle, builtInShared], CanTranslateMessages = false, TranslationDomain = StoredResourceDomain };
         data.Peer = data;
         using var source = new LocalSceneRoot { Name = "Template", Data = data };
         for (var i = 0; i < 2; i++)
@@ -102,6 +105,11 @@ public static partial class BackendChecks
             ReferenceEquals(firstData.GetLocalScene(), first) && ReferenceEquals(secondData.GetLocalScene(), second),
             "Each scene receives one independent local resource setup");
         var firstCircle = (CircleShape)firstData.References[0]; var secondCircle = (CircleShape)secondData.References[0];
+        Check(firstData.TranslationReadyAtSetup && secondData.TranslationReadyAtSetup &&
+            !firstData.CanTranslateMessages && !secondData.CanTranslateMessages && !firstCircle.CanTranslateMessages && !secondCircle.CanTranslateMessages &&
+            firstData.TranslationDomain == StoredResourceDomain && secondData.TranslationDomain == StoredResourceDomain &&
+            firstCircle.TranslationDomain == StoredResourceDomain && secondCircle.TranslationDomain == StoredResourceDomain,
+            "Local resource graphs preserve inherited stored state before setup and physical scene use");
         Check(firstCircle != circle && firstCircle != secondCircle && firstData.References[2] == firstCircle &&
             firstData.References[1] == shared && secondData.References[1] == shared && shared.GetLocalScene() is null &&
             first.GetNode<CollisionShape>("Body0/Shape").Shape == firstCircle && first.GetNode<CollisionShape>("Body1/Shape").Shape == firstCircle,

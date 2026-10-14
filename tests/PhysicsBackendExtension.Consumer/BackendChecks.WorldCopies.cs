@@ -29,6 +29,7 @@ public static partial class BackendChecks
         using var owned = backend is { } selected ? new World(selected) : new World("WorldCopyBorrowed");
         bound.ResourceName = "bound"; source.ResourceName = "source"; owned.ResourceName = "owned";
         source.ResourceLocalToScene = true;
+        source.CanTranslateMessages = false; source.TranslationDomain = StoredResourceDomain;
         bound.SetPathCache("local://world-copy-bound"); bound.ResourceSceneUniqueID = "bound1";
         owned.SetPathCache("local://world-copy-owned"); owned.ResourceSceneUniqueID = "owned1";
         using var root = new SubViewport { World = bound }; using var circle = new CircleShape { Radius = 2 };
@@ -151,8 +152,8 @@ public static partial class BackendChecks
             Check(MathF.Abs(mover.Position.X - x - 1) < .02f && bound.DirectSpaceState.IntersectPoint(query, hits) == 1 &&
                 hits[0].ColliderRID == mover.GetRID(), "Rejected world copies preserve real simulation and query identity");
         }
-        static (string Name, bool Local, string Path, string SceneID, ulong ID, RID Space, RID Canvas, RID Map) State(World world) =>
+        static (string Name, bool Local, string Path, string SceneID, ulong ID, RID Space, RID Canvas, RID Map, bool Translate, string Domain) State(World world) =>
             (world.ResourceName, world.ResourceLocalToScene, world.ResourcePath, world.ResourceSceneUniqueID,
-                world.InstanceID, world.Space, world.Canvas, world.NavigationMap);
+                world.InstanceID, world.Space, world.Canvas, world.NavigationMap, world.CanTranslateMessages, world.TranslationDomain);
     }
 }

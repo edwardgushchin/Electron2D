@@ -28,6 +28,8 @@ Resource lifetime uses the managed runtime together with [`ElectronObject.Dispos
 counter is exposed. Base state is safe for concurrent reads and serialized writes, but derived resource state and
 callbacks have no implicit synchronization or thread affinity.
 
+Stored base state includes inherited `ElectronObject.CanTranslateMessages` and `TranslationDomain` together with resource name and locality. Shallow/deep duplicates, scene-local resource graphs and `CopyFromResource` retain that policy. A successful copy publishes its coalesced `Changed` event after inherited settings and custom stored state are applied. Path/scene identity and runtime subscribers retain their separate ownership rules.
+
 ## Examples
 
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
