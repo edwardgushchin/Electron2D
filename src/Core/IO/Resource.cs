@@ -327,7 +327,9 @@ public class Resource : ElectronObject
     /// </param>
     /// <returns>A new live resource of the exact same runtime type with an empty path and scene ID.</returns>
     /// <remarks>Stored base state includes inherited translation policy and domain. Resource identity and runtime subscribers are not copied.
-    /// Ordinary nested <see cref="Script"/> assets stay shared, including built-in paths. Explicit force-copy properties retain their separate policy.</remarks>
+    /// Each nested edge selects sharing or duplication before cached targets are considered. A forced copy does not
+    /// replace an ordinary shared reference. Ordinary nested <see cref="Script"/> assets stay shared, including built-in paths.
+    /// Explicit force-copy properties retain their separate policy.</remarks>
     /// <exception cref="InvalidOperationException">A derived duplication factory returns an invalid instance.</exception>
     /// <exception cref="NotSupportedException">A derived resource does not explicitly implement the duplication hooks.</exception>
     /// <exception cref="ObjectDisposedException">This resource is disposing or disposed.</exception>
@@ -339,7 +341,10 @@ public class Resource : ElectronObject
     /// <param name="subresourceMode">Controls which nested resources are duplicated.</param>
     /// <returns>A new live resource of the exact same runtime type with an empty path and scene ID.</returns>
     /// <remarks>
-    /// Repeated and cyclic resource references preserve graph identity. Derived resources remain responsible for
+    /// Repeated and cyclic references across duplicated edges preserve graph identity. Shared edges retain their
+    /// original references, including references to the source root for None or external roots under Internal.
+    /// Selection precedes cached targets, so force-copy order does not change an ordinary edge's policy.
+    /// Derived resources remain responsible for
     /// cloning their typed collection containers and passing nested resources to the appropriate supplied duplication delegate.
     /// Inherited translation policy and domain are copied with stored resource base state.
     /// Ordinary nested <see cref="Script"/> assets stay shared in every mode. Explicit root or force-copy
@@ -829,7 +834,7 @@ public class Resource : ElectronObject
             ArgumentNullException.ThrowIfNull(source);
             source.ThrowIfDisposed();
 
-            if (!_isolateAllResources && source is Script && !source.ResourceLocalToScene)
+            if (!_isolateAllResources && !source.ResourceLocalToScene)
                 return source;
 
             if (_session.TryGetDuplicate(source, out var duplicate))
@@ -944,15 +949,11 @@ public class Resource : ElectronObject
         {
             source.ThrowIfDisposed();
 
-            if (!isRoot && !force && source is Script &&
-                (shouldDuplicate is null || !shouldDuplicate(source)))
+            if (!isRoot && !force && !ShouldDuplicate(source))
                 return source;
 
             if (_duplicates.TryGetValue(source, out var existing))
                 return existing;
-
-            if (!isRoot && !force && !ShouldDuplicate(source))
-                return source;
 
             var lastIssuedID = ElectronObject.LastIssuedInstanceID;
             var target = source.CreateDuplicateInstance();
@@ -992,7 +993,7 @@ public class Resource : ElectronObject
 
         private bool ShouldDuplicate(Resource resource) =>
             deep && (shouldDuplicate?.Invoke(resource) ??
-                (mode == DeepDuplicateMode.All || mode == DeepDuplicateMode.Internal && resource.IsBuiltIn));
+                (resource is not Script && (mode == DeepDuplicateMode.All || mode == DeepDuplicateMode.Internal && resource.IsBuiltIn)));
 
         private static Resource ValidateTarget(Resource source, Resource? target)
         {

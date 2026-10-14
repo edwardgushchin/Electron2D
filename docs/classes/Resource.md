@@ -32,6 +32,8 @@ Stored base state includes inherited `ElectronObject.CanTranslateMessages` and `
 
 Ordinary nested `Script` references retain the same asset under every deep-copy mode, including built-in paths. Force-copy fields and explicit Script root copies create independent wrappers; they do not replace ordinary references even when visited first. Scene instantiation shares non-local ordinary scripts and duplicates local scripts once per scene. Isolated authoring capture keeps independent source snapshots.
 
+Every resource edge selects sharing or duplication before cached targets are used. A prior forced or root copy cannot change an ordinary shared reference. Only selected duplicated edges remap aliases/cycles; shallow/None references and external references under Internal remain original, including a reference back to the source root. All-mode and built-in Internal cycles remap to acquired roots. Scene scopes likewise keep non-local ordinary resources shared regardless of force order.
+
 ## Examples
 
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.

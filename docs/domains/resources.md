@@ -85,7 +85,8 @@ Concrete Shader/ShaderMaterial resources use the internal rendering reflection a
 - Synchronous loader cache decisions serialize; decoding failures preserve existing cached image pixels or font bytes and resource identity. Loaded resources remain caller-owned.
 - Derived resources explicitly define construction and stored-state copying.
 - Common resource copying includes inherited translation policy/domain as stored state, including scene-local duplicates; successful coalesced notifications observe the completed state.
-- Successful duplication preserves graph topology and clears external identity.
+- Successful duplication preserves graph topology across selected duplicated edges and clears their external identity.
+- Per-edge policy is selected before cached targets; only duplicated edges remap aliases/cycles. Shared root/external references remain original, and a forced copy never redirects ordinary shared edges.
 - Ordinary nested Script assets remain shared under deep policy; explicit root/force wrapper copies and scene-local/isolated authoring retain their separate lifetime and source rules.
 - Scene-local duplicates preserve graph topology, receive their owning scene root before setup, run setup once, and are disposed by that root.
 - Failed duplication disposes its complete partial result.

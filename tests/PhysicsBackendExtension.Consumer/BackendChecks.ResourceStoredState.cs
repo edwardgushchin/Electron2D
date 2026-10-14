@@ -14,6 +14,7 @@ public static partial class BackendChecks
             new ConcavePolygonShape { Segments = [Vector2.Zero, new(5, 1), new(5, 1), new(6, 3)] },
             new CustomShape(Annulus.Create(2, 6)), new StoredShape(),
             new PhysicsMaterial { Friction = .6f, Bounce = .4f, Rough = true, Absorbent = true }, world];
+        ResourceEdgePolicy(resources);
         var culture = TranslationServer.Culture;
         using var catalog = new Translation { Locale = "en" }; catalog.AddMessage("storage probe", "translated probe");
         TranslationServer.Culture = CultureInfo.GetCultureInfo("en"); TranslationServer.AddTranslation(catalog, StoredResourceDomain);

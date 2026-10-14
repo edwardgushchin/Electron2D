@@ -13161,14 +13161,15 @@ static void VerifyResources()
 
     using var internalDeep = (TestResource)root.Duplicate(deep: true);
     Require(internalDeep.First is not null && !ReferenceEquals(internalDeep.First, embedded) &&
-            ReferenceEquals(internalDeep.First, internalDeep.Second) && ReferenceEquals(internalDeep.First.First, internalDeep) &&
+            ReferenceEquals(internalDeep.First, internalDeep.Second) && ReferenceEquals(internalDeep.First.First, root) &&
             ReferenceEquals(internalDeep.External, external) && internalDeep.Always is not null &&
             !ReferenceEquals(internalDeep.Always, external) && ReferenceEquals(internalDeep.Never, embedded) &&
             !ReferenceEquals(internalDeep.First.Numbers, embedded.Numbers),
-        "Internal deep duplication must preserve aliases and cycles while sharing external nested resources.");
+        "Internal deep duplication preserves duplicated aliases and shares external edges, including a reference back to its external source root.");
 
     using var allDeep = (TestResource)root.DuplicateDeep(DeepDuplicateMode.All);
     Require(allDeep.External is not null && !ReferenceEquals(allDeep.External, external) &&
+            allDeep.First is not null && ReferenceEquals(allDeep.First.First, allDeep) &&
             ReferenceEquals(allDeep.Always, allDeep.External) && ReferenceEquals(allDeep.Never, embedded) &&
             allDeep.External.ResourcePath.Length == 0,
         "All-mode deep duplication must duplicate external resources once, honor never-copy fields, and clear path identity.");
