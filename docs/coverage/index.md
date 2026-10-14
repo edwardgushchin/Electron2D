@@ -1,6 +1,6 @@
 # API coverage register
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 [Mass-role verification](../components/physics-registered-adapter.md#mass-profiles-across-roles)
 checks scene/raw retained centers, point velocity, inverse values and live geometry
@@ -135,7 +135,7 @@ algorithm coverage and native/foreign acceptance remain open.
 
 [MenuBar](../classes/MenuBar.md) now executes a complete embedded menu strip with direct popup identity, shaped themed RTL headers, keyboard/pointer/hover switching, shortcut gates and child-bound fresh scene/file storage. Its 38 own/inherited-default/theme rows are Implemented; system-global-menu preference/insertion remain precisely Blocked under ADR 0041 and class correspondence retains inherited semantic/editor/native-window services. Linux Wayland GPU and compatibility pass native SDL/pixel checks and 64 warmed title/focus/render frames with zero managed allocation.
 
-[Public joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance) now runs
+[Public joint conformance](../components/physics-joint-policies.md#public-cpugpu-conformance) now runs
 pin/groove/spring, server identity/lifecycle and solver policies through explicitly
 selected CPU and independent GPU worlds. GPU motion queries now honor joint vetoes;
 finite spring caps and complete decay handle extreme coefficients before range
@@ -754,3 +754,9 @@ Registered [collider metadata](../components/physics-registered-adapter.md#initi
 [Integer lighting](../components/local-compute.md#integer-lighting-checkpoint) now executes all raw float/signed/unsigned diffuse, normal and specular combinations, point-light mask atlases and alpha clipping without a CPU pixel bridge. The ordinary and independent-array device resource classes and bindings are implemented; automatic ShaderMaterial lighting and shared format/subresource views retain their exact separate triggers.
 
 [RDShaderFile named versions](../components/local-compute.md#named-compiled-shader-versions) now supplies all five own class/member rows: exact borrowed module selection, copied Unicode scalar-sorted names and independent import diagnostics. Portable aliased graphs, shallow/deep/local copies and fresh-process native compute/graphics consumers execute. Source compilation remains its explicit import/build tool boundary; native allocator totals and other platforms remain unverified.
+
+
+[Network joint continuation](../components/physics-network-example.md#three-joint-families-across-network-correction-2026-10-14)
+checks every pin/groove/spring authority/prediction/replay tick after impaired
+cross-backend portable correction. Coverage states retain their existing scope;
+full hardware/platform/network/performance acceptance remains open.

@@ -59,9 +59,16 @@ internal static class ProcessCheck
                 Check(report.SeparateThread == threaded, "Every process uses the requested numerical thread policy");
                 Check(report.CompletedSteps > report.WarmupSteps && report.WarmSteps + report.WarmReplaySteps <= report.CompletedSteps - report.WarmupSteps,
                     "Every process excludes its own physical warmup before measured samples");
+                Check(report.JointSteps == report.CompletedSteps && report.JointKicks > 0 && report.MaxPinError < .5f && report.MaxGrooveError < .5f && report.MaxSpringLength < 130,
+                    "Every authority/predicted/replayed step executes finite groove and spring constraints under real impulses");
+                if (report.BackendInstrumented && report.Backend == "GPU")
+                    Check(report.GPUDriver.Length > 0 && report.GPUDeviceName.Length > 0 && report.GPUSubmissions > 0 && report.GPUUploadBytes > 0 && report.GPUReadbackBytes > 0 && report.GPUWaitMS > 0,
+                        "GPU client executed measured device submissions and transfers");
                 if (report.BackendInstrumented && report.Backend == "CPU")
                     Check(report.NumericalSteps > 0 && report.NumericalThreadVerified, "Actual CPU intervals run on the requested owner or separate numerical lane");
             }
+            Check(authority.Actors.Length == 14 && authority.Actors.Any(actor => actor.ID == 101) && authority.Actors.Any(actor => actor.ID == 102),
+                "All three joint families and their endpoints survive authority and late-join topology");
             Check(authority.Actors.Any(actor => Math.Abs(actor.AngularVelocity) > .05),
                 "Final authority state carries a real nonzero angular response for cross-backend restoration");
             Check(authority.InvalidHello >= 2 && authority.GenerationCommands >= 2, "Invalid session tokens and stale incarnations are rejected");

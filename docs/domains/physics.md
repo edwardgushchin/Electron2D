@@ -1032,3 +1032,9 @@ Standalone Shape.ResetState uses the same preflight before OnResetState. The pub
 [Copied material revision](../components/physics-registered-adapter.md#copied-material-revision-2026-10-14) now lets existing body polling recover all copied PhysicsMaterial coefficients after an earlier Changed observer fails. The public-only contact consumer covers shared borrower identity, body-local override retirement, archive Replace and analytic real contact/impulse on CPU/GPU/registered serial/separate profiles; copied/file work is outside the strict zero-allocation warm contact bracket. Broader acceptance stays open.
 
 [World copy preflight](../components/worlds.md#world-resource-copy-preflight-2026-10-14) now refuses bound/expired/release-restricted runtime replacement before Resource metadata, reset, ownership and Changed effects. Public-only CPU/GPU/registered serial/separate checks retain aliases, accepted errors, actual simulation/query identity and zero warmed allocations; broader inherited/numerical/native/performance gates remain open.
+
+
+[Network joint continuation](../components/physics-network-example.md#three-joint-families-across-network-correction-2026-10-14)
+checks every pin/groove/spring authority/prediction/replay tick after impaired
+cross-backend portable correction. Coverage states retain their existing scope;
+full hardware/platform/network/performance acceptance remains open.

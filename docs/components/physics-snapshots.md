@@ -397,3 +397,9 @@ count. Its CPU-only Vulkan values are transfer/function evidence, not hardware
 speedup, native allocator totals, real-window FPS or final performance acceptance.
 
 GPU collider replay also retains the compact activity flag, validity and epoch. This is pre-step callback/force eligibility metadata, independent of full Snapshot and authored sensor pose caches. Restore keeps cache epochs aligned with restored space state; explicit edits invalidate activity before subsequent use.
+
+
+[Three networked joint families](physics-network-example.md#three-joint-families-across-network-correction-2026-10-14) now verify pin/groove/spring continuation after
+portable corrections and real replay in separate CPU-authority/GPU-client processes.
+Explicit effort-disabled trajectories validate the guards. Broader graphs, native,
+hardware and final performance acceptance remain open.

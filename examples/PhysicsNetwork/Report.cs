@@ -22,6 +22,11 @@ internal sealed class SessionReport
     public bool RenderedPhysicsPreserved { get; set; }
     public bool BackendInstrumented { get; set; }
     public bool SeparateThread { get; set; }
+    public int JointSteps { get; set; }
+    public int JointKicks { get; set; }
+    public float MaxPinError { get; set; }
+    public float MaxGrooveError { get; set; }
+    public float MaxSpringLength { get; set; }
     public int CompletedSteps { get; set; }
     public int WarmupSteps { get; set; }
     public int NumericalSteps { get; set; }
@@ -107,6 +112,11 @@ internal sealed partial class NetworkSession
         {
             Role = _authority ? "server" : "client",
             Backend = Simulation.World.PhysicsBackend.ToString(),
+            JointSteps = Simulation.JointSteps,
+            JointKicks = Simulation.JointKicks,
+            MaxPinError = Simulation.MaxPinError,
+            MaxGrooveError = Simulation.MaxGrooveError,
+            MaxSpringLength = Simulation.MaxSpringLength,
             CompletedSteps = CompletedSteps,
             WarmupSteps = WarmupSteps,
             Tick = Simulation.Tick,

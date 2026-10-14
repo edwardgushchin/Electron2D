@@ -57,7 +57,7 @@ host additionally records actual CPU numerical intervals and verifies their thre
 against the requested policy. The public-only example reports the captured policy
 without claiming those private measurements. GPU modes require an available device.
 
-The scenario includes moving/jumping players, contact/Area events, a two-body pin,
+The scenario includes moving/jumping players, contact/Area events, a two-body pin, a finite groove and a damped spring with separate fixed anchors,
 sleeping bodies, crate creation at tick 90, removal at 140, ID reuse with a new
 generation at 160, a control-owner change at 240, and a verified sleeper waking at 300. Each client is deliberately
 moved away from its predicted trajectory in position, rotation and angular velocity. The final authoritative state at tick 360
@@ -65,6 +65,14 @@ must agree across processes, including identities, generations, ownership, compl
 pose, linear/angular velocity and sleep. An authority torque impulse at the final
 tick requires a real nonzero angular state in that comparison.
 Invalid session tokens, unowned input and old object generations are rejected.
+
+Every solved authority, predicted and replayed tick checks actual pin anchors,
+finite groove containment and bounded spring response. Small numbered impulses from tick
+120 onward exercise continuation, including after late admission and coalesced corrections. Startup checks
+independently disable each constraint's effort and require its trajectory guard to
+fail. Reports retain joint-step/kick counts and maximum errors. Final topology
+contains all three joints and their endpoints. These checks retain the existing
+exact-once confirmed effects, adverse delivery and .002 final correction bounds.
 
 `NetworkWorld` owns the game scene and lifecycle recipes. `NetworkSession` owns
 bounded command/event histories and peer policy. `NetworkSession.State` applies

@@ -72,3 +72,9 @@ continued constraints retain their bounds; all six warm cases require 0/0 bytes.
 [Off-center spring checks](../components/physics-registered-adapter.md#off-center-spring-anchors-and-portable-joints)
 also retain force/moment/cap and stable damping bounds. GPU executes on llvmpipe;
 hardware, broader geometry/graphs and network acceptance remain open.
+
+
+[Network joint continuation](../components/physics-network-example.md#three-joint-families-across-network-correction-2026-10-14)
+checks every pin/groove/spring authority/prediction/replay tick after impaired
+cross-backend portable correction. Coverage states retain their existing scope;
+full hardware/platform/network/performance acceptance remains open.

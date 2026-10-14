@@ -456,3 +456,88 @@ Instrumented test-host reports include GPUDriver and GPUDeviceName from the actu
 retained compute device. The executable example still consumes only public engine
 APIs; backend introspection remains in PhysicsNetworkProbe. Empty strings in the
 public-only host mean no device observation, not a hardware identity.
+
+
+## Three joint families across network correction (2026-10-14)
+
+The live scenario includes PinJoint, an 80-unit GrooveJoint and a DampedSpringJoint
+with 30-unit rest length, 30 kg/s² stiffness and 8 kg/s damping. Separate fixed
+anchors and four extra endpoints bring final topology to fourteen objects,
+within the existing sixteen-slot budget. The complete manifest validation,
+joint-first retirement/body-first construction, snapshot object census and late
+admission handle every joint role. The wire retains application-owned recipes;
+backend handles and local RIDs do not become network identities.
+
+Numbered impulses from tick 120 onward act on the guided (.5,-.1) and sprung
+(.2,-.1) bodies during authority, prediction and replay. Continuous bounded input
+ensures both fast and coalescing clients exercise post-correction impulse work;
+three isolated tick-specific kicks could already be confirmed before a slow
+client simulates those ticks. Every actual complete tick verifies transformed
+pin-anchor separation, finite groove containment and spring length. Pin/groove
+error must remain below .5 scene units, less than 1/24 of the 12-unit body radius.
+The spring bound is 130 units: gravity gives a 980/30-unit static extension above
+the 30-unit rest length, with room for the specified finite impulses and damped
+transients. Free fall escapes the bound; this is a physical invariant, not a
+requirement for identical CPU/GPU trajectories. Startup checks disable each
+joint's MaxForce and require the real trajectory guard to fail, after one normal
+constrained tick. These checks use the public CPU API without a graphics device.
+
+Reports retain JointSteps, JointKicks, MaxPinError, MaxGrooveError and
+MaxSpringLength. The parent requires checks for every completed authority,
+predicted and replayed step, positive kick counts, all three final joint identities
+and unchanged complete authority correction bounds (.002 for poses/velocities,
+exact identities/generations/owners/epochs/sleep and confirmed event contents).
+Instrumented GPU reports must carry actual device submissions, positive transfer
+bytes and completed waits. CPU numerical interval threading retains its independent
+probe; a GPU solver thread seen in process inventory is lifetime evidence rather
+than a measurement of every numerical invocation.
+
+The implementation retains impaired separate-process ENet, late joining, lifecycle,
+sleep/wake, ownership transfer, history budgets, interpolation/smoothing and strict
+zero warmed owner/all-thread prediction/replay allocation checks. Physical hardware,
+real-window/FPS/native allocator and full physics/performance acceptance remain open.
+
+
+The standalone example disables JSON reflection. Its startup exposed missing
+compiled metadata for built-in MSAA/LCD settings; those schemas now initialize
+and round-trip through public ConfigFile before all network checks. The test host
+and standalone example must both execute, because the reflection-enabled test
+host alone could conceal this startup failure. NativeAOT publication is separate.
+
+
+Four Linux profiles passed on one frozen runtime revision (2026-10-14):
+
+| Host/policy | Final tick / late admission | Warm authority | Warm GPU prediction / replay | Warm late CPU prediction / replay |
+| --- | --- | --- | --- | --- |
+| example-serial | 360 / 123 | 61 | 13 / 41 | 61 / 176 |
+| tests-serial | 900 / 379 | 601 | 19 / 221 | 428 / 1298 |
+| tests-thread | 900 / 353 | 601 | 41 / 487 | 481 / 1468 |
+| example-thread | 900 / 343 | 601 | 68 / 645 | 486 / 1441 |
+
+Every warm sample in the table reports 0/0 owner/all-thread managed bytes.
+The authority applied 197/451/501/511 numbered player commands respectively.
+Maximum pin error was .218727 units, groove error .000031 units and spring
+length 65.817 units; the existing bounds were retained. Every profile delivered
+the complete post-admission authority event sequence exactly once, with final
+fourteen-object identities/poses/velocities/sleep converging at the original bounds.
+
+The longer software-Vulkan profiles use 900 ticks and admission after tick 310.
+An initial 600-tick run admitted its late CPU client at tick 390 and applied only
+136 inputs, below the unchanged >180 gate. Extending the run adds 300 authority
+ticks; no operation, object, tolerance or allocation gate is reduced. The default
+360-tick public example remains checked with admission after tick 90.
+
+Instrumented GPU serial/separate reports retain 643448/1210728 uploaded bytes,
+2253920/4093144 readback bytes and 12562/22458 submissions. Total completed wait
+was 12099.1352/9470.0663 ms. Full-step p50/p95/p99 was
+16.6123/79.9145/82.7428 ms and 14.0340/18.6431/21.3849 ms; correction including
+real replay was 290.1953/740.4986/883.3356 ms and 171.7658/231.8722/279.7625 ms.
+These are impaired software-Vulkan process runs, with other verification work
+overlapping; they establish execution/transfer cost, not isolated scheduling
+benefit or target GPU speed. Process maps show llvmpipe only in the GPU child,
+no NVIDIA library in any game process, and solver threads only in requested
+separate profiles. Both CPU children require strict GPU-startup denial.
+
+Evidence is retained under bin/physics-network-current/2026-10-14/final4.
+The standalone example has JSON reflection disabled and passes its compiled
+MSAA/LCD metadata checks; no NativeAOT publication or window rendering is inferred.

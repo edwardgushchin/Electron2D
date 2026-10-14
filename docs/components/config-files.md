@@ -1,6 +1,6 @@
 # Configuration files component
 
-Last updated: 2026-10-10
+Last updated: 2026-10-14
 
 ## Scope
 
@@ -88,3 +88,9 @@ The directory-destination failure check covers plain, raw-key and password saves
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
 
 Typed WorkerPoolMaxThreads, WorkerPoolLowPriorityThreadRatio and WorkerPoolMaxPendingTasks definitions are registered built-in settings in process-wide and isolated registries. The worker service samples feature overrides only on first submission; running pools retain prepared capacity and thread/priority limits. See [worker execution](worker-pool.md).
+
+
+Built-in MSAA and LCD subpixel settings retain compiled JSON metadata for hosts
+with JSON reflection disabled. The public PhysicsNetwork startup check initializes
+the complete registry and round-trips both enum schemas before its process run.
+This verifies ordinary reflection-disabled managed execution, not a NativeAOT publish.

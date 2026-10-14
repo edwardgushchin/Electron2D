@@ -2,7 +2,7 @@ using Electron2D;
 
 namespace Electron2D.Examples.PhysicsNetwork;
 
-internal enum ObjectKind { Floor, Sensor, Ball, Box, Pin }
+internal enum ObjectKind { Floor, Sensor, Ball, Box, Pin, Anchor, Groove, Spring }
 internal readonly record struct ObjectSpec(ulong ID, uint Generation, ObjectKind Kind, int Owner, uint ControlEpoch,
     Vector2 Spawn, ulong First = 0, ulong Second = 0);
 internal readonly record struct PlayerInput(float Move, bool Jump);
@@ -10,7 +10,7 @@ internal readonly record struct InputCommand(ulong Tick, ulong ID, uint Generati
 internal readonly record struct GameEvent(ulong Sequence, ulong Tick, ulong ID, uint Generation, ulong Other, uint OtherGeneration, int Kind);
 internal enum SimulationPhase { Authority, Prediction, Replay, Correction, Shutdown }
 
-internal sealed class NetworkWorld : IDisposable
+internal sealed partial class NetworkWorld : IDisposable
 {
     internal const int Capacity = 16;
     internal const double FixedStep = 1d / 60;
@@ -56,10 +56,10 @@ internal sealed class NetworkWorld : IDisposable
         for (var i = 0; i < specs.Length; i++)
         {
             var spec = specs[i];
-            if (spec.ID == 0 || spec.Generation == 0 || spec.ControlEpoch == 0 || spec.Owner < 0 || !spec.Spawn.IsFinite() || (uint)spec.Kind > 4)
+            if (spec.ID == 0 || spec.Generation == 0 || spec.ControlEpoch == 0 || spec.Owner < 0 || !spec.Spawn.IsFinite() || (uint)spec.Kind > (uint)ObjectKind.Spring)
                 throw new InvalidDataException("Invalid world object definition.");
             for (var j = 0; j < i; j++) if (specs[j].ID == spec.ID) throw new InvalidDataException("Duplicate world object ID.");
-            if (spec.Kind == ObjectKind.Pin && (!HasBody(specs, spec.First) || !HasBody(specs, spec.Second) || spec.First == spec.Second))
+            if (IsJoint(spec.Kind) && (!HasBody(specs, spec.First) || !HasBody(specs, spec.Second) || spec.First == spec.Second))
                 throw new InvalidDataException("A joint must reference two distinct bodies in the same manifest.");
         }
         for (var pass = 0; pass < 2; pass++)
@@ -73,7 +73,7 @@ internal sealed class NetworkWorld : IDisposable
         for (var pass = 0; pass < 2; pass++)
             foreach (var spec in specs)
             {
-                if ((spec.Kind == ObjectKind.Pin) != (pass == 1)) continue;
+                if (IsJoint(spec.Kind) != (pass == 1)) continue;
                 var actor = Find(spec.ID);
                 if (actor is null) Add(spec);
                 else
@@ -85,7 +85,7 @@ internal sealed class NetworkWorld : IDisposable
             }
     }
     private static bool HasBody(ReadOnlySpan<ObjectSpec> specs, ulong id)
-    { foreach (var spec in specs) if (spec.ID == id) return spec.Kind is ObjectKind.Ball or ObjectKind.Box or ObjectKind.Floor; return false; }
+    { foreach (var spec in specs) if (spec.ID == id) return spec.Kind is ObjectKind.Ball or ObjectKind.Box or ObjectKind.Floor or ObjectKind.Anchor; return false; }
     private static bool SameObject(ObjectSpec first, ObjectSpec second) => first.ID == second.ID && first.Generation == second.Generation &&
         first.Kind == second.Kind && first.Spawn == second.Spawn && first.First == second.First && first.Second == second.Second;
     private void Add(ObjectSpec spec)
@@ -99,6 +99,9 @@ internal sealed class NetworkWorld : IDisposable
             case ObjectKind.Floor:
                 body = new StaticBody { Name = name, Position = spec.Spawn };
                 body.AddChild(new CollisionShape { Shape = _floor }); break;
+            case ObjectKind.Anchor:
+                body = new StaticBody { Name = name, Position = spec.Spawn, CollisionLayer = 0, CollisionMask = 0 };
+                body.AddChild(new CollisionShape { Shape = _circle }); break;
             case ObjectKind.Sensor:
                 var area = new Area { Name = name, Position = spec.Spawn, Monitoring = true };
                 area.AddChild(new CollisionShape { Shape = _region });
@@ -118,6 +121,12 @@ internal sealed class NetworkWorld : IDisposable
                 };
                 rigid.AddChild(new CollisionShape { Shape = spec.Kind == ObjectKind.Ball ? _circle : _box });
                 rigid.BodyEntered += other => Contact(spec.ID, other, 1); body = rigid; break;
+            case ObjectKind.Groove:
+                joint = new GrooveJoint { Name = name, Position = spec.Spawn, NodeA = "../Object" + spec.First, NodeB = "../Object" + spec.Second, Length = 80, InitialOffset = 40 };
+                break;
+            case ObjectKind.Spring:
+                joint = new DampedSpringJoint { Name = name, Position = spec.Spawn, NodeA = "../Object" + spec.First, NodeB = "../Object" + spec.Second, Length = 50, RestLength = 30, Stiffness = 30, Damping = 8 };
+                break;
             case ObjectKind.Pin:
                 joint = new PinJoint { Name = name, Position = spec.Spawn, NodeA = "../Object" + spec.First, NodeB = "../Object" + spec.Second };
                 break;
@@ -151,7 +160,9 @@ internal sealed class NetworkWorld : IDisposable
             body.ApplyCentralForce(new((actor.Held.Move * 100 - body.LinearVelocity.X) * 12, 0));
             if (actor.Held.Jump && actor.LastInputTick == _stepTick && body.Position.Y > 270) body.ApplyCentralImpulse(new(0, -260));
         }
+        KickJoints(_stepTick);
         Tree.PhysicsFrame(FixedStep);
+        CheckJoints();
         if (Tick != _stepTick) throw new InvalidOperationException("Fixed simulation did not advance exactly one tick.");
     }
     private void Contact(ulong id, Node other, int kind)

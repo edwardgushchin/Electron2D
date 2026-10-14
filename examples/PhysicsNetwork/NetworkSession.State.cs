@@ -142,7 +142,7 @@ internal sealed partial class NetworkSession
         if (CorrectionSampleCount < CorrectionSamples.Length) CorrectionSamples[CorrectionSampleCount++] = duration;
     }
     private int CountJoints(int count)
-    { var joints = 0; for (var i = 0; i < count; i++) if (_manifest[i].Kind == ObjectKind.Pin) joints++; return joints; }
+    { var joints = 0; for (var i = 0; i < count; i++) if (NetworkWorld.IsJoint(_manifest[i].Kind)) joints++; return joints; }
     private void PredictStep()
     {
         if (Simulation.Tick >= (ulong)_ticks || Simulation.Tick - _confirmedTick >= History - 1) return;
