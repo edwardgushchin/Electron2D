@@ -5644,6 +5644,11 @@
       "electron2d": "property:Electron2D.ProjectSettings.Physics2DAllowCPUFallback()",
       "reason": "ADR 0054: separately typed opt-in implicit GPU startup fallback, captured with project selection. Denied actual SDL/Vulkan GPU verifies immutable strict worlds, later CPU fallback and requested/actual/cause diagnostics; provider errors and begun steps retain failure without CPU replay.",
       "adr": "ADR 0054"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult.ValidateDisposal()",
+      "reason": "Inherited engine-object disposal preflight preserves motion output owned by the selected implementation while ordinary caller snapshots retain their lifetime.",
+      "adr": "ADRs 0003, 0063, 0103"
     }
   ],
   "statusGroups": [

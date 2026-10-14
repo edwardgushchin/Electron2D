@@ -308,7 +308,9 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <summary>Supplies the selected implementation operation: test body motion.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.
     /// Collision output must retain the requested moving body's identity. The engine validates that identity
-    /// before replacing caller output; a result constructed for another live body is rejected.</remarks>
+    /// before replacing caller output; a result constructed for another live body is rejected.
+    /// The supplied result is borrowed library storage usable only on this hook's owning thread; do not retain or dispose it.
+    /// Failed hooks and invalid output leave caller storage unchanged and permit later reuse. World retirement releases the borrowed result.</remarks>
     protected internal abstract bool TestBodyMotion(RID body, Transform from, Vector2 motion, float margin, bool recoveryAsCollision, ReadOnlySpan<RID> excludedBodies, ReadOnlySpan<ulong> excludedObjects, bool collideSeparationRay, PhysicsTestMotionResult result);
     /// <summary>Supplies the selected implementation operation: finish.</summary>
     /// <remarks>Runs once during owned-world retirement, including failed initialization or simulation. Disposal is still attempted after a Finish error; cleanup errors are retained together.

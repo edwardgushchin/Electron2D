@@ -1085,3 +1085,6 @@ now protects both resources through standalone and selected callbacks, including
 inherited copying/reset and owned RID replacement/retirement. Nested reads and
 error cleanup retain their existing contract; full numerical/foreign/hardware
 acceptance remains open.
+
+
+[Borrowed motion output](../components/physics-registered-adapter.md#borrowed-motion-output-2026-10-14) preserves selected scratch lifetime and owner scope while retaining caller-owned snapshots, error continuation and retirement failures. The inherited disposal preflight is a reviewed C# adaptation; full numerical/foreign/hardware acceptance stays open.

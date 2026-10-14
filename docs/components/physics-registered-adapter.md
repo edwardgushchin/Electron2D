@@ -1531,3 +1531,26 @@ now protects both resources through standalone and selected callbacks, including
 inherited copying/reset and owned RID replacement/retirement. Nested reads and
 error cleanup retain their existing contract; full numerical/foreign/hardware
 acceptance remains open.
+
+
+## Borrowed motion output (2026-10-14)
+
+A registered TestBodyMotion hook receives retained engine-owned output. Its physical
+value getters and SetMotion/SetCollision are usable only during that hook on the
+owning thread; consumer Dispose rejects during or after borrowing. Ordinary public
+construction still creates independently writable/disposable caller snapshots.
+The adapter resets and reuses scratch identity, copies completed values before
+finally clearing the borrowed payload and thread scope, and permits later queries
+after callback or invalid-output failures. Retirement releases scratch even after
+Finish failure and aggregates its disposal errors with the earlier cleanup errors.
+
+The public-only --motion-result-lifetime fixture checks all thirteen getters, both
+fillers and disposal outside a hook and on a worker, normal owner access, exact
+reused identity, failed/invalid output preservation, subsequent queries and scratch
+retirement with simultaneous Finish/Disposed errors. CPU/GPU/registered serial and
+separate profiles run 128 warm/128 measured complete frames with two body-motion
+queries per frame at strict 0/0 owner/all-thread managed bytes. Real numerical motion
+is 256 units within .02; circle first impact is 14 units within .2, covering eight
+refinements over a 40-unit sweep (40/256 = .15625) plus float rounding. Completed
+travel/remainder sum is within .001. GPU uses CPU-only Vulkan; hardware, native,
+foreign, full extension/numerical and performance acceptance remain open.

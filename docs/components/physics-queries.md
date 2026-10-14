@@ -1,8 +1,8 @@
 # Physics server and direct queries component
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
-The [typed result family](../classes/PhysicsRayResult.md#constructor) now has public construction for ray, point, shape and rest results, plus reusable [motion result filling](../classes/PhysicsTestMotionResult.md#setcollision). One shared engine path validates collider RID/kind, logical shape resource and owner/solver/failure access, then samples the current weak object association. Supplied finite geometry is preserved; construction performs no collision calculation. Motion collisions additionally require different bodies in the same live space and a valid fraction bracket. Invalid writes preserve previous output; SetMotion clears collision state. The separate [public API consumer](../../examples/PhysicsResultConstruction/README.md) exercises both built-ins with zero warmed managed allocation. The [runtime probe](../../tests/Electron2D.Tests/PhysicsResultConstructionTests.cs) additionally verifies rejection across the complete result family while the CPU solver owns the world. This implements a required result boundary under ADR 0103; manager registration, custom geometry and extension dispatch remain open.
+The [typed result family](../classes/PhysicsRayResult.md#constructor) now has public construction for ray, point, shape and rest results, plus reusable [motion result filling](../classes/PhysicsTestMotionResult.md#setcollision). One shared engine path validates collider RID/kind, logical shape resource and owner/solver/failure access, then samples the current weak object association. Supplied finite geometry is preserved; construction performs no collision calculation. Motion collisions additionally require different bodies in the same live space and a valid fraction bracket. Invalid writes preserve previous output; SetMotion clears collision state. The separate [public API consumer](../../examples/PhysicsResultConstruction/README.md) exercises both built-ins with zero warmed managed allocation. The [runtime probe](../../tests/Electron2D.Tests/PhysicsResultConstructionTests.cs) additionally verifies rejection across the complete result family while the CPU solver owns the world. This implements a required result boundary under ADR 0103; named registration and typed dispatch now execute; complete numerical-extension and custom geometry acceptance remain open.
 
 [Per-body CCD](cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; the [world adapter](physics-backends.md) also dispatches GPU worlds to their resident CCD path. Full-contract acceptance remains tracked separately.
 
@@ -184,3 +184,6 @@ rejects removal/reindex/readdition before replacing bytes while preserving sampl
 public data and events. In-slot replacement stays valid. CPU/registered serial/
 separate twelve-case verification executes; destination apply remaps tokens, which
 never enter wire data. Current GPU/native and broader topology acceptance stay open.
+
+
+[Borrowed motion output](physics-registered-adapter.md#borrowed-motion-output-2026-10-14) preserves selected scratch lifetime and owner scope while retaining caller-owned snapshots, error continuation and retirement failures. The inherited disposal preflight is a reviewed C# adaptation; full numerical/foreign/hardware acceptance stays open.

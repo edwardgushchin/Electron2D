@@ -1,6 +1,6 @@
 # Physics backend extension decisions
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 <a id="adr-0103"></a>
 ## ADR 0103: Registered world backends and typed extension dispatch
@@ -146,6 +146,13 @@ interception would leave scene behavior and direct queries outside the extension
   RID/shape ownership, finite values, result counts and fractions; it must not trust
   forged backend object identities. Query exclusions are scoped to the current
   synchronous invocation and restored in finally, including nesting and exceptions.
+  The PhysicsTestMotionResult supplied to a motion implementation is reusable
+  engine-owned output, borrowed only on the synchronous hook's owning thread.
+  Physical value access/filling require that scope; inherited identity/lifetime
+  observations retain their ordinary contract. Consumer disposal rejects even after
+  the hook. Copy completed values to caller-owned output before clearing the borrow;
+  world retirement releases scratch and retains its errors alongside Finish/disposal
+  failures. Ordinary publicly constructed results remain caller-owned snapshots.
   Public PhysicsServer.ShapeCollide selects an explicit live space for the two
   resource-pair implementation hook; BodyCollideShape selects the body's actual
   attachment or the detached resource path. Caller spans hold alternating global

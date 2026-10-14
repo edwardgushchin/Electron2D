@@ -100,16 +100,48 @@ public sealed class PhysicsTestMotionParameters : ElectronObject
     }
 }
 
-/// <summary>Caller-owned snapshot of a server body motion test.</summary>
+/// <summary>Contains the completed values of a server body motion test.</summary>
+/// <remarks>Public construction creates caller-owned storage. A selected implementation hook instead receives borrowed
+/// library storage usable only during that hook on its owner thread; do not retain or dispose it. World retirement releases it.</remarks>
 public sealed class PhysicsTestMotionResult : ElectronObject
 {
     private MotionResultData _data;
-    internal MotionResultData Data { get { ThrowIfDisposed(); return _data; } }
+    private readonly bool _implementationOwned;
+    private int _implementationThread, _releaseThread;
+    internal MotionResultData Data { get { EnsureResultAccess(); return _data; } }
+    internal PhysicsTestMotionResult(bool implementationOwned) => _implementationOwned = implementationOwned;
+    internal void BeginImplementationUse()
+    {
+        ThrowIfDisposed();
+        if (!_implementationOwned || _implementationThread != 0) throw new InvalidOperationException("Motion output borrowing is unbalanced.");
+        Volatile.Write(ref _implementationThread, Environment.CurrentManagedThreadId);
+    }
+    internal void EndImplementationUse() { _data = default; Volatile.Write(ref _implementationThread, 0); }
+    internal void ReleaseImplementationResult()
+    {
+        Volatile.Write(ref _releaseThread, Environment.CurrentManagedThreadId);
+        try { Dispose(); }
+        finally { Volatile.Write(ref _releaseThread, 0); }
+    }
+    private void EnsureResultAccess()
+    {
+        ThrowIfDisposed();
+        if (_implementationOwned && Volatile.Read(ref _implementationThread) != Environment.CurrentManagedThreadId)
+            throw new InvalidOperationException("Borrowed motion output requires its active implementation hook on the owning thread.");
+    }
+    /// <summary>Preserves the lifetime of motion output owned by a selected physics implementation.</summary>
+    /// <exception cref="InvalidOperationException">The physics implementation owns this result and has not authorized its retirement.</exception>
+    protected override void ValidateDisposal()
+    {
+        if (_implementationOwned && Volatile.Read(ref _releaseThread) != Environment.CurrentManagedThreadId)
+            throw new InvalidOperationException("A borrowed motion result cannot be disposed by its consumer.");
+        base.ValidateDisposal();
+    }
 
-    /// <summary>Creates an empty result writable by a motion-query implementation.</summary>
+    /// <summary>Creates empty caller-owned output for a motion test or explicit result filling.</summary>
     public PhysicsTestMotionResult() { }
 
-    internal void Set(in MotionResultData data) { ThrowIfDisposed(); _data = data; }
+    internal void Set(in MotionResultData data) { EnsureResultAccess(); _data = data; }
 
     /// <summary>Replaces this result with an unobstructed completed motion.</summary>
     /// <param name="travel">The completed global displacement, including any recovery, in scene units.</param>
@@ -117,9 +149,10 @@ public sealed class PhysicsTestMotionResult : ElectronObject
     /// This method does not execute a motion test and reuses the result's existing storage.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Travel is not finite.</exception>
     /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
+    /// <exception cref="InvalidOperationException">Borrowed implementation output is used outside its owning active hook.</exception>
     public void SetMotion(Vector2 travel)
     {
-        ThrowIfDisposed();
+        EnsureResultAccess();
         if (!travel.IsFinite()) throw new ArgumentOutOfRangeException(nameof(travel));
         _data = new(default, default, 0, 0, 0, default, default, 0, default, travel, default, 1, 1, false);
     }
@@ -143,13 +176,13 @@ public sealed class PhysicsTestMotionResult : ElectronObject
     /// The supplied moving-body identity is preserved; selected motion-query output must use its requested body.</remarks>
     /// <exception cref="ArgumentException">An RID is not a live body, or the moving body is its own collider.</exception>
     /// <exception cref="ArgumentOutOfRangeException">A shape index, vector, depth or fraction is invalid.</exception>
-    /// <exception cref="InvalidOperationException">Bodies do not share a live space, or access violates its guard.</exception>
+    /// <exception cref="InvalidOperationException">Bodies do not share a live space, access violates its guard, or borrowed output is used outside its owning active hook.</exception>
     /// <exception cref="ObjectDisposedException">The result or a selected shape has been disposed.</exception>
     public void SetCollision(RID body, int localShape, RID collider, int colliderShape, Vector2 point,
         Vector2 normal, float depth, Vector2 colliderVelocity, Vector2 travel, Vector2 remainder,
         float safeFraction, float unsafeFraction)
     {
-        ThrowIfDisposed();
+        EnsureResultAccess();
         if (!point.IsFinite()) throw new ArgumentOutOfRangeException(nameof(point));
         if (!normal.IsFinite()) throw new ArgumentOutOfRangeException(nameof(normal));
         if (!colliderVelocity.IsFinite()) throw new ArgumentOutOfRangeException(nameof(colliderVelocity));
@@ -169,53 +202,79 @@ public sealed class PhysicsTestMotionResult : ElectronObject
 
     /// <summary>Returns the live object association captured by the motion test.</summary>
     /// <returns>The borrowed instance, including a generated tile-layer owner, or null when unassigned, disposed or collected.</returns>
-    public ElectronObject? GetCollider() { ThrowIfDisposed(); return _data.ColliderIdentity.Target; }
+    /// <exception cref="InvalidOperationException">Borrowed implementation output is used outside its owning active hook.</exception>
+    /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
+    public ElectronObject? GetCollider() { return Data.ColliderIdentity.Target; }
 
     /// <summary>Returns the sampled object association ID, including server-bound instances.</summary>
     /// <returns>The sampled object instance ID or zero.</returns>
-    public ulong GetColliderID() { ThrowIfDisposed(); return _data.ColliderID; }
+    /// <exception cref="InvalidOperationException">Borrowed implementation output is used outside its owning active hook.</exception>
+    /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
+    public ulong GetColliderID() { return Data.ColliderID; }
 
     /// <summary>Returns the sampled collider RID.</summary>
     /// <returns>An empty RID when no collision occurred.</returns>
-    public RID GetColliderRID() { ThrowIfDisposed(); return _data.ColliderRID; }
+    /// <exception cref="InvalidOperationException">Borrowed implementation output is used outside its owning active hook.</exception>
+    /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
+    public RID GetColliderRID() { return Data.ColliderRID; }
 
     /// <summary>Returns the collider's direct shape-owner index.</summary>
     /// <returns>The index, or zero before a collision.</returns>
-    public int GetColliderShape() { ThrowIfDisposed(); return _data.ColliderShape; }
+    /// <exception cref="InvalidOperationException">Borrowed implementation output is used outside its owning active hook.</exception>
+    /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
+    public int GetColliderShape() { return Data.ColliderShape; }
 
     /// <summary>Returns collider velocity at the contact point in scene units per second.</summary>
     /// <returns>Zero when no collision occurred.</returns>
-    public Vector2 GetColliderVelocity() { ThrowIfDisposed(); return _data.ColliderVelocity; }
+    /// <exception cref="InvalidOperationException">Borrowed implementation output is used outside its owning active hook.</exception>
+    /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
+    public Vector2 GetColliderVelocity() { return Data.ColliderVelocity; }
 
     /// <summary>Returns penetration depth along the contact normal in scene units.</summary>
     /// <returns>Zero when no collision occurred.</returns>
-    public float GetCollisionDepth() { ThrowIfDisposed(); return _data.Depth; }
+    /// <exception cref="InvalidOperationException">Borrowed implementation output is used outside its owning active hook.</exception>
+    /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
+    public float GetCollisionDepth() { return Data.Depth; }
 
     /// <summary>Returns the moving body's direct shape-owner index.</summary>
     /// <returns>The index, or zero when no collision occurred.</returns>
-    public int GetCollisionLocalShape() { ThrowIfDisposed(); return _data.LocalShape; }
+    /// <exception cref="InvalidOperationException">Borrowed implementation output is used outside its owning active hook.</exception>
+    /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
+    public int GetCollisionLocalShape() { return Data.LocalShape; }
 
     /// <summary>Returns the global contact normal pointing away from the collider.</summary>
     /// <returns>Zero when no collision occurred.</returns>
-    public Vector2 GetCollisionNormal() { ThrowIfDisposed(); return _data.Normal; }
+    /// <exception cref="InvalidOperationException">Borrowed implementation output is used outside its owning active hook.</exception>
+    /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
+    public Vector2 GetCollisionNormal() { return Data.Normal; }
 
     /// <summary>Returns the global point on the collider at contact.</summary>
     /// <returns>Zero when no collision occurred.</returns>
-    public Vector2 GetCollisionPoint() { ThrowIfDisposed(); return _data.Point; }
+    /// <exception cref="InvalidOperationException">Borrowed implementation output is used outside its owning active hook.</exception>
+    /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
+    public Vector2 GetCollisionPoint() { return Data.Point; }
 
     /// <summary>Returns the safe motion fraction before first impact.</summary>
     /// <returns>One on a miss.</returns>
-    public float GetCollisionSafeFraction() { ThrowIfDisposed(); return _data.SafeFraction; }
+    /// <exception cref="InvalidOperationException">Borrowed implementation output is used outside its owning active hook.</exception>
+    /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
+    public float GetCollisionSafeFraction() { return Data.SafeFraction; }
 
     /// <summary>Returns the unsafe motion fraction at first impact.</summary>
     /// <returns>One on a miss.</returns>
-    public float GetCollisionUnsafeFraction() { ThrowIfDisposed(); return _data.UnsafeFraction; }
+    /// <exception cref="InvalidOperationException">Borrowed implementation output is used outside its owning active hook.</exception>
+    /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
+    public float GetCollisionUnsafeFraction() { return Data.UnsafeFraction; }
 
     /// <summary>Returns untraveled requested displacement.</summary>
     /// <returns>Zero on an unobstructed motion.</returns>
-    public Vector2 GetRemainder() { ThrowIfDisposed(); return _data.Remainder; }
+    /// <exception cref="InvalidOperationException">Borrowed implementation output is used outside its owning active hook.</exception>
+    /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
+    public Vector2 GetRemainder() { return Data.Remainder; }
 
     /// <summary>Returns displacement including recovery before first impact.</summary>
     /// <returns>The requested motion plus recovery on a miss.</returns>
-    public Vector2 GetTravel() { ThrowIfDisposed(); return _data.Travel; }
+    /// <exception cref="InvalidOperationException">Borrowed implementation output is used outside its owning active hook.</exception>
+    /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
+    public Vector2 GetTravel() { return Data.Travel; }
 }

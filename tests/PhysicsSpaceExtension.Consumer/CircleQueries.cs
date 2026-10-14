@@ -9,8 +9,8 @@ internal sealed class CircleQueries : PhysicsDirectSpaceStateExtension
     internal PhysicsPointResult? CachedPoint;
     internal int BadCount;
     internal bool BadFractions, BadPoints, Duplicate, Throw;
-    internal Action? OnQuery, OnShapeQuery;
-    internal RID OwnedQueryRID;
+    internal Action? OnQuery, OnShapeQuery = null;
+    internal RID OwnedQueryRID = default;
     internal CircleQueries(RID space, Actor[] actors, CircleShape? queryShape = null) : base(space)
     {
         _actors = actors; _queryShape = queryShape;

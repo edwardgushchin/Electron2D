@@ -164,3 +164,11 @@ policy/reset/copy/disposal guards, nested/error continuation and owned shape RID
 replacement/retirement. Add `--cpu` or `--gpu` to select a built-in owner and
 `--threaded` for its separate numerical lane. Prepared full frames/queries require
 zero owner/all-thread managed allocation.
+
+
+`--motion-result-lifetime` accepts `--cpu`, `--gpu` and `--threaded`, selecting a
+registered owner by default. It verifies the complete physical result-value family,
+borrowed disposal/owner guards, scratch identity/reuse, callback/validation failures,
+caller snapshots and retirement aggregation. Full measured frames include body
+motion tests with and without caller output. All 128 measured frames after 128 warm
+frames require zero owner/all-thread managed bytes and actual solved movement.

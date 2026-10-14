@@ -8,7 +8,7 @@ internal sealed partial class RegisteredPhysicsWorldBackend : PhysicsWorldBacken
     private readonly Dictionary<PhysicsJointBackend, Joint> _joints = [];
     private RID[] _portableBodies = [];
     private PhysicsBackendOneWay[] _oneWays = [];
-    private readonly PhysicsTestMotionResult _motion = new();
+    private readonly PhysicsTestMotionResult _motion = new(implementationOwned: true);
     private readonly List<(RID From, RID To)> _sourceExceptions = [], _exceptions = [];
     private bool _exceptionsDirty = true;
     private bool _disposed, _retiring, _solving, _resultsReady, _readingFailure;
@@ -203,11 +203,16 @@ internal sealed partial class RegisteredPhysicsWorldBackend : PhysicsWorldBacken
         Enter();
         try
         {
-            _motion.SetMotion(motion);
-            var hit = _implementation.TestBodyMotion(body, from, motion, margin, recoveryAsCollision, excludedBodies, excludedObjects, collideSeparationRay, _motion);
-            var data = _motion.Data;
-            if (hit != data.Collided) throw new InvalidOperationException("A motion implementation returned inconsistent collision status.");
-            return hit ? data : data with { OwnerRID = body };
+            _motion.BeginImplementationUse();
+            try
+            {
+                _motion.SetMotion(motion);
+                var hit = _implementation.TestBodyMotion(body, from, motion, margin, recoveryAsCollision, excludedBodies, excludedObjects, collideSeparationRay, _motion);
+                var data = _motion.Data;
+                if (hit != data.Collided) throw new InvalidOperationException("A motion implementation returned inconsistent collision status.");
+                return hit ? data : data with { OwnerRID = body };
+            }
+            finally { _motion.EndImplementationUse(); }
         }
         finally { Exit(); }
     }
@@ -223,7 +228,11 @@ internal sealed partial class RegisteredPhysicsWorldBackend : PhysicsWorldBacken
             try { _implementation.Finish(); } catch (Exception error) { (errors ??= []).Add(error); }
             try { _implementation.ReleaseImplementation(); } catch (Exception error) { (errors ??= []).Add(error); }
         }
-        finally { Exit(); _disposed = true; _colliders.Clear(); _joints.Clear(); _motion.Dispose(); }
+        finally
+        {
+            Exit(); _disposed = true; _colliders.Clear(); _joints.Clear();
+            try { _motion.ReleaseImplementationResult(); } catch (Exception error) { (errors ??= []).Add(error); }
+        }
         if (errors is not null) throw new AggregateException("Registered physics cleanup failed.", errors);
     }
 }

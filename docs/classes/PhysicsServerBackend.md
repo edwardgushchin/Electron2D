@@ -1,6 +1,6 @@
 # PhysicsServerBackend
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 [Curved custom contacts](../components/physics-registered-adapter.md#curved-custom-contacts)
 verify the independent implementation's response and complete frame publication
@@ -223,3 +223,6 @@ geometry and final network/native/performance/platform acceptance remain open.
 [Compound slot numerics](../components/physics-registered-adapter.md#compound-slot-numerics) now verify independent multiple-circle/annulus placements and logical indices through the typed hook family, including Area/CCD/contact/private-history use. General geometry and coupled angular acceptance remain open.
 
 With the captured separate-thread policy, Solve and its immediate HasFailure check execute on the retained numerical lane. Prepared readonly geometry, mass and exclusion inputs remain available in that exact borrowed scope; authoring, live queries and scene/lifetime operations reject. All other hooks, factories, synchronization and game callbacks remain on the owner. See [thread conformance](../components/physics-thread.md).
+
+
+[Borrowed motion output](../components/physics-registered-adapter.md#borrowed-motion-output-2026-10-14) preserves selected scratch lifetime and owner scope while retaining caller-owned snapshots, error continuation and retirement failures. The inherited disposal preflight is a reviewed C# adaptation; full numerical/foreign/hardware acceptance stays open.
