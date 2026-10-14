@@ -293,6 +293,7 @@ public sealed partial class ThemeDB
         ["PlaceholderTextureLayered"] = ["PlaceholderTextureLayered", "TextureLayered", "Resource", "ElectronObject"],
         ["PointLight"] = ["PointLight", "Light", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["Polygon"] = ["Polygon", "Entity", "CanvasItem", "Node", "ElectronObject"],
+        ["PolygonPathFinder"] = ["PolygonPathFinder", "Resource", "ElectronObject"],
         ["Popup"] = ["Popup", "Window", "Viewport", "Node", "ElectronObject"],
         ["PopupMenu"] = ["PopupMenu", "Popup", "Window", "Viewport", "Node", "ElectronObject"],
         ["PopupPanel"] = ["PopupPanel", "Popup", "Window", "Viewport", "Node", "ElectronObject"],

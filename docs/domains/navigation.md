@@ -1,6 +1,6 @@
 # Navigation domain
 
-Last updated: 2026-10-10
+Last updated: 2026-10-15
 
 ## Responsibility
 
@@ -64,3 +64,5 @@ Committed [raster topology and surface sampling](../components/navigation-maps.m
 [Tile navigation layers](../components/tiles.md#navigation-layers) connect typed TileSet masks and borrowed TileData polygons to scene-owned NavigationServer regions, runtime cell data, root-local baking and retained diagnostic drawing. Global navigation diagnostics remain separate work.
 
 [Background iterations](../components/navigation-maps.md#background-iterations) now rebuild region geometry and map topology through independently selected workers while keeping prior query snapshots usable. Explicit host Synchronize remains deterministic.
+
+[PolygonPathFinder](../classes/PolygonPathFinder.md) owns stored closed-area visibility paths, holes/islands, projected endpoints, weighted waypoint costs and deterministic scalar/intersection queries. Private typed storage survives resource copy/reset and scene/file loading. It uses immutable geometry with per-resource synchronized search workspace; [polygon paths](../components/polygon-paths.md) and [ADR 0106](../decisions/navigation.md#adr-0106) own its bounded preparation and separate verification gates.

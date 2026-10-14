@@ -652,7 +652,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PointMesh](classes/PointMesh.md) | PrimitiveMesh | Excluded | 0 |
 | [Polygon2D](classes/Polygon2D.md) | Node2D | Partial | 23 |
 | [PolygonOccluder3D](classes/PolygonOccluder3D.md) | Occluder3D | Excluded | 1 |
-| [PolygonPathFinder](classes/PolygonPathFinder.md) | Resource | Blocked | 8 |
+| [PolygonPathFinder](classes/PolygonPathFinder.md) | Resource | Implemented | 8 |
 | [Popup](classes/Popup.md) | Window | Partial | 10 |
 | [PopupMenu](classes/PopupMenu.md) | Popup | Partial | 140 |
 | [PopupPanel](classes/PopupPanel.md) | Popup | Partial | 5 |

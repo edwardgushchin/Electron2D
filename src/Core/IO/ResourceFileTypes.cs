@@ -47,6 +47,7 @@ public static partial class ResourceFileTypes
         RegisterResource("ImmediateMesh", CreateImmediateMesh);
         RegisterResource("NavigationPolygon", CreateNavigationPolygon);
         RegisterResource("NavigationMeshSourceGeometryData", CreateNavigationSourceGeometry);
+        RegisterResource("PolygonPathFinder", CreatePolygonPathFinder);
         RegisterNode("NavigationRegion", CreateNavigationRegion);
         RegisterNode("NavigationLink", CreateNavigationLink);
         RegisterNode("NavigationAgent", CreateNavigationAgent);
@@ -149,6 +150,7 @@ public static partial class ResourceFileTypes
     private static RichTextEffect CreateRichTextEffect() => new();
     private static NavigationPolygon CreateNavigationPolygon() => new();
     private static NavigationMeshSourceGeometryData CreateNavigationSourceGeometry() => new();
+    private static PolygonPathFinder CreatePolygonPathFinder() => new();
     private static NavigationRegion CreateNavigationRegion() => new();
     private static NavigationLink CreateNavigationLink() => new();
     private static NavigationAgent CreateNavigationAgent() => new();

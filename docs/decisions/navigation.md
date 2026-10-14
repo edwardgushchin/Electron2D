@@ -1,6 +1,6 @@
 # Electron2D navigation decisions
 
-Last updated: 2026-10-10
+Last updated: 2026-10-15
 
 This bounded document owns standalone and server-backed 2D pathfinding decisions. The [decision index](index.md) routes other domains.
 
@@ -120,3 +120,22 @@ The [baking component](../components/navigation-baking.md) records actual manage
 ### Verification
 
 The connected slice requires polygon/resource checks, deferred publication and reentry/lifetime errors, weighted routes, projection/unreachable behavior, region scene membership/World replacement, and real rendered path following on each claimed backend. Source/scene storage is verified separately from native pixels; compilation alone establishes neither.
+
+
+<a id="adr-0106"></a>
+## ADR 0106: Stored polygon visibility paths
+
+Last updated: 2026-10-15
+
+- Status: Accepted
+- Scope: `PolygonPathFinder : Resource`, complete standalone polygon queries and scene/file authoring
+
+### Decision
+
+Retain the complete applicable eight-method family with typed spans for copied setup inputs and caller-owned Vector2 arrays for paths/intersections. Authored unordered undirected boundary edges define an even-odd area: multiple islands, holes, concave rings and touching/crossing closed boundaries are supported; zero-length edges and odd-degree/open boundaries reject atomically. Duplicate reversed edges collapse in first-occurrence order. Unconnected authored points remain usable internal waypoints. Boundary points belong to the closed area. Nearest boundary ties and route ties follow authored edge/point order. Empty data has zero bounds/closest point and no path/intersections; disconnected islands return no path. Outside endpoints project to their nearest boundary before searching. Equal endpoints retain two endpoints like other direct paths.
+
+Geometry and the prepared visibility graph are immutable snapshots. Setup clears penalties; a nonnegative finite point penalty adds entry cost to the route. The pinned source adds it only to open-list priority, and terminates on first goal discovery; this does not establish a minimum-cost route. Use complete A-star relaxation/pop termination with Euclidean admissible lower bound and accumulated penalties instead. This corrects an unprescribed algorithm defect without dropping a public capability. Deterministic half-open ray parity and segment interval testing replace the random outside-ray test and endpoint-crossing ambiguities. Return proper segment intersections in first-authored edge order, including duplicate hits at a shared vertex; collinear overlap has no unique crossing and returns none.
+
+Per-resource synchronization owns state/query workspace; observers run after publication outside the gate. Inputs are finite, representable bounds are required, and preparation is bounded to 2,048 points and 4,096 unique edges to bound retained graph/workspace storage. Setup and file load validate/build before replacing state. Paths allocate their returned snapshot; prepared scalar predicates and point/penalty queries allocate nothing. Concurrent callers serialize; source input copying still requires callers to coordinate edits to supplied spans.
+
+Store a private versioned typed byte-array descriptor containing authored points, edges and penalties, and rebuild visibility when loading. Built-in Resource duplication/copy/reset, ResourceArchive and PackedScene use the same executable state. The pinned `_set_data` returns early for every nonempty connection array; the executable typed loader corrects that failure. Share only immutable geometry when copying and copy penalties. ResetState preserves stored geometry/penalties and retires only transient search workspace under ADR 0013. Retain no scene/renderer/native ownership. No new dependency, universal data container or navigation-service RID is introduced. ADRs 0001/0003/0004/0013/0014/0023/0052/0053/0090 remain applicable. Native visual/foreign-platform/performance/owner gates require their own evidence.

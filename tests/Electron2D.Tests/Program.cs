@@ -680,6 +680,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_DIALOG") == "1") { 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BAR_CHILD") is { } menuBarPath) { MenuBarTests.RunChild(menuBarPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BAR") == "1") { MenuBarTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_UNDO_RENDER") is { } undoBackend) { UndoRedoRenderingTests.Run(undoBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POLYGON_PATH_RENDER") is { } polygonBackend) { PolygonPathRenderingTests.Run(polygonBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POLYGON_PATH") == "1") { PolygonPathFinderTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_UNDO") == "1") { UndoRedoTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_PRIMITIVES_RENDER") is { } primitiveBackend) { GUIPrimitivesRenderingTests.Run(primitiveBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_PRIMITIVES_CHILD") is { } primitivesPath) { GUIPrimitivesTests.RunChild(primitivesPath); return; }
@@ -1429,6 +1431,7 @@ RigidFreezeModeTests.Run(); RigidFreezeModeTests.Run(PhysicsServer.Backend.GPU);
 PhysicsBodyParameterTests.Run(); PhysicsBodyParameterTests.Run(PhysicsServer.Backend.GPU);
 PhysicsAreaMonitorTests.Run(); PhysicsAreaMonitorTests.Run(PhysicsServer.Backend.GPU);
 AStarTests.Run();
+PolygonPathFinderTests.Run();
 AStarGridTests.Run();
 RemoteTransformTests.Run();
 ControlLayoutTests.Run();

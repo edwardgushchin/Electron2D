@@ -8648,6 +8648,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PolygonPathFinder",
+    "kind": "type",
+    "declaringType": "Electron2D.PolygonPathFinder",
+    "name": "PolygonPathFinder",
+    "signature": "public sealed class Electron2D.PolygonPathFinder",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Popup",
     "kind": "type",
     "declaringType": "Electron2D.Popup",
@@ -20668,6 +20683,19 @@
     "declaringType": "Electron2D.Polygon",
     "name": ".ctor",
     "signature": "public Polygon()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PolygonPathFinder..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PolygonPathFinder",
+    "name": ".ctor",
+    "signature": "public PolygonPathFinder()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -140426,6 +140454,269 @@
       {
         "name": "weights",
         "type": "System.Single[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PolygonPathFinder.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PolygonPathFinder",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PolygonPathFinder.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.PolygonPathFinder",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PolygonPathFinder.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PolygonPathFinder",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PolygonPathFinder.FindPath(Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PolygonPathFinder",
+    "name": "FindPath",
+    "signature": "public Electron2D.Vector2[] FindPath(Electron2D.Vector2 from, Electron2D.Vector2 to)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "to",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PolygonPathFinder.GetBounds()",
+    "kind": "method",
+    "declaringType": "Electron2D.PolygonPathFinder",
+    "name": "GetBounds",
+    "signature": "public Electron2D.Rect2 GetBounds()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PolygonPathFinder.GetClosestPoint(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PolygonPathFinder",
+    "name": "GetClosestPoint",
+    "signature": "public Electron2D.Vector2 GetClosestPoint(Electron2D.Vector2 point)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PolygonPathFinder.GetIntersections(Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PolygonPathFinder",
+    "name": "GetIntersections",
+    "signature": "public Electron2D.Vector2[] GetIntersections(Electron2D.Vector2 from, Electron2D.Vector2 to)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "to",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PolygonPathFinder.GetPointPenalty(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PolygonPathFinder",
+    "name": "GetPointPenalty",
+    "signature": "public System.Single GetPointPenalty(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PolygonPathFinder.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.PolygonPathFinder",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PolygonPathFinder.IsPointInside(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PolygonPathFinder",
+    "name": "IsPointInside",
+    "signature": "public System.Boolean IsPointInside(Electron2D.Vector2 point)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PolygonPathFinder.OnResetState()",
+    "kind": "method",
+    "declaringType": "Electron2D.PolygonPathFinder",
+    "name": "OnResetState",
+    "signature": "protected override System.Void OnResetState()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PolygonPathFinder.SetPointPenalty(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PolygonPathFinder",
+    "name": "SetPointPenalty",
+    "signature": "public System.Void SetPointPenalty(System.Int32 index, System.Single penalty)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "penalty",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PolygonPathFinder.Setup(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CSystem.Int32\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PolygonPathFinder",
+    "name": "Setup",
+    "signature": "public System.Void Setup(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E points, System.ReadOnlySpan\u003CSystem.Int32\u003E connections)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "points",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "connections",
+        "type": "System.ReadOnlySpan\u003CSystem.Int32\u003E",
         "default": null
       }
     ],

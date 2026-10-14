@@ -1,0 +1,98 @@
+{
+  "mappings": [
+    {
+      "godot": "class:PolygonPathFinder",
+      "electron2d": "T:Electron2D.PolygonPathFinder",
+      "reason": "ADR 0106 with 0001/0003/0004/0013/0014/0023/0052/0053/0090: complete stored standalone polygon visibility queries, closed even-odd boundaries/holes/islands, deterministic projection/intersection order, accumulated nonnegative penalties and optimal goal-pop search. Typed validation/bounded preparation publishes atomically; private versioned authored geometry/penalties survives resource copy/reset, archive and scenes. Pinned random parity, early-goal and nonempty-loader defects are corrected. Arrays are caller-owned; scalar queries and retained rendered movement keep their separate allocation gates. Native/foreign/performance/owner acceptance is separately reported."
+    },
+    {
+      "godot": "PolygonPathFinder::method:find_path(Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.PolygonPathFinder.FindPath(Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "ADR 0106 with 0001/0003/0004/0013/0014/0023/0052/0053/0090: complete stored standalone polygon visibility queries, closed even-odd boundaries/holes/islands, deterministic projection/intersection order, accumulated nonnegative penalties and optimal goal-pop search. Typed validation/bounded preparation publishes atomically; private versioned authored geometry/penalties survives resource copy/reset, archive and scenes. Pinned random parity, early-goal and nonempty-loader defects are corrected. Arrays are caller-owned; scalar queries and retained rendered movement keep their separate allocation gates. Native/foreign/performance/owner acceptance is separately reported."
+    },
+    {
+      "godot": "PolygonPathFinder::method:get_bounds()",
+      "electron2d": "method:Electron2D.PolygonPathFinder.GetBounds()",
+      "reason": "ADR 0106 with 0001/0003/0004/0013/0014/0023/0052/0053/0090: complete stored standalone polygon visibility queries, closed even-odd boundaries/holes/islands, deterministic projection/intersection order, accumulated nonnegative penalties and optimal goal-pop search. Typed validation/bounded preparation publishes atomically; private versioned authored geometry/penalties survives resource copy/reset, archive and scenes. Pinned random parity, early-goal and nonempty-loader defects are corrected. Arrays are caller-owned; scalar queries and retained rendered movement keep their separate allocation gates. Native/foreign/performance/owner acceptance is separately reported."
+    },
+    {
+      "godot": "PolygonPathFinder::method:get_closest_point(Vector2:)",
+      "electron2d": "method:Electron2D.PolygonPathFinder.GetClosestPoint(Electron2D.Vector2)",
+      "reason": "ADR 0106 with 0001/0003/0004/0013/0014/0023/0052/0053/0090: complete stored standalone polygon visibility queries, closed even-odd boundaries/holes/islands, deterministic projection/intersection order, accumulated nonnegative penalties and optimal goal-pop search. Typed validation/bounded preparation publishes atomically; private versioned authored geometry/penalties survives resource copy/reset, archive and scenes. Pinned random parity, early-goal and nonempty-loader defects are corrected. Arrays are caller-owned; scalar queries and retained rendered movement keep their separate allocation gates. Native/foreign/performance/owner acceptance is separately reported."
+    },
+    {
+      "godot": "PolygonPathFinder::method:get_intersections(Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.PolygonPathFinder.GetIntersections(Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "ADR 0106 with 0001/0003/0004/0013/0014/0023/0052/0053/0090: complete stored standalone polygon visibility queries, closed even-odd boundaries/holes/islands, deterministic projection/intersection order, accumulated nonnegative penalties and optimal goal-pop search. Typed validation/bounded preparation publishes atomically; private versioned authored geometry/penalties survives resource copy/reset, archive and scenes. Pinned random parity, early-goal and nonempty-loader defects are corrected. Arrays are caller-owned; scalar queries and retained rendered movement keep their separate allocation gates. Native/foreign/performance/owner acceptance is separately reported."
+    },
+    {
+      "godot": "PolygonPathFinder::method:get_point_penalty(int:)",
+      "electron2d": "method:Electron2D.PolygonPathFinder.GetPointPenalty(System.Int32)",
+      "reason": "ADR 0106 with 0001/0003/0004/0013/0014/0023/0052/0053/0090: complete stored standalone polygon visibility queries, closed even-odd boundaries/holes/islands, deterministic projection/intersection order, accumulated nonnegative penalties and optimal goal-pop search. Typed validation/bounded preparation publishes atomically; private versioned authored geometry/penalties survives resource copy/reset, archive and scenes. Pinned random parity, early-goal and nonempty-loader defects are corrected. Arrays are caller-owned; scalar queries and retained rendered movement keep their separate allocation gates. Native/foreign/performance/owner acceptance is separately reported."
+    },
+    {
+      "godot": "PolygonPathFinder::method:is_point_inside(Vector2:)",
+      "electron2d": "method:Electron2D.PolygonPathFinder.IsPointInside(Electron2D.Vector2)",
+      "reason": "ADR 0106 with 0001/0003/0004/0013/0014/0023/0052/0053/0090: complete stored standalone polygon visibility queries, closed even-odd boundaries/holes/islands, deterministic projection/intersection order, accumulated nonnegative penalties and optimal goal-pop search. Typed validation/bounded preparation publishes atomically; private versioned authored geometry/penalties survives resource copy/reset, archive and scenes. Pinned random parity, early-goal and nonempty-loader defects are corrected. Arrays are caller-owned; scalar queries and retained rendered movement keep their separate allocation gates. Native/foreign/performance/owner acceptance is separately reported."
+    },
+    {
+      "godot": "PolygonPathFinder::method:set_point_penalty(int:,float:)",
+      "electron2d": "method:Electron2D.PolygonPathFinder.SetPointPenalty(System.Int32,System.Single)",
+      "reason": "ADR 0106 with 0001/0003/0004/0013/0014/0023/0052/0053/0090: complete stored standalone polygon visibility queries, closed even-odd boundaries/holes/islands, deterministic projection/intersection order, accumulated nonnegative penalties and optimal goal-pop search. Typed validation/bounded preparation publishes atomically; private versioned authored geometry/penalties survives resource copy/reset, archive and scenes. Pinned random parity, early-goal and nonempty-loader defects are corrected. Arrays are caller-owned; scalar queries and retained rendered movement keep their separate allocation gates. Native/foreign/performance/owner acceptance is separately reported."
+    },
+    {
+      "godot": "PolygonPathFinder::method:setup(PackedVector2Array:,PackedInt32Array:)",
+      "electron2d": "method:Electron2D.PolygonPathFinder.Setup(System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<System.Int32>)",
+      "reason": "ADR 0106 with 0001/0003/0004/0013/0014/0023/0052/0053/0090: complete stored standalone polygon visibility queries, closed even-odd boundaries/holes/islands, deterministic projection/intersection order, accumulated nonnegative penalties and optimal goal-pop search. Typed validation/bounded preparation publishes atomically; private versioned authored geometry/penalties survives resource copy/reset, archive and scenes. Pinned random parity, early-goal and nonempty-loader defects are corrected. Arrays are caller-owned; scalar queries and retained rendered movement keep their separate allocation gates. Native/foreign/performance/owner acceptance is separately reported."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.PolygonPathFinder..ctor()",
+      "reason": "Typed Resource construction, private stored data/copy and deterministic cleanup under ADR 0106.",
+      "adr": "ADRs 0013/0014/0106"
+    },
+    {
+      "electron2d": "method:Electron2D.PolygonPathFinder.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed Resource construction, private stored data/copy and deterministic cleanup under ADR 0106.",
+      "adr": "ADRs 0013/0014/0106"
+    },
+    {
+      "electron2d": "method:Electron2D.PolygonPathFinder.CreateDuplicateInstance()",
+      "reason": "Typed Resource construction, private stored data/copy and deterministic cleanup under ADR 0106.",
+      "adr": "ADRs 0013/0014/0106"
+    },
+    {
+      "electron2d": "method:Electron2D.PolygonPathFinder.Dispose(System.Boolean)",
+      "reason": "Typed Resource construction, private stored data/copy and deterministic cleanup under ADR 0106.",
+      "adr": "ADRs 0013/0014/0106"
+    },
+    {
+      "electron2d": "method:Electron2D.PolygonPathFinder.GetPropertyDescriptors()",
+      "reason": "Typed Resource construction, private stored data/copy and deterministic cleanup under ADR 0106.",
+      "adr": "ADRs 0013/0014/0106"
+    },
+    {
+      "electron2d": "method:Electron2D.PolygonPathFinder.OnResetState()",
+      "reason": "Transient workspace reset preserves stored geometry and penalties under ADR 0013/0106.",
+      "adr": "ADRs 0013/0106"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:PolygonPathFinder",
+        "PolygonPathFinder::method:find_path(Vector2:,Vector2:)",
+        "PolygonPathFinder::method:get_bounds()",
+        "PolygonPathFinder::method:get_closest_point(Vector2:)",
+        "PolygonPathFinder::method:get_intersections(Vector2:,Vector2:)",
+        "PolygonPathFinder::method:get_point_penalty(int:)",
+        "PolygonPathFinder::method:is_point_inside(Vector2:)",
+        "PolygonPathFinder::method:set_point_penalty(int:,float:)",
+        "PolygonPathFinder::method:setup(PackedVector2Array:,PackedInt32Array:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0106 with 0001/0003/0004/0013/0014/0023/0052/0053/0090: complete stored standalone polygon visibility queries, closed even-odd boundaries/holes/islands, deterministic projection/intersection order, accumulated nonnegative penalties and optimal goal-pop search. Typed validation/bounded preparation publishes atomically; private versioned authored geometry/penalties survives resource copy/reset, archive and scenes. Pinned random parity, early-goal and nonempty-loader defects are corrected. Arrays are caller-owned; scalar queries and retained rendered movement keep their separate allocation gates. Native/foreign/performance/owner acceptance is separately reported."
+    }
+  ]
+}
