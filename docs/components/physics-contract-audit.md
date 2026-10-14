@@ -1257,3 +1257,12 @@ The same engine assembly retains exact confirmed effects, topology/state converg
 and zero warmed ordinary/replay managed allocations. Driver/thread proofs and
 instrumented transfer/wait/history costs are retained; software timings do not
 establish native allocation, hardware advantage or real-window FPS.
+
+
+[Moving one-way recovery](../components/gpu-resident-motion-queries.md#moving-one-way-recovery)
+now includes kinematic/dynamic linear approach over the last physical step on
+both production backends, including private/portable restoration. Static surface,
+receding/tangent and angular-only velocities do not enlarge recovery depth.
+PhysicsMovingOneWayTests checks raw/scene callers, roles, rotated slots, six finite
+source families and eight 128-warmup/128-measured complete-frame brackets at zero
+managed allocation. Native/platform/hardware/performance acceptance remains open.

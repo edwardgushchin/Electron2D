@@ -42,10 +42,12 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private int[] _motionQueryCounts = [];
 
     /// <summary>Tests each body's shapes at a supplied pose, including recovery and first impact; the live bodies stay unchanged.</summary>
-    /// <remarks>Exclusion keys and object IDs are authored query identities. Explicit pair exceptions and collision-disabled joints suppress either endpoint. Results include recovery travel even on a miss; collision fields then clear.</remarks>
-    internal void TestMotion(ReadOnlySpan<MotionQuery> queries, ReadOnlySpan<ulong> excludedBodies, ReadOnlySpan<ulong> excludedObjects, Span<MotionQueryResult> results)
+    /// <remarks>Exclusion keys and object IDs are authored query identities. Explicit pair exceptions and collision-disabled joints suppress either endpoint. Results include recovery travel even on a miss; collision fields then clear. A moving one-way obstacle extends recovery depth by its linear approach over the supplied last-step duration, defaulting to the retained simulation tick.</remarks>
+    internal void TestMotion(ReadOnlySpan<MotionQuery> queries, ReadOnlySpan<ulong> excludedBodies, ReadOnlySpan<ulong> excludedObjects, Span<MotionQueryResult> results, float? lastStep = null)
     {
         EnsureAccess();
+        var step = lastStep ?? _contactTickDuration;
+        if (!float.IsFinite(step) || step < 0) throw new ArgumentOutOfRangeException(nameof(lastStep));
         if (results.Length < queries.Length) throw new ArgumentException("The motion result destination is too small.", nameof(results));
         var payloadCount = checked(excludedBodies.Length + excludedObjects.Length);
         foreach (ref readonly var q in queries)
@@ -72,7 +74,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             var input = new MotionQueryInput
             {
                 Pose = new(q.From.Origin.X, q.From.Origin.Y, MathF.Cos(q.From.Rotation), MathF.Sin(q.From.Rotation)),
-                MotionMargin = new(q.Motion.X, q.Motion.Y, MathF.Max(q.Margin, .0001f), 0),
+                MotionMargin = new(q.Motion.X, q.Motion.Y, MathF.Max(q.Margin, .0001f), step),
                 Body = (uint)q.Body.Index,
                 Generation = q.Body.Generation,
                 BodiesStart = (uint)q.BodyExclusionStart,

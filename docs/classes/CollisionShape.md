@@ -88,3 +88,12 @@ The child registers during tree entry and unregisters before its exit finishes; 
 The [CollisionObject owner registry](CollisionObject.md#createshapeowner) now supplies logical shape slots for both child and manual groups. Query/contact indices identify global slots, while ShapeFindOwner returns the distinct group ID; removal shifts later indices. Motion owner accessors resolve weak configured objects as well as child nodes. See [ADR 0071](../decisions/physics.md#adr-0071).
 
 The complete OneWayCollisionTests now runs on explicitly selected public CPU/GPU worlds: opposite contact sides, child/body rotation, live policy and zero-direction edits, dynamic/kinematic platforms, Area sensor bypass and packing. Existing numerical bounds are unchanged; 64 warm active contact frames require 0/0 owner/all-thread managed bytes. Broader inherited/extension, native/platform and final performance acceptance remains open.
+
+
+[Moving one-way recovery](../components/gpu-resident-motion-queries.md#moving-one-way-recovery)
+now includes kinematic/dynamic linear approach over the last physical step on
+both production backends, including private/portable restoration. Static surface,
+receding/tangent and angular-only velocities do not enlarge recovery depth.
+PhysicsMovingOneWayTests checks raw/scene callers, roles, rotated slots, six finite
+source families and eight 128-warmup/128-measured complete-frame brackets at zero
+managed allocation. Native/platform/hardware/performance acceptance remains open.

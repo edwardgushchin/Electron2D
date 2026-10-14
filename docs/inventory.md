@@ -1643,3 +1643,11 @@ open.
 | [Networking](domains/networking.md) | [Address resolution](components/address-resolution.md) | [IPInterfaceInfo](classes/IPInterfaceInfo.md) | [src/Core/Networking/IPInterfaceInfo.cs](../src/Core/Networking/IPInterfaceInfo.cs) | Current | Typed caller-owned adapter snapshot. |
 
 IP.API.cs supplies the public static delegates; Engine registers the retained identity. NetworkSockets and HTTPClient consume the same backend/cache. Internal controlled resolver fixtures remain within runtime/tests.
+
+[Moving one-way recovery](components/gpu-resident-motion-queries.md#moving-one-way-recovery)
+now includes kinematic/dynamic linear approach over the last physical step on
+both production backends, including private/portable restoration. Static surface,
+receding/tangent and angular-only velocities do not enlarge recovery depth.
+PhysicsMovingOneWayTests checks raw/scene callers, roles, rotated slots, six finite
+source families and eight 128-warmup/128-measured complete-frame brackets at zero
+managed allocation. Native/platform/hardware/performance acceptance remains open.

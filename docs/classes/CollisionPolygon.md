@@ -32,7 +32,7 @@ ground.AddChild(new CollisionPolygon
 | `public Vector2[] Polygon { get; set; }` | Copied local vertices; empty by default. |
 | `public bool Disabled { get; set; }` | Removes fixtures while retaining the contour; false by default. |
 | `public bool OneWayCollision { get; set; }` | Selects the side of body contact; false by default. |
-| `public float OneWayCollisionMargin { get; set; }` | Maximum accepted one-way recovery depth; one scene unit by default. |
+| `public float OneWayCollisionMargin { get; set; }` | Base accepted one-way recovery depth; one scene unit by default. |
 | `public Vector2 OneWayCollisionDirection { get; set; }` | Local pass-through direction; `(0, 1)` by default. |
 | `public override string[] GetConfigurationWarnings()` | Reports an absent direct owner, empty/invalid geometry or ineffective Area one-way setting. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Stores mode, contour, disabled and one-way state. |
@@ -83,3 +83,12 @@ The [CollisionObject owner registry](CollisionObject.md#createshapeowner) now su
 [Physics canvas diagnostics](../components/physics-debug.md) describes this node's retained geometry, live redraw, ordinary canvas behavior and CPU/GPU/native checks.
 
 The complete CollisionPolygonTests now runs on explicitly selected public CPU/GPU worlds, including solid/hollow geometry, concave Area sensing, dynamic mass/torque response, scale rejection/recovery, warning-callback failure, removal/reentry and packed one-way contact. Restored scenes receive the explicit selected World before simulation. Existing numerical bounds are unchanged; 64 warm contact frames require 0/0 owner/all-thread managed bytes. Broader inherited/extension, native/platform and final performance acceptance remains open.
+
+
+[Moving one-way recovery](../components/gpu-resident-motion-queries.md#moving-one-way-recovery)
+now includes kinematic/dynamic linear approach over the last physical step on
+both production backends, including private/portable restoration. Static surface,
+receding/tangent and angular-only velocities do not enlarge recovery depth.
+PhysicsMovingOneWayTests checks raw/scene callers, roles, rotated slots, six finite
+source families and eight 128-warmup/128-measured complete-frame brackets at zero
+managed allocation. Native/platform/hardware/performance acceptance remains open.

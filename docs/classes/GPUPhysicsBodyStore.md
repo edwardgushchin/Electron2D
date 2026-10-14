@@ -387,3 +387,12 @@ and 128-interval budgets. The first speed-only continuation exhausted refinement
 and was rejected. A focused --directed-angular case uses only the public API and
 retains contact/energy assertions; its successful GPU probe records a real nonzero
 entry impulse. Earlier cohorts before this correction are not final acceptance.
+
+
+[Moving one-way recovery](../components/gpu-resident-motion-queries.md#moving-one-way-recovery)
+now includes kinematic/dynamic linear approach over the last physical step on
+both production backends, including private/portable restoration. Static surface,
+receding/tangent and angular-only velocities do not enlarge recovery depth.
+PhysicsMovingOneWayTests checks raw/scene callers, roles, rotated slots, six finite
+source families and eight 128-warmup/128-measured complete-frame brackets at zero
+managed allocation. Native/platform/hardware/performance acceptance remains open.
