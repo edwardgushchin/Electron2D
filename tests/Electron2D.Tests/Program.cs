@@ -1244,6 +1244,7 @@ PhysicsMaterialTests.Run(PhysicsServer.Backend.GPU);
 PhysicsSurfaceVelocityTests.Run(); PhysicsSurfaceVelocityTests.Run(PhysicsServer.Backend.GPU);
 AreaTests.Run();
 PhysicsAreaFieldTests.Run(); PhysicsAreaFieldTests.Run(PhysicsServer.Backend.GPU);
+PhysicsPointGravityRangeTests.Run(PhysicsServer.Backend.CPU); PhysicsPointGravityRangeTests.Run(PhysicsServer.Backend.GPU);
 PhysicsServerAreaFieldTests.Run(); PhysicsServerAreaFieldTests.Run(PhysicsServer.Backend.GPU);
 ScreenVisibilityTests.Run();
 NinePatchTests.Run();

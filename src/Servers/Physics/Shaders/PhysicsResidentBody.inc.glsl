@@ -16,13 +16,13 @@ uint continuousMode(ResidentBody b)
     return b.flags.y==1u?(b.velocity.xyz!=vec3(0)?2u:0u):b.flags.y>=2u?(b.flags.z>>8)&3u:0u;
 }
 
-bool finiteField(vec4 value){return !any(isnan(value))&&!any(isinf(value));}
+bool finiteField(vec4 value){return all(lessThan(floatBitsToUint(value)&uvec4(0x7fffffffu),uvec4(0x7f800000u)));}
 bool receivesBodyFields(ResidentBody b){return b.flags.y!=0u||(b.flags.z&65536u)!=0u;}
 bool resolveBodyFields(inout ResidentBody b,inout vec4 stored,vec4 selected,float delta)
 {
-    vec4 next=!receivesBodyFields(b)?vec4(0):vec4(selected.xy*b.force.w,
+    precise vec4 next=!receivesBodyFields(b)?vec4(0):vec4(selected.xy*b.force.w,
         ((b.flags.z&16384u)!=0u?0:selected.z)+b.properties.z,((b.flags.z&32768u)!=0u?0:selected.w)+b.properties.w);
-    vec2 factors=max(vec2(0),vec2(1)-delta*next.zw);
+    precise vec2 factors=max(vec2(0),vec2(1)-delta*next.zw);
     if(!finiteField(next)||!finiteField(vec4(factors,0,0)))return false;
     if((b.flags.z&8192u)!=0u&&next!=stored&&b.flags.y>=2u)
     {b.flags.z=(b.flags.z&~80u)|32u;b.velocity.w=0;}

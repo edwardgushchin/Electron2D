@@ -4,6 +4,7 @@ internal static class PhysicsPointGravityRangeTests
 {
     internal static void Run(PhysicsServer.Backend backend)
     {
+        PhysicsPointGravityFailureTests.Run(backend);
         WideCoordinates(backend);
         using var world = new World(backend); using var region = new CircleShape { Radius = 20 }; using var circle = new CircleShape { Radius = 1 };
         using var root = new SubViewport { World = world };

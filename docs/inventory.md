@@ -1539,3 +1539,5 @@ Prepared typed deferred delivery internals under ADRs 0010/0006:
 | [Scene queue](components/scene-tree.md) | [SceneTree.DeferredInvocation<T>](classes/SceneTree.DeferredInvocation.Generic.md) | [source](../src/Scene/Main/SceneTree.Deferred.cs) | One reusable callback/value pair, independently owned by a queued emission until completion. |
 
 The [Image block-codec slice](components/image-bcn.md) compiles pinned BCnEncoder.NET and buffer-tool sources as private types in Electron2D.dll. Vendored types are implementation dependencies, not production API inventory entries. Image.BCn.cs, Image.DDS.cs and Image.DDS.Pixels.cs own the public compression/DDS behavior and portable layout adapters.
+
+The [point-field hardware guard](components/physics-areas.md#hardware-point-field-guards-2026-10-14) updates the existing PhysicsAreaFields/GPUPhysicsBodyStore reduction slice, preserving its public types and native status/publication boundary.

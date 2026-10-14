@@ -210,7 +210,7 @@ Point-field reduction avoids float squared-distance underflow/overflow and
 retains signed constant/inverse-square behavior, exact-center zero and rejection
 of truly unrepresentable forces. PhysicsPointGravityRangeTests covers scene, raw
 Area and default-space sources with three body roles and CPU zero-allocation frames.
-The revised device kernel compiles; real GPU numeric-range acceptance remains open.
+The device kernel now passes the point-range and terminal-failure contract on NVIDIA GeForce RTX 3090 Ti/Vulkan; native allocation, other drivers/platforms and performance acceptance remain open.
 See [point-field verification](../components/physics-areas.md#point-gravity-numeric-range).
 
 
@@ -250,3 +250,5 @@ user effects. Serial/separate numerical profiles retain these same operations.
 The fixture reports full-frame p50/p95/p99, uploads, readback, mean wait and submission
 count. Its CPU-only Vulkan values are transfer/function evidence, not hardware
 speedup, native allocator totals, real-window FPS or final performance acceptance.
+
+The resident point-field reducer preserves guarded float operation order with GLSL precise intermediates and propagates reconstruction validity separately from the value. Values beyond the finite output range do not enter subsequent arithmetic as infinity sentinels. A later Replace/ReplaceCombine contribution resets validity with the channel; Combine retains an invalid earlier contribution. Final invalid fields fail before body-field publication or solver motion through the existing eight-byte status read and terminal GPU-world policy. Mantissa/exponent normalization avoids reciprocals outside the normal range for large/tiny coordinates. No CPU mirror, buffer growth, new readback or wait is introduced. See [hardware point-field guards](../components/physics-areas.md#hardware-point-field-guards-2026-10-14).

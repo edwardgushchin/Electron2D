@@ -101,6 +101,9 @@ public sealed partial class Area
     }
 
     /// <summary>Gets or sets the distance at which point gravity has the configured strength.</summary>
+    /// <remarks>Finite authored values are accepted. The selected world rejects an unrepresentable final field
+    /// before publishing body fields or applying motion. A started GPU field failure is terminal; CPU fields can
+    /// be corrected before the next interval. Priority replacement may discard an earlier field contribution.</remarks>
     /// <value>Zero by default for distance-independent point gravity; positive values use inverse-square falloff.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread or while the solver owns its space.</exception>

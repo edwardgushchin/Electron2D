@@ -1409,3 +1409,5 @@ Reproduce the focused matrix with ELECTRON2D_TEST_PHYSICS_MATERIAL=1 and
 ELECTRON2D_SANDBOX_GPU_SOLVER=0 or 1 when launching Electron2D.Tests.dll.
 The normal full suite runs both material owners. The focused path performs
 simulation/resource checks and does not open a rendered window.
+
+The resident point-field reducer preserves guarded float operation order with GLSL precise intermediates and propagates reconstruction validity separately from the value. Values beyond the finite output range do not enter subsequent arithmetic as infinity sentinels. A later Replace/ReplaceCombine contribution resets validity with the channel; Combine retains an invalid earlier contribution. Final invalid fields fail before body-field publication or solver motion through the existing eight-byte status read and terminal GPU-world policy. Mantissa/exponent normalization avoids reciprocals outside the normal range for large/tiny coordinates. No CPU mirror, buffer growth, new readback or wait is introduced. [Hardware verification](physics-areas.md#hardware-point-field-guards-2026-10-14).

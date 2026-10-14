@@ -260,6 +260,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     internal void Step(float delta, Vector2 gravity) => StepFields(delta, new FieldParameters(gravity, 1));
 
     /// <summary>Integration-only control with explicit default fields and current Area membership.</summary>
+    /// <remarks>Point-field reconstruction uses explicit range validity and guarded device arithmetic;
+    /// a failed final reduction retains published observations and fails the selected store without CPU replay.</remarks>
     internal void StepFields(float delta, in FieldParameters defaults)
     {
         EnsureAccess(); ValidateFields(defaults);

@@ -18,43 +18,56 @@ layout(std140,set=2,binding=0) uniform Settings { uvec4 control; uint areaCount;
 const uint none=0xffffffffu;
 void fail(){atomicOr(status.x,1u);}
 vec2 rotate(vec2 q,vec2 p){return vec2(q.x*p.x-q.y*p.y,q.y*p.x+q.x*p.y);}
-float pointComponent(float value,int exponent)
+bool pointComponent(float value,int exponent,out precise float result)
+{
+    result=0;if(value==0)return true;
+    int adjustment;precise float mantissa=frexp(value,adjustment);exponent+=adjustment;
+    // Reject the range explicitly; an infinity sentinel must not enter field arithmetic.
+    if(exponent>128)return false;
+    result=ldexp(mantissa,exponent);return finiteField(vec4(result,0,0,0));
+}
+// Keep division in the normal mantissa range even for extreme authored coordinates.
+float scaledComponent(float value,float mantissa,int exponent)
 {
     if(value==0)return 0;
-    int adjustment;float mantissa=frexp(value,adjustment);exponent+=adjustment;
-    // ldexp does not define overflowing products or exponents above 128.
-    if(exponent>128)return sign(mantissa)*uintBitsToFloat(0x7f800000u);
-    return ldexp(mantissa,exponent);
+    int valueExponent;precise float valueMantissa=frexp(value,valueExponent);
+    return ldexp(valueMantissa/mantissa,valueExponent-exponent);
 }
-vec2 gravity(Field f,vec4 pose,vec2 position)
+vec2 scaledVector(vec2 value,float mantissa,int exponent)
 {
-    if(f.policy.y==0u)return f.gravity.xy*f.gravity.z;
-    vec2 toward=pose.xy+rotate(pose.zw,f.gravity.xy)-position;
-    if(f.gravity.z==0)return vec2(0);
-    float scale;vec2 scaled;
-    if(any(isnan(toward))||any(isinf(toward)))
+    return vec2(scaledComponent(value.x,mantissa,exponent),scaledComponent(value.y,mantissa,exponent));
+}
+bool gravity(Field f,vec4 pose,vec2 position,out precise vec2 result)
+{
+    result=vec2(0);
+    if(f.policy.y==0u){result=f.gravity.xy*f.gravity.z;return finiteField(vec4(result,0,0));}
+    if(f.gravity.z==0)return true;
+    // Preserve the guarded affine operation order through shader optimization.
+    precise vec2 toward=pose.xy+rotate(pose.zw,f.gravity.xy)-position;
+    float scale;int scaleExponent;float scaleMantissa;precise vec2 scaled;
+    if(!finiteField(vec4(toward,0,0)))
     {
-        // Scale before the affine sum when only its intermediate overflows.
         scale=max(max(max(abs(pose.x),abs(pose.y)),max(abs(f.gravity.x),abs(f.gravity.y))),max(abs(position.x),abs(position.y)));
-        scaled=pose.xy/scale+rotate(pose.zw,f.gravity.xy/scale)-position/scale;
+        scaleMantissa=frexp(scale,scaleExponent);
+        scaled=scaledVector(pose.xy,scaleMantissa,scaleExponent)+rotate(pose.zw,scaledVector(f.gravity.xy,scaleMantissa,scaleExponent))-scaledVector(position,scaleMantissa,scaleExponent);
     }
     else
     {
-        scale=max(abs(toward.x),abs(toward.y));if(scale==0)return vec2(0);
-        scaled=toward/scale;
+        scale=max(abs(toward.x),abs(toward.y));if(scale==0)return true;
+        scaleMantissa=frexp(scale,scaleExponent);scaled=scaledVector(toward,scaleMantissa,scaleExponent);
     }
-    if(any(isnan(scaled))||any(isinf(scaled)))return vec2(uintBitsToFloat(0x7fc00000u));
-    float distance=length(scaled);if(distance==0)return vec2(0);
-    vec2 direction=scaled/distance;
-    if(f.gravity.w<=0)return direction*f.gravity.z;
-    int gravityExponent,unitExponent,scaleExponent;
+    precise float distance=length(scaled);if(distance==0)return true;
+    precise vec2 direction=scaled/distance;
+    if(f.gravity.w<=0){result=direction*f.gravity.z;return finiteField(vec4(result,0,0));}
+    int gravityExponent,unitExponent;
     float gravityMantissa=frexp(f.gravity.z,gravityExponent);
     float unitMantissa=frexp(f.gravity.w,unitExponent);
-    float scaleMantissa=frexp(scale,scaleExponent);
-    float ratio=unitMantissa/(scaleMantissa*distance);
-    float strength=gravityMantissa*ratio*ratio;
+    precise float ratio=unitMantissa/(scaleMantissa*distance);
+    precise float strength=gravityMantissa*ratio*ratio;
     int exponent=gravityExponent+2*(unitExponent-scaleExponent);
-    return vec2(pointComponent(direction.x*strength,exponent),pointComponent(direction.y*strength,exponent));
+    bool x=pointComponent(direction.x*strength,exponent,result.x);
+    bool y=pointComponent(direction.y*strength,exponent,result.y);
+    return x&&y;
 }
 void linkArea(uint at,Shape a,Shape b)
 {
@@ -80,7 +93,7 @@ void main()
         linkArea(2u*i,a,b);linkArea(2u*i+1u,b,a);return;
     }
     ResidentBody body=bodies[i];if(body.flags.w==0u)return;
-    vec4 total=vec4(0);bvec3 done=bvec3(false);
+    precise vec4 total=vec4(0);bool gravityValid=true;bvec3 done=bvec3(false);
     uint minimum=0u;
     if(receivesBodyFields(body))
     {
@@ -99,8 +112,8 @@ void main()
             uint g=f.owner.z,l=f.owner.w,a=f.policy.x;
             if(!done.x&&g!=0u)
             {
-                vec2 value=gravity(f,pose,body.pose.xy);
-                if(g<=2u)total.xy+=value;else total.xy=value;
+                vec2 value;bool valid=gravity(f,pose,body.pose.xy,value);
+                if(g<=2u){total.xy+=value;gravityValid=gravityValid&&valid;}else{total.xy=value;gravityValid=valid;}
                 done.x=g==2u||g==3u;
             }
             if(!done.y&&l!=0u){if(l<=2u)total.z+=f.damping.x;else total.z=f.damping.x;done.y=l==2u||l==3u;}
@@ -108,11 +121,11 @@ void main()
             if(all(done))break;
             minimum=rank+1u;
         }
-        if(!done.x)total.xy+=gravity(world,vec4(0,0,1,0),body.pose.xy);
+        if(!done.x){vec2 value;bool valid=gravity(world,vec4(0,0,1,0),body.pose.xy,value);total.xy+=value;gravityValid=gravityValid&&valid;}
         if(!done.y)total.z+=world.damping.x;
         if(!done.z)total.w+=world.damping.y;
     }
     vec4 result=resolved[i];
-    if(!resolveBodyFields(body,result,total,delta)){fail();return;}
+    if(!gravityValid||!resolveBodyFields(body,result,total,delta)){fail();return;}
     resolved[i]=result;bodies[i]=body;
 }

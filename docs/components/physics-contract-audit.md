@@ -1121,3 +1121,5 @@ Standalone Shape.ResetState uses the same preflight before OnResetState. The pub
 portable corrections and real replay in separate CPU-authority/GPU-client processes.
 Explicit effort-disabled trajectories validate the guards. Broader graphs, native,
 hardware and final performance acceptance remain open.
+
+The resident point-field reducer preserves guarded float operation order with GLSL precise intermediates and propagates reconstruction validity separately from the value. Values beyond the finite output range do not enter subsequent arithmetic as infinity sentinels. A later Replace/ReplaceCombine contribution resets validity with the channel; Combine retains an invalid earlier contribution. Final invalid fields fail before body-field publication or solver motion through the existing eight-byte status read and terminal GPU-world policy. Mantissa/exponent normalization avoids reciprocals outside the normal range for large/tiny coordinates. No CPU mirror, buffer growth, new readback or wait is introduced. [Hardware verification](physics-areas.md#hardware-point-field-guards-2026-10-14).
