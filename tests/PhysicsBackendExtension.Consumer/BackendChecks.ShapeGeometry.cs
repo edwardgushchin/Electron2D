@@ -46,7 +46,7 @@ public static partial class BackendChecks
         ];
         var shapes = edits.Select(edit => edit.Shape).Distinct().ToArray();
         var copySources = shapes.Select(shape => (Shape)shape.Duplicate()).ToArray();
-        foreach (var source in copySources) { source.ResourceName = "replacement"; source.ResourceLocalToScene = true; }
+        foreach (var source in copySources) { source.ResourceName = "replacement"; source.ResourceLocalToScene = true; source.CanTranslateMessages = false; source.TranslationDomain = StoredResourceDomain; }
         var data = shapes.Select(shape => shape.GetGeometryData()).ToArray();
         var values = edits.Select(edit => edit.Read()).ToArray();
         var ids = shapes.Select(shape => shape.GetRID()).ToArray();
@@ -111,7 +111,7 @@ public static partial class BackendChecks
             var hits = new PhysicsPointResult[1];
             Check(world.DirectSpaceState.IntersectPoint(point, hits) == 1 && hits[0].ColliderRID == body.GetRID(), "Lazy geometry preparation changes real selected point-query results");
             circle.Radius = 3;
-            circle.ResourceName = string.Empty; circle.ResourceLocalToScene = false;
+            circle.ResourceName = string.Empty; circle.ResourceLocalToScene = false; circle.CanTranslateMessages = true; circle.TranslationDomain = string.Empty;
             foreach (var edit in edits)
             {
                 var previous = edit.Shape.GetGeometryData(); edit.Change();
@@ -144,7 +144,7 @@ public static partial class BackendChecks
                 {
                     Reject<InvalidOperationException>(shapes[i].ResetState);
                     Reject<InvalidOperationException>(() => shapes[i].CopyFromResource(copySources[i]));
-                    Check(shapes[i].ResourceName.Length == 0 && !shapes[i].ResourceLocalToScene,
+                    Check(shapes[i].ResourceName.Length == 0 && !shapes[i].ResourceLocalToScene && shapes[i].CanTranslateMessages && shapes[i].TranslationDomain.Length == 0,
                         "Geometry supplier rejection preserves inherited copy metadata");
                     if (!ReferenceEquals(shapes[i], probe)) Check(ReferenceEquals(shapes[i].GetGeometryData(), currentData[i]), "Other exact data remains unchanged during a geometry supplier");
                 }
@@ -164,7 +164,7 @@ public static partial class BackendChecks
                 var target = shapes[i]; var id = target.GetRID(); var changed = changes;
                 target.ResourceSceneUniqueID = "copy1"; target.SetPathCache($"local://copy-target-{i}");
                 target.CopyFromResource(copySources[i]);
-                Check(target.ResourceName == "replacement" && target.ResourceLocalToScene && target.GetRID() == id &&
+                Check(target.ResourceName == "replacement" && target.ResourceLocalToScene && !target.CanTranslateMessages && target.TranslationDomain == StoredResourceDomain && target.GetRID() == id &&
                     target.ResourceSceneUniqueID == "copy1" && target.ResourcePath == $"local://copy-target-{i}" && changes == changed + 1,
                     "Allowed copying preserves target identity/path/scene ID and coalesces every shape family");
                 Check(target.GetGeometryData().Type == copySources[i].GetGeometryData().Type, "Allowed copying retains represented geometry kind");
@@ -200,7 +200,7 @@ public static partial class BackendChecks
             {
                 Reject<InvalidOperationException>(shapes[i].ResetState);
                 Reject<InvalidOperationException>(() => shapes[i].CopyFromResource(copySources[i]));
-                Check(shapes[i].ResourceName.Length == 0 && !shapes[i].ResourceLocalToScene,
+                Check(shapes[i].ResourceName.Length == 0 && !shapes[i].ResourceLocalToScene && shapes[i].CanTranslateMessages && shapes[i].TranslationDomain.Length == 0,
                     "Rejected inherited resource copying preserves shape base state");
                 Check(shapes[i].GetRID() == ids[i] && ReferenceEquals(shapes[i].GetGeometryData(), data[i]), "Rejected geometric write preserves RID and immutable cache");
             }

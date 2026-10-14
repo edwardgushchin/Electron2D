@@ -270,6 +270,8 @@ public class Resource : ElectronObject
     /// defines other behavior. <see cref="ResetState"/> runs first. Change notifications raised while copying are
     /// coalesced into one final <see cref="Changed"/> event. Batches targeting the same resource are serialized, but
     /// derived state still requires caller coordination. The operation is not transactional if a derived callback fails.
+    /// Stored base state includes inherited <see cref="ElectronObject.CanTranslateMessages"/> and
+    /// <see cref="ElectronObject.TranslationDomain"/>; both are copied before the final change event.
     /// </remarks>
     /// <exception cref="ArgumentException"><paramref name="source"/> has a different runtime type.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
@@ -299,8 +301,9 @@ public class Resource : ElectronObject
                     try
                     {
                         source.ThrowIfDisposed();
-                        var (name, localToScene) = source.GetCopyableBaseState();
+                        var (name, localToScene, canTranslateMessages, translationDomain) = source.GetCopyableBaseState();
                         EmitChanged(); ThrowIfDisposed(); OnResetState(); ResourceName = name; ResourceLocalToScene = localToScene;
+                        CanTranslateMessages = canTranslateMessages; TranslationDomain = translationDomain;
                         source.CopyCustomStateTo(this, deep: false, DeepDuplicateMode.None, static resource => resource, static resource => resource);
                         copied = true;
                     }
@@ -323,6 +326,7 @@ public class Resource : ElectronObject
     /// derived resources clone containers and duplicate built-in nested resources.
     /// </param>
     /// <returns>A new live resource of the exact same runtime type with an empty path and scene ID.</returns>
+    /// <remarks>Stored base state includes inherited translation policy and domain. Resource identity and runtime subscribers are not copied.</remarks>
     /// <exception cref="InvalidOperationException">A derived duplication factory returns an invalid instance.</exception>
     /// <exception cref="NotSupportedException">A derived resource does not explicitly implement the duplication hooks.</exception>
     /// <exception cref="ObjectDisposedException">This resource is disposing or disposed.</exception>
@@ -336,6 +340,7 @@ public class Resource : ElectronObject
     /// <remarks>
     /// Repeated and cyclic resource references preserve graph identity. Derived resources remain responsible for
     /// cloning their typed collection containers and passing nested resources to the appropriate supplied duplication delegate.
+    /// Inherited translation policy and domain are copied with stored resource base state.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="subresourceMode"/> is not defined.</exception>
     /// <exception cref="InvalidOperationException">A derived duplication factory returns an invalid instance.</exception>
@@ -605,13 +610,13 @@ public class Resource : ElectronObject
         throw new InvalidOperationException("Unreachable resource duplication state.");
     }
 
-    private (string Name, bool LocalToScene) GetCopyableBaseState()
+    private (string Name, bool LocalToScene, bool CanTranslateMessages, string TranslationDomain) GetCopyableBaseState()
     {
         ThrowIfDisposed();
         lock (_stateGate)
         {
             ThrowIfDisposed();
-            return (_resourceName, _localToScene);
+            return (_resourceName, _localToScene, CanTranslateMessages, TranslationDomain);
         }
     }
 
@@ -952,12 +957,14 @@ public class Resource : ElectronObject
             if (source.ResourceLocalToScene)
                 _sceneLocalDuplicates.Add(target);
 
-            var (name, localToScene) = source.GetCopyableBaseState();
+            var (name, localToScene, canTranslateMessages, translationDomain) = source.GetCopyableBaseState();
             target.ExecuteChangeBatch(
                 () =>
                 {
                     target.ResourceName = name;
                     target.ResourceLocalToScene = localToScene;
+                    target.CanTranslateMessages = canTranslateMessages;
+                    target.TranslationDomain = translationDomain;
                     source.CopyCustomStateTo(
                         target,
                         deep,

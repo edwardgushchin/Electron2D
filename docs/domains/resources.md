@@ -84,6 +84,7 @@ Concrete Shader/ShaderMaterial resources use the internal rendering reflection a
 - Registered paths are ordinal, process-wide, weakly held, and single-owner.
 - Synchronous loader cache decisions serialize; decoding failures preserve existing cached image pixels or font bytes and resource identity. Loaded resources remain caller-owned.
 - Derived resources explicitly define construction and stored-state copying.
+- Common resource copying includes inherited translation policy/domain as stored state, including scene-local duplicates; successful coalesced notifications observe the completed state.
 - Successful duplication preserves graph topology and clears external identity.
 - Scene-local duplicates preserve graph topology, receive their owning scene root before setup, run setup once, and are disposed by that root.
 - Failed duplication disposes its complete partial result.

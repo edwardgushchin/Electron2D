@@ -18,9 +18,9 @@ public static partial class BackendChecks
         var folder = Path.Combine(Path.GetTempPath(), "e2d-resource-identity-" + Guid.NewGuid()); Directory.CreateDirectory(folder);
         try
         {
-            using var first = new CircleShape { Radius = 3, ResourceName = "first", ResourceSceneUniqueID = "shared_id" };
-            using var second = new CircleShape { Radius = 6, ResourceName = "second", ResourceSceneUniqueID = "shared_id" };
-            using var material = new PhysicsMaterial { Friction = .3f, ResourceName = "empty ID" };
+            using var first = new CircleShape { Radius = 3, ResourceName = "first", ResourceSceneUniqueID = "shared_id", CanTranslateMessages = false, TranslationDomain = StoredResourceDomain };
+            using var second = new CircleShape { Radius = 6, ResourceName = "second", ResourceSceneUniqueID = "shared_id", TranslationDomain = StoredResourceDomain };
+            using var material = new PhysicsMaterial { Friction = .3f, ResourceName = "empty ID", CanTranslateMessages = false, TranslationDomain = StoredResourceDomain };
             using var root = new Node { Name = "Asset" };
             AddBody(root, "First", 0, first); AddBody(root, "Second", 30, second); AddBody(root, "Alias", 60, first);
             var mover = new RigidBody
@@ -65,8 +65,13 @@ public static partial class BackendChecks
                 "File graph preserves authored names, corrected IDs and repeated physical resource aliases");
             using var world = backend is { } selected ? new World(selected) : RegisteredIdentityWorld();
             var host = new SubViewport { World = world }; host.AddChild(loadedRoot); using var tree = new SceneTree(host);
+            ResourceStoredState(world);
             ResourceFactoryOwnership(loadedRoot, world, loadedFirst, loadedRoot.GetNode<RigidBody>("Mover").PhysicsMaterialOverride!);
             var moving = loadedRoot.GetNode<RigidBody>("Mover"); var queriedBody = loadedRoot.GetNode<StaticBody>("Second"); using var query = new PhysicsPointQueryParameters { Position = new(35, 0) };
+            Check(!loadedFirst.CanTranslateMessages && loadedFirst.TranslationDomain == StoredResourceDomain &&
+                loadedSecond.CanTranslateMessages && loadedSecond.TranslationDomain == StoredResourceDomain &&
+                moving.PhysicsMaterialOverride is { CanTranslateMessages: false, TranslationDomain: StoredResourceDomain },
+                "Packed/file physical resources retain inherited stored translation settings");
             var hits = new PhysicsPointResult[1];
             for (var i = 0; i < 128; i++) Frame();
             Collect(); var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
@@ -114,6 +119,10 @@ public static partial class BackendChecks
         using var unrelated = new Node(); using var unrelatedShape = new CircleShape();
         using var packed = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.IgnoreDeep); var root = packed.Instantiate();
         var first = root.GetNode<CollisionShape>("First/Shape").Shape!; var second = root.GetNode<CollisionShape>("Second/Shape").Shape!;
+        Check(!first.CanTranslateMessages && first.TranslationDomain == StoredResourceDomain &&
+            second.CanTranslateMessages && second.TranslationDomain == StoredResourceDomain &&
+            root.GetNode<RigidBody>("Mover").PhysicsMaterialOverride is { CanTranslateMessages: false, TranslationDomain: StoredResourceDomain },
+            "Fresh-process physical resources preserve inherited stored translation settings");
         Check(first.ResourceSceneUniqueID == "shared_id" && Generated(second.ResourceSceneUniqueID) && first != second &&
             first == root.GetNode<CollisionShape>("Alias/Shape").Shape, "Fresh process restores portable IDs independently of local object/RID creation order");
         using var world = backend is { } selected ? new World(selected) : RegisteredIdentityWorld();
