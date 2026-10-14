@@ -143,6 +143,7 @@ Temporary logs and generated shader/wiki files are not shipped. The timing loops
 inside the regression suites ran on a shared desktop and do not establish a
 controlled throughput comparison, window FPS or network acceptance.
 
+<a id="public-cpu-gpu-conformance"></a>
 ## Public CPU/GPU conformance
 
 The 2026-10-10 joint family run selects a public `World(backend)` or

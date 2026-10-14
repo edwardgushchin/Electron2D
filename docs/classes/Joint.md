@@ -140,3 +140,6 @@ continued constraints retain their bounds; all six warm cases require 0/0 bytes.
 [Off-center spring checks](../components/physics-registered-adapter.md#off-center-spring-anchors-and-portable-joints)
 also retain force/moment/cap and stable damping bounds. GPU executes on llvmpipe;
 hardware, broader geometry/graphs and network acceptance remain open.
+
+
+[Closed coupled graph](../components/physics-joints.md#closed-coupled-graph-2026-10-14) verifies all three joint families together, scene/raw ownership, momentum/stability, private replay and CPU-authoritative portable correction on CPU/GPU with zero warmed managed allocation. Larger/contact-rich/native/foreign/network/performance acceptance remains open; declaration states are unchanged.

@@ -1,6 +1,6 @@
 # Resident GPU joints
 
-Last updated: 2026-10-10
+Last updated: 2026-10-14
 
 [Public CPU/GPU joint conformance](physics-joint-policies.md#public-cpu-gpu-conformance)
 now exercises scene/server pin, groove and spring behavior through explicitly
@@ -279,3 +279,6 @@ Warm-start duration scaling is bounded above by one, matching contact constraint
 reproduces unequal-mass pin velocity loss after a 25,000-fold duration increase;
 the unamplified cache preserves momentum while fresh iteration supplies any extra
 impulse. Joint impulses remain excluded from contact-report payloads.
+
+
+[Closed coupled graph](physics-joints.md#closed-coupled-graph-2026-10-14) verifies all three joint families together, scene/raw ownership, momentum/stability, private replay and CPU-authoritative portable correction on CPU/GPU with zero warmed managed allocation. Larger/contact-rich/native/foreign/network/performance acceptance remains open; declaration states are unchanged.

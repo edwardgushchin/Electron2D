@@ -1,6 +1,6 @@
 # Physics joints component
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 ## Physical skeletal integration
 
@@ -73,3 +73,42 @@ Clear and Configure share the numerical authoring guard. Public make preflights 
 
 
 Dependent retirement now continues after a joint detach error and unregisters its old world membership. Body free clears every dependent role before dropping the body identity; caller-owned joint free retires its RID after validated cleanup begins. Authoring clear/make retains its separate retry policy.
+
+
+## Closed coupled graph (2026-10-14)
+
+The public-only --coupled-joints fixture runs four dynamic bodies (two scene, two
+raw) with two pins, one finite groove and one off-center damped spring in a closed
+loop. Both scene-owned and raw joint resources execute the same mechanism on
+explicit CPU/GPU worlds without startup fallback. Gravity and external damping
+are zero; collision layers are zero to isolate joint response. An off-center
+20-unit impulse starts real translation and rotation. Disabling each constraint
+family changes the first physical response, preventing an inert row from passing.
+
+Every complete step checks finite derived state, both pin anchor gaps and groove
+line/range, total linear/angular momentum, center travel and bounded kinetic plus
+spring energy. Limits are .5 scene units for anchor/guide error (1.25 percent of the
+40-unit mechanism), .03 impulse units against the initial 20-unit momentum,
+2 angular units against the initial 360, and .05 units for center drift. The energy
+ceiling 600 exceeds twice the initial kinetic/elastic energy, allowing finite-step
+constraint correction while rejecting unbounded growth; it is a stability bound,
+not exact energy conservation with damping. Local 32-step checkpoint replay uses
+.005 units/velocity and .002 radians/angular velocity. The same bounds apply to
+both implementations; post-correction cross-backend trajectories need not match.
+
+An independent CPU world supplies eight portable body/joint IDs and encoded
+snapshot packets to another CPU or GPU world. Deliberate pose/velocity divergence
+is corrected silently with stable distinct local RIDs, all four pose/rotation/linear/angular values within .002, exact sleep/role flags
+and the authoritative tick. Incompatible coupled policy rejects before any
+encoded world or event mutation. Each of 257 corrections is followed
+by actual constrained motion. Separate 128-warm/128-measured gates require strict
+0/0 owner/all-thread managed bytes for full local frames and complete capture,
+encoding/decoding, application and both worlds' numerical frames. This is local
+portable transport; real socket/network acceptance retains its separate example.
+
+Fresh serial/separate CPU/GPU processes observe no hardware driver; GPU executes
+CPU-only Vulkan. Separate profiles observe two live numerical lanes when both
+worlds run; GPU profiles observe those lanes with the software driver present.
+The bounded ring establishes this coupled path. Contact-rich graphs, larger or
+extreme-scale workloads, full inherited/extension contracts, native/foreign
+execution, routed networking and hardware/window performance remain open.

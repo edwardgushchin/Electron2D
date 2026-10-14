@@ -172,3 +172,12 @@ borrowed disposal/owner guards, scratch identity/reuse, callback/validation fail
 caller snapshots and retirement aggregation. Full measured frames include body
 motion tests with and without caller output. All 128 measured frames after 128 warm
 frames require zero owner/all-thread managed bytes and actual solved movement.
+
+
+`--coupled-joints` selects CPU by default, with `--gpu` and `--threaded` available.
+Two pins, a finite groove and an off-center spring close a four-body mixed scene/raw
+mechanism; both joint ownership forms execute. Numerical contribution controls,
+physical momentum/stability, checkpoint replay and CPU-authoritative portable
+correction all use public API. The independent local-frame and full transport/frame
+128-sample brackets require zero owner/all-thread bytes. Packet transport is local;
+real multi-process networking and hardware GPU performance are separate gates.

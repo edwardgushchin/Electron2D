@@ -1143,3 +1143,6 @@ acceptance remains open.
 
 
 [Borrowed motion output](physics-registered-adapter.md#borrowed-motion-output-2026-10-14) preserves selected scratch lifetime and owner scope while retaining caller-owned snapshots, error continuation and retirement failures. The inherited disposal preflight is a reviewed C# adaptation; full numerical/foreign/hardware acceptance stays open.
+
+
+[Closed coupled graph](physics-joints.md#closed-coupled-graph-2026-10-14) verifies all three joint families together, scene/raw ownership, momentum/stability, private replay and CPU-authoritative portable correction on CPU/GPU with zero warmed managed allocation. Larger/contact-rich/native/foreign/network/performance acceptance remains open; declaration states are unchanged.
