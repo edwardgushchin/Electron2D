@@ -1,6 +1,6 @@
 # Resource base component
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 [Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
@@ -50,7 +50,7 @@ Base state supports concurrent access, and copy batches on one target serialize 
 
 ## Current implementation status
 
-Name/path/scene configuration, path cache ownership, raw cache paths, changed/setup events, local-scene association, reset, shallow copy, all deep-duplicate modes, alias/cycle handling, rollback cleanup, typed property exposure, packed-scene local duplication/setup/ownership, and deterministic disposal are implemented and verified.
+The typed base operations, deep policies and packed-scene lifecycle execute. The coverage register still keeps full derived stored-state copying, renderer RID families and editor path-ID integration open; passing base/physical consumers does not certify those wider families.
 
 ## Exclusions and deferred integration
 
@@ -97,3 +97,5 @@ Internal resource graph IDs are staged before persistence: first authored IDs re
 ## Named scene assets
 
 [ResourcePreloader](resource-preloading.md) supplies case-sensitive named resource slots with numbered duplicate/rename handling and copied name enumeration. Existing PackedScene and archive graphs retain aliases, local-scene copying and file ownership through exact typed reserved slot recovery. The holder borrows ordinary assets and exposes no loading task. Runtime/test details and verification boundaries are in the component.
+
+[Copy-failure consumers](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.ResourceCopyFailures.cs) exercise a live application Shape: reset failure before stored writes, partial shallow state, combined operation/observer failures, skipped later subscribers, nested and final-observer reentrant batches, and recovery through actual selected frames/queries with stable body/shape/cache identity. A failed deep graph retires both acquired query shapes in reverse order despite two throwing cleanup hooks, preserves each exception and leaves sources live. Subsequent duplication uses an independent session. Exact enum values and invalid policies are checked alongside the existing full per-edge matrix. CPU/software-Vulkan/registered serial/separate managed and NativeAOT evidence is retained in `bin/physics-resource-copy-failures/2026-10-15/validation.json`; hardware timings, native allocator totals and complete derived-resource storage remain separate.

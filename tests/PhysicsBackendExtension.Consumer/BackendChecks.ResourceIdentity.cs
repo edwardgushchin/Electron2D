@@ -66,6 +66,7 @@ public static partial class BackendChecks
             using var world = backend is { } selected ? new World(selected) : RegisteredIdentityWorld();
             var host = new SubViewport { World = world }; host.AddChild(loadedRoot); using var tree = new SceneTree(host);
             ResourceStoredState(world);
+            ResourceCopyFailures(loadedRoot, world);
             ScriptGraphs(loadedRoot, world);
             ResourceEdgeScenes(loadedRoot, world);
             ResourceFactoryOwnership(loadedRoot, world, loadedFirst, loadedRoot.GetNode<RigidBody>("Mover").PhysicsMaterialOverride!);
