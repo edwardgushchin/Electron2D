@@ -1,0 +1,142 @@
+{
+  "mappings": [
+    {
+      "godot": "class:JSONRPC",
+      "electron2d": "T:Electron2D.JSONRPC",
+      "reason": "ADR 0094/0048: caller-owned JSON documents and concrete callback schemas; strict wire envelopes, exact ID tokens, root batches and notification/error ownership execute in JSONRPCTests and a public scene TCP workflow. Allocating message work, external hosts and routed/editor acceptance remain separate."
+    },
+    {
+      "godot": "JSONRPC::enum:ErrorCode",
+      "electron2d": "T:Electron2D.JSONRPCErrorCode",
+      "reason": "ADR 0094/0048: caller-owned JSON documents and concrete callback schemas; strict wire envelopes, exact ID tokens, root batches and notification/error ownership execute in JSONRPCTests and a public scene TCP workflow. Allocating message work, external hosts and routed/editor acceptance remain separate."
+    },
+    {
+      "godot": "JSONRPC::enum_value:ErrorCode.INTERNAL_ERROR",
+      "electron2d": "enumValue:Electron2D.JSONRPCErrorCode.InternalError()",
+      "reason": "ADR 0094/0048: caller-owned JSON documents and concrete callback schemas; strict wire envelopes, exact ID tokens, root batches and notification/error ownership execute in JSONRPCTests and a public scene TCP workflow. Allocating message work, external hosts and routed/editor acceptance remain separate."
+    },
+    {
+      "godot": "JSONRPC::enum_value:ErrorCode.INVALID_PARAMS",
+      "electron2d": "enumValue:Electron2D.JSONRPCErrorCode.InvalidParams()",
+      "reason": "ADR 0094/0048: caller-owned JSON documents and concrete callback schemas; strict wire envelopes, exact ID tokens, root batches and notification/error ownership execute in JSONRPCTests and a public scene TCP workflow. Allocating message work, external hosts and routed/editor acceptance remain separate."
+    },
+    {
+      "godot": "JSONRPC::enum_value:ErrorCode.INVALID_REQUEST",
+      "electron2d": "enumValue:Electron2D.JSONRPCErrorCode.InvalidRequest()",
+      "reason": "ADR 0094/0048: caller-owned JSON documents and concrete callback schemas; strict wire envelopes, exact ID tokens, root batches and notification/error ownership execute in JSONRPCTests and a public scene TCP workflow. Allocating message work, external hosts and routed/editor acceptance remain separate."
+    },
+    {
+      "godot": "JSONRPC::enum_value:ErrorCode.METHOD_NOT_FOUND",
+      "electron2d": "enumValue:Electron2D.JSONRPCErrorCode.MethodNotFound()",
+      "reason": "ADR 0094/0048: caller-owned JSON documents and concrete callback schemas; strict wire envelopes, exact ID tokens, root batches and notification/error ownership execute in JSONRPCTests and a public scene TCP workflow. Allocating message work, external hosts and routed/editor acceptance remain separate."
+    },
+    {
+      "godot": "JSONRPC::enum_value:ErrorCode.PARSE_ERROR",
+      "electron2d": "enumValue:Electron2D.JSONRPCErrorCode.ParseError()",
+      "reason": "ADR 0094/0048: caller-owned JSON documents and concrete callback schemas; strict wire envelopes, exact ID tokens, root batches and notification/error ownership execute in JSONRPCTests and a public scene TCP workflow. Allocating message work, external hosts and routed/editor acceptance remain separate."
+    },
+    {
+      "godot": "JSONRPC::method:make_notification(String:,Variant:)",
+      "electron2d": "method:Electron2D.JSONRPC.MakeNotification(System.String,Electron2D.JSON)",
+      "reason": "ADR 0094/0048: caller-owned JSON documents and concrete callback schemas; strict wire envelopes, exact ID tokens, root batches and notification/error ownership execute in JSONRPCTests and a public scene TCP workflow. Allocating message work, external hosts and routed/editor acceptance remain separate."
+    },
+    {
+      "godot": "JSONRPC::method:make_request(String:,Variant:,Variant:)",
+      "electron2d": "method:Electron2D.JSONRPC.MakeRequest(System.String,Electron2D.JSON,Electron2D.JSON)",
+      "reason": "ADR 0094/0048: caller-owned JSON documents and concrete callback schemas; strict wire envelopes, exact ID tokens, root batches and notification/error ownership execute in JSONRPCTests and a public scene TCP workflow. Allocating message work, external hosts and routed/editor acceptance remain separate."
+    },
+    {
+      "godot": "JSONRPC::method:make_response(Variant:,Variant:)",
+      "electron2d": "method:Electron2D.JSONRPC.MakeResponse(Electron2D.JSON,Electron2D.JSON)",
+      "reason": "ADR 0094/0048: caller-owned JSON documents and concrete callback schemas; strict wire envelopes, exact ID tokens, root batches and notification/error ownership execute in JSONRPCTests and a public scene TCP workflow. Allocating message work, external hosts and routed/editor acceptance remain separate."
+    },
+    {
+      "godot": "JSONRPC::method:make_response_error(int:,String:,Variant:)",
+      "electron2d": "method:Electron2D.JSONRPC.MakeResponseError(System.Int32,System.String,Electron2D.JSON)",
+      "reason": "ADR 0094/0048: caller-owned JSON documents and concrete callback schemas; strict wire envelopes, exact ID tokens, root batches and notification/error ownership execute in JSONRPCTests and a public scene TCP workflow. Allocating message work, external hosts and routed/editor acceptance remain separate."
+    },
+    {
+      "godot": "JSONRPC::method:process_action(Variant:,bool:)",
+      "electron2d": "method:Electron2D.JSONRPC.ProcessAction(Electron2D.JSON,System.Boolean)",
+      "reason": "ADR 0094/0048: caller-owned JSON documents and concrete callback schemas; strict wire envelopes, exact ID tokens, root batches and notification/error ownership execute in JSONRPCTests and a public scene TCP workflow. Allocating message work, external hosts and routed/editor acceptance remain separate."
+    },
+    {
+      "godot": "JSONRPC::method:process_string(String:)",
+      "electron2d": "method:Electron2D.JSONRPC.ProcessString(System.String)",
+      "reason": "ADR 0094/0048: caller-owned JSON documents and concrete callback schemas; strict wire envelopes, exact ID tokens, root batches and notification/error ownership execute in JSONRPCTests and a public scene TCP workflow. Allocating message work, external hosts and routed/editor acceptance remain separate."
+    },
+    {
+      "godot": "JSONRPC::method:set_method(String:,Callable:)",
+      "electron2d": "method:Electron2D.JSONRPC.SetMethod`2(System.String,Func<TParameters, TResult>,JsonTypeInfo<TParameters>,JsonTypeInfo<TResult>)",
+      "reason": "ADR 0094/0048: caller-owned JSON documents and concrete callback schemas; strict wire envelopes, exact ID tokens, root batches and notification/error ownership execute in JSONRPCTests and a public scene TCP workflow. Allocating message work, external hosts and routed/editor acceptance remain separate."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.JSONRPC..ctor()",
+      "reason": "ADR 0094/0048 typed projection of the existing message/delegate/error family: concrete schemas, compiled metadata, standard enum error overload, constructor and inherited deterministic registration cleanup. No new protocol operation."
+    },
+    {
+      "electron2d": "method:Electron2D.JSONRPC.Dispose(System.Boolean)",
+      "reason": "ADR 0094/0048 typed projection of the existing message/delegate/error family: concrete schemas, compiled metadata, standard enum error overload, constructor and inherited deterministic registration cleanup. No new protocol operation."
+    },
+    {
+      "electron2d": "method:Electron2D.JSONRPC.MakeNotification`1(System.String,TParameters,JsonTypeInfo<TParameters>)",
+      "reason": "ADR 0094/0048 typed projection of the existing message/delegate/error family: concrete schemas, compiled metadata, standard enum error overload, constructor and inherited deterministic registration cleanup. No new protocol operation."
+    },
+    {
+      "electron2d": "method:Electron2D.JSONRPC.MakeRequest`2(System.String,TParameters,TID,JsonTypeInfo<TParameters>,JsonTypeInfo<TID>)",
+      "reason": "ADR 0094/0048 typed projection of the existing message/delegate/error family: concrete schemas, compiled metadata, standard enum error overload, constructor and inherited deterministic registration cleanup. No new protocol operation."
+    },
+    {
+      "electron2d": "method:Electron2D.JSONRPC.MakeResponseError(Electron2D.JSONRPCErrorCode,System.String,Electron2D.JSON)",
+      "reason": "ADR 0094/0048 typed projection of the existing message/delegate/error family: concrete schemas, compiled metadata, standard enum error overload, constructor and inherited deterministic registration cleanup. No new protocol operation."
+    },
+    {
+      "electron2d": "method:Electron2D.JSONRPC.MakeResponseError`1(System.Int32,System.String,TID,JsonTypeInfo<TID>)",
+      "reason": "ADR 0094/0048 typed projection of the existing message/delegate/error family: concrete schemas, compiled metadata, standard enum error overload, constructor and inherited deterministic registration cleanup. No new protocol operation."
+    },
+    {
+      "electron2d": "method:Electron2D.JSONRPC.MakeResponse`2(TResult,TID,JsonTypeInfo<TResult>,JsonTypeInfo<TID>)",
+      "reason": "ADR 0094/0048 typed projection of the existing message/delegate/error family: concrete schemas, compiled metadata, standard enum error overload, constructor and inherited deterministic registration cleanup. No new protocol operation."
+    },
+    {
+      "electron2d": "method:Electron2D.JSONRPC.SetMethod(System.String,System.Action)",
+      "reason": "ADR 0094/0048 typed projection of the existing message/delegate/error family: concrete schemas, compiled metadata, standard enum error overload, constructor and inherited deterministic registration cleanup. No new protocol operation."
+    },
+    {
+      "electron2d": "method:Electron2D.JSONRPC.SetMethod(System.String,System.Func<Electron2D.JSON, Electron2D.JSON>)",
+      "reason": "ADR 0094/0048 typed projection of the existing message/delegate/error family: concrete schemas, compiled metadata, standard enum error overload, constructor and inherited deterministic registration cleanup. No new protocol operation."
+    },
+    {
+      "electron2d": "method:Electron2D.JSONRPC.SetMethod`1(System.String,Action<TParameters>,JsonTypeInfo<TParameters>)",
+      "reason": "ADR 0094/0048 typed projection of the existing message/delegate/error family: concrete schemas, compiled metadata, standard enum error overload, constructor and inherited deterministic registration cleanup. No new protocol operation."
+    },
+    {
+      "electron2d": "method:Electron2D.JSONRPC.SetMethod`1(System.String,Func<TResult>,JsonTypeInfo<TResult>)",
+      "reason": "ADR 0094/0048 typed projection of the existing message/delegate/error family: concrete schemas, compiled metadata, standard enum error overload, constructor and inherited deterministic registration cleanup. No new protocol operation."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:JSONRPC",
+        "JSONRPC::enum:ErrorCode",
+        "JSONRPC::enum_value:ErrorCode.INTERNAL_ERROR",
+        "JSONRPC::enum_value:ErrorCode.INVALID_PARAMS",
+        "JSONRPC::enum_value:ErrorCode.INVALID_REQUEST",
+        "JSONRPC::enum_value:ErrorCode.METHOD_NOT_FOUND",
+        "JSONRPC::enum_value:ErrorCode.PARSE_ERROR",
+        "JSONRPC::method:make_notification(String:,Variant:)",
+        "JSONRPC::method:make_request(String:,Variant:,Variant:)",
+        "JSONRPC::method:make_response(Variant:,Variant:)",
+        "JSONRPC::method:make_response_error(int:,String:,Variant:)",
+        "JSONRPC::method:process_action(Variant:,bool:)",
+        "JSONRPC::method:process_string(String:)",
+        "JSONRPC::method:set_method(String:,Callable:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0094/0048: caller-owned JSON documents and concrete callback schemas; strict wire envelopes, exact ID tokens, root batches and notification/error ownership execute in JSONRPCTests and a public scene TCP workflow. Allocating message work, external hosts and routed/editor acceptance remain separate."
+    }
+  ]
+}

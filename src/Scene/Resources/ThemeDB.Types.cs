@@ -210,6 +210,7 @@ public sealed partial class ThemeDB
         ["IntervalTweener"] = ["IntervalTweener", "Tweener", "ElectronObject"],
         ["ItemList"] = ["ItemList", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["JSON"] = ["JSON", "Resource", "ElectronObject"],
+        ["JSONRPC"] = ["JSONRPC", "ElectronObject"],
         ["Joint"] = ["Joint", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["KinematicCollision"] = ["KinematicCollision", "ElectronObject"],
         ["Label"] = ["Label", "Control", "CanvasItem", "Node", "ElectronObject"],

@@ -13,6 +13,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_CHILD") is {
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_HOST") == "1") { FontRasterPolicyTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER") == "1") { FontRasterPolicyTests.Run(); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JSON") == "1") { JsonTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JSONRPC") == "1") { JSONRPCTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IP") == "1") { IPTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ENGINE_REGISTRY") == "1") { VerifyEngine(); return; }
 if (args.Length == 2 && args[0] == "--touch-archive") { TouchControlTests.RunArchive(args[1]); return; }
@@ -1284,7 +1286,7 @@ PhysicsPointGravityRangeTests.Run(PhysicsServer.Backend.CPU); PhysicsPointGravit
 PhysicsServerAreaFieldTests.Run(); PhysicsServerAreaFieldTests.Run(PhysicsServer.Backend.GPU);
 ScreenVisibilityTests.Run();
 NinePatchTests.Run();
-IPTests.Run(); TouchControlTests.RunManaged(); ZIPTests.RunManaged(); RangeProgressTests.Run(); ProgressBarTests.RunManaged(); ProjectThemeTests.RunManaged(); FoldableTests.RunManaged();
+JSONRPCTests.Run(); IPTests.Run(); TouchControlTests.RunManaged(); ZIPTests.RunManaged(); RangeProgressTests.Run(); ProgressBarTests.RunManaged(); ProjectThemeTests.RunManaged(); FoldableTests.RunManaged();
 BoxContainerTests.Run();
 GridContainerTests.Run();
 FlowContainerTests.Run();

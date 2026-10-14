@@ -17,7 +17,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "zip", "jobs", "display", "rendering", "texture_arrays", "device", "navigation", "navigation_baking", "resources", "threaded_resources", "physics", "text", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "particles", "skeleton", "networking", "ip", "tiles")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "zip", "jobs", "display", "rendering", "texture_arrays", "device", "navigation", "navigation_baking", "resources", "threaded_resources", "physics", "text", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -420,7 +420,7 @@ def reason_for_type(item, lookup):
         ("Animation", r"Animation", "first missing type-specific animation resource utility or persistence slice on the executable graph/state-machine/BlendSpace/action foundation (ADR 0093); applicable event tracks already execute"),
         ("Skeleton", r"Skeleton2D|Bone2D", "typed 2D bone hierarchy, rest/pose transforms and skinning integration"),
         ("Tiles", r"Tile|Atlas", "first tile and atlas resource slice after 2D rendering"),
-        ("Networking", r"Multiplayer|PacketPeer|ENet|WebRTC|WebSocket|HTTP|TLS|DTLS|TCP|UDP|IP$|SocketServer|StreamPeer|UDSServer|UPNP", "first networking and multiplayer slice"),
+        ("Networking", r"Multiplayer|PacketPeer|ENet|WebRTC|WebSocket|HTTP|TLS|DTLS|TCP|UDP|JSONRPC|IP$|SocketServer|StreamPeer|UDSServer|UPNP", "first networking and multiplayer slice"),
         ("Assets", r"ResourceLoader|ResourceSaver|CompressedTexture|StreamTexture|ImageTexture|Font|Video|PackedData|ImageFormatLoader|GLTF|FBX", "first type-specific asset format and native-backed integration beyond the existing image-texture loader (ADR 0013/0023)"),
         ("InputHost", r"InputEvent|InputMap|Input$|Shortcut|Joypad|TouchScreen|Sensor", "first SDL input-host integration slice (ADR 0038)"),
         ("Host", r"DisplayServer|OS$|Time$|NativeMenu|CameraServer|CameraFeed|AccessibilityServer", "first SDL-backed platform host and display slice (ADR 0021/0038)"),

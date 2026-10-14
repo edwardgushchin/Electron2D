@@ -1696,3 +1696,12 @@ owner/all-thread managed bytes. A public-only standalone consumer supports the
 same compiled test in ordinary and NativeAOT hosts. Evidence and exact limits are
 retained under bin/physics-auto-callbacks/2026-10-14; full inherited, native/foreign
 and hardware/window/performance acceptance remains open.
+
+## JSON-RPC documents
+
+| Domain | Component | Type | Source | State | Responsibility |
+| --- | --- | --- | --- | --- | --- |
+| [Networking](domains/networking.md) | [JSON-RPC](components/jsonrpc.md) | [JSONRPC](classes/JSONRPC.md) | [JSONRPC.cs](../src/Core/Networking/JSONRPC.cs) | Current | Caller-owned typed/document method dispatcher and wire message makers. |
+| [Networking](domains/networking.md) | [JSON-RPC](components/jsonrpc.md) | [JSONRPCErrorCode](classes/JSONRPCErrorCode.md) | [JSONRPCErrorCode.cs](../src/Core/Networking/JSONRPCErrorCode.cs) | Current | Five standard protocol failure identities. |
+
+JSONRPC.API.cs supplies copied document and concrete-schema makers. JSON supplies the dedicated document/native schema boundary; transport and scene consumers own actual I/O and callback scheduling.

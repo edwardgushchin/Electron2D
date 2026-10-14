@@ -63,3 +63,7 @@ window FPS/allocation reporting remain separate from physics/replay metrics.
 ## Shared address resolution
 
 The [IP service](../classes/IP.md) and [address-resolution component](../components/address-resolution.md) now retain the hostname/family cache and bounded asynchronous queue. Existing transport hostname helpers and HTTP asynchronous resolution use this common backend; cold DNS and connection setup remain outside warmed polling budgets. Engine named lookup includes the permanent IP object and rejects disposal/unregistration.
+
+## JSON-RPC document dispatch
+
+[JSON-RPC documents and typed dispatch](../components/jsonrpc.md) adds caller-owned JSONRPC over existing transport text/bytes. Typed callbacks and compiled schemas handle positional/named parameters, response correlation, notifications and ordered batches. Wire validation and protocol errors retain dedicated document ownership; constructing a dispatcher opens no listener. The public scene TCP test exercises actual framed request/notification/response flow. JSON message work allocates; application framing, authentication, scene ownership and remote acceptance remain separate.

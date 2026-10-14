@@ -5936,6 +5936,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.JSONRPC",
+    "kind": "type",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "JSONRPC",
+    "signature": "public sealed class Electron2D.JSONRPC",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.JSONRPCErrorCode",
+    "kind": "type",
+    "declaringType": "Electron2D.JSONRPCErrorCode",
+    "name": "JSONRPCErrorCode",
+    "signature": "public enum Electron2D.JSONRPCErrorCode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Joint",
     "kind": "type",
     "declaringType": "Electron2D.Joint",
@@ -18372,6 +18405,19 @@
     "declaringType": "Electron2D.JSON",
     "name": ".ctor",
     "signature": "public JSON()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.JSONRPC..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": ".ctor",
+    "signature": "public JSONRPC()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -33159,6 +33205,71 @@
     "parameters": [],
     "returnType": "Electron2D.ItemList.SelectMode",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.JSONRPCErrorCode.InternalError()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.JSONRPCErrorCode",
+    "name": "InternalError",
+    "signature": "public const Electron2D.JSONRPCErrorCode InternalError = -32603",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.JSONRPCErrorCode",
+    "value": "-32603"
+  },
+  {
+    "id": "enumValue:Electron2D.JSONRPCErrorCode.InvalidParams()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.JSONRPCErrorCode",
+    "name": "InvalidParams",
+    "signature": "public const Electron2D.JSONRPCErrorCode InvalidParams = -32602",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.JSONRPCErrorCode",
+    "value": "-32602"
+  },
+  {
+    "id": "enumValue:Electron2D.JSONRPCErrorCode.InvalidRequest()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.JSONRPCErrorCode",
+    "name": "InvalidRequest",
+    "signature": "public const Electron2D.JSONRPCErrorCode InvalidRequest = -32600",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.JSONRPCErrorCode",
+    "value": "-32600"
+  },
+  {
+    "id": "enumValue:Electron2D.JSONRPCErrorCode.MethodNotFound()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.JSONRPCErrorCode",
+    "name": "MethodNotFound",
+    "signature": "public const Electron2D.JSONRPCErrorCode MethodNotFound = -32601",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.JSONRPCErrorCode",
+    "value": "-32601"
+  },
+  {
+    "id": "enumValue:Electron2D.JSONRPCErrorCode.ParseError()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.JSONRPCErrorCode",
+    "name": "ParseError",
+    "signature": "public const Electron2D.JSONRPCErrorCode ParseError = -32700",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.JSONRPCErrorCode",
+    "value": "-32700"
   },
   {
     "id": "enumValue:Electron2D.JoyAxis.Invalid()",
@@ -108068,6 +108179,479 @@
       }
     ],
     "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.MakeNotification(System.String,Electron2D.JSON)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "MakeNotification",
+    "signature": "public Electron2D.JSON MakeNotification(System.String method, Electron2D.JSON parameters)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "method",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "parameters",
+        "type": "Electron2D.JSON",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.JSON",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.MakeNotification\u00601(System.String,TParameters,JsonTypeInfo\u003CTParameters\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "MakeNotification",
+    "signature": "public Electron2D.JSON MakeNotification\u003CTParameters\u003E(System.String method, TParameters parameters, JsonTypeInfo\u003CTParameters\u003E parametersTypeInfo = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "method",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "parameters",
+        "type": "TParameters",
+        "default": null
+      },
+      {
+        "name": "parametersTypeInfo",
+        "type": "JsonTypeInfo\u003CTParameters\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "Electron2D.JSON",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.MakeRequest(System.String,Electron2D.JSON,Electron2D.JSON)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "MakeRequest",
+    "signature": "public Electron2D.JSON MakeRequest(System.String method, Electron2D.JSON parameters, Electron2D.JSON id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "method",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "parameters",
+        "type": "Electron2D.JSON",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "Electron2D.JSON",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.JSON",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.MakeRequest\u00602(System.String,TParameters,TID,JsonTypeInfo\u003CTParameters\u003E,JsonTypeInfo\u003CTID\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "MakeRequest",
+    "signature": "public Electron2D.JSON MakeRequest\u003CTParameters, TID\u003E(System.String method, TParameters parameters, TID id, JsonTypeInfo\u003CTParameters\u003E parametersTypeInfo = null, JsonTypeInfo\u003CTID\u003E idTypeInfo = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "method",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "parameters",
+        "type": "TParameters",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "TID",
+        "default": null
+      },
+      {
+        "name": "parametersTypeInfo",
+        "type": "JsonTypeInfo\u003CTParameters\u003E",
+        "default": "null"
+      },
+      {
+        "name": "idTypeInfo",
+        "type": "JsonTypeInfo\u003CTID\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "Electron2D.JSON",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.MakeResponse(Electron2D.JSON,Electron2D.JSON)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "MakeResponse",
+    "signature": "public Electron2D.JSON MakeResponse(Electron2D.JSON result, Electron2D.JSON id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "result",
+        "type": "Electron2D.JSON",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "Electron2D.JSON",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.JSON",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.MakeResponseError(Electron2D.JSONRPCErrorCode,System.String,Electron2D.JSON)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "MakeResponseError",
+    "signature": "public Electron2D.JSON MakeResponseError(Electron2D.JSONRPCErrorCode code, System.String message, Electron2D.JSON id = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "code",
+        "type": "Electron2D.JSONRPCErrorCode",
+        "default": null
+      },
+      {
+        "name": "message",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "Electron2D.JSON",
+        "default": "null"
+      }
+    ],
+    "returnType": "Electron2D.JSON",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.MakeResponseError(System.Int32,System.String,Electron2D.JSON)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "MakeResponseError",
+    "signature": "public Electron2D.JSON MakeResponseError(System.Int32 code, System.String message, Electron2D.JSON id = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "code",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "message",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "Electron2D.JSON",
+        "default": "null"
+      }
+    ],
+    "returnType": "Electron2D.JSON",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.MakeResponseError\u00601(System.Int32,System.String,TID,JsonTypeInfo\u003CTID\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "MakeResponseError",
+    "signature": "public Electron2D.JSON MakeResponseError\u003CTID\u003E(System.Int32 code, System.String message, TID id, JsonTypeInfo\u003CTID\u003E idTypeInfo = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "code",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "message",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "TID",
+        "default": null
+      },
+      {
+        "name": "idTypeInfo",
+        "type": "JsonTypeInfo\u003CTID\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "Electron2D.JSON",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.MakeResponse\u00602(TResult,TID,JsonTypeInfo\u003CTResult\u003E,JsonTypeInfo\u003CTID\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "MakeResponse",
+    "signature": "public Electron2D.JSON MakeResponse\u003CTResult, TID\u003E(TResult result, TID id, JsonTypeInfo\u003CTResult\u003E resultTypeInfo = null, JsonTypeInfo\u003CTID\u003E idTypeInfo = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "result",
+        "type": "TResult",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "TID",
+        "default": null
+      },
+      {
+        "name": "resultTypeInfo",
+        "type": "JsonTypeInfo\u003CTResult\u003E",
+        "default": "null"
+      },
+      {
+        "name": "idTypeInfo",
+        "type": "JsonTypeInfo\u003CTID\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "Electron2D.JSON",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.ProcessAction(Electron2D.JSON,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "ProcessAction",
+    "signature": "public Electron2D.JSON ProcessAction(Electron2D.JSON action, System.Boolean recurse = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "action",
+        "type": "Electron2D.JSON",
+        "default": null
+      },
+      {
+        "name": "recurse",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.JSON",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.ProcessString(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "ProcessString",
+    "signature": "public System.String ProcessString(System.String action)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "action",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.SetMethod(System.String,System.Action)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "SetMethod",
+    "signature": "public System.Void SetMethod(System.String name, System.Action callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.SetMethod(System.String,System.Func\u003CElectron2D.JSON, Electron2D.JSON\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "SetMethod",
+    "signature": "public System.Void SetMethod(System.String name, System.Func\u003CElectron2D.JSON, Electron2D.JSON\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Func\u003CElectron2D.JSON, Electron2D.JSON\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.SetMethod\u00601(System.String,Action\u003CTParameters\u003E,JsonTypeInfo\u003CTParameters\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "SetMethod",
+    "signature": "public System.Void SetMethod\u003CTParameters\u003E(System.String name, Action\u003CTParameters\u003E callback, JsonTypeInfo\u003CTParameters\u003E parametersTypeInfo = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "Action\u003CTParameters\u003E",
+        "default": null
+      },
+      {
+        "name": "parametersTypeInfo",
+        "type": "JsonTypeInfo\u003CTParameters\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.SetMethod\u00601(System.String,Func\u003CTResult\u003E,JsonTypeInfo\u003CTResult\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "SetMethod",
+    "signature": "public System.Void SetMethod\u003CTResult\u003E(System.String name, Func\u003CTResult\u003E callback, JsonTypeInfo\u003CTResult\u003E resultTypeInfo = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "Func\u003CTResult\u003E",
+        "default": null
+      },
+      {
+        "name": "resultTypeInfo",
+        "type": "JsonTypeInfo\u003CTResult\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSONRPC.SetMethod\u00602(System.String,Func\u003CTParameters, TResult\u003E,JsonTypeInfo\u003CTParameters\u003E,JsonTypeInfo\u003CTResult\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSONRPC",
+    "name": "SetMethod",
+    "signature": "public System.Void SetMethod\u003CTParameters, TResult\u003E(System.String name, Func\u003CTParameters, TResult\u003E callback, JsonTypeInfo\u003CTParameters\u003E parametersTypeInfo = null, JsonTypeInfo\u003CTResult\u003E resultTypeInfo = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "Func\u003CTParameters, TResult\u003E",
+        "default": null
+      },
+      {
+        "name": "parametersTypeInfo",
+        "type": "JsonTypeInfo\u003CTParameters\u003E",
+        "default": "null"
+      },
+      {
+        "name": "resultTypeInfo",
+        "type": "JsonTypeInfo\u003CTResult\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {

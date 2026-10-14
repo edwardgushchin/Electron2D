@@ -937,3 +937,7 @@ owner/all-thread managed bytes. A public-only standalone consumer supports the
 same compiled test in ordinary and NativeAOT hosts. Evidence and exact limits are
 retained under bin/physics-auto-callbacks/2026-10-14; full inherited, native/foreign
 and hardware/window/performance acceptance remains open.
+
+## JSON-RPC documents (2026-10-14)
+
+The [JSON-RPC document/typed-dispatch slice](../components/jsonrpc.md) closes all fourteen JSONRPC own rows. Document/native makers, concrete/compiled callbacks, strict wire validation, exact numeric/string/null IDs, all standard errors, root batches, notification suppression and deterministic input/result/registration ownership execute in JSONRPCTests. A public Node/SceneTree/TCP/PacketPeerStream scenario performs actual framed request, notification and correlated response. Allocating JSON work and external/foreign/routed/rendered/editor acceptance remain separate.

@@ -195,7 +195,7 @@ public sealed class JSON : Resource
         base.Dispose(disposing);
     }
 
-    private static void CheckNativeType<T>()
+    internal static void CheckNativeType<T>()
     {
         var type = typeof(T);
         if (type == typeof(object) || typeof(ElectronObject).IsAssignableFrom(type))
