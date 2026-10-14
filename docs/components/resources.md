@@ -21,7 +21,7 @@ Both types are production members of `Electron2D.dll`.
 2. Ordinary path assignment claims one process-wide ordinal path; takeover is explicit, while raw cache assignment bypasses ownership.
 3. Custom setters call `EmitChanged` only after committing meaningful content.
 4. Copying first validates the target engine resource authoring policy, then resets it, shallow-copies stored state, preserves target identity, and emits one coalesced change. Shape preflight checks geometry/access hooks and all live borrowers before any base-state, reset, ownership or Changed effects. Arbitrary failures after accepted preflight retain the documented non-transactional behavior.
-5. Duplication creates and validates exact-type targets, registers them before recursive copying, and therefore preserves aliases and cycles.
+5. Duplication samples the process-local construction counter before each factory. A returned pre-existing object rejects before copying or ownership acquisition. Fresh exact-type targets register before recursive copying, preserving aliases and cycles; distinct sources cannot reuse an earlier created target.
 6. Packed-scene instantiation uses the same graph machinery to duplicate local resource graphs. It assigns the new scene root before setup, invokes setup once per local duplicate, and transfers every created resource to root ownership.
 7. Failure disposes every partial duplicate in reverse order; normal resource disposal unregisters its path, clears local-scene association, and clears subscribers.
 
@@ -35,6 +35,7 @@ The managed [Images](images.md) component derives from this base and implements 
 
 - Registered nonempty paths have at most one live owner.
 - A duplicate has the exact runtime type and no copied path or scene ID.
+- Failed factories preserve rejected pre-existing resources, including active physical shapes, materials and worlds. Newly acquired invalid/partial targets retain reverse-order rollback cleanup.
 - Derived custom stored state is never silently assumed copyable; duplication support is explicit.
 - Deep graphs preserve identity, repeated edges, cycles, and explicit typed always/never-duplicate fields.
 - No failed duplication leaves a live partial graph owned by the caller.
@@ -55,6 +56,10 @@ The component does not expose a public manual reference counter: managed memory 
 ## Verification
 
 The executable checks in `tests/Electron2D.Tests/Program.cs` cover positive, negative, concurrent, cyclic, callback-failure, partial-copy, cleanup, and packed-scene local-resource paths. Release build and generated XML documentation validation are part of the repository-wide completion checks.
+
+[Public physical consumers](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.ResourceFactories.cs) reject pre-existing exact/wrong-type targets, nested borrowed targets and reuse of an acquired target for a distinct source. They preserve attached custom shape geometry/RID, material and world identities, then execute active simulation and a physical query. The resource-identity host runs this fixture on CPU, software GPU and registered backends in serial/separate-thread modes; broader platform and hardware performance acceptance remain separate.
+
+The current cohort also passes all six profiles as strict NativeAOT consumers, twelve real child-process physical scene loads, the common sixteen CPU/GPU physical suites, resource archives and packed-scene/subtree authoring regressions. Twelve resource-identity brackets warm 128 and measure 128 full active frames with queries at 0/0 owner/all-thread managed bytes. Manifests and results are retained in `bin/physics-resource-factories/2026-10-14/validation.json`; GPU execution uses explicit lavapipe. Full derived-resource duplication coverage and native/hardware performance remain open.
 
 ## TLS security resources
 

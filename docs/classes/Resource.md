@@ -326,6 +326,10 @@ Creates a fresh default instance used as the target of duplication.
 
 **Remarks:** The base implementation supports only an exact [`Resource`](Resource.md) instance. Every derived class must
 override this method, even when it adds no state, so duplication support is explicit.
+Construct the target during the factory invocation. A returned pre-existing resource is rejected before base/custom
+copying or ownership acquisition, including a different-type object or a target already created for another graph source.
+Newly constructed invalid targets still belong to rollback cleanup. A partial graph failure releases its acquired targets
+while preserving caller-owned source and rejected pre-existing objects.
 
 <a id="m-electron2d-resource-copycustomstateto-electron2d-resource-system-boolean-electron2d-deepduplicatemode-system-func-electron2d-resource-electron2d-resource-system-func-electron2d-resource-electron2d-resource"></a>
 ### `protected virtual void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource, Resource> duplicateSubresource, Func<Resource, Resource> forceDuplicateSubresource)`

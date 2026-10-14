@@ -87,6 +87,7 @@ Concrete Shader/ShaderMaterial resources use the internal rendering reflection a
 - Successful duplication preserves graph topology and clears external identity.
 - Scene-local duplicates preserve graph topology, receive their owning scene root before setup, run setup once, and are disposed by that root.
 - Failed duplication disposes its complete partial result.
+- Factory results created before their invocation are rejected before copying or acquiring ownership; rollback never releases those caller-owned resources. Previously acquired targets cannot be returned for a distinct source.
 - Base state is concurrently safe; derived state must define any stronger contract.
 - Managed object memory is reclaimed by the runtime; deterministic disposal controls logical and native-resource lifetime, not managed memory reclamation.
 - Public resources do not expose manual reference counting. Font layout internally leases immutable source snapshots so native retirement waits for active reads; this does not add a public asset-manager or lease API.

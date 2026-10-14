@@ -65,6 +65,7 @@ public static partial class BackendChecks
                 "File graph preserves authored names, corrected IDs and repeated physical resource aliases");
             using var world = backend is { } selected ? new World(selected) : RegisteredIdentityWorld();
             var host = new SubViewport { World = world }; host.AddChild(loadedRoot); using var tree = new SceneTree(host);
+            ResourceFactoryOwnership(loadedRoot, world, loadedFirst, loadedRoot.GetNode<RigidBody>("Mover").PhysicsMaterialOverride!);
             var moving = loadedRoot.GetNode<RigidBody>("Mover"); var queriedBody = loadedRoot.GetNode<StaticBody>("Second"); using var query = new PhysicsPointQueryParameters { Position = new(35, 0) };
             var hits = new PhysicsPointResult[1];
             for (var i = 0; i < 128; i++) Frame();

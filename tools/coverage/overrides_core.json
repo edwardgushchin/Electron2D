@@ -5,116 +5,581 @@
       "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
       "reason": "ADRs 0013/0023/0050: local instance graphs preserve aliases/cycles and borrow non-local built-in/external resources. Setup runs once after complete detached restoration, with rollback of created resources; scene identity is weak, returns null on root retirement and transfers with root replacement. Public-only --local-scenes executes CPU/GPU/registered serial/separate full physical frames and queries at 0/0 managed bytes, with GC retention regression and base/packed/replacement/isolated-authoring checks. Wider inherited/native/foreign/hardware acceptance remains open."
     },
-    {"godot": "TranslationServer::method:get_all_languages()", "electron2d": "method:Electron2D.TranslationServer.GetAllLanguages()", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},
-    {"godot": "TranslationServer::method:get_all_scripts()", "electron2d": "method:Electron2D.TranslationServer.GetAllScripts()", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},
-    {"godot": "TranslationServer::method:get_all_countries()", "electron2d": "method:Electron2D.TranslationServer.GetAllCountries()", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},
-    {"godot": "TranslationServer::method:get_language_name(String:)", "electron2d": "method:Electron2D.TranslationServer.GetLanguageName(System.String)", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},
-    {"godot": "TranslationServer::method:get_script_name(String:)", "electron2d": "method:Electron2D.TranslationServer.GetScriptName(System.String)", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},
-    {"godot": "TranslationServer::method:get_country_name(String:)", "electron2d": "method:Electron2D.TranslationServer.GetCountryName(System.String)", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},
-    {"godot": "TranslationServer::method:get_locale_name(String:)", "electron2d": "method:Electron2D.TranslationServer.GetLocaleName(System.String)", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},
-    {"godot": "TranslationServer::method:standardize_locale(String:,bool:)", "electron2d": "method:Electron2D.TranslationServer.StandardizeLocale(System.String,System.Boolean)", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},
-    {"godot": "TranslationServer::method:get_plural_rules(String:)", "electron2d": "method:Electron2D.TranslationServer.GetPluralRules(System.String)", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},
-    {"electron2d": "method:Electron2D.FileAccess.OpenCompressed(System.String,Electron2D.FileAccessModeFlags,Electron2D.FileCompressionMode)", "godot": "FileAccess::method:open_compressed(String:,int:FileAccess.ModeFlags,int:FileAccess.CompressionMode)", "state": "Implemented", "reason": "ADR 0020 retains the engine-owned E2DCMP envelope and whole-file/atomic semantics; default FastLZ and all five codecs execute seek/read/write/flush/reopen. Native 64 KiB blocks validate structure, exact decode, padding and SHA-256. FileCompressionTests verifies tiny/boundary/random/repeated data, edits, virtual paths, corruption, atomic failure and fresh-process reads; direct codec oracle and GPU/compatibility compressed-PNG pixels exercise Linux x64 with the matching native bundle. No reference container binary compatibility or foreign-host acceptance is claimed."} ,
-    {"godot": "Input::method:get_connected_joypads()", "electron2d": "method:Electron2D.Input.GetConnectedJoypads()", "reason": "Typed array snapshot of connected SDL joystick and gamepad IDs."},
-    {"godot": "ProjectSettings::property:input_devices/joypads/ignore_joypad_on_unfocused_application", "electron2d": "property:Electron2D.ProjectSettings.IgnoreJoypadOnUnfocusedApplication()", "reason": "Typed project setting sampled before Engine.Run opens the native controller host."},
-    {"godot": "WeakRef::method:get_ref()", "electron2d": "method:Electron2D.WeakRef<T>.GetRef()", "state": "Implemented", "reason": "ADR 0050 returns the same live object or null after target disposal or collection; WeakRefTests checks identity, null, deterministic disposal and GC collection."},
-    {"godot": "@GlobalScope::method:weakref(Variant:)", "electron2d": "constructor:Electron2D.WeakRef<T>..ctor(T)", "state": "Implemented", "reason": "ADR 0050 projects the object-or-null factory into a typed constructor; non-object values cannot satisfy the generic engine-object constraint. WeakRefTests checks live, null and disposed construction."},
-    {"godot": "ProjectSettings::property:internationalization/locale/test", "electron2d": "property:Electron2D.ProjectSettings.LocaleTest()", "state": "Partial", "reason": "Typed culture override is validated, persisted and sampled by Engine startup; reference locale aliases, active-scene notification and other native platforms remain unaudited (ADR 0007)."},
-    {"godot": "ProjectSettings::property:internationalization/locale/fallback", "electron2d": "property:Electron2D.ProjectSettings.LocaleFallback()", "state": "Partial", "reason": "Typed fallback locale is validated, persisted and sampled by Engine startup; resource remaps, reference alias tables and other native platforms remain unaudited (ADR 0007)."},
-    {"godot": "TranslationServer::method:compare_locales(String:,String:)", "electron2d": "method:Electron2D.TranslationServer.CompareLocales(System.String,System.String)", "state": "Partial", "reason": "Catalog-normalized language/script/region/variant scores now use pinned alias/default tables under ADR0007; 2600 cases compare the original compiled locale constructor and existing score checks plus native catalog consumers execute."},
-    {"godot": "TranslationServer::method:get_tool_locale()", "electron2d": "method:Electron2D.TranslationServer.GetToolLocale()", "state": "Partial", "reason": "Selects highest-scoring live main-domain catalog or configured fallback; editor-specific locale behavior is absent (ADR 0007)."},
-    {"godot": "ProjectSettings::property:internationalization/pseudolocalization/use_pseudolocalization", "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationEnabled()", "state": "Partial", "reason": "Typed startup setting drives the runtime switch in Engine.Start and Engine.Run; managed and SDL dummy startup are verified, but full locale workflow and other native platforms are not (ADR 0007)."},
-    {"godot": "ProjectSettings::property:internationalization/pseudolocalization/replace_with_accents", "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationReplaceWithAccents()", "state": "Partial", "reason": "Typed project option drives the main-domain accent transform at startup and reload; exact Unicode transformation parity remains unaudited (ADR 0007)."},
-    {"godot": "ProjectSettings::property:internationalization/pseudolocalization/double_vowels", "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationDoubleVowels()", "state": "Partial", "reason": "Typed project option drives the main-domain doubled-vowel transform at startup and reload; exact Unicode transformation parity remains unaudited (ADR 0007)."},
-    {"godot": "ProjectSettings::property:internationalization/pseudolocalization/fake_bidi", "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationFakeBIDI()", "state": "Partial", "reason": "Typed project option drives the main-domain bidirectional test transform at startup and reload; full Unicode bidi behavior remains unaudited (ADR 0007)."},
-    {"godot": "ProjectSettings::property:internationalization/pseudolocalization/override", "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationOverride()", "state": "Partial", "reason": "Typed project option drives the main-domain override transform at startup and reload; complete translation-change propagation is absent (ADR 0007)."},
-    {"godot": "ProjectSettings::property:internationalization/pseudolocalization/expansion_ratio", "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationExpansionRatio()", "state": "Partial", "reason": "Typed nonnegative finite expansion ratio drives the main-domain transform at startup and reload; exact output parity remains unaudited (ADR 0007)."},
-    {"godot": "ProjectSettings::property:internationalization/pseudolocalization/prefix", "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationPrefix()", "state": "Partial", "reason": "Typed prefix persists and drives the main-domain transform at startup and reload; scene translation-change notification is absent (ADR 0007)."},
-    {"godot": "ProjectSettings::property:internationalization/pseudolocalization/suffix", "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationSuffix()", "state": "Partial", "reason": "Typed suffix persists and drives the main-domain transform at startup and reload; scene translation-change notification is absent (ADR 0007)."},
-    {"godot": "ProjectSettings::property:internationalization/pseudolocalization/skip_placeholders", "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationSkipPlaceholders()", "state": "Partial", "reason": "Typed project option drives placeholder preservation at startup and reload; exact formatting-token parity remains unaudited (ADR 0007)."},
-    {"godot": "TranslationServer::method:reload_pseudolocalization()", "electron2d": "method:Electron2D.TranslationServer.ReloadPseudolocalization()", "state": "Partial", "reason": "Reapplies eight typed transform settings while preserving runtime enablement; asset remaps and active-scene translation-change notification are not yet integrated (ADR 0007)."},
-    {"godot": "InputMap::method:load_from_project_settings()", "electron2d": "method:Electron2D.InputMap.LoadFromProjectSettings()", "state": "Partial", "reason": "The typed version-one project schema replaces untyped action dictionaries and atomically swaps the live map. Managed round-trip, rollback and callback ordering are verified; full source event-family and platform parity remain unaudited (ADR 0038)."},
-    {"godot": "InputMap::signal:project_settings_loaded()", "electron2d": "event:Electron2D.InputMap.ProjectSettingsLoaded()", "state": "Implemented", "reason": "Raised synchronously after committed typed action reload; failed validation does not raise it. InputActionSettingsTests verifies callback order and failure state (ADR 0038)."},
-    {"godot": "ProjectSettings::property:input/ui_focus_next", "electron2d": "property:Electron2D.ProjectSettings.InputUIFocusNext()", "state": "Partial", "reason": "Registered typed input-action key with an executable GUI focus consumer and project-file round-trip; exact platform-specific reference defaults and all input setting families remain unaudited (ADR 0038)."},
-    {"godot": "ProjectSettings::property:input/ui_focus_prev", "electron2d": "property:Electron2D.ProjectSettings.InputUIFocusPrev()", "state": "Partial", "reason": "Registered typed input-action key with an executable GUI focus consumer and project-file round-trip; exact platform-specific reference defaults and all input setting families remain unaudited (ADR 0038)."},
-    {"godot": "ProjectSettings::property:input/ui_left", "electron2d": "property:Electron2D.ProjectSettings.InputUILeft()", "state": "Partial", "reason": "Typed arrow, D-pad and left-stick defaults survive project-file reload and navigate GUI focus in managed tests; native controller delivery and reference platform variants remain unverified (ADR 0038)."},
-    {"godot": "ProjectSettings::property:input/ui_up", "electron2d": "property:Electron2D.ProjectSettings.InputUIUp()", "state": "Partial", "reason": "Typed arrow, D-pad and left-stick defaults survive project-file reload and match managed input events; native controller delivery and reference platform variants remain unverified (ADR 0038)."},
-    {"godot": "ProjectSettings::property:input/ui_right", "electron2d": "property:Electron2D.ProjectSettings.InputUIRight()", "state": "Partial", "reason": "Typed arrow, D-pad and left-stick defaults survive project-file reload and navigate GUI focus in managed tests; native controller delivery and reference platform variants remain unverified (ADR 0038)."},
-    {"godot": "ProjectSettings::property:input/ui_down", "electron2d": "property:Electron2D.ProjectSettings.InputUIDown()", "state": "Partial", "reason": "Typed arrow, D-pad and left-stick defaults survive project-file reload and match managed input events; native controller delivery and reference platform variants remain unverified (ADR 0038)."},
-    {"godot": "JSON::method:from_native(Variant:,bool:)", "electron2d": "method:Electron2D.JSON.FromNative`1(T)", "reason": "Explicit generic native type replaces Variant; engine objects are excluded by ADR 0048."},
-    {"godot": "JSON::method:from_native(Variant:,bool:)", "electron2d": "method:Electron2D.JSON.FromNative`1(T,JsonTypeInfo<T>)", "reason": "ADR 0048 supplies compiled typed metadata for custom model conversion in trimmed/AOT hosts; no engine-object reconstruction."},
-    {"godot": "JSON::method:get_error_line()", "electron2d": "method:Electron2D.JSON.GetErrorLine()", "reason": "Managed JSON parser error line and diagnostics under ADR 0048."},
-    {"godot": "JSON::method:get_error_message()", "electron2d": "method:Electron2D.JSON.GetErrorMessage()", "reason": "Managed JSON parser error text under ADR 0048."},
-    {"godot": "JSON::method:get_parsed_text()", "electron2d": "method:Electron2D.JSON.GetParsedText()", "reason": "Returns optionally retained source text under ADR 0048."},
-    {"godot": "JSON::method:to_native(Variant:,bool:)", "electron2d": "method:Electron2D.JSON.ToNative`1(System.Text.Json.Nodes.JsonNode)", "reason": "Explicit generic destination replaces Variant; arbitrary engine-object reconstruction is excluded by ADR 0048."},
-    {"godot": "JSON::method:to_native(Variant:,bool:)", "electron2d": "method:Electron2D.JSON.ToNative`1(System.Text.Json.Nodes.JsonNode,JsonTypeInfo<T>)", "reason": "ADR 0048 supplies compiled typed metadata for custom model conversion in trimmed/AOT hosts; no runtime type names."},
-    {"godot": "FastNoiseLite::enum:CellularDistanceFunction", "electron2d": "T:Electron2D.CellularDistanceFunction", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum:CellularReturnType", "electron2d": "T:Electron2D.CellularReturnType", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum:DomainWarpFractalType", "electron2d": "T:Electron2D.DomainWarpFractalType", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum:DomainWarpType", "electron2d": "T:Electron2D.DomainWarpType", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum:FractalType", "electron2d": "T:Electron2D.FractalType", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum:NoiseType", "electron2d": "T:Electron2D.NoiseType", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:CellularDistanceFunction.DISTANCE_EUCLIDEAN", "electron2d": "enumValue:Electron2D.CellularDistanceFunction.Euclidean()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:CellularDistanceFunction.DISTANCE_EUCLIDEAN_SQUARED", "electron2d": "enumValue:Electron2D.CellularDistanceFunction.EuclideanSquared()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:CellularDistanceFunction.DISTANCE_HYBRID", "electron2d": "enumValue:Electron2D.CellularDistanceFunction.Hybrid()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:CellularDistanceFunction.DISTANCE_MANHATTAN", "electron2d": "enumValue:Electron2D.CellularDistanceFunction.Manhattan()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:CellularReturnType.RETURN_CELL_VALUE", "electron2d": "enumValue:Electron2D.CellularReturnType.CellValue()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE", "electron2d": "enumValue:Electron2D.CellularReturnType.Distance()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2", "electron2d": "enumValue:Electron2D.CellularReturnType.Distance2()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2_ADD", "electron2d": "enumValue:Electron2D.CellularReturnType.Distance2Add()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2_DIV", "electron2d": "enumValue:Electron2D.CellularReturnType.Distance2Div()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2_MUL", "electron2d": "enumValue:Electron2D.CellularReturnType.Distance2Mul()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2_SUB", "electron2d": "enumValue:Electron2D.CellularReturnType.Distance2Sub()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:DomainWarpFractalType.DOMAIN_WARP_FRACTAL_INDEPENDENT", "electron2d": "enumValue:Electron2D.DomainWarpFractalType.Independent()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:DomainWarpFractalType.DOMAIN_WARP_FRACTAL_NONE", "electron2d": "enumValue:Electron2D.DomainWarpFractalType.None()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:DomainWarpFractalType.DOMAIN_WARP_FRACTAL_PROGRESSIVE", "electron2d": "enumValue:Electron2D.DomainWarpFractalType.Progressive()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:DomainWarpType.DOMAIN_WARP_BASIC_GRID", "electron2d": "enumValue:Electron2D.DomainWarpType.BasicGrid()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:DomainWarpType.DOMAIN_WARP_SIMPLEX", "electron2d": "enumValue:Electron2D.DomainWarpType.Simplex()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:DomainWarpType.DOMAIN_WARP_SIMPLEX_REDUCED", "electron2d": "enumValue:Electron2D.DomainWarpType.SimplexReduced()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:FractalType.FRACTAL_FBM", "electron2d": "enumValue:Electron2D.FractalType.FBM()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:FractalType.FRACTAL_NONE", "electron2d": "enumValue:Electron2D.FractalType.None()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:FractalType.FRACTAL_PING_PONG", "electron2d": "enumValue:Electron2D.FractalType.PingPong()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:FractalType.FRACTAL_RIDGED", "electron2d": "enumValue:Electron2D.FractalType.Ridged()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:NoiseType.TYPE_CELLULAR", "electron2d": "enumValue:Electron2D.NoiseType.Cellular()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:NoiseType.TYPE_PERLIN", "electron2d": "enumValue:Electron2D.NoiseType.Perlin()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:NoiseType.TYPE_SIMPLEX", "electron2d": "enumValue:Electron2D.NoiseType.Simplex()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:NoiseType.TYPE_SIMPLEX_SMOOTH", "electron2d": "enumValue:Electron2D.NoiseType.SimplexSmooth()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:NoiseType.TYPE_VALUE", "electron2d": "enumValue:Electron2D.NoiseType.Value()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::enum_value:NoiseType.TYPE_VALUE_CUBIC", "electron2d": "enumValue:Electron2D.NoiseType.ValueCubic()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
-    {"godot": "FastNoiseLite::property:offset", "electron2d": "property:Electron2D.FastNoiseLite.Offset()", "reason": "The Vector2 XY offset preserves all 1D/2D sampling effects; the Z component is excluded by ADR 0004."},
-    {"electron2d": "method:Electron2D.Noise.GetImage(System.Int32,System.Int32,System.Boolean,System.Boolean)", "godot": "Noise::method:get_image(int:,int:,bool:,bool:,bool:)", "reason": "ADRs 0013/0014/0039/0104: complete 2D image producer and deferred-first/background NoiseTexture consumer, independent built-in input snapshots, custom virtual image dispatch, coalesced stale input, owner completion/failure/retry, task/file-graph retirement, null rendering retention, portable/local graphs and diagnostic placeholder sampling. NoiseGenerationTests, 122 pinned image cases and 20 unchanged RGBA kernel cases, fresh-process authoring and actual 48-frame GPU/compatibility consumers verify the exercised profile; pending reads and 25 warmed pending frame intervals allocate zero managed owner bytes. Large-skirt writes clip to output bounds; browser threading, foreign/editor/native allocator/load gates remain separate."},
-    {"electron2d": "method:Electron2D.Noise.GetSeamlessImage(System.Int32,System.Int32,System.Boolean,System.Single,System.Boolean)", "godot": "Noise::method:get_seamless_image(int:,int:,bool:,bool:,float:,bool:)", "reason": "ADRs 0013/0014/0039/0104: complete 2D image producer and deferred-first/background NoiseTexture consumer, independent built-in input snapshots, custom virtual image dispatch, coalesced stale input, owner completion/failure/retry, task/file-graph retirement, null rendering retention, portable/local graphs and diagnostic placeholder sampling. NoiseGenerationTests, 122 pinned image cases and 20 unchanged RGBA kernel cases, fresh-process authoring and actual 48-frame GPU/compatibility consumers verify the exercised profile; pending reads and 25 warmed pending frame intervals allocate zero managed owner bytes. Large-skirt writes clip to output bounds; browser threading, foreign/editor/native allocator/load gates remain separate."},
-    {"electron2d": "T:Electron2D.MouseMode", "godot": "Input::enum:MouseMode", "reason": "C# Enum suffix avoids colliding with Input.MouseMode property; numeric identities match."},
-    {"electron2d": "enumValue:Electron2D.MouseMode.Visible()", "godot": "Input::enum_value:MouseMode.MOUSE_MODE_VISIBLE", "reason": "Native pointer mode zero."},
-    {"electron2d": "enumValue:Electron2D.MouseMode.Hidden()", "godot": "Input::enum_value:MouseMode.MOUSE_MODE_HIDDEN", "reason": "Native pointer mode one."},
-    {"electron2d": "enumValue:Electron2D.MouseMode.Captured()", "godot": "Input::enum_value:MouseMode.MOUSE_MODE_CAPTURED", "reason": "Native relative pointer mode two."},
-    {"electron2d": "enumValue:Electron2D.MouseMode.Confined()", "godot": "Input::enum_value:MouseMode.MOUSE_MODE_CONFINED", "reason": "Native window confinement mode three."},
-    {"electron2d": "enumValue:Electron2D.MouseMode.ConfinedHidden()", "godot": "Input::enum_value:MouseMode.MOUSE_MODE_CONFINED_HIDDEN", "reason": "Native hidden confinement mode four."},
-    {"electron2d": "enumValue:Electron2D.MouseMode.Max()", "godot": "Input::enum_value:MouseMode.MOUSE_MODE_MAX", "reason": "Sentinel five is not selectable."},
-    {"electron2d": "method:Electron2D.Input.GetCurrentCursorShape()", "godot": "Input::method:get_current_cursor_shape()", "reason": "Returns the active display cursor shape, including direct display changes."},
-    {"electron2d": "method:Electron2D.TranslationDomain.GetTranslations()", "godot": "TranslationDomain::method:get_translations()", "reason": "Returns a snapshot of borrowed catalogs in registration order."},
-    {"electron2d": "property:Electron2D.TranslationDomain.LocaleOverride()", "godot": "TranslationDomain::method:set_locale_override(String:)", "reason": "A normalized CultureInfo name replaces the locale string setter under ADR 0007."},
-    {"electron2d": "method:Electron2D.TranslationServer.GetLoadedLocales()", "godot": "TranslationServer::method:get_loaded_locales()", "reason": "Lists distinct live locales registered in the main domain; culture and editor locale lists remain a separate audit."},
-    {"electron2d": "method:Electron2D.TranslationServer.GetTranslations()", "godot": "TranslationServer::method:get_translations()", "reason": "Returns a snapshot of borrowed main-domain catalogs."},
-    {"electron2d": "method:Electron2D.XMLParser.GetAttributeCount()", "godot": "XMLParser::method:get_attribute_count()", "reason": "Count of the current or last element's ordered attributes; non-element tokens retain the list."},
-    {"electron2d": "method:Electron2D.XMLParser.GetCurrentLine()", "godot": "XMLParser::method:get_current_line()", "reason": "Zero-based count of newline bytes consumed by the token cursor."},
-    {"electron2d": "method:Electron2D.XMLParser.GetNodeData()", "godot": "XMLParser::method:get_node_data()", "reason": "Returns decoded text only for a text token."},
-    {"electron2d": "method:Electron2D.XMLParser.GetNodeName()", "godot": "XMLParser::method:get_node_name()", "reason": "Returns element or markup content; text tokens return empty."},
-    {"electron2d": "method:Electron2D.XMLParser.GetNodeOffset()", "godot": "XMLParser::method:get_node_offset()", "reason": "Byte offset uses a managed long and records the start of the read operation."},
-    {"electron2d": "method:Electron2D.XMLParser.GetNodeType()", "godot": "XMLParser::method:get_node_type()", "reason": "Strongly typed enum return with the same numeric node identities."},
-    {"electron2d": "method:Electron2D.Translation.OnGetMessage(System.String,System.String)", "godot": "Translation::method:_get_message(StringName:,StringName:)", "reason": "Protected typed virtual override returns null to fall through to catalog storage; an empty string is a resolved value."},
-    {"electron2d": "method:Electron2D.Translation.OnGetPluralMessage(System.String,System.String,System.Int64,System.String)", "godot": "Translation::method:_get_plural_message(StringName:,StringName:,int:,StringName:)", "reason": "Protected typed virtual override uses long counts from the existing TrN API and returns null to use local storage."},
-    {"electron2d": "method:Electron2D.Translation.GetMessageCount()", "godot": "Translation::method:get_message_count()", "reason": "Returns the number of contextual source entries; plural forms count as one entry."},
-    {"electron2d": "method:Electron2D.Translation.GetMessageList()", "godot": "Translation::method:get_message_list()", "reason": "Returns copied source keys, prefixing nonempty contexts with the EOT separator."},
-    {"electron2d": "method:Electron2D.Translation.GetTranslatedMessageList()", "godot": "Translation::method:get_translated_message_list()", "reason": "Returns copied translated strings, including each plural form."},
-    {"electron2d": "method:Electron2D.OptimizedTranslation.GetMessageCount()", "godot": "Translation::method:get_message_count()", "reason": "The optimized override returns zero because source keys are not stored."},
-    {"electron2d": "method:Electron2D.OptimizedTranslation.GetMessageList()", "godot": "Translation::method:get_message_list()", "reason": "The optimized override returns an empty list because source keys are not stored."},
-    {"electron2d": "method:Electron2D.OptimizedTranslation.GetTranslatedMessageList()", "godot": "Translation::method:get_translated_message_list()", "reason": "The optimized override decompresses a copied list of translated values."},
-    {"electron2d": "method:Electron2D.OptimizedTranslation.OnGetMessage(System.String,System.String)", "godot": "Translation::method:_get_message(StringName:,StringName:)", "reason": "Derived compressed lookup projects the inherited virtual message resolver and ignores context."},
-    {"electron2d": "method:Electron2D.OptimizedTranslation.OnGetPluralMessage(System.String,System.String,System.Int64,System.String)", "godot": "Translation::method:_get_plural_message(StringName:,StringName:,int:,StringName:)", "reason": "Derived resolver returns the singular compressed value regardless of count or context."},
-    {"electron2d": "property:Electron2D.Translation.PluralRulesOverride()", "godot": "Translation::property:plural_rules_override", "reason": "Stored gettext expression overrides automatic locale selection; empty or syntactically invalid definitions retain locale fallback. Caller delegates retain an explicit higher-priority typed override."},
-    {"electron2d": "method:Electron2D.TranslationServer.AddTranslation(Electron2D.Translation,System.String)", "godot": "TranslationServer::method:add_translation(Translation:)", "reason": "Registers a borrowed live Translation resource within a case-sensitive domain; later edits and disposal affect lookup."},
-    {"electron2d": "method:Electron2D.TranslationServer.RemoveTranslation(Electron2D.Translation,System.String)", "godot": "TranslationServer::method:remove_translation(Translation:)", "reason": "Unregisters the borrowed catalog without disposing it; domain is the typed localization boundary of ADR 0007."},
+    {
+      "godot": "TranslationServer::method:get_all_languages()",
+      "electron2d": "method:Electron2D.TranslationServer.GetAllLanguages()",
+      "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."
+    },
+    {
+      "godot": "TranslationServer::method:get_all_scripts()",
+      "electron2d": "method:Electron2D.TranslationServer.GetAllScripts()",
+      "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."
+    },
+    {
+      "godot": "TranslationServer::method:get_all_countries()",
+      "electron2d": "method:Electron2D.TranslationServer.GetAllCountries()",
+      "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."
+    },
+    {
+      "godot": "TranslationServer::method:get_language_name(String:)",
+      "electron2d": "method:Electron2D.TranslationServer.GetLanguageName(System.String)",
+      "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."
+    },
+    {
+      "godot": "TranslationServer::method:get_script_name(String:)",
+      "electron2d": "method:Electron2D.TranslationServer.GetScriptName(System.String)",
+      "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."
+    },
+    {
+      "godot": "TranslationServer::method:get_country_name(String:)",
+      "electron2d": "method:Electron2D.TranslationServer.GetCountryName(System.String)",
+      "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."
+    },
+    {
+      "godot": "TranslationServer::method:get_locale_name(String:)",
+      "electron2d": "method:Electron2D.TranslationServer.GetLocaleName(System.String)",
+      "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."
+    },
+    {
+      "godot": "TranslationServer::method:standardize_locale(String:,bool:)",
+      "electron2d": "method:Electron2D.TranslationServer.StandardizeLocale(System.String,System.Boolean)",
+      "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."
+    },
+    {
+      "godot": "TranslationServer::method:get_plural_rules(String:)",
+      "electron2d": "method:Electron2D.TranslationServer.GetPluralRules(System.String)",
+      "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.OpenCompressed(System.String,Electron2D.FileAccessModeFlags,Electron2D.FileCompressionMode)",
+      "godot": "FileAccess::method:open_compressed(String:,int:FileAccess.ModeFlags,int:FileAccess.CompressionMode)",
+      "state": "Implemented",
+      "reason": "ADR 0020 retains the engine-owned E2DCMP envelope and whole-file/atomic semantics; default FastLZ and all five codecs execute seek/read/write/flush/reopen. Native 64 KiB blocks validate structure, exact decode, padding and SHA-256. FileCompressionTests verifies tiny/boundary/random/repeated data, edits, virtual paths, corruption, atomic failure and fresh-process reads; direct codec oracle and GPU/compatibility compressed-PNG pixels exercise Linux x64 with the matching native bundle. No reference container binary compatibility or foreign-host acceptance is claimed."
+    },
+    {
+      "godot": "Input::method:get_connected_joypads()",
+      "electron2d": "method:Electron2D.Input.GetConnectedJoypads()",
+      "reason": "Typed array snapshot of connected SDL joystick and gamepad IDs."
+    },
+    {
+      "godot": "ProjectSettings::property:input_devices/joypads/ignore_joypad_on_unfocused_application",
+      "electron2d": "property:Electron2D.ProjectSettings.IgnoreJoypadOnUnfocusedApplication()",
+      "reason": "Typed project setting sampled before Engine.Run opens the native controller host."
+    },
+    {
+      "godot": "WeakRef::method:get_ref()",
+      "electron2d": "method:Electron2D.WeakRef<T>.GetRef()",
+      "state": "Implemented",
+      "reason": "ADR 0050 returns the same live object or null after target disposal or collection; WeakRefTests checks identity, null, deterministic disposal and GC collection."
+    },
+    {
+      "godot": "@GlobalScope::method:weakref(Variant:)",
+      "electron2d": "constructor:Electron2D.WeakRef<T>..ctor(T)",
+      "state": "Implemented",
+      "reason": "ADR 0050 projects the object-or-null factory into a typed constructor; non-object values cannot satisfy the generic engine-object constraint. WeakRefTests checks live, null and disposed construction."
+    },
+    {
+      "godot": "ProjectSettings::property:internationalization/locale/test",
+      "electron2d": "property:Electron2D.ProjectSettings.LocaleTest()",
+      "state": "Partial",
+      "reason": "Typed culture override is validated, persisted and sampled by Engine startup; reference locale aliases, active-scene notification and other native platforms remain unaudited (ADR 0007)."
+    },
+    {
+      "godot": "ProjectSettings::property:internationalization/locale/fallback",
+      "electron2d": "property:Electron2D.ProjectSettings.LocaleFallback()",
+      "state": "Partial",
+      "reason": "Typed fallback locale is validated, persisted and sampled by Engine startup; resource remaps, reference alias tables and other native platforms remain unaudited (ADR 0007)."
+    },
+    {
+      "godot": "TranslationServer::method:compare_locales(String:,String:)",
+      "electron2d": "method:Electron2D.TranslationServer.CompareLocales(System.String,System.String)",
+      "state": "Partial",
+      "reason": "Catalog-normalized language/script/region/variant scores now use pinned alias/default tables under ADR0007; 2600 cases compare the original compiled locale constructor and existing score checks plus native catalog consumers execute."
+    },
+    {
+      "godot": "TranslationServer::method:get_tool_locale()",
+      "electron2d": "method:Electron2D.TranslationServer.GetToolLocale()",
+      "state": "Partial",
+      "reason": "Selects highest-scoring live main-domain catalog or configured fallback; editor-specific locale behavior is absent (ADR 0007)."
+    },
+    {
+      "godot": "ProjectSettings::property:internationalization/pseudolocalization/use_pseudolocalization",
+      "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationEnabled()",
+      "state": "Partial",
+      "reason": "Typed startup setting drives the runtime switch in Engine.Start and Engine.Run; managed and SDL dummy startup are verified, but full locale workflow and other native platforms are not (ADR 0007)."
+    },
+    {
+      "godot": "ProjectSettings::property:internationalization/pseudolocalization/replace_with_accents",
+      "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationReplaceWithAccents()",
+      "state": "Partial",
+      "reason": "Typed project option drives the main-domain accent transform at startup and reload; exact Unicode transformation parity remains unaudited (ADR 0007)."
+    },
+    {
+      "godot": "ProjectSettings::property:internationalization/pseudolocalization/double_vowels",
+      "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationDoubleVowels()",
+      "state": "Partial",
+      "reason": "Typed project option drives the main-domain doubled-vowel transform at startup and reload; exact Unicode transformation parity remains unaudited (ADR 0007)."
+    },
+    {
+      "godot": "ProjectSettings::property:internationalization/pseudolocalization/fake_bidi",
+      "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationFakeBIDI()",
+      "state": "Partial",
+      "reason": "Typed project option drives the main-domain bidirectional test transform at startup and reload; full Unicode bidi behavior remains unaudited (ADR 0007)."
+    },
+    {
+      "godot": "ProjectSettings::property:internationalization/pseudolocalization/override",
+      "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationOverride()",
+      "state": "Partial",
+      "reason": "Typed project option drives the main-domain override transform at startup and reload; complete translation-change propagation is absent (ADR 0007)."
+    },
+    {
+      "godot": "ProjectSettings::property:internationalization/pseudolocalization/expansion_ratio",
+      "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationExpansionRatio()",
+      "state": "Partial",
+      "reason": "Typed nonnegative finite expansion ratio drives the main-domain transform at startup and reload; exact output parity remains unaudited (ADR 0007)."
+    },
+    {
+      "godot": "ProjectSettings::property:internationalization/pseudolocalization/prefix",
+      "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationPrefix()",
+      "state": "Partial",
+      "reason": "Typed prefix persists and drives the main-domain transform at startup and reload; scene translation-change notification is absent (ADR 0007)."
+    },
+    {
+      "godot": "ProjectSettings::property:internationalization/pseudolocalization/suffix",
+      "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationSuffix()",
+      "state": "Partial",
+      "reason": "Typed suffix persists and drives the main-domain transform at startup and reload; scene translation-change notification is absent (ADR 0007)."
+    },
+    {
+      "godot": "ProjectSettings::property:internationalization/pseudolocalization/skip_placeholders",
+      "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationSkipPlaceholders()",
+      "state": "Partial",
+      "reason": "Typed project option drives placeholder preservation at startup and reload; exact formatting-token parity remains unaudited (ADR 0007)."
+    },
+    {
+      "godot": "TranslationServer::method:reload_pseudolocalization()",
+      "electron2d": "method:Electron2D.TranslationServer.ReloadPseudolocalization()",
+      "state": "Partial",
+      "reason": "Reapplies eight typed transform settings while preserving runtime enablement; asset remaps and active-scene translation-change notification are not yet integrated (ADR 0007)."
+    },
+    {
+      "godot": "InputMap::method:load_from_project_settings()",
+      "electron2d": "method:Electron2D.InputMap.LoadFromProjectSettings()",
+      "state": "Partial",
+      "reason": "The typed version-one project schema replaces untyped action dictionaries and atomically swaps the live map. Managed round-trip, rollback and callback ordering are verified; full source event-family and platform parity remain unaudited (ADR 0038)."
+    },
+    {
+      "godot": "InputMap::signal:project_settings_loaded()",
+      "electron2d": "event:Electron2D.InputMap.ProjectSettingsLoaded()",
+      "state": "Implemented",
+      "reason": "Raised synchronously after committed typed action reload; failed validation does not raise it. InputActionSettingsTests verifies callback order and failure state (ADR 0038)."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_focus_next",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIFocusNext()",
+      "state": "Partial",
+      "reason": "Registered typed input-action key with an executable GUI focus consumer and project-file round-trip; exact platform-specific reference defaults and all input setting families remain unaudited (ADR 0038)."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_focus_prev",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIFocusPrev()",
+      "state": "Partial",
+      "reason": "Registered typed input-action key with an executable GUI focus consumer and project-file round-trip; exact platform-specific reference defaults and all input setting families remain unaudited (ADR 0038)."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_left",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUILeft()",
+      "state": "Partial",
+      "reason": "Typed arrow, D-pad and left-stick defaults survive project-file reload and navigate GUI focus in managed tests; native controller delivery and reference platform variants remain unverified (ADR 0038)."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_up",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIUp()",
+      "state": "Partial",
+      "reason": "Typed arrow, D-pad and left-stick defaults survive project-file reload and match managed input events; native controller delivery and reference platform variants remain unverified (ADR 0038)."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_right",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIRight()",
+      "state": "Partial",
+      "reason": "Typed arrow, D-pad and left-stick defaults survive project-file reload and navigate GUI focus in managed tests; native controller delivery and reference platform variants remain unverified (ADR 0038)."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_down",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIDown()",
+      "state": "Partial",
+      "reason": "Typed arrow, D-pad and left-stick defaults survive project-file reload and match managed input events; native controller delivery and reference platform variants remain unverified (ADR 0038)."
+    },
+    {
+      "godot": "JSON::method:from_native(Variant:,bool:)",
+      "electron2d": "method:Electron2D.JSON.FromNative`1(T)",
+      "reason": "Explicit generic native type replaces Variant; engine objects are excluded by ADR 0048."
+    },
+    {
+      "godot": "JSON::method:from_native(Variant:,bool:)",
+      "electron2d": "method:Electron2D.JSON.FromNative`1(T,JsonTypeInfo<T>)",
+      "reason": "ADR 0048 supplies compiled typed metadata for custom model conversion in trimmed/AOT hosts; no engine-object reconstruction."
+    },
+    {
+      "godot": "JSON::method:get_error_line()",
+      "electron2d": "method:Electron2D.JSON.GetErrorLine()",
+      "reason": "Managed JSON parser error line and diagnostics under ADR 0048."
+    },
+    {
+      "godot": "JSON::method:get_error_message()",
+      "electron2d": "method:Electron2D.JSON.GetErrorMessage()",
+      "reason": "Managed JSON parser error text under ADR 0048."
+    },
+    {
+      "godot": "JSON::method:get_parsed_text()",
+      "electron2d": "method:Electron2D.JSON.GetParsedText()",
+      "reason": "Returns optionally retained source text under ADR 0048."
+    },
+    {
+      "godot": "JSON::method:to_native(Variant:,bool:)",
+      "electron2d": "method:Electron2D.JSON.ToNative`1(System.Text.Json.Nodes.JsonNode)",
+      "reason": "Explicit generic destination replaces Variant; arbitrary engine-object reconstruction is excluded by ADR 0048."
+    },
+    {
+      "godot": "JSON::method:to_native(Variant:,bool:)",
+      "electron2d": "method:Electron2D.JSON.ToNative`1(System.Text.Json.Nodes.JsonNode,JsonTypeInfo<T>)",
+      "reason": "ADR 0048 supplies compiled typed metadata for custom model conversion in trimmed/AOT hosts; no runtime type names."
+    },
+    {
+      "godot": "FastNoiseLite::enum:CellularDistanceFunction",
+      "electron2d": "T:Electron2D.CellularDistanceFunction",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum:CellularReturnType",
+      "electron2d": "T:Electron2D.CellularReturnType",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum:DomainWarpFractalType",
+      "electron2d": "T:Electron2D.DomainWarpFractalType",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum:DomainWarpType",
+      "electron2d": "T:Electron2D.DomainWarpType",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum:FractalType",
+      "electron2d": "T:Electron2D.FractalType",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum:NoiseType",
+      "electron2d": "T:Electron2D.NoiseType",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:CellularDistanceFunction.DISTANCE_EUCLIDEAN",
+      "electron2d": "enumValue:Electron2D.CellularDistanceFunction.Euclidean()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:CellularDistanceFunction.DISTANCE_EUCLIDEAN_SQUARED",
+      "electron2d": "enumValue:Electron2D.CellularDistanceFunction.EuclideanSquared()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:CellularDistanceFunction.DISTANCE_HYBRID",
+      "electron2d": "enumValue:Electron2D.CellularDistanceFunction.Hybrid()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:CellularDistanceFunction.DISTANCE_MANHATTAN",
+      "electron2d": "enumValue:Electron2D.CellularDistanceFunction.Manhattan()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:CellularReturnType.RETURN_CELL_VALUE",
+      "electron2d": "enumValue:Electron2D.CellularReturnType.CellValue()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE",
+      "electron2d": "enumValue:Electron2D.CellularReturnType.Distance()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2",
+      "electron2d": "enumValue:Electron2D.CellularReturnType.Distance2()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2_ADD",
+      "electron2d": "enumValue:Electron2D.CellularReturnType.Distance2Add()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2_DIV",
+      "electron2d": "enumValue:Electron2D.CellularReturnType.Distance2Div()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2_MUL",
+      "electron2d": "enumValue:Electron2D.CellularReturnType.Distance2Mul()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2_SUB",
+      "electron2d": "enumValue:Electron2D.CellularReturnType.Distance2Sub()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:DomainWarpFractalType.DOMAIN_WARP_FRACTAL_INDEPENDENT",
+      "electron2d": "enumValue:Electron2D.DomainWarpFractalType.Independent()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:DomainWarpFractalType.DOMAIN_WARP_FRACTAL_NONE",
+      "electron2d": "enumValue:Electron2D.DomainWarpFractalType.None()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:DomainWarpFractalType.DOMAIN_WARP_FRACTAL_PROGRESSIVE",
+      "electron2d": "enumValue:Electron2D.DomainWarpFractalType.Progressive()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:DomainWarpType.DOMAIN_WARP_BASIC_GRID",
+      "electron2d": "enumValue:Electron2D.DomainWarpType.BasicGrid()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:DomainWarpType.DOMAIN_WARP_SIMPLEX",
+      "electron2d": "enumValue:Electron2D.DomainWarpType.Simplex()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:DomainWarpType.DOMAIN_WARP_SIMPLEX_REDUCED",
+      "electron2d": "enumValue:Electron2D.DomainWarpType.SimplexReduced()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:FractalType.FRACTAL_FBM",
+      "electron2d": "enumValue:Electron2D.FractalType.FBM()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:FractalType.FRACTAL_NONE",
+      "electron2d": "enumValue:Electron2D.FractalType.None()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:FractalType.FRACTAL_PING_PONG",
+      "electron2d": "enumValue:Electron2D.FractalType.PingPong()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:FractalType.FRACTAL_RIDGED",
+      "electron2d": "enumValue:Electron2D.FractalType.Ridged()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:NoiseType.TYPE_CELLULAR",
+      "electron2d": "enumValue:Electron2D.NoiseType.Cellular()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:NoiseType.TYPE_PERLIN",
+      "electron2d": "enumValue:Electron2D.NoiseType.Perlin()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:NoiseType.TYPE_SIMPLEX",
+      "electron2d": "enumValue:Electron2D.NoiseType.Simplex()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:NoiseType.TYPE_SIMPLEX_SMOOTH",
+      "electron2d": "enumValue:Electron2D.NoiseType.SimplexSmooth()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:NoiseType.TYPE_VALUE",
+      "electron2d": "enumValue:Electron2D.NoiseType.Value()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::enum_value:NoiseType.TYPE_VALUE_CUBIC",
+      "electron2d": "enumValue:Electron2D.NoiseType.ValueCubic()",
+      "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."
+    },
+    {
+      "godot": "FastNoiseLite::property:offset",
+      "electron2d": "property:Electron2D.FastNoiseLite.Offset()",
+      "reason": "The Vector2 XY offset preserves all 1D/2D sampling effects; the Z component is excluded by ADR 0004."
+    },
+    {
+      "electron2d": "method:Electron2D.Noise.GetImage(System.Int32,System.Int32,System.Boolean,System.Boolean)",
+      "godot": "Noise::method:get_image(int:,int:,bool:,bool:,bool:)",
+      "reason": "ADRs 0013/0014/0039/0104: complete 2D image producer and deferred-first/background NoiseTexture consumer, independent built-in input snapshots, custom virtual image dispatch, coalesced stale input, owner completion/failure/retry, task/file-graph retirement, null rendering retention, portable/local graphs and diagnostic placeholder sampling. NoiseGenerationTests, 122 pinned image cases and 20 unchanged RGBA kernel cases, fresh-process authoring and actual 48-frame GPU/compatibility consumers verify the exercised profile; pending reads and 25 warmed pending frame intervals allocate zero managed owner bytes. Large-skirt writes clip to output bounds; browser threading, foreign/editor/native allocator/load gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.Noise.GetSeamlessImage(System.Int32,System.Int32,System.Boolean,System.Single,System.Boolean)",
+      "godot": "Noise::method:get_seamless_image(int:,int:,bool:,bool:,float:,bool:)",
+      "reason": "ADRs 0013/0014/0039/0104: complete 2D image producer and deferred-first/background NoiseTexture consumer, independent built-in input snapshots, custom virtual image dispatch, coalesced stale input, owner completion/failure/retry, task/file-graph retirement, null rendering retention, portable/local graphs and diagnostic placeholder sampling. NoiseGenerationTests, 122 pinned image cases and 20 unchanged RGBA kernel cases, fresh-process authoring and actual 48-frame GPU/compatibility consumers verify the exercised profile; pending reads and 25 warmed pending frame intervals allocate zero managed owner bytes. Large-skirt writes clip to output bounds; browser threading, foreign/editor/native allocator/load gates remain separate."
+    },
+    {
+      "electron2d": "T:Electron2D.MouseMode",
+      "godot": "Input::enum:MouseMode",
+      "reason": "C# Enum suffix avoids colliding with Input.MouseMode property; numeric identities match."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.MouseMode.Visible()",
+      "godot": "Input::enum_value:MouseMode.MOUSE_MODE_VISIBLE",
+      "reason": "Native pointer mode zero."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.MouseMode.Hidden()",
+      "godot": "Input::enum_value:MouseMode.MOUSE_MODE_HIDDEN",
+      "reason": "Native pointer mode one."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.MouseMode.Captured()",
+      "godot": "Input::enum_value:MouseMode.MOUSE_MODE_CAPTURED",
+      "reason": "Native relative pointer mode two."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.MouseMode.Confined()",
+      "godot": "Input::enum_value:MouseMode.MOUSE_MODE_CONFINED",
+      "reason": "Native window confinement mode three."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.MouseMode.ConfinedHidden()",
+      "godot": "Input::enum_value:MouseMode.MOUSE_MODE_CONFINED_HIDDEN",
+      "reason": "Native hidden confinement mode four."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.MouseMode.Max()",
+      "godot": "Input::enum_value:MouseMode.MOUSE_MODE_MAX",
+      "reason": "Sentinel five is not selectable."
+    },
+    {
+      "electron2d": "method:Electron2D.Input.GetCurrentCursorShape()",
+      "godot": "Input::method:get_current_cursor_shape()",
+      "reason": "Returns the active display cursor shape, including direct display changes."
+    },
+    {
+      "electron2d": "method:Electron2D.TranslationDomain.GetTranslations()",
+      "godot": "TranslationDomain::method:get_translations()",
+      "reason": "Returns a snapshot of borrowed catalogs in registration order."
+    },
+    {
+      "electron2d": "property:Electron2D.TranslationDomain.LocaleOverride()",
+      "godot": "TranslationDomain::method:set_locale_override(String:)",
+      "reason": "A normalized CultureInfo name replaces the locale string setter under ADR 0007."
+    },
+    {
+      "electron2d": "method:Electron2D.TranslationServer.GetLoadedLocales()",
+      "godot": "TranslationServer::method:get_loaded_locales()",
+      "reason": "Lists distinct live locales registered in the main domain; culture and editor locale lists remain a separate audit."
+    },
+    {
+      "electron2d": "method:Electron2D.TranslationServer.GetTranslations()",
+      "godot": "TranslationServer::method:get_translations()",
+      "reason": "Returns a snapshot of borrowed main-domain catalogs."
+    },
+    {
+      "electron2d": "method:Electron2D.XMLParser.GetAttributeCount()",
+      "godot": "XMLParser::method:get_attribute_count()",
+      "reason": "Count of the current or last element's ordered attributes; non-element tokens retain the list."
+    },
+    {
+      "electron2d": "method:Electron2D.XMLParser.GetCurrentLine()",
+      "godot": "XMLParser::method:get_current_line()",
+      "reason": "Zero-based count of newline bytes consumed by the token cursor."
+    },
+    {
+      "electron2d": "method:Electron2D.XMLParser.GetNodeData()",
+      "godot": "XMLParser::method:get_node_data()",
+      "reason": "Returns decoded text only for a text token."
+    },
+    {
+      "electron2d": "method:Electron2D.XMLParser.GetNodeName()",
+      "godot": "XMLParser::method:get_node_name()",
+      "reason": "Returns element or markup content; text tokens return empty."
+    },
+    {
+      "electron2d": "method:Electron2D.XMLParser.GetNodeOffset()",
+      "godot": "XMLParser::method:get_node_offset()",
+      "reason": "Byte offset uses a managed long and records the start of the read operation."
+    },
+    {
+      "electron2d": "method:Electron2D.XMLParser.GetNodeType()",
+      "godot": "XMLParser::method:get_node_type()",
+      "reason": "Strongly typed enum return with the same numeric node identities."
+    },
+    {
+      "electron2d": "method:Electron2D.Translation.OnGetMessage(System.String,System.String)",
+      "godot": "Translation::method:_get_message(StringName:,StringName:)",
+      "reason": "Protected typed virtual override returns null to fall through to catalog storage; an empty string is a resolved value."
+    },
+    {
+      "electron2d": "method:Electron2D.Translation.OnGetPluralMessage(System.String,System.String,System.Int64,System.String)",
+      "godot": "Translation::method:_get_plural_message(StringName:,StringName:,int:,StringName:)",
+      "reason": "Protected typed virtual override uses long counts from the existing TrN API and returns null to use local storage."
+    },
+    {
+      "electron2d": "method:Electron2D.Translation.GetMessageCount()",
+      "godot": "Translation::method:get_message_count()",
+      "reason": "Returns the number of contextual source entries; plural forms count as one entry."
+    },
+    {
+      "electron2d": "method:Electron2D.Translation.GetMessageList()",
+      "godot": "Translation::method:get_message_list()",
+      "reason": "Returns copied source keys, prefixing nonempty contexts with the EOT separator."
+    },
+    {
+      "electron2d": "method:Electron2D.Translation.GetTranslatedMessageList()",
+      "godot": "Translation::method:get_translated_message_list()",
+      "reason": "Returns copied translated strings, including each plural form."
+    },
+    {
+      "electron2d": "method:Electron2D.OptimizedTranslation.GetMessageCount()",
+      "godot": "Translation::method:get_message_count()",
+      "reason": "The optimized override returns zero because source keys are not stored."
+    },
+    {
+      "electron2d": "method:Electron2D.OptimizedTranslation.GetMessageList()",
+      "godot": "Translation::method:get_message_list()",
+      "reason": "The optimized override returns an empty list because source keys are not stored."
+    },
+    {
+      "electron2d": "method:Electron2D.OptimizedTranslation.GetTranslatedMessageList()",
+      "godot": "Translation::method:get_translated_message_list()",
+      "reason": "The optimized override decompresses a copied list of translated values."
+    },
+    {
+      "electron2d": "method:Electron2D.OptimizedTranslation.OnGetMessage(System.String,System.String)",
+      "godot": "Translation::method:_get_message(StringName:,StringName:)",
+      "reason": "Derived compressed lookup projects the inherited virtual message resolver and ignores context."
+    },
+    {
+      "electron2d": "method:Electron2D.OptimizedTranslation.OnGetPluralMessage(System.String,System.String,System.Int64,System.String)",
+      "godot": "Translation::method:_get_plural_message(StringName:,StringName:,int:,StringName:)",
+      "reason": "Derived resolver returns the singular compressed value regardless of count or context."
+    },
+    {
+      "electron2d": "property:Electron2D.Translation.PluralRulesOverride()",
+      "godot": "Translation::property:plural_rules_override",
+      "reason": "Stored gettext expression overrides automatic locale selection; empty or syntactically invalid definitions retain locale fallback. Caller delegates retain an explicit higher-priority typed override."
+    },
+    {
+      "electron2d": "method:Electron2D.TranslationServer.AddTranslation(Electron2D.Translation,System.String)",
+      "godot": "TranslationServer::method:add_translation(Translation:)",
+      "reason": "Registers a borrowed live Translation resource within a case-sensitive domain; later edits and disposal affect lookup."
+    },
+    {
+      "electron2d": "method:Electron2D.TranslationServer.RemoveTranslation(Electron2D.Translation,System.String)",
+      "godot": "TranslationServer::method:remove_translation(Translation:)",
+      "reason": "Unregisters the borrowed catalog without disposing it; domain is the typed localization boundary of ADR 0007."
+    },
     {
       "electron2d": "method:Electron2D.ConfigFile.EraseSectionKey`1(ConfigKey<T>)",
       "godot": "ConfigFile::method:erase_section_key(String:,String:)",
@@ -685,25 +1150,101 @@
       "electron2d": "enumValue:Electron2D.CursorShape.Wait()",
       "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
     },
-    {"godot": "Script::method:can_instantiate()", "electron2d": "method:Electron2D.Script.CanInstantiate()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "Script::method:get_base_script()", "electron2d": "method:Electron2D.Script.GetBaseScript()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "Script::method:get_global_name()", "electron2d": "method:Electron2D.Script.GetGlobalName()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "Script::method:get_instance_base_type()", "electron2d": "method:Electron2D.Script.GetInstanceBaseType()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "Script::method:get_property_default_value(StringName:)", "electron2d": "method:Electron2D.Script.GetPropertyDefaultValue`2(PropertyDescriptor<TOwner, TValue>,TOwner)", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "Script::method:get_script_constant_map()", "electron2d": "method:Electron2D.Script.GetScriptConstantMap`1()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "Script::method:get_script_method_list()", "electron2d": "method:Electron2D.Script.GetScriptMethodList()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "Script::method:get_script_property_list()", "electron2d": "method:Electron2D.Script.GetScriptPropertyList()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "Script::method:get_script_signal_list()", "electron2d": "method:Electron2D.Script.GetScriptSignalList()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "Script::method:has_script_method(StringName:)", "electron2d": "method:Electron2D.Script.HasScriptMethod(System.String)", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "Script::method:has_script_signal(StringName:)", "electron2d": "method:Electron2D.Script.HasScriptSignal(System.String)", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "Script::method:has_source_code()", "electron2d": "method:Electron2D.Script.HasSourceCode()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "Script::method:is_abstract()", "electron2d": "method:Electron2D.Script.IsAbstract()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "Script::method:is_tool()", "electron2d": "method:Electron2D.Script.IsTool()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "Script::property:source_code", "electron2d": "property:Electron2D.Script.SourceCode()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "class:Script", "electron2d": "T:Electron2D.Script", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "class:CSharpScript", "electron2d": "T:Electron2D.Script", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "CSharpScript::method:new()", "electron2d": "method:Electron2D.Script.New`1()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "CSharpScript::method:new()", "electron2d": "method:Electron2D.Script.New`1(Func<T>)", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {
+      "godot": "Script::method:can_instantiate()",
+      "electron2d": "method:Electron2D.Script.CanInstantiate()",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "Script::method:get_base_script()",
+      "electron2d": "method:Electron2D.Script.GetBaseScript()",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "Script::method:get_global_name()",
+      "electron2d": "method:Electron2D.Script.GetGlobalName()",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "Script::method:get_instance_base_type()",
+      "electron2d": "method:Electron2D.Script.GetInstanceBaseType()",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "Script::method:get_property_default_value(StringName:)",
+      "electron2d": "method:Electron2D.Script.GetPropertyDefaultValue`2(PropertyDescriptor<TOwner, TValue>,TOwner)",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "Script::method:get_script_constant_map()",
+      "electron2d": "method:Electron2D.Script.GetScriptConstantMap`1()",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "Script::method:get_script_method_list()",
+      "electron2d": "method:Electron2D.Script.GetScriptMethodList()",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "Script::method:get_script_property_list()",
+      "electron2d": "method:Electron2D.Script.GetScriptPropertyList()",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "Script::method:get_script_signal_list()",
+      "electron2d": "method:Electron2D.Script.GetScriptSignalList()",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "Script::method:has_script_method(StringName:)",
+      "electron2d": "method:Electron2D.Script.HasScriptMethod(System.String)",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "Script::method:has_script_signal(StringName:)",
+      "electron2d": "method:Electron2D.Script.HasScriptSignal(System.String)",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "Script::method:has_source_code()",
+      "electron2d": "method:Electron2D.Script.HasSourceCode()",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "Script::method:is_abstract()",
+      "electron2d": "method:Electron2D.Script.IsAbstract()",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "Script::method:is_tool()",
+      "electron2d": "method:Electron2D.Script.IsTool()",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "Script::property:source_code",
+      "electron2d": "property:Electron2D.Script.SourceCode()",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "class:Script",
+      "electron2d": "T:Electron2D.Script",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "class:CSharpScript",
+      "electron2d": "T:Electron2D.Script",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "CSharpScript::method:new()",
+      "electron2d": "method:Electron2D.Script.New`1()",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": "CSharpScript::method:new()",
+      "electron2d": "method:Electron2D.Script.New`1(Func<T>)",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, registration-time copied CLR/default/constant metadata with explicit file/PDB and untrimmed declaration prerequisites, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
     {
       "godot": "OS::method:get_system_font_path(String:,int:,int:,bool:)",
       "electron2d": "method:Electron2D.OS.GetSystemFontPath(System.String,System.Int32,System.Int32,System.Boolean)",
@@ -1010,61 +1551,298 @@
     }
   ],
   "extras": [
-    {"electron2d": "property:Electron2D.Translation.PluralSelector()", "reason": "Typed optional borrowed caller delegate overrides prepared catalog or locale rules under ADR 0007; cannot be stored in resource files."},
-    {"electron2d": "T:Electron2D.JoypadInfo", "reason": "Typed projection of the platform-info dictionary returned by Input.GetJoyInfo; omits unavailable platform-specific fields.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.JoypadInfo.RawName()", "reason": "Typed raw_name field from the reference joypad-info dictionary.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.JoypadInfo.VendorID()", "reason": "Typed vendor_id field from the reference joypad-info dictionary.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.JoypadInfo.ProductID()", "reason": "Typed product_id field from the reference joypad-info dictionary.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.JoypadInfo.SerialNumber()", "reason": "Typed optional serial_number field from the reference joypad-info dictionary.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "T:Electron2D.InputActionSettings", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "T:Electron2D.InputBindingKind", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "T:Electron2D.InputBindingSettings", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "constructor:Electron2D.InputActionSettings..ctor()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "constructor:Electron2D.InputBindingSettings..ctor()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "enumValue:Electron2D.InputBindingKind.Action()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "enumValue:Electron2D.InputBindingKind.JoypadButton()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "enumValue:Electron2D.InputBindingKind.JoypadMotion()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "enumValue:Electron2D.InputBindingKind.Key()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "enumValue:Electron2D.InputBindingKind.MouseButton()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.InputActionSettings.Bindings()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.InputActionSettings.Deadzone()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.InputActionSettings.Version()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.InputBindingSettings.Action()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.InputBindingSettings.AxisValue()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.InputBindingSettings.Device()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.InputBindingSettings.JoyAxis()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.InputBindingSettings.JoyButtonIndex()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.InputBindingSettings.KeyLabel()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.InputBindingSettings.Keycode()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.InputBindingSettings.Kind()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.InputBindingSettings.Location()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.InputBindingSettings.Modifiers()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.InputBindingSettings.MouseButtonIndex()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "property:Electron2D.InputBindingSettings.PhysicalKeycode()", "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.", "adr": "docs/decisions/input.md#adr-0038"},
-    {"electron2d": "constructor:Electron2D.JSON..ctor()", "state": "Implemented", "reason": "Creates an empty managed JSON resource; no upstream constructor row.", "adr": "adr-0048"},
-    {"electron2d": "method:Electron2D.JSON.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)", "state": "Implemented", "reason": "Deep-copies JSON document state for the managed Resource duplication contract.", "adr": "adr-0048"},
-    {"electron2d": "method:Electron2D.JSON.CreateDuplicateInstance()", "state": "Implemented", "reason": "Creates the managed JSON resource used by Resource.Duplicate.", "adr": "adr-0048"},
-    {"electron2d": "method:Electron2D.JSON.Dispose(System.Boolean)", "state": "Implemented", "reason": "Releases owned JSON tree during deterministic managed disposal.", "adr": "adr-0048"},
-    {"electron2d": "constructor:Electron2D.FastNoiseLite..ctor()", "reason": "C# constructor initializes the documented resource defaults.", "adr": "adr-0013"},
-    {"electron2d": "method:Electron2D.FastNoiseLite.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)", "reason": "Derived override of the Noise or Resource base contract; no separate declared upstream member.", "adr": "adr-0013"},
-    {"electron2d": "method:Electron2D.FastNoiseLite.CreateDuplicateInstance()", "reason": "Derived override of the Noise or Resource base contract; no separate declared upstream member.", "adr": "adr-0013"},
-    {"electron2d": "method:Electron2D.FastNoiseLite.GetNoise1D(System.Single)", "reason": "Derived override of the Noise or Resource base contract; no separate declared upstream member.", "adr": "adr-0013"},
-    {"electron2d": "method:Electron2D.FastNoiseLite.GetNoise2D(System.Single,System.Single)", "reason": "Derived override of the Noise or Resource base contract; no separate declared upstream member.", "adr": "adr-0013"},
-    {"electron2d": "method:Electron2D.FastNoiseLite.GetPropertyDescriptors()", "reason": "Derived override of the Noise or Resource base contract; no separate declared upstream member.", "adr": "adr-0013"},
-    {"electron2d": "constructor:Electron2D.Noise..ctor()", "state": "Implemented", "reason": "Protected managed construction permits concrete noise resource subclasses; the reference abstract class has no constructor declaration.", "adr": "adr-0004"},
-    {"electron2d": "constructor:Electron2D.TranslationDomain..ctor()", "state": "Implemented", "reason": "Creates an independent managed domain; the reference class has no explicit constructor row.", "adr": "adr-0003"},
-    {"electron2d": "method:Electron2D.TranslationDomain.Dispose(System.Boolean)", "state": "Implemented", "reason": "Unregisters borrowed catalogs during deterministic managed lifetime cleanup.", "adr": "adr-0003"},
-    {"electron2d": "constructor:Electron2D.XMLParser..ctor()", "state": "Implemented", "reason": "Managed construction of an unopened token reader; no constructor row exists upstream.", "adr": "adr-0003"},
-    {"electron2d": "method:Electron2D.XMLParser.Dispose(System.Boolean)", "state": "Implemented", "reason": "Releases the owned input buffer on deterministic managed disposal.", "adr": "adr-0003"},
-    {"electron2d": "constructor:Electron2D.Translation..ctor()", "state": "Implemented", "reason": "Managed default construction of an empty en translation resource; the reference class has no constructor row.", "adr": "adr-0007"},
-    {"electron2d": "method:Electron2D.Translation.CreateDuplicateInstance()", "state": "Implemented", "reason": "Exact-type factory for the managed Resource duplication contract.", "adr": "adr-0013"},
-    {"electron2d": "method:Electron2D.Translation.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)", "state": "Implemented", "reason": "Copies locale, selector reference, and independent message/form containers for Resource duplication.", "adr": "adr-0013"},
-    {"electron2d": "method:Electron2D.Translation.GetPropertyDescriptors()", "state": "Implemented", "reason": "Exposes the stored typed locale property to Resource tooling.", "adr": "adr-0005"},
-    {"electron2d": "method:Electron2D.Translation.Dispose(System.Boolean)", "state": "Implemented", "reason": "Clears managed catalog storage during deterministic Resource disposal without owning a server registry.", "adr": "adr-0003"},
-    {"electron2d": "constructor:Electron2D.OptimizedTranslation..ctor()", "state": "Implemented", "reason": "Managed construction of an empty optimized catalog; the reference has no constructor row.", "adr": "adr-0007"},
-    {"electron2d": "method:Electron2D.OptimizedTranslation.CreateDuplicateInstance()", "state": "Implemented", "reason": "Exact-type target for Resource duplication.", "adr": "adr-0013"},
-    {"electron2d": "method:Electron2D.OptimizedTranslation.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)", "state": "Implemented", "reason": "Copies the immutable compressed lookup snapshot to an independent resource.", "adr": "adr-0013"},
-    {"electron2d": "method:Electron2D.OptimizedTranslation.Dispose(System.Boolean)", "state": "Implemented", "reason": "Clears the compressed lookup table during managed disposal.", "adr": "adr-0003"},
+    {
+      "electron2d": "property:Electron2D.Translation.PluralSelector()",
+      "reason": "Typed optional borrowed caller delegate overrides prepared catalog or locale rules under ADR 0007; cannot be stored in resource files."
+    },
+    {
+      "electron2d": "T:Electron2D.JoypadInfo",
+      "reason": "Typed projection of the platform-info dictionary returned by Input.GetJoyInfo; omits unavailable platform-specific fields.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.JoypadInfo.RawName()",
+      "reason": "Typed raw_name field from the reference joypad-info dictionary.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.JoypadInfo.VendorID()",
+      "reason": "Typed vendor_id field from the reference joypad-info dictionary.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.JoypadInfo.ProductID()",
+      "reason": "Typed product_id field from the reference joypad-info dictionary.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.JoypadInfo.SerialNumber()",
+      "reason": "Typed optional serial_number field from the reference joypad-info dictionary.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "T:Electron2D.InputActionSettings",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "T:Electron2D.InputBindingKind",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "T:Electron2D.InputBindingSettings",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputActionSettings..ctor()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputBindingSettings..ctor()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "enumValue:Electron2D.InputBindingKind.Action()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "enumValue:Electron2D.InputBindingKind.JoypadButton()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "enumValue:Electron2D.InputBindingKind.JoypadMotion()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "enumValue:Electron2D.InputBindingKind.Key()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "enumValue:Electron2D.InputBindingKind.MouseButton()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputActionSettings.Bindings()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputActionSettings.Deadzone()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputActionSettings.Version()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputBindingSettings.Action()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputBindingSettings.AxisValue()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputBindingSettings.Device()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputBindingSettings.JoyAxis()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputBindingSettings.JoyButtonIndex()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputBindingSettings.KeyLabel()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputBindingSettings.Keycode()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputBindingSettings.Kind()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputBindingSettings.Location()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputBindingSettings.Modifiers()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputBindingSettings.MouseButtonIndex()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputBindingSettings.PhysicalKeycode()",
+      "reason": "Typed version-one input-action persistence value or event discriminator; replaces untyped project action dictionaries without adding an independent game capability.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "constructor:Electron2D.JSON..ctor()",
+      "state": "Implemented",
+      "reason": "Creates an empty managed JSON resource; no upstream constructor row.",
+      "adr": "adr-0048"
+    },
+    {
+      "electron2d": "method:Electron2D.JSON.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "Deep-copies JSON document state for the managed Resource duplication contract.",
+      "adr": "adr-0048"
+    },
+    {
+      "electron2d": "method:Electron2D.JSON.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "Creates the managed JSON resource used by Resource.Duplicate.",
+      "adr": "adr-0048"
+    },
+    {
+      "electron2d": "method:Electron2D.JSON.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "Releases owned JSON tree during deterministic managed disposal.",
+      "adr": "adr-0048"
+    },
+    {
+      "electron2d": "constructor:Electron2D.FastNoiseLite..ctor()",
+      "reason": "C# constructor initializes the documented resource defaults.",
+      "adr": "adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.FastNoiseLite.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Derived override of the Noise or Resource base contract; no separate declared upstream member.",
+      "adr": "adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.FastNoiseLite.CreateDuplicateInstance()",
+      "reason": "Derived override of the Noise or Resource base contract; no separate declared upstream member.",
+      "adr": "adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.FastNoiseLite.GetNoise1D(System.Single)",
+      "reason": "Derived override of the Noise or Resource base contract; no separate declared upstream member.",
+      "adr": "adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.FastNoiseLite.GetNoise2D(System.Single,System.Single)",
+      "reason": "Derived override of the Noise or Resource base contract; no separate declared upstream member.",
+      "adr": "adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.FastNoiseLite.GetPropertyDescriptors()",
+      "reason": "Derived override of the Noise or Resource base contract; no separate declared upstream member.",
+      "adr": "adr-0013"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Noise..ctor()",
+      "state": "Implemented",
+      "reason": "Protected managed construction permits concrete noise resource subclasses; the reference abstract class has no constructor declaration.",
+      "adr": "adr-0004"
+    },
+    {
+      "electron2d": "constructor:Electron2D.TranslationDomain..ctor()",
+      "state": "Implemented",
+      "reason": "Creates an independent managed domain; the reference class has no explicit constructor row.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.TranslationDomain.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "Unregisters borrowed catalogs during deterministic managed lifetime cleanup.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "constructor:Electron2D.XMLParser..ctor()",
+      "state": "Implemented",
+      "reason": "Managed construction of an unopened token reader; no constructor row exists upstream.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.XMLParser.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "Releases the owned input buffer on deterministic managed disposal.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Translation..ctor()",
+      "state": "Implemented",
+      "reason": "Managed default construction of an empty en translation resource; the reference class has no constructor row.",
+      "adr": "adr-0007"
+    },
+    {
+      "electron2d": "method:Electron2D.Translation.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "Exact-type factory for the managed Resource duplication contract.",
+      "adr": "adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.Translation.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "Copies locale, selector reference, and independent message/form containers for Resource duplication.",
+      "adr": "adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.Translation.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "Exposes the stored typed locale property to Resource tooling.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.Translation.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "Clears managed catalog storage during deterministic Resource disposal without owning a server registry.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "constructor:Electron2D.OptimizedTranslation..ctor()",
+      "state": "Implemented",
+      "reason": "Managed construction of an empty optimized catalog; the reference has no constructor row.",
+      "adr": "adr-0007"
+    },
+    {
+      "electron2d": "method:Electron2D.OptimizedTranslation.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "Exact-type target for Resource duplication.",
+      "adr": "adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.OptimizedTranslation.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "Copies the immutable compressed lookup snapshot to an independent resource.",
+      "adr": "adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.OptimizedTranslation.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "Clears the compressed lookup table during managed disposal.",
+      "adr": "adr-0003"
+    },
     {
       "electron2d": "constructor:Electron2D.RegEx..ctor()",
       "reason": "Managed construction of the reference RegEx type; the reference constructor is not a class-reference declaration.",
@@ -1490,63 +2268,291 @@
       "reason": "Protected lifetime and owner-thread validation override with no upstream callback.",
       "adr": "adr-0009"
     },
-    {"electron2d": "T:Electron2D.ProjectSettingsRegistry", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "event:Electron2D.ProjectSettingsRegistry.SettingsChanged()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.AddCustomFeature(System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.CheckChangedSettingsInGroup(System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.ClearFeatureOverride`1(ProjectSetting<T>,System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.ConfigurePaths(System.String,System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.FlushChanges()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.GetActiveFeatures()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.GetChangedSettings()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.GetFeatureOverrides`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.GetOrder`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.GetSettingNames(System.Boolean)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.GetWithOverride`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.GetWithOverride`1(ProjectSetting<T>,System.Collections.Generic.IEnumerable<System.String>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.Get`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.GlobalizePath(System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.HasFeature(System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.HasSetting`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.IsBasic`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.IsInternal`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.IsRestartRequired`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.Load()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.LoadCustom(System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.LocalizePath(System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.Register`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.RemoveCustomFeature(System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.Reset`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.Save()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.SaveCustom(System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.SetAsBasic`1(ProjectSetting<T>,System.Boolean)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.SetAsInternal`1(ProjectSetting<T>,System.Boolean)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.SetFeatureOverride`1(ProjectSetting<T>,System.String,T)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.SetInitialValue`1(ProjectSetting<T>,T)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.SetOrder`1(ProjectSetting<T>,System.Int32)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.SetRestartIfChanged`1(ProjectSetting<T>,System.Boolean)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.Set`1(ProjectSetting<T>,T)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.Unregister`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "property:Electron2D.ProjectSettingsRegistry.OverrideFilePath()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "property:Electron2D.ProjectSettingsRegistry.ProjectDataPath()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "property:Electron2D.ProjectSettingsRegistry.ProjectFilePath()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "property:Electron2D.ProjectSettingsRegistry.ProjectRoot()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "property:Electron2D.ProjectSettingsRegistry.UserDataRoot()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "property:Electron2D.ProjectSettingsRegistry.Version()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "T:Electron2D.GlobalClassAttribute", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
-    {"electron2d": "T:Electron2D.ToolAttribute", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
-    {"electron2d": "constructor:Electron2D.GlobalClassAttribute..ctor()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
-    {"electron2d": "constructor:Electron2D.Script..ctor()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
-    {"electron2d": "constructor:Electron2D.ToolAttribute..ctor()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
-    {"electron2d": "method:Electron2D.Script.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
-    {"electron2d": "method:Electron2D.Script.CreateDuplicateInstance()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
-    {"electron2d": "method:Electron2D.Script.Dispose(System.Boolean)", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
-    {"electron2d": "method:Electron2D.Script.GetPropertyDescriptors()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
-    {"electron2d": "method:Electron2D.Script.RegisterAbstract`1(System.String,System.String,Electron2D.PropertyDescriptor[])", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions. Source registration requires a file-backed assembly, matching portable PDB and untrimmed project declarations; these are explicit public analysis contracts.", "adr": "ADR 0004/0013/0014/0091"},
-    {"electron2d": "method:Electron2D.Script.RegisterNode`1(System.String,System.String,Func<TNode>,Electron2D.PropertyDescriptor[])", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions. Source registration requires a file-backed assembly, matching portable PDB and untrimmed project declarations; these are explicit public analysis contracts.", "adr": "ADR 0004/0013/0014/0091"},
-    {"electron2d": "method:Electron2D.Script.RegisterResource`1(System.String,System.String,Func<TResource>,Electron2D.PropertyDescriptor[])", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions. Source registration requires a file-backed assembly, matching portable PDB and untrimmed project declarations; these are explicit public analysis contracts.", "adr": "ADR 0004/0013/0014/0091"},
-    {"electron2d": "property:Electron2D.Script.CompiledType()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
-    {"electron2d": "property:Electron2D.Script.CompiledTypeID()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
+    {
+      "electron2d": "T:Electron2D.ProjectSettingsRegistry",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "event:Electron2D.ProjectSettingsRegistry.SettingsChanged()",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.AddCustomFeature(System.String)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.CheckChangedSettingsInGroup(System.String)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.ClearFeatureOverride`1(ProjectSetting<T>,System.String)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.ConfigurePaths(System.String,System.String)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.FlushChanges()",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.GetActiveFeatures()",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.GetChangedSettings()",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.GetFeatureOverrides`1(ProjectSetting<T>)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.GetOrder`1(ProjectSetting<T>)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.GetSettingNames(System.Boolean)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.GetWithOverride`1(ProjectSetting<T>)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.GetWithOverride`1(ProjectSetting<T>,System.Collections.Generic.IEnumerable<System.String>)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.Get`1(ProjectSetting<T>)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.GlobalizePath(System.String)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.HasFeature(System.String)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.HasSetting`1(ProjectSetting<T>)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.IsBasic`1(ProjectSetting<T>)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.IsInternal`1(ProjectSetting<T>)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.IsRestartRequired`1(ProjectSetting<T>)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.Load()",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.LoadCustom(System.String)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.LocalizePath(System.String)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.Register`1(ProjectSetting<T>)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.RemoveCustomFeature(System.String)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.Reset`1(ProjectSetting<T>)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.Save()",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.SaveCustom(System.String)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.SetAsBasic`1(ProjectSetting<T>,System.Boolean)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.SetAsInternal`1(ProjectSetting<T>,System.Boolean)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.SetFeatureOverride`1(ProjectSetting<T>,System.String,T)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.SetInitialValue`1(ProjectSetting<T>,T)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.SetOrder`1(ProjectSetting<T>,System.Int32)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.SetRestartIfChanged`1(ProjectSetting<T>,System.Boolean)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.Set`1(ProjectSetting<T>,T)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.Unregister`1(ProjectSetting<T>)",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettingsRegistry.OverrideFilePath()",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettingsRegistry.ProjectDataPath()",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettingsRegistry.ProjectFilePath()",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettingsRegistry.ProjectRoot()",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettingsRegistry.UserDataRoot()",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettingsRegistry.Version()",
+      "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.",
+      "adr": "ADR 0019 / ADR 0095"
+    },
+    {
+      "electron2d": "T:Electron2D.GlobalClassAttribute",
+      "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.",
+      "adr": "ADR 0004/0013/0014/0091"
+    },
+    {
+      "electron2d": "T:Electron2D.ToolAttribute",
+      "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.",
+      "adr": "ADR 0004/0013/0014/0091"
+    },
+    {
+      "electron2d": "constructor:Electron2D.GlobalClassAttribute..ctor()",
+      "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.",
+      "adr": "ADR 0004/0013/0014/0091"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Script..ctor()",
+      "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.",
+      "adr": "ADR 0004/0013/0014/0091"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ToolAttribute..ctor()",
+      "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.",
+      "adr": "ADR 0004/0013/0014/0091"
+    },
+    {
+      "electron2d": "method:Electron2D.Script.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.",
+      "adr": "ADR 0004/0013/0014/0091"
+    },
+    {
+      "electron2d": "method:Electron2D.Script.CreateDuplicateInstance()",
+      "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.",
+      "adr": "ADR 0004/0013/0014/0091"
+    },
+    {
+      "electron2d": "method:Electron2D.Script.Dispose(System.Boolean)",
+      "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.",
+      "adr": "ADR 0004/0013/0014/0091"
+    },
+    {
+      "electron2d": "method:Electron2D.Script.GetPropertyDescriptors()",
+      "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.",
+      "adr": "ADR 0004/0013/0014/0091"
+    },
+    {
+      "electron2d": "method:Electron2D.Script.RegisterAbstract`1(System.String,System.String,Electron2D.PropertyDescriptor[])",
+      "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions. Source registration requires a file-backed assembly, matching portable PDB and untrimmed project declarations; these are explicit public analysis contracts.",
+      "adr": "ADR 0004/0013/0014/0091"
+    },
+    {
+      "electron2d": "method:Electron2D.Script.RegisterNode`1(System.String,System.String,Func<TNode>,Electron2D.PropertyDescriptor[])",
+      "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions. Source registration requires a file-backed assembly, matching portable PDB and untrimmed project declarations; these are explicit public analysis contracts.",
+      "adr": "ADR 0004/0013/0014/0091"
+    },
+    {
+      "electron2d": "method:Electron2D.Script.RegisterResource`1(System.String,System.String,Func<TResource>,Electron2D.PropertyDescriptor[])",
+      "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions. Source registration requires a file-backed assembly, matching portable PDB and untrimmed project declarations; these are explicit public analysis contracts.",
+      "adr": "ADR 0004/0013/0014/0091"
+    },
+    {
+      "electron2d": "property:Electron2D.Script.CompiledType()",
+      "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.",
+      "adr": "ADR 0004/0013/0014/0091"
+    },
+    {
+      "electron2d": "property:Electron2D.Script.CompiledTypeID()",
+      "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.",
+      "adr": "ADR 0004/0013/0014/0091"
+    },
     {
       "electron2d": "T:Electron2D.PipeWriteException",
       "reason": "Typed C# projection of process-pipe partial-write error state from FileAccess.store_buffer/get_error; BytesWritten identifies consumed prefix without a shared mutable last-error slot.",
@@ -1627,10 +2633,50 @@
       "state": "Implemented",
       "reason": "ADRs 0013/0023/0050: local instance graphs preserve aliases/cycles and borrow non-local built-in/external resources. Setup runs once after complete detached restoration, with rollback of created resources; scene identity is weak, returns null on root retirement and transfers with root replacement. Public-only --local-scenes executes CPU/GPU/registered serial/separate full physical frames and queries at 0/0 managed bytes, with GC retention regression and base/packed/replacement/isolated-authoring checks. Wider inherited/native/foreign/hardware acceptance remains open."
     },
-    {"godot": ["Translation::property:plural_rules_override"], "state": "Implemented", "reason": "Bounded prepared gettext integer expressions, precedence and short circuit execute; invalid definitions retain automatic locale fallback, duplication and archives preserve definitions, and imported PO/MO catalogs reach native pixels. TranslationCatalogTests covers trust boundaries and zero-byte warm lookup on Linux x64."},
-    {"godot": ["TranslationServer::method:compare_locales(String:,String:)"], "state": "Implemented", "reason": "ADR0007: same fixed default-aware locale identity parser as StandardizeLocale; score retains exact/language/script/region/variant semantics. Original C++ constructor agrees on 2600 cases and LocalizationProjectSettingsTests retains scalar score checks; actual catalogs consume the provider."},
-    {"godot": ["TranslationServer::method:get_all_languages()", "TranslationServer::method:get_all_scripts()", "TranslationServer::method:get_all_countries()", "TranslationServer::method:get_language_name(String:)", "TranslationServer::method:get_script_name(String:)", "TranslationServer::method:get_country_name(String:)", "TranslationServer::method:get_locale_name(String:)", "TranslationServer::method:standardize_locale(String:,bool:)", "TranslationServer::method:get_plural_rules(String:)"], "state": "Implemented", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},
-    {"godot": ["FileAccess::method:open_compressed(String:,int:FileAccess.ModeFlags,int:FileAccess.CompressionMode)"], "state": "Implemented", "reason": "ADR 0020 retains the engine-owned E2DCMP envelope and whole-file/atomic semantics; default FastLZ and all five codecs execute seek/read/write/flush/reopen. Native 64 KiB blocks validate structure, exact decode, padding and SHA-256. FileCompressionTests verifies tiny/boundary/random/repeated data, edits, virtual paths, corruption, atomic failure and fresh-process reads; direct codec oracle and GPU/compatibility compressed-PNG pixels exercise Linux x64 with the matching native bundle. No reference container binary compatibility or foreign-host acceptance is claimed."},
+    {
+      "godot": [
+        "Resource::method:duplicate(bool:)",
+        "Resource::method:duplicate_deep(int:Resource.DeepDuplicateMode)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0013 explicit typed factories/copy hooks preserve deep policies and graph aliases/cycles. Each factory rejects a pre-existing target before copying or ownership acquisition, preserving exact/wrong-type borrowed physical resources; nested failure retires only acquired graph targets, and distinct sources cannot reuse a prior target. Public CPU/software-GPU/registered serial/separate consumers and strict NativeAOT profiles exercise active worlds, shape/query identity, material lifetime, fresh-process scene files and 128 warmed/measured frames at 0/0 managed bytes; common CPU/GPU physical suites and resource/scene authoring regressions pass. Evidence: bin/physics-resource-factories/2026-10-14/validation.json. The full derived typed-resource storage family and ordinary duplication semantics remain unaudited; broader inherited acceptance stays open."
+    },
+    {
+      "godot": [
+        "Translation::property:plural_rules_override"
+      ],
+      "state": "Implemented",
+      "reason": "Bounded prepared gettext integer expressions, precedence and short circuit execute; invalid definitions retain automatic locale fallback, duplication and archives preserve definitions, and imported PO/MO catalogs reach native pixels. TranslationCatalogTests covers trust boundaries and zero-byte warm lookup on Linux x64."
+    },
+    {
+      "godot": [
+        "TranslationServer::method:compare_locales(String:,String:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR0007: same fixed default-aware locale identity parser as StandardizeLocale; score retains exact/language/script/region/variant semantics. Original C++ constructor agrees on 2600 cases and LocalizationProjectSettingsTests retains scalar score checks; actual catalogs consume the provider."
+    },
+    {
+      "godot": [
+        "TranslationServer::method:get_all_languages()",
+        "TranslationServer::method:get_all_scripts()",
+        "TranslationServer::method:get_all_countries()",
+        "TranslationServer::method:get_language_name(String:)",
+        "TranslationServer::method:get_script_name(String:)",
+        "TranslationServer::method:get_country_name(String:)",
+        "TranslationServer::method:get_locale_name(String:)",
+        "TranslationServer::method:standardize_locale(String:,bool:)",
+        "TranslationServer::method:get_plural_rules(String:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."
+    },
+    {
+      "godot": [
+        "FileAccess::method:open_compressed(String:,int:FileAccess.ModeFlags,int:FileAccess.CompressionMode)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0020 retains the engine-owned E2DCMP envelope and whole-file/atomic semantics; default FastLZ and all five codecs execute seek/read/write/flush/reopen. Native 64 KiB blocks validate structure, exact decode, padding and SHA-256. FileCompressionTests verifies tiny/boundary/random/repeated data, edits, virtual paths, corruption, atomic failure and fresh-process reads; direct codec oracle and GPU/compatibility compressed-PNG pixels exercise Linux x64 with the matching native bundle. No reference container binary compatibility or foreign-host acceptance is claimed."
+    },
     {
       "godot": [
         "Object::method:get_script()"
@@ -2176,7 +3222,17 @@
       "state": "Partial",
       "reason": "Current Linux Fontconfig profile enumerates scalable families and resolves style/text/locale requests with exact path/face ownership; unavailable catalogs return empty results. Trigger: owning Windows DirectWrite and Apple CoreText provider slices must connect these same static OS contracts, with actual target discovery/ownership fixtures. Discovery does not depend on a graphics session."
     },
-    {"godot": ["Noise::method:get_noise_1d(float:)", "Noise::method:get_noise_2d(float:,float:)", "Noise::method:get_seamless_image(int:,int:,bool:,bool:,float:,bool:)", "class:Noise", "Noise::method:get_image(int:,int:,bool:,bool:,bool:)"], "state": "Implemented", "reason": "ADRs 0013/0014/0039/0104: complete 2D image producer and deferred-first/background NoiseTexture consumer, independent built-in input snapshots, custom virtual image dispatch, coalesced stale input, owner completion/failure/retry, task/file-graph retirement, null rendering retention, portable/local graphs and diagnostic placeholder sampling. NoiseGenerationTests, 122 pinned image cases and 20 unchanged RGBA kernel cases, fresh-process authoring and actual 48-frame GPU/compatibility consumers verify the exercised profile; pending reads and 25 warmed pending frame intervals allocate zero managed owner bytes. Large-skirt writes clip to output bounds; browser threading, foreign/editor/native allocator/load gates remain separate."},
+    {
+      "godot": [
+        "Noise::method:get_noise_1d(float:)",
+        "Noise::method:get_noise_2d(float:,float:)",
+        "Noise::method:get_seamless_image(int:,int:,bool:,bool:,float:,bool:)",
+        "class:Noise",
+        "Noise::method:get_image(int:,int:,bool:,bool:,bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0039/0104: complete 2D image producer and deferred-first/background NoiseTexture consumer, independent built-in input snapshots, custom virtual image dispatch, coalesced stale input, owner completion/failure/retry, task/file-graph retirement, null rendering retention, portable/local graphs and diagnostic placeholder sampling. NoiseGenerationTests, 122 pinned image cases and 20 unchanged RGBA kernel cases, fresh-process authoring and actual 48-frame GPU/compatibility consumers verify the exercised profile; pending reads and 25 warmed pending frame intervals allocate zero managed owner bytes. Large-skirt writes clip to output bounds; browser threading, foreign/editor/native allocator/load gates remain separate."
+    },
     {
       "godot": [
         "OS::method:get_process_id()",
