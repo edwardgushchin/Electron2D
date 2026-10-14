@@ -158,6 +158,8 @@ public sealed partial class ThemeDB
         ["FileAccess"] = ["FileAccess", "ElectronObject"],
         ["FileDialog"] = ["FileDialog", "ConfirmationDialog", "AcceptDialog", "Window", "Viewport", "Node", "ElectronObject"],
         ["FlowContainer"] = ["FlowContainer", "Container", "Control", "CanvasItem", "Node", "ElectronObject"],
+        ["FoldableContainer"] = ["FoldableContainer", "Container", "Control", "CanvasItem", "Node", "ElectronObject"],
+        ["FoldableGroup"] = ["FoldableGroup", "Resource", "ElectronObject"],
         ["Font"] = ["Font", "Resource", "ElectronObject"],
         ["FontFile"] = ["FontFile", "Font", "Resource", "ElectronObject"],
         ["FontVariation"] = ["FontVariation", "Font", "Resource", "ElectronObject"],

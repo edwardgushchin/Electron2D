@@ -19,7 +19,7 @@ internal static partial class RenderingRuntimeTests
                 var point = tabs.GetCurrentTabControl()!.GetGlobalRect().GetCenter(); var color = pixels.GetPixel((int)point.X, (int)point.Y);
                 Check(frame == 2 ? color.B > .9f && color.R < .1f : color.R > .9f && color.B < .1f, $"Tab panels {backend} draw only the selected child's pixels (frame {frame}).");
                 if (frame == 1) { var input = new SDL.Event { Type = (uint)SDL.EventType.KeyDown }; input.Key.WindowID = SDL.GetWindowID(SDL.GetWindows(out var count)![0]); input.Key.Key = SDL.Keycode.Right; input.Key.Down = true; SDL.PushEvent(ref input); return; }
-                if (frame == 2) { Check(tabs.CurrentTab == 1 && blue.Visible && !red.Visible, "Native keyboard switches real page."); File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-tab-panels-{backend}.png"), pixels.SavePNGToBuffer()); tabs.TabsPosition = TabContainer.TabPosition.Bottom; tabs.LayoutDirection = LayoutDirection.RTL; tabs.CurrentTab = 0; return; }
+                if (frame == 2) { Check(tabs.CurrentTab == 1 && blue.Visible && !red.Visible, "Native keyboard switches real page."); File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-tab-panels-{backend}.png"), pixels.SavePNGToBuffer()); tabs.TabsPosition = BarPosition.Bottom; tabs.LayoutDirection = LayoutDirection.RTL; tabs.CurrentTab = 0; return; }
                 Check(tabs.GetTabBar().Position.Y > red.Position.Y, "Bottom header is rendered below page content."); File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-tab-panels-rtl-{backend}.png"), pixels.SavePNGToBuffer()); root.Tree!.Quit();
             };
         };

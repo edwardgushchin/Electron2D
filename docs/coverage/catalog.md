@@ -299,8 +299,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [FlowContainer](classes/FlowContainer.md) | Container | Implemented | 16 |
 | [FogMaterial](classes/FogMaterial.md) | Material | Excluded | 6 |
 | [FogVolume](classes/FogVolume.md) | VisualInstance3D | Excluded | 3 |
-| [FoldableContainer](classes/FoldableContainer.md) | Container | Blocked | 36 |
-| [FoldableGroup](classes/FoldableGroup.md) | Resource | Blocked | 5 |
+| [FoldableContainer](classes/FoldableContainer.md) | Container | Implemented | 36 |
+| [FoldableGroup](classes/FoldableGroup.md) | Resource | Implemented | 5 |
 | [Font](classes/Font.md) | Resource | Partial | 36 |
 | [FontFile](classes/FontFile.md) | Font | Partial | 89 |
 | [FontVariation](classes/FontVariation.md) | Font | Implemented | 14 |

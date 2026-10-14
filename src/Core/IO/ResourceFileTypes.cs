@@ -17,6 +17,8 @@ public static partial class ResourceFileTypes
         RegisterNode("Node", CreateNode);
         RegisterNode("Entity", CreateEntity);
         RegisterNode("CanvasModulate", CreateCanvasModulate);
+        RegisterNode("FoldableContainer", CreateFoldableContainer);
+        RegisterResource("FoldableGroup", CreateFoldableGroup);
         RegisterNode("PointLight", CreatePointLight);
         RegisterNode("DirectionalLight", CreateDirectionalLight);
         RegisterNode("LightOccluder", CreateLightOccluder);
@@ -121,6 +123,8 @@ public static partial class ResourceFileTypes
     private static DirectionalLight CreateDirectionalLight() => new();
     private static LightOccluder CreateLightOccluder() => new();
     private static CanvasModulate CreateCanvasModulate() => new();
+    private static FoldableContainer CreateFoldableContainer() => new();
+    private static FoldableGroup CreateFoldableGroup() => new();
     private static CanvasTexture CreateCanvasTexture() => new();
     private static OccluderPolygon CreateOccluderPolygon() => new();
     private static CPUParticles CreateCPUParticles() => new();

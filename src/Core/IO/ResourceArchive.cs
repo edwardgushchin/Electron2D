@@ -351,6 +351,7 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
             if (descriptor is null && owner is Node node) descriptor = ThemeOwner.StoredOverride(node, property.Name, property.Value.ValueType) ?? InstanceUniformState.StoredParameter(node, property.Name, property.Value.ValueType);
             if (descriptor?.ValueType != property.Value.ValueType && owner is CanvasItem canvas) descriptor = InstanceUniformState.StoredParameter(canvas, property.Name, property.Value.ValueType) ?? descriptor;
             if (descriptor is null && owner is Theme) descriptor = Theme.StoredProperty(property.Name, property.Value.ValueType);
+            if (descriptor is null && owner is FoldableContainer) descriptor = FoldableContainer.StoredTitleControl(property.Name, property.Value.ValueType);
             if (descriptor is null) throw new InvalidDataException("Stored schema has no matching descriptor.");
             if (descriptor.ValueType != property.Value.ValueType) throw new InvalidDataException("Stored property schema changed.");
             ResourceArchiveStrings.Write(stream, property.Name);
@@ -548,6 +549,7 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
              valueType) descriptor = ThemeOwner.StoredOverride(node, name, valueType) ?? InstanceUniformState.StoredParameter(node, name, valueType);
             if (owner is CanvasItem canvas && ResourceFileTypes.FindValueType(schema) is { } storedType && descriptor?.ValueType != storedType) descriptor = InstanceUniformState.StoredParameter(canvas, name, storedType) ?? descriptor;
             if (descriptor is null && owner is Theme && ResourceFileTypes.FindValueType(schema) is { } themeValueType) descriptor = Theme.StoredProperty(name, themeValueType);
+            if (descriptor is null && owner is FoldableContainer && ResourceFileTypes.FindValueType(schema) is { } titleValueType) descriptor = FoldableContainer.StoredTitleControl(name, titleValueType);
             if (descriptor is null) throw new InvalidDataException("Unknown stored property.");
             if (ResourceFileTypes.ValueID(descriptor.ValueType) != schema) throw new InvalidDataException("Stored property type mismatch.");
             if (role is not null && role != MissingResourceData.Role(descriptor.ValueType)) throw new InvalidDataException("Stored property role mismatch.");

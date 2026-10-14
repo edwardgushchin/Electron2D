@@ -12,7 +12,7 @@ public partial class TabContainer
         yield return new PropertyDescriptor<TabContainer, bool>(nameof(SwitchOnDragHover), m => m.SwitchOnDragHover, (m, v) => m.SwitchOnDragHover = v, _ => true, stored: true);
         yield return new PropertyDescriptor<TabContainer, TabBar.AlignmentMode>(nameof(TabAlignment), m => m.TabAlignment, (m, v) => m.TabAlignment = v, _ => TabBar.AlignmentMode.Left, stored: true);
         yield return new PropertyDescriptor<TabContainer, FocusMode>(nameof(TabFocusMode), m => m.TabFocusMode, (m, v) => m.TabFocusMode = v, _ => FocusMode.All, stored: true);
-        yield return new PropertyDescriptor<TabContainer, TabPosition>(nameof(TabsPosition), m => m.TabsPosition, (m, v) => m.TabsPosition = v, _ => TabPosition.Top, stored: true);
+        yield return new PropertyDescriptor<TabContainer, BarPosition>(nameof(TabsPosition), m => m.TabsPosition, (m, v) => m.TabsPosition = v, _ => BarPosition.Top, stored: true);
         yield return new PropertyDescriptor<TabContainer, int>(nameof(TabsRearrangeGroup), m => m.TabsRearrangeGroup, (m, v) => m.TabsRearrangeGroup = v, _ => -1, stored: true);
         yield return new PropertyDescriptor<TabContainer, bool>(nameof(TabsVisible), m => m.TabsVisible, (m, v) => m.TabsVisible = v, _ => true, stored: true);
         yield return new PropertyDescriptor<TabContainer, bool>(nameof(UseHiddenTabsForMinSize), m => m.UseHiddenTabsForMinSize, (m, v) => m.UseHiddenTabsForMinSize = v, _ => false, stored: true);

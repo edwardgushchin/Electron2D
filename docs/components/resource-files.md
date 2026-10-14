@@ -1,6 +1,6 @@
 # Typed resource and scene files
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 ## Executable mesh skin integration
 
@@ -138,3 +138,7 @@ The existing track schema supports compiled typed method callbacks/payloads, bor
 Animation graph resources and AnimationTree scene controllers now persist authored topology, compiled writable parameter IDs and typed values through the existing archive. See [graph file persistence](scene-animation.md#graph-file-persistence). Resource validation runs after all embedded payloads and before publication.
 
 RESET save preparation now executes through AnimationMixer.ResetOnSave and PackedScene.PackForSave. Enabled RESET value/Bézier tracks run at zero on detached nodes and isolated copied resources, capturing coupled effects while preserving source preview values/clocks/queues. Ordinary Pack captures the actual pose. Preparation failures preserve prior packed data; temporary resources are cleaned or transferred to the prepared scene. Compiled factories/setters/postprocessing execute, while lifecycle, local-resource setup and method/audio/nested event tracks are suppressed. Custom authoring state must be stored and resource duplication supported. AnimationResetSaveTests exercises policies, all controller families, coupled values/resources, errors, lifetime and portable saved scenes.
+
+## Foldable panel scenes
+
+Exact FoldableContainer and FoldableGroup registrations preserve typed configuration and per-instance local group aliases. Pack includes explicitly root-owned authored title controls and records their ordering as bounded typed relative Control references. Restoration validates canonical slots, resolves direct children after parenting and restores front-internal membership before hierarchy validation. Runtime implementation helpers and group member leases are excluded. Fresh-process scene tests execute the restored group and removable title controls.

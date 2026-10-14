@@ -2,11 +2,11 @@
 
 Last updated: 2026-10-06
 
-Owns [TabContainer](../classes/TabContainer.md) and its [TabPosition](../classes/TabContainer.TabPosition.md), composing existing TabBar, Control/Container, Button, theme and Popup contracts under ADRs 0004, 0008, 0038, 0081 and 0083.
+Owns [TabContainer](../classes/TabContainer.md) and shared [BarPosition](../classes/BarPosition.md), composing existing TabBar, Control/Container, Button, theme and Popup contracts under ADRs 0004, 0008, 0038, 0081 and 0083.
 
 ## Description
 
-TabContainer owns page selection and layout for ordinary direct non-top-level Control children. Neutral Node, top-level and internal children do not define tabs. Its stable internal TabBar and popup Button are implementation children omitted by ordinary enumeration and scene packing. GetTabBar returns a borrowed strip; use container/page APIs for count and ordering. Page indices follow scene-child order, including after MoveChild, removal or disposal. Icons and exact generic metadata stay borrowed; metadata remains runtime-only. The two position values retain the container's nested TabPosition domain, while alignment reuses TabBar.AlignmentMode and focus uses shared FocusMode.
+TabContainer owns page selection and layout for ordinary direct non-top-level Control children. Neutral Node, top-level and internal children do not define tabs. Its stable internal TabBar and popup Button are implementation children omitted by ordinary enumeration and scene packing. GetTabBar returns a borrowed strip; use container/page APIs for count and ordering. Page indices follow scene-child order, including after MoveChild, removal or disposal. Icons and exact generic metadata stay borrowed; metadata remains runtime-only. The two position values use shared BarPosition, while alignment reuses TabBar.AlignmentMode and focus uses shared FocusMode.
 
 The first page becomes current unless deselection is enabled. Detached CurrentTab assignments queue for tree entry; the getter continues reporting the strip's actual selection. Attached assignments use TabBar's current/previous, equal-selection and nested-callback rules. Selected/Changed follow committed page visibility; equal assignments report Selected only. Keyboard/controller/pointer/touch and overflow/reveal remain the exercised TabBar consumers. Only the selected page is locally visible. Manually showing a page selects it; hiding the current one deselects when enabled, restores the sole page, or selects another available page. Disabled pages remain programmatically selectable. Hidden tabs retain their scene child and trigger the same page visibility/replacement policy. Changes while a container is hidden are applied before child visibility propagation.
 

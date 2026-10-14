@@ -608,3 +608,5 @@ Server CanvasSetModulate remains an immediate retained canvas operation. Active 
 [CanvasModulateTests](../../tests/Electron2D.Tests/CanvasModulateTests.cs) covers arbitration, independent/shared canvases, inherited visibility, reparent/TopLevel, World replacement, manual notification rejection, disposal, warning failures, owner/capture guards and exact scenes in a fresh process. Its native profiles inspect seven pixel phases and 64 warmed color-update/render frames. Native allocation, other platforms and human acceptance remain separate gates.
 
 The published saved-scene workflow also preserves an untouched Window.Position as automatic placement. Explicit zero remains stored and retains its platform coordinate gate; loading a default root window no longer invents a global-position request on Wayland.
+
+[FoldableContainer](../classes/FoldableContainer.md) and [FoldableGroup](../classes/FoldableGroup.md) implement collapsible title/body panels, mutually exclusive expansion, shared BarPosition, owner-safe input/layout/themes and typed fresh scene/title-control storage. FoldableTests/FoldableNativeTests cover the connected workflow under ADR 0081/0083.

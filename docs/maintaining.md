@@ -132,3 +132,5 @@ For ProgressBar changes, run the Release executable with `ELECTRON2D_TEST_PROGRE
 For project Theme archive/startup changes, run `ELECTRON2D_TEST_PROJECT_THEME=managed`, `gpu` and `compatibility`. Check six categories/defaults/nulls, group and variation order, alias graph ownership, fresh-process scene loading, startup priority, custom font restoration, preparation failures and actual global-style rendering. These gates do not establish foreign execution or nonunit built-in icon scaling.
 
 CanvasModulate focused checks use `ELECTRON2D_TEST_CANVAS_MODULATE=managed`, `gpu` or `compatibility` with the Release test runner. The managed profile also launches `--canvas-modulate-archive` in a fresh process. Optional `ELECTRON2D_CAPTURE_DIR` retains native pixel images. GPU lighting assertions do not imply compatibility lighting support.
+
+Foldable focused validation uses `ELECTRON2D_TEST_FOLDABLE=managed`, `gpu` or `compatibility` with the Release runner; the managed profile launches `--foldable-archive` in a fresh process. `ELECTRON2D_CAPTURE_DIR` retains native evidence. Include TabContainer validation when changing shared BarPosition.

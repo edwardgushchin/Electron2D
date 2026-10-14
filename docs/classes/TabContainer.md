@@ -8,7 +8,7 @@ Hosts actual child control pages beneath a themed tab header.
 
 ## Description
 
-TabContainer owns page selection and layout for ordinary direct non-top-level Control children. Neutral Node, top-level and internal children do not define tabs. Its stable internal TabBar and popup Button are implementation children omitted by ordinary enumeration and scene packing. GetTabBar returns a borrowed strip; use container/page APIs for count and ordering. Page indices follow scene-child order, including after MoveChild, removal or disposal. Icons and exact generic metadata stay borrowed; metadata remains runtime-only. The two position values retain the container's nested TabPosition domain, while alignment reuses TabBar.AlignmentMode and focus uses shared FocusMode.
+TabContainer owns page selection and layout for ordinary direct non-top-level Control children. Neutral Node, top-level and internal children do not define tabs. Its stable internal TabBar and popup Button are implementation children omitted by ordinary enumeration and scene packing. GetTabBar returns a borrowed strip; use container/page APIs for count and ordering. Page indices follow scene-child order, including after MoveChild, removal or disposal. Icons and exact generic metadata stay borrowed; metadata remains runtime-only. The two position values use shared BarPosition, while alignment reuses TabBar.AlignmentMode and focus uses shared FocusMode.
 
 The first page becomes current unless deselection is enabled. Detached CurrentTab assignments queue for tree entry; the getter continues reporting the strip's actual selection. Attached assignments use TabBar's current/previous, equal-selection and nested-callback rules. Selected/Changed follow committed page visibility; equal assignments report Selected only. Keyboard/controller/pointer/touch and overflow/reveal remain the exercised TabBar consumers. Only the selected page is locally visible. Manually showing a page selects it; hiding the current one deselects when enabled, restores the sole page, or selects another available page. Disabled pages remain programmatically selectable. Hidden tabs retain their scene child and trigger the same page visibility/replacement policy. Changes while a container is hidden are applied before child visibility propagation.
 
@@ -61,7 +61,7 @@ The complete own API executes on the current backends. Native accessibility rema
 | `public System.Boolean SwitchOnDragHover { get; set; }` | Gets or sets the internal strip SwitchOnDragHover policy. |
 | `public Electron2D.TabBar.AlignmentMode TabAlignment { get; set; }` | Gets or sets the internal strip TabAlignment policy. |
 | `public Electron2D.FocusMode TabFocusMode { get; set; }` | Gets or sets the internal strip TabFocusMode policy. |
-| `public Electron2D.TabContainer.TabPosition TabsPosition { get; set; }` | Gets or sets the header position. |
+| `public Electron2D.BarPosition TabsPosition { get; set; }` | Gets or sets the header position. |
 | `public System.Int32 TabsRearrangeGroup { get; set; }` | Gets or sets the internal strip TabsRearrangeGroup policy. |
 | `public System.Boolean TabsVisible { get; set; }` | Gets or sets whether the header is shown. |
 | `public System.Boolean UseHiddenTabsForMinSize { get; set; }` | Gets or sets whether locally hidden pages contribute to the minimum size. |
@@ -119,7 +119,7 @@ The complete own API executes on the current backends. Native accessibility rema
 
 ## Enumerations
 
-[TabPosition](TabContainer.TabPosition.md) defines Top, Bottom and the nonselectable Max sentinel.
+[BarPosition](BarPosition.md) defines Top, Bottom and the nonselectable Max sentinel.
 
 ## Constructor Descriptions
 
@@ -225,7 +225,7 @@ All initially.
 ### TabsPosition
 
 ```csharp
-public Electron2D.TabContainer.TabPosition TabsPosition { get; set; }
+public Electron2D.BarPosition TabsPosition { get; set; }
 ```
 
 Gets or sets the header position.

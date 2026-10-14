@@ -172,6 +172,7 @@ public sealed partial class PackedScene : Resource
     /// The root is always captured. A descendant branch is captured only when its first node is owned by
     /// <paramref name="root"/>; rejected branches are pruned. After capture starts, any failure leaves this resource empty.
     /// Unrequested Window.Position is omitted to preserve automatic native placement; explicit zero remains stored.
+    /// Authored owned FoldableContainer title controls are captured with their typed relative membership references.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="root"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">Capture is re-entered, the hierarchy changes, or a node factory is unsafe.</exception>
@@ -336,7 +337,9 @@ public sealed partial class PackedScene : Resource
             var properties = node.GetPropertyList()
                 .Where(property => property.IsStored && property.Name != nameof(Node.Name) &&
                     !(property.Name == nameof(Node.TranslationDomain) && node.IsTranslationDomainInherited) &&
-                    !(node is Window window && property.Name == nameof(Window.Position) && !window.HasAuthoredPosition))
+                    !(node is Window window && property.Name == nameof(Window.Position) && !window.HasAuthoredPosition) &&
+                    !(node is FoldableContainer && property.Name.StartsWith("__TitleControl/", StringComparison.Ordinal)))
+                .Concat(node is FoldableContainer foldable ? foldable.CapturedTitleProperties(root) : [])
                 .Select(property => new ScenePropertyData(property.Name, property.CaptureStoredValue(node)))
                 .ToArray();
 
@@ -364,8 +367,10 @@ public sealed partial class PackedScene : Resource
 
     private static void AddOwnedChildren(Node parent, Node root, List<Node> selected)
     {
-        foreach (var child in parent.Children)
+        for (var index = 0; index < parent.GetChildCount(includeInternal: true); index++)
         {
+            var child = parent.GetChild(index, includeInternal: true);
+            if (child.IsInternalChild && !(parent is FoldableContainer foldable && foldable.IsTitleControl(child))) continue;
             if (!ReferenceEquals(child.Owner, root))
                 continue;
 
@@ -411,6 +416,7 @@ public sealed partial class PackedScene : Resource
             if (descriptor is null)
                 descriptor = ThemeOwner.StoredOverride(node, property.Name, property.Value.ValueType) ?? InstanceUniformState.StoredParameter(node, property.Name, property.Value.ValueType);
             if (descriptor?.ValueType != property.Value.ValueType) descriptor = InstanceUniformState.StoredParameter(node, property.Name, property.Value.ValueType) ?? descriptor;
+            if (descriptor is null && node is FoldableContainer) descriptor = FoldableContainer.StoredTitleControl(property.Name, property.Value.ValueType);
             if (descriptor is null || !descriptor.IsStored ||
                 descriptor.ValueType != property.Value.ValueType)
             {
@@ -475,6 +481,17 @@ public sealed partial class PackedScene : Resource
     private static void ValidateInstantiatedHierarchy(PackedSceneData data, Node[] nodes)
     {
         var childCursors = new int[nodes.Length];
+        var foldableChildren = new Dictionary<Node, Node[]>(ReferenceEqualityComparer.Instance);
+        foreach (var node in nodes) if (node is FoldableContainer foldable)
+            {
+                var children = new List<Node>();
+                for (var i = 0; i < node.GetChildCount(includeInternal: true); i++)
+                { var child = node.GetChild(i, includeInternal: true); if (!child.IsInternalChild || foldable.IsTitleControl(child)) children.Add(child); }
+                foldableChildren.Add(node, [.. children]);
+            }
+        Node? Child(Node parent, int ordinal) => foldableChildren.TryGetValue(parent, out var children)
+            ? (uint)ordinal < (uint)children.Length ? children[ordinal] : null
+            : (uint)ordinal < (uint)parent.GetChildCount() ? parent.GetChild(ordinal) : null;
 
         for (var index = 0; index < nodes.Length; index++)
         {
@@ -491,8 +508,7 @@ public sealed partial class PackedScene : Resource
             if (stored.ParentIndex >= 0)
             {
                 var cursor = childCursors[stored.ParentIndex]++;
-                if ((uint)cursor >= (uint)expectedParent!.Children.Count ||
-                    !ReferenceEquals(expectedParent.Children[cursor], node))
+                if (!ReferenceEquals(Child(expectedParent!, cursor), node))
                 {
                     throw new InvalidOperationException("A callback changed child order during scene instantiation.");
                 }
@@ -501,7 +517,7 @@ public sealed partial class PackedScene : Resource
 
         for (var index = 0; index < nodes.Length; index++)
         {
-            if (childCursors[index] != nodes[index].Children.Count)
+            if (Child(nodes[index], childCursors[index]) is not null)
                 throw new InvalidOperationException("A callback changed the hierarchy during scene instantiation.");
         }
     }

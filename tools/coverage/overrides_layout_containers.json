@@ -24,6 +24,221 @@
       "godot": "AspectRatioContainer::property:stretch_mode",
       "electron2d": "property:Electron2D.AspectRatioContainer.Stretch()",
       "reason": "ADRs 0081/0083: the three live Container specializations use deferred child fitting, typed theme constants, exact scene factories and verified geometry on current Linux Wayland GPU and compatibility backends; native allocations and other platforms remain unverified. The nested enum retains all four numeric values."
+    },
+    {
+      "godot": "class:FoldableContainer",
+      "electron2d": "T:Electron2D.FoldableContainer",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::enum:TitlePosition",
+      "electron2d": "T:Electron2D.BarPosition",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::enum_value:TitlePosition.POSITION_BOTTOM",
+      "electron2d": "enumValue:Electron2D.BarPosition.Bottom()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::enum_value:TitlePosition.POSITION_TOP",
+      "electron2d": "enumValue:Electron2D.BarPosition.Top()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::method:add_title_bar_control(Control:)",
+      "electron2d": "method:Electron2D.FoldableContainer.AddTitleBarControl(Electron2D.Control)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::method:expand()",
+      "electron2d": "method:Electron2D.FoldableContainer.Expand()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::method:fold()",
+      "electron2d": "method:Electron2D.FoldableContainer.Fold()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::method:remove_title_bar_control(Control:)",
+      "electron2d": "method:Electron2D.FoldableContainer.RemoveTitleBarControl(Electron2D.Control)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::property:focus_mode",
+      "electron2d": "property:Electron2D.Control.FocusMode()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::property:foldable_group",
+      "electron2d": "property:Electron2D.FoldableContainer.FoldableGroup()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::property:folded",
+      "electron2d": "property:Electron2D.FoldableContainer.Folded()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::property:language",
+      "electron2d": "property:Electron2D.FoldableContainer.Language()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::property:mouse_filter",
+      "electron2d": "property:Electron2D.Control.MouseFilter()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::property:title",
+      "electron2d": "property:Electron2D.FoldableContainer.Title()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::property:title_alignment",
+      "electron2d": "property:Electron2D.FoldableContainer.TitleAlignment()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::property:title_position",
+      "electron2d": "property:Electron2D.FoldableContainer.TitlePosition()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::property:title_text_direction",
+      "electron2d": "property:Electron2D.FoldableContainer.TitleTextDirection()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::property:title_text_overrun_behavior",
+      "electron2d": "property:Electron2D.FoldableContainer.TitleTextOverrunBehavior()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::signal:folding_changed(bool:)",
+      "electron2d": "event:Electron2D.FoldableContainer.FoldingChanged()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:collapsed_font_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:expanded_arrow",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:expanded_arrow_mirrored",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:focus",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:folded_arrow",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:folded_arrow_mirrored",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:font",
+      "electron2d": "method:Electron2D.Control.GetThemeFont(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:font_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:font_outline_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:font_size",
+      "electron2d": "method:Electron2D.Control.GetThemeFontSize(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:h_separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:hover_font_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:outline_size",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:panel",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:title_collapsed_hover_panel",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:title_collapsed_panel",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:title_hover_panel",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableContainer::theme_item:title_panel",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "class:FoldableGroup",
+      "electron2d": "T:Electron2D.FoldableGroup",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableGroup::method:get_containers()",
+      "electron2d": "method:Electron2D.FoldableGroup.GetContainers()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableGroup::method:get_expanded_container()",
+      "electron2d": "method:Electron2D.FoldableGroup.GetExpandedContainer()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableGroup::property:allow_folding_all",
+      "electron2d": "property:Electron2D.FoldableGroup.AllowFoldingAll()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableGroup::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    },
+    {
+      "godot": "FoldableGroup::signal:expanded(FoldableContainer:)",
+      "electron2d": "event:Electron2D.FoldableGroup.Expanded()",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
     }
   ],
   "extras": [
@@ -110,7 +325,125 @@
     {
       "electron2d": "method:Electron2D.MarginContainer.OnNotification(System.Int32)",
       "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "constructor:Electron2D.FoldableContainer..ctor()",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.FoldableContainer..ctor(System.String)",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.FoldableGroup..ctor()",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FoldableContainer.CreateSceneInstanceFactory()",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FoldableContainer.Dispose(System.Boolean)",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FoldableContainer.GetAllowedSizeFlagsHorizontal()",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FoldableContainer.GetAllowedSizeFlagsVertical()",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FoldableContainer.GetPropertyDescriptors()",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FoldableContainer.HasPoint(Electron2D.Vector2)",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FoldableContainer.OnGUIInput(Electron2D.InputEvent)",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FoldableContainer.OnGetMinimumSize()",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FoldableContainer.OnGetTooltip(Electron2D.Vector2)",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FoldableContainer.OnNotification(System.Int32)",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FoldableGroup.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FoldableGroup.CreateDuplicateInstance()",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FoldableGroup.Dispose(System.Boolean)",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FoldableGroup.GetPropertyDescriptors()",
+      "reason": "ADRs 0003/0013/0023/0081/0083: concrete construction, sizing/input/tooltip/notification, typed descriptors/factories, duplication and cleanup project existing foldable GUI/resource lifecycle; no unrelated capability."
     }
   ],
-  "statusGroups": []
+  "statusGroups": [
+    {
+      "godot": [
+        "class:FoldableContainer",
+        "FoldableContainer::enum:TitlePosition",
+        "FoldableContainer::enum_value:TitlePosition.POSITION_BOTTOM",
+        "FoldableContainer::enum_value:TitlePosition.POSITION_TOP",
+        "FoldableContainer::method:add_title_bar_control(Control:)",
+        "FoldableContainer::method:expand()",
+        "FoldableContainer::method:fold()",
+        "FoldableContainer::method:remove_title_bar_control(Control:)",
+        "FoldableContainer::property:focus_mode",
+        "FoldableContainer::property:foldable_group",
+        "FoldableContainer::property:folded",
+        "FoldableContainer::property:language",
+        "FoldableContainer::property:mouse_filter",
+        "FoldableContainer::property:title",
+        "FoldableContainer::property:title_alignment",
+        "FoldableContainer::property:title_position",
+        "FoldableContainer::property:title_text_direction",
+        "FoldableContainer::property:title_text_overrun_behavior",
+        "FoldableContainer::signal:folding_changed(bool:)",
+        "FoldableContainer::theme_item:collapsed_font_color",
+        "FoldableContainer::theme_item:expanded_arrow",
+        "FoldableContainer::theme_item:expanded_arrow_mirrored",
+        "FoldableContainer::theme_item:focus",
+        "FoldableContainer::theme_item:folded_arrow",
+        "FoldableContainer::theme_item:folded_arrow_mirrored",
+        "FoldableContainer::theme_item:font",
+        "FoldableContainer::theme_item:font_color",
+        "FoldableContainer::theme_item:font_outline_color",
+        "FoldableContainer::theme_item:font_size",
+        "FoldableContainer::theme_item:h_separation",
+        "FoldableContainer::theme_item:hover_font_color",
+        "FoldableContainer::theme_item:outline_size",
+        "FoldableContainer::theme_item:panel",
+        "FoldableContainer::theme_item:title_collapsed_hover_panel",
+        "FoldableContainer::theme_item:title_collapsed_panel",
+        "FoldableContainer::theme_item:title_hover_panel",
+        "FoldableContainer::theme_item:title_panel",
+        "class:FoldableGroup",
+        "FoldableGroup::method:get_containers()",
+        "FoldableGroup::method:get_expanded_container()",
+        "FoldableGroup::property:allow_folding_all",
+        "FoldableGroup::property:resource_local_to_scene",
+        "FoldableGroup::signal:expanded(FoldableContainer:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0081/0083/0051: executable FoldableContainer/scene-local FoldableGroup, silent property and explicit/input fold events, weak-member selection, precommit expansion, callback failure/reentry, deferred child visibility/fitting, translated title/trimming/RTL/bottom styles, focus and header controls. Typed relative title references and exact fresh scene factories preserve membership and local group aliases. Managed/native GPU/Compatibility tests exercise this profile; native accessibility/other-platform/native allocation/owner acceptance retain separate gates."
+    }
+  ]
 }

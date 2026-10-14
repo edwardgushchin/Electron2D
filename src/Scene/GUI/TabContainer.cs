@@ -6,16 +6,7 @@ namespace Electron2D;
 /// Attached access follows the scene owner thread; indexed scene settings precede child construction.</remarks>
 public partial class TabContainer : Container
 {
-    /// <summary>Places the tab header above or below page content.</summary>
-    public enum TabPosition
-    {
-        /// <summary>Header above content.</summary>
-        Top = 0,
-        /// <summary>Header below content.</summary>
-        Bottom = 1,
-        /// <summary>Exclusive upper bound.</summary>
-        Max = 2
-    }
+
     private sealed class Page(Control control) { internal readonly Control Control = control; internal string? Title; }
     private sealed class PendingTab { internal string? Title; internal Texture? Icon; internal bool Disabled, Hidden; }
     private readonly List<Page> _pages = [];
@@ -26,7 +17,7 @@ public partial class TabContainer : Container
     private WeakReference<Popup>? _popup;
     private bool _syncing, _painting, _paintAgain, _visibility, _disposing, _tabsVisible = true, _useHidden;
     private int _setupCurrent = -2;
-    private TabPosition _position;
+    private BarPosition _position;
     /// <summary>Creates an empty page owner with internal tab strip and popup button.</summary>
     public TabContainer()
     {
@@ -42,7 +33,7 @@ public partial class TabContainer : Container
     /// <value>-1 with no pages; first page otherwise. -1 requires deselection or no available tab.</value>
     public int CurrentTab { get { CheckTabs(); return _bar.CurrentTab; } set { EnsureMutable(); if (!IsInsideTree) { if (value < -1 || value >= 65536) throw new ArgumentOutOfRangeException(nameof(value)); _setupCurrent = value; return; } _bar.CurrentTab = value; } }
     /// <summary>Gets or sets the header position.</summary><value>Top initially; Max is invalid.</value>
-    public TabPosition TabsPosition { get { CheckTabs(); return _position; } set { EnsureMutable(); if (value is < TabPosition.Top or >= TabPosition.Max) throw new ArgumentOutOfRangeException(nameof(value)); if (_position == value) return; _position = value; LayoutChanged(); } }
+    public BarPosition TabsPosition { get { CheckTabs(); return _position; } set { EnsureMutable(); if (value is < BarPosition.Top or >= BarPosition.Max) throw new ArgumentOutOfRangeException(nameof(value)); if (_position == value) return; _position = value; LayoutChanged(); } }
     /// <summary>Gets or sets whether the header is shown.</summary><value>True initially; hidden headers leave the page panel.</value>
     public bool TabsVisible { get { CheckTabs(); return _tabsVisible; } set { EnsureMutable(); if (_tabsVisible == value) return; _tabsVisible = value; _bar.Visible = value; _popupButton.Visible = value && GetPopup() != null; LayoutChanged(); } }
     /// <summary>Gets or sets whether locally hidden pages contribute to the minimum size.</summary><value>False initially.</value>

@@ -507,22 +507,22 @@
     },
     {
       "godot": "TabContainer::enum:TabPosition",
-      "electron2d": "T:Electron2D.TabContainer.TabPosition",
+      "electron2d": "T:Electron2D.BarPosition",
       "reason": "ADRs 0004/0008/0038/0081/0083: executable typed TabContainer owns ordinary Control pages and a stable internal TabBar, theme forwarding, selection/visibility and title identity, top/bottom/RTL layout, weak Popup button and group page drags preserving exact metadata. Four indexed fields and scalar policies restore before children through a private schema-count descriptor and fresh-process factories. Native rendering/input and warm selection/layout/visibility checks verify the current embedded profile; inherited accessibility, editor authoring and other-platform acceptance stay on their owning coverage rows."
     },
     {
       "godot": "TabContainer::enum_value:TabPosition.POSITION_BOTTOM",
-      "electron2d": "enumValue:Electron2D.TabContainer.TabPosition.Bottom()",
+      "electron2d": "enumValue:Electron2D.BarPosition.Bottom()",
       "reason": "ADRs 0004/0008/0038/0081/0083: executable typed TabContainer owns ordinary Control pages and a stable internal TabBar, theme forwarding, selection/visibility and title identity, top/bottom/RTL layout, weak Popup button and group page drags preserving exact metadata. Four indexed fields and scalar policies restore before children through a private schema-count descriptor and fresh-process factories. Native rendering/input and warm selection/layout/visibility checks verify the current embedded profile; inherited accessibility, editor authoring and other-platform acceptance stay on their owning coverage rows."
     },
     {
       "godot": "TabContainer::enum_value:TabPosition.POSITION_MAX",
-      "electron2d": "enumValue:Electron2D.TabContainer.TabPosition.Max()",
+      "electron2d": "enumValue:Electron2D.BarPosition.Max()",
       "reason": "ADRs 0004/0008/0038/0081/0083: executable typed TabContainer owns ordinary Control pages and a stable internal TabBar, theme forwarding, selection/visibility and title identity, top/bottom/RTL layout, weak Popup button and group page drags preserving exact metadata. Four indexed fields and scalar policies restore before children through a private schema-count descriptor and fresh-process factories. Native rendering/input and warm selection/layout/visibility checks verify the current embedded profile; inherited accessibility, editor authoring and other-platform acceptance stay on their owning coverage rows."
     },
     {
       "godot": "TabContainer::enum_value:TabPosition.POSITION_TOP",
-      "electron2d": "enumValue:Electron2D.TabContainer.TabPosition.Top()",
+      "electron2d": "enumValue:Electron2D.BarPosition.Top()",
       "reason": "ADRs 0004/0008/0038/0081/0083: executable typed TabContainer owns ordinary Control pages and a stable internal TabBar, theme forwarding, selection/visibility and title identity, top/bottom/RTL layout, weak Popup button and group page drags preserving exact metadata. Four indexed fields and scalar policies restore before children through a private schema-count descriptor and fresh-process factories. Native rendering/input and warm selection/layout/visibility checks verify the current embedded profile; inherited accessibility, editor authoring and other-platform acceptance stay on their owning coverage rows."
     },
     {

@@ -1,6 +1,6 @@
 # PackedScene
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Inherits:** [Resource](Resource.md)
 
@@ -315,3 +315,7 @@ ResourceSaver.Save(scene, "scene.e2dscene", SaverFlags.BundleResources);
 [AnimationResetSaveTests](../../tests/Electron2D.Tests/AnimationResetSaveTests.cs) covers policy, coupled values/resources, failure atomicity, ownership and files. Linux Wayland GPU/compatibility host verification is recorded in scene animation; foreign/editor/human acceptance remains separate.
 
 Window.Position is omitted while native placement is automatic. Explicit requests, including `(0,0)`, remain stored. Restoring a saved default Window therefore preserves its placement policy and does not invent a global-coordinate operation. This follows the existing conditional storage policy used by inherited TranslationDomain.
+
+## Foldable panel scenes
+
+Exact FoldableContainer and FoldableGroup registrations preserve typed configuration and per-instance local group aliases. Pack includes explicitly root-owned authored title controls and records their ordering as bounded typed relative Control references. Restoration validates canonical slots, resolves direct children after parenting and restores front-internal membership before hierarchy validation. Runtime implementation helpers and group member leases are excluded. Fresh-process scene tests execute the restored group and removable title controls.

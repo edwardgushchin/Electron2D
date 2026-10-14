@@ -94,7 +94,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | --- | ---: |
 | Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028). | 92 |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
-| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 18 |
+| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 17 |
 | Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 8 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
 | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 6 |
@@ -106,7 +106,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: actual GPU particle simulation, process-material shader/data integration, native storage and compute/collision/attractor ownership under ADR 0028. CPUParticles baseline does not provide GPU compute or process-material conversion. | 2 |
 | Trigger: compressed array-file parsing/decoding or direct compressed native upload, source format/mipmap ownership and reproducible sampling over the executable TextureArray pipeline (ADR 0028). | 2 |
 | Trigger: first compressed-texture import, decoder and verified GPU sampling slice (ADRs 0028 and 0039). | 2 |
-| Trigger: first self-hosted editor and typed GUI authoring slice (ADRs 0027 and 0028). | 2 |
 | Trigger: first typed missing-asset placeholder and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first typed networking, address-resolution and RPC slice. | 2 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
@@ -125,6 +124,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first missing 2D material, canvas-modulation and shader-global renderer integration (ADR 0028). | 1 |
 | Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041). | 1 |
 | Trigger: first portable external-image ownership and native texture-import decision (ADRs 0021 and 0028). | 1 |
+| Trigger: first self-hosted editor and typed GUI authoring slice (ADRs 0027 and 0028). | 1 |
 | Trigger: first semantic accessibility-tree, focus and native screen-reader bridge slice (ADR 0041). | 1 |
 | Trigger: first typed 2D mesh-data and MeshInstance2D rendering slice; audit 3D-only members individually (ADR 0028). | 1 |
 | Trigger: first typed 2D navigation and pathfinding slice. | 1 |

@@ -2316,6 +2316,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.BarPosition",
+    "kind": "type",
+    "declaringType": "Electron2D.BarPosition",
+    "name": "BarPosition",
+    "signature": "public enum Electron2D.BarPosition",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.BaseButton",
     "kind": "type",
     "declaringType": "Electron2D.BaseButton",
@@ -4362,6 +4380,36 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.FoldableContainer",
+    "kind": "type",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "FoldableContainer",
+    "signature": "public class Electron2D.FoldableContainer",
+    "visibility": "public",
+    "baseType": "Electron2D.Container",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.FoldableGroup",
+    "kind": "type",
+    "declaringType": "Electron2D.FoldableGroup",
+    "name": "FoldableGroup",
+    "signature": "public class Electron2D.FoldableGroup",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -11237,24 +11285,6 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.TabContainer.TabPosition",
-    "kind": "type",
-    "declaringType": "Electron2D.TabContainer.TabPosition",
-    "name": "TabPosition",
-    "signature": "public enum Electron2D.TabContainer.TabPosition",
-    "visibility": "public",
-    "baseType": "System.Enum",
-    "interfaces": [
-      "System.IComparable",
-      "System.IConvertible",
-      "System.IFormattable",
-      "System.ISpanFormattable"
-    ],
-    "parameters": null,
-    "returnType": null,
-    "value": null
-  },
-  {
     "id": "T:Electron2D.TerrainMode",
     "kind": "type",
     "declaringType": "Electron2D.TerrainMode",
@@ -17265,6 +17295,51 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.FoldableContainer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": ".ctor",
+    "signature": "public FoldableContainer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.FoldableContainer..ctor(System.String)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": ".ctor",
+    "signature": "public FoldableContainer(System.String title)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "title",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.FoldableGroup..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.FoldableGroup",
+    "name": ".ctor",
+    "signature": "public FoldableGroup()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -25086,6 +25161,45 @@
     "parameters": [],
     "returnType": "Electron2D.BackBufferCopyMode",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.BarPosition.Bottom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BarPosition",
+    "name": "Bottom",
+    "signature": "public const Electron2D.BarPosition Bottom = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BarPosition",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.BarPosition.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BarPosition",
+    "name": "Max",
+    "signature": "public const Electron2D.BarPosition Max = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BarPosition",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.BarPosition.Top()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BarPosition",
+    "name": "Top",
+    "signature": "public const Electron2D.BarPosition Top = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BarPosition",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.BaseButton.DrawMode.Disabled()",
@@ -45186,45 +45300,6 @@
     "value": "0"
   },
   {
-    "id": "enumValue:Electron2D.TabContainer.TabPosition.Bottom()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.TabContainer.TabPosition",
-    "name": "Bottom",
-    "signature": "public const Electron2D.TabContainer.TabPosition Bottom = 1",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.TabContainer.TabPosition",
-    "value": "1"
-  },
-  {
-    "id": "enumValue:Electron2D.TabContainer.TabPosition.Max()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.TabContainer.TabPosition",
-    "name": "Max",
-    "signature": "public const Electron2D.TabContainer.TabPosition Max = 2",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.TabContainer.TabPosition",
-    "value": "2"
-  },
-  {
-    "id": "enumValue:Electron2D.TabContainer.TabPosition.Top()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.TabContainer.TabPosition",
-    "name": "Top",
-    "signature": "public const Electron2D.TabContainer.TabPosition Top = 0",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.TabContainer.TabPosition",
-    "value": "0"
-  },
-  {
     "id": "enumValue:Electron2D.TerrainMode.MatchCorners()",
     "kind": "enumValue",
     "declaringType": "Electron2D.TerrainMode",
@@ -50864,6 +50939,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CSystem.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.FoldableContainer.FoldingChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "FoldingChanged",
+    "signature": "public event System.Action\u003CSystem.Boolean\u003E FoldingChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.FoldableGroup.Expanded()",
+    "kind": "event",
+    "declaringType": "Electron2D.FoldableGroup",
+    "name": "Expanded",
+    "signature": "public event System.Action\u003CElectron2D.FoldableContainer\u003E Expanded",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.FoldableContainer\u003E",
     "value": null
   },
   {
@@ -91886,6 +91987,340 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableContainer.AddTitleBarControl(Electron2D.Control)",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "AddTitleBarControl",
+    "signature": "public System.Void AddTitleBarControl(Electron2D.Control control)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "control",
+        "type": "Electron2D.Control",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableContainer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableContainer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableContainer.Expand()",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "Expand",
+    "signature": "public System.Void Expand()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableContainer.Fold()",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "Fold",
+    "signature": "public System.Void Fold()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableContainer.GetAllowedSizeFlagsHorizontal()",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "GetAllowedSizeFlagsHorizontal",
+    "signature": "protected override Electron2D.Control.SizeFlags[] GetAllowedSizeFlagsHorizontal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.SizeFlags[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableContainer.GetAllowedSizeFlagsVertical()",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "GetAllowedSizeFlagsVertical",
+    "signature": "protected override Electron2D.Control.SizeFlags[] GetAllowedSizeFlagsVertical()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.SizeFlags[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableContainer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableContainer.HasPoint(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "HasPoint",
+    "signature": "protected override System.Boolean HasPoint(Electron2D.Vector2 point)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableContainer.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "OnGUIInput",
+    "signature": "protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableContainer.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableContainer.OnGetTooltip(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "OnGetTooltip",
+    "signature": "protected override System.String OnGetTooltip(Electron2D.Vector2 atPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableContainer.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableContainer.RemoveTitleBarControl(Electron2D.Control)",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "RemoveTitleBarControl",
+    "signature": "public System.Void RemoveTitleBarControl(Electron2D.Control control)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "control",
+        "type": "Electron2D.Control",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableGroup.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableGroup",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableGroup.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableGroup",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableGroup.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableGroup",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableGroup.GetContainers()",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableGroup",
+    "name": "GetContainers",
+    "signature": "public Electron2D.FoldableContainer[] GetContainers()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FoldableContainer[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableGroup.GetExpandedContainer()",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableGroup",
+    "name": "GetExpandedContainer",
+    "signature": "public Electron2D.FoldableContainer GetExpandedContainer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FoldableContainer",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FoldableGroup.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.FoldableGroup",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {
@@ -211392,6 +211827,123 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.FoldableContainer.FoldableGroup()",
+    "kind": "property",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "FoldableGroup",
+    "signature": "public Electron2D.FoldableGroup FoldableGroup { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FoldableGroup",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FoldableContainer.Folded()",
+    "kind": "property",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "Folded",
+    "signature": "public System.Boolean Folded { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FoldableContainer.Language()",
+    "kind": "property",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "Language",
+    "signature": "public System.String Language { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FoldableContainer.Title()",
+    "kind": "property",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "Title",
+    "signature": "public System.String Title { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FoldableContainer.TitleAlignment()",
+    "kind": "property",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "TitleAlignment",
+    "signature": "public Electron2D.HorizontalAlignment TitleAlignment { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HorizontalAlignment",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FoldableContainer.TitlePosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "TitlePosition",
+    "signature": "public Electron2D.BarPosition TitlePosition { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BarPosition",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FoldableContainer.TitleTextDirection()",
+    "kind": "property",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "TitleTextDirection",
+    "signature": "public Electron2D.TextDirection TitleTextDirection { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FoldableContainer.TitleTextOverrunBehavior()",
+    "kind": "property",
+    "declaringType": "Electron2D.FoldableContainer",
+    "name": "TitleTextOverrunBehavior",
+    "signature": "public Electron2D.TextOverrunBehavior TitleTextOverrunBehavior { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextOverrunBehavior",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FoldableGroup.AllowFoldingAll()",
+    "kind": "property",
+    "declaringType": "Electron2D.FoldableGroup",
+    "name": "AllowFoldingAll",
+    "signature": "public System.Boolean AllowFoldingAll { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Font.Fallbacks()",
     "kind": "property",
     "declaringType": "Electron2D.Font",
@@ -229726,12 +230278,12 @@
     "kind": "property",
     "declaringType": "Electron2D.TabContainer",
     "name": "TabsPosition",
-    "signature": "public Electron2D.TabContainer.TabPosition TabsPosition { get; set; }",
+    "signature": "public Electron2D.BarPosition TabsPosition { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.TabContainer.TabPosition",
+    "returnType": "Electron2D.BarPosition",
     "value": null
   },
   {

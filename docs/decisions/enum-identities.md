@@ -33,6 +33,8 @@ The following other selected names remain exact public type identities. Listed t
 
 Canvas light blend/filter/cull contracts share `LightBlendMode`, `LightShadowFilter` and `OccluderCullMode` between scene resources and RenderingServer. `LightMode` belongs to fixed material shading and remains distinct from point/directional `CanvasLightMode`. Viewport/server distance-field presets share `CanvasSDFOversize` and `CanvasSDFScale`; `CanvasTextureChannel` selects the three texture roles. Max bounds remain nonselectable. These identities execute in the first native light/occlusion consumer rather than storing inert choices.
 
+TabContainer.TabPosition and FoldableContainer.TitlePosition share top-level `BarPosition`: Top=0, Bottom=1, Max=2. Both selectable contracts place a GUI bar above or below its body; Max remains nonselectable. Keep TabsPosition and TitlePosition property names, update the complete consumer/schema/documentation family, and expose no former nested alias.
+
 GraphEdit keeps the applicable `GridPattern` and `PanningScheme` properties. Its distinct owner-specific enum domains are `GraphEdit.GridPatternMode` (Lines/Dots) and `GraphEdit.PanningSchemeMode` (ScrollZooms/ScrollPans); the Mode suffix avoids C# member/type name collisions without moving or merging these unrelated domains.
 
 The owning class keeps its applicable property names. Enum numeric values and observable behavior do not change with location. Do not ship former type spellings, compatibility aliases or duplicate public mirrors. Keep the bidirectional coverage mappings, source XML, consumers and class pages synchronized with these identities. When a new enum is proposed, compare its meaning and valid values with existing public enums before declaring a new type.

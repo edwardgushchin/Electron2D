@@ -52,7 +52,7 @@ public partial class TabContainer
                 try { for (var i = 0; i < _paintPages.Count; i++) { var c = _paintPages[i]; if (c.IsDisposed || c.Parent != this || c.TopLevel) continue; try { c.Visible = i == current; } catch (Exception e) { CollectException(ref errors, e); } } }
                 finally { _visibility = false; }
                 ArrangeHeader(); var panelOffset = _panelStyle?.GetOffset() ?? Vector2.Zero; var panelMargins = _panelStyle?.GetMinimumSize() ?? Vector2.Zero;
-                var offset = panelOffset + new Vector2(0, _position == TabPosition.Top ? _headerHeight : 0); var available = (Size - panelMargins - new Vector2(0, _headerHeight)).Max(Vector2.Zero); var maximum = PageMaximum(_headerHeight, panelMargins);
+                var offset = panelOffset + new Vector2(0, _position == BarPosition.Top ? _headerHeight : 0); var available = (Size - panelMargins - new Vector2(0, _headerHeight)).Max(Vector2.Zero); var maximum = PageMaximum(_headerHeight, panelMargins);
                 if (IsInsideTree) for (var i = 0; i < _paintPages.Count; i++) { var c = _paintPages[i]; if (c.IsDisposed || c.Parent != this || c.TopLevel || !c.Visible) continue; c.ContainerMaximum = maximum; try { FitChildInRect(c, new(offset, available)); } catch (Exception e) { CollectException(ref errors, e); } }
                 UpdateMinimumSize(); QueueRedraw(); if (!_paintAgain) break; if (pass == 63) throw new InvalidOperationException("Tab page layout did not settle.");
             }
@@ -63,7 +63,7 @@ public partial class TabContainer
     private void ArrangeHeader()
     {
         var margins = _headerStyle?.GetMinimumSize() ?? Vector2.Zero; var offset = _headerStyle?.GetOffset() ?? Vector2.Zero;
-        _headerHeight = _tabsVisible && _pages.Count > 0 ? _bar.GetMinimumSize().Y + margins.Y : 0; var y = _position == TabPosition.Bottom ? Size.Y - _headerHeight : 0; var rtl = IsLayoutRTL();
+        _headerHeight = _tabsVisible && _pages.Count > 0 ? _bar.GetMinimumSize().Y + margins.Y : 0; var y = _position == BarPosition.Bottom ? Size.Y - _headerHeight : 0; var rtl = IsLayoutRTL();
         var buttonWidth = _tabsVisible && GetPopup() != null ? _popupButton.GetCombinedMinimumSize().X : 0;
         var side = _pages.Count == 0 || _bar.TabAlignment == TabBar.AlignmentMode.Center || _bar.TabAlignment == TabBar.AlignmentMode.Right && buttonWidth > 0 ? 0 : GetThemeConstant("side_margin");
         var left = rtl ? margins.X - offset.X : offset.X; var right = margins.X - left;
@@ -81,9 +81,9 @@ public partial class TabContainer
         else if (what is NotificationThemeChanged or NotificationLayoutDirectionChanged or NotificationTranslationChanged) { _themeDirty = true; LayoutChanged(); }
         else if (what == NotificationDraw)
         {
-            ApplyTheme(); var header = _tabsVisible ? _headerHeight : 0; var y = _position == TabPosition.Bottom ? Size.Y - header : 0;
+            ApplyTheme(); var header = _tabsVisible ? _headerHeight : 0; var y = _position == BarPosition.Bottom ? Size.Y - header : 0;
             if (_tabsVisible && _headerStyle is not null) DrawStyleBox(_headerStyle, new(0, y, Size.X, header));
-            if (_panelStyle is not null) DrawStyleBox(_panelStyle, new(0, _position == TabPosition.Top ? header : 0, Size.X, MathF.Max(0, Size.Y - header)));
+            if (_panelStyle is not null) DrawStyleBox(_panelStyle, new(0, _position == BarPosition.Top ? header : 0, Size.X, MathF.Max(0, Size.Y - header)));
         }
     }
     /// <inheritdoc />
