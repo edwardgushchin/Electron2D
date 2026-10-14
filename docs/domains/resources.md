@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 [Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
@@ -36,7 +36,7 @@ The Resources domain defines reusable typed data, portable CPU image buffers and
 
 Resource base and image sources live under `src/Core/IO/`; shader/material/texture/frame-library/curve/font resources live under `src/Scene/Resources/`. The public namespace remains `Electron2D`.
 
-[ADR 0091](../decisions/scripting.md#adr-0091) selects one future concrete `Script : Resource` for C# code-as-asset metadata and typed construction. It merges the reference Script/CSharpScript roles and does not own a particular Node's gameplay state. No Script production type or loader is implemented; add it only with a real code/scene/editor consumer and the existing Resource lifetime/storage checks.
+[ADR 0091](../decisions/scripting.md#adr-0091) owns the implemented concrete `Script : Resource` for compiled C# source/type metadata, typed construction and registered source/archive loading. It merges the reference Script/CSharpScript roles and keeps source assets separate from instance gameplay state. [The scripting component](../components/scripting.md) records real registration/file prerequisites, consumer checks and remaining editor/tool limits. Ordinary nested scripts stay shared under all deep-copy modes; force/root and scene-local copies retain their own policies.
 
 ## Component inventory
 
@@ -46,7 +46,7 @@ Resource base and image sources live under `src/Core/IO/`; shader/material/textu
 | [Gradients](../components/gradients.md) | Gradient and its mode/space enums, GradientRampTexture, GradientTexture and its fill/repeat enums | Managed interpolation and lazy RGBA8/RGBAF texture generation, typed copies/local ownership and native canvas/material sampling |
 | [Curves](../components/curves.md) | [`Curve`](../classes/Curve.md), [`Curve.TangentMode`](../classes/Curve.TangentMode.md), [`Curve2D`](../classes/Curve2D.md), [`CurveTexture`](../classes/CurveTexture.md), [`CurveXYZTexture`](../classes/CurveXYZTexture.md), [`CurveTexture.TextureModeEnum`](../classes/CurveTexture.TextureModeEnum.md) | Managed scalar/spatial sampling, tangents, baking, tessellation and nearest queries with typed copying and scene-local ownership |
 | [Typed themes](../components/themes.md) | [Theme](../classes/Theme.md), [Theme.DataType](../classes/Theme.DataType.md) | Six typed data categories including borrowed Font resources, exact copies and scene lookup integration |
-| [Resource base](../components/resources.md) | [`Resource`](../classes/Resource.md), [`DeepDuplicateMode`](../classes/DeepDuplicateMode.md) | Implemented and verified |
+| [Resource base](../components/resources.md) | [`Resource`](../classes/Resource.md), [`DeepDuplicateMode`](../classes/DeepDuplicateMode.md) | Typed base operations and physical consumers execute; wider derived storage/RID/editor coverage remains open |
 | [Text](../components/text.md) | [Font](../classes/Font.md), [FontFile](../classes/FontFile.md), [LabelSettings](../classes/LabelSettings.md) | Validated encoded bytes, fractional metrics/shaping, borrowed fallbacks, cached glyph textures and shared label effects |
 | [Resource loading](../components/resource-loading.md) | [`ResourceLoader`](../classes/ResourceLoader.md), [`ResourceLoader.CacheMode`](../classes/ResourceLoader.CacheMode.md) | Synchronous image-texture, dynamic font and audio files use the weak path cache; general loader remains Partial |
 | [Images](../components/images.md) | [`Image`](../classes/Image.md), [`BitMap`](../classes/BitMap.md), Image's seven nested enums, [`ImageMetrics`](../classes/ImageMetrics.md), [`ClockDirection`](../classes/ClockDirection.md) | Managed image and mask processing implemented and verified; nine file extensions including DDS and EXR; PNG/JPEG/WebP/EXR saving; further codec semantics pending; copied byte/BCn/HDR pixels feed textures |
@@ -259,3 +259,5 @@ Internal resource graph IDs are staged before persistence: first authored IDs re
 ## Named scene assets
 
 [ResourcePreloader](../components/resource-preloading.md) supplies case-sensitive named resource slots with numbered duplicate/rename handling and copied name enumeration. Existing PackedScene and archive graphs retain aliases, local-scene copying and file ownership through exact typed reserved slot recovery. The holder borrows ordinary assets and exposes no loading task. Runtime/test details and verification boundaries are in the component.
+
+Physical copy-failure consumers now verify partial-state publication, nested/reentrant batches and throwing graph cleanup against actual selected simulation/query identities. The precise enum policy excludes ordinary Script references and allows explicit force/never fields. These results extend the exercised base/physical contract; the component and coverage retain wider Resource obligations instead of a blanket completion claim.

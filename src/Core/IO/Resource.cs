@@ -271,6 +271,8 @@ public class Resource : ElectronObject
     /// defines other behavior. <see cref="ResetState"/> runs first. Change notifications raised while copying are
     /// coalesced into one final <see cref="Changed"/> event. Batches targeting the same resource are serialized, but
     /// derived state still requires caller coordination. The operation is not transactional if a derived callback fails.
+    /// A reset or copy failure still attempts one final change event. Operation and final handler failures are
+    /// aggregated in that order. Nested batches publish at the outer boundary; a final handler may start a new batch.
     /// Stored base state includes inherited <see cref="ElectronObject.CanTranslateMessages"/> and
     /// <see cref="ElectronObject.TranslationDomain"/>; both are copied before the final change event.
     /// </remarks>

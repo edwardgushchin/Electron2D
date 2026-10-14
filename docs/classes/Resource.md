@@ -1,6 +1,6 @@
 # Resource
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -210,7 +210,7 @@ Copies stored data from another resource of the exact same runtime type while pr
 **Remarks:** Copying is shallow: nested resources and collection instances remain shared unless a derived override explicitly
 defines other behavior. [`Resource.ResetState`](Resource.md#m-electron2d-resource-resetstate) runs first. Change notifications raised while copying are
 coalesced into one final [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) event. Batches targeting the same resource are serialized, but
-derived state still requires caller coordination. The operation is not transactional if a derived callback fails.
+derived state still requires caller coordination. The operation is not transactional if a derived callback fails. Reset/copy failure still attempts one final event; operation and observer failures are aggregated in that order. Nested copies coalesce at the outer boundary, while a final observer can begin a new balanced batch.
 
 <a id="m-electron2d-resource-duplicate-system-boolean"></a>
 ### `public Resource Duplicate(bool deep = false)`
