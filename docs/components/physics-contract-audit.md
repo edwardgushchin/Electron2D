@@ -1197,3 +1197,12 @@ profiles retain eight full-frame/replay warmed brackets at strict 0/0 managed by
 Actual twelve-vertex query/rotational controls, asymmetric analytic triangle mass,
 both windings and live empty/replacement cases extend this numerical evidence.
 Related extension rows remain Partial for wider geometry and final acceptance.
+
+[Registered concave numerics](physics-registered-adapter.md#registered-concave-numerics)
+now execute actual paired hollow edges, zero-area mass, direct query source/target,
+body motion, contacts and linear/angular CCD. Shared CPU/software-GPU/registered
+serial/separate profiles retain nine complete warmed brackets at strict 0/0 managed
+bytes. Corner contacts keep two normals/impulses behind one logical shape pair;
+Area/shape hits deduplicate that pair and deepest rest retains its actual edge.
+Standalone motion/exclusion/capped-deepest and custom callback controls extend the
+scope. Related extension rows remain Partial for the wider/final acceptance gate.

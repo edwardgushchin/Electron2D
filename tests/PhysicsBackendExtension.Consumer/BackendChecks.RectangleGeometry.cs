@@ -2,7 +2,7 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    private static Part GeometryPart(ShapeGeometry geometry, Transform transform, int index = 0)
+    private static Part GeometryPart(ShapeGeometry geometry, Transform transform, int index = 0, int element = 0)
     {
         if (geometry.Type == PhysicsServer.ShapeType.ConvexPolygon)
         {
@@ -17,6 +17,13 @@ public static partial class BackendChecks
             if (!x.IsFinite() || !y.IsFinite() || !float.IsFinite(radius) || CrossEdges(x, y) == 0)
                 throw new NotSupportedException("The rectangle requires finite nondegenerate transformed edges.");
             return new(index, transform.Origin, 0, radius, x, y);
+        }
+        if (geometry.Type == PhysicsServer.ShapeType.ConcavePolygon)
+        {
+            var points = geometry.GetConcavePolygonSegments(); var a = transform * points[2 * element]; var b = transform * points[2 * element + 1];
+            var edge = (b - a) / 2; var length = edge.Length();
+            return new(index, (a + b) / 2, 0, length <= .25f ? 0 : length, default,
+                length <= .25f ? default : edge, 0, false, true, null, true);
         }
         if (geometry.Type == PhysicsServer.ShapeType.Segment)
         {
@@ -221,6 +228,10 @@ public static partial class BackendChecks
         ShapeGeometry second, Transform secondPose, Vector2 secondMotion, Span<Vector2> output, out int count)
     {
         var a = GeometryPart(first, firstPose); var b = GeometryPart(second, secondPose);
+        return CollidePartsRegions(a, firstMotion, b, secondMotion, output, out count);
+    }
+    private static bool CollidePartsRegions(in Part a, Vector2 firstMotion, in Part b, Vector2 secondMotion, Span<Vector2> output, out int count)
+    {
         if (a.Polygon is not null || b.Polygon is not null) return CollidePolygonRegions(a, firstMotion, b, secondMotion, output, out count);
         Span<Vector2> av = stackalloc Vector2[8]; Span<Vector2> bv = stackalloc Vector2[8];
         var ac = Vertices(a, firstMotion, av); var bc = Vertices(b, secondMotion, bv);

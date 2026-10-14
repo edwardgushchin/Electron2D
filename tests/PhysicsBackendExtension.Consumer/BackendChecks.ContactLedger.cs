@@ -3,21 +3,21 @@ using Electron2D;
 public static partial class BackendChecks
 {
     private readonly record struct FrameContact(RID Peer, int LocalShape, int PeerShape, Vector2 Point, Vector2 Normal, Vector2 Impulse, float Depth,
-        Vector2 LocalVelocity = default, Vector2 PeerVelocity = default);
+        Vector2 LocalVelocity = default, Vector2 PeerVelocity = default, int LocalPart = -1, int PeerPart = -1);
 
     private sealed partial class Body
     {
         internal readonly List<FrameContact> Contacts = [];
         internal float ReportedDepth;
-        internal void RecordContact(Body peer, int localShape, int peerShape, Vector2 point, Vector2 normal, Vector2 impulse, float depth)
+        internal void RecordContact(Body peer, int localShape, int peerShape, Vector2 point, Vector2 normal, Vector2 impulse, float depth, int localPart, int peerPart)
         {
             if (ReportedLimit == 0) return;
             for (var i = 0; i < Contacts.Count; i++)
-                if (Contacts[i].Peer == peer.RID && Contacts[i].LocalShape == localShape && Contacts[i].PeerShape == peerShape)
+                if (Contacts[i].Peer == peer.RID && Contacts[i].LocalShape == localShape && Contacts[i].PeerShape == peerShape && Contacts[i].LocalPart == localPart && Contacts[i].PeerPart == peerPart)
                 {
-                    var old = Contacts[i]; Contacts[i] = new(peer.RID, localShape, peerShape, point, normal, old.Impulse + impulse, MathF.Max(old.Depth, depth)); return;
+                    var old = Contacts[i]; Contacts[i] = new(peer.RID, localShape, peerShape, point, normal, old.Impulse + impulse, MathF.Max(old.Depth, depth), LocalPart: localPart, PeerPart: peerPart); return;
                 }
-            Contacts.Add(new(peer.RID, localShape, peerShape, point, normal, impulse, depth));
+            Contacts.Add(new(peer.RID, localShape, peerShape, point, normal, impulse, depth, LocalPart: localPart, PeerPart: peerPart));
         }
         internal void FreezeContacts()
         {

@@ -2,6 +2,13 @@
 
 Last updated: 2026-10-14
 
+[Registered concave numerics](../components/physics-registered-adapter.md#registered-concave-numerics)
+now preserve paired hollow edges, one logical shape slot, rod mass, queries,
+contacts and linear/angular CCD in the independent public-only provider. Shared
+CPU/software-GPU serial/separate profiles retain zero warmed managed bytes, with
+two corner features and one logical event. Boundary/ray, inherited/network/native/
+hardware and final acceptance remain open.
+
 [Registered convex numerics](../components/physics-registered-adapter.md#registered-convex-numerics)
 now preserve whole accepted convex contours in the independent public-only provider,
 with signed projections, centroid/inertia, queries, contacts and linear/angular CCD.

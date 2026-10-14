@@ -107,3 +107,10 @@ with signed projections, centroid/inertia, queries, contacts and linear/angular 
 Shared CPU/software-GPU serial/separate profiles retain zero warmed managed bytes.
 Asymmetric/winding/live-empty and twelve-vertex controls extend evidence; concave,
 boundary/ray, inherited/network/native/hardware and final acceptance remain open.
+
+[Registered concave numerics](../components/physics-registered-adapter.md#registered-concave-numerics)
+now preserve paired hollow edges, one logical shape slot, rod mass, queries,
+contacts and linear/angular CCD in the independent public-only provider. Shared
+CPU/software-GPU serial/separate profiles retain zero warmed managed bytes, with
+two corner features and one logical event. Boundary/ray, inherited/network/native/
+hardware and final acceptance remain open.

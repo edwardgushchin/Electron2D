@@ -115,7 +115,7 @@ public static partial class BackendChecks
                         if (peer == area || peer.IsArea && area.RID.GetID() > peer.RID.GetID() ||
                             (area.Mask & peer.Layer) == 0 && (!peer.IsArea || (peer.Mask & area.Layer) == 0)) continue;
                         for (var i = 0; i < area.Shapes; i++) for (var j = 0; j < peer.Shapes; j++)
-                                if (PartOverlap(area, area.Parts[i], peer, peer.Parts[j])) sensorPairs++;
+                                if (PartsOverlap(area, area.Parts[i], peer, peer.Parts[j])) sensorPairs++;
                     }
             return new(active, checked(Pairs + sensorPairs), islands);
         }
@@ -183,9 +183,9 @@ public static partial class BackendChecks
                                 if (PartContact(a, first, b, second, out _, out _, out var solvedPoint)) contactPoint = solvedPoint;
                                 impulse = SolveContact(a, b, normal, contactPoint);
                             }
-                            a.RecordContact(b, first.Index, second.Index, contactPoint, -normal, -impulse, depth);
-                            b.RecordContact(a, second.Index, first.Index, contactPoint, normal, impulse, depth);
-                            if (_framePairs.Add((a.RID, first.Index, b.RID, second.Index))) Pairs++;
+                            a.RecordContact(b, first.Index, second.Index, contactPoint, -normal, -impulse, depth, i, j);
+                            b.RecordContact(a, second.Index, first.Index, contactPoint, normal, impulse, depth, j, i);
+                            if (_framePairs.Add((a.RID, i, b.RID, j))) Pairs++;
                         }
                 }
             if (FailSolve) throw new InvalidOperationException("Injected independent solver failure.");
@@ -210,7 +210,7 @@ public static partial class BackendChecks
             {
                 if (other == self || (self.Mask & other.Layer) == 0 || other.IsArea && !other.Monitorable) continue;
                 for (var i = 0; i < self.Shapes; i++) for (var j = 0; j < other.Shapes; j++)
-                        if (PartOverlap(self, self.Parts[i], other, other.Parts[j]))
+                        if (PartsOverlap(self, self.Parts[i], other, other.Parts[j]) && !PriorAreaPair(self, i, other, j))
                         { if (count < output.Length) output[count] = new(other.RID, other.Parts[j].Index, self.Parts[i].Index); count++; }
             }
             return count;

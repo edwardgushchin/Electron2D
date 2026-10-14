@@ -238,3 +238,12 @@ Eight warmed frame/replay brackets measure 128 frames each at 0/0 managed bytes.
 The independent provider streams all vertices without delegating to built-in
 solvers. Its large-contour throughput and complete provider/native/network/target-
 device acceptance remain open.
+
+`--concave-geometry`, with optional `--cpu`/`--gpu` and `--threaded`, verifies paired
+hollow edges, one logical slot, rod mass, direct-query source/target, nearest/deepest
+edge output, Area deduplication, contacts and linear/angular CCD. Two corner features
+retain full impulses through private history while one body/shape transition is
+delivered. Nine warmed brackets measure 128 complete frames each at 0/0 managed bytes.
+Cold controls include short/point/empty edits, ignored standalone concave motion,
+two-concave exclusion, capped deepest pairs and custom annulus material. Larger
+coupling, provider/native/network/hardware and final performance gates remain open.

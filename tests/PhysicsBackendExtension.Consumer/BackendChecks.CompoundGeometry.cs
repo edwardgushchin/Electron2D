@@ -3,7 +3,7 @@ using Electron2D;
 public static partial class BackendChecks
 {
     private readonly record struct Part(int Index, Vector2 Offset, float Inner, float Outer,
-        Vector2 EdgeX = default, Vector2 EdgeY = default, float Inflation = 0, bool Capsule = false, bool Segment = false, Polygon? Polygon = null)
+        Vector2 EdgeX = default, Vector2 EdgeY = default, float Inflation = 0, bool Capsule = false, bool Segment = false, Polygon? Polygon = null, bool Concave = false)
     {
         internal bool Rectangle => Polygon is null && EdgeX != Vector2.Zero;
         internal bool Contour => Rectangle || Capsule || Segment || Polygon is not null;
@@ -33,15 +33,22 @@ public static partial class BackendChecks
         }
         private void RebuildParts(ReadOnlySpan<PhysicsColliderShape> slots)
         {
-            if (Parts.Length < slots.Length) Array.Resize(ref Parts, slots.Length);
+            var required = 0;
+            foreach (ref readonly var slot in slots)
+                if (slot.Enabled) required += GeometryCount(slot.Shape.GetGeometryData());
+            if (Parts.Length < required) Array.Resize(ref Parts, required);
             Shapes = 0;
             foreach (ref readonly var slot in slots)
             {
                 if (!slot.Enabled) continue;
-                var part = GeometryPart(slot.Shape.GetGeometryData(), slot.Transform, slot.Index);
-                if (part.Polygon is { Vertices.Length: 0 }) continue;
-                if (part.Segment && part.LineLength <= .5f) part = part with { EdgeY = default, Outer = 0 };
-                Parts[Shapes++] = part;
+                var geometry = slot.Shape.GetGeometryData();
+                for (var element = 0; element < GeometryCount(geometry); element++)
+                {
+                    var part = GeometryPart(geometry, slot.Transform, slot.Index, element);
+                    if (part.Polygon is { Vertices.Length: 0 }) continue;
+                    if (part.Segment && part.LineLength <= .5f) part = part with { EdgeY = default, Outer = 0 };
+                    Parts[Shapes++] = part;
+                }
             }
             Parts.AsSpan(Shapes).Clear();
         }
@@ -68,7 +75,7 @@ public static partial class BackendChecks
     }
     private sealed partial class Solver
     {
-        private static bool PartOverlap(Body a, in Part first, Body b, in Part second)
+        internal static bool PartsOverlap(Body a, in Part first, Body b, in Part second)
         {
             if (first.Contour || second.Contour)
                 return PartGap(first, new(a.Rotation, a.Position), second, new(b.Rotation, b.Position), out _, out _, out _) <= 0;
@@ -92,7 +99,7 @@ public static partial class BackendChecks
         }
         private static bool Overlap(Body a, Body b)
         {
-            for (var i = 0; i < a.Shapes; i++) for (var j = 0; j < b.Shapes; j++) if (PartOverlap(a, a.Parts[i], b, b.Parts[j])) return true;
+            for (var i = 0; i < a.Shapes; i++) for (var j = 0; j < b.Shapes; j++) if (PartsOverlap(a, a.Parts[i], b, b.Parts[j])) return true;
             return false;
         }
         private bool Contact(Body a, Body b, out Vector2 normal, out float depth, out Vector2 point)

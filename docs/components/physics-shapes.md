@@ -183,3 +183,9 @@ now consume every accepted perimeter vertex through the public immutable payload
 They retain logical shape identity across whole contours while CPU may partition
 native fixtures, and verify winding, asymmetric mass and live empty replacement.
 Other provider families and final numerical acceptance remain open.
+
+[Registered concave numerics](physics-registered-adapter.md#registered-concave-numerics)
+now preserve hollow paired-edge material, logical slot identity, short/point limits,
+queries and rod mass through the public immutable geometry payload. Standalone
+concave motion remains ignored in either operand; two concave resources do not
+collide. Wider provider and final acceptance gates remain open.

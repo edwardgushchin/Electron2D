@@ -1976,3 +1976,98 @@ Results/manifests are under bin/physics-convex-provider/2026-10-14/final; all si
 commit gates pass under gates. API stays at 13,842 declarations, 10,585 mapped,
 3,257 reviewed extras and zero unmapped; wiki verifies 821 public types and 839
 files with zero updates/removals.
+
+## Registered concave numerics
+
+The independent public-only solver now reads every paired ConcavePolygon endpoint
+into a numerical edge while retaining one authored logical slot. Storage capacity
+is prepared for the enabled edge count before numerical work; repeated preparation
+reuses arrays. Edge/point geometry keeps the accepted .5 scene-unit midpoint
+fallback and the resource remains hollow, including closed bounds. Empty input
+retires all leaves. Existing length-weighted zero-area mass and parallel-axis
+moments apply across leaves and slots; positive-area shapes still own mass first.
+
+Point/ray/shape/body-motion paths read actual edges. Shape query results deduplicate
+RID/shape index, while contact query output retains individual edge pairs. Rest
+collection now carries the exact prepared source and collider parts alongside
+published pairs rather than resolving a physical leaf from a nonunique logical
+index. Concave geometry can also be the direct-query source, including earliest
+motion, multiple input contacts and empty-source results. Numerical contact history
+stores local/peer part indices internally so two features of one public shape pair
+retain distinct normals, points and full impulses through synchronization and
+private replay. Those indices never enter the public result or wire identity.
+Area overlaps deduplicate logical slot pairs independently of caller output
+capacity, including the count-only read. Distinct features retain numerical pair
+statistics while object/shape notifications stay singular.
+
+Standalone collection ignores concave motion in either operand and excludes two
+concave resources under ADR 0069. It evaluates each real edge against the convex
+counterpart's independently swept region, preserving output operand order and the
+supplied pair capacity. When capacity fills it retains deeper pairs, including
+later edges. The existing custom-annulus callback now handles concave counterparts
+through this same independent algorithm, retaining the annulus hole and motion
+rules. No body bounds, filled hull or built-in numerical delegation substitutes
+for concave material.
+
+The --concave-geometry profile (optional --cpu/--gpu and --threaded) uses a rotated/
+offset closed square with disabled slot zero, a matching line Area and a circle
+at a two-edge corner. Six query families, nearest ray, body motion, masks/exclusions,
+deepest rest and one logical Area entry are exercised every full query frame.
+Moving the circle inside the bounds ends overlap; returning to the corner delivers
+one new transition. A separate two-edge dynamic corner retains both axis normals,
+logical slot one in every payload, one body/shape entry, silent checkpoint restore
+and complete stopped momentum. Six concave/circle or concave/rectangle contact
+cases cover all CCD modes and full impulses; an unlocked offset-rod case checks
+angular moment and energy. These nine brackets each warm 128 complete frames and
+measure 128 at strict 0/0 owner/all-thread managed bytes. No query, Area publication,
+restore or contact delivery is removed from measurement.
+
+Cold controls verify rod centroid/inertia across two edges of one slot, mixed solid
+mass precedence, collinear/opposite-side rays, short/coincident/empty live edits,
+identity-preserving replacement, concave query input and empty input, independently
+swept resource motion rules, two-concave exclusion, 20 reversed-depth input edges
+retained into four output pairs and custom callback hole/material behavior. The
+1000-unit/s thin-wall and intermediate 30-rad/s rotating 320-length edge cases
+verify actual linear/angular CCD; these are cold functional checks, not extra
+warmed-allocation or hardware-performance claims. Existing primitive/convex/
+compound/joint/history/contact-frame profiles remain regressions.
+
+Ordinary ray/rest coordinates permit .002 scene units, normals dot above .999,
+cast fraction 1/256 plus .00002, centroid/inertia .0002, paired momentum .002 and
+full impulse .02–.03. The cold deepest corner point permits .01, two percent of the
+accepted .5 CPU linear tolerance: a CPU point error of .008726 initially rejected
+the stricter .002 ordinary face bound despite selecting the correct edge/normal.
+Its first oracle also placed the circle beyond both endpoints, where the physical
+normal is radial; the final inside-corner input has distinct edge penetrations
+and a genuinely axis-aligned deepest face. Neither correction weakens event,
+feature identity or full impulse assertions. Angular moment retains the sample-
+interval bound, rotating energy stays at most 102 percent initial and thin-wall
+position retains the .501 native-tolerance/float allowance. Poses keep the shared
+unit-scale/zero-skew contract.
+
+The frozen previous convex consumer rejects concave attachment in primitive
+decoding; this provider executes the full exercised edge path through public
+API only. Evidence is under bin/physics-concave-provider/2026-10-14. CPU lavapipe
+provides functional GPU proof only. Large-edge-count throughput, arbitrary custom/
+coupled geometry, boundary/directed ray, complete extension/inherited/network/
+native/platform and target-device performance acceptance remain open. Production
+public API/XML and accepted geometry/mass ADRs are unchanged; current coverage
+Partial states remain while numerical evidence expands.
+
+Final evidence uses integrated main `18db210fd00ce3364fa8d03fab837478be1cd946` and this consumer slice,
+preserving the concurrent foldable GUI change. Its 4,197 source inputs
+fingerprint is `6470018996ca03c457bc81f96e1b4874d0a57103974985908b1727ef99b177ae`; loaded runtime/consumer DLLs are
+`902512f07a97f0ade7724d882a8101ec5bb16ee0f9a80e94e9935d504c1f15ef` and `c449809c0a6ac0a56ea230b2dcccf551cc170fb52b00350ac98d13ecc1d38fee`.
+All 19 fresh processes pass: six CPU/GPU/registered serial/separate numerical
+profiles and thirteen previous primitive/custom/convex/compound/joint/history/
+contact-frame regressions. Source-before/source-after identities agree, all 61
+runtime-file identities stay unchanged, and the precommit runtime matches the
+loaded DLL. GPU loads CPU lavapipe only with no NVIDIA library; CPU/provider have
+unavailable graphics drivers and retained solver lanes are exactly 0/1. Nine
+warmed brackets per numerical profile still measure strict 0/0 managed bytes.
+Independent processes share the host concurrently for functional proof only.
+Results/manifests are under bin/physics-concave-provider/2026-10-14/final; all six
+commit gates pass under gates. The integrated API has 13,878 declarations,
+10,604 mapped, 3,274 reviewed extras and zero unmapped; wiki verifies 823 public
+types and 841 files with zero updates/removals. These surface-count changes belong
+to the preserved GUI integration, not a new physics API.

@@ -1571,3 +1571,7 @@ No shipped backend type or runtime public API is introduced.
 FoldableContainer.cs, FoldableContainer.Layout.cs and FoldableContainer.Storage.cs implement the GUI foldable title/body consumer; FoldableGroup.cs supplies its scene-local selection resource. BarPosition.cs is shared by FoldableContainer and TabContainer. ThemeDB.Foldable.cs extends the retained default catalog; no new backend/runtime assembly is introduced.
 
 | [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [FoldableContainer](classes/FoldableContainer.md), [FoldableGroup](classes/FoldableGroup.md) | [state](../src/Scene/GUI/FoldableContainer.cs), [layout](../src/Scene/GUI/FoldableContainer.Layout.cs), [storage](../src/Scene/GUI/FoldableContainer.Storage.cs), [group](../src/Scene/Resources/FoldableGroup.cs), [theme](../src/Scene/Resources/ThemeDB.Foldable.cs) | Current | Themed top/bottom/RTL foldable panels, exclusive scene-local groups, title controls, input and owned fresh-process scenes. |
+
+The [registered concave consumer](components/physics-registered-adapter.md#registered-concave-numerics)
+adds independent paired-edge numerics behind the existing extension family;
+no shipped backend type or runtime public API is introduced.
