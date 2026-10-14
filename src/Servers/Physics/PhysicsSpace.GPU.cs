@@ -108,7 +108,6 @@ internal sealed partial class PhysicsSpace
         PrepareGPUCapacity();
         var count = 0;
         foreach (var body in _bodies) Observe(body.Backend);
-        foreach (var area in _areas) Observe(area.Backend);
         foreach (var body in _serverColliders)
             if (RequiresGPUCompletion(body, callbacks: false)) Observe(body.Backend);
         if (count == 0) return;

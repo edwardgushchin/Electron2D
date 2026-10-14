@@ -1,6 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Owns one collider's resident handles, shape leases and publication caches in its retained GPU store.</summary>
+/// <remarks>Sensor poses are authored inputs and reuse the existing pose cache between numerical epochs.</remarks>
 internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBackend owner, PhysicsSpace space, GPUPhysicsBodyStore store) : PhysicsColliderImplementation(owner, space)
 {
     internal bool GPUSensor;
@@ -17,7 +18,8 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
     {
         _gpuPose = pose; _gpuPoseValid = true; _gpuPoseEpoch = Space.GPUStateEpoch;
     }
-    private System.Numerics.Vector4 CurrentPose => GPUStateValid ? _gpuState.Pose :
+    // Sensor poses do not move in the numerical solver.
+    private System.Numerics.Vector4 CurrentPose => GPUSensor && _gpuPoseValid ? _gpuPose : GPUStateValid ? _gpuState.Pose :
         _gpuPoseValid && _gpuPoseEpoch == Space.GPUStateEpoch ? _gpuPose : ReadPose();
 
     private System.Numerics.Vector4 ReadPose()
@@ -60,6 +62,7 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
     internal void AcceptGPUState(in GPUPhysicsBodyStore.Snapshot state, bool published = false)
     {
         _gpuState = state; GPUStateValid = true;
+        if (GPUSensor) AcceptGPUPose(state.Pose);
         _gpuStateMatchesPublication = published || Space!.GPUStatePublicationEpoch == Space.GPUStateEpoch;
     }
     internal void CompleteGPUStatePublication() => GPUStateValid = _gpuStateMatchesPublication;
@@ -71,6 +74,9 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
             configuration.AngularVelocity, GravityScale: configuration.GravityScale, CanSleep: configuration.CanSleep,
             Sleeping: configuration.Sleeping, LockRotation: configuration.LockRotation));
         GPUStateValid = false; _gpuStateMatchesPublication = false;
+        GPUSensor = Owner.SceneOwner is Area;
+        _gpuPoseValid = false;
+        if (GPUSensor) AcceptGPUPose(new(position.X, position.Y, MathF.Cos(rotation), MathF.Sin(rotation)));
         _gpuParametersPrepared = false;
         _gpuConstantForce = _gpuSurfaceLinear = default; _gpuSurfaceAngular = _gpuConstantTorque = 0;
         space.RegisterGPUCollider(Owner);

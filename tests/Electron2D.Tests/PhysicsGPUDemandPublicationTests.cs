@@ -5,7 +5,10 @@ internal static class PhysicsGPUDemandPublicationTests
 {
     internal static void Run()
     {
-        Raw(); Mixed();
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PUBLICATION_THREAD") == "1") ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, true);
+        try { Raw(); Mixed(); Areas(); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
     }
     private static void Raw()
     {
@@ -91,5 +94,87 @@ internal static class PhysicsGPUDemandPublicationTests
         finally { foreach (var body in bodies) if (body.IsValid()) PhysicsServer.FreeRID(body); }
     }
     private static void Near(float value, float expected) => Check(Math.Abs(value - expected) < .02f, "Prescribed constant motion/field agrees within .02 scene units (or per second)");
+    private static void Areas()
+    {
+        using var world = new World(PhysicsServer.Backend.GPU); using var root = new SubViewport { World = world };
+        using var shape = new CircleShape { Radius = 2 };
+        var mover = new RigidBody { GravityScale = 0, CanSleep = false }; mover.AddChild(new CollisionShape { Shape = shape }); root.AddChild(mover);
+        var areas = new Area[64];
+        for (var i = 0; i < areas.Length; i++)
+        {
+            var area = areas[i] = new Area { Name = $"Area{i}", Position = new(i * 100, 0), Monitoring = false };
+            area.AddChild(new CollisionShape { Shape = shape }); root.AddChild(area);
+        }
+        using var tree = new SceneTree(root);
+        var raw = PhysicsServer.BodyCreate(); PhysicsServer.BodySetSpace(raw, world.Space);
+        var rawArea = PhysicsServer.AreaCreate(); PhysicsServer.AreaAddShape(rawArea, shape.GetRID());
+        PhysicsServer.AreaSetTransform(rawArea, new(0, new(8000, 0))); PhysicsServer.AreaSetSpace(rawArea, world.Space);
+        _ = PhysicsServer.AreaGetTransform(rawArea);
+        var store = PhysicsServer.Service.GetSceneSpace(world.Space).GPUStore!;
+        var samples = new double[128];
+        try
+        {
+            Collect(); GC.WaitForPendingFinalizers();
+            for (var i = 0; i < 128; i++) Frame();
+            var read = store.ReadbackBytes; var publications = store.ChangePublicationCount;
+            var upload = store.UploadBytes; var wait = store.WaitMS; var submissions = store.SubmissionCount;
+            var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+            for (var i = 0; i < 128; i++)
+            {
+                var started = System.Diagnostics.Stopwatch.GetTimestamp(); Frame();
+                samples[i] = System.Diagnostics.Stopwatch.GetElapsedTime(started).TotalMilliseconds;
+            }
+            var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; var allBytes = GC.GetTotalAllocatedBytes(true) - all;
+            var bytes = (store.ReadbackBytes - read) / 128;
+            Array.Sort(samples);
+            Console.WriteLine($"GPU Area demand: 64 sensors + scene/raw bodies, 128 full edited frames, {ownerBytes}/{allBytes} B, {bytes} readback B/step.");
+            Console.WriteLine($"GPU Area cost: p50/p95/p99={samples[64]:F4}/{samples[121]:F4}/{samples[126]:F4} ms; upload={(store.UploadBytes - upload) / 128} B/step, wait={(store.WaitMS - wait) / 128:F4} ms/step, submissions={(store.SubmissionCount - submissions) / 128}; software Vulkan only.");
+            Check(ownerBytes == 0 && allBytes == 0 && bytes < 1024 && store.ChangePublicationCount == publications,
+                "Authored Area poses do not require a complete state readback at every mixed-world completion.");
+            read = store.ReadbackBytes;
+            foreach (var area in areas) Check(PhysicsServer.AreaGetTransform(area.GetRID()).Origin == area.GlobalPosition, "Area transform reads retain current authored poses.");
+            Check(store.ReadbackBytes == read, "Unchanged Area transform getters do not trigger individual device reads.");
+            areas[0].Monitoring = true;
+            var entered = 0; var exited = 0;
+            areas[0].BodyEntered += other => { Check(ReferenceEquals(other, mover), "Moved Area retains its collider identity."); entered++; };
+            areas[0].BodyExited += _ => exited++;
+            mover.Position = Vector2.Zero; tree.PhysicsFrame(.01);
+            areas[0].Position = new(50, 0); tree.PhysicsFrame(.01);
+            areas[0].Position = Vector2.Zero; areas[0].Rotation = .3f; tree.PhysicsFrame(.01);
+            Check(entered == 2 && exited == 1 && PhysicsServer.AreaGetTransform(areas[0].GetRID()).IsEqualApprox(areas[0].GlobalTransform),
+                "Area pose edits still reach GPU sensing and public transform reads.");
+            using var checkpoint = PhysicsServer.SpaceCreateCheckpoint(world.Space);
+            areas[0].Position = new(70, 0); tree.PhysicsFrame(.01);
+            var beforeRestore = entered + exited;
+            checkpoint.Restore();
+            Check(entered + exited == beforeRestore && PhysicsServer.AreaGetTransform(areas[0].GetRID()).IsEqualApprox(areas[0].GlobalTransform),
+                "Area pose cache follows restored device/scene state without duplicate effects.");
+            var rawPose = new Transform(.4f, new Vector2(9000, 0)); PhysicsServer.AreaSetTransform(rawArea, rawPose);
+            read = store.ReadbackBytes;
+            Check(PhysicsServer.AreaGetTransform(rawArea).IsEqualApprox(rawPose) && store.ReadbackBytes == read, "Raw Area edits expose authored pose without an observer readback.");
+            PhysicsServer.AreaSetSpace(rawArea, default); PhysicsServer.AreaSetSpace(rawArea, world.Space);
+            Check(PhysicsServer.AreaGetTransform(rawArea).IsEqualApprox(rawPose), "Raw Area transfer preserves the latest authored pose.");
+            using var point = new PhysicsPointQueryParameters { Position = rawPose.Origin, CollideWithBodies = false, CollideWithAreas = true };
+            var hits = new PhysicsPointResult[8]; var hitCount = world.DirectSpaceState.IntersectPoint(point, hits);
+            var sawRawArea = false; for (var i = 0; i < hitCount; i++) sawRawArea |= hits[i].ColliderRID == rawArea;
+            Check(sawRawArea && hitCount == 1, "Resident point queries consume the edited raw Area pose.");
+            var rawEntered = 0;
+            PhysicsServer.AreaSetMonitorCallback(rawArea, (status, rid, _, _, _) =>
+            { if (status == PhysicsServer.AreaBodyStatus.Added) { Check(rid == mover.GetRID(), "Raw sensing retains the moved body's identity."); rawEntered++; } });
+            rawPose = new(.7f, Vector2.Zero); PhysicsServer.AreaSetTransform(rawArea, rawPose); tree.PhysicsFrame(.01);
+            Check(rawEntered == 1, "Raw Area monitoring uses the edited sensor pose after numerical completion.");
+            using var map = new PhysicsSnapshotMap(world.Space); var snapshot = new PhysicsSnapshot();
+            map.Bind(1, 1, mover.GetRID()); map.Bind(2, 1, raw); map.Bind(3, 1, rawArea);
+            for (var i = 0; i < areas.Length; i++) map.Bind((ulong)(100 + i), 1, areas[i].GetRID());
+            map.Capture(snapshot); var areaPose = areas[0].GlobalTransform;
+            areas[0].Position = new(80, 0); PhysicsServer.AreaSetTransform(rawArea, new(0, new(9100, 0))); tree.PhysicsFrame(.01);
+            beforeRestore = entered + exited; var beforeRawRestore = rawEntered; map.Apply(snapshot);
+            Check(entered + exited == beforeRestore && rawEntered == beforeRawRestore && areas[0].GlobalTransform.IsEqualApprox(areaPose) &&
+                PhysicsServer.AreaGetTransform(areas[0].GetRID()).IsEqualApprox(areaPose) && PhysicsServer.AreaGetTransform(rawArea).IsEqualApprox(rawPose),
+                "Portable Area restoration replaces cached poses without replaying gameplay effects.");
+            void Frame() { mover.Position = mover.Position.X == 0 ? new(10000, 0) : Vector2.Zero; tree.PhysicsFrame(.01); }
+        }
+        finally { PhysicsServer.FreeRID(rawArea); PhysicsServer.FreeRID(raw); }
+    }
     private static void Collect() { GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); }
 }

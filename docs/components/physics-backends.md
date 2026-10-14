@@ -1240,3 +1240,47 @@ Physical GPU drivers, native GPU allocations, device-loss behavior, foreign plat
 real window FPS and same-revision hardware CPU/GPU advantage remain open. Software
 adapter timing and transfer counters must not be used as an RTX/PCIe performance
 measurement. Full physics and registered-backend conformance remain separate gates.
+
+## Authored sensor pose publication (2026-10-14)
+
+Ordinary mixed-world completion no longer requests complete GPU snapshots for
+scene Areas. Sensor poses are authored static inputs; their collider reuses the
+existing pose cache across numerical epochs. Initial scene attachment and explicit
+pose writes populate it. Selected device reads and restored snapshots replace its
+values. Body caches retain the existing epoch policy, and explicit portable capture
+still reads complete sensor state when needed. No new host solver or pose array is
+introduced; resident geometry remains authoritative for actual sensing and queries.
+
+PhysicsGPUDemandPublicationTests exercises 64 scene sensors, scene/raw bodies and
+a raw sensor through 128 warm/128 measured edited full frames at strict 0/0 owner/
+all-thread managed bytes. The completed observer readback drops by exactly 4,096
+bytes per step, equal to 64 unused 64-byte sensor records. Public pose reads, moved/
+rotated scene and raw sensing, raw detach/reattach, resident point queries, local
+checkpoint and portable Area restoration retain identities and avoid duplicate
+user effects. Serial/separate numerical profiles retain these same operations.
+The fixture reports full-frame p50/p95/p99, uploads, readback, mean wait and submission
+count. Its CPU-only Vulkan values are transfer/function evidence, not hardware
+speedup, native allocator totals, real-window FPS or final performance acceptance.
+
+### Sensor observer transfer samples
+
+The pre-change runtime and corrected candidate used the same test fixture assembly
+(SHA-256 af2dea8ad771bfa56bca97db6e54e4fa084c3cf0a1284477c1886810e56009dc)
+and native dependencies. The old runtime intentionally fails the readback bound
+after recording its unchanged full-frame workload. Final verification additionally
+includes the current text changes on main and the corrected dedicated thread selector.
+
+| Software Vulkan profile | Readback B/step | Upload B/step | Submissions/step | Mean wait ms | Full-frame p50/p95/p99 ms |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Pre-change runtime/current fixture | 4,632 | 1,416 | 16 | 5.2593 | 7.8270 / 8.9641 / 9.6572 |
+| Corrected candidate/same fixture | 536 | 392 | 16 | 5.1217 | 7.6281 / 8.7676 / 9.8732 |
+| Current main, serial validation | 536 | 392 | 16 | 8.7667 | 9.6414 / 17.9646 / 20.2060 |
+| Current main, separate numerical lane | 536 | 392 | 16 | 26.0641 | 18.4476 / 56.9302 / 72.2463 |
+
+All intervals retain zero owner/all-thread managed bytes. The exact reduction is
+4,096 downloaded bytes and 1,024 uploaded request bytes per step; submission count
+is unchanged. Final timing samples ran during other validation work and do not
+form a controlled throughput comparison. Software waits remain substantial; these
+numbers establish transfer policy and exercised cost, not a hardware speed claim.
+Source/runtime manifests, failed baseline provenance and individual logs are retained
+under bin/physics-area-publication/2026-10-14.

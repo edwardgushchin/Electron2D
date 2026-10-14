@@ -1,6 +1,6 @@
 # PhysicsSpace
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Declaration:** `internal sealed partial class PhysicsSpace : IDisposable`
 
@@ -285,3 +285,24 @@ Membership removal now attempts every dependent joint, state capture, numerical 
 The public GPU adapter retains one rebindable query-geometry lease. Alternating live resources reuses its wrapper and retires the previous reference; past resources are not accumulated. ConvexPolygonShapeTests exercises 128 warmed overlap/contact/rest/motion cycles between shared and standalone geometry on CPU/GPU with zero owner/all-thread bytes, preserving current contour results and initial-overlap fractions. GPUPhysicsShapeQueryTests checks successful replacement, null/disposed/thread rejection with preserved previous geometry, and retired lease failure. Geometry uploads and query waits retain their existing separate costs.
 
 A captured [separate numerical lane](../components/physics-thread.md) now dispatches only Solve after owner preparation and joins before all observations/callbacks. Its private exact-thread borrow authorizes prepared readonly inputs, while public queries, authoring and lifetime remain owner-bound. Disposal joins the retained lane before attachments; CPU/provider checks pass and GPU/native acceptance remains open.
+
+## Authored sensor pose publication (2026-10-14)
+
+Ordinary mixed-world completion no longer requests complete GPU snapshots for
+scene Areas. Sensor poses are authored static inputs; their collider reuses the
+existing pose cache across numerical epochs. Initial scene attachment and explicit
+pose writes populate it. Selected device reads and restored snapshots replace its
+values. Body caches retain the existing epoch policy, and explicit portable capture
+still reads complete sensor state when needed. No new host solver or pose array is
+introduced; resident geometry remains authoritative for actual sensing and queries.
+
+PhysicsGPUDemandPublicationTests exercises 64 scene sensors, scene/raw bodies and
+a raw sensor through 128 warm/128 measured edited full frames at strict 0/0 owner/
+all-thread managed bytes. The completed observer readback drops by exactly 4,096
+bytes per step, equal to 64 unused 64-byte sensor records. Public pose reads, moved/
+rotated scene and raw sensing, raw detach/reattach, resident point queries, local
+checkpoint and portable Area restoration retain identities and avoid duplicate
+user effects. Serial/separate numerical profiles retain these same operations.
+The fixture reports full-frame p50/p95/p99, uploads, readback, mean wait and submission
+count. Its CPU-only Vulkan values are transfer/function evidence, not hardware
+speedup, native allocator totals, real-window FPS or final performance acceptance.

@@ -374,3 +374,24 @@ the resident GPU modules, point-range/failure checks and common public physics s
 without physical-GPU load. A separate CPU authority/GPU prediction/late CPU client
 run covers the existing impaired-network scenario. Hardware GPU execution, performance
 and full-goal acceptance remain open; software timing is not hardware evidence.
+
+## Authored sensor pose publication (2026-10-14)
+
+Ordinary mixed-world completion no longer requests complete GPU snapshots for
+scene Areas. Sensor poses are authored static inputs; their collider reuses the
+existing pose cache across numerical epochs. Initial scene attachment and explicit
+pose writes populate it. Selected device reads and restored snapshots replace its
+values. Body caches retain the existing epoch policy, and explicit portable capture
+still reads complete sensor state when needed. No new host solver or pose array is
+introduced; resident geometry remains authoritative for actual sensing and queries.
+
+PhysicsGPUDemandPublicationTests exercises 64 scene sensors, scene/raw bodies and
+a raw sensor through 128 warm/128 measured edited full frames at strict 0/0 owner/
+all-thread managed bytes. The completed observer readback drops by exactly 4,096
+bytes per step, equal to 64 unused 64-byte sensor records. Public pose reads, moved/
+rotated scene and raw sensing, raw detach/reattach, resident point queries, local
+checkpoint and portable Area restoration retain identities and avoid duplicate
+user effects. Serial/separate numerical profiles retain these same operations.
+The fixture reports full-frame p50/p95/p99, uploads, readback, mean wait and submission
+count. Its CPU-only Vulkan values are transfer/function evidence, not hardware
+speedup, native allocator totals, real-window FPS or final performance acceptance.

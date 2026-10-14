@@ -229,3 +229,24 @@ EventHandlerTests compares 1,024 mixed delegate add/remove operations with nativ
 See [typed handler storage](../classes/EventHandlers.Generic.md) and [ADR 0010](../decisions/core-object-runtime.md#adr-0010).
 
 Public-only registered resource checks inject combined collider-detachment and TreeExiting callback failures for StaticBody, AnimatableBody, CharacterBody, RigidBody, PhysicalBone and Area. They assert both errors remain observable, disposal completes, scene membership clears and subscriber payloads become collectible. This covers the guaranteed base cleanup path, separately from numerical acceptance.
+
+## Authored sensor pose publication (2026-10-14)
+
+Ordinary mixed-world completion no longer requests complete GPU snapshots for
+scene Areas. Sensor poses are authored static inputs; their collider reuses the
+existing pose cache across numerical epochs. Initial scene attachment and explicit
+pose writes populate it. Selected device reads and restored snapshots replace its
+values. Body caches retain the existing epoch policy, and explicit portable capture
+still reads complete sensor state when needed. No new host solver or pose array is
+introduced; resident geometry remains authoritative for actual sensing and queries.
+
+PhysicsGPUDemandPublicationTests exercises 64 scene sensors, scene/raw bodies and
+a raw sensor through 128 warm/128 measured edited full frames at strict 0/0 owner/
+all-thread managed bytes. The completed observer readback drops by exactly 4,096
+bytes per step, equal to 64 unused 64-byte sensor records. Public pose reads, moved/
+rotated scene and raw sensing, raw detach/reattach, resident point queries, local
+checkpoint and portable Area restoration retain identities and avoid duplicate
+user effects. Serial/separate numerical profiles retain these same operations.
+The fixture reports full-frame p50/p95/p99, uploads, readback, mean wait and submission
+count. Its CPU-only Vulkan values are transfer/function evidence, not hardware
+speedup, native allocator totals, real-window FPS or final performance acceptance.
