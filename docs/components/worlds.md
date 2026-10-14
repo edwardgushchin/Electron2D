@@ -1,6 +1,6 @@
 # Canvas and physics worlds
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 A World combines one stable logical rendering canvas with one lazily created registered physics space. Viewport.World selects that runtime; CanvasItem.GetWorld resolves the nearest viewport's selection, or a SceneTree fallback in a viewport-free scene. FindWorld returns the live local world. Each ordinary viewport starts independently. Assigning another viewport's World shares scene canvas content and physics queries/simulation; null assignment creates a fresh independent default, matching the pinned viewport setter. CanvasLayer canvases keep their explicit viewport scope.
 
@@ -57,3 +57,29 @@ WorldTests retains default CPU world lifetime and mixed default/explicit transfe
 ## Project-selected defaults
 
 Implicit viewport creation/reset and viewport-free SceneTree fallback capture the feature-aware project engine/fallback settings before lazy startup. Later edits do not reconfigure that runtime; aliases share it. Caller parameterless World/SpaceCreate stay CPU, and explicit supplied worlds keep their choice. Unknown names reject before replacement. [The selection contract](physics-backends.md#project-physics-selection) records DEFAULT priority, startup failure boundaries, checks and remaining acceptance.
+
+## World resource-copy preflight (2026-10-14)
+
+Replacing a runtime through CopyFromResource checks the bound target, last-owner
+release policy and source runtime lifetime before Resource reset, name/locality,
+file ownership or Changed batching. An early refusal preserves target metadata,
+canvas, physics space and navigation map. Same-runtime aliases still copy base
+state even while bound; self-copy and standalone World.ResetState keep their
+existing harmless behavior. Allowed unbound replacement retains the source
+runtime before publishing it to the target and retiring the old final-owner
+space/map. If old-backend cleanup fails, the original error escapes while the
+new shared runtime stays committed and its retained ownership remains balanced.
+A later Changed failure likewise keeps accepted values under Resource's policy.
+
+The public-only --world-copies fixture runs CPU/GPU/registered serial/separate
+profiles. It checks bound and expired-source rejection, off-owner last release,
+real scene callback rejection, registered status-hook borrowing, aliases and
+accepted replacement/notification failure and registered retirement failure.
+Explicit disposal of both new-runtime wrappers verifies balanced retention.
+Physics spaces and navigation maps are checked through public identities and
+stale-RID queries. After 128 warmups,
+128 complete scene frames with current point queries require zero owner/all-thread
+managed bytes. The prescribed 60-unit/s body advances one unit per 1/60-s frame,
+within .02 units; metadata, identity, event counts and query membership are exact.
+Structural copies are outside that bracket. Native/platform/network, hardware
+performance and full numerical-extension acceptance remain separate.

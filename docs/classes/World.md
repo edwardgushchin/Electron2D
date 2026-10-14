@@ -1,6 +1,6 @@
 # World
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 - Declaration: `public sealed class World : Resource`
 - Source: [World.cs](../../src/Scene/Resources/World.cs)
@@ -59,3 +59,29 @@ WorldTests retains default CPU world lifetime and mixed default/explicit transfe
 See [the selection checks](../components/physics-backends.md#project-physics-selection).
 
 New world/space creation captures ProjectSettings.Physics2DRunOnSeparateThread with feature overrides, retaining it across aliases and later project edits. True runs complete selected Solve on a retained numerical lane and joins before owner publication/callbacks; unsupported hosts reject startup. [Thread conformance](../components/physics-thread.md) records CPU/provider checks and the open GPU/native gate.
+
+## World resource-copy preflight (2026-10-14)
+
+Replacing a runtime through CopyFromResource checks the bound target, last-owner
+release policy and source runtime lifetime before Resource reset, name/locality,
+file ownership or Changed batching. An early refusal preserves target metadata,
+canvas, physics space and navigation map. Same-runtime aliases still copy base
+state even while bound; self-copy and standalone World.ResetState keep their
+existing harmless behavior. Allowed unbound replacement retains the source
+runtime before publishing it to the target and retiring the old final-owner
+space/map. If old-backend cleanup fails, the original error escapes while the
+new shared runtime stays committed and its retained ownership remains balanced.
+A later Changed failure likewise keeps accepted values under Resource's policy.
+
+The public-only --world-copies fixture runs CPU/GPU/registered serial/separate
+profiles. It checks bound and expired-source rejection, off-owner last release,
+real scene callback rejection, registered status-hook borrowing, aliases and
+accepted replacement/notification failure and registered retirement failure.
+Explicit disposal of both new-runtime wrappers verifies balanced retention.
+Physics spaces and navigation maps are checked through public identities and
+stale-RID queries. After 128 warmups,
+128 complete scene frames with current point queries require zero owner/all-thread
+managed bytes. The prescribed 60-unit/s body advances one unit per 1/60-s frame,
+within .02 units; metadata, identity, event counts and query membership are exact.
+Structural copies are outside that bracket. Native/platform/network, hardware
+performance and full numerical-extension acceptance remain separate.

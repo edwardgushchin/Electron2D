@@ -133,7 +133,7 @@ context before publication and preserve solved contacts, recovery and later
 callback delivery on failure. CPU/GPU/no-device fixtures retain zero warmed managed
 allocation. Public registered implementations and their full operation bridge stay open.
 
-[Public joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance) now runs
+[Public joint conformance](../components/physics-joint-policies.md#public-cpugpu-conformance) now runs
 pin/groove/spring, server identity/lifecycle and solver policies through explicitly
 selected CPU and independent GPU worlds. GPU motion queries now honor joint vetoes;
 finite spring caps and complete decay handle extreme coefficients before range
@@ -1030,3 +1030,5 @@ GPU callback preparation reads compact initial activity rather than full raw-bod
 Standalone Shape.ResetState uses the same preflight before OnResetState. The public-only regression rejects reset during numerical/access/geometry hooks, checks no custom-reset side effects, and preserves allowed quiescent reset without Changed. Copying invokes reset exactly once after its own accepted preflight.
 
 [Copied material revision](../components/physics-registered-adapter.md#copied-material-revision-2026-10-14) now lets existing body polling recover all copied PhysicsMaterial coefficients after an earlier Changed observer fails. The public-only contact consumer covers shared borrower identity, body-local override retirement, archive Replace and analytic real contact/impulse on CPU/GPU/registered serial/separate profiles; copied/file work is outside the strict zero-allocation warm contact bracket. Broader acceptance stays open.
+
+[World copy preflight](../components/worlds.md#world-resource-copy-preflight-2026-10-14) now refuses bound/expired/release-restricted runtime replacement before Resource metadata, reset, ownership and Changed effects. Public-only CPU/GPU/registered serial/separate checks retain aliases, accepted errors, actual simulation/query identity and zero warmed allocations; broader inherited/numerical/native/performance gates remain open.

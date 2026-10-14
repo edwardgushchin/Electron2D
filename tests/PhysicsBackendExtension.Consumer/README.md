@@ -155,3 +155,5 @@ The `--shape-geometry` profile accepts `--cpu`, `--gpu` and `--threaded` (omitti
 Standalone Shape.ResetState uses the same preflight before OnResetState. The public-only regression rejects reset during numerical/access/geometry hooks, checks no custom-reset side effects, and preserves allowed quiescent reset without Changed. Copying invokes reset exactly once after its own accepted preflight.
 
 `--contact-response` accepts `--cpu`, `--gpu` and `--threaded`, with the registered provider selected when no built-in is named. Besides existing material/surface/impulse checks it verifies copied and archive-reloaded material publication after an earlier Changed observer failure, shared borrowers, override retirement and 128 zero-allocation full contact frames. Cold copying and file I/O are outside that bracket.
+
+`--world-copies` accepts `--cpu`, `--gpu` and `--threaded`, with a registered provider by default. It verifies world resource-copy preflight, lifetime/release restrictions, alias and replacement behavior, accepted notification failures and zero-allocation warm simulation/point queries.

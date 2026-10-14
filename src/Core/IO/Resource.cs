@@ -287,7 +287,7 @@ public class Resource : ElectronObject
         if (GetType() != source.GetType())
             throw new ArgumentException("Resources must have the same runtime type.", nameof(source));
 
-        ValidateStateMutation();
+        ValidateStateCopy(source);
         var retention = source._fileOwnership is { } owner && !owner.Contains(this) ? owner.RetainOwner() : null;
         try
         {
@@ -314,6 +314,7 @@ public class Resource : ElectronObject
     }
 
     internal virtual void ValidateStateMutation() { }
+    internal virtual void ValidateStateCopy(Resource source) => ValidateStateMutation();
 
     /// <summary>Creates a shallow or internally deep duplicate of this resource.</summary>
     /// <param name="deep">

@@ -1508,3 +1508,19 @@ Replace/cache identity and analytic real bounce plus full impulse. It also check
 thread policies execute on CPU/GPU/registered owners. This closes missed copy
 publication rather than certifying arbitrary registered geometry or final native,
 platform, network or hardware performance acceptance.
+
+## World resource-copy preflight (2026-10-14)
+
+The public-only --world-copies consumer checks early refusal of bound world
+replacement, expired source retention, last-owner off-thread release and real
+scene callback attempts without metadata/events/runtime mutation. Registered
+status hooks additionally exercise exact borrowed release rejection. Copies
+between bound aliases, ordinary reset, permitted unbound sharing and accepted
+Changed failures retain their existing policies. Stale old space/map queries
+prove final-owner retirement. A throwing provider Finish preserves the accepted
+new runtime; disposal of both sharing wrappers proves balanced retention and
+released source space/map. CPU/GPU/registered serial/separate profiles use
+128 warm/128 measured real scene frames and resident point queries at strict
+zero owner/all-thread allocation. Copies are structural work outside that bracket;
+full inherited/provider geometry/native/platform/network/performance acceptance
+remains open.

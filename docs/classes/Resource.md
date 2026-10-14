@@ -509,3 +509,5 @@ AudioBusLayout and AudioServer use the existing private file graph retention to 
 The protected `RemapResourceReferences(Func<Resource, Resource> remap)` hook maps freshly prepared references to final cached/new identities before owner publication under ADR 0013. Resource defaults to stored resource descriptors; PackedScene includes its node model; Shader includes default texture bindings. Opaque application storage overrides this hook and calls base for descriptor state. Primitive descriptors are not rewritten by the default remapper. This is a typed graph-publication extension, not a dynamic property API.
 
 Shape targets use the same authoring preflight for standalone ResetState. CopyFromResource invokes the reset hook once under its already accepted preflight; denied calls enter neither reset hooks nor change batching. Base Resources retain their ordinary reset/copy policy.
+
+World targets also apply a copy-specific preflight to the incoming runtime before reset, base-state, source ownership or Changed effects. This preserves the existing standalone reset policy and permits copies between aliases of one bound runtime.

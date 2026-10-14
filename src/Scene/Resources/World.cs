@@ -5,6 +5,8 @@ namespace Electron2D;
 /// resources and scene ownership retain it. Resource duplicates borrow the same runtime identities and never copy solver state.
 /// Navigation map ownership shares the same runtime lifetime; topology synchronization remains a separate boundary.
 /// Last-resource disposal still releases a failed physics world, subject to its owner-thread and callback restrictions.
+/// Resource copies validate replacement identity, source lifetime and last-owner release before base state or notifications change.
+/// Once transferred, the new runtime remains shared if cleanup of the previous runtime reports an error.
 /// Each constructor captures <see cref="ProjectSettings.Physics2DRunOnSeparateThread"/> with feature overrides.
 /// A selected numerical thread joins before owner publication; later project edits affect new runtimes only.</remarks>
 public sealed class World : Resource
@@ -71,13 +73,23 @@ public sealed class World : Resource
     public RID NavigationMap { get { ThrowIfDisposed(); return _runtime.NavigationMap; } }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new World(_runtime);
+    internal override void ValidateStateCopy(Resource source)
+    {
+        base.ValidateStateCopy(source);
+        var world = (World)source;
+        if (ReferenceEquals(_runtime, world._runtime)) return;
+        if (_runtime.SceneOwner is not null) throw new InvalidOperationException("Bound world identity cannot be replaced through resource copying; assign Viewport.World instead.");
+        _runtime.ValidateRelease(); world._runtime.EnsureAlive();
+    }
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
         var world = (World)target; if (ReferenceEquals(world._runtime, _runtime)) return;
-        if (world._runtime.SceneOwner is not null) throw new InvalidOperationException("Bound world identity cannot be replaced through resource copying; assign Viewport.World instead.");
-        world._runtime.ValidateRelease(); _runtime.Retain(); world._runtime.Release(); world._runtime = _runtime;
+        world.ValidateStateCopy(this);
+        var previous = world._runtime;
+        _runtime.Retain(); world._runtime = _runtime;
+        previous.Release();
     }
     /// <inheritdoc />
     protected override void ValidateDisposal() { base.ValidateDisposal(); _runtime.ValidateRelease(); }
