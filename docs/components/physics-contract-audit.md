@@ -4,6 +4,13 @@
 
 Last updated: 2026-10-14
 
+[Completed numerical statistics](physics-registered-adapter.md#completed-numerical-statistics)
+now verify real constraint groups, kinematic activity, sensor candidates, sleep,
+pause and diagnostic replay on CPU/software-GPU/registered serial/separate modes.
+The bridge rejects excessive island counts; full frames plus cached process/Performance
+reads remain allocation-free immediately after collection. Broader numerical,
+hardware, inherited and performance gates remain open.
+
 [Scoped native allocator profiling](physics-scene-performance.md#scoped-native-allocation-profiling-2026-10-14)
 now records all-process-thread libc request traffic in full PhysicsFrame windows,
 with calibrated attachment and separate uninstrumented timing. Eight bounded
@@ -178,7 +185,7 @@ operations remain open in the ledger.
 ## Current requirement audit
 
 The complete generated ledger remains the per-declaration list. Current own
-physics families contain 686 Implemented, 151 Partial and 55 Excluded rows,
+physics families contain 687 Implemented, 150 Partial and 55 Excluded rows,
 with no own Blocked or Unimplemented rows. Shared inherited declarations still
 contain 137 Partial, 17 Blocked and 66 Unimplemented rows after the current typed
 property, class-identity, glyph-region and indexed-property projections; cross-domain consumers

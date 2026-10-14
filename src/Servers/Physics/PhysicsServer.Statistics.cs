@@ -25,7 +25,8 @@ public sealed partial class PhysicsServer
 
     private int GetProcessInfoCore(ProcessInfo processInfo)
     {
-        if (!Enum.IsDefined(processInfo)) throw new ArgumentOutOfRangeException(nameof(processInfo));
+        if (processInfo is < ProcessInfo.ActiveObjects or > ProcessInfo.IslandCount)
+            throw new ArgumentOutOfRangeException(nameof(processInfo));
         lock (_registryGate)
         {
             var count = 0;

@@ -1088,3 +1088,10 @@ acceptance remains open.
 
 
 [Borrowed motion output](../components/physics-registered-adapter.md#borrowed-motion-output-2026-10-14) preserves selected scratch lifetime and owner scope while retaining caller-owned snapshots, error continuation and retirement failures. The inherited disposal preflight is a reviewed C# adaptation; full numerical/foreign/hardware acceptance stays open.
+
+[Completed numerical statistics](../components/physics-registered-adapter.md#completed-numerical-statistics)
+now exercise actual mixed scene/raw constraints, sensors, kinematic activity and
+sleep/replay on CPU/software-GPU/registered serial/separate profiles. Selector
+validation no longer rebuilds enum metadata after collection; complete moving
+frames plus all process/Performance reads retain strict 0/0 managed bytes.
+Registered output with Islands greater than Active fails before publication.

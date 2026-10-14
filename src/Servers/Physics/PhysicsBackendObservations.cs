@@ -25,7 +25,8 @@ public readonly record struct PhysicsBackendShapeContact(RID RID, int ShapeIndex
 public readonly record struct PhysicsBackendOverlap(RID Other, int RemoteShape, int LocalShape);
 
 /// <summary>Returns completed active-body, collision-pair and island counts.</summary>
-/// <param name="Active">Active in the owning operation's engine-unit contract.</param>
-/// <param name="Pairs">Pairs in the owning operation's engine-unit contract.</param>
-/// <param name="Islands">Islands in the owning operation's engine-unit contract.</param>
+/// <param name="Active">Nonnegative awake nonstatic body count, including kinematic bodies and excluding Areas.</param>
+/// <param name="Pairs">Nonnegative backend collision candidate count, including sensor pairs rather than contact points or events.</param>
+/// <param name="Islands">Nonnegative active dynamic constraint-group count containing contacts or joints, at most <paramref name="Active"/>.
+/// Static supports and Areas do not join otherwise independent dynamic groups; isolated unconstrained bodies do not create islands.</param>
 public readonly record struct PhysicsBackendStatistics(int Active, int Pairs, int Islands);

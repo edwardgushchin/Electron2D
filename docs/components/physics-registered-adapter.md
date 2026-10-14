@@ -658,7 +658,7 @@ reentry and SceneTree release guards are exercised through their own roles; expl
 spaces use SpaceStep and FreeRID.
 
 ReadStatistics supplies the complete typed Active/Pairs/Islands value; each field
-must be nonnegative. Common publication keeps the last completed sample and
+must be nonnegative, and Islands cannot exceed Active. Common publication keeps the last completed sample and
 GetProcessInfo aggregates active spaces without reentering the implementation,
 including on another thread. Failed numerical intervals retain the previous sample.
 Solve, synchronization or statistics failure makes that selected world terminal;
@@ -676,7 +676,7 @@ Eight previously unmapped lifecycle/statistics extension rows now map to eleven
 existing typed declarations under ADR 0103. BeginStep plus Solve project the step
 operation, EndSync accepts the prior failure, and the three-value statistics record
 projects the selector output. The global static facade remains separate from the
-owned implementation. These rows are Partial, with concrete executed paths;
+owned implementation. The lifecycle rows remain Partial; the exercised completed-statistics selector is Implemented, with concrete executed paths;
 complete numerical-extension, native/foreign and final performance acceptance
 remain open. No additional lifecycle API or numerical algorithm is introduced.
 
@@ -1554,3 +1554,62 @@ is 256 units within .02; circle first impact is 14 units within .2, covering eig
 refinements over a 40-unit sweep (40/256 = .15625) plus float rounding. Completed
 travel/remainder sum is within .001. GPU uses CPU-only Vulkan; hardware, native,
 foreign, full extension/numerical and performance acceptance remain open.
+
+## Completed numerical statistics
+
+The public-only --statistics consumer uses the same complete scene on explicit
+CPU/GPU worlds and an independent registered solver, in serial and separate numerical
+modes. Counts describe actual completed work: awake nonstatic bodies (including
+kinematic bodies), collision candidates (including sensors), and active dynamic
+constraint groups containing contacts or joints. Static supports do not merge
+independent dynamic groups; unconstrained bodies do not create islands.
+
+The former registered fixture returned Active for Islands, omitted kinematic
+activity and sensor pairs, and its lifecycle checks accepted those incorrect counts.
+It now traverses its existing retained dynamic connection groups and separately
+counts actual sensor shape pairs. Its circle/annulus numerical model remains bounded;
+this change does not add rectangle or arbitrary geometry support. The shared count
+scenario uses two-circle compound static support with real gravitational contacts,
+an overlapping Area, a scene rigid body, a raw dynamic body, one awake kinematic
+body and a pin. Kinematic CanSleep is explicitly false, avoiding the CPU's legitimate
+quiet-body sleep during the settling interval.
+
+Exact active/island expectations are 2/0 for isolated dynamics, 3/0 after kinematic
+attachment, 3/2 for independent supported bodies and sensor overlap, 3/1 for the pin,
+1/0 while dynamics sleep, and 3/1 after joint wake. Inactive spaces contribute 0/0;
+reactivation retains the previous successful sample. A private checkpoint restores
+that publication after a discarded sleeping future. All three Performance projections
+match the cached process values, including a foreign-thread read. Candidate totals
+need actual physical contacts and an increase after sensor attachment; backend
+candidate construction/order is deliberately not compared as an equality gate.
+
+The bridge now rejects negative fields and Islands greater than Active before
+publication. The lifecycle fixture checks zero and nonzero Active overflow cases,
+terminal statistics failure, previous-sample preservation and error cleanup. An
+isolated baseline runtime failed this new refusal assertion: the bad sample was
+accepted. The API's existing failed-world/no-replay policy is retained.
+
+The first complete-frame/read trial reported 248/248 managed bytes after collection.
+ProcessInfo's Enum.IsDefined rebuilt runtime enum metadata; bounded selector checks
+now preserve all three accepted values and undefined-selector rejection without
+that cache allocation. Both process and Performance reads, actual impulses and
+full PhysicsFrame remain inside the measured interval: 128 warm and 128 measured
+frames at strict 0/0 owner/all-thread bytes, with no allowance or discarded first read.
+
+The final frozen six-process cohort is based on main 9b1da4e0, under
+bin/physics-statistics/2026-10-14/final. CPU/provider processes have no display and
+unavailable GPU/ICD; GPU uses explicitly selected CPU lavapipe with four driver
+workers. Hardware NVIDIA is excluded. Native GPU, arbitrary provider geometry,
+complete inherited/extension, network, native-memory and final performance acceptance
+remain open. These are count/physical-workflow checks, not target GPU timing or FPS.
+
+The cohort's 4,171 sorted source inputs fingerprint is
+`5ef92e0671a46080b8cf8047589fd311a2e9afce7963cbfd2e9891c2f07f4586`;
+loaded runtime/test-consumer DLLs are respectively
+`3e1729fa105e1e147bd7cc6914e5d1bbb5b64a2b33ac73d3efc7a609f38035da` and
+`3c4598fdbff2379cd11368082184ea1928bbc25714a596f2cd447b0b79ff56fd`.
+All 61 isolated runtime files remain unchanged. Subsequent consumer README and
+coverage metadata edits are documented separately; no compiled input changed.
+Process proofs observe exactly zero/one retained numerical thread for serial/separate,
+lavapipe only for GPU and no NVIDIA driver. The lifecycle regression and complete
+default registered consumer also return zero on that same frozen runtime.

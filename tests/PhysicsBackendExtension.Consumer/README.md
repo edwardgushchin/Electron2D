@@ -192,3 +192,13 @@ after clearing constraints. Missing-floor and missing-elastic controls reject;
 Finite-step damping bounds follow the accepted spring law, preserving nonzero
 damping on both backends. Hardware/native/foreign and larger workload gates remain
 separate.
+
+`--statistics`, optionally `--cpu` or `--gpu` and `--threaded`, verifies completed
+active-body/candidate/island publication through real compound support, sensors,
+kinematic bodies, pin groups, sleep, pause, replay and Performance projections.
+The registered implementation uses its retained dynamic graph rather than reporting
+one island per active body. Each profile measures 128 complete moving frames plus
+reads after 128 warm frames and collection at zero owner/all-thread managed bytes.
+`--lifecycle` additionally rejects negative samples and Islands greater than Active,
+retaining the previous successful publication and terminal error cleanup.
+The registered geometry remains bounded to its implemented circle/annulus model.

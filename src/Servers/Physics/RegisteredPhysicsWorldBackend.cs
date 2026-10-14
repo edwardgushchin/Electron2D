@@ -154,7 +154,8 @@ internal sealed partial class RegisteredPhysicsWorldBackend : PhysicsWorldBacken
         try
         {
             var values = _implementation.ReadStatistics();
-            if (values.Active < 0 || values.Pairs < 0 || values.Islands < 0) throw new InvalidOperationException("A physics implementation returned invalid statistics.");
+            if (values.Active < 0 || values.Pairs < 0 || values.Islands < 0 || values.Islands > values.Active)
+                throw new InvalidOperationException("A physics implementation returned invalid statistics.");
             return new(values.Active, values.Pairs, values.Islands);
         }
         finally { Exit(); }

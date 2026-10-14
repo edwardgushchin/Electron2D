@@ -88,8 +88,36 @@ public static partial class BackendChecks
         {
             LifecycleHook?.Invoke(LifecyclePhase.Statistics);
             if (StatisticsOverride is { } value) return value;
-            var active = 0; foreach (var b in Bodies.Values) if (b.Awake && b.Dynamic) active++;
-            return new(active, Pairs, active);
+            var active = 0; var islands = 0; var sensorPairs = 0;
+            foreach (var b in Bodies.Values)
+            {
+                b.SleepVisited = false;
+                if (!b.IsArea && b.Awake && b.Mode != PhysicsServer.BodyMode.Static) active++;
+            }
+            foreach (var seed in Bodies.Values)
+            {
+                if (!seed.Dynamic || seed.SleepVisited) continue;
+                Group(seed, _sleepGroup);
+                var awake = false; var constrained = false;
+                foreach (var b in _sleepGroup)
+                {
+                    awake |= b.Awake;
+                    foreach (var peer in Bodies.Values)
+                        if (peer != b && !peer.IsArea && Connected(b, peer)) constrained = true;
+                }
+                if (awake && constrained) islands++;
+            }
+            _sleepGroup.Clear();
+            foreach (var area in Bodies.Values)
+                if (area.IsArea)
+                    foreach (var peer in Bodies.Values)
+                    {
+                        if (peer == area || peer.IsArea && area.RID.GetID() > peer.RID.GetID() ||
+                            (area.Mask & peer.Layer) == 0 && (!peer.IsArea || (peer.Mask & area.Layer) == 0)) continue;
+                        for (var i = 0; i < area.Shapes; i++) for (var j = 0; j < peer.Shapes; j++)
+                                if (PartOverlap(area, area.Parts[i], peer, peer.Parts[j])) sensorPairs++;
+                    }
+            return new(active, checked(Pairs + sensorPairs), islands);
         }
         protected override PhysicsBackendCollider CreateCollider(RID collider, bool area)
         { var b = new Body(this, collider, area); Bodies.Add(collider, b); return b; }

@@ -115,7 +115,7 @@ if (IsBodyExcludedFromMotionTest(candidateRID) ||
 | `protected internal abstract void SetConstraintDefaultBias(float value)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract void PrepareSolverCapacity(int bodies, int shapes, int joints)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract void PrepareMonitoringCapacity(int bodies, int shapes)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
-| `protected internal abstract PhysicsBackendStatistics ReadStatistics()` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
+| `protected internal abstract PhysicsBackendStatistics ReadStatistics()` | Returns completed nonnegative active-body/candidate/island counts. Islands cannot exceed Active. Invalid samples fail the interval before common publication; cached readers retain the prior completed sample. |
 | `protected internal abstract PhysicsBackendCollider CreateCollider(RID collider, bool area)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract PhysicsBackendJoint CreateJoint(RID joint)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal virtual PhysicsDirectSpaceState CreateDirectSpaceState(RID space)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |

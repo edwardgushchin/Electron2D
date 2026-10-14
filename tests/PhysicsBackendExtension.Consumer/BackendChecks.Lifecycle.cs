@@ -9,7 +9,8 @@ public static partial class BackendChecks
         LifecycleScope(false); LifecycleScope(true);
         foreach (var phase in new[] { LifecyclePhase.Solve, LifecyclePhase.Sync, LifecyclePhase.Statistics, LifecyclePhase.Flush, LifecyclePhase.End })
             LifecycleFailure(phase);
-        foreach (var statistics in new[] { new PhysicsBackendStatistics(-1, 0, 0), new PhysicsBackendStatistics(0, -1, 0), new PhysicsBackendStatistics(0, 0, -1) })
+        foreach (var statistics in new[] { new PhysicsBackendStatistics(-1, 0, 0), new PhysicsBackendStatistics(0, -1, 0),
+            new PhysicsBackendStatistics(0, 0, -1), new PhysicsBackendStatistics(0, 0, 1), new PhysicsBackendStatistics(1, 0, 2) })
             LifecycleFailure(LifecyclePhase.Statistics, statistics);
         Solver? rejected = null;
         PhysicsServerManager.RegisterServer("LifecycleInitializationFailure", () => rejected = new Solver { FailInit = true, FailFinish = true, FailDisposal = true });
@@ -58,7 +59,7 @@ public static partial class BackendChecks
             var position = PhysicsServer.BodyGetTransform(body).Origin; phases.Clear(); Tick(0);
             Check(phases.Count == 0 && PhysicsServer.SpaceGetTick(space) == 0, "Zero time does not dispatch interval hooks");
             Cycle(); Check(MathF.Abs(PhysicsServer.BodyGetTransform(body).Origin.X - position.X - 1f / 120) < .0001f, "Selected solving publishes real scene-unit motion");
-            Counts(1, 0, 1);
+            Counts(1, 0, 0);
             phases.Clear(); PhysicsServer.SpaceSetActive(space, true); Check(phases.Count == 0, "Equal activation invokes no hook");
             solver!.LifecycleHook = phase => { phases.Add(phase); if (phase == LifecyclePhase.Active) throw new ApplicationException("Activation failure"); };
             Reject<ApplicationException>(() => PhysicsServer.SpaceSetActive(space, false));
@@ -66,11 +67,11 @@ public static partial class BackendChecks
             solver.LifecycleHook = phases.Add;
             PhysicsServer.SpaceSetActive(space, false); Counts(0, 0, 0); phases.Clear(); Tick(1d / 120);
             Check(phases.Count == 0 && solver!.Steps == 1, "Inactive ownership does not dispatch or erase its completed interval");
-            PhysicsServer.SpaceSetActive(space, true); Counts(1, 0, 1);
+            PhysicsServer.SpaceSetActive(space, true); Counts(1, 0, 0);
             PhysicsServer.SetActive(false);
-            try { phases.Clear(); Tick(1d / 120); Check(phases.Count == 0 && solver!.Steps == 1, "Global suspension retains selected activation and performs no solve"); Counts(1, 0, 1); }
+            try { phases.Clear(); Tick(1d / 120); Check(phases.Count == 0 && solver!.Steps == 1, "Global suspension retains selected activation and performs no solve"); Counts(1, 0, 0); }
             finally { PhysicsServer.SetActive(true); }
-            Task.Run(() => Counts(1, 0, 1)).GetAwaiter().GetResult();
+            Task.Run(() => Counts(1, 0, 0)).GetAwaiter().GetResult();
             Task.Run(() => Reject<InvalidOperationException>(() => PhysicsServer.SpaceSetActive(space, false))).GetAwaiter().GetResult();
             solver!.LifecycleHook = phase =>
             {
@@ -111,7 +112,7 @@ public static partial class BackendChecks
             ReadOnlySpan<LifecyclePhase> expected = [LifecyclePhase.Begin, LifecyclePhase.Solve, LifecyclePhase.Sync, LifecyclePhase.Statistics, LifecyclePhase.State, LifecyclePhase.Flush, LifecyclePhase.End];
             Check(phases.Count == expected.Length, "One complete selected interval has exactly the required phases");
             for (var i = 0; i < expected.Length; i++) Check(phases[i] == expected[i], "Numerical sync, completed statistics, body observers, flush and end-sync retain order");
-            Check(solver!.EndFailure is null, "Successful end-sync receives no failure"); Counts(1, 0, 1);
+            Check(solver!.EndFailure is null, "Successful end-sync receives no failure"); Counts(1, 0, 0);
         }
     }
 
@@ -129,7 +130,7 @@ public static partial class BackendChecks
             solver.LifecycleHook = current => { if (current == phase && statistics is null) throw new ApplicationException("Lifecycle failure"); };
             Reject<AggregateException>(() => PhysicsServer.SpaceStep(space, 1d / 120));
             Check(solver.Steps == steps + (phase == LifecyclePhase.Solve ? 0 : 1), "Failure never repeats a started numerical solve");
-            Counts(1, 0, 1);
+            Counts(1, 0, 0);
             solver.LifecycleHook = null; solver.StatisticsOverride = null;
             if (phase is LifecyclePhase.Flush or LifecyclePhase.End)
             {
