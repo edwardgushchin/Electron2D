@@ -63,6 +63,8 @@ An archive contains a resource identity table and scene node tables. Allocate ev
 
 This decision defines the first persistent producer and extensions; current executable behavior and verification are documented with the implementation. File authoring requires save plus fresh-process load/run under ADR 0090. Native rendering, editor controls, inheritance authoring, persistent delegate endpoints and general dynamic values retain their separate dependencies/exclusions.
 
+Theme archives add explicit typed dynamic schema recovery for colors, constants, fonts, font sizes, icons, styles and variation bases. Exact reserved shape fields preserve empty category groups and child order. Names and value roles must match the current Theme API; malformed or unknown fields reject before publication. No arbitrary resource member invocation is introduced.
+
 Built-in resource schema validation runs after every embedded payload is restored and before graph publication. Animation definitions use it for complete table/connection and containment validation, independent of archive table order; failures remain inside decoded-graph cleanup.
 
 ### Threaded loading and owner publication

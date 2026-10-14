@@ -594,3 +594,7 @@ CanvasBackBufferTests checks source publication/storage/observer commitment and 
 ## Themed numeric progress
 
 [ProgressBar](../classes/ProgressBar.md) connects shared Range state with actual background/fill styles, centered localized percentage text and outline, four physical/RTL directions and clipped indeterminate animation. The existing EditedSceneRoot selection scopes static or animated authoring preview. Exact scene factories restore settings in a fresh process. GPU/Compatibility pixel masks and 64 prepared active frames verify current Linux rendering and zero managed owner-thread allocation; authored Theme archive, native semantics and foreign platforms retain their separate dependencies. See [ADR 0080](../decisions/rendering.md#adr-0080).
+
+## Project themes and portable authoring
+
+Theme resource archives and scenes now persist complete typed theme data, resource aliases and structural groups/variations. ThemeDB.GetProjectTheme returns the real resource prepared at startup from typed GUIThemeCustom/GUIThemeCustomFont settings. Branch overrides precede project items; built-in defaults remain behind them. Headless startup and fresh-process authoring checks are separate from GPU/Compatibility rendered verification. Project file failure preserves the prior selection, while successful replacement retires owned project snapshots. See ADR 0083 and the Theme/ThemeDB class pages.

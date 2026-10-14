@@ -91,6 +91,7 @@ public sealed partial class Engine
             if (OperatingSystem.IsBrowser() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS())
                 SDL3.SDL.SetMainReady();
             TranslationServer.LoadProjectLocalization();
+            ThemeDB.LoadProjectTheme();
             AudioServer.LoadDefaultLayout();
             Input.IgnoreJoypadOnUnfocusedApplication = ProjectSettings.GetWithOverride(ProjectSettings.IgnoreJoypadOnUnfocusedApplication);
             window.OpenNative();

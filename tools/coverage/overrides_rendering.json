@@ -4686,6 +4686,21 @@
       "godot": "ProjectSettings::property:rendering/textures/webp_compression/lossless_compression_factor",
       "electron2d": "property:Electron2D.ProjectSettings.WebPLosslessCompressionFactor()",
       "reason": "Live typed WebP codec setting with reference default (method 2, lossless effort 25), validated range, feature override and existing registry persistence; sampled per cold save. See ADR 0039 and docs/components/image-webp.md."
+    },
+    {
+      "godot": "ThemeDB::method:get_project_theme()",
+      "electron2d": "method:Electron2D.ThemeDB.GetProjectTheme()",
+      "reason": "ADR 0083: actual Theme archive/fresh scene loading, six typed categories, empty groups/nulls/aliases/variation order and owned project snapshot/font startup through GUIThemeCustom and GUIThemeCustomFont. Branch/project/built-in/fallback priority, content invalidation, preparation failure and retirement are executable; native GPU/Compatibility project styles are verified locally. Nonunit built-in assets and native semantics/foreign runtime remain separate gates."
+    },
+    {
+      "godot": "ProjectSettings::property:gui/theme/custom",
+      "electron2d": "property:Electron2D.ProjectSettings.GUIThemeCustom()",
+      "reason": "ADR 0083: actual Theme archive/fresh scene loading, six typed categories, empty groups/nulls/aliases/variation order and owned project snapshot/font startup through GUIThemeCustom and GUIThemeCustomFont. Branch/project/built-in/fallback priority, content invalidation, preparation failure and retirement are executable; native GPU/Compatibility project styles are verified locally. Nonunit built-in assets and native semantics/foreign runtime remain separate gates."
+    },
+    {
+      "godot": "ProjectSettings::property:gui/theme/custom_font",
+      "electron2d": "property:Electron2D.ProjectSettings.GUIThemeCustomFont()",
+      "reason": "ADR 0083: actual Theme archive/fresh scene loading, six typed categories, empty groups/nulls/aliases/variation order and owned project snapshot/font startup through GUIThemeCustom and GUIThemeCustomFont. Branch/project/built-in/fallback priority, content invalidation, preparation failure and retirement are executable; native GPU/Compatibility project styles are verified locally. Nonunit built-in assets and native semantics/foreign runtime remain separate gates."
     }
   ],
   "statusGroups": [
@@ -5707,14 +5722,7 @@
         "Window::signal:theme_changed()"
       ],
       "state": "Implemented",
-      "reason": "ADR 0083: six typed theme categories, defaults/variation/type operations and shared Control/Window owner lookup, overrides, batching and theme-change delivery execute with current panel/container consumers. Project-theme loading and absent GUI defaults remain separately accounted. ThemeResourceTests, ThemeLookupTests and PanelContainerTests verify state/priority/notification failures/reentry/typed packing and warmed allocations; ThemePanelRenderingTests verifies seven visual phases and 64 warmed notification/layout/render frames without managed allocation on Linux Wayland GPU/compatibility."
-    },
-    {
-      "godot": [
-        "ThemeDB::method:get_project_theme()"
-      ],
-      "state": "Blocked",
-      "reason": "ADR 0083: trigger Theme resource-file serialization/loading plus typed gui/theme/custom startup configuration, validation and ownership. Add GetProjectTheme only when it returns the actual loaded project Theme, not a null-success stub."
+      "reason": "ADR 0083: six typed theme categories, defaults/variation/type operations and shared Control/Window owner lookup, overrides, batching and theme-change delivery execute with current panel/container consumers. Project-theme files and startup selection execute; absent GUI defaults remain separately accounted. ThemeResourceTests, ThemeLookupTests and PanelContainerTests verify state/priority/notification failures/reentry/typed packing and warmed allocations; ThemePanelRenderingTests verifies seven visual phases and 64 warmed notification/layout/render frames without managed allocation on Linux Wayland GPU/compatibility."
     },
     {
       "godot": [
@@ -6628,6 +6636,15 @@
         "ProjectSettings::property:rendering/textures/webp_compression/lossless_compression_factor"
       ],
       "reason": "Both typed WebP settings execute in the native file/buffer encoding path; exact RGBA tests cover method and effort boundaries. Persistence/feature semantics use the established typed settings registry (ADR 0019). Other target codec execution remains unverified."
+    },
+    {
+      "godot": [
+        "ThemeDB::method:get_project_theme()",
+        "ProjectSettings::property:gui/theme/custom",
+        "ProjectSettings::property:gui/theme/custom_font"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0083: actual Theme archive/fresh scene loading, six typed categories, empty groups/nulls/aliases/variation order and owned project snapshot/font startup through GUIThemeCustom and GUIThemeCustomFont. Branch/project/built-in/fallback priority, content invalidation, preparation failure and retirement are executable; native GPU/Compatibility project styles are verified locally. Nonunit built-in assets and native semantics/foreign runtime remain separate gates."
     }
   ],
   "extras": [

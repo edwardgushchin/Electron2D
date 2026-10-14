@@ -57,6 +57,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(WebPLosslessCompressionFactor, isBasic: false);
         RegisterInternal(ApplicationName, isBasic: true);
         RegisterInternal(ApplicationVersion, isBasic: true);
+        RegisterInternal(GUIThemeCustom, isBasic: true);
+        RegisterInternal(GUIThemeCustomFont, isBasic: true);
         RegisterInternal(AudioDriverEnableInput, isBasic: true);
         RegisterInternal(AudioGeneralDefaultPlaybackType, isBasic: true);
         RegisterInternal(AudioGeneral2DPanningStrength, isBasic: false);
@@ -1174,6 +1176,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, AudioBusesChannelDisableThresholdDB) ||
         ReferenceEquals(setting, AudioBusesChannelDisableTime) ||
         ReferenceEquals(setting, AudioBusesDefaultBusLayout) ||
+        ReferenceEquals(setting, GUIThemeCustom) || ReferenceEquals(setting, GUIThemeCustomFont) ||
         ReferenceEquals(setting, PhysicsTicksPerSecond) ||
         ReferenceEquals(setting, Physics2DRunOnSeparateThread) ||
         ReferenceEquals(setting, Physics2DDefaultGravity) ||

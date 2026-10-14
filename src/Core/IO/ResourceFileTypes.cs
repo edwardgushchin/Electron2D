@@ -76,6 +76,7 @@ public static partial class ResourceFileTypes
         RegisterAnimationGraphFiles();
         RegisterBuiltInNodes();
         RegisterAudioFileResources();
+        RegisterResource("Theme", CreateThemeFileResource);
         RegisterResource("StyleBoxFlat", CreateFlatFileResource);
         RegisterResource("StyleBoxLine", CreateLineFileResource);
         RegisterResource("StyleBoxTexture", CreateTextureStyleFileResource);
@@ -105,6 +106,7 @@ public static partial class ResourceFileTypes
         ResourceFileCodecs.Prepare();
         RegisterResourceArray<Font>();
     }
+    private static Theme CreateThemeFileResource() => new();
     private static AudioStreamWAV CreateAudioStreamWAVResource() => new();
     private static Animation CreateAnimationResource() => new();
     private static AnimationLibrary CreateAnimationLibraryResource() => new();

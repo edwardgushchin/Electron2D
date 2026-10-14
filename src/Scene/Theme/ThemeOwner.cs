@@ -153,6 +153,8 @@ internal sealed class ThemeOwner : IDisposable
     {
         for (var owner = this; owner is not null; owner = From(owner._owner.Parent))
             if (owner._theme is { IsDisposed: false } theme && theme.GetTypeVariationBase(_variation).Length > 0) return theme;
+        var project = ThemeDB.GetProjectTheme();
+        if (project is not null && project.GetTypeVariationBase(_variation).Length > 0) return project;
         var defaults = ThemeDB.GetDefaultTheme();
         return defaults.GetTypeVariationBase(_variation).Length > 0 ? defaults : null;
     }
@@ -182,6 +184,9 @@ internal sealed class ThemeOwner : IDisposable
             if (owner._theme is { IsDisposed: false } theme)
                 foreach (var candidate in _types)
                     if (store.Has(theme, name, candidate)) { value = store.Get(theme, name, candidate); if (_tree is not null && cacheGeneration == _cacheGeneration) store.Cache[(name, type)] = value; return value; }
+        var project = ThemeDB.GetProjectTheme();
+        if (project is not null) foreach (var candidate in _types)
+                if (store.Has(project, name, candidate)) { value = store.Get(project, name, candidate); if (_tree is not null && cacheGeneration == _cacheGeneration) store.Cache[(name, type)] = value; return value; }
         var defaults = ThemeDB.GetDefaultTheme();
         foreach (var candidate in _types)
             if (store.Has(defaults, name, candidate)) { value = store.Get(defaults, name, candidate); if (_tree is not null && cacheGeneration == _cacheGeneration) store.Cache[(name, type)] = value; return value; }
@@ -195,6 +200,8 @@ internal sealed class ThemeOwner : IDisposable
         for (var owner = this; owner is not null; owner = From(owner._owner.Parent))
             if (owner._theme is { IsDisposed: false } theme)
                 foreach (var candidate in _types) if (store.Has(theme, name, candidate)) return true;
+        var project = ThemeDB.GetProjectTheme();
+        if (project is not null) foreach (var candidate in _types) if (store.Has(project, name, candidate)) return true;
         var defaults = ThemeDB.GetDefaultTheme();
         foreach (var candidate in _types) if (store.Has(defaults, name, candidate)) return true;
         return false;
@@ -204,6 +211,7 @@ internal sealed class ThemeOwner : IDisposable
         CheckQuery();
         for (var owner = this; owner is not null; owner = From(owner._owner.Parent))
             if (owner._theme is { IsDisposed: false } theme && theme.HasDefaultBaseScale()) return theme.DefaultBaseScale;
+        var project = ThemeDB.GetProjectTheme(); if (project is not null && project.HasDefaultBaseScale()) return project.DefaultBaseScale;
         var defaults = ThemeDB.GetDefaultTheme(); return defaults.HasDefaultBaseScale() ? defaults.DefaultBaseScale : ThemeDB.FallbackBaseScale;
     }
     internal Font? DefaultFont()
@@ -211,6 +219,7 @@ internal sealed class ThemeOwner : IDisposable
         CheckQuery();
         for (var owner = this; owner is not null; owner = From(owner._owner.Parent))
             if (owner._theme is { IsDisposed: false } theme && theme.HasDefaultFont()) return theme.DefaultFont;
+        var project = ThemeDB.GetProjectTheme(); if (project is not null && project.HasDefaultFont()) return project.DefaultFont;
         var defaults = ThemeDB.GetDefaultTheme(); return defaults.HasDefaultFont() ? defaults.DefaultFont : ThemeDB.FallbackFont;
     }
     internal int DefaultFontSize()
@@ -218,6 +227,7 @@ internal sealed class ThemeOwner : IDisposable
         CheckQuery();
         for (var owner = this; owner is not null; owner = From(owner._owner.Parent))
             if (owner._theme is { IsDisposed: false } theme && theme.HasDefaultFontSize()) return theme.DefaultFontSize;
+        var project = ThemeDB.GetProjectTheme(); if (project is not null && project.HasDefaultFontSize()) return project.DefaultFontSize;
         var defaults = ThemeDB.GetDefaultTheme(); return defaults.HasDefaultFontSize() ? defaults.DefaultFontSize : ThemeDB.FallbackFontSize;
     }
     internal bool HasOverride<T>(Store<T> store, string name) { CheckQuery(); ValidateName(name); return store.Overrides.ContainsKey(name); }

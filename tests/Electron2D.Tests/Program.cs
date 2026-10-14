@@ -13,6 +13,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_CHILD") is {
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_HOST") == "1") { FontRasterPolicyTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER") == "1") { FontRasterPolicyTests.Run(); return; }
 
+if (args.Length == 2 && args[0] == "--project-theme-archive") { ProjectThemeTests.RunArchive(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_THEME") is { } projectThemeProfile) { if (projectThemeProfile == "managed") ProjectThemeTests.RunManaged(); else ProjectThemeTests.RunNative(projectThemeProfile); return; }
 if (args.Length == 2 && args[0] == "--progress-bar-archive") { ProgressBarTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROGRESS_BAR") is { } progressProfile) { if (progressProfile == "managed") ProgressBarTests.RunManaged(); else ProgressBarTests.RunNative(progressProfile); return; }
 if (args.Length == 2 && args[0] == "--image-exr-archive") { ImageEXRTests.RunArchive(args[1]); return; }
@@ -1258,7 +1260,7 @@ PhysicsPointGravityRangeTests.Run(PhysicsServer.Backend.CPU); PhysicsPointGravit
 PhysicsServerAreaFieldTests.Run(); PhysicsServerAreaFieldTests.Run(PhysicsServer.Backend.GPU);
 ScreenVisibilityTests.Run();
 NinePatchTests.Run();
-RangeProgressTests.Run(); ProgressBarTests.RunManaged();
+RangeProgressTests.Run(); ProgressBarTests.RunManaged(); ProjectThemeTests.RunManaged();
 BoxContainerTests.Run();
 GridContainerTests.Run();
 FlowContainerTests.Run();

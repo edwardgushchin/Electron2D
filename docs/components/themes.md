@@ -1,12 +1,12 @@
 # Typed themes and lookup
 
-Last updated: 2026-10-05
+Last updated: 2026-10-14
 
 ## Scope and owned types
 
 This component connects reusable [Theme](../classes/Theme.md) resources and the [ThemeDB](../classes/ThemeDB.md) process service to typed Control/Window lookup, overrides and actual layout/drawing consumers. Internal [ThemeOwner](../classes/ThemeOwner.md) shares cache, subscription and owner traversal behavior without creating a public theme-owner API. [Theme.DataType](../classes/Theme.DataType.md) preserves category identities.
 
-The implemented data categories are Color, Constant, Font, FontSize, Icon and StyleBox. General Theme file loading, remaining GUI default assets and editor skin authoring retain precise separate dependencies under [ADR 0083](../decisions/rendering.md#adr-0083).
+The implemented data categories are Color, Constant, Font, FontSize, Icon and StyleBox. Theme archives and project startup selection execute; remaining GUI default assets and editor skin authoring retain precise separate dependencies under [ADR 0083](../decisions/rendering.md#adr-0083).
 
 ## Runtime flow
 
@@ -14,7 +14,7 @@ Native ancestry and variation-name validation use compiled names and ancestry ch
 
 1. A Theme stores values by category, explicit theme type and item name. Resource queries read this exact type; typed methods preserve null resource entries and category fallback behavior.
 2. Control/Window selects a type dependency order from its active variation and native ancestry. Its own overrides participate only for requests matching its default/current type or variation.
-3. Lookup visits each nearest-to-outer Control/Window owner theme, checking the type order within each resource. A neutral Node ends branch inheritance. The global default theme follows; a universal category fallback supplies the final Get result, while Has still reports actual matching data.
+3. Lookup visits each nearest-to-outer Control/Window owner theme, checking the type order within each resource. A neutral Node ends branch inheritance. The startup-selected project theme follows, then the built-in default theme; a universal category fallback supplies the final Get result, while Has still reports actual matching data.
 4. Typed query caches are invalidated by assignment, variation, ancestry, resource content and fallback changes. Resource callbacks use deferred owner-thread delivery; direct override changes notify immediately unless a bulk operation suppresses publication.
 5. ThemeChanged and notifications 45/32 refresh real consumers: Panel retained drawing, PanelContainer content layout, and box/grid separation constants. They preserve existing scene owner/capture/lifetime rules.
 6. Removal, replacement and disposal release subscriptions and cached resource references according to ownership. Theme resource copying uses the existing Resource graph and exact factory mechanism; nodes borrow external theme/font/style/texture resources.
@@ -36,3 +36,7 @@ ThemeDB supplies actual default entries for panel/container, horizontal/vertical
 FlowContainer/HFlowContainer/VFlowContainer now resolve built-in h_separation/v_separation constants (four each), inherited type/variation values and typed local overrides through the existing owner cache. Theme changes refresh flow minimums and queue sorting. [Flow tests](../../tests/Electron2D.Tests/FlowContainerTests.cs) verify executable defaults and configuration.
 
 SplitContainer/H/V now consume built-in bar/touch skins, directional grabber icons, separation/minimum hit-thickness/autohide and touch-state colors. Their inherited theme overrides and resource-revision polling refresh actual layout/drawing; hidden icons retain prepared renderer residency while attached. Four pinned SVG assets are embedded with the existing CanvasStyleGeometry notice. Native split checks verify real input/geometry on Wayland GPU/compatibility; software layout/touch-image drawing is checked separately.
+
+## Portable themes and project startup
+
+Theme `.e2dres` files and actual themes embedded in `.e2dscene` graphs restore typed dynamic entries, explicit null slots, empty category groups, font/style/icon aliases and variation child order. `ProjectSettings.GUIThemeCustom` and `GUIThemeCustomFont` are optional restart paths. Engine.Start and windowed Engine.Run prepare both before main-loop activation; ThemeDB.GetProjectTheme returns the borrowed selection without file I/O. Failed preparation preserves the prior selection; successful replacement retires the old owned snapshots. Project items/defaults/variations participate after branch themes and before built-in defaults. ProjectThemeTests exercises fresh-process files, startup failure, ownership and native GPU/compatibility pixels.

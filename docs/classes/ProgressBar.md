@@ -47,7 +47,7 @@ The built-in theme supplies all seven items: `background`, `fill`, `font`, `font
 
 Access follows scene owner, lifetime and capture guards. Undefined fill modes reject. Nonfinite ratios/percentages, animation overflow and unsupported integer pixel geometry fail explicitly. Indeterminate drawing can display unknown progress without inspecting the numeric value. Notification errors retain the required internal update/invalidation phase and aggregate callback failures.
 
-Shared Range state remains executable. Exact scene factories store Range configuration before Value and restore all four progress settings. Phase, formatted strings and renderer state are transient. In-memory packed scenes retain their resource graph policy. Fresh `.e2dscene` archives restore the built-in theme; authored Theme file storage/loading remains the existing [ADR 0083](../decisions/rendering.md#adr-0083) dependency and is not claimed here.
+Shared Range state remains executable. Exact scene factories store Range configuration before Value and restore all four progress settings. Phase, formatted strings and renderer state are transient. In-memory packed scenes retain their resource graph policy. Fresh `.e2dscene` archives restore authored Theme graphs and shared resources through [ADR 0083](../decisions/rendering.md#adr-0083). Project Theme startup applies without per-widget assignment.
 
 ## Verification
 

@@ -10,7 +10,7 @@ Last updated: 2026-10-06
 
 Native type ancestry and variation-name validation use [ThemeDB.Types.cs](../../src/Scene/Resources/ThemeDB.Types.cs), compiled names and ancestry chains generated from the exported type inventory. Coverage checks reject catalog drift. The catalog does not retain runtime `Type` objects or the native theme factory; the service has a separate lazy holder. Native names remain available after trimming without loading fonts or claiming target text/rendering acceptance.
 
-The process-wide service for the current built-in theme and universal typed fallbacks. Consumers borrow the singleton and its built-in resources; they do not own their lifetime. It supplies real data for implemented controls while the complete GUI default catalog and project Theme-file loading remain separate dependencies.
+The process-wide service for the current built-in theme and universal typed fallbacks. Consumers borrow the singleton and its built-in resources; they do not own their lifetime. It supplies real data for implemented controls while the complete GUI default catalog remains separate dependencies. Project Theme files and startup selection execute as described below.
 
 ```csharp
 Theme builtIn = ThemeDB.GetDefaultTheme();
@@ -25,6 +25,7 @@ The returned Theme is mutable and shared. Its changes reach scene theme owners t
 | Signature | Contract/default |
 | --- | --- |
 | `public static Theme GetDefaultTheme()` | Borrowed current built-in Theme. |
+| `public static Theme? GetProjectTheme()` | Borrowed real startup-selected project Theme, or null for an empty setting. |
 | `public static float FallbackBaseScale { get; set; }` | Finite signed final fallback, initially 1. |
 | `public static Font? FallbackFont { get; set; }` | Embedded Open Sans SemiBold initially; explicit null allowed. |
 | `public static int FallbackFontSize { get; set; }` | Signed integer final fallback, initially 16. |
@@ -93,7 +94,7 @@ The default slider, button and scroll-hint icons currently use scale one; nonuni
 
 ## Dependencies and verification
 
-GetProjectTheme remains absent until a Theme resource-file loader and typed `gui/theme/custom` startup validation/ownership policy return actual loaded state. Font fallback and font objects execute in the FreeType/HarfBuzz Font resource/loading/shaping slice. Missing GUI default data remains Partial; font theme storage and lookup are executable.
+GetProjectTheme returns the actual startup-selected Theme through typed `gui/theme/custom` validation and retained ownership. Font fallback and font objects execute in the FreeType/HarfBuzz Font resource/loading/shaping slice. Missing GUI default data remains Partial; font theme storage and lookup are executable.
 
 [ThemeResourceTests](../../tests/Electron2D.Tests/ThemeResourceTests.cs) verifies typed values, placeholders, alias subscriptions, variations, merge/copy, guards and concurrency; [ThemeLookupTests](../../tests/Electron2D.Tests/ThemeLookupTests.cs) verifies owner priority, deferred/detached caches, batching, reentry, fallback policy and typed override packing. [PanelContainerTests](../../tests/Electron2D.Tests/PanelContainerTests.cs) verifies defaults, background draw order, content bounds, eligibility, failure continuation and sorting after failed theme callbacks. Resource updates and active lookup pass 64 warmed cycles with zero managed bytes. [ThemePanelRenderingTests](../../tests/Electron2D.Tests/ThemePanelRenderingTests.cs) verifies seven visual phases and 64 warmed notification/layout/recording/render frames with zero managed bytes from ProcessFrameStarted through FramePostDraw on Linux Wayland GPU and compatibility. Native allocator counts, large-GUI performance, nonunit default-icon scaling, other platforms and owner acceptance remain unverified. See [coverage](../coverage/classes/ThemeDB.md), [Theme](Theme.md) and [ADR 0083](../decisions/rendering.md#adr-0083). The built-in font and icons retain their [runtime attribution notice](../../licence/THIRD_PARTY_NOTICES.md).
 
@@ -126,3 +127,9 @@ SpinBox defaults consume all current arrow state icons/colors, button background
 Color authoring adds all 27 current ColorPicker theme keys and ColorPickerButton.bg with authored SVGs, focus styles and real picker/button consumers. See [the connected contract](../components/color-authoring.md).
 
 [CodeEdit](CodeEdit.md) defaults add marker/fold/completion icons, colors and presentation constants/styles; the native type chain includes CodeEdit → TextEdit → Control for inherited fonts and policies.
+
+## Project startup theme
+
+`ProjectSettings.GUIThemeCustom` and `GUIThemeCustomFont` select optional Theme/font resources. Both paths default to empty and are restart settings, resolved through ordinary ResourceLoader/FileAccess paths. Engine.Start and Engine.Run prepare them before main-loop activation. GetProjectTheme performs no I/O and returns the actual last completed selection. Project items, variations and defaults sit between branch themes and the built-in theme.
+
+The retained service owns the loaded snapshots; callers borrow them until the next successful replacement. A missing/malformed/wrong-type input releases prepared objects and preserves the old selection. Publication callback errors propagate after commitment and required cleanup. Clearing a project font restores prior font identities, while preserving manual assignments made since project font installation. Empty initial settings preserve existing programmatic defaults. Project edits defer ordinary theme invalidation to scene owners. This provides runtime file authoring/startup on the existing backends; visual editor and nonunit default asset scaling remain separate.

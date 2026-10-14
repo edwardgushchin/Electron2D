@@ -9,7 +9,7 @@ Shared implementation for the public [Control](Control.md) and [Window](Window.m
 ## Responsibilities and flow
 
 - Retains the borrowed local Theme, variation name, six typed override/cache stores and native class ancestry.
-- Validates lookup keys, selects the eligible local override and variation/type dependency order, searches consecutive Control/Window owner themes, then built-in defaults and category fallback.
+- Validates lookup keys, selects the eligible local override and variation/type dependency order, searches consecutive Control/Window owner themes, then project themes, built-in defaults and category fallback.
 - Rejects active dependency-chain cycles with InvalidOperationException. A neutral Node terminates branch inheritance.
 - Connects Theme/global context changes to generation-specific deferred actions. Detached resource changes set an atomic invalidation flag, and detached queries bypass value caches so ancestor/global edits remain immediately visible; attached work returns to the scene owner thread. Exit/reentry prevents stale actions from touching a new membership.
 - Snapshots live consecutive theme-owner descendants for propagation, continues required callbacks after failures, and bounds nonsettling reentrant propagation to 64 passes.

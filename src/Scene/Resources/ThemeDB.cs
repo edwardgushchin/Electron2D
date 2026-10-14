@@ -4,8 +4,8 @@ namespace Electron2D;
 
 /// <summary>Owns the built-in theme for implemented controls and the universal typed fallback values.</summary>
 /// <remarks>Public static operations delegate to the retained service object; state, identity and ownership remain object-scoped.
-/// The singleton and its built-in resources are borrowed. Project theme-file loading
-/// and skins for unimplemented controls remain separate integrations. Resource changes notify attached theme
+/// Built-in resources and the startup-selected project theme are borrowed.
+/// Skins for unimplemented controls remain separate integrations. Resource changes notify attached theme
 /// owners through their scene queues. Universal fallback assignments are synchronous and suppress equal values.
 /// Initial service construction decodes the built-in slider, button, text-field and scroll-hint icons through the SVG image codec at scale one.
 /// Native type-name queries use compiled names and inheritance chains without initializing the native theme service.</remarks>
@@ -172,7 +172,7 @@ public sealed partial class ThemeDB : ElectronObject
         {
             ContextChanged = null; FallbackChangedCore = null;
             _defaultTheme.Changed -= DefaultChanged; _defaultTheme.Disposed -= DefaultDisposed;
-            _defaultTheme.Dispose(); foreach (var owned in _owned) owned.Dispose(); _owned.Clear();
+            DisposeProjectTheme(); _defaultTheme.Dispose(); foreach (var owned in _owned) owned.Dispose(); _owned.Clear();
         }
         base.Dispose(disposing);
     }

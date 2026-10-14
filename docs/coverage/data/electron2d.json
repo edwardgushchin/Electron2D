@@ -175421,6 +175421,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ThemeDB.GetProjectTheme()",
+    "kind": "method",
+    "declaringType": "Electron2D.ThemeDB",
+    "name": "GetProjectTheme",
+    "signature": "public static Electron2D.Theme GetProjectTheme()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Theme",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileData.AddCollisionPolygon(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.TileData",
@@ -222327,6 +222340,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.GUIThemeCustom()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "GUIThemeCustom",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E GUIThemeCustom { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.GUIThemeCustomFont()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "GUIThemeCustomFont",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E GUIThemeCustomFont { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
     "value": null
   },
   {

@@ -138,7 +138,7 @@ public partial class Theme
             }
         }
         entries.Sort(static (left, right) => StringComparer.Ordinal.Compare(left.Name, right.Name));
-        return base.GetPropertyDescriptors().Concat(ThemeProperties).Concat(entries);
+        return base.GetPropertyDescriptors().Concat(ThemeProperties).Concat(ThemeStructureProperties).Concat(entries).Append(ThemeVariationOrderProperty);
     }
     private T StoredValue<T>(Dictionary<string, Dictionary<string, T>> map, string name, string themeType)
     {

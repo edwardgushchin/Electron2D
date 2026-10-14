@@ -177,6 +177,7 @@ public sealed partial class Engine : ElectronObject
         try
         {
             TranslationServer.LoadProjectLocalization();
+            ThemeDB.LoadProjectTheme();
             AudioServer.LoadDefaultLayout();
             mainLoop.StartForEngine();
             ResetRunState();

@@ -157,6 +157,13 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<string> ApplicationVersion { get; } =
         new("application/config/version", string.Empty);
 
+    /// <summary>Selects the optional project Theme archive loaded before engine activation.</summary>
+    /// <value>gui/theme/custom; empty initially. Resource and operating-system paths are accepted.</value>
+    public static ProjectSetting<string> GUIThemeCustom { get; } = new("gui/theme/custom", "");
+    /// <summary>Selects an optional project font used by the built-in theme and universal font fallback.</summary>
+    /// <value>gui/theme/custom_font; empty initially. Loading occurs at engine startup.</value>
+    public static ProjectSetting<string> GUIThemeCustomFont { get; } = new("gui/theme/custom_font", "");
+
     /// <summary>Allows recording-device activation by AudioServer and microphone playbacks.</summary>
     /// <value>The typed audio/driver/enable_input setting, false initially; checked before each new capture request.</value>
     public static ProjectSetting<bool> AudioDriverEnableInput { get; } = new("audio/driver/enable_input", false);

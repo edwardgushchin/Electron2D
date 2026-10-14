@@ -24,6 +24,10 @@ Public static declarations are in [`ProjectSettings.API.cs`](../../src/Core/Conf
 `ProjectSettings.MSAA2D` is a typed `ProjectSetting<Viewport.MSAA>` for `rendering/anti_aliasing/quality/msaa_2d`. Disabled is the default; Max and undefined values reject. Engine startup reads active feature overrides for an unconfigured root window. Explicit window and offscreen viewport selections remain independent. Enabled values require GPU RGBA8 support for the requested sample count; compatibility fails explicitly. See [canvas MSAA](../components/canvas-rendering.md#canvas-multisample-antialiasing).
 
 
+## Project theme startup
+
+`GUIThemeCustom` and `GUIThemeCustomFont` are permanent typed `ProjectSetting<string>` definitions for `gui/theme/custom` and `gui/theme/custom_font`, both empty by default, basic and restart-required. Feature overrides and ordinary project path resolution apply. Engine.Start and windowed Engine.Run load the selected Theme/font before activating the main loop. Invalid files fail preparation and retain the previous selection. See [ThemeDB](ThemeDB.md#project-startup-theme) for ownership and lookup order.
+
 ## Description
 
 Public operations and events use static access to the retained object under [ADR 0095](../decisions/singleton-services.md#adr-0095). Object state, identity, property discovery and the owning domain lifetime rules remain intact.

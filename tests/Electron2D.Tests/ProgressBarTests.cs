@@ -46,7 +46,7 @@ internal static class ProgressBarTests
         var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "Electron2D-progress-" + Guid.NewGuid().ToString("N") + ".e2dscene");
         try
         {
-            bar.Theme = null; packed.Pack(root); ResourceSaver.Save(packed, path); bar.Theme = theme; var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
+            ResourceSaver.Save(packed, path); var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
             start.ArgumentList.Add(typeof(ProgressBarTests).Assembly.Location); start.ArgumentList.Add("--progress-bar-archive"); start.ArgumentList.Add(path); start.Environment.Remove("ELECTRON2D_TEST_PROGRESS_BAR");
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync();
             if (!child.WaitForExit(30000)) { child.Kill(entireProcessTree: true); throw new TimeoutException("Fresh progress scene exceeded its deadline."); }

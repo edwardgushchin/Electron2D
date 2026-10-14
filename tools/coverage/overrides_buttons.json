@@ -1201,7 +1201,7 @@
         "class:ThemeDB"
       ],
       "state": "Partial",
-      "reason": "ADR 0083: six-category Theme storage/defaults and ThemeDB/Control/Window lookup execute with embedded font and actual panels, sliders, containers, Label, Button/CheckBox/CheckButton and tooltip skins. Completion still requires project Theme-file loading/startup gui/theme/custom ownership, defaults for remaining GUI families, and nonunit theme-scale/DPI icon construction/refresh."
+      "reason": "ADR 0083: six-category Theme storage/defaults and ThemeDB/Control/Window lookup execute with embedded font and actual panels, sliders, containers, Label, Button/CheckBox/CheckButton and tooltip skins. Completion still requires defaults for remaining GUI families, and nonunit theme-scale/DPI icon construction/refresh. Project Theme archive/startup now executes under ADR 0083."
     },
     {
       "godot": [
