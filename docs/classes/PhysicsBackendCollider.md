@@ -1,6 +1,6 @@
 # PhysicsBackendCollider
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Declaration:** `public abstract class PhysicsBackendCollider` · **Source:** [PhysicsBackendCollider.cs](../../src/Servers/Physics/PhysicsBackendCollider.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
 
@@ -128,3 +128,13 @@ and encounter-order ties. The independent fixture retains bounded per-peer
 numerical rows and frozen velocities; 128 replay cycles and 768 changed-policy
 frames each measure 0/0 owner/all-thread bytes. Arbitrary shape features, coupled
 geometry and final network/native/performance/platform acceptance remain open.
+
+
+[Registered contact numerics](../components/physics-registered-adapter.md#registered-contact-numerics)
+now exercises actual world/shape bias and penetration slack, complete contact/joint
+sweeps, full physical impulses and identity-preserving live policy through the
+public-only provider. Seven source families, dense contacts, CCD durations and
+contact/pin convergence use nineteen complete 128-warmup/128-measured brackets
+at zero managed allocation. Registered contact-cache, arbitrary coupled/custom,
+full inherited/extension/network and native/platform/performance acceptance remain
+open.

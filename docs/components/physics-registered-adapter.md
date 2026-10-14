@@ -2339,11 +2339,10 @@ uses .003 and mass .0001. Geometry, identity, filtering, sleep and event counts 
 exact assertions. Evidence lives under bin/physics-priority-provider/2026-10-14.
 
 Production public API/XML and ADRs are unchanged. Priority affects motion recovery,
-not rigid mass or impulses. General registered contact bias/slack/iterations/cache
-settings, arbitrary coupled/custom solver behavior, complete inherited/extension
+not rigid mass or impulses. General registered contact-cache settings and arbitrary coupled/custom solver behavior, complete inherited/extension
 contract, native/network/platform and target-device performance acceptance remain
-open. The provider's SetContactSettings still has no numerical effect; this priority
-result does not claim correction-policy completion. Software Vulkan is functional
+open. The priority profile is complemented by the registered contact numerics below;
+contact-cache acceptance remains separate. Software Vulkan is functional
 evidence, with physical GPU performance and real-window FPS unverified.
 
 
@@ -2361,3 +2360,85 @@ loaded runtime files were rehashed. CPU/registered profiles loaded no graphics
 driver, GPU profiles loaded only software Vulkan, and numerical thread counts
 matched zero/one. No native-memory, hardware throughput or window acceptance
 is inferred from these results.
+
+
+<a id="registered-contact-numerics"></a>
+## Registered contact correction and sweeps
+
+The independent public-only provider now captures PhysicsContactSettings on world
+creation and applies the world bias/penetration slack in its numerical solver.
+Prepared parts retain their owning resource and sampled bias; policy preparation
+refreshes that value without recreating geometry, including a committed change
+whose Changed subscriber throws. Actual changes wake the connected body group;
+world correction/iteration changes wake dynamics, while equal writes preserve
+explicit sleep. Zero shape bias inherits the world; one override replaces it and
+two overrides use their arithmetic mean.
+
+Each positive interval recomputes contacts and derives a target residual depth
+from 1-(1-bias)^(interval/outer tick), retaining the allowed penetration slack.
+Complete contact/joint sweeps converge towards that target without multiplying
+the budget by the number of rows or sweeps. Twelve coincident contacts therefore
+share the same required residual. Positional correction changes pose separately
+from physical velocity and reported normal/tangent impulses. The common mask
+rules retain per-endpoint inverse mass/inertia and the passive endpoint's velocity.
+
+Contact rows retain accumulated normal/tangent impulses within each interval and
+one restitution target sampled before sweeps. Each complete sweep solves contacts,
+joints and positional correction. Published impulses are the final physical sums,
+including release of earlier provisional impulses; friction limits use the complete
+normal sum. Contact geometry, logical indices, reports, debug points and pair
+statistics are prepared once per interval, retaining the existing outer-frame
+aggregation/caps/events and private restore. Reusable row storage scales with
+contact capacity rather than the authored iteration count and clears body references
+in finally on success/failure. An empty constraint set skips empty sweeps, including
+int.MaxValue with a shapeless CCD body. No iteration request is clamped.
+
+CCD preserves the previous joint-velocity preparation before predicting curved
+motion, applying spring input only once per outer interval. Contacts and joints
+then participate in shared sweeps at each actual CCD duration. Removing that
+preparation missed the pinned custom annulus arc and was rejected. The old strict
+custom arc geometry fixture now explicitly requests bias one and zero slack,
+retaining its original .005 allowed-side bounds; ordinary captured defaults and
+nonzero slack are exercised by the new policy matrix.
+
+Changed post-contact angular trajectories exposed slow convergence in independent
+boundary advancement. Each finite core vertex now uses projected closing velocity
+and a conservative second-derivative bound that includes both rotations, offset
+mass centers and relative translation over the remaining duration. Earliest roots
+bound the next advance; rounded support radius is constant along a unit plane
+normal. The existing 1,024 refinement budget and .0001-times-thickness tolerance
+remain unchanged. No search allowance becomes physical penetration slack.
+
+The --contact-policy profile accepts --cpu/--gpu and --threaded. Seven built-in
+finite/directed source families against an analytic boundary exercise seven bias
+combinations at one/16/128 sweeps and .01/.04-second outer ticks, allowed slack,
+physical momentum/friction, live policy and throwing-observer commits, unchanged
+geometry/RID/mass, sleep/equal/changed writes and one contact episode. An unrelated
+real CCD collision checks outer-budget distribution; twelve incident contacts
+check shared correction. Eight-body contact and pin chains compare one versus
+128 sweeps by convergence and total momentum, with complete private replay.
+Nineteen brackets per profile each warm 128 full frames and measure 128 with
+strict 0/0 owner/all-thread managed bytes; no query/frame/restore work is subtracted.
+Correction permits .004 scene-unit numerical error, physical impulses .03 and
+chain momentum .03; event/identity/geometry/sleep and allocation assertions remain
+exact. Evidence lives under bin/physics-policy-provider/2026-10-14.
+
+Public API, production XML, algorithms and ADRs are unchanged by this consumer
+implementation. Registered geometric cache recycling/max-separation behavior,
+arbitrary coupled/custom correction, full inherited/extension/network contract,
+native allocation, platforms and target-device/window performance acceptance remain
+open. Stored recycling settings do not imply cache acceptance. Software Vulkan
+establishes functional behavior only.
+
+
+Final contact-policy validation over local main 33529779e24ac251cbf2446a93f76179827cbaeb retained 4,222 source files with SHA-256 3a99a26f06b8e368a50a20bdfcd17fda6ccf6e647374dbef7367e16d5fe4c919.
+All 34 fresh final processes passed (six policy profiles plus 28 linked regressions),
+with nineteen 128-warmup/128-measured brackets per policy profile at 0/0 managed
+bytes. All 61 retained runtime files and current source files were rehashed.
+The six commit gates passed Release build, scoped formatting, compiled API, wiki
+tests, generation and generation --check. Coverage reports 13,961 declarations
+with zero unmapped members; wiki reports 832 public types and 850 files. Software
+GPU/no-device CPU/registered proofs retain the exact zero/one solver-thread modes.
+The boundary curvature bound also passed 80,000 derivative samples from 5,000
+seeded cases without a violation; these checks supplement the actual rotating
+boundary/offset CCD regression, not hardware or complete numerical acceptance.

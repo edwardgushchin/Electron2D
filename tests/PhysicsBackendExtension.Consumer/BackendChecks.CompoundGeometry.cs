@@ -3,7 +3,7 @@ using Electron2D;
 public static partial class BackendChecks
 {
     private readonly record struct Part(int Index, Vector2 Offset, float Inner, float Outer,
-        Vector2 EdgeX = default, Vector2 EdgeY = default, float Inflation = 0, bool Capsule = false, bool Segment = false, Polygon? Polygon = null, bool Concave = false, Vector2 PlaneNormal = default, bool Directed = false, bool Slide = false, OneWayContactData? OneWay = null)
+        Vector2 EdgeX = default, Vector2 EdgeY = default, float Inflation = 0, bool Capsule = false, bool Segment = false, Polygon? Polygon = null, bool Concave = false, Vector2 PlaneNormal = default, bool Directed = false, bool Slide = false, OneWayContactData? OneWay = null, Shape? Source = null, float Bias = 0)
     {
         internal bool Boundary => PlaneNormal != Vector2.Zero;
         internal bool Rectangle => Polygon is null && EdgeX != Vector2.Zero;
@@ -45,7 +45,7 @@ public static partial class BackendChecks
                 var geometry = slot.Shape.GetGeometryData();
                 for (var element = 0; element < GeometryCount(geometry); element++)
                 {
-                    var part = GeometryPart(geometry, slot.Transform, slot.Index, element) with { OneWay = slot.OneWay };
+                    var part = GeometryPart(geometry, slot.Transform, slot.Index, element) with { OneWay = slot.OneWay, Source = slot.Shape, Bias = slot.Shape.CustomSolverBias };
                     if (part.Polygon is { Vertices.Length: 0 }) continue;
                     if (part.Segment && part.LineLength <= .5f) part = part with { EdgeY = default, Outer = 0 };
                     Parts[Shapes++] = part;

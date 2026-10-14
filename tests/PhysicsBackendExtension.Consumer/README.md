@@ -284,3 +284,14 @@ momentum. Five 128-warmup/128-measured full-frame brackets require zero owner an
 all-thread managed allocations. GPU execution needs its renderer/driver setup;
 software-driver checks establish functional behavior only. This profile leaves
 general registered contact correction/cache/iteration acceptance open.
+
+
+`--contact-policy` selects the independent solver by default and accepts `--cpu`,
+`--gpu` and `--threaded`. It checks mixed world/shape correction and slack,
+complete contact/joint sweeps, dense contacts, actual CCD durations, momentum,
+live policy/observer failures and private replay. Nineteen brackets use 128 warmup
+and 128 measured complete frames with strict zero owner/all-thread managed
+allocations. The custom curved arc fixture explicitly uses bias one/zero slack
+for its strict geometry bounds; ordinary defaults and nonzero slack have their
+own analytic matrix. Registered geometric cache and full numerical/performance
+acceptance remain open.

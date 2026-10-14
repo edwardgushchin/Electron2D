@@ -1143,5 +1143,15 @@ now exercises weighted motion recovery independently through the public API,
 including finite/directed families, bounded contact planes, exclusions, one-way
 controls, character movement and unchanged rigid momentum. The shared CPU/GPU/
 registered profile covers five 128-warmup/128-measured full-frame brackets at zero
-managed allocation. Wider registered contact settings and complete numerical,
+managed allocation. Wider registered contact-cache settings and arbitrary coupled correction and complete numerical,
 native/network/platform/performance acceptance remain open.
+
+
+[Registered contact numerics](../components/physics-registered-adapter.md#registered-contact-numerics)
+now exercises actual world/shape bias and penetration slack, complete contact/joint
+sweeps, full physical impulses and identity-preserving live policy through the
+public-only provider. Seven source families, dense contacts, CCD durations and
+contact/pin convergence use nineteen complete 128-warmup/128-measured brackets
+at zero managed allocation. Registered contact-cache, arbitrary coupled/custom,
+full inherited/extension/network and native/platform/performance acceptance remain
+open.

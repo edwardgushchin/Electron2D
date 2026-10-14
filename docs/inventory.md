@@ -1607,7 +1607,7 @@ now exercises weighted motion recovery independently through the public API,
 including finite/directed families, bounded contact planes, exclusions, one-way
 controls, character movement and unchanged rigid momentum. The shared CPU/GPU/
 registered profile covers five 128-warmup/128-measured full-frame brackets at zero
-managed allocation. Wider registered contact settings and complete numerical,
+managed allocation. Wider registered contact-cache settings and arbitrary coupled correction and complete numerical,
 native/network/platform/performance acceptance remain open.
 ## Touch game controls
 
@@ -1622,3 +1622,13 @@ native/network/platform/performance acceptance remain open.
 Input.VirtualControls.cs retains private owner/axis contributions; SceneTree.VirtualInput.cs queues discrete button transitions at a safe input boundary. The two Storage partials register authored typed descriptors and exact noncapturing scene factories; ResourceFileTypes registers their file names. ThemeDB.VirtualJoystick.cs adds four default style items with owned base/tip styles.
 
 BitMap now has a registered typed file factory and atomic packed-mask descriptor used by bundled touch scenes; dimensions and actual hit pixels survive fresh-process load.
+
+
+[Registered contact numerics](components/physics-registered-adapter.md#registered-contact-numerics)
+now exercises actual world/shape bias and penetration slack, complete contact/joint
+sweeps, full physical impulses and identity-preserving live policy through the
+public-only provider. Seven source families, dense contacts, CCD durations and
+contact/pin convergence use nineteen complete 128-warmup/128-measured brackets
+at zero managed allocation. Registered contact-cache, arbitrary coupled/custom,
+full inherited/extension/network and native/platform/performance acceptance remain
+open.

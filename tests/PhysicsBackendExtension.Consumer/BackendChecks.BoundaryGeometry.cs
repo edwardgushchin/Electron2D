@@ -97,7 +97,33 @@ public static partial class BackendChecks
             var gap = BoundaryGap(plane, planePose, finite, finitePose, out _, out _, out _);
             if (gap <= tolerance) { fraction = time / duration; return true; }
             if (!(speed > 0)) return false;
-            var advance = gap / speed; var next = time + advance;
+            var normal = BoundaryNormal(plane, planePose); var origin = PartAt(plane, planePose);
+            var planeCenter = planeBody.Center + planeMotion * time;
+            var finiteCenter = finiteBody.Center + finiteMotion * time;
+            var planeRadius = (origin - planeCenter).Length(); var remaining = duration - time;
+            var advance = float.PositiveInfinity;
+            for (var vertex = 0; vertex < CoreCount(finite); vertex++)
+            {
+                var point = CoreVertex(finite, finitePose, vertex); var arm = point - finiteCenter;
+                var offset = origin - planeCenter;
+                var relativeVelocity = relative + finiteSpin * new Vector2(-arm.Y, arm.X) - planeSpin * new Vector2(-offset.Y, offset.X);
+                var closing = -normal.Dot(relativeVelocity) - planeSpin * new Vector2(-normal.Y, normal.X).Dot(point - origin);
+                var radius = arm.Length(); var absolutePlaneSpin = MathF.Abs(planeSpin);
+                var distanceBound = (finiteCenter - planeCenter).Length() + relative.Length() * remaining + radius + planeRadius;
+                var curvature = (double)finiteSpin * finiteSpin * radius + (double)planeSpin * planeSpin * planeRadius +
+                    2 * absolutePlaneSpin * (relative.Length() + MathF.Abs(finiteSpin) * radius + absolutePlaneSpin * planeRadius) +
+                    (double)planeSpin * planeSpin * distanceBound;
+                var distance = (point - origin).Dot(normal) - (finite.Contour ? finite.Inflation : finite.Outer);
+                double candidate;
+                if (curvature == 0) candidate = closing > 0 ? distance / closing : double.PositiveInfinity;
+                else
+                {
+                    var root = Math.Sqrt((double)closing * closing + 2 * curvature * Math.Max(0, distance));
+                    candidate = closing >= 0 ? 2 * distance / (closing + root) : (root - closing) / curvature;
+                }
+                advance = MathF.Min(advance, (float)candidate);
+            }
+            var next = time + advance;
             if (next > duration) return false;
             if (!(next > time)) throw new InvalidOperationException("A rotating boundary sweep cannot advance.");
             time = next;

@@ -70,6 +70,8 @@ public static partial class BackendChecks
             _sleepSettings = new(PhysicsServer.SpaceGetBodyLinearVelocitySleepThreshold(SpaceRID),
                 PhysicsServer.SpaceGetBodyAngularVelocitySleepThreshold(SpaceRID), PhysicsServer.SpaceGetBodyTimeToSleep(SpaceRID));
             Iterations = PhysicsServer.SpaceGetSolverIterations(SpaceRID); ConstraintBias = PhysicsServer.SpaceGetConstraintDefaultBias(SpaceRID);
+            _contactSettings = new(PhysicsServer.SpaceGetContactDefaultBias(SpaceRID), PhysicsServer.SpaceGetContactMaxAllowedPenetration(SpaceRID),
+                PhysicsServer.SpaceGetContactRecycleRadius(SpaceRID), PhysicsServer.SpaceGetContactMaxSeparation(SpaceRID));
         }
         protected override void Dispose(bool disposing)
         {
@@ -83,10 +85,13 @@ public static partial class BackendChecks
             WorldPolicy(); _sleepSettings = settings;
             foreach (var body in Bodies.Values) if (!body.IsArea && body.Mode != PhysicsServer.BodyMode.Static) { body.Awake = true; body.SleepTime = 0; }
         }
-        protected override void SetContactSettings(in PhysicsContactSettings settings) => WorldPolicy();
+        private PhysicsContactSettings _contactSettings;
+        protected override void SetContactSettings(in PhysicsContactSettings settings)
+        { WorldPolicy(); if (_contactSettings == settings) return; _contactSettings = settings; WakeDynamics(); }
+        private void WakeDynamics() { foreach (var body in Bodies.Values) if (body.Dynamic) { body.Awake = true; body.SleepTime = 0; } }
         internal int Iterations = 16;
         internal float ConstraintBias = .2f;
-        protected override void SetSolverIterations(int value) { WorldPolicy(); Iterations = value; }
+        protected override void SetSolverIterations(int value) { WorldPolicy(); if (Iterations == value) return; Iterations = value; WakeDynamics(); }
         protected override void SetConstraintDefaultBias(float value) { WorldPolicy(); ConstraintBias = value; }
         private void WorldPolicy() { WorldPolicyCalls++; WorldPolicyHook?.Invoke(); }
         protected override void PrepareSolverCapacity(int bodies, int shapes, int joints) => CapacityHook?.Invoke();
@@ -153,58 +158,11 @@ public static partial class BackendChecks
             else
             {
                 foreach (var b in Bodies.Values) b.Advance((float)delta);
-                SolveContacts(); SolveJoints((float)delta, true); UpdateSleep((float)delta);
+                SolveConstraints((float)delta, true); UpdateSleep((float)delta);
             }
             Steps++;
         }
         private readonly HashSet<(RID, int, RID, int)> _framePairs = [];
-        private void SolveContacts()
-        {
-            foreach (var a in Bodies.Values)
-                foreach (var b in Bodies.Values)
-                {
-                    if (a.RID.GetID() >= b.RID.GetID() || a.IsArea || b.IsArea || a.Shapes == 0 || b.Shapes == 0 ||
-                        (a.Mask & b.Layer) == 0 && (b.Mask & a.Layer) == 0 || Exceptions.Contains((a.RID, b.RID)) || Exceptions.Contains((b.RID, a.RID))) continue;
-                    if (a.Mode == PhysicsServer.BodyMode.Static && b.Mode == PhysicsServer.BodyMode.Static ||
-                        a.InvMass + b.InvMass == 0 && a.ReportedLimit == 0 && b.ReportedLimit == 0) continue;
-                    for (var i = 0; i < a.Shapes; i++) for (var j = 0; j < b.Shapes; j++)
-                        {
-                            var first = a.Parts[i]; var second = b.Parts[j];
-                            if (!AllowsContact(a.RID, first.Index, b.RID, second.Index) ||
-                                !PartContact(a, first, b, second, out var normal, out var depth, out var diagnosticPoint)) continue;
-                            if (depth > 0 && (a.Awake || b.Awake))
-                            {
-                                var half = normal * (depth * .5f);
-                                AddDebugPoint(diagnosticPoint - half); AddDebugPoint(diagnosticPoint + half);
-                            }
-                            var massA = (a.Mask & b.Layer) != 0 ? a.InvMass : 0;
-                            var massB = (b.Mask & a.Layer) != 0 ? b.InvMass : 0;
-                            var inverse = massA + massB;
-                            var active = a.Dynamic && a.Awake || b.Dynamic && b.Awake ||
-                                a.Mode == PhysicsServer.BodyMode.Kinematic && (a.Velocity != Vector2.Zero || a.Angular != 0) ||
-                                b.Mode == PhysicsServer.BodyMode.Kinematic && (b.Velocity != Vector2.Zero || b.Angular != 0);
-                            var impulse = Vector2.Zero;
-                            var contactPoint = diagnosticPoint;
-                            if (active && inverse > 0)
-                            {
-                                a.Position -= normal * depth * (massA / inverse);
-                                b.Position += normal * depth * (massB / inverse);
-                                if (PartContact(a, first, b, second, out _, out _, out var solvedPoint)) contactPoint = solvedPoint;
-                                impulse = SolveContact(a, b, normal, contactPoint);
-                            }
-                            a.RecordContact(b, first.Index, second.Index, contactPoint, -normal, -impulse, depth, i, j);
-                            b.RecordContact(a, second.Index, first.Index, contactPoint, normal, impulse, depth, j, i);
-                            if (_framePairs.Add((a.RID, i, b.RID, j))) Pairs++;
-                        }
-                }
-            if (FailSolve) throw new InvalidOperationException("Injected independent solver failure.");
-        }
-        private void SolveJoints(float delta, bool begin)
-        {
-            if (begin) foreach (var j in Joints.Values) j.BeginSolve();
-            for (var i = 0; i < Iterations; i++)
-                foreach (var j in Joints.Values) j.Solve(delta, begin && i == 0);
-        }
         protected override void SyncResults()
         { foreach (var body in Bodies.Values) body.FreezeContacts(); Ready = true; LifecycleHook?.Invoke(LifecyclePhase.Sync); }
         protected override void CompleteBody(RID body) { }
@@ -331,7 +289,17 @@ public static partial class BackendChecks
         protected override bool HasMotionMode(PhysicsServer.BodyMode mode) => Mode == mode || mode == PhysicsServer.BodyMode.Rigid && Mode == PhysicsServer.BodyMode.RigidLinear;
         protected override void SetMotionMode(PhysicsServer.BodyMode mode) => Mode = mode;
         protected override void SetContactReporting(bool enabled) { }
-        protected override void PrepareContactPolicy() => solver.PolicyHook?.Invoke(rid);
+        protected override void PrepareContactPolicy()
+        {
+            solver.PolicyHook?.Invoke(rid); var changed = false;
+            for (var i = 0; i < Shapes; i++)
+            {
+                var part = Parts[i]; if (part.Source is not { IsDisposed: false } shape) continue;
+                var bias = shape.CustomSolverBias; if (part.Bias == bias) continue;
+                Parts[i] = part with { Bias = bias }; changed = true;
+            }
+            if (changed) solver.WakeConnected(this);
+        }
         protected override void PrepareIntegration(in PhysicsBodyIntegrationConfiguration configuration, double delta)
         {
             ContinuousMode = configuration.CCDMode;

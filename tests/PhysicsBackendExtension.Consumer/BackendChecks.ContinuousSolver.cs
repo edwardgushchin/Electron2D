@@ -12,7 +12,9 @@ public static partial class BackendChecks
         private void SolveContinuous(float delta)
         {
             foreach (var body in Bodies.Values) body.FrameForcesApplied = body.PrepareAdvance(delta);
-            SolveJoints(delta, true);
+            foreach (var joint in Joints.Values) joint.BeginSolve();
+            if (Joints.Count != 0) for (var iteration = 0; iteration < Iterations; iteration++)
+                    foreach (var joint in Joints.Values) joint.Solve(delta, iteration == 0);
             var remaining = delta; var intervals = 0;
             while (remaining > 0)
             {
@@ -23,7 +25,7 @@ public static partial class BackendChecks
                 if (!(step > 0) || !float.IsFinite(step) || step < remaining && remaining - step == remaining)
                     throw new InvalidOperationException("Independent continuous interval is not representable.");
                 foreach (var body in Bodies.Values) body.Move(step);
-                SolveContacts(); SolveJoints(delta, false); UpdateSleep(step);
+                SolveConstraints(step, false, false); UpdateSleep(step);
                 remaining = step == remaining ? 0 : remaining - step;
             }
         }

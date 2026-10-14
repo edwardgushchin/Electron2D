@@ -18,6 +18,7 @@ public static partial class BackendChecks
         void Arc(bool inner, bool pinned)
         {
             using var world = new World("CurvedAnnulus");
+            PhysicsServer.SpaceSetContactDefaultBias(world.Space, 1); PhysicsServer.SpaceSetContactMaxAllowedPenetration(world.Space, 0);
             using var ring = new CustomShape(Annulus.Create(4, 5)); using var disk = new CircleShape { Radius = .25f };
             using var root = new SubViewport { World = world };
             var body = Driver(); body.Mass = 2; body.MaxContactsReported = 8;
@@ -110,6 +111,7 @@ public static partial class BackendChecks
         void MovingRing()
         {
             using var world = new World("CurvedAnnulus");
+            PhysicsServer.SpaceSetContactDefaultBias(world.Space, 1); PhysicsServer.SpaceSetContactMaxAllowedPenetration(world.Space, 0);
             using var ring = new CustomShape(Annulus.Create(4, 5)); using var disk = new CircleShape { Radius = .25f };
             using var root = new SubViewport { World = world };
             var body = Driver(); body.Mass = 2; body.ContinuousCD = CCDMode.CastShape; body.MaxContactsReported = 8;

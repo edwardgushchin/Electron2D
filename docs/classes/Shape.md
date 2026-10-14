@@ -190,3 +190,13 @@ acceptance remains open.
 
 
 [Query-shape borrowing](../components/physics-space-extensions.md#query-shape-borrowing-2026-10-14) retains resource/owned RID geometry through preparation, hooks and validated publication, with nested/error continuation and zero warmed full-frame allocations. Existing declarations and coverage states remain unchanged; full numerical/foreign/hardware acceptance stays open.
+
+
+[Registered contact numerics](../components/physics-registered-adapter.md#registered-contact-numerics)
+now exercises actual world/shape bias and penetration slack, complete contact/joint
+sweeps, full physical impulses and identity-preserving live policy through the
+public-only provider. Seven source families, dense contacts, CCD durations and
+contact/pin convergence use nineteen complete 128-warmup/128-measured brackets
+at zero managed allocation. Registered contact-cache, arbitrary coupled/custom,
+full inherited/extension/network and native/platform/performance acceptance remain
+open.

@@ -226,3 +226,13 @@ With the captured separate-thread policy, Solve and its immediate HasFailure che
 
 
 [Borrowed motion output](../components/physics-registered-adapter.md#borrowed-motion-output-2026-10-14) preserves selected scratch lifetime and owner scope while retaining caller-owned snapshots, error continuation and retirement failures. The inherited disposal preflight is a reviewed C# adaptation; full numerical/foreign/hardware acceptance stays open.
+
+
+[Registered contact numerics](../components/physics-registered-adapter.md#registered-contact-numerics)
+now exercises actual world/shape bias and penetration slack, complete contact/joint
+sweeps, full physical impulses and identity-preserving live policy through the
+public-only provider. Seven source families, dense contacts, CCD durations and
+contact/pin convergence use nineteen complete 128-warmup/128-measured brackets
+at zero managed allocation. Registered contact-cache, arbitrary coupled/custom,
+full inherited/extension/network and native/platform/performance acceptance remain
+open.

@@ -1,6 +1,6 @@
 # PhysicsContactSettings
 
-Last updated: 2026-10-09
+Last updated: 2026-10-14
 
 **Declaration:** `public readonly record struct PhysicsContactSettings(float Bias, float AllowedPenetration, float RecycleRadius = 1, float MaxSeparation = 1.5f)`
 
@@ -24,3 +24,13 @@ sleep/event ordering through explicit CPU/GPU worlds in both numerical-thread mo
 All six public/resident/stage profiles retain 128 edited full-step samples at
 0/0 owner/all-thread managed bytes. Software Vulkan evidence leaves hardware,
 registered geometry and broader network/platform/performance acceptance open.
+
+
+[Registered contact numerics](../components/physics-registered-adapter.md#registered-contact-numerics)
+now exercises actual world/shape bias and penetration slack, complete contact/joint
+sweeps, full physical impulses and identity-preserving live policy through the
+public-only provider. Seven source families, dense contacts, CCD durations and
+contact/pin convergence use nineteen complete 128-warmup/128-measured brackets
+at zero managed allocation. Registered contact-cache, arbitrary coupled/custom,
+full inherited/extension/network and native/platform/performance acceptance remain
+open.

@@ -212,3 +212,13 @@ profile require 128 warmup/128 measured frames at 0/0 managed bytes. Directional
 response and stable long-ray/circle roots are corrected in the shared consumer.
 Arbitrary custom/coupled, complete inherited/extension/network/native/platform
 and hardware-performance acceptance remain open; coverage states are unchanged.
+
+
+[Registered contact numerics](../components/physics-registered-adapter.md#registered-contact-numerics)
+now exercises actual world/shape bias and penetration slack, complete contact/joint
+sweeps, full physical impulses and identity-preserving live policy through the
+public-only provider. Seven source families, dense contacts, CCD durations and
+contact/pin convergence use nineteen complete 128-warmup/128-measured brackets
+at zero managed allocation. Registered contact-cache, arbitrary coupled/custom,
+full inherited/extension/network and native/platform/performance acceptance remain
+open.
