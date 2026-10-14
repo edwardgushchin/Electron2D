@@ -317,7 +317,7 @@ coverage of its stated cases, not proof of arbitrary external algorithms.
 | Full frame tangent impulses, deepest caps/ties, tile owners and logical identities | PhysicsContactImpulseTests, body/direct-state tests, TileMapLayerTests, registered contact frames | General polygon/capsule/multiple-piece provider geometry; bounded multiple-circle slots and private history are verified. |
 | Scene/raw server states, axis velocity, layers/masks, shape type, process info, object/canvas IDs and registration | Shared state/force/binding/query suites plus complete selected operation hooks and public-only consumer | Exact open inherited/extension rows in the ledger; no placeholder exemption. |
 | Bodies, CharacterBody, shapes, queries, forces, materials, Area, joints and physical bones | Full existing suite explicitly exercises independent CPU/GPU variants | Uncovered coupled/long-run cases and remaining external geometry acceptance. |
-| Headless CPU authority, fixed ticks, numbered input, portable cross-process identity and snapshots | Public PhysicsNetwork example, checkpoint/snapshot suites and no-GPU process checks | Same-revision final process runs and bounded packet/history costs. |
+| Headless CPU authority, fixed ticks, numbered input, portable cross-process identity and snapshots | Public PhysicsNetwork example, checkpoint/snapshot suites and no-GPU process checks | Current same-source seven-profile headless matrix is verified; packet/native/device totals and arbitrary gameplay remain scoped. |
 | Prediction, correction/replay, remote interpolation, physical/presentation separation and confirmed effects | NetworkSession, PhysicsNetwork process checks and native window captures | Viewport default boundary is now verified; broader gameplay/topology coverage remains scoped. |
 | Spawn/removal, ownership changes, late join, impaired delivery, CPU server with GPU client and divergence recovery | Three actual ENet processes, generation/authority checks, joints/sleep/event assertions | Current workload results must include all positive counters and convergence rather than startup alone. |
 | Full step distributions, transfers/waits/allocations, real-window FPS and network replay/history cost | Full monitored-scene pipeline and instrumented public network example | Same-revision results, physical gates, retained all-body/features and repeatability scope; stage-only metrics cannot satisfy it. |
@@ -1248,3 +1248,12 @@ contact/pin convergence use nineteen complete 128-warmup/128-measured brackets
 at zero managed allocation. Registered contact-cache, arbitrary coupled/custom,
 full inherited/extension/network and native/platform/performance acceptance remain
 open.
+
+
+[Current production network matrix](../components/physics-network-example.md#current-headless-production-network-matrix-2026-10-14)
+passes seven three-process CPU-authority scenarios at tick 600, with CPU/GPU early
+clients, late admission after tick 310 and serial/separate numerical execution.
+The same engine assembly retains exact confirmed effects, topology/state convergence
+and zero warmed ordinary/replay managed allocations. Driver/thread proofs and
+instrumented transfer/wait/history costs are retained; software timings do not
+establish native allocation, hardware advantage or real-window FPS.

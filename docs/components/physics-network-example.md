@@ -541,3 +541,62 @@ separate profiles. Both CPU children require strict GPU-startup denial.
 Evidence is retained under bin/physics-network-current/2026-10-14/final4.
 The standalone example has JSON reflection disabled and passes its compiled
 MSAA/LCD metadata checks; no NativeAOT publication or window rendering is inferred.
+
+
+## Current headless production network matrix, 2026-10-14
+
+Seven actual three-process scenarios on local main b06d137c255052a81ff4ed82084d8091f04589a7
+passed at tick 600 with late admission requested at tick 310. Four runs use the
+public-only example (CPU/GPU early client, serial/separate numerical execution);
+three use the instrumented test host (CPU separate and GPU serial/separate). The
+21 selected child processes share one byte-identical engine assembly. CPU server
+and CPU clients require strict GPU startup rejection; only GPU clients load explicit
+software Vulkan. External process observation enumerates all parent tasks and ignores retired
+children with empty command lines. It records every live role and zero/one numerical
+threads; instrumented CPU counters additionally verify actual interval execution
+on the requested lane.
+
+| Profile | Early / late join tick | Early warm step / replay samples | Late warm step / replay samples |
+| --- | ---: | ---: | ---: |
+| example-cpu | 1 / 347 | 301 / 915 | 183 / 549 |
+| example-cpu-thread | 1 / 341 | 301 / 897 | 190 / 603 |
+| example-gpu | 1 / 341 | 28 / 333 | 191 / 626 |
+| example-gpu-thread | 1 / 342 | 46 / 311 | 190 / 608 |
+| instrumented-cpu-thread | 1 / 345 | 301 / 906 | 185 / 540 |
+| instrumented-gpu | 1 / 345 | 33 / 330 | 185 / 555 |
+| instrumented-gpu-thread | 1 / 345 | 29 / 338 | 185 / 540 |
+
+Every selected authority has 301 measured warm physics steps. All measured ordinary
+and replayed physical steps allocate 0/0 owner/all-thread managed bytes. Every
+client has positive warmed replay, correction, interpolation and smoothing counts.
+The launcher verifies adverse delivery, numbered input, invalid ownership/token/
+generation rejection, creation/removal/reincarnation, sleep/wake, all three joint
+families, injected linear/angular divergence, and exact confirmed-event contents
+without duplicated effects. Final 14-object identity/generation/ownership/epoch,
+pose, velocity and sleep agree within the existing .002 numerical bounds. This
+proves the scripted production workflow, not arbitrary gameplay rollback.
+
+The following instrumented separate-thread mixed run records the complete physical
+step and snapshot-application/replay distributions. Software-driver timings are
+functional diagnostics, not target-device performance comparisons.
+
+| Process | Step p50 / p95 / p99 ms | Correction p50 / p95 / p99 ms | Sent / received application B |
+| --- | --- | --- | ---: |
+| server | 0.1149 / 0.1758 / 3.7253 | 0.0000 / 0.0000 / 0.0000 | 1069196 / 79400 |
+| gpu | 13.4365 / 14.2836 / 14.7390 | 163.0733 / 172.1447 / 193.2165 | 24524 / 668624 |
+| late | 0.1018 / 0.1357 / 0.1585 | 1.0493 / 1.3775 / 6.8823 | 58716 / 327900 |
+
+GPU lifetime counters record 989,424 upload B, 3,564,484 readback B,
+19,845 submissions and 7335.5451 summed wait ms across setup, ordinary
+prediction, restoration and replay; they are not a per-step transfer minimum. Each
+process retains 131,072 command-record and 36,864 event-record payload bytes,
+excluding array headers, packet slabs, other managed storage and native/device
+memory. No window was opened. Native allocation, cross-platform/owner acceptance,
+arbitrary game-state rollback, massive target-GPU advantage and real-window FPS
+remain open. Physical GPU load remains deferred until its power prerequisite is
+verified; software evidence does not close that gate.
+
+Evidence: bin/physics-production-network/2026-10-14/validation.json and its
+retained reports/logs/manifests. The frozen source has 4,222 files, SHA-256
+3a99a26f06b8e368a50a20bdfcd17fda6ccf6e647374dbef7367e16d5fe4c919; both hosts load engine DLL SHA-256
+40477b2239d37517f14141c5d40f84af8590bdaa3383de0547dd1adfe37c2bf5.

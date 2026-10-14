@@ -874,3 +874,12 @@ contact/pin convergence use nineteen complete 128-warmup/128-measured brackets
 at zero managed allocation. Registered contact-cache, arbitrary coupled/custom,
 full inherited/extension/network and native/platform/performance acceptance remain
 open.
+
+
+[Current production network matrix](../components/physics-network-example.md#current-headless-production-network-matrix-2026-10-14)
+passes seven three-process CPU-authority scenarios at tick 600, with CPU/GPU early
+clients, late admission after tick 310 and serial/separate numerical execution.
+The same engine assembly retains exact confirmed effects, topology/state convergence
+and zero warmed ordinary/replay managed allocations. Driver/thread proofs and
+instrumented transfer/wait/history costs are retained; software timings do not
+establish native allocation, hardware advantage or real-window FPS.
