@@ -283,7 +283,7 @@ public partial class FontFile : Font
     }
     private static void CopyConfiguration(FontData source, FontData target)
     {
-        target.AllowSystemFallback = source.AllowSystemFallback; target.Hinting = source.Hinting; target.SubpixelPositioning = source.SubpixelPositioning;
+        target.Antialiasing = source.Antialiasing; target.AllowSystemFallback = source.AllowSystemFallback; target.Hinting = source.Hinting; target.SubpixelPositioning = source.SubpixelPositioning;
         target.KeepRoundingRemainders = source.KeepRoundingRemainders; target.Oversampling = source.Oversampling;
         target.DisableEmbeddedBitmaps = source.DisableEmbeddedBitmaps; target.ForceAutohinter = source.ForceAutohinter; target.GenerateMIPMaps = source.GenerateMIPMaps; target.SupportPolicy = source.SupportPolicy; target.ModulateColorGlyphs = source.ModulateColorGlyphs; target.OpenTypeFeatures = source.OpenTypeFeatures;
     }
@@ -304,14 +304,14 @@ public partial class FontFile : Font
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
         byte[] bytes, cacheSnapshot; Dictionary<string, int> features; FontSupportPolicy support; bool deferred; int fixedSize; FixedSizeScaleMode scaleMode;
-        (FontHinting Hinting, FontSubpixelPositioning Subpixel, bool Remainders, float Oversampling, bool Modulate, bool SystemFallback,
+        (FontAntialiasing Antialiasing, FontHinting Hinting, FontSubpixelPositioning Subpixel, bool Remainders, float Oversampling, bool Modulate, bool SystemFallback,
             string Name, string Style, FontStyle Flags, int Weight, int Stretch, bool DisableBitmaps, bool AutoHint, bool MIPMaps) settings;
         lock (FontGate)
         {
             ThrowIfDisposed(); fixedSize = _fixedSize; scaleMode = _fixedScaleMode; bytes = (byte[])_bytes.Clone(); features = new(_featureOverrides, StringComparer.Ordinal); deferred = _deferred;
             cacheSnapshot = SaveCaches(); support = _fontData!.SupportPolicy;
             var data = _fontData!;
-            settings = (data.Hinting, data.SubpixelPositioning, data.KeepRoundingRemainders, data.Oversampling,
+            settings = (data.Antialiasing, data.Hinting, data.SubpixelPositioning, data.KeepRoundingRemainders, data.Oversampling,
                 data.ModulateColorGlyphs, data.AllowSystemFallback, data.FamilyName, data.StyleName, data.FontStyle, data.FontWeight, data.FontStretch, data.DisableEmbeddedBitmaps, data.ForceAutohinter, data.GenerateMIPMaps);
         }
         var compiledFeatures = CompileFeatures(features);
@@ -319,7 +319,7 @@ public partial class FontFile : Font
         var copy = (FontFile)target; FontData? previous;
         try
         {
-            replacement.Hinting = settings.Hinting; replacement.SubpixelPositioning = settings.Subpixel;
+            replacement.Antialiasing = settings.Antialiasing; replacement.Hinting = settings.Hinting; replacement.SubpixelPositioning = settings.Subpixel;
             replacement.KeepRoundingRemainders = settings.Remainders; replacement.Oversampling = settings.Oversampling;
             replacement.ModulateColorGlyphs = settings.Modulate; replacement.AllowSystemFallback = settings.SystemFallback; replacement.DisableEmbeddedBitmaps = settings.DisableBitmaps; replacement.ForceAutohinter = settings.AutoHint; replacement.GenerateMIPMaps = settings.MIPMaps; replacement.SupportPolicy = support; replacement.OpenTypeFeatures = compiledFeatures;
             replacement.FamilyName = settings.Name; replacement.StyleName = settings.Style; replacement.FontStyle = settings.Flags;

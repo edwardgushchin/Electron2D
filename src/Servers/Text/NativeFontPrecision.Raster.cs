@@ -3,17 +3,25 @@ using System.Runtime.InteropServices;
 
 namespace Electron2D;
 
-internal readonly record struct NativeRasterGlyph(byte[] Pixels, int Width, int Height, int Left, int Top, bool Colored);
+internal readonly record struct NativeRasterGlyph(byte[] Pixels, int Width, int Height, int Left, int Top, bool Colored, bool LCD = false);
 
 internal sealed unsafe partial class NativeFontPrecision
 {
     // Cache-miss rasterization owns its returned RGBA bytes. Phase is applied to the outline, not the final texture position.
-    internal NativeRasterGlyph Rasterize(uint glyph, FontHinting hinting, int phase26Dot6 = 0, int outlineRadius26Dot6 = 0, bool disableEmbeddedBitmaps = true, bool forceAutohinter = false)
+    internal NativeRasterGlyph Rasterize(uint glyph, FontHinting hinting, int phase26Dot6 = 0, int outlineRadius26Dot6 = 0, bool disableEmbeddedBitmaps = true, bool forceAutohinter = false, FontAntialiasing antialiasing = FontAntialiasing.Gray, FontLCDSubpixelLayout layout = FontLCDSubpixelLayout.HorizontalRGB)
     {
         EnsureOwner();
         if (glyph >= GlyphCount) throw new ArgumentOutOfRangeException(nameof(glyph));
         if ((uint)phase26Dot6 >= 64) throw new ArgumentOutOfRangeException(nameof(phase26Dot6));
         if ((uint)outlineRadius26Dot6 > 16384 * 64) throw new ArgumentOutOfRangeException(nameof(outlineRadius26Dot6));
+        var mode = antialiasing switch
+        {
+            FontAntialiasing.None => 2,
+            FontAntialiasing.LCD when layout is FontLCDSubpixelLayout.HorizontalRGB or FontLCDSubpixelLayout.HorizontalBGR => 3,
+            FontAntialiasing.LCD when layout is FontLCDSubpixelLayout.VerticalRGB or FontLCDSubpixelLayout.VerticalBGR => 4,
+            _ => 0
+        };
+        var reverse = layout is FontLCDSubpixelLayout.HorizontalBGR or FontLCDSubpixelLayout.VerticalBGR;
         var flags = hinting switch { FontHinting.None => NoHinting, FontHinting.Light => LightHinting, _ => 0 };
         if (forceAutohinter) flags |= 1 << 5;
         if (outlineRadius26Dot6 > 0 || disableEmbeddedBitmaps && (FaceFlags & (1 << 14)) == 0) flags |= 8;
@@ -31,16 +39,16 @@ internal sealed unsafe partial class NativeFontPrecision
                 throw new InvalidOperationException("Font raster dimensions exceed the canvas texture range.");
             if (outlineRadius26Dot6 == 0)
             {
-                CheckFT(FTRenderGlyph((nint)slot, 0));
-                return CopyBitmap(slot->Bitmap, slot->BitmapLeft, slot->BitmapTop);
+                CheckFT(FTRenderGlyph((nint)slot, mode));
+                return CopyBitmap(slot->Bitmap, slot->BitmapLeft, slot->BitmapTop, reverse);
             }
             CheckFT(FTGetGlyph((nint)slot, out detached));
             CheckFT(FTStrokerNew(_library, out stroker));
             FTStrokerSet(stroker, new CLong(outlineRadius26Dot6), 0, 0, default); // Butt caps and round joins.
             CheckFT(FTGlyphStroke(ref detached, stroker, 1));
-            CheckFT(FTGlyphToBitmap(ref detached, 0, null, 1));
+            CheckFT(FTGlyphToBitmap(ref detached, mode, null, 1));
             var bitmap = (BitmapGlyphRecord*)detached;
-            return CopyBitmap(bitmap->Bitmap, bitmap->Left, bitmap->Top);
+            return CopyBitmap(bitmap->Bitmap, bitmap->Left, bitmap->Top, reverse);
         }
         finally
         {
@@ -50,24 +58,35 @@ internal sealed unsafe partial class NativeFontPrecision
         }
     }
 
-    private static NativeRasterGlyph CopyBitmap(RasterBitmap bitmap, int left, int top)
+    private static NativeRasterGlyph CopyBitmap(RasterBitmap bitmap, int left, int top, bool reverse = false)
     {
-        if (bitmap.Width > 16384 || bitmap.Rows > 16384) throw new InvalidOperationException("Font raster dimensions exceed the canvas texture range.");
-        var width = (int)bitmap.Width; var height = (int)bitmap.Rows;
+        var horizontal = bitmap.PixelMode == 5; var vertical = bitmap.PixelMode == 6;
+        if (horizontal && bitmap.Width % 3 != 0 || vertical && bitmap.Rows % 3 != 0) throw new InvalidOperationException("LCD bitmap dimensions must contain complete component triples.");
+        var logicalWidth = horizontal ? bitmap.Width / 3 : bitmap.Width; var logicalHeight = vertical ? bitmap.Rows / 3 : bitmap.Rows;
+        if (logicalWidth > 16384 || logicalHeight > 16384) throw new InvalidOperationException("Font raster dimensions exceed the canvas texture range.");
+        var width = (int)logicalWidth; var height = (int)logicalHeight;
         var colored = bitmap.PixelMode == 7;
-        if (width == 0 || height == 0) return new([], width, height, left, top, colored);
+        if (width == 0 || height == 0) return new([], width, height, left, top, colored, horizontal || vertical);
         if (bitmap.Buffer == null) throw new InvalidOperationException("A nonempty glyph has no raster buffer.");
-        var rowBytes = bitmap.PixelMode switch { 1 => (width + 7) / 8, 2 => width, 3 => (width + 3) / 4, 4 => (width + 1) / 2, 7 => checked(width * 4), _ => throw new NotSupportedException("The glyph bitmap pixel mode is not supported.") };
+        var rowBytes = bitmap.PixelMode switch { 1 => (width + 7) / 8, 2 or 6 => width, 3 => (width + 3) / 4, 4 => (width + 1) / 2, 5 => checked(width * 3), 7 => checked(width * 4), _ => throw new NotSupportedException("The glyph bitmap pixel mode is not supported.") };
         if (Math.Abs((long)bitmap.Pitch) < rowBytes) throw new InvalidOperationException("The glyph bitmap pitch is smaller than its rows.");
         if (bitmap.PixelMode == 2 && bitmap.GrayLevels < 2) throw new InvalidOperationException("The glyph bitmap has an invalid gray scale.");
         var pixels = new byte[checked(width * height * 4)];
         for (var y = 0; y < height; y++)
         {
-            var source = bitmap.Buffer + y * (nint)bitmap.Pitch;
+            var source = bitmap.Buffer + (vertical ? y * 3 : y) * (nint)bitmap.Pitch;
             for (var x = 0; x < width; x++)
             {
                 var destination = (y * width + x) * 4;
-                if (colored)
+                if (horizontal || vertical)
+                {
+                    var first = reverse ? 2 : 0; var last = reverse ? 0 : 2;
+                    pixels[destination] = horizontal ? source[x * 3 + first] : source[x + first * (nint)bitmap.Pitch];
+                    pixels[destination + 1] = horizontal ? source[x * 3 + 1] : source[x + (nint)bitmap.Pitch];
+                    pixels[destination + 2] = horizontal ? source[x * 3 + last] : source[x + last * (nint)bitmap.Pitch];
+                    pixels[destination + 3] = 255;
+                }
+                else if (colored)
                 {
                     var alpha = source[x * 4 + 3];
                     pixels[destination] = Unpremultiply(source[x * 4 + 2], alpha);
@@ -89,7 +108,7 @@ internal sealed unsafe partial class NativeFontPrecision
                 }
             }
         }
-        return new(pixels, width, height, left, top, colored);
+        return new(pixels, width, height, left, top, colored, horizontal || vertical);
     }
 
     private static byte Unpremultiply(byte component, byte alpha) => alpha == 0 ? (byte)0 : (byte)Math.Min(255, (component * 255 + alpha / 2) / alpha);

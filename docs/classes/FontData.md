@@ -1,6 +1,6 @@
 # FontData
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Visibility:** internal · **Source:** [FontData.cs](../../src/Servers/Text/FontData.cs) · **Component:** [Text](../components/text.md)
 
@@ -35,3 +35,5 @@ The primary realized face supplies OpenType metadata through `GetSupportedFeatur
 Localized name capture is lazy, runs on the existing serialized FontThread operation slot, publishes only a completed map and enforces a 64 MiB expanded-text boundary. Required feature descriptions are captured with the native face.
 
 Retirement clears supported-feature and localized-name maps only after the final retained reader releases the source. Returned public snapshots remain independent of that cleanup.
+
+Antialiasing is copied into configured variants and owned automatic fallback sources. Native raster results publish actual LCD coverage flags into ordinary and packed glyph snapshots. Source replacement discards generated pages while preserving authored records and active old readers.

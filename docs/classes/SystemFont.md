@@ -1,8 +1,13 @@
 # SystemFont
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Namespace:** Electron2D · **Declaration:** public partial class SystemFont · **Inherits:** [Font](Font.md) · **Inherited By:** — · **Source:** [SystemFont.cs](../../src/Scene/Resources/SystemFont.cs) · **Component:** [System fonts](../components/system-fonts.md)
+
+
+## Antialiasing
+
+`public FontAntialiasing Antialiasing { get; set; }` defaults to Gray and executes native Mono/Gray/LCD coverage. Source changes retire caches after active readers; copy/storage and configured variations preserve the preference. The text owner's captured LCD layout and backend capability determine component sampling. See [complete behavior and verification](../components/text.md#native-font-antialiasing-and-lcd-layout).
 
 ## Description
 

@@ -82,7 +82,7 @@ public partial class SystemFont : Font
             if (theme.PrimaryData is { } data) { _data = data.CreateVariation(new(0, [], 0, Transform.Identity, 0, 0, [])); Configure(_data); _data.AdvertisedFaceCount = 0; }
         }
     }
-    private void Configure(FontData data) { data.DisableEmbeddedBitmaps = _disableEmbeddedBitmaps; data.ForceAutohinter = _forceAutohinter; data.GenerateMIPMaps = _generateMipmaps; data.Hinting = _hinting; data.SubpixelPositioning = _subpixel; data.KeepRoundingRemainders = _remainders; data.ModulateColorGlyphs = _modulate; data.Oversampling = _oversampling; data.AllowSystemFallback = _allowSystemFallback; }
+    private void Configure(FontData data) { data.Antialiasing = _antialiasing; data.DisableEmbeddedBitmaps = _disableEmbeddedBitmaps; data.ForceAutohinter = _forceAutohinter; data.GenerateMIPMaps = _generateMipmaps; data.Hinting = _hinting; data.SubpixelPositioning = _subpixel; data.KeepRoundingRemainders = _remainders; data.ModulateColorGlyphs = _modulate; data.Oversampling = _oversampling; data.AllowSystemFallback = _allowSystemFallback; }
     private void Set<T>(ref T field, T value)
     {
         lock (FontGate) { ThrowIfDisposed(); if (EqualityComparer<T>.Default.Equals(field, value)) return; field = value; RetireLocked(); }
@@ -139,7 +139,7 @@ public partial class SystemFont : Font
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
         var copy = (SystemFont)target;
-        copy.DisableEmbeddedBitmaps = DisableEmbeddedBitmaps; copy.ForceAutohinter = ForceAutohinter; copy.GenerateMIPMaps = GenerateMIPMaps; copy.FontNames = FontNames; copy.FontItalic = FontItalic; copy.FontWeight = FontWeight; copy.FontStretch = FontStretch;
+        copy.Antialiasing = Antialiasing; copy.DisableEmbeddedBitmaps = DisableEmbeddedBitmaps; copy.ForceAutohinter = ForceAutohinter; copy.GenerateMIPMaps = GenerateMIPMaps; copy.FontNames = FontNames; copy.FontItalic = FontItalic; copy.FontWeight = FontWeight; copy.FontStretch = FontStretch;
         copy.AllowSystemFallback = AllowSystemFallback; copy.Hinting = Hinting; copy.SubpixelPositioning = SubpixelPositioning;
         copy.KeepRoundingRemainders = KeepRoundingRemainders; copy.ModulateColorGlyphs = ModulateColorGlyphs; copy.Oversampling = Oversampling;
         base.CopyCustomStateTo(target, deep, subresourceMode, duplicateSubresource, forceDuplicateSubresource);
@@ -147,7 +147,7 @@ public partial class SystemFont : Font
     /// <inheritdoc />
     protected override void OnResetState()
     {
-        DisableEmbeddedBitmaps = true; ForceAutohinter = false; GenerateMIPMaps = false; FontNames = []; FontItalic = false; FontWeight = 400; FontStretch = 100; AllowSystemFallback = true; Hinting = FontHinting.Light; SubpixelPositioning = FontSubpixelPositioning.Disabled; KeepRoundingRemainders = true; ModulateColorGlyphs = false; Oversampling = 0; base.OnResetState();
+        Antialiasing = FontAntialiasing.Gray; DisableEmbeddedBitmaps = true; ForceAutohinter = false; GenerateMIPMaps = false; FontNames = []; FontItalic = false; FontWeight = 400; FontStretch = 100; AllowSystemFallback = true; Hinting = FontHinting.Light; SubpixelPositioning = FontSubpixelPositioning.Disabled; KeepRoundingRemainders = true; ModulateColorGlyphs = false; Oversampling = 0; base.OnResetState();
     }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)

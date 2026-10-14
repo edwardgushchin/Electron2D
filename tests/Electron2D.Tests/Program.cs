@@ -9,6 +9,13 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_CHILD") is { } fontRasterPath) { FontRasterPolicyTests.RunChild(fontRasterPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_HOST") == "1") { FontRasterPolicyTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER") == "1") { FontRasterPolicyTests.Run(); return; }
+
+if (args.Length == 2 && args[0] == "--font-aa-archive") { FontAntialiasingTests.RunArchive(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_AA") is { } fontAAProfile) { if (fontAAProfile == "managed") FontAntialiasingTests.RunManaged(); else if (fontAAProfile == "raster") FontAntialiasingTests.RunRaster(); else FontAntialiasingTests.RunNative(fontAAProfile); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_GLYPH") is { } glyphProfile) { if (glyphProfile == "managed") CanvasGlyphTests.RunManaged(); else if (glyphProfile == "modules") CanvasGlyphTests.RunModules(); else CanvasGlyphTests.RunNative(glyphProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_EVENT_CONNECTIONS") is { } eventProfile)
 {
@@ -588,9 +595,6 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_CATALOG") ==
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_CHILD") is { } systemFontPath) { SystemFontTests.RunChild(systemFontPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_HOST") == "1") { SystemFontTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT") == "1") { SystemFontTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_CHILD") is { } fontRasterPath) { FontRasterPolicyTests.RunChild(fontRasterPath); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_HOST") == "1") { FontRasterPolicyTests.RunHost(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER") == "1") { FontRasterPolicyTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_SUPPORT_CHILD") is { } fontSupportPath) { FontSupportTests.RunChild(fontSupportPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_SUPPORT_HOST") == "1") { FontSupportTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_SUPPORT") == "1") { FontSupportTests.Run(); return; }

@@ -7,6 +7,7 @@ namespace Electron2D;
 // ponytail: native cache misses serialize here; shard font owners only if measured contention requires it.
 internal static class FontThread
 {
+    internal static readonly FontLCDSubpixelLayout LCDLayout = ProjectSettings.Get(ProjectSettings.LCDSubpixelLayout);
     private static readonly object InvocationGate = new(), WorkGate = new();
     private static int _owner = OperatingSystem.IsBrowser() ? Environment.CurrentManagedThreadId : 0;
     private static readonly Thread? Worker = OperatingSystem.IsBrowser() ? null : Start();

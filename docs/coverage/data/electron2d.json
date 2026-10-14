@@ -4368,6 +4368,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.FontAntialiasing",
+    "kind": "type",
+    "declaringType": "Electron2D.FontAntialiasing",
+    "name": "FontAntialiasing",
+    "signature": "public enum Electron2D.FontAntialiasing",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.FontFeatureInfo",
     "kind": "type",
     "declaringType": "Electron2D.FontFeatureInfo",
@@ -4403,6 +4421,24 @@
     "declaringType": "Electron2D.FontHinting",
     "name": "FontHinting",
     "signature": "public enum Electron2D.FontHinting",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.FontLCDSubpixelLayout",
+    "kind": "type",
+    "declaringType": "Electron2D.FontLCDSubpixelLayout",
+    "name": "FontLCDSubpixelLayout",
+    "signature": "public enum Electron2D.FontLCDSubpixelLayout",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -29099,6 +29135,45 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.FontAntialiasing.Gray()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FontAntialiasing",
+    "name": "Gray",
+    "signature": "public const Electron2D.FontAntialiasing Gray = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FontAntialiasing",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.FontAntialiasing.LCD()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FontAntialiasing",
+    "name": "LCD",
+    "signature": "public const Electron2D.FontAntialiasing LCD = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FontAntialiasing",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.FontAntialiasing.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FontAntialiasing",
+    "name": "None",
+    "signature": "public const Electron2D.FontAntialiasing None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FontAntialiasing",
+    "value": "0"
+  },
+  {
     "id": "enumValue:Electron2D.FontHinting.Light()",
     "kind": "enumValue",
     "declaringType": "Electron2D.FontHinting",
@@ -29136,6 +29211,84 @@
     "parameters": [],
     "returnType": "Electron2D.FontHinting",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.FontLCDSubpixelLayout.HorizontalBGR()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FontLCDSubpixelLayout",
+    "name": "HorizontalBGR",
+    "signature": "public const Electron2D.FontLCDSubpixelLayout HorizontalBGR = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FontLCDSubpixelLayout",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.FontLCDSubpixelLayout.HorizontalRGB()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FontLCDSubpixelLayout",
+    "name": "HorizontalRGB",
+    "signature": "public const Electron2D.FontLCDSubpixelLayout HorizontalRGB = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FontLCDSubpixelLayout",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.FontLCDSubpixelLayout.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FontLCDSubpixelLayout",
+    "name": "Max",
+    "signature": "public const Electron2D.FontLCDSubpixelLayout Max = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FontLCDSubpixelLayout",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.FontLCDSubpixelLayout.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FontLCDSubpixelLayout",
+    "name": "None",
+    "signature": "public const Electron2D.FontLCDSubpixelLayout None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FontLCDSubpixelLayout",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.FontLCDSubpixelLayout.VerticalBGR()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FontLCDSubpixelLayout",
+    "name": "VerticalBGR",
+    "signature": "public const Electron2D.FontLCDSubpixelLayout VerticalBGR = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FontLCDSubpixelLayout",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.FontLCDSubpixelLayout.VerticalRGB()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FontLCDSubpixelLayout",
+    "name": "VerticalRGB",
+    "signature": "public const Electron2D.FontLCDSubpixelLayout VerticalRGB = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FontLCDSubpixelLayout",
+    "value": "3"
   },
   {
     "id": "enumValue:Electron2D.FontStyle.Bold()",
@@ -210800,6 +210953,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.FontFile.Antialiasing()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontFile",
+    "name": "Antialiasing",
+    "signature": "public Electron2D.FontAntialiasing Antialiasing { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FontAntialiasing",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.FontFile.Data()",
     "kind": "property",
     "declaringType": "Electron2D.FontFile",
@@ -222500,6 +222666,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.LCDSubpixelLayout()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "LCDSubpixelLayout",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.FontLCDSubpixelLayout\u003E LCDSubpixelLayout { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.FontLCDSubpixelLayout\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.LocaleFallback()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -228399,6 +228578,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SystemFont.Antialiasing()",
+    "kind": "property",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "Antialiasing",
+    "signature": "public Electron2D.FontAntialiasing Antialiasing { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FontAntialiasing",
     "value": null
   },
   {

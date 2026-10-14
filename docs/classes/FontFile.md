@@ -1,10 +1,15 @@
 # FontFile
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 **Inherits:** [Font](Font.md), [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
 **Declaration:** `public class FontFile : Font` · **Source:** [FontFile.cs](../../src/Scene/Resources/FontFile.cs) · **Component:** [Canvas rendering](../components/canvas-rendering.md)
+
+
+## Antialiasing
+
+`public FontAntialiasing Antialiasing { get; set; }` defaults to Gray and executes native Mono/Gray/LCD coverage. Source changes retire caches after active readers; copy/storage and configured variations preserve the preference. The text owner's captured LCD layout and backend capability determine component sampling. See [complete behavior and verification](../components/text.md#native-font-antialiasing-and-lcd-layout).
 
 ## Description and example
 

@@ -7,6 +7,11 @@ Private native runtime binaries come from versioned Linux/macOS packages in ordi
 [Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
 
+
+## Native text coverage modes
+
+FontFile/SystemFont now generate real Mono/Gray/LCD native glyphs and share a captured project subpixel layout. Scalable glyph regions consume the existing GPU LCD path, while compatibility retains ordinary coverage and explicitly rejects component glyphs. [The complete font contract](../components/text.md#native-font-antialiasing-and-lcd-layout) records variation/fallback/storage, native oracle and rendered/allocation evidence. MSDF generation remains separate.
+
 ## LCD and MSDF regions
 
 The retained canvas now draws caller-supplied LCD and MSDF textures through scene and static server commands. GPU executes coverage decoding, component blend, custom materials, lights, masks/groups and MSAA; compatibility rejects the unsupported profile. [The glyph contract and verification](../components/canvas-rendering.md#lcd-and-msdf-texture-regions) distinguish texture consumption from the separate FontFile generation prerequisite.

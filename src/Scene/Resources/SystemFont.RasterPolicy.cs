@@ -3,6 +3,13 @@ namespace Electron2D;
 public partial class SystemFont
 {
     private bool _disableEmbeddedBitmaps = true, _forceAutohinter, _generateMipmaps;
+    private FontAntialiasing _antialiasing = FontAntialiasing.Gray;
+    /// <summary>Gets or sets coverage generation for realized primary and automatic fallback font sources.</summary>
+    /// <value>Gray initially. Unknown values are stored and use grayscale coverage.</value>
+    /// <remarks>Changes invalidate realized faces, dependent text and variations after active readers.
+    /// LCD glyph drawing requires the GPU canvas profile unless the captured subpixel layout is None.</remarks>
+    /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
+    public FontAntialiasing Antialiasing { get { lock (FontGate) { ThrowIfDisposed(); return _antialiasing; } } set => Set(ref _antialiasing, value); }
     /// <summary>Gets or sets whether selected native sources bypass monochrome embedded bitmap strikes.</summary>
     /// <value>True initially. Color strikes remain available and strokes use outlines.</value>
     /// <remarks>Changes retire realized sources after active readers and invalidate dependent text/variations.</remarks>
@@ -20,6 +27,7 @@ public partial class SystemFont
     public bool GenerateMIPMaps { get { lock (FontGate) { ThrowIfDisposed(); return _generateMipmaps; } } set => Set(ref _generateMipmaps, value); }
     private static readonly PropertyDescriptor[] RasterProperties =
     [
+        new PropertyDescriptor<SystemFont, FontAntialiasing>(nameof(Antialiasing), f => f.Antialiasing, (f, v) => f.Antialiasing = v, _ => FontAntialiasing.Gray, stored: true),
         new PropertyDescriptor<SystemFont, bool>(nameof(DisableEmbeddedBitmaps), f => f.DisableEmbeddedBitmaps, (f, v) => f.DisableEmbeddedBitmaps = v, _ => true, stored: true),
         new PropertyDescriptor<SystemFont, bool>(nameof(ForceAutohinter), f => f.ForceAutohinter, (f, v) => f.ForceAutohinter = v, _ => false, stored: true),
         new PropertyDescriptor<SystemFont, bool>(nameof(GenerateMIPMaps), f => f.GenerateMIPMaps, (f, v) => f.GenerateMIPMaps = v, _ => false, stored: true)

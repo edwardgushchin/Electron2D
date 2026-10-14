@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Electron2D;
 
 internal readonly record struct FontMetrics(float Ascent, float Descent, float Height, float UnderlinePosition, float UnderlineThickness);
-internal readonly record struct FontGlyph(Texture? Texture, Vector2 Offset, Vector2 Size, bool Colored = false, Rect2? Region = null);
+internal readonly record struct FontGlyph(Texture? Texture, Vector2 Offset, Vector2 Size, bool Colored = false, Rect2? Region = null, bool LCD = false);
 
 // Immutable source bytes and portable glyph textures; mutable native state is confined to FontThread.
 internal sealed partial class FontData : IDisposable
@@ -57,6 +57,7 @@ internal sealed partial class FontData : IDisposable
     internal int FontWeight { get; set; } = 400;
     internal int FontStretch { get; set; } = 100;
     internal FontStyle FontStyle { get; set; }
+    internal FontAntialiasing Antialiasing { get; set; } = FontAntialiasing.Gray;
     internal bool DisableEmbeddedBitmaps { get; set; } = true;
     internal bool ForceAutohinter { get; set; }
     internal bool GenerateMIPMaps { get; set; }
@@ -98,7 +99,7 @@ internal sealed partial class FontData : IDisposable
             var result = new FontData(_bytes, instance.FaceIndex, instance, cache);
             try
             {
-                result.Hinting = Hinting; result.SubpixelPositioning = SubpixelPositioning; result.KeepRoundingRemainders = KeepRoundingRemainders; result.Oversampling = Oversampling; result.ModulateColorGlyphs = ModulateColorGlyphs;
+                result.Antialiasing = Antialiasing; result.Hinting = Hinting; result.SubpixelPositioning = SubpixelPositioning; result.KeepRoundingRemainders = KeepRoundingRemainders; result.Oversampling = Oversampling; result.ModulateColorGlyphs = ModulateColorGlyphs;
                 result.DisableEmbeddedBitmaps = DisableEmbeddedBitmaps; result.ForceAutohinter = ForceAutohinter; result.GenerateMIPMaps = GenerateMIPMaps; result.SupportPolicy = SupportPolicy; result.OpenTypeFeatures = OpenTypeFeatures; result.AllowSystemFallback = AllowSystemFallback; result.AdvertisedFaceCount = AdvertisedFaceCount; return result;
             }
             catch { result.Dispose(); throw; }
@@ -284,14 +285,14 @@ internal sealed partial class FontData : IDisposable
     private FontGlyph RasterGlyph()
     {
         _precision!.SetSize(_size * _oversampling);
-        var raster = _precision.Rasterize(_glyph, Hinting, _phase, checked((int)(_outline * _oversampling) * 16), DisableEmbeddedBitmaps, ForceAutohinter);
+        var raster = _precision.Rasterize(_glyph, Hinting, _phase, checked((int)(_outline * _oversampling) * 16), DisableEmbeddedBitmaps, ForceAutohinter, Antialiasing, FontThread.LCDLayout);
         if (raster.Width == 0 || raster.Height == 0) return default;
         if (Authored != null && _oversampling == 1 && _phase == 0) return CacheRaster(_glyph, new(_size, _outline), raster);
         using var image = Image.CreateFromData(raster.Width, raster.Height, false, Image.Format.Rgba8, raster.Pixels);
         if (GenerateMIPMaps) image.GenerateMIPMaps();
         var texture = ImageTexture.CreateFromImage(image); texture.RetainRendererCache = true;
         var result = new FontGlyph(texture, new Vector2(raster.Left, -raster.Top) / _oversampling,
-            new Vector2(raster.Width, raster.Height) / _oversampling, raster.Colored);
+            new Vector2(raster.Width, raster.Height) / _oversampling, raster.Colored, LCD: raster.LCD);
         return result;
     }
     private static int Round26(double value) => checked((int)Math.Round(value, MidpointRounding.AwayFromZero) * 64);

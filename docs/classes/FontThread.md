@@ -1,6 +1,6 @@
 # FontThread
 
-Last updated: 2026-10-05
+Last updated: 2026-10-14
 
 **Visibility:** internal · **Source:** [FontThread.cs](../../src/Servers/Text/FontThread.cs) · **Component:** [Text](../components/text.md)
 
@@ -11,3 +11,5 @@ Serial synchronous owner for native font operations. Threaded runtimes use one w
 ## Integration and verification
 
 Used through [Font](Font.md), [FontFile](FontFile.md) and canvas/Label consumers. These helpers do not add a public compatibility API. The [text component](../components/text.md#verification-boundaries) distinguishes source, managed, native pixel, allocation and platform evidence. [ADR 0046](../decisions/rendering.md#adr-0046) owns the backend and integration boundary.
+
+LCDLayout captures ProjectSettings.LCDSubpixelLayout before the first text-owner worker starts. The typed built-in setting is restart-required; later preference changes do not mutate existing source caches.

@@ -1,6 +1,6 @@
 # FontGlyph
 
-Last updated: 2026-10-07
+Last updated: 2026-10-14
 
 **Visibility:** internal · **Source:** [FontData.cs](../../src/Servers/Text/FontData.cs) · **Component:** [Text](../components/text.md)
 
@@ -15,3 +15,5 @@ Used through [Font](Font.md), [FontFile](FontFile.md) and canvas/Label consumers
 ## Bitmap/indexed font integration
 
 [Bitmap font authoring](../components/bitmap-fonts.md) connects FontFile indexed image/glyph/kerning/metric records and matching configured FontVariation resources to the existing HarfBuzz and common canvas/control path. Copied pixel UV regions preserve clipping and recorded image snapshots; authored publication retires native data after active readers finish. Text/binary v3 import, typed archive/fresh-process restoration and current Linux GPU/compatibility prepared output are exercised. Source policies and other platform/native-allocator gates remain explicit.
+
+LCD records actual component coverage and directs common TextLayout drawing, clipped regions and outlines to the retained LCD command. Ordinary and intrinsic-color bitmap snapshots preserve their existing role.

@@ -1,6 +1,76 @@
 {
   "mappings": [
     {
+      "godot": "FontFile::property:antialiasing",
+      "electron2d": "property:Electron2D.FontFile.Antialiasing()",
+      "reason": "ADRs 0046/0051: native Mono/Gray/LCD FreeType coverage executes for FontFile/SystemFont, configured variants and owned system fallbacks. Typed project None/horizontal/vertical RGB/BGR layout is captured at first text-owner startup, with restart metadata and a nonselectable Max. Generated caches retire after active readers; authored bitmap roles, callbacks, metrics, imports, duplicate and fresh-process storage are verified. GPU scalar/string/variation/Label/clip/outline pixels, all layouts and MSAA pass with 64 active/64 idle zero managed bytes; compatibility executes ordinary coverage and rejects actual component glyph submission. 60 independent packaged FreeType raster cases verify exact component bytes, phases/hinting/outline. Intrinsic-color/bitmap-only image roles remain explicit adaptations; MSDF/native allocator/foreign/owner acceptance remain separate."
+    },
+    {
+      "godot": "SystemFont::property:antialiasing",
+      "electron2d": "property:Electron2D.SystemFont.Antialiasing()",
+      "reason": "ADRs 0046/0051: native Mono/Gray/LCD FreeType coverage executes for FontFile/SystemFont, configured variants and owned system fallbacks. Typed project None/horizontal/vertical RGB/BGR layout is captured at first text-owner startup, with restart metadata and a nonselectable Max. Generated caches retire after active readers; authored bitmap roles, callbacks, metrics, imports, duplicate and fresh-process storage are verified. GPU scalar/string/variation/Label/clip/outline pixels, all layouts and MSAA pass with 64 active/64 idle zero managed bytes; compatibility executes ordinary coverage and rejects actual component glyph submission. 60 independent packaged FreeType raster cases verify exact component bytes, phases/hinting/outline. Intrinsic-color/bitmap-only image roles remain explicit adaptations; MSDF/native allocator/foreign/owner acceptance remain separate."
+    },
+    {
+      "godot": "TextServer::enum:FontAntialiasing",
+      "electron2d": "T:Electron2D.FontAntialiasing",
+      "reason": "ADRs 0046/0051: native Mono/Gray/LCD FreeType coverage executes for FontFile/SystemFont, configured variants and owned system fallbacks. Typed project None/horizontal/vertical RGB/BGR layout is captured at first text-owner startup, with restart metadata and a nonselectable Max. Generated caches retire after active readers; authored bitmap roles, callbacks, metrics, imports, duplicate and fresh-process storage are verified. GPU scalar/string/variation/Label/clip/outline pixels, all layouts and MSAA pass with 64 active/64 idle zero managed bytes; compatibility executes ordinary coverage and rejects actual component glyph submission. 60 independent packaged FreeType raster cases verify exact component bytes, phases/hinting/outline. Intrinsic-color/bitmap-only image roles remain explicit adaptations; MSDF/native allocator/foreign/owner acceptance remain separate."
+    },
+    {
+      "godot": "TextServer::enum_value:FontAntialiasing.FONT_ANTIALIASING_GRAY",
+      "electron2d": "enumValue:Electron2D.FontAntialiasing.Gray()",
+      "reason": "ADRs 0046/0051: native Mono/Gray/LCD FreeType coverage executes for FontFile/SystemFont, configured variants and owned system fallbacks. Typed project None/horizontal/vertical RGB/BGR layout is captured at first text-owner startup, with restart metadata and a nonselectable Max. Generated caches retire after active readers; authored bitmap roles, callbacks, metrics, imports, duplicate and fresh-process storage are verified. GPU scalar/string/variation/Label/clip/outline pixels, all layouts and MSAA pass with 64 active/64 idle zero managed bytes; compatibility executes ordinary coverage and rejects actual component glyph submission. 60 independent packaged FreeType raster cases verify exact component bytes, phases/hinting/outline. Intrinsic-color/bitmap-only image roles remain explicit adaptations; MSDF/native allocator/foreign/owner acceptance remain separate."
+    },
+    {
+      "godot": "TextServer::enum_value:FontAntialiasing.FONT_ANTIALIASING_LCD",
+      "electron2d": "enumValue:Electron2D.FontAntialiasing.LCD()",
+      "reason": "ADRs 0046/0051: native Mono/Gray/LCD FreeType coverage executes for FontFile/SystemFont, configured variants and owned system fallbacks. Typed project None/horizontal/vertical RGB/BGR layout is captured at first text-owner startup, with restart metadata and a nonselectable Max. Generated caches retire after active readers; authored bitmap roles, callbacks, metrics, imports, duplicate and fresh-process storage are verified. GPU scalar/string/variation/Label/clip/outline pixels, all layouts and MSAA pass with 64 active/64 idle zero managed bytes; compatibility executes ordinary coverage and rejects actual component glyph submission. 60 independent packaged FreeType raster cases verify exact component bytes, phases/hinting/outline. Intrinsic-color/bitmap-only image roles remain explicit adaptations; MSDF/native allocator/foreign/owner acceptance remain separate."
+    },
+    {
+      "godot": "TextServer::enum_value:FontAntialiasing.FONT_ANTIALIASING_NONE",
+      "electron2d": "enumValue:Electron2D.FontAntialiasing.None()",
+      "reason": "ADRs 0046/0051: native Mono/Gray/LCD FreeType coverage executes for FontFile/SystemFont, configured variants and owned system fallbacks. Typed project None/horizontal/vertical RGB/BGR layout is captured at first text-owner startup, with restart metadata and a nonselectable Max. Generated caches retire after active readers; authored bitmap roles, callbacks, metrics, imports, duplicate and fresh-process storage are verified. GPU scalar/string/variation/Label/clip/outline pixels, all layouts and MSAA pass with 64 active/64 idle zero managed bytes; compatibility executes ordinary coverage and rejects actual component glyph submission. 60 independent packaged FreeType raster cases verify exact component bytes, phases/hinting/outline. Intrinsic-color/bitmap-only image roles remain explicit adaptations; MSDF/native allocator/foreign/owner acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:gui/theme/lcd_subpixel_layout",
+      "electron2d": "property:Electron2D.ProjectSettings.LCDSubpixelLayout()",
+      "reason": "ADRs 0046/0051: native Mono/Gray/LCD FreeType coverage executes for FontFile/SystemFont, configured variants and owned system fallbacks. Typed project None/horizontal/vertical RGB/BGR layout is captured at first text-owner startup, with restart metadata and a nonselectable Max. Generated caches retire after active readers; authored bitmap roles, callbacks, metrics, imports, duplicate and fresh-process storage are verified. GPU scalar/string/variation/Label/clip/outline pixels, all layouts and MSAA pass with 64 active/64 idle zero managed bytes; compatibility executes ordinary coverage and rejects actual component glyph submission. 60 independent packaged FreeType raster cases verify exact component bytes, phases/hinting/outline. Intrinsic-color/bitmap-only image roles remain explicit adaptations; MSDF/native allocator/foreign/owner acceptance remain separate."
+    },
+    {
+      "godot": "TextServer::enum:FontLCDSubpixelLayout",
+      "electron2d": "T:Electron2D.FontLCDSubpixelLayout",
+      "reason": "ADRs 0046/0051: native Mono/Gray/LCD FreeType coverage executes for FontFile/SystemFont, configured variants and owned system fallbacks. Typed project None/horizontal/vertical RGB/BGR layout is captured at first text-owner startup, with restart metadata and a nonselectable Max. Generated caches retire after active readers; authored bitmap roles, callbacks, metrics, imports, duplicate and fresh-process storage are verified. GPU scalar/string/variation/Label/clip/outline pixels, all layouts and MSAA pass with 64 active/64 idle zero managed bytes; compatibility executes ordinary coverage and rejects actual component glyph submission. 60 independent packaged FreeType raster cases verify exact component bytes, phases/hinting/outline. Intrinsic-color/bitmap-only image roles remain explicit adaptations; MSDF/native allocator/foreign/owner acceptance remain separate."
+    },
+    {
+      "godot": "TextServer::enum_value:FontLCDSubpixelLayout.FONT_LCD_SUBPIXEL_LAYOUT_HBGR",
+      "electron2d": "enumValue:Electron2D.FontLCDSubpixelLayout.HorizontalBGR()",
+      "reason": "ADRs 0046/0051: native Mono/Gray/LCD FreeType coverage executes for FontFile/SystemFont, configured variants and owned system fallbacks. Typed project None/horizontal/vertical RGB/BGR layout is captured at first text-owner startup, with restart metadata and a nonselectable Max. Generated caches retire after active readers; authored bitmap roles, callbacks, metrics, imports, duplicate and fresh-process storage are verified. GPU scalar/string/variation/Label/clip/outline pixels, all layouts and MSAA pass with 64 active/64 idle zero managed bytes; compatibility executes ordinary coverage and rejects actual component glyph submission. 60 independent packaged FreeType raster cases verify exact component bytes, phases/hinting/outline. Intrinsic-color/bitmap-only image roles remain explicit adaptations; MSDF/native allocator/foreign/owner acceptance remain separate."
+    },
+    {
+      "godot": "TextServer::enum_value:FontLCDSubpixelLayout.FONT_LCD_SUBPIXEL_LAYOUT_HRGB",
+      "electron2d": "enumValue:Electron2D.FontLCDSubpixelLayout.HorizontalRGB()",
+      "reason": "ADRs 0046/0051: native Mono/Gray/LCD FreeType coverage executes for FontFile/SystemFont, configured variants and owned system fallbacks. Typed project None/horizontal/vertical RGB/BGR layout is captured at first text-owner startup, with restart metadata and a nonselectable Max. Generated caches retire after active readers; authored bitmap roles, callbacks, metrics, imports, duplicate and fresh-process storage are verified. GPU scalar/string/variation/Label/clip/outline pixels, all layouts and MSAA pass with 64 active/64 idle zero managed bytes; compatibility executes ordinary coverage and rejects actual component glyph submission. 60 independent packaged FreeType raster cases verify exact component bytes, phases/hinting/outline. Intrinsic-color/bitmap-only image roles remain explicit adaptations; MSDF/native allocator/foreign/owner acceptance remain separate."
+    },
+    {
+      "godot": "TextServer::enum_value:FontLCDSubpixelLayout.FONT_LCD_SUBPIXEL_LAYOUT_MAX",
+      "electron2d": "enumValue:Electron2D.FontLCDSubpixelLayout.Max()",
+      "reason": "ADRs 0046/0051: native Mono/Gray/LCD FreeType coverage executes for FontFile/SystemFont, configured variants and owned system fallbacks. Typed project None/horizontal/vertical RGB/BGR layout is captured at first text-owner startup, with restart metadata and a nonselectable Max. Generated caches retire after active readers; authored bitmap roles, callbacks, metrics, imports, duplicate and fresh-process storage are verified. GPU scalar/string/variation/Label/clip/outline pixels, all layouts and MSAA pass with 64 active/64 idle zero managed bytes; compatibility executes ordinary coverage and rejects actual component glyph submission. 60 independent packaged FreeType raster cases verify exact component bytes, phases/hinting/outline. Intrinsic-color/bitmap-only image roles remain explicit adaptations; MSDF/native allocator/foreign/owner acceptance remain separate."
+    },
+    {
+      "godot": "TextServer::enum_value:FontLCDSubpixelLayout.FONT_LCD_SUBPIXEL_LAYOUT_NONE",
+      "electron2d": "enumValue:Electron2D.FontLCDSubpixelLayout.None()",
+      "reason": "ADRs 0046/0051: native Mono/Gray/LCD FreeType coverage executes for FontFile/SystemFont, configured variants and owned system fallbacks. Typed project None/horizontal/vertical RGB/BGR layout is captured at first text-owner startup, with restart metadata and a nonselectable Max. Generated caches retire after active readers; authored bitmap roles, callbacks, metrics, imports, duplicate and fresh-process storage are verified. GPU scalar/string/variation/Label/clip/outline pixels, all layouts and MSAA pass with 64 active/64 idle zero managed bytes; compatibility executes ordinary coverage and rejects actual component glyph submission. 60 independent packaged FreeType raster cases verify exact component bytes, phases/hinting/outline. Intrinsic-color/bitmap-only image roles remain explicit adaptations; MSDF/native allocator/foreign/owner acceptance remain separate."
+    },
+    {
+      "godot": "TextServer::enum_value:FontLCDSubpixelLayout.FONT_LCD_SUBPIXEL_LAYOUT_VBGR",
+      "electron2d": "enumValue:Electron2D.FontLCDSubpixelLayout.VerticalBGR()",
+      "reason": "ADRs 0046/0051: native Mono/Gray/LCD FreeType coverage executes for FontFile/SystemFont, configured variants and owned system fallbacks. Typed project None/horizontal/vertical RGB/BGR layout is captured at first text-owner startup, with restart metadata and a nonselectable Max. Generated caches retire after active readers; authored bitmap roles, callbacks, metrics, imports, duplicate and fresh-process storage are verified. GPU scalar/string/variation/Label/clip/outline pixels, all layouts and MSAA pass with 64 active/64 idle zero managed bytes; compatibility executes ordinary coverage and rejects actual component glyph submission. 60 independent packaged FreeType raster cases verify exact component bytes, phases/hinting/outline. Intrinsic-color/bitmap-only image roles remain explicit adaptations; MSDF/native allocator/foreign/owner acceptance remain separate."
+    },
+    {
+      "godot": "TextServer::enum_value:FontLCDSubpixelLayout.FONT_LCD_SUBPIXEL_LAYOUT_VRGB",
+      "electron2d": "enumValue:Electron2D.FontLCDSubpixelLayout.VerticalRGB()",
+      "reason": "ADRs 0046/0051: native Mono/Gray/LCD FreeType coverage executes for FontFile/SystemFont, configured variants and owned system fallbacks. Typed project None/horizontal/vertical RGB/BGR layout is captured at first text-owner startup, with restart metadata and a nonselectable Max. Generated caches retire after active readers; authored bitmap roles, callbacks, metrics, imports, duplicate and fresh-process storage are verified. GPU scalar/string/variation/Label/clip/outline pixels, all layouts and MSAA pass with 64 active/64 idle zero managed bytes; compatibility executes ordinary coverage and rejects actual component glyph submission. 60 independent packaged FreeType raster cases verify exact component bytes, phases/hinting/outline. Intrinsic-color/bitmap-only image roles remain explicit adaptations; MSDF/native allocator/foreign/owner acceptance remain separate."
+    },
+    {
       "godot": "CanvasItem::method:draw_char(Font:,Vector2:,String:,int:,Color:,float:)",
       "electron2d": "method:Electron2D.CanvasItem.DrawChar(Electron2D.Font,Electron2D.Vector2,System.String,System.Int32,System.Nullable<Electron2D.Color>,System.Single)",
       "reason": "ADR 0046: executable FreeType/HarfBuzz text resources retain fractional shaping, scalar clusters, Unicode bidi/grapheme/line/word handling, explicit fallback, source outline/phase rules and ordinary canvas lifetime. FontTests, NativeFontPrecisionTests and FontRenderingTests verify metrics/ligatures/Arabic/Hebrew/CJK, exact independent C/FreeType bitmap pixels, all six drawing entrypoints and 64 warmed active frames with zero managed bytes on Linux Wayland GPU/compatibility. Other text platforms remain separately gated."
@@ -4181,6 +4251,26 @@
   "statusGroups": [
     {
       "state": "Implemented",
+      "godot": [
+        "FontFile::property:antialiasing",
+        "SystemFont::property:antialiasing",
+        "TextServer::enum:FontAntialiasing",
+        "TextServer::enum_value:FontAntialiasing.FONT_ANTIALIASING_GRAY",
+        "TextServer::enum_value:FontAntialiasing.FONT_ANTIALIASING_LCD",
+        "TextServer::enum_value:FontAntialiasing.FONT_ANTIALIASING_NONE",
+        "ProjectSettings::property:gui/theme/lcd_subpixel_layout",
+        "TextServer::enum:FontLCDSubpixelLayout",
+        "TextServer::enum_value:FontLCDSubpixelLayout.FONT_LCD_SUBPIXEL_LAYOUT_HBGR",
+        "TextServer::enum_value:FontLCDSubpixelLayout.FONT_LCD_SUBPIXEL_LAYOUT_HRGB",
+        "TextServer::enum_value:FontLCDSubpixelLayout.FONT_LCD_SUBPIXEL_LAYOUT_MAX",
+        "TextServer::enum_value:FontLCDSubpixelLayout.FONT_LCD_SUBPIXEL_LAYOUT_NONE",
+        "TextServer::enum_value:FontLCDSubpixelLayout.FONT_LCD_SUBPIXEL_LAYOUT_VBGR",
+        "TextServer::enum_value:FontLCDSubpixelLayout.FONT_LCD_SUBPIXEL_LAYOUT_VRGB"
+      ],
+      "reason": "ADRs 0046/0051: native Mono/Gray/LCD FreeType coverage executes for FontFile/SystemFont, configured variants and owned system fallbacks. Typed project None/horizontal/vertical RGB/BGR layout is captured at first text-owner startup, with restart metadata and a nonselectable Max. Generated caches retire after active readers; authored bitmap roles, callbacks, metrics, imports, duplicate and fresh-process storage are verified. GPU scalar/string/variation/Label/clip/outline pixels, all layouts and MSAA pass with 64 active/64 idle zero managed bytes; compatibility executes ordinary coverage and rejects actual component glyph submission. 60 independent packaged FreeType raster cases verify exact component bytes, phases/hinting/outline. Intrinsic-color/bitmap-only image roles remain explicit adaptations; MSDF/native allocator/foreign/owner acceptance remain separate."
+    },
+    {
+      "state": "Implemented",
       "reason": "ADR 0046: executable FreeType/HarfBuzz text resources retain fractional shaping, scalar clusters, Unicode bidi/grapheme/line/word handling, explicit fallback, source outline/phase rules and ordinary canvas lifetime. FontTests, NativeFontPrecisionTests and FontRenderingTests verify metrics/ligatures/Arabic/Hebrew/CJK, exact independent C/FreeType bitmap pixels, all six drawing entrypoints and 64 warmed active frames with zero managed bytes on Linux Wayland GPU/compatibility. Other text platforms remain separately gated.",
       "godot": [
         "CanvasItem::method:draw_char(Font:,Vector2:,String:,int:,Color:,float:)",
@@ -4336,7 +4426,7 @@
     },
     {
       "state": "Partial",
-      "reason": "FontFile executes scalable/bitmap loading, indexed glyph/size/texture/kerning/instance authoring, language/script overrides, Linux automatic system fallback and real shared shaping/rendering/storage. Remaining applicable mechanisms: non-SFNT Type 1 sources, antialiasing/LCD modes and MSDF, plus foreign installed-font providers. Exact dependencies stay on their own rows; no inert settings are exposed.",
+      "reason": "FontFile executes scalable/bitmap loading, indexed glyph/size/texture/kerning/instance authoring, language/script overrides, Linux automatic system fallback and real shared shaping/rendering/storage. Remaining applicable mechanisms: non-SFNT Type 1 sources, MSDF generation, plus foreign installed-font providers. Exact dependencies stay on their own rows; no inert settings are exposed.",
       "godot": [
         "class:FontFile"
       ]
@@ -4353,13 +4443,6 @@
         "FontFile::method:remove_script_support_override(String:)",
         "FontFile::method:set_language_support_override(String:,bool:)",
         "FontFile::method:set_script_support_override(String:,bool:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable raster policy needs mono/gray/LCD FreeType bitmap modes, RGB/BGR horizontal/vertical coverage cache identity and the project LCD layout consumer. LCD is coupled to a post-material/post-light sampling stage and component-color blend constants; GPU has native constants, but the current shader composition has no LCD epilogue and SDL_Renderer has no constant-color blend factor. Trigger: complete LCD canvas composition/capability/pixel slice before publishing this policy; grayscale substitution is not an implementation.",
-      "godot": [
-        "FontFile::property:antialiasing"
       ]
     },
     {
@@ -5270,14 +5353,7 @@
         "class:SystemFont"
       ],
       "state": "Partial",
-      "reason": "SystemFont resolves and owns Linux system faces, styles/variables, logical collection faces, common text consumers and typed storage; absent catalogs use a borrowed theme source. Exact remaining dependencies: CoreText and DirectWrite providers on their owning targets; native antialiasing/bitmap/autohinter/mipmap modes and MSDF sampling from FontFile foundation. No inert policies are exposed."
-    },
-    {
-      "godot": [
-        "SystemFont::property:antialiasing"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: first executable FontFile native raster policy/MSDF slice must apply this same policy across SystemFont-owned primary/fallback faces, duplication/storage and both applicable canvas backend contracts. Platform discovery is implemented separately; no passive setting is exposed."
+      "reason": "SystemFont resolves and owns Linux system faces, styles/variables, logical collection faces, common text consumers and typed storage; absent catalogs use a borrowed theme source. Exact remaining dependencies: CoreText and DirectWrite providers on their owning targets; MSDF generation from the FontFile foundation. No inert policies are exposed."
     },
     {
       "godot": [

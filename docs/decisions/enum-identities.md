@@ -37,6 +37,8 @@ GraphEdit keeps the applicable `GridPattern` and `PanningScheme` properties. Its
 
 The owning class keeps its applicable property names. Enum numeric values and observable behavior do not change with location. Do not ship former type spellings, compatibility aliases or duplicate public mirrors. Keep the bidirectional coverage mappings, source XML, consumers and class pages synchronized with these identities. When a new enum is proposed, compare its meaning and valid values with existing public enums before declaring a new type.
 
+FontFile/SystemFont use the shared top-level FontAntialiasing contract (None/Gray/LCD). The distinct top-level FontLCDSubpixelLayout contract (None/HorizontalRGB/HorizontalBGR/VerticalRGB/VerticalBGR/Max) owns the project text-startup preference. Layout Max remains nonselectable; these enums do not merge with canvas MSAA or raster hinting.
+
 ### Consequences
 
 Moving or unifying public enum types breaks source and binary compatibility. The value-contract rule governs new enum identities; it does not move unrelated owner-specific types. ADR 0045 continues to govern acronyms in function, method and property names, not enum type names.

@@ -287,6 +287,13 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<Viewport.MSAA> MSAA2D { get; } =
         new("rendering/anti_aliasing/quality/msaa_2d", Viewport.MSAA.Disabled, value => (uint)value < (uint)Viewport.MSAA.Max);
 
+    /// <summary>Selects the LCD subpixel arrangement captured when the native text owner first starts.</summary>
+    /// <value>gui/theme/lcd_subpixel_layout; HorizontalRGB initially. None through VerticalBGR are valid.</value>
+    /// <remarks>Set before first native font use. Later assignments persist the next process's preference and require restart.
+    /// None makes LCD fonts rasterize grayscale; enabled component layouts require supported GPU drawing.</remarks>
+    public static ProjectSetting<FontLCDSubpixelLayout> LCDSubpixelLayout { get; } =
+        new("gui/theme/lcd_subpixel_layout", FontLCDSubpixelLayout.HorizontalRGB, value => (uint)value < (uint)FontLCDSubpixelLayout.Max);
+
     internal static ProjectSetting<bool> NavigationMapAsyncIterations { get; } = new("navigation/world/map_use_async_iterations", true);
     internal static ProjectSetting<bool> NavigationRegionAsyncIterations { get; } = new("navigation/world/region_use_async_iterations", true);
 

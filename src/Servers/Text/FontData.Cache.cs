@@ -31,7 +31,8 @@ internal sealed partial class FontData
         if (SelectAuthored(size, outline) is not { } cache || !cache.Glyphs.TryGetValue(glyph, out var record) || !record.Authored) return false;
         var page = record.Page >= 0 && record.Page < cache.Pages.Count ? cache.Pages[record.Page] : null;
         var factor = BitmapScale(size) * cache.Scale;
-        result = new(page?.Texture(GenerateMIPMaps), record.Offset * factor, record.Size * factor, record.Colored, record.Region); return true;
+        var lcd = _bytes.Length > 0 && Antialiasing == FontAntialiasing.LCD && FontThread.LCDLayout != FontLCDSubpixelLayout.None;
+        result = new(page?.Texture(GenerateMIPMaps), record.Offset * factor, record.Size * factor, record.Colored, record.Region, lcd); return true;
     }
     private FontGlyph CacheRaster(uint glyph, Vector2i key, NativeRasterGlyph raster)
     {
@@ -63,7 +64,7 @@ internal sealed partial class FontData
         var offset = new Vector2(raster.Left, -raster.Top); var dimensions = new Vector2(raster.Width, raster.Height);
         var region = new Rect2(position.X + 1, position.Y + 1, raster.Width, raster.Height);
         size.Glyphs[glyph] = new(offset, dimensions, region, index, raster.Colored, false);
-        return new(texture, offset, dimensions, raster.Colored, region);
+        return new(texture, offset, dimensions, raster.Colored, region, raster.LCD);
     }
     private static bool TryPack(FontCachePage page, int width, int height, out Vector2i position)
     {
