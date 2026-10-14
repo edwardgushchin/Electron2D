@@ -201,7 +201,7 @@ one island per active body. Each profile measures 128 complete moving frames plu
 reads after 128 warm frames and collection at zero owner/all-thread managed bytes.
 `--lifecycle` additionally rejects negative samples and Islands greater than Active,
 retaining the previous successful publication and terminal error cleanup.
-The registered geometry remains bounded to its implemented circle/annulus model.
+The registered geometry now includes circle/annulus, rectangle and capsule numerics; other families remain open.
 
 `--rectangle-geometry`, with optional `--cpu`/`--gpu` and `--threaded`, checks
 actual rotated/offset unit-pose rectangular contours, Area monitoring and point
@@ -211,3 +211,13 @@ and contact/replay bracket measures 128 complete frames at 0/0 managed bytes.
 Registered-only controls preserve the custom annulus hole and inner-boundary
 response. The shared pose precondition remains unit scale and zero skew; other
 primitive/contour families and target-device acceptance retain separate gates.
+
+`--capsule-geometry`, with optional `--cpu`/`--gpu` and `--threaded`, verifies actual
+rounded segments, rotated/offset slots and Areas, point and axial/side/oblique-cap
+rays, all shape-query families, margins, body motion, compound mass, all CCD modes,
+full linear/angular impulses and silent private replay. Eight warmed brackets
+measure 128 full frames each at 0/0 managed bytes. Cold controls cover disk and
+standalone zero-radius limits, live edits, independent sweeps, false circumscribed
+contacts, thin walls and intermediate rotational arcs. Registered-only custom-ring
+checks retain the hollow boundary. Geometry uses public API only; complete
+provider/zero-area dynamic/native/network/target-device acceptance stays open.

@@ -15,7 +15,14 @@ public static partial class BackendChecks
         }
         var scale = transform.Scale.Abs();
         if (!Mathf.IsEqualApprox(scale.X, scale.Y) || !Mathf.IsZeroApprox(transform.Skew))
-            throw new NotSupportedException("Circle/annulus fixtures require uniform local scale.");
+            throw new NotSupportedException("Round fixtures require uniform local scale.");
+        if (geometry.Type == PhysicsServer.ShapeType.Capsule)
+        {
+            var capsule = geometry.GetCapsuleDimensions();
+            var r = capsule.Radius * scale.X;
+            var y = transform.Y * MathF.Max(0, capsule.Height / 2 - capsule.Radius);
+            return new(index, transform.Origin, 0, y.Length() + r, default, y, r, true);
+        }
         var dimensions = Annulus.Dimensions(geometry);
         return new(index, transform.Origin, dimensions.Inner * scale.X, dimensions.Outer * scale.X);
     }
@@ -28,7 +35,8 @@ public static partial class BackendChecks
     private static bool ContainsPart(in Part part, Transform pose, Vector2 point)
     {
         var center = PartAt(part, pose);
-        if (!part.Rectangle) return Annulus.Contains(point, center, part.Inner, part.Outer);
+        if (part.Capsule) return point.DistanceSquaredTo(ClosestContour(part, pose, point)) <= part.Inflation * part.Inflation;
+        if (!part.Contour) return Annulus.Contains(point, center, part.Inner, part.Outer);
         var v = Coefficients(point - center, EdgeX(part, pose), EdgeY(part, pose));
         return MathF.Abs(v.X) <= 1 && MathF.Abs(v.Y) <= 1;
     }
@@ -40,9 +48,9 @@ public static partial class BackendChecks
     }
     private static Vector2 ClosestEdge(Vector2 point, Vector2 a, Vector2 b)
     {
-        var edge = b - a; return a + edge * Math.Clamp((point - a).Dot(edge) / edge.LengthSquared(), 0, 1);
+        var edge = b - a; return edge == Vector2.Zero ? a : a + edge * Math.Clamp((point - a).Dot(edge) / edge.LengthSquared(), 0, 1);
     }
-    private static Vector2 ClosestRectangle(in Part part, Transform pose, Vector2 point)
+    private static Vector2 ClosestContour(in Part part, Transform pose, Vector2 point)
     {
         Span<Vector2> corners = stackalloc Vector2[4]; Corners(part, pose, corners);
         var best = corners[0]; var distance = float.PositiveInfinity;
@@ -53,19 +61,19 @@ public static partial class BackendChecks
         }
         return best;
     }
-    private static float ProjectionRadius(in Part part, Transform pose, Vector2 axis) => part.Rectangle
+    private static float ProjectionRadius(in Part part, Transform pose, Vector2 axis) => part.Contour
         ? MathF.Abs(EdgeX(part, pose).Dot(axis)) + MathF.Abs(EdgeY(part, pose).Dot(axis)) + part.Inflation
         : part.Outer;
     private static Vector2 LeadingPart(in Part part, Transform pose, Vector2 direction)
     {
-        if (!part.Rectangle) return PartAt(part, pose) + direction * part.Outer;
+        if (!part.Contour) return PartAt(part, pose) + direction * part.Outer;
         var x = EdgeX(part, pose); var y = EdgeY(part, pose);
         return PartAt(part, pose) + x * MathF.Sign(x.Dot(direction)) + y * MathF.Sign(y.Dot(direction)) + direction * part.Inflation;
     }
     private static void SupportRange(in Part part, Transform pose, Vector2 normal, Vector2 tangent, out float minimum, out float maximum)
     {
         var center = PartAt(part, pose);
-        if (!part.Rectangle) { minimum = maximum = center.Dot(tangent); return; }
+        if (!part.Contour) { minimum = maximum = center.Dot(tangent); return; }
         var x = EdgeX(part, pose); var y = EdgeY(part, pose);
         var sx = x.Dot(normal); var sy = y.Dot(normal);
         var tx = .000001f * MathF.Max(1, x.Length()); var ty = .000001f * MathF.Max(1, y.Length());
@@ -75,20 +83,25 @@ public static partial class BackendChecks
             (MathF.Abs(sy) <= ty ? MathF.Abs(y.Dot(tangent)) : 0);
         minimum = along - extent; maximum = along + extent;
     }
-    private static float RectangleGap(in Part first, Transform a, in Part second, Transform b,
+    private static float ContourGap(in Part first, Transform a, in Part second, Transform b,
         out Vector2 normal, out Vector2 pointA, out Vector2 pointB)
     {
-        Span<Vector2> axes = stackalloc Vector2[21]; var count = 0;
-        if (first.Rectangle) { var x = EdgeX(first, a); var y = EdgeY(first, a); axes[count++] = new(-x.Y, x.X); axes[count++] = new(-y.Y, y.X); }
-        if (second.Rectangle) { var x = EdgeX(second, b); var y = EdgeY(second, b); axes[count++] = new(-x.Y, x.X); axes[count++] = new(-y.Y, y.X); }
+        Span<Vector2> axes = stackalloc Vector2[40]; var count = 0;
+        if (first.Contour) { var x = EdgeX(first, a); var y = EdgeY(first, a); axes[count++] = new(-x.Y, x.X); axes[count++] = new(-y.Y, y.X); }
+        if (second.Contour) { var x = EdgeX(second, b); var y = EdgeY(second, b); axes[count++] = new(-x.Y, x.X); axes[count++] = new(-y.Y, y.X); }
         var ca = PartAt(first, a); var cb = PartAt(second, b);
-        if (!first.Rectangle) axes[count++] = ca - ClosestRectangle(second, b, ca);
-        else if (!second.Rectangle) axes[count++] = cb - ClosestRectangle(first, a, cb);
+        axes[count++] = ca == cb ? Vector2.Right : cb - ca;
+        if (!first.Contour) axes[count++] = ca - ClosestContour(second, b, ca);
+        else if (!second.Contour) axes[count++] = cb - ClosestContour(first, a, cb);
         else if (first.Inflation + second.Inflation > 0)
         {
             Span<Vector2> ac = stackalloc Vector2[4]; Span<Vector2> bc = stackalloc Vector2[4];
             Corners(first, a, ac); Corners(second, b, bc);
-            for (var i = 0; i < 4; i++) for (var j = 0; j < 4; j++) axes[count++] = bc[j] - ac[i];
+            for (var i = 0; i < 4; i++) for (var j = 0; j < 4; j++)
+                {
+                    axes[count++] = bc[j] - ClosestEdge(bc[j], ac[i], ac[(i + 1) % 4]);
+                    axes[count++] = ac[i] - ClosestEdge(ac[i], bc[j], bc[(j + 1) % 4]);
+                }
         }
         var gap = float.NegativeInfinity; normal = Vector2.Right;
         for (var i = 0; i < count; i++)
@@ -109,11 +122,11 @@ public static partial class BackendChecks
     private static float PartGap(in Part first, Transform a, in Part second, Transform b,
         out Vector2 normal, out Vector2 pointA, out Vector2 pointB)
     {
-        if (first.Rectangle || second.Rectangle)
+        if (first.Contour || second.Contour)
         {
             if (first.Inner > 0 || second.Inner > 0)
-                return RectangleRingGap(first, a, second, b, out normal, out pointA, out pointB);
-            return RectangleGap(first, a, second, b, out normal, out pointA, out pointB);
+                return ContourRingGap(first, a, second, b, out normal, out pointA, out pointB);
+            return ContourGap(first, a, second, b, out normal, out pointA, out pointB);
         }
         var ca = PartAt(first, a); var cb = PartAt(second, b); var delta = cb - ca;
         var distance = delta.Length(); normal = distance > 0 ? delta / distance : Vector2.Right;
@@ -128,12 +141,12 @@ public static partial class BackendChecks
         }
         pointA = ca + normal * first.Outer; pointB = cb - normal * second.Outer; return outer;
     }
-    private static float RectangleRingGap(in Part first, Transform a, in Part second, Transform b,
+    private static float ContourRingGap(in Part first, Transform a, in Part second, Transform b,
         out Vector2 normal, out Vector2 pointA, out Vector2 pointB)
     {
-        var box = first.Rectangle ? first : second; var boxPose = first.Rectangle ? a : b;
-        var ring = first.Rectangle ? second : first; var ringPose = first.Rectangle ? b : a;
-        var center = PartAt(ring, ringPose); var closest = ClosestRectangle(box, boxPose, center);
+        var box = first.Contour ? first : second; var boxPose = first.Contour ? a : b;
+        var ring = first.Contour ? second : first; var ringPose = first.Contour ? b : a;
+        var center = PartAt(ring, ringPose); var closest = ClosestContour(box, boxPose, center);
         Span<Vector2> vertices = stackalloc Vector2[4]; Corners(box, boxPose, vertices);
         var farthest = vertices[0];
         for (var i = 1; i < 4; i++) if (vertices[i].DistanceSquaredTo(center) > farthest.DistanceSquaredTo(center)) farthest = vertices[i];
@@ -141,12 +154,12 @@ public static partial class BackendChecks
         var outer = (ContainsPart(box, boxPose, center) ? 0 : closest.DistanceTo(center)) - ring.Outer - box.Inflation;
         if (inner > outer)
         {
-            var n = (farthest - center).Normalized(); normal = first.Rectangle ? n : -n;
-            pointA = first.Rectangle ? farthest + n * box.Inflation : center + n * ring.Inner;
-            pointB = first.Rectangle ? center + n * ring.Inner : farthest + n * box.Inflation;
+            var n = (farthest - center).Normalized(); normal = first.Contour ? n : -n;
+            pointA = first.Contour ? farthest + n * box.Inflation : center + n * ring.Inner;
+            pointB = first.Contour ? center + n * ring.Inner : farthest + n * box.Inflation;
             return inner;
         }
-        return RectangleGap(first with { Inner = 0 }, a, second with { Inner = 0 }, b, out normal, out pointA, out pointB);
+        return ContourGap(first with { Inner = 0 }, a, second with { Inner = 0 }, b, out normal, out pointA, out pointB);
     }
     private static bool SweepParts(in Part first, Transform a, Vector2 motion, in Part second, Transform b, out float fraction)
     {
@@ -159,7 +172,9 @@ public static partial class BackendChecks
         {
             gap = PartGap(first, current, second, b, out var normal, out _, out _);
             if (gap <= .00001f) return true;
-            var closing = motion.Dot(normal); if (closing <= 0) return false;
+            // A hollow inner boundary can close later even when its initial radial speed is zero.
+            var closing = first.Inner > 0 || second.Inner > 0 ? speed : motion.Dot(normal);
+            if (closing <= 0) return false;
             var advance = gap / closing;
             if (!float.IsFinite(advance) || advance <= 0) throw new InvalidOperationException("A contour sweep cannot advance.");
             fraction += advance; if (fraction > 1) return false;
@@ -167,23 +182,23 @@ public static partial class BackendChecks
         }
         throw new InvalidOperationException("A contour sweep exceeded its advancement budget.");
     }
-    internal static bool CollideRectangleGeometry(ShapeGeometry first, Transform firstPose, Vector2 firstMotion,
+    internal static bool CollideContourGeometry(ShapeGeometry first, Transform firstPose, Vector2 firstMotion,
         ShapeGeometry second, Transform secondPose, Vector2 secondMotion, Span<Vector2> output, out int count)
     {
         var a = GeometryPart(first, firstPose); var b = GeometryPart(second, secondPose);
         Span<Vector2> av = stackalloc Vector2[8]; Span<Vector2> bv = stackalloc Vector2[8];
         var ac = Vertices(a, firstMotion, av); var bc = Vertices(b, secondMotion, bv);
-        Span<Vector2> axes = stackalloc Vector2[132]; var axisCount = 0;
-        if (a.Rectangle) { axes[axisCount++] = new(-a.EdgeX.Y, a.EdgeX.X); axes[axisCount++] = new(-a.EdgeY.Y, a.EdgeY.X); }
-        if (b.Rectangle) { axes[axisCount++] = new(-b.EdgeX.Y, b.EdgeX.X); axes[axisCount++] = new(-b.EdgeY.Y, b.EdgeY.X); }
+        Span<Vector2> axes = stackalloc Vector2[584]; var axisCount = 1; axes[0] = Vector2.Right;
+        if (a.Contour) { axes[axisCount++] = new(-a.EdgeX.Y, a.EdgeX.X); axes[axisCount++] = new(-a.EdgeY.Y, a.EdgeY.X); }
+        if (b.Contour) { axes[axisCount++] = new(-b.EdgeX.Y, b.EdgeX.X); axes[axisCount++] = new(-b.EdgeY.Y, b.EdgeY.X); }
         if (firstMotion != Vector2.Zero) axes[axisCount++] = new(-firstMotion.Y, firstMotion.X);
         if (secondMotion != Vector2.Zero) axes[axisCount++] = new(-secondMotion.Y, secondMotion.X);
-        if (!a.Rectangle || !b.Rectangle)
+        if (a.Inflation + b.Inflation > 0 || !a.Contour || !b.Contour)
         {
-            var box = a.Rectangle ? av[..ac] : bv[..bc]; var line = a.Rectangle ? bv[..bc] : av[..ac];
-            foreach (var endpoint in line)
-                for (var i = 0; i < box.Length; i++) for (var j = i; j < box.Length; j++)
-                        axes[axisCount++] = endpoint - (i == j ? box[i] : ClosestEdge(endpoint, box[i], box[j]));
+            for (var i = 0; i < ac; i++) for (var j = 0; j < bc; j++) for (var k = j; k < bc; k++)
+                        axes[axisCount++] = av[i] - (j == k ? bv[j] : ClosestEdge(av[i], bv[j], bv[k]));
+            for (var i = 0; i < bc; i++) for (var j = 0; j < ac; j++) for (var k = j; k < ac; k++)
+                        axes[axisCount++] = bv[i] - (j == k ? av[j] : ClosestEdge(bv[i], av[j], av[k]));
         }
         var best = float.NegativeInfinity; var normal = Vector2.Right;
         for (var i = 0; i < axisCount; i++)
@@ -216,19 +231,21 @@ public static partial class BackendChecks
                     var endpoint = ring.Offset + ringMotion * end; var value = corner.DistanceTo(endpoint);
                     if (value > distance) { distance = value; vertex = corner; center = endpoint; }
                 }
-            var innerGap = ring.Inner - distance;
+            var rounded = a.Inner > 0 ? b.Inflation : a.Inflation;
+            var innerGap = ring.Inner - distance - rounded;
             if (innerGap > 0) return false;
             if (innerGap > best)
             {
                 var boundary = center + (vertex - center).Normalized() * ring.Inner;
-                pointA = a.Rectangle ? vertex : boundary; pointB = a.Rectangle ? boundary : vertex;
+                var tip = vertex + (vertex - center).Normalized() * rounded;
+                pointA = a.Contour ? tip : boundary; pointB = a.Contour ? boundary : tip;
             }
         }
         if (output.Length >= 2) { output[0] = pointA; output[1] = pointB; count = 1; }
         return true;
         static int Vertices(in Part part, Vector2 motion, Span<Vector2> vertices)
         {
-            if (!part.Rectangle) { vertices[0] = part.Offset; vertices[1] = part.Offset + motion; return 2; }
+            if (!part.Contour) { vertices[0] = part.Offset; vertices[1] = part.Offset + motion; return 2; }
             Corners(part, Transform.Identity, vertices);
             for (var i = 0; i < 4; i++) vertices[i + 4] = vertices[i] + motion;
             return 8;
@@ -247,8 +264,8 @@ public static partial class BackendChecks
         var linearA = MotionForContour(a); var linearB = MotionForContour(b);
         var armA = first.Offset - (a.Dynamic ? a.LocalCenter : Vector2.Zero);
         var armB = second.Offset - (b.Dynamic ? b.LocalCenter : Vector2.Zero);
-        var speed = (linearA - linearB).Length() + MathF.Abs(spinA) * (armA.Length() + (first.Rectangle ? first.Outer : 0)) +
-            MathF.Abs(spinB) * (armB.Length() + (second.Rectangle ? second.Outer : 0));
+        var speed = (linearA - linearB).Length() + MathF.Abs(spinA) * (armA.Length() + (first.Contour ? first.Outer : 0)) +
+            MathF.Abs(spinB) * (armB.Length() + (second.Contour ? second.Outer : 0));
         var ray = full ? first : new Part(first.Index, LeadingPart(first, initialA, (linearA - linearB).Normalized()), 0, 0);
         var tolerance = .0001f * MathF.Min(first.Thickness, second.Thickness);
         var time = 0f; Span<Vector2> ap = stackalloc Vector2[4]; Span<Vector2> bp = stackalloc Vector2[4];
@@ -263,7 +280,7 @@ public static partial class BackendChecks
             {
                 var ac = Points(ray, full ? poseA : Transform.Identity.Translated(linearA * time), ap);
                 var bc = Points(second, poseB, bp); advance = double.PositiveInfinity;
-                var radius = (ray.Rectangle ? ray.Inflation : ray.Outer) + (second.Rectangle ? second.Inflation : second.Outer);
+                var radius = (ray.Contour ? ray.Inflation : ray.Outer) + (second.Contour ? second.Inflation : second.Outer);
                 var centerA = a.Center + linearA * time; var centerB = b.Center + linearB * time;
                 for (var i = 0; i < ac; i++) for (var j = 0; j < bc; j++)
                     {
@@ -291,7 +308,7 @@ public static partial class BackendChecks
         }
         throw new InvalidOperationException("A rotating contour sweep exceeded its advancement budget.");
         static int Points(in Part part, Transform pose, Span<Vector2> points)
-        { if (part.Rectangle) { Corners(part, pose, points); return 4; } points[0] = PartAt(part, pose); return 1; }
+        { if (part.Contour) { Corners(part, pose, points); return 4; } points[0] = PartAt(part, pose); return 1; }
         static Vector2 MotionForContour(Body body) => body.IsArea || body.Mode == PhysicsServer.BodyMode.Static || body.Dynamic && !body.Awake ? Vector2.Zero : body.Velocity;
         static Transform MovingPose(Body body, Vector2 linear, float spin, float time)
         {
@@ -301,7 +318,8 @@ public static partial class BackendChecks
     }
     private static bool RayPart(in Part part, Transform pose, Vector2 from, Vector2 motion, out float fraction, out Vector2 normal)
     {
-        if (!part.Rectangle)
+        if (part.Capsule) return RayCapsule(part, pose, from, motion, out fraction, out normal);
+        if (!part.Contour)
         { var hit = Annulus.Sweep(from, motion, PartAt(part, pose), part.Inner, part.Outer, out fraction); normal = Solver.PartNormal(from + motion * fraction, PartAt(part, pose), part); return hit; }
         var x = EdgeX(part, pose); var y = EdgeY(part, pose); var start = Coefficients(from - PartAt(part, pose), x, y);
         var delta = Coefficients(motion, x, y); var near = 0f; var far = 1f; normal = Vector2.Zero;

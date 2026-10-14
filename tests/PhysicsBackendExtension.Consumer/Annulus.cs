@@ -48,8 +48,8 @@ internal static class Annulus
     internal static bool Collide(ShapeGeometry first, Transform firstPose, Vector2 firstMotion,
         ShapeGeometry second, Transform secondPose, Vector2 secondMotion, Span<Vector2> contacts, out int count)
     {
-        if (second.Type == PhysicsServer.ShapeType.Rectangle)
-            return BackendChecks.CollideRectangleGeometry(first, firstPose, firstMotion, second, secondPose, secondMotion, contacts, out count);
+        if (second.Type is PhysicsServer.ShapeType.Rectangle or PhysicsServer.ShapeType.Capsule)
+            return BackendChecks.CollideContourGeometry(first, firstPose, firstMotion, second, secondPose, secondMotion, contacts, out count);
         var a = Dimensions(first); var b = Dimensions(second);
         if (b.Inner != 0) throw new NotSupportedException("The fixture exercises annulus/circle pairs.");
         count = 0;

@@ -112,3 +112,10 @@ retain their existing behavior.
 ## Rotating geometry acceptance
 
 [Public rotating geometry checks](../components/gpu-resident-ccd.md#public-rotating-geometry-verification-2026-10-14) cover full selected CPU/GPU frames with rectangle, capsule, a 12-vertex polygon split into native pieces and separate compound slots. All three CCD policies, static/moving targets, exact logical identity, full impulse/momentum and one tick/callback per frame are checked. Eight active cases each retain 128 warm/128 measured frames at 0/0 owner/all-thread bytes in serial/separate numerical profiles. Software Vulkan provides functional evidence; provider geometry, wider coupling/network/native/hardware acceptance remain open.
+
+[Registered capsule numerics](../components/physics-registered-adapter.md#registered-capsule-numerics) now extend the independent public-only provider with rounded segments,
+analytic area/inertia, side and cap queries, margin-preserving sweeps, contacts and
+linear/angular CCD. Shared CPU/software-GPU serial/separate profiles retain full
+frame impulses and silent replay at zero warmed managed bytes. Wider geometry,
+coupling, inherited/network/native/hardware and performance acceptance remain open.
+Production signatures and the accepted geometry/lifetime decisions are unchanged.

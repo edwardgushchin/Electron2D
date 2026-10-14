@@ -1668,8 +1668,8 @@ The preserved baseline consumer rejects it in primitive decoding; the candidate
 executes it. Evidence is under bin/physics-rectangle-provider/2026-10-14, with the
 final source/runtime manifest and serial/separate process proofs in final2.
 Software Vulkan uses explicitly pinned CPU lavapipe and excludes NVIDIA hardware.
-No target-GPU advantage or real-window FPS is inferred. General capsule/segment/
-polygon/boundary/directed-ray numerical integration, arbitrary custom algorithms,
+No target-GPU advantage or real-window FPS is inferred. Capsule evidence is recorded
+below; general segment/polygon/boundary/directed-ray numerical integration, arbitrary custom algorithms,
 complete extension/inherited/network/native-memory and platform gates stay open.
 
 Final evidence is based on main `3e948e73aea113d80389544dba624f931b72e662` and
@@ -1690,3 +1690,93 @@ rotational-bar controls and the custom ring are separate functional controls.
 Their construction/first-use costs are not labelled allocation-free. The warmed
 brackets include all six direct query reads or complete contact/replay frames;
 Area overlap and point filtering are also inside the measured query bracket.
+
+## Registered capsule numerics
+
+The independent application solver now reads Capsule geometry as its transformed
+cap-center segment plus its actual round radius. Circle/annulus and rectangle
+behavior is retained; capsules are never substituted with circumscribed disks.
+A common contour path projects the segment or rectangle core plus the radius,
+checks edge normals and both vertex-to-edge rounded-corner axes, clips contact
+supports and uses separating-axis advancement for linear and angular motion.
+The latter retains the vertex-pair speed/acceleration certificates, with constant
+round radius and moving core vertices. Standalone pair queries project both swept
+regions independently; their collision does not require synchronous trajectories.
+The custom annulus retains its hollow inner boundary using farthest core vertices
+plus the counterpart radius. Inner-boundary linear advancement uses the bounded
+translation speed rather than a convex separating-axis closing certificate: zero
+initial radial speed can still close later. A reproduced RED query missed that
+crossing before this correction. Both elongated and disk-limit capsules now cast
+from the hole center toward its inner wall, including all four shape-query families. Ray queries use actual straight sides and radial
+end caps, including the disk limit, rather than a bounding box.
+
+For capsule radius r and half middle height h, area is 4rh + pi r². The polar area
+integral is 4rh(r²+h²)/3 + pi r²(r²/2+h²) + 8hr³/3. Dividing by area gives the
+mass-normalized moment; compound center and inertia retain area weighting and
+parallel-axis terms. Scene/raw slots preserve offsets, local rotation and disabled
+logical indices. Query margin expands the round radius without replacing the
+segment or losing the original radius. Live edits retire and rebuild that core.
+Zero middle height is a disk; zero radius retains a segment in standalone pairs.
+Zero-area dynamic numerical acceptance is not established by that pair check.
+
+The public-only --capsule-geometry profile (optional --cpu/--gpu and --threaded)
+uses rotated/offset body and Area capsules, one disabled slot, point/ray queries,
+all four shape-query families and real body motion. Axial, straight-side and
+oblique-cap ray points/normals, margin cast, deepest rest, masks and exclusions
+are verified. Six actual capsule/circle or capsule/capsule contact cases cover
+Disabled, CastRay and CastShape. Each restores private state silently, publishes
+one real contact entry, conserves paired momentum and accounts for the entire
+step impulse. An unlocked oblique cap contact checks angular impulse and energy.
+One query/full-frame bracket plus those seven contact/replay brackets warm 128
+frames and measure 128 more at strict 0/0 owner/all-thread managed bytes. No query,
+restore, notification or full-frame operation is subtracted from that interval.
+
+Cold controls check the compound analytic center/inertia, disk mass and query
+limit, live disk/segment edits, zero-radius standalone segment pairs, separated
+parallel capsules whose circumscribed disks overlap, independently swept regions,
+rounded misses/hits, a 1000-unit/s capsule at a thin wall, a 320-height rotating
+capsule's intermediate CastShape arc and the registered custom-ring inner wall.
+Those controls are functional checks outside the warmed allocation brackets.
+Poses retain the shared unit-scale/zero-skew contract.
+
+Numeric bounds are .005 scene units for round ray/rest coordinates (one hundredth
+of the CPU solver's .5 scene-unit linear tolerance), normal dot product greater
+than .999, cast fraction 1/256 plus .00002, mass/center .0002, paired momentum .002
+and total impulse .02–.03. The ray candidate originally rejected a CPU endpoint
+error of .00339 under the rectangle's .002 bound; the round bound is explicit.
+The thin-wall center must remain at most 8.75 + .501 with residual horizontal
+speed below .1: .5 is the accepted CPU linear tolerance and .001 is float slack.
+The first rectangle-specific bound 9.1 rejected an actually stopped CPU capsule
+at 9.134204; this is not claimed as exact boundary placement. Angular moment
+uses .005 plus interval × maximum linear speed × impulse magnitude because
+published contacts may precede final pose integration. Oblique contact runs at
+1/2048 s with negative angular response and energy at most 400.1. The 30-rad/s
+rotating capsule uses .015 s and at most 102 percent initial energy; ring controls
+bound every actual cap by inner radius 5 + .3 contact allowance + .001 float slack
+and kinetic energy by 50.1.
+
+The frozen baseline from the rectangle cohort rejects Capsule attachment in the
+real registered factory's primitive decoding. The new consumer executes it without
+engine internals or built-in solver delegation. Final evidence resides under
+bin/physics-capsule-provider/2026-10-14; explicitly pinned CPU lavapipe provides
+functional GPU evidence only. General segment/polygon/boundary/directed-ray
+integration, arbitrary custom algorithms, complete extension/inherited/network/
+native-memory/platform and target-GPU performance gates remain open. Production
+API/XML and geometry-policy ADRs are unchanged; related coverage rows retain their
+current Partial states.
+
+Final2 evidence uses main `13609c1afe45a8806d40e0871c8952bdf9fc8890` and this consumer slice. The 4,182
+source inputs fingerprint is `2d4a5a5024d292adfcd87de585b1030766aacfd53da89ea744c8aadf346dd049`; loaded runtime/consumer DLLs
+are `cd57fff3cdca74f2fcb4e4bedcca476db9d799396a49edd06f95114bd10ceea6` and `9a6d38d6a5983356acedcd6412e5b11ee111915740f32ec7718980a4e9f9d7dd`.
+All 61 runtime-file identities stay unchanged through the cohort. Six independent
+fresh numerical processes (CPU/GPU/registered × serial/separate) pass with eight
+strict warmed brackets each. The GPU processes load lavapipe only; CPU/provider
+processes have no graphical device, and exact retained solver-lane counts are
+0/1. Seven additional default/custom/curved/statistics/rectangle/compound processes
+pass. Source-before/source-after fingerprints agree; the precommit runtime build
+matches the loaded DLL. Independent processes share the host concurrently for
+functional checks; this is not a latency or hardware-performance measurement.
+Evidence manifests/results are under bin/physics-capsule-provider/2026-10-14/final2,
+with six precommit gates under gates2. Production API remains 13,835 declarations
+with 10,583 mappings, 3,252 reviewed extras and zero unmapped; wiki check covers
+820 public types and 838 pages with zero updates/removals.

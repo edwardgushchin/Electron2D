@@ -69,7 +69,7 @@ public static partial class BackendChecks
         private Part QueryPart(PhysicsShapeQueryParameters parameters)
         {
             var part = GeometryPart(GetShapeGeometry(parameters.ShapeRID), parameters.Transform);
-            return part.Rectangle ? part with { Inflation = parameters.Margin } : part with
+            return part.Contour ? part with { Inflation = part.Inflation + parameters.Margin } : part with
             { Outer = part.Outer + parameters.Margin, Inner = MathF.Max(0, part.Inner - parameters.Margin) };
         }
         protected override List<PhysicsShapeResult> CollectShapeHits(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
@@ -79,7 +79,7 @@ public static partial class BackendChecks
             {
                 if (!Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded)) continue;
                 for (var i = 0; i < b.Shapes; i++)
-                { var p = b.Parts[i]; if (query.Rectangle || p.Rectangle ? SweepParts(query, Transform.Identity, parameters.Motion, p, b.Pose, out _) : Annulus.Sweep(parameters.Transform.Origin, parameters.Motion, b.PartCenter(p), MathF.Max(0, p.Inner - radius), p.Outer + radius, out _)) _shapeHits.Add(new(b.RID, p.Index)); }
+                { var p = b.Parts[i]; if (query.Contour || p.Contour ? SweepParts(query, Transform.Identity, parameters.Motion, p, b.Pose, out _) : Annulus.Sweep(parameters.Transform.Origin, parameters.Motion, b.PartCenter(p), MathF.Max(0, p.Inner - radius), p.Outer + radius, out _)) _shapeHits.Add(new(b.RID, p.Index)); }
             }
             _shapeHits.Sort(static (a, b) => a.ColliderRID == b.ColliderRID ? a.ShapeIndex.CompareTo(b.ShapeIndex) : a.ColliderRID.GetID().CompareTo(b.ColliderRID.GetID())); return _shapeHits;
         }
@@ -91,7 +91,7 @@ public static partial class BackendChecks
                 if (!Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded)) continue;
                 for (var i = 0; i < b.Shapes; i++)
                 {
-                    var p = b.Parts[i]; if (query.Rectangle || p.Rectangle)
+                    var p = b.Parts[i]; if (query.Contour || p.Contour)
                     {
                         if (PartGap(query, Transform.Identity, p, b.Pose, out _, out _, out _) <= 0) continue;
                         if (SweepParts(query, Transform.Identity, parameters.Motion, p, b.Pose, out var f)) fraction = MathF.Min(fraction, f);
@@ -110,7 +110,7 @@ public static partial class BackendChecks
                 for (var i = 0; i < b.Shapes && _shapeContacts.Count < limit; i++)
                 {
                     var p = b.Parts[i]; var at = b.PartCenter(p);
-                    if (query.Rectangle || p.Rectangle)
+                    if (query.Contour || p.Contour)
                     {
                         if (!SweepParts(query, Transform.Identity, parameters.Motion, p, b.Pose, out var contourFraction)) continue;
                         var pose = Transform.Identity; pose.Origin = parameters.Motion * contourFraction;
@@ -136,7 +136,7 @@ public static partial class BackendChecks
                     var part = body.Parts[i]; if (part.Index != h.ShapeIndex) continue;
                     var normal = PartNormal(h.QueryPoint, body.PartCenter(part), part);
                     var depth = h.QueryPoint.DistanceTo(h.ColliderPoint);
-                    if (query.Rectangle || part.Rectangle)
+                    if (query.Contour || part.Contour)
                     {
                         SweepParts(query, Transform.Identity, parameters.Motion, part, body.Pose, out var fraction);
                         var pose = Transform.Identity; pose.Origin = parameters.Motion * fraction;
@@ -157,8 +157,8 @@ public static partial class BackendChecks
             PairQueries++;
             var a = GetShapeGeometry(first); var b = GetShapeGeometry(second);
             bool hit;
-            if (a.Type == PhysicsServer.ShapeType.Rectangle || b.Type == PhysicsServer.ShapeType.Rectangle)
-                hit = CollideRectangleGeometry(a, firstPose, firstMotion, b, secondPose, secondMotion, contacts, out count);
+            if (a.Type is PhysicsServer.ShapeType.Rectangle or PhysicsServer.ShapeType.Capsule || b.Type is PhysicsServer.ShapeType.Rectangle or PhysicsServer.ShapeType.Capsule)
+                hit = CollideContourGeometry(a, firstPose, firstMotion, b, secondPose, secondMotion, contacts, out count);
             else if (a.Type == PhysicsServer.ShapeType.Custom)
                 hit = Annulus.Collide(a, firstPose, firstMotion, b, secondPose, secondMotion, contacts, out count);
             else if (b.Type == PhysicsServer.ShapeType.Custom)
@@ -215,9 +215,9 @@ public static partial class BackendChecks
                     {
                         var a = local.Parts[i]; var b = other.Parts[j]; var start = from.Origin + a.Offset.Rotated(from.Rotation);
                         float f;
-                        if (a.Rectangle || b.Rectangle)
+                        if (a.Contour || b.Contour)
                         {
-                            var expanded = a.Rectangle ? a with { Inflation = margin } : a with { Outer = a.Outer + margin };
+                            var expanded = a.Contour ? a with { Inflation = a.Inflation + margin } : a with { Outer = a.Outer + margin };
                             if (!SweepParts(expanded, from, motion, b, other.Pose, out f)) continue;
                         }
                         else if (!Annulus.Sweep(start, motion, other.PartCenter(b), MathF.Max(0, b.Inner - a.Outer - margin), a.Outer + b.Outer + margin, out f)) continue;
@@ -228,10 +228,10 @@ public static partial class BackendChecks
             if (best is null) { result.SetMotion(motion); return false; }
             var travel = motion * fraction; var center = from.Origin + source.Offset.Rotated(from.Rotation) + travel; var at = best.PartCenter(target);
             var normal = PartNormal(center, at, target); var point = at + normal * (center.DistanceTo(at) < target.Inner ? -target.Inner : target.Outer);
-            if (source.Rectangle || target.Rectangle)
+            if (source.Contour || target.Contour)
             {
                 var pose = from; pose.Origin += travel;
-                PartGap(source.Rectangle ? source with { Inflation = margin } : source with { Outer = source.Outer + margin }, pose,
+                PartGap(source.Contour ? source with { Inflation = source.Inflation + margin } : source with { Outer = source.Outer + margin }, pose,
                     target, best.Pose, out var towardTarget, out _, out point); normal = -towardTarget;
             }
             result.SetCollision(body, source.Index, best.RID, target.Index, point, normal, 0, best.PointVelocity(point), travel, motion - travel, fraction, fraction);

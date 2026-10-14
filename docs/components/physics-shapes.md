@@ -1,6 +1,6 @@
 # Collision shapes component
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 ## Scope and owned types
 
@@ -8,15 +8,16 @@ Last updated: 2026-10-13
 
 ## Runtime flow
 
-Every built-in resource supplies a temporary [PhysicsShapeGeometry](../classes/PhysicsShapeGeometry.md)
-view of scene-unit endpoints, radius or borrowed vertices. Resource classes contain
-no backend types. [PhysicsShapeBackend](../classes/PhysicsShapeBackend.md) constructs
-current CPU fixtures and query proxies and retains compiled convex hulls in a weak
-resource-keyed cache. The common collider adapter calls it for scene/server slots;
-mass and direct queries use the same compilation. Standalone Shape collision reads
-the view directly, preserving whole convex contours. Compiled polygon validation
-still runs during authoring; independent GPU geometry storage executes internally,
-while public GPU world binding remains open.
+Every built-in resource supplies cached immutable [ShapeGeometry](../classes/ShapeGeometry.md)
+data with exact scene-unit endpoints, radius and contours. Resource classes contain
+no backend handles. The selected collider owner compiles its body/Area attachments:
+the CPU implementation uses PhysicsShapeBackend, GPU keeps resident geometry, and
+a registered implementation reads the same public immutable payload. Mass and
+direct queries dispatch through that selected owner. Standalone Shape collision
+retains its separate resource-only whole-contour kernel. Compiled polygon
+validation runs during authoring. The independent registered consumer now has
+[rectangle and capsule numerics](physics-registered-adapter.md#registered-capsule-numerics);
+other provider geometry and complete acceptance remain open.
 
 Circle radius defaults to 10 scene units, capsule radius/full height to 10/30, segment endpoints to (0, 0)/(0, 10), and rectangle size to (20, 20). Capsule height and radius stay linked; MidHeight sets their central separation. The capsule accepts finite nonnegative dimensions, including zero and line/circle limits. Circle and rectangle require finite positive dimensions; segment endpoints and their difference must be finite and may coincide. These shapes report local bounds, publish geometry changes and support independent resource duplication; equal capsule radius/height writes do not publish, while an equal MidHeight write does. A CollisionShape starts with no resource, `Disabled=false`, `OneWayCollision=false` and local direction `(0, 1)`; assigning a live resource or changing either flag updates its direct collision owner's fixtures before the next physics step. Local position and rotation offset the fixture; scale/skew are rejected while active. The parent body or area owns its backend fixtures, while the caller owns the Shape resource.
 

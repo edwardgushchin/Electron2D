@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-14
 
+[Registered capsule numerics](../components/physics-registered-adapter.md#registered-capsule-numerics) now extend the independent public-only provider with rounded segments,
+analytic area/inertia, side and cap queries, margin-preserving sweeps, contacts and
+linear/angular CCD. Shared CPU/software-GPU serial/separate profiles retain full
+frame impulses and silent replay at zero warmed managed bytes. Wider geometry,
+coupling, inherited/network/native/hardware and performance acceptance remain open.
+
 [Registered rectangle numerics](../components/physics-registered-adapter.md#registered-rectangle-numerics)
 now execute actual contours, six queries, mass, contacts and linear/angular CCD
 through the independent public-only provider. Shared CPU/software-GPU checks cover

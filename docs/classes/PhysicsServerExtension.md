@@ -86,3 +86,10 @@ now exercise transformed rectangular regions in the independent provider through
 scene/raw queries, contacts, mass, CCD and replay. This is executable evidence for
 its owned implementation boundary; broader shape families and numerical acceptance
 remain open. The runtime declaration family and signatures are unchanged.
+
+[Registered capsule numerics](../components/physics-registered-adapter.md#registered-capsule-numerics) now extend the independent public-only provider with rounded segments,
+analytic area/inertia, side and cap queries, margin-preserving sweeps, contacts and
+linear/angular CCD. Shared CPU/software-GPU serial/separate profiles retain full
+frame impulses and silent replay at zero warmed managed bytes. Wider geometry,
+coupling, inherited/network/native/hardware and performance acceptance remain open.
+Production signatures and the accepted geometry/lifetime decisions are unchanged.

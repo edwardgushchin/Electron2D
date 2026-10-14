@@ -1169,3 +1169,12 @@ acceptance remains open.
 
 
 [Joint and contact support](physics-joints.md#joint-and-contact-support-2026-10-14) verifies spring-loaded pin/groove constraints, real floor friction, contact identity/normal/surface-velocity/impulse, monitored checkpoint continuation and post-clear motion on CPU/GPU. Warm full frames allocate no managed bytes; broader numerical/native/foreign/network/performance acceptance remains open and declaration states are unchanged.
+
+[Registered capsule numerics](physics-registered-adapter.md#registered-capsule-numerics)
+now execute actual round-ended contours, analytic compound mass, six direct-query
+families, margins, scene/raw/Area slots, contacts, all CCD modes and silent private
+replay through a public-only provider. Common CPU/software-GPU serial/separate
+profiles retain strict 0/0 warmed managed bytes. Circle and zero-radius standalone
+limits, live segment rebuilds, independent swept regions and hollow custom-ring
+controls are separate cold checks. These extend numerical evidence without
+closing complete extension, inherited, network, native or performance acceptance.

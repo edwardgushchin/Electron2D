@@ -1555,3 +1555,7 @@ The [registered rectangle consumer](components/physics-registered-adapter.md#reg
 now verifies actual rectangle/circle regions, mass, contacts, queries and CCD behind
 PhysicsServerExtension, retaining its public-only implementation and current
 production type inventory. This adds no shipped backend type or runtime API.
+
+The [registered capsule consumer](components/physics-registered-adapter.md#registered-capsule-numerics)
+adds independent rounded-segment numerics behind the existing extension family.
+This introduces no shipped backend type or runtime API.
