@@ -422,6 +422,7 @@ public sealed partial class ThemeDB
         ["UDSServer"] = ["UDSServer", "SocketServer", "ElectronObject"],
         ["UPNP"] = ["UPNP", "ElectronObject"],
         ["UPNPDevice"] = ["UPNPDevice", "ElectronObject"],
+        ["UndoRedo"] = ["UndoRedo", "ElectronObject"],
         ["VBoxContainer"] = ["VBoxContainer", "BoxContainer", "Container", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["VFlowContainer"] = ["VFlowContainer", "FlowContainer", "Container", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["VScrollBar"] = ["VScrollBar", "ScrollBar", "Range", "Control", "CanvasItem", "Node", "ElectronObject"],

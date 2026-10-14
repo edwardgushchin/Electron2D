@@ -678,6 +678,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_DIALOG_NATIVE") == 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_DIALOG") == "1") { FileDialogTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BAR_CHILD") is { } menuBarPath) { MenuBarTests.RunChild(menuBarPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BAR") == "1") { MenuBarTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_UNDO_RENDER") is { } undoBackend) { UndoRedoRenderingTests.Run(undoBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_UNDO") == "1") { UndoRedoTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_PRIMITIVES_RENDER") is { } primitiveBackend) { GUIPrimitivesRenderingTests.Run(primitiveBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_PRIMITIVES_CHILD") is { } primitivesPath) { GUIPrimitivesTests.RunChild(primitivesPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_PRIMITIVES") == "1") { GUIPrimitivesTests.Run(); return; }
@@ -1447,6 +1449,7 @@ MenuBarTests.Run();
 MenuButtonTests.Run();
 LinkButtonTests.Run();
 GUIPrimitivesTests.Run();
+UndoRedoTests.Run();
 DialogTests.Run();
 OptionButtonTests.Run();
 PopupTests.Run();

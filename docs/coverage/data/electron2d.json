@@ -12700,6 +12700,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.UndoRedo",
+    "kind": "type",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "UndoRedo",
+    "signature": "public class Electron2D.UndoRedo",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.UndoRedo.MergeMode",
+    "kind": "type",
+    "declaringType": "Electron2D.UndoRedo.MergeMode",
+    "name": "MergeMode",
+    "signature": "public enum Electron2D.UndoRedo.MergeMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.UnixPermissionFlags",
     "kind": "type",
     "declaringType": "Electron2D.UnixPermissionFlags",
@@ -23136,6 +23169,19 @@
     "declaringType": "Electron2D.UPNPDevice",
     "name": ".ctor",
     "signature": "public UPNPDevice()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.UndoRedo..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": ".ctor",
+    "signature": "public UndoRedo()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -49187,6 +49233,45 @@
     "value": "28"
   },
   {
+    "id": "enumValue:Electron2D.UndoRedo.MergeMode.All()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UndoRedo.MergeMode",
+    "name": "All",
+    "signature": "public const Electron2D.UndoRedo.MergeMode All = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UndoRedo.MergeMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.UndoRedo.MergeMode.Disable()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UndoRedo.MergeMode",
+    "name": "Disable",
+    "signature": "public const Electron2D.UndoRedo.MergeMode Disable = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UndoRedo.MergeMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.UndoRedo.MergeMode.Ends()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UndoRedo.MergeMode",
+    "name": "Ends",
+    "signature": "public const Electron2D.UndoRedo.MergeMode Ends = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UndoRedo.MergeMode",
+    "value": "1"
+  },
+  {
     "id": "enumValue:Electron2D.UnixPermissionFlags.ExecuteGroup()",
     "kind": "enumValue",
     "declaringType": "Electron2D.UnixPermissionFlags",
@@ -54176,6 +54261,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.Tweener\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.UndoRedo.VersionChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "VersionChanged",
+    "signature": "public event System.Action VersionChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
     "value": null
   },
   {
@@ -189612,6 +189710,427 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.UndoRedo.AddDoMethod(System.Action)",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "AddDoMethod",
+    "signature": "public System.Void AddDoMethod(System.Action callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "callback",
+        "type": "System.Action",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.AddDoProperty\u00602(TOwner,PropertyDescriptor\u003CTOwner, TValue\u003E,TValue)",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "AddDoProperty",
+    "signature": "public System.Void AddDoProperty\u003CTOwner, TValue\u003E(TOwner owner, PropertyDescriptor\u003CTOwner, TValue\u003E property, TValue value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "owner",
+        "type": "TOwner",
+        "default": null
+      },
+      {
+        "name": "property",
+        "type": "PropertyDescriptor\u003CTOwner, TValue\u003E",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "TValue",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.AddDoReference(Electron2D.ElectronObject)",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "AddDoReference",
+    "signature": "public System.Void AddDoReference(Electron2D.ElectronObject owner)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "owner",
+        "type": "Electron2D.ElectronObject",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.AddUndoMethod(System.Action)",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "AddUndoMethod",
+    "signature": "public System.Void AddUndoMethod(System.Action callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "callback",
+        "type": "System.Action",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.AddUndoProperty\u00602(TOwner,PropertyDescriptor\u003CTOwner, TValue\u003E,TValue)",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "AddUndoProperty",
+    "signature": "public System.Void AddUndoProperty\u003CTOwner, TValue\u003E(TOwner owner, PropertyDescriptor\u003CTOwner, TValue\u003E property, TValue value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "owner",
+        "type": "TOwner",
+        "default": null
+      },
+      {
+        "name": "property",
+        "type": "PropertyDescriptor\u003CTOwner, TValue\u003E",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "TValue",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.AddUndoReference(Electron2D.ElectronObject)",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "AddUndoReference",
+    "signature": "public System.Void AddUndoReference(Electron2D.ElectronObject owner)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "owner",
+        "type": "Electron2D.ElectronObject",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.ClearHistory(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "ClearHistory",
+    "signature": "public System.Void ClearHistory(System.Boolean increaseVersion = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "increaseVersion",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.CommitAction(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "CommitAction",
+    "signature": "public System.Void CommitAction(System.Boolean execute = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "execute",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.CreateAction(System.String,Electron2D.UndoRedo.MergeMode,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "CreateAction",
+    "signature": "public System.Void CreateAction(System.String name, Electron2D.UndoRedo.MergeMode mergeMode = Disable, System.Boolean backwardUndoOps = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "mergeMode",
+        "type": "Electron2D.UndoRedo.MergeMode",
+        "default": "Disable"
+      },
+      {
+        "name": "backwardUndoOps",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.EndForceKeepInMergeEnds()",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "EndForceKeepInMergeEnds",
+    "signature": "public System.Void EndForceKeepInMergeEnds()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.GetActionName(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "GetActionName",
+    "signature": "public System.String GetActionName(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.GetCurrentAction()",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "GetCurrentAction",
+    "signature": "public System.Int32 GetCurrentAction()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.GetCurrentActionName()",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "GetCurrentActionName",
+    "signature": "public System.String GetCurrentActionName()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.GetHistoryCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "GetHistoryCount",
+    "signature": "public System.Int32 GetHistoryCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.GetVersion()",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "GetVersion",
+    "signature": "public System.UInt64 GetVersion()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.HasRedo()",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "HasRedo",
+    "signature": "public System.Boolean HasRedo()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.HasUndo()",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "HasUndo",
+    "signature": "public System.Boolean HasUndo()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.IsCommittingAction()",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "IsCommittingAction",
+    "signature": "public System.Boolean IsCommittingAction()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.Redo()",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "Redo",
+    "signature": "public System.Boolean Redo()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.StartForceKeepInMergeEnds()",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "StartForceKeepInMergeEnds",
+    "signature": "public System.Void StartForceKeepInMergeEnds()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.Undo()",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "Undo",
+    "signature": "public System.Boolean Undo()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UndoRedo.ValidateMutation()",
+    "kind": "method",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "ValidateMutation",
+    "signature": "protected override System.Void ValidateMutation()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VBoxContainer.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.VBoxContainer",
@@ -235864,6 +236383,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.UndoRedo.MaxSteps()",
+    "kind": "property",
+    "declaringType": "Electron2D.UndoRedo",
+    "name": "MaxSteps",
+    "signature": "public System.Int32 MaxSteps { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {

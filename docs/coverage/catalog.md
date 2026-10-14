@@ -899,7 +899,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [UDSServer](classes/UDSServer.md) | SocketServer | Implemented | 2 |
 | [UPNP](classes/UPNP.md) | RefCounted | Implemented | 44 |
 | [UPNPDevice](classes/UPNPDevice.md) | RefCounted | Implemented | 21 |
-| [UndoRedo](classes/UndoRedo.md) | Object | Blocked | 27 |
+| [UndoRedo](classes/UndoRedo.md) | Object | Implemented | 27 |
 | [UniformSetCacheRD](classes/UniformSetCacheRD.md) | Object | Blocked | 1 |
 | [VBoxContainer](classes/VBoxContainer.md) | BoxContainer | Implemented | 0 |
 | [VFlowContainer](classes/VFlowContainer.md) | FlowContainer | Implemented | 0 |

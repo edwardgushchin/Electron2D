@@ -1,6 +1,6 @@
 # Core domain
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 ## Skeletal schema policy
 
@@ -273,3 +273,5 @@ See [typed handler storage](../classes/EventHandlers.Generic.md) and [ADR 0010](
 ## ZIP asset preparation
 
 [ZIP archives](../components/zip-archives.md) add owned ZIPReader/ZIPPacker sessions, streamed full-level deflate, ZIP64/prefix/append preservation, portable permission/time metadata and complete length/CRC validation. Bundled scene/resource ZIP round trips execute real GPU/compatibility rendering; they do not introduce automatic extraction or pack mounts.
+
+[Typed undo history](../components/undo-history.md) adds thread-owned reversible Action/property authoring, named cursor/version/merge policies and conditional non-Resource ownership. It is public runtime infrastructure for game/tool/editor consumers; it does not introduce an editor-only dependency or dynamic property lookup. See ADR 0105 and the component for executed behavior and verification boundaries.

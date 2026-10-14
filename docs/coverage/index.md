@@ -1,6 +1,8 @@
 # API coverage register
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
+
+[Typed undo history](../components/undo-history.md) now executes reversible scene/resource edits, complete named merge/cursor/version policies and conditional object ownership through public runtime API. Native undo/redo pixels and warmed playback are exercised; editor context/UI, foreign/native allocator and owner gates remain separate.
 
 [GUI primitives](../components/gui-primitives.md) now execute solid fills and both themed separator axes with exact pixel placement, live edits and saved scenes. Native GPU/compatibility pixels and warm managed checks are exercised; DPI textures, public text objects and editor reference frames retain precise separate dependencies.
 

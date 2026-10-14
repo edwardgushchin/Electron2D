@@ -100,13 +100,13 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 6 |
 | ADR 0094: Requires a WebRTC backend with ICE/STUN/TURN, SDP, DTLS/SCTP and data-channel state/ownership, plus native/browser packaging. Managed extension hooks follow the executable typed owner. | 4 |
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
-| Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 3 |
 | Trigger: first video decoding, timed texture playback and audio synchronization slice. | 3 |
 | Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 3 |
 | Trigger: actual GPU particle simulation, process-material shader/data integration, native storage and compute/collision/attractor ownership under ADR 0028. CPUParticles baseline does not provide GPU compute or process-material conversion. | 2 |
 | Trigger: compressed array-file parsing/decoding or direct compressed native upload, source format/mipmap ownership and reproducible sampling over the executable TextureArray pipeline (ADR 0028). | 2 |
 | Trigger: first complete typed multi-segment/inline-object text builder with copied metadata/key/BIDI contracts and real shaped-text RID ownership, metrics/hit tests/draw/duplicate integration under ADRs 0001/0046. Current Font/TextLayout/RichText consumers do not expose this public text-object family. | 2 |
 | Trigger: first compressed-texture import, decoder and verified GPU sampling slice (ADRs 0028 and 0039). | 2 |
+| Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 2 |
 | Trigger: first typed missing-asset placeholder and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
@@ -117,6 +117,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. | 1 |
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
 | Trigger: actual editor execution-context reporting through Engine.IsEditorHint and editor/runtime border drawing under ADRs 0015/0027/0090. The current runtime has no editor-context producer; do not introduce a constant hint or inert EditorOnly switch. | 1 |
+| Trigger: an accepted PCK archive/encryption/removal writer-reader contract plus ProjectSettings.LoadResourcePack mounting and packed virtual res:// lookup integrated with FileAccess/DirAccess/ResourceLoader under ADRs 0019/0013/0023/0039. Current directory-backed project resolution and ZIP utilities do not provide packed overlays, pack keys or removal entries. | 1 |
 | Trigger: an installed compiler-consumed built-in include library with stable names, source lookup and all three retained static discovery operations (ADR 0028). ShaderInclude user-source files and native compiler preprocessing now execute; they do not supply a built-in library or invent empty lookup results. | 1 |
 | Trigger: complete SVG Color-to-Color paint remapping in the native SVG path plus retained per-canvas/viewport oversampling variants and scaled RID ownership under ADRs 0028/0039/0083. Current Image SVG rasterization and static theme icons alone do not execute these contracts. | 1 |
 | Trigger: complete typed thread start/result, priority, main-owner identity and join/retirement, plus a resolved executable safety-check override contract: the pinned set_thread_safety_checks_enabled(bool) must not be an inert flag and current ADRs 0006/0011/0104 require owner-affine scene mutation. | 1 |
@@ -126,7 +127,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first missing 2D material, canvas-modulation and shader-global renderer integration (ADR 0028). | 1 |
 | Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041). | 1 |
 | Trigger: first portable external-image ownership and native texture-import decision (ADRs 0021 and 0028). | 1 |
-| Trigger: first self-hosted editor and typed GUI authoring slice (ADRs 0027 and 0028). | 1 |
 | Trigger: first semantic accessibility-tree, focus and native screen-reader bridge slice (ADR 0041). | 1 |
 | Trigger: first typed 2D mesh-data and MeshInstance2D rendering slice; audit 3D-only members individually (ADR 0028). | 1 |
 | Trigger: first typed 2D navigation and pathfinding slice. | 1 |
