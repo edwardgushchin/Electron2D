@@ -15,6 +15,7 @@ public static partial class BackendChecks
             new CustomShape(Annulus.Create(2, 6)), new StoredShape(),
             new PhysicsMaterial { Friction = .6f, Bounce = .4f, Rough = true, Absorbent = true }, world];
         ResourceEdgePolicy(resources);
+        ResourceLifecycle(resources);
         var culture = TranslationServer.Culture;
         using var catalog = new Translation { Locale = "en" }; catalog.AddMessage("storage probe", "translated probe");
         TranslationServer.Culture = CultureInfo.GetCultureInfo("en"); TranslationServer.AddTranslation(catalog, StoredResourceDomain);

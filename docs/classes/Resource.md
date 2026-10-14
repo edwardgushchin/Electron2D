@@ -144,6 +144,8 @@ Gets or sets the unique cache path associated with this resource.
 **Remarks:** Nonempty paths are process-wide and unique among live resources. Assigning an occupied path throws without
 changing either resource. Use [`Resource.TakeOverPath(String)`](Resource.md#m-electron2d-resource-takeoverpath-system-string) to transfer ownership deliberately.
 
+Path hooks run after metadata/cache commitment; hook failures propagate without rolling back that commitment. Registered equal writes are silent, while promoting an equal raw path must still claim cache ownership. Cache entries are weak and ordinal; disposal or collection releases their ownership. Path changes do not automatically emit content `Changed`.
+
 <a id="p-electron2d-resource-resourcesceneuniqueid"></a>
 ### `public string ResourceSceneUniqueID { get; set; }`
 
@@ -302,6 +304,8 @@ Sets the path value without registering it in the process-wide resource cache.
 
 **Remarks:** This loader-oriented operation may produce the same visible path on multiple resources. It first removes this
 resource's previously registered path, then invokes [`Resource.OnPathCacheSet(String)`](Resource.md#m-electron2d-resource-onpathcacheset-system-string) after committing the value.
+
+Equal raw writes also invoke this hook. The general path-change hook is then attempted even if the raw hook fails; both errors aggregate, and the committed raw metadata stays unregistered.
 
 <a id="m-electron2d-resource-takeoverpath-system-string"></a>
 ### `public void TakeOverPath(string path)`

@@ -176,6 +176,7 @@ public class Resource : ElectronObject
     /// <exception cref="ArgumentNullException">The assigned value is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">Another live resource owns the assigned nonempty path.</exception>
     /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
+    /// <exception cref="Exception">A path hook throws after the new registered path is committed.</exception>
     public string ResourcePath
     {
         get
@@ -362,7 +363,9 @@ public class Resource : ElectronObject
     }
 
     /// <summary>Synchronously reports that this resource's meaningful content changed.</summary>
-    /// <remarks>Calls made inside a copy batch are coalesced into one event when the outermost batch ends.</remarks>
+    /// <remarks>Calls made inside a copy batch are coalesced into one event when the outermost batch ends.
+    /// Ordinary publication runs handlers in subscription order on the publishing thread. Handler failures stop
+    /// subsequent handlers and propagate; a reentrant publication uses its own captured subscription list.</remarks>
     /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">A <see cref="Changed"/> handler throws.</exception>
     public void EmitChanged()
@@ -419,6 +422,8 @@ public class Resource : ElectronObject
     /// <remarks>
     /// This loader-oriented operation may produce the same visible path on multiple resources. It first removes this
     /// resource's previously registered path, then invokes <see cref="OnPathCacheSet"/> after committing the value.
+    /// Equal raw assignments also invoke the hook. The general path-change hook is attempted after it;
+    /// both failures are aggregated without rolling back metadata or acquiring a cache entry.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
@@ -470,9 +475,11 @@ public class Resource : ElectronObject
 
     /// <summary>Transfers ownership of a process-wide resource path to this resource.</summary>
     /// <param name="path">The non-null opaque path. An empty path simply clears this resource's current path.</param>
-    /// <remarks>A displaced live resource atomically receives an empty path.</remarks>
+    /// <remarks>A displaced live resource atomically receives an empty path. Displaced and new-owner path hooks
+    /// observe committed cache ownership. Both are attempted; failures aggregate without rolling back ownership.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
+    /// <exception cref="Exception">A displaced or new-owner path hook throws after ownership is committed.</exception>
     public void TakeOverPath(string path) => SetPath(path, takeOver: true);
 
     /// <summary>Creates a fresh default instance used as the target of duplication.</summary>

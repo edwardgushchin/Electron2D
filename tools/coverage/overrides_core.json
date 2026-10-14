@@ -1612,6 +1612,22 @@
   "statusGroups": [
     {
       "godot": [
+        "Resource::method:_reset_state()",
+        "Resource::method:reset_state()",
+        "Resource::method:_set_path_cache(String:)",
+        "Resource::method:set_path_cache(String:)",
+        "Resource::method:is_built_in()",
+        "Resource::method:take_over_path(String:)",
+        "Resource::method:emit_changed()",
+        "Resource::signal:changed()",
+        "Resource::property:resource_name",
+        "Resource::property:resource_path"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0013 typed managed contract audited against pinned Resource.xml/resource.cpp/resource.h. Reset invokes the transient hook without changing stored state or automatic Changed, with real custom/error/explicit-publication and physical preflight evidence. Registered paths are ordinal weak single-owner claims; conflicts preserve state, raw assignment unregisters the caller while bypassing new ownership, equal raw writes invoke hooks, promotion/equal registered writes and takeover/clear execute. Post-commit hooks are both attempted with aggregated failures; reentrant/concurrent cache claims, disposal and GC preserve ownership. IsBuiltIn matches empty/embedded/local:// rules and case sensitivity. Content events are synchronous typed C# delegates under the accepted adaptation: publishing thread/subscription order, committed equal name writes, captured reentrant lists, failure propagation and coalesced copies. Public Lifecycle consumers audit Resource, all nine production shapes, an application Shape, PhysicsMaterial and World; current CPU/software-GPU/registered serial/separate managed and strict NativeAOT profiles, inherited copy guards and full physical frames pass. Evidence: bin/physics-resource-lifecycle/2026-10-14/validation.json. These ten rows are complete under the accepted typed lifetime/error/cache/event adaptations; duplicate/copy/renderer RID/editor ID and full class inheritance remain separate open rows."
+    },
+    {
+      "godot": [
         "Resource::method:generate_scene_unique_id()",
         "Resource::property:resource_scene_unique_id"
       ],

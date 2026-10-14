@@ -82,6 +82,7 @@ Concrete Shader/ShaderMaterial resources use the internal rendering reflection a
 - Electron2D-owned code stays in `Electron2D.dll`.
 - Resource state is typed; there is no dynamic property bag or untyped reflection-based copier.
 - Registered paths are ordinal, process-wide, weakly held, and single-owner.
+- Reset reaches the typed transient hook without manufacturing Changed. Path callbacks observe committed cache state; ordinary content events are synchronous, including explicit reset-hook publication and reentrant delivery.
 - Synchronous loader cache decisions serialize; decoding failures preserve existing cached image pixels or font bytes and resource identity. Loaded resources remain caller-owned.
 - Derived resources explicitly define construction and stored-state copying.
 - Common resource copying includes inherited translation policy/domain as stored state, including scene-local duplicates; successful coalesced notifications observe the completed state.
