@@ -306,3 +306,7 @@ user effects. Serial/separate numerical profiles retain these same operations.
 The fixture reports full-frame p50/p95/p99, uploads, readback, mean wait and submission
 count. Its CPU-only Vulkan values are transfer/function evidence, not hardware
 speedup, native allocator totals, real-window FPS or final performance acceptance.
+
+## Compact callback activity (2026-10-14)
+
+CaptureGPUActivity reuses uint scratch sized for resident slots and updates collider activity only. PublishGPUCompletion selects raw callback receivers individually; a callback on one body no longer publishes unrelated raw states. Full callback descriptors preserve late registration. Newly enabled receivers publish fresh fields before GetView and retain active-before-step eligibility.

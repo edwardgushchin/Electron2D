@@ -30,6 +30,7 @@ internal sealed partial class PhysicsSpace
     internal bool TryGetGPUCollider(RID rid, out PhysicsColliderBackend collider) => _gpuRIDColliders.TryGetValue((ulong)rid.GetID(), out collider!);
     internal bool TryGetGPUCollider(int index, out PhysicsColliderBackend collider) => _gpuColliders.TryGetValue(index, out collider!);
     private GPUPhysicsBodyStore.BodyChange[] _gpuChanges = [];
+    private uint[] _gpuActivity = [];
     private GPUPhysicsBodyStore.BodyHandle[] _gpuObservedBodies = [];
     private GPUPhysicsBodyStore.Snapshot[] _gpuObservedStates = [];
     private PhysicsColliderBackend?[] _gpuObservedBackends = [];
@@ -70,6 +71,7 @@ internal sealed partial class PhysicsSpace
         {
             var capacity = Math.Max(8, count * 2);
             Array.Resize(ref _gpuChanges, capacity);
+            Array.Resize(ref _gpuActivity, capacity);
         }
         if (_gpuReportBodies.Length < count)
         {
@@ -98,18 +100,29 @@ internal sealed partial class PhysicsSpace
         foreach (var backend in _gpuColliders.Values) GPUCollider(backend).CompleteGPUStatePublication();
     }
 
-    internal static bool RequiresGPUCompletion(PhysicsServerCollider body, bool callbacks) =>
-        !body.IsArea && (callbacks || body.Mode == PhysicsServer.BodyMode.Kinematic ||
+    internal void CaptureGPUActivity()
+    {
+        PrepareGPUCapacity(); FlushGPUWakes();
+        GPUStore!.ReadActivity(_gpuActivity);
+        foreach (var backend in _gpuColliders.Values)
+        {
+            var collider = GPUCollider(backend);
+            collider.AcceptGPUActivity(_gpuActivity[collider.GPUHandle.Index] != 0);
+        }
+    }
+
+    internal static bool RequiresGPUCompletion(PhysicsServerCollider body) =>
+        !body.IsArea && (RequiresBodySnapshot(body.Runtime, null) || body.Mode == PhysicsServer.BodyMode.Kinematic ||
             body.Runtime.ContactLimit > 0 || body.Runtime.View is { IsDisposed: false });
 
-    internal void PublishGPUCompletion(bool callbacks)
+    internal void PublishGPUCompletion()
     {
-        if (callbacks || _serverColliders.Count == 0) { PublishGPU(); return; }
+        if (_serverColliders.Count == 0) { PublishGPU(); return; }
         PrepareGPUCapacity();
         var count = 0;
         foreach (var body in _bodies) Observe(body.Backend);
         foreach (var body in _serverColliders)
-            if (RequiresGPUCompletion(body, callbacks: false)) Observe(body.Backend);
+            if (RequiresGPUCompletion(body)) Observe(body.Backend);
         if (count == 0) return;
         FlushGPUWakes();
         GPUStore!.Read(_gpuObservedBodies.AsSpan(0, count), _gpuObservedStates.AsSpan(0, count));
@@ -179,7 +192,7 @@ internal sealed partial class PhysicsSpace
     {
         _gpuQueryGeometry?.Dispose(); _gpuQueryGeometry = null; _gpuQueryShape = null;
         _gpuColliders.Clear(); _gpuRIDColliders.Clear(); _gpuShapeOwners.Clear(); _gpuReportRanges.Clear();
-        _gpuChanges = []; _gpuObservedBodies = []; _gpuObservedStates = []; _gpuObservedBackends = []; _gpuReportBodies = []; _gpuReportLimits = []; _gpuReportCounts = []; _gpuReports = [];
+        _gpuChanges = []; _gpuActivity = []; _gpuObservedBodies = []; _gpuObservedStates = []; _gpuObservedBackends = []; _gpuReportBodies = []; _gpuReportLimits = []; _gpuReportCounts = []; _gpuReports = [];
         _gpuQueryExclusions = []; _gpuPointHits = []; _gpuShapeHits = [];
         _gpuShapeQuery[0] = default;
     }

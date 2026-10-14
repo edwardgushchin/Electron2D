@@ -206,7 +206,7 @@ message. It does not catch a started physics interval. Device failure invalidate
 the store; subsequent queries/steps reject while release remains available. No CPU
 replay or hidden backend change follows a failed GPU step.
 
-[Consumer-driven GPU publication](gpu-demand-publication.md) now avoids mandatory raw-body state downloads. Scene/view/contact/kinematic consumers and explicit getters retain current results; callbacks preserve shared ordered publication. The current 4096-body fixture downloads 752 bytes per step rather than a full moving-body stream, while GPU speed advantage remains open.
+[Consumer-driven GPU publication](gpu-demand-publication.md) now avoids mandatory raw-body state downloads. Scene/view/contact/kinematic consumers and explicit getters retain current results; callbacks preserve initial activity and ordered delivery with selected state reads. The current 4096-body fixture downloads 752 bytes per step rather than a full moving-body stream, while GPU speed advantage remains open.
 
 [Caller-selected pose batches](gpu-demand-publication.md#explicit-pose-batches) preserve the scalar public contract on both implementations. Render consumers can read dynamic raw GPU poses with one compact gather and no full state mirror; scene presentation and static authored poses retain their existing path.
 
@@ -420,8 +420,8 @@ The GPU adapter no longer downloads authored intermediate poses for every ordina
 step. Pre-step activity is needed to preserve pending-force eligibility, omission
 and retention while sleeping/static, and dispatch of receivers active before the
 solver. If any body has pending force/torque or satisfies the existing callback/
-contact-snapshot predicate, the original full pre-step publication and activity
-capture remain. The complete receiver order is retained, allowing an earlier
+contact-snapshot predicate, a compact per-slot active-flag read captures eligibility
+without full body state. The complete receiver order is retained, allowing an earlier
 callback to enable a later receiver within the same step. With no such consumer,
 activity capture is skipped; constant forces and field integration stay on device.
 Queued connected wakes are still flushed before simulation. This optimization

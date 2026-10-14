@@ -85,7 +85,12 @@ internal sealed partial class PhysicsSpace
                 if (body.Backend.HasMotionMode(PhysicsServer.BodyMode.Static) ||
                     !body.Runtime.ActiveBeforeStep && !body.Backend.IsAwake) continue;
                 PhysicsDirectBodyState state;
-                try { state = body.Runtime.GetView(this); }
+                try
+                {
+                    // A previous callback can enable this receiver after completion publication.
+                    if (GPUStore is not null) body.Runtime.PublishFields();
+                    state = body.Runtime.GetView(this);
+                }
                 catch (Exception error) { (errors ??= []).Add(error); continue; }
                 try { state.BeginCallback(); body.Runtime.ForceCallback?.Invoke(state); }
                 catch (Exception error) { (errors ??= []).Add(error); }

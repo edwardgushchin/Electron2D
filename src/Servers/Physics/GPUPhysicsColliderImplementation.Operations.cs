@@ -79,7 +79,8 @@ internal sealed partial class GPUPhysicsColliderImplementation
     }
     internal override Vector2 LinearVelocity => new(GPUState.Velocity.X, GPUState.Velocity.Y);
     internal override float AngularVelocity => GPUState.Velocity.Z;
-    internal override bool IsAwake => !HasMotionMode(PhysicsServer.BodyMode.Static) && !GPUState.Sleeping;
+    internal override bool IsAwake => !HasMotionMode(PhysicsServer.BodyMode.Static) &&
+        (_gpuActivityValid && _gpuActivityEpoch == Space.GPUStateEpoch ? _gpuActive : !GPUState.Sleeping);
     internal override void SavePose() => _gpuSavedPose = GetPose();
     internal override void RestorePose() => SetPose(_gpuSavedPose.Position, _gpuSavedPose.Rotation);
     internal override void SetPose(Vector2 position, float rotation)

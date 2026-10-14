@@ -1020,3 +1020,7 @@ user effects. Serial/separate numerical profiles retain these same operations.
 The fixture reports full-frame p50/p95/p99, uploads, readback, mean wait and submission
 count. Its CPU-only Vulkan values are transfer/function evidence, not hardware
 speedup, native allocator totals, real-window FPS or final performance acceptance.
+
+## Compact callback activity (2026-10-14)
+
+GPU callback preparation reads compact initial activity rather than full raw-body snapshots. Ordered descriptors retain late receiver registration, newly sleeping eligibility and fresh fields. Completion reads actual consumers; explicit getters remain selected operations. Private replay retains activity epochs. Hardware speed, native memory and real-window performance remain separate open gates.

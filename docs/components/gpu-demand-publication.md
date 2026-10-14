@@ -1,6 +1,6 @@
 # GPU publication for current consumers
 
-Last updated: 2026-10-11
+Last updated: 2026-10-14
 
 [The 2026-10-11 paired trial](physics-current-performance.md) verifies complete
 headless and real-window paths on one main revision with freshly built assemblies.
@@ -25,12 +25,23 @@ receivers and retained live body views. Its reusable staging arrays grow with th
 consumer count. Raw bodies without those consumers do not acquire a current host
 mirror. Disposed views leave the completion set on the next interval.
 
-Force/integration and synchronization callbacks preserve the existing shared
-pre-step/complete publication. Their common ordered delivery lets an earlier
-callback enable a later receiver in the same interval, including bodies that were
-active before becoming asleep. Queued force eligibility also requires the existing
-pre-step activity snapshot. The callback paths still use the global change stream;
-they are measured consumers and remain an optimization boundary.
+Force/integration and synchronization callbacks capture one 32-bit active flag
+per resident slot before the step, after policy edits and queued wakes. This
+bounded activity read preserves queued-force retention and the eligibility of a
+receiver enabled by an earlier callback, including a body that sleeps during the
+step. It does not copy pose, velocity or fields, and does not mark their caches
+current. Dead/static/sleeping slots return zero. Slot flags live in reused space
+scratch; each collider caches only its current epoch's flag. State edits invalidate
+that cache, and local replay preserves its value and epoch.
+
+Completion selects the existing scene/kinematic/contact/live-view consumers plus
+bodies with actual force/integration/sync receivers. Callback descriptors retain
+the complete existing order, so registration during delivery still reaches later
+bodies. A newly enabled receiver resolves its fields and selected device state
+immediately before delivery. Explicit getters of other bodies remain independent
+selected consumers. Pure scene worlds retain changed-state completion because
+all their body poses have scene consumers. No full raw-body mirror is required by
+one callback. Absence of force/callback/contact demand still skips activity capture.
 
 Acquiring a GPU direct-body view refreshes that body's resolved field cache. Live
 raw views participate in subsequent selected completion, so fields and velocities
@@ -193,3 +204,32 @@ same evidence directory.
 Scalar GPU pose-only getters now use the existing sixteen-byte gather plus eight-byte dispatch status when neither full state nor a current pose is cached. Repeated requests reuse the current epoch; complete state is still read for velocity/fields/sleep or explicit portable demand. [Selected pair tests](physics-shape-pairs.md) measure the one-body request and retain replay/publication checks.
 
 [Complete monitored scene measurements](physics-scene-performance.md) now expose scene/contact publication traffic on CPU/GPU and a fixed late native-buffer growth allocation. The shared fixture uses public state for invariants, retains eight reported points and full interpolation, and does not claim final ordinary-scene GPU advantage.
+
+## Sparse callback verification (2026-10-14)
+
+The 512-active-body fixture keeps identical motion and one state-sync receiver,
+then executes 128 warm and 128 measured complete 1/60 s steps. Baseline full
+publication downloads 41,040 bytes/step; selected completion plus initial flags
+reads 2,200 bytes/step (94.64 percent less). Upload grows from 72 to 96 bytes/step,
+and submissions from five to six: the initial flag read and selected completion
+are separate waits. This removes a full state mirror, not all synchronization.
+Owner/all-thread managed allocations remain exactly 0/0.
+
+Final software-Vulkan serial p50/p95/p99 is 1.5366/1.8307/2.1702 ms, mean device
+wait 1.3662 ms; separate numerical execution is 1.9568/2.2885/2.5099 ms, mean
+wait 1.7211 ms. Other verification ran concurrently, so these are functional
+cost observations and do not establish hardware speedup. Earlier baseline wait
+was 1.2257 ms; that unmatched run must not be treated as a timing comparison.
+Source/assembly/runtime hashes and logs are retained under
+`bin/physics-callback-publication/2026-10-14/final/`, with baseline under `red/`.
+
+PhysicsGPUPublicationTests checks both CPU and GPU with bodies entering sleep in
+the interval, already sleeping exclusion, late fields/velocity, earlier committed
+edits plus thrown callbacks, cross-body direct reads, detach and reattachment.
+Existing contact/scene/force omission and retention checks remain active.
+PhysicsGPUDemandPublicationTests runs serial and separate numerical execution;
+its bounded readback assertion permits architecture changes without demanding a
+particular internal publication count. Public checkpoint, portable snapshot,
+sleep-policy, scene and picking checks retain separate results. Complete physics,
+extension, network, native allocation, foreign-platform and hardware FPS gates
+remain open.

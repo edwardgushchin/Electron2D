@@ -295,6 +295,17 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         Submit(0, default, bodies, default, poses: results[..bodies.Length]);
     }
 
+    /// <summary>Reads one active flag per resident slot for pre-step force and callback eligibility.</summary>
+    /// <remarks>Dead, static and sleeping slots return zero; this read does not make pose or velocity caches current.</remarks>
+    internal void ReadActivity(Span<uint> results)
+    {
+        EnsureAccess();
+        if (results.Length < _highWater) throw new ArgumentException("The activity destination is too small.", nameof(results));
+        if (_highWater == 0) return;
+        PrepareMasses(); Reserve(_highWater);
+        Submit(0, default, default, default, activity: results[.._highWater]);
+    }
+
     private ref Command Edit(int index)
     {
         ref var slot = ref _slots[index];
@@ -399,7 +410,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         finally { bodies?.Dispose(); centers?.Dispose(); transientForces?.Dispose(); targets?.Dispose(); resolvedFields?.Dispose(); commands?.Dispose(); requests?.Dispose(); results?.Dispose(); status?.Dispose(); upload?.Dispose(); download?.Dispose(); }
     }
 
-    private void Submit(float delta, Vector2 gravity, ReadOnlySpan<BodyHandle> requests, Span<Snapshot> results, uint motionStage = 1, bool positionCorrections = false, float? sleepDelta = null, float? dampingDelta = null, bool beginTick = false, bool endTick = false, bool resolvedFields = false, Span<Float4> poses = default)
+    private void Submit(float delta, Vector2 gravity, ReadOnlySpan<BodyHandle> requests, Span<Snapshot> results, uint motionStage = 1, bool positionCorrections = false, float? sleepDelta = null, float? dampingDelta = null, bool beginTick = false, bool endTick = false, bool resolvedFields = false, Span<Float4> poses = default, Span<uint> activity = default)
     {
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw GPUPhysicsDevice.Failure("acquire resident body commands");
@@ -408,7 +419,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             var commandBytes = checked((uint)(_pendingCount * sizeof(Command)));
             var requestBytes = checked((uint)(requests.Length * sizeof(BodyHandle)));
             var poseOnly = !poses.IsEmpty;
-            var outputBytes = checked((uint)(requests.Length * (poseOnly ? sizeof(Float4) : sizeof(Snapshot))));
+            var activityOnly = !activity.IsEmpty;
+            var outputCount = activityOnly ? activity.Length : requests.Length;
+            var outputBytes = checked((uint)(outputCount * (activityOnly ? sizeof(uint) : poseOnly ? sizeof(Float4) : sizeof(Snapshot))));
             var publishStatistics = motionStage == 4 && (sleepDelta ?? delta) > 0 && endTick;
             var headerBytes = publishStatistics ? 16u : 8u;
             var mapped = SDL.MapGPUTransferBuffer(Device, _upload!.DangerousGetHandle(), false);
@@ -430,7 +443,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             Dispatch(command, ref settings, 0, _pendingCount);
             if (delta > 0 || endTick) Dispatch(command, ref settings, motionStage, _highWater);
             if (motionStage == 4 && (sleepDelta ?? delta) > 0) FinishSleep(command, sleepDelta ?? delta);
-            Dispatch(command, ref settings, poseOnly ? 5u : 2u, requests.Length);
+            Dispatch(command, ref settings, activityOnly ? 6u : poseOnly ? 5u : 2u, outputCount);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident results");
             SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _status!.DangerousGetHandle(), Size = headerBytes }, new() { TransferBuffer = _download!.DangerousGetHandle() });
@@ -441,7 +454,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             _failed = true;
             Finish(ref command);
             UploadBytes += 8 + commandBytes + requestBytes; ReadbackBytes += headerBytes + outputBytes;
-            UniformBytes += sizeof(Settings) * ((_pendingCount > 0 ? 1 : 0) + (delta > 0 || endTick ? 1 : 0) + (requests.Length > 0 ? 1 : 0));
+            UniformBytes += sizeof(Settings) * ((_pendingCount > 0 ? 1 : 0) + (delta > 0 || endTick ? 1 : 0) + (outputCount > 0 ? 1 : 0));
             mapped = SDL.MapGPUTransferBuffer(Device, _download.DangerousGetHandle(), false);
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map resident results");
             try
@@ -453,7 +466,11 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
                     PublishedActiveBodyCount = checked((int)((uint*)mapped)[2]);
                     PublishedIslandCount = checked((int)((uint*)mapped)[3]);
                 }
-                if (poseOnly)
+                if (activityOnly)
+                {
+                    fixed (uint* destination = activity) System.Buffer.MemoryCopy((byte*)mapped + headerBytes, destination, outputBytes, outputBytes);
+                }
+                else if (poseOnly)
                 {
                     fixed (Float4* destination = poses) System.Buffer.MemoryCopy((byte*)mapped + headerBytes, destination, outputBytes, outputBytes);
                 }

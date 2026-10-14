@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Owns one collider's resident handles, shape leases and publication caches in its retained GPU store.</summary>
-/// <remarks>Sensor poses are authored inputs and reuse the existing pose cache between numerical epochs.</remarks>
+/// <remarks>Sensor poses reuse the authored pose cache between numerical epochs. Compact activity has a separate epoch and never marks full state current.</remarks>
 internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBackend owner, PhysicsSpace space, GPUPhysicsBodyStore store) : PhysicsColliderImplementation(owner, space)
 {
     internal bool GPUSensor;
@@ -33,12 +33,18 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
     }
 
     private bool _gpuStateValid, _gpuStateMatchesPublication;
+    private bool _gpuActivityValid, _gpuActive;
+    private long _gpuActivityEpoch;
+    internal void AcceptGPUActivity(bool active)
+    {
+        _gpuActive = active; _gpuActivityValid = true; _gpuActivityEpoch = Space.GPUStateEpoch;
+    }
     private bool _gpuParametersPrepared, _gpuResolveStaticFields;
     private long _gpuStateEpoch;
     internal bool GPUStateValid
     {
         get => _gpuStateValid && _gpuStateEpoch == Space!.GPUStateEpoch;
-        set { _gpuStateValid = value; if (value) _gpuStateEpoch = Space!.GPUStateEpoch; }
+        set { _gpuStateValid = value; if (value) _gpuStateEpoch = Space!.GPUStateEpoch; else _gpuActivityValid = false; }
     }
     private Vector2 _gpuSurfaceLinear, _gpuConstantForce;
     private float _gpuSurfaceAngular, _gpuConstantTorque;
@@ -62,6 +68,7 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
     internal void AcceptGPUState(in GPUPhysicsBodyStore.Snapshot state, bool published = false)
     {
         _gpuState = state; GPUStateValid = true;
+        AcceptGPUActivity(!state.Sleeping);
         if (GPUSensor) AcceptGPUPose(state.Pose);
         _gpuStateMatchesPublication = published || Space!.GPUStatePublicationEpoch == Space.GPUStateEpoch;
     }

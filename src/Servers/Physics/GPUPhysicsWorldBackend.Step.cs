@@ -32,7 +32,7 @@ internal sealed partial class GPUPhysicsWorldBackend
         if (ProfilingEnabled) Space.GPUPrepareBodiesMS = System.Diagnostics.Stopwatch.GetElapsedTime(start).TotalMilliseconds;
         // Policy edits must finish before the shared activity snapshot consumed by force callbacks.
         _captureActivity = _callbacks || pendingForces;
-        if (_captureActivity) Space.PublishGPU();
+        if (_captureActivity) Space.CaptureGPUActivity();
         uint areaOrder = 0;
         foreach (var area in Space.Areas) GPUStore.SetAreaFields(GPUStore.NativeCollider(area.Backend).GPUHandle, GPUFields(area.Fields), areaOrder++);
         foreach (var body in Space.ServerColliders)
@@ -65,11 +65,11 @@ internal sealed partial class GPUPhysicsWorldBackend
     internal override void SyncResults()
     {
         Space.InvalidateGPUStates(wake: false);
-        Space.PublishGPUCompletion(_callbacks); Space.ReadGPUReports(); _resultsReady = true;
+        Space.PublishGPUCompletion(); Space.ReadGPUReports(); _resultsReady = true;
     }
     internal override void CompleteBody(PhysicsServerCollider body)
     {
-        if (RequiresGPUCompletion(body, _callbacks)) body.Runtime.PublishFields(completingStep: true);
+        if (RequiresGPUCompletion(body)) body.Runtime.PublishFields(completingStep: true);
         body.CompleteMotion();
     }
     internal override void CompleteBody(PhysicsBody body)

@@ -152,6 +152,11 @@ void main()
         if (!finite4(b.pose) || !finite4(b.velocity) || !finite4(vec4(b.velocity.xyz+b.surface.xyz,b.surface.w))) { fail(2u); return; }
         bodies[i] = b; transientForces[i]=pending;
     }
+    else if (control.x == 6u)
+    {
+        ResidentBody b = bodies[i];
+        results[i] = b.flags.w != 0u && b.flags.y != 0u && (b.flags.z & 16u) == 0u ? 1u : 0u;
+    }
     else
     {
         uvec4 request = requests[i];

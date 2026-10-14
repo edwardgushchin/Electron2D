@@ -7,7 +7,7 @@ internal static class PhysicsGPUDemandPublicationTests
     {
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PUBLICATION_THREAD") == "1") ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, true);
-        try { Raw(); Mixed(); Areas(); }
+        try { Raw(); Mixed(); Areas(); SparseCallbacks(); }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
     }
     private static void Raw()
@@ -84,7 +84,7 @@ internal static class PhysicsGPUDemandPublicationTests
             var later = 0;
             PhysicsServer.BodySetForceIntegrationCallback(bodies[1], _ => PhysicsServer.BodySetStateSyncCallback(bodies[2], _ => later++));
             tree.PhysicsFrame(1d / 60);
-            Check(later == 1 && scene.Position.X > before + 50, "Switching to global callback publication preserves later registration and scene completion");
+            Check(later == 1 && scene.Position.X > before + 50, "Selected callback publication preserves later registration and scene completion");
             PhysicsServer.BodySetForceIntegrationCallback(bodies[1], null); PhysicsServer.BodySetStateSyncCallback(bodies[2], null);
             PhysicsServer.BodySetTransform(bodies[0], new(0, new(99, 0))); _ = view.Transform;
             PhysicsServer.BodySetTransform(bodies[0], new(0, new(100, 0))); tree.PhysicsFrame(1d / 60);
@@ -94,6 +94,46 @@ internal static class PhysicsGPUDemandPublicationTests
         finally { foreach (var body in bodies) if (body.IsValid()) PhysicsServer.FreeRID(body); }
     }
     private static void Near(float value, float expected) => Check(Math.Abs(value - expected) < .02f, "Prescribed constant motion/field agrees within .02 scene units (or per second)");
+    private static void SparseCallbacks()
+    {
+        var space = PhysicsServer.SpaceCreate(PhysicsServer.Backend.GPU);
+        var bodies = new RID[512]; var calls = 0;
+        try
+        {
+            PhysicsServer.SpaceSetActive(space, true); PhysicsServer.AreaSetGravity(space, 60);
+            PhysicsServer.AreaSetLinearDamp(space, 0); PhysicsServer.AreaSetAngularDamp(space, 0);
+            for (var i = 0; i < bodies.Length; i++)
+            {
+                bodies[i] = PhysicsServer.BodyCreate(); PhysicsServer.BodySetCanSleep(bodies[i], false);
+                PhysicsServer.BodySetLinearVelocity(bodies[i], new(60, 0)); PhysicsServer.BodySetSpace(bodies[i], space);
+            }
+            PhysicsServer.BodySetStateSyncCallback(bodies[0], state =>
+            {
+                Check(state.TotalGravity.Y == 60 && state.TotalLinearDamp == 0 && state.TotalAngularDamp == 0,
+                    "A sparse callback observes the completed resolved fields.");
+                Near(state.Transform.Origin.X, calls + 1); calls++;
+            });
+            var store = PhysicsServer.Service.GetSceneSpace(space).GPUStore!;
+            var samples = new double[128];
+            Collect(); GC.WaitForPendingFinalizers();
+            for (var i = 0; i < 128; i++) PhysicsServer.SpaceStep(space, 1d / 60);
+            var read = store.ReadbackBytes; var upload = store.UploadBytes; var wait = store.WaitMS; var submitted = store.SubmissionCount;
+            var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+            for (var i = 0; i < 128; i++)
+            {
+                var started = System.Diagnostics.Stopwatch.GetTimestamp(); PhysicsServer.SpaceStep(space, 1d / 60);
+                samples[i] = System.Diagnostics.Stopwatch.GetElapsedTime(started).TotalMilliseconds;
+            }
+            var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; var allBytes = GC.GetTotalAllocatedBytes(true) - all;
+            var bytes = (store.ReadbackBytes - read) / 128;
+            Array.Sort(samples);
+            Console.WriteLine($"Sparse GPU callback: 512 active bodies, 1 receiver, 128 full frames, {ownerBytes}/{allBytes} B; readback={bytes}, upload={(store.UploadBytes - upload) / 128} B/step, wait={(store.WaitMS - wait) / 128:F4} ms, submissions={(store.SubmissionCount - submitted) / 128}.");
+            Console.WriteLine($"Sparse GPU callback full-step p50/p95/p99={samples[63]:F4}/{samples[121]:F4}/{samples[126]:F4} ms; software Vulkan only.");
+            Check(calls == 256 && ownerBytes == 0 && allBytes == 0 && bytes < 8192,
+                "One callback does not download complete snapshots for unrelated raw bodies.");
+        }
+        finally { foreach (var body in bodies) if (body.IsValid()) PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(space); }
+    }
     private static void Areas()
     {
         using var world = new World(PhysicsServer.Backend.GPU); using var root = new SubViewport { World = world };

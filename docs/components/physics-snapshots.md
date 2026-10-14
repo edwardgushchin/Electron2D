@@ -395,3 +395,5 @@ user effects. Serial/separate numerical profiles retain these same operations.
 The fixture reports full-frame p50/p95/p99, uploads, readback, mean wait and submission
 count. Its CPU-only Vulkan values are transfer/function evidence, not hardware
 speedup, native allocator totals, real-window FPS or final performance acceptance.
+
+GPU collider replay also retains the compact activity flag, validity and epoch. This is pre-step callback/force eligibility metadata, independent of full Snapshot and authored sensor pose caches. Restore keeps cache epochs aligned with restored space state; explicit edits invalidate activity before subsequent use.
