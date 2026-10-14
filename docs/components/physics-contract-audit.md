@@ -173,7 +173,7 @@ operations remain open in the ledger.
 The complete generated ledger remains the per-declaration list. Current own
 physics families contain 686 Implemented, 151 Partial and 55 Excluded rows,
 with no own Blocked or Unimplemented rows. Shared inherited declarations still
-contain 136 Partial, 17 Blocked and 67 Unimplemented rows after the current typed
+contain 137 Partial, 17 Blocked and 66 Unimplemented rows after the current typed
 property, class-identity, glyph-region and indexed-property projections; cross-domain consumers
 now contain 76 Implemented, two Partial and no Unimplemented rows after the
 captured numerical-thread implementation. These are declaration counts,
@@ -1056,3 +1056,7 @@ metadata, with 0/0 warm full-frame bytes. Other inherited APIs and final accepta
 remain separate gates.
 
 [ObjectPropertyTests](../../tests/Electron2D.Tests/ObjectPropertyTests.cs) executes discovery snapshots, compatible replacement/filtering and invalid lists, owner policy, live/default/null/array values, readonly/validation/delegate errors and teardown inspection. Explicit CPU/GPU serial and separate-thread profiles use real RigidBody properties, permitted post-solver mass edits, owner/capture rejection and callback-error recovery. Each retains 128 warm/128 measured full frames with typed inspection, velocity writes and reversion at strict zero owner/all-thread managed bytes. GPU runs use CPU-only Vulkan; this does not establish hardware performance, editor automation or native/platform acceptance.
+
+[EventConnectionPhysicsTests](../../tests/Electron2D.Tests/EventConnectionPhysicsTests.cs) verifies all three prepared immediate arities and full selected CPU/GPU frames: 128 warm/128 measured frames, strict zero owner/all-thread managed bytes, 128 emissions of each arity and 64 Area body enters/exits. Identity, disposed subscriptions and collected callback-error recovery remain observable. Cold two-argument deferred/one-shot checks cover value capture, ordering, cancellation and recursion; the existing EventConnection suite retains concurrency, accessor rollback/removal/scheduler errors and all overloads. GPU execution uses CPU-only Vulkan; hardware/native/network/performance acceptance stays open.
+
+The inherited notification/_notification rows remain Partial: Notify has ordinary C# virtual/base-call ordering, no reversed parameter and no automatic post-initialization 0 delivery. EventConnection.IsConnected now maps the existing logical token capability as Partial; independently cleared publisher lists and arbitrary publisher/handler inspection remain absent. This audit keeps those concrete gaps open. Deferred/one-shot capture allocations also remain outside the immediate-path zero-byte proof.

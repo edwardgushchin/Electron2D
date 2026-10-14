@@ -7,6 +7,9 @@ namespace Electron2D;
 /// This type wraps ordinary C# event accessors without introducing string-addressed signals or untyped arguments.
 /// Disposing the connection removes its wrapper and cancels deferred callbacks that have not started. A callback that
 /// has already started can finish concurrently with disposal.
+/// Prepared reusable synchronous delivery with zero, one or two arguments creates no per-emission capture.
+/// Subscription, one-shot capture and deferred scheduling remain separate allocation paths; supplied handlers
+/// and accessors retain their own allocation behavior.
 /// </remarks>
 public sealed class EventConnection : IDisposable
 {
@@ -256,7 +259,7 @@ public sealed class EventConnection : IDisposable
     {
         if (_oneShot)
         {
-            DispatchOneShot<Action<T>>(handler => handler(value));
+            DispatchOneShotValue(value);
             return;
         }
 
@@ -265,7 +268,7 @@ public sealed class EventConnection : IDisposable
 
         if (defer is not null)
         {
-            defer(() => InvokeDeferred(value));
+            DispatchDeferred(defer, value);
             return;
         }
 
@@ -277,7 +280,7 @@ public sealed class EventConnection : IDisposable
     {
         if (_oneShot)
         {
-            DispatchOneShot<Action<T1, T2>>(handler => handler(first, second));
+            DispatchOneShotPair(first, second);
             return;
         }
 
@@ -286,13 +289,25 @@ public sealed class EventConnection : IDisposable
 
         if (defer is not null)
         {
-            defer(() => InvokeDeferred(first, second));
+            DispatchDeferred(defer, first, second);
             return;
         }
 
         if (TryGetHandler<Action<T1, T2>>(out var handler))
             handler(first, second);
     }
+
+    private void DispatchOneShotValue<T>(T value) =>
+        DispatchOneShot<Action<T>>(handler => handler(value));
+
+    private void DispatchOneShotPair<T1, T2>(T1 first, T2 second) =>
+        DispatchOneShot<Action<T1, T2>>(handler => handler(first, second));
+
+    private void DispatchDeferred<T>(Action<Action> defer, T value) =>
+        defer(() => InvokeDeferred(value));
+
+    private void DispatchDeferred<T1, T2>(Action<Action> defer, T1 first, T2 second) =>
+        defer(() => InvokeDeferred(first, second));
 
     private void DispatchOneShot<TDelegate>(Action<TDelegate> invoke)
         where TDelegate : Delegate

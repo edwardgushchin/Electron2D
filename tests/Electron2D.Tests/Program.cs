@@ -10,6 +10,18 @@ using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_GLYPH") is { } glyphProfile) { if (glyphProfile == "managed") CanvasGlyphTests.RunManaged(); else if (glyphProfile == "modules") CanvasGlyphTests.RunModules(); else CanvasGlyphTests.RunNative(glyphProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_EVENT_CONNECTIONS") is { } eventProfile)
+{
+    VerifyEventConnections();
+    EventConnectionPhysicsTests.Run(eventProfile switch
+    {
+        "cpu" => PhysicsServer.Backend.CPU,
+        "gpu" => PhysicsServer.Backend.GPU,
+        _ => throw new ArgumentException("Use cpu or gpu for physics event connections.")
+    });
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OBJECT_PROPERTIES") is { } propertyProfile)
 {
     ObjectPropertyTests.Run(propertyProfile switch
@@ -1404,6 +1416,7 @@ ObjectPropertyTests.Run(PhysicsServer.Backend.CPU); ObjectPropertyTests.Run(Phys
 WeakRefTests.Run();
 VerifyNotificationsAndProperties();
 VerifyEventConnections();
+EventConnectionPhysicsTests.Run(PhysicsServer.Backend.CPU); EventConnectionPhysicsTests.Run(PhysicsServer.Backend.GPU);
 VerifyTranslations();
 NodeLocalizationTests.Run();
 TranslationDomainTests.Run();

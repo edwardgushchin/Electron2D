@@ -997,6 +997,11 @@
       "godot": "Object::method:property_get_revert(StringName:)",
       "electron2d": "method:Electron2D.PropertyDescriptor<TOwner, TValue>.TryGetRevertValue(TOwner,ref TValue)",
       "reason": "ADRs 0001/0005/0009: explicit typed descriptors and live getter/setter/revert factories replace the name/Variant callback boundary. ObjectPropertyTests checks immutable discovery snapshots, compatible replacement/filtering and invalid lists, custom owner policy, default presence including null versus value-difference inspection, live factories, readonly/range/callback errors and committed writes. Exact teardown-thread inspection is retained while writes, foreign-thread and terminal access reject. Selected CPU/GPU full frames retain physical setters, owner/capture guards, permitted post-solver edits and callback-error recovery; warmed inspection/write/revert intervals enforce zero owner/all-thread bytes. This is the typed C# tooling projection, not an arbitrary dynamic-name property resolver or editor/native acceptance."
+    },
+    {
+      "godot": "Object::method:is_connected(StringName:,Callable:)",
+      "electron2d": "property:Electron2D.EventConnection.IsConnected()",
+      "reason": "ADRs 0002/0010: EventConnection.IsConnected reports logical acceptance for the exact owned typed subscription. Existing EventConnection checks cover reusable/one-shot/disposed state, recursion/concurrency, queued cancellation and accessor/scheduler errors; EventConnectionPhysicsTests retains actual CPU/GPU Area/body callbacks and strict zero warmed immediate frame bytes. This token cannot detect a publisher independently clearing/replacing its invocation list, enumerate another publisher/handler pair or supply dynamic-name introspection; those remaining capabilities are not certified by this mapping."
     }
   ],
   "extras": [
@@ -1352,11 +1357,6 @@
     },
     {
       "electron2d": "method:Electron2D.EventConnection.Subscribe`2(Action<Action<T1, T2>>,Action<Action<T1, T2>>,Action<T1, T2>,System.Boolean,System.Action<System.Action>)",
-      "reason": "Typed event subscription/disconnection replacing dynamic signals.",
-      "adr": "adr-0010"
-    },
-    {
-      "electron2d": "property:Electron2D.EventConnection.IsConnected()",
       "reason": "Typed event subscription/disconnection replacing dynamic signals.",
       "adr": "adr-0010"
     },
@@ -2306,6 +2306,21 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0001/0005/0009: explicit typed descriptors and live getter/setter/revert factories replace the name/Variant callback boundary. ObjectPropertyTests checks immutable discovery snapshots, compatible replacement/filtering and invalid lists, custom owner policy, default presence including null versus value-difference inspection, live factories, readonly/range/callback errors and committed writes. Exact teardown-thread inspection is retained while writes, foreign-thread and terminal access reject. Selected CPU/GPU full frames retain physical setters, owner/capture guards, permitted post-solver edits and callback-error recovery; warmed inspection/write/revert intervals enforce zero owner/all-thread bytes. This is the typed C# tooling projection, not an arbitrary dynamic-name property resolver or editor/native acceptance."
+    },
+    {
+      "godot": [
+        "Object::method:is_connected(StringName:,Callable:)"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0002/0010: EventConnection.IsConnected reports logical acceptance for the exact owned typed subscription. Existing EventConnection checks cover reusable/one-shot/disposed state, recursion/concurrency, queued cancellation and accessor/scheduler errors; EventConnectionPhysicsTests retains actual CPU/GPU Area/body callbacks and strict zero warmed immediate frame bytes. This token cannot detect a publisher independently clearing/replacing its invocation list, enumerate another publisher/handler pair or supply dynamic-name introspection; those remaining capabilities are not certified by this mapping."
+    },
+    {
+      "godot": [
+        "Object::method:notification(int:,bool:)",
+        "Object::method:_notification(int:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0005 retains ordinary C# virtual OnNotification dispatch and explicit base calls. Notify has no reversed parameter or per-class reversal mechanism; reserved post-initialization 0 is not automatically emitted. These remain explicit inherited capability/ordering gaps, not completion inferred from the numeric callback declarations. Existing Node/Timer/SceneTree hooks retain their documented typed lifecycle behavior."
     }
   ]
 }

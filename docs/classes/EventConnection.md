@@ -1,6 +1,6 @@
 # EventConnection
 
-Last updated: 2026-09-21
+Last updated: 2026-10-14
 
 **Inherits:** —
 
@@ -23,6 +23,8 @@ The caller owns the returned token and must dispose it no later than the subscri
 This type wraps ordinary C# event accessors without introducing string-addressed signals or untyped arguments.
 Disposing the connection removes its wrapper and cancels deferred callbacks that have not started. A callback that
 has already started can finish concurrently with disposal.
+
+Prepared reusable synchronous subscriptions with zero, one or two arguments create no per-emission capture. One-shot delivery and deferred scheduling retain their separate capture paths; no zero-allocation claim is made for them, subscription/accessor work or allocating user handlers. This preserves argument values, lock boundaries, detach-before-handler ordering, cancellation and exception policy under ADR 0010.
 
 ## Examples
 
@@ -200,3 +202,5 @@ The token does not make the publisher, subscriber, handler state, or custom even
 
 
 Authored typed scene connections use registered compiled `SceneConnectionBinding` factories, copied payloads and dual endpoint cleanup. PackedScene captures/rebinds these subscriptions, including file archives v3. SceneState queries expose paths, diagnostic labels, flags, unbind count and typed payload snapshots. See [packed scenes](../components/packed-scenes.md) for ownership and persistence limits.
+
+[EventConnectionPhysicsTests](../../tests/Electron2D.Tests/EventConnectionPhysicsTests.cs) verifies all three prepared immediate arities and full selected CPU/GPU frames: 128 warm/128 measured frames, strict zero owner/all-thread managed bytes, 128 emissions of each arity and 64 Area body enters/exits. Identity, disposed subscriptions and collected callback-error recovery remain observable. Cold two-argument deferred/one-shot checks cover value capture, ordering, cancellation and recursion; the existing EventConnection suite retains concurrency, accessor rollback/removal/scheduler errors and all overloads. GPU execution uses CPU-only Vulkan; hardware/native/network/performance acceptance stays open.

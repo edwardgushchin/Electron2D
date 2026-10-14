@@ -222,11 +222,11 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
 | [Node](classes/Node.md) | [Object](classes/Object.md) | 99 | 66 | 6 | 42 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
-| [Object](classes/Object.md) | — | 19 | 15 | 2 | 23 | 15 |
+| [Object](classes/Object.md) | — | 19 | 16 | 2 | 22 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 4 | 21 | 0 | 2 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 248 | 136 | 17 | 67 | 23 |
+| **Total** | | 248 | 137 | 17 | 66 | 23 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -397,7 +397,7 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Object::method:_iter_get(Variant:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:_iter_init(Array:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:_iter_next(Array:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
-| [`Object::method:_notification(int:)`](classes/Object.md) | Partial | Numeric notification callback under ADR 0005.; Numeric notification callback under ADR 0005.; Numeric notification callback under ADR 0005.; Typed notification/property callback adaptation (ADRs 0005 and 0009). |
+| [`Object::method:_notification(int:)`](classes/Object.md) | Partial | ADR 0005 retains ordinary C# virtual OnNotification dispatch and explicit base calls. Notify has no reversed parameter or per-class reversal mechanism; reserved post-initialization 0 is not automatically emitted. These remain explicit inherited capability/ordering gaps, not completion inferred from the numeric callback declarations. Existing Node/Timer/SceneTree hooks retain their documented typed lifecycle behavior. |
 | [`Object::method:call_deferred(StringName:)`](classes/Object.md) | Partial | Typed Action scheduling replaces dynamic deferred call; ADRs 0001/0006. Return type differs: Variant → System.Void; audit observable contract. |
 | [`Object::method:can_translate_messages()`](classes/Object.md) | Partial | C# property form of upstream Object operation (ADRs 0005 and 0007). |
 | [`Object::method:cancel_free()`](classes/Object.md) | Partial | Deletion cancellation under ADR 0006; verify atomicity. Return type differs: void → System.Boolean; audit observable contract. |
@@ -411,9 +411,9 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Object::method:has_signal(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:has_user_signal(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:is_blocking_signals()`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
-| [`Object::method:is_connected(StringName:,Callable:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
+| [`Object::method:is_connected(StringName:,Callable:)`](classes/Object.md) | Partial | ADRs 0002/0010: EventConnection.IsConnected reports logical acceptance for the exact owned typed subscription. Existing EventConnection checks cover reusable/one-shot/disposed state, recursion/concurrency, queued cancellation and accessor/scheduler errors; EventConnectionPhysicsTests retains actual CPU/GPU Area/body callbacks and strict zero warmed immediate frame bytes. This token cannot detect a publisher independently clearing/replacing its invocation list, enumerate another publisher/handler pair or supply dynamic-name introspection; those remaining capabilities are not certified by this mapping. |
 | [`Object::method:is_queued_for_deletion()`](classes/Object.md) | Partial | The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit. |
-| [`Object::method:notification(int:,bool:)`](classes/Object.md) | Partial | Typed notification/property callback adaptation (ADRs 0005 and 0009). |
+| [`Object::method:notification(int:,bool:)`](classes/Object.md) | Partial | ADR 0005 retains ordinary C# virtual OnNotification dispatch and explicit base calls. Notify has no reversed parameter or per-class reversal mechanism; reserved post-initialization 0 is not automatically emitted. These remain explicit inherited capability/ordering gaps, not completion inferred from the numeric callback declarations. Existing Node/Timer/SceneTree hooks retain their documented typed lifecycle behavior. |
 | [`Object::method:notify_property_list_changed()`](classes/Object.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Object::method:remove_user_signal(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:set_block_signals(bool:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
