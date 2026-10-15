@@ -139,8 +139,12 @@ internal static class ThemeResourceTests
         target.DefaultBaseScale = 3; target.DefaultFontSize = 20; target.Clear(); Check(target.GetTypeList().Length == 0 && target.DefaultBaseScale == 3 && target.DefaultFontSize == 20 && !style.IsDisposed, "Clear removes maps/variations while preserving defaults and borrowed resources.");
         source.ResourceLocalToScene = true; using var consumer = new ThemeConsumer { Theme = source }; using var packed = new PackedScene(); packed.Pack(consumer);
         var instance = (ThemeConsumer)packed.Instantiate(); var local = instance.Theme!; var localStyle = local.GetStyleBox("a", "Type")!;
-        Check(!ReferenceEquals(local, source) && !ReferenceEquals(localStyle, style) && ReferenceEquals(localStyle, local.GetStyleBox("b", "Type")), "Packed scenes localize a theme and its built-in borrowed graph while preserving aliases.");
-        instance.Dispose(); Check(local.IsDisposed && localStyle.IsDisposed && !source.IsDisposed && !style.IsDisposed, "The instance owns localized copies and leaves source resources alive.");
+        Check(!ReferenceEquals(local, source) && ReferenceEquals(localStyle, style) && ReferenceEquals(localStyle, local.GetStyleBox("b", "Type")), "Packed scenes borrow non-local theme style aliases.");
+        instance.Dispose(); Check(local.IsDisposed && !style.IsDisposed && !source.IsDisposed, "The scene owns the local theme and preserves its borrowed styles.");
+        style.ResourceLocalToScene = true; packed.Pack(consumer);
+        using var markedInstance = (ThemeConsumer)packed.Instantiate(); var markedTheme = markedInstance.Theme!; var markedStyle = markedTheme.GetStyleBox("a", "Type")!;
+        Check(!ReferenceEquals(markedTheme, source) && !ReferenceEquals(markedStyle, style) && ReferenceEquals(markedStyle, markedTheme.GetStyleBox("b", "Type")), "Packed scenes preserve aliases among explicitly local theme styles.");
+        markedInstance.Dispose(); Check(markedTheme.IsDisposed && markedStyle.IsDisposed && !source.IsDisposed && !style.IsDisposed, "The instance owns selected local copies and leaves source resources alive.");
     }
 
     private static void VerifyErrorsConcurrencyAndAllocations()

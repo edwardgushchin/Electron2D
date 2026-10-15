@@ -171,6 +171,14 @@ internal static class AnimatedSpriteTests
         sprite.Play(); Check(!sprite.GetPropertyList().Single(p => p.Name == "Frame").IsStored, "Playing frame is transient.");
         scene.Pack(sprite); using var runningCopy = (AnimatedSprite)scene.Instantiate(); Check(runningCopy.Frame == 0 && !runningCopy.IsPlaying(), "Packing does not store running frame or playback flag.");
         sprite.Pause(); frames.ResourceLocalToScene = true; scene.Pack(sprite);
+        using (var borrowed = (AnimatedSprite)scene.Instantiate())
+        {
+            var borrowedFrames = borrowed.SpriteFrames!;
+            Check(!ReferenceEquals(borrowedFrames, frames) && ReferenceEquals(borrowedFrames.GetFrameTexture("default", 0), texture) &&
+                ReferenceEquals(borrowedFrames.GetFrameTexture("default", 1), texture), "Scene-local frames borrow every non-local texture alias.");
+            borrowed.Dispose(); Check(borrowedFrames.IsDisposed && !texture.IsDisposed, "Scene disposal preserves the non-local texture.");
+        }
+        texture.ResourceLocalToScene = true; scene.Pack(sprite);
         using var local = (AnimatedSprite)scene.Instantiate(); var localFrames = local.SpriteFrames!; var localTexture = localFrames.GetFrameTexture("default", 0)!;
         Check(!ReferenceEquals(localFrames, frames) && !ReferenceEquals(localTexture, texture) && ReferenceEquals(localTexture, localFrames.GetFrameTexture("default", 1)), "Scene-local graph retains texture aliases.");
         local.Dispose(); Check(localFrames.IsDisposed && localTexture.IsDisposed && !frames.IsDisposed && !texture.IsDisposed, "Scene root owns only local copies.");

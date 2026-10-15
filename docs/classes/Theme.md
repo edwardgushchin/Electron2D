@@ -1,6 +1,6 @@
 # Theme
 
-Last updated: 2026-09-27
+Last updated: 2026-10-15
 
 **Inherits:** [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
@@ -144,7 +144,7 @@ Every valid item write emits Changed, including equal values/references. A new s
 **MergeWith:** null is a no-op. Otherwise it snapshots and validates the source, overlays stored items including null resources and nonpositive font sizes, updates variations, and copies a nonnull source DefaultFont and positive scalar defaults. A null source DefaultFont leaves the destination default unchanged. Empty category records are not imported. One structural/Changed pair follows the committed overlay. Clear releases subscriptions and removes all item/variation maps, retaining DefaultBaseScale, DefaultFont and DefaultFontSize, including the retained default font subscription; even an empty clear publishes both notifications.
 
 <a id="createduplicateinstance"></a><a id="copycustomstateto"></a><a id="onresetstate"></a><a id="getpropertydescriptors"></a><a id="dispose"></a>
-**Resource hooks:** duplicates preserve exact Theme type, empty category records, raw placeholders/defaults and variation child order. Shallow copies borrow the same resources; deep/scene-local copies follow the existing graph policy and preserve aliases. Dynamic stored entries are exposed through typed PropertyDescriptor instances, including raw nullable values and signed font sizes; no Variant values are introduced. Default reverts are zero, null and -1. Deep copies preserve aliases shared between DefaultFont and named font slots. Dispose detaches subscriptions and releases references without disposing caller-owned resources.
+**Resource hooks:** duplicates preserve exact Theme type, empty category records, raw placeholders/defaults and variation child order. Shallow copies borrow the same resources; deep copies follow the selected graph policy; scene-local themes borrow non-local resources even on built-in paths, and copy only independently local edges while preserving aliases. Dynamic stored entries are exposed through typed PropertyDescriptor instances, including raw nullable values and signed font sizes; no Variant values are introduced. Default reverts are zero, null and -1. Deep copies preserve aliases shared between DefaultFont and named font slots. Dispose detaches subscriptions and releases references without disposing caller-owned resources.
 
 Each distinct borrowed resource has one change/disposal subscription even when several entries and DefaultFont alias it. Resource content changes forward Changed without a structural event. Built-in mutations/snapshots use an instance lock; user callbacks run outside it. Arbitrary cross-resource user code and custom getter overrides remain responsible for their own synchronization.
 

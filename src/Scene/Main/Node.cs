@@ -1,4 +1,3 @@
-using System.IO.Enumeration;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -1126,34 +1125,40 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Finds the first descendant whose name matches a wildcard pattern.</summary>
-    /// <param name="pattern">A nonblank simple expression using <c>*</c> and <c>?</c>; matching is case-insensitive.</param>
-    /// <param name="recursive">Whether descendants below direct children are searched.</param>
+    /// <param name="pattern">A case-sensitive name pattern: <c>*</c> matches any sequence and <c>?</c> one Unicode character except a period.</param>
+    /// <param name="recursive">Whether descendants below direct children are searched, including internal children.</param>
+    /// <param name="owned">Whether branches without an owner are skipped; true by default.</param>
     /// <returns>The first matching node in depth-first pre-order, or <see langword="null"/>.</returns>
-    /// <exception cref="ArgumentException"><paramref name="pattern"/> is empty or whitespace.</exception>
+    /// <exception cref="ArgumentException"><paramref name="pattern"/> is empty.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">An attached search runs outside its scene owner or current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node or a recursively searched node is disposing on another thread, or has finished disposing.</exception>
-    public Node? FindChild(string pattern, bool recursive = true) => FindChild<Node>(pattern, recursive);
+    public Node? FindChild(string pattern, bool recursive = true, bool owned = true) => FindChild<Node>(pattern, recursive, owned);
 
     /// <summary>Finds the first descendant of a requested type whose name matches a wildcard pattern.</summary>
     /// <typeparam name="TNode">The required node subtype.</typeparam>
-    /// <param name="pattern">A nonblank simple expression using <c>*</c> and <c>?</c>; matching is case-insensitive.</param>
-    /// <param name="recursive">Whether descendants below direct children are searched.</param>
+    /// <param name="pattern">A case-sensitive name pattern: <c>*</c> matches any sequence and <c>?</c> one Unicode character except a period.</param>
+    /// <param name="recursive">Whether descendants below direct children are searched, including internal children.</param>
+    /// <param name="owned">Whether branches without an owner are skipped; true by default.</param>
     /// <returns>The first typed match in depth-first pre-order, or <see langword="null"/>.</returns>
-    /// <exception cref="ArgumentException"><paramref name="pattern"/> is empty or whitespace.</exception>
+    /// <exception cref="ArgumentException"><paramref name="pattern"/> is empty.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">An attached search runs outside its scene owner or current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node or a recursively searched node is disposing on another thread, or has finished disposing.</exception>
-    public TNode? FindChild<TNode>(string pattern = "*", bool recursive = true)
+    public TNode? FindChild<TNode>(string pattern = "*", bool recursive = true, bool owned = true)
         where TNode : Node
     {
         ThrowIfDisposed();
-        ArgumentException.ThrowIfNullOrWhiteSpace(pattern);
+        Tree?.EnsureProcessingAccess(this);
+        ArgumentException.ThrowIfNullOrEmpty(pattern);
 
         foreach (var child in _children)
         {
-            if (child is TNode typedChild && FileSystemName.MatchesSimpleExpression(pattern, child.Name))
+            if (owned && child._owner is null) continue;
+            if (child is TNode typedChild && MatchesNodeName(pattern, child._name))
                 return typedChild;
 
-            if (recursive && child.FindChild<TNode>(pattern, recursive: true) is { } descendant)
+            if (recursive && child.FindChild<TNode>(pattern, recursive: true, owned) is { } descendant)
                 return descendant;
         }
 
@@ -1161,47 +1166,56 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Finds all descendants whose names match a wildcard pattern.</summary>
-    /// <param name="pattern">A nonblank simple expression using <c>*</c> and <c>?</c>; matching is case-insensitive.</param>
-    /// <param name="recursive">Whether descendants below direct children are searched.</param>
+    /// <param name="pattern">A case-sensitive name pattern: <c>*</c> matches any sequence and <c>?</c> one Unicode character except a period.</param>
+    /// <param name="recursive">Whether descendants below direct children are searched, including internal children.</param>
+    /// <param name="owned">Whether branches without an owner are skipped; true by default.</param>
     /// <returns>A read-only snapshot in depth-first pre-order.</returns>
-    /// <exception cref="ArgumentException"><paramref name="pattern"/> is empty or whitespace.</exception>
+    /// <exception cref="ArgumentException"><paramref name="pattern"/> is empty.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">An attached search runs outside its scene owner or current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    public IReadOnlyList<Node> FindChildren(string pattern, bool recursive = true) => FindChildren<Node>(pattern, recursive);
+    public IReadOnlyList<Node> FindChildren(string pattern, bool recursive = true, bool owned = true)
+    {
+        ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this); ArgumentException.ThrowIfNullOrEmpty(pattern);
+        return FindChildren<Node>(pattern, recursive, owned);
+    }
 
     /// <summary>Finds all descendants of a requested type whose names match a wildcard pattern.</summary>
     /// <typeparam name="TNode">The required node subtype.</typeparam>
-    /// <param name="pattern">A nonblank simple expression using <c>*</c> and <c>?</c>; matching is case-insensitive.</param>
-    /// <param name="recursive">Whether descendants below direct children are searched.</param>
+    /// <param name="pattern">A case-sensitive name pattern: <c>*</c> matches any sequence and <c>?</c> one Unicode character except a period. An empty pattern selects every name.</param>
+    /// <param name="recursive">Whether descendants below direct children are searched, including internal children.</param>
+    /// <param name="owned">Whether branches without an owner are skipped; true by default.</param>
     /// <returns>A read-only typed snapshot in depth-first pre-order.</returns>
-    /// <exception cref="ArgumentException"><paramref name="pattern"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">An attached search runs outside its scene owner or current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    public IReadOnlyList<TNode> FindChildren<TNode>(string pattern = "*", bool recursive = true)
+    public IReadOnlyList<TNode> FindChildren<TNode>(string pattern = "*", bool recursive = true, bool owned = true)
         where TNode : Node
     {
         ThrowIfDisposed();
-        ArgumentException.ThrowIfNullOrWhiteSpace(pattern);
+        Tree?.EnsureProcessingAccess(this);
+        ArgumentNullException.ThrowIfNull(pattern);
 
         var result = new List<TNode>();
-        FindChildrenCore(pattern, recursive, result);
+        FindChildrenCore(pattern, recursive, owned, result);
         return result.AsReadOnly();
     }
 
     /// <summary>Finds the nearest ancestor whose name matches a wildcard pattern.</summary>
-    /// <param name="pattern">A nonblank simple expression using <c>*</c> and <c>?</c>; matching is case-insensitive.</param>
+    /// <param name="pattern">A case-sensitive name pattern: <c>*</c> matches any sequence and <c>?</c> one Unicode character except a period.</param>
     /// <returns>The nearest matching ancestor, or <see langword="null"/>.</returns>
-    /// <exception cref="ArgumentException"><paramref name="pattern"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">An attached search runs outside its scene owner or current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public Node? FindParent(string pattern)
     {
         ThrowIfDisposed();
-        ArgumentException.ThrowIfNullOrWhiteSpace(pattern);
+        Tree?.EnsureProcessingAccess(this);
+        ArgumentNullException.ThrowIfNull(pattern);
 
         for (var current = Parent; current is not null; current = current.Parent)
         {
-            if (FileSystemName.MatchesSimpleExpression(pattern, current.Name))
+            if (MatchesNodeName(pattern, current._name))
                 return current;
         }
 
@@ -2714,17 +2728,40 @@ public partial class Node : ElectronObject
         return null;
     }
 
-    private void FindChildrenCore<TNode>(string pattern, bool recursive, List<TNode> result)
+    private void FindChildrenCore<TNode>(string pattern, bool recursive, bool owned, List<TNode> result)
         where TNode : Node
     {
+        ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
         foreach (var child in _children)
         {
-            if (child is TNode typedChild && FileSystemName.MatchesSimpleExpression(pattern, child.Name))
+            if (owned && child._owner is null) continue;
+            if (child is TNode typedChild && (pattern.Length == 0 || MatchesNodeName(pattern, child._name)))
                 result.Add(typedChild);
 
             if (recursive)
-                child.FindChildrenCore(pattern, recursive: true, result);
+                child.FindChildrenCore(pattern, recursive: true, owned, result);
         }
+    }
+
+    private static bool MatchesNodeName(string pattern, string name)
+    {
+        if (pattern.Length == 0 || name.Length == 0) return false;
+        var p = 0; var n = 0; var star = -1; var retry = 0;
+        while (n < name.Length)
+        {
+            if (p < pattern.Length && pattern[p] == '*') { star = p++; retry = n; continue; }
+            if (p < pattern.Length && (pattern[p] == '?' ? name[n] != '.' : pattern[p] == name[n]))
+            {
+                n += pattern[p] == '?' ? CharacterWidth(name, n) : 1; p++; continue;
+            }
+            if (star < 0) return false;
+            retry += CharacterWidth(name, retry); n = retry; p = star + 1;
+        }
+        while (p < pattern.Length && pattern[p] == '*') p++;
+        return p == pattern.Length;
+
+        static int CharacterWidth(string text, int at) => char.IsHighSurrogate(text[at]) &&
+            at + 1 < text.Length && char.IsLowSurrogate(text[at + 1]) ? 2 : 1;
     }
 
     private void AppendTreeString(StringBuilder result, string path)

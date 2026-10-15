@@ -986,28 +986,28 @@
       "reason": "Deletion cancellation under ADR 0006; verify atomicity."
     },
     {
-      "electron2d": "method:Electron2D.Node.FindChild(System.String,System.Boolean)",
+      "electron2d": "method:Electron2D.Node.FindChild(System.String,System.Boolean,System.Boolean)",
       "godot": "Node::method:find_child(String:,bool:,bool:)",
-      "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "state": "Implemented",
+      "reason": "ADRs 0001/0008: typed generic filters preserve CLR subclass/inheritance matching; case-sensitive Unicode wildcard names, period exclusion for ?, internal-child depth-first order, recursive/owned defaults and complete unowned-branch pruning are checked by the public NodeSearch consumer. Empty typed all-results patterns select by type; ordinary empty patterns reject. Live owner edits, snapshots, parent lookup, owner/current-processing-group access and foreign-group/lifetime errors, with 128 complete physics/search frames at strict 0/0 managed bytes execute on CPU/GPU/registered serial/separate profiles; numerical/native/platform gates remain separate."
     },
     {
-      "electron2d": "method:Electron2D.Node.FindChild`1(System.String,System.Boolean)",
+      "electron2d": "method:Electron2D.Node.FindChild`1(System.String,System.Boolean,System.Boolean)",
       "godot": "Node::method:find_child(String:,bool:,bool:)",
-      "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "state": "Implemented",
+      "reason": "ADRs 0001/0008: typed generic filters preserve CLR subclass/inheritance matching; case-sensitive Unicode wildcard names, period exclusion for ?, internal-child depth-first order, recursive/owned defaults and complete unowned-branch pruning are checked by the public NodeSearch consumer. Empty typed all-results patterns select by type; ordinary empty patterns reject. Live owner edits, snapshots, parent lookup, owner/current-processing-group access and foreign-group/lifetime errors, with 128 complete physics/search frames at strict 0/0 managed bytes execute on CPU/GPU/registered serial/separate profiles; numerical/native/platform gates remain separate."
     },
     {
-      "electron2d": "method:Electron2D.Node.FindChildren(System.String,System.Boolean)",
+      "electron2d": "method:Electron2D.Node.FindChildren(System.String,System.Boolean,System.Boolean)",
       "godot": "Node::method:find_children(String:,String:,bool:,bool:)",
-      "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "state": "Implemented",
+      "reason": "ADRs 0001/0008: typed generic filters preserve CLR subclass/inheritance matching; case-sensitive Unicode wildcard names, period exclusion for ?, internal-child depth-first order, recursive/owned defaults and complete unowned-branch pruning are checked by the public NodeSearch consumer. Empty typed all-results patterns select by type; ordinary empty patterns reject. Live owner edits, snapshots, parent lookup, owner/current-processing-group access and foreign-group/lifetime errors, with 128 complete physics/search frames at strict 0/0 managed bytes execute on CPU/GPU/registered serial/separate profiles; numerical/native/platform gates remain separate."
     },
     {
-      "electron2d": "method:Electron2D.Node.FindChildren`1(System.String,System.Boolean)",
+      "electron2d": "method:Electron2D.Node.FindChildren`1(System.String,System.Boolean,System.Boolean)",
       "godot": "Node::method:find_children(String:,String:,bool:,bool:)",
-      "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "state": "Implemented",
+      "reason": "ADRs 0001/0008: typed generic filters preserve CLR subclass/inheritance matching; case-sensitive Unicode wildcard names, period exclusion for ?, internal-child depth-first order, recursive/owned defaults and complete unowned-branch pruning are checked by the public NodeSearch consumer. Empty typed all-results patterns select by type; ordinary empty patterns reject. Live owner edits, snapshots, parent lookup, owner/current-processing-group access and foreign-group/lifetime errors, with 128 complete physics/search frames at strict 0/0 managed bytes execute on CPU/GPU/registered serial/separate profiles; numerical/native/platform gates remain separate."
     },
     {
       "electron2d": "method:Electron2D.Node.GetChild(System.Int32,System.Boolean)",
@@ -5560,6 +5560,12 @@
       "godot": "Node::method:get_physics_process_delta_time()",
       "electron2d": "property:Electron2D.Node.PhysicsProcessDeltaTime()",
       "reason": "ADR 0006/0067: both typed delta properties read the attached tree lane time independently of callback enablement. PhysicsNodeDeltaTests covers disabled/paused nodes, frame-start publication, separate lane/zero duration, detach/new-tree adoption, scaled/zero Engine time, callback error/rejected frame, owner guards and controller-driven CharacterBody motion on CPU/GPU serial/separate. Two 128-warm/128-measured full-frame brackets retain strict 0/0 owner/all-thread managed bytes. Native/foreign/hardware performance acceptance remains open."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.FindParent(System.String)",
+      "godot": "Node::method:find_parent(String:)",
+      "state": "Implemented",
+      "reason": "ADRs 0001/0008: typed generic filters preserve CLR subclass/inheritance matching; case-sensitive Unicode wildcard names, period exclusion for ?, internal-child depth-first order, recursive/owned defaults and complete unowned-branch pruning are checked by the public NodeSearch consumer. Empty typed all-results patterns select by type; ordinary empty patterns reject. Live owner edits, snapshots, parent lookup, owner/current-processing-group access and foreign-group/lifetime errors, with 128 complete physics/search frames at strict 0/0 managed bytes execute on CPU/GPU/registered serial/separate profiles; numerical/native/platform gates remain separate."
     }
   ],
   "extras": [
@@ -11322,6 +11328,15 @@
       ],
       "state": "Partial",
       "reason": "ADR 0006: ready enables the actual six bound typed virtual callback targets before OnReady, including inherited overrides; hidden methods/plain nodes stay off. PhysicsAutomaticCallbackTests verifies full selected CPU/GPU physical and input delivery, explicit disabling, requested/manual ready, reentry, packed state, pause, weak retirement and 128-warm/128-measured zero owner/all-thread byte frames in ordinary/separate modes. Bound metadata is cached under weak Type keys; no reflection invocation or dynamic name dispatch. Wider callback/default/lifecycle and full inherited/native/foreign/hardware acceptance remain open."
+    },
+    {
+      "godot": [
+        "Node::method:find_child(String:,bool:,bool:)",
+        "Node::method:find_children(String:,String:,bool:,bool:)",
+        "Node::method:find_parent(String:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0001/0008: typed generic filters preserve CLR subclass/inheritance matching; case-sensitive Unicode wildcard names, period exclusion for ?, internal-child depth-first order, recursive/owned defaults and complete unowned-branch pruning are checked by the public NodeSearch consumer. Empty typed all-results patterns select by type; ordinary empty patterns reject. Live owner edits, snapshots, parent lookup, owner/current-processing-group access and foreign-group/lifetime errors, with 128 complete physics/search frames at strict 0/0 managed bytes execute on CPU/GPU/registered serial/separate profiles; numerical/native/platform gates remain separate."
     }
   ]
 }

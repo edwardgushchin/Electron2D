@@ -1,6 +1,6 @@
 # Scene hierarchy component
 
-Last updated: 2026-10-13
+Last updated: 2026-10-15
 
 ## Resource endpoints and subtree operations
 
@@ -141,3 +141,58 @@ SceneTree.Defer and deferred group operations enqueue under the existing lifetim
 RESET save preparation now executes through AnimationMixer.ResetOnSave and PackedScene.PackForSave. Enabled RESET value/Bézier tracks run at zero on detached nodes and isolated copied resources, capturing coupled effects while preserving source preview values/clocks/queues. Ordinary Pack captures the actual pose. Preparation failures preserve prior packed data; temporary resources are cleaned or transferred to the prepared scene. Compiled factories/setters/postprocessing execute, while lifecycle, local-resource setup and method/audio/nested event tracks are suppressed. Custom authoring state must be stored and resource duplication supported. AnimationResetSaveTests exercises policies, all controller families, coupled values/resources, errors, lifetime and portable saved scenes.
 
 The internal resource/subtree correspondence was inspected against pinned [Node resource traversal and propagation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/node.cpp) and [node path grammar](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/string/node_path.cpp). Typed tuples/delegates/descriptors preserve the applicable result, order and property boundaries under ADRs 0001/0004/0005/0008/0011.
+
+
+## Owned name and type searches
+
+Node.FindChild and FindChildren now expose recursive=true and owned=true on both
+ordinary and typed overloads. Search includes internal front/back children in
+depth-first tree order, starts below the receiver, and prunes an entire branch
+whose first node has no Owner when ownership filtering is enabled. A nonnull
+Owner may be any valid ancestor; it need not equal the search receiver. Set
+owned=false to include runtime-created branches. Matching is against names only,
+is case-sensitive, and supports * plus ? for one Unicode character except a period.
+FindParent applies the same matching to nearest-first ancestors, excluding self.
+
+Typed FindChildren<TNode> replaces dynamic type-name filtering with assignability,
+including compiled application subclasses, and permits an empty name pattern for
+type-only selection. An empty ordinary all-results or single-result pattern is an
+argument error; an empty parent pattern matches nothing. Null arguments reject.
+FindChildren returns a fresh read-only collection of borrowed node identities;
+later hierarchy/name changes leave the snapshot intact. Collection creation is
+outside the zero-allocation contract of repeated first-result/parent reads.
+Attached searches require the scene owner or the receiver's current processing
+group. Worker-side recursive traversal rejects a foreign group boundary; parent name matching
+starts from the guarded receiver. Disposed receivers reject.
+
+The public-only NodeSearch consumer checks ownership pruning and live edits,
+internal order, recursion, current worker-group searches and foreign-group
+rejection, physical sibling/type identities, Unicode/case/period
+patterns, snapshots and invalid thread/lifetime calls. Real physics callbacks use
+the inherited methods, with actual body travel and 128 warm/128 measured complete
+search/physics frames at strict zero owner/all-thread managed bytes. Current
+executed profiles and exact evidence are retained under
+bin/physics-node-search/2026-10-15. These queries do not close the remaining
+inherited/extension or hardware/window/performance gates.
+
+
+On 2026-10-15 the final source passes six managed and six strict NativeAOT
+CPU/software-GPU/registered serial/separate profiles. Each executes the real
+processing worker, cold foreign-group rejection and 128 warm/128 measured complete
+physical/search frames at 0/0 owner/all-thread managed bytes. Process maps confirm
+CoreCLR only for managed hosts, explicit lavapipe only for GPU profiles, no NVIDIA
+and numerical solver threads only with the separate policy. The native runs use
+one unchanged 125-file publish without an overlay or LD_LIBRARY_PATH.
+
+The complete test host also passes with source-built native prerequisites. The
+older bootstrap native package lacked its mesh library; that rejected launch is
+retained. A focused seven-family resource cohort and the full run distinguish
+borrowed non-local resources from explicitly local copies in AnimatedSprite,
+StyleBoxTexture and Theme, preserving aliases and scene retirement in both cases.
+These correct obsolete fixture expectations; the resource runtime policy stays
+unchanged. Three audited inherited reference rows now become Implemented, with
+four updated owned-parameter signatures and no increase in declaration count.
+API/wiki checks pass at 854 types, 14247 declarations and 872 wiki files.
+Exact commands, failed candidates, process proofs and source/binary manifests:
+bin/physics-node-search/2026-10-15/validation.json. Full inherited/extension,
+foreign/native-memory and hardware/window/performance acceptance remain open.

@@ -17,6 +17,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIAGNOSTICS") == "native
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIAGNOSTICS") == "managed") { DiagnosticsTests.Run(); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOCAL_RESOURCE_CONSUMERS") == "1")
+{
+    AnimatedSpriteTests.Run(); RenderingRuntimeTests.VerifyAtlasResources(); AnimatedTextureTests.Run(); StyleBoxTests.Run();
+    ThemeResourceTests.Run(); ShortcutTests.Run(); AudioSynchronizedTests.Run(); return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PACK_FILE_SYSTEM") == "1")
 {
     VerifyFileAccess(); VerifyDirAccess(); VerifyProjectSettings();
@@ -9717,8 +9722,8 @@ static void VerifyNodeHierarchyAndTransforms()
         "Relative and absolute paths must resolve the same node.");
     Require(root.GetPathTo(mover) == "second/mover" && mover.GetPath() == "/root/second/mover",
         "Entity paths must describe the hierarchy.");
-    Require(root.FindChild("MOV*") == mover && mover.FindParent("SEC*") == second,
-        "Wildcard hierarchy search must find descendants and parents case-insensitively.");
+    Require(root.FindChild("mov*", owned: false) == mover && mover.FindParent("sec*") == second,
+        "Wildcard hierarchy search must find descendants and parents with matching case.");
 
     mover.AddToGroup("actors");
     Require(tree.GetFirstNodeInGroup("actors") == mover && tree.GetNodesInGroup("actors").SequenceEqual([mover]),
@@ -13381,7 +13386,7 @@ static void VerifyPackedScenes()
                 instance.SceneNotifications == 1 && instanceChild.SceneNotifications == 0 &&
                 instanceGrandchild.SceneNotifications == 0 && ReferenceEquals(instanceChild.Owner, instance) &&
                 ReferenceEquals(instanceGrandchild.Owner, instance) && instanceChild.IsInGroup("persistent") &&
-                !instanceChild.IsInGroup("runtime-only") && instance.FindChild("RuntimeOnly") is null,
+                !instanceChild.IsInGroup("runtime-only") && instance.FindChild("RuntimeOnly", owned: false) is null,
             "Instantiation must restore properties, owners, persistent groups, source path, and root-only notification.");
         Require(instance.Data is not null && instanceChild.Data is not null &&
                 ReferenceEquals(instance.Data, instanceChild.Data) && !ReferenceEquals(instance.Data, local) &&

@@ -192,11 +192,10 @@ operations remain open in the ledger.
 
 The complete generated ledger remains the per-declaration list. Current own
 physics families contain 687 Implemented, 150 Partial and 55 Excluded rows,
-with no own Blocked or Unimplemented rows. Shared inherited declarations still
-contain 135 Partial, 17 Blocked and 66 Unimplemented rows after the current typed
-property, class-identity, glyph-region and indexed-property projections; cross-domain consumers
-now contain 76 Implemented, two Partial and no Unimplemented rows after the
-captured numerical-thread implementation. These are declaration counts,
+with no own Blocked or Unimplemented rows. The 491 shared inherited declarations
+contain 277 Implemented, 125 Partial, 17 Blocked, 49 Unimplemented and 23 Excluded
+rows. The 78 selected cross-domain consumer declarations contain 76 Implemented
+and two Partial rows. These are declaration counts, including class and enum rows,
 not a claim that all numerical behaviors pass. The exact inherited names and
 prerequisites remain in the ledger rather than disappearing from this audit.
 
@@ -1377,3 +1376,15 @@ See [the coupled network profile](physics-network-example.md#coupled-support-acr
 for executed profiles, tolerances and bounds. Arbitrary/dense coupled worlds, complete
 inherited/extension behavior, foreign native execution, total native/device memory
 and physical GPU/window/performance acceptance remain open.
+
+
+## Inherited node name/type search, 2026-10-15
+
+The inherited FindChild/FindChildren family previously omitted owned=true and
+matched names without case. It now preserves full unowned-branch pruning,
+internal depth-first order, typed subclass filters and scalar wildcard/period
+semantics together with FindParent. The shared public consumer exercises actual
+CPU/GPU/registered bodies and physics callbacks, with strict zero warmed frame
+allocation; see [scene hierarchy](scene-hierarchy.md#owned-name-and-type-searches).
+Only these audited inherited rows change state; the complete inherited contract
+and hardware/window/performance requirements stay open.

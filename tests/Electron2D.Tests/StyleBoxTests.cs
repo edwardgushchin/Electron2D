@@ -177,12 +177,16 @@ internal static class StyleBoxTests
         style.ResourceLocalToScene = true;
         using var consumer = new StyleConsumer { Style = style }; using var packed = new PackedScene(); packed.Pack(consumer);
         using var instance = (StyleConsumer)packed.Instantiate(); using var localStyle = (StyleBoxTexture)instance.Style!;
-        Check(!ReferenceEquals(localStyle, style) && localStyle.ContentMarginLeft == 5 && !ReferenceEquals(localStyle.Texture, texture) && texture.IsBuiltIn && !texture.ResourceLocalToScene,
-            "A scene-local style duplicates its built-in texture subresource even when that texture is not independently local-to-scene.");
+        Check(!ReferenceEquals(localStyle, style) && localStyle.ContentMarginLeft == 5 && ReferenceEquals(localStyle.Texture, texture) && texture.IsBuiltIn && !texture.ResourceLocalToScene,
+            "A scene-local style borrows its non-local built-in texture.");
         texture.ResourcePath = "res://style-box-packing-external.png"; packed.Pack(consumer);
         using var externalInstance = (StyleConsumer)packed.Instantiate(); using var externalStyle = (StyleBoxTexture)externalInstance.Style!;
         Check(!ReferenceEquals(externalStyle, style) && ReferenceEquals(externalStyle.Texture, texture), "A scene-local style retains a nonlocal external texture under the existing graph policy.");
-        texture.ResourcePath = string.Empty;
+        texture.ResourcePath = string.Empty; texture.ResourceLocalToScene = true; packed.Pack(consumer);
+        using var localInstance = (StyleConsumer)packed.Instantiate(); var markedStyle = (StyleBoxTexture)localInstance.Style!;
+        var markedTexture = markedStyle.Texture!;
+        Check(!ReferenceEquals(markedStyle, style) && !ReferenceEquals(markedTexture, texture), "A scene-local style copies its explicitly local texture.");
+        localInstance.Dispose(); Check(markedStyle.IsDisposed && markedTexture.IsDisposed && !texture.IsDisposed, "The scene owns only its selected local copies.");
         var property = style.GetPropertyList().Single(value => value.Name == nameof(StyleBox.ContentMarginLeft));
         style.RevertProperty(property); Check(style.ContentMarginLeft == -1 && !style.PropertyCanRevert(property), "Stored content-margin defaults match construction.");
         Action<Resource> fail = _ => throw new ApplicationException("expected style change failure"); line.Changed += fail;
