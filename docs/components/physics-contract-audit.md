@@ -38,6 +38,12 @@ reproduces a 128 B residue per load/enumeration without the engine and identifie
 its driver static root. Foreign-driver cleanup and wider native ownership remain open.
 No public API or overall acceptance is promoted.
 
+[Native network allocation paths](physics-network-memory.md#native-allocation-stack-cohort-2026-10-16)
+now cover twelve ordinary CPU/GPU session processes with all original checks,
+separate from the fifteen-phase non-preloaded graph control. Simultaneous traced
+peaks include startup and the added local checkpoint choice; per-phase attribution,
+unhooked/native ownership and target-device/window acceptance remain open.
+
 [Registered rectangle numerics](physics-registered-adapter.md#registered-rectangle-numerics)
 now execute actual contours, six queries, mass, contacts and linear/angular CCD
 through the independent public-only provider. Shared CPU/software-GPU checks cover

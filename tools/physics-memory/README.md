@@ -161,6 +161,41 @@ sample, native ENet/driver heap total, NativeAOT size or window/FPS evidence.
 
 Recorded results: [scene and network memory](../../docs/components/physics-network-memory.md).
 
+### Network native allocation stacks
+
+Use the explicit Heaptrack preload with the full network workflow:
+
+```bash
+python3 -B tools/physics-memory/run.py NEW_OUTPUT --network \
+  --client-backend gpu --icd /absolute/path/to/lavapipe.json --threaded \
+  --unpaced --client-poll-delay-ms 250 \
+  --heaptrack-preload /absolute/path/to/libheaptrack_preload.so
+```
+
+The CPU authority, primary client and late CPU client each receive their own
+`network/allocation-traces/ROLE.heaptrack.raw`. The collector and check launcher
+remain unprofiled; their mappings are checked at the first gate, and every child
+gate verifies the expected profiler/driver mappings. The fifteen full-GC/glibc/
+procfs observations remain, along with all original network/physics assertions.
+This instrumented mode skips CLRMD attachment: phase reports say
+`HeapAttached=false` and `Measurement=null`, which means unmeasured managed owners,
+not zero managed bytes. `network/collection.json` records the collection mode,
+preload identity and each trace's role/PID/size/SHA-256.
+
+The child-start partial has an implementation only in `NetworkFixture`; its
+declaration and call are erased from the ordinary public example. Omitting the
+preload retains the original fifteen graph/calibration/retirement inspections.
+CPU-only and owner-lane variants use the same options described above.
+
+Traces cover complete process lifetimes, including cold startup, real ordinary
+network simulation and the extra four local checkpoint captures/restoration
+after the session report. Their peaks do not isolate ordinary gameplay, warmed
+steps or checkpoint-only intervals. Use the matching Heaptrack interpreter and
+unmerged reports as described below. Keep hooked requested-byte peaks/end values,
+module allocation paths, wire payload, selected managed graphs and RSS distinct.
+The profiler changes timing and memory. [Recorded network native scope](../../docs/components/physics-network-memory.md#native-allocation-stack-cohort-2026-10-16)
+retains the remaining ownership, phase-attribution and hardware gates.
+
 ## Repeated world retirement
 
 Use `--cycles 8` with the raw fixture to create and retire eight independent worlds
@@ -239,7 +274,7 @@ python3 -B tools/physics-memory/run.py NEW_OUTPUT --native-phases \
   --heaptrack-preload /absolute/path/to/libheaptrack_preload.so
 ```
 
-The runner rejects the option outside native phases and rejects a missing library
+The runner rejects the option outside native phases/network mode and rejects a missing library
 before creating output. Only the fixture children receive the preload; the
 collector, build and calibration processes keep their ordinary allocator path.
 Each `MODE.heaptrack.raw` covers startup through normal process shutdown. The

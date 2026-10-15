@@ -8,6 +8,13 @@ local scene-history choice. Completed and disposed graphs are separate from fina
 collection. These CoreCLR object sizes do not close native/driver/AOT or hardware
 performance acceptance.
 
+[Native session traces](physics-network-memory.md#native-allocation-stack-cohort-2026-10-16)
+now exercise four ordinary CPU/GPU and owner/separate cohorts with all original
+checks. Their child-start hook exists only in the measurement host; public
+consumer metadata and NativeAOT execution verify its absence there. Traced
+native peaks include startup and the extra checkpoint choice, remain separate
+from the non-preloaded managed graphs and do not establish window/GPU speed.
+
 [PhysicsNetwork](../../examples/PhysicsNetwork/README.md) connects the existing
 `SceneMultiplayer`/`ENetMultiplayerPeer`, `PhysicsSnapshotMap`, `PhysicsSnapshot` and
 world-tick APIs. Its CPU authority and GPU/CPU clients are separate OS processes.

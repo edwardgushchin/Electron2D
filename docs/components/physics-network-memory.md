@@ -257,3 +257,85 @@ Release/API/wiki checks pass; the engine snapshot and coverage states are unchan
 Complete static/global/native/driver ownership, peaks beyond these scoped counters,
 NativeAOT object sizes, arbitrary workloads, foreign platforms, target-device
 advantage and window FPS remain open. The RTX power-cable prerequisite remains.
+
+## Native allocation-stack cohort, 2026-10-16
+
+The [runner](../../tools/physics-memory/README.md#network-native-allocation-stacks)
+now supports an explicit Heaptrack preload in network mode. Its implementation
+lives in the measurement host's child-start partial; the corresponding hook is
+absent from the public consumer's compiled method definitions/references.
+Only the authority and two clients are interposed. The collector/check launcher
+are checked unprofiled at the first gate, and all fifteen child observations
+check their expected profiler and software/denied-driver mappings.
+
+Four new cohorts cover CPU/GPU primary clients and owner/separate numerical lanes,
+with ordinary unpaced authority, 250 ms primary polling, late admission requested
+at tick 310 and 900 authority ticks. All twelve children pass the unchanged
+physical, geometry, joint, support, portable identity, actual packet disorder,
+ownership, sleep/wake correction, exact confirmed-event and final .002 convergence
+checks. Warm authority steps and each client's predicted/replayed steps retain
+0/0 owner/all-thread managed allocation. All 60 full-GC/glibc/procfs phases complete. This
+mode intentionally skips CLRMD: `Measurement=null` and `HeapAttached=false`
+make selected managed graphs unmeasured rather than empty.
+
+Each trace runs from process startup through shutdown, including the four
+additional public scene checkpoints and first restore after the session report.
+The figures below are simultaneous requested-byte peaks across traced hooked
+allocations in each process, followed by still-live requests at trace shutdown.
+They include host/runtime and native libraries, exclude untraced/direct-mapping
+and profiler-internal allocations, and do not prove an engine leak. They cannot
+be summed with GC, RSS or requested SDL buffers, or subtracted from ordinary
+non-interposed samples to infer exclusive owners. Maxima from different
+processes need not occur simultaneously.
+
+| Cohort | Role | Traced process peak B | Traced end B | ENet module leaf maximum B |
+| --- | --- | ---: | ---: | ---: |
+| CPU / owner | authority | 24,253,256 | 18,660,831 | 36,834 |
+| CPU / owner | CPU client | 24,556,745 | 18,977,262 | 158,234 |
+| CPU / owner | late CPU | 25,279,921 | 18,979,722 | 100,602 |
+| CPU / separate | authority | 24,114,300 | 18,516,249 | 36,834 |
+| CPU / separate | CPU client | 24,545,669 | 18,959,688 | 162,998 |
+| CPU / separate | late CPU | 25,289,541 | 18,982,900 | 100,994 |
+| GPU / owner | authority | 24,250,208 | 18,657,783 | 37,202 |
+| GPU / owner | GPU client | 482,986,667 | 19,072,472 | 322,540 |
+| GPU / owner | late CPU | 25,129,401 | 18,980,882 | 89,617 |
+| GPU / separate | authority | 24,229,028 | 18,630,977 | 37,202 |
+| GPU / separate | GPU client | 483,040,735 | 19,053,498 | 322,544 |
+| GPU / separate | late CPU | 25,267,933 | 18,961,292 | 100,746 |
+
+The ENet column is the individual lifetime maximum whose immediate allocation
+caller is `libElectron2DENet.so`, not its value at the global process peak and
+not an extra amount to add to that peak. All twelve direct ENet module leaf
+groups return to zero bytes at trace shutdown. For example, the GPU/separate
+primary allocates 2,014,434 cumulative bytes in 843 calls from that module;
+its authority allocates 4,450,253 B in 4,673 calls. Cumulative allocator traffic
+is not live storage or application/network wire volume. Inclusive ENet stack
+groups also include allocations reached in CoreCLR through native callbacks;
+their nonzero end values are not direct ENet module ownership.
+
+At the GPU/separate global peak, 467,250,415 B have an immediate lavapipe caller;
+467,445,835 B contain lavapipe anywhere in the stack. These are overlapping
+allocation-path views. Large paths traverse `VULKAN_CreateComputePipeline`.
+The exact split between ordinary gameplay and the added checkpoint work is
+not established by phase pauses; this is not a claimed 483 MB gameplay budget.
+Both GPU clients finish with the previously isolated 256 B direct-driver
+[topology residue](physics-native-phases.md#driver-only-lifetime-attribution-2026-10-16).
+CPU processes have no mapped software/physical GPU and no driver leaf group.
+
+A same-source non-preloaded GPU/separate control passes all fifteen original
+CLRMD observations, including disposed held buffers and zero final selected
+owners. A strict public-consumer NativeAOT publication and ordinary GPU/separate
+900-tick process check also pass. Its four observed processes run the same ELF
+without CoreCLR, with one software GPU client and no NVIDIA mappings. These
+controls verify collection-mode separation and the public consumer; the native
+allocation tables remain instrumented CoreCLR evidence.
+
+Artifacts are `bin/physics-network-native/2026-10-16/`: four instrumented cohort
+directories, `default-gpu-threaded/`, `aot-public-gpu-threaded/`, calibrated
+event summaries, unmerged reports/flamegraphs, `hook-erasure.json`,
+`compiled-source-audit.json` and `validation.json`. Trace identities, native
+module and exercised source/binary identities are retained there. Runtime API
+and coverage states are unchanged. Per-phase native peaks, complete ownership
+and unhooked/direct-mapping totals, NativeAOT native allocation budgets, arbitrary
+workloads, foreign platforms, target-device advantage and real window FPS remain
+open. The unverified RTX power cable remains a prerequisite for its load tests.

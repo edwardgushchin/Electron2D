@@ -342,6 +342,12 @@ reproduces the driver residue independently and verifies its static root;
 foreign-driver cleanup and wider native ownership remain open. These
 instrumented results do not establish physical GPU speed or window acceptance.
 
+[Network native traces](../components/physics-network-memory.md#native-allocation-stack-cohort-2026-10-16)
+now retain all ordinary 900-tick checks across CPU/GPU and both numerical lanes.
+Their hooked process/module peaks include cold setup and four extra local
+checkpoints. Separate managed and public NativeAOT controls pass; full native
+ownership, precise phase attribution and hardware/window gates remain open.
+
 Physics readiness requires both CPU/Box2D.NET behavior and a complete selectable
 independent GPU world. The [source audit](../components/physics-contract-audit.md)
 and [generated declaration ledger](../coverage/physics-status.md) separate current

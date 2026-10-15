@@ -203,3 +203,11 @@ measure the ordinary network client's native ownership. Inclusive stack-module
 groups overlap; allocation-leaf module groups describe the direct call site,
 not a complete retained owner graph. Direct mappings and unhooked allocators
 still require other evidence.
+
+The [network allocation-stack cohort](physics-network-memory.md#native-allocation-stack-cohort-2026-10-16)
+now adds twelve instrumented session traces and 60 nearby process observations.
+It retains the full network checks and four extra local checkpoints while
+skipping CLRMD, with explicit unmeasured graph fields. A separate non-preloaded
+control retains the original managed inspections. Traced process/ENet-module
+peaks and end values have their own scope; they do not replace the ordinary
+samples above or establish exact gameplay/checkpoint-only intervals.

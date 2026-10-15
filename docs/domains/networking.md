@@ -92,3 +92,11 @@ owners; held disposal has zero requested GPU buffers. A separate NativeAOT paced
 cohort verifies the report/counter path without establishing native object sizes.
 These bounded results preserve open full native/driver/global ownership, unseen
 peaks, arbitrary workloads, foreign platforms and target-device/window gates.
+
+[Native session allocation paths](../components/physics-network-memory.md#native-allocation-stack-cohort-2026-10-16)
+now add twelve instrumented child traces with 60 process observations. All four
+ordinary CPU/GPU and owner/separate cohorts retain their original physics,
+network and zero warm managed-allocation checks. Traced process and transport-
+module peaks remain separate from wire payload, managed graphs and RSS, and
+include the additional checkpoint choice. Phase-specific native budgets, complete
+ownership and target-device/window acceptance remain open.

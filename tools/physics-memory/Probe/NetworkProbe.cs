@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Security.Cryptography;
 using System.Text.Json;
 using Microsoft.Diagnostics.Runtime;
 using static HeapGraph;
@@ -8,6 +9,9 @@ internal static class NetworkProbe
     internal static async Task Run(string[] args)
     {
         if (args.Length < 2) throw new ArgumentException("Expected NetworkFixture.dll, new output directory, optional process-check arguments.");
+        var preload = Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_HEAPTRACK_PRELOAD");
+        if (preload is not null) preload = Path.GetFullPath(preload);
+        if (preload is not null && (Path.GetFileName(preload) != "libheaptrack_preload.so" || !File.Exists(preload))) throw new ArgumentException("An existing heaptrack preload library is required.");
         var folder = Path.GetFullPath(args[1]);
         if (Directory.Exists(folder)) throw new IOException("The network memory output directory must be new.");
         var gates = Path.Combine(folder, "gates"); Directory.CreateDirectory(gates);
@@ -15,9 +19,18 @@ internal static class NetworkProbe
         foreach (var argument in new[] { args[0], "--check", "--output", Path.Combine(folder, "sessions") }.Concat(args.Skip(2)))
             start.ArgumentList.Add(argument);
         start.Environment["ELECTRON2D_TEST_PHYSICS_MEMORY"] = gates;
+        var traces = Path.Combine(folder, "allocation-traces");
+        if (preload is not null)
+        {
+            Directory.CreateDirectory(traces);
+            start.Environment["ELECTRON2D_TEST_PHYSICS_HEAPTRACK_PRELOAD"] = preload;
+            start.Environment["ELECTRON2D_TEST_PHYSICS_HEAPTRACK_OUTPUT"] = traces;
+        }
         using var check = Process.Start(start) ?? throw new IOException("Could not start the network process check.");
         var stdout = check.StandardOutput.ReadToEndAsync(); var stderr = check.StandardError.ReadToEndAsync();
         var measured = new HashSet<string>(); var started = Stopwatch.GetTimestamp();
+        var processes = new Dictionary<string, int>();
+        var collectorProfiled = false; var launcherProfiled = false;
         try
         {
             while (!check.HasExited)
@@ -26,14 +39,24 @@ internal static class NetworkProbe
                 foreach (var path in Directory.EnumerateFiles(gates, "*.ready.json"))
                 {
                     if (!measured.Add(path)) continue;
+                    if (measured.Count == 1)
+                    {
+                        collectorProfiled = File.ReadAllText($"/proc/{Environment.ProcessId}/maps").Contains("libheaptrack_preload.so", StringComparison.Ordinal);
+                        launcherProfiled = File.ReadAllText($"/proc/{check.Id}/maps").Contains("libheaptrack_preload.so", StringComparison.Ordinal);
+                        if (collectorProfiled || launcherProfiled) throw new InvalidOperationException("Only the three session children may be allocation-profiled.");
+                    }
                     var metadata = JsonSerializer.Deserialize<JsonElement>(File.ReadAllText(path));
                     var pid = metadata.GetProperty("PID").GetInt32();
                     if (!IsDescendant(pid, check.Id)) throw new InvalidOperationException("The probe can inspect only its own network descendants.");
                     var role = metadata.GetProperty("Role").GetString()!; var phase = metadata.GetProperty("Phase").GetString()!;
+                    if (processes.TryGetValue(role, out var existing) && existing != pid) throw new InvalidDataException("A network role changed processes.");
+                    processes[role] = pid;
                     var maps = File.ReadAllText($"/proc/{pid}/maps");
                     var software = maps.Contains("libvulkan_lvp.so"); var hardware = maps.Contains("libnvidia", StringComparison.OrdinalIgnoreCase);
                     if (hardware || phase is "completed" or "checkpointed" && software != (role == "gpu")) throw new InvalidOperationException("Unexpected network driver mapping.");
-                    var report = new { Metadata = metadata, LavapipeMapped = software, NVIDIAMapped = hardware, Process = ProcessObservation.Read(pid), Measurement = Inspect(pid, phase) };
+                    var heaptrackMapped = maps.Contains("libheaptrack_preload.so", StringComparison.Ordinal);
+                    if (heaptrackMapped != (preload is not null)) throw new InvalidOperationException("Unexpected network allocation profiler mapping.");
+                    var report = new { Metadata = metadata, LavapipeMapped = software, NVIDIAMapped = hardware, HeaptrackMapped = heaptrackMapped, HeapAttached = preload is null, Process = ProcessObservation.Read(pid), Measurement = preload is null ? Inspect(pid, phase) : null };
                     File.WriteAllText(Path.Combine(folder, role + "-" + phase + ".json"), JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true }));
                     File.WriteAllText(path[..^".ready.json".Length] + ".go", "next");
                     Console.WriteLine($"Measured {role} {phase}.");
@@ -43,6 +66,17 @@ internal static class NetworkProbe
             File.WriteAllText(Path.Combine(folder, "check.stdout.log"), await stdout);
             File.WriteAllText(Path.Combine(folder, "check.stderr.log"), await stderr);
             if (check.ExitCode != 0 || measured.Count != 15) throw new InvalidOperationException("The full network check or one of its fifteen memory phases failed; inspect the check logs.");
+            var allocations = new List<object>();
+            if (preload is not null)
+            {
+                foreach (var (role, pid) in processes)
+                {
+                    var trace = Path.Combine(traces, role + ".heaptrack.raw");
+                    if (!File.Exists(trace) || new FileInfo(trace).Length == 0) throw new IOException("A network child produced no allocation trace.");
+                    allocations.Add(new { Role = role, PID = pid, Path = trace, Bytes = new FileInfo(trace).Length, SHA256 = Hash(trace) });
+                }
+            }
+            File.WriteAllText(Path.Combine(folder, "collection.json"), JsonSerializer.Serialize(new { HeapAttached = preload is null, CollectorHeaptrackMappedAtFirstGate = collectorProfiled, LauncherHeaptrackMappedAtFirstGate = launcherProfiled, HeaptrackPreloadSHA256 = preload is null ? null : Hash(preload), AllocationTraces = allocations }, new JsonSerializerOptions { WriteIndented = true }));
         }
         finally
         {
@@ -50,6 +84,12 @@ internal static class NetworkProbe
             File.WriteAllText(Path.Combine(folder, "check.stdout.log"), await stdout);
             File.WriteAllText(Path.Combine(folder, "check.stderr.log"), await stderr);
         }
+    }
+
+    private static string Hash(string path)
+    {
+        using var stream = File.OpenRead(path);
+        return Convert.ToHexStringLower(SHA256.HashData(stream));
     }
 
     private static bool IsDescendant(int pid, int ancestor)

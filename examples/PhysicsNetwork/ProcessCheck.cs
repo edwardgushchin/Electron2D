@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Electron2D.Examples.PhysicsNetwork;
 
-internal static class ProcessCheck
+internal static partial class ProcessCheck
 {
     internal static async Task<int> Run(string[] args)
     {
@@ -187,6 +187,7 @@ internal static class ProcessCheck
                 info.Environment["XDG_SESSION_TYPE"] = "unspecified";
                 info.ArgumentList.Add("--require-no-gpu");
             }
+            ConfigureChildForTesting(info, role);
             return Process.Start(info) ?? throw new InvalidOperationException("Could not start child process.");
         }
         async Task Drain(Process process, string role, string first, TaskCompletionSource? lateJoinReady = null)
@@ -202,5 +203,6 @@ internal static class ProcessCheck
         }
         SessionReport Read(string name) => JsonSerializer.Deserialize(File.ReadAllText(System.IO.Path.Combine(output, name + ".json")), ReportJSON.Default.SessionReport)!;
     }
+    static partial void ConfigureChildForTesting(ProcessStartInfo info, string role);
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
 }

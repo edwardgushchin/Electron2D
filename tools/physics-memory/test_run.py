@@ -59,7 +59,8 @@ with tempfile.TemporaryDirectory() as folder:
 with tempfile.TemporaryDirectory() as folder:
     output = Path(folder) / "must-not-start"
     for extra, error in [(["--heaptrack-preload", "missing.so"], "require --native-phases"),
-                         (["--native-phases", "--icd", "missing.json", "--heaptrack-preload", "missing.so"], "existing libheaptrack_preload.so")]:
+                         (["--native-phases", "--icd", "missing.json", "--heaptrack-preload", "missing.so"], "existing libheaptrack_preload.so"),
+                         (["--network", "--client-backend", "cpu", "--heaptrack-preload", "missing.so"], "existing libheaptrack_preload.so")]:
         result = subprocess.run([sys.executable, str(Path(__file__).with_name("run.py")), str(output), *extra], capture_output=True, text=True)
         assert result.returncode == 2 and error in result.stderr and not output.exists()
 print("PASS: timeout retires nested processes; success/nonzero exits and native-phase/network/heaptrack option preflight are preserved.")
