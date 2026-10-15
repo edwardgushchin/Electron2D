@@ -64,6 +64,8 @@ internal sealed class ImpairedLink(SceneMultiplayer multiplayer, bool impaired)
     private const int Capacity = 128;
     private readonly byte[] _storage = new byte[Capacity * PacketBytes];
     private readonly double[] _due = new double[Capacity];
+    private readonly ulong[] _order = new ulong[Capacity];
+    private ulong _nextOrder;
     private readonly int[] _sizes = new int[Capacity], _peers = new int[Capacity];
     private readonly TransferMode[] _modes = new TransferMode[Capacity];
     private uint _random = 0x371fac53;
@@ -83,7 +85,8 @@ internal sealed class ImpairedLink(SceneMultiplayer multiplayer, bool impaired)
     {
         var slot = Array.FindIndex(_sizes, static size => size == 0);
         if (slot < 0) throw new InvalidOperationException("Network delay queue exhausted its bounded capacity.");
-        _due[slot] = now + (impaired ? .02 + Next() % 80 / 1000d : 0);
+        _due[slot] = now + (impaired ? .02 + Next() % 80 / 1000d + (_sequence % 5 == 0 ? .15 : 0) : 0);
+        _order[slot] = ++_nextOrder;
         _sizes[slot] = packet.Length; _peers[slot] = peer; _modes[slot] = mode;
         packet.CopyTo(_storage.AsSpan(slot * PacketBytes, packet.Length));
         if (impaired) Delayed++;
@@ -99,7 +102,8 @@ internal sealed class ImpairedLink(SceneMultiplayer multiplayer, bool impaired)
             var slot = -1;
             for (var i = 0; i < Capacity; i++) if (_sizes[i] != 0 && _due[i] <= now && (slot < 0 || _due[i] < _due[slot])) slot = i;
             if (slot < 0) return;
-            for (var i = 0; i < slot; i++) if (_sizes[i] != 0 && _due[i] > _due[slot]) { Reordered++; break; }
+            for (var i = 0; i < Capacity; i++)
+                if (_sizes[i] != 0 && _peers[i] == _peers[slot] && _order[i] < _order[slot]) { Reordered++; break; }
             var size = _sizes[slot]; _sizes[slot] = 0;
             multiplayer.SendBytes(_storage.AsSpan(slot * PacketBytes, size), _peers[slot], _modes[slot]); SentBytes += size; Sent++;
         }

@@ -23,6 +23,7 @@ internal sealed class SessionReport
     public bool BackendInstrumented { get; set; }
     public bool SeparateThread { get; set; }
     public int ClientPollDelayMS { get; set; }
+    public double ElapsedMS { get; set; }
     public int RetiredCommandReplacements { get; set; }
     public bool CheckProgressEnabled { get; set; }
     public uint CheckPhases { get; set; }
@@ -48,6 +49,7 @@ internal sealed class SessionReport
     public uint GeometryWakes { get; set; }
     public uint GeometryContactCorrections { get; set; }
     public uint GeometrySleepingCorrections { get; set; }
+    public uint GeometryWakeCorrections { get; set; }
     public float MaxGeometryPenetration { get; set; }
     public uint GeometryCompoundContacts { get; set; }
     public uint GeometryCompoundImpulses { get; set; }
@@ -64,6 +66,7 @@ internal sealed class SessionReport
     public int SupportCorrections { get; set; }
     public int SupportContactCorrections { get; set; }
     public int SupportSleepingCorrections { get; set; }
+    public int SupportWakeCorrections { get; set; }
     public float MaxSupportPinError { get; set; }
     public float MaxSupportGrooveError { get; set; }
     public float MaxSupportImpulseError { get; set; }
@@ -107,6 +110,7 @@ internal sealed class SessionReport
     public int ReplayEvents { get; set; }
     public int MalformedPackets { get; set; }
     public int StalePackets { get; set; }
+    public int ReorderedStates { get; set; }
     public int ForeignCommands { get; set; }
     public int EpochCommands { get; set; }
     public int Created { get; set; }
@@ -115,6 +119,7 @@ internal sealed class SessionReport
     public int SleepObservations { get; set; }
     public int WakeObservations { get; set; }
     public int Dropped { get; set; }
+    public int Delayed { get; set; }
     public int Duplicated { get; set; }
     public int Reordered { get; set; }
     public long SentBytes { get; set; }
@@ -153,6 +158,7 @@ internal sealed partial class NetworkSession
             Role = _authority ? "server" : "client",
             Backend = Simulation.World.PhysicsBackend.ToString(),
             RetiredCommandReplacements = RetiredCommandReplacements,
+            ElapsedMS = _clock.Elapsed.TotalMilliseconds,
             CheckProgressEnabled = _checkProgress,
             CheckPhases = CheckPhases,
             CheckWaitPolls = CheckWaitPolls,
@@ -177,6 +183,7 @@ internal sealed partial class NetworkSession
             GeometryWakes = Simulation.GeometryWakes,
             GeometryContactCorrections = Simulation.GeometryContactCorrections,
             GeometrySleepingCorrections = Simulation.GeometrySleepingCorrections,
+            GeometryWakeCorrections = Simulation.GeometryWakeCorrections,
             MaxGeometryPenetration = Simulation.MaxGeometryPenetration,
             GeometryCompoundContacts = Simulation.GeometryCompoundContacts,
             GeometryCompoundImpulses = Simulation.GeometryCompoundImpulses,
@@ -193,6 +200,7 @@ internal sealed partial class NetworkSession
             SupportCorrections = Simulation.SupportCorrections,
             SupportContactCorrections = Simulation.SupportContactCorrections,
             SupportSleepingCorrections = Simulation.SupportSleepingCorrections,
+            SupportWakeCorrections = Simulation.SupportWakeCorrections,
             MaxSupportPinError = Simulation.MaxSupportPinError,
             MaxSupportGrooveError = Simulation.MaxSupportGrooveError,
             MaxSupportImpulseError = Simulation.MaxSupportImpulseError,
@@ -219,6 +227,7 @@ internal sealed partial class NetworkSession
             ReplayEvents = ReplayEvents,
             MalformedPackets = MalformedPackets,
             StalePackets = StalePackets,
+            ReorderedStates = ReorderedStates,
             ForeignCommands = ForeignCommands,
             EpochCommands = EpochCommands,
             Created = Simulation.Created,
@@ -227,6 +236,7 @@ internal sealed partial class NetworkSession
             SleepObservations = SleepObservations,
             WakeObservations = WakeObservations,
             Dropped = _link.Dropped,
+            Delayed = _link.Delayed,
             Duplicated = _link.Duplicated,
             Reordered = _link.Reordered,
             SentBytes = _link.SentBytes,

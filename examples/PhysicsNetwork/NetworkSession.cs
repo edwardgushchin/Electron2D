@@ -50,7 +50,7 @@ internal sealed partial class NetworkSession : IDisposable
     private ulong _confirmedTick, _confirmedEvent, _baseline, _frameSerial;
     private ulong _lateSleepTick;
     private int _manifestCount;
-    internal int Corrections, ReplayedTicks, RejectedCommands, StalePackets, MalformedPackets, PredictedEvents, ReplayEvents, ConfirmedEffects;
+    internal int Corrections, ReplayedTicks, RejectedCommands, StalePackets, ReorderedStates, MalformedPackets, PredictedEvents, ReplayEvents, ConfirmedEffects;
     internal int SpawnCorrections, OwnershipCorrections, SleepObservations, WakeObservations;
     private readonly bool[] _wasSleeping = new bool[NetworkWorld.Capacity];
     private readonly uint[] _sleepGenerations = new uint[NetworkWorld.Capacity];
@@ -154,7 +154,11 @@ internal sealed partial class NetworkSession : IDisposable
                 if (kind == 3)
                 {
                     var serial = reader.U64(); var tick = reader.U64();
-                    if (_pendingStateLength > 0 && (tick < _pendingTick || tick == _pendingTick && serial <= _pendingSerial)) { StalePackets++; return; }
+                    if (_pendingStateLength > 0 && (tick < _pendingTick || tick == _pendingTick && serial <= _pendingSerial))
+                    {
+                        if (tick < _pendingTick || serial < _pendingSerial) ReorderedStates++;
+                        StalePackets++; return;
+                    }
                     if (_pendingStateLength > 0) CoalescedStates++;
                     WireReader.Require(bytes.Length <= _pendingState.Length); bytes.CopyTo(_pendingState); _pendingStateLength = bytes.Length; _pendingTick = tick; _pendingSerial = serial;
                 }
@@ -258,7 +262,7 @@ internal sealed partial class NetworkSession : IDisposable
     {
         var tick = Simulation.Tick + 1; Simulation.BeginTick(tick, SimulationPhase.Authority);
         if (tick is 90 or 140 or 160) ChangeCrate(tick);
-        if (tick == (ulong)_ticks && Simulation.Find(10)?.Body is RigidBody finalSpinner) finalSpinner.ApplyTorqueImpulse(800);
+        if (tick == (ulong)_ticks) Simulation.QueueFinalImpulses();
         if (_lateSleepTick != 0 && tick == _lateSleepTick) ((RigidBody)Simulation.Find(30)!.Body!).Sleeping = true;
         if (tick == 300 || _lateSleepTick != 0 && tick == _lateSleepTick + 16)
         {

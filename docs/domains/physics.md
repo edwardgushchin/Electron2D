@@ -26,7 +26,7 @@ first interval. Complete retained-memory budgets remain open.
 
 [Resident GPU buffer accounting](../components/gpu-memory.md) now distinguishes storage, transfer and transient growth capacity, including replay copies and failed preparation. Full CPU/managed/native/driver memory budgets remain open.
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 [Multi-impact CCD history](../components/physics-snapshots.md#multi-impact-ccd-contact-history)
 checks 64 logical pairs against both walls of one peer after three impacts in one
@@ -1323,3 +1323,12 @@ Area, indexed geometry, canvas and object-association fixtures now explicitly
 select and assert the owner. Registered geometry passes fourteen profiles and
 keeps its bounded external-algorithm limits. Current GPU evidence uses software
 Vulkan; no hardware/window, whole-goal or coverage-status promotion follows.
+
+[Ordinary slow-client physics verification](../components/physics-network-example.md#ordinary-slow-client-verification-2026-10-16)
+now runs the public example without authority phase/input barriers. Nine ordinary
+managed/NativeAOT/instrumented cohorts and two paced regressions pass 900 ticks
+with CPU authority, CPU/GPU prediction, late admission, actual state reordering,
+sleep/wake correction and strict zero warmed physical bytes. Bounded queue age is
+tracked per recipient and verified across slot reuse. This verifies the Linux
+software-GPU recipe; general inherited/extension, native/driver memory, foreign
+platform and target-device/window/performance acceptance remain open.

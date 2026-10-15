@@ -74,3 +74,12 @@ The [IP service](../classes/IP.md) and [address-resolution component](../compone
 ## JSON-RPC document dispatch
 
 [JSON-RPC documents and typed dispatch](../components/jsonrpc.md) adds caller-owned JSONRPC over existing transport text/bytes. Typed callbacks and compiled schemas handle positional/named parameters, response correlation, notifications and ordered batches. Wire validation and protocol errors retain dedicated document ownership; constructing a dispatcher opens no listener. The public scene TCP test exercises actual framed request/notification/response flow. JSON message work allocates; application framing, authentication, scene ownership and remote acceptance remain separate.
+
+[Ordinary slow-client physics verification](../components/physics-network-example.md#ordinary-slow-client-verification-2026-10-16)
+now runs the public example without authority phase/input barriers. Nine ordinary
+managed/NativeAOT/instrumented cohorts and two paced regressions pass 900 ticks
+with CPU authority, CPU/GPU prediction, late admission, actual state reordering,
+sleep/wake correction and strict zero warmed physical bytes. Bounded queue age is
+tracked per recipient and verified across slot reuse. This verifies the Linux
+software-GPU recipe; general inherited/extension, native/driver memory, foreign
+platform and target-device/window/performance acceptance remain open.

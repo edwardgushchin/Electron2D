@@ -19,6 +19,8 @@ internal sealed partial class NetworkWorld
     private float _geometryRayRotationBefore;
     internal int GeometrySteps, GeometryCorrections, GeometryKicks;
     internal uint GeometryContacts, GeometryImpulses, GeometrySleeping, GeometryWakes, GeometryContactCorrections, GeometrySleepingCorrections;
+    internal uint GeometryWakeCorrections;
+    private uint _geometryCorrectionSleeping;
     internal float MaxGeometryPenetration, MaxGeometryRayAngularSpeed;
     internal int GeometryRayAngularSteps, GeometryRayAngularCorrections;
     internal uint GeometryCompoundContacts, GeometryCompoundImpulses, GeometryCompoundContactCorrections;
@@ -62,11 +64,11 @@ internal sealed partial class NetworkWorld
         body.BodyEntered += other => Contact(spec.ID, other, 1);
         return body;
     }
-    private void PrepareGeometry(ulong tick)
+    private void PrepareGeometry(ulong tick, bool final)
     {
         _geometryRayRotationBefore = Find(214)!.Body!.GlobalRotation;
         _geometryWakeExpected = 0;
-        if (tick < 240 || tick % 120 != 0) return;
+        if (!final && (tick < 240 || tick % 120 != 0)) return;
         for (var i = 0; i < GeometryFamilies; i++)
         {
             var body = (RigidBody)Find((ulong)(210 + i))!.Body!;
@@ -158,11 +160,15 @@ internal sealed partial class NetworkWorld
         var rotatingRay = (RigidBody)Find(214)!.Body!;
         if (MathF.Abs(rotatingRay.AngularVelocity) > .01f && MathF.Abs(Mathf.AngleDifference(.3f, rotatingRay.GlobalRotation)) > .01f)
             GeometryRayAngularCorrections++;
+        uint sleeping = 0;
         for (var i = 0; i < GeometryFamilies; i++)
         {
             if (GeometryContact(i, recordImpulse: false)) GeometryContactCorrections |= 1u << i;
-            if (((RigidBody)Find((ulong)(210 + i))!.Body!).Sleeping) GeometrySleepingCorrections |= 1u << i;
+            if (((RigidBody)Find((ulong)(210 + i))!.Body!).Sleeping) sleeping |= 1u << i;
         }
+        GeometrySleepingCorrections |= sleeping;
+        GeometryWakeCorrections |= _geometryCorrectionSleeping & ~sleeping;
+        _geometryCorrectionSleeping = sleeping;
     }
     private void DisposeGeometry()
     {

@@ -43,12 +43,14 @@ internal sealed partial class NetworkWorld
     private float _supportMomentum, _supportLoadSpeed;
     internal int SupportSteps, SupportContacts, SupportSleeping, SupportWakes, SupportKicks, SupportImpulseSamples;
     internal int SupportCorrections, SupportContactCorrections, SupportSleepingCorrections;
+    internal int SupportWakeCorrections;
+    private bool _supportCorrectionSleeping;
     internal float MaxSupportPinError, MaxSupportGrooveError, MaxSupportImpulseError;
 
-    private void PrepareSupport(ulong tick)
+    private void PrepareSupport(ulong tick, bool final)
     {
         var load = (RigidBody)Find(71)!.Body!; var peer = (RigidBody)Find(72)!.Body!;
-        _supportWakeExpected = false; _supportKicked = tick >= 240 && tick % 120 == 0;
+        _supportWakeExpected = false; _supportKicked = final || tick >= 240 && tick % 120 == 0;
         _supportWasSleeping = load.Sleeping && peer.Sleeping;
         _supportWasAwake = !load.Sleeping && !peer.Sleeping;
         if (_supportKicked)
@@ -112,6 +114,9 @@ internal sealed partial class NetworkWorld
     {
         SupportCorrections++;
         if (SupportContact()) SupportContactCorrections++;
-        if (((RigidBody)Find(71)!.Body!).Sleeping && ((RigidBody)Find(72)!.Body!).Sleeping) SupportSleepingCorrections++;
+        var sleeping = ((RigidBody)Find(71)!.Body!).Sleeping && ((RigidBody)Find(72)!.Body!).Sleeping;
+        if (sleeping) SupportSleepingCorrections++;
+        if (_supportCorrectionSleeping && !((RigidBody)Find(71)!.Body!).Sleeping && !((RigidBody)Find(72)!.Body!).Sleeping) SupportWakeCorrections++;
+        _supportCorrectionSleeping = sleeping;
     }
 }

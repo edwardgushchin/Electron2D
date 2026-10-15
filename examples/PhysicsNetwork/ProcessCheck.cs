@@ -20,6 +20,7 @@ internal static class ProcessCheck
         if (clientBackend is not ("cpu" or "gpu")) throw new ArgumentException("Client backend must be cpu or gpu.");
         if (windowed && clientBackend == "cpu") throw new ArgumentException("The CPU-only process check requires headless clients.");
         var threaded = args.Contains("--threaded");
+        var checkProgress = !args.Contains("--unpaced");
         var clientPollDelayMS = int.Parse(Value("--client-poll-delay-ms", "0"));
         if (clientPollDelayMS is < 0 or > 250) throw new ArgumentException("Client poll delay must be between 0 and 250 milliseconds.");
         if (windowed && clientPollDelayMS != 0) throw new ArgumentException("Slow poll checks require a headless client.");
@@ -31,7 +32,7 @@ internal static class ProcessCheck
         var renderer = Value("--renderer", "gpu");
         if (renderer is not ("gpu" or "compatibility")) throw new ArgumentException("Renderer must be gpu or compatibility.");
         var output = System.IO.Path.GetFullPath(Value("--output", "bin/physics-network-check")); Directory.CreateDirectory(output);
-        var checkDeadline = TimeSpan.FromSeconds(ticks * NetworkWorld.FixedStep + 120);
+        var checkDeadline = TimeSpan.FromSeconds(ticks * NetworkWorld.FixedStep + (checkProgress ? 120 : 30));
         var token = Guid.NewGuid().ToString();
         var children = new List<Process>(); var drains = new List<Task>();
         try
@@ -55,38 +56,54 @@ internal static class ProcessCheck
                     rendered.RenderedPhysicsPreserved && File.Exists(System.IO.Path.Combine(output, "gpu-window.png")), "Actual networked window renders smoothing/interpolation while preserving portable physics");
             }
             var authority = Read("server"); Check(authority.Role == "server" && authority.Backend == "CPU" && authority.Tick == (ulong)ticks, "CPU server completed all real ticks");
-            Check(authority.CheckProgressReceived > 0 && authority.RejectedCheckProgress >= 2,
-                "The check receives real phase progress and rejects forged future phase masks");
-            Check(authority.CheckInputWaitPolls > 0 && authority.CheckWaitPolls == authority.CheckInputWaitPolls + authority.CheckPhaseWaitPolls && authority.CheckWaitMS > 0,
-                "Check-only pacing waits for actual numbered inputs and accounts separately for missing phases");
-            Check(authority.RetiredCommandReplacements > 0, "New control epochs replace retired future commands without losing the handoff input");
+            if (checkProgress)
+            {
+                Check(authority.CheckProgressReceived > 0 && authority.RejectedCheckProgress >= 2,
+                    "The check receives real phase progress and rejects forged future phase masks");
+                Check(authority.CheckInputWaitPolls > 0 && authority.CheckWaitPolls == authority.CheckInputWaitPolls + authority.CheckPhaseWaitPolls && authority.CheckWaitMS > 0,
+                    "Check-only pacing waits for actual numbered inputs and accounts separately for missing phases");
+                Check(authority.RetiredCommandReplacements > 0, "New control epochs replace retired future commands without losing the handoff input");
+            }
+            else Check(authority.OwnershipChanges >= 4 && authority.EpochCommands >= 2,
+                "Ordinary authority changes control and rejects retired-epoch inputs without waiting for clients");
             Check(authority.GPUUnavailableVerified && Read("late").GPUUnavailableVerified && Read(primary).GPUUnavailableVerified == (clientBackend == "cpu"),
                 "All CPU processes exercised actual denied GPU startup before their working network worlds");
             foreach (var name in new[] { "server", primary, "late" })
             {
                 var report = Read(name);
-                uint requiredPhases = 0;
-                for (ulong phase = 240; phase <= (ulong)ticks; phase += 120)
-                    if (phase > report.JoinTick) requiredPhases |= 1u << (int)(phase / 120 - 2);
-                Check(report.CheckProgressEnabled && requiredPhases != 0 && (report.CheckPhases & requiredPhases) == requiredPhases &&
-                    report.ClientPollDelayMS == (name == primary ? clientPollDelayMS : 0),
-                    "Every participant actually solves each required post-admission phase at its original tick");
-                if (name != "server") Check(report.CheckProgressSent > 0 && report.CheckProgressAttemptedBytes == report.CheckProgressSent * 12L,
-                    "Client phase progress uses the existing impaired transport with accounted control bytes");
+                Check(report.ClientPollDelayMS == (name == primary ? clientPollDelayMS : 0) && report.ElapsedMS > 0,
+                    "Every process records actual client poll delay and session duration");
+                if (checkProgress)
+                {
+                    uint requiredPhases = 0;
+                    for (ulong phase = 240; phase <= (ulong)ticks; phase += 120)
+                        if (phase > report.JoinTick) requiredPhases |= 1u << (int)(phase / 120 - 2);
+                    Check(report.CheckProgressEnabled && requiredPhases != 0 && (report.CheckPhases & requiredPhases) == requiredPhases,
+                        "Every participant actually solves each required post-admission phase at its original tick");
+                    if (name != "server") Check(report.CheckProgressSent > 0 && report.CheckProgressAttemptedBytes == report.CheckProgressSent * 12L,
+                        "Client phase progress uses the existing impaired transport with accounted control bytes");
+                }
+                else Check(!report.CheckProgressEnabled && report.CheckPhases == 0 && report.CheckWaitPolls == 0 &&
+                    report.CheckPhaseWaitPolls == 0 && report.CheckInputWaitPolls == 0 && report.CheckWaitMS == 0 &&
+                    report.CheckProgressSent == 0 && report.CheckProgressReceived == 0 && report.RejectedCheckProgress == 0 && report.CheckProgressAttemptedBytes == 0,
+                    "Ordinary processes use no phase barriers, input waits or check-progress messages");
                 Check(report.SeparateThread == threaded, "Every process uses the requested numerical thread policy");
                 Check(report.CompletedSteps > report.WarmupSteps && report.WarmSteps + report.WarmReplaySteps <= report.CompletedSteps - report.WarmupSteps,
                     "Every process excludes its own physical warmup before measured samples");
                 Check(report.JointSteps == report.CompletedSteps && report.JointKicks > 0 && report.MaxPinError < .5f && report.MaxGrooveError < .5f && report.MaxSpringLength < 130,
                     "Every authority/predicted/replayed step executes finite groove and spring constraints under real impulses");
                 Check(report.SupportSteps == report.CompletedSteps && report.SupportContacts > 0 && report.SupportSleeping > 0 &&
-                    report.SupportWakes > 0 && report.SupportKicks > 0 && report.SupportImpulseSamples > 0 && report.MaxSupportPinError < .5f && report.MaxSupportGrooveError < .5f,
-                    "Every process solves the shared contact-supported graph, sleeps and wakes its connected island");
+                    report.SupportImpulseSamples > 0 && report.MaxSupportPinError < .5f && report.MaxSupportGrooveError < .5f,
+                    "Every process solves the shared contact-supported graph with real supported sleep and balanced impulses");
                 Check(report.GeometrySteps == report.CompletedSteps && report.GeometryContacts == NetworkWorld.GeometryFamilyMask && report.GeometryImpulses == NetworkWorld.GeometryFamilyMask &&
-                    report.GeometrySleeping == NetworkWorld.GeometryFamilyMask && report.GeometryWakes == NetworkWorld.GeometryFamilyMask && report.GeometryKicks > 0 && report.MaxGeometryPenetration <= .65f,
+                    report.GeometrySleeping == NetworkWorld.GeometryFamilyMask && report.MaxGeometryPenetration <= .65f,
                     "Every process exercises all five nontrivial geometry families with contacts, real impulses, sleep and wake");
                 Check(report.GeometryCompoundContacts == 3 && report.GeometryCompoundImpulses == 3 &&
                     report.GeometryRayAngularSteps > 0 && report.MaxGeometryRayAngularSpeed > .1f,
                     "Both compound slots generate physical impulses and the unrestrained ray actually rotates");
+                if (checkProgress || name == "server")
+                    Check(report.SupportWakes > 0 && report.SupportKicks > 0 && report.GeometryWakes == NetworkWorld.GeometryFamilyMask && report.GeometryKicks > 0,
+                        "Authority and phase-paced clients solve the original scripted physical wake impulses");
                 if (report.BackendInstrumented && report.Backend == "GPU")
                     Check(report.GPUDriver.Length > 0 && report.GPUDeviceName.Length > 0 && report.GPUSubmissions > 0 && report.GPUUploadBytes > 0 && report.GPUReadbackBytes > 0 && report.GPUWaitMS > 0,
                         "GPU client executed measured device submissions and transfers");
@@ -97,6 +114,10 @@ internal static class ProcessCheck
                 "All three joint families and their endpoints survive authority and late-join topology");
             Check(authority.Actors.Any(actor => Math.Abs(actor.AngularVelocity) > .05),
                 "Final authority state carries a real nonzero angular response for cross-backend restoration");
+            Check(authority.Actors.Count(actor => actor.ID is 71 or 72 or >= 210 and <= 214 && !actor.Sleeping) == 7,
+                "The final authority step wakes both supported bodies and every geometry family before snapshot publication");
+            Check(authority.Dropped > 0 && authority.Duplicated > 0 && authority.Reordered > 0,
+                "Authority state delivery includes actual drops, duplicates and same-peer packet reordering");
             Check(authority.InvalidHello >= 2 && authority.GenerationCommands >= 2, "Invalid session tokens and stale incarnations are rejected");
             Check(authority.AppliedCommands > 180, "Authority actually applies numbered player inputs");
             Check(authority.WarmSteps > 0 && authority.WarmStepAllocations == 0 && authority.WarmStepTotalAllocations == 0, "Prepared authority steps allocate zero bytes on owner/all threads");
@@ -106,7 +127,9 @@ internal static class ProcessCheck
             {
                 var client = Read(name); Check(client.Tick == authority.Tick && client.Corrections > 5 && client.ReplayedTicks > 0, "Client corrects and replays actual physics");
                 Check(client.EventSequence == authority.EventSequence && (ulong)client.ConfirmedEffects == client.EventSequence - client.EventBaseline, "Confirmed effects appear exactly once");
-                Check(client.Dropped > 0 && client.Duplicated > 0 && client.Reordered > 0 && client.StalePackets > 0, "Adverse application delivery was exercised");
+                Check(client.Dropped > 0 && client.Duplicated > 0 && client.Delayed > 0 && client.StalePackets > 0 && client.ReorderedStates > 0,
+                    "Clients exercise impaired sends and reject actually reordered authority states");
+                if (checkProgress) Check(client.Reordered > 0, "Paced clients also reorder their own queued input/progress traffic");
                 Check(client.Events.SequenceEqual(authority.Events.Where(item => item.Sequence > client.EventBaseline)), "Confirmed event identities and physical contents match authority");
                 Check(client.SleepObservations > 0 && client.WakeObservations > 0, "Client observes restored sleep and waking");
                 Check(client.InterpolatedSamples > 0 && client.SmoothedSamples > 0 && client.PostDriftCorrections > 0 && client.DriftCorrectionDistance > 10, "Remote interpolation, local smoothing and injected divergence recovery execute");
@@ -117,6 +140,8 @@ internal static class ProcessCheck
                     "Authority correction imports real contacts and sleeping state for every geometry family");
                 Check(client.GeometryCompoundContactCorrections == 3 && client.GeometryRayAngularCorrections > 0,
                     "Portable correction restores both compound slots and moving ray angular state");
+                Check(client.SupportWakeCorrections > 0 && client.GeometryWakeCorrections == NetworkWorld.GeometryFamilyMask,
+                    "Authority snapshots actually restore sleeping-to-awake transitions for the coupled island and every geometry family");
                 Check(client.WarmSteps > 0 && client.WarmReplaySteps > 0, "Allocation sample includes real warmed predicted and replayed ticks");
                 Check(client.WarmStepAllocations == 0 && client.WarmReplayAllocations == 0 && client.WarmStepTotalAllocations == 0 && client.WarmReplayTotalAllocations == 0, "Prepared predicted and replayed physics steps allocate zero managed bytes");
                 Check(client.MalformedPackets == 0 && client.MaxVisualOffset > 0, "Valid wire traffic and separate presentation smoothing");
@@ -131,7 +156,7 @@ internal static class ProcessCheck
             }
             Check(Read(primary).Backend == (clientBackend == "gpu" ? "GPU" : "CPU") && Read(primary).JoinTick < Read("late").JoinTick && Read("late").JoinTick >= (ulong)lateJoinTick,
                 "Explicit client backend and real late join");
-            Console.WriteLine($"PASS: separate CPU authority, {clientBackend.ToUpperInvariant()} prediction, late CPU client, threaded={threaded}, impaired packets, lifecycle, ownership, event confirmation and final convergence."); return 0;
+            Console.WriteLine($"PASS: separate CPU authority, {clientBackend.ToUpperInvariant()} prediction, late CPU client, threaded={threaded}, paced={checkProgress}, impaired packets, lifecycle, ownership, event confirmation and final convergence."); return 0;
         }
         catch (Exception error) { Console.Error.WriteLine(error); return 1; }
         finally
@@ -145,7 +170,7 @@ internal static class ProcessCheck
             var command = Environment.ProcessPath!; var info = new ProcessStartInfo(command) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
             if (System.IO.Path.GetFileNameWithoutExtension(command) == "dotnet") info.ArgumentList.Add(Environment.GetCommandLineArgs()[0]);
             info.ArgumentList.Add("--physics-network");
-            info.ArgumentList.Add("--check-progress");
+            if (checkProgress) info.ArgumentList.Add("--check-progress");
             if (role == primary)
                 foreach (var argument in new[] { "--client-poll-delay-ms", clientPollDelayMS.ToString() }) info.ArgumentList.Add(argument);
             if (threaded) info.ArgumentList.Add("--threaded");

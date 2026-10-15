@@ -55,7 +55,11 @@ internal sealed partial class NetworkSession
     private void ReceiveState(ref WireReader reader)
     {
         var serial = reader.U64(); var tick = reader.U64(); var final = reader.Bool(); var baseline = reader.U64(); var eventEnd = reader.U64();
-        if (_started && (tick < _confirmedTick || tick == _confirmedTick && serial <= _frameSerial)) { StalePackets++; return; }
+        if (_started && (tick < _confirmedTick || tick == _confirmedTick && serial <= _frameSerial))
+        {
+            if (tick < _confirmedTick || serial < _frameSerial) ReorderedStates++;
+            StalePackets++; return;
+        }
         WireReader.Require(baseline <= eventEnd && tick <= (ulong)_ticks && (!final || tick == (ulong)_ticks));
         var count = reader.Count(NetworkWorld.Capacity, 64);
         for (var i = 0; i < count; i++)

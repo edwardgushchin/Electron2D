@@ -38,7 +38,7 @@ internal sealed partial class NetworkWorld : IDisposable
     private readonly RectangleShape _box = new() { Size = new(24, 24) };
     private readonly RectangleShape _region = new() { Size = new(120, 100) };
     private readonly CircleShape _circle = new() { Radius = 12 };
-    private bool _disposed;
+    private bool _disposed, _finalImpulsesPending;
     internal ulong Tick => PhysicsServer.SpaceGetTick(World.Space);
     internal NetworkWorld(PhysicsServer.Backend backend)
     {
@@ -187,6 +187,7 @@ internal sealed partial class NetworkWorld : IDisposable
         if (actor is null || actor.Spec.Generation != command.Generation || actor.Spec.ControlEpoch != command.Epoch) return;
         actor.Held = command.Input; actor.LastInputTick = command.Tick;
     }
+    internal void QueueFinalImpulses() => _finalImpulsesPending = true;
     internal void BeginTick(ulong tick, SimulationPhase phase) { Phase = phase; _stepTick = tick; }
     internal void Step(SimulationPhase phase)
     {
@@ -197,7 +198,9 @@ internal sealed partial class NetworkWorld : IDisposable
             body.ApplyCentralForce(new((actor.Held.Move * 100 - body.LinearVelocity.X) * 12, 0));
             if (actor.Held.Jump && actor.LastInputTick == _stepTick && body.Position.Y > 270) body.ApplyCentralImpulse(new(0, -260));
         }
-        KickJoints(_stepTick); PrepareSupport(_stepTick); PrepareGeometry(_stepTick);
+        var final = _finalImpulsesPending; _finalImpulsesPending = false;
+        if (final) ((RigidBody)Find(10)!.Body!).ApplyTorqueImpulse(800);
+        KickJoints(_stepTick); PrepareSupport(_stepTick, final); PrepareGeometry(_stepTick, final);
         Tree.PhysicsFrame(FixedStep);
         CheckJoints(); CheckSupport(); CheckGeometry();
         if (Tick != _stepTick) throw new InvalidOperationException("Fixed simulation did not advance exactly one tick.");

@@ -1517,3 +1517,23 @@ Arbitrary external algorithms, unclosed inherited/extension rows, wider coupled
 and network cases, complete memory budgets and native/device/platform/performance
 acceptance retain their named triggers. Physical GPU validation remains deferred
 while the power cable is unverified; these GPU checks use pinned software Vulkan.
+
+## Ordinary authority without phase pacing, 2026-10-16
+
+The [ordinary slow-client scenario](physics-network-example.md#ordinary-slow-client-verification-2026-10-16)
+now has a first-class --unpaced process check. Nine ordinary cohorts exercise CPU
+and software-GPU prediction, serial/separate scheduling, public managed/NativeAOT
+entry points and an instrumented host, with an independent CPU authority and late
+CPU admission. Two default-paced regressions retain original phase/local-impulse
+gates. The ordinary mode requires zero check-only messages/waits, actual incoming
+state reordering and real sleeping-to-awake corrections for the supported graph
+and all five geometry families, preserving physical bounds and zero warmed bytes.
+
+Queue reorder accounting now follows insertion age for the same recipient,
+including slot reuse; startup controls reject cross-recipient false positives.
+A bounded 150 ms long tail makes state reordering observable with sparse client
+polling. The final authority frame emits real wake impulses before publication;
+withholding its snapshot fails the restored-wake control. This closes that named
+recipe verification trigger. Complete inherited/extension, dense/arbitrary network,
+native/driver/history memory, foreign-platform and target-device/window/performance
+requirements retain their existing open gates. Engine API/status counts are unchanged.

@@ -1007,3 +1007,102 @@ full session/native/device memory, real-window rendering/FPS and target GPU
 advantage remain open. The physical RTX power prerequisite is unchanged.
 Commands, all reports, retained failed candidates and manifests:
 bin/physics-network-support/2026-10-15/validation.json.
+
+## Ordinary slow-client verification (2026-10-16)
+
+ProcessCheck accepts --unpaced to exercise the existing ordinary NetworkSession
+path. It omits --check-progress in all three selected children. Every report must
+have CheckProgressEnabled false and exactly zero phase mask, phase/input waits,
+wait duration, sent/received/rejected progress messages and attempted progress
+bytes. The authority independently advances its fixed 1/60-second ticks; client
+poll delays are recorded and applied only to the first client.
+
+Every physical step retains the existing joint/contact/geometry/support bounds
+and prepared allocation checks. Command trust, lifecycle/control, exact confirmed
+events, drift/interpolation/smoothing and final .002 state assertions remain common.
+Ordinary prediction may skip original impulse ticks between authoritative updates;
+its clients must observe sleeping-to-awake corrections for the support pair and
+all five geometry families. Paced clients and the authority still require their
+original local wake/kick counts. The final authority step applies real impulses
+to the supported peer and all five bodies, alongside the existing angular spinner
+impulse, then publishes the newly awake state. All seven target bodies must be
+awake in the final authoritative report and match each corrected client exactly.
+
+Consecutive correction observations retain only the previous authoritative sleep
+flags: a bool for the support pair and a five-bit geometry mask. A sleeping update
+alone cannot count as a wake. Startup controls first apply a real sleeping snapshot,
+withhold the actual awake snapshot and verify no wakes, then apply it and require
+the support transition plus all five mask bits. No physical tolerance or object
+count changes; this does not require clients to reproduce missed authority ticks. The ordinary authority additionally records
+at least four owner changes and rejects retired epochs. Paced checks retain their
+required phase masks, observed waits and live retired-command replacement gate.
+Both modes run the same startup protocol controls for conflicting, retired-epoch
+and new-incarnation future commands. Naturally absent pending retired commands
+are valid in ordinary scheduling.
+
+ElapsedMS records session construction through report capture, before JSON output,
+including network waits, prediction/replay and the final acknowledgement exchange.
+It does not replace measured physical-step/replay distributions or bound total
+managed/native/device/history memory. The application wire layout and production
+engine API are unchanged.
+
+Impaired delivery keeps its 20–99 ms jitter and adds 150 ms to every fifth
+non-dropped send; duplicates retain their additional 25 ms. This provides real
+state reordering despite sparse client polling. The bounded queue now retains
+one monotonically ordered ulong per slot (128 slots, 1,024 requested array-data
+bytes); only an older queued packet for the same recipient counts as Reordered.
+Startup controls reject cross-recipient false positives and verify age across
+slot reuse. ReorderedStates counts strictly older authority versions rejected on
+the client, separately from equal-version duplicates. Each client must observe
+actual reordered snapshots; the server must record dropped/duplicated/reordered
+state traffic. Paced clients additionally retain their outgoing reorder gate.
+
+Final frozen-source evidence covers nine ordinary cohorts (public managed and
+NativeAOT CPU/GPU serial/separate, plus one instrumented GPU/separate cohort) and
+two default-paced regression cohorts. Each cohort selects a CPU authority, a first
+client and a genuinely later CPU client, runs 900 fixed ticks, and requests late
+admission after tick 310. Ordinary first clients add 250 ms to each poll; paced
+regressions retain zero artificial poll delay. All eleven hosts pass the full
+applicable assertions, including actual incoming reordered states and restored
+sleep-to-wake observations. Every authority measures 601 warmed physical steps;
+all measured owner/all-thread ordinary/replay intervals remain exactly 0/0 bytes.
+
+| Cohort | First-client warm ordinary / replay | Restored pair wakes / geometry mask | Reordered authority versions | Authority session ms |
+| --- | ---: | ---: | ---: | ---: |
+| ready-cpu-serial | 39 / 473 | 7 / 0x1f | 40 | 17221.8 |
+| ready-cpu-threaded | 39 / 474 | 7 / 0x1f | 41 | 17246.8 |
+| ready-gpu-serial | 15 / 169 | 6 / 0x1f | 37 | 17073.6 |
+| ready-gpu-threaded | 15 / 169 | 6 / 0x1f | 37 | 17147.5 |
+| ready-regression-cpu | 155 / 1546 | 7 / 0x1f | 48 | 19008.4 |
+| ready-regression-gpu | 152 / 2100 | 7 / 0x1f | 132 | 63940.6 |
+| aot-cpu-serial | 39 / 477 | 7 / 0x1f | 40 | 16775.4 |
+| aot-cpu-threaded | 39 / 470 | 7 / 0x1f | 41 | 16787.0 |
+| aot-gpu-serial | 19 / 217 | 5 / 0x1f | 39 | 16565.2 |
+| aot-gpu-threaded | 19 / 217 | 7 / 0x1f | 42 | 16517.8 |
+| instrumented-gpu-threaded | 15 / 169 | 6 / 0x1f | 35 | 17373.0 |
+
+Elapsed values include each selected session's setup and acknowledgement exchange;
+concurrent loopback observations do not establish target-device throughput. The
+instrumented GPU client records step p50/p95/p99 of 16.9802/22.1944/22.4752 ms and
+whole correction/replay 188.6204/241.3887/242.3134 ms. Its lifetime counts include
+17,310 submissions, 751,016 upload bytes, 3,463,624 readback bytes and 5,924.9496 ms
+of GPU wait. These are pinned lavapipe functional costs, with packet application
+included in correction, and separate from real-window FPS or hardware advantage.
+
+The final process audit observes 44 processes: eleven controllers and 33 selected
+children. Sixteen native processes execute the same published ELF without CoreCLR;
+the 126-file NativeAOT closure is hash-checked after execution. CPU processes map
+no GPU driver and selected CPU children require actual strict-GPU startup failure.
+Only six GPU-client processes map lavapipe; NVIDIA is absent throughout. An initial
+observer overwrote valid native executable metadata at zombie retirement; those
+functional passes are retained separately and the two affected profiles were
+re-observed with last-valid metadata preservation.
+
+Source/PDB checks match all 2,223 runtime, 13 example and 713 test-host compile
+inputs. The 14,330-declaration engine snapshot is unchanged. Release/API/wiki and
+identity checks pass. Commands, reports, source/binary manifests, negative controls
+and retained failed candidates are in bin/physics-network-unpaced/2026-10-16;
+validation.json names the final eleven cohorts. This closes the recorded ordinary
+slow-client verification gap for this Linux recipe. Arbitrary/dense workloads,
+complete native/driver/history memory, foreign platforms, real-window FPS and
+physical-GPU advantage remain open. No coverage declaration status is promoted.

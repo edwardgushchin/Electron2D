@@ -18,7 +18,7 @@ must reject strict GPU startup before running CPU physics. Omit `--threaded` for
 owner-thread numerical execution. The default GPU scenario remains required for
 cross-backend verification; a CPU-only pass does not establish that result.
 
-The check coordinates coverage of the scripted impulse phases at ticks 240, 360
+By default, `--check` coordinates coverage of the scripted impulse phases at ticks 240, 360
 and each later multiple of 120. It waits for actual post-admission client steps
 and current-epoch player input before advancing the authority, while continuing
 packet polling and state delivery. Fixed physical steps and impulse ticks stay
@@ -30,12 +30,31 @@ from 0 through 250 to reproduce slow polling. For example:
 dotnet run --project examples/PhysicsNetwork -c Release -- --check --client-backend cpu --threaded --ticks 600 --late-join-tick 310 --client-poll-delay-ms 250 --output bin/physics-network-slow
 ```
 
+Add `--unpaced` to run the ordinary session without check-progress messages or
+authority waits for client phases/inputs. For a headless slow-client check:
+
+```sh
+dotnet run --project examples/PhysicsNetwork -c Release -- --check --unpaced --client-backend cpu --threaded --ticks 900 --late-join-tick 310 --client-poll-delay-ms 250 --output bin/physics-network-unpaced
+```
+
+All physical steps retain the same geometry, contact, joint, impulse and allocation
+assertions. Reports must show zero check-only traffic and waits. Ordinary clients
+can skip server impulse ticks between snapshots; their reports must instead prove
+actual sleeping-to-awake corrections for the coupled island and all five geometry
+families. The final authority frame applies real wake impulses before publication,
+so even a slow client must restore that active state. Startup controls reject a
+missing awake snapshot. Default paced profiles still require every scripted phase,
+local wake impulses and live retired-input replacement; both modes also run the
+same deterministic future-input replacement controls. `ElapsedMS` measures each session from construction through report
+capture, including network/physics/replay and final acknowledgements, before JSON
+output. It is a wall-clock observation, separate from the physical-step samples.
+
 Reports include the completed `CheckPhases` mask, separate phase/input wait
 counts, wait milliseconds and attempted progress-message bytes, including the
 deliberately invalid future-mask probes. Progress travels through the existing
 impaired link and duplicate/reordered masks merge idempotently. The coordinated
 check has a bounded deadline of simulated run duration plus 120 seconds, allowing
-slow polling and software execution. Ordinary server/client launches retain their
+slow polling and software execution. The --unpaced check and ordinary server/client launches retain their
 wall-clock drive and simulated-duration-plus-30-second deadline. Check timings
 include deliberate authority waits and do not measure game throughput or FPS.
 
@@ -63,8 +82,9 @@ The check uses ephemeral loopback ports and writes `server.json`, `gpu.json`,
 `late.json` and their logs. It runs real ENet connections across three processes.
 The late client starts after the authority confirms tick 90, so startup speed cannot
 turn this into simultaneous admission.
-Application packets incur 20–99 ms delay, deterministic loss, duplication and
-reordering before transport submission. The two CPU processes have display variables
+Application packets incur 20–99 ms delay, with an additional 150 ms on every
+fifth non-dropped send; duplicates add 25 ms. Deterministic loss, duplication
+and same-peer reordering occur before transport submission. The two CPU processes have display variables
 removed and an unavailable Vulkan driver path; the server checks that it created
 neither display nor rendering services. Both CPU processes explicitly attempt strict GPU startup and require rejection
 before creating their CPU network worlds; the report records this proof. The GPU

@@ -51,6 +51,8 @@ internal static class ProtocolChecks
         CheckJointContinuations();
         CheckSupportControls();
         CheckGeometryControls();
+        CheckWakeCorrections();
+        CheckPacketOrder();
         NetworkSession.CheckInputCommands();
     }
     private static void CheckJointContinuations()
@@ -109,6 +111,57 @@ internal static class ProtocolChecks
             Check(rejected, "Geometry continuation requires its boundary/ledge, both compound slots and unlocked angular response");
         }
     }
+    private static void CheckWakeCorrections()
+    {
+        using var source = new NetworkWorld(PhysicsServer.Backend.CPU); source.Reconcile(NetworkWorld.InitialObjects);
+        using var target = new NetworkWorld(PhysicsServer.Backend.CPU); target.Reconcile(NetworkWorld.InitialObjects);
+        var snapshot = new PhysicsSnapshot(24000);
+        for (var i = 0; i < 200; i++) source.Step(SimulationPhase.Authority);
+        source.Map.Capture(snapshot); target.Map.Apply(snapshot);
+        target.CheckSupportCorrection(); target.CheckGeometryCorrection();
+        Check(target.SupportSleepingCorrections > 0 && target.GeometrySleepingCorrections == NetworkWorld.GeometryFamilyMask &&
+            target.SupportWakeCorrections == 0 && target.GeometryWakeCorrections == 0, "Sleeping correction alone cannot count as a restored wake");
+        source.QueueFinalImpulses(); source.Step(SimulationPhase.Authority); source.Map.Capture(snapshot);
+        target.CheckSupportCorrection(); target.CheckGeometryCorrection();
+        Check(target.SupportWakeCorrections == 0 && target.GeometryWakeCorrections == 0, "Omitting the awake snapshot leaves the client asleep");
+        target.Map.Apply(snapshot); target.CheckSupportCorrection(); target.CheckGeometryCorrection();
+        Check(target.SupportWakeCorrections == 1 && target.GeometryWakeCorrections == NetworkWorld.GeometryFamilyMask,
+            "Applying actual awake state restores the coupled island and all geometry wake observations");
+    }
+
+    private static void CheckPacketOrder()
+    {
+        using var peer = new ENetMultiplayerPeer(); peer.SetBindIP("127.0.0.1"); peer.CreateServer(0, 4, 1);
+        using var multiplayer = new SceneMultiplayer { MultiplayerPeer = peer };
+        var port = peer.Host!.GetLocalPort();
+        using var first = new ENetMultiplayerPeer(); first.CreateClient("127.0.0.1", port, 1);
+        using var firstAPI = new SceneMultiplayer { MultiplayerPeer = first };
+        using var second = new ENetMultiplayerPeer(); second.CreateClient("127.0.0.1", port, 1);
+        using var secondAPI = new SceneMultiplayer { MultiplayerPeer = second };
+        using var third = new ENetMultiplayerPeer(); third.CreateClient("127.0.0.1", port, 1);
+        using var thirdAPI = new SceneMultiplayer { MultiplayerPeer = third };
+        var deadline = System.Diagnostics.Stopwatch.StartNew();
+        while (multiplayer.GetPeers().Length != 3)
+        {
+            multiplayer.Poll(); firstAPI.Poll(); secondAPI.Poll(); thirdAPI.Poll();
+            if (deadline.Elapsed.TotalSeconds > 5) throw new TimeoutException("Packet-order control peers did not connect.");
+            Thread.Sleep(1);
+        }
+        var a = firstAPI.GetUniqueID(); var b = secondAPI.GetUniqueID(); var c = thirdAPI.GetUniqueID();
+        var separate = new ImpairedLink(multiplayer, true);
+        separate.Send(a, [1], 0); separate.Send(b, [1], 0); separate.Send(c, [1], 0); separate.Flush(1);
+        Check(separate.Sent == 3 && separate.Reordered == 0, "Different recipients cannot count as packet reordering");
+        var shared = new ImpairedLink(multiplayer, true);
+        shared.Send(a, [1], 0); shared.Send(a, [1], 0); shared.Send(a, [1], 0); shared.Flush(1);
+        Check(shared.Sent == 3 && shared.Reordered > 0, "Later same-peer packets can overtake earlier queued packets");
+        var reused = new ImpairedLink(multiplayer, true);
+        for (var i = 0; i < 5; i++) reused.Send(a, [1], 0);
+        reused.Flush(.1); var before = reused.Reordered;
+        Check(reused.Sent == 4, "A long-tail packet remains queued after the short delays expire");
+        reused.Send(a, [1], .1); reused.Flush(.3);
+        Check(reused.Sent == 6 && reused.Reordered == before + 1, "Slot reuse preserves packet age when measuring same-peer reordering");
+    }
+
     private static void RejectInput(byte[] bytes)
     {
         try { var reader = new WireReader(bytes); _ = reader.Input(); }
