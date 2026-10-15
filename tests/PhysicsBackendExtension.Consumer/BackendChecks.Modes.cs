@@ -2,6 +2,13 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
+    public static void RunMotionRoles(bool threaded = false)
+    {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { MotionRoleChecks(); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
     private static void MotionRoleChecks()
     {
         Solver? solver = null;
@@ -79,8 +86,11 @@ public static partial class BackendChecks
         {
             PhysicsServer.BodySetMode(raw, PhysicsServer.BodyMode.RigidLinear);
             PhysicsServer.BodyAddShape(raw, circle.GetRID()); PhysicsServer.BodySetSpace(raw, world.Space);
-            Check(solver.Bodies[raw].Mode == implementation.Mode && PhysicsServer.BodyGetMode(raw) == implementation.Mode,
-                "Scene and raw locked bodies deliver the same exact implementation mode");
+            Check(solver.Bodies[raw].Mode == implementation.Mode && PhysicsServer.BodyGetMode(raw) == implementation.Mode && solver.Bodies[raw].Locked &&
+                PhysicsServer.BodyGetDirectState(raw)!.InverseInertia == 0,
+                "Initial scene/raw RigidLinear configuration agrees on both the mode and rotation lock");
+            PhysicsServer.BodyApplyTorqueImpulse(raw, 10);
+            Check(PhysicsServer.BodyGetAngularVelocity(raw) == 0, "A detached-selected RigidLinear role rejects angular response immediately after attachment");
         }
         finally { PhysicsServer.FreeRID(raw); }
         Console.WriteLine("Registered motion roles: initial/live rotation lock, freeze, disable and scene/raw RigidLinear delivery passed.");

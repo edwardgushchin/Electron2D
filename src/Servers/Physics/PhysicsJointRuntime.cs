@@ -244,10 +244,12 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     {
         EnsureWriteAccess();
         ValidateExtent(value); if (value < 0) throw new ArgumentOutOfRangeException(nameof(value));
-        SpringRestLength = value; SpringAutomaticRest = automatic && value == 0;
+        var automaticRest = automatic && value == 0;
+        if (SpringRestLength == value && SpringAutomaticRest == automaticRest) return;
+        SpringRestLength = value; SpringAutomaticRest = automaticRest; ApplySolverPolicy();
     }
-    internal void SetSpringStiffness(float value) { EnsureWriteAccess(); Coefficient(value); SpringStiffness = value; }
-    internal void SetSpringDamping(float value) { EnsureWriteAccess(); Coefficient(value); SpringDamping = value; }
+    internal void SetSpringStiffness(float value) { EnsureWriteAccess(); Coefficient(value); if (SpringStiffness == value) return; SpringStiffness = value; ApplySolverPolicy(); }
+    internal void SetSpringDamping(float value) { EnsureWriteAccess(); Coefficient(value); if (SpringDamping == value) return; SpringDamping = value; ApplySolverPolicy(); }
 
     internal PhysicsJointConfiguration Configuration => new(Type, FrameA, FrameB, DisableCollision, LowerTranslation, UpperTranslation,
         Bias, MaxBias, MaxForce, PinSoftness, PinLimitEnabled, PinLimitLower, PinLimitUpper, PinMotorEnabled,

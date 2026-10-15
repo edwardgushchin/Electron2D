@@ -1733,3 +1733,5 @@ Node.ThreadMessages.cs and SceneTree.ThreadMessages.cs implement the complete ty
 | Domain | Component | Types | Source | State | Contract |
 | --- | --- | --- | --- | --- | --- |
 | [Rendering](domains/rendering.md) | [Text objects](components/text-objects.md) | [TextParagraph](classes/TextParagraph.md) | [TextParagraph.cs](../src/Servers/Text/TextParagraph.cs) | Current | Typed borrowed multi-font spans and inline tokens, full/display wrapping, generation-bound line identities, independent dropcap, signed spacing/margins, visibility, indexed metrics/ranges and actual paragraph/line/dropcap canvas drawing. |
+
+Current coupled-joint verification also covers initial raw RigidLinear lock delivery through PhysicsBodyConfiguration and supported spring-island sleep/wake on CPU/GPU/registered profiles; [the joint component](components/physics-joints.md#coupled-support-continuous-motion-and-sleep) records exact evidence and limits. No production type was added by this correction.

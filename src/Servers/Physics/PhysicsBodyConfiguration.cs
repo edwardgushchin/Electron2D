@@ -7,7 +7,7 @@ namespace Electron2D;
 /// <param name="GravityScale">Gravity Scale in the owning operation's engine-unit contract.</param>
 /// <param name="CanSleep">Can Sleep in the owning operation's engine-unit contract.</param>
 /// <param name="Sleeping">Sleeping in the owning operation's engine-unit contract.</param>
-/// <param name="LockRotation">Lock Rotation in the owning operation's engine-unit contract.</param>
+/// <param name="LockRotation">Whether angular response is locked. The engine supplies true when attaching a RigidLinear body.</param>
 public readonly record struct PhysicsBodyConfiguration(
     PhysicsServer.BodyMode Mode,
     Vector2 LinearVelocity = default,

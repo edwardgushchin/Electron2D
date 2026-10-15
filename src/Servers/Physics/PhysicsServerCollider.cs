@@ -55,7 +55,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
         if (Space is not null) throw new InvalidOperationException("A server collider already belongs to a space.");
         var configuration = new PhysicsBodyConfiguration(IsArea ? PhysicsServer.BodyMode.Static : _mode,
             AngularVelocity: _mode == PhysicsServer.BodyMode.Rigid ? _angularVelocity : 0,
-            CanSleep: _canSleep, Sleeping: _sleeping);
+            CanSleep: _canSleep, Sleeping: _sleeping, LockRotation: _mode == PhysicsServer.BodyMode.RigidLinear);
         _backend.Attach(space, _transform.Origin, _transform.Rotation, configuration);
         try
         {

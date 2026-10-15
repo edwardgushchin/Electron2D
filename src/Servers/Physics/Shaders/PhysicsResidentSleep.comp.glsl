@@ -149,14 +149,7 @@ void main()
             // An unchanged motor keeps an active component awake but must respect explicit sleep.
             if(j.ids.y==0u)driving=(j.identity.z&2u)!=0u&&j.motorSpring.y>0&&j.motorSpring.x!=0&&
                 ((a&&(bodies[e.x].flags.z&16u)==0u)||(b&&(bodies[e.y].flags.z&16u)==0u));
-            if(j.ids.y==2u)
-            {
-                ResidentBody ba=bodies[e.x],bb=e.y==none?worldBody():bodies[e.y];
-                vec2 d=bb.pose.xy+rotate(bb.pose.zw,j.frameB.xy)-ba.pose.xy-rotate(ba.pose.zw,j.frameA.xy);
-                float distance=length(d);
-                if(isnan(distance)||isinf(distance)){fail();return;}
-                driving=j.motorSpring.w!=0&&distance>1.1920929e-5&&abs(distance-j.motorSpring.z)>1.1920929e-5;
-            }
+            // Steady spring tension may balance contacts; motion and authored edits govern sleep/wake.
             wakeA=wakeA||(a&&driving);wakeB=wakeB||(b&&driving);
         }
         if(wakeA){uint r=root(e.x,control.z);if(r!=none)atomicOr(graph[r].y,3u);}

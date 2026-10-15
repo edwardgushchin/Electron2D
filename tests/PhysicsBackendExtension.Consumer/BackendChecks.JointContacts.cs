@@ -2,12 +2,13 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunJointContacts(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU, bool threaded = false)
+    public static void RunJointContacts(PhysicsServer.Backend? backend = PhysicsServer.Backend.CPU, bool threaded = false)
     {
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
         try
         {
+            if (backend is null) PhysicsServerManager.RegisterServer("JointContacts", static () => new Solver());
             using (var absentFloor = new JointContactRig(backend, false, false))
             {
                 absentFloor.DisableFloor(); for (var i = 0; i < 300; i++) absentFloor.Step();
@@ -19,7 +20,7 @@ public static partial class BackendChecks
                 for (var i = 0; i < 300; i++) absentElastic.Step();
                 Reject<InvalidOperationException>(absentElastic.Verify);
             }
-            Console.WriteLine($"Joint/contact {backend}: absent-floor and absent-elastic negative controls rejected.");
+            Console.WriteLine($"Joint/contact {backend?.ToString() ?? "registered"}: absent-floor and absent-elastic negative controls rejected.");
             foreach (var scenePeer in new[] { false, true })
                 foreach (var sceneJoints in new[] { false, true })
                 {
@@ -47,7 +48,9 @@ public static partial class BackendChecks
                     for (var i = 0; i < 60; i++) rig.Step();
                     Check(PhysicsServer.BodyGetTransform(rig.Peer).Origin.X > 20 && rig.HasFloorContact(),
                         "Cleared joint rows release motion while physical floor contact continues");
-                    Console.WriteLine($"Joint/contact {backend}, peerScene={scenePeer}, jointsScene={sceneJoints}, threaded={threaded}: support/friction impulse errors {rig.MaxNormalError:F6}/{rig.MaxFrictionError:F6}, replay/release, 128 complete measured frames {owner}/{all} B.");
+                    Console.WriteLine($"Joint/contact {backend?.ToString() ?? "registered"}, peerScene={scenePeer}, jointsScene={sceneJoints}, threaded={threaded}: support/friction impulse errors {rig.MaxNormalError:F6}/{rig.MaxFrictionError:F6}, replay/release, 128 complete measured frames {owner}/{all} B.");
+                    using var continuous = new JointContactRig(backend, scenePeer, sceneJoints);
+                    continuous.VerifyContinuousSleep();
                 }
         }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
@@ -70,9 +73,9 @@ public static partial class BackendChecks
         internal float MaxNormalError, MaxFrictionError;
         private float _momentumBefore, _loadSpeedBefore;
 
-        internal JointContactRig(PhysicsServer.Backend backend, bool scenePeer, bool sceneJoints)
+        internal JointContactRig(PhysicsServer.Backend? backend, bool scenePeer, bool sceneJoints)
         {
-            _sceneJoints = sceneJoints; World = new(backend);
+            _sceneJoints = sceneJoints; World = backend is { } selected ? new(selected) : new("JointContacts");
             var root = new SubViewport { World = World }; var anchor = new StaticBody { Name = "Anchor" }; root.AddChild(anchor);
             _floor = new StaticBody { Name = "Floor", Position = new(0, 30), ConstantLinearVelocity = new(30, 0), PhysicsMaterialOverride = _material };
             _floor.AddChild(new CollisionShape { Shape = _rectangle }); root.AddChild(_floor);
@@ -111,10 +114,66 @@ public static partial class BackendChecks
             PhysicsServer.JointMakeDampedSpring(Joints[2], Vector2.Zero, new(0, 10), anchor.GetRID(), Load);
             PhysicsServer.DampedSpringJointSetRestLength(Joints[2], 50); PhysicsServer.DampedSpringJointSetStiffness(Joints[2], 20); PhysicsServer.DampedSpringJointSetDamping(Joints[2], 4);
             _state = PhysicsServer.BodyGetDirectState(Peer)!;
-            Check(World.PhysicsBackend == backend && World.PhysicsFallbackReason is null, "Joint/contact uses the explicit backend without fallback");
+            Check(World.PhysicsBackend == (backend ?? PhysicsServer.Backend.Extension) && World.PhysicsFallbackReason is null, "Joint/contact uses the explicit backend without fallback");
             Check(PhysicsServer.BodyGetMass(Load) == 1 && PhysicsServer.BodyGetMass(Peer) == 1 &&
                 PhysicsServer.BodyGetGravityScale(Load) == 1 && PhysicsServer.BodyGetGravityScale(Peer) == 1,
                 "Analytic support uses both actual unit masses and unscaled gravity");
+        }
+        internal void VerifyContinuousSleep()
+        {
+            _floor.ConstantLinearVelocity = Vector2.Zero;
+            var bodies = new[] { Load, Peer };
+            foreach (var body in bodies) PhysicsServer.BodySetCanSleep(body, true);
+            PhysicsServer.SpaceSetBodyLinearVelocitySleepThreshold(World.Space, 1);
+            PhysicsServer.SpaceSetBodyAngularVelocitySleepThreshold(World.Space, .1f);
+            PhysicsServer.SpaceSetBodyTimeToSleep(World.Space, .05f);
+            foreach (var mode in new[] { CCDMode.CastRay, CCDMode.CastShape })
+            {
+                foreach (var body in bodies) PhysicsServer.BodySetContinuousCollisionDetectionMode(body, mode);
+                for (var i = 0; i < 300; i++) Step();
+                if (!PhysicsServer.BodyGetSleeping(Load) || !PhysicsServer.BodyGetSleeping(Peer)) throw new InvalidOperationException($"Contact/joint sleep failed in {mode}: velocities={PhysicsServer.BodyGetLinearVelocity(Load)}/{PhysicsServer.BodyGetLinearVelocity(Peer)}, awake={!PhysicsServer.BodyGetSleeping(Load)}/{!PhysicsServer.BodyGetSleeping(Peer)}");
+                for (var i = 0; i < 16; i++)
+                {
+                    Step(); Check(PhysicsServer.BodyGetSleeping(Load) && PhysicsServer.BodyGetSleeping(Peer), "Steady spring tension preserves the sleeping contact island");
+                }
+                var restLength = PhysicsServer.DampedSpringJointGetRestLength(Joints[2]);
+                PhysicsServer.DampedSpringJointSetRestLength(Joints[2], restLength);
+                PhysicsServer.DampedSpringJointSetStiffness(Joints[2], PhysicsServer.DampedSpringJointGetStiffness(Joints[2]));
+                PhysicsServer.DampedSpringJointSetDamping(Joints[2], PhysicsServer.DampedSpringJointGetDamping(Joints[2])); Step();
+                Check(PhysicsServer.BodyGetSleeping(Load) && PhysicsServer.BodyGetSleeping(Peer), "Equal spring coefficient writes retain the sleeping island");
+                PhysicsServer.DampedSpringJointSetRestLength(Joints[2], restLength + 1); Step();
+                Check(!PhysicsServer.BodyGetSleeping(Load) && !PhysicsServer.BodyGetSleeping(Peer), "An authored spring edit wakes the connected island");
+                PhysicsServer.DampedSpringJointSetRestLength(Joints[2], restLength);
+                for (var i = 0; i < 300; i++) Step();
+                Check(PhysicsServer.BodyGetSleeping(Load) && PhysicsServer.BodyGetSleeping(Peer), "Restored spring load reaches automatic sleep again");
+                var anchor = Tree.Root.GetNode<StaticBody>("Anchor"); var anchorPosition = anchor.Position;
+                anchor.Position += Vector2.Right; Step();
+                Check(!PhysicsServer.BodyGetSleeping(Load) && !PhysicsServer.BodyGetSleeping(Peer), "Moving a static joint anchor wakes the connected island");
+                anchor.Position = anchorPosition;
+                for (var i = 0; i < 300; i++) Step();
+                Check(PhysicsServer.BodyGetSleeping(Load) && PhysicsServer.BodyGetSleeping(Peer), "The restored anchor permits later quiet sleep");
+                using var checkpoint = PhysicsServer.SpaceCreateCheckpoint(World.Space);
+                for (var i = 0; i < 128; i++) Impact();
+                Collect(); var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+                for (var i = 0; i < 128; i++) Impact();
+                owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+                Check(owner == 0 && all == 0, $"Sleep/CCD/coupled-contact replay allocated {owner}/{all} B");
+                Console.WriteLine($"Coupled {mode} sleep/impact replay: 128 restored high-speed full frames {owner}/{all} B.");
+                void Impact()
+                {
+                    checkpoint.Restore();
+                    Check(PhysicsServer.BodyGetSleeping(Load) && PhysicsServer.BodyGetSleeping(Peer), "Private replay restores the sleeping coupled island");
+                    foreach (var body in bodies)
+                    {
+                        var pose = PhysicsServer.BodyGetTransform(body);
+                        PhysicsServer.BodySetTransform(body, new(pose.Rotation, pose.Origin + Vector2.Up * 10));
+                    }
+                    PhysicsServer.BodyApplyCentralImpulse(Peer, new(0, 12000)); Step();
+                    Check(!PhysicsServer.BodyGetSleeping(Load) && !PhysicsServer.BodyGetSleeping(Peer) &&
+                        PhysicsServer.BodyGetTransform(Load).Origin.Y < 31 && PhysicsServer.BodyGetTransform(Peer).Origin.Y < 31 && HasFloorContact(),
+                        "A fast joint-connected waking island cannot cross the thin floor and publishes the actual floor contact");
+                }
+            }
         }
         internal void DisableFloor() { _floor.CollisionLayer = 0; _floor.CollisionMask = 0; }
         internal void Step()
@@ -131,9 +190,9 @@ public static partial class BackendChecks
         internal void Verify()
         {
             var load = PhysicsServer.BodyGetTransform(Load).Origin; var peer = PhysicsServer.BodyGetTransform(Peer).Origin;
-            Check(load.IsFinite() && peer.IsFinite() && MathF.Abs(load.X) < .15f && MathF.Abs(peer.X) < .15f &&
-                MathF.Abs(load.Y - 23) < .15f && MathF.Abs(peer.Y - 27) < .15f && MathF.Abs(peer.Y - load.Y - 4) < .02f,
-                "Pin/groove retain the spring-loaded column supported by actual floor contact");
+            if (!(load.IsFinite() && peer.IsFinite() && MathF.Abs(load.X) < .15f && MathF.Abs(peer.X) < .15f &&
+                MathF.Abs(load.Y - 23) < .15f && MathF.Abs(peer.Y - 27) < .15f && MathF.Abs(peer.Y - load.Y - 4) < .02f))
+                throw new InvalidOperationException($"Pin/groove must retain the spring-loaded floor column: load={load}, peer={peer}, velocities={PhysicsServer.BodyGetLinearVelocity(Load)}/{PhysicsServer.BodyGetLinearVelocity(Peer)}, rotations={PhysicsServer.BodyGetTransform(Load).Rotation}/{PhysicsServer.BodyGetTransform(Peer).Rotation}, modes={PhysicsServer.BodyGetMode(Load)}/{PhysicsServer.BodyGetMode(Peer)}");
             Check(PhysicsServer.BodyGetLinearVelocity(Load).Length() < .1f && PhysicsServer.BodyGetLinearVelocity(Peer).Length() < .1f &&
                 _floor.Position == new Vector2(0, 30), "Constrained support settles while virtual surface motion leaves the floor pose fixed");
             var impulse = Vector2.Zero; var count = _state.GetContactCount();

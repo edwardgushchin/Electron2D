@@ -1,6 +1,6 @@
 # DampedSpringJoint
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 [Portable joint continuation](../components/physics-snapshots.md#portable-joint-continuation)
 now verifies CPU/registered scene/raw sampled frames, silent correction, atomic
@@ -94,3 +94,5 @@ hardware, broader geometry/graphs and network acceptance remain open.
 
 
 [Closed coupled graph](../components/physics-joints.md#closed-coupled-graph-2026-10-14) verifies all three joint families together, scene/raw ownership, momentum/stability, private replay and CPU-authoritative portable correction on CPU/GPU with zero warmed managed allocation. Larger/contact-rich/native/foreign/network/performance acceptance remains open; declaration states are unchanged.
+
+A spring under a steady supported load may sleep with its constrained island. CPU and GPU retain quiet time while its load is balanced; unchanged tension does not repeatedly wake it. Rest-length edits and external impulses still wake the connected bodies. The shared public coupled joint/contact consumer verifies both stationary sleep and waking CCD impact replay.

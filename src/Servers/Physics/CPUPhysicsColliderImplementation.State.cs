@@ -40,7 +40,17 @@ internal sealed partial class CPUPhysicsColliderImplementation
 
     internal override void SetPose(Vector2 position, float rotation)
     {
-        b2Body_SetTransform(BodyID, PhysicsShapeBackend.ToBackend(position), PhysicsShapeBackend.RotationToBackend(rotation));
+        var target = PhysicsShapeBackend.ToBackend(position); var angle = PhysicsShapeBackend.RotationToBackend(rotation);
+        var previous = b2Body_GetTransform(BodyID);
+        b2Body_SetTransform(BodyID, target, angle);
+        if (previous.p.X == target.X && previous.p.Y == target.Y && previous.q.c == angle.c && previous.q.s == angle.s) return;
+        var jointKey = _body!.headJointKey;
+        while (jointKey != B2Constants.B2_NULL_INDEX)
+        {
+            var joint = _world!.joints.data[jointKey >> 1]; var next = joint.edges[jointKey & 1].nextKey;
+            B2Joints.b2Joint_WakeBodies(new((jointKey >> 1) + 1, BodyID.world0, joint.generation));
+            jointKey = next;
+        }
     }
     internal override void SetTargetPose(Transform pose, double delta)
     {

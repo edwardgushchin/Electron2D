@@ -2,7 +2,7 @@
 
 [Tile owner projections and failure cleanup](tiles.md) now execute through explicit CPU/GPU tests, including object deduplication, shape/RID payloads, canvas and weak lifetime, scene/server motion and callback-failed replacement/retirement. The formerly tile-blocked Area, KinematicCollision, PhysicsTestMotionResult and point-query rows are reconciled against actual production paths. This closes those recorded implementation triggers; full inherited, numerical-extension, network/platform and performance acceptance remain open.
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 [Registered rectangle numerics](physics-registered-adapter.md#registered-rectangle-numerics)
 now execute actual contours, six queries, mass, contacts and linear/angular CCD
@@ -1321,3 +1321,11 @@ The final active-body cohort also passes strict current-source NativeAOT publica
 Internal resource graph IDs are staged before persistence: first authored IDs remain stable, missing and duplicate IDs are generated without colliding with reserved authored values. IDs commit only after atomic writing, while source path replacement follows its explicit flag. Post-write path-hook failures attempt later paths and retain the committed IDs/file. Read validation rejects duplicate resolved embedded paths before factories or cache replacement, including legacy fallback indices. Public-only physical scene identity checks exercise actual saved aliases and backend simulation; exact executable evidence and platform limits are recorded with the current validation cohort.
 
 The current resource-identity cohort passes eight managed profiles and six strict NativeAOT profiles, including twelve real fresh-process physical scene consumers with changed local creation order. Repeated saves retain corrected IDs, names and physical aliases; failed writes preserve source metadata, and malformed resolved paths reject before factories/cache replacement. Twelve brackets warm 128 and measure 128 active full frames with queries and ID reads at 0/0 owner/all-thread managed bytes. GPU runs use explicit lavapipe; hardware performance and native allocations remain separate gates. Exact manifests/results are retained in bin/physics-resource-identity/2026-10-14/validation.json.
+
+## Coupled spring sleep and initial locked attachment
+
+The current joint profile exercises initial raw RigidLinear lock delivery and a shared closed joint graph/contact-supported column on CPU, software Vulkan and a registered provider. Supported spring tension no longer resets the CPU/GPU quiet interval unconditionally. Stable sleep, authored wake, high-speed CastRay/CastShape motion, private replay, contact identity/impulses and zero managed allocations are recorded in bin/physics-coupled-extension/2026-10-15/validation.json. This does not close arbitrary extension geometry, all inherited API, multi-process acceptance or the hardware/window performance gate.
+
+A separate existing portable-contact scenario currently fails its character-slide-history assertion on both the frozen 6ffd54f1 runtime and the new sources. Baseline evidence is retained in bin/physics-coupled-extension/2026-10-15/baseline-portable-contacts.log. Its missing slide must be investigated before that scenario or the full standalone extension runner can be accepted; the coupled profile does not certify it.
+
+The generic shader source check currently rejects the unchanged Canvas vertex ABI in tools/shaders/check.py (artifact: bin/physics-coupled-extension/2026-10-15/shader-check.log). The changed resident sleep compute shader is compiled and validated by the Release runtime shader build; the broader Canvas guard requires separate reconciliation before a full shader-check claim.

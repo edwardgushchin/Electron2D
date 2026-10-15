@@ -1,6 +1,6 @@
 # Registered numerical solver adapter
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 ## Scope and ownership
 
@@ -2442,3 +2442,7 @@ GPU/no-device CPU/registered proofs retain the exact zero/one solver-thread mode
 The boundary curvature bound also passed 80,000 derivative samples from 5,000
 seeded cases without a violation; these checks supplement the actual rotating
 boundary/offset CCD regression, not hardware or complete numerical acceptance.
+
+## Initial rigid locks and coupled constraints
+
+Raw bodies selected as RigidLinear before attachment now receive LockRotation=true in their creation configuration, matching scene bodies and the existing live-mode projection. The public motion-role consumer checks the flag, immediate zero inverse inertia and rejected torque response before the first solver step. The coupled four-body graph and loaded contact column also select the independent registered solver; see [the joint verification profile](physics-joints.md#coupled-support-continuous-motion-and-sleep). Wider arbitrary geometry and complete extension acceptance remain open.

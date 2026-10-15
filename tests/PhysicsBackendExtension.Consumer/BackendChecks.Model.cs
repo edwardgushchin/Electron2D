@@ -154,7 +154,7 @@ public static partial class BackendChecks
                 if (!b.IsArea) b.ReportedDepth = PhysicsServer.BodyGetContactsReportedDepthThreshold(b.RID);
                 b.Contacts.Clear();
             }
-            if (HasContinuousBodies()) SolveContinuous((float)delta);
+            if (Joints.Count != 0 || HasContinuousBodies()) SolveContinuous((float)delta);
             else
             {
                 foreach (var b in Bodies.Values) b.Advance((float)delta);
@@ -342,10 +342,14 @@ public static partial class BackendChecks
         protected override Vector2 LinearVelocity => Mode == PhysicsServer.BodyMode.Static ? Surface : Velocity + (Mode == PhysicsServer.BodyMode.Kinematic ? Surface : Vector2.Zero);
         protected override float AngularVelocity => Mode == PhysicsServer.BodyMode.Static ? SurfaceAngular : Angular + (Mode == PhysicsServer.BodyMode.Kinematic ? SurfaceAngular : 0);
         protected override bool IsAwake => Awake;
-        protected override void SetPose(Vector2 position, float rotation) { Position = position; Rotation = rotation; }
+        protected override void SetPose(Vector2 position, float rotation)
+        {
+            if (Position == position && Rotation == rotation) return;
+            Position = position; Rotation = rotation; solver.WakeConnected(this);
+        }
         protected override void SetTargetPose(Transform pose, double delta) { Velocity = (pose.Origin - Position) / (float)delta; Angular = (pose.Rotation - Rotation) / (float)delta; }
         protected override void SavePose() => _saved = GetTransform();
-        protected override void RestorePose() => SetPose(_saved.Origin, _saved.Rotation);
+        protected override void RestorePose() { Position = _saved.Origin; Rotation = _saved.Rotation; }
         protected override void SetLinearVelocity(Vector2 velocity) { solver.BodyHook?.Invoke(rid); Velocity = velocity; }
         protected override void SetAngularVelocity(float velocity) => Angular = velocity;
         protected override void ClearVelocity() { Velocity = default; Angular = 0; }
@@ -399,7 +403,12 @@ public static partial class BackendChecks
             try { solver.JointReleaseHook?.Invoke(rid); if (solver.FailJointDetach) throw new InvalidOperationException("Joint detach failure"); }
             finally { _attached = false; solver.Joints.Remove(rid); }
         }
-        protected override void ApplySolverPolicy(in PhysicsJointConfiguration settings) { Settings = settings; solver.JointHook?.Invoke(rid); }
+        protected override void ApplySolverPolicy(in PhysicsJointConfiguration settings)
+        {
+            var changed = Settings != settings; Settings = settings;
+            if (changed && _attached) solver.WakeConnected(solver.Bodies[_first]);
+            solver.JointHook?.Invoke(rid);
+        }
         protected override void ApplyPortableFrames(Transform first, Transform second) => Settings = Settings with { FrameA = first, FrameB = second };
         protected override void SetCollideConnected(bool value) { Settings = Settings with { DisableCollision = !value }; solver.JointHook?.Invoke(rid); }
         protected override void SetPinLimits(bool enabled, float lower, float upper) { Settings = Settings with { PinLimitEnabled = enabled, PinLimitLower = lower, PinLimitUpper = upper }; solver.JointHook?.Invoke(rid); }

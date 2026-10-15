@@ -14,6 +14,7 @@ internal sealed partial class CPUPhysicsJointImplementation
     {
         _pendingImpulse = default;
         if (settings.Type != PhysicsServer.JointType.DampedSpring || !IsAttached || settings.SpringStiffness == 0 && settings.SpringDamping == 0) return;
+        if (!b2Body_IsAwake(BodyAID) && !b2Body_IsAwake(BodyBID)) return;
         _pointA = b2Body_GetWorldPoint(BodyAID, _localFrameA.p);
         _pointB = b2Body_GetWorldPoint(BodyBID, _localFrameB.p);
         var dx = (double)_pointB.X - _pointA.X;

@@ -3,7 +3,8 @@ namespace Electron2D;
 /// <summary>Connects two body-local anchors with a Hooke spring and axial damping.</summary>
 /// <remarks>The second anchor is sampled along local Y at Length when connected. The spring can stretch beyond
 /// Length; RestLength controls equilibrium. Scene units convert internally to meters. Forces act at both anchors
-/// and can rotate the bodies. The scene owner thread owns attached configuration and simulation.</remarks>
+/// and can rotate the bodies. Supported quiet islands may sleep under steady load; changed coefficients or anchors wake linked bodies.
+/// The scene owner thread owns attached configuration and simulation.</remarks>
 public sealed class DampedSpringJoint : Joint
 {
     private static readonly PropertyDescriptor[] SpringProperties =

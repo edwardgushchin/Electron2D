@@ -2,12 +2,13 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunCoupledJoints(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU, bool threaded = false)
+    public static void RunCoupledJoints(PhysicsServer.Backend? backend = PhysicsServer.Backend.CPU, bool threaded = false)
     {
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
         try
         {
+            if (backend is null) PhysicsServerManager.RegisterServer("CoupledJoints", static () => new Solver());
             VerifyCoupledContributions(backend);
             foreach (var sceneJoints in new[] { false, true })
             {
@@ -37,7 +38,7 @@ public static partial class BackendChecks
                 for (var i = 0; i < 128; i++) Cycle();
                 owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
                 Check(owner == 0 && all == 0, $"Coupled complete transport/frames allocate {owner}/{all} B");
-                Console.WriteLine($"Coupled {backend}, sceneJoints={sceneJoints}, threaded={threaded}: pin={rig.MaxPinError:F6}, groove={rig.MaxGrooveError:F6}, momentum={rig.MaxMomentumError:F6}, angular={rig.MaxAngularError:F6}, energy={rig.MaxEnergy:F6}; replay and {transmissions} portable corrections; 128 full frames and 128 full transport cycles 0/0 B.");
+                Console.WriteLine($"Coupled {backend?.ToString() ?? "registered"}, sceneJoints={sceneJoints}, threaded={threaded}: pin={rig.MaxPinError:F6}, groove={rig.MaxGrooveError:F6}, momentum={rig.MaxMomentumError:F6}, angular={rig.MaxAngularError:F6}, energy={rig.MaxEnergy:F6}; replay and {transmissions} portable corrections; 128 full frames and 128 full transport cycles 0/0 B.");
                 void Cycle()
                 {
                     authority.Step(); authority.Map.Capture(sent); var count = sent.WriteTo(packet); received.ReadFrom(packet.AsSpan(0, count));
@@ -62,7 +63,7 @@ public static partial class BackendChecks
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
     }
 
-    private static void VerifyCoupledContributions(PhysicsServer.Backend backend)
+    private static void VerifyCoupledContributions(PhysicsServer.Backend? backend)
     {
         using var baseline = new CoupledJointRig(backend, false); baseline.Step();
         for (var family = 0; family < 3; family++)
@@ -95,9 +96,9 @@ public static partial class BackendChecks
         private readonly bool _sceneJoints;
         private int _ticks;
         internal float MaxPinError, MaxGrooveError, MaxMomentumError, MaxAngularError, MaxEnergy;
-        internal CoupledJointRig(PhysicsServer.Backend backend, bool sceneJoints)
+        internal CoupledJointRig(PhysicsServer.Backend? backend, bool sceneJoints)
         {
-            _sceneJoints = sceneJoints; World = new(backend);
+            _sceneJoints = sceneJoints; World = backend is { } selected ? new(selected) : new("CoupledJoints");
             var root = new SubViewport { World = World };
             Vector2[] positions = [new(0, 0), new(40, 0), new(40, 40), new(0, 40)];
             for (var i = 0; i < 4; i += 2)
@@ -143,7 +144,7 @@ public static partial class BackendChecks
             PhysicsServer.BodyApplyImpulse(Bodies[0], new(20, 0), new(0, 2));
             Map = new(World.Space);
             for (var i = 0; i < 4; i++) { Map.Bind((ulong)(10 + i), 1, Bodies[i]); Map.Bind((ulong)(110 + i), 1, Joints[i]); }
-            Check(World.PhysicsBackend == backend && World.PhysicsFallbackReason is null, "Coupled graph retains the explicit backend without fallback");
+            Check(World.PhysicsBackend == (backend ?? PhysicsServer.Backend.Extension) && World.PhysicsFallbackReason is null, "Coupled graph retains the explicit backend without fallback");
         }
         internal void Step()
         {
