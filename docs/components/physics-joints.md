@@ -163,3 +163,11 @@ The public joint/contact consumer now runs CPU, GPU and an independent registere
 The independent consumer solves joint/contact constraints before advancing poses and bounds coupled motion intervals to a quarter tick while retaining full-step force/impulse budgets. Its closed four-body pin/groove/spring loop retains the existing anchor, momentum and energy tolerances, private replay and encoded correction from a distinct CPU authority. This in-process transport is separate from multi-process network acceptance. Evidence: bin/physics-coupled-extension/2026-10-15/validation.json.
 
 Changed spring rest length, stiffness and damping now dispatch the live solver policy immediately, while equal-value writes preserve quiet state. CPU pose edits wake linked native constraints, including shapeless static anchors; internal pose restoration keeps its silent path. The shared profile checks both coefficient and static-anchor wake, return to sleep, unchanged-value writes and private impact replay.
+
+
+The public [network example](physics-network-example.md#coupled-support-across-network-correction-2026-10-15)
+now also exercises a spring-loaded pin/groove column with real floor support across
+authoritative correction and replay in separate processes. It checks contact
+identity, awake impulse balance, natural sleep and impulse wake independently of
+final authoritative convergence. This is one bounded loaded graph; arbitrary/dense
+coupling and complete hardware/platform/performance acceptance remain open.

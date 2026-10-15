@@ -74,13 +74,15 @@ internal sealed class NetworkWindow(NetworkSession session, string capturePath) 
                 switch (actor.Spec.Kind)
                 {
                     case ObjectKind.Floor: DrawRect(new(new(-320, -10), new(640, 20)), new(.25f, .3f, .38f)); break;
+                    case ObjectKind.SupportFloor: DrawRect(new(new(-100, -1), new(200, 2)), Colors.Gray); break;
+                    case ObjectKind.SupportBody: DrawCircle(Vector2.Zero, 2, Colors.Gold); break;
                     case ObjectKind.Sensor: DrawRect(new(new(-60, -50), new(120, 100)), new(.2f, .8f, .5f, .15f)); break;
                     case ObjectKind.Box: DrawRect(new(new(-12, -12), new(24, 24)), Colors.CornflowerBlue); break;
                     case ObjectKind.Anchor: DrawCircle(Vector2.Zero, 12, Colors.Gray); break;
                     case ObjectKind.Ball: DrawCircle(Vector2.Zero, 12, Colors.Pink); break;
                 }
                 DrawSetTransform(Vector2.Zero);
-                if (actor.Spec.Kind is ObjectKind.Box or ObjectKind.Ball)
+                if (actor.Spec.Kind is ObjectKind.Box or ObjectKind.Ball or ObjectKind.SupportBody)
                 {
                     if (session.IsSmoothedPresentation(slot)) _smoothed++;
                     if (session.IsInterpolatedPresentation(slot)) _interpolated++;
@@ -98,7 +100,7 @@ internal sealed class NetworkWindow(NetworkSession session, string capturePath) 
                 DrawLine(Screen(session.PresentationPosition(Array.IndexOf(session.Simulation.Actors, first))),
                     Screen(session.PresentationPosition(Array.IndexOf(session.Simulation.Actors, second))), Colors.Gold, 2);
         foreach (var actor in session.Simulation.Actors)
-            if (actor?.Body is not null && actor.Spec.Kind is ObjectKind.Box or ObjectKind.Ball)
+            if (actor?.Body is not null && actor.Spec.Kind is ObjectKind.Box or ObjectKind.Ball or ObjectKind.SupportBody)
             {
                 var slot = Array.IndexOf(session.Simulation.Actors, actor);
                 var visual = Screen(session.PresentationPosition(slot)); var solved = Screen(actor.Position);

@@ -1360,3 +1360,20 @@ without CoreCLR. This closes that bounded native network gate; broader graphs,
 platforms, full allocations and hardware/window performance remain open. See
 [the native network profile](physics-network-example.md#nativeaot-network-processes-2026-10-15)
 and bin/physics-network-aot/2026-10-15/validation.json.
+
+
+## Networked contact-supported joint graph, 2026-10-15
+
+PhysicsNetwork now keeps its original players, separate joint trajectories and
+lifecycle script while adding one pin/groove/spring column supported by a real
+floor. Every authority, predicted and replayed step checks support and constraint
+invariants; real corrections must restore contacts and sleeping pairs. Numbered
+impulses exercise actual connected wake, and startup controls reject removed floor
+collision and spring load. The final world contains 21 objects in 32 prepared slots;
+command history grows to 262144 bytes per process and the application wire becomes
+version two. The runtime API and portable snapshot format are unchanged.
+
+See [the coupled network profile](physics-network-example.md#coupled-support-across-network-correction-2026-10-15)
+for executed profiles, tolerances and bounds. Arbitrary/dense coupled worlds, complete
+inherited/extension behavior, foreign native execution, total native/device memory
+and physical GPU/window/performance acceptance remain open.

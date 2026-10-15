@@ -74,6 +74,18 @@ fail. Reports retain joint-step/kick counts and maximum errors. Final topology
 contains all three joints and their endpoints. These checks retain the existing
 exact-once confirmed effects, adverse delivery and .002 final correction bounds.
 
+A separate spring-loaded column combines a pin, a 100-unit groove, a spring and
+real floor contact in the same connected island. Every physical step checks the
+constraints and actual collider identity/normal; awake settled frames also check
+support impulse against both bodies' weight and spring load. Numbered kicks from
+tick 240 every 120 ticks must wake both bodies from natural sleep. Both clients
+must restore actual floor contacts and sleeping state from server corrections.
+Startup negative controls remove the floor or spring load and require rejection.
+The final topology now contains 21 objects within 32 prepared slots. Command history
+uses 262144 bytes per process, excluding array headers. The example's application
+wire is version 2 and rejects previous recipe/slot layouts; the engine portable
+snapshot format is unchanged.
+
 `NetworkWorld` owns the game scene and lifecycle recipes. `NetworkSession` owns
 bounded command/event histories and peer policy. `NetworkSession.State` applies
 snapshots, replays input, confirms each event once, and computes remote interpolation

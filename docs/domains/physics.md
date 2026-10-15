@@ -1224,3 +1224,12 @@ The complete current-source automatic-callback consumer now passes strict Native
 Scene-local physical resource graphs now preserve borrowed non-local identities for both built-in and external paths. Local shapes/resources retain aliases and cycles within each instance and isolate geometry between instances. Setup sees the complete detached scene once per local duplicate. GetLocalScene borrows immutable weak object identity, returns null when the root starts disposal or is collected, and transfers with ownership on Node.ReplaceBy. Ordinary deep duplication and explicit force/isolated-authoring policies retain separate rules. Public-only --local-scenes exercises CPU/GPU/registered ordinary/separate worlds, actual query identities, GC retirement, setup rollback and strict 0/0 managed bytes for 128 warm/128 measured two-scene intervals; the connected base/packed/replacement/authoring suite also passes. Evidence is retained under bin/physics-local-scenes/2026-10-14. Full inherited, native allocation, foreign-platform and hardware/window/performance acceptance remain open.
 
 Initial scene/server RigidLinear configuration now consistently carries its rotation lock to registered implementations. Supported spring islands can remain asleep on CPU and GPU and wake on authored changes or impulses. The coupled joint/contact profile combines these paths with both CCD modes and private history; see [current joint verification](../components/physics-joints.md#coupled-support-continuous-motion-and-sleep).
+
+
+[Networked coupled support](../components/physics-network-example.md#coupled-support-across-network-correction-2026-10-15)
+adds a loaded pin/groove/spring column to the public multi-process example. Actual
+contacts, normal impulse balance, natural sleep, connected wake and immediate
+authoritative contact/sleep restoration are required alongside the earlier
+network/lifecycle/event assertions. Runtime declarations and portable format are
+unchanged; wider inherited/extension, dense-world, native memory, foreign and
+hardware/window/performance acceptance remain open.

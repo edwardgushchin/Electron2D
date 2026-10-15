@@ -27,6 +27,18 @@ internal sealed class SessionReport
     public float MaxPinError { get; set; }
     public float MaxGrooveError { get; set; }
     public float MaxSpringLength { get; set; }
+    public int SupportSteps { get; set; }
+    public int SupportContacts { get; set; }
+    public int SupportSleeping { get; set; }
+    public int SupportWakes { get; set; }
+    public int SupportKicks { get; set; }
+    public int SupportImpulseSamples { get; set; }
+    public int SupportCorrections { get; set; }
+    public int SupportContactCorrections { get; set; }
+    public int SupportSleepingCorrections { get; set; }
+    public float MaxSupportPinError { get; set; }
+    public float MaxSupportGrooveError { get; set; }
+    public float MaxSupportImpulseError { get; set; }
     public int CompletedSteps { get; set; }
     public int WarmupSteps { get; set; }
     public int NumericalSteps { get; set; }
@@ -117,6 +129,18 @@ internal sealed partial class NetworkSession
             MaxPinError = Simulation.MaxPinError,
             MaxGrooveError = Simulation.MaxGrooveError,
             MaxSpringLength = Simulation.MaxSpringLength,
+            SupportSteps = Simulation.SupportSteps,
+            SupportContacts = Simulation.SupportContacts,
+            SupportSleeping = Simulation.SupportSleeping,
+            SupportWakes = Simulation.SupportWakes,
+            SupportKicks = Simulation.SupportKicks,
+            SupportImpulseSamples = Simulation.SupportImpulseSamples,
+            SupportCorrections = Simulation.SupportCorrections,
+            SupportContactCorrections = Simulation.SupportContactCorrections,
+            SupportSleepingCorrections = Simulation.SupportSleepingCorrections,
+            MaxSupportPinError = Simulation.MaxSupportPinError,
+            MaxSupportGrooveError = Simulation.MaxSupportGrooveError,
+            MaxSupportImpulseError = Simulation.MaxSupportImpulseError,
             CompletedSteps = CompletedSteps,
             WarmupSteps = WarmupSteps,
             Tick = Simulation.Tick,

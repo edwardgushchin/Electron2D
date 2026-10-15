@@ -17,7 +17,7 @@ Clients send bounded records of tick, network ID, object generation, control epo
 and typed move/jump input. The server derives sender identity from SceneMultiplayer,
 checks the controller and incarnation, rejects elapsed/over-budget ticks and
 conflicting duplicate commands, and applies accepted input on the numbered tick.
-The command window contains 256 ticks with 16 prepared object slots; this game's
+The command window contains 256 ticks with 32 prepared object slots; this game's
 controlled IDs occupy distinct slots. The server holds the last continuous control
 when a command misses its deadline, but does not repeat a jump edge. This is an
 explicit gameplay policy, not a promise that unreliable packets arrive in time.
@@ -97,7 +97,7 @@ prepared authority/prediction/replay steps on both owner and all managed threads
 after each process completes its own first 128 physical steps,
 with positive sample counts required. Cold contact construction and lifecycle costs
 remain in the separate total replay allocation counter. Each process reserves
-131,072 bytes of command records and 36,864 bytes of event records, excluding array
+262,144 bytes of command records and 36,864 bytes of event records, excluding array
 headers. Additional presentation storage, the 4 MiB impairment slab, reusable wire
 buffers, engine world/checkpoint buffers, transport state and native/GPU storage are
 separate costs. Histories are bounded; no unlimited snapshot list is retained.
@@ -717,3 +717,99 @@ graphs, other native platforms, full session/native/device allocation, real-wind
 rendering/FPS and target hardware performance remain open. The physical RTX
 power prerequisite is unchanged. Exact reports, commands and manifests:
 bin/physics-network-aot/2026-10-15/validation.json.
+
+
+## Coupled support across network correction, 2026-10-15
+
+The current example adds a loaded column without removing the earlier players,
+separate three-joint trajectories, Area, lifecycle or angular-divergence cases.
+Two unit-mass, rotation-locked radius-two bodies share a pin with a four-unit
+separation. The upper body slides along a 100-unit groove and carries a spring
+with rest length 50, stiffness 20 and damping 4. The lower body rests on a real
+static floor. The column occupies collision layer two and is spatially separate
+from the earlier scene. Six joint recipes and fifteen body/Area recipes give
+21 final objects. The prepared budget grows from sixteen to 32 slots; command
+history is now 262144 bytes per process. The existing 36864-byte event journal,
+4 MiB impairment slab and 32768-byte packet capacity retain their separate costs.
+Version-two application headers reject the old recipe/command layout before
+payload decoding. This does not change the engine portable snapshot format.
+
+Every authority, predicted and replayed physical step checks finite poses,
+rotation lock, pin offset and groove containment below .5 scene units. For the
+radius-two column this is a quarter-radius stability bound, not equality between
+unsynchronized backend paths. Actual reported contacts must identify the local
+floor RID, InstanceID, object and shape indices exactly, with an upward unit
+normal within .001. A sleeping pair must retain upper/lower support heights 23/27
+within .15 scene units. Periodic numbered impulses (10,-20), beginning at tick
+240 and repeated every 120 ticks, must wake both connected bodies when asleep;
+positive contact, sleep, kick and actual wake counters are required in every
+process. Clients additionally require immediate imported contacts and sleeping
+pairs after real authority corrections.
+
+For contact frames with both bodies awake before and after the step and final
+speeds below .1, summed normal impulse balances weight plus the authored elastic
+load minus measured momentum change. The one-sided deficit permits the analytic
+exponential spring damping bound plus .15 impulse units; .15 is also the allowed
+opposite residual. Positive impulse sample counts are mandatory. Frames entering
+sleep do not integrate gravity over the entire outer interval, so they use the
+separate support-height and sleep assertions rather than the full-duration force
+formula. A retained failing probe at tick 630 demonstrated precisely that case:
+the pair became asleep and reported the impulse for its active subinterval.
+Neither numeric tolerances nor numerical runtime behavior were changed.
+
+Startup CPU controls independently remove floor collision or spring stiffness;
+both must fail the real support assertions. Ordinary input validation, the three
+separate disabled-joint controls, exact confirmed events, impaired ENet delivery,
+late admission and .002 final authoritative bounds remain required. Reports expose
+support steps/contact/sleep/wake/kick/impulse-sample counts, imported-contact/sleep
+corrections and maximum constraint/impulse residuals.
+
+Nine frozen-source profiles pass 900 ticks with admission requested after tick 310:
+four public managed CPU/GPU serial/separate runs, the same four NativeAOT runs,
+and an instrumented GPU/separate run. All 27 selected children retain the entire
+existing protocol and final-state assertions plus the new coupled checks.
+Every authority measures 601 warmed physical steps; all warmed ordinary and
+replayed physical brackets allocate 0/0 owner/all-thread managed bytes.
+
+| Entry / client / lane | Early / late admission | Early warm step / replay | Late warm step / replay | Early support wakes / impulse frames |
+| --- | ---: | ---: | ---: | ---: |
+| dotnet-gpu-serial | 1 / 341 | 67 / 672 | 488 / 1483 | 7 / 224 |
+| dotnet-cpu-serial | 1 / 341 | 601 / 1817 | 488 / 1483 | 24 / 709 |
+| dotnet-cpu-threaded | 1 / 341 | 601 / 1902 | 488 / 1505 | 24 / 718 |
+| dotnet-gpu-threaded | 1 / 341 | 89 / 641 | 487 / 1472 | 7 / 214 |
+| aot-cpu-serial | 0 / 315 | 601 / 1838 | 548 / 1715 | 25 / 813 |
+| aot-gpu-serial | 0 / 315 | 101 / 692 | 549 / 1722 | 9 / 235 |
+| aot-cpu-threaded | 0 / 315 | 601 / 1847 | 547 / 1702 | 25 / 815 |
+| aot-gpu-threaded | 0 / 315 | 90 / 643 | 547 / 1707 | 9 / 233 |
+| testhost-gpu-threaded | 1 / 346 | 58 / 674 | 487 / 1534 | 7 / 215 |
+
+The instrumented separate-thread run records these complete-path observations:
+
+| Process | Step p50 / p95 / p99 ms | Correction + replay p50 / p95 / p99 ms | Sent / received application bytes |
+| --- | --- | --- | --- |
+| server | 0.1129 / 0.1759 / 1.3928 | — | 2494668 / 164864 |
+| gpu | 13.5804 / 14.8467 / 15.1627 | 165.0199 / 176.5111 / 186.1942 | 35628 / 1451588 |
+| late | 0.1038 / 0.1488 / 0.1673 | 1.2438 / 1.6464 / 9.7587 | 131648 / 949120 |
+
+The GPU client executes 35409 submissions, uploads 1859592 bytes and reads
+6801932 bytes; accumulated wait is 12069.8134 ms. Its full cold-inclusive
+replay allocation is 573432 bytes, outside the strict prepared physical brackets.
+These are concurrent impaired loopback observations on explicit lavapipe, not a
+physical GPU speed comparison or native/device memory accounting. The full
+correction/replay samples include packet application, not only solver intervals.
+
+Every CPU child rejects strict GPU startup and maps no Vulkan software driver.
+GPU clients alone map lavapipe; no child maps NVIDIA. Solver threads appear only
+in separate profiles. Twelve native children execute the exact 123-file published
+ELF closure without CoreCLR; fifteen managed children map CoreCLR. Public example
+and instrumented host share one current production runtime DLL. Source and binary
+manifests are rechecked after execution. The source base includes the independent
+resource-package commits through cf585ca71ad43a597381618fc00956c50b853509; this
+network change adds no engine declarations or portable-format changes.
+
+This verifies one loaded graph across real network correction/replay on Linux x64.
+Dense/arbitrary coupling, full inherited/extension behavior, foreign platforms,
+full session/native/device memory, real-window rendering/FPS and target GPU
+advantage remain open. The physical RTX power prerequisite is unchanged.
+Commands, all reports, retained failed candidates and manifests:
+bin/physics-network-support/2026-10-15/validation.json.

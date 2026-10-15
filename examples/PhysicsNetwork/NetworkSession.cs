@@ -77,20 +77,7 @@ internal sealed partial class NetworkSession : IDisposable
         _link = new(_network, impaired);
         if (authority)
         {
-            _manifestCount = 13;
-            _manifest[0] = new(1, 1, ObjectKind.Floor, 0, 1, new(320, 320));
-            _manifest[1] = new(2, 1, ObjectKind.Sensor, 0, 1, new(240, 260));
-            _manifest[2] = new(10, 1, ObjectKind.Box, 0, 1, new(80, 285));
-            _manifest[3] = new(11, 1, ObjectKind.Ball, 0, 1, new(160, 285));
-            _manifest[4] = new(20, 1, ObjectKind.Ball, 0, 1, new(340, 160));
-            _manifest[5] = new(21, 1, ObjectKind.Ball, 0, 1, new(375, 180));
-            _manifest[6] = new(100, 1, ObjectKind.Pin, 0, 1, new(360, 170), 20, 21);
-            _manifest[7] = new(40, 1, ObjectKind.Anchor, 0, 1, new(700, 140));
-            _manifest[8] = new(41, 1, ObjectKind.Ball, 0, 1, new(700, 180));
-            _manifest[9] = new(101, 1, ObjectKind.Groove, 0, 1, new(700, 140), 40, 41);
-            _manifest[10] = new(50, 1, ObjectKind.Anchor, 0, 1, new(850, 140));
-            _manifest[11] = new(51, 1, ObjectKind.Ball, 0, 1, new(850, 190));
-            _manifest[12] = new(102, 1, ObjectKind.Spring, 0, 1, new(850, 140), 50, 51);
+            var initial = NetworkWorld.InitialObjects; _manifestCount = initial.Length; initial.CopyTo(_manifest);
             Simulation.Reconcile(_manifest.AsSpan(0, _manifestCount));
         }
     }

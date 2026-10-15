@@ -6,7 +6,7 @@ internal sealed partial class NetworkWorld
 {
     internal int JointSteps, JointKicks;
     internal float MaxPinError, MaxGrooveError, MaxSpringLength;
-    internal static bool IsJoint(ObjectKind kind) => kind is ObjectKind.Pin or ObjectKind.Groove or ObjectKind.Spring;
+    internal static bool IsJoint(ObjectKind kind) => kind is ObjectKind.Pin or ObjectKind.Groove or ObjectKind.Spring or ObjectKind.SupportPin or ObjectKind.SupportGroove or ObjectKind.SupportSpring;
 
     private void KickJoints(ulong tick)
     {

@@ -2,7 +2,7 @@ using Electron2D;
 
 namespace Electron2D.Examples.PhysicsNetwork;
 
-internal enum ObjectKind { Floor, Sensor, Ball, Box, Pin, Anchor, Groove, Spring }
+internal enum ObjectKind { Floor, Sensor, Ball, Box, Pin, Anchor, Groove, Spring, SupportFloor, SupportBody, SupportPin, SupportGroove, SupportSpring }
 internal readonly record struct ObjectSpec(ulong ID, uint Generation, ObjectKind Kind, int Owner, uint ControlEpoch,
     Vector2 Spawn, ulong First = 0, ulong Second = 0);
 internal readonly record struct PlayerInput(float Move, bool Jump);
@@ -12,7 +12,7 @@ internal enum SimulationPhase { Authority, Prediction, Replay, Correction, Shutd
 
 internal sealed partial class NetworkWorld : IDisposable
 {
-    internal const int Capacity = 16;
+    internal const int Capacity = 32;
     internal const double FixedStep = 1d / 60;
     internal sealed class Actor(ObjectSpec spec, CollisionObject? body, Joint? joint)
     {
@@ -56,7 +56,7 @@ internal sealed partial class NetworkWorld : IDisposable
         for (var i = 0; i < specs.Length; i++)
         {
             var spec = specs[i];
-            if (spec.ID == 0 || spec.Generation == 0 || spec.ControlEpoch == 0 || spec.Owner < 0 || !spec.Spawn.IsFinite() || (uint)spec.Kind > (uint)ObjectKind.Spring)
+            if (spec.ID == 0 || spec.Generation == 0 || spec.ControlEpoch == 0 || spec.Owner < 0 || !spec.Spawn.IsFinite() || (uint)spec.Kind > (uint)ObjectKind.SupportSpring)
                 throw new InvalidDataException("Invalid world object definition.");
             for (var j = 0; j < i; j++) if (specs[j].ID == spec.ID) throw new InvalidDataException("Duplicate world object ID.");
             if (IsJoint(spec.Kind) && (!HasBody(specs, spec.First) || !HasBody(specs, spec.Second) || spec.First == spec.Second))
@@ -85,7 +85,7 @@ internal sealed partial class NetworkWorld : IDisposable
             }
     }
     private static bool HasBody(ReadOnlySpan<ObjectSpec> specs, ulong id)
-    { foreach (var spec in specs) if (spec.ID == id) return spec.Kind is ObjectKind.Ball or ObjectKind.Box or ObjectKind.Floor or ObjectKind.Anchor; return false; }
+    { foreach (var spec in specs) if (spec.ID == id) return spec.Kind is ObjectKind.Ball or ObjectKind.Box or ObjectKind.Floor or ObjectKind.Anchor or ObjectKind.SupportFloor or ObjectKind.SupportBody; return false; }
     private static bool SameObject(ObjectSpec first, ObjectSpec second) => first.ID == second.ID && first.Generation == second.Generation &&
         first.Kind == second.Kind && first.Spawn == second.Spawn && first.First == second.First && first.Second == second.Second;
     private void Add(ObjectSpec spec)
@@ -121,6 +121,35 @@ internal sealed partial class NetworkWorld : IDisposable
                 };
                 rigid.AddChild(new CollisionShape { Shape = spec.Kind == ObjectKind.Ball ? _circle : _box });
                 rigid.BodyEntered += other => Contact(spec.ID, other, 1); body = rigid; break;
+            case ObjectKind.SupportFloor:
+                body = new StaticBody { Name = name, Position = spec.Spawn, CollisionLayer = 2, CollisionMask = 2, PhysicsMaterialOverride = _supportMaterial };
+                body.AddChild(new CollisionShape { Shape = _supportFloor }); break;
+            case ObjectKind.SupportBody:
+                var supported = new RigidBody
+                {
+                    Name = name,
+                    Position = spec.Spawn,
+                    Mass = 1,
+                    LockRotation = true,
+                    CanSleep = true,
+                    CollisionLayer = 2,
+                    CollisionMask = 2,
+                    MaxContactsReported = 4,
+                    ContactMonitor = true,
+                    PhysicsMaterialOverride = _supportMaterial,
+                    LinearDamp = 0,
+                    AngularDamp = 0,
+                    LinearDampMode = RigidBody.DampMode.Replace,
+                    AngularDampMode = RigidBody.DampMode.Replace
+                };
+                supported.AddChild(new CollisionShape { Shape = _supportCircle });
+                supported.BodyEntered += other => Contact(spec.ID, other, 1); body = supported; break;
+            case ObjectKind.SupportPin:
+                joint = new PinJoint { Name = name, Position = spec.Spawn, NodeA = "../Object" + spec.First, NodeB = "../Object" + spec.Second }; break;
+            case ObjectKind.SupportGroove:
+                joint = new GrooveJoint { Name = name, Position = spec.Spawn, NodeA = "../Object" + spec.First, NodeB = "../Object" + spec.Second, Length = 100, InitialOffset = 10 }; break;
+            case ObjectKind.SupportSpring:
+                joint = new DampedSpringJoint { Name = name, Position = spec.Spawn, NodeA = "../Object" + spec.First, NodeB = "../Object" + spec.Second, Length = 10, RestLength = 50, Stiffness = 20, Damping = 4 }; break;
             case ObjectKind.Groove:
                 joint = new GrooveJoint { Name = name, Position = spec.Spawn, NodeA = "../Object" + spec.First, NodeB = "../Object" + spec.Second, Length = 80, InitialOffset = 40 };
                 break;
@@ -160,9 +189,9 @@ internal sealed partial class NetworkWorld : IDisposable
             body.ApplyCentralForce(new((actor.Held.Move * 100 - body.LinearVelocity.X) * 12, 0));
             if (actor.Held.Jump && actor.LastInputTick == _stepTick && body.Position.Y > 270) body.ApplyCentralImpulse(new(0, -260));
         }
-        KickJoints(_stepTick);
+        KickJoints(_stepTick); PrepareSupport(_stepTick);
         Tree.PhysicsFrame(FixedStep);
-        CheckJoints();
+        CheckJoints(); CheckSupport();
         if (Tick != _stepTick) throw new InvalidOperationException("Fixed simulation did not advance exactly one tick.");
     }
     private void Contact(ulong id, Node other, int kind)
@@ -177,6 +206,7 @@ internal sealed partial class NetworkWorld : IDisposable
     public void Dispose()
     {
         if (_disposed) return; _disposed = true; Phase = SimulationPhase.Shutdown;
-        Map.Dispose(); Tree.Dispose(); Root.Dispose(); World.Dispose(); _floor.Dispose(); _box.Dispose(); _region.Dispose(); _circle.Dispose();
+        _supportState?.Dispose();
+        Map.Dispose(); Tree.Dispose(); Root.Dispose(); World.Dispose(); _floor.Dispose(); _box.Dispose(); _region.Dispose(); _circle.Dispose(); _supportCircle.Dispose(); _supportFloor.Dispose(); _supportMaterial.Dispose();
     }
 }

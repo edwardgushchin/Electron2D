@@ -101,7 +101,7 @@ internal sealed partial class NetworkSession
         Simulation.Phase = SimulationPhase.Correction;
         try
         {
-            Simulation.Reconcile(_manifest.AsSpan(0, count)); Simulation.Map.Apply(_snapshot);
+            Simulation.Reconcile(_manifest.AsSpan(0, count)); Simulation.Map.Apply(_snapshot); Simulation.CheckSupportCorrection();
             Simulation.EventSequence = eventEnd;
             for (var i = 0; i < count; i++)
             {
