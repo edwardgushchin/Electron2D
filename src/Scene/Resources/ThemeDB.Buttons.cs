@@ -9,7 +9,7 @@ public sealed partial class ThemeDB
         style.ContentMarginLeft = left; style.ContentMarginTop = top; style.ContentMarginRight = right; style.ContentMarginBottom = bottom;
         _owned.Add(style); return style;
     }
-    private ImageTexture LoadButtonIcon(string name)
+    private DPITexture LoadButtonIcon(string name)
     {
         using var stream = typeof(ThemeDB).Assembly.GetManifestResourceStream("Electron2D.Icons." + name + ".svg")
             ?? throw new InvalidOperationException("A built-in button icon is missing.");

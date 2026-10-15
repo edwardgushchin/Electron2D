@@ -56,6 +56,7 @@ public static partial class ResourceFileTypes
         RegisterResource("Resource", CreateResource);
         RegisterResource("PackedScene", CreatePackedScene);
         RegisterResource("FontVariation", CreateFontVariation);
+        RegisterResource("DPITexture", CreateDPITexture);
         RegisterResource("Script", CreateScript);
         RegisterResource("PhysicsMaterial", CreatePhysicsMaterial);
         RegisterResource("TileSet", CreateTileSet);
@@ -168,6 +169,7 @@ public static partial class ResourceFileTypes
     private static CanvasItemMaterial CreateCanvasItemMaterialResource() => new();
     private static PackedScene CreatePackedScene() => new();
     private static FontVariation CreateFontVariation() => new();
+    private static DPITexture CreateDPITexture() => new();
     private static Script CreateScript() => new();
     private static RDShaderSPIRV CreateRDShaderSPIRV() => new();
     private static RDShaderFile CreateRDShaderFile() => new();

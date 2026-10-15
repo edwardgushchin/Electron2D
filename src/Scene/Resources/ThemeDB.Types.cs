@@ -144,6 +144,7 @@ public sealed partial class ThemeDB
         ["CurveTexture"] = ["CurveTexture", "Texture", "Resource", "ElectronObject"],
         ["CurveXYZTexture"] = ["CurveXYZTexture", "Texture", "Resource", "ElectronObject"],
         ["CustomShape"] = ["CustomShape", "Shape", "Resource", "ElectronObject"],
+        ["DPITexture"] = ["DPITexture", "Texture", "Resource", "ElectronObject"],
         ["DTLSServer"] = ["DTLSServer", "ElectronObject"],
         ["DampedSpringJoint"] = ["DampedSpringJoint", "Joint", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["DirAccess"] = ["DirAccess", "ElectronObject"],

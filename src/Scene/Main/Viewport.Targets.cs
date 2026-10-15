@@ -42,7 +42,7 @@ public abstract partial class Viewport
     internal virtual Transform WindowTransform => Transform.Identity;
     internal Transform RenderFinalTransform => StretchTransform * GlobalCanvasTransform;
     internal Transform CanvasCompositionTransform => StretchTransform * (RenderingOwner?.GlobalCanvasTransform(this) ?? GlobalCanvasTransform);
-    internal float FontRasterScale { get { var scale = StretchTransform.Scale; var value = MathF.Min(MathF.Abs(scale.X), MathF.Abs(scale.Y)) * (this is Window window ? window.RenderDensity : 1); return value > 0 ? value : 1; } }
+    internal float FontRasterScale => GetOversampling();
     internal Vector2i TextureDimensions => RenderingOwner?.ViewportDimensions(this) ?? (this is SubViewport sub ? sub.Size : (this is Window window ? window.ContentRenderSize : default));
     /// <summary>Returns this viewport's live scene-local texture view.</summary>
     /// <returns>A borrowed resource retaining stable RID identity while the target image changes.</returns>
@@ -63,7 +63,7 @@ public abstract partial class Viewport
         if (TextureSizeUpdated is { } handlers) foreach (var handler in Delegate.EnumerateInvocationList(handlers)) try { handler(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
         AnimationNode.ThrowCollected("Viewport texture notification failed.", errors);
     }
-    internal void InvalidateViewportRecording() { if (RenderingOwner is { } renderer) renderer.InvalidateViewportRecordings(this); else InvalidateRecording(this); }
+    internal void InvalidateViewportRecording() { SyncDPIScale(); if (RenderingOwner is { } renderer) renderer.InvalidateViewportRecordings(this); else InvalidateRecording(this); }
     private static void InvalidateRecording(Node node)
     { if (node is CanvasItem item) item.QueueRedraw(); for (var i = 0; i < node.GetChildCount(includeInternal: true); i++) { var child = node.GetChild(i, includeInternal: true); if (child is not Viewport) InvalidateRecording(child); } }
     private static readonly PropertyDescriptor[] TargetProperties =

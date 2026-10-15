@@ -1,6 +1,6 @@
 # Texture
 
-Last updated: 2026-10-12
+Last updated: 2026-10-15
 
 - Declaration: `public abstract class Texture : Resource`
 - Source: [Texture.cs](../../src/Scene/Resources/Texture.cs)
@@ -122,3 +122,6 @@ Attached buttons can hold internal renderer-cache residency counts for their kno
 RenderingServer proxies borrow resource RID links. They observe live pixel changes and source disposal, while retaining their own stable identity until renderer free/shutdown. The alias does not own this resource; replay samples the resolved root storage.
 
 ViewportTexture supplies live native target storage and explicit caller-owned GetImage readback; ordinary drawing does not require CPU pixels. Atlas/server RID drawing follows the existing texture path. See [offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets) for scope, tests and remaining prerequisites.
+
+
+DPITexture retains SVG authoring data and selects viewport raster variants during canvas replay. GetRID preserves the stable base resource identity; its GetScaledRID supplies a borrowed current-draw scale identity. See [scalable SVG textures](../components/scalable-svg.md) for variant lifetime and processing limits.

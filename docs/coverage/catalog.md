@@ -215,7 +215,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CurveXYZTexture](classes/CurveXYZTexture.md) | Texture2D | Implemented | 5 |
 | [CylinderMesh](classes/CylinderMesh.md) | PrimitiveMesh | Excluded | 7 |
 | [CylinderShape3D](classes/CylinderShape3D.md) | Shape3D | Excluded | 2 |
-| [DPITexture](classes/DPITexture.md) | Texture2D | Blocked | 11 |
+| [DPITexture](classes/DPITexture.md) | Texture2D | Implemented | 11 |
 | [DTLSServer](classes/DTLSServer.md) | RefCounted | Implemented | 2 |
 | [DampedSpringJoint2D](classes/DampedSpringJoint2D.md) | Joint2D | Implemented | 4 |
 | [Decal](classes/Decal.md) | VisualInstance3D | Excluded | 23 |

@@ -1,0 +1,144 @@
+{
+  "mappings": [
+    {
+      "godot": "class:DPITexture",
+      "electron2d": "T:Electron2D.DPITexture",
+      "reason": "ADRs 0039/0083: retained SVG source and copied Color-to-Color paint map execute native rasterization, image processing, logical overrides, stable base/scaled borrowed identities, viewport scale lifetime, current canvas replay, scalable theme icons and typed resource/scene storage. GPU/compatibility pixel and 64 warmed full-frame checks execute on Linux; independent package/NativeAOT and foreign/native allocator gates are recorded in scalable-svg.md."
+    },
+    {
+      "godot": "DPITexture::method:create_from_string(String:,float:,float:,Dictionary:)",
+      "electron2d": "method:Electron2D.DPITexture.CreateFromString(System.String,System.Single,System.Single,System.Collections.Generic.Dictionary<Electron2D.Color, Electron2D.Color>)",
+      "reason": "ADRs 0039/0083: retained SVG source and copied Color-to-Color paint map execute native rasterization, image processing, logical overrides, stable base/scaled borrowed identities, viewport scale lifetime, current canvas replay, scalable theme icons and typed resource/scene storage. GPU/compatibility pixel and 64 warmed full-frame checks execute on Linux; independent package/NativeAOT and foreign/native allocator gates are recorded in scalable-svg.md."
+    },
+    {
+      "godot": "DPITexture::method:get_scaled_rid()",
+      "electron2d": "method:Electron2D.DPITexture.GetScaledRID()",
+      "reason": "ADRs 0039/0083: retained SVG source and copied Color-to-Color paint map execute native rasterization, image processing, logical overrides, stable base/scaled borrowed identities, viewport scale lifetime, current canvas replay, scalable theme icons and typed resource/scene storage. GPU/compatibility pixel and 64 warmed full-frame checks execute on Linux; independent package/NativeAOT and foreign/native allocator gates are recorded in scalable-svg.md."
+    },
+    {
+      "godot": "DPITexture::method:get_source()",
+      "electron2d": "method:Electron2D.DPITexture.GetSource()",
+      "reason": "ADRs 0039/0083: retained SVG source and copied Color-to-Color paint map execute native rasterization, image processing, logical overrides, stable base/scaled borrowed identities, viewport scale lifetime, current canvas replay, scalable theme icons and typed resource/scene storage. GPU/compatibility pixel and 64 warmed full-frame checks execute on Linux; independent package/NativeAOT and foreign/native allocator gates are recorded in scalable-svg.md."
+    },
+    {
+      "godot": "DPITexture::method:set_size_override(Vector2i:)",
+      "electron2d": "method:Electron2D.DPITexture.SetSizeOverride(Electron2D.Vector2i)",
+      "reason": "ADRs 0039/0083: retained SVG source and copied Color-to-Color paint map execute native rasterization, image processing, logical overrides, stable base/scaled borrowed identities, viewport scale lifetime, current canvas replay, scalable theme icons and typed resource/scene storage. GPU/compatibility pixel and 64 warmed full-frame checks execute on Linux; independent package/NativeAOT and foreign/native allocator gates are recorded in scalable-svg.md."
+    },
+    {
+      "godot": "DPITexture::method:set_source(String:)",
+      "electron2d": "method:Electron2D.DPITexture.SetSource(System.String)",
+      "reason": "ADRs 0039/0083: retained SVG source and copied Color-to-Color paint map execute native rasterization, image processing, logical overrides, stable base/scaled borrowed identities, viewport scale lifetime, current canvas replay, scalable theme icons and typed resource/scene storage. GPU/compatibility pixel and 64 warmed full-frame checks execute on Linux; independent package/NativeAOT and foreign/native allocator gates are recorded in scalable-svg.md."
+    },
+    {
+      "godot": "DPITexture::property:base_scale",
+      "electron2d": "property:Electron2D.DPITexture.BaseScale()",
+      "reason": "ADRs 0039/0083: retained SVG source and copied Color-to-Color paint map execute native rasterization, image processing, logical overrides, stable base/scaled borrowed identities, viewport scale lifetime, current canvas replay, scalable theme icons and typed resource/scene storage. GPU/compatibility pixel and 64 warmed full-frame checks execute on Linux; independent package/NativeAOT and foreign/native allocator gates are recorded in scalable-svg.md."
+    },
+    {
+      "godot": "DPITexture::property:color_map",
+      "electron2d": "property:Electron2D.DPITexture.ColorMap()",
+      "reason": "ADRs 0039/0083: retained SVG source and copied Color-to-Color paint map execute native rasterization, image processing, logical overrides, stable base/scaled borrowed identities, viewport scale lifetime, current canvas replay, scalable theme icons and typed resource/scene storage. GPU/compatibility pixel and 64 warmed full-frame checks execute on Linux; independent package/NativeAOT and foreign/native allocator gates are recorded in scalable-svg.md."
+    },
+    {
+      "godot": "DPITexture::property:fix_alpha_border",
+      "electron2d": "property:Electron2D.DPITexture.FixAlphaBorder()",
+      "reason": "ADRs 0039/0083: retained SVG source and copied Color-to-Color paint map execute native rasterization, image processing, logical overrides, stable base/scaled borrowed identities, viewport scale lifetime, current canvas replay, scalable theme icons and typed resource/scene storage. GPU/compatibility pixel and 64 warmed full-frame checks execute on Linux; independent package/NativeAOT and foreign/native allocator gates are recorded in scalable-svg.md."
+    },
+    {
+      "godot": "DPITexture::property:premult_alpha",
+      "electron2d": "property:Electron2D.DPITexture.PremultAlpha()",
+      "reason": "ADRs 0039/0083: retained SVG source and copied Color-to-Color paint map execute native rasterization, image processing, logical overrides, stable base/scaled borrowed identities, viewport scale lifetime, current canvas replay, scalable theme icons and typed resource/scene storage. GPU/compatibility pixel and 64 warmed full-frame checks execute on Linux; independent package/NativeAOT and foreign/native allocator gates are recorded in scalable-svg.md."
+    },
+    {
+      "godot": "DPITexture::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "ADRs 0039/0083: retained SVG source and copied Color-to-Color paint map execute native rasterization, image processing, logical overrides, stable base/scaled borrowed identities, viewport scale lifetime, current canvas replay, scalable theme icons and typed resource/scene storage. GPU/compatibility pixel and 64 warmed full-frame checks execute on Linux; independent package/NativeAOT and foreign/native allocator gates are recorded in scalable-svg.md."
+    },
+    {
+      "godot": "DPITexture::property:saturation",
+      "electron2d": "property:Electron2D.DPITexture.Saturation()",
+      "reason": "ADRs 0039/0083: retained SVG source and copied Color-to-Color paint map execute native rasterization, image processing, logical overrides, stable base/scaled borrowed identities, viewport scale lifetime, current canvas replay, scalable theme icons and typed resource/scene storage. GPU/compatibility pixel and 64 warmed full-frame checks execute on Linux; independent package/NativeAOT and foreign/native allocator gates are recorded in scalable-svg.md."
+    },
+    {
+      "godot": "Viewport::method:get_oversampling()",
+      "electron2d": "method:Electron2D.Viewport.GetOversampling()",
+      "reason": "ADRs 0039/0083: retained SVG source and copied Color-to-Color paint map execute native rasterization, image processing, logical overrides, stable base/scaled borrowed identities, viewport scale lifetime, current canvas replay, scalable theme icons and typed resource/scene storage. GPU/compatibility pixel and 64 warmed full-frame checks execute on Linux; independent package/NativeAOT and foreign/native allocator gates are recorded in scalable-svg.md."
+    },
+    {
+      "godot": "Viewport::property:oversampling",
+      "electron2d": "property:Electron2D.Viewport.Oversampling()",
+      "reason": "ADRs 0039/0083: retained SVG source and copied Color-to-Color paint map execute native rasterization, image processing, logical overrides, stable base/scaled borrowed identities, viewport scale lifetime, current canvas replay, scalable theme icons and typed resource/scene storage. GPU/compatibility pixel and 64 warmed full-frame checks execute on Linux; independent package/NativeAOT and foreign/native allocator gates are recorded in scalable-svg.md."
+    },
+    {
+      "godot": "Viewport::property:oversampling_override",
+      "electron2d": "property:Electron2D.Viewport.OversamplingOverride()",
+      "reason": "ADRs 0039/0083: retained SVG source and copied Color-to-Color paint map execute native rasterization, image processing, logical overrides, stable base/scaled borrowed identities, viewport scale lifetime, current canvas replay, scalable theme icons and typed resource/scene storage. GPU/compatibility pixel and 64 warmed full-frame checks execute on Linux; independent package/NativeAOT and foreign/native allocator gates are recorded in scalable-svg.md."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:DPITexture",
+        "DPITexture::method:create_from_string(String:,float:,float:,Dictionary:)",
+        "DPITexture::method:get_scaled_rid()",
+        "DPITexture::method:get_source()",
+        "DPITexture::method:set_size_override(Vector2i:)",
+        "DPITexture::method:set_source(String:)",
+        "DPITexture::property:base_scale",
+        "DPITexture::property:color_map",
+        "DPITexture::property:fix_alpha_border",
+        "DPITexture::property:premult_alpha",
+        "DPITexture::property:resource_local_to_scene",
+        "DPITexture::property:saturation",
+        "Viewport::method:get_oversampling()",
+        "Viewport::property:oversampling",
+        "Viewport::property:oversampling_override"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0039/0083: retained SVG source and copied Color-to-Color paint map execute native rasterization, image processing, logical overrides, stable base/scaled borrowed identities, viewport scale lifetime, current canvas replay, scalable theme icons and typed resource/scene storage. GPU/compatibility pixel and 64 warmed full-frame checks execute on Linux; independent package/NativeAOT and foreign/native allocator gates are recorded in scalable-svg.md."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.DPITexture..ctor()",
+      "reason": "ADR 0039: typed construction, deterministic disposal/copy/schema hooks or inherited Texture dimension/image/alpha overrides for the same scalable SVG resource role."
+    },
+    {
+      "electron2d": "method:Electron2D.DPITexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADR 0039: typed construction, deterministic disposal/copy/schema hooks or inherited Texture dimension/image/alpha overrides for the same scalable SVG resource role."
+    },
+    {
+      "electron2d": "method:Electron2D.DPITexture.CreateDuplicateInstance()",
+      "reason": "ADR 0039: typed construction, deterministic disposal/copy/schema hooks or inherited Texture dimension/image/alpha overrides for the same scalable SVG resource role."
+    },
+    {
+      "electron2d": "method:Electron2D.DPITexture.Dispose(System.Boolean)",
+      "reason": "ADR 0039: typed construction, deterministic disposal/copy/schema hooks or inherited Texture dimension/image/alpha overrides for the same scalable SVG resource role."
+    },
+    {
+      "electron2d": "method:Electron2D.DPITexture.GetHeight()",
+      "reason": "ADR 0039: typed construction, deterministic disposal/copy/schema hooks or inherited Texture dimension/image/alpha overrides for the same scalable SVG resource role."
+    },
+    {
+      "electron2d": "method:Electron2D.DPITexture.GetImage()",
+      "reason": "ADR 0039: typed construction, deterministic disposal/copy/schema hooks or inherited Texture dimension/image/alpha overrides for the same scalable SVG resource role."
+    },
+    {
+      "electron2d": "method:Electron2D.DPITexture.GetPropertyDescriptors()",
+      "reason": "ADR 0039: typed construction, deterministic disposal/copy/schema hooks or inherited Texture dimension/image/alpha overrides for the same scalable SVG resource role."
+    },
+    {
+      "electron2d": "method:Electron2D.DPITexture.GetSize()",
+      "reason": "ADR 0039: typed construction, deterministic disposal/copy/schema hooks or inherited Texture dimension/image/alpha overrides for the same scalable SVG resource role."
+    },
+    {
+      "electron2d": "method:Electron2D.DPITexture.GetWidth()",
+      "reason": "ADR 0039: typed construction, deterministic disposal/copy/schema hooks or inherited Texture dimension/image/alpha overrides for the same scalable SVG resource role."
+    },
+    {
+      "electron2d": "property:Electron2D.DPITexture.HasAlpha()",
+      "reason": "ADR 0039: typed construction, deterministic disposal/copy/schema hooks or inherited Texture dimension/image/alpha overrides for the same scalable SVG resource role."
+    }
+  ]
+}

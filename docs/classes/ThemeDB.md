@@ -1,6 +1,6 @@
 # ThemeDB
 
-Last updated: 2026-10-06
+Last updated: 2026-10-15
 
 **Inherits:** [ElectronObject](ElectronObject.md) · **Inherited By:** —
 
@@ -72,7 +72,7 @@ There is no public static constructor or GetProjectTheme null stub.
 | Scrollbar padding / container separation | Absent named constants resolve to0; Has remains false until an override or theme supplies an item. |
 | TooltipPanel / TooltipLabel variations | TooltipPanel uses PanelContainer with black alpha0.5, margins8/2/8/2, radius3 and detail5. TooltipLabel inherits Label with font slots null/-1, gray0.875 text, transparent shadow, black outline, shadow offsets1/1 and outline0. |
 
-The default slider, button and scroll-hint icons currently use scale one; nonunit default-theme/DPI construction and refresh remain incomplete. The missing standard data for other GUI families is a real coverage gap. Their complete first consumer slices must add the matching styles/colors/constants/icons, while the current Font slice supplies the embedded font and Label defaults. This table is not a claim of a complete upstream default theme.
+The default SVG icons now retain DPITexture sources and adapt to viewport oversampling. Nonunit default-theme construction and refresh remain incomplete. The missing standard data for other GUI families is a real coverage gap. Their complete first consumer slices must add the matching styles/colors/constants/icons, while the current Font slice supplies the embedded font and Label defaults. This table is not a claim of a complete upstream default theme.
 
 <a id="fallbackbasescale"></a><a id="fallbackfontsize"></a>
 **Scalar fallbacks:** used only after applicable themes provide no positive default/value. Base scale requires a finite value and otherwise preserves its sign; font size preserves signed integer state. Equal assignments are silent. Nonfinite scale throws ArgumentOutOfRangeException. These values do not load fonts or automatically rescale existing styles/constants.
@@ -81,7 +81,7 @@ The default slider, button and scroll-hint icons currently use scale one; nonuni
 **Font:** the initial fallback and built-in Theme.DefaultFont share the embedded Open Sans SemiBold resource. Replacement borrows a live Font or stores explicit null; disposed assignments throw ObjectDisposedException and equal identities are silent. Replacing FallbackFont does not rewrite Theme.DefaultFont. Owner lookup reaches this universal fallback only after branch and built-in defaults provide no font. Existing resource identities are not silently replaced when externally disposed; drawing observes their lifetime guards. The service disposes only its original owned default assets, not user-supplied fonts.
 
 <a id="fallbackicon"></a>
-**Icon:** the first unoverridden read decodes the built-in 16×16 SVG through the existing image-codec path and creates a service-owned ImageTexture. A supplied Texture is borrowed, and assigning null before that first read intentionally suppresses lazy creation. Assigned disposed textures throw ObjectDisposedException. Explicitly disposing a stored borrowed texture does not transfer ownership or silently substitute another resource. Lazy decode inherits the SVG codec's availability/error contract. The default icon currently uses scale one; DPI/default-theme-scale-aware asset creation and refresh remain a precise Partial dependency, not a claim of nonunit scaling.
+**Icon:** the first unoverridden read creates a service-owned DPITexture with the built-in 16×16 SVG source; native decoding is lazy and adapts to viewport oversampling. A supplied Texture is borrowed, and assigning null before that first read intentionally suppresses lazy creation. Assigned disposed textures throw ObjectDisposedException. Explicitly disposing a stored borrowed texture does not transfer ownership or silently substitute another resource. Lazy decode inherits the SVG codec's availability/error contract. The default icon currently uses scale one; DPI/default-theme-scale-aware asset creation and refresh remain a precise Partial dependency, not a claim of nonunit scaling.
 
 <a id="fallbackstylebox"></a>
 **Style:** initially a hollow StyleBoxFlat with two-pixel borders, four-pixel content margins, detail one, DrawCenter=false and error-color background configuration. Setting another live style borrows it; null is an explicit empty fallback. Assigned disposed styles throw ObjectDisposedException. Consumers that require a concrete style, such as Panel drawing, fail explicitly if final lookup returns null.

@@ -17,7 +17,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "diagnostics", "zip", "resource_packs", "jobs", "display", "rendering", "texture_arrays", "device", "navigation", "navigation_baking", "polygon_path", "resources", "preloader", "threaded_resources", "physics", "text", "text_objects", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "diagnostics", "zip", "resource_packs", "jobs", "display", "rendering", "texture_arrays", "device", "navigation", "navigation_baking", "polygon_path", "resources", "dpi_textures", "preloader", "threaded_resources", "physics", "text", "text_objects", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -687,6 +687,8 @@ def render():
             updated = "2026-10-11"
         if name in {"RenderingDevice", "RDTextureFormat", "RDSamplerState", "RDAttachmentFormat", "RDPipelineDepthStencilState", "RDPipelineRasterizationState", "RDFramebufferPass", "RDPipelineMultisampleState"}:
             updated = "2026-10-12"
+        if name in {"DPITexture", "Viewport"}:
+            updated = "2026-10-15"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

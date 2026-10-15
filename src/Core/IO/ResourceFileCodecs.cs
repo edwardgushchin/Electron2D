@@ -96,6 +96,23 @@ internal static class ResourceFileCodecs
 }
 );
         Add<Dictionary<string, string>>((stream, map) => { if (map.Count > 65536) throw new InvalidDataException("Dictionary exceeds file budget."); stream.Put32(map.Count); foreach (var pair in map.OrderBy(p => p.Key, StringComparer.Ordinal)) { ResourceArchiveStrings.Write(stream, pair.Key); ResourceArchiveStrings.Write(stream, pair.Value); } }, stream => { var count = stream.Get32(); if (count < 0 || count > 65536) throw new InvalidDataException("Invalid dictionary count."); var map = new Dictionary<string, string>(StringComparer.Ordinal); for (var i = 0; i < count; i++) if (!map.TryAdd(ResourceArchiveStrings.Read(stream), ResourceArchiveStrings.Read(stream))) throw new InvalidDataException("Duplicate dictionary key."); return map; });
+        Add<Dictionary<Color, Color>>((stream, map) =>
+        {
+            if (map.Count > 65536) throw new InvalidDataException("Paint map exceeds file budget.");
+            stream.Put32(map.Count);
+            foreach (var pair in map.OrderBy(p => p.Key.R).ThenBy(p => p.Key.G).ThenBy(p => p.Key.B).ThenBy(p => p.Key.A))
+            { ResourceFileTypes.Codec<Color>().Write(stream, pair.Key); ResourceFileTypes.Codec<Color>().Write(stream, pair.Value); }
+        }, stream =>
+        {
+            var count = stream.Get32(); if (count < 0 || count > 65536) throw new InvalidDataException("Invalid paint map count.");
+            var result = new Dictionary<Color, Color>();
+            for (var i = 0; i < count; i++)
+            {
+                var key = ResourceFileTypes.Codec<Color>().Read(stream); var value = ResourceFileTypes.Codec<Color>().Read(stream);
+                if (!key.IsFinite() || !value.IsFinite() || !result.TryAdd(key, value)) throw new InvalidDataException("Invalid or duplicate paint map color.");
+            }
+            return result;
+        });
         Add<Dictionary<string, Color>>((s, v) =>
         {
             if (v.Count > 65536) throw new InvalidDataException("Dictionary exceeds file budget.");

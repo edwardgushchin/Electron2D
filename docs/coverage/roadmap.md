@@ -117,7 +117,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
 | Trigger: actual editor execution-context reporting through Engine.IsEditorHint and editor/runtime border drawing under ADRs 0015/0027/0090. The current runtime has no editor-context producer; do not introduce a constant hint or inert EditorOnly switch. | 1 |
 | Trigger: an installed compiler-consumed built-in include library with stable names, source lookup and all three retained static discovery operations (ADR 0028). ShaderInclude user-source files and native compiler preprocessing now execute; they do not supply a built-in library or invent empty lookup results. | 1 |
-| Trigger: complete SVG Color-to-Color paint remapping in the native SVG path plus retained per-canvas/viewport oversampling variants and scaled RID ownership under ADRs 0028/0039/0083. Current Image SVG rasterization and static theme icons alone do not execute these contracts. | 1 |
 | Trigger: complete typed thread start/result, priority, main-owner identity and join/retirement, plus a resolved executable safety-check override contract: the pinned set_thread_safety_checks_enabled(bool) must not be an inert flag and current ADRs 0006/0011/0104 require owner-affine scene mutation. | 1 |
 | Trigger: first 2D light/mesh texture renderer integration (ADR 0028). | 1 |
 | Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 1 |

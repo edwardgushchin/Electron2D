@@ -2,9 +2,11 @@
 
 Last updated: 2026-10-15
 
+[Scalable SVG textures](../components/scalable-svg.md) execute source paint maps, native processing, viewport/font oversampling, borrowed scale identities, theme icons and typed resource/scene storage. Local GPU/compatibility pixels and warmed replay are measured; native allocation and foreign-host gates remain separate.
+
 [Typed undo history](../components/undo-history.md) now executes reversible scene/resource edits, complete named merge/cursor/version policies and conditional object ownership through public runtime API. Native undo/redo pixels and warmed playback are exercised; editor context/UI, foreign/native allocator and owner gates remain separate.
 
-[GUI primitives](../components/gui-primitives.md) now execute solid fills and both themed separator axes with exact pixel placement, live edits and saved scenes. Native GPU/compatibility pixels and warm managed checks are exercised; DPI textures, public text objects and editor reference frames retain precise separate dependencies.
+[GUI primitives](../components/gui-primitives.md) now execute solid fills and both themed separator axes with exact pixel placement, live edits and saved scenes. Native GPU/compatibility pixels and warm managed checks are exercised; Scalable SVG textures are integrated separately; public text objects and editor reference frames retain their own recorded dependencies.
 
 [Text links](../classes/LinkButton.md) now execute shaped captions, typed BiDi/ellipsis, underline/state/focus themes, native pointer activation and persisted URI opening through the OS service. Real GPU/compatibility pixels and warmed managed allocation checks pass; native allocator, accessibility and ordinary desktop/browser acceptance retain separate gates.
 

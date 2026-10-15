@@ -7,7 +7,7 @@ namespace Electron2D;
 /// Built-in resources and the startup-selected project theme are borrowed.
 /// Skins for unimplemented controls remain separate integrations. Resource changes notify attached theme
 /// owners through their scene queues. Universal fallback assignments are synchronous and suppress equal values.
-/// Initial service construction decodes the built-in slider, button, text-field and scroll-hint icons through the SVG image codec at scale one.
+/// Built-in slider, button, text-field and scroll-hint icons retain SVG sources and rasterize lazily for the active viewport scale.
 /// Native type-name queries use compiled names and inheritance chains without initializing the native theme service.</remarks>
 public sealed partial class ThemeDB : ElectronObject
 {
@@ -101,10 +101,9 @@ public sealed partial class ThemeDB : ElectronObject
         style.SetContentMarginAll(4); style.SetCornerRadiusAll(4); _owned.Add(style);
         return style;
     }
-    private ImageTexture CreateIcon(ReadOnlySpan<byte> svg)
+    private DPITexture CreateIcon(ReadOnlySpan<byte> svg)
     {
-        using var image = new Image(); image.LoadSVGFromBuffer(svg);
-        var texture = ImageTexture.CreateFromImage(image); _owned.Add(texture); return texture;
+        var texture = DPITexture.CreateFromString(System.Text.Encoding.UTF8.GetString(svg)); _owned.Add(texture); return texture;
     }
     internal static ThemeDB Service => ServiceHolder.Singleton.Value;
     internal Theme GetDefaultThemeCore() { ThrowIfDisposed(); if (_defaultTheme.IsDisposed) throw new ObjectDisposedException(nameof(Theme)); return _defaultTheme; }
@@ -143,9 +142,7 @@ public sealed partial class ThemeDB : ElectronObject
                 ThrowIfDisposed();
                 if (!_iconInitialized)
                 {
-                    using var image = new Image();
-                    image.LoadSVGFromBuffer("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path fill="#ff5d5d" d="M2 1v8.586l1.293-1.293a1 1 0 0 1 1.414 0L7 10.587l2.293-2.293a1 1 0 0 1 1.414 0L13 10.586l1-1V6H9V1H2zm8 0v4h4zm-6 9.414-2 2V15h12v-2.586l-.293.293a1 1 0 0 1-1.414 0L10 10.414l-2.293 2.293a1 1 0 0 1-1.414 0L4 10.414z"/></svg>"""u8);
-                    _icon = ImageTexture.CreateFromImage(image); _owned.Add(_icon); _iconInitialized = true;
+                    _icon = CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path fill="#ff5d5d" d="M2 1v8.586l1.293-1.293a1 1 0 0 1 1.414 0L7 10.587l2.293-2.293a1 1 0 0 1 1.414 0L13 10.586l1-1V6H9V1H2zm8 0v4h4zm-6 9.414-2 2V15h12v-2.586l-.293.293a1 1 0 0 1-1.414 0L10 10.414l-2.293 2.293a1 1 0 0 1-1.414 0L4 10.414z"/></svg>"""u8); _iconInitialized = true;
                 }
                 return _icon;
             }

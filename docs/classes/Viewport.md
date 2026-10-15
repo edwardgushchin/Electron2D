@@ -1,6 +1,6 @@
 # Viewport
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 **Inherits:** [Node](Node.md)
 
@@ -598,3 +598,8 @@ See [the selection checks](../components/physics-backends.md#project-physics-sel
 Frame/input/lifecycle requests coalesce at the next safe point; refresh callbacks cannot reenter refresh. The caller must own the active tree. Native-host absence and singular global canvas inverses fail explicitly. Temporary events are disposed even when callbacks fail. Global Input polling is untouched by this method.
 
 WarpMouse resolves the containing native Window for embedded viewports, applying the complete GetScreenTransform chain before finite/native integer validation. Standalone viewports without a native window fail explicitly.
+
+
+## Font and scalable SVG oversampling
+
+Oversampling defaults true; disabling selects raster factor one. OversamplingOverride defaults zero; a positive finite value selects an explicit factor, while nonpositive values use automatic maximum-axis stretch. GetOversampling returns the effective font/DPI raster factor. Mutations preserve scene-owner/capture/submission guards and invalidate viewport recordings. Viewport disposal releases retained DPI scale variants. These properties are typed scene state. See [scalable SVG textures](../components/scalable-svg.md).

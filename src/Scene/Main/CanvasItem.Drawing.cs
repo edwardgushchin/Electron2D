@@ -346,6 +346,11 @@ public abstract partial class CanvasItem
                 if (source is not (ViewportTexture or TextureRD) && source.CapturePixels() is null) source = RenderingTextureRegistry.PlaceholderTexture;
                 replay = command with { Texture = source };
             }
+            if (replay.Texture is DPITexture dpiTexture)
+            {
+                var raster = dpiTexture.ForViewport(viewport); if (raster is null) continue;
+                replay = replay with { Texture = raster };
+            }
             if (replay.MultiMesh is { } instances)
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.GetCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }

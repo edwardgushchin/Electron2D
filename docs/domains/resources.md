@@ -264,3 +264,6 @@ Physical copy-failure consumers now verify partial-state publication, nested/ree
 
 
 Mounted res:// resources now share [resource pack resolution](../components/resource-packs.md). PCK/ZIP overlays, synthetic directories, read-only packed metadata, relative scene dependencies and bitmap-font pages use the mounted bytes. Ordinary absolute paths and user:// retain physical access. Cached resources keep their normal cache-mode policy.
+
+
+[DPITexture](../components/scalable-svg.md) stores SVG source and typed paint maps as resource data, with independent scene-local copies and transient viewport raster caches. Existing Image SVG codec limits remain separate from this retained texture/resource integration.

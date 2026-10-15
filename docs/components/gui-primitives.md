@@ -1,6 +1,6 @@
 # GUI backgrounds and separators
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 Owns [ColorRect](../classes/ColorRect.md), abstract [Separator](../classes/Separator.md), [HSeparator](../classes/HSeparator.md) and [VSeparator](../classes/VSeparator.md). These primitives add common panel/list decoration through existing Control, typed themes, StyleBox and canvas drawing. They add no renderer, dependency or separate assembly.
 
@@ -16,4 +16,4 @@ GUIPrimitivesRenderingTests loads an authored compressed big-endian Window scene
 
 ## Dependencies and remaining families
 
-These consumers use ADRs 0008, 0023, 0028 and 0083. ReferenceRect remains blocked on a real editor-context producer/Engine.IsEditorHint under ADR 0027; no constant hint or inert EditorOnly substitute is added. DPITexture still needs SVG paint remapping and retained canvas oversampling/scale variants. TextLine/TextParagraph need their full typed builder, inline objects/metadata and shaped handle contract; these controls do not stand in for that API.
+These consumers use ADRs 0008, 0023, 0028 and 0083. ReferenceRect remains blocked on a real editor-context producer/Engine.IsEditorHint under ADR 0027; no constant hint or inert EditorOnly substitute is added. [DPITexture](scalable-svg.md) now supplies paint remapping and retained viewport raster variants. TextLine/TextParagraph need their full typed builder, inline objects/metadata and shaped handle contract; these controls do not stand in for that API.

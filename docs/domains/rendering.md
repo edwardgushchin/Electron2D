@@ -1,6 +1,6 @@
 # Rendering domain
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 Private native runtime binaries come from versioned Linux/macOS packages in ordinary desktop builds; `Electron2DBuildNativeFromSource=true` rebuilds those libraries. Source builds separately prepare pinned host shader tools on first use and generate built-in shaders under `obj/`. [Shader delivery](../components/shader-materials.md#built-in-shader-delivery) keeps these tools out of game packages. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
@@ -335,3 +335,6 @@ Theme resource archives and scenes now persist complete typed theme data, resour
 [TextLine](../classes/TextLine.md) is a retained standalone typed line with borrowed font spans/metadata and inline tokens, full-buffer caret/object geometry and a separately trimmed display. Its public drawing uses CanvasItem and existing native glyph kernels; [text objects](../components/text-objects.md) and [ADR 0107](../decisions/text-objects.md#adr-0107) describe ownership and separate gates.
 
 [TextParagraph](../classes/TextParagraph.md) extends standalone retained text to complete wrapped paragraphs, independent dropcap and indexed line buffers, sharing typed spans, native fonts and canvas drawing with TextLine. Visibility retains hidden line queries/drawing; reflow retires line identities. See [text objects](../components/text-objects.md) for ownership, signed metrics and verification limits.
+
+
+[Scalable SVG textures](../components/scalable-svg.md) integrate DPITexture paint maps, native image processing, shared viewport/font oversampling, retained scale identities, default theme icons and typed resource/scene storage. Native Linux warmed replay and foreign-host acceptance remain separately measured gates.

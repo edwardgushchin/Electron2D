@@ -9,6 +9,11 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length == 3 && args[0] == "--dpi-storage") { if (args[1] == "write") DPITextureStorageTests.Write(args[2]); else if (args[1] == "read") DPITextureStorageTests.Read(args[2]); else DPITextureStorageTests.Render(args[1], args[2]); return; }
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DPI_TEXTURE") == "managed") { DPITextureTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DPI_TEXTURE") is "gpu" or "compatibility" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DPI_TEXTURE") is { } dpiBackend) { DPITextureFlowTests.Run(dpiBackend); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIAGNOSTICS") == "portable") { DiagnosticsTests.RunPortable(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIAGNOSTICS") is "gpu" or "compatibility" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIAGNOSTICS") is { } diagnosticsBackend) { DiagnosticsFlowTests.Run(diagnosticsBackend); return; }

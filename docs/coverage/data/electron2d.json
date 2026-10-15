@@ -3662,6 +3662,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.DPITexture",
+    "kind": "type",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "DPITexture",
+    "signature": "public sealed class Electron2D.DPITexture",
+    "visibility": "public",
+    "baseType": "Electron2D.Texture",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.DTLSServer",
     "kind": "type",
     "declaringType": "Electron2D.DTLSServer",
@@ -17664,6 +17679,19 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.DPITexture..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.DPITexture",
+    "name": ".ctor",
+    "signature": "public DPITexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -86920,6 +86948,240 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DPITexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DPITexture.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DPITexture.CreateFromString(System.String,System.Single,System.Single,System.Collections.Generic.Dictionary\u003CElectron2D.Color, Electron2D.Color\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "CreateFromString",
+    "signature": "public static Electron2D.DPITexture CreateFromString(System.String source, System.Single scale = 1f, System.Single saturation = 1f, System.Collections.Generic.Dictionary\u003CElectron2D.Color, Electron2D.Color\u003E colorMap = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "scale",
+        "type": "System.Single",
+        "default": "1f"
+      },
+      {
+        "name": "saturation",
+        "type": "System.Single",
+        "default": "1f"
+      },
+      {
+        "name": "colorMap",
+        "type": "System.Collections.Generic.Dictionary\u003CElectron2D.Color, Electron2D.Color\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "Electron2D.DPITexture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DPITexture.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DPITexture.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DPITexture.GetImage()",
+    "kind": "method",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "GetImage",
+    "signature": "public override Electron2D.Image GetImage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DPITexture.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DPITexture.GetScaledRID()",
+    "kind": "method",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "GetScaledRID",
+    "signature": "public Electron2D.RID GetScaledRID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DPITexture.GetSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "GetSize",
+    "signature": "public override Electron2D.Vector2 GetSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DPITexture.GetSource()",
+    "kind": "method",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "GetSource",
+    "signature": "public System.String GetSource()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DPITexture.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DPITexture.SetSizeOverride(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "SetSizeOverride",
+    "signature": "public System.Void SetSizeOverride(Electron2D.Vector2i size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DPITexture.SetSource(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "SetSource",
+    "signature": "public System.Void SetSource(System.String source)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -197125,6 +197387,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Viewport.GetOversampling()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GetOversampling",
+    "signature": "public System.Single GetOversampling()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Viewport.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.Viewport",
@@ -216488,6 +216763,84 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DPITexture.BaseScale()",
+    "kind": "property",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "BaseScale",
+    "signature": "public System.Single BaseScale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DPITexture.ColorMap()",
+    "kind": "property",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "ColorMap",
+    "signature": "public System.Collections.Generic.Dictionary\u003CElectron2D.Color, Electron2D.Color\u003E ColorMap { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.Dictionary\u003CElectron2D.Color, Electron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DPITexture.FixAlphaBorder()",
+    "kind": "property",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "FixAlphaBorder",
+    "signature": "public System.Boolean FixAlphaBorder { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DPITexture.HasAlpha()",
+    "kind": "property",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "HasAlpha",
+    "signature": "public System.Boolean HasAlpha { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DPITexture.PremultAlpha()",
+    "kind": "property",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "PremultAlpha",
+    "signature": "public System.Boolean PremultAlpha { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DPITexture.Saturation()",
+    "kind": "property",
+    "declaringType": "Electron2D.DPITexture",
+    "name": "Saturation",
+    "signature": "public System.Single Saturation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {
@@ -240252,6 +240605,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Viewport.MSAA",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.Oversampling()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "Oversampling",
+    "signature": "public System.Boolean Oversampling { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.OversamplingOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "OversamplingOverride",
+    "signature": "public System.Single OversamplingOverride { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {
