@@ -5,6 +5,7 @@ using Microsoft.Diagnostics.Runtime;
 using static HeapGraph;
 
 if (args is ["--process-memory-self-test"]) { ProcessObservation.SelfTest(); return; }
+if (args.Length > 0 && args[0] == "--native-phases") { await NativePhaseProbe.Run(args[1..]); return; }
 if (args.Length > 0 && args[0] == "--network") { await NetworkProbe.Run(args[1..]); return; }
 
 var retirement = args.Length > 0 && args[0] == "--retirement";

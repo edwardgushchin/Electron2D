@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-15
 
+[Native compiler/device controls](physics-native-phases.md) now separate format
+enumeration, reflection, device and pipeline lifetime from complete public worlds.
+The process-only matrix and separate 128-world follow-up show much smaller later
+growth than the original threaded finding. They neither measure selected graphs
+nor close native ownership-stack, unrestricted memory or hardware acceptance.
+
 ## Exercised lifetime
 
 The [memory runner](../../tools/physics-memory/README.md#repeated-world-retirement)

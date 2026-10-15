@@ -9,6 +9,12 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length > 0 && args[0] == "--physics-native-memory")
+{
+    if (args.Length != 3) throw new ArgumentException("Expected a native-memory mode and cycle count.");
+    GPUPhysicsNativeMemoryTests.Run(args[1], int.Parse(args[2])); return;
+}
+
 if (args.Length >= 2 && args[0] == "--movie-profile-project")
 {
     if (args[1] == "write" && args.Length == 4) MovieProfileTests.WriteProject(args[2], args[3]);

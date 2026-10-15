@@ -6,6 +6,12 @@
 
 Last updated: 2026-10-15
 
+[Native compiler/device phases](physics-native-phases.md) now separate five cold
+controls from complete public-world retirement on the same runtime, without heap
+attachment. A 128-world-per-policy follow-up does not reproduce the original
+large threaded accumulation; later growth remains smaller and native ownership
+stacks remain unverified. No public API or overall acceptance is promoted.
+
 [Registered rectangle numerics](physics-registered-adapter.md#registered-rectangle-numerics)
 now execute actual contours, six queries, mass, contacts and linear/angular CCD
 through the independent public-only provider. Shared CPU/software-GPU checks cover

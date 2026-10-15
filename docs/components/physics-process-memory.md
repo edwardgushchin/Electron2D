@@ -4,6 +4,11 @@ Last updated: 2026-10-15
 
 ## Scope and measurement
 
+[Native phase controls](physics-native-phases.md) now reuse these calibrated
+process observations without heap attachment, preserving shader/device controls
+separately from complete public retirement. Disabled SDL allocation counting is
+reported as unavailable, never as zero live allocations.
+
 [The development runner](../../tools/physics-memory/README.md#process-and-allocator-observations)
 now adds process-wide observations to its [owned managed graph](physics-retained-memory.md)
 and [scene/network history](physics-network-memory.md) reports. The engine and

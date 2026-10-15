@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-15
 
+[Cold compiler/device controls](physics-native-phases.md) now measure scopes
+outside requested buffers. Reflection alone does not reproduce the large rise;
+device lifetime and allocator retention remain the next native-stack targets.
+These process observations are not exclusive per-store device/VRAM totals.
+
 [Repeated public world retirement](physics-retirement-memory.md) collects the
 selected store/device after normal and failed intervals. Moving cold numerical
 pipeline creation to the owner reduces the observed default threaded software

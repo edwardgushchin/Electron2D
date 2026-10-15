@@ -32,10 +32,15 @@ parser.add_argument("--icd", type=Path, help="Optional lavapipe ICD; without it 
 parser.add_argument("--bodies", type=int, default=1024)
 parser.add_argument("--history", type=int, default=4)
 parser.add_argument("--network", action="store_true", help="Measure the full three-process network example instead of the raw world")
+parser.add_argument("--native-phases", action="store_true", help="Compare cold compiler/device controls and both public GPU retirement policies without heap attachment")
 parser.add_argument("--client-backend", choices=["cpu", "gpu"], default="gpu", help="Primary network client backend")
 parser.add_argument("--threaded", action="store_true", help="Use a separate numerical thread in network or retirement fixtures")
-parser.add_argument("--cycles", type=int, default=0, help="Measure repeated raw-world retirement, 1 through 32 cycles")
+parser.add_argument("--cycles", type=int, default=0, help="Measure 1 through 32 retirement cycles; native phases default to 32")
 args = parser.parse_args()
+if args.native_phases and (args.network or args.threaded or not args.icd):
+    parser.error("Native phases require an explicit lavapipe ICD, include both policies, and cannot combine with --network or --threaded")
+if args.native_phases and not args.cycles:
+    args.cycles = 32
 if args.network and (args.bodies != 1024 or args.history != 4):
     parser.error("Body/history options apply only to the raw fixture")
 if args.cycles < 0 or args.cycles > 32 or args.network and args.cycles:
@@ -61,8 +66,12 @@ if args.icd:
         raise ValueError("GPU memory profiling requires an explicit existing lavapipe library")
     driver = {"icd": str(args.icd), "library": str(library), "sha256": hashlib.file_digest(library.open("rb"), "sha256").hexdigest()}
 fixture = "NetworkFixture" if args.network else "Fixture"
-for name, extra in [("Probe", []), (fixture, ["-p:Electron2DBuildNativeFromSource=true"])]:
-    command = ["dotnet", "build", str(repo / f"tools/physics-memory/{name}/{name}.csproj"), "-c", "Release", "-o", str(output / name), *extra]
+projects = [("Probe", repo / "tools/physics-memory/Probe/Probe.csproj", []),
+            (fixture, repo / f"tools/physics-memory/{fixture}/{fixture}.csproj", ["-p:Electron2DBuildNativeFromSource=true"])]
+if args.native_phases:
+    projects.append(("Tests", repo / "tests/Electron2D.Tests/Electron2D.Tests.csproj", ["-p:Electron2DBuildNativeFromSource=true"]))
+for name, project, extra in projects:
+    command = ["dotnet", "build", str(project), "-c", "Release", "-o", str(output / name), *extra]
     with (output / f"build-{name}.log").open("w") as log:
         subprocess.run(command, cwd=repo, env=env, stdout=log, stderr=subprocess.STDOUT, check=True)
 abi_program = output / "process-memory-abi"
@@ -78,7 +87,13 @@ if any(calibration[key] != value for key, value in abi.items()):
 with (output / "process-memory-self-test.log").open("w") as log:
     run_probe(["dotnet", str(output / "Probe/Probe.dll"), "--process-memory-self-test"], cwd=repo, env=env,
               stdout=log, stderr=subprocess.STDOUT, timeout=30)
-if args.network:
+if args.native_phases:
+    env.update(VK_DRIVER_FILES=str(args.icd), VK_ICD_FILENAMES=str(args.icd))
+    command = ["dotnet", str(output / "Probe/Probe.dll"), "--native-phases", str(output / "Tests/Electron2D.Tests.dll"),
+               str(output / "Fixture/Fixture.dll"), str(args.bodies), str(args.history), str(args.cycles)]
+    with (output / "native-phases.json").open("w") as log, (output / "native-phases.err").open("w") as error:
+        run_probe(command, cwd=repo, env=env, stdout=log, stderr=error, timeout=300)
+elif args.network:
     icd = args.icd if args.client_backend == "gpu" else output / "missing-icd.json"
     env.update(VK_DRIVER_FILES=str(icd), VK_ICD_FILENAMES=str(icd))
     command = ["dotnet", str(output / "Probe/Probe.dll"), "--network", str(output / fixture / (fixture + ".dll")), str(output / "network"),
@@ -87,7 +102,7 @@ if args.network:
         command.append("--threaded")
     with (output / "network.log").open("w") as log, (output / "network.err").open("w") as error:
         run_probe(command, cwd=repo, env=env, stdout=log, stderr=error, timeout=120)
-for backend in [] if args.network else ["cpu", *(["gpu"] if driver else [])]:
+for backend in [] if args.network or args.native_phases else ["cpu", *(["gpu"] if driver else [])]:
     icd = args.icd if backend == "gpu" else output / "missing-icd.json"
     env.update(VK_DRIVER_FILES=str(icd), VK_ICD_FILENAMES=str(icd))
     command = ["dotnet", str(output / "Probe/Probe.dll"), str(output / "Fixture/Fixture.dll"), backend, str(args.bodies), str(args.history)]
@@ -98,9 +113,11 @@ for backend in [] if args.network else ["cpu", *(["gpu"] if driver else [])]:
         run_probe(command, cwd=repo, env=env, stdout=log, stderr=error, timeout=300)
     report = json.loads((output / f"{backend}.json").read_text())
     print(backend, [(p["Measurement"]["Metadata"]["Phase"], p["Measurement"]["ManagedObjectBytes"]) for p in report["Phases"]], flush=True)
-artifacts = {str(p.relative_to(output)): hashlib.file_digest(p.open("rb"), "sha256").hexdigest()
-             for p in [output / "Probe/Probe.dll", output / fixture / (fixture + ".dll"), output / fixture / "Electron2D.dll", abi_program]}
+artifact_paths = [output / "Probe/Probe.dll", output / fixture / (fixture + ".dll"), output / fixture / "Electron2D.dll", abi_program]
+if args.native_phases:
+    artifact_paths.extend([output / "Tests/Electron2D.Tests.dll", output / "Tests/Electron2D.dll"])
+artifacts = {str(p.relative_to(output)): hashlib.file_digest(p.open("rb"), "sha256").hexdigest() for p in artifact_paths}
 (output / "environment.json").write_text(json.dumps({"driver": driver, "bodies": args.bodies, "history": args.history,
-    "network": args.network, "clientBackend": args.client_backend, "threaded": args.threaded, "cycles": args.cycles, "artifacts": artifacts,
+    "network": args.network, "nativePhases": args.native_phases, "clientBackend": args.client_backend, "threaded": args.threaded, "cycles": args.cycles, "artifacts": artifacts,
     "host": {"kernel": platform.release(), "architecture": platform.machine(), "pageSize": os.sysconf("SC_PAGESIZE"),
              "libcVersion": abi["LibcVersion"], "mallocArenaMax": env.get("MALLOC_ARENA_MAX")}}, indent=2) + "\n")

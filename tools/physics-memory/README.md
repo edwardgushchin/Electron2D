@@ -164,3 +164,45 @@ with spaces. Procfs reads remain nearby observations rather than an atomic snaps
 `host.mallocArenaMax` records an inherited `MALLOC_ARENA_MAX` diagnostic control;
 the runner does not set that value. [Results and the open native-growth issue](../../docs/components/physics-retirement-memory.md)
 distinguish default behavior from the one-arena experiment.
+
+## Native compiler and device phases
+
+```bash
+python3 -B tools/physics-memory/run.py NEW_OUTPUT --native-phases \
+  --bodies 64 --history 1 --cycles 32 --icd /absolute/path/to/lavapipe.json
+```
+
+This process-only mode separates five cold controls from the existing complete
+public retirement fixture in both numerical policies. It requires one explicit
+existing lavapipe ICD and includes both policies, so it rejects `--network` and
+`--threaded`. Cycles default to 32; body/history counts affect only the complete
+worlds. The test executable and public fixture must contain the same runtime DLL.
+
+Each control uses the explicit test entry `--physics-native-memory MODE CYCLES`:
+
+- `formats`: compiler-library initialization, format enumeration and shutdown.
+- `reflection`: the same lifetime around reflection of fourteen physics kernels,
+  with every metadata allocation freed; no GPU device.
+- `device`: create and dispose an independent compute device, without pipelines.
+- `pipelines`: retain one device, repeatedly create/release those fourteen kernels,
+  then release the retained device after the final cycle.
+- `device-pipelines`: recreate the device and pipeline set each cycle.
+
+Pipeline controls wait for device idle after release so pending native retirement
+can progress. This extra wait belongs only to the diagnostic control; it is not
+a runtime optimization, measured physics step or hardware/window benchmark.
+The complete worlds retain the original simulation, checkpoint/portable replay
+and even-cycle terminal numerical-failure assertions.
+
+`native-phases.json` records each full-GC/glibc/procfs pause with per-mapping RSS,
+driver observations and binary identities. Unlike heap-attached `--cycles`, it
+never attaches CLRMD and makes no selected-object/collected-owner claim. The
+control metadata also preserves SDL's outstanding allocation count; `-1` means
+that native build disabled counting. This count is neither bytes nor all driver
+allocations. Both application baselines include their own host/JIT state; do not
+subtract different control totals to invent exclusive native-owner budgets.
+Nearby samples and scoped allocator statistics remain overlapping observations,
+not continuous peaks. No global allocator or compiler/device lifetime is changed.
+
+[Recorded phase results and limits](../../docs/components/physics-native-phases.md)
+keep these controls separate from complete-physics and target-hardware acceptance.

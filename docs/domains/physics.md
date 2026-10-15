@@ -329,6 +329,12 @@ ownership and disposal remain retained. [Ownership and retirement evidence](../c
 records the cold-feature/error and warmed allocation checks plus reduced software
 allocator growth; residual native memory and target-hardware acceptance stay open.
 
+[Native compiler/device controls](../components/physics-native-phases.md) now
+separate cold formats/reflection, pipeline sets, device recreation and complete
+public-world retirement. The calibrated process-only reports and 128-world-per-
+policy follow-up narrow the remaining allocation investigation without a runtime
+cache, allocator tuning or a selected-object/native-memory acceptance claim.
+
 Physics readiness requires both CPU/Box2D.NET behavior and a complete selectable
 independent GPU world. The [source audit](../components/physics-contract-audit.md)
 and [generated declaration ledger](../coverage/physics-status.md) separate current
