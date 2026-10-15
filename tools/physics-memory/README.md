@@ -1,7 +1,7 @@
 # Physics retained object measurement
 
-Run from the repository root on Linux x64 with .NET 10 and the normal source-native
-build prerequisites:
+Run from the repository root on Linux x64/glibc with .NET 10, a C compiler and the
+normal source-native build prerequisites:
 
 ```bash
 python3 -B tools/physics-memory/run.py bin/physics-memory-new
@@ -25,8 +25,8 @@ hashes and the software driver identity stay in the selected output directory.
 
 The fixture creates raw circles in isolated pairs and one origin pin, with zero
 gravity and sleeping disabled. It exercises full steps, private capture/restore
-and portable capture/apply before each collection. Five phases cover the original
-world, added history/map/packet, a quarter-sized world after retirement and
+and portable capture/apply before each collection. Six phases cover a baseline
+before world creation, the original world, added history/map/packet, a quarter-sized world after retirement and
 recapture, disposed histories whose public wrappers remain held, and disposed
 world. The portable packet deliberately survives to expose its peak capacity.
 
@@ -71,6 +71,31 @@ This covers one identified static root, not all engine or runtime globals.
 
 Recorded scope and measurements: [retained physics memory](../../docs/components/physics-retained-memory.md).
 
+## Process and allocator observations
+
+Every pause also reports the latest full blocking GC's heap, fragmentation and
+committed bytes, and the host glibc `mallinfo2` fields. Before suspending its child,
+the parent reads `/proc/PID/status` and `smaps_rollup`, converting kernel kB fields
+to bytes. RSS/PSS, virtual size, kernel-reported RSS high water, shared/private
+pages and thread counts stay separate from the managed owner graph and requested
+SDL buffers. These scopes overlap; do not add them or infer native memory by
+subtracting the selected graph from RSS.
+
+The runner first checks the native structure size/offsets against a small C
+program built with the host headers. A separate managed calibration process
+allocates, touches and frees a known 8 MiB native block; its allocator counters
+must observe both transitions. That block never enters a measured game's peak.
+The procfs self-test verifies units and rejects missing, invalid, duplicate and
+overflowing fields. Calibration files, host/kernel identity and hashes remain
+with each cohort. No allocation interposer or allocator trimming is enabled.
+
+The GC/glibc sample precedes JSON serialization; procfs follows its publication.
+They are nearby quiescent observations, not an atomic transaction. Status RSS/high
+water are kernel estimates; rollup is a current page-table observation, not a
+continuous peak trace. Allocator caches, other native allocators and direct maps
+prevent treating these counters as exact per-world native ownership. See the
+[process memory measurements](../../docs/components/physics-process-memory.md).
+
 ## Scene and network histories
 
 The same runner can link the unmodified PhysicsNetwork example into a test host:
@@ -88,11 +113,11 @@ The driver option still permits only the explicit software device.
 
 The probe launches the check parent and inspects only descendants of that process.
 A test-only partial pauses each of the authority, primary client and late CPU
-client after completion, with four newly captured local scene checkpoints (the
+client before startup, after completion, with four newly captured local scene checkpoints (the
 first restored), after disposal while wrappers are held, and after releasing all
 references. These extra local points measure an additional application choice;
 ordinary PhysicsNetwork uses portable correction plus input replay without them.
-The hooks run after step measurements and are absent from the shipped example.
+The four final hooks run after step measurements; all hooks are absent from the shipped example.
 Their caller handle array and calibration anchors are excluded from the graph.
 
 Atomic ready/go files coordinate each attachment. The probe counts the union of
@@ -109,7 +134,7 @@ Final collection requires no remaining session/world, Nodes, Shapes, SceneTree,
 World, PhysicsSpace, checkpoint/map, selected CPU/GPU owner, SceneMultiplayer,
 ENetMultiplayerPeer or ENetConnection objects. JSON contains per-type byte counts,
 array capacities and requested GPU bytes. Existing process-check reports remain
-under `network/sessions/`, twelve memory observations under `network/`, and
+under `network/sessions/`, fifteen memory observations under `network/`, and
 `environment.json` records assembly hashes. Pauses/collection perturb wall time;
 these observations are not a fresh speed benchmark, traffic-queue high-water
 sample, native ENet/driver heap total, NativeAOT size or window/FPS evidence.

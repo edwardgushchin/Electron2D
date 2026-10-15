@@ -1460,3 +1460,9 @@ numerical lanes, held histories and injected failed steps. [Static-pool accounti
 adds the fixed idle world/context/worker shells to the existing controlled graph
 measurements without double counting active owners. Full global/native/driver,
 platform memory, hardware advantage and real-window/FPS acceptance remain open.
+
+[Process and allocator memory](physics-process-memory.md) now observes pre-startup,
+live/history and disposal states through full-GC, host glibc and kernel RSS/PSS
+counters. Separate native-block/ABI and procfs calibration precede the unchanged
+physical/network checks. This does not establish per-world native/driver ownership,
+continuous peaks or complete memory/performance acceptance.

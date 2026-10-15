@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.Diagnostics.Runtime;
 using static HeapGraph;
 
+if (args is ["--process-memory-self-test"]) { ProcessObservation.SelfTest(); return; }
 if (args.Length > 0 && args[0] == "--network") { await NetworkProbe.Run(args[1..]); return; }
 
 if (args.Length != 4) throw new ArgumentException("Expected Fixture.dll, cpu|gpu, body count, checkpoint count.");
@@ -15,7 +16,7 @@ var errors = child.StandardError.ReadToEndAsync();
 var phases = new List<object>();
 try
 {
-    foreach (var phase in new[] { "world", "history", "shrink", "released-history", "released-world" })
+    foreach (var phase in new[] { "baseline", "world", "history", "shrink", "released-history", "released-world" })
     {
         var line = await child.StandardOutput.ReadLineAsync().WaitAsync(TimeSpan.FromMinutes(1));
         if (line is null) throw new IOException("Fixture exited: " + await errors);
@@ -24,10 +25,11 @@ try
         var maps = File.ReadAllText($"/proc/{child.Id}/maps");
         var lavapipe = maps.Contains("libvulkan_lvp.so");
         var nvidia = maps.Contains("libnvidia", StringComparison.OrdinalIgnoreCase);
-        if (nvidia || (phase != "released-world" && lavapipe != (args[1] == "gpu")))
+        if (nvidia || (phase == "baseline" ? lavapipe : phase != "released-world" && lavapipe != (args[1] == "gpu")))
             throw new InvalidOperationException($"Unexpected driver mapping at {phase}: lavapipe={lavapipe}, NVIDIA={nvidia}.");
         phases.Add(new
         {
+            Process = ProcessObservation.Read(child.Id),
             Measurement = Inspect(child.Id, phase, metadata),
             LavapipeMapped = lavapipe,
             NVIDIAMapped = nvidia,
@@ -65,7 +67,7 @@ static object Inspect(int pid, string phase, JsonElement metadata)
     var calibrationBytes = Calibrate(anchors.ReadObjectField("Calibration"));
 
     var spaces = all.Where(o => o.Type?.Name == "Electron2D.PhysicsSpace").ToArray();
-    if (spaces.Length != (phase == "released-world" ? 0 : 1)) throw new InvalidDataException("Unexpected retained physics spaces.");
+    if (spaces.Length != (phase is "baseline" or "released-world" ? 0 : 1)) throw new InvalidDataException("Unexpected retained physics spaces.");
     var roots = new List<(string Name, ClrObject Object)>();
     if (spaces.Length != 0) roots.Add(("world", spaces[0]));
     Add("map", anchors.ReadObjectField("Map")); Add("snapshot", anchors.ReadObjectField("Snapshot"));

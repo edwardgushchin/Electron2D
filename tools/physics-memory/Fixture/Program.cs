@@ -2,16 +2,19 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Electron2D;
 
+if (args is ["--process-memory-calibration"]) { Console.WriteLine(JsonSerializer.Serialize(ProcessMemory.Calibrate())); return; }
 if (args.Length != 3 || args[0] is not ("cpu" or "gpu")) throw new ArgumentException("Expected cpu|gpu, body count, checkpoint count.");
 var count = int.Parse(args[1]); var historyCount = int.Parse(args[2]);
 if (count < 4 || count > 65536 || count % 4 != 0 || historyCount is < 1 or > 32) throw new ArgumentOutOfRangeException(nameof(args));
 var backend = args[0] == "cpu" ? PhysicsServer.Backend.CPU : PhysicsServer.Backend.GPU;
-var space = PhysicsServer.SpaceCreate(backend);
+var space = default(RID);
 var bodies = new RID[count]; var joint = default(RID);
 using var shape = new CircleShape { Radius = 2 };
 var roots = new MemoryRoots();
+Ready("baseline", 0);
 try
 {
+    space = PhysicsServer.SpaceCreate(backend);
     if (PhysicsServer.SpaceGetBackend(space) != backend || PhysicsServer.SpaceGetBackendFallbackReason(space) is not null)
         throw new InvalidOperationException("The memory fixture requires its selected backend without fallback.");
     PhysicsServer.SpaceSetActive(space, true);
@@ -72,6 +75,7 @@ void Ready(string phase, int liveBodies)
     Console.WriteLine(JsonSerializer.Serialize(new
     {
         Phase = phase,
+        ProcessMemory = ProcessMemory.Capture(),
         Bodies = liveBodies,
         Checkpoints = roots.Checkpoints.Length,
         EncodedBytes = roots.Snapshot?.GetEncodedSize() ?? 0,

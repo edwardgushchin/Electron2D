@@ -238,3 +238,8 @@ timeout check verifies cleanup. The successful 1024-body and network profiles do
 not prove general live-attachment reliability. Native/driver heaps, other globals,
 whole-process peaks, NativeAOT sizes, wider workloads and final hardware/window
 acceptance remain open.
+
+The subsequent [process and allocator measurements](physics-process-memory.md)
+add startup baselines, GC commitment, glibc statistics and current RSS/PSS plus
+kernel-reported high water to the same controlled fixtures. These overlapping
+process scopes do not replace per-world ownership or close the full budget.

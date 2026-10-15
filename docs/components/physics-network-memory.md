@@ -170,3 +170,9 @@ window FPS remain open. Collection pauses perturb elapsed session time, so this
 profile is not a new speed/FPS benchmark. Real RTX loading remains deferred while
 the power cable is unverified. No declaration state or architectural decision is
 promoted by these bounded measurements.
+
+[Process-wide memory observations](physics-process-memory.md) subsequently add a
+pre-startup baseline to each child and record GC, glibc and procfs alongside the
+owned graph. Each new cohort has fifteen observations. Existing tables above
+retain their four-phase/candidate scope; process counters are separate overlapping
+measurements rather than additional disjoint owners.

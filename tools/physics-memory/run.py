@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import platform
 import signal
 import subprocess
 
@@ -61,6 +62,19 @@ for name, extra in [("Probe", []), (fixture, ["-p:Electron2DBuildNativeFromSourc
     command = ["dotnet", "build", str(repo / f"tools/physics-memory/{name}/{name}.csproj"), "-c", "Release", "-o", str(output / name), *extra]
     with (output / f"build-{name}.log").open("w") as log:
         subprocess.run(command, cwd=repo, env=env, stdout=log, stderr=subprocess.STDOUT, check=True)
+abi_program = output / "process-memory-abi"
+subprocess.run(["cc", "-std=c11", "-Wall", "-Wextra", "-Werror", str(repo / "tools/physics-memory/test_process_memory.c"), "-o", str(abi_program)], check=True)
+abi = json.loads(subprocess.check_output([str(abi_program)], text=True))
+with (output / "process-memory-calibration.json").open("w") as log, (output / "process-memory-calibration.err").open("w") as error:
+    run_probe(["dotnet", str(output / fixture / (fixture + ".dll")), "--process-memory-calibration"], cwd=repo, env=env,
+              stdout=log, stderr=error, timeout=30)
+calibration = json.loads((output / "process-memory-calibration.json").read_text())
+if any(calibration[key] != value for key, value in abi.items()):
+    raise ValueError("Managed mallinfo2 declaration does not match the host C ABI")
+(output / "process-memory-abi.json").write_text(json.dumps(abi, indent=2) + "\n")
+with (output / "process-memory-self-test.log").open("w") as log:
+    run_probe(["dotnet", str(output / "Probe/Probe.dll"), "--process-memory-self-test"], cwd=repo, env=env,
+              stdout=log, stderr=subprocess.STDOUT, timeout=30)
 if args.network:
     icd = args.icd if args.client_backend == "gpu" else output / "missing-icd.json"
     env.update(VK_DRIVER_FILES=str(icd), VK_ICD_FILENAMES=str(icd))
@@ -79,6 +93,8 @@ for backend in [] if args.network else ["cpu", *(["gpu"] if driver else [])]:
     report = json.loads((output / f"{backend}.json").read_text())
     print(backend, [(p["Measurement"]["Metadata"]["Phase"], p["Measurement"]["ManagedObjectBytes"]) for p in report["Phases"]], flush=True)
 artifacts = {str(p.relative_to(output)): hashlib.file_digest(p.open("rb"), "sha256").hexdigest()
-             for p in [output / "Probe/Probe.dll", output / fixture / (fixture + ".dll"), output / fixture / "Electron2D.dll"]}
+             for p in [output / "Probe/Probe.dll", output / fixture / (fixture + ".dll"), output / fixture / "Electron2D.dll", abi_program]}
 (output / "environment.json").write_text(json.dumps({"driver": driver, "bodies": args.bodies, "history": args.history,
-    "network": args.network, "clientBackend": args.client_backend, "threaded": args.threaded, "artifacts": artifacts}, indent=2) + "\n")
+    "network": args.network, "clientBackend": args.client_backend, "threaded": args.threaded, "artifacts": artifacts,
+    "host": {"kernel": platform.release(), "architecture": platform.machine(), "pageSize": os.sysconf("SC_PAGESIZE"),
+             "libcVersion": abi["LibcVersion"]}}, indent=2) + "\n")

@@ -33,7 +33,7 @@ internal static class NetworkProbe
                     var maps = File.ReadAllText($"/proc/{pid}/maps");
                     var software = maps.Contains("libvulkan_lvp.so"); var hardware = maps.Contains("libnvidia", StringComparison.OrdinalIgnoreCase);
                     if (hardware || phase is "completed" or "checkpointed" && software != (role == "gpu")) throw new InvalidOperationException("Unexpected network driver mapping.");
-                    var report = new { Metadata = metadata, LavapipeMapped = software, NVIDIAMapped = hardware, Measurement = Inspect(pid, phase) };
+                    var report = new { Metadata = metadata, LavapipeMapped = software, NVIDIAMapped = hardware, Process = ProcessObservation.Read(pid), Measurement = Inspect(pid, phase) };
                     File.WriteAllText(Path.Combine(folder, role + "-" + phase + ".json"), JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true }));
                     File.WriteAllText(path[..^".ready.json".Length] + ".go", "next");
                     Console.WriteLine($"Measured {role} {phase}.");
@@ -42,7 +42,7 @@ internal static class NetworkProbe
             }
             File.WriteAllText(Path.Combine(folder, "check.stdout.log"), await stdout);
             File.WriteAllText(Path.Combine(folder, "check.stderr.log"), await stderr);
-            if (check.ExitCode != 0 || measured.Count != 12) throw new InvalidOperationException("The full network check or one of its twelve memory phases failed; inspect the check logs.");
+            if (check.ExitCode != 0 || measured.Count != 15) throw new InvalidOperationException("The full network check or one of its fifteen memory phases failed; inspect the check logs.");
         }
         finally
         {
@@ -74,7 +74,7 @@ internal static class NetworkProbe
         var sessions = all.Where(o => o.Type?.Name == prefix + "NetworkSession").ToArray();
         var spaces = all.Where(o => o.Type?.Name == "Electron2D.PhysicsSpace").ToArray();
         var checkpoints = all.Where(o => o.Type?.Name == "Electron2D.PhysicsCheckpoint").ToArray();
-        if (phase == "released")
+        if (phase is "baseline" or "released")
         {
             var remaining = all.Where(o => IsDerived(o.Type, "Electron2D.Node") || IsDerived(o.Type, "Electron2D.Shape") ||
                 o.Type?.Name is "Electron2D.SceneTree" or "Electron2D.World" or "Electron2D.PhysicsSpace" or "Electron2D.PhysicsCheckpoint" or

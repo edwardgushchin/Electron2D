@@ -15,7 +15,7 @@ internal static class MemoryGate
         if (string.IsNullOrEmpty(folder)) return;
         GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
         var name = System.IO.Path.Combine(folder, $"{Environment.ProcessId}-{phase}");
-        File.WriteAllText(name + ".tmp", JsonSerializer.Serialize(new { PID = Environment.ProcessId, Role, Phase = phase }));
+        File.WriteAllText(name + ".tmp", JsonSerializer.Serialize(new { PID = Environment.ProcessId, Role, Phase = phase, ProcessMemory = ProcessMemory.Capture() }));
         File.Move(name + ".tmp", name + ".ready.json");
         var started = Stopwatch.GetTimestamp();
         while (!File.Exists(name + ".go"))

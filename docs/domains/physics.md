@@ -1290,3 +1290,8 @@ independent checkpoints. [The lifetime and pool budget](../components/physics-re
 records CoreCLR/focused NativeAOT checks and separates fixed idle-slot storage from
 live world/history graphs. Other global/native/driver and full process budgets
 remain open.
+
+[The process memory collector](../components/physics-process-memory.md) now records
+GC commitment, glibc storage and procfs RSS/PSS with startup baselines for raw and
+network fixtures. These calibrated process observations overlap the existing owned
+graphs; per-world native/driver attribution and complete peak accounting remain open.
