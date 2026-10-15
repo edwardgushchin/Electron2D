@@ -33,6 +33,7 @@ parser.add_argument("--bodies", type=int, default=1024)
 parser.add_argument("--history", type=int, default=4)
 parser.add_argument("--network", action="store_true", help="Measure the full three-process network example instead of the raw world")
 parser.add_argument("--native-phases", action="store_true", help="Compare cold compiler/device controls and both public GPU retirement policies without heap attachment")
+parser.add_argument("--heaptrack-preload", type=Path, help="Explicit libheaptrack_preload.so for native-phase child allocation stacks; changes measurement overhead")
 parser.add_argument("--client-backend", choices=["cpu", "gpu"], default="gpu", help="Primary network client backend")
 parser.add_argument("--threaded", action="store_true", help="Use a separate numerical thread in network or retirement fixtures")
 parser.add_argument("--unpaced", action="store_true", help="Use ordinary network sessions without authority phase/input barriers")
@@ -55,6 +56,14 @@ if not 0 <= args.client_poll_delay_ms <= 250:
     parser.error("Client poll delay must be between 0 and 250 milliseconds")
 if (args.unpaced or args.client_poll_delay_ms) and not args.network:
     parser.error("Unpaced sessions and client poll delay require --network")
+heaptrack = None
+if args.heaptrack_preload:
+    if not args.native_phases:
+        parser.error("Heaptrack allocation stacks require --native-phases")
+    args.heaptrack_preload = args.heaptrack_preload.resolve()
+    if args.heaptrack_preload.name != "libheaptrack_preload.so" or not args.heaptrack_preload.is_file():
+        parser.error("Heaptrack requires an existing libheaptrack_preload.so")
+    heaptrack = {"preload": str(args.heaptrack_preload), "sha256": hashlib.file_digest(args.heaptrack_preload.open("rb"), "sha256").hexdigest()}
 repo = Path(__file__).resolve().parents[2]
 output = args.output.resolve()
 output.mkdir(parents=True, exist_ok=False)
@@ -97,6 +106,8 @@ if args.native_phases:
     env.update(VK_DRIVER_FILES=str(args.icd), VK_ICD_FILENAMES=str(args.icd))
     command = ["dotnet", str(output / "Probe/Probe.dll"), "--native-phases", str(output / "Tests/Electron2D.Tests.dll"),
                str(output / "Fixture/Fixture.dll"), str(args.bodies), str(args.history), str(args.cycles)]
+    if heaptrack:
+        command.extend([heaptrack["preload"], str(output)])
     with (output / "native-phases.json").open("w") as log, (output / "native-phases.err").open("w") as error:
         run_probe(command, cwd=repo, env=env, stdout=log, stderr=error, timeout=300)
 elif args.network:
@@ -126,7 +137,7 @@ artifact_paths = [output / "Probe/Probe.dll", output / fixture / (fixture + ".dl
 if args.native_phases:
     artifact_paths.extend([output / "Tests/Electron2D.Tests.dll", output / "Tests/Electron2D.dll"])
 artifacts = {str(p.relative_to(output)): hashlib.file_digest(p.open("rb"), "sha256").hexdigest() for p in artifact_paths}
-(output / "environment.json").write_text(json.dumps({"driver": driver, "bodies": args.bodies, "history": args.history,
+(output / "environment.json").write_text(json.dumps({"driver": driver, "heaptrack": heaptrack, "bodies": args.bodies, "history": args.history,
     "network": args.network, "unpaced": args.unpaced, "clientPollDelayMS": args.client_poll_delay_ms, "nativePhases": args.native_phases, "clientBackend": args.client_backend, "threaded": args.threaded, "cycles": args.cycles, "artifacts": artifacts,
     "host": {"kernel": platform.release(), "architecture": platform.machine(), "pageSize": os.sysconf("SC_PAGESIZE"),
              "libcVersion": abi["LibcVersion"], "mallocArenaMax": env.get("MALLOC_ARENA_MAX")}}, indent=2) + "\n")

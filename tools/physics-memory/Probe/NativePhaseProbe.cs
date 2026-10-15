@@ -7,9 +7,11 @@ internal static class NativePhaseProbe
 {
     internal static async Task Run(string[] args)
     {
-        if (args.Length != 5) throw new ArgumentException("Expected Tests.dll, Fixture.dll, bodies, histories and cycles.");
+        if (args.Length is not (5 or 7)) throw new ArgumentException("Expected Tests.dll, Fixture.dll, bodies, histories and cycles; optional heaptrack preload and trace directory.");
         var tests = Path.GetFullPath(args[0]); var fixture = Path.GetFullPath(args[1]);
         var bodies = int.Parse(args[2], CultureInfo.InvariantCulture); var histories = int.Parse(args[3], CultureInfo.InvariantCulture); var cycles = int.Parse(args[4], CultureInfo.InvariantCulture);
+        var preload = args.Length == 7 ? Path.GetFullPath(args[5]) : null;
+        if (preload is not null && (Path.GetFileName(preload) != "libheaptrack_preload.so" || !File.Exists(preload))) throw new ArgumentException("An existing heaptrack preload library is required.");
         if (bodies < 4 || bodies > 65536 || bodies % 4 != 0 || histories is < 1 or > 32 || cycles is < 1 or > 32) throw new ArgumentOutOfRangeException(nameof(args));
         var runtime = Hash(Path.Combine(Path.GetDirectoryName(tests)!, "Electron2D.dll"));
         if (runtime != Hash(Path.Combine(Path.GetDirectoryName(fixture)!, "Electron2D.dll"))) throw new InvalidOperationException("Native controls and public worlds must use the same runtime assembly.");
@@ -18,6 +20,13 @@ internal static class NativePhaseProbe
         {
             var world = mode.StartsWith("world", StringComparison.Ordinal);
             var start = new ProcessStartInfo("dotnet") { RedirectStandardInput = true, RedirectStandardOutput = true, RedirectStandardError = true };
+            var trace = preload is null ? null : Path.Combine(Path.GetFullPath(args[6]), mode + ".heaptrack.raw");
+            if (trace is not null)
+            {
+                if (File.Exists(trace)) throw new IOException("The allocation trace already exists.");
+                start.Environment["LD_PRELOAD"] = preload;
+                start.Environment["DUMP_HEAPTRACK_OUTPUT"] = trace;
+            }
             start.ArgumentList.Add(world ? fixture : tests);
             foreach (var argument in world ? new[] { "--retire", "gpu", args[2], args[3], args[4], (mode == "world-threaded").ToString() } : new[] { "--physics-native-memory", mode, args[4] }) start.ArgumentList.Add(argument);
             using var child = Process.Start(start) ?? throw new IOException("Could not start a native-memory fixture.");
@@ -52,10 +61,15 @@ internal static class NativePhaseProbe
                 if (child.ExitCode != 0) throw new IOException("Fixture failed: " + await errors);
             }
             finally { if (!child.HasExited) { child.Kill(entireProcessTree: true); await child.WaitForExitAsync(); } }
-            profiles.Add(new { Mode = mode, Samples = samples });
+            if (trace is not null && (!File.Exists(trace) || new FileInfo(trace).Length == 0)) throw new IOException("The child produced no allocation trace.");
+            profiles.Add(new { Mode = mode, Samples = samples, StandardError = await errors, AllocationTrace = trace is null ? null : new { Path = trace, Bytes = new FileInfo(trace).Length, SHA256 = Hash(trace) } });
         }
-        Console.WriteLine(JsonSerializer.Serialize(new { TestsSHA256 = Hash(tests), FixtureSHA256 = Hash(fixture), RuntimeSHA256 = runtime, HeapAttached = false, Cycles = cycles, Bodies = bodies, Histories = histories, Profiles = profiles }, new JsonSerializerOptions { WriteIndented = true }));
+        Console.WriteLine(JsonSerializer.Serialize(new { TestsSHA256 = Hash(tests), FixtureSHA256 = Hash(fixture), RuntimeSHA256 = runtime, HeapAttached = false, HeaptrackPreloadSHA256 = preload is null ? null : Hash(preload), Cycles = cycles, Bodies = bodies, Histories = histories, Profiles = profiles }, new JsonSerializerOptions { WriteIndented = true }));
     }
 
-    private static string Hash(string path) => Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(path)));
+    private static string Hash(string path)
+    {
+        using var stream = File.OpenRead(path);
+        return Convert.ToHexStringLower(SHA256.HashData(stream));
+    }
 }

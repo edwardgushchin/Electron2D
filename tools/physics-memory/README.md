@@ -226,3 +226,43 @@ not continuous peaks. No global allocator or compiler/device lifetime is changed
 
 [Recorded phase results and limits](../../docs/components/physics-native-phases.md)
 keep these controls separate from complete-physics and target-hardware acceptance.
+
+### Native allocation stacks
+
+Pass an existing [Heaptrack](https://github.com/KDE/heaptrack) preload library
+explicitly to record malloc-family events and native stacks in each of the seven
+native-phase children:
+
+```bash
+python3 -B tools/physics-memory/run.py NEW_OUTPUT --native-phases \
+  --bodies 64 --history 1 --cycles 4 --icd /absolute/path/to/lavapipe.json \
+  --heaptrack-preload /absolute/path/to/libheaptrack_preload.so
+```
+
+The runner rejects the option outside native phases and rejects a missing library
+before creating output. Only the fixture children receive the preload; the
+collector, build and calibration processes keep their ordinary allocator path.
+Each `MODE.heaptrack.raw` covers startup through normal process shutdown. The
+report preserves its size/SHA-256, the preload SHA-256 and child stderr. Existing
+phase/error/driver checks still run. Traces are raw and can be large; start with
+four cycles and retain enough disk space before extending the cohort.
+
+Interpret and analyze with the matching Heaptrack tools, for example:
+
+```bash
+set -o pipefail
+/absolute/path/to/heaptrack_interpret < NEW_OUTPUT/world.heaptrack.raw \
+  | gzip -c > NEW_OUTPUT/world.heaptrack.interpreted.gz
+heaptrack_print NEW_OUTPUT/world.heaptrack.interpreted.gz \
+  --print-leaks --merge-backtraces=0 \
+  --disable-builtin-suppressions --disable-embedded-suppressions
+```
+
+Keep these instrumented cohorts separate from ordinary GC/glibc/RSS results and
+timing benchmarks. A traced requested-byte peak includes hooked native allocations
+from the host/runtime and libraries, plus trace-visible allocations reached from
+physics; it does not establish managed GC heap, arbitrary direct-mapping or
+unhooked-allocator totals. A stack identifies an allocation path, not exclusive ownership. The
+tool's end-of-process "leaked" label includes process-lifetime storage and does
+not by itself prove an engine leak. Phase pauses do not delimit exact intervals
+inside the allocation trace. No allocator tuning or runtime cache is introduced.

@@ -30,8 +30,11 @@ inherited rows are Implemented; wider contract and hardware gates stay open.
 [Native compiler/device phases](physics-native-phases.md) now separate five cold
 controls from complete public-world retirement on the same runtime, without heap
 attachment. A 128-world-per-policy follow-up does not reproduce the original
-large threaded accumulation; later growth remains smaller and native ownership
-stacks remain unverified. No public API or overall acceptance is promoted.
+large threaded accumulation; later growth remains smaller. The optional
+[allocation-stack follow-up](physics-native-phases.md#allocation-stack-follow-up-2026-10-16)
+now measures hooked native peaks and records two outstanding 128 B driver paths
+per recreated software device; source-level residual ownership remains open.
+No public API or overall acceptance is promoted.
 
 [Registered rectangle numerics](physics-registered-adapter.md#registered-rectangle-numerics)
 now execute actual contours, six queries, mass, contacts and linear/angular CCD

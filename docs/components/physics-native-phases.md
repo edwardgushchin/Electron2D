@@ -1,6 +1,6 @@
 # Native physics compiler and device phases
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 ## Scope and executable path
 
@@ -97,6 +97,76 @@ This supports retained allocator capacity as a major measured contributor, not
 an unconditional memory ceiling, native ownership-stack attribution or a proof
 that all small native allocations stop growing.
 
+## Allocation-stack follow-up, 2026-10-16
+
+The runner's optional `--heaptrack-preload` now records native malloc-family
+events in the same seven children, without attaching a managed heap reader.
+The preload is explicit, restricted to native phases and hashed; raw traces,
+their sizes/hashes and child stderr accompany the ordinary phase assertions.
+Builds, calibration and the collector itself do not receive the interposer.
+This is an instrumented cohort, separate from the ordinary residency tables.
+
+Heaptrack 1.5.0 at `b54e92e88b0895f910a5b107f499d1155a086b80` was built
+locally, without installation or an allocator replacement. Its CMake libunwind
+probes needed `buf` instead of `&buf` for current GCC; configuration also used
+`CMAKE_POLICY_VERSION_MINIMUM=3.5`. The retained source patch/build logs identify
+these tooling changes. A native calibration keeps 1,048,576 B and frees
+2,097,152 B. Both named call sites appear; the event stream reports three
+allocations/two frees, exactly 3,219,456 B peak including the 73,728 B library
+startup request, and 1,048,576 B still live at exit.
+
+Four- and thirty-two-cycle cohorts pass all seven profiles: 354 nearby process
+observations, 72 complete public-world lifetimes and 36 terminal intervals in
+total. A further one-cycle default-mode regression passes 24 observations with
+no preload/trace. Runtime DLLs match across the controls, worlds and both stack
+cohorts. All GPU observations use the same pinned lavapipe library; no NVIDIA
+mapping, renderer or window is involved.
+
+These byte counts come from individual allocation/free events, independently
+checked against Heaptrack's unrounded peak/end flamegraph sums. The peak is
+simultaneous requested bytes across hooked allocations in the whole process.
+"End" is still-live requests at trace shutdown, including host/runtime and
+process-lifetime storage; it is not an engine leak verdict. Allocation-leaf
+module means the recorded immediate allocation caller, not exclusive ownership.
+
+| Profile | Whole-process hooked peak, 32 cycles | Whole-process hooked end, 32 cycles | lavapipe allocation-leaf end, 4 / 32 cycles |
+| --- | ---: | ---: | ---: |
+| formats | 40,028,156 | 18,038,143 | 0 / 0 |
+| reflection | 40,028,174 | 18,034,669 | 0 / 0 |
+| device | 47,288,360 | 18,208,638 | 1,024 / 8,192 |
+| pipelines | 147,817,673 | 1,554,980 | 256 / 256 |
+| device-pipelines | 147,813,971 | 1,439,610 | 1,024 / 8,192 |
+| world | 153,956,792 | 1,606,978 | 1,024 / 8,192 |
+| world-threaded | 153,969,718 | 1,612,784 | 1,024 / 8,192 |
+
+At the owner-world global peak, 139,577,543 B have lavapipe somewhere in their
+stack, including large paths through `VULKAN_CreateComputePipeline`. This is an
+inclusive allocation-path group, not additional memory to add to the total.
+The corresponding end group is 10,688 B; its direct lavapipe leaves contribute
+8,192 B. Two distinct 128 B call paths, each with 32 outstanding requests,
+contain `pthread_once` and the stripped driver frames. The four-cycle cohorts
+have four requests per path; the single retained-device profile has one per
+path despite creating 32 pipeline sets. Device-only control reproduces the
+same scaling without pipeline/physics execution. This narrows a real residual
+to repeated software-driver/device lifetimes; it neither assigns source-level
+ownership nor proves an unconditional leak in the engine. It stays open for
+symbolized driver/loader investigation. No process-wide device cache or global
+shutdown/allocator change is introduced to hide the residual.
+
+Current artifacts are `bin/physics-native-stacks/2026-10-16/`: `instrumented4/`,
+`instrumented32/`, `calibration-analysis/`, `default-regression.json`,
+`compiled-source-audit.json` and `validation.json`. Raw traces total 2,385,357,306 B
+in the 32-cycle cohort; the matching interpreted gzip files, unmerged reports,
+flamegraphs and local analysis sources remain available. Six portable-PDB source
+sets match the exercised inputs, and Release/coverage/wiki and runner checks pass.
+
+Traces change traffic, residency, threads and timings. They do not inventory
+managed objects, arbitrary direct mappings, unhooked allocators, all driver
+ownership or physical GPU memory, and do not measure an ordinary network client.
+Phase pauses are not exact trace interval markers. Summed per-location maximums
+are not a simultaneous process peak; the event-stream/global peak is used here.
+The broader native/foreign-memory and target-hardware/window gates remain open.
+
 ## Reproduction and remaining gates
 
 ```bash
@@ -120,12 +190,12 @@ check pass. Seven portable-PDB source sets match the exercised sources; runtime
 production source and public API remain unchanged. Local `validation.json`
 keeps these checks and source/binary identities separate from the phase totals.
 
-These are cold/setup and retirement observations, not warmed allocation or
+The ordinary, non-preloaded samples are cold/setup and retirement observations, not warmed allocation or
 throughput brackets, continuous peaks, native GPU heap/VRAM totals, rendered
 batch output or owner acceptance. No selected managed graph is measured in this
 mode. The earlier heap-attached long-run stall remains a separate diagnostic
 reliability issue; avoiding attachment does not claim to fix it. Ordinary heap/
 retirement/network modes and their existing assertions remain required regressions.
-Residual native allocation stacks, larger/different workloads, NativeAOT/foreign
+Residual native source-level ownership, larger/different workloads, NativeAOT/foreign
 memory, full physics/extension/inherited contracts and target GPU/window speed
 remain open. RTX loading stays deferred while its power cable is unverified.

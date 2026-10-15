@@ -193,3 +193,13 @@ Lifetime queue payload high water is now observed by the application, independen
 of periodic heap pauses; its allocated wrapper/arrays are already in the graph.
 Foreign/native ownership, unseen process peaks and hardware GPU/FPS acceptance
 remain open.
+
+The optional [native allocation-stack cohort](physics-native-phases.md#allocation-stack-follow-up-2026-10-16)
+now traces malloc-family paths in the cold controls and complete retirement
+worlds. It remains separate from these ordinary network samples: the profiler
+changes allocator traffic, residency, thread count and timing. Its event-stream
+requested-byte peak and end-of-process live requests neither replace RSS nor
+measure the ordinary network client's native ownership. Inclusive stack-module
+groups overlap; allocation-leaf module groups describe the direct call site,
+not a complete retained owner graph. Direct mappings and unhooked allocators
+still require other evidence.
