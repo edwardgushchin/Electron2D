@@ -763,6 +763,13 @@ preserved behavior, not a broad throughput guarantee. Logs/reports are in
 
 ## Selected step phases
 
+CPU owner capacity preparation now includes contact-pair hashing at two slots
+per budgeted contact, matching the native table's half-full threshold. Existing
+live keys survive rehashing before numerical entry. The [evolving full-scene
+regression and storage cost](physics-scene-performance.md#cpu-contact-pair-capacity-2026-10-15)
+record the corrected warm allocation boundary without changing the solver or
+expanding the existing four-contact-per-prepared-body budget.
+
 `PhysicsWorldBackend.Step` now enters one common `PhysicsSpace.ExecuteStep` boundary.
 The selected owner executes BeginStep, world/field preparation, body/motion
 preparation, Solve, SyncResults, body completion, contact collection, Area scanning

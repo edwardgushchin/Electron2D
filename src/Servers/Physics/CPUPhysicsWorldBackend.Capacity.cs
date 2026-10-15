@@ -57,6 +57,9 @@ internal sealed partial class CPUPhysicsWorldBackend
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.bodyMoveEvents, capacity);
         // ponytail: Four contacts per body is the prepared graph budget; larger topologies need explicit capacity preparation.
         var contacts = checked(capacity * 4);
+        // The pair table grows at half occupancy, so prepare two slots per budgeted contact.
+        var pairCapacity = checked(contacts * 2);
+        while (world.broadPhase.pairSet.capacity < pairCapacity) B2Tables.b2GrowTable(ref world.broadPhase.pairSet);
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.contacts, contacts);
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.contactIdPool.freeArray, contacts);
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.islands, capacity);

@@ -242,6 +242,11 @@ four substeps, interpolation and 144 Hz fixed input. All four physical and 0/0
 managed-byte gates pass. This verifies that warmup profile; the shorter evolving
 scene's allocation remains unaccepted, and no allowance or subtraction was added.
 
+The subsequent [CPU pair-table preparation](physics-scene-performance.md#cpu-contact-pair-capacity-2026-10-15)
+identifies and fixes that 4,120-byte allocation. The original rejected result and
+the older 1,600-warmup table below remain historical evidence, not results from
+the corrected runtime.
+
 | Policy | Backend | Whole step p50 / p95 / p99 (ms) | Included wait p50 (ms) | Upload / readback / uniforms per tick (B) |
 | --- | --- | --- | ---: | --- |
 | Owner | CPU | 0.3619 / 0.5429 / 0.6093 | 0.0000 | 0 / 0 / 0 |

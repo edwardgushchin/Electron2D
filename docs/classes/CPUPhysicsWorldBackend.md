@@ -37,6 +37,14 @@ The selected owner now applies sleep/contact thresholds, solver iterations and w
 
 CPU capacity preparation keeps a conservative flag once any dynamic attachment can sleep. Worlds whose dynamic bodies have never enabled sleep skip repeated complete-body scans during attachment. Enabling sleep or changing a sleep-enabled static/kinematic body to a dynamic role prepares dormant capacity immediately. The flag never resets, so private checkpoint restores cannot introduce an unobserved sleeping role. Existing dormant budgets and physics semantics are retained.
 
+The broad-phase contact-pair hash table now reserves two slots per prepared
+contact, matching its half-full growth threshold and the existing four-contact-
+per-prepared-body budget. Growth and rehashing happen during owner capacity
+preparation, preserving live keys; ordinary numerical membership/insertion and
+contact ordering are unchanged. This prevents later contacts within the prepared
+budget from allocating a larger table in `Solve`. See [evolving-contact regression
+and measured storage cost](../components/physics-scene-performance.md#cpu-contact-pair-capacity-2026-10-15).
+
 [PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs) checks typed policy, invalid values, independent worlds, CPU native settings, selected statistics, no GPU CPU-motion storage, live role changes and disposed-owner guards. Common sleep/contact/iteration/statistics, replay and network suites remain the behavioral acceptance boundary.
 
 ## Selected step phases

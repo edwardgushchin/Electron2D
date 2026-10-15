@@ -2,6 +2,13 @@
 
 Last updated: 2026-10-15
 
+[CPU contact-pair preparation](physics-scene-performance.md#cpu-contact-pair-capacity-2026-10-15)
+now adds 4,096 selected-graph bytes to the controlled 64-body world and each
+history, with zero additional difference after source release. The 1,024-body
+fixture is unchanged because its table already grew beyond the prepared budget.
+The original tables below retain their stated revisions and are not silently
+relabelled as measurements of this correction.
+
 ## Scope and method
 
 [The development probe](../../tools/physics-memory/README.md) now measures a

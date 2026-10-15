@@ -1453,6 +1453,12 @@ acceptance remain open.
 
 ## Static CPU world retirement, 2026-10-15
 
+[CPU contact-pair capacity](physics-scene-performance.md#cpu-contact-pair-capacity-2026-10-15)
+now prepares the pair hash table with the existing contact budget. It fixes a
+late `B2SetItem[512]` allocation in the evolving full scene without extending
+warmup or changing physical behavior. The selected-source checks and bounded
+memory cost remain separate from complete topology/native/hardware acceptance.
+
 CPU world reset now clears graph-block segments and source graph-color roots.
 The reproducer retained 64 source arrays after 32 destroyed real contact worlds;
 after the fix all collect on CoreCLR and focused Linux NativeAOT, across both

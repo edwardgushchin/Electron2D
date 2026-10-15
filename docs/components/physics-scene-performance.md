@@ -1,6 +1,6 @@
 # Complete scene physics measurements
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 The [scoped allocator profile](#scoped-native-allocation-profiling-2026-10-14)
 adds all-thread libc request accounting to the complete monitored scene, with
@@ -712,3 +712,115 @@ both formatting checks, compiled API coverage and wiki tests/generation/check
 passed; source and saved runtime stayed unchanged throughout. This is CPU-only
 verification of the profiling change, not a fresh full GPU/native/network gate.
 Logs and manifests are retained in the sibling final-checks directory.
+
+## CPU contact-pair capacity, 2026-10-15
+
+The [owner-pipeline follow-up](physics-retirement-memory.md#functional-network-and-complete-step-checks)
+exposed 4,120 managed bytes in CPU `Solve` with a 64-body monitored scene after
+128 warmup frames. A fresh run on the unchanged `4fcd3a70` assembly reproduced
+exactly 4,120/4,120 owner/all-thread bytes. Temporary allocation-site diagnostics
+identified `B2SetItem[512]` in `b2GrowTable`, called by contact creation during
+broad-phase pair updates. The diagnostic was removed byte-for-byte before the
+accepted build; instrumented output is not ordinary timing/allocation evidence.
+
+`PrepareSolverCapacity` already prepares four contacts per power-of-two body
+capacity. It now grows the broad-phase pair hash table in that same owner phase,
+with two slots per budgeted contact because insertion grows at half occupancy.
+Existing keys are rehashed and preserved. It does not create or remove contacts,
+change numerical algorithms, select another backend or extend warmup. Tables
+reuse ordinary native-world lifetime/checkpoint paths. Larger topologies beyond
+that budget can still grow cold capacity; this is not an all-pairs reservation
+or a guarantee for arbitrary authored topology changes.
+
+### Existing full-scene regression
+
+The original `PhysicsPipelinePerformance` executable is the regression: its
+physical, identity, scene/direct-state, event, interpolation and strict allocation
+assertions remain unchanged. No duplicate scene, test-only preallocation or
+allocation allowance is introduced. Fresh processes run 128 warm and 128 measured
+complete `PhysicsFrame` calls at 144 Hz, four substeps and 16 iterations, with four
+walls, awake bodies, materials, eight reported contacts and contact monitors.
+CPU uses dummy video and an unavailable driver/ICD, without display or renderer;
+GPU controls use the pinned lavapipe ICD with disabled loader layers and no real window.
+
+| Bodies | Policy | Backend | p50 / p95 / p99 (ms) | Owner / all-thread managed bytes |
+| ---: | --- | --- | --- | --- |
+| 64 | Owner | CPU | 0.1367 / 0.1624 / 0.2294 | 0 / 0 |
+| 64 | Separate | CPU | 0.1600 / 0.1940 / 0.2513 | 0 / 0 |
+| 256 | Owner | CPU | 1.6089 / 1.7488 / 1.9636 | 0 / 0 |
+| 256 | Separate | CPU | 1.6421 / 1.8082 / 1.8913 | 0 / 0 |
+| 64 | Owner | GPU | 8.4178 / 11.4226 / 12.4407 | 0 / 0 |
+| 64 | Separate | GPU | 8.4472 / 11.1123 / 11.7693 | 0 / 0 |
+
+Both 64-body CPU profiles retain the original 272 entries, 245 exits and 27
+reported final points. Final state/contact hashes also match the old serial
+profile as auxiliary diagnostics; the public physical/invariant assertions are
+the acceptance boundary. The unchanged software-GPU controls each upload 1,304
+bytes and read 47,456 bytes per tick. These small-scene trials overlap unrelated
+local checks and do not establish a before/after speed improvement, target GPU
+advantage or real-window FPS. Complete percentile/wait/phase/traffic reports
+retain the original schema.
+
+### Storage cost and verification limits
+
+The same raw public world/history fixture is measured before and after this
+change through the calibrated CLRMD/process runner. Both source-matched runtime
+assemblies execute the identical fixture binary. At 64 bodies/one history, the
+live owner graph adds 4,096 bytes and the world-plus-history graph adds 8,192
+bytes: one larger pair-key array in each owner. After history release only the
+world's 4,096-byte increase remains; after source-world release the difference
+is zero. The 1,024-body/four-history fixture already grew its table beyond the
+prepared budget, so all six selected-graph measurements remain unchanged. These
+are controlled graph deltas, not RSS/native totals or all-scene memory estimates.
+
+The five managed regressions cover backend ownership, private replay, separate
+numerical execution, failed/ordinary world retirement and static pool cleanup.
+The existing checkpoint transfer preserves the table's captured capacity and
+keys. Strict Linux x64 NativeAOT passes the 32-world ordinary/failed lifetime
+matrix and private CPU checkpoint contact/joint/sleep/sensor/query replay. Its
+1,024-box/four-worker checkpoint test retains 0/0 managed bytes for 64 warm and
+128 measured capture/restore pairs; it is not a native run of the evolving scene.
+The first focused host build lacked its real `PhysicsDebugTests` helper; linking
+the actual file corrected the test-host compilation without stubs or runtime changes.
+
+Two complete mixed network checks run CPU servers with an unavailable GPU and
+software-GPU primary clients in serial/separate policies through tick 900, with
+late admission at 310. Existing impaired delivery, correction/replay, identity,
+lifecycle/event and strict 0/0 warm step/replay assertions pass; their 30 memory
+observations keep collected-owner checks. These memory hosts do not instrument
+numerical thread identity. The selected-source/PDB audit covers both runtime
+profiles, the 710-file managed test project, focused native host and actual raw/
+network/probe builds. These scopes do not replace the evolving-scene checks above.
+
+Reproduce the unchanged regression with the Release test executable:
+
+```bash
+ELECTRON2D_TEST_PHYSICS_PERFORMANCE=1 \
+ELECTRON2D_PHYSICS_PERFORMANCE_COUNT=64 \
+ELECTRON2D_PHYSICS_PERFORMANCE_WARMUP=128 \
+ELECTRON2D_PHYSICS_PERFORMANCE_SAMPLES=128 \
+ELECTRON2D_PHYSICS_PERFORMANCE_BACKEND=cpu \
+ELECTRON2D_PHYSICS_PERFORMANCE_THREADED=0 \
+dotnet PATH_TO_RELEASE_TEST_DLL
+```
+
+Use `THREADED=1` for the separate lane and `COUNT=256` for the larger CPU profile.
+The software-GPU controls use `BACKEND=gpu` and the explicit pinned ICD. Local
+artifacts: `bin/physics-cpu-evolving/2026-10-15/` contains red/diagnostic logs,
+`green-*`, five regression logs, matched `baseline-memory-*` and `memory-*`,
+source/PDB manifests and final validation. Public API and coverage states are
+unchanged. Residual GPU native retention, unrestricted topology budgets,
+foreign-platform/hardware/window acceptance and the full physics objective remain
+open; RTX loading stays deferred while its power cable is unverified.
+
+The first before/after memory comparison used source-matched fixture builds with
+different revision metadata. The accepted comparison reruns one byte-identical
+current fixture against isolated copies of the old and corrected runtime; the
+provisional reports remain separate. The final 24 checks pass, including 54
+matched heap/process observations and all seven source/PDB sets with no missing
+or mismatched Compile inputs. Release, formatting, API coverage and wiki checks
+pass; generated output remains ignored.
+
+- Corrected matched runtime SHA-256: `89f4503aa9ba4fcfb0b2ef8c8cdea6c56ce664a55f611aa877afae9190713117`.
+- Identical raw fixture SHA-256: `175060a92bcf474476faab13ffd7b6978c2bcc57ce5328624d6a1468eda1cd5b`.
+- Baseline runtime SHA-256: `b2ed5fd923de2056cfff69387815e9b049e9b0b8cb8eed9b54859db3247b3794`.

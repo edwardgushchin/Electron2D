@@ -317,6 +317,12 @@ separate correction now execute on GPU. Joints, automatic mass-center profiles, 
 CCD and public selection/publication now connect through the selected owner and
 the shared public checks; their broader conformance/performance gates remain open.
 
+CPU capacity preparation now reserves contact-pair hash slots for the existing
+contact budget before numerical work. The [evolving full-scene regression](../components/physics-scene-performance.md#cpu-contact-pair-capacity-2026-10-15)
+keeps the original short warmup and strict allocation gate; bounded extra retained
+storage is measured separately. Arbitrary larger topologies and full native/
+hardware performance acceptance remain open.
+
 Cold GPU numerical pipelines now prepare on the original world owner before a
 separate solver borrows the device. Existing per-store handles, numerical command
 ownership and disposal remain retained. [Ownership and retirement evidence](../components/physics-retirement-memory.md#owner-pipeline-preparation)
