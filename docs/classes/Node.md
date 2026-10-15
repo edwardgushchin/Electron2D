@@ -100,10 +100,10 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public Tween CreateTween()`](#m-electron2d-node-createtween) | Creates a tween in this node's scene tree and binds it to this node. |
 | [`protected override void Dispose(bool disposing)`](#m-electron2d-node-dispose-system-boolean) | Releases resources owned by a derived class. |
 | [`protected void EnsureMutable()`](#m-electron2d-node-ensuremutable) | Validates that this node may be mutated at the current lifecycle point. |
-| [`public Node FindChild(string pattern, bool recursive = true)`](#m-electron2d-node-findchild-system-string-system-boolean) | Finds the first descendant whose name matches a wildcard pattern. |
-| [`public TNode FindChild<TNode>(string pattern = "*", bool recursive = true)`](#m-electron2d-node-findchild-1-system-string-system-boolean) | Finds the first descendant of a requested type whose name matches a wildcard pattern. |
-| [`public IReadOnlyList<Node> FindChildren(string pattern, bool recursive = true)`](#m-electron2d-node-findchildren-system-string-system-boolean) | Finds all descendants whose names match a wildcard pattern. |
-| [`public IReadOnlyList<TNode> FindChildren<TNode>(string pattern = "*", bool recursive = true)`](#m-electron2d-node-findchildren-1-system-string-system-boolean) | Finds all descendants of a requested type whose names match a wildcard pattern. |
+| [`public Node FindChild(string pattern, bool recursive = true, bool owned = true)`](#m-electron2d-node-findchild-system-string-system-boolean-system-boolean) | Finds the first descendant whose name matches a wildcard pattern. |
+| [`public TNode FindChild<TNode>(string pattern = "*", bool recursive = true, bool owned = true)`](#m-electron2d-node-findchild-1-system-string-system-boolean-system-boolean) | Finds the first descendant of a requested type whose name matches a wildcard pattern. |
+| [`public IReadOnlyList<Node> FindChildren(string pattern, bool recursive = true, bool owned = true)`](#m-electron2d-node-findchildren-system-string-system-boolean-system-boolean) | Finds all descendants whose names match a wildcard pattern. |
+| [`public IReadOnlyList<TNode> FindChildren<TNode>(string pattern = "*", bool recursive = true, bool owned = true)`](#m-electron2d-node-findchildren-1-system-string-system-boolean-system-boolean) | Finds all descendants of a requested type whose names match a wildcard pattern. |
 | [`public Node FindParent(string pattern)`](#m-electron2d-node-findparent-system-string) | Finds the nearest ancestor whose name matches a wildcard pattern. |
 | [`public Node GetChild(int index, bool includeInternal = false)`](#m-electron2d-node-getchild-system-int32) | Gets a direct child from the selected view. |
 | `public int GetChildCount(bool includeInternal = false)` | Counts ordinary or all direct children. |
@@ -677,75 +677,89 @@ Validates that this node may be mutated at the current lifecycle point.
 
 **System.ObjectDisposedException:** Disposal has started.
 
-<a id="m-electron2d-node-findchild-system-string-system-boolean"></a>
-### `public Node FindChild(string pattern, bool recursive = true)`
+<a id="m-electron2d-node-findchild-system-string-system-boolean-system-boolean"></a>
+### `public Node FindChild(string pattern, bool recursive = true, bool owned = true)`
 
 Finds the first descendant whose name matches a wildcard pattern.
 
-**Parameter `pattern`:** A nonblank simple expression using * and ?; matching is case-insensitive.
+**Parameter `pattern`:** A case-sensitive name pattern: * matches any sequence and ? one Unicode character except a period.
 
-**Parameter `recursive`:** Whether descendants below direct children are searched.
+**Parameter `recursive`:** Whether descendants below direct children are searched, including internal children.
+
+**Parameter `owned`:** Whether branches without an owner are skipped; true by default.
 
 **Returns:** The first matching node in depth-first pre-order, or `null`.
 
-**System.ArgumentException:** `pattern` is empty or whitespace.
+**System.ArgumentException:** `pattern` is empty.
 
 **System.ArgumentNullException:** `pattern` is `null`.
 
+**System.InvalidOperationException:** An attached search runs outside its scene owner or current processing group.
+
 **System.ObjectDisposedException:** This node or a recursively searched node is disposing on another thread, or has finished disposing.
 
-<a id="m-electron2d-node-findchild-1-system-string-system-boolean"></a>
-### `public TNode FindChild<TNode>(string pattern = "*", bool recursive = true)`
+<a id="m-electron2d-node-findchild-1-system-string-system-boolean-system-boolean"></a>
+### `public TNode FindChild<TNode>(string pattern = "*", bool recursive = true, bool owned = true)`
 
 Finds the first descendant of a requested type whose name matches a wildcard pattern.
 
 **Type parameter `TNode`:** The required node subtype.
 
-**Parameter `pattern`:** A nonblank simple expression using * and ?; matching is case-insensitive.
+**Parameter `pattern`:** A case-sensitive name pattern: * matches any sequence and ? one Unicode character except a period.
 
-**Parameter `recursive`:** Whether descendants below direct children are searched.
+**Parameter `recursive`:** Whether descendants below direct children are searched, including internal children.
+
+**Parameter `owned`:** Whether branches without an owner are skipped; true by default.
 
 **Returns:** The first typed match in depth-first pre-order, or `null`.
 
-**System.ArgumentException:** `pattern` is empty or whitespace.
+**System.ArgumentException:** `pattern` is empty.
 
 **System.ArgumentNullException:** `pattern` is `null`.
+
+**System.InvalidOperationException:** An attached search runs outside its scene owner or current processing group.
 
 **System.ObjectDisposedException:** This node or a recursively searched node is disposing on another thread, or has finished disposing.
 
-<a id="m-electron2d-node-findchildren-system-string-system-boolean"></a>
-### `public IReadOnlyList<Node> FindChildren(string pattern, bool recursive = true)`
+<a id="m-electron2d-node-findchildren-system-string-system-boolean-system-boolean"></a>
+### `public IReadOnlyList<Node> FindChildren(string pattern, bool recursive = true, bool owned = true)`
 
 Finds all descendants whose names match a wildcard pattern.
 
-**Parameter `pattern`:** A nonblank simple expression using * and ?; matching is case-insensitive.
+**Parameter `pattern`:** A case-sensitive name pattern: * matches any sequence and ? one Unicode character except a period.
 
-**Parameter `recursive`:** Whether descendants below direct children are searched.
+**Parameter `recursive`:** Whether descendants below direct children are searched, including internal children.
+
+**Parameter `owned`:** Whether branches without an owner are skipped; true by default.
 
 **Returns:** A read-only snapshot in depth-first pre-order.
 
-**System.ArgumentException:** `pattern` is empty or whitespace.
+**System.ArgumentException:** `pattern` is empty.
 
 **System.ArgumentNullException:** `pattern` is `null`.
 
+**System.InvalidOperationException:** An attached search runs outside its scene owner or current processing group.
+
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
-<a id="m-electron2d-node-findchildren-1-system-string-system-boolean"></a>
-### `public IReadOnlyList<TNode> FindChildren<TNode>(string pattern = "*", bool recursive = true)`
+<a id="m-electron2d-node-findchildren-1-system-string-system-boolean-system-boolean"></a>
+### `public IReadOnlyList<TNode> FindChildren<TNode>(string pattern = "*", bool recursive = true, bool owned = true)`
 
 Finds all descendants of a requested type whose names match a wildcard pattern.
 
 **Type parameter `TNode`:** The required node subtype.
 
-**Parameter `pattern`:** A nonblank simple expression using * and ?; matching is case-insensitive.
+**Parameter `pattern`:** A case-sensitive name pattern: * matches any sequence and ? one Unicode character except a period. An empty pattern selects every name.
 
-**Parameter `recursive`:** Whether descendants below direct children are searched.
+**Parameter `recursive`:** Whether descendants below direct children are searched, including internal children.
+
+**Parameter `owned`:** Whether branches without an owner are skipped; true by default.
 
 **Returns:** A read-only typed snapshot in depth-first pre-order.
 
-**System.ArgumentException:** `pattern` is empty or whitespace.
-
 **System.ArgumentNullException:** `pattern` is `null`.
+
+**System.InvalidOperationException:** An attached search runs outside its scene owner or current processing group.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
@@ -754,13 +768,13 @@ Finds all descendants of a requested type whose names match a wildcard pattern.
 
 Finds the nearest ancestor whose name matches a wildcard pattern.
 
-**Parameter `pattern`:** A nonblank simple expression using * and ?; matching is case-insensitive.
+**Parameter `pattern`:** A case-sensitive name pattern: * matches any sequence and ? one Unicode character except a period.
 
 **Returns:** The nearest matching ancestor, or `null`.
 
-**System.ArgumentException:** `pattern` is empty or whitespace.
-
 **System.ArgumentNullException:** `pattern` is `null`.
+
+**System.InvalidOperationException:** An attached search runs outside its scene owner or current processing group.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 

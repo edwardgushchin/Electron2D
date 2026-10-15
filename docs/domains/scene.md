@@ -358,3 +358,11 @@ Node scheduling now captures actual enabled public/internal lane membership, wit
 The Node call/set/notify thread-safe and deferred-group family now publishes typed operations to the current main processing owner. A distinct FIFO runs before and after callbacks, preserving weak receiver lifetime, current-owner transfer, error continuation and prepared zero-byte delivery alongside actual physical frames. Explicit worker processing groups and message masks are implemented by the profile below; broader worker scene/backend access remains open.
 
 Node processing now includes real inherited main/worker groups, ordered barriers, per-lane message-only masks, cached member schedules and typed cross-group dispatch. Public tests connect worker results to actual physics on the owner and retain general Node/CanvasItem/Entity/backend worker-access gaps as Partial.
+
+
+[Owned name/type searches](../components/scene-hierarchy.md#owned-name-and-type-searches)
+now preserve full branch ownership, internal scene order, case-sensitive Unicode
+patterns and typed inheritance filters for every Node descendant, including
+physics bodies and Areas. Repeated first-result/parent reads in actual physical
+frames have their own allocation and lifetime/thread checks; remaining scene
+API and platform acceptance remain separate.

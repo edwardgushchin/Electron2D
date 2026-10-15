@@ -123647,11 +123647,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Node.FindChild(System.String,System.Boolean)",
+    "id": "method:Electron2D.Node.FindChild(System.String,System.Boolean,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
     "name": "FindChild",
-    "signature": "public Electron2D.Node FindChild(System.String pattern, System.Boolean recursive = true)",
+    "signature": "public Electron2D.Node FindChild(System.String pattern, System.Boolean recursive = true, System.Boolean owned = true)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -123663,6 +123663,11 @@
       },
       {
         "name": "recursive",
+        "type": "System.Boolean",
+        "default": "true"
+      },
+      {
+        "name": "owned",
         "type": "System.Boolean",
         "default": "true"
       }
@@ -123671,11 +123676,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Node.FindChild\u00601(System.String,System.Boolean)",
+    "id": "method:Electron2D.Node.FindChild\u00601(System.String,System.Boolean,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
     "name": "FindChild",
-    "signature": "public TNode FindChild\u003CTNode\u003E(System.String pattern = \u0022*\u0022, System.Boolean recursive = true)",
+    "signature": "public TNode FindChild\u003CTNode\u003E(System.String pattern = \u0022*\u0022, System.Boolean recursive = true, System.Boolean owned = true)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -123689,17 +123694,22 @@
         "name": "recursive",
         "type": "System.Boolean",
         "default": "true"
+      },
+      {
+        "name": "owned",
+        "type": "System.Boolean",
+        "default": "true"
       }
     ],
     "returnType": "TNode",
     "value": null
   },
   {
-    "id": "method:Electron2D.Node.FindChildren(System.String,System.Boolean)",
+    "id": "method:Electron2D.Node.FindChildren(System.String,System.Boolean,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
     "name": "FindChildren",
-    "signature": "public System.Collections.Generic.IReadOnlyList\u003CElectron2D.Node\u003E FindChildren(System.String pattern, System.Boolean recursive = true)",
+    "signature": "public System.Collections.Generic.IReadOnlyList\u003CElectron2D.Node\u003E FindChildren(System.String pattern, System.Boolean recursive = true, System.Boolean owned = true)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -123713,17 +123723,22 @@
         "name": "recursive",
         "type": "System.Boolean",
         "default": "true"
+      },
+      {
+        "name": "owned",
+        "type": "System.Boolean",
+        "default": "true"
       }
     ],
     "returnType": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.Node\u003E",
     "value": null
   },
   {
-    "id": "method:Electron2D.Node.FindChildren\u00601(System.String,System.Boolean)",
+    "id": "method:Electron2D.Node.FindChildren\u00601(System.String,System.Boolean,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
     "name": "FindChildren",
-    "signature": "public IReadOnlyList\u003CTNode\u003E FindChildren\u003CTNode\u003E(System.String pattern = \u0022*\u0022, System.Boolean recursive = true)",
+    "signature": "public IReadOnlyList\u003CTNode\u003E FindChildren\u003CTNode\u003E(System.String pattern = \u0022*\u0022, System.Boolean recursive = true, System.Boolean owned = true)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -123735,6 +123750,11 @@
       },
       {
         "name": "recursive",
+        "type": "System.Boolean",
+        "default": "true"
+      },
+      {
+        "name": "owned",
         "type": "System.Boolean",
         "default": "true"
       }

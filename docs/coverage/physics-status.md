@@ -219,13 +219,13 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 82 | 27 | 6 | 0 | 0 |
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
-| [Node](classes/Node.md) | [Object](classes/Object.md) | 109 | 73 | 6 | 25 | 1 |
+| [Node](classes/Node.md) | [Object](classes/Object.md) | 112 | 70 | 6 | 25 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
 | [Object](classes/Object.md) | — | 19 | 16 | 2 | 22 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 20 | 5 | 0 | 2 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 274 | 128 | 17 | 49 | 23 |
+| **Total** | | 277 | 125 | 17 | 49 | 23 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -307,9 +307,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Node::method:can_process()`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Node::method:create_tween()`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Node::method:duplicate(int:)`](classes/Node.md) | Unimplemented | Authored typed connections now capture and rebind under ADRs 0010/0023. Remaining runtime duplication prerequisites: resolve ADR0091 live script binding/identity first so the Scripts bit is executable, then implement complete runtime groups and subtree factory/resource/node-reference remapping, including UseInstantiation and InternalState policies. Owner-selected stored-property Pack cannot substitute for full runtime duplication. |
-| [`Node::method:find_child(String:,bool:,bool:)`](classes/Node.md) | Partial | The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit.; The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit. |
-| [`Node::method:find_children(String:,String:,bool:,bool:)`](classes/Node.md) | Partial | The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit.; The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit. |
-| [`Node::method:find_parent(String:)`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Node::method:get_accessibility_element()`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
 | [`Node::method:get_groups()`](classes/Node.md) | Partial | The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit. |
 | [`Node::method:get_last_exclusive_window()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
@@ -446,10 +443,3 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | --- |
 | [`Performance::method:get_monitor(int:Performance.Monitor)`](classes/Performance.md) | Partial | Three completed physical producers and the complete typed custom-monitor lifecycle execute. Remaining built-in monitor selectors need their exact runtime producer instrumentation, counters or native diagnostics; these prerequisites remain recorded per row. Native Linux sessions and warmed managed reads are verified; debugger UI and foreign acceptance are separate. |
 | [`ProjectSettings::property:physics/2d/run_on_separate_thread`](classes/ProjectSettings.md) | Partial | ADRs 0054/0103: captured feature-aware false-default policy now dispatches complete selected Solve on a retained numerical lane with owner preparation/publication barriers, exact readonly input borrowing and joined error/lifetime cleanup. CPU and independent public-only provider checks execute real motion, callback identity, failure/no-replay, retirement and strict 0/0 warmed full frames. GPU store borrowing now executes continuous numerical tests on software Vulkan; hardware GPU/native/threaded-browser and scheduling/performance acceptance remain open. No serial fallback or inert stored switch closes these gates. The impaired three-process CPU network scenario now executes serial/separate numerical profiles through ticks 360/600, observing actual CPU lane identity, authority correction/replay, lifecycle/sleep and exact-once confirmed effects with strict 0/0 warm owner/all-thread bytes. Current mixed-backend/native and final performance gates remain open. Warm classification requires 128 completed steps per process as well as tick 300; cold replay stays in its total counter. Explicit admission after tick 310 exercises the boundary without suppressing positive warm samples. Serial and separate numerical profiles now execute the same six shared CCD/boundary/directed-ray CPU/GPU suites via the early continuous selector, using CPU-only llvmpipe Vulkan. All 128-sample warm brackets require 0/0 owner/all-thread bytes; process maps exclude NVIDIA and observe the retained thread only with separate policy. Software execution does not establish hardware performance, native allocation, foreign-platform or complete numerical-extension acceptance. |
-
-
-The [networked coupled support profile](../components/physics-network-example.md#coupled-support-across-network-correction-2026-10-15)
-adds actual loaded pin/groove/spring contacts, sleep/wake and imported-contact/sleep
-assertions to the public separate-process scenario. No engine declaration or
-coverage state changes: this bounded graph does not close arbitrary/dense coupling,
-the complete inherited/extension contract or hardware/window/performance gates.

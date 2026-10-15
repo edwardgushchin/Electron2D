@@ -1,6 +1,6 @@
 # StyleBoxTexture
 
-Last updated: 2026-10-02
+Last updated: 2026-10-15
 
 **Inherits:** [StyleBox](StyleBox.md), [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
@@ -81,7 +81,7 @@ The example has left content margin eight, other content margins falling back to
 **Draw hooks:** the bounds query simply expands the requested rectangle by stored expand margins. Drawing first resolves nested AtlasTexture source/destination regions, then expands the resolved destination and records one nine-patch command with border margins, axis policies, center and tint. This order preserves atlas margins/clipping before outward expansion. A null or empty atlas source emits no geometry. GetDrawRect remains a query of the requested bounds and does not apply atlas clipping. Nonfinite resulting geometry fails before recording a command.
 
 <a id="getpropertydescriptors"></a><a id="createduplicateinstance"></a><a id="copycustomstateto"></a><a id="dispose"></a>
-**Storage, copying and cleanup:** raw content, texture-border and expand margins remain distinct. Shallow duplicates share the texture; deep duplicates use Resource's selected subresource graph policy, preserving identity/aliases where required. Instantiating a scene-local style clones its built-in or scene-local texture subresources; a nonlocal external texture remains shared under that existing policy. The built-in factory returns exact StyleBoxTexture; further subclasses require an exact factory of their own. Dispose clears only this style's texture reference and then performs ordinary Resource cleanup.
+**Storage, copying and cleanup:** raw content, texture-border and expand margins remain distinct. Shallow duplicates share the texture; deep duplicates use Resource's selected subresource graph policy, preserving identity/aliases where required. Instantiating a scene-local style clones only texture subresources independently marked ResourceLocalToScene; nonlocal textures remain borrowed for both built-in and external paths. The built-in factory returns exact StyleBoxTexture; further subclasses require an exact factory of their own. Dispose clears only this style's texture reference and then performs ordinary Resource cleanup.
 
 ## Lifecycle and verification
 

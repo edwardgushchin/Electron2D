@@ -1,4 +1,6 @@
-if (args.Contains("--process-groups-child")) BackendChecks.ReadGroupSettings(args[Array.IndexOf(args, "--process-groups-child") + 1]);
+if (args.Contains("--node-search")) BackendChecks.RunNodeSearch(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--process-groups-child")) BackendChecks.ReadGroupSettings(args[Array.IndexOf(args, "--process-groups-child") + 1]);
 else if (args.Contains("--resource-identity-child")) BackendChecks.ReadResourceIdentity(args[Array.IndexOf(args, "--resource-identity-child") + 1], args[0] == "gpu" ? Electron2D.PhysicsServer.Backend.GPU : args[0] == "cpu" ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("threaded"));
 else if (args.Contains("--process-groups")) BackendChecks.RunProcessGroups(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--thread-messages")) BackendChecks.RunThreadMessages(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));

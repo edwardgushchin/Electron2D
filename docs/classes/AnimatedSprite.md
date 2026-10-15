@@ -1,6 +1,6 @@
 # AnimatedSprite
 
-Last updated: 2026-09-23
+Last updated: 2026-10-15
 
 **Inherits:** [Entity](Entity.md), [CanvasItem](CanvasItem.md), [Node](Node.md)
 
@@ -495,6 +495,11 @@ Resource replacement disconnects the old library, reconciles selection/autoplay,
 Centered and Offset emit ItemRectChanged when changed. Flips, frame changes and library changes redraw but do not emit that geometry event. Direct texture geometry/view changes do not forward through SpriteFrames; call QueueRedraw or emit the library's Changed as appropriate. Existing pixel updates remain visible without rerecording commands. Null frames and absent/empty animations draw nothing. A source texture is borrowed throughout retained drawing.
 
 [AnimatedSpriteTests](../../tests/Electron2D.Tests/AnimatedSpriteTests.cs) verifies deterministic forward/reverse/loop/ping-pong traces, duration transitions, exact boundaries, bounded catch-up, zero speed, tree pause/process mode, ready/reentry, event ordering, worker reconciliation, virtual drawing/pixel snapping, packing/local ownership, callback errors/reentry/disposal and allocation-free repeated internal notifications after warmup. This allocation check does not establish whole-frame performance.
+
+The packing checks distinguish locality per resource: a local SpriteFrames library
+borrows unmarked frame textures and preserves their aliases and lifetime. Marking
+the texture itself ResourceLocalToScene creates one shared local texture copy,
+which retires with its scene together with the copied frame library.
 
 [AnimatedSpriteRenderingTests](../../tests/Electron2D.Tests/AnimatedSpriteRenderingTests.cs) checks native pixel readback for texture/atlas/null frames, flips, centering, worker library edits, pixel updates, visibility, timed host completion and error cleanup. Verified on Linux Wayland with compatibility and GPU/Vulkan, including HLSL/GLSL canvas materials, and dummy/software compatibility. Windows, macOS, other platform backends, owner visual acceptance, published deployment and performance remain unverified. This does not add AnimationPlayer, AnimationMixer, an editor, asset import or disk scene serialization. See ADRs [0008](../decisions/scene.md#adr-0008), [0028](../decisions/rendering.md#adr-0028), and [0021](../decisions/product.md#adr-0021).
 
