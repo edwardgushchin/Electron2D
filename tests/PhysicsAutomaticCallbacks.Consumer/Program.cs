@@ -10,6 +10,10 @@ PhysicsAOTPrerequisiteTests.Run();
 
 var backend = args.Length > 0 && args[0] == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
 if (args.Contains("--process-groups")) BackendChecks.RunProcessGroups(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));
+else if (args.Contains("--portable-contacts")) BackendChecks.RunPortableContacts(args.Contains("threaded"), args.Length > 0 && args[0] == "registered" ? null : backend);
+else if (args.Contains("--portable-capture")) BackendChecks.RunPortableCapture(args.Contains("threaded"), args.Length > 0 && args[0] == "registered" ? null : backend);
+else if (args.Contains("--portable-geometry")) BackendChecks.RunPortableGeometry(args.Contains("threaded"), args.Length > 0 && args[0] == "registered" ? null : backend);
+else if (args.Contains("--portable-motion")) BackendChecks.RunPortableMotion(args.Contains("threaded"), args.Length > 0 && args[0] == "registered" ? null : backend);
 else if (args.Contains("--portable-joints")) BackendChecks.RunPortableJoints(args.Contains("threaded"), args.Length > 0 && args[0] == "registered" ? null : backend);
 else if (args.Contains("--spring-anchors")) BackendChecks.RunSpringAnchors(args.Contains("threaded"), args.Length > 0 && args[0] == "registered" ? null : backend);
 else if (args.Contains("--sleep")) BackendChecks.RunSleep(args.Length > 0 && args[0] == "registered" ? null : backend);

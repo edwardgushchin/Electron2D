@@ -65,7 +65,7 @@ public static partial class BackendChecks
                 Check(target.Events == events && target.Character.GetPlatformVelocity() == platformVelocity,
                     "A real body platform transfers silently into the destination's own world");
                 target.VerifyCharacterQuery(); var before = target.Character.GlobalPosition;
-                target.Character.Velocity = Vector2.Zero; target.Tree.PhysicsFrame(.01); target.Character.MoveAndSlide();
+                target.Character.Velocity = Vector2.Zero; target.Tree.PhysicsFrame(.01); target.Tree.ProcessFrame(.01); target.Character.MoveAndSlide();
                 var carried = before.Y - target.Character.GlobalPosition.Y;
                 Check(carried > .02f && carried < .1f, "The next real movement follows the remapped platform's nonzero surface velocity");
                 target.Map.Capture(snapshot);

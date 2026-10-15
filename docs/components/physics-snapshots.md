@@ -1,6 +1,6 @@
 # Portable physics snapshots
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 `PhysicsSnapshotMap` connects caller-assigned network identities to one live CPU,
 GPU or registered world. `PhysicsSnapshot` owns a bounded reusable byte encoding. Together they
@@ -358,8 +358,9 @@ logical-index validation.
 The 128-warm/128-measured complete contact/step/transfer/slide/query cycles require
 0/0 owner/all-thread managed bytes in serial/separate modes. This bounded circle
 fixture now passes all six CPU/CPU, CPU/GPU and CPU/registered serial/separate
-profiles. Each measured bracket retains 640 complete frames, 256 transfers,
-128 character movements and 256 actual point queries at 0/0 owner/all-thread bytes.
+profiles. Each measured bracket retains 640 physical frames, 128 process frames, 256
+transfers, 128 character movements and 256 actual point queries at 0/0
+owner/all-thread bytes.
 GPU processes load CPU-only llvmpipe without NVIDIA; CPU/registered load no graphics
 driver, and retained numerical threads are observed only in separate profiles.
 The corresponding six --portable-motion profiles also pass exact wire/platform
@@ -403,3 +404,16 @@ GPU collider replay also retains the compact activity flag, validity and epoch. 
 portable corrections and real replay in separate CPU-authority/GPU-client processes.
 Explicit effort-disabled trajectories validate the guards. Broader graphs, native,
 hardware and final performance acceptance remain open.
+
+
+## Character history frame preparation
+
+External MoveAndSlide calls use the tree process duration under ADR 0067. The
+portable-contact fixture supplies that process frame after its physical step; the
+portable-motion receiver does the same before following a restored platform.
+Before any ProcessFrame has run, PhysicsFrame alone leaves the external process
+duration at zero and cannot create the intended velocity travel. This fixture correction preserves the
+runtime phase contract and the existing contact/slide/Area assertions and bounds.
+Current managed and NativeAOT verification is retained in
+bin/physics-character-history/2026-10-15/validation.json; hardware, general geometry
+and multi-process acceptance remain separate gates.

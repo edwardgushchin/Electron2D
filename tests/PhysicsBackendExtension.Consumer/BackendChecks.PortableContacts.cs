@@ -198,7 +198,7 @@ public static partial class BackendChecks
         internal void Contact()
         {
             Mover.Position = Vector2.Zero; Mover.LinearVelocity = new(20, 5); Mover.AngularVelocity = 0; Character.Position = new(100, 0);
-            Tree.PhysicsFrame(.01); Character.Velocity = new(1000, 0); Character.MoveAndSlide();
+            Tree.PhysicsFrame(.01); Tree.ProcessFrame(.01); Character.Velocity = new(1000, 0); Character.MoveAndSlide();
         }
         internal void Separate() { Mover.Position = new(50, 0); Mover.LinearVelocity = Vector2.Zero; Tree.PhysicsFrame(.01); }
         internal void RemoveAreaShape() => PhysicsServer.AreaRemoveShape(_area, 1);
