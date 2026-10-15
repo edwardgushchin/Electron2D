@@ -2,6 +2,45 @@
 
 Last updated: 2026-10-15
 
+## Exact node paths
+
+`GetPath()` returns a cached immutable absolute string only while the node belongs to
+an active SceneTree; detached nodes return an empty string. The first query creates
+only the requested node's string. Renaming any ancestor, changing parents, entering
+or leaving the tree clears affected caches before subsequent observer access. Exit
+callbacks can still read their active path; TreeExited sees an empty path. Callback
+failures leave the committed hierarchy and path state coherent. Reordering siblings
+does not invalidate a path. Previously returned strings remain caller-owned values.
+
+`GetNode`, its typed overload, `GetNodeOrNull` and `HasNode` share a span-based exact
+resolver, including internal and unowned children. Relative paths, repeated slashes,
+`.`/`..`, active absolute root names and owner-scoped `%Name` retain borrowed node
+identity. Empty input and a lone colon do not resolve; whitespace matches literally.
+Valid property subnames are ignored for node traversal; `:Name` addresses this node,
+and a trailing colon is accepted. Null throws ArgumentNullException, empty intermediate
+subnames throw ArgumentException, required misses throw KeyNotFoundException and
+wrong typed targets throw InvalidCastException. The resource endpoint remains a
+separate cold descriptor query with its documented required-input validation.
+
+Attached path reads accept the owner or the receiver's current processing group.
+Other workers reject before reading even a cached string. Exact traversal can cross
+group boundaries through immutable names; it does not invoke target callbacks.
+`GetPathTo` retains its source/target unique-path rules and supports detached nodes
+in the same hierarchy; its returned relative path is an explicit allocated snapshot.
+
+[The public NodePaths consumer](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.NodePaths.cs)
+checks grammar, unique/typed identities, internal children, rename/reparent/detach,
+failed activation/exit/rename callbacks, pre-entry multiplayer root binding, thread guards and processing groups through moving physical nodes
+and their sibling roles. Each profile warms 128 full physics frames then measures
+128 more with strict zero owner/all-thread managed bytes for cached paths, required
+and nullable lookups, unique names and misses. Backend numerical performance,
+native allocation, real-window output and other platforms remain separate gates.
+The same public consumer passes all six CPU/software-Vulkan/registered serial and
+separate-thread profiles in both managed execution and strict NativeAOT. Process
+maps distinguish CoreCLR from the native executable, confirm lavapipe only in GPU
+profiles and show no physical NVIDIA library; numerical worker threads appear only
+in separate-thread profiles.
+
 ## Resource endpoints and subtree operations
 
 `GetNodeAndResource(string path)` resolves slash-separated node names followed by colon-separated typed property names. It returns a C# tuple `(Node? Node, Resource? Resource, string RemainingPath)` rather than a heterogeneous array. Each resource-valued property becomes the next owner. The result retains the last borrowed resource and stops at the first existing scalar, node, other non-resource value or null, returning that component and later components as a colon-prefixed remainder. It does not validate the remainder. A missing node/property returns a null Node; a resource already found remains in the tuple. `HasNodeAndResource` tests the Node field, so an existing null property is a successful remainder. Getter/schema errors remain visible; disposed resolved resources reject access.

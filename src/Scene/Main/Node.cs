@@ -188,6 +188,7 @@ public partial class Node : ElectronObject
     private readonly Dictionary<string, bool> _groups = new(StringComparer.Ordinal);
 
     private string _name;
+    private string? _absolutePathCache;
 
     private string _sceneFilePath = string.Empty;
 
@@ -282,6 +283,7 @@ public partial class Node : ElectronObject
 
             Parent?.EnsureChildNameAvailable(value, this);
             _name = value;
+            InvalidatePathCache();
             ClaimUniqueName();
 
             if (IsInsideTree)
@@ -1222,15 +1224,30 @@ public partial class Node : ElectronObject
         return null;
     }
 
-    /// <summary>Builds this node's absolute path from the root of its current hierarchy.</summary>
-    /// <returns>A slash-prefixed path that includes the hierarchy root name.</returns>
-    /// <remarks>The path is available for both attached and detached hierarchies.</remarks>
+    /// <summary>Gets this node's absolute path in its active scene tree.</summary>
+    /// <returns>A slash-prefixed path including the root name, or an empty string outside an active tree.</returns>
+    /// <remarks>The immutable result is cached until this node's ancestry, tree membership or an ancestor name changes.</remarks>
+    /// <exception cref="InvalidOperationException">An attached read runs outside the owner thread or current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public string GetPath()
     {
         ThrowIfDisposed();
-        var names = GetAncestry().Select(node => node.Name);
-        return "/" + string.Join('/', names);
+        Tree?.EnsureProcessingAccess(this);
+        if (Tree is null) return string.Empty;
+        if (_absolutePathCache is not null) return _absolutePathCache;
+        var length = 0;
+        for (Node? current = this; current is not null; current = current.Parent)
+            length = checked(length + current._name.Length + 1);
+        return _absolutePathCache = string.Create(length, this, static (buffer, node) =>
+        {
+            var index = buffer.Length;
+            for (Node? current = node; current is not null; current = current.Parent)
+            {
+                index -= current._name.Length;
+                current._name.AsSpan().CopyTo(buffer[index..]);
+                buffer[--index] = '/';
+            }
+        });
     }
 
     /// <summary>Builds a relative path from this node to another node in the same hierarchy.</summary>
@@ -1239,7 +1256,7 @@ public partial class Node : ElectronObject
     /// <returns><c>.</c> for this node, otherwise a slash-separated sequence of <c>..</c>, child names and optional owner-scoped unique names.</returns>
     /// <remarks>With <paramref name="useUniquePath"/>, the first eligible unique node on the target side replaces the preceding path. Otherwise an eligible source-side unique node may prefix the upward path, even when that makes the result longer.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
-    /// <exception cref="InvalidOperationException">The nodes do not share a hierarchy root.</exception>
+    /// <exception cref="InvalidOperationException">The nodes do not share a hierarchy root, or an attached read runs outside the owner thread or current processing group.</exception>
     /// <exception cref="ObjectDisposedException">
     /// This node is disposing on another thread or has finished disposing, or disposal of <paramref name="node"/> has started.
     /// </exception>
@@ -1248,6 +1265,7 @@ public partial class Node : ElectronObject
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(node);
         ObjectDisposedException.ThrowIf(node.IsDisposed, node);
+        Tree?.EnsureProcessingAccess(this);
 
         if (ReferenceEquals(this, node))
             return ".";
@@ -1305,94 +1323,92 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Resolves a required relative or absolute node path.</summary>
-    /// <param name="path">A nonblank slash-separated path supporting <c>.</c>, <c>..</c>, owner-scoped <c>%Name</c>, and an optional absolute root-name segment.</param>
+    /// <param name="path">A slash-separated path supporting <c>.</c>, <c>..</c>, owner-scoped <c>%Name</c>, and an optional absolute root-name segment.</param>
     /// <returns>The resolved node.</returns>
-    /// <remarks>Absolute paths require active scene membership and start with the scene root's name. Colon-separated property subnames are validated for empty components but do not participate in node traversal; a property-only path addresses this node.</remarks>
-    /// <exception cref="ArgumentException"><paramref name="path"/> is empty or whitespace.</exception>
+    /// <remarks>Absolute paths require active scene membership and start with the scene root's name. Colon-separated property subnames are validated for empty components but do not participate in node traversal; a property-only path addresses this node. Empty paths and a lone colon do not resolve; whitespace is matched literally.</remarks>
+    /// <exception cref="ArgumentException"><paramref name="path"/> contains an empty intermediate property subname.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
-    /// <exception cref="InvalidOperationException">An attached lookup runs off the scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached lookup runs outside the owner thread or current processing group.</exception>
     /// <exception cref="KeyNotFoundException">No node exists at the requested path.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public Node GetNode(string path) => GetNodeOrNull(path) ?? throw new KeyNotFoundException($"Node path '{path}' was not found from '{GetPath()}'.");
 
     /// <summary>Resolves a required relative or absolute path to a requested node type.</summary>
     /// <typeparam name="TNode">The required node subtype.</typeparam>
-    /// <param name="path">A nonblank slash-separated node path.</param>
+    /// <param name="path">A slash-separated node path.</param>
     /// <returns>The resolved node cast to <typeparamref name="TNode"/>.</returns>
-    /// <exception cref="ArgumentException"><paramref name="path"/> is empty or whitespace.</exception>
+    /// <exception cref="ArgumentException"><paramref name="path"/> contains an empty intermediate property subname.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidCastException">The resolved node is not a <typeparamref name="TNode"/>.</exception>
-    /// <exception cref="InvalidOperationException">An attached lookup runs off the scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached lookup runs outside the owner thread or current processing group.</exception>
     /// <exception cref="KeyNotFoundException">No node exists at the requested path.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public TNode GetNode<TNode>(string path)
         where TNode : Node => GetNode(path) as TNode ?? throw new InvalidCastException($"Node at '{path}' is not a {typeof(TNode).Name}.");
 
     /// <summary>Attempts to resolve a relative or absolute node path.</summary>
-    /// <param name="path">A nonblank slash-separated path supporting <c>.</c>, <c>..</c>, owner-scoped <c>%Name</c>, and an optional absolute root-name segment.</param>
-    /// <returns>The resolved node, or <see langword="null"/> when traversal cannot continue.</returns>
-    /// <remarks>Absolute paths require active scene membership and start with the scene root's name. Colon-separated property subnames are validated for empty components but do not participate in node traversal; a property-only path addresses this node.</remarks>
-    /// <exception cref="ArgumentException"><paramref name="path"/> is empty or whitespace.</exception>
+    /// <param name="path">A slash-separated path supporting <c>.</c>, <c>..</c>, owner-scoped <c>%Name</c>, and an optional absolute root-name segment.</param>
+    /// <returns>The resolved node, or <see langword="null"/> for an empty path or when traversal cannot continue.</returns>
+    /// <remarks>Absolute paths require active scene membership and start with the scene root's name. Colon-separated property subnames are validated for empty components but do not participate in node traversal; a property-only path addresses this node. Empty paths and a lone colon do not resolve; whitespace is matched literally.</remarks>
+    /// <exception cref="ArgumentException"><paramref name="path"/> contains an empty intermediate property subname.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
-    /// <exception cref="InvalidOperationException">An attached lookup runs off the scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached lookup runs outside the owner thread or current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public Node? GetNodeOrNull(string path)
     {
         ThrowIfDisposed();
-        Tree?.EnsureOwnerThread();
-        ArgumentException.ThrowIfNullOrWhiteSpace(path);
-
-        var subpath = path.IndexOf(':');
+        Tree?.EnsureProcessingAccess(this);
+        ArgumentNullException.ThrowIfNull(path);
+        if (path.Length == 0) return null;
+        var nodePath = path.AsSpan();
+        var subpath = nodePath.IndexOf(':');
         if (subpath >= 0)
         {
-            if (path.Length == 1 || path.Contains("::", StringComparison.Ordinal)) throw new ArgumentException("Node property path components cannot be empty.", nameof(path));
-            path = subpath == 0 ? "." : path[..subpath];
+            if (nodePath.Contains("::", StringComparison.Ordinal))
+                throw new ArgumentException("Node property path components cannot be empty.", nameof(path));
+            if (path.Length == 1) return null;
+            nodePath = nodePath[..subpath];
         }
-        var absolute = path.StartsWith('/');
+        var absolute = path[0] == '/';
         if (absolute && Tree is null) return null;
-        var current = absolute ? GetHierarchyRoot() : this;
-        var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
-        if (absolute && (parts.Length == 0 || !StringComparer.Ordinal.Equals(parts[0], current.Name))) return null;
-        var start = absolute ? 1 : 0;
-
-        for (var index = start; index < parts.Length; index++)
+        Node? current = absolute ? GetHierarchyRoot() : this;
+        var needsRoot = absolute;
+        while (!nodePath.IsEmpty)
         {
-            var part = parts[index];
-
-            if (part == ".")
-                continue;
-
-            if (part == "..")
+            var end = nodePath.IndexOf('/');
+            var part = end < 0 ? nodePath : nodePath[..end];
+            nodePath = end < 0 ? default : nodePath[(end + 1)..];
+            if (part.IsEmpty) continue;
+            if (needsRoot)
             {
-                current = current.Parent;
-                if (current is null)
-                    return null;
-
-                continue;
+                if (!part.SequenceEqual(current._name)) return null;
+                needsRoot = false;
             }
-
-            current = part[0] == '%'
-                ? current.FindUniqueOwned(part[1..]) ?? current._owner?.FindUniqueOwned(part[1..])
-                : current._children.FirstOrDefault(child => StringComparer.Ordinal.Equals(child.Name, part));
-            if (current is null)
-                return null;
+            else if (part.SequenceEqual("..")) current = current.Parent;
+            else if (!part.SequenceEqual("."))
+            {
+                if (part[0] == '%') current = current.FindUniqueOwned(part[1..]) ?? current._owner?.FindUniqueOwned(part[1..]);
+                else
+                {
+                    Node? child = null;
+                    foreach (var candidate in current._children)
+                        if (part.SequenceEqual(candidate._name)) { child = candidate; break; }
+                    current = child;
+                }
+            }
+            if (current is null) return null;
         }
-
-        return current;
+        return needsRoot ? null : current;
     }
 
     /// <summary>Reports whether a relative or absolute node path resolves from this node.</summary>
-    /// <param name="path">A nonblank node path.</param>
+    /// <param name="path">A node path.</param>
     /// <returns>True when the target node exists; false when traversal cannot continue.</returns>
-    /// <exception cref="ArgumentException">The path is blank.</exception>
+    /// <exception cref="ArgumentException">The path contains an empty intermediate property subname.</exception>
     /// <exception cref="ArgumentNullException">The path is null.</exception>
-    /// <exception cref="InvalidOperationException">An attached query runs off-owner.</exception>
+    /// <exception cref="InvalidOperationException">An attached query runs outside the owner thread or current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
-    public bool HasNode(string path)
-    {
-        Tree?.EnsureOwnerThread();
-        return GetNodeOrNull(path) is not null;
-    }
+    public bool HasNode(string path) => GetNodeOrNull(path) is not null;
 
     /// <summary>Tests whether this node follows another node in the same active tree's depth-first order.</summary>
     /// <param name="node">The other live node.</param>
@@ -2180,6 +2196,7 @@ public partial class Node : ElectronObject
     {
 
         Tree = tree;
+        _absolutePathCache = null;
         TreeAttachmentVersion++;
         tree.BindProcessingGroup(this);
         List<Exception>? errors = null;
@@ -2417,6 +2434,7 @@ public partial class Node : ElectronObject
 
             tree.UnbindProcessingGroup(this);
             Tree = null;
+            _absolutePathCache = null;
 
             try
             {
@@ -2444,6 +2462,7 @@ public partial class Node : ElectronObject
             {
                 tree.UnbindProcessingGroup(this);
                 Tree = null;
+                _absolutePathCache = null;
             }
         }
 
@@ -2534,6 +2553,7 @@ public partial class Node : ElectronObject
         ChangeInternalChildCount(internalMode, 1);
         child._internalMode = internalMode;
         child.Parent = this;
+        child.InvalidatePathCache();
         List<Exception>? errors = null;
 
         try
@@ -2654,6 +2674,7 @@ public partial class Node : ElectronObject
         _children.Remove(child);
         ChangeInternalChildCount(child._internalMode, -1);
         child.Parent = null;
+        child.InvalidatePathCache();
         child.ClearInvalidOwnersRecursive();
 
         try
@@ -2718,14 +2739,22 @@ public partial class Node : ElectronObject
             _uniqueNameInOwner = false;
     }
 
-    private Node? FindUniqueOwned(string name, Node? except = null)
+    private Node? FindUniqueOwned(ReadOnlySpan<char> name, Node? except = null) => FindUniqueOwned(this, this, name, except);
+
+    private static Node? FindUniqueOwned(Node current, Node owner, ReadOnlySpan<char> name, Node? except)
     {
-        // ponytail: owner-scoped lookup scans the subtree; add an index if path profiling makes this significant.
-        foreach (var node in EnumerateDepthFirst())
-            if (!ReferenceEquals(node, except) && ReferenceEquals(node._owner, this) && node._uniqueNameInOwner &&
-                StringComparer.Ordinal.Equals(node._name, name))
-                return node;
+        // shortcut: scan the owner subtree; add an index if path profiling makes traversal significant.
+        if (!ReferenceEquals(current, except) && ReferenceEquals(current._owner, owner) && current._uniqueNameInOwner &&
+            name.SequenceEqual(current._name)) return current;
+        foreach (var child in current._children)
+            if (FindUniqueOwned(child, owner, name, except) is { } found) return found;
         return null;
+    }
+
+    private void InvalidatePathCache()
+    {
+        _absolutePathCache = null;
+        foreach (var child in _children) child.InvalidatePathCache();
     }
 
     private void FindChildrenCore<TNode>(string pattern, bool recursive, bool owned, List<TNode> result)

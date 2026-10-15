@@ -115,7 +115,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public Node GetNode(string path)`](#m-electron2d-node-getnode-system-string) | Resolves a required relative or absolute node path. |
 | [`public Node GetNodeOrNull(string path)`](#m-electron2d-node-getnodeornull-system-string) | Attempts to resolve a relative or absolute node path. |
 | [`public TNode GetNode<TNode>(string path)`](#m-electron2d-node-getnode-1-system-string) | Resolves a required relative or absolute path to a requested node type. |
-| [`public string GetPath()`](#m-electron2d-node-getpath) | Builds this node's absolute path from the root of its current hierarchy. |
+| [`public string GetPath()`](#m-electron2d-node-getpath) | Gets this node's cached absolute path in its active scene tree. |
 | [`public string GetPathTo(Node node, bool useUniquePath = false)`](#m-electron2d-node-getpathto-electron2d-node-system-boolean) | Builds a relative path, optionally using owner-scoped unique names. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-node-getpropertydescriptors) | Extends base typed descriptors with neutral name, process, input and automatic translation state for inspection and packed scenes. |
 | [`public Viewport GetViewport()`](#m-electron2d-node-getviewport) | Finds this node's nearest viewport, including itself. |
@@ -486,7 +486,7 @@ Clears an explicit domain override so this node resolves its parent's current do
 <a id="m-electron2d-node-hasnode-system-string"></a>
 ### `public bool HasNode(string path)`
 
-Returns whether `path` resolves through the relative or absolute node-path rules, including owner-scoped `%Name`. Detached hierarchies support relative paths; absolute paths require active tree membership and a root-name segment. Rejects blank paths and off-owner attached queries.
+Returns whether `path` resolves through the relative or absolute node-path rules, including owner-scoped `%Name`. Detached hierarchies support relative paths; absolute paths require active tree membership and a root-name segment. Empty paths and a lone colon return false; whitespace is matched literally. Null and empty intermediate property subnames reject. Attached queries require the owner thread or current processing group.
 
 <a id="m-electron2d-node-isgreaterthan-electron2d-node"></a>
 ### `public bool IsGreaterThan(Node node)`
@@ -824,17 +824,17 @@ Gets this node's index in its parent's ordered child list.
 
 Resolves a required relative or absolute node path, including owner-scoped `%Name` segments.
 
-**Parameter `path`:** A nonblank slash-separated path supporting ., .., `%Name`, and an optional absolute root-name segment.
+**Parameter `path`:** A slash-separated path supporting ., .., `%Name`, and an optional absolute root-name segment.
 
 **Returns:** The resolved node.
 
-**Remarks:** Absolute paths require an active scene tree and the root-name segment; detached hierarchies support relative paths.
+**Remarks:** Absolute paths require an active scene tree and the root-name segment; detached hierarchies support relative paths. Repeated separators are ignored. Valid colon-separated property subnames do not participate in node traversal; property-only paths address this node. Empty paths and a lone colon do not resolve. Required lookup throws KeyNotFoundException on a miss. Exact lookups include internal and unowned nodes and allocate no managed memory.
 
-**System.ArgumentException:** `path` is empty or whitespace.
+**System.ArgumentException:** `path` contains an empty intermediate property subname.
 
 **System.ArgumentNullException:** `path` is `null`.
 
-**System.InvalidOperationException:** An attached lookup runs off the scene owner thread.
+**System.InvalidOperationException:** An attached lookup runs outside the owner thread or current processing group.
 
 **KeyNotFoundException:** No node exists at the requested path.
 
@@ -845,17 +845,17 @@ Resolves a required relative or absolute node path, including owner-scoped `%Nam
 
 Attempts to resolve a relative or absolute node path, including owner-scoped `%Name` segments.
 
-**Parameter `path`:** A nonblank slash-separated path supporting ., .., `%Name`, and an optional absolute root-name segment.
+**Parameter `path`:** A slash-separated path supporting ., .., `%Name`, and an optional absolute root-name segment.
 
-**Returns:** The resolved node, or `null` when traversal cannot continue.
+**Returns:** The resolved node, or `null` for an empty path, a lone colon or when traversal cannot continue.
 
-**Remarks:** Absolute paths require an active scene tree and the root-name segment; detached hierarchies support relative paths.
+**Remarks:** Absolute paths require an active scene tree and the root-name segment; detached hierarchies support relative paths. Repeated separators are ignored. Valid colon-separated property subnames do not participate in node traversal; property-only paths address this node. Empty paths and a lone colon do not resolve. Required lookup throws KeyNotFoundException on a miss. Exact lookups include internal and unowned nodes and allocate no managed memory.
 
-**System.ArgumentException:** `path` is empty or whitespace.
+**System.ArgumentException:** `path` contains an empty intermediate property subname.
 
 **System.ArgumentNullException:** `path` is `null`.
 
-**System.InvalidOperationException:** An attached lookup runs off the scene owner thread.
+**System.InvalidOperationException:** An attached lookup runs outside the owner thread or current processing group.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
@@ -866,17 +866,17 @@ Resolves a required relative or absolute path to a requested node type.
 
 **Type parameter `TNode`:** The required node subtype.
 
-**Parameter `path`:** A nonblank slash-separated node path.
+**Parameter `path`:** A slash-separated node path.
 
 **Returns:** The resolved node cast to `TNode`.
 
-**System.ArgumentException:** `path` is empty or whitespace.
+**System.ArgumentException:** `path` contains an empty intermediate property subname.
 
 **System.ArgumentNullException:** `path` is `null`.
 
 **System.InvalidCastException:** The resolved node is not a `TNode`.
 
-**System.InvalidOperationException:** An attached lookup runs off the scene owner thread.
+**System.InvalidOperationException:** An attached lookup runs outside the owner thread or current processing group.
 
 **KeyNotFoundException:** No node exists at the requested path.
 
@@ -885,11 +885,13 @@ Resolves a required relative or absolute path to a requested node type.
 <a id="m-electron2d-node-getpath"></a>
 ### `public string GetPath()`
 
-Builds this node's absolute path from the root of its current hierarchy.
+Gets this node's cached absolute path in its active scene tree.
 
-**Returns:** A slash-prefixed path that includes the hierarchy root name.
+**Returns:** A slash-prefixed path including the root name, or an empty string outside an active tree.
 
-**Remarks:** The path is available for both attached and detached hierarchies.
+**Remarks:** The immutable string is cached until ancestry, tree membership or an ancestor name changes. Cache invalidation precedes path notifications; exit callbacks retain the path until membership ends. Attached reads require the owner thread or current processing group.
+
+**System.InvalidOperationException:** An attached read runs outside the owner thread or current processing group.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
@@ -906,7 +908,7 @@ Builds a relative path from this node to another node in the same hierarchy. Wit
 
 **System.ArgumentNullException:** `node` is `null`.
 
-**System.InvalidOperationException:** The nodes do not share a hierarchy root.
+**System.InvalidOperationException:** The nodes do not share a hierarchy root, or the attached receiver is accessed outside the owner thread or current processing group.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing, or disposal of `node` has started.
 
