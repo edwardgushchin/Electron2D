@@ -10,6 +10,20 @@ remains the separate exact-history mechanism for local prediction/replay.
 
 ## Temporary reference lifetime
 
+Recapturing a binding after its shape count shrinks clears retired shape references
+from its retained configuration array. Preparing apply does the same, including a
+later schema rejection. Common replay buffers containing references also clear
+their unused tail when a shorter contact history replaces a previous capture.
+Array capacity stays reusable; completed samples in the active prefix retain
+their intended identity and configuration checks.
+
+The public-only `--history-storage` profile crosses scene/raw bodies and Areas,
+local checkpoint recapture, successful/rejected portable capture and successful/
+rejected apply. It keeps the map/checkpoint alive while checking collection of a
+removed and disposed shape, then checks 64 warm capture/restore or capture/apply
+cycles. CPU, GPU and independent registered ownership support serial/separate
+execution; complete byte budgets remain open.
+
 Capture and apply clear their pose-order scratch on success and failure while
 reusing its capacity. Removing a binding therefore releases its replay entry;
 an idle map does not retain that entry through a completed operation. Bound-body

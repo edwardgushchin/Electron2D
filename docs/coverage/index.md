@@ -1,5 +1,10 @@
 # API coverage register
 
+[Replay storage reuse](../components/physics-snapshots.md#temporary-reference-lifetime)
+clears references outside the current shape/contact prefix while preserving warm
+capacity. Public scene/raw body/Area checks cover recapture and accepted/rejected
+portable preparation; declaration states and full memory acceptance stay unchanged.
+
 [History reference lifetime](../components/physics-space-checkpoints.md#released-history-references)
 fixes common checkpoint owner retention, portable pose/body scratch cleanup and
 shapeless GPU apply before the first step. CPU/GPU collection checks and public

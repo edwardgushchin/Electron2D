@@ -1,6 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Common attached scene/server state accompanying a backend-local replay checkpoint.</summary>
+/// <remarks>Recapture releases retired shape references while retaining reusable storage capacity.</remarks>
 internal sealed partial class PhysicsReplayEntry
 {
     internal readonly PhysicsColliderBackend Backend;
@@ -73,7 +74,9 @@ internal sealed partial class PhysicsReplayEntry
         _attachment = Backend.AttachmentVersion; _configuration = Settings();
         _parent = Scene?.Parent; _tree = Scene?.Tree; _pose = Scene?.GlobalTransform ?? default;
         Depth = 0; for (var ancestor = _parent; ancestor is not null; ancestor = ancestor.Parent) Depth++;
-        _shapeCount = ShapeCount; if (_shapes.Length < _shapeCount) Array.Resize(ref _shapes, _shapeCount);
+        var count = ShapeCount; if (_shapes.Length < count) Array.Resize(ref _shapes, count);
+        if (_shapeCount > count) Array.Clear(_shapes, count, _shapeCount - count);
+        _shapeCount = count;
         for (var i = 0; i < _shapeCount; i++) _shapes[i] = ShapeAt(i);
         if (Scene is PhysicsBody body) body.CaptureReplay(_body!);
         if (Scene is RigidBody rigid) rigid.CaptureReplay(_rigid!);

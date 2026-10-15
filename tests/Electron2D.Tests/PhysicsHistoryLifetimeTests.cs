@@ -35,7 +35,9 @@ internal static class PhysicsHistoryLifetimeTests
             finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(space); }
         }
         PartialPreparation(backend, retained);
+        ContactTail(backend, retained);
         Check(retained.Count == 0, "History scratch retained released owners: " + string.Join(", ", retained));
+        BackendChecks.RunHistoryStorage(backend);
         Console.WriteLine($"{backend} history lifetime: disposed checkpoints and successful/rejected portable operations release borrowed object graphs.");
     }
 
@@ -107,4 +109,39 @@ internal static class PhysicsHistoryLifetimeTests
         GC.WaitForPendingFinalizers();
         GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: true);
     }
+
+    private static void ContactTail(PhysicsServer.Backend backend, List<string> retained)
+    {
+        var space = PhysicsServer.SpaceCreate(backend); var body = PhysicsServer.BodyCreate();
+        try
+        {
+            PhysicsServer.BodySetSpace(body, space);
+            var runtime = PhysicsServer.Service.BodyRuntime(body);
+            var (state, current, retired) = ReplacedContacts(runtime, body);
+            Collect();
+            Check(Alive(current), "The current captured contact retains its sampled identity");
+            if (Alive(retired)) retained.Add($"{backend} replaced contact tail");
+            runtime.CaptureReplay(state); Collect();
+            Check(state.ContactCount == 0, "Replacing contacts with an empty view captures an empty history");
+            if (Alive(current) || Alive(retired)) retained.Add($"{backend} empty contact tail");
+            GC.KeepAlive(state);
+        }
+        finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(space); }
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static (PhysicsBodyRuntime.ReplayState, WeakReference<object>, WeakReference<object>) ReplacedContacts(PhysicsBodyRuntime runtime, RID body)
+    {
+        var current = new object(); var retired = new object();
+        var view = PhysicsServer.BodyGetDirectState(body)!;
+        view.RestoreContacts([default(PhysicsDirectBodyState.Contact) with { LocalSlotIdentity = current },
+            default(PhysicsDirectBodyState.Contact) with { OtherSlotIdentity = retired }]);
+        var state = new PhysicsBodyRuntime.ReplayState(); runtime.CaptureReplay(state);
+        view.RestoreContacts([default(PhysicsDirectBodyState.Contact) with { LocalSlotIdentity = current }]);
+        runtime.CaptureReplay(state); runtime.InvalidateView(); view.Dispose();
+        return (state, new(current), new(retired));
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static bool Alive(WeakReference<object> value) => value.TryGetTarget(out _);
 }

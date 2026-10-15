@@ -23,6 +23,10 @@ leave no selected solver reference in a disposed point, including cleanup failur
 A surviving public wrapper does not keep a closed world's graph alive through
 its private checkpoint; this is verified with weak references on CPU and GPU.
 
+Recapture releases removed shape references from inactive array tails and replaces
+shorter contact histories without retaining their retired identities. Current
+shape/configuration validation and prepared array capacity remain available.
+
 | Member | Contract |
 | --- | --- |
 | `IsDisposed` | True after explicit release or source-world disposal. |

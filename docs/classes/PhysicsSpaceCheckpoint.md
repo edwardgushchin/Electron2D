@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-15
 
+[Retained buffer tails](../components/physics-snapshots.md#temporary-reference-lifetime)
+are cleared when recapture reduces shape count or replaces reference-bearing
+contact buffers with shorter histories. Live-prefix configuration and identity
+checks remain available; high-water array capacity is reused without retaining
+removed resources through the inactive tail.
+
 [Released history references](../components/physics-space-checkpoints.md#released-history-references)
 are cleared in disposal's cleanup path, including selected cleanup failure. A
 disposed common point no longer retains its solver owner through the selected

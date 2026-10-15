@@ -1,12 +1,14 @@
 # CPU solver replay checkpoints
 
-Last updated: 2026-10-10
+Last updated: 2026-10-15
 
 The internal [CPUPhysicsCheckpoint](../classes/CPUPhysicsCheckpoint.md) retains a
 CPU solver restore point under ADR 0054/0094. It complements the
-[device-local GPU checkpoint](gpu-checkpoints.md). Neither is a public whole-world
-snapshot or a portable network message. The common scene/server adapter and
-network acceptance remain open in the [physics audit](physics-contract-audit.md).
+[device-local GPU checkpoint](gpu-checkpoints.md). The public
+[PhysicsCheckpoint](physics-space-checkpoints.md) connects both private histories
+to common scene/server state. [Portable snapshots](physics-snapshots.md) provide
+separate transferable physical state. Full numerical, networking, memory and
+platform acceptance remain open in the [physics audit](physics-contract-audit.md).
 
 ## State, identity and ownership
 

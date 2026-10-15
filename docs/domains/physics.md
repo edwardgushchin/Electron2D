@@ -1,5 +1,10 @@
 # Physics domain
 
+[Replay storage reuse](../components/physics-snapshots.md#temporary-reference-lifetime)
+releases retired shape/contact references on recapture and portable preparation,
+including later guard rejection. Prepared storage remains reusable; complete
+CPU/GPU/history byte budgets are still open.
+
 [History reference lifetime](../components/physics-space-checkpoints.md#released-history-references)
 now releases selected checkpoint owners and portable temporary object references
 after successful or failed work. Shapeless GPU portable apply works before the

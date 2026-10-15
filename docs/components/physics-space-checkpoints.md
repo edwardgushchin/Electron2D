@@ -94,6 +94,11 @@ release. The public-only independent consumer's `--history` profile checks both
 successful and failing provider disposal while keeping its public wrappers alive.
 These checks establish reference release, not a total retained-memory byte budget.
 
+Recapture also drops retired references from shorter shape/configuration and
+contact histories while preserving reusable storage. The public-only
+`--history-storage` profile checks scene/raw body/Area local recapture with a live
+checkpoint across collection; see [portable history storage](physics-snapshots.md#temporary-reference-lifetime).
+
 ## Checks and measurements
 
 `ELECTRON2D_TEST_PUBLIC_CHECKPOINT=cpu` or `gpu` exercises the public factory,

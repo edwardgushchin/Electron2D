@@ -49,6 +49,11 @@ attachment validation. Unbinding releases its replay entry while reusable scratc
 capacity remains available. A shapeless GPU world can apply a packet before its
 first simulation interval.
 
+Preparation also releases shape references beyond a reduced current topology,
+including when a later schema/budget guard rejects. A live binding keeps only its
+current captured shape prefix; the storage suite holds it across collection and
+then exercises prepared reuse.
+
 | Member | Contract |
 | --- | --- |
 | `PhysicsSnapshotMap(RID space)` | Bind to one live scene-owned or server-owned space. |

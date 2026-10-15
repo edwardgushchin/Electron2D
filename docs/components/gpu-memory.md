@@ -82,6 +82,11 @@ not close the broader memory and hardware gates listed above.
 
 ## Remaining memory owners
 
+[Retained common histories](physics-snapshots.md#temporary-reference-lifetime)
+release removed shape resources and retired contact identities from reusable
+array tails after replacement. Live-prefix payload and allocated capacity remain
+owned by their map/checkpoint; a collection check does not measure their byte size.
+
 Requested GPU resources are one part of the required total. The next retained
 budget must also account for these current owners without counting shared objects
 twice:
