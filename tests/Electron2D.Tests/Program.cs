@@ -9,6 +9,13 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MOVIE_WRITER") is { } movieMode)
+{
+    if (movieMode == "portable") MovieWriterTests.Portable();
+    else MovieWriterTests.Native(movieMode, Environment.GetEnvironmentVariable("ELECTRON2D_MOVIE_OUTPUT") ?? IOPath.Combine(IOPath.GetTempPath(), "electron2d-movie-" + movieMode));
+    return;
+}
+
 if (args.Length == 3 && args[0] == "--dpi-storage") { if (args[1] == "write") DPITextureStorageTests.Write(args[2]); else if (args[1] == "read") DPITextureStorageTests.Read(args[2]); else DPITextureStorageTests.Render(args[1], args[2]); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DPI_TEXTURE") == "managed") { DPITextureTests.Run(); return; }
