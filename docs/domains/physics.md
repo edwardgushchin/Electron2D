@@ -336,8 +336,10 @@ policy follow-up narrow the remaining allocation investigation without a runtime
 cache, allocator tuning or a selected-object/native-memory acceptance claim.
 The [native stack cohort](../components/physics-native-phases.md#allocation-stack-follow-up-2026-10-16)
 now attributes hooked allocation paths and simultaneous requested-byte peaks.
-Repeated software-device creation leaves two 128 B driver paths per lifetime;
-their source-level retirement and wider native ownership remain open. These
+Repeated software-device creation leaves two 128 B driver paths per lifetime.
+The [standalone ICD control](../components/physics-native-phases.md#driver-only-lifetime-attribution-2026-10-16)
+reproduces the driver residue independently and verifies its static root;
+foreign-driver cleanup and wider native ownership remain open. These
 instrumented results do not establish physical GPU speed or window acceptance.
 
 Physics readiness requires both CPU/Box2D.NET behavior and a complete selectable

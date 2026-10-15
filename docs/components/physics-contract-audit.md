@@ -33,7 +33,9 @@ attachment. A 128-world-per-policy follow-up does not reproduce the original
 large threaded accumulation; later growth remains smaller. The optional
 [allocation-stack follow-up](physics-native-phases.md#allocation-stack-follow-up-2026-10-16)
 now measures hooked native peaks and records two outstanding 128 B driver paths
-per recreated software device; source-level residual ownership remains open.
+per recreated software device. The [driver-only control](physics-native-phases.md#driver-only-lifetime-attribution-2026-10-16)
+reproduces a 128 B residue per load/enumeration without the engine and identifies
+its driver static root. Foreign-driver cleanup and wider native ownership remain open.
 No public API or overall acceptance is promoted.
 
 [Registered rectangle numerics](physics-registered-adapter.md#registered-rectangle-numerics)

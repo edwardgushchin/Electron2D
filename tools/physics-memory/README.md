@@ -266,3 +266,41 @@ unhooked-allocator totals. A stack identifies an allocation path, not exclusive 
 tool's end-of-process "leaked" label includes process-lifetime storage and does
 not by itself prove an engine leak. Phase pauses do not delimit exact intervals
 inside the allocation trace. No allocator tuning or runtime cache is introduced.
+
+### Driver-only unload/reload control
+
+On Linux with Vulkan headers, a C compiler and the standard C++ runtime:
+
+```bash
+mkdir NEW_NATIVE_OUTPUT
+cc -std=c11 -g -O0 -Wall -Wextra -Werror \
+  tools/physics-memory/test_icd_lifetime.c -ldl \
+  -Wl,--no-as-needed -lstdc++ -Wl,--as-needed \
+  -o NEW_NATIVE_OUTPUT/icd-lifetime
+NEW_NATIVE_OUTPUT/icd-lifetime /absolute/path/to/libvulkan_lvp.so reopen 32
+```
+
+This standalone control accepts `load`, `reopen` or `retain` and 1 through 32
+cycles. `load` only opens/closes the ICD. The other modes create/destroy instances
+and enumerate the CPU/llvmpipe physical device, either reopening the library each
+time or keeping it until the end. They create no logical device or GPU work.
+Calls use the [driver interface](https://github.com/KhronosGroup/Vulkan-Loader/blob/main/docs/LoaderDriverInterface.md#loader-and-driver-interface-negotiation)
+directly; no renderer, engine, SDL or system Vulkan loader is involved. Forbidden
+mappings and a driver still loaded after its final close reject the control.
+
+The explicit C++ link order matters: without an already loaded standard C++
+runtime, reverse relocations may pin the ICD and invalidate the unload experiment.
+The helper rejects that missing prerequisite. This is a diagnostic host, with
+no change to runtime library/device retention.
+
+To trace the same control with the matching installed/local Heaptrack tools:
+
+```bash
+heaptrack --record-only -o NEW_NATIVE_OUTPUT/reopen \
+  NEW_NATIVE_OUTPUT/icd-lifetime /absolute/path/to/libvulkan_lvp.so reopen 32
+```
+
+Repeat with `load`/`retain` and separate output prefixes. Interpret/report the
+trace with the matching Heaptrack version. Compare requested allocation paths,
+not timing or RSS from different hosts. The [driver-only findings](../../docs/components/physics-native-phases.md#driver-only-lifetime-attribution-2026-10-16)
+record the current source/binary attribution and remaining foreign-memory gates.

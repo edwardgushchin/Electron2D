@@ -147,10 +147,9 @@ The corresponding end group is 10,688 B; its direct lavapipe leaves contribute
 contain `pthread_once` and the stripped driver frames. The four-cycle cohorts
 have four requests per path; the single retained-device profile has one per
 path despite creating 32 pipeline sets. Device-only control reproduces the
-same scaling without pipeline/physics execution. This narrows a real residual
-to repeated software-driver/device lifetimes; it neither assigns source-level
-ownership nor proves an unconditional leak in the engine. It stays open for
-symbolized driver/loader investigation. No process-wide device cache or global
+same scaling without pipeline/physics execution. The driver-only follow-up below
+now identifies a driver static root and reproduces the residue independently.
+Foreign-driver cleanup remains open. No process-wide device cache or global
 shutdown/allocator change is introduced to hide the residual.
 
 Current artifacts are `bin/physics-native-stacks/2026-10-16/`: `instrumented4/`,
@@ -166,6 +165,67 @@ ownership or physical GPU memory, and do not measure an ordinary network client.
 Phase pauses are not exact trace interval markers. Summed per-location maximums
 are not a simultaneous process peak; the event-stream/global peak is used here.
 The broader native/foreign-memory and target-hardware/window gates remain open.
+
+## Driver-only lifetime attribution, 2026-10-16
+
+[`test_icd_lifetime.c`](../../tools/physics-memory/test_icd_lifetime.c) isolates the
+remaining driver allocation from Electron2D, SDL, CoreCLR and the system Vulkan
+loader. It opens the explicit software ICD directly through its negotiated
+interface, creates an instance, enumerates the single CPU/llvmpipe physical
+device and destroys the instance. It creates no logical device, pipeline or
+compute work. Every final close must remove the library from both the dynamic
+linker and procfs mappings; forbidden modules reject the control.
+
+The three modes either load/close without enumeration, reopen around every
+instance, or retain one library across all instances and then close it. Each
+four-/thirty-two-cycle cohort passes both ordinary and Heaptrack runs: twelve
+fresh processes, 144 enumeration lifetimes and 72 load-only intervals. Ten
+invalid CLI/file cases and the missing-C++ prerequisite reject before successful
+execution. The final helper is compiled with warnings as errors.
+
+| Mode | lavapipe allocation-leaf end, 4 cycles | Same, 32 cycles |
+| --- | ---: | ---: |
+| load | 0 | 0 |
+| reopen | 512 | 4,096 |
+| retain | 128 | 128 |
+
+Every outstanding driver request is 128 B. All normalize to the same leaf at
+module offset `0x17dafe`, also present in both SDL call routes of the earlier
+complete-world profiles. Thus one direct ICD load/enumeration leaves one block;
+the earlier backend setup traverses two load/enumeration routes. An additional
+owned-process GDB observation stops at the actual `realloc` instruction
+`0x17daf9`: its old pointer is null and requested size is 128. After the driver
+store at `0x17d965`, the static pointer at `0xe35e40` equals that returned
+allocation, and the adjacent topology data reports one L3 cache. The program
+then destroys the instance, unmaps the driver and exits normally. No private
+driver state is modified or freed by the control.
+
+The pinned CachyOS package is `3:26.2.4-1`, ELF build ID
+`e43c9e6ec5cd20265af2c18512f76a2b1cba6693`, with its existing SHA-256 unchanged.
+It was built with `!debug`; there is no local debug section, and the attempted
+debuginfod query returned HTTP 400. This is instruction/data attribution, not
+successful DWARF symbolization. The corresponding pinned
+[Mesa source](https://gitlab.freedesktop.org/mesa/mesa/-/blob/96cb43121031992b85767f9c1be8f3f48e22b1d2/src/util/u_cpu_detect.c#L638)
+allocates `L3_affinity_masks` with `realloc` in `get_cpu_topology`, stores it in
+static CPU capability data and initializes it through `_util_cpu_detect_once`.
+Its header defines 1,024 CPU bits, hence a 128 B affinity mask per L3 cache.
+This source identification is an inference corroborated by the exact call,
+static data, host topology and independent native reproduction; it does not
+claim symbols from the stripped binary or a repaired third-party driver.
+
+The first plain-C prototype could not unload its ICD: dynamic-linker diagnostics
+showed a reverse dependency from `libstdc++` binding to driver exports. The final
+control links the standard C++ runtime first and rejects its absence. This
+permits real unload/reload and preserves the relevant host-library order; it is
+not a runtime device cache or an alternate engine policy.
+
+Artifacts are `bin/physics-native-symbols/2026-10-16/`: `control-manifest.json`,
+`controls/`, `normalized-leaves.json`, `driver-root-observation.json`, the GDB
+script/log, pinned source copies, disassembly/relocations and `validation.json`.
+The new control establishes an independently reproducible software-driver
+residue and its static root. Its cleanup repair, other native/global ownership,
+ordinary network memory, NativeAOT/foreign allocators and hardware/window
+acceptance remain open; no physics or platform gate is promoted.
 
 ## Reproduction and remaining gates
 
