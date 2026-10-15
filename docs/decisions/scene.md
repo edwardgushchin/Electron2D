@@ -94,6 +94,27 @@ Last updated: 2026-10-15
 
 The complete chain is `ElectronObject → Node → CanvasItem → Entity → Sprite`; the UI branch is `CanvasItem → Control`. Resources stay outside the scene hierarchy. The former `SceneNode` name is retired. No `Node2D`, `Node3D`, `TransformNode`, duplicate compatibility base, or second public game-object hierarchy is introduced.
 
+Node insertion resolves sibling-name collisions across ordinary and internal
+children. Existing typed constructors expose their class name immediately; that
+nonblank initial name is preserved when unique, as are explicit authored names.
+The default insertion policy uses a process counter for `@Class@number` names on
+collision. `forceReadableName=true` instead advances an existing decimal suffix
+or starts at 2, preserving leading width and arbitrary-length carry. The live,
+feature-aware `editor/naming/node_name_num_separator` setting selects no separator,
+space, underscore or dash (0 through 3, default 0). Keep the existing typed
+InternalMode overload and supply the bool overload without changing old call
+positions. AddSibling inherits its source's internal partition. Name assignment
+uses the readable policy; Reparent and ReplaceBy use default insertion naming,
+including transferred children. Validate structural/lifetime/owner restrictions
+before naming or topology mutation; an ancestor cannot replace its descendant.
+Names and path invalidation commit before callbacks; a different requested name
+still notifies if collision resolution returns the current name, with ordinary committed
+progress on callback failure. Retained depth-specific path-notification snapshots
+preserve reentry and child-list mutation semantics while releasing borrowed
+references after every traversal. Invalid-name exceptions and existing typed
+construction defaults remain the accepted C# contract; this does not invent an
+empty-name or script-identity state.
+
 `Node.GetOrphanNodeIDs()` and `PrintOrphanNodes()` retain the pinned debug-build
 boundary: Debug tracks live nodes outside every active SceneTree, including
 detached descendants and internal children; Release returns an empty array and

@@ -259,6 +259,7 @@ if (args.Length == 3 && args[0] == "--file-compression-child") { FileCompression
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_COMPRESSION_NATIVE") is { } fileBackend) { FileCompressionTests.RunNative(fileBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_CODEC_ENET") == "1") { ENetTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_ACCESS") == "1") { VerifyFileAccess(); FileCompressionTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_NAMES") == "1") { VerifyNodeHierarchyAndTransforms(); SceneHierarchyTests.Run(); NodeUniqueNameTests.Run(); NodeReplacementTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_SCHEDULING") == "1") { SceneHierarchyTests.Run(); NodeInternalProcessingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_INTERNAL") == "1") { NodeInternalProcessingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_INTERNAL_NATIVE") is { } internalBackend) { NodeInternalProcessingTests.RunNative(internalBackend); return; }
@@ -9784,7 +9785,8 @@ static void VerifyNodeHierarchyAndTransforms()
     root.AddChild(third);
 
     using var duplicate = new Entity { Name = "first" };
-    Expect<InvalidOperationException>(() => root.AddChild(duplicate), "Sibling names must be unique.");
+    root.AddChild(duplicate);
+    Require(duplicate.Name != "first" && root.GetNode(duplicate.Name) == duplicate, "Sibling collisions receive unique names.");
 
     var visibilityEvents = 0;
     mover.VisibilityChanged += _ => visibilityEvents++;

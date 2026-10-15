@@ -303,3 +303,12 @@ construction/scans. It also runs 128 warmed/measured moving full frames at zero
 owner/all-thread managed bytes, excluding cold diagnostic snapshots. Use `--cpu`,
 `--gpu` or neither for the registered provider, with optional `--threaded`.
 Debug supplies real diagnostics; Release requires empty IDs and no output.
+
+`--node-names` verifies generated/readable collision naming, all four numeric
+separators and feature overrides, long/leading-zero suffixes, internal siblings,
+physical-role identity, owner/numerical guards, reparent/replacement and retained
+reentrant path notifications. It saves scene/config files and loads them in a
+fresh process. Use `--cpu`, `--gpu` or the default registered provider, with
+optional `--threaded`. Each full-frame bracket alternates existing unique names
+while simulating, after preparation, and requires 0/0 managed bytes. New collision
+strings and first snapshot capacity growth remain cold authoring work.

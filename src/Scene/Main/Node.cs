@@ -201,6 +201,8 @@ public partial class Node : ElectronObject
 
     private int _sceneCaptureDepth;
     private int _notificationPropagationDepth;
+    private List<List<Node>>? _pathRenameSnapshots;
+    private int _pathRenameDepth;
 
     private int _sceneInstantiationDepth;
 
@@ -258,13 +260,14 @@ public partial class Node : ElectronObject
     /// <summary>Gets or sets the node name used in sibling lookup and paths.</summary>
     /// <value>The nonblank name, initialized to <see cref="ElectronObject.ClassName"/>.</value>
     /// <remarks>
-    /// Names use ordinal equality among siblings and cannot be <c>.</c>, <c>..</c>, or contain <c>/</c>. Renaming may revoke
+    /// Sibling collisions receive readable numeric suffixes. Names use ordinal equality and cannot be <c>.</c>, <c>..</c>, or contain <c>/</c>. Renaming may revoke
     /// <see cref="UniqueNameInOwner"/> when the new name is already claimed by another node with the same owner. Renaming an
     /// active node propagates <see cref="NotificationPathRenamed"/> through its subtree and then raises
-    /// <see cref="Renamed"/> on this node.
+    /// <see cref="Renamed"/> on this node. A different requested name follows this notification path even when
+    /// collision resolution returns the current name.
     /// </remarks>
     /// <exception cref="ArgumentException">The assigned name is invalid.</exception>
-    /// <exception cref="InvalidOperationException">A sibling already has the assigned name, or an attached node is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="AggregateException">One or more path, node-renamed, or tree-renamed callbacks fail after the name changes.</exception>
     public string Name
@@ -284,7 +287,7 @@ public partial class Node : ElectronObject
             if (StringComparer.Ordinal.Equals(_name, value))
                 return;
 
-            Parent?.EnsureChildNameAvailable(value, this);
+            value = Parent?.ResolveChildName(this, value, readable: true) ?? value;
             _name = value;
             InvalidatePathCache();
             ClaimUniqueName();
@@ -899,11 +902,12 @@ public partial class Node : ElectronObject
 
     /// <summary>Appends a detached node as the last direct child.</summary>
     /// <param name="child">The live node to adopt.</param>
-    /// <remarks>If this node is active, the child's subtree enters immediately and receives ready where eligible.</remarks>
+    /// <remarks>Name collisions receive a generated class name. If this node is active, the child's subtree enters
+    /// immediately and receives ready where eligible. Use the bool overload for readable numeric suffixes.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="child"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="child"/> is this node.</exception>
     /// <exception cref="InvalidOperationException">
-    /// The operation would create a cycle, the child already has a parent or tree, a sibling name conflicts, or mutation
+    /// The operation would create a cycle, the child already has a parent or tree, or mutation
     /// occurs off the owner thread, or child order is blocked during notification propagation.
     /// </exception>
     /// <exception cref="ObjectDisposedException">
@@ -912,10 +916,18 @@ public partial class Node : ElectronObject
     /// <exception cref="AggregateException">One or more structural, lifecycle, notification, or event callbacks fail after insertion begins.</exception>
     /// <param name="internalMode">Whether the child belongs to the internal front/back range; Disabled by default.</param>
     /// <exception cref="ArgumentOutOfRangeException">The internal mode is not defined.</exception>
-    public void AddChild(Node child, InternalMode internalMode = InternalMode.Disabled)
+    public void AddChild(Node child, InternalMode internalMode = InternalMode.Disabled) => AddChild(child, false, internalMode);
+
+    /// <summary>Appends a detached child, choosing readable collision names when requested.</summary>
+    /// <param name="child">The live node to adopt.</param>
+    /// <param name="forceReadableName">Whether name collisions use a numeric suffix rather than a generated class name.</param>
+    /// <param name="internalMode">The front, ordinary or back child partition.</param>
+    /// <remarks>Existing unique names are preserved. Naming commits before parenting callbacks. The ordinary overload
+    /// uses false. All insertion, lifetime, thread and failure rules of that overload apply.</remarks>
+    public void AddChild(Node child, bool forceReadableName, InternalMode internalMode = InternalMode.Disabled)
     {
         if (!Enum.IsDefined(internalMode)) throw new ArgumentOutOfRangeException(nameof(internalMode));
-        InsertChild(child, ChildInsertionIndex(internalMode), internalMode);
+        InsertChild(child, ChildInsertionIndex(internalMode), internalMode, forceReadableName);
     }
 
     /// <summary>Inserts a detached node immediately after this node in its parent's child order.</summary>
@@ -923,7 +935,7 @@ public partial class Node : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="sibling"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="sibling"/> is the destination parent.</exception>
     /// <exception cref="InvalidOperationException">
-    /// This node has no parent, insertion would create a cycle, the sibling is already attached, a name conflicts, or
+    /// This node has no parent, insertion would create a cycle, the sibling is already attached, or
     /// mutation occurs off the owner thread, or child order is blocked during notification propagation.
     /// </exception>
     /// <exception cref="ObjectDisposedException">
@@ -931,14 +943,21 @@ public partial class Node : ElectronObject
     /// <paramref name="sibling"/> has started.
     /// </exception>
     /// <exception cref="AggregateException">One or more structural, lifecycle, notification, or event callbacks fail after insertion begins.</exception>
-    public void AddSibling(Node sibling)
+    public void AddSibling(Node sibling) => AddSibling(sibling, false);
+
+    /// <summary>Inserts a detached sibling after this node, resolving name collisions with the selected policy.</summary>
+    /// <param name="sibling">The live node to insert.</param>
+    /// <param name="forceReadableName">Whether a collision uses a readable numeric suffix.</param>
+    /// <remarks>The sibling inherits this node's internal partition. Existing unique names are preserved;
+    /// the ordinary overload uses false. Its hierarchy, lifetime, thread and failure rules apply.</remarks>
+    public void AddSibling(Node sibling, bool forceReadableName)
     {
         ThrowIfDisposed();
 
         if (Parent is null)
             throw new InvalidOperationException("A root or detached node cannot add a sibling.");
 
-        Parent.InsertChild(sibling, GetIndex(includeInternal: true) + 1, _internalMode);
+        Parent.InsertChild(sibling, GetIndex(includeInternal: true) + 1, _internalMode, forceReadableName);
     }
 
     /// <summary>Removes a direct child without disposing it.</summary>
@@ -1014,7 +1033,7 @@ public partial class Node : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="newParent"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The destination validation rejects this node as its own child.</exception>
     /// <exception cref="InvalidOperationException">
-    /// This node has no parent, the move creates a cycle, a destination child name conflicts, either attached hierarchy
+    /// This node has no parent, the move creates a cycle, either attached hierarchy
     /// is accessed off its owner thread, this node or its current parent is in protected tree lifecycle delivery, or a derived placement model rejects its destination.
     /// </exception>
     /// <exception cref="ObjectDisposedException">This node or <paramref name="newParent"/> is disposing on another thread or has finished disposing.</exception>
@@ -2537,12 +2556,20 @@ public partial class Node : ElectronObject
     private void PropagatePathRenamed()
     {
         DispatchNotification(NotificationPathRenamed);
-
-        foreach (var child in _children.ToArray())
-            child.PropagatePathRenamed();
+        if (_children.Count == 0) return;
+        var snapshots = _pathRenameSnapshots ??= [];
+        var depth = _pathRenameDepth++;
+        if (depth == snapshots.Count) snapshots.Add([]);
+        var children = snapshots[depth];
+        try
+        {
+            children.AddRange(_children);
+            foreach (var child in children) child.PropagatePathRenamed();
+        }
+        finally { children.Clear(); _pathRenameDepth--; }
     }
 
-    private void InsertChild(Node child, int index, InternalMode internalMode = InternalMode.Disabled)
+    private void InsertChild(Node child, int index, InternalMode internalMode = InternalMode.Disabled, bool forceReadableName = false)
     {
         EnsureMutable();
         EnsureChildOrderMutable();
@@ -2551,6 +2578,7 @@ public partial class Node : ElectronObject
         if ((uint)index > (uint)_children.Count)
             throw new ArgumentOutOfRangeException(nameof(index), index, "Insertion index is outside the valid range.");
 
+        child._name = ResolveChildName(child, child._name, forceReadableName);
         var tree = Tree;
         _children.Insert(index, child);
         ChangeInternalChildCount(internalMode, 1);
@@ -2641,13 +2669,6 @@ public partial class Node : ElectronObject
                 throw new InvalidOperationException("Adding this child would create a node cycle.");
         }
 
-        EnsureChildNameAvailable(child.Name, child);
-    }
-
-    private void EnsureChildNameAvailable(string name, Node? except)
-    {
-        if (_children.Any(child => !ReferenceEquals(child, except) && StringComparer.Ordinal.Equals(child.Name, name)))
-            throw new InvalidOperationException($"A child named '{name}' already exists under '{Name}'.");
     }
 
     private bool RemoveChildCore(Node child)

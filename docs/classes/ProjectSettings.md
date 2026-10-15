@@ -67,6 +67,7 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<AudioServer.SpeakerMode> MovieWriterSpeakerMode { get; }`](#moviewriterspeakermode) | Built-in recording channel mode; Stereo initially. |
 | [`public static ProjectSetting<float> MovieWriterVideoQuality { get; }`](#moviewritervideoquality) | AVI/Theora quality, 0.75 initially; finite 0..1. |
 | [`public static ProjectSetting<int> MovieWriterAudioBitDepth { get; }`](#moviewriteraudiobitdepth) | AVI PCM depth, 16 initially; accepts 16 or 32. |
+| [`public static ProjectSetting<int> NodeNameNumberSeparator { get; }`](#nodenamenumberseparator) | Readable node suffix separator: 0 none, 1 space, 2 underscore, 3 dash; zero initially. |
 | [`public static ProjectSetting<int> MovieWriterFPS { get; }`](#moviewriterfps) | Configured recording cadence, 60 initially; positive FPS. |
 | [`public static ProjectSetting<string> MovieWriterFile { get; }`](#moviewriterfile) | Configured recording output, empty initially. |
 | [`public static ProjectSetting<bool> MovieWriterDisableVSync { get; }`](#moviewriterdisablevsync) | Request immediate movie presentation, false initially. |
@@ -1566,3 +1567,13 @@ Nonbasic editor/movie_writer/movie_file setting, default empty. Configured movie
 ### `public static ProjectSetting<bool> MovieWriterDisableVSync { get; }`
 
 Nonbasic editor/movie_writer/disable_vsync setting, default false. Every recording entry point samples its feature override before startup. True retains the Disabled presentation request before renderer creation; unsupported native presentation follows DisplayServer fallback. False leaves the backend default. This request is scoped to the recording's display lifetime and does not change persisted settings or a later ordinary window. Scene code can subsequently request another mode through DisplayServer. This is a presentation request, not a guarantee about physical compositor timing.
+
+<a id="nodenamenumberseparator"></a>
+### `public static ProjectSetting<int> NodeNameNumberSeparator { get; }`
+
+Defines `editor/naming/node_name_num_separator` with default 0 and accepted values
+0 through 3: none, space, underscore and dash. Node insertion with readable names
+and collision renaming sample active feature overrides when resolving the next
+collision. Existing names stay unchanged. Every independent project registry
+registers the same built-in definition; invalid values reject before mutation.
+The setting participates in ordinary project persistence. See [child names](../components/scene-hierarchy.md#child-name-collisions).

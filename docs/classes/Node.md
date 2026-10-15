@@ -6,7 +6,7 @@ Last updated: 2026-10-15
 
 **Inherited By:** [AudioStreamPlayer](AudioStreamPlayer.md), [CanvasItem](CanvasItem.md), [CanvasLayer](CanvasLayer.md), [Timer](Timer.md), [Viewport](Viewport.md)
 
-- **Source:** [Node.cs](../../src/Scene/Main/Node.cs), [Node.Replacement.cs](../../src/Scene/Main/Node.Replacement.cs), [Node.PhysicsInterpolation.cs](../../src/Scene/Main/Node.PhysicsInterpolation.cs), [Node.Diagnostics.cs](../../src/Scene/Main/Node.Diagnostics.cs)
+- **Source:** [Node.cs](../../src/Scene/Main/Node.cs), [Node.Replacement.cs](../../src/Scene/Main/Node.Replacement.cs), [Node.PhysicsInterpolation.cs](../../src/Scene/Main/Node.PhysicsInterpolation.cs), [Node.Diagnostics.cs](../../src/Scene/Main/Node.Diagnostics.cs), [Node.Names.cs](../../src/Scene/Main/Node.Names.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public partial class Node : ElectronObject`
 
@@ -32,7 +32,7 @@ The neutral base of every object in a scene tree. Owns ordered children, paths, 
 
 `UniqueNameInOwner` allows an owned node to be resolved through `%Name` from its owner or another node with that same owner. The first node to claim a name keeps it; a later conflicting claim is cleared. Owner and name changes update the claim, and packed scenes restore it after ownership is assigned. `GetPathTo(node, useUniquePath: true)` uses the eligible unique node on the destination side first, or a unique node on the source side when no destination shortcut exists.
 
-`ReplaceBy` swaps a node with a detached replacement at the same sibling index, then moves its children. The old node stays alive and detached. Group copying is optional; owned descendants and scene-local resources follow the replacement.
+`ReplaceBy` swaps a node with a detached replacement at the same sibling index, then moves its children. The old node stays alive and detached. Ownership failures are collected with transfer errors after every saved owner is attempted. Group copying is optional; owned descendants and scene-local resources follow the replacement.
 
 Physics interpolation keeps logical transforms current while the renderer presents a pose between the two latest physics ticks. A node inherits the nearest ancestor's policy; a root defaults On and Control defaults Off. The tree-wide setting and current renderer decide whether presentation interpolation is active.
 
@@ -89,7 +89,9 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public void UpdateConfigurationWarnings()`](#diagnostics-updateconfigurationwarnings) | Requests a configuration-warning refresh for this node in the selected edited scene. |
 | [`public virtual string[] GetConfigurationWarnings()`](#diagnostics-getconfigurationwarnings) | Returns this node's current configuration warnings for tooling. |
 | [`public void AddChild(Node child, InternalMode internalMode = InternalMode.Disabled)`](#m-electron2d-node-addchild-electron2d-scenenode) | Adds an ordinary or front/back internal direct child. |
+| [`public void AddChild(Node child, bool forceReadableName, InternalMode internalMode = InternalMode.Disabled)`](#m-electron2d-node-addchild-readable) | Adds with readable or generated collision names. |
 | [`public void AddSibling(Node sibling)`](#m-electron2d-node-addsibling-electron2d-scenenode) | Inserts a detached node immediately after this node in its parent's child order. |
+| [`public void AddSibling(Node sibling, bool forceReadableName)`](#m-electron2d-node-addsibling-readable) | Selects naming while preserving immediate sibling order and internal mode. |
 | [`public void AddToGroup(string group, bool persistent = false)`](#m-electron2d-node-addtogroup-system-string-system-boolean) | Adds this node to a case-sensitive group. |
 | [`public string Atr(string message, string? context = null)`](#m-electron2d-node-atr-system-string-system-string) | Translates a singular message when automatic translation is enabled. |
 | [`public string AtrN(string singular, string plural, long count, string? context = null)`](#m-electron2d-node-atrn-system-string-system-string-system-int64-system-string) | Translates a plural message when automatic translation is enabled. |
@@ -286,11 +288,11 @@ Gets or sets the node name used in sibling lookup and paths.
 
 **Value:** The nonblank name, initialized to `ElectronObject.ClassName`.
 
-**Remarks:** Names use ordinal equality among siblings and cannot be ., .., or contain /. Renaming to a name already claimed in the same owner scope clears `UniqueNameInOwner`. Renaming an active node propagates `Node.NotificationPathRenamed` through its subtree and then raises `Node.Renamed` on this node.
+**Remarks:** Sibling collisions receive readable numeric suffixes. Names use ordinal equality and cannot be ., .., or contain /. Renaming to a name already claimed in the same owner scope clears `UniqueNameInOwner`. Renaming an active node propagates `Node.NotificationPathRenamed` through its subtree and then raises `Node.Renamed` on this node. A different requested name follows this notification path even when collision resolution returns the current name.
 
 **System.ArgumentException:** The assigned name is invalid.
 
-**System.InvalidOperationException:** A sibling already has the assigned name, or an attached node is mutated off the owner thread.
+**System.InvalidOperationException:** An attached node is mutated off the owner thread.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -580,7 +582,7 @@ ObjectDisposedException: This node is disposed.
 <a id="m-electron2d-node-addchild-electron2d-scenenode"></a>
 ### `public void AddChild(Node child, InternalMode internalMode = InternalMode.Disabled)`
 
-Adds a detached node to the end of the selected ordinary, internal-front or internal-back partition. See [InternalMode](Node.InternalMode.md). Ordinary children stay between front and back children; all children still enter, process, draw and receive notifications.
+Adds a detached node to the end of the selected ordinary, internal-front or internal-back partition. Unique names stay unchanged; collisions receive a generated `@Class@number` name. See [InternalMode](Node.InternalMode.md). Ordinary children stay between front and back children; all children still enter, process, draw and receive notifications.
 
 **Parameter `child`:** The live node to adopt.
 
@@ -592,11 +594,21 @@ Adds a detached node to the end of the selected ordinary, internal-front or inte
 
 **System.ArgumentException:** `child` is this node.
 
-**System.InvalidOperationException:** The operation would create a cycle, the child already has a parent or tree, a sibling name conflicts, or mutation occurs off the owner thread.
+**System.InvalidOperationException:** The operation would create a cycle, the child already has a parent or tree, or mutation occurs off the owner thread.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing, or disposal of `child` has started.
 
 **System.AggregateException:** One or more structural, lifecycle, notification, or event callbacks fail after insertion begins.
+
+<a id="m-electron2d-node-addchild-readable"></a>
+### `public void AddChild(Node child, bool forceReadableName, InternalMode internalMode = InternalMode.Disabled)`
+
+Uses the same insertion and validation contract. With `forceReadableName=true`,
+collisions advance a readable decimal suffix (starting at 2), using the live
+ProjectSettings.NodeNameNumberSeparator. Existing suffix width and arbitrarily
+long decimal carry are preserved. False selects the ordinary generated policy.
+The existing InternalMode overload retains its call positions and false policy.
+Naming commits before parenting/entry callbacks. See [child names](../components/scene-hierarchy.md#child-name-collisions).
 
 <a id="m-electron2d-node-addsibling-electron2d-scenenode"></a>
 ### `public void AddSibling(Node sibling)`
@@ -609,11 +621,19 @@ Inserts a detached node immediately after this node in its parent's child order.
 
 **System.ArgumentException:** `sibling` is the destination parent.
 
-**System.InvalidOperationException:** This node has no parent, insertion would create a cycle, the sibling is already attached, a name conflicts, or mutation occurs off the owner thread.
+**System.InvalidOperationException:** This node has no parent, insertion would create a cycle, the sibling is already attached, or mutation occurs off the owner thread.
 
 **System.ObjectDisposedException:** This node or its parent is disposing on another thread or has finished disposing, or disposal of `sibling` has started.
 
 **System.AggregateException:** One or more structural, lifecycle, notification, or event callbacks fail after insertion begins.
+
+<a id="m-electron2d-node-addsibling-readable"></a>
+### `public void AddSibling(Node sibling, bool forceReadableName)`
+
+Inserts immediately after this node in its current internal/ordinary partition,
+using the same readable/generated naming policy as AddChild. Names are unique
+across all three partitions. The original overload selects false. Its validation,
+callback failure and lifetime rules remain in force.
 
 <a id="m-electron2d-node-addtogroup-system-string-system-boolean"></a>
 ### `public void AddToGroup(string group, bool persistent = false)`
@@ -1142,7 +1162,7 @@ Moves this non-root node under a new parent.
 
 **System.ArgumentException:** The destination validation rejects this node as its own child.
 
-**System.InvalidOperationException:** This node has no parent, the move creates a cycle, a destination child name conflicts, either attached hierarchy is accessed off its owner thread, this node or its current parent is in protected tree lifecycle delivery, or a derived placement model rejects its destination.
+**System.InvalidOperationException:** This node has no parent, the move creates a cycle, either attached hierarchy is accessed off its owner thread, this node or its current parent is in protected tree lifecycle delivery, or a derived placement model rejects its destination.
 
 **System.ObjectDisposedException:** This node or `newParent` is disposing on another thread or has finished disposing.
 
@@ -1163,7 +1183,7 @@ Replaces this node at its sibling index with a live detached node. The replaceme
 
 **System.ArgumentException:** `node` is this node.
 
-**System.InvalidOperationException:** A node is attached, names conflict, a protected lifecycle is running, the active root is selected, or the caller is off the scene owner thread.
+**System.InvalidOperationException:** A replacement is attached or an ancestor, a protected lifecycle is running, the active root is selected, or the caller is off the scene owner thread.
 
 **System.ObjectDisposedException:** Either node is disposed.
 

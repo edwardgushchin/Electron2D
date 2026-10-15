@@ -1,8 +1,10 @@
 # Project settings component
 
-Last updated: 2026-10-13
+Last updated: 2026-10-15
 
 ## Scope
+
+The built-in NodeNameNumberSeparator now drives [readable node collision names](scene-hierarchy.md#child-name-collisions), with zero default, validated 0–3 values, live feature overrides and independent-registry file persistence. Existing names remain unchanged until a naming operation resolves a collision.
 
 Custom model definitions can carry compiled `JsonTypeInfo<T>` through the four-argument [`ProjectSetting<T>` constructor](../classes/ProjectSetting.Generic.md#constructor-metadata). Defaults, validation, registered base values and feature overrides reuse that compact schema. Trimmed/AOT applications do not discover arbitrary models through reflection; ordinary reflection-enabled hosts retain the existing path. [Contract checks](../../tests/Portability/ContractChecks.cs) verify both override paths and validation rollback.
 

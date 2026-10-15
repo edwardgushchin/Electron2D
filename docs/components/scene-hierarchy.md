@@ -2,6 +2,59 @@
 
 Last updated: 2026-10-15
 
+## Child-name collisions
+
+AddChild and AddSibling preserve unique names and resolve collisions across
+ordinary/internal children. The existing typed overloads use generated
+`@Class@number` names; new bool overloads select `forceReadableName`. Readable
+names start at suffix 2 or advance the existing decimal suffix, with leading
+width and arbitrary-length carry. NodeNameNumberSeparator samples live feature
+overrides for no separator, space, underscore or dash (0–3, default 0). Existing
+typed constructors retain their nonblank class-name default.
+
+Name assignment uses readable suffixes. Reparent and ReplaceBy use generated
+insertion names, including children transferred into an already populated
+replacement. Object/RID identity and internal partitions remain stable. Structural,
+owner, lifetime, capture and numerical-borrow validation precede naming; replacing
+an ancestor into its descendant is rejected before mutation. Names/path caches
+commit before callbacks, and callback errors retain the committed progress.
+A different requested name still notifies when suffix resolution returns the
+current name. Broader Name normalization and same-input/detached notifications
+remain open in its Partial coverage row.
+Replacement attempts all saved ownership assignments and combines their errors
+with earlier transfer failures, so one rejecting target cannot skip restoring a
+live child that returned to the original node.
+
+Path-rename propagation now reuses depth-specific child snapshots instead of
+allocating a new array per non-leaf rename. It preserves the original capture
+after each node's notification, nested renames, removal during delivery and error
+recovery. Every traversal clears borrowed child references in finally; first
+capacity/depth growth remains cold work. Readable/generated strings on actual
+collisions remain allocated authoring results.
+
+The [public naming consumer](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.NodeNames.cs)
+checks four separators, leading/40-digit suffixes, feature overrides, internal
+sibling order, physical roles, stable identity, renaming errors, reparent/replacement,
+owner/numerical rejection and retained traversal lifetime. Packed scene names and
+the setting survive actual file saving and fresh-process loading. Its 128 warm /
+128 measured complete moving frames include alternating unique names, callbacks
+and path lookup, requiring 0/0 owner/all-thread bytes. At 6 scene units/second and
+1/60-second ticks, expected travel is 12.8 units with .01-unit float accumulation
+tolerance. Run the public consumer with `--node-names [--cpu|--gpu] [--threaded]`;
+without a built-in selector it uses the independent registered solver. Headless
+software execution remains separate from hardware/window and full physics gates.
+
+Current Linux x64 verification passes 12 managed Debug/Release and six strict
+Release NativeAOT naming profiles, each with fresh-process scene/config loads.
+Six public path and six Debug orphan profiles also pass at 0/0 warm bytes; three
+legacy hierarchy/scheduling/resource selectors pass. A separate three-process
+threaded CPU-authority/software-GPU prediction check reaches tick 600 with late
+admission at 310, zero warm step/replay bytes and final convergence. Actual CPU
+numerical lanes are instrumented; GPU numerical thread identity is not asserted
+by that probe. Eleven portable-PDB/source sets match the exercised runtime/consumer/
+test/AOT host. Release runtime, format, compiled coverage and wiki checks pass.
+Artifacts and assembly identities: `bin/physics-node-names/2026-10-15/`.
+
 ## Orphan node diagnostics
 
 `Node.GetOrphanNodeIDs()` and `PrintOrphanNodes()` share a Debug-only weak node
@@ -114,7 +167,7 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 
 [RemoteTransform](../classes/RemoteTransform.md) also derives from Entity. It weakly targets another spatial node by path, resolves the target on tree entry or an explicit cache refresh, and transfers selected transform components through the existing queued global or synchronous local notification path. It rejects hierarchy feedback and remote-target cycles; PackedScene stores the path and policy, not the live target.
 
-`Node.ReplaceBy` installs a detached replacement at the old sibling index, fires `ReplacingBy`, and moves the old node's children in order. The old node remains alive and detached. Optional group copying retains persistence flags; owner references and packed-scene-local resources follow the replacement. Sibling-name conflicts and active-root replacement fail before mutation. A selected current or edited scene clears when the old node leaves the tree.
+`Node.ReplaceBy` installs a detached replacement at the old sibling index, fires `ReplacingBy`, and moves the old node's children in order. The old node remains alive and detached. Optional group copying retains persistence flags; owner references and packed-scene-local resources follow the replacement. Active-root/ancestor replacement fails before mutation; naming collisions use the shared insertion policy. A selected current or edited scene clears when the old node leaves the tree.
 
 `Node.PhysicsInterpolationMode` resolves Inherit, On and Off through the parent chain; a root inherits On and Control starts Off. `IsPhysicsInterpolatedAndEnabled` also requires the tree-wide switch. `ResetPhysicsInterpolation` delivers notification 2001 and resets presentation history without changing logical transforms. Pause and application-suspend notifications reset active histories. SceneTree snapshots eligible canvas items around physics callbacks, and the renderer samples the resulting poses on both backends; a current Camera's viewport transform follows the same fraction.
 

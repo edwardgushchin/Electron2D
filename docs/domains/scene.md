@@ -2,6 +2,14 @@
 
 Last updated: 2026-10-15
 
+## Runtime child names
+
+[Child-name collision policy](../components/scene-hierarchy.md#child-name-collisions)
+now supplies readable/generated insertion names, live numeric separators and
+consistent rename/reparent/replacement behavior for all physical and scene roles.
+Retained path-notification snapshots preserve nested mutation and release retired
+references while warmed edited full frames allocate no managed memory.
+
 ## Orphan node diagnostics
 
 [Debug orphan diagnostics](../components/scene-hierarchy.md#orphan-node-diagnostics)

@@ -13,7 +13,7 @@ internal static class SceneHierarchyTests
             Check(typeof(Node).GetProperty(name) is null && typeof(EngineTimer).GetProperty(name) is null, $"Neutral API has no {name}.");
         Check(typeof(Node).GetMethod("DrawRect") is null && typeof(CanvasItem).GetProperty("Position") is null,
             "Drawing and concrete placement remain separate.");
-        Check(typeof(Node).GetMethod("AddChild")!.GetParameters()[0].ParameterType == typeof(Node) &&
+        Check(typeof(Node).GetMethod("AddChild", [typeof(Node), typeof(Node.InternalMode)])!.GetParameters()[0].ParameterType == typeof(Node) &&
             typeof(Node).GetProperty("Parent")!.PropertyType == typeof(Node) &&
             typeof(Texture).GetMethod("Draw")!.GetParameters()[0].ParameterType == typeof(CanvasItem), "API argument roles.");
         MixedTree();

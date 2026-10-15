@@ -6,6 +6,13 @@
 
 Last updated: 2026-10-15
 
+[Inherited child names](scene-hierarchy.md#child-name-collisions) now implement
+readable/generated AddChild/AddSibling naming, live numeric separators and
+consistent rename/reparent/replacement collision behavior. Retained path traversal
+preserves nested mutation without warmed arrays. Public physical consumers and
+fresh-process scene/config loads exercise the slice; the two insertion rows are
+Implemented, with wider inherited/numerical/native/hardware gates retained.
+
 [Inherited orphan diagnostics](scene-hierarchy.md#orphan-node-diagnostics) now
 provide real Debug weak-membership and logger-safe snapshots across physical
 roles, with the specified empty/no-output Release behavior. The public consumer
@@ -208,7 +215,7 @@ operations remain open in the ledger.
 The complete generated ledger remains the per-declaration list. Current own
 physics families contain 687 Implemented, 150 Partial and 55 Excluded rows,
 with no own Blocked or Unimplemented rows. The 491 shared inherited declarations
-contain 282 Implemented, 122 Partial, 17 Blocked, 47 Unimplemented and 23 Excluded
+contain 284 Implemented, 120 Partial, 17 Blocked, 47 Unimplemented and 23 Excluded
 rows. The 78 selected cross-domain consumer declarations contain 76 Implemented
 and two Partial rows. These are declaration counts, including class and enum rows,
 not a claim that all numerical behaviors pass. The exact inherited names and

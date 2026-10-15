@@ -96,13 +96,11 @@ internal static class NodeReplacementTests
         Reject<ArgumentNullException>(() => old.ReplaceBy(null!));
         Reject<ArgumentException>(() => old.ReplaceBy(old));
         Reject<InvalidOperationException>(() => old.ReplaceBy(conflict));
-        using var collidingName = new Node { Name = "Conflict" };
-        Reject<InvalidOperationException>(() => old.ReplaceBy(collidingName));
+        Reject<InvalidOperationException>(() => old.ReplaceBy(root));
         var child = new Node { Name = "Child" };
         old.AddChild(child);
         using var replacement = new Node { Name = "Replacement" };
         replacement.AddChild(new Node { Name = "Child" });
-        Reject<InvalidOperationException>(() => old.ReplaceBy(replacement));
         Check(ReferenceEquals(old.Parent, root) && ReferenceEquals(child.Parent, old) &&
               replacement.Parent is null, "Invalid replacements leave the original hierarchy intact.");
         using var tree = new SceneTree(root);
@@ -143,13 +141,28 @@ internal static class NodeReplacementTests
         var old = new Node { Name = "Old" };
         var child = new Node { Name = "Child" };
         root.AddChild(old); old.AddChild(child); child.Owner = old;
-        var replacement = new Node { Name = "Replacement" };
-        old.ReplacingBy += node => node.AddChild(new Node { Name = "Child" });
-        Reject<AggregateException>(() => old.ReplaceBy(replacement));
+        var replacement = new RejectTransferNode { Name = "Replacement" };
+        old.ReplacingBy += _ => replacement.RejectChildren = true;
+        AggregateException? failure = null;
+        try { old.ReplaceBy(replacement); }
+        catch (AggregateException error) { failure = error; }
+        Check(failure?.Flatten().InnerExceptions.Count == 2 &&
+              failure.InnerExceptions.All(error => error is InvalidOperationException),
+            "Child transfer and replacement-owner failures are both retained.");
         Check(ReferenceEquals(replacement.Parent, root) && ReferenceEquals(child.Parent, old) &&
               ReferenceEquals(child.Owner, old),
-            "A callback-created name collision returns an untransferred child to the original node.");
+            "A rejected child transfer restores the live child and its owner to the original node.");
         old.Dispose();
+    }
+
+    private sealed class RejectTransferNode : Node
+    {
+        internal bool RejectChildren;
+        protected override void ValidateMutation()
+        {
+            base.ValidateMutation();
+            if (RejectChildren) throw new InvalidOperationException("Expected child transfer rejection");
+        }
     }
 
     private static void CallbackTopologyChange()

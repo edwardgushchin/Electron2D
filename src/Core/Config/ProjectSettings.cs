@@ -183,6 +183,11 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>audio/buses/channel_disable_time; two seconds initially. Read at output preparation.</value>
     public static ProjectSetting<float> AudioBusesChannelDisableTime { get; } = new("audio/buses/channel_disable_time", 2f, value => float.IsFinite(value) && value >= 0);
 
+    /// <summary>Defines the separator used when node names need a readable numeric suffix.</summary>
+    /// <value>editor/naming/node_name_num_separator; 0 (none), 1 (space), 2 (underscore), or 3 (dash). Zero initially.</value>
+    /// <remarks>Feature overrides are sampled when a collision is resolved; existing names are unchanged.</remarks>
+    public static ProjectSetting<int> NodeNameNumberSeparator { get; } = new("editor/naming/node_name_num_separator", 0, value => value is >= 0 and <= 3);
+
     /// <summary>Recording cadence used by Engine.RunMovie and Engine.RunMovieAsync.</summary>
     /// <value>editor/movie_writer/fps; 60 initially, accepts positive frames per second.</value>
     public static ProjectSetting<int> MovieWriterFPS { get; } = new("editor/movie_writer/fps", 60, value => value > 0);

@@ -124187,6 +124187,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.AddChild(Electron2D.Node,System.Boolean,Electron2D.Node.InternalMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "AddChild",
+    "signature": "public System.Void AddChild(Electron2D.Node child, System.Boolean forceReadableName, Electron2D.Node.InternalMode internalMode = Disabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "child",
+        "type": "Electron2D.Node",
+        "default": null
+      },
+      {
+        "name": "forceReadableName",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "internalMode",
+        "type": "Electron2D.Node.InternalMode",
+        "default": "Disabled"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.AddSibling(Electron2D.Node)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -124199,6 +124228,30 @@
       {
         "name": "sibling",
         "type": "Electron2D.Node",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.AddSibling(Electron2D.Node,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "AddSibling",
+    "signature": "public System.Void AddSibling(Electron2D.Node sibling, System.Boolean forceReadableName)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sibling",
+        "type": "Electron2D.Node",
+        "default": null
+      },
+      {
+        "name": "forceReadableName",
+        "type": "System.Boolean",
         "default": null
       }
     ],
@@ -231044,6 +231097,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.NodeNameNumberSeparator()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NodeNameNumberSeparator",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E NodeNameNumberSeparator { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
     "value": null
   },
   {

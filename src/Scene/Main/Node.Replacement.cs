@@ -9,10 +9,11 @@ public partial class Node
     /// node's children in order. Owner references to this node become references to the replacement. An active
     /// SceneTree root cannot be replaced because its identity is stable. An active CurrentScene or EditedSceneRoot
     /// selection clears when this node exits; callers may select the replacement afterward. Existing typed event
-    /// subscriptions remain with the node they target. Callback failures are collected after structural progress.</remarks>
+    /// subscriptions remain with the node they target. Callback and ownership-assignment failures are collected
+    /// after structural progress; every retained owner restoration is attempted.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="node"/> is null.</exception>
     /// <exception cref="ArgumentException"><paramref name="node"/> is this node.</exception>
-    /// <exception cref="InvalidOperationException">The replacement is attached, names conflict, the active root is
+    /// <exception cref="InvalidOperationException">The replacement is attached or an ancestor, the active root is
     /// selected, a protected lifecycle is running, or the caller is off the scene owner thread.</exception>
     /// <exception cref="ObjectDisposedException">Either node is disposed.</exception>
     /// <exception cref="AggregateException">One or more structural or lifecycle callbacks failed after mutation began.</exception>
@@ -22,6 +23,8 @@ public partial class Node
         ArgumentNullException.ThrowIfNull(node);
         if (ReferenceEquals(node, this)) throw new ArgumentException("A node cannot replace itself.", nameof(node));
         node.EnsureMutable();
+        if (node.IsAncestorOf(this))
+            throw new InvalidOperationException("An ancestor cannot replace its own descendant.");
         if (node.Parent is not null || node.Tree is not null)
             throw new InvalidOperationException("A replacement must be detached and parentless.");
         if (Parent is null && Tree is not null)
@@ -37,11 +40,6 @@ public partial class Node
         node.EnsureChildOrderMutable();
         if (node is Viewport && parent is not null)
             throw new NotSupportedException("Child viewports require multiwindow or offscreen rendering support.");
-        if (parent is not null && parent._children.Any(sibling => !ReferenceEquals(sibling, this) && sibling.Name == node.Name))
-            throw new InvalidOperationException("The replacement name conflicts with a sibling.");
-        if (Children.Any(child => node._children.Any(existing => existing.Name == child.Name)))
-            throw new InvalidOperationException("A moved child name conflicts with a replacement child.");
-
         var owner = _owner;
         var owned = EnumerateDepthFirst()
             .Where(descendant => !ReferenceEquals(descendant, this) && descendant._owner is not null)
@@ -115,13 +113,20 @@ public partial class Node
 
         if (ReferenceEquals(node.Parent, parent) || parent is null)
         {
-            node.Owner = owner;
+            try { node.Owner = owner; }
+            catch (Exception error) { CollectException(ref errors, error); }
             foreach (var (descendant, previousOwner) in owned)
-                if (node.IsAncestorOf(descendant) &&
-                    (ReferenceEquals(previousOwner, this) || previousOwner.IsAncestorOf(descendant)))
-                    descendant.Owner = ReferenceEquals(previousOwner, this) ? node : previousOwner;
-                else if (IsAncestorOf(descendant) && previousOwner.IsAncestorOf(descendant))
-                    descendant.Owner = previousOwner;
+            {
+                try
+                {
+                    if (node.IsAncestorOf(descendant) &&
+                        (ReferenceEquals(previousOwner, this) || previousOwner.IsAncestorOf(descendant)))
+                        descendant.Owner = ReferenceEquals(previousOwner, this) ? node : previousOwner;
+                    else if (IsAncestorOf(descendant) && previousOwner.IsAncestorOf(descendant))
+                        descendant.Owner = previousOwner;
+                }
+                catch (Exception error) { CollectException(ref errors, error); }
+            }
             node._sceneFilePath = _sceneFilePath;
             if (_sceneFileLeases is { } leases) { (node._sceneFileLeases ??= []).AddRange(leases); _sceneFileLeases = null; }
             if (_ownedSceneResources is { Count: > 0 } resources)

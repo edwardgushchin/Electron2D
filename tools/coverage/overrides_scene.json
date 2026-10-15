@@ -971,14 +971,14 @@
     {
       "electron2d": "method:Electron2D.Node.AddChild(Electron2D.Node,Electron2D.Node.InternalMode)",
       "godot": "Node::method:add_child(Node:,bool:,int:Node.InternalMode)",
-      "state": "Partial",
-      "reason": "ADR 0008: typed InternalMode inserts front/ordinary/back children and ScrollInternalNodeTests verifies processing, indexing and packing. The reference force_readable_name policy is not exposed because the current typed hierarchy requires explicit unique names; this missing naming behavior keeps the row Partial."
+      "state": "Implemented",
+      "reason": "ADR 0008: existing typed overloads retain false-default call positions; bool overloads implement readable/generated collision naming across ordinary/internal children. Constructor class-name defaults remain. Readable decimal suffixes honor live separator/feature policy, leading width and arbitrary-length carry; AddSibling preserves immediate order and partition. Name/reparent/replacement share resolution and stable physical identities; hierarchy, lifecycle, owner/capture/numerical guards precede mutation. Public NodeNames checks four separators, internal/physical siblings, rejected and failed callbacks, nested/removing path notifications, weak snapshot retirement, actual file/fresh-process persistence and 128 warm/measured edited full frames at 0/0 owner/all-thread bytes on CPU/software-GPU/registered policies. Remaining inherited, numerical, native-memory, hardware/window and full physics acceptance stay open."
     },
     {
       "electron2d": "method:Electron2D.Node.AddSibling(Electron2D.Node)",
       "godot": "Node::method:add_sibling(Node:,bool:)",
-      "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "state": "Implemented",
+      "reason": "ADR 0008: existing typed overloads retain false-default call positions; bool overloads implement readable/generated collision naming across ordinary/internal children. Constructor class-name defaults remain. Readable decimal suffixes honor live separator/feature policy, leading width and arbitrary-length carry; AddSibling preserves immediate order and partition. Name/reparent/replacement share resolution and stable physical identities; hierarchy, lifecycle, owner/capture/numerical guards precede mutation. Public NodeNames checks four separators, internal/physical siblings, rejected and failed callbacks, nested/removing path notifications, weak snapshot retirement, actual file/fresh-process persistence and 128 warm/measured edited full frames at 0/0 owner/all-thread bytes on CPU/software-GPU/registered policies. Remaining inherited, numerical, native-memory, hardware/window and full physics acceptance stay open."
     },
     {
       "electron2d": "method:Electron2D.Node.CancelFree()",
@@ -5579,6 +5579,29 @@
       "godot": "Node::method:print_orphan_nodes()",
       "state": "Implemented",
       "reason": "ADR 0008: Debug-only weak Node registry samples all live detached roots/descendants, including internal children and physical siblings, independently of owner metadata and direct physics attachment. Caller-owned UInt64 IDs match InstanceID and sort by ID; printed hierarchy/compiled-type rows are captured before ordinary logger callbacks. Disposing/collected nodes are omitted without retaining abandoned or failed-construction objects. Release has no registry, returns empty IDs and emits nothing as the pinned build contract requires. The public NodeOrphans consumer verifies membership, array isolation, print/reentry, lifetime and concurrent construction/scans on 12 managed and 12 strict Linux x64 NativeAOT CPU/software-GPU/registered serial/separate Debug/Release profiles; each retains actual motion and 128 measured full frames at 0/0 owner/all-thread managed bytes. Cold diagnostic snapshots allocate separately; full inherited/numerical/native/platform/performance acceptance remains open."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.AddChild(Electron2D.Node,System.Boolean,Electron2D.Node.InternalMode)",
+      "godot": "Node::method:add_child(Node:,bool:,int:Node.InternalMode)",
+      "state": "Implemented",
+      "reason": "ADR 0008: existing typed overloads retain false-default call positions; bool overloads implement readable/generated collision naming across ordinary/internal children. Constructor class-name defaults remain. Readable decimal suffixes honor live separator/feature policy, leading width and arbitrary-length carry; AddSibling preserves immediate order and partition. Name/reparent/replacement share resolution and stable physical identities; hierarchy, lifecycle, owner/capture/numerical guards precede mutation. Public NodeNames checks four separators, internal/physical siblings, rejected and failed callbacks, nested/removing path notifications, weak snapshot retirement, actual file/fresh-process persistence and 128 warm/measured edited full frames at 0/0 owner/all-thread bytes on CPU/software-GPU/registered policies. Remaining inherited, numerical, native-memory, hardware/window and full physics acceptance stay open."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.AddSibling(Electron2D.Node,System.Boolean)",
+      "godot": "Node::method:add_sibling(Node:,bool:)",
+      "state": "Implemented",
+      "reason": "ADR 0008: existing typed overloads retain false-default call positions; bool overloads implement readable/generated collision naming across ordinary/internal children. Constructor class-name defaults remain. Readable decimal suffixes honor live separator/feature policy, leading width and arbitrary-length carry; AddSibling preserves immediate order and partition. Name/reparent/replacement share resolution and stable physical identities; hierarchy, lifecycle, owner/capture/numerical guards precede mutation. Public NodeNames checks four separators, internal/physical siblings, rejected and failed callbacks, nested/removing path notifications, weak snapshot retirement, actual file/fresh-process persistence and 128 warm/measured edited full frames at 0/0 owner/all-thread bytes on CPU/software-GPU/registered policies. Remaining inherited, numerical, native-memory, hardware/window and full physics acceptance stay open."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.NodeNameNumberSeparator()",
+      "godot": "ProjectSettings::property:editor/naming/node_name_num_separator",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0019: typed integer builtin defaults to zero and validates 0..3. Node readable collision naming consumes no separator/space/underscore/dash with live feature overrides; independent registry file save/fresh-process load and actual inherited physical-node consumers execute. This is runtime authoring policy; editor GUI and remaining naming casing remain separate."
+    },
+    {
+      "godot": "Node::property:name",
+      "electron2d": "property:Electron2D.Node.Name()",
+      "reason": "Readable sibling collision resolution, committed callbacks, inherited physical identity, paths and packed/fresh-file persistence execute in CPU/software-GPU/registered serial/separate JIT/NativeAOT profiles; requesting another occupied name still notifies when the resolved name is unchanged. Evidence: bin/physics-node-names/2026-10-15/validation.json. Remains Partial: complete reserved-character normalization, notifications on same-input assignment and detached path notifications require implementation and focused checks against pinned node.cpp set_name. The accepted typed nonblank class-name initial value is retained."
     }
   ],
   "extras": [
@@ -11358,6 +11381,21 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0008: Debug-only weak Node registry samples all live detached roots/descendants, including internal children and physical siblings, independently of owner metadata and direct physics attachment. Caller-owned UInt64 IDs match InstanceID and sort by ID; printed hierarchy/compiled-type rows are captured before ordinary logger callbacks. Disposing/collected nodes are omitted without retaining abandoned or failed-construction objects. Release has no registry, returns empty IDs and emits nothing as the pinned build contract requires. The public NodeOrphans consumer verifies membership, array isolation, print/reentry, lifetime and concurrent construction/scans on 12 managed and 12 strict Linux x64 NativeAOT CPU/software-GPU/registered serial/separate Debug/Release profiles; each retains actual motion and 128 measured full frames at 0/0 owner/all-thread managed bytes. Cold diagnostic snapshots allocate separately; full inherited/numerical/native/platform/performance acceptance remains open."
+    },
+    {
+      "godot": [
+        "Node::method:add_child(Node:,bool:,int:Node.InternalMode)",
+        "Node::method:add_sibling(Node:,bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0008: existing typed overloads retain false-default call positions; bool overloads implement readable/generated collision naming across ordinary/internal children. Constructor class-name defaults remain. Readable decimal suffixes honor live separator/feature policy, leading width and arbitrary-length carry; AddSibling preserves immediate order and partition. Name/reparent/replacement share resolution and stable physical identities; hierarchy, lifecycle, owner/capture/numerical guards precede mutation. Public NodeNames checks four separators, internal/physical siblings, rejected and failed callbacks, nested/removing path notifications, weak snapshot retirement, actual file/fresh-process persistence and 128 warm/measured edited full frames at 0/0 owner/all-thread bytes on CPU/software-GPU/registered policies. Remaining inherited, numerical, native-memory, hardware/window and full physics acceptance stay open."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:editor/naming/node_name_num_separator"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0008/0019: typed integer builtin defaults to zero and validates 0..3. Node readable collision naming consumes no separator/space/underscore/dash with live feature overrides; independent registry file save/fresh-process load and actual inherited physical-node consumers execute. This is runtime authoring policy; editor GUI and remaining naming casing remain separate."
     }
   ]
 }
