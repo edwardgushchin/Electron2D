@@ -38,7 +38,7 @@ public sealed class PhysicsCheckpoint : IDisposable
     /// access is off-owner, or an interval/callback/scene capture is active.</exception>
     public void Restore() => _state.Restore();
 
-    /// <summary>Releases retained storage without disposing the source world or its objects.</summary>
+    /// <summary>Releases retained storage and borrowed world/solver references without disposing the source world or its objects.</summary>
     /// <remarks>Repeated disposal, including after source-world disposal, does nothing. A selected solver operation
     /// borrows this point and prevents its release until that operation returns. Cleanup failure still retires the point.</remarks>
     /// <exception cref="InvalidOperationException">A live point is first disposed off its owner thread or during its borrowed solver operation.</exception>

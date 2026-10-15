@@ -71,7 +71,7 @@ void main()
 {
     uint i=gl_GlobalInvocationID.x;if(i>=control.y)return;
     uint stage=control.x;
-    if(stage==11u){awakeCount=0u;activeBodies=0u;activeIslands=0u;return;}
+    if(stage==11u){status=0u;awakeCount=0u;activeBodies=0u;activeIslands=0u;return;}
     if(stage==10u)
     {
         if(bodies[i].flags.x!=graph[i].w)return;

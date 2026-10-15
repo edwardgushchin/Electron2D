@@ -193,7 +193,12 @@ public static partial class BackendChecks
         protected override void EndSync(Exception? failure) { EndFailure = failure; LifecycleHook?.Invoke(LifecyclePhase.End); Synchronizations++; SyncHook?.Invoke(); }
         protected override void Finish() { LifecycleHook?.Invoke(LifecyclePhase.Finish); FinishHook?.Invoke(); Finished = true; Bodies.Clear(); Joints.Clear(); if (FailFinish) throw new InvalidOperationException("Finish failure"); }
         protected override void PrepareCheckpoint() { }
-        protected override PhysicsBackendCheckpoint CreateCheckpoint() => new History(this);
+        internal WeakReference<PhysicsBackendCheckpoint>? HistoryReference;
+        internal bool FailHistoryRelease;
+        protected override PhysicsBackendCheckpoint CreateCheckpoint()
+        {
+            var history = new History(this); HistoryReference = new(history); return history;
+        }
         protected override void PreparePortableCapture() { }
         protected override void ReadPortableBodies(ReadOnlySpan<RID> colliders, bool capture) { }
         protected override void InvalidateCollisionExceptions(RID collider) { }

@@ -84,6 +84,11 @@ public static partial class BackendChecks
             _debug.AsSpan(0, owner.DebugPointCount).CopyTo(owner.DebugPoints);
             owner.Delta = _delta; owner.Pairs = _pairs; owner.Ready = _ready;
         }
-        public override void Dispose() { _owner = null; _states = []; _oneWays = []; _debug = []; _contacts = []; _count = _oneWayCount = _debugCount = _contactCount = 0; }
+        public override void Dispose()
+        {
+            var fail = _owner?.FailHistoryRelease ?? false;
+            _owner = null; _states = []; _oneWays = []; _debug = []; _contacts = []; _count = _oneWayCount = _debugCount = _contactCount = 0;
+            if (fail) throw new InvalidOperationException("Expected independent history release failure.");
+        }
     }
 }

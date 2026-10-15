@@ -49,7 +49,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         EnsureAccess(); Step(0, default); FlushJoints(); FindPairs(); ImportPortableOneWays(pairs);
         FindContacts();
         if (_highWater == 0) { ActiveSimulationBodyCount = PublishedActiveBodyCount = PublishedIslandCount = 0; return; }
-        EnsureSleep(); Grow(ref _contactsGPU, ref _contactCapacity, 1, 64, false);
+        EnsureSpatial(); EnsureSleep(); Grow(ref _contactsGPU, ref _contactCapacity, 1, 64, false);
         Grow(ref _positionCorrectionsGPU, ref _positionCorrectionCapacity, _highWater, 16, false);
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw GPUPhysicsDevice.Failure("acquire restored sleep graph");
@@ -57,9 +57,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         {
             var settings = SleepParameters(0); settings.PreviousBodies = settings.PreviousEdges = 0;
             // Build connectivity only. Applying an authoritative pose must not wake bodies or advance quiet clocks.
+            SleepPass(command, settings, 11, 1, _spatialSummary!);
             SleepPass(command, settings, 3, _highWater, _spatialSummary!);
             SleepPass(command, settings, 4, ContactPointCount + _jointHighWater, _spatialSummary!);
-            SleepPass(command, settings, 11, 1, _spatialSummary!);
             SleepPass(command, settings, 12, _highWater, _spatialSummary!);
             Finish(ref command); _sleepGraphBodies = _highWater; _sleepEdgeCount = ContactPointCount + _jointHighWater; _wakeAllSleep = false;
         }

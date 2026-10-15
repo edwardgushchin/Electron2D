@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Electron2D;
+using SDL3;
 using static PhysicsDebugTests;
 using Body = Electron2D.GPUPhysicsBodyStore.BodyHandle;
 using Mode = Electron2D.PhysicsServer.BodyMode;
@@ -9,13 +10,55 @@ internal static class GPUPhysicsCheckpointTests
 {
     internal static void Run()
     {
-        ReplayContacts(); ReplayJointsAndTargets(); ReplayOneWayGrowth(); ReplayCCD(); SleepAndPending(); Guards(); CopyFailure(); Warm();
+        ShapelessPortable(); ReplayContacts(); ReplayJointsAndTargets(); ReplayOneWayGrowth(); ReplayCCD(); SleepAndPending(); Guards(); CopyFailure(); Warm();
         Console.WriteLine("GPU checkpoints: contact/joint/sleep/target/one-way replay, growth, publication, configuration/lifetime guards and warmed allocation passed.");
     }
     private static Body Add(GPUPhysicsBodyStore store, Vector2 position, Mode mode = Mode.Rigid, bool sleep = false) =>
         store.Add(new(mode, position, 0, default, 0, CanSleep: sleep));
     private static void Step(GPUPhysicsBodyStore store, int frames = 1, float gravity = 980)
     { for (var i = 0; i < frames; i++) store.Simulate(1f / 60, new(0, gravity)); }
+    private static void ShapelessPortable()
+    {
+        foreach (var joint in new[] { false, true })
+        {
+            using var store = new GPUPhysicsBodyStore();
+            var a = Add(store, default); var b = Add(store, new(30, 0));
+            if (joint) store.AddJoint(new(PhysicsServer.JointType.Pin, a, b, Transform.Identity, Transform.Identity));
+            store.Step(0, default); store.BeginPortableRestore();
+            Restore(a, default); Restore(b, new(30, 0));
+            Check(GPUPhysicsBodyStore.BufferCreatedForTesting is null, "Portable initialization owns its allocation probe");
+            GPUPhysicsBodyStore.BufferCreatedForTesting = PoisonStatus;
+            try { store.CompletePortableRestore([]); }
+            finally { GPUPhysicsBodyStore.BufferCreatedForTesting = null; }
+            Check(store.ActiveSimulationBodyCount == 2 && store.PublishedActiveBodyCount == 2 && store.PublishedIslandCount == (joint ? 1 : 0),
+                $"Shapeless portable status, joint={joint}: awake={store.ActiveSimulationBodyCount}, active={store.PublishedActiveBodyCount}, islands={store.PublishedIslandCount}");
+            void Restore(Body body, Vector2 position) => store.SetPortableMotion(body, new(0, position), new(3, 0), 0, 0,
+                false, false, default, 0, default, 0, default, 0, 0, true);
+        }
+    }
+    private static unsafe void PoisonStatus(nint device, nint buffer, uint size)
+    {
+        if (size != 16) return;
+        var transfer = SDL.CreateGPUTransferBuffer(device, new() { Size = size, Usage = SDL.GPUTransferBufferUsage.Upload });
+        Check(transfer != 0, "Create status initialization probe");
+        nint command = 0, fence = 0;
+        try
+        {
+            var mapped = SDL.MapGPUTransferBuffer(device, transfer, false); Check(mapped != 0, "Map status initialization probe");
+            new Span<byte>((void*)mapped, (int)size).Fill(255); SDL.UnmapGPUTransferBuffer(device, transfer);
+            command = SDL.AcquireGPUCommandBuffer(device); Check(command != 0, "Acquire status initialization probe");
+            var copy = SDL.BeginGPUCopyPass(command); Check(copy != 0, "Begin status initialization probe");
+            SDL.UploadToGPUBuffer(copy, new() { TransferBuffer = transfer }, new() { Buffer = buffer, Size = size }, false); SDL.EndGPUCopyPass(copy);
+            var submitted = command; command = 0; fence = SDL.SubmitGPUCommandBufferAndAcquireFence(submitted);
+            Check(fence != 0 && SDL.WaitForGPUFences(device, true, new ReadOnlySpan<nint>(&fence, 1), 1), "Finish status initialization probe");
+        }
+        finally
+        {
+            if (command != 0) SDL.CancelGPUCommandBuffer(command);
+            if (fence != 0) SDL.ReleaseGPUFence(device, fence);
+            SDL.ReleaseGPUTransferBuffer(device, transfer);
+        }
+    }
     private static void ReplayContacts()
     {
         using var store = new GPUPhysicsBodyStore { CaptureContactReports = true };

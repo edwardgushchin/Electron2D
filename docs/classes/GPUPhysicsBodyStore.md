@@ -4,6 +4,10 @@
 
 Last updated: 2026-10-15
 
+[Portable reconstruction](../components/physics-snapshots.md#temporary-reference-lifetime)
+prepares spatial/sleep inputs for a shapeless world before applying its first
+snapshot. Capture/apply at tick zero preserves subsequent physical motion.
+
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable`
 
 **Source:** [GPUPhysicsBodyStore.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.cs),

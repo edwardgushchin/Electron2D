@@ -96,7 +96,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     {
         _spatialPipeline ??= _context.CreatePipeline("PhysicsResidentShapes.comp.spv");
         _residentTreePipeline ??= _context.CreatePipeline("PhysicsTree.comp.spv");
-        _spatialSummary ??= Buffer(8);
+        _spatialSummary ??= Buffer(16);
         Grow(ref _verticesGPU, ref _vertexCapacity, Math.Max(1, _vertexHighWater), sizeof(Vector2), true);
         Grow(ref _geometryGPU, ref _geometryCapacity, Math.Max(1, _geometryEntries.Count), sizeof(GeometryData), true);
         var previous = _shapeCapacity;

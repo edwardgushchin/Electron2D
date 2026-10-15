@@ -100,6 +100,16 @@ twice:
 
 The table above promotes none of these unmeasured owners to accepted totals.
 
+[Local checkpoint disposal](physics-space-checkpoints.md#released-history-references)
+now releases the selected history reference even after a cleanup exception.
+[Portable scratch](physics-snapshots.md#temporary-reference-lifetime) clears borrowed
+object references after successful and rejected operations, including partial
+attachment preparation. CPU/GPU weak-reference tests distinguish these fixed
+retention paths from the reusable array capacities that still require a byte budget.
+The shared spatial/joint status buffer now reserves its full four-word sleep/status
+layout (16 B rather than 8 B). Earlier measurements above describe their recorded
+candidate; this correction adds 8 B to worlds that own that buffer.
+
 ## Query investigation found during validation
 
 The extended resident-query profile fails its ray-normal comparison because the

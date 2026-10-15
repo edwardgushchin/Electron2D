@@ -1,6 +1,6 @@
 # PhysicsSnapshotMap
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 [Portable joint continuation](../components/physics-snapshots.md#portable-joint-continuation)
 now verifies CPU/CPU, CPU/GPU and CPU/registered scene/raw sampled frames, silent correction, atomic
@@ -42,6 +42,12 @@ pose; local/portable capture supports pending movement without another step.
 
 Owner-thread identity bindings and reusable capture/apply scratch for one borrowed
 world. Complete collider/joint bindings and matching physical authoring are required.
+
+[Temporary reference lifetime](../components/physics-snapshots.md#temporary-reference-lifetime)
+clears pose and body scratch after successful or rejected work, including partial
+attachment validation. Unbinding releases its replay entry while reusable scratch
+capacity remains available. A shapeless GPU world can apply a packet before its
+first simulation interval.
 
 | Member | Contract |
 | --- | --- |

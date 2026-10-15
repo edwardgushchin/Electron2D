@@ -8,6 +8,31 @@ capture and apply authoritative physical state across different worlds, object
 creation orders and backends. The [local checkpoint](physics-space-checkpoints.md)
 remains the separate exact-history mechanism for local prediction/replay.
 
+## Temporary reference lifetime
+
+Capture and apply clear their pose-order scratch on success and failure while
+reusing its capacity. Removing a binding therefore releases its replay entry;
+an idle map does not retain that entry through a completed operation. Bound-body
+scratch also clears a partially filled prefix when attachment validation rejects.
+The lifetime suite (`ELECTRON2D_TEST_HISTORY_LIFETIME=cpu` or `gpu`) checks successful
+capture/apply, rejected schema/budget, and stale attachment preparation with weak
+references, keeping the map and world alive across collection.
+
+A GPU world with bodies but no shapes prepares the spatial inputs needed by sleep
+graph reconstruction before portable apply, including before its first interval.
+Both first-use spatial and joint-upload paths allocate all four 32-bit status
+lanes used by sleep/island reconstruction; a two-body fixture checks zero
+unconstrained islands and one pin-connected island without shapes, following the
+[process statistics](physics-statistics.md) contract.
+The same dispatch that resets portable counters now clears status before building
+connectivity, so first-use buffers respect the [SDL buffer initialization contract](https://wiki.libsdl.org/SDL3/SDL_CreateGPUBuffer).
+The fixture overwrites fresh 16-byte buffers with `0xff` before reconstruction;
+the earlier candidate failed with an invalid-connectivity error under that probe.
+The public-only `--history --cpu`, `--history --gpu`, and registered `--history`
+profiles check tick-zero capture/apply, subsequent velocity-driven motion and
+128 warm capture/change/apply cycles. Full retained capacities and network-history
+budgets remain separate open acceptance work.
+
 ## Public use and ownership
 
 Bind every attached collision object and joint with a shared nonzero `ulong` ID and

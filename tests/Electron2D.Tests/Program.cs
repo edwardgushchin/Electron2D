@@ -615,6 +615,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_BODY") == "
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POINT_CONTAINMENT") is { } pointMode) { PhysicsPointContainmentTests.Run(pointMode == "gpu"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TRANSIENT_CONTACTS") is { } transientMode) { PhysicsTransientContactTests.Run(transientMode == "gpu"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DENSE_CONTACTS") is { } denseMode) { PhysicsDenseContactTests.Run(denseMode == "gpu"); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HISTORY_LIFETIME") is { } historyLifetimeMode) { PhysicsHistoryLifetimeTests.Run(historyLifetimeMode == "gpu"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_SNAPSHOT") is { } snapshotMode) { PhysicsSnapshotTests.Run(snapshotMode == "gpu"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PUBLIC_CHECKPOINT") is { } publicCheckpointMode) { PhysicsCheckpointTests.Run(publicCheckpointMode == "gpu"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPACE_CHECKPOINT") is { } checkpointMode) { PhysicsSpaceCheckpointTests.Run(checkpointMode == "gpu"); return; }
@@ -1289,6 +1290,7 @@ PhysicsViewportInterpolationTests.Run(PhysicsServer.Backend.CPU);
 PhysicsViewportInterpolationTests.Run(PhysicsServer.Backend.GPU);
 PhysicsBodyTests.Run(); PhysicsBodyTests.Run(PhysicsServer.Backend.GPU);
 PhysicsCheckpointTests.Run();
+PhysicsHistoryLifetimeTests.Run();
 PhysicsSnapshotTests.Run();
 PhysicsDenseContactTests.Run(true);
 PhysicsTransientContactTests.Run(true);

@@ -1,6 +1,11 @@
 # PhysicsSpace.Checkpoint
 
-Last updated: 2026-10-13
+Last updated: 2026-10-15
+
+[Released history references](../components/physics-space-checkpoints.md#released-history-references)
+are cleared in disposal's cleanup path, including selected cleanup failure. A
+disposed common point no longer retains its solver owner through the selected
+checkpoint wrapper. Collection tests hold the public point alive after release.
 
 [Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
 keeps sampled public values while rejecting portable capture of retired/reindexed

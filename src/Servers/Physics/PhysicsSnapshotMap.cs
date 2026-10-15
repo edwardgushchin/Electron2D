@@ -4,7 +4,8 @@ namespace Electron2D;
 /// <remarks>The caller assigns shared nonzero IDs and incarnation generations. Bind every live collision
 /// object and joint before capture/apply. Worlds must have compatible authored configuration and scene/server
 /// roles; local creation order and physics backend can differ. This class borrows objects and owns reusable
-/// transfer scratch. It does not authenticate peers, choose stale-packet policy or replicate lifecycle.</remarks>
+/// transfer scratch. Capture/apply release temporary object references on completion or failure; unbinding
+/// releases the binding's borrowed objects. It does not authenticate peers, choose stale-packet policy or replicate lifecycle.</remarks>
 public sealed partial class PhysicsSnapshotMap : IDisposable
 {
     internal sealed class Binding(ulong id, uint generation, RID rid, PhysicsReplayEntry? entry, PhysicsJointRuntime? joint)
@@ -82,7 +83,7 @@ public sealed partial class PhysicsSnapshotMap : IDisposable
             var measure = new PhysicsSnapshotWriter(default); Write(ref measure, space, schema);
             var writer = new PhysicsSnapshotWriter(snapshot.BeginCapture(measure.Position)); Write(ref writer, space, schema); snapshot.CompleteCapture(writer.Position);
         }
-        finally { _busy = false; }
+        finally { _poses.Clear(); _busy = false; }
     }
     /// <summary>Validates then applies a compatible authoritative snapshot without gameplay callbacks.</summary>
     /// <param name="snapshot">A complete decoded or locally captured portable snapshot.</param>
@@ -117,7 +118,7 @@ public sealed partial class PhysicsSnapshotMap : IDisposable
             }
             catch (Exception error) { space.FailPortableRestore(error); throw; }
         }
-        finally { _busy = false; }
+        finally { _poses.Clear(); _busy = false; }
     }
     private PhysicsSpace Check()
     {
@@ -130,15 +131,19 @@ public sealed partial class PhysicsSnapshotMap : IDisposable
         space.PreparePortableCapture();
         PhysicsReplayCopy.Require(space.Bodies.Count + space.Areas.Count + space.ServerColliders.Count == _objects.Count && space.SnapshotJoints.Count == _joints.Count);
         if (_captureBodies.Length < _objects.Count) Array.Resize(ref _captureBodies, _objects.Count);
-        for (var i = 0; i < _objects.Count; i++)
+        try
         {
-            var entry = _objects[i].Entry!;
-            PhysicsReplayCopy.Require(entry.Backend.Space == space && entry.Backend.AttachmentVersion == _objects[i].Attachment);
-            _captureBodies[i] = entry.Backend;
+            for (var i = 0; i < _objects.Count; i++)
+            {
+                var entry = _objects[i].Entry!;
+                PhysicsReplayCopy.Require(entry.Backend.Space == space && entry.Backend.AttachmentVersion == _objects[i].Attachment);
+                _captureBodies[i] = entry.Backend;
+            }
+            space.BeginBackendCallback();
+            try { space.BackendImplementation.ReadPortableBodies(_captureBodies.AsSpan(0, _objects.Count), capture); }
+            finally { space.EndExtensionCallback(); }
         }
-        space.BeginBackendCallback();
-        try { space.BackendImplementation.ReadPortableBodies(_captureBodies.AsSpan(0, _objects.Count), capture); }
-        finally { space.EndExtensionCallback(); Array.Clear(_captureBodies, 0, _objects.Count); }
+        finally { Array.Clear(_captureBodies, 0, _objects.Count); }
         _poses.Clear(); _poses.EnsureCapacity(_objects.Count);
         for (var i = 0; i < _objects.Count; i++)
         {

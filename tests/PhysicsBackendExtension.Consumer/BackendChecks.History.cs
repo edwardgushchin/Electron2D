@@ -92,9 +92,62 @@ public static partial class BackendChecks
             own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
             Check(own == 0 && all == 0, $"History full-step/capture/restore cycles allocated {own}/{all} B");
             Console.WriteLine($"History on {backend?.ToString() ?? "registered"}: sleep, grow/shrink recapture, pending commands/contact observations and 128 full-step/capture/restore cycles {own}/{all} B passed.");
+            if (solver is not null)
+            {
+                var history = solver.HistoryReference!; checkpoint.Dispose(); Collect();
+                Check(!history.TryGetTarget(out _), "A live disposed public wrapper releases the independent history object");
+                GC.KeepAlive(checkpoint);
+                var failed = FailedHistoryRelease(solver, world.Space); history = solver.HistoryReference!; Collect();
+                Check(failed.IsDisposed && !history.TryGetTarget(out _), "A failed release also drops the independent history reference");
+                GC.KeepAlive(failed);
+                Console.WriteLine("Registered history release: live public wrappers retain neither successful nor failed provider histories.");
+            }
             void Cycle() { checkpoint.Capture(); PhysicsServer.BodySetSleeping(raw, false); tree.PhysicsFrame(1d / 60); checkpoint.Restore(); }
         }
         finally { if (extra.IsValid()) PhysicsServer.FreeRID(extra); PhysicsServer.FreeRID(raw); }
+        BarePortableHistory(backend);
+    }
+
+    private static void BarePortableHistory(PhysicsServer.Backend? backend)
+    {
+        using var world = backend is { } selected ? new World(selected) : new World("History");
+        using var root = new SubViewport { World = world }; using var tree = new SceneTree(root); _ = root.FindWorld();
+        var body = PhysicsServer.BodyCreate();
+        try
+        {
+            PhysicsServer.BodySetGravityScale(body, 0); PhysicsServer.BodySetCanSleep(body, false);
+            PhysicsServer.BodySetLinearDampMode(body, RigidBody.DampMode.Replace); PhysicsServer.BodySetLinearDamp(body, 0);
+            PhysicsServer.BodySetLinearVelocity(body, new(3, 0)); PhysicsServer.BodySetSpace(body, world.Space);
+            using var map = new PhysicsSnapshotMap(world.Space); map.Bind(1, 1, body);
+            var snapshot = new PhysicsSnapshot(); map.Capture(snapshot); map.Apply(snapshot);
+            Check(PhysicsServer.SpaceGetTick(world.Space) == 0 && PhysicsServer.BodyGetLinearVelocity(body) == new Vector2(3, 0),
+                "A shapeless world applies portable history before its first simulation interval");
+            for (var i = 0; i < 128; i++) Cycle();
+            Collect(); var own = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+            for (var i = 0; i < 128; i++) Cycle();
+            own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
+            Check(own == 0 && all == 0, $"Shapeless portable history allocated {own}/{all} B");
+            tree.PhysicsFrame(1d / 60);
+            var tick = PhysicsServer.SpaceGetTick(world.Space); var position = PhysicsServer.BodyGetTransform(body).Origin;
+            Check(tick == 1 && MathF.Abs(position.X - .05f) < .0001f,
+                $"The restored shapeless body advances with its captured velocity: tick={tick}, position={position}");
+            Console.WriteLine($"Shapeless {backend?.ToString() ?? "registered"} history before first step: apply, actual motion and 128 capture/apply cycles {own}/{all} B.");
+            void Cycle() { map.Capture(snapshot); PhysicsServer.BodySetLinearVelocity(body, new(6, 0)); map.Apply(snapshot); }
+        }
+        finally { PhysicsServer.FreeRID(body); }
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static PhysicsCheckpoint FailedHistoryRelease(Solver solver, RID space)
+    {
+        var checkpoint = PhysicsServer.SpaceCreateCheckpoint(space); solver.FailHistoryRelease = true;
+        try
+        {
+            try { checkpoint.Dispose(); }
+            catch (InvalidOperationException error) when (error.Message == "Expected independent history release failure.") { return checkpoint; }
+            throw new Exception("Expected independent history release failure");
+        }
+        finally { solver.FailHistoryRelease = false; }
     }
 
     private static void PrivateEpisodeReplay(SceneTree tree, PhysicsCheckpoint checkpoint, Solver solver, RID first, RID second)

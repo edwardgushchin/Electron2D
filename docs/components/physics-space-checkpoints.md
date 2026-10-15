@@ -1,6 +1,6 @@
 # Local physics-world checkpoints
 
-Last updated: 2026-10-13
+Last updated: 2026-10-15
 
 A moved character's prepared query pose and separate solver pose are captured
 with the mutable query-preparation flag. Restoring a point keeps immediate query
@@ -82,6 +82,17 @@ exit again: prediction/confirmation and gameplay-effect deduplication still requ
 the network event layer. Generic node/script state, timers, interpolation of remote
 snapshots, resource authoring and lifecycle changes are outside this point. Physical
 bone runtime follows its rigid-body state; skeleton/gameplay state is not cloned.
+
+## Released history references
+
+Common disposal drops the selected checkpoint reference in its cleanup path,
+including when selected disposal throws. A caller may keep the disposed public
+wrapper alive without retaining the closed world's solver graph through it.
+`ELECTRON2D_TEST_HISTORY_LIFETIME=cpu` or `gpu` holds that wrapper across blocking
+collections and checks weak world references after explicit and world-driven
+release. The public-only independent consumer's `--history` profile checks both
+successful and failing provider disposal while keeping its public wrappers alive.
+These checks establish reference release, not a total retained-memory byte budget.
 
 ## Checks and measurements
 

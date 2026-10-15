@@ -1,6 +1,6 @@
 # PhysicsCheckpoint
 
-Last updated: 2026-10-13
+Last updated: 2026-10-15
 
 Capturing a moved character now retains its prepared query pose, query flag and
 separate solver pose. These are mutable replay state rather than fixed authoring.
@@ -17,6 +17,11 @@ Create a caller-owned point with `PhysicsServer.SpaceCreateCheckpoint(space)`.
 It is already captured; there is no public detached constructor. The point borrows
 one source world, which also releases its points on disposal. Calls and first
 release require the world's owner thread.
+
+[Released history references](../components/physics-space-checkpoints.md#released-history-references)
+leave no selected solver reference in a disposed point, including cleanup failure.
+A surviving public wrapper does not keep a closed world's graph alive through
+its private checkpoint; this is verified with weak references on CPU and GPU.
 
 | Member | Contract |
 | --- | --- |

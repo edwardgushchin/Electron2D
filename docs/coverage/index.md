@@ -1,5 +1,11 @@
 # API coverage register
 
+[History reference lifetime](../components/physics-space-checkpoints.md#released-history-references)
+fixes common checkpoint owner retention, portable pose/body scratch cleanup and
+shapeless GPU apply before the first step. CPU/GPU collection checks and public
+independent history checks cover successful and rejected cleanup. No declaration
+status changes; full retained/native/device history budgets remain open.
+
 [Polygon point containment](../components/physics-point-containment.md) closes a confirmed CPU exterior-point defect and the stale mismatched-angle query fixture. Shared public scene/server checks preserve ray-origin policy and filters. No declaration status changes; wider inherited/numerical/platform/performance acceptance remains open.
 
 [Resident GPU buffer accounting](../components/gpu-memory.md) now covers all storage/transfer allocations, growth peaks and replay retirement. This internal measurement changes no public declaration status and leaves complete retained/native/device budgets open.

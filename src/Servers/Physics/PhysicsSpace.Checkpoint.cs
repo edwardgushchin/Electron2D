@@ -157,6 +157,7 @@ internal sealed partial class PhysicsSpace
             finally
             {
                 EndSolverAccess(s);
+                _solver = null;
                 s._checkpoints.Remove(this); _space = null; _valid = false;
                 _entries.Clear(); _poses.Clear(); _joints.Clear(); _sceneJoints.Clear();
                 _debug = [];

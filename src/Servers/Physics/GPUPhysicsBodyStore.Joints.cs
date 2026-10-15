@@ -223,7 +223,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private void UploadJoints()
     {
         _jointEditPipeline ??= _context.CreatePipeline("PhysicsResidentJointEdits.comp.spv");
-        _spatialSummary ??= Buffer(8);
+        _spatialSummary ??= Buffer(16);
         var bytes = checked(_dirtyJoints.Count * sizeof(JointEdit));
         var exceptionBytes = checked(_dirtyExceptions.Count * sizeof(ExceptionEdit));
         GrowTransfer(ref _spatialUpload, ref _spatialUploadBytes, checked(8 + bytes + exceptionBytes), SDL.GPUTransferBufferUsage.Upload);
