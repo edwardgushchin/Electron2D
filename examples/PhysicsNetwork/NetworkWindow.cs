@@ -79,6 +79,7 @@ internal sealed class NetworkWindow(NetworkSession session, string capturePath) 
                     case ObjectKind.GeometryPolygon:
                     case ObjectKind.GeometryRay:
                     case ObjectKind.GeometryCompound:
+                    case ObjectKind.GeometryRotatingRay:
                         for (var child = 0; child < body.GetChildCount(); child++)
                         {
                             var collision = (CollisionShape)body.GetChild(child);
@@ -95,7 +96,7 @@ internal sealed class NetworkWindow(NetworkSession session, string capturePath) 
                     case ObjectKind.Ball: DrawCircle(Vector2.Zero, 12, Colors.Pink); break;
                 }
                 DrawSetTransform(Vector2.Zero);
-                if (actor.Spec.Kind is ObjectKind.Box or ObjectKind.Ball or ObjectKind.SupportBody or ObjectKind.GeometryCapsule or ObjectKind.GeometryPolygon or ObjectKind.GeometryRay or ObjectKind.GeometryCompound)
+                if (actor.Spec.Kind is ObjectKind.Box or ObjectKind.Ball or ObjectKind.SupportBody or ObjectKind.GeometryCapsule or ObjectKind.GeometryPolygon or ObjectKind.GeometryRay or ObjectKind.GeometryCompound or ObjectKind.GeometryRotatingRay)
                 {
                     if (session.IsSmoothedPresentation(slot)) _smoothed++;
                     if (session.IsInterpolatedPresentation(slot)) _interpolated++;
@@ -113,7 +114,7 @@ internal sealed class NetworkWindow(NetworkSession session, string capturePath) 
                 DrawLine(Screen(session.PresentationPosition(Array.IndexOf(session.Simulation.Actors, first))),
                     Screen(session.PresentationPosition(Array.IndexOf(session.Simulation.Actors, second))), Colors.Gold, 2);
         foreach (var actor in session.Simulation.Actors)
-            if (actor?.Body is not null && actor.Spec.Kind is ObjectKind.Box or ObjectKind.Ball or ObjectKind.SupportBody or ObjectKind.GeometryCapsule or ObjectKind.GeometryPolygon or ObjectKind.GeometryRay or ObjectKind.GeometryCompound)
+            if (actor?.Body is not null && actor.Spec.Kind is ObjectKind.Box or ObjectKind.Ball or ObjectKind.SupportBody or ObjectKind.GeometryCapsule or ObjectKind.GeometryPolygon or ObjectKind.GeometryRay or ObjectKind.GeometryCompound or ObjectKind.GeometryRotatingRay)
             {
                 var slot = Array.IndexOf(session.Simulation.Actors, actor);
                 var visual = Screen(session.PresentationPosition(slot)); var solved = Screen(actor.Position);

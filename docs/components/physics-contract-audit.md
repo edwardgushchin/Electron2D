@@ -1402,3 +1402,16 @@ records and their index when contact aggregation begins, within its existing gra
 budget. No public runtime signature, portable format or coverage-state exemption is
 introduced. Arbitrary dense geometry, complete inherited/extension semantics,
 retained/device memory, target hardware and real-window/FPS acceptance remain open.
+
+## Positive compound slots and free ray network state, 2026-10-15
+
+The public network example now requires real impulses and imported contacts for
+both local compound slots, including geometric point/index association. A separate
+ray-only body uses explicit inertia and free rotation while preserving the locked
+ray and earlier actors. Actual angular steps and moving authoritative angular
+corrections are required. [The current profile](physics-network-example.md#compound-slots-and-rotating-ray-under-correction-2026-10-15)
+keeps the previous impaired transport, lifecycle, sleep/wake, effects, zero warm
+allocation and final convergence gates; it uses 28 objects in 32 slots and an
+application version-four header. No runtime API or portable format changes, broad
+coverage-state promotion or final hardware/native/performance acceptance follows
+from this bounded scenario.

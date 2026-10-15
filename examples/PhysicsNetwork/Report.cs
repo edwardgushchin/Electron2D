@@ -37,6 +37,12 @@ internal sealed class SessionReport
     public uint GeometryContactCorrections { get; set; }
     public uint GeometrySleepingCorrections { get; set; }
     public float MaxGeometryPenetration { get; set; }
+    public uint GeometryCompoundContacts { get; set; }
+    public uint GeometryCompoundImpulses { get; set; }
+    public uint GeometryCompoundContactCorrections { get; set; }
+    public int GeometryRayAngularSteps { get; set; }
+    public int GeometryRayAngularCorrections { get; set; }
+    public float MaxGeometryRayAngularSpeed { get; set; }
     public int SupportSteps { get; set; }
     public int SupportContacts { get; set; }
     public int SupportSleeping { get; set; }
@@ -149,6 +155,12 @@ internal sealed partial class NetworkSession
             GeometryContactCorrections = Simulation.GeometryContactCorrections,
             GeometrySleepingCorrections = Simulation.GeometrySleepingCorrections,
             MaxGeometryPenetration = Simulation.MaxGeometryPenetration,
+            GeometryCompoundContacts = Simulation.GeometryCompoundContacts,
+            GeometryCompoundImpulses = Simulation.GeometryCompoundImpulses,
+            GeometryCompoundContactCorrections = Simulation.GeometryCompoundContactCorrections,
+            GeometryRayAngularSteps = Simulation.GeometryRayAngularSteps,
+            GeometryRayAngularCorrections = Simulation.GeometryRayAngularCorrections,
+            MaxGeometryRayAngularSpeed = Simulation.MaxGeometryRayAngularSpeed,
             SupportSteps = Simulation.SupportSteps,
             SupportContacts = Simulation.SupportContacts,
             SupportSleeping = Simulation.SupportSleeping,

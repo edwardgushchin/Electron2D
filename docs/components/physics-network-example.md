@@ -9,12 +9,63 @@ All example code uses public Electron2D types; the test-only partial probe suppl
 private GPU transfer counters. No alternative physics solver or private engine API
 is embedded in the consumer.
 
+## Compound slots and rotating ray under correction, 2026-10-15
+
+The current application retains the preceding 27 objects and adds ID 214, a second
+ray-only body at (1700,40) with free rotation, explicit inertia 2, initial rotation
+.3 radians, local angular damping 4 and CastShape CCD. The original locked ray is
+unchanged. The final manifest contains 28 objects in the same 32 slots and retains
+the same command/event history budgets. The application header becomes version
+four and rejects versions one through three; the runtime portable format and API
+are unchanged.
+
+The fifth geometry bit requires the same positive contact, impulse, sleep, wake and
+imported contact/sleep evidence as the preceding four families. Alternating torque
+impulses +2/-2 accompany the existing upward impulses at ticks 240 + 120n. An angular
+step requires actual pose change greater than .0001 rad and speed greater than .01
+rad/s; each process must observe speed above .1 rad/s. Client corrections must carry
+both nonzero angular speed and an orientation differing from the initial pose by
+more than .01 rad. The support bound includes both ray endpoints at arbitrary angle,
+with the existing .65 penetration and 50-unit horizontal bounds.
+
+Compound evidence is now per local slot: masks 3 require actual contact and positive
+upward impulse from both circle slot 0 and box slot 1, plus both restored indices.
+Every reported point is transformed from world coordinates into body coordinates;
+its X sign must match the authored left-circle/right-box layout, outside a .25-unit
+ambiguity band. The geometries occupy disjoint local X intervals, with more than a
+three-unit gap, so this association also rejects swapped indices. Correction reads
+still do not count toward simulated impulse evidence. The startup controls retain
+removed-boundary/ledge checks and additionally disable each compound slot or lock
+the free ray; each must lose a required physical/evidence invariant.
+
+The updated scenario passed eleven real three-process ENet profiles: four managed
+and four strict NativeAOT CPU/software-GPU combinations with serial/separate
+numerical execution, one instrumented threaded profile (900 authority ticks, late
+admission at 310), and two default managed profiles (360 ticks, admission at 90).
+All 33 processes produced complete five-family masks, compound contact/impulse
+masks 3 and actual angular steps; all clients imported both compound slots and
+moving angular state. Maximum observed penetration was .10626221. All warmed
+owner/all-thread prediction, authority and replay allocation counters stayed zero.
+Process maps confirmed software Vulkan only on GPU clients and the same native
+executable without CoreCLR for all twelve NativeAOT children. Source/binary
+manifests and reports are retained under ignored
+`bin/physics-network-slots/2026-10-15/`. Release/source-native builds, linked test-host
+workflow, compiled coverage and wiki tests/generation/check passed. The default full
+suite was not rerun for this example-only change; runtime source is unchanged.
+
+The headless check matrix retains CPU authority and CPU/software-GPU clients,
+separate numerical lanes, actual ENet impairments and late admission. New drawing
+cases use the existing Shape.Draw consumer; compilation/headless simulation does
+not establish rendered output or real-window FPS. Dense arbitrary feature histories,
+complete inherited/extension semantics, native/device memory, target hardware and
+final performance acceptance remain open.
+
 ## Cross-family geometry under correction, 2026-10-15
 
-The current manifest adds six recipes without removing earlier players, events,
+At f0aa93aa, the manifest added six recipes without removing earlier players, events,
 trajectories or the loaded joint column: an infinite boundary at y=100, a paired
 concave ledge at y=80, rotated capsule, asymmetric convex polygon, directed ray and
-rotated two-slot circle/rectangle body. The final topology has 27 objects in the
+rotated two-slot circle/rectangle body. That profile has 27 objects in the
 existing 32 prepared slots; command/event history capacities are unchanged. The
 application header is version three and rejects versions one and two before decode;
 the runtime portable snapshot format and API are unchanged.

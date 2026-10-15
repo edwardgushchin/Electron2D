@@ -64,16 +64,19 @@ internal static class ProcessCheck
                 Check(report.SupportSteps == report.CompletedSteps && report.SupportContacts > 0 && report.SupportSleeping > 0 &&
                     report.SupportWakes > 0 && report.SupportKicks > 0 && report.SupportImpulseSamples > 0 && report.MaxSupportPinError < .5f && report.MaxSupportGrooveError < .5f,
                     "Every process solves the shared contact-supported graph, sleeps and wakes its connected island");
-                Check(report.GeometrySteps == report.CompletedSteps && report.GeometryContacts == 15 && report.GeometryImpulses == 15 &&
-                    report.GeometrySleeping == 15 && report.GeometryWakes == 15 && report.GeometryKicks > 0 && report.MaxGeometryPenetration <= .65f,
-                    "Every process exercises all four nontrivial geometry families with contacts, real impulses, sleep and wake");
+                Check(report.GeometrySteps == report.CompletedSteps && report.GeometryContacts == NetworkWorld.GeometryFamilyMask && report.GeometryImpulses == NetworkWorld.GeometryFamilyMask &&
+                    report.GeometrySleeping == NetworkWorld.GeometryFamilyMask && report.GeometryWakes == NetworkWorld.GeometryFamilyMask && report.GeometryKicks > 0 && report.MaxGeometryPenetration <= .65f,
+                    "Every process exercises all five nontrivial geometry families with contacts, real impulses, sleep and wake");
+                Check(report.GeometryCompoundContacts == 3 && report.GeometryCompoundImpulses == 3 &&
+                    report.GeometryRayAngularSteps > 0 && report.MaxGeometryRayAngularSpeed > .1f,
+                    "Both compound slots generate physical impulses and the unrestrained ray actually rotates");
                 if (report.BackendInstrumented && report.Backend == "GPU")
                     Check(report.GPUDriver.Length > 0 && report.GPUDeviceName.Length > 0 && report.GPUSubmissions > 0 && report.GPUUploadBytes > 0 && report.GPUReadbackBytes > 0 && report.GPUWaitMS > 0,
                         "GPU client executed measured device submissions and transfers");
                 if (report.BackendInstrumented && report.Backend == "CPU")
                     Check(report.NumericalSteps > 0 && report.NumericalThreadVerified, "Actual CPU intervals run on the requested owner or separate numerical lane");
             }
-            Check(authority.Actors.Length == 27 && authority.Actors.Any(actor => actor.ID == 101) && authority.Actors.Any(actor => actor.ID == 102) && authority.Actors.Any(actor => actor.ID == 110) && authority.Actors.Any(actor => actor.ID == 111) && authority.Actors.Any(actor => actor.ID == 112),
+            Check(authority.Actors.Length == 28 && authority.Actors.Any(actor => actor.ID == 101) && authority.Actors.Any(actor => actor.ID == 102) && authority.Actors.Any(actor => actor.ID == 110) && authority.Actors.Any(actor => actor.ID == 111) && authority.Actors.Any(actor => actor.ID == 112),
                 "All three joint families and their endpoints survive authority and late-join topology");
             Check(authority.Actors.Any(actor => Math.Abs(actor.AngularVelocity) > .05),
                 "Final authority state carries a real nonzero angular response for cross-backend restoration");
@@ -93,8 +96,10 @@ internal static class ProcessCheck
                 Check(client.AngularDriftCorrection > .1, "Injected rotation/angular-velocity divergence is corrected through real authority state");
                 Check(client.SupportCorrections > 0 && client.SupportContactCorrections > 0 && client.SupportSleepingCorrections > 0,
                     "Actual authority corrections restore the coupled graph's floor contacts and sleeping state");
-                Check(client.GeometryCorrections > 0 && client.GeometryContactCorrections == 15 && client.GeometrySleepingCorrections == 15,
+                Check(client.GeometryCorrections > 0 && client.GeometryContactCorrections == NetworkWorld.GeometryFamilyMask && client.GeometrySleepingCorrections == NetworkWorld.GeometryFamilyMask,
                     "Authority correction imports real contacts and sleeping state for every geometry family");
+                Check(client.GeometryCompoundContactCorrections == 3 && client.GeometryRayAngularCorrections > 0,
+                    "Portable correction restores both compound slots and moving ray angular state");
                 Check(client.WarmSteps > 0 && client.WarmReplaySteps > 0, "Allocation sample includes real warmed predicted and replayed ticks");
                 Check(client.WarmStepAllocations == 0 && client.WarmReplayAllocations == 0 && client.WarmStepTotalAllocations == 0 && client.WarmReplayTotalAllocations == 0, "Prepared predicted and replayed physics steps allocate zero managed bytes");
                 Check(client.MalformedPackets == 0 && client.MaxVisualOffset > 0, "Valid wire traffic and separate presentation smoothing");

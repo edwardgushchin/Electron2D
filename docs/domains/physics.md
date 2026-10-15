@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-15
 
+[Compound slots and free ray network state](../components/physics-network-example.md#compound-slots-and-rotating-ray-under-correction-2026-10-15)
+now require positive per-slot impulse/restoration evidence, geometric contact-index
+association and actual ray angular motion/correction, retaining the preceding
+network workload and strict warmed allocation/convergence gates. Broad API,
+native/device, platform and final hardware/performance acceptance remain open.
+
 [Network geometry continuation](../components/physics-network-example.md#cross-family-geometry-under-correction-2026-10-15)
 now includes capsules, convex/concave contours, infinite support, directed rays and
 compound slots in authoritative correction/replay. The same workload exposed and

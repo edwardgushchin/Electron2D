@@ -20,7 +20,7 @@ internal static class ProtocolChecks
         }
         var header = new byte[8]; var headerWriter = new WireWriter(header); headerWriter.Header(3);
         var headerReader = new WireReader(header); Check(headerReader.Header() == 3, "Current application wire header round trip"); headerReader.End();
-        foreach (var oldVersion in new uint[] { 0x31504E45, 0x32504E45 })
+        foreach (var oldVersion in new uint[] { 0x31504E45, 0x32504E45, 0x33504E45 })
         {
             BinaryPrimitives.WriteUInt32LittleEndian(header, oldVersion);
             var oldHeaderRejected = false;
@@ -88,14 +88,24 @@ internal static class ProtocolChecks
     }
     private static void CheckGeometryControls()
     {
-        for (var edit = 0; edit < 2; edit++)
+        for (var edit = 0; edit < 5; edit++)
         {
             using var world = new NetworkWorld(PhysicsServer.Backend.CPU); world.Reconcile(NetworkWorld.InitialObjects);
-            var floor = world.Find(edit == 0 ? 200u : 201u)!.Body!; floor.CollisionLayer = 0; floor.CollisionMask = 0;
+            if (edit < 2)
+            {
+                var floor = world.Find(edit == 0 ? 200u : 201u)!.Body!; floor.CollisionLayer = 0; floor.CollisionMask = 0;
+            }
+            else if (edit < 4) ((CollisionShape)world.Find(213)!.Body!.GetChild(edit - 2)).Disabled = true;
+            else ((RigidBody)world.Find(214)!.Body!).LockRotation = true;
             var rejected = false;
-            try { for (var i = 0; i < 120; i++) world.Step(SimulationPhase.Authority); }
+            try
+            {
+                for (var i = 0; i < 360; i++) world.Step(SimulationPhase.Authority);
+                if (world.GeometryCompoundContacts != 3 || world.GeometryCompoundImpulses != 3 || world.GeometryRayAngularSteps == 0)
+                    throw new InvalidOperationException("Network geometry negative control lost required slot or angular evidence.");
+            }
             catch (InvalidOperationException error) when (error.Message.StartsWith("Network geometry", StringComparison.Ordinal)) { rejected = true; }
-            Check(rejected, "Geometry trajectory requires its actual boundary and concave support");
+            Check(rejected, "Geometry continuation requires its boundary/ledge, both compound slots and unlocked angular response");
         }
     }
     private static void RejectInput(byte[] bytes)

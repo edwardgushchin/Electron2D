@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-15
 
+[Compound slots and free ray network state](../components/physics-network-example.md#compound-slots-and-rotating-ray-under-correction-2026-10-15)
+now require positive per-slot impulse/restoration evidence, geometric contact-index
+association and actual ray angular motion/correction, retaining the preceding
+network workload and strict warmed allocation/convergence gates. Broad API,
+native/device, platform and final hardware/performance acceptance remain open.
+
 [Scalable SVG textures](../components/scalable-svg.md) execute source paint maps, native processing, viewport/font oversampling, borrowed scale identities, theme icons and typed resource/scene storage. Local GPU/compatibility pixels and warmed replay are measured; native allocation and foreign-host gates remain separate.
 
 [Wider network geometry](../components/physics-network-example.md#cross-family-geometry-under-correction-2026-10-15)
