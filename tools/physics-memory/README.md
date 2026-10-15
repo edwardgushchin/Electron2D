@@ -140,3 +140,27 @@ these observations are not a fresh speed benchmark, traffic-queue high-water
 sample, native ENet/driver heap total, NativeAOT size or window/FPS evidence.
 
 Recorded results: [scene and network memory](../../docs/components/physics-network-memory.md).
+
+## Repeated world retirement
+
+Use `--cycles 8` with the raw fixture to create and retire eight independent worlds
+in one process. `--threaded` selects their separate numerical lane. Body/history
+counts keep their existing meaning. Each world solves the paired-circle/origin-pin
+scene, captures/restores every history and publishes/applies a portable packet.
+Even GPU cycles then force an unrepresentable gravity interval and verify terminal
+step/read rejection with the selected GPU backend still reported.
+
+The fixture destroys the source while checkpoints are held, then releases every
+caller-owned RID/history/packet. Every live and retired state is measured, followed
+by a 250 ms idle observation. Retired observations require no PhysicsSpace, selected
+backend/store/device, Shape, public checkpoint, snapshot map or packet object.
+The selected graph must be empty; the separate static CPU pool can remain.
+These are bounded lifetime checks, not native allocation or throughput acceptance.
+
+This mode also groups `/proc/PID/smaps` RSS by mapping name, preserving anonymous,
+heap, file and runtime mappings. Grouping does not identify individual allocation
+owners or stacks. The parser checks repeated/missing RSS, grouping and filenames
+with spaces. Procfs reads remain nearby observations rather than an atomic snapshot.
+`host.mallocArenaMax` records an inherited `MALLOC_ARENA_MAX` diagnostic control;
+the runner does not set that value. [Results and the open native-growth issue](../../docs/components/physics-retirement-memory.md)
+distinguish default behavior from the one-arena experiment.

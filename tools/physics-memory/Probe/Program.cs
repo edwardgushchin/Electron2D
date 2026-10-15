@@ -7,16 +7,21 @@ using static HeapGraph;
 if (args is ["--process-memory-self-test"]) { ProcessObservation.SelfTest(); return; }
 if (args.Length > 0 && args[0] == "--network") { await NetworkProbe.Run(args[1..]); return; }
 
-if (args.Length != 4) throw new ArgumentException("Expected Fixture.dll, cpu|gpu, body count, checkpoint count.");
+var retirement = args.Length > 0 && args[0] == "--retirement";
+if (retirement) args = args[1..];
+if (args.Length != (retirement ? 6 : 4)) throw new ArgumentException("Expected Fixture.dll, backend, bodies, checkpoints; retirement also requires cycles and separate-thread boolean.");
 var fixture = Path.GetFullPath(args[0]);
 var start = new ProcessStartInfo("dotnet") { RedirectStandardInput = true, RedirectStandardOutput = true, RedirectStandardError = true };
-foreach (var argument in args) start.ArgumentList.Add(argument);
+start.ArgumentList.Add(args[0]);
+if (retirement) start.ArgumentList.Add("--retire");
+foreach (var argument in args[1..]) start.ArgumentList.Add(argument);
 using var child = Process.Start(start) ?? throw new IOException("Could not start the memory fixture.");
 var errors = child.StandardError.ReadToEndAsync();
 var phases = new List<object>();
 try
 {
-    foreach (var phase in new[] { "baseline", "world", "history", "shrink", "released-history", "released-world" })
+    IEnumerable<string> expected = retirement ? new[] { "baseline" }.Concat(Enumerable.Range(1, int.Parse(args[4])).SelectMany(i => new[] { $"cycle-{i}-live", $"cycle-{i}-retired" })).Append("settled") : ["baseline", "world", "history", "shrink", "released-history", "released-world"];
+    foreach (var phase in expected)
     {
         var line = await child.StandardOutput.ReadLineAsync().WaitAsync(TimeSpan.FromMinutes(1));
         if (line is null) throw new IOException("Fixture exited: " + await errors);
@@ -25,16 +30,18 @@ try
         var maps = File.ReadAllText($"/proc/{child.Id}/maps");
         var lavapipe = maps.Contains("libvulkan_lvp.so");
         var nvidia = maps.Contains("libnvidia", StringComparison.OrdinalIgnoreCase);
-        if (nvidia || (phase == "baseline" ? lavapipe : phase != "released-world" && lavapipe != (args[1] == "gpu")))
+        var live = phase is not ("released-world" or "settled") && !phase.EndsWith("-retired", StringComparison.Ordinal);
+        if (nvidia || (phase == "baseline" ? lavapipe : live && lavapipe != (args[1] == "gpu")))
             throw new InvalidOperationException($"Unexpected driver mapping at {phase}: lavapipe={lavapipe}, NVIDIA={nvidia}.");
         phases.Add(new
         {
-            Process = ProcessObservation.Read(child.Id),
+            Process = ProcessObservation.Read(child.Id, retirement),
             Measurement = Inspect(child.Id, phase, metadata),
             LavapipeMapped = lavapipe,
             NVIDIAMapped = nvidia,
             CoreCLRPath = maps.Split('\n').First(line => line.Contains("libcoreclr.so")).Split(' ', StringSplitOptions.RemoveEmptyEntries)[^1]
         });
+        Console.Error.WriteLine($"Measured {phase}.");
         await child.StandardInput.WriteLineAsync("next"); await child.StandardInput.FlushAsync();
     }
     await child.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(30));
@@ -67,7 +74,14 @@ static object Inspect(int pid, string phase, JsonElement metadata)
     var calibrationBytes = Calibrate(anchors.ReadObjectField("Calibration"));
 
     var spaces = all.Where(o => o.Type?.Name == "Electron2D.PhysicsSpace").ToArray();
-    if (spaces.Length != (phase is "baseline" or "released-world" ? 0 : 1)) throw new InvalidDataException("Unexpected retained physics spaces.");
+    var retired = phase == "settled" || phase.EndsWith("-retired", StringComparison.Ordinal);
+    if (spaces.Length != (phase is "baseline" or "released-world" || retired ? 0 : 1)) throw new InvalidDataException("Unexpected retained physics spaces.");
+    if (retired)
+    {
+        var remaining = all.Where(o => o.Type?.Name is "Electron2D.PhysicsCheckpoint" or "Electron2D.PhysicsSnapshotMap" or "Electron2D.PhysicsSnapshot" or
+            "Electron2D.CPUPhysicsWorldBackend" or "Electron2D.GPUPhysicsWorldBackend" or "Electron2D.GPUPhysicsBodyStore" or "Electron2D.GPUPhysicsDevice" || IsShape(o.Type)).ToArray();
+        if (remaining.Length != 0) throw new InvalidDataException("Retired owners still exist: " + string.Join(", ", remaining.GroupBy(o => o.Type!.Name).Select(g => g.Key + "=" + g.Count())));
+    }
     var roots = new List<(string Name, ClrObject Object)>();
     if (spaces.Length != 0) roots.Add(("world", spaces[0]));
     Add("map", anchors.ReadObjectField("Map")); Add("snapshot", anchors.ReadObjectField("Snapshot"));
@@ -133,4 +147,10 @@ static object Inspect(int pid, string phase, JsonElement metadata)
     };
 
     void Add(string name, ClrObject o) { if (!o.IsNull) roots.Add((name, o)); }
+}
+
+static bool IsShape(ClrType? type)
+{
+    for (; type is not null; type = type.BaseType) if (type.Name == "Electron2D.Shape") return true;
+    return false;
 }

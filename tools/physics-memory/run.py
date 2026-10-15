@@ -33,12 +33,15 @@ parser.add_argument("--bodies", type=int, default=1024)
 parser.add_argument("--history", type=int, default=4)
 parser.add_argument("--network", action="store_true", help="Measure the full three-process network example instead of the raw world")
 parser.add_argument("--client-backend", choices=["cpu", "gpu"], default="gpu", help="Primary network client backend")
-parser.add_argument("--threaded", action="store_true", help="Use the network example's separate numerical thread")
+parser.add_argument("--threaded", action="store_true", help="Use a separate numerical thread in network or retirement fixtures")
+parser.add_argument("--cycles", type=int, default=0, help="Measure repeated raw-world retirement, 1 through 32 cycles")
 args = parser.parse_args()
 if args.network and (args.bodies != 1024 or args.history != 4):
     parser.error("Body/history options apply only to the raw fixture")
-if args.threaded and not args.network:
-    parser.error("Separate-thread selection currently applies to the network fixture")
+if args.cycles < 0 or args.cycles > 32 or args.network and args.cycles:
+    parser.error("Retirement cycles must be 1 through 32 and apply only to the raw fixture")
+if args.threaded and not (args.network or args.cycles):
+    parser.error("Separate-thread selection applies to network or retirement fixtures")
 if args.network and args.client_backend == "gpu" and not args.icd:
     parser.error("The GPU network client requires an explicit lavapipe ICD")
 repo = Path(__file__).resolve().parents[2]
@@ -88,6 +91,9 @@ for backend in [] if args.network else ["cpu", *(["gpu"] if driver else [])]:
     icd = args.icd if backend == "gpu" else output / "missing-icd.json"
     env.update(VK_DRIVER_FILES=str(icd), VK_ICD_FILENAMES=str(icd))
     command = ["dotnet", str(output / "Probe/Probe.dll"), str(output / "Fixture/Fixture.dll"), backend, str(args.bodies), str(args.history)]
+    if args.cycles:
+        command.insert(2, "--retirement")
+        command.extend([str(args.cycles), str(args.threaded).lower()])
     with (output / f"{backend}.json").open("w") as log, (output / f"{backend}.err").open("w") as error:
         run_probe(command, cwd=repo, env=env, stdout=log, stderr=error, timeout=300)
     report = json.loads((output / f"{backend}.json").read_text())
@@ -95,6 +101,6 @@ for backend in [] if args.network else ["cpu", *(["gpu"] if driver else [])]:
 artifacts = {str(p.relative_to(output)): hashlib.file_digest(p.open("rb"), "sha256").hexdigest()
              for p in [output / "Probe/Probe.dll", output / fixture / (fixture + ".dll"), output / fixture / "Electron2D.dll", abi_program]}
 (output / "environment.json").write_text(json.dumps({"driver": driver, "bodies": args.bodies, "history": args.history,
-    "network": args.network, "clientBackend": args.client_backend, "threaded": args.threaded, "artifacts": artifacts,
+    "network": args.network, "clientBackend": args.client_backend, "threaded": args.threaded, "cycles": args.cycles, "artifacts": artifacts,
     "host": {"kernel": platform.release(), "architecture": platform.machine(), "pageSize": os.sysconf("SC_PAGESIZE"),
-             "libcVersion": abi["LibcVersion"]}}, indent=2) + "\n")
+             "libcVersion": abi["LibcVersion"], "mallocArenaMax": env.get("MALLOC_ARENA_MAX")}}, indent=2) + "\n")

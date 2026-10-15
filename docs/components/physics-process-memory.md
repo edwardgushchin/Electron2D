@@ -68,7 +68,7 @@ The public-only network host selects serial/separate scheduling but does not
 enable internal numerical-thread/transfer telemetry. Other reports establish
 those separately.
 
-Per-world native/driver attribution, repeated creation/failure retirement,
+Per-world native/driver attribution, longer and wider creation/failure retirement,
 continuous peaks and transport queue high water remain open. So do other global
 roots, NativeAOT/platform memory, wider loads, full physics/extension/inherited
 acceptance and target-hardware speed/window FPS. Real RTX loading remains deferred
@@ -166,3 +166,8 @@ The initial candidates passed their measurements but preceded a shared-helper
 formatting correction. Only the six final cohorts above form these tables.
 The source/PDB audit verifies their actual Compile inputs against current files;
 this change adds no public runtime declaration or coverage-state promotion.
+
+[Repeated raw-world retirement](physics-retirement-memory.md) subsequently measures
+eight cycles with ordinary and failed GPU intervals. It exposes substantial default
+separate-lane glibc arena retention even when selected owners collect; the issue
+remains open. The one-arena diagnostic control is not a runtime policy change.

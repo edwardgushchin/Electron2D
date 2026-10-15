@@ -124,3 +124,8 @@ suite on explicit CPU/GPU worlds in both numerical-thread modes. All six profile
 retain 64 active or wake/sleep-cycling bodies at 0/0 warm owner/all-thread bytes.
 The public-only CPU/GPU/registered consumer additionally verifies connected groups
 and quiet-clock restoration. Hardware and broader acceptance remain open.
+
+[Repeated world-retirement memory](physics-retirement-memory.md) now shows
+substantial free glibc arena/RSS growth on the separate-lane software GPU despite
+joined threads and collected selected owners. Default native retention remains
+open; a diagnostic one-arena process control is not a production fix.

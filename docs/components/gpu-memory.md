@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-15
 
+[Repeated public world retirement](physics-retirement-memory.md) collects the
+selected store/device after normal and failed intervals, yet the default threaded
+software process accumulates resident free glibc arena storage. Requested buffer
+accounting does not close that open native-memory/performance issue.
+
 ## Measured boundary
 
 `GPUPhysicsBodyStore.BufferMemory` reports the current requested bytes and live

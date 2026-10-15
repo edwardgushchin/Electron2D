@@ -3,6 +3,7 @@ using System.Text.Json;
 using Electron2D;
 
 if (args is ["--process-memory-calibration"]) { Console.WriteLine(JsonSerializer.Serialize(ProcessMemory.Calibrate())); return; }
+if (args.Length > 0 && args[0] == "--retire") { Retirement.Run(args[1..]); return; }
 if (args.Length != 3 || args[0] is not ("cpu" or "gpu")) throw new ArgumentException("Expected cpu|gpu, body count, checkpoint count.");
 var count = int.Parse(args[1]); var historyCount = int.Parse(args[2]);
 if (count < 4 || count > 65536 || count % 4 != 0 || historyCount is < 1 or > 32) throw new ArgumentOutOfRangeException(nameof(args));

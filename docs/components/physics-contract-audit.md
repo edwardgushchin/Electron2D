@@ -1466,3 +1466,10 @@ live/history and disposal states through full-GC, host glibc and kernel RSS/PSS
 counters. Separate native-block/ABI and procfs calibration precede the unchanged
 physical/network checks. This does not establish per-world native/driver ownership,
 continuous peaks or complete memory/performance acceptance.
+
+[Repeated public world retirement](physics-retirement-memory.md) now verifies
+normal CPU/GPU and terminal GPU intervals with held histories, both numerical
+policies, collected owners and per-mapping process RSS. Default threaded lavapipe
+exhibits substantial free glibc arena growth across worlds; the matched one-arena
+control supports allocator retention as the main measured contributor. This
+native-memory/performance gate remains open pending a verified production remedy.
