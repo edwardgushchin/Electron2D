@@ -106,7 +106,7 @@ internal static class ProcessCheck
         Process Start(string role, int port, string backend, bool headless)
         {
             var command = Environment.ProcessPath!; var info = new ProcessStartInfo(command) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
-            if (System.IO.Path.GetFileNameWithoutExtension(command) == "dotnet") info.ArgumentList.Add(typeof(ProcessCheck).Assembly.Location);
+            if (System.IO.Path.GetFileNameWithoutExtension(command) == "dotnet") info.ArgumentList.Add(Environment.GetCommandLineArgs()[0]);
             info.ArgumentList.Add("--physics-network");
             if (threaded) info.ArgumentList.Add("--threaded");
             if (role == "server") info.ArgumentList.Add("--server");

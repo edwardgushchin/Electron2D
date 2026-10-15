@@ -505,7 +505,8 @@ The standalone example disables JSON reflection. Its startup exposed missing
 compiled metadata for built-in MSAA/LCD settings; those schemas now initialize
 and round-trip through public ConfigFile before all network checks. The test host
 and standalone example must both execute, because the reflection-enabled test
-host alone could conceal this startup failure. NativeAOT publication is separate.
+host alone could conceal this startup failure. [The native process profile](#nativeaot-network-processes-2026-10-15)
+now verifies a separate strict NativeAOT publish.
 
 
 Four Linux profiles passed on one frozen runtime revision (2026-10-14):
@@ -660,8 +661,59 @@ children exercise explicit GPU-startup denial. Named solver threads occur only
 in separate profiles, with instrumented CPU intervals verified on that lane.
 
 This refreshes the scripted workload rather than adding networking features.
-Arbitrary/dense coupled graphs, NativeAOT network execution, foreign platforms,
+Arbitrary/dense coupled graphs, native execution beyond the profile below, foreign platforms,
 native allocator totals, target GPU advantage and real-window FPS remain open.
 No window or physical GPU was used. Evidence:
 bin/physics-network-current/2026-10-15/validation.json and its frozen manifests,
 reports and logs.
+
+
+## NativeAOT network processes, 2026-10-15
+
+The public PhysicsNetwork example now publishes with NativeAOT and linker/compiler
+warnings treated as errors. Its launcher formerly used Assembly.Location when
+restarting a framework-dependent entry DLL, which produced IL3000 for native
+publication. It now takes that DLL path from the application command line;
+direct native and ordinary apphost execution restart Environment.ProcessPath.
+The engine API, numerical rules and network protocol are unchanged.
+
+Four native and four managed control profiles pass 900 ticks with admission
+requested after tick 310. All eight parents enforce the same physical, protocol,
+lifecycle, ownership, sleep, joint, event and final convergence assertions.
+
+| Entry / client / lane | Early / late admission | Early warm step / replay | Late warm step / replay |
+| --- | ---: | ---: | ---: |
+| aot-cpu-serial | 0 / 316 | 601 / 1906 | 535 / 1643 |
+| aot-gpu-serial | 0 / 315 | 102 / 692 | 547 / 1728 |
+| aot-cpu-threaded | 0 / 317 | 601 / 1914 | 535 / 1654 |
+| aot-gpu-threaded | 0 / 315 | 97 / 695 | 536 / 1589 |
+| dotnet-cpu-serial | 1 / 341 | 600 / 1821 | 495 / 1571 |
+| dotnet-gpu-threaded | 1 / 341 | 82 / 656 | 491 / 1547 |
+| apphost-cpu-serial | 0 / 381 | 601 / 2085 | 445 / 1389 |
+| testhost-cpu-serial | 1 / 345 | 600 / 1818 | 485 / 1431 |
+
+Every authority has 601 warmed measured steps. All measured ordinary and replayed
+physical steps retain 0/0 owner/all-thread managed bytes. Native CPU/GPU profiles
+cover serial and separate numerical policies; the managed controls exercise both
+the dotnet DLL branch, direct apphost restart and linked instrumented test host. All final fourteen-object
+identities, generations, owners, epochs and sleep match exactly, with unchanged
+.002 pose/velocity/angle bounds and exact post-admission confirmed event contents.
+
+The 24 selected children include twelve native processes. Each native child
+executes the same published ELF and maps no CoreCLR; the twelve managed controls
+map CoreCLR. GPU clients alone map explicit lavapipe, no process maps NVIDIA,
+and named solver threads appear only in separate profiles. Public reports retain
+their ordinary policy identity; lifetime observation does not measure every
+private numerical invocation.
+
+The native run uses the exact 123-file publish output without helper overlays
+or LD_LIBRARY_PATH. The managed example controls retain their own 62-file build output; the linked
+instrumented test host has a separate frozen manifest.
+The source set and both binary manifests are rechecked after execution. A strict
+publish failure before the launcher fix is retained as regression evidence.
+
+This closes the scripted Linux x64 NativeAOT network gate. Arbitrary/dense coupled
+graphs, other native platforms, full session/native/device allocation, real-window
+rendering/FPS and target hardware performance remain open. The physical RTX
+power prerequisite is unchanged. Exact reports, commands and manifests:
+bin/physics-network-aot/2026-10-15/validation.json.

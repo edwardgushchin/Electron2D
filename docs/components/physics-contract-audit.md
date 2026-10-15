@@ -1344,5 +1344,19 @@ current regression evidence rather than a new networking capability. Exact
 profiles, timings, traffic, histories and retained failed candidates are in
 [the network component](physics-network-example.md#network-regression-after-spring-sleep-fixes-2026-10-15)
 and bin/physics-network-current/2026-10-15/validation.json. Dense coupled graphs,
-NativeAOT networking, hardware/window performance and the complete inherited
+NativeAOT beyond the scripted Linux profile, hardware/window performance and the complete inherited
 physical/extension contract remain open.
+
+
+## Native network executable, 2026-10-15
+
+The public PhysicsNetwork launcher no longer requests Assembly.Location for a
+native publish. Strict Linux x64 NativeAOT publication and four actual CPU/GPU
+serial/separate network scenarios pass, alongside dotnet DLL/apphost controls.
+Twenty-four selected children reach tick 900 with positive correction/replay,
+unchanged lifecycle/joint/event/state assertions and 0/0 warmed owner/all-thread
+physical bytes. Twelve native children execute one unchanged published ELF
+without CoreCLR. This closes that bounded native network gate; broader graphs,
+platforms, full allocations and hardware/window performance remain open. See
+[the native network profile](physics-network-example.md#nativeaot-network-processes-2026-10-15)
+and bin/physics-network-aot/2026-10-15/validation.json.

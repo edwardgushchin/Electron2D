@@ -104,3 +104,20 @@ without moving physical nodes. `gpu-window.png` captures a verified frame with
 identical complete portable physics before/after drawing. Reports include actual
 window FPS/frame percentiles, window allocations and rendered interpolation/
 smoothing counts, separately from physics/replay metrics.
+
+## NativeAOT on Linux
+
+Publish the complete native output directory and run its executable directly:
+
+```sh
+dotnet publish examples/PhysicsNetwork/PhysicsNetwork.csproj -c Release -r linux-x64 -p:PublishAot=true -p:ILLinkTreatWarningsAsErrors=true -p:IlcTreatWarningsAsErrors=true -o bin/physics-network-native
+bin/physics-network-native/PhysicsNetwork --check --client-backend cpu --ticks 900 --late-join-tick 310 --output bin/physics-network-native-check
+```
+
+Keep the complete published directory intact. The parent launches
+its server and clients from the same application, both for direct execution and
+for a framework-dependent DLL launched through `dotnet`. Use `--client-backend gpu`
+for a GPU early client and add `--threaded` for separate numerical execution;
+CPU authority and late CPU client still require denied GPU startup. These checks
+retain the ordinary physical, protocol, event, convergence and warm allocation
+assertions. Platform and device acceptance must be recorded for the actual run.
