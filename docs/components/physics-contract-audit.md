@@ -1328,4 +1328,35 @@ The current joint profile exercises initial raw RigidLinear lock delivery and a 
 
 The portable-contact slide-history failure recorded by the coupled profile was traced to an outdated consumer setup: it called MoveAndSlide outside a physical frame without supplying a process duration. The shared contact fixture and the platform-continuation scenario now explicitly run the process frame used by their external movement calls. Zero duration and phase selection remain unchanged. Current verification and the original failure are retained in bin/physics-character-history/2026-10-15/validation.json.
 
-The generic shader source check currently rejects the unchanged Canvas vertex ABI in tools/shaders/check.py (artifact: bin/physics-coupled-extension/2026-10-15/shader-check.log). The changed resident sleep compute shader is compiled and validated by the Release runtime shader build; the broader Canvas guard requires separate reconciliation before a full shader-check claim.
+The generic shader source check was using private built-in glyph programs as public material fixtures. It now uses fixed material HLSL sources, keeps the existing bytecode oracle, and verifies that private built-ins reject without replacing a usable material artifact. Runtime built-in generation/delivery and all 732 glyph composition modules have separate executable checks. Evidence and the original rejection are retained in bin/physics-shader-gates/2026-10-15/validation.json. This restores the shader gate without changing the canvas ABI or proving rendered physics/window performance.
+
+
+## Post-spring network regression, 2026-10-15
+
+The existing impaired ENet workload is reverified after the initial RigidLinear
+attachment and supported-spring sleep/wake fixes. Eight frozen-source 900-tick
+profiles execute 24 real processes: six CPU-authority/software-GPU-client scenarios
+and two CPU-only controls, serial/separate numerical lanes, public and instrumented
+hosts, and both early/late admission boundaries. Positive correction/replay and
+warm samples, zero owner/all-thread measured physical bytes, all three joint
+families, lifecycle/sleep/events and unchanged final state bounds pass. This is
+current regression evidence rather than a new networking capability. Exact
+profiles, timings, traffic, histories and retained failed candidates are in
+[the network component](physics-network-example.md#network-regression-after-spring-sleep-fixes-2026-10-15)
+and bin/physics-network-current/2026-10-15/validation.json. Dense coupled graphs,
+NativeAOT beyond the scripted Linux profile, hardware/window performance and the complete inherited
+physical/extension contract remain open.
+
+
+## Native network executable, 2026-10-15
+
+The public PhysicsNetwork launcher no longer requests Assembly.Location for a
+native publish. Strict Linux x64 NativeAOT publication and four actual CPU/GPU
+serial/separate network scenarios pass, alongside dotnet DLL/apphost controls.
+Twenty-four selected children reach tick 900 with positive correction/replay,
+unchanged lifecycle/joint/event/state assertions and 0/0 warmed owner/all-thread
+physical bytes. Twelve native children execute one unchanged published ELF
+without CoreCLR. This closes that bounded native network gate; broader graphs,
+platforms, full allocations and hardware/window performance remain open. See
+[the native network profile](physics-network-example.md#nativeaot-network-processes-2026-10-15)
+and bin/physics-network-aot/2026-10-15/validation.json.

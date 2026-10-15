@@ -147,6 +147,20 @@ internal static class ResourcePackTests
         using (var p = new ZIPPacker()) { p.Open(pack); p.StartFile("zip/hello.txt"); p.WriteFile("hello"u8); p.Close(); }
         Check(ProjectSettings.LoadResourcePack(pack) && EFile.GetFileAsString("res://zip/hello.txt") == "hello", "ZIP resource mount.");
         Check(!ProjectSettings.LoadResourcePack(pack, offset: 1), "ZIP cannot mount at a PCK offset.");
+        var corrupt = File.ReadAllBytes(pack);
+        var central = -1;
+        for (var i = 0; i <= corrupt.Length - 4; i++) if (BinaryPrimitives.ReadUInt32LittleEndian(corrupt.AsSpan(i)) == 0x02014b50) { central = i; break; }
+        Check(central >= 0, "ZIP fixture has a central directory.");
+        var unsupported = Path.Combine(folder, "encrypted.zip");
+        foreach (var flag in new ushort[] { 1, 64, 8192 })
+        {
+            var invalid = corrupt.ToArray(); BinaryPrimitives.WriteUInt16LittleEndian(invalid.AsSpan(6), flag); BinaryPrimitives.WriteUInt16LittleEndian(invalid.AsSpan(central + 8), flag); File.WriteAllBytes(unsupported, invalid);
+            Check(!ProjectSettings.LoadResourcePack(unsupported), "Unsupported ZIP encryption rejects before overlay publication: " + flag);
+        }
+        var prefixed = Path.Combine(folder, "prefixed.zip"); File.WriteAllBytes(prefixed, [1, 2, 3, 4, 5]);
+        using (var writer = new ZIPPacker()) { writer.Open(prefixed, ZIPAppend.CreateAfter); writer.StartFile("zip-prefix/item"); writer.WriteFile([8]); }
+        Check(ProjectSettings.LoadResourcePack(prefixed) && EFile.GetFileAsBytes("res://zip-prefix/item").SequenceEqual(new byte[] { 8 }), "Prefixed ZIP uses the same directory origin as entry reads.");
+
     }
 
     private static void VersionsAndOffsets(string folder)

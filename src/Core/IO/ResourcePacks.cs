@@ -136,8 +136,12 @@ internal sealed class ResourcePacks
 
     private static List<(string, Entry?)> ReadZIP(Stream stream, string pack)
     {
-        stream.Position = 0;
-        using var archive = new ZipArchive(stream, ZipArchiveMode.Read, leaveOpen: true);
+        var directory = ZIPDirectory.Read(stream);
+        if (directory.Length > PCKFormat.DirectoryLimit || directory.Count > PCKFormat.DirectoryLimit / 46) throw new InvalidDataException("ZIP directory exceeds its size budget.");
+        var flags = ZIPDirectory.Flags(stream, directory);
+        if (flags.Any(static flag => (flag & 0x2041) != 0)) throw new InvalidDataException("Encrypted ZIP resource packs are unsupported.");
+        stream.Position = directory.Prefix;
+        using var archive = new ZipArchive(new ZIPViewStream(stream, directory.Prefix), ZipArchiveMode.Read, leaveOpen: true, entryNameEncoding: ZIPDirectory.UTF8);
         var records = new List<(string, Entry?)>(); var size = 0L;
         for (var i = 0; i < archive.Entries.Count; i++)
         {
