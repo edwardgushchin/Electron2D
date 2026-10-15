@@ -90,6 +90,7 @@
   <Import Project="tools/enet-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
   <Import Project="tools/mesh-native.targets" />
   <Import Project="tools/webp-native.targets" />
+  <Import Project="tools/ogv-native.targets" />
   <Import Project="tools/tls-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
   <Import Project="tools/font-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
   <Import Project="tools/native-package.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />

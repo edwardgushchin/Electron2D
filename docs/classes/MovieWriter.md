@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-15
 
-Source: [MovieWriter.cs](../../src/Servers/Movie/MovieWriter.cs). Declaration: `public abstract class MovieWriter : ElectronObject`. Inherits [ElectronObject](ElectronObject.md). Internal implementations: [PNGMovieWriter](PNGMovieWriter.md), [AVIMovieWriter](AVIMovieWriter.md).
+Source: [MovieWriter.cs](../../src/Servers/Movie/MovieWriter.cs). Declaration: `public abstract class MovieWriter : ElectronObject`. Inherits [ElectronObject](ElectronObject.md). Internal implementations: [PNGMovieWriter](PNGMovieWriter.md), [AVIMovieWriter](AVIMovieWriter.md), [OGVMovieWriter](OGVMovieWriter.md).
 
 ## Description
 
@@ -49,7 +49,7 @@ Rejects null/disposed, off-creator-thread, duplicate/full registrations, active 
 <a id="audiometadata"></a>
 ### OnGetAudioMixRate / OnGetAudioSpeakerMode
 
-Sampled once for a selected recording, before Begin. Invalid rate/enum fails before Begin/End. The native output graph uses exactly this rate and 2/4/6/8 channels in AudioServer order. The built-in writer samples MovieWriterMixRate and MovieWriterSpeakerMode project settings instead of custom defaults.
+Sampled once for a selected recording, before Begin. Invalid rate/enum fails before Begin/End. The native output graph uses exactly this rate and 2/4/6/8 channels in AudioServer order. Built-in writers sample MovieWriterMixRate and MovieWriterSpeakerMode project settings instead of custom defaults.
 
 <a id="ongetsupportedextensions"></a>
 <a id="onhandlesfile"></a>
@@ -79,4 +79,4 @@ End runs once after Begin was attempted, including startup/callback failure, bef
 
 ## Verification and remaining work
 
-MovieWriterTests exercises portable registration and actual Linux GPU/Compatibility recording. [The component](../components/movie-writing.md) records the exact checks and package/foreign limits. Built-in AVI writes indexed MJPEG and PCM16/32; its quality/depth and shared rate/channel settings are sampled once before scene activation. OGV remains an encoder dependency in coverage. [ADR 0109](../decisions/movie-writing.md#adr-0109).
+MovieWriterTests exercises portable registration and actual Linux GPU/Compatibility recording. [The component](../components/movie-writing.md) records the exact checks and package/foreign limits. Built-in AVI writes indexed MJPEG and PCM16/32; its quality/depth and shared rate/channel settings are sampled once before scene activation. Built-in OGV encodes Theora/Vorbis with sampled quality/speed/keyframe controls and codec-specific speaker mapping; positive even dimensions are required. [ADR 0109](../decisions/movie-writing.md#adr-0109).

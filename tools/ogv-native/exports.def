@@ -1,0 +1,6 @@
+LIBRARY Electron2DOGV
+EXPORTS
+    e2d_ogv_create
+    e2d_ogv_frame
+    e2d_ogv_finish
+    e2d_ogv_destroy

@@ -190,13 +190,23 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>editor/movie_writer/speaker_mode; Stereo initially.</value>
     public static ProjectSetting<AudioServer.SpeakerMode> MovieWriterSpeakerMode { get; } = new("editor/movie_writer/speaker_mode", AudioServer.SpeakerMode.Stereo, Enum.IsDefined);
 
-    /// <summary>Lossy video quality sampled when a built-in AVI recording begins.</summary>
+    /// <summary>Lossy video quality sampled when a built-in AVI or OGV recording begins.</summary>
     /// <value>editor/movie_writer/video_quality; 0.75 initially, finite range 0 through 1.</value>
-    /// <remarks>AVI uses the JPEG encoder's minimum one-percent quality for values below 0.01. PNG is lossless.</remarks>
+    /// <remarks>AVI uses the JPEG encoder's minimum one-percent quality for values below 0.01. OGV maps the complete range to Theora quality. PNG is lossless.</remarks>
     public static ProjectSetting<float> MovieWriterVideoQuality { get; } = new("editor/movie_writer/video_quality", .75f, value => float.IsFinite(value) && value is >= 0 and <= 1);
     /// <summary>PCM sample depth sampled when a built-in AVI recording begins.</summary>
     /// <value>editor/movie_writer/audio_bit_depth; 16 initially, accepts 16 or 32. PNG/WAV remains 32-bit.</value>
     public static ProjectSetting<int> MovieWriterAudioBitDepth { get; } = new("editor/movie_writer/audio_bit_depth", 16, value => value is 16 or 32);
+
+    /// <summary>Vorbis quality sampled when a built-in OGV recording begins.</summary>
+    /// <value>editor/movie_writer/ogv/audio_quality; 0.5 initially, finite range -0.1 through 1.</value>
+    public static ProjectSetting<float> MovieWriterOGVAudioQuality { get; } = new("editor/movie_writer/ogv/audio_quality", .5f, value => float.IsFinite(value) && value is >= -.1f and <= 1);
+    /// <summary>Theora speed level sampled when a built-in OGV recording begins.</summary>
+    /// <value>editor/movie_writer/ogv/encoding_speed; 4 initially, accepts 1 through 4. Higher levels encode faster.</value>
+    public static ProjectSetting<int> MovieWriterOGVEncodingSpeed { get; } = new("editor/movie_writer/ogv/encoding_speed", 4, value => value is >= 1 and <= 4);
+    /// <summary>Maximum spacing of OGV video keyframes, in recorded frames.</summary>
+    /// <value>editor/movie_writer/ogv/keyframe_interval; 64 initially, accepts 1 through 1024.</value>
+    public static ProjectSetting<int> MovieWriterOGVKeyframeInterval { get; } = new("editor/movie_writer/ogv/keyframe_interval", 64, value => value is >= 1 and <= 1024);
 
     /// <summary>Defines the fixed-step callback frequency used by <see cref="Engine"/>.</summary>
     public static ProjectSetting<int> PhysicsTicksPerSecond { get; } =

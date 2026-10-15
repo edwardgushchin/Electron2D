@@ -69,6 +69,9 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(MovieWriterSpeakerMode, isBasic: false);
         RegisterInternal(MovieWriterVideoQuality, isBasic: false);
         RegisterInternal(MovieWriterAudioBitDepth, isBasic: false);
+        RegisterInternal(MovieWriterOGVAudioQuality, isBasic: false);
+        RegisterInternal(MovieWriterOGVEncodingSpeed, isBasic: false);
+        RegisterInternal(MovieWriterOGVKeyframeInterval, isBasic: false);
         RegisterInternal(PhysicsTicksPerSecond, isBasic: true);
         RegisterInternal(Physics2DEngine, isBasic: true);
         RegisterInternal(Physics2DAllowCPUFallback, isBasic: false);
@@ -1176,6 +1179,9 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, MovieWriterSpeakerMode) ||
         ReferenceEquals(setting, MovieWriterVideoQuality) ||
         ReferenceEquals(setting, MovieWriterAudioBitDepth) ||
+        ReferenceEquals(setting, MovieWriterOGVAudioQuality) ||
+        ReferenceEquals(setting, MovieWriterOGVEncodingSpeed) ||
+        ReferenceEquals(setting, MovieWriterOGVKeyframeInterval) ||
         ReferenceEquals(setting, ApplicationName) ||
         ReferenceEquals(setting, ApplicationVersion) ||
         ReferenceEquals(setting, AudioDriverEnableInput) ||

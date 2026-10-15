@@ -1,0 +1,29 @@
+<Project>
+  <PropertyGroup>
+    <Electron2DOGVNativeRID Condition="'$(Electron2DOGVNativeRID)' == ''">$(_Electron2DPrivateNativeRID)</Electron2DOGVNativeRID>
+    <_Electron2DOGVName>libElectron2DOGV.so</_Electron2DOGVName>
+    <_Electron2DOGVName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libElectron2DOGV.dylib</_Electron2DOGVName>
+    <_Electron2DOGVName Condition="'$(Electron2DNativePlatform)' == 'Windows'">Electron2DOGV.dll</_Electron2DOGVName>
+    <_Electron2DOGVBuild>$(MSBuildThisFileDirectory)../obj/ogv-native/$(Electron2DOGVNativeRID)</_Electron2DOGVBuild>
+    <_Electron2DOGVLibrary>$(_Electron2DOGVBuild)/$(_Electron2DOGVName)</_Electron2DOGVLibrary>
+    <_Electron2DOGVLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true'">$(PkgElectron2D_Linux)/runtimes/$(Electron2DOGVNativeRID)/native/$(_Electron2DOGVName)</_Electron2DOGVLibrary>
+    <_Electron2DOGVLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_MacOS)/runtimes/$(Electron2DOGVNativeRID)/native/$(_Electron2DOGVName)</_Electron2DOGVLibrary>
+    <_Electron2DOGVLibrary Condition="'$(Electron2DOGVNativeLibrary)' != ''">$(Electron2DOGVNativeLibrary)</_Electron2DOGVLibrary>
+  </PropertyGroup>
+  <ItemGroup>
+    <_Electron2DOGVInput Include="$(MSBuildThisFileDirectory)ogv-native/*;$(MSBuildThisFileFullPath)" />
+    <None Include="$(_Electron2DOGVLibrary)" Condition="('$(Electron2DNativePlatform)' == 'Linux' or '$(Electron2DNativePlatform)' == 'MacOS') and ('$(Electron2DBuildNativeFromSource)' == 'true' or Exists('$(_Electron2DOGVLibrary)'))" Link="runtimes/$(Electron2DOGVNativeRID)/native/$(_Electron2DOGVName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" Visible="false" />
+  </ItemGroup>
+  <Target Name="BuildElectron2DOGVNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DOGVNativeLibrary)' == '' and ('$(Electron2DNativePlatform)' == 'Linux' or '$(Electron2DNativePlatform)' == 'MacOS')" Inputs="@(_Electron2DOGVInput)" Outputs="$(_Electron2DOGVLibrary)">
+    <Error Condition="'$(Electron2DOGVNativeRID)' != '$(NETCoreSdkRuntimeIdentifier)'" Text="Private OGV compilation requires the matching target host; foreign profiles use the native bundle producers." />
+    <Exec Command="cmake -S &quot;$(MSBuildThisFileDirectory)ogv-native&quot; -B &quot;$(_Electron2DOGVBuild)&quot; -G Ninja -DCMAKE_BUILD_TYPE=Release" />
+    <Exec Command="cmake --build &quot;$(_Electron2DOGVBuild)&quot; --target Electron2DOGV --parallel 2" />
+  </Target>
+  <Target Name="CheckElectron2DOGVNative" DependsOnTargets="BuildElectron2DOGVNative" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and ('$(Electron2DNativePlatform)' == 'Linux' or '$(Electron2DNativePlatform)' == 'MacOS')">
+    <Exec Command="cmake --build &quot;$(_Electron2DOGVBuild)&quot; --target Electron2DOGVCheck Electron2DVorbisResidueCheck --parallel 2" />
+    <MakeDir Directories="$(_Electron2DOGVBuild)/checks" />
+    <Exec Command="&quot;$(_Electron2DOGVBuild)/Electron2DOGVCheck&quot; &quot;$(_Electron2DOGVBuild)/checks&quot;" />
+    <Exec Command="&quot;$(_Electron2DOGVBuild)/Electron2DVorbisResidueCheck&quot;" />
+  </Target>
+
+</Project>

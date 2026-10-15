@@ -71,7 +71,7 @@ def build(rid, artifacts, sdl=None, ndk=None):
                    env=environment, check=True)
     audio_target = "FAudio-shared" if rid.startswith("android-") else "FAudio-static"
     subprocess.run(["cmake", "--build", str(directory), "--target", "Electron2DTextBreak", audio_target,
-                    "Electron2DENet", "Electron2DMesh", "Electron2DWebP", "freetype", "harfbuzz", "--parallel", "2"], env=environment, check=True)
+                    "Electron2DENet", "Electron2DMesh", "Electron2DWebP", "Electron2DOGV", "freetype", "harfbuzz", "--parallel", "2"], env=environment, check=True)
     if rid == "browser-wasm":
         subprocess.run(["cmake", "--build", str(directory), "--target", "SDL3_image-static", "Electron2DFreeTypeCheck", "Electron2DWasmJumpCheck", "--parallel", "2"], env=environment, check=True)
         subprocess.run([environment["DOTNET_EMSCRIPTEN_NODE_JS"], str(directory / "Electron2DWasmJumpCheck.js")], env=environment, check=True)

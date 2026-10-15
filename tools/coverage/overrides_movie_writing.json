@@ -69,6 +69,21 @@
       "godot": "ProjectSettings::property:editor/movie_writer/audio_bit_depth",
       "electron2d": "property:Electron2D.ProjectSettings.MovieWriterAudioBitDepth()",
       "reason": "ADR 0109: built-in AVI writes indexed/interleaved MJPEG and little-endian PCM16/32 using the real renderer and synchronous FAudio graph. Quality and depth are sampled at Begin; rational audio lengths preserve the sample clock. RIFF/index extent checks and failure finalization preserve complete frame pairs. Local Linux verification and limits are documented in movie-writing.md."
+    },
+    {
+      "godot": "ProjectSettings::property:editor/movie_writer/ogv/audio_quality",
+      "electron2d": "property:Electron2D.ProjectSettings.MovieWriterOGVAudioQuality()",
+      "reason": "ADR 0109: the built-in OGV handler executes real RGB8 capture through private Theora/Vorbis encoding and timestamp-ordered Ogg muxing, with quality/speed/keyframe controls sampled before scene activation. Exact rational PCM clocks include short/empty blocks, EOS finalization and failure-safe native/file ownership. Source/native package integration and verification limits are recorded in movie-writing.md."
+    },
+    {
+      "godot": "ProjectSettings::property:editor/movie_writer/ogv/encoding_speed",
+      "electron2d": "property:Electron2D.ProjectSettings.MovieWriterOGVEncodingSpeed()",
+      "reason": "ADR 0109: the built-in OGV handler executes real RGB8 capture through private Theora/Vorbis encoding and timestamp-ordered Ogg muxing, with quality/speed/keyframe controls sampled before scene activation. Exact rational PCM clocks include short/empty blocks, EOS finalization and failure-safe native/file ownership. Source/native package integration and verification limits are recorded in movie-writing.md."
+    },
+    {
+      "godot": "ProjectSettings::property:editor/movie_writer/ogv/keyframe_interval",
+      "electron2d": "property:Electron2D.ProjectSettings.MovieWriterOGVKeyframeInterval()",
+      "reason": "ADR 0109: the built-in OGV handler executes real RGB8 capture through private Theora/Vorbis encoding and timestamp-ordered Ogg muxing, with quality/speed/keyframe controls sampled before scene activation. Exact rational PCM clocks include short/empty blocks, EOS finalization and failure-safe native/file ownership. Source/native package integration and verification limits are recorded in movie-writing.md."
     }
   ],
   "statusGroups": [
@@ -88,24 +103,18 @@
         "ProjectSettings::property:editor/movie_writer/mix_rate",
         "ProjectSettings::property:editor/movie_writer/speaker_mode",
         "ProjectSettings::property:editor/movie_writer/video_quality",
-        "ProjectSettings::property:editor/movie_writer/audio_bit_depth"
-      ]
-    },
-    {
-      "state": "Partial",
-      "reason": "ADR 0109: registered typed writers, PNG/WAV and indexed AVI/MJPEG/PCM16/32 execute. OGV remains missing: its first codec slice must package native Theora/Vorbis encoding and Ogg muxing and consume the three OGV controls plus shared video quality. This layer is authorized, not implemented by the existing decoder.",
-      "godot": [
-        "class:MovieWriter"
-      ]
-    },
-    {
-      "godot": [
+        "ProjectSettings::property:editor/movie_writer/audio_bit_depth",
         "ProjectSettings::property:editor/movie_writer/ogv/audio_quality",
         "ProjectSettings::property:editor/movie_writer/ogv/encoding_speed",
         "ProjectSettings::property:editor/movie_writer/ogv/keyframe_interval"
-      ],
-      "state": "Blocked",
-      "reason": "ADR 0109: first executable OGV encoder slice must supply native Theora/Vorbis encoding and Ogg muxing through the source/native package gates, with the three real quality/speed/keyframe controls. The existing Vorbis decoder cannot encode. Implementing that layer is authorized; no separate user command is required."
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0109: borrowed typed writer hooks, fixed-cadence recording and all three built-ins execute: PNG/WAV, indexed AVI/MJPEG/PCM and OGV/Theora/Vorbis. Real renderer/FAudio data, native source/package dispatch, settings and lifecycle/failure behavior are verified locally on Linux. Foreign execution and owner acceptance remain separate platform gates.",
+      "godot": [
+        "class:MovieWriter"
+      ]
     },
     {
       "godot": [

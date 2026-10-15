@@ -1,0 +1,11 @@
+# Keep the pinned archive unchanged; compile a narrowly adapted encoder copy.
+set(encoder "${electron2dvorbis_SOURCE_DIR}/lib/vorbisenc.c")
+file(SHA256 "${encoder}" encoder_hash)
+if(NOT encoder_hash STREQUAL "0c123e6c1ecf7fd5729b570db7ff061b2bfeff46815bd93f96ac49c2df79a45d")
+  message(FATAL_ERROR "Re-audit the residue allocation fix when updating libvorbis.")
+endif()
+file(READ "${encoder}" encoder_text)
+set(original "  vorbis_info_residue0 *r=ci->residue_param[number]=\n    _ogg_malloc(sizeof(*r));")
+set(replacement "  vorbis_info_residue0 *r=ci->residue_param[number];\n  if(!r)r=ci->residue_param[number]=_ogg_malloc(sizeof(*r));")
+string(REPLACE "${original}" "${replacement}" encoder_text "${encoder_text}")
+file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/vorbisenc.c" CONTENT "${encoder_text}")

@@ -24,6 +24,7 @@ def build(rid, sdl, artifacts):
                 "-DELECTRON2D_SDL_VERSION=" + package.configuration()["sdlVersion"],
                 "-DSDL3_LIBRARIES=" + str(output / "sdl/SDL3.lib")]),
             ("tools/enet-native", "Electron2DENet", "Electron2DENet.dll", []),
+            ("tools/ogv-native", "Electron2DOGV", "Electron2DOGV.dll", []),
             ("tools/webp-native", "Electron2DWebP", "Electron2DWebP.dll", []),
             ("tools/mesh-native", "Electron2DMesh", "Electron2DMesh.dll", []),
             ("tools/font-native", "freetype", "Electron2DFreeType.dll", [])):
@@ -37,6 +38,12 @@ def build(rid, sdl, artifacts):
             subprocess.run(["cmake", "--build", str(directory), "--target", "Electron2DFreeTypeCheck", "--parallel", "2"], check=True)
             font = next((root / "src/Scene/Theme/Fonts").glob("*.woff2"))
             subprocess.run([str(directory / "Electron2DFreeTypeCheck.exe"), str(font)], check=True)
+        if target == "Electron2DOGV":
+            subprocess.run(["cmake", "--build", str(directory), "--target", "Electron2DOGVCheck", "Electron2DVorbisResidueCheck", "--parallel", "2"], check=True)
+            checks = directory / "checks"
+            checks.mkdir(parents=True, exist_ok=True)
+            subprocess.run([str(directory / "Electron2DOGVCheck.exe"), str(checks)], check=True)
+            subprocess.run([str(directory / "Electron2DVorbisResidueCheck.exe")], check=True)
         destination = artifacts / "runtimes" / rid / "native"
         destination.mkdir(parents=True, exist_ok=True)
         shutil.copy2(directory / name, destination / name)

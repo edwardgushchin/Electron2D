@@ -95,6 +95,7 @@ public abstract class MovieWriter : ElectronObject
         }
         if (System.IO.Path.GetExtension(path).Equals(".png", StringComparison.OrdinalIgnoreCase)) return new PNGMovieWriter { _active = 1, _owned = true };
         if (System.IO.Path.GetExtension(path).Equals(".avi", StringComparison.OrdinalIgnoreCase)) return new AVIMovieWriter { _active = 1, _owned = true };
+        if (System.IO.Path.GetExtension(path).Equals(".ogv", StringComparison.OrdinalIgnoreCase)) return new OGVMovieWriter { _active = 1, _owned = true };
         throw new NotSupportedException("No movie writer accepts this path.");
     }
     internal (int Rate, int Channels) GetAudioFormat()

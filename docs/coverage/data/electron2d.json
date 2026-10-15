@@ -230879,6 +230879,45 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.MovieWriterOGVAudioQuality()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "MovieWriterOGVAudioQuality",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E MovieWriterOGVAudioQuality { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.MovieWriterOGVEncodingSpeed()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "MovieWriterOGVEncodingSpeed",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E MovieWriterOGVEncodingSpeed { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.MovieWriterOGVKeyframeInterval()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "MovieWriterOGVKeyframeInterval",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E MovieWriterOGVKeyframeInterval { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.MovieWriterSpeakerMode()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",

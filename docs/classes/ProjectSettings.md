@@ -65,8 +65,11 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | --- | --- |
 | [`public static ProjectSetting<int> MovieWriterMixRate { get; }`](#moviewritermixrate) | Built-in recording rate; 48000 Hz, supported 1000..200000. |
 | [`public static ProjectSetting<AudioServer.SpeakerMode> MovieWriterSpeakerMode { get; }`](#moviewriterspeakermode) | Built-in recording channel mode; Stereo initially. |
-| [`public static ProjectSetting<float> MovieWriterVideoQuality { get; }`](#moviewritervideoquality) | AVI JPEG quality, 0.75 initially; finite 0..1. |
+| [`public static ProjectSetting<float> MovieWriterVideoQuality { get; }`](#moviewritervideoquality) | AVI/Theora quality, 0.75 initially; finite 0..1. |
 | [`public static ProjectSetting<int> MovieWriterAudioBitDepth { get; }`](#moviewriteraudiobitdepth) | AVI PCM depth, 16 initially; accepts 16 or 32. |
+| [`public static ProjectSetting<float> MovieWriterOGVAudioQuality { get; }`](#moviewriterogvaudioquality) | Vorbis quality, 0.5 initially; finite -0.1..1. |
+| [`public static ProjectSetting<int> MovieWriterOGVEncodingSpeed { get; }`](#moviewriterogvencodingspeed) | Theora speed, 4 initially; 1..4. |
+| [`public static ProjectSetting<int> MovieWriterOGVKeyframeInterval { get; }`](#moviewriterogvkeyframeinterval) | Maximum keyframe spacing, 64 initially; 1..1024 frames. |
 | [`public static ProjectSetting<Color> DebugPathsColor { get; }`](#diagnostics-debugpathscolor) | Defines the color of path curves and tangent markers when scene path diagnostics are enabled. |
 | [`public static ProjectSetting<string> ApplicationName { get; }`](#p-electron2d-projectsettings-applicationname) | Defines the human-readable application name. |
 | [`public static ProjectSetting<string> ApplicationVersion { get; }`](#p-electron2d-projectsettings-applicationversion) | Defines the application version string. |
@@ -1524,9 +1527,24 @@ Mounted res:// resources now share [resource pack resolution](../components/reso
 <a id="moviewritervideoquality"></a>
 ### `public static ProjectSetting<float> MovieWriterVideoQuality { get; }`
 
-Projects editor/movie_writer/video_quality. Nonbasic, default 0.75, finite 0..1 inclusive; invalid values reject before mutation. Supports registry serialization and feature overrides. AVI samples it at Begin, clamps values below 0.01 to the JPEG encoder's minimum quality, and remains lossy at 1. PNG is lossless and ignores it. OGV consumption awaits its encoder.
+Projects editor/movie_writer/video_quality. Nonbasic, default 0.75, finite 0..1 inclusive; invalid values reject before mutation. Supports registry serialization and feature overrides. AVI samples it at Begin, clamps values below 0.01 to the JPEG encoder's minimum quality, and remains lossy at 1. OGV maps the complete range to Theora quality 0..63. PNG is lossless and ignores it.
 
 <a id="moviewriteraudiobitdepth"></a>
 ### `public static ProjectSetting<int> MovieWriterAudioBitDepth { get; }`
 
 Projects editor/movie_writer/audio_bit_depth. Nonbasic, default 16; only 16 or 32 is accepted. Supports registry serialization and feature overrides. AVI samples it at Begin; 16-bit output uses signed Int32 high bits and 32-bit output preserves the full mixed PCM. PNG/WAV always writes 32-bit PCM. Invalid values throw ArgumentOutOfRangeException without mutation.
+
+<a id="moviewriterogvaudioquality"></a>
+### `public static ProjectSetting<float> MovieWriterOGVAudioQuality { get; }`
+
+Projects editor/movie_writer/ogv/audio_quality. Nonbasic, finite -0.1..1 inclusive, default 0.5. Invalid values reject before mutation (nonfinite JSON values throw ArgumentException). Normal serialization and feature overrides apply. Sampled at OGV Begin; controls Vorbis VBR quality and is independent of AVI PCM depth.
+
+<a id="moviewriterogvencodingspeed"></a>
+### `public static ProjectSetting<int> MovieWriterOGVEncodingSpeed { get; }`
+
+Projects editor/movie_writer/ogv/encoding_speed. Nonbasic, default 4, range 1..4 inclusive. Higher values encode faster with less efficient compression; the selected level is capped at the codec's queried maximum. Invalid values throw ArgumentOutOfRangeException before mutation. Serialization and feature overrides apply; OGV samples it at Begin.
+
+<a id="moviewriterogvkeyframeinterval"></a>
+### `public static ProjectSetting<int> MovieWriterOGVKeyframeInterval { get; }`
+
+Projects editor/movie_writer/ogv/keyframe_interval. Nonbasic, default 64, range 1..1024 inclusive, measured in recorded video frames. OGV sets the actual maximum forced interval, including non-powers of two; spontaneous earlier keyframes are allowed. Invalid values throw ArgumentOutOfRangeException before mutation. Serialization and feature overrides apply; sampled at Begin.

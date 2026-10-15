@@ -14,7 +14,7 @@ payloads and continued scene events across CPU/GPU scene/raw worlds. This bounde
 verification changes no declaration status; arbitrary feature histories and full
 native/device, platform and hardware/performance acceptance remain open.
 
-[Movie writing](../components/movie-writing.md) connects typed writer hooks, fixed-cadence Engine capture, a synchronous no-device FAudio graph and PNG/WAV plus indexed AVI/MJPEG/PCM16/32 output. AVI quality/depth settings now drive the encoder; OGV remains an exact native encoding/muxing dependency.
+[Movie writing](../components/movie-writing.md) connects typed writer hooks, fixed-cadence Engine capture, a synchronous no-device FAudio graph and PNG/WAV plus indexed AVI/MJPEG/PCM16/32 output. AVI quality/depth and OGV quality/speed/keyframe settings drive executable encoders; OGV uses a pinned native Theora/Vorbis/Ogg closure. Configured movie startup remains a separate host-adapter dependency.
 
 [Compound slots and free ray network state](../components/physics-network-example.md#compound-slots-and-rotating-ray-under-correction-2026-10-15)
 now require positive per-slot impulse/restoration evidence, geometric contact-index

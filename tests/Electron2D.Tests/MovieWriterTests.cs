@@ -122,7 +122,7 @@ internal static class MovieWriterTests
             Check(loaded.Get(ProjectSettings.MovieWriterMixRate) == 44100 && loaded.Get(ProjectSettings.MovieWriterSpeakerMode) == AudioServer.SpeakerMode.Surround71, "Independent project settings round-trip.");
         }
         finally { Directory.Delete(folder, recursive: true); }
-        AVIMovieWriterTests.Portable();
+        AVIMovieWriterTests.Portable(); OGVMovieWriterTests.Portable();
         Console.WriteLine("Movie writer portable: arguments, registry ownership/capacity/duplicates, failure and reclamation passed.");
     }
     internal static AudioStreamWAV Source()
@@ -142,6 +142,7 @@ internal static class MovieWriterTests
     internal static void Native(string backend, string folder)
     {
         Directory.CreateDirectory(folder);
+        if (backend.StartsWith("ogv-", StringComparison.Ordinal)) { OGVMovieWriterTests.Native(backend[4..], folder); return; }
         if (backend.StartsWith("avi-", StringComparison.Ordinal))
         {
             ProjectSettings.Set(ProjectSettings.RenderingMethod, backend[4..]); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
