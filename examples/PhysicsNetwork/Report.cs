@@ -27,6 +27,16 @@ internal sealed class SessionReport
     public float MaxPinError { get; set; }
     public float MaxGrooveError { get; set; }
     public float MaxSpringLength { get; set; }
+    public int GeometrySteps { get; set; }
+    public int GeometryCorrections { get; set; }
+    public int GeometryKicks { get; set; }
+    public uint GeometryContacts { get; set; }
+    public uint GeometryImpulses { get; set; }
+    public uint GeometrySleeping { get; set; }
+    public uint GeometryWakes { get; set; }
+    public uint GeometryContactCorrections { get; set; }
+    public uint GeometrySleepingCorrections { get; set; }
+    public float MaxGeometryPenetration { get; set; }
     public int SupportSteps { get; set; }
     public int SupportContacts { get; set; }
     public int SupportSleeping { get; set; }
@@ -129,6 +139,16 @@ internal sealed partial class NetworkSession
             MaxPinError = Simulation.MaxPinError,
             MaxGrooveError = Simulation.MaxGrooveError,
             MaxSpringLength = Simulation.MaxSpringLength,
+            GeometrySteps = Simulation.GeometrySteps,
+            GeometryCorrections = Simulation.GeometryCorrections,
+            GeometryKicks = Simulation.GeometryKicks,
+            GeometryContacts = Simulation.GeometryContacts,
+            GeometryImpulses = Simulation.GeometryImpulses,
+            GeometrySleeping = Simulation.GeometrySleeping,
+            GeometryWakes = Simulation.GeometryWakes,
+            GeometryContactCorrections = Simulation.GeometryContactCorrections,
+            GeometrySleepingCorrections = Simulation.GeometrySleepingCorrections,
+            MaxGeometryPenetration = Simulation.MaxGeometryPenetration,
             SupportSteps = Simulation.SupportSteps,
             SupportContacts = Simulation.SupportContacts,
             SupportSleeping = Simulation.SupportSleeping,

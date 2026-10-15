@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-15
 
+[Network geometry continuation](../components/physics-network-example.md#cross-family-geometry-under-correction-2026-10-15)
+now includes capsules, convex/concave contours, infinite support, directed rays and
+compound slots in authoritative correction/replay. The same workload exposed and
+removed a warmed CPU frame-contact buffer growth; broad API, platform and final
+hardware/performance acceptance remain open.
+
 [Registered concave numerics](../components/physics-registered-adapter.md#registered-concave-numerics)
 now preserve paired hollow edges, one logical shape slot, rod mass, queries,
 contacts and linear/angular CCD in the independent public-only provider. Shared

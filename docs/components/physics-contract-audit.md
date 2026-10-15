@@ -1388,3 +1388,17 @@ CPU/GPU/registered bodies and physics callbacks, with strict zero warmed frame
 allocation; see [scene hierarchy](scene-hierarchy.md#owned-name-and-type-searches).
 Only these audited inherited rows change state; the complete inherited contract
 and hardware/window/performance requirements stay open.
+
+## Cross-family network geometry and CPU contact reservation, 2026-10-15
+
+The public example now retains its previous scenario and adds capsules, asymmetric
+convex and paired concave contours, an infinite boundary, directed rays and compound
+slots. The [current profile](physics-network-example.md#cross-family-geometry-under-correction-2026-10-15)
+requires actual contact/impulse/sleep/wake evidence, imported contact/sleep state and
+all prior final-state/event/lifecycle assertions. The 27-object world retains 32 slots
+and fixed history budgets; the application header becomes version three. A late CPU
+contact-feature peak grew frame records after warmup. The engine now reserves point
+records and their index when contact aggregation begins, within its existing graph
+budget. No public runtime signature, portable format or coverage-state exemption is
+introduced. Arbitrary dense geometry, complete inherited/extension semantics,
+retained/device memory, target hardware and real-window/FPS acceptance remain open.

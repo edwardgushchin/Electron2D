@@ -4,6 +4,13 @@ Last updated: 2026-10-15
 
 [Scalable SVG textures](../components/scalable-svg.md) execute source paint maps, native processing, viewport/font oversampling, borrowed scale identities, theme icons and typed resource/scene storage. Local GPU/compatibility pixels and warmed replay are measured; native allocation and foreign-host gates remain separate.
 
+[Wider network geometry](../components/physics-network-example.md#cross-family-geometry-under-correction-2026-10-15)
+adds six application recipes and requires all four moving families to retain real
+contact impulses, sleep/wake, imported contacts and final authoritative convergence.
+CPU frame impulse aggregation now reserves its declared point/index budget before
+intervals. This extends executable evidence without closing broad extension,
+inherited, native-memory, hardware or performance coverage states.
+
 [Exact inherited node paths](../components/scene-hierarchy.md#exact-node-paths) now use
 active-only cached absolute paths and allocation-free exact, absolute and unique
 lookups. Empty/malformed inputs, typed failures, callback failures, membership and

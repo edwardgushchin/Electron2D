@@ -13,7 +13,8 @@ internal sealed partial class NetworkSession
         if (Simulation.World.PhysicsBackend != PhysicsServer.Backend.CPU) return;
         var owner = Environment.CurrentManagedThreadId;
         var separate = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DRunOnSeparateThread);
-        Box2D.NET.B2Worlds.b2GetWorldFromId(space.WorldID).finalizeBodyStates += _ =>
+        // CCD owns pose finalization; observe the native collision interval without replacing its algorithms.
+        Box2D.NET.B2Worlds.b2GetWorldFromId(space.WorldID).beginIslandChanges += _ =>
         {
             _numericalSteps++;
             _numericalThreadVerified &= (Environment.CurrentManagedThreadId != owner) == separate;

@@ -1,6 +1,6 @@
 # CPUPhysicsWorldBackend
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 **Declaration:** `internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend` · **Source:** [CPUPhysicsWorldBackend.cs](../../src/Servers/Physics/CPUPhysicsWorldBackend.cs) · **Component:** [Physics backends](../components/physics-backends.md)
 
@@ -42,6 +42,14 @@ CPU capacity preparation keeps a conservative flag once any dynamic attachment c
 CPU step phases resolve world fields and body callbacks, select workers, execute native discrete/CCD/kinematic intervals, complete poses, collect contacts in joined ranges and scan Area observations. ResultsReady becomes true only after solve advances the tick. EndStep prunes one-way history on both success and failure. The [common phase/lifetime boundary](PhysicsWorldBackend.md#selected-step-phases) owns observer publication and ordered callbacks. Source: [CPU phases](../../src/Servers/Physics/CPUPhysicsWorldBackend.Step.cs).
 
 Body-motion tests now dispatch through this selected owner using engine-unit inputs and RID exclusions. The [common contract and verification](PhysicsWorldBackend.md#body-motion-and-platform-lookup) records geometry, identity, lookup and allocation boundaries.
+
+Frame impulse aggregation prepares retained point records and their feature index
+for two points per contact in the existing four-contact-per-prepared-body budget.
+Only worlds with an active contact receiver reserve these stores. This prevents a
+later CCD/contact feature peak from growing the list during a warmed step; first
+use or topology growth remains cold capacity work. The public network geometry
+[profile](../components/physics-network-example.md#cross-family-geometry-under-correction-2026-10-15)
+checks the real late-client regression rather than a capacity-field assertion.
 
 ## Ownership and verification
 

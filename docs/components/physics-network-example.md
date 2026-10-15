@@ -9,6 +9,74 @@ All example code uses public Electron2D types; the test-only partial probe suppl
 private GPU transfer counters. No alternative physics solver or private engine API
 is embedded in the consumer.
 
+## Cross-family geometry under correction, 2026-10-15
+
+The current manifest adds six recipes without removing earlier players, events,
+trajectories or the loaded joint column: an infinite boundary at y=100, a paired
+concave ledge at y=80, rotated capsule, asymmetric convex polygon, directed ray and
+rotated two-slot circle/rectangle body. The final topology has 27 objects in the
+existing 32 prepared slots; command/event history capacities are unchanged. The
+application header is version three and rejects versions one and two before decode;
+the runtime portable snapshot format and API are unchanged.
+
+Four moving families use isolated layer/mask 4. Capsule, directed ray and compound
+body select shape CCD; the polygon selects ray CCD. The ray explicitly locks
+rotation; the other finite bodies start at .3 radians and remain free to rotate.
+Every numbered tick 240 + 120n
+applies an upward impulse of 40 to each body. Actual contact reads require mapped
+floor RID/instance/object identity, logical collider shape zero, valid local slot,
+finite unit normal and impulse. Positive impulse evidence is sampled only from
+simulation, not from correction reads. Bit masks map bits 0..3 to capsule, polygon,
+ray and compound; all four bits are required for contacts, impulses, sleep and wake,
+and separately for imported contacts/sleep after corrections.
+
+Support bounds use exact capsule support, authored convex vertices, ray tip and
+both transformed compound pieces. Penetration is limited to .65 scene units,
+consistent with the existing .6 complete-scene tolerance plus .05 float/contact
+margin; horizontal drift is bounded to 50 units inside the ledge's 60-unit half
+width. Contact normal length tolerance is .002, independently of orientation.
+Two startup controls remove boundary or ledge collision and require rejection.
+The instrumented host observes native collision intervals through the existing
+notification hook, including CCD intervals whose pose finalizer belongs to the CCD
+algorithm. Thread identity remains checked against the requested numerical lane.
+Final cross-process pose/motion/sleep convergence retains the .002 tolerances and
+all previous adverse delivery, identity, ownership and exactly-once effect gates.
+
+The wider trajectories exposed CPU frame-contact list growth from 16 to 32 records
+after warmup (2328 bytes in the observed late client). Frame contact aggregation now
+prepares its list and index for two points per contact in the existing four-contact
+per prepared-body budget, before intervals run. Reservation occurs only when a
+receiver requests contacts; unobserved worlds acquire no extra frame-contact store.
+First use/topology growth can allocate; warmed continuation within that budget
+retains the strict zero owner/all-thread managed-byte requirement. Private profiling
+prints used to identify the allocation were removed. Native/device totals, arbitrary
+dense feature histories, foreign platforms, physical GPU advantage and real-window
+FPS remain separate acceptance work. The drawing consumer uses Shape.Draw for the
+new recipes; this headless profile does not certify rendered output.
+
+### Executed headless matrix
+
+| Host/profile | Profiles | Authority ticks / late admission |
+| --- | ---: | --- |
+| Managed CPU or software-GPU client, serial and separate numerical thread | 4 | 900 / 310 |
+| Strict NativeAOT CPU or software-GPU client, serial and separate numerical thread | 4 | 900 / 310 |
+| Instrumented managed CPU authority/software-GPU client, separate thread | 1 | 900 / 310 |
+| Default managed CPU or software-GPU client | 2 | 360 / 90 |
+
+All eleven real three-process ENet checks passed, including all prior packet
+loss/reordering/duplication, lifecycle, ownership, effects, presentation-coordinate
+and final convergence gates. All 33 processes reported zero warmed owner/all-thread
+managed bytes for complete prediction/authority/replay steps. The four family masks
+are complete in every process; clients also import complete contact/sleep masks.
+All twelve NativeAOT children map the same native executable without CoreCLR.
+Process maps show lavapipe only for GPU clients, no NVIDIA library, and numerical
+threads only for requested separate execution. Test-only observer and random-phase fixture corrections followed the application
+builds; runtime/application source and binary manifests stayed unchanged. The
+instrumented host was rebuilt and its network profile rerun after both changes.
+These are functional/allocation checks, not physical-GPU or real-window performance
+acceptance. Source/binary manifests and reports are under the ignored
+`bin/physics-network-geometry/2026-10-15/` artifact root.
+
 ## Tick and authority protocol
 
 The game uses exactly 1/60 s per physical tick and asserts that every SceneTree step

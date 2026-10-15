@@ -81,10 +81,22 @@ support impulse against both bodies' weight and spring load. Numbered kicks from
 tick 240 every 120 ticks must wake both bodies from natural sleep. Both clients
 must restore actual floor contacts and sleeping state from server corrections.
 Startup negative controls remove the floor or spring load and require rejection.
-The final topology now contains 21 objects within 32 prepared slots. Command history
+The final topology now contains 27 objects within 32 prepared slots. Command history
 uses 262144 bytes per process, excluding array headers. The example's application
-wire is version 2 and rejects previous recipe/slot layouts; the engine portable
+wire is version 3 and rejects previous recipe/slot layouts; the engine portable
 snapshot format is unchanged.
+
+The additional geometry island includes an infinite boundary, a two-segment concave
+ledge, a rotated capsule, an asymmetric convex polygon, a directed separation ray
+and a rotated two-slot circle/rectangle body. Shape CCD applies to the capsule,
+ray and compound body; the polygon selects ray CCD. The ray locks rotation while
+the other finite bodies rotate freely. Numbered impulses wake them
+every 120 ticks from tick 240. Every authority/prediction/replay step checks finite
+motion, actual world-space support bounds, contact identities and local shape
+indices. Reports require all four moving families to produce real impulses, sleep,
+wake and restore contacts/sleep from authority corrections. Startup controls remove
+each support and require the trajectory check to fail. The display draws their
+actual public Shape geometry; headless checks establish no rendered/window gate.
 
 `NetworkWorld` owns the game scene and lifecycle recipes. `NetworkSession` owns
 bounded command/event histories and peer policy. `NetworkSession.State` applies

@@ -20,11 +20,14 @@ internal static class ProtocolChecks
         }
         var header = new byte[8]; var headerWriter = new WireWriter(header); headerWriter.Header(3);
         var headerReader = new WireReader(header); Check(headerReader.Header() == 3, "Current application wire header round trip"); headerReader.End();
-        BinaryPrimitives.WriteUInt32LittleEndian(header, 0x31504E45);
-        var oldHeaderRejected = false;
-        try { var legacy = new WireReader(header); _ = legacy.Header(); }
-        catch (InvalidDataException) { oldHeaderRejected = true; }
-        Check(oldHeaderRejected, "Previous recipe/command layout rejects before decoding application state");
+        foreach (var oldVersion in new uint[] { 0x31504E45, 0x32504E45 })
+        {
+            BinaryPrimitives.WriteUInt32LittleEndian(header, oldVersion);
+            var oldHeaderRejected = false;
+            try { var legacy = new WireReader(header); _ = legacy.Header(); }
+            catch (InvalidDataException) { oldHeaderRejected = true; }
+            Check(oldHeaderRejected, "Previous recipe/command layout rejects before decoding application state");
+        }
         var encoded = new byte[32]; var writer = new WireWriter(encoded);
         var expected = new InputCommand(17, 10, 2, 3, new(.5f, true)); writer.Input(expected);
         var reader = new WireReader(encoded); Check(reader.Input() == expected, "Input wire round trip"); reader.End();
@@ -47,6 +50,7 @@ internal static class ProtocolChecks
         BinaryPrimitives.WriteUInt32LittleEndian(encoded.AsSpan(20), 0); RejectInput(encoded);
         CheckJointContinuations();
         CheckSupportControls();
+        CheckGeometryControls();
     }
     private static void CheckJointContinuations()
     {
@@ -80,6 +84,18 @@ internal static class ProtocolChecks
             }
             catch (InvalidOperationException error) when (error.Message.StartsWith("Network coupled", StringComparison.Ordinal)) { rejected = true; }
             Check(rejected, "A coupled network world requires both its floor and actual spring load");
+        }
+    }
+    private static void CheckGeometryControls()
+    {
+        for (var edit = 0; edit < 2; edit++)
+        {
+            using var world = new NetworkWorld(PhysicsServer.Backend.CPU); world.Reconcile(NetworkWorld.InitialObjects);
+            var floor = world.Find(edit == 0 ? 200u : 201u)!.Body!; floor.CollisionLayer = 0; floor.CollisionMask = 0;
+            var rejected = false;
+            try { for (var i = 0; i < 120; i++) world.Step(SimulationPhase.Authority); }
+            catch (InvalidOperationException error) when (error.Message.StartsWith("Network geometry", StringComparison.Ordinal)) { rejected = true; }
+            Check(rejected, "Geometry trajectory requires its actual boundary and concave support");
         }
     }
     private static void RejectInput(byte[] bytes)

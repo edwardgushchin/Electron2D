@@ -73,6 +73,19 @@ internal sealed class NetworkWindow(NetworkSession session, string capturePath) 
                 DrawSetTransform(Screen(visual), solved.Rotation, new Vector2(_viewScale, _viewScale));
                 switch (actor.Spec.Kind)
                 {
+                    case ObjectKind.GeometryBoundary:
+                    case ObjectKind.GeometryLedge:
+                    case ObjectKind.GeometryCapsule:
+                    case ObjectKind.GeometryPolygon:
+                    case ObjectKind.GeometryRay:
+                    case ObjectKind.GeometryCompound:
+                        for (var child = 0; child < body.GetChildCount(); child++)
+                        {
+                            var collision = (CollisionShape)body.GetChild(child);
+                            DrawSetTransformMatrix(new Transform(solved.Rotation, new Vector2(_viewScale, _viewScale), 0, Screen(visual)) * collision.Transform);
+                            collision.Shape!.Draw(GetCanvasItem(), Colors.Gold);
+                        }
+                        break;
                     case ObjectKind.Floor: DrawRect(new(new(-320, -10), new(640, 20)), new(.25f, .3f, .38f)); break;
                     case ObjectKind.SupportFloor: DrawRect(new(new(-100, -1), new(200, 2)), Colors.Gray); break;
                     case ObjectKind.SupportBody: DrawCircle(Vector2.Zero, 2, Colors.Gold); break;
@@ -82,7 +95,7 @@ internal sealed class NetworkWindow(NetworkSession session, string capturePath) 
                     case ObjectKind.Ball: DrawCircle(Vector2.Zero, 12, Colors.Pink); break;
                 }
                 DrawSetTransform(Vector2.Zero);
-                if (actor.Spec.Kind is ObjectKind.Box or ObjectKind.Ball or ObjectKind.SupportBody)
+                if (actor.Spec.Kind is ObjectKind.Box or ObjectKind.Ball or ObjectKind.SupportBody or ObjectKind.GeometryCapsule or ObjectKind.GeometryPolygon or ObjectKind.GeometryRay or ObjectKind.GeometryCompound)
                 {
                     if (session.IsSmoothedPresentation(slot)) _smoothed++;
                     if (session.IsInterpolatedPresentation(slot)) _interpolated++;
@@ -100,7 +113,7 @@ internal sealed class NetworkWindow(NetworkSession session, string capturePath) 
                 DrawLine(Screen(session.PresentationPosition(Array.IndexOf(session.Simulation.Actors, first))),
                     Screen(session.PresentationPosition(Array.IndexOf(session.Simulation.Actors, second))), Colors.Gold, 2);
         foreach (var actor in session.Simulation.Actors)
-            if (actor?.Body is not null && actor.Spec.Kind is ObjectKind.Box or ObjectKind.Ball or ObjectKind.SupportBody)
+            if (actor?.Body is not null && actor.Spec.Kind is ObjectKind.Box or ObjectKind.Ball or ObjectKind.SupportBody or ObjectKind.GeometryCapsule or ObjectKind.GeometryPolygon or ObjectKind.GeometryRay or ObjectKind.GeometryCompound)
             {
                 var slot = Array.IndexOf(session.Simulation.Actors, actor);
                 var visual = Screen(session.PresentationPosition(slot)); var solved = Screen(actor.Position);

@@ -1,6 +1,6 @@
 # Physics backend selection and shared worlds
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 [Same-revision mass measurements](physics-current-performance.md) record complete
 CPU/GPU headless steps and real-window frames at 65,536 awake bodies on
@@ -10,6 +10,11 @@ physics/frame samples allocate zero managed bytes. This workload passes physical
 gates and confirms a host-specific advantage; 60 Hz, native/foreign acceptance
 and complete registered extensions remain open. Earlier measurements below retain
 their own source/workload scope.
+
+CPU complete-frame impulse aggregation now prepares its point list and feature index
+when contact reporting is requested, using two points for each contact in the existing
+four-contact-per-prepared-body budget. The wider network geometry profile records
+the late-growth failure and continuation scope in [the network example](physics-network-example.md#cross-family-geometry-under-correction-2026-10-15).
 
 ## CPU collider ownership
 
