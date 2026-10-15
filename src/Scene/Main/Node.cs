@@ -639,18 +639,18 @@ public partial class Node : ElectronObject
     /// <value>False initially; ready notification enables an overridden callback before OnReady.</value>
     /// <remarks>A node absent from the captured idle schedule starts on the next idle frame. Disabling a captured
     /// node suppresses later delivery immediately. An existing internal participant may enable its public callback in that frame.</remarks>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">Access is outside the scene owner/current processing group, or mutation violates scene capture or physical authoring guards.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool ProcessEnabled
     {
         get
         {
-            ThrowIfDisposed();
+            ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
             return _processEnabled;
         }
         set
         {
-            EnsureMutable();
+            EnsureProcessingAccess();
             if (_processEnabled == value) return;
             _processEnabled = value;
             Tree?.InvalidateProcessOrder();
@@ -661,18 +661,18 @@ public partial class Node : ElectronObject
     /// <value>False initially; ready notification enables an overridden callback before OnReady.</value>
     /// <remarks>A node absent from the captured physics schedule starts on the next physics frame. Disabling a captured
     /// node suppresses later delivery immediately. An existing internal participant may enable its public callback in that frame.</remarks>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">Access is outside the scene owner/current processing group, or mutation violates scene capture or physical authoring guards.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool PhysicsProcessEnabled
     {
         get
         {
-            ThrowIfDisposed();
+            ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
             return _physicsProcessEnabled;
         }
         set
         {
-            EnsureMutable();
+            EnsureProcessingAccess();
             if (_physicsProcessEnabled == value) return;
             _physicsProcessEnabled = value;
             Tree?.InvalidateProcessOrder();
@@ -686,12 +686,12 @@ public partial class Node : ElectronObject
     /// Disabling a built-in node's internal work can suspend animation, timers or other implementation logic.
     /// Participation is captured together with ordinary idle processing. A newly enabled node waits for
     /// the next idle snapshot; a node already included through its ordinary callback can enable internal delivery in this frame.</remarks>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off its owner thread or during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">Access is outside the scene owner/current processing group, or mutation violates scene capture or physical authoring guards.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public bool InternalProcessEnabled
     {
-        get { ThrowIfDisposed(); return _internalProcessEnabled; }
-        set { EnsureMutable(); if (_internalProcessEnabled == value) return; _internalProcessEnabled = value; Tree?.InvalidateProcessOrder(); }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this); return _internalProcessEnabled; }
+        set { EnsureProcessingAccess(); if (_internalProcessEnabled == value) return; _internalProcessEnabled = value; Tree?.InvalidateProcessOrder(); }
     }
 
     /// <summary>Gets or sets whether this node receives internal fixed-frame notifications.</summary>
@@ -701,12 +701,12 @@ public partial class Node : ElectronObject
     /// Disabling built-in internal physics can suspend casts, timers or other implementation logic.
     /// Participation is captured together with ordinary physics processing. A newly enabled node waits for
     /// the next physics snapshot; a node already included through its ordinary callback can enable internal delivery in this frame.</remarks>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off its owner thread or during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">Access is outside the scene owner/current processing group, or mutation violates scene capture or physical authoring guards.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public bool InternalPhysicsProcessEnabled
     {
-        get { ThrowIfDisposed(); return _internalPhysicsProcessEnabled; }
-        set { EnsureMutable(); if (_internalPhysicsProcessEnabled == value) return; _internalPhysicsProcessEnabled = value; Tree?.InvalidateProcessOrder(); }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this); return _internalPhysicsProcessEnabled; }
+        set { EnsureProcessingAccess(); if (_internalPhysicsProcessEnabled == value) return; _internalPhysicsProcessEnabled = value; Tree?.InvalidateProcessOrder(); }
     }
 
     /// <summary>Gets or sets whether this node receives the first input-propagation stage.</summary>
@@ -778,19 +778,19 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Gets or sets this node's ascending process-frame order key.</summary>
-    /// <value>Any integer; the default is zero. Equal priorities retain captured tree order.</value>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <value>Any integer; the default is zero. Equal priorities retain captured tree order within the group.</value>
+    /// <exception cref="InvalidOperationException">Access is outside the scene owner/current processing group, or mutation violates scene capture or physical authoring guards.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public int ProcessPriority
     {
         get
         {
-            ThrowIfDisposed();
+            ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
             return _processPriority;
         }
         set
         {
-            EnsureMutable();
+            EnsureProcessingAccess();
             if (_processPriority == value) return;
             _processPriority = value;
             Tree?.InvalidateProcessOrder();
@@ -798,19 +798,19 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Gets or sets this node's ascending physics-process order key.</summary>
-    /// <value>Any integer; the default is zero. Equal priorities retain captured tree order.</value>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <value>Any integer; the default is zero. Equal priorities retain captured tree order within the group.</value>
+    /// <exception cref="InvalidOperationException">Access is outside the scene owner/current processing group, or mutation violates scene capture or physical authoring guards.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public int PhysicsProcessPriority
     {
         get
         {
-            ThrowIfDisposed();
+            ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
             return _physicsProcessPriority;
         }
         set
         {
-            EnsureMutable();
+            EnsureProcessingAccess();
             if (_physicsProcessPriority == value) return;
             _physicsProcessPriority = value;
             Tree?.InvalidateProcessOrder();
@@ -820,21 +820,21 @@ public partial class Node : ElectronObject
     /// <summary>Gets the current or most recent process-frame duration of the attached scene tree.</summary>
     /// <value>The tree's scaled process duration in seconds, or zero while detached or before its first process frame.</value>
     /// <remarks>All attached nodes observe the same lane duration, including disabled or paused nodes. It is committed before frame-start callbacks. Manual notification does not advance it.</remarks>
-    /// <exception cref="InvalidOperationException">An attached node is read off the scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is read outside its scene owner or current processing group.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public double ProcessDeltaTime
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return Tree?.ProcessDelta ?? 0; }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this); return Tree?.ProcessDelta ?? 0; }
     }
 
     /// <summary>Gets the current or most recent physics-frame duration of the attached scene tree.</summary>
     /// <value>The tree's scaled physics duration in seconds, or zero while detached or before its first physics frame.</value>
     /// <remarks>All attached nodes observe the same lane duration, including disabled or paused nodes. It is committed before frame-start callbacks. Manual notification does not advance it.</remarks>
-    /// <exception cref="InvalidOperationException">An attached node is read off the scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is read outside its scene owner or current processing group.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public double PhysicsProcessDeltaTime
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return Tree?.PhysicsDelta ?? 0; }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this); return Tree?.PhysicsDelta ?? 0; }
     }
 
     /// <summary>Occurs on the parent after a direct child is structurally attached and child order is reported.</summary>
@@ -1803,7 +1803,7 @@ public partial class Node : ElectronObject
 
     /// <inheritdoc />
     /// <remarks>Appends this class's typed hierarchy, ownership, processing, and automatic translation descriptors to the inherited descriptors.</remarks>
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(SceneNodeProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(SceneNodeProperties).Concat(ProcessingGroupProperties);
 
     /// <inheritdoc />
     /// <remarks>Rejects disposal during tree lifecycle or notification delivery, or of an active tree root, and requires the owner thread for an attached node.</remarks>
@@ -2167,6 +2167,7 @@ public partial class Node : ElectronObject
 
         Tree = tree;
         TreeAttachmentVersion++;
+        tree.BindProcessingGroup(this);
         List<Exception>? errors = null;
         try { OnTreeMembershipChanged(entering: true); }
         catch (Exception error) { CollectException(ref errors, error); }
@@ -2400,6 +2401,7 @@ public partial class Node : ElectronObject
                 CollectException(ref errors, error);
             }
 
+            tree.UnbindProcessingGroup(this);
             Tree = null;
 
             try
@@ -2425,7 +2427,10 @@ public partial class Node : ElectronObject
             _isExitingTree = false;
 
             if (ReferenceEquals(Tree, tree))
+            {
+                tree.UnbindProcessingGroup(this);
                 Tree = null;
+            }
         }
 
         ThrowCollected("One or more exit-tree callbacks failed.", errors);

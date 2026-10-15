@@ -5,7 +5,7 @@ public partial class Node
     /// <summary>Queues a typed operation before or after processing of this node's owning group.</summary>
     /// <typeparam name="TNode">The receiver type accepted by the operation.</typeparam>
     /// <param name="operation">The operation receiving this live node.</param>
-    /// <remarks>The current main group drains its FIFO in both frame lanes, even with processing disabled.
+    /// <remarks>The destination group drains FIFO in each active callback lane; its message mask additionally permits empty-group delivery.
     /// The receiver is borrowed weakly; disposed or collected receivers are skipped. A transferred receiver follows
     /// its current tree owner. Captured delegates and values retain their ordinary caller-owned references.
     /// Messages queued during delivery join the same drain; avoid unbounded self-enqueue.</remarks>
@@ -16,7 +16,7 @@ public partial class Node
     public void CallDeferredThreadGroup<TNode>(Action<TNode> operation) where TNode : Node
     {
         ValidateThreadMessage<TNode>(operation, nameof(operation));
-        RequireMessageTree().EnqueueProcessMessage(DeliverCall<TNode>, new CallMessage<TNode>(BorrowIdentity(), operation));
+        RequireMessageTree().EnqueueProcessMessage(this, DeliverCall<TNode>, new CallMessage<TNode>(BorrowIdentity(), operation));
     }
 
     /// <summary>Queues a typed property assignment in this node's owning processing group.</summary>
@@ -33,7 +33,7 @@ public partial class Node
     public void SetDeferredThreadGroup<TNode, TValue>(Action<TNode, TValue> setter, TValue value) where TNode : Node
     {
         ValidateThreadMessage<TNode>(setter, nameof(setter));
-        RequireMessageTree().EnqueueProcessMessage(DeliverSet<TNode, TValue>, new SetMessage<TNode, TValue>(BorrowIdentity(), setter, value));
+        RequireMessageTree().EnqueueProcessMessage(this, DeliverSet<TNode, TValue>, new SetMessage<TNode, TValue>(BorrowIdentity(), setter, value));
     }
 
     /// <summary>Queues a numeric notification in this node's owning processing group.</summary>
@@ -44,13 +44,13 @@ public partial class Node
     public void NotifyDeferredThreadGroup(int what)
     {
         ThrowIfDisposed();
-        RequireMessageTree().EnqueueProcessMessage(DeliverNotification, new NotificationMessage(BorrowIdentity(), what));
+        RequireMessageTree().EnqueueProcessMessage(this, DeliverNotification, new NotificationMessage(BorrowIdentity(), what));
     }
 
     /// <summary>Invokes a typed operation immediately when accessible, otherwise queues it to this node's owner.</summary>
     /// <typeparam name="TNode">The receiver type accepted by the operation.</typeparam>
     /// <param name="operation">The operation receiving this live node.</param>
-    /// <remarks>Attached nodes execute immediately only on their tree owner. Detached nodes execute on the caller
+    /// <remarks>Attached nodes execute immediately on their tree owner or current processing-group worker. Detached nodes execute on the caller
     /// under their ordinary access policy. Otherwise delivery follows the deferred group rules; this method does not
     /// wait for completion or return an operation result. Immediate failures propagate, queued failures join frame errors.</remarks>
     /// <exception cref="ArgumentNullException">The operation is null.</exception>
@@ -60,8 +60,8 @@ public partial class Node
     public void CallThreadSafe<TNode>(Action<TNode> operation) where TNode : Node
     {
         ValidateThreadMessage<TNode>(operation, nameof(operation));
-        if (Tree is not { } tree || tree.IsOwnerThread) operation((TNode)this);
-        else tree.EnqueueProcessMessage(DeliverCall<TNode>, new CallMessage<TNode>(BorrowIdentity(), operation));
+        if (ProcessingAccessible) operation((TNode)this);
+        else RequireMessageTree().EnqueueProcessMessage(this, DeliverCall<TNode>, new CallMessage<TNode>(BorrowIdentity(), operation));
     }
 
     /// <summary>Assigns a typed property immediately when accessible, otherwise queues it to this node's owner.</summary>
@@ -78,8 +78,8 @@ public partial class Node
     public void SetThreadSafe<TNode, TValue>(Action<TNode, TValue> setter, TValue value) where TNode : Node
     {
         ValidateThreadMessage<TNode>(setter, nameof(setter));
-        if (Tree is not { } tree || tree.IsOwnerThread) setter((TNode)this, value);
-        else tree.EnqueueProcessMessage(DeliverSet<TNode, TValue>, new SetMessage<TNode, TValue>(BorrowIdentity(), setter, value));
+        if (ProcessingAccessible) setter((TNode)this, value);
+        else RequireMessageTree().EnqueueProcessMessage(this, DeliverSet<TNode, TValue>, new SetMessage<TNode, TValue>(BorrowIdentity(), setter, value));
     }
 
     /// <summary>Delivers a numeric notification immediately when accessible, otherwise queues it to this node's owner.</summary>
@@ -90,8 +90,8 @@ public partial class Node
     public void NotifyThreadSafe(int what)
     {
         ThrowIfDisposed();
-        if (Tree is not { } tree || tree.IsOwnerThread) Notify(what);
-        else tree.EnqueueProcessMessage(DeliverNotification, new NotificationMessage(BorrowIdentity(), what));
+        if (ProcessingAccessible) Notify(what);
+        else RequireMessageTree().EnqueueProcessMessage(this, DeliverNotification, new NotificationMessage(BorrowIdentity(), what));
     }
 
     private void ValidateThreadMessage<TNode>(Delegate callback, string parameter) where TNode : Node
@@ -107,19 +107,19 @@ public partial class Node
     private static void DeliverCall<TNode>(CallMessage<TNode> message) where TNode : Node
     {
         if (message.Target.Target is not TNode node) return;
-        if (node.Tree is { IsOwnerThread: false } tree) tree.EnqueueProcessMessage(DeliverCall<TNode>, message);
+        if (!node.ProcessingAccessible) node.RequireMessageTree().EnqueueProcessMessage(node, DeliverCall<TNode>, message);
         else message.Operation(node);
     }
     private static void DeliverSet<TNode, TValue>(SetMessage<TNode, TValue> message) where TNode : Node
     {
         if (message.Target.Target is not TNode node) return;
-        if (node.Tree is { IsOwnerThread: false } tree) tree.EnqueueProcessMessage(DeliverSet<TNode, TValue>, message);
+        if (!node.ProcessingAccessible) node.RequireMessageTree().EnqueueProcessMessage(node, DeliverSet<TNode, TValue>, message);
         else message.Setter(node, message.Value);
     }
     private static void DeliverNotification(NotificationMessage message)
     {
         if (message.Target.Target is not Node node) return;
-        if (node.Tree is { IsOwnerThread: false } tree) tree.EnqueueProcessMessage(DeliverNotification, message);
+        if (!node.ProcessingAccessible) node.RequireMessageTree().EnqueueProcessMessage(node, DeliverNotification, message);
         else node.Notify(message.What);
     }
 }

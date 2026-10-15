@@ -3,7 +3,7 @@
 <a id="adr-0051"></a>
 ## ADR 0051: Public enum identities and declaring owners
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 ### Status
 
@@ -50,3 +50,5 @@ ZIPAppend (Create=0, CreateAfter=1, AddInZIP=2) is distinct from file access fla
 VirtualJoystickMode (Fixed/Dynamic/Following) owns base movement. JoystickVisibility (Always/WhenTouched) and TouchButtonVisibility (Always/TouchscreenOnly) have different predicates and must not merge despite matching integers. All three are top-level identities; owning JoystickMode/VisibilityMode property names are preserved without former nested aliases.
 
 IPType preserves the None/IPv4/IPv6/Any address-selection domain; ResolverStatus preserves None/Waiting/Done/Error queue phases. These domains differ from socket/TLS connection state and are top-level types under ADR 0051.
+
+Node keeps the applicable ProcessThreadGroup and ProcessThreadMessages property names. Their owner-specific nested types are Node.ProcessThreadGroupMode and Node.ProcessThreadMessageFlags, avoiding C# type/member name collisions without aliases. Inherit/MainThread/SubThread values0/1/2 and Process/Physics/All flags1/2/3 retain pinned meanings; zero is valid as an empty flags value without an extra named constant.
