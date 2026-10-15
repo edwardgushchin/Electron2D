@@ -295,3 +295,11 @@ allocations. The custom curved arc fixture explicitly uses bias one/zero slack
 for its strict geometry bounds; ordinary defaults and nonzero slack have their
 own analytic matrix. Registered geometric cache and full numerical/performance
 acceptance remain open.
+
+`--node-orphans` checks the inherited static Node diagnostics in both Debug and
+Release: weak live/detached membership, internal/physical roles, sampled output
+and logger reentry, direct physics binding, lifetime failures and concurrent
+construction/scans. It also runs 128 warmed/measured moving full frames at zero
+owner/all-thread managed bytes, excluding cold diagnostic snapshots. Use `--cpu`,
+`--gpu` or neither for the registered provider, with optional `--threaded`.
+Debug supplies real diagnostics; Release requires empty IDs and no output.

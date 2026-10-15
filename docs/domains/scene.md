@@ -2,6 +2,14 @@
 
 Last updated: 2026-10-15
 
+## Orphan node diagnostics
+
+[Debug orphan diagnostics](../components/scene-hierarchy.md#orphan-node-diagnostics)
+sample detached nodes across all scene/physical roles without retaining their
+hierarchies. ID snapshots and pre-captured diagnostic text follow lifetime and
+tree membership independently of direct physics attachment. Release preserves
+the empty/no-output contract and has no diagnostic registry.
+
 ## Exact inherited node paths
 
 [Node path reads](../components/scene-hierarchy.md#exact-node-paths) now preserve active-only

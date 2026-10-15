@@ -6,6 +6,13 @@
 
 Last updated: 2026-10-15
 
+[Inherited orphan diagnostics](scene-hierarchy.md#orphan-node-diagnostics) now
+provide real Debug weak-membership and logger-safe snapshots across physical
+roles, with the specified empty/no-output Release behavior. The public consumer
+checks both build contracts, lifetime/collection and zero-allocation warmed
+physical frames on CPU/software-GPU/registered serial/separate profiles. The two
+inherited rows are Implemented; wider contract and hardware gates stay open.
+
 [Native compiler/device phases](physics-native-phases.md) now separate five cold
 controls from complete public-world retirement on the same runtime, without heap
 attachment. A 128-world-per-policy follow-up does not reproduce the original
@@ -201,7 +208,7 @@ operations remain open in the ledger.
 The complete generated ledger remains the per-declaration list. Current own
 physics families contain 687 Implemented, 150 Partial and 55 Excluded rows,
 with no own Blocked or Unimplemented rows. The 491 shared inherited declarations
-contain 277 Implemented, 125 Partial, 17 Blocked, 49 Unimplemented and 23 Excluded
+contain 282 Implemented, 122 Partial, 17 Blocked, 47 Unimplemented and 23 Excluded
 rows. The 78 selected cross-domain consumer declarations contain 76 Implemented
 and two Partial rows. These are declaration counts, including class and enum rows,
 not a claim that all numerical behaviors pass. The exact inherited names and

@@ -6,7 +6,7 @@ Last updated: 2026-10-15
 
 **Inherited By:** [AudioStreamPlayer](AudioStreamPlayer.md), [CanvasItem](CanvasItem.md), [CanvasLayer](CanvasLayer.md), [Timer](Timer.md), [Viewport](Viewport.md)
 
-- **Source:** [Node.cs](../../src/Scene/Main/Node.cs), [Node.Replacement.cs](../../src/Scene/Main/Node.Replacement.cs), [Node.PhysicsInterpolation.cs](../../src/Scene/Main/Node.PhysicsInterpolation.cs)
+- **Source:** [Node.cs](../../src/Scene/Main/Node.cs), [Node.Replacement.cs](../../src/Scene/Main/Node.Replacement.cs), [Node.PhysicsInterpolation.cs](../../src/Scene/Main/Node.PhysicsInterpolation.cs), [Node.Diagnostics.cs](../../src/Scene/Main/Node.Diagnostics.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public partial class Node : ElectronObject`
 
@@ -109,6 +109,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | `public int GetChildCount(bool includeInternal = false)` | Counts ordinary or all direct children. |
 | `public Node[] GetChildren(bool includeInternal = false)` | Returns a caller-owned child snapshot. |
 | [`public IReadOnlyList<string> GetGroups()`](#m-electron2d-node-getgroups) | Returns this node's group memberships. |
+| [`public static ulong[] GetOrphanNodeIDs()`](#m-electron2d-node-getorphannodeids) | Samples live detached node IDs in Debug; returns an empty array in Release. |
 | [`public int GetIndex(bool includeInternal = false)`](#m-electron2d-node-getindex) | Gets this node's index in its selected sibling partition. |
 | [`public string GetTreeString()`](#m-electron2d-node-gettreestring) | Lists this node and descendants as relative paths in tree order. |
 | [`public string GetTreeStringPretty()`](#m-electron2d-node-gettreestringpretty) | Formats this subtree with Unicode branches. |
@@ -138,6 +139,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`protected virtual void OnUnhandledInput(InputEvent event)`](#m-electron2d-node-onunhandledinput-electron2d-inputevent) | Receives an event that remains unhandled after earlier scene-input stages. |
 | [`protected virtual void OnUnhandledKeyInput(InputEventKey event)`](#m-electron2d-node-onunhandledkeyinput-electron2d-inputeventkey) | Receives a keyboard event that remains unhandled after the first input stage. |
 | [`public void PrintTree()`](#m-electron2d-node-printtree) | Prints relative subtree paths. |
+| [`public static void PrintOrphanNodes()`](#m-electron2d-node-printorphannodes) | Prints sampled detached node IDs, hierarchy names and compiled types in Debug. |
 | [`public void PrintTreePretty()`](#m-electron2d-node-printtreepretty) | Prints the indented subtree. |
 | [`public void PropagateNotification(int what)`](#m-electron2d-node-propagatenotification-system-int32) | Delivers a notification to this node and its descendants. |
 | [`public void QueueFree()`](#m-electron2d-node-queuefree) | Atomically requests this node's deferred disposal at a future scene-tree safe point. |
@@ -512,6 +514,25 @@ Returns this subtree in depth-first order as relative paths, starting with `.` a
 ### `public string GetTreeStringPretty()`
 
 Returns this subtree with Unicode branch characters, names, depth-first order and a final newline. A detached subtree is supported; attached queries require the owner thread.
+
+<a id="m-electron2d-node-getorphannodeids"></a>
+### `public static ulong[] GetOrphanNodeIDs()`
+
+Debug returns a caller-owned array of live nodes outside active SceneTrees, sorted
+by InstanceID. Detached roots, ordinary/internal descendants and physical nodes
+bound directly to a space all participate. Disposing and collected objects do
+not. The weak registry does not extend node lifetime. Release returns an empty
+array and does not register nodes. This cold diagnostic allocates in Debug and
+does not provide an atomic snapshot during concurrent lifetime/tree transitions.
+
+<a id="m-electron2d-node-printorphannodes"></a>
+### `public static void PrintOrphanNodes()`
+
+Debug emits one row per sampled node through OS.LogMessage: ID, root-relative
+hierarchy name and actual compiled class name, in ID order. All text is captured
+before logging, so logger edits/disposal cannot invalidate later rows. Release
+emits nothing to either the console or registered loggers. No live script-source
+association is inferred. See [orphan diagnostics](../components/scene-hierarchy.md#orphan-node-diagnostics).
 
 <a id="m-electron2d-node-printtree"></a>
 ### `public void PrintTree()`

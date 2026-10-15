@@ -2,6 +2,44 @@
 
 Last updated: 2026-10-15
 
+## Orphan node diagnostics
+
+`Node.GetOrphanNodeIDs()` and `PrintOrphanNodes()` share a Debug-only weak node
+registry. All live detached nodes participate, including roots, internal children,
+compiled subclasses and physics siblings. Owner metadata and direct physical-space
+attachment do not make a detached node part of a SceneTree. Active, disposing and
+collected nodes are omitted. Release builds register no nodes, return an empty
+ID array and produce no diagnostic output, as required by ADR 0008.
+
+IDs are caller-owned `ulong[]` snapshots ordered by InstanceID. Printing captures
+root-relative hierarchy names and actual CLR class names before ordinary
+`OS.LogMessage` callbacks run; callback edits/disposal do not invalidate remaining
+rows. Script file identity is not manufactured by this diagnostic. Collection
+and concurrent construction/disposal do not leave strong registry roots. These
+are cold nearby observations, with ordinary allocated snapshots in Debug, rather
+than atomic tree or solver-state inspection.
+
+The [public-only orphan consumer](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.NodeOrphans.cs)
+checks detached/active membership, internal and inherited roles, caller array
+isolation, both logging sinks and logger reentry, explicit physical attachment,
+failed deletion, abandoned/failed-construction weak collection and concurrent
+construction/scans. Its full-frame bracket excludes cold diagnostic scans and
+requires actual motion plus 128 measured owner/all-thread zero-byte frames after
+128 warm frames. Reproduce with the consumer's `--node-orphans`, optional
+`--cpu`/`--gpu` (otherwise registered), and optional `--threaded`, in Debug and
+Release. GPU execution requires the explicit software ICD used by the current
+physics checks; window and target-device acceptance remain separate.
+
+Current Linux x64 checks pass 12 managed and 12 strict NativeAOT profiles across
+both build configurations, three backends and both numerical thread policies.
+All 24 full-frame brackets report 0/0 managed bytes. Six Debug node-search
+regressions also retain 0/0 bytes. Eleven portable-PDB/source sets match the
+exercised runtime, consumer and small AOT host; artifacts and identities are in
+`bin/physics-node-orphans/2026-10-15/`. Release runtime build, format, compiled
+API coverage and wiki tests/generation/check pass. These checks close the two
+inherited diagnostic rows, not the remaining physical/numerical, native-memory,
+foreign-platform, hardware or real-window gates.
+
 ## Exact node paths
 
 `GetPath()` returns a cached immutable absolute string only while the node belongs to

@@ -5,7 +5,7 @@ Last updated: 2026-10-08
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
 1. Close 1551 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 731 missing declarations in already represented type families; split each type by its documented dependency trigger.
+2. Complete 729 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -18,7 +18,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [RenderingDevice](classes/RenderingDevice.md) | 154 | 39 |
 | [OS](classes/OS.md) | 48 | 10 |
 | [Window](classes/Window.md) | 32 | 57 |
-| [Node](classes/Node.md) | 25 | 66 |
+| [Node](classes/Node.md) | 23 | 66 |
 | [Object](classes/Object.md) | 22 | 15 |
 | [Input](classes/Input.md) | 12 | 30 |
 | [Performance](classes/Performance.md) | 12 | 2 |

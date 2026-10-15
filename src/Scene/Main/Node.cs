@@ -250,6 +250,9 @@ public partial class Node : ElectronObject
         _name = ClassName;
         _childrenView = _children.AsReadOnly();
         _publicChildrenView = new OrdinaryChildrenView(this);
+#if DEBUG
+        DiagnosticNodes.Add(this, DiagnosticNodeMarker);
+#endif
     }
 
     /// <summary>Gets or sets the node name used in sibling lookup and paths.</summary>

@@ -54,7 +54,7 @@ Godot's object surface includes deferred calls and queued deletion, but both req
 <a id="adr-0008"></a>
 ## ADR 0008: Preserve scene inheritance with Node and Entity names
 
-Last updated: 2026-10-08
+Last updated: 2026-10-15
 
 - Status: Accepted by the user on 2026-09-23.
 - Scope: Scene inheritance, type naming, and preservation of the corresponding API and responsibilities.
@@ -93,6 +93,18 @@ Last updated: 2026-10-08
 | `Window : Viewport` | `Window : Viewport` | Window behavior under the viewport contract. |
 
 The complete chain is `ElectronObject → Node → CanvasItem → Entity → Sprite`; the UI branch is `CanvasItem → Control`. Resources stay outside the scene hierarchy. The former `SceneNode` name is retired. No `Node2D`, `Node3D`, `TransformNode`, duplicate compatibility base, or second public game-object hierarchy is introduced.
+
+`Node.GetOrphanNodeIDs()` and `PrintOrphanNodes()` retain the pinned debug-build
+boundary: Debug tracks live nodes outside every active SceneTree, including
+detached descendants and internal children; Release returns an empty array and
+prints nothing. This is the specified release behavior, not an unavailable
+runtime capability fallback. The registry must not keep nodes or detached
+hierarchies alive. Return caller-owned `ulong[]` identifiers matching InstanceID,
+ordered by ID. Print sampled root-relative names and compiled C# class names
+through the ordinary diagnostic stream, capturing rows before logger callbacks.
+Disposing/collected nodes are absent, independently of physical space attachment.
+These are cold nearby observations rather than atomic or zero-allocation scene
+snapshots; they do not inspect a numerical backend or introduce script binding.
 
 `Entity.GetRelativeTransformToParent` preserves the source's ordered local-transform product through a direct spatial-parent chain, including across `TopLevel`. A null, disposed or unconnected ancestor fails with a typed C# exception instead of the native diagnostic plus identity fallback, because identity is also the valid result for a self query. Attached queries enforce the scene owner thread. This error adaptation does not change valid hierarchy results.
 

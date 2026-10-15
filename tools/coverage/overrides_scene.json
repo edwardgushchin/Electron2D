@@ -5567,6 +5567,18 @@
       "godot": "Node::method:find_parent(String:)",
       "state": "Implemented",
       "reason": "ADRs 0001/0008: typed generic filters preserve CLR subclass/inheritance matching; case-sensitive Unicode wildcard names, period exclusion for ?, internal-child depth-first order, recursive/owned defaults and complete unowned-branch pruning are checked by the public NodeSearch consumer. Empty typed all-results patterns select by type; ordinary empty patterns reject. Live owner edits, snapshots, parent lookup, owner/current-processing-group access and foreign-group/lifetime errors, with 128 complete physics/search frames at strict 0/0 managed bytes execute on CPU/GPU/registered serial/separate profiles; numerical/native/platform gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.GetOrphanNodeIDs()",
+      "godot": "Node::method:get_orphan_node_ids()",
+      "state": "Implemented",
+      "reason": "ADR 0008: Debug-only weak Node registry samples all live detached roots/descendants, including internal children and physical siblings, independently of owner metadata and direct physics attachment. Caller-owned UInt64 IDs match InstanceID and sort by ID; printed hierarchy/compiled-type rows are captured before ordinary logger callbacks. Disposing/collected nodes are omitted without retaining abandoned or failed-construction objects. Release has no registry, returns empty IDs and emits nothing as the pinned build contract requires. The public NodeOrphans consumer verifies membership, array isolation, print/reentry, lifetime and concurrent construction/scans on 12 managed and 12 strict Linux x64 NativeAOT CPU/software-GPU/registered serial/separate Debug/Release profiles; each retains actual motion and 128 measured full frames at 0/0 owner/all-thread managed bytes. Cold diagnostic snapshots allocate separately; full inherited/numerical/native/platform/performance acceptance remains open."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.PrintOrphanNodes()",
+      "godot": "Node::method:print_orphan_nodes()",
+      "state": "Implemented",
+      "reason": "ADR 0008: Debug-only weak Node registry samples all live detached roots/descendants, including internal children and physical siblings, independently of owner metadata and direct physics attachment. Caller-owned UInt64 IDs match InstanceID and sort by ID; printed hierarchy/compiled-type rows are captured before ordinary logger callbacks. Disposing/collected nodes are omitted without retaining abandoned or failed-construction objects. Release has no registry, returns empty IDs and emits nothing as the pinned build contract requires. The public NodeOrphans consumer verifies membership, array isolation, print/reentry, lifetime and concurrent construction/scans on 12 managed and 12 strict Linux x64 NativeAOT CPU/software-GPU/registered serial/separate Debug/Release profiles; each retains actual motion and 128 measured full frames at 0/0 owner/all-thread managed bytes. Cold diagnostic snapshots allocate separately; full inherited/numerical/native/platform/performance acceptance remains open."
     }
   ],
   "extras": [
@@ -11338,6 +11350,14 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0004/0008: typed string NodePath adaptation preserves exact relative/absolute/root/unique traversal, repeated separators, literal whitespace and ignored valid property subnames. Empty and lone-colon inputs do not resolve; null, invalid intermediate subnames, required misses and wrong generic types have typed exceptions. Active absolute paths cache only the queried immutable string and invalidate on rename/reparent/membership before observers, including failed exit/rename callbacks. Detached relative paths and source/target unique shortcuts round-trip. The public NodePaths consumer checks inherited physical roles, internal/unowned children, owner/current-processing-group reads, foreign worker/lifetime rejection and 128 warmed complete moving physics frames with strict zero owner/all-thread managed allocation. Native/platform/performance gates remain separately recorded."
+    },
+    {
+      "godot": [
+        "Node::method:get_orphan_node_ids()",
+        "Node::method:print_orphan_nodes()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0008: Debug-only weak Node registry samples all live detached roots/descendants, including internal children and physical siblings, independently of owner metadata and direct physics attachment. Caller-owned UInt64 IDs match InstanceID and sort by ID; printed hierarchy/compiled-type rows are captured before ordinary logger callbacks. Disposing/collected nodes are omitted without retaining abandoned or failed-construction objects. Release has no registry, returns empty IDs and emits nothing as the pinned build contract requires. The public NodeOrphans consumer verifies membership, array isolation, print/reentry, lifetime and concurrent construction/scans on 12 managed and 12 strict Linux x64 NativeAOT CPU/software-GPU/registered serial/separate Debug/Release profiles; each retains actual motion and 128 measured full frames at 0/0 owner/all-thread managed bytes. Cold diagnostic snapshots allocate separately; full inherited/numerical/native/platform/performance acceptance remains open."
     }
   ]
 }

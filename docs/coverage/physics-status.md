@@ -219,13 +219,13 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 82 | 27 | 6 | 0 | 0 |
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
-| [Node](classes/Node.md) | [Object](classes/Object.md) | 115 | 67 | 6 | 25 | 1 |
+| [Node](classes/Node.md) | [Object](classes/Object.md) | 117 | 67 | 6 | 23 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
 | [Object](classes/Object.md) | — | 19 | 16 | 2 | 22 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 20 | 5 | 0 | 2 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 280 | 122 | 17 | 49 | 23 |
+| **Total** | | 282 | 122 | 17 | 47 | 23 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -310,7 +310,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Node::method:get_accessibility_element()`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
 | [`Node::method:get_groups()`](classes/Node.md) | Partial | The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit. |
 | [`Node::method:get_last_exclusive_window()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
-| [`Node::method:get_orphan_node_ids()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:get_parent()`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Node::method:get_scene_instance_load_placeholder()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:get_tree()`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
@@ -330,7 +329,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Node::method:is_processing_unhandled_key_input()`](classes/Node.md) | Partial | One C# property supplies upstream query and setter; ADRs 0008 and 0038. |
 | [`Node::method:notify_deferred_thread_group(int:)`](classes/Node.md) | Partial | ADRs0006/0104: all six typed call/set/notify methods route to actual inherited processing-group queues. Pinned wrappers return nil, so void loses no result. The scene owner or current target group may invoke immediately; other callers enqueue. Active groups drain before/after callbacks and masks also permit empty-group delivery. Weak receiver identity, current-owner transfer, retained slots, closure discard and error continuation remain. Public CPU/software-GPU/registered serial/separate JIT/NativeAOT group and message consumers verify real worker callbacks, barriers, main physical collection, queue masks, lifecycle and zero warmed managed allocations. Evidence: bin/physics-process-groups/2026-10-15/validation.json. General worker access across Node/CanvasItem/Entity and physical/render backend mutation remains Partial; group execution and configuration are no longer absent. |
 | [`Node::method:notify_thread_safe(int:)`](classes/Node.md) | Partial | ADRs0006/0104: all six typed call/set/notify methods route to actual inherited processing-group queues. Pinned wrappers return nil, so void loses no result. The scene owner or current target group may invoke immediately; other callers enqueue. Active groups drain before/after callbacks and masks also permit empty-group delivery. Weak receiver identity, current-owner transfer, retained slots, closure discard and error continuation remain. Public CPU/software-GPU/registered serial/separate JIT/NativeAOT group and message consumers verify real worker callbacks, barriers, main physical collection, queue masks, lifecycle and zero warmed managed allocations. Evidence: bin/physics-process-groups/2026-10-15/validation.json. General worker access across Node/CanvasItem/Entity and physical/render backend mutation remains Partial; group execution and configuration are no longer absent. |
-| [`Node::method:print_orphan_nodes()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:queue_accessibility_update()`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
 | [`Node::method:queue_free()`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Node::method:remove_child(Node:)`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. Return type differs: void → System.Boolean; audit observable contract. |

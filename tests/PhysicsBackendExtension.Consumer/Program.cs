@@ -1,4 +1,6 @@
-if (args.Contains("--anchor-capacity")) BackendChecks.RunAnchorCapacity(args.Contains("--gpu"), args.Contains("--threaded"));
+if (args.Contains("--node-orphans")) BackendChecks.RunNodeOrphans(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--anchor-capacity")) BackendChecks.RunAnchorCapacity(args.Contains("--gpu"), args.Contains("--threaded"));
 else if (args.Contains("--history-storage")) BackendChecks.RunHistoryStorage(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--point-containment")) PhysicsPointContainmentTests.Run(args.Contains("--gpu"));
