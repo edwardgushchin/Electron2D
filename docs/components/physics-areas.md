@@ -1,6 +1,6 @@
 # Physics areas component
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 ## Scope and owned types
 
@@ -22,7 +22,7 @@ An Area uses nonresponding sensor fixtures; a child CollisionShape's one-way bod
 
 The current profile accepts unit global scale and zero skew while active. Shape/resource, monitoring and field edits take effect on the next step. Layer/mask edits update existing sensor geometry immediately for queries; overlap snapshots and events update on the next step. Borrowed resources remain caller-owned; tree exit and disposal release backend handles. The CPU pairwise scan has quadratic candidate growth; add a spatial candidate index when measured large-scene cost requires it. Square-atlas TileMapLayer virtual bodies now retain their layer owner and logical shape/RID payloads through overlap snapshots and events on both public backends. Other tile capabilities retain separate coverage records. Spatial audio point queries use scene Area shapes and collision layers independently of monitoring flags; see [audio playback](audio-playback.md#spatial-2d-playback).
 
-[AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) checks monitoring and event timing. [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks field modes, point falloff, sampled defaults, damping and warmed RigidBody frames; [CharacterBodyTests](../../tests/Electron2D.Tests/CharacterBodyTests.cs) checks world/Area gravity selection on a kinematic character. Native allocator counts, other platforms and owner visual acceptance remain unverified. [ADRs 0055 and 0056](../decisions/physics.md#adr-0056) record the execution boundary.
+[AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) now checks monitoring, event timing, failed callbacks, packing and lifecycle on explicitly selected public CPU/GPU worlds. Its steady and empty full-frame brackets retain 64 warmup/64 samples and require zero owner/all-thread managed bytes. The [paired runner](physics-backends.md#paired-complete-collider-runner-2026-10-16) supplies serial/separate policies. [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks field modes, point falloff, sampled defaults, damping and warmed RigidBody frames; [CharacterBodyTests](../../tests/Electron2D.Tests/CharacterBodyTests.cs) checks world/Area gravity selection on a kinematic character. Native allocator counts, other platforms and owner visual acceptance remain unverified. [ADRs 0055 and 0056](../decisions/physics.md#adr-0056) record the execution boundary.
 
 Separation-ray overlap uses exact endpoints and the directed query kernel rather than a GJK segment overlap. Containment and ray-ray pairs are rejected. This also governs field-area selection. [SeparationRayShapeTests](../../tests/Electron2D.Tests/SeparationRayShapeTests.cs) checks directed Area entry and containment exit under [ADR 0068](../decisions/physics.md#adr-0068).
 

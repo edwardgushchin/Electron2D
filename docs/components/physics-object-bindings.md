@@ -1,6 +1,6 @@
 # Physics object associations
 
-Last updated: 2026-10-09
+Last updated: 2026-10-16
 
 ## Public contract
 
@@ -53,13 +53,18 @@ Resident ray/point records carry ObjectID in existing padding and remain 64 byte
 intersection/contact/rest/cast records now carry ObjectID explicitly and occupy 96 bytes
 instead of 80: the additional 16 bytes preserve identity with each sampled result. Body
 motion already carries object ID. These are authored identities, not portable network IDs.
-Public GPU-world binding remains open.
+Public GPU-world binding now executes through the typed backend overload and the
+[paired collider runner](physics-backends.md#paired-complete-collider-runner-2026-10-16),
+including scene/raw queries, monitoring, weak lifetime and error guards. The bool
+GPU overload retains a separate direct resident-store diagnostic.
 
 PhysicsObjectBindingTests exercises all four direct query result families, motion exclusions,
 scene ray/shape/movement caches, target replacement/disposal/collection, raw body/Area bindings,
 wrong-kind/lifetime/thread/solver guards, contact snapshots, shared owners, immediate node
 exit/reentry and throwing callbacks. It checks all 64 bits in resident ray/point and all four
 shape-query modes. Existing physical scene-collider properties remain source-compatible.
+
+## Historical probe measurements, 2026-10-09
 
 On Linux/.NET 10 Release, 128 warmup and 128 owner changes plus complete SceneTree physics
 steps and point queries measured p50/p95/p99 0.0041/0.0042/0.0042 ms with 0/0 owner/all-thread
@@ -71,12 +76,13 @@ managed bytes. Upload/readback was 20,488/25,608 B per batch; readback increased
 for the added sampled IDs. `/tmp/e2d-objects-shapes.log` also records the subsequently corrected
 old ShapeCast expectation, so that run alone is not a complete-suite pass.
 
-The final shared-collider CPU suite and complete GPU suite both passed on this implementation:
+The then-current shared-collider CPU suite and complete GPU probe suite passed:
 `/tmp/e2d-objects-final-cpu.log` and `/tmp/e2d-objects-final-gpu.log`. The GPU suite also checks
 compute lifetime with both renderers. Release runtime compilation, compiled API coverage,
 wiki tests/generation/check, shader generation checks and changed-file whitespace checks passed.
 
 Use ELECTRON2D_TEST_PHYSICS_OBJECTS=1 or ELECTRON2D_TEST_PHYSICS_OBJECTS_GPU=1 with the Release
-RID test runner. Public independent-GPU binding, tile collision generation/lookup, picking,
-backend extensions, networking, full CPU/GPU scene comparison and window acceptance remain
-open. Native allocation and other platforms are not established by these checks.
+RID test runner for those narrower historical profiles. Current public CPU/GPU
+world checks use the paired runner above. Tiles, picking, registered implementations
+and networking have their own current component records; native allocations,
+other platforms and final window acceptance are not established by these probes.

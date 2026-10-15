@@ -1,6 +1,6 @@
 using Electron2D;
 
-internal static class PhysicsServerShapeSlotTests
+internal sealed class PhysicsServerShapeSlotTests(PhysicsServer.Backend backend)
 {
     private sealed class RIDResource(RID rid) : Resource
     {
@@ -9,15 +9,18 @@ internal static class PhysicsServerShapeSlotTests
 
     private static Transform At(float x, float y = 0, float rotation = 0) => new(rotation, Vector2.One, 0, new(x, y));
 
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new PhysicsServerShapeSlotTests(backend).RunCore();
+
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         using (var resource = new Resource()) Check(!resource.GetRID().IsValid(), "A base managed resource has no backend RID.");
         VerifyExplicitSlots();
         VerifySceneSlots();
         VerifyOneWay(false);
         VerifyOneWay(true);
         VerifyGuardsAndLifetime();
-        Console.WriteLine("Physics scene/server shape slots, replacement, transforms, one-way response and lifetime passed.");
+        Console.WriteLine($"Physics scene/server shape slots, replacement, transforms, one-way response and lifetime passed: {backend}.");
     }
 
     private static bool Point(RID space, RID owner, Vector2 point, int index = 0, bool areas = false)
@@ -32,10 +35,10 @@ internal static class PhysicsServerShapeSlotTests
             .Any(hit => hit.ColliderRID == owner && hit.ShapeIndex == index);
     }
 
-    private static void VerifyExplicitSlots()
+    private void VerifyExplicitSlots()
     {
         var physics = PhysicsServer.Service;
-        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true); var body = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate();
+        var space = PhysicsServer.SpaceCreate(backend); Check(PhysicsServer.SpaceGetBackend(space) == backend, "Indexed server fixture uses the requested backend."); PhysicsServer.SpaceSetActive(space, true); var body = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate();
         var circle = PhysicsServer.CircleShapeCreate(); var rectangle = PhysicsServer.RectangleShapeCreate();
         try
         {
@@ -83,16 +86,17 @@ internal static class PhysicsServerShapeSlotTests
         }
     }
 
-    private static void VerifySceneSlots()
+    private void VerifySceneSlots()
     {
         var physics = PhysicsServer.Service;
         using var shape = new CircleShape { Radius = 5 };
-        var root = new Node(); var body = new StaticBody(); var area = new Area { Position = new(100, 0) };
+        using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld }; var body = new StaticBody(); var area = new Area { Position = new(100, 0) };
         var owner = body.CreateShapeOwner(null);
         body.ShapeOwnerAddShape(owner, shape); body.ShapeOwnerAddShape(owner, shape);
         var child = new CollisionShape { Shape = shape, Position = new(50, 0) }; body.AddChild(child);
         root.AddChild(body); root.AddChild(area);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Indexed scene fixture uses the requested backend.");
         var bodyRID = body.GetRID(); var areaRID = area.GetRID(); var space = body.GetWorld()!.Space;
         var serverShape = PhysicsServer.CircleShapeCreate();
         try
@@ -141,15 +145,15 @@ internal static class PhysicsServerShapeSlotTests
             body.ShapeOwnerSetDisabled(owner, false);
             Check(Point(space, bodyRID, new(28, 0)), "A group disabled-policy edit reclaims raw slot overrides.");
             for (var step = 0; step < 40; step++) tree.PhysicsFrame(1d / 120);
-            var before = GC.GetAllocatedBytesForCurrentThread();
+            var all = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread();
             for (var step = 0; step < 64; step++)
             {
                 _ = PhysicsServer.BodyGetShape(bodyRID, 0); _ = PhysicsServer.AreaGetShape(areaRID, 0);
                 PhysicsServer.BodySetShapeTransform(bodyRID, 0, At(10)); PhysicsServer.AreaSetShape(areaRID, 0, serverShape);
                 tree.PhysicsFrame(1d / 120);
             }
-            Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
-                "Warmed indexed reads, unchanged writes and active solver frames allocate no managed bytes.");
+            Check(GC.GetAllocatedBytesForCurrentThread() - before == 0 && GC.GetTotalAllocatedBytes(true) - all == 0,
+                "Warmed indexed reads, unchanged writes and active solver frames allocate no owner/all-thread managed bytes.");
             PhysicsServer.FreeRID(serverShape); serverShape = default;
             Check(PhysicsServer.BodyGetShapeCount(bodyRID) == 2 && PhysicsServer.AreaGetShapeCount(areaRID) == 0 &&
                   PhysicsServer.BodyGetShape(bodyRID, 0) == shape.GetRID() && body.ShapeOwnerGetShapeCount(owner) == 1,
@@ -167,14 +171,15 @@ internal static class PhysicsServerShapeSlotTests
         finally { if (serverShape.IsValid()) PhysicsServer.FreeRID(serverShape); }
     }
 
-    private static void VerifyOneWay(bool sceneMode)
+    private void VerifyOneWay(bool sceneMode)
     {
         var physics = PhysicsServer.Service;
         var segment = PhysicsServer.SegmentShapeCreate(); var circle = PhysicsServer.CircleShapeCreate(); var moving = PhysicsServer.BodyCreate();
         StaticBody? sceneBody = sceneMode ? new() { Position = new(0, 100) } : null;
-        var root = new Node(); if (sceneBody is not null) root.AddChild(sceneBody);
+        using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld }; if (sceneBody is not null) root.AddChild(sceneBody);
         using var tree = new SceneTree(root);
-        var space = sceneBody?.GetWorld()!.Space ?? PhysicsServer.SpaceCreate();
+        Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Indexed scene fixture uses the requested backend.");
+        var space = sceneBody?.GetWorld()!.Space ?? PhysicsServer.SpaceCreate(backend);
         if (!sceneMode) PhysicsServer.SpaceSetActive(space, true);
         var platform = sceneBody?.GetRID() ?? PhysicsServer.BodyCreate();
         try
@@ -216,12 +221,13 @@ internal static class PhysicsServerShapeSlotTests
         }
     }
 
-    private static void VerifyGuardsAndLifetime()
+    private void VerifyGuardsAndLifetime()
     {
         var physics = PhysicsServer.Service; var serverShape = PhysicsServer.CircleShapeCreate();
-        var root = new Node(); var body = new RigidBody { GravityScale = 0, LinearVelocity = new(60, 0), NotifyLocalTransformChanges = true };
+        using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld }; var body = new RigidBody { GravityScale = 0, LinearVelocity = new(60, 0), NotifyLocalTransformChanges = true };
         var area = new Area(); root.AddChild(body); root.AddChild(area);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Indexed scene fixture uses the requested backend.");
         PhysicsServer.BodyAddShape(body.GetRID(), serverShape); PhysicsServer.AreaAddShape(area.GetRID(), serverShape);
         try
         {

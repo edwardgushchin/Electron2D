@@ -91,6 +91,12 @@ internal static class SceneChangeTests
             tree.ChangeSceneToNode(pending);
             var blocker = new Node { Name = "Pending" };
             failureHost.AddChild(blocker);
+            failureHost.ChildAdded += (_, child) =>
+            {
+                if (!ReferenceEquals(child, pending)) return;
+                failureHost.RemoveChild(child);
+                throw new ApplicationException("Scene attachment failure.");
+            };
             Reject<AggregateException>(tree.FlushDeferred);
             Check(pending.IsDisposed && tree.CurrentScene is null && ReferenceEquals(blocker.Parent, failureHost),
                 "A failed attachment disposes the accepted scene without disturbing an unrelated child.");

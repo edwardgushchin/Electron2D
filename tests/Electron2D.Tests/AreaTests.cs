@@ -1,21 +1,24 @@
 using Electron2D;
 
-internal static class AreaTests
+internal sealed class AreaTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new AreaTests(backend).RunCore();
+
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         VerifyBodyAndAreaSnapshots();
         VerifyMovingBodyPassesThrough();
         VerifyShapeEditsAndPacking();
         VerifyCallbackMutationAndFailure();
-        Console.WriteLine("Physics area monitoring, filtering, lifecycle and allocation checks passed.");
+        Console.WriteLine($"Physics area monitoring, filtering, lifecycle and allocation checks passed: {backend}.");
     }
 
-    private static void VerifyMovingBodyPassesThrough()
+    private void VerifyMovingBodyPassesThrough()
     {
         using var region = new RectangleShape { Size = new(80, 20) };
         using var circle = new CircleShape { Radius = 5 };
-        var root = new Node();
+        using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld };
         var area = new Area { Position = new(0, 50) };
         area.AddChild(new CollisionShape { Shape = region });
         var body = new RigidBody();
@@ -26,17 +29,18 @@ internal static class AreaTests
         area.BodyEntered += value => { Check(ReferenceEquals(value, body), "Moving body enters the sensor."); entered++; };
         area.BodyExited += value => { Check(ReferenceEquals(value, body), "Moving body exits the sensor."); exited++; };
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Area fixture uses the requested backend without fallback.");
         for (var frame = 0; frame < 60; frame++) tree.PhysicsFrame(1d / 60);
         Check(entered == 1 && exited == 1 && body.GlobalPosition.Y > 100 &&
               !area.OverlapsBody(body),
             "A dynamic body passes through a sensor without collision response.");
     }
 
-    private static void VerifyBodyAndAreaSnapshots()
+    private void VerifyBodyAndAreaSnapshots()
     {
         using var region = new RectangleShape { Size = new(80, 80) };
         using var circle = new CircleShape { Radius = 5 };
-        var root = new Node();
+        using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld };
         var area = new Area { Name = "MainArea" };
         area.AddChild(new CollisionShape { Shape = region });
         area.AddChild(new CollisionShape { Shape = circle, Name = "InnerCircle" });
@@ -54,6 +58,7 @@ internal static class AreaTests
         area.AreaExited += value => { Check(ReferenceEquals(value, otherArea), "Area exit carries the detected node."); areaExits++; };
 
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Area fixture uses the requested backend without fallback.");
         Check(!area.HasOverlappingBodies() && !area.HasOverlappingAreas(),
             "Area snapshots start empty before the first physics step.");
         tree.PhysicsFrame(0);
@@ -74,11 +79,11 @@ internal static class AreaTests
             "An area's own monitorability does not disable its monitoring.");
         area.Monitorable = true;
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        var allocatedBefore = GC.GetAllocatedBytesForCurrentThread();
+        var allBefore = GC.GetTotalAllocatedBytes(true); var allocatedBefore = GC.GetAllocatedBytesForCurrentThread();
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
         var allocated = GC.GetAllocatedBytesForCurrentThread() - allocatedBefore;
-        Check(allocated == 0,
-            "A warmed steady overlap scan allocates no managed memory: " + allocated);
+        Check(allocated == 0 && GC.GetTotalAllocatedBytes(true) - allBefore == 0,
+            "A warmed steady overlap scan allocates no owner/all-thread managed memory: " + allocated);
 
         otherArea.CollisionLayer = 2;
         tree.PhysicsFrame(1d / 60);
@@ -106,10 +111,10 @@ internal static class AreaTests
         tree.PhysicsFrame(1d / 60);
         Check(bodyExits == 2 && areaExits == 4 && !area.HasOverlappingBodies() && !area.HasOverlappingAreas(),
             "Moving shapes away produces one exit per object.");
-        allocatedBefore = GC.GetAllocatedBytesForCurrentThread();
+        allBefore = GC.GetTotalAllocatedBytes(true); allocatedBefore = GC.GetAllocatedBytesForCurrentThread();
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() - allocatedBefore == 0,
-            "A warmed empty overlap scan allocates no managed memory.");
+        Check(GC.GetAllocatedBytesForCurrentThread() - allocatedBefore == 0 && GC.GetTotalAllocatedBytes(true) - allBefore == 0,
+            "A warmed empty overlap scan allocates no owner/all-thread managed memory.");
 
         body.Position = Vector2.Zero;
         tree.PhysicsFrame(1d / 60);
@@ -119,7 +124,7 @@ internal static class AreaTests
         body.Dispose();
     }
 
-    private static void VerifyShapeEditsAndPacking()
+    private void VerifyShapeEditsAndPacking()
     {
         using var region = new RectangleShape { Size = new(20, 20) };
         using var circle = new CircleShape { Radius = 5 };
@@ -143,7 +148,7 @@ internal static class AreaTests
         Action<Resource> changedFailure = _ => throw new InvalidOperationException("User shape callback failure.");
         region.Changed += changedFailure;
 
-        var root = new Node();
+        using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld };
         var liveArea = new Area();
         var liveCollider = new CollisionShape { Shape = region };
         liveArea.AddChild(liveCollider);
@@ -152,6 +157,7 @@ internal static class AreaTests
         root.AddChild(liveArea);
         root.AddChild(body);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Area fixture uses the requested backend without fallback.");
         tree.PhysicsFrame(1d / 60);
         Check(!liveArea.OverlapsBody(body), "Separated shapes do not count as overlapping.");
         Reject<InvalidOperationException>(() => region.Size = new(80, 80));
@@ -170,11 +176,11 @@ internal static class AreaTests
         Check(liveArea.OverlapsBody(body), "An invalid area transform leaves the world reusable after correction.");
     }
 
-    private static void VerifyCallbackMutationAndFailure()
+    private void VerifyCallbackMutationAndFailure()
     {
         using var region = new RectangleShape { Size = new(80, 80) };
         using var circle = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld };
         var area = new Area();
         area.AddChild(new CollisionShape { Shape = region });
         var body = new StaticBody();
@@ -188,6 +194,7 @@ internal static class AreaTests
         area.AreaEntered += _ => areaEntered++;
         using (var tree = new SceneTree(root))
         {
+            Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Area callback fixture uses the requested backend.");
             tree.PhysicsFrame(1d / 60);
             Check(entered == 1 && exited == 1 && !area.OverlapsBody(body),
                 "An overlap callback can remove a body and deliver its exit without stale state.");

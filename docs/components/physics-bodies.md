@@ -1,6 +1,6 @@
 # Scene physics bodies component
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 [Per-body CCD](cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; the selected world also dispatches independent GPU CCD. Complete contract and platform acceptance remain open.
 
@@ -104,7 +104,7 @@ The body runtime now owns one-step pending force/torque and routes scene/direct-
 
 Shared [scene/server joint resources](physics-joints.md) use the existing physics world and native body IDs. Stable joint identities, typed settings, pending connection lifetime and independent contact/motion exception contributions now execute under [ADR 0087](../decisions/physics-joints.md#adr-0087).
 
-[Indexed PhysicsServer geometry](../classes/PhysicsServer.md#shape-slots) now shares the scene/server logical slots, effective local poses and native fixture/query path under [ADR 0088](../decisions/physics-shape-slots.md#adr-0088). Raw replacement/pose/disabled/one-way edits do not rewrite child configuration; group/child edits reclaim corresponding overrides. Shape free/replacement follows shared RID/view ownership and related-world phase guards. Effective poses also feed mass geometry. [PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) verifies real geometry, body/Area lifetime and one-way contacts/motion on Linux/.NET 10.
+[Indexed PhysicsServer geometry](../classes/PhysicsServer.md#shape-slots) now shares the scene/server logical slots, effective local poses and native fixture/query path under [ADR 0088](../decisions/physics-shape-slots.md#adr-0088). Raw replacement/pose/disabled/one-way edits do not rewrite child configuration; group/child edits reclaim corresponding overrides. Shape free/replacement follows shared RID/view ownership and related-world phase guards. Effective poses also feed mass geometry. [PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) verifies real geometry, body/Area lifetime and one-way contacts/motion on explicitly selected public CPU/GPU worlds. The [paired collider runner](physics-backends.md#paired-complete-collider-runner-2026-10-16) also checks serial/separate policies and zero owner/all-thread bytes in warmed indexed edit/step intervals.
 
 [Physics world activity](../classes/PhysicsServer.md#activity) is now independent of scene scheduling under [ADR 0089](../decisions/physics-activity.md#adr-0089). SceneTree activates its lazily created world; explicit SpaceCreate defaults inactive and requires SpaceSetActive(true). Global/local false skips simulation, force consumption and solver callbacks without clearing native state or accumulating elapsed time. Queries/configuration/cleanup and scene callbacks/timers continue. [PhysicsActivityTests](../../tests/Electron2D.Tests/PhysicsActivityTests.cs) checks the profile and warmed allocation on Linux/.NET 10.
 

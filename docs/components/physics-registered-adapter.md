@@ -1,6 +1,6 @@
 # Registered numerical solver adapter
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 ## Scope and ownership
 
@@ -16,13 +16,13 @@ Same-backend private history stays with the implementation. Portable state trans
 
 ## Verification boundary
 
-The separate [public-only consumer](../../tests/PhysicsBackendExtension.Consumer/PhysicsBackendExtension.Consumer.csproj) implements a bounded circle/constraint model, with actual integration, queries, overlap/contact output, constraints, automatic sleep and private replay. It is not a production physics option. The fixture runs 64 warmup and 64 measured complete PhysicsFrame cycles, including raw state callbacks, and measures zero owner/all-thread managed bytes. Scene/raw mass2/4 and constant forces12/24 both yield .1 scene units/s after the first 1/60-second interval within .000001 float tolerance; retained checkpoint and portable poses compare exactly. Contact/Area events, real circle queries, bounded spring response, receiver-failure continuation, reuse rejection and terminal solve failure cover their named paths. The fixture proves these exercised adapter paths. All currently applicable built-in shape/body/Area/joint behavior still requires its existing shared CPU/GPU checks.
+The separate [public-only consumer](../../tests/PhysicsBackendExtension.Consumer/PhysicsBackendExtension.Consumer.csproj) implements a bounded numerical model with circle/annulus, rectangle, capsule, segment, convex/concave polygon, infinite-boundary and directed-ray geometry. The dedicated geometry sections below record actual integration, queries, overlap/contact output, constraints, automatic sleep and private replay, with their own limits and tolerances. It is not a production physics option. The fixture runs 64 warmup and 64 measured complete PhysicsFrame cycles, including raw state callbacks, and measures zero owner/all-thread managed bytes. Scene/raw mass2/4 and constant forces12/24 both yield .1 scene units/s after the first 1/60-second interval within .000001 float tolerance; retained checkpoint and portable poses compare exactly. Contact/Area events, real circle queries, bounded spring response, receiver-failure continuation, reuse rejection and terminal solve failure cover their named paths. The fixture proves these exercised adapter paths. All currently applicable built-in shape/body/Area/joint behavior still requires its existing shared CPU/GPU checks.
 
 PhysicsServerManager.RegisterServer and SetDefaultServer now execute through a retained static facade. Factories return fresh PhysicsServerBackend objects, typically derived from PhysicsServerExtension. Duplicate/reserved names, null/disposed/reused implementations and recursive creation reject. DEFAULT uses strictly greater priorities; World(string) captures its selection before lazy startup, while SpaceCreate(string) initializes an owned inactive space immediately. Resource aliases retain one runtime. Requested and actual names accompany Backend.Extension; explicit CPU/GPU and parameterless CPU remain independent of the default. Factories execute outside the lock, including registration from another thread. World release calls Finish and disposes the implementation; direct caller disposal of a bound implementation rejects.
 
 The public immutable configuration/result family includes body integration/forces, Area fields, joints, sleep/contact policy, logical shape slots, resolved fields, mass properties, overlap/shape contacts, statistics and one-way episodes. Collider and joint objects are fresh per attachment; checkpoint objects provide private history hooks. Query exclusion spans are passed explicitly and borrowed only during the synchronous call. The consumer compiles without internal access and executes both SceneTree frames and explicitly owned SpaceStep.
 
-Every extension operation's acceptance remains open under [ADR 0103](../decisions/physics-extensions.md#adr-0103). Backend rows stay Partial or Blocked where their named path is absent; the bounded test solver does not certify the full production contract. Native allocator, cross-platform, real-rendered output and final performance acceptance are unverified here.
+Complete extension-family acceptance remains open under [ADR 0103](../decisions/physics-extensions.md#adr-0103). The coverage ledger retains each row's actual Implemented, Partial or Blocked status and its named remaining trigger; existing public registration and exercised geometry are not missing prerequisites. The bounded test solver does not certify arbitrary external algorithms or the full production contract. Native allocator, cross-platform, real-rendered output and final performance acceptance are unverified here.
 
 Initialization/Finish/disposal failure injection retains all three errors after retirement. Scene diagnostic capture executes the selected ReadDebugContacts hook after synchronization; invalid count or nonfinite points reject before diagnostic publication and fail the started interval.
 
@@ -2230,8 +2230,10 @@ and offset-center angular CCD. Two immutable prebuilt query rays keep authoring
 outside the steady bracket; the initial length-editing query fixture allocated
 262,144 bytes per 128 frames and was rejected as a steady-state fixture. Geometry
 edits still execute as explicit cold cases. Queued scene impulses are checked
-after consumption, and character delta/snap state is prepared with a physics-
-processed node and a real floor departure, matching those public preconditions.
+after consumption. Character movement is called outside the physics frame, so
+the fixture first supplies a real process frame as well as a physics frame.
+PhysicsProcessEnabled alone does not supply that process delta. Snap follows a
+real floor departure. These are public clock and movement preconditions.
 
 Point/rest coordinates permit .003 scene units, normal dot above .999, cast
 fraction 1/256 plus .00005, mass/inertia .0001, full contact impulse .03,
@@ -2446,3 +2448,17 @@ boundary/offset CCD regression, not hardware or complete numerical acceptance.
 ## Initial rigid locks and coupled constraints
 
 Raw bodies selected as RigidLinear before attachment now receive LockRotation=true in their creation configuration, matching scene bodies and the existing live-mode projection. The public motion-role consumer checks the flag, immediate zero inverse inertia and rejected torque response before the first solver step. The coupled four-body graph and loaded contact column also select the independent registered solver; see [the joint verification profile](physics-joints.md#coupled-support-continuous-motion-and-sleep). Wider arbitrary geometry and complete extension acceptance remain open.
+
+## Geometry profile reconciliation, 2026-10-16
+
+The current public-only consumer passes all seven registered geometry profiles
+(rectangle, capsule, segment, convex, concave, infinite boundary, directed ray)
+in both serial and separate numerical modes. Directed geometry also passes the
+same CPU/GPU policies on pinned lavapipe, with the process clock prepared before
+out-of-physics CharacterBody movement. The prior zero-process-delta failure is
+retained in the diagnostic log; no numerical bound or movement assertion was
+relaxed. Current evidence is in bin/physics-current-audit/2026-10-16 and the
+[paired runner record](physics-backends.md#paired-complete-collider-runner-2026-10-16).
+The earlier circle-only verification description no longer represents this fixture.
+Full external numerical, inherited/network, native/driver memory and target-device
+performance acceptance remain open; coverage states are unchanged.

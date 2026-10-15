@@ -7,12 +7,15 @@ internal static class PhysicsCanvasTests
     private const ulong Canvas = (1ul << 63) | 17;
     private const ulong OtherCanvas = (1ul << 40) | 17;
 
-    internal static void Run(bool resident = false)
+    internal static void Run(bool resident = false) => RunCore(PhysicsServer.Backend.CPU, resident);
+    internal static void Run(PhysicsServer.Backend backend) => RunCore(backend, false);
+    private static void RunCore(PhysicsServer.Backend backend, bool resident)
     {
-        if (!resident) SceneMembership();
+        if (!resident) SceneMembership(backend);
         using var circle = new CircleShape { Radius = 5 };
         using var gpu = resident ? new Store() : null;
-        var space = PhysicsServer.SpaceCreate();
+        var space = PhysicsServer.SpaceCreate(backend);
+        Check(PhysicsServer.SpaceGetBackend(space) == backend, "Canvas identity fixture uses the requested backend.");
         RID[] colliders = [PhysicsServer.BodyCreate(), PhysicsServer.BodyCreate(), PhysicsServer.AreaCreate(), PhysicsServer.AreaCreate()];
         var shapes = new Store.ShapeHandle[4];
         using var point = new PhysicsPointQueryParameters { CollideWithAreas = true };
@@ -73,12 +76,14 @@ internal static class PhysicsCanvasTests
                 gpu.Query([new(new(-10, 0), new(10, 0), Ray: true, Canvas: OtherCanvas)], [], counts, nativeHits);
                 Check(counts[0] == 1 && nativeHits[0].Collider == (ulong)colliders[0].GetID(), "GPU rays ignore the point-only canvas selector.");
             }
-            var backend = PhysicsServer.Service.BodyRuntime(colliders[1]).Backend;
-            var bodyID = ((CPUPhysicsColliderImplementation)backend.Implementation!).BodyID; var fixture = ((CPUPhysicsColliderImplementation)backend.Implementation!).Shapes[0];
+            var attachment = PhysicsServer.Service.BodyRuntime(colliders[1]).Backend;
+            var version = attachment.AttachmentVersion;
+            var retainedState = PhysicsServer.BodyGetDirectState(colliders[1])!; var velocity = retainedState.LinearVelocity;
             PhysicsServer.BodyAttachCanvasInstanceID(colliders[1], OtherCanvas);
             gpu?.SetQueryIdentity(shapes[1], (ulong)colliders[1].GetID(), 0, OtherCanvas);
             Check(Query() == 1 && hits[0].ColliderRID == colliders[3], "Live metadata edits affect the next query without a step.");
-            Check(((CPUPhysicsColliderImplementation)backend.Implementation!).BodyID.Equals(bodyID) && ((CPUPhysicsColliderImplementation)backend.Implementation!).Shapes[0].Equals(fixture), "Canvas edits preserve body and fixture identities.");
+            Check(attachment.AttachmentVersion == version && retainedState.LinearVelocity == velocity,
+                "Canvas edits preserve live attachment views and physical state.");
             PhysicsServer.BodySetSpace(colliders[1], default); PhysicsServer.BodySetSpace(colliders[1], space);
             PhysicsServer.AreaSetSpace(colliders[3], default); PhysicsServer.AreaSetSpace(colliders[3], space);
             Check(PhysicsServer.BodyGetCanvasInstanceID(colliders[1]) == OtherCanvas, "Server detach and reattachment retain authored canvas association.");
@@ -88,13 +93,15 @@ internal static class PhysicsCanvasTests
             Reject<ArgumentException>(() => PhysicsServer.BodyGetCanvasInstanceID(space));
             Reject<ArgumentException>(() => PhysicsServer.AreaAttachCanvasInstanceID(circle.GetRID(), 1));
             Reject<InvalidOperationException>(() => Task.Run(() => PhysicsServer.BodyAttachCanvasInstanceID(colliders[1], 0)).GetAwaiter().GetResult());
-            var world = Box2D.NET.B2Worlds.b2GetWorldFromId(backend.Space!.WorldID); world.locked = true;
-            try
+            var owner = attachment.Space!; owner.BeginImplementationCallback();
+            try { Reject<InvalidOperationException>(() => PhysicsServer.AreaAttachCanvasInstanceID(colliders[3], 0)); }
+            finally { owner.EndImplementationCallback(); }
+            if (backend == PhysicsServer.Backend.CPU)
             {
-                Reject<InvalidOperationException>(() => PhysicsServer.BodyGetCanvasInstanceID(colliders[1]));
-                Reject<InvalidOperationException>(() => PhysicsServer.AreaAttachCanvasInstanceID(colliders[3], 0));
+                var nativeWorld = Box2D.NET.B2Worlds.b2GetWorldFromId(owner.WorldID); nativeWorld.locked = true;
+                try { Reject<InvalidOperationException>(() => PhysicsServer.BodyGetCanvasInstanceID(colliders[1])); }
+                finally { nativeWorld.locked = false; }
             }
-            finally { world.locked = false; }
             Check(PhysicsServer.BodyGetCanvasInstanceID(colliders[1]) == OtherCanvas && PhysicsServer.AreaGetCanvasInstanceID(colliders[3]) == Canvas, "Rejected writes preserve associations.");
 
             var times = new double[128];
@@ -105,7 +112,8 @@ internal static class PhysicsCanvasTests
             own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
             Check(own == 0 && all == 0, $"Warmed canvas edits/queries allocate zero managed bytes: {own}/{all}.");
             Array.Sort(times);
-            Console.WriteLine($"Canvas {(resident ? "GPU plus public CPU oracle" : "public CPU")}: 4 colliders, 128 warmup/128 edited point queries, p50/p95/p99={times[64]:F4}/{times[121]:F4}/{times[126]:F4} ms; {own}/{all} owner/all-thread managed B; upload={((gpu?.UploadBytes ?? 0) - upload) / 128}, readback={((gpu?.ReadbackBytes ?? 0) - readback) / 128} B/query, wait={((gpu?.WaitMS ?? 0) - wait) / 128:F4} ms.");
+            Console.WriteLine($"Canvas {(resident ? "GPU plus public CPU oracle" : $"public {backend}")}: 4 colliders, 128 warmup/128 edited point queries, p50/p95/p99={times[64]:F4}/{times[121]:F4}/{times[126]:F4} ms; {own}/{all} owner/all-thread managed B.");
+            if (gpu is not null) Console.WriteLine($"Resident probe traffic/query: upload={(gpu.UploadBytes - upload) / 128}, readback={(gpu.ReadbackBytes - readback) / 128} B, wait={(gpu.WaitMS - wait) / 128:F4} ms.");
             PhysicsServer.FreeRID(colliders[3]);
             Reject<ArgumentException>(() => PhysicsServer.AreaGetCanvasInstanceID(colliders[3]));
             colliders[3] = default;
@@ -138,15 +146,16 @@ internal static class PhysicsCanvasTests
         }
     }
 
-    private static void SceneMembership()
+    private static void SceneMembership(PhysicsServer.Backend backend)
     {
         using var shape = new CircleShape { Radius = 5 };
-        var root = new SubViewport(); var first = new CanvasLayer { Name = "First", Offset = new(100, 0) }; var second = new CanvasLayer { Name = "Second" };
+        using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld }; var first = new CanvasLayer { Name = "First", Offset = new(100, 0) }; var second = new CanvasLayer { Name = "Second" };
         root.AddChild(first); root.AddChild(second);
         var body = new RigidBody { GravityScale = 0, Sleeping = true }; body.AddChild(new CollisionShape { Shape = shape }); first.AddChild(body);
         var area = new Area(); area.AddChild(new CollisionShape { Shape = shape }); first.AddChild(area);
         var normal = new StaticBody(); normal.AddChild(new CollisionShape { Shape = shape }); root.AddChild(normal);
         using var tree = new SceneTree(root); using var point = new PhysicsPointQueryParameters { CollideWithAreas = true };
+        Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Layered scene uses the requested backend.");
         var view = root.FindWorld()!.DirectSpaceState;
         Check(PhysicsServer.BodyGetCanvasInstanceID(body.GetRID()) == first.InstanceID && PhysicsServer.AreaGetCanvasInstanceID(area.GetRID()) == first.InstanceID, "Scene bodies and Areas publish CanvasLayer identity on entry.");
         Check(view.IntersectPoint(point).Length == 1, "Default point query excludes layered colliders in the same world.");

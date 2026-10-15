@@ -2,7 +2,7 @@
 
 [Polygon point containment and ray origins](physics-point-containment.md) now share strict unrounded CPU half-planes across direct queries, Area audio and directed query/proxy regions. Public scene/server CPU/GPU checks preserve filters, logical identities and warmed allocations.
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 The [typed result family](../classes/PhysicsRayResult.md#constructor) now has public construction for ray, point, shape and rest results, plus reusable [motion result filling](../classes/PhysicsTestMotionResult.md#setcollision). One shared engine path validates collider RID/kind, logical shape resource and owner/solver/failure access, then samples the current weak object association. Supplied finite geometry is preserved; construction performs no collision calculation. Motion collisions additionally require different bodies in the same live space and a valid fraction bracket. Invalid writes preserve previous output; SetMotion clears collision state. The separate [public API consumer](../../examples/PhysicsResultConstruction/README.md) exercises both built-ins with zero warmed managed allocation. The [runtime probe](../../tests/Electron2D.Tests/PhysicsResultConstructionTests.cs) additionally verifies rejection across the complete result family while the CPU solver owns the world. This implements a required result boundary under ADR 0103; named registration and typed dispatch now execute; complete numerical-extension and custom geometry acceptance remain open.
 
@@ -97,7 +97,7 @@ Typed PhysicsServer Area field getter/setters now share scene/server profiles an
 
 Shared [scene/server joint resources](physics-joints.md) use the existing physics world and native body IDs. Stable joint identities, typed settings, pending connection lifetime and independent contact/motion exception contributions now execute under [ADR 0087](../decisions/physics-joints.md#adr-0087).
 
-[Indexed PhysicsServer geometry](../classes/PhysicsServer.md#shape-slots) now shares the scene/server logical slots, effective local poses and native fixture/query path under [ADR 0088](../decisions/physics-shape-slots.md#adr-0088). Raw replacement/pose/disabled/one-way edits do not rewrite child configuration; group/child edits reclaim corresponding overrides. Shape free/replacement follows shared RID/view ownership and related-world phase guards. Effective poses also feed mass geometry. [PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) verifies real geometry, body/Area lifetime and one-way contacts/motion on Linux/.NET 10.
+[Indexed PhysicsServer geometry](../classes/PhysicsServer.md#shape-slots) now shares the scene/server logical slots, effective local poses and native fixture/query path under [ADR 0088](../decisions/physics-shape-slots.md#adr-0088). Raw replacement/pose/disabled/one-way edits do not rewrite child configuration; group/child edits reclaim corresponding overrides. Shape free/replacement follows shared RID/view ownership and related-world phase guards. Effective poses also feed mass geometry. [PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) verifies real geometry, body/Area lifetime and one-way contacts/motion on explicitly selected public CPU/GPU worlds. The [paired collider runner](physics-backends.md#paired-complete-collider-runner-2026-10-16) also checks serial/separate policies and zero owner/all-thread bytes in warmed indexed edit/step intervals.
 
 [Physics world activity](../classes/PhysicsServer.md#activity) is now independent of scene scheduling under [ADR 0089](../decisions/physics-activity.md#adr-0089). SceneTree activates its lazily created world; explicit SpaceCreate defaults inactive and requires SpaceSetActive(true). Global/local false skips simulation, force consumption and solver callbacks without clearing native state or accumulating elapsed time. Queries/configuration/cleanup and scene callbacks/timers continue. [PhysicsActivityTests](../../tests/Electron2D.Tests/PhysicsActivityTests.cs) checks the profile and warmed allocation on Linux/.NET 10.
 
@@ -130,6 +130,13 @@ physics disable removal does not remove canvas membership. Raw server edits are
 immediate and survive reattachment. Zero is an exact default-canvas selector, not
 an all-canvas wildcard. Selection uses physical world coordinates even when a
 CanvasLayer has a visual offset. Separate World identities still bound every query.
+
+PhysicsCanvasTests now selects the actual public CPU/GPU owner for scene and raw
+fixtures through the [paired runner](physics-backends.md#paired-complete-collider-runner-2026-10-16).
+The legacy GPU bool profile remains a direct resident-store comparison with a CPU
+oracle; its transfer counters describe that probe only. The common public profile
+checks retained direct views and physical state after metadata edits, exact
+filters and both managed allocation counters.
 
 PhysicsCanvasTests exercises four overlapping raw colliders (two bodies and two
 Areas), default and high-bit 64-bit associations, same-low-bits nonmatching keys,

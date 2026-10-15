@@ -738,22 +738,22 @@ PhysicsColliderBackend. Both implementations execute real scene/raw default-forc
 preparation; CPU field integration remains concrete and GPU stays resident. This is
 an internal extension prerequisite, not public backend registration.
 
-[Procedural Shape resources](../components/physics-shapes.md#caller-defined-shape-resources) now supply immutable exact geometry through a protected typed hook. All current primitive/contour families share drawing, bounds, CPU/GPU attachments and replay data. Third-party solver registration and algorithms outside those families remain open.
+[Procedural Shape resources](../components/physics-shapes.md#caller-defined-shape-resources) now supply immutable exact geometry through a protected typed hook. All current primitive/contour families share drawing, bounds, CPU/GPU attachments and replay data. Third-party solver registration now executes through the registered adapter. Arbitrary algorithms outside the exercised families remain open.
 
-[Space initialization](../components/physics-backends.md#space-construction-transaction) registers immutable world identity before implementation construction. The same transaction publishes explicit/inactive and scene/active spaces, guards initialization reentrancy and rolls back failed native/registry state. Public third-party factory operation integration remains open.
+[Space initialization](../components/physics-backends.md#space-construction-transaction) registers immutable world identity before implementation construction. The same transaction publishes explicit/inactive and scene/active spaces, guards initialization reentrancy and rolls back failed native/registry state. Public named factories now execute through the registered adapter; unexercised external operations retain their coverage triggers.
 
 [Named implementation selection](../components/physics-backends.md#named-implementation-selection) now retains immutable internal factories, strict default priorities and lazy World alias identity. Existing built-in CPU/GPU creation uses the registry and preserves no-device/fallback behavior. Real wrapped scene/raw impulse response and selected views execute through this path; public manager/server-extension families now execute in a separate consumer; arbitrary geometry and full operation acceptance remain open.
 
 [Selected shape-pair queries](../components/physics-shape-pairs.md) now execute resource/body-slot collision through actual retained owners, including detached bodies, disabled logical geometry and atomic nested results. GPU pose-only demand no longer reads an unnecessary full state record. Borrowed collider free rejects before registry cleanup. This closes an internal operation prerequisite; the complete public manager/server-extension family now executes; arbitrary geometry and full operation acceptance remain open.
 
-[Selected contact publication](../components/physics-body-extensions.md#selected-contact-publication) now connects factory-provided body contact count/values to actual scene/raw snapshots and monitored events. Native worker capture stays separate from owner-thread hooks; complete immutable output commits before observers. User contact failures preserve the receiver's prior state and allow later callbacks/committed ticks. Public manager/server-extension and custom algorithms remain open.
+[Selected contact publication](../components/physics-body-extensions.md#selected-contact-publication) now connects factory-provided body contact count/values to actual scene/raw snapshots and monitored events. Native worker capture stays separate from owner-thread hooks; complete immutable output commits before observers. User contact failures preserve the receiver's prior state and allow later callbacks/committed ticks. Public manager/server-extension integration now executes; arbitrary custom algorithms and complete external acceptance remain open.
 
-The [scene pipeline performance fixture](../../tests/Electron2D.Tests/PhysicsPipelinePerformance.cs) now exercises the same explicit CPU/GPU RigidBody world, real contact monitors, fixed frames and interpolation. Private GPU capacity buffers retain their managed wrappers across native growth, avoiding a measured late-contact allocation without removing solver work or native copies. Full public registration and final platform/window performance acceptance remain open.
+The [scene pipeline performance fixture](../../tests/Electron2D.Tests/PhysicsPipelinePerformance.cs) now exercises the same explicit CPU/GPU RigidBody world, real contact monitors, fixed frames and interpolation. Private GPU capacity buffers retain their managed wrappers across native growth, avoiding a measured late-contact allocation without removing solver work or native copies. Public registration now executes; complete external numerical and final platform/window performance acceptance remain open.
 
-[Value-only integration inputs](../components/physics-backends.md#value-only-body-integration-inputs) now carry complete default-force intent and CPU/GPU authored policies into numerical preparation. Shared bindings consume successful pending commands and retire GPU dirty flags; actual fields and resident work retain their current behavior. Public registration and custom algorithms remain open.
+[Value-only integration inputs](../components/physics-backends.md#value-only-body-integration-inputs) now carry complete default-force intent and CPU/GPU authored policies into numerical preparation. Shared bindings consume successful pending commands and retire GPU dirty flags; actual fields and resident work retain their current behavior. Public registration now executes; arbitrary custom algorithms remain open.
 
 
-[Registered numerical adapter](../components/physics-registered-adapter.md) now connects an internal value/RID-only implementation to real scene/raw motion, fields/forces, joints, queries, contact/Area publication, private/portable history and terminal failure. Its independent circle/spring test solver owns its own state and does not wrap a built-in. Public factories/backend classes, arbitrary custom geometry and full external acceptance remain open.
+[Registered numerical adapter](../components/physics-registered-adapter.md) now connects an internal value/RID-only implementation to real scene/raw motion, fields/forces, joints, queries, contact/Area publication, private/portable history and terminal failure. Its independent circle/spring test solver owns its own state and does not wrap a built-in. Public factories/backend classes and the dedicated bounded geometry profiles now execute; arbitrary custom geometry and full external acceptance remain open.
 
 Public [registered implementations](../components/physics-registered-adapter.md) now execute through PhysicsServerManager, World(string) and PhysicsServer.SpaceCreate(string). Requested/actual names retain the captured registration and startup fallback identity. The scoped PhysicsServerBackend/Extension family and immutable inputs/results have a public-only circle/spring consumer; custom geometry and full extension/performance/platform acceptance remain open.
 
@@ -1315,3 +1315,11 @@ remain open.
 GC commitment, glibc storage and procfs RSS/PSS with startup baselines for raw and
 network fixtures. These calibrated process observations overlap the existing owned
 graphs; per-world native/driver attribution and complete peak accounting remain open.
+
+The [complete collider runner](../components/physics-backends.md#paired-complete-collider-runner-2026-10-16)
+now preserves the earlier 47 families and adds one independent scene-failure control.
+The same 48 suites pass on public CPU/GPU in serial/separate numerical modes;
+Area, indexed geometry, canvas and object-association fixtures now explicitly
+select and assert the owner. Registered geometry passes fourteen profiles and
+keeps its bounded external-algorithm limits. Current GPU evidence uses software
+Vulkan; no hardware/window, whole-goal or coverage-status promotion follows.

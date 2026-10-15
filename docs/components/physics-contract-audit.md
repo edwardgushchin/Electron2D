@@ -283,8 +283,10 @@ Fresh source review distinguishes concrete omissions from acceptance limits:
   now verifies mass-center/point-velocity projection and coupled rotating circle
   slots on CPU and the independent provider in serial/separate numerical modes.
   GPU software execution now passes serial/separate profiles after the separated
-  convex trajectory advancement fix. Physical hardware, general polygon/capsule/
-  multiple-piece provider and wider coupled CCD acceptance stays open; [compound evidence](physics-registered-adapter.md#compound-slot-numerics)
+  convex trajectory advancement fix. The registered rectangle, capsule, segment,
+  convex/concave, boundary and directed-ray sections now cover bounded transformed
+  logical geometry, response and private history. Physical hardware, arbitrary
+  custom geometry and wider coupled CCD acceptance stay open; [compound evidence](physics-registered-adapter.md#compound-slot-numerics)
   defines the bounded fixture and numerical tolerances.
 - [Curved custom contacts](physics-registered-adapter.md#curved-custom-contacts)
   now check inner/outer annulus arcs, motor-generated motion, a rotating counterpart,
@@ -363,9 +365,9 @@ coverage of its stated cases, not proof of arbitrary external algorithms.
 | Independent selection, CPU without GPU, startup fallback, requested/actual identity and terminal started-GPU failure | physics-backends; WorldTests, PhysicsBackendOwnershipTests; named registry and lifecycle consumer | Wider platform/device profiles and complete external owner semantics. |
 | Resident broad phase, contacts, constraints/joints, integration, sleep and CCD | Resident store/kernel components; GPUPhysicsTests and public CPU/GPU suites | Coupled long workloads and cost/capacity accounting for required publication/query/network reads. |
 | CCD modes; stationary static linear/angular surfaces; boundary and directed-ray response | ContinuousPhysicsTests, BoundaryShapeTests, SeparationRayShapeTests, PhysicsSurfaceVelocityTests; shared response/grazing controls | Provider multi-slot/rotated/coupled numerical cases; no bitwise equality condition. |
-| Joint bias/softness/force, impulse and correction caps; shape bias/priority; world policies | Shared PhysicsJointPolicyTests, PhysicsContactPolicyTests, PhysicsCollisionPriorityTests, PhysicsSleepPolicyTests and typed space operations | Separate-thread simulation and external numerical policy coverage. |
+| Joint bias/softness/force, impulse and correction caps; shape bias/priority; world policies | Shared serial/separate CPU/GPU policy suites and registered correction/sweep/priority profiles | Wider coupled external numerical policies, hardware scheduling and final performance acceptance. |
 | Picking, canvas filtering, shape/debug drawing, colors and hints | Picking/debug/native suites, direct-space and tile tests | Unverified native platforms and applicable inherited renderer/editor rows remain separate. |
-| Full frame tangent impulses, deepest caps/ties, tile owners and logical identities | PhysicsContactImpulseTests, body/direct-state tests, TileMapLayerTests, registered contact frames | General polygon/capsule/multiple-piece provider geometry; bounded multiple-circle slots and private history are verified. |
+| Full frame tangent impulses, deepest caps/ties, tile owners and logical identities | PhysicsContactImpulseTests, body/direct-state tests, TileMapLayerTests, registered contact frames and all seven registered geometry profiles | Arbitrary external geometry, wider coupled histories and tile-specific network topology; bounded polygon/capsule and logical-piece profiles already execute. |
 | Scene/raw server states, axis velocity, layers/masks, shape type, process info, object/canvas IDs and registration | Shared state/force/binding/query suites plus complete selected operation hooks and public-only consumer | Exact open inherited/extension rows in the ledger; no placeholder exemption. |
 | Bodies, CharacterBody, shapes, queries, forces, materials, Area, joints and physical bones | Full existing suite explicitly exercises independent CPU/GPU variants | Uncovered coupled/long-run cases and remaining external geometry acceptance. |
 | Headless CPU authority, fixed ticks, numbered input, portable cross-process identity and snapshots | Public PhysicsNetwork example, checkpoint/snapshot suites and no-GPU process checks | Current same-source seven-profile headless matrix is verified; packet/native/device totals and arbitrary gameplay remain scoped. |
@@ -458,7 +460,7 @@ current CPU host does not certify new geometry, tile owners or independent GPU u
 | Tiles and object identity | TileSet physics layers/filter/priority/material; TileData polygons, one-way margins and constant surface velocities; TileMapLayer body-RID lookup, collision enable/visibility, quadrant grouping and kinematic mode. Carry tile owners through Area/RigidBody object and shape events, direct contacts, direct-space queries, ray/shape casts and kinematic/motion results. ADR 0101 now implements these policies for square atlas tiles, including actual generated bodies and owner projections through all listed consumers; TileMapLayerTests runs CPU/GPU and native rendering. Remaining general tile capabilities and tile-specific network topology remain open. |
 | Server identity and queries | BodyGetCollisionLayer/Mask and shared scene/server/tile filter setters now execute under ADR 0102, with guarded authoring reads, immediate query edits, next-step monitoring and unchanged-assignment wake. Typed object/canvas associations, ShapeGetType, completed ProcessInfo and three Performance monitors now execute. Wider extension/state semantics and full conformance remain open. |
 | Debug drawing | Authored shape/cast/joint and contact-point diagnostics now execute through retained canvas commands, including live hints, colors/outlines and bounded Space contact snapshots (physics-debug). Square atlas tile overlays execute under ADR 0101. Registered diagnostic capacity and bounded point/count dispatch now execute under ADR 0103. Wider visual/device, numerical-extension and full-frame performance acceptance remain open. |
-| Backend registration and extensions | Register/default/factory selection, typed server operations, direct-state factories, lifecycle, exclusions, callbacks and resource lifetime now execute through the public-only consumer. Bounded numerical fields, material/surface response, CCD, sleep, pin/groove constraints and multi-peer frame history execute independently. Its numerical model now retains multiple transformed circle/annulus slots, disabled index gaps and per-feature contacts/queries/private history, including same-peer caps and CCD. Bounded rotating circle slots now pass mass-center, intermediate/coupled CCD and momentum checks on CPU/registered serial/separate modes. Public CPU/GPU rectangle/capsule/12-vertex/native-piece/compound-slot rotational CCD now runs the same bounded static/moving-target full-frame checks in serial/separate profiles. General provider polygon/capsule algorithms and wider coupled CCD acceptance remain open. These are remaining verification/fixture gaps, not permission to expose inert library hooks. |
+| Backend registration and extensions | Register/default/factory selection, typed server operations, direct-state factories, lifecycle, exclusions, callbacks and resource lifetime now execute through the public-only consumer. Bounded numerical fields, material/surface response, CCD, sleep, pin/groove constraints and multi-peer frame history execute independently. Its numerical model now retains multiple transformed circle/annulus slots, disabled index gaps and per-feature contacts/queries/private history, including same-peer caps and CCD. Bounded rotating circle slots now pass mass-center, intermediate/coupled CCD and momentum checks on CPU/registered serial/separate modes. Public CPU/GPU rectangle/capsule/12-vertex/native-piece/compound-slot rotational CCD now runs the same bounded static/moving-target full-frame checks in serial/separate profiles. Registered rectangle/capsule/segment/convex/concave/boundary/directed-ray numerics now execute their dedicated bounded response, query, history and CCD cases; arbitrary custom algorithms and wider coupled CCD acceptance remain open. These are remaining verification/fixture gaps, not permission to expose inert library hooks. |
 | Inherited contract | All remaining Partial/Blocked/Unimplemented declarations on Node, Entity/CanvasItem, Object/RefCounted/Resource, SkeletonModification and relevant shared ancestors remain listed separately. Existing role mappings, packing, ownership, process disable, worlds, transforms and callbacks must survive both implementations. Generic inherited gaps must not disappear behind a class marked Implemented. |
 
 ## Transfers, mirrors and waits
@@ -599,64 +601,25 @@ The owned `PhysicsServer.BodyGetTransform(space, bodies, transforms)` overload n
 
 ## Backend extension audit, 2026-10-10
 
-The pinned census contains two manager members, 140 server-extension members,
-48 direct-body-state members and seven direct-space members, plus their four
-owning types. No owning type/member deprecated metadata excludes these families;
-the old one-way compatibility binding remains separately excluded. Current
-PhysicsServer is a sealed static facade, direct states support guarded caller-created extensions and RID allocation
-is internal. Public typed query-result constructors now exist and preserve payload validation.
-Shape now supports caller-defined resources through immutable exact ShapeGeometry and a protected geometry hook. Supported primitive/contour data executes on both backends; CustomShapeCreate and new solver-defined algorithms remain open. Selected world/collider/joint
-ownership, world policy/capacity, completed statistics and selected full-step phases have been extracted, but registered third-party state/motion/query dispatch
-is not implemented. These
-are concrete integration prerequisites, not a reason to exclude extension behavior.
-[ADR 0103](../decisions/physics-extensions.md#adr-0103) resolves the implementation
-object/static-service role boundary and requires complete typed dispatch and
-supporting construction/lifetime paths. Registration-only enum aliases and virtual
-signatures with no scene/query consumer are rejected. Manager/server-extension declarations remain Blocked until complete public
-implementation and executable acceptance. Caller-created direct-state families
-execute; their class status remains Partial pending registered public integration.
+This is the historical extraction baseline. At that point the two manager,
+140 server-extension, 48 direct-body and seven direct-space declarations (plus
+owning types) lacked complete public registered integration. No deprecated
+metadata excluded those families. Their former Blocked census is superseded by
+the current coverage ledger and the [registered adapter](physics-registered-adapter.md).
 
-Area implementation dispatch now moves CPU native overlap/priority reduction and
-pre-step body preparation out of the shared space. Scene/raw observer scans and
-audio containment reach the selected owner; GPU retains resident field reduction
-and owns sensor/audio scratch. [Shared Area checks](physics-backends.md#area-implementation-ownership)
-cover CPU/GPU fields, masks, logical notifications, audio and attachment lifetime
-at zero warmed managed allocation. This closes an internal registration prerequisite;
-the manager/server-extension census remains open until real registered implementations
-execute the complete contract.
+Current named factories, selected scene/raw ownership, typed collider/joint
+operations, direct views, guarded callbacks, lifecycle cleanup and private/portable
+history execute through the public-only consumer. ShapeGeometry supports exact
+built-in contours and custom annulus data. Registered rectangle, capsule, segment,
+convex/concave, infinite-boundary and directed-ray sections record bounded numerical
+execution. Public registration and those geometry families are implemented;
+arbitrary custom algorithms and complete external-family acceptance remain open.
 
-Native CPU scheduling/contact/CCD histories, selected private checkpoints and
-portable one-way mapping now execute through their immutable world implementations.
-Report-only pair/activity counters rewind with contacts before another solver step.
-[The ownership contract](physics-backends.md#native-simulation-and-replay-ownership)
-records replay, diagnostics, failure and allocation checks; registered public backend
-factories and custom geometry remain open.
-
-[Selected body integration preparation](physics-backends.md#selected-body-integration-preparation)
-now removes direct CPU-only force/field calls from common PhysicsBodyRuntime and
-PhysicsColliderBackend. Both implementations execute real scene/raw default-force
-preparation; CPU field integration remains concrete and GPU stays resident. This is
-an internal extension prerequisite, not public backend registration.
-
-The live-space initialization boundary now has one internal construction transaction.
-The server registers an immutable space RID before invoking the selected owner factory
-outside the registry lock. The retained implementation is assigned before its initialization
-callback can construct/query a guarded direct-space extension. Stepping, activation,
-attachment changes, recursive initialization and release reject until completion. Failure
-retires registry/view/ownership entries and releases retained native state; rejecting a
-foreign implementation leaves its original world alive. CPU/GPU/no-device ownership
-fixtures exercise these phases and all six real query hooks. This closes an internal
-initialization prerequisite; public registered factories still do not execute.
-Body-context preparation is independent of cached view acquisition: the protected
-constructor prepares geometry/state and samples attachment identity without calling
-BodyGetDirectStateCore or reopening its cache.
-Existing direct-state constructors enforce ordinary off-solver access, while built-in
-callback/contact views are prepared during the common interval. Registered factories
-still need public factory integration, qualified callback-view construction phases
-and the full selected operation bridge. Independent body binding closes
-that cache-bootstrap prerequisite, not registered callback delivery. These are
-implementation requirements rather than missing user permission; current
-caller-created views do not prove the registered path.
+The ownership, Area dispatch, body preparation and construction-transaction details
+are maintained in [physics backends](physics-backends.md). The following dated
+prerequisite notes describe earlier extraction steps; their absence statements do
+not override current implementation or coverage. No status is promoted solely by
+this historical reconciliation.
 
 ## Internal named factory prerequisite, 2026-10-11
 
@@ -1532,3 +1495,25 @@ native-memory/performance gate remains open. Subsequent [owner pipeline preparat
 moves cold numerical compilation before borrowing and reduces the large threaded
 growth without allocator tuning. Residual retention, complete native attribution
 and hardware/performance acceptance remain open.
+
+## Common collider reconciliation, 2026-10-16
+
+The [paired complete runner](physics-backends.md#paired-complete-collider-runner-2026-10-16)
+now executes the same 48 suites on public CPU/GPU with serial/separate scheduling.
+It preserves all 47 earlier families and adds the independent scene-failure control.
+The newly selected Area/shape-slot/canvas/object fixtures assert backend identity;
+standalone resource geometry and scene changes remain backend-independent.
+Existing physical tolerances are unchanged; the Area and shape-edit intervals
+now also require all-thread zero bytes. Four common profiles, fourteen registered
+geometry profiles, four additional directed built-in profiles and the two retained
+resident probes pass. The actual scope and process evidence are recorded there.
+
+The old manager/geometry absence claims above have been reconciled with current
+source and dedicated component records. This changes no declaration status:
+physics-family totals remain 687 Implemented / 150 Partial / 55 Excluded;
+inherited totals remain 288 / 118 / 17 / 45 / 23 in ledger order. The common suite
+is a regression gate for existing behavior, not completion of every ledger row.
+Arbitrary external algorithms, unclosed inherited/extension rows, wider coupled
+and network cases, complete memory budgets and native/device/platform/performance
+acceptance retain their named triggers. Physical GPU validation remains deferred
+while the power cable is unverified; these GPU checks use pinned software Vulkan.

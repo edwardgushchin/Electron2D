@@ -239,8 +239,10 @@ public static partial class BackendChecks
             using var world = Create(); using var root = new SubViewport { World = world }; using var ray = new SeparationRayShape { Length = 20, SlideOnSlope = true }; using var box = new RectangleShape { Size = new(200, 10) };
             var floor = new StaticBody { Position = new(0, 30) }; floor.AddChild(new CollisionShape { Shape = box }); root.AddChild(floor);
             var character = new CharacterBody { PhysicsProcessEnabled = true, FloorSnapLength = 10 }; character.AddChild(new CollisionShape { Shape = ray }); root.AddChild(character);
-            using var tree = new SceneTree(root); tree.PhysicsFrame(1d / 60); character.Velocity = new(0, 600);
-            Check(character.MoveAndSlide() && character.IsOnFloor() && character.Velocity.Y == 0 && character.GetSlideCollision(0).GetColliderRID() == floor.GetRID(), "Character movement consumes registered directed motion and floor identity");
+            using var tree = new SceneTree(root); tree.PhysicsFrame(1d / 60); tree.ProcessFrame(1d / 60); character.Velocity = new(0, 600);
+            var moved = character.MoveAndSlide();
+            Check(moved && character.IsOnFloor() && character.Velocity.Y == 0 && character.GetSlideCollision(0).GetColliderRID() == floor.GetRID(),
+                $"Character movement consumes registered directed motion and floor identity: moved={moved}, floor={character.IsOnFloor()}, velocity={character.Velocity}, position={character.Position}, slides={character.GetSlideCollisionCount()}, physicsDelta={character.PhysicsProcessDeltaTime}, processDelta={character.ProcessDeltaTime}");
             character.Velocity = new(0, -600); character.MoveAndSlide(); character.MoveAndSlide();
             ray.SlideOnSlope = false; character.Position = Vector2.Zero; character.Velocity = Vector2.Zero; character.ApplyFloorSnap();
             Check(character.IsOnFloor() && character.Position.Y is > 4.8f and < 5.1f, "Character snap explicitly includes a non-sliding ray");

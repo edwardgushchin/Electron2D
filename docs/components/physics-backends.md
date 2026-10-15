@@ -2,7 +2,7 @@
 
 [Polygon point containment](physics-point-containment.md) corrects CPU GJK false-inside observations across points, ray origins, Area audio and directed proxy regions. CPU/GPU tests use equal authored poses and independent geometric controls.
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 [Same-revision mass measurements](physics-current-performance.md) record complete
 CPU/GPU headless steps and real-window frames at 65,536 awake bodies on
@@ -48,8 +48,10 @@ is introduced by that finalization route.
 use a non-CPU implementation type delegating actual CPU state. The selected-view
 fixture exercises real impulse/policy hooks, scene/raw contacts, Area monitoring,
 ray/shape CCD, queries, retirement/reentry and portable capture/apply. Shared
-physics APIs and warm allocation guards are retained. Public registration and the
-complete external server operation bridge remain open under ADR 0103.
+physics APIs and warm allocation guards are retained. Public named registration
+and the typed operation bridge now execute through the
+[registered adapter](physics-registered-adapter.md). This internal wrapper remains
+an ownership diagnostic; complete external numerical acceptance stays open under ADR 0103.
 
 ## GPU collider ownership
 
@@ -1314,3 +1316,70 @@ selects current incremental or complete state by estimated transfer cost. Cached
 mode/sleep is a hint only; scalar values and wake/private/portable continuation
 retain authoritative device reads. Existing API and coverage states remain unchanged;
 hardware, native, foreign and full acceptance remain open.
+
+## Paired complete collider runner (2026-10-16)
+
+ELECTRON2D_TEST_COLLIDER_BACKEND=cpu or gpu selects the same
+[PhysicsColliderContractTests](../../tests/Electron2D.Tests/PhysicsColliderContractTests.cs)
+list. ELECTRON2D_TEST_THREADED_COLLIDER=1 captures separate numerical scheduling
+before fixtures are created and preserves an explicit GPU selection. The legacy
+backend value 1 and a lone threaded flag remain CPU aliases. Other backend values
+reject before the suite begins.
+
+All 47 previous collider families are retained. Forty-six forward the explicit
+backend; standalone ShapeCollisionTests is independent of world selection.
+SceneChangeTests adds one backend-independent safe-point/failure control, for
+48 suites per profile. Failures are labelled and accumulated so later families
+still run; the host exits unsuccessfully if any suite fails. This entry excludes
+the full default renderer/editor/network runner and does not replace its gates.
+
+AreaTests, PhysicsServerShapeSlotTests, PhysicsCanvasTests and
+PhysicsObjectBindingTests now bind every live fixture to the requested public
+World/Space and assert actual backend identity. They retain monitoring and failed
+callback delivery, shape edits/index gaps/one-way response, canvas/object filters,
+weak sampled identities, reentry and lifetime/error checks. Metadata continuity
+checks use retained attachment views and physical state; CPU body/fixture handle
+equality is no longer a condition on a public GPU world. The shared borrowed-owner
+write guard runs on both backends, with an additional CPU native-lock diagnostic.
+The older direct resident-store canvas/object probes remain separate diagnostics.
+
+Area steady/empty frames and indexed shape-edit frames now require both owner and
+all-thread managed allocation counters to stay exactly zero. Existing canvas and
+object intervals keep their strict zero gates. Warmup lengths, operations and
+numerical bounds are unchanged. Software Vulkan timings in these functional
+runs do not establish target-device speed or real-window FPS.
+
+Final paired evidence, 2026-10-16:
+
+| Actual public backend | Numerical policy | Common suites |
+| --- | --- | --- |
+| CPU, GPU driver denied | Serial | 48 passed |
+| CPU, GPU driver denied | Separate thread | 48 passed |
+| GPU, pinned lavapipe | Serial | 48 passed |
+| GPU, pinned lavapipe | Separate thread | 48 passed |
+
+The immutable Release test host SHA-256 is
+604a1f1106ffb9f8e2d5a91e2ea5290761e581237dc6258dfa3c6a7c203fe082.
+The two GPU functional profiles ran concurrently; their timings are not an
+isolated performance comparison. Process-map observations retain lavapipe only
+on GPU paths and no NVIDIA driver on any observed parent/fresh bone child.
+Legacy CPU selector aliases pass and an unknown selector rejects before tests.
+Both narrower resident canvas/object probes also pass separately.
+
+The public-only registered consumer passes rectangle/capsule/segment/convex/
+concave/boundary/directed profiles in serial and separate modes (14 runs).
+Directed geometry additionally passes public CPU/GPU serial/separate profiles.
+Its CharacterBody control now supplies a process delta before an out-of-physics
+MoveAndSlide; the original movement, floor identity, velocity and snap assertions
+remain. SceneChangeTests injects a ChildAdded removal/error before entry to test
+failed-attachment disposal; automatic name resolution no longer supplies that
+error. OnEnterTree failure retains its distinct attached-scene ownership test.
+No production numerical behavior changed.
+
+Current source/PDB checks match 2,223 runtime, 713 test-host and 134 external
+consumer compile inputs. The 14,330-declaration API snapshot is unchanged.
+Release/API/wiki checks pass. Logs, process proofs, manifests and final checks
+remain in ignored bin/physics-current-audit/2026-10-16. Native AOT and the full
+default renderer/editor/network runner were not rerun in this slice. Physical GPU,
+complete inherited/extension, native/driver memory, foreign-platform and final
+performance/window acceptance remain open in their owning records.

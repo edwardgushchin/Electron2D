@@ -9,14 +9,19 @@ internal static class PhysicsObjectBindingTests
     internal static void Run(bool gpu = false)
     {
         if (gpu) { GPU(); return; }
-        Queries(); Monitoring();
-        Console.WriteLine("Physics object binding passed: weak snapshots, query/motion/contact identities, scene membership, callbacks, guards and allocation.");
+        Run(PhysicsServer.Backend.CPU);
     }
-    private static void Queries()
+    internal static void Run(PhysicsServer.Backend backend)
+    {
+        Queries(backend); Monitoring(backend);
+        Console.WriteLine($"Public physics object binding passed: {backend}.");
+    }
+    private static void Queries(PhysicsServer.Backend backend)
     {
         using var shape = new CircleShape { Radius = 10 };
         using var first = new Target(); using var second = new Target();
-        var space = PhysicsServer.SpaceCreate(); var body = PhysicsServer.BodyCreate(); var mover = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate();
+        var space = PhysicsServer.SpaceCreate(backend);
+        Check(PhysicsServer.SpaceGetBackend(space) == backend, "Object association fixture uses the requested backend."); var body = PhysicsServer.BodyCreate(); var mover = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate();
         using var point = new PhysicsPointQueryParameters(); using var ray = PhysicsRayQueryParameters.Create(new(-30, 0), new(30, 0));
         using var query = new PhysicsShapeQueryParameters { Shape = shape };
         using var parameters = new PhysicsTestMotionParameters { From = new(0, new(-30, 0)), Motion = new(40, 0) };
@@ -36,10 +41,12 @@ internal static class PhysicsObjectBindingTests
             Check(PhysicsServer.BodyTestMotion(mover, parameters, result) && result.GetColliderID() == first.InstanceID && result.GetCollider() == first, "Motion snapshot captures bound object.");
             parameters.ExcludeObjects = [first.InstanceID]; Check(!PhysicsServer.BodyTestMotion(mover, parameters, result), "Object exclusions use assigned identity."); parameters.ExcludeObjects = [];
             Check(PhysicsServer.BodyTestMotion(mover, parameters, result), "Removing exclusion restores motion hit.");
-            var backend = PhysicsServer.Service.BodyRuntime(body).Backend; var native = ((CPUPhysicsColliderImplementation)backend.Implementation!).BodyID; var fixture = ((CPUPhysicsColliderImplementation)backend.Implementation!).Shapes[0];
+            var attachment = PhysicsServer.Service.BodyRuntime(body).Backend; var version = attachment.AttachmentVersion;
+            var retainedState = PhysicsServer.BodyGetDirectState(body)!; var velocity = retainedState.LinearVelocity;
             PhysicsServer.BodyAttachObject(body, second);
             Check(pointHit.ColliderObject == first && rayHit.ColliderObject == first && shapeHit.ColliderObject == first && restHit.ColliderObject == first && result.GetCollider() == first, "Rebinding cannot rewrite old query/motion snapshots.");
-            Check(direct.IntersectPoint(point)[0].ColliderObject == second && native.Equals(((CPUPhysicsColliderImplementation)backend.Implementation!).BodyID) && fixture.Equals(((CPUPhysicsColliderImplementation)backend.Implementation!).Shapes[0]), "New association is immediate and preserves solver identity.");
+            Check(direct.IntersectPoint(point)[0].ColliderObject == second && attachment.AttachmentVersion == version && retainedState.LinearVelocity == velocity,
+                "New association is immediate and preserves live body views and physical state.");
             point.CollideWithBodies = false; point.CollideWithAreas = true;
             Check(direct.IntersectPoint(point).Single().ColliderObject == second && PhysicsServer.AreaGetObjectInstanceID(area) == second.InstanceID, "Area association uses the same path.");
             PhysicsServer.BodySetSpace(body, default); PhysicsServer.BodySetSpace(body, space);
@@ -49,9 +56,9 @@ internal static class PhysicsObjectBindingTests
             Reject<ArgumentException>(() => PhysicsServer.BodyAttachObject(area, second));
             Reject<ArgumentException>(() => PhysicsServer.AreaGetObjectInstanceID(body));
             Reject<InvalidOperationException>(() => Task.Run(() => PhysicsServer.AreaAttachObject(area, null)).GetAwaiter().GetResult());
-            var world = Box2D.NET.B2Worlds.b2GetWorldFromId(backend.Space!.WorldID); world.locked = true;
+            var owner = attachment.Space!; owner.BeginImplementationCallback();
             try { Reject<InvalidOperationException>(() => PhysicsServer.BodyAttachObject(body, null)); }
-            finally { world.locked = false; }
+            finally { owner.EndImplementationCallback(); }
             Check(PhysicsServer.BodyGetObjectInstanceID(body) == second.InstanceID, "Rejected writes preserve association.");
             PhysicsServer.BodyAttachObject(body, null); Check(PhysicsServer.BodyGetObjectInstanceID(body) == 0, "Null clears association.");
             var weak = BindTemporary(body); var id = PhysicsServer.BodyGetObjectInstanceID(body);
@@ -69,15 +76,16 @@ internal static class PhysicsObjectBindingTests
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static bool Alive(WeakReference<ElectronObject> weak) => weak.TryGetTarget(out _);
 
-    private static void Monitoring()
+    private static void Monitoring(PhysicsServer.Backend backend)
     {
         using var shape = new CircleShape { Radius = 10 }; using var sensorShape = new CircleShape { Radius = 40 };
-        var root = new SubViewport(); var owner = new Entity { Name = "Owner" }; var replacement = new Entity { Name = "Replacement" };
+        using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld }; var owner = new Entity { Name = "Owner" }; var replacement = new Entity { Name = "Replacement" };
         var sensor = new Area { Name = "Sensor", CollisionMask = 2, CollisionLayer = 8 }; sensor.AddChild(new CollisionShape { Shape = sensorShape });
         var receiver = new RigidBody { Name = "Receiver", GravityScale = 0, Position = new(18, 0), CollisionLayer = 4, CollisionMask = 2, ContactMonitor = true, MaxContactsReported = 8 };
         receiver.AddChild(new CollisionShape { Shape = shape });
         root.AddChild(owner); root.AddChild(replacement); root.AddChild(sensor); root.AddChild(receiver);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene associations use the requested backend.");
         Check(PhysicsServer.BodyGetObjectInstanceID(receiver.GetRID()) == receiver.InstanceID && PhysicsServer.AreaGetObjectInstanceID(sensor.GetRID()) == sensor.InstanceID, "Scene associations initially identify their nodes.");
         var body = PhysicsServer.BodyCreate(); var second = PhysicsServer.BodyCreate();
         var enters = 0; var exits = 0; var contactEnters = 0; var contactExits = 0;
