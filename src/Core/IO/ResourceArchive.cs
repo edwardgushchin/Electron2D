@@ -596,7 +596,7 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
             var type = ResourceFileTypes.Get(ResourceArchiveStrings.Read(stream));
             if (!typeof(Node).IsAssignableFrom(type.Type)) throw new InvalidDataException("Scene table includes a resource.");
             var name = ResourceArchiveStrings.Read(stream);
-            if (!Node.IsValidNodeName(name)) throw new InvalidDataException("Invalid scene node name.");
+            if (!Node.IsValidStoredNodeName(name)) throw new InvalidDataException("Invalid scene node name.");
             var parent = stream.Get32();
             var owner = stream.Get32();
             var sibling = stream.Get32();

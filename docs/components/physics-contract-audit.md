@@ -6,6 +6,13 @@
 
 Last updated: 2026-10-15
 
+[Complete name assignment](scene-hierarchy.md#child-name-collisions) now normalizes
+reserved path characters, propagates unchanged/detached subtree notifications,
+and attempts all active rename event phases after errors. Stored internal names
+remain exact through scene/file reconstruction. The Name, Renamed and tree
+NodeRenamed rows now have public physical evidence; other inherited and complete
+physics acceptance gates stay open.
+
 [Inherited child names](scene-hierarchy.md#child-name-collisions) now implement
 readable/generated AddChild/AddSibling naming, live numeric separators and
 consistent rename/reparent/replacement collision behavior. Retained path traversal
@@ -215,13 +222,29 @@ operations remain open in the ledger.
 The complete generated ledger remains the per-declaration list. Current own
 physics families contain 687 Implemented, 150 Partial and 55 Excluded rows,
 with no own Blocked or Unimplemented rows. The 491 shared inherited declarations
-contain 284 Implemented, 120 Partial, 17 Blocked, 47 Unimplemented and 23 Excluded
+contain 286 Implemented, 118 Partial, 17 Blocked, 47 Unimplemented and 23 Excluded
 rows. The 78 selected cross-domain consumer declarations contain 76 Implemented
 and two Partial rows. These are declaration counts, including class and enum rows,
 not a claim that all numerical behaviors pass. The exact inherited names and
 prerequisites remain in the ledger rather than disappearing from this audit.
 
 Fresh source review distinguishes concrete omissions from acceptance limits:
+
+- Slow software-GPU process-check coverage remains timing-dependent under host
+  load. At the name-assignment revision, the mixed 600/310 threaded check run
+  alongside Release compilation reached tick 600 in all three participants at
+  zero warm step/replay managed bytes, but the GPU client completed only 182 local
+  steps: SupportKicks/SupportWakes and GeometryWakes were zero, so the strict
+  shared-graph assertion failed. An otherwise identical isolated run passed with
+  462 local GPU steps, five support kicks/wakes and all geometry wake bits. The
+  source schedules those kicks at exact tick multiples while authority correction
+  can advance past local ticks. These counters and source paths indicate skipped
+  local fixture phases; exact progress needs a deterministic coverage check.
+  Keep this acceptance limit open until slow clients
+  exercise the required phases deterministically, without shifting gameplay
+  impulses or relaxing the physical assertions. Both runs and binary identities
+  are retained in `bin/physics-node-name-assignment/2026-10-15/`; the failing
+  artifacts have the `concurrent-build-failed-` prefix / matching network directory.
 
 - Viewport's On (1) default now agrees in construction and Node property metadata,
   including Window/SubViewport. Shared real-body CPU/GPU and native nested pixels

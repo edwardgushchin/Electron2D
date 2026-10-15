@@ -107,13 +107,20 @@ positions. AddSibling inherits its source's internal partition. Name assignment
 uses the readable policy; Reparent and ReplaceBy use default insertion naming,
 including transferred children. Validate structural/lifetime/owner restrictions
 before naming or topology mutation; an ancestor cannot replace its descendant.
-Names and path invalidation commit before callbacks; a different requested name
-still notifies if collision resolution returns the current name, with ordinary committed
-progress on callback failure. Retained depth-specific path-notification snapshots
+Public Name assignment replaces each `.`, `:`, `@`, `/`, `"` and `%` with `_`
+before sibling resolution. Null, empty and whitespace-only inputs reject; the
+typed nonblank construction default is retained. Every accepted assignment,
+including the same input, propagates path notifications through detached or active
+subtrees. Only active nodes raise Renamed and the tree events, in that order after
+path delivery. Names and path invalidation commit before callbacks; remaining
+descendants and active events are attempted after failures and errors are combined.
+Retained depth-specific path-notification snapshots
 preserve reentry and child-list mutation semantics while releasing borrowed
-references after every traversal. Invalid-name exceptions and existing typed
-construction defaults remain the accepted C# contract; this does not invent an
-empty-name or script-identity state.
+references after every traversal. Packed-scene reconstruction restores validated
+stored names directly, preserving generated `@Class@number` identities before
+attachment instead of running public authoring normalization again. Stored names
+allow internal `@` but reject other reserved path characters. This does not invent
+an empty-name or script-identity state.
 
 `Node.GetOrphanNodeIDs()` and `PrintOrphanNodes()` retain the pinned debug-build
 boundary: Debug tracks live nodes outside every active SceneTree, including

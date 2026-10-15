@@ -18,9 +18,14 @@ replacement. Object/RID identity and internal partitions remain stable. Structur
 owner, lifetime, capture and numerical-borrow validation precede naming; replacing
 an ancestor into its descendant is rejected before mutation. Names/path caches
 commit before callbacks, and callback errors retain the committed progress.
-A different requested name still notifies when suffix resolution returns the
-current name. Broader Name normalization and same-input/detached notifications
-remain open in its Partial coverage row.
+Public name assignment replaces each `.`, `:`, `@`, `/`, `"` and `%` with `_`
+before suffix resolution. Null/empty/whitespace-only inputs reject before
+mutation. Every accepted assignment, including the same input, propagates path
+notifications through detached or active descendants. Only active nodes then
+raise Renamed and the tree node/change events. Failures are combined after the
+remaining descendants and event phases are attempted. Stored scene names bypass
+fresh authoring normalization, retaining exact internal `@Class@number` identities;
+other reserved path characters reject on archive input.
 Replacement attempts all saved ownership assignments and combines their errors
 with earlier transfer failures, so one rejecting target cannot skip restoring a
 live child that returned to the original node.
@@ -54,6 +59,20 @@ numerical lanes are instrumented; GPU numerical thread identity is not asserted
 by that probe. Eleven portable-PDB/source sets match the exercised runtime/consumer/
 test/AOT host. Release runtime, format, compiled coverage and wiki checks pass.
 Artifacts and assembly identities: `bin/physics-node-names/2026-10-15/`.
+
+The assignment follow-up also checks Unicode and typed-descriptor normalization,
+blank-input rollback, unchanged names in detached/active trees, and five simultaneous
+path/node/tree failures with ordered continued delivery. Physical roles retain
+InstanceID and public path lookup through normalized and unchanged assignments.
+Stored generated names survive exact packed/file/fresh-process reconstruction;
+publicly reassigning that same generated text applies ordinary normalization.
+The measured full frames now include both changed and unchanged clean assignments.
+Current Linux x64 follow-up passes 18 naming profiles, twelve path/orphan
+regressions and four hierarchy/scheduling/resource selectors, plus Release/API/wiki
+and eleven PDB/source sets. An isolated mixed 600/310 process check passes; its
+concurrent-build control misses local GPU wake phases and remains an open
+[network acceptance limit](physics-contract-audit.md#current-requirement-audit).
+Evidence: `bin/physics-node-name-assignment/2026-10-15/`.
 
 ## Orphan node diagnostics
 

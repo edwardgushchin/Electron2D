@@ -307,7 +307,10 @@ Debug supplies real diagnostics; Release requires empty IDs and no output.
 `--node-names` verifies generated/readable collision naming, all four numeric
 separators and feature overrides, long/leading-zero suffixes, internal siblings,
 physical-role identity, owner/numerical guards, reparent/replacement and retained
-reentrant path notifications. It saves scene/config files and loads them in a
+reentrant path notifications. Public assignment covers all six reserved characters,
+Unicode, typed descriptors, same-input and detached delivery, and five simultaneous
+path/node/tree failures with continued delivery. Stored generated names remain exact;
+public reassignment normalizes their internal markers. It saves scene/config files and loads them in a
 fresh process. Use `--cpu`, `--gpu` or the default registered provider, with
 optional `--threaded`. Each full-frame bracket alternates existing unique names
 while simulating, after preparation, and requires 0/0 managed bytes. New collision

@@ -7,8 +7,11 @@ Last updated: 2026-10-15
 [Child-name collision policy](../components/scene-hierarchy.md#child-name-collisions)
 now supplies readable/generated insertion names, live numeric separators and
 consistent rename/reparent/replacement behavior for all physical and scene roles.
-Retained path-notification snapshots preserve nested mutation and release retired
-references while warmed edited full frames allocate no managed memory.
+Public assignments normalize all six reserved characters and notify detached
+subtrees and unchanged names, with active node/tree events and continued error
+delivery. Stored scene names retain exact internal identities. Retained path
+snapshots preserve nested mutation and release retired references; warmed clean
+assignments and complete physical frames allocate no managed memory.
 
 ## Orphan node diagnostics
 
@@ -129,7 +132,7 @@ The [Physics domain](physics.md) supplies RigidBody, StaticBody, CollisionShape,
 - A node has at most one parent and one active `SceneTree`; cycles and cross-tree insertion are rejected before mutation.
 - Replacing a node keeps the active tree root stable, preserves its old sibling index, moves children and eligible owners, and leaves the original node alive but detached. Scene-local resources transfer to the replacement root.
 - An active root can be disposed only by its owning `SceneTree`.
-- Sibling names are ordinal-unique, and path separators/reserved path tokens cannot be names.
+- Sibling names are ordinal-unique. Public assignment normalizes `.`, `:`, `@`, `/`, `"` and `%` to `_`; blank inputs reject. Stored scene names preserve internal `@` identities.
 - SceneTree-managed enter runs parent-first, ready runs child-first and once unless explicitly reset, and exit runs child-first. Lifecycle snapshots revalidate membership and lifecycle re-entry is rejected. Constructor failure terminally closes the failed tree, rolls membership and newly consumed ready state back, disposes activation-created timers, and invalidates activation-created tweens; later lifecycle failures complete their state transition and are aggregated. Manual `Notify(int)` dispatch is outside that state machine.
 - Attached state mutation, lifecycle delivery, frame execution, flushing, and disposal use the tree's creating thread. Deferred and deletion requests may be enqueued from other threads.
 - A non-top-level global transform is the ancestor global transform composed with the local transform. Transform inputs must be finite; operations needing an inverse reject singular transforms.

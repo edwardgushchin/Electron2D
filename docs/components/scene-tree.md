@@ -6,6 +6,11 @@ Last updated: 2026-10-15
 
 This Scene component provides the concrete [Main loop](main-loop.md), owns one active hierarchy and an optional current scene child, propagates typed input and system notifications, delivers lifecycle and pause changes, accepts direct or [Engine](engine-runtime.md)-scheduled process/physics frame boundaries, frame counters and events, tree-change events, reusable Node timers, lightweight one-shot timers, frame-driven [tweening](tweening.md), typed group operations, deferred work, and queued deletion. Per-node hierarchy and 2D state belong to the [Scene hierarchy component](scene-hierarchy.md).
 
+Accepted Node.Name assignments, including unchanged names, notify active trees
+after subtree path notifications and the node's own Renamed event. NodeRenamed
+precedes TreeChanged; both phases are attempted after earlier failures. Detached
+assignments only notify their subtree. See [child names](scene-hierarchy.md#child-name-collisions).
+
 ## Owned types
 
 | Type | Role |

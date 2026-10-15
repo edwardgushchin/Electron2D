@@ -19,7 +19,7 @@ public partial class Node : ElectronObject
             node => node.Name,
             (node, value) => node.Name = value,
             node => node.ClassName,
-            (_, value) => IsValidNodeName(value),
+            (_, value) => !string.IsNullOrWhiteSpace(value),
             stored: true),
         new PropertyDescriptor<Node, bool>(nameof(UniqueNameInOwner), node => node.UniqueNameInOwner,
             (node, value) => node.UniqueNameInOwner = value, _ => false, stored: true),
@@ -96,7 +96,7 @@ public partial class Node : ElectronObject
     /// <summary>Identifies the notification after a GUI drag ends and its result commits.</summary>
     public const int NotificationDragEnd = 22;
 
-    /// <summary>Identifies the notification propagated when this node's path changes.</summary>
+    /// <summary>Identifies the notification propagated after an accepted name assignment, including an unchanged name.</summary>
     public const int NotificationPathRenamed = 23;
 
     /// <summary>Identifies the notification sent after the direct child order changes.</summary>
@@ -260,16 +260,16 @@ public partial class Node : ElectronObject
     /// <summary>Gets or sets the node name used in sibling lookup and paths.</summary>
     /// <value>The nonblank name, initialized to <see cref="ElectronObject.ClassName"/>.</value>
     /// <remarks>
-    /// Sibling collisions receive readable numeric suffixes. Names use ordinal equality and cannot be <c>.</c>, <c>..</c>, or contain <c>/</c>. Renaming may revoke
-    /// <see cref="UniqueNameInOwner"/> when the new name is already claimed by another node with the same owner. Renaming an
-    /// active node propagates <see cref="NotificationPathRenamed"/> through its subtree and then raises
-    /// <see cref="Renamed"/> on this node. A different requested name follows this notification path even when
-    /// collision resolution returns the current name.
+    /// Assignment replaces each <c>.</c>, <c>:</c>, <c>@</c>, <c>/</c>, <c>"</c> and <c>%</c> with <c>_</c> before
+    /// readable sibling collision resolution. Every accepted assignment, including an unchanged name, propagates
+    /// <see cref="NotificationPathRenamed"/> through its subtree. Only an active node then raises <see cref="Renamed"/>
+    /// and tree events. Names and path caches commit before delivery; remaining notifications are attempted after errors.
+    /// Renaming may revoke <see cref="UniqueNameInOwner"/> when another node with the same owner claims the resolved name.
     /// </remarks>
-    /// <exception cref="ArgumentException">The assigned name is invalid.</exception>
+    /// <exception cref="ArgumentException">The assigned name is null, empty or whitespace-only.</exception>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="AggregateException">One or more path, node-renamed, or tree-renamed callbacks fail after the name changes.</exception>
+    /// <exception cref="AggregateException">One or more path, node-renamed, or tree-renamed callbacks fail after the assignment commits.</exception>
     public string Name
     {
         get
@@ -281,30 +281,27 @@ public partial class Node : ElectronObject
         {
             EnsureMutable();
 
-            if (!IsValidNodeName(value))
-                throw new ArgumentException("A node name cannot be empty, '.', '..', or contain '/'.", nameof(value));
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("A node name cannot be null, empty or whitespace-only.", nameof(value));
 
-            if (StringComparer.Ordinal.Equals(_name, value))
-                return;
-
+            value = NormalizeNodeName(value);
             value = Parent?.ResolveChildName(this, value, readable: true) ?? value;
             _name = value;
             InvalidatePathCache();
             ClaimUniqueName();
 
+            List<Exception>? errors = null;
+            try
+            {
+                PropagatePathRenamed();
+            }
+            catch (Exception error)
+            {
+                CollectException(ref errors, error);
+            }
+
             if (IsInsideTree)
             {
-                List<Exception>? errors = null;
-
-                try
-                {
-                    PropagatePathRenamed();
-                }
-                catch (Exception error)
-                {
-                    CollectException(ref errors, error);
-                }
-
                 try
                 {
                     Renamed?.Invoke(this);
@@ -322,9 +319,8 @@ public partial class Node : ElectronObject
                 {
                     CollectException(ref errors, error);
                 }
-
-                ThrowCollected("One or more node-renamed callbacks failed.", errors);
             }
+            ThrowCollected("One or more node-renamed callbacks failed.", errors);
         }
     }
 
@@ -876,8 +872,8 @@ public partial class Node : ElectronObject
     /// <remarks>The argument is this parent node. Delivery is synchronous after <see cref="NotificationChildOrderChanged"/>.</remarks>
     public event Action<Node>? ChildOrderChanged;
 
-    /// <summary>Occurs after an active node's own name changes and path notifications propagate.</summary>
-    /// <remarks>The argument is this node. Detached-node renames do not raise the event.</remarks>
+    /// <summary>Occurs after an active node accepts a name assignment and path notifications propagate.</summary>
+    /// <remarks>The argument is this node. Unchanged names also raise the event; detached assignments only propagate path notifications.</remarks>
     public event Action<Node>? Renamed;
 
     /// <summary>Occurs when this node enters an active scene tree.</summary>
@@ -2501,8 +2497,8 @@ public partial class Node : ElectronObject
 
     internal void DispatchUnhandledInput(InputEvent @event) => OnUnhandledInput(@event);
 
-    internal static bool IsValidNodeName(string? value) =>
-        !string.IsNullOrWhiteSpace(value) && value is not "." and not ".." && !value.Contains('/');
+    internal static bool IsValidStoredNodeName(string? value) =>
+        !string.IsNullOrWhiteSpace(value) && value.AsSpan().IndexOfAny(".:/\"%") < 0;
 
     private static Node CreateDefaultSceneNode() => new();
 
@@ -2555,18 +2551,27 @@ public partial class Node : ElectronObject
 
     private void PropagatePathRenamed()
     {
-        DispatchNotification(NotificationPathRenamed);
-        if (_children.Count == 0) return;
-        var snapshots = _pathRenameSnapshots ??= [];
-        var depth = _pathRenameDepth++;
-        if (depth == snapshots.Count) snapshots.Add([]);
-        var children = snapshots[depth];
-        try
+        List<Exception>? errors = null;
+        try { DispatchNotification(NotificationPathRenamed); }
+        catch (Exception error) { CollectException(ref errors, error); }
+        if (_children.Count != 0)
         {
-            children.AddRange(_children);
-            foreach (var child in children) child.PropagatePathRenamed();
+            var snapshots = _pathRenameSnapshots ??= [];
+            var depth = _pathRenameDepth++;
+            if (depth == snapshots.Count) snapshots.Add([]);
+            var children = snapshots[depth];
+            try
+            {
+                children.AddRange(_children);
+                foreach (var child in children)
+                {
+                    try { child.PropagatePathRenamed(); }
+                    catch (Exception error) { CollectException(ref errors, error); }
+                }
+            }
+            finally { children.Clear(); _pathRenameDepth--; }
         }
-        finally { children.Clear(); _pathRenameDepth--; }
+        ThrowCollected("One or more path-renamed callbacks failed.", errors);
     }
 
     private void InsertChild(Node child, int index, InternalMode internalMode = InternalMode.Disabled, bool forceReadableName = false)

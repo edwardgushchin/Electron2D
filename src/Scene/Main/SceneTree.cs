@@ -377,7 +377,7 @@ public sealed partial class SceneTree : MainLoop
     /// </remarks>
     public event Action<SceneTree, Node>? NodeRemoved;
 
-    /// <summary>Occurs after an active node is renamed.</summary>
+    /// <summary>Occurs after an active node accepts a name assignment, including an unchanged name.</summary>
     /// <remarks>
     /// Path-change notifications and the node's own renamed event run first. <see cref="TreeChanged"/> is still
     /// attempted when this event invocation fails, and both failures are aggregated. A throwing subscriber prevents

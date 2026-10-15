@@ -14,6 +14,7 @@ public static partial class BackendChecks
         if (backend is null) PhysicsServerManager.RegisterServer("NodeNames", () => solver = new Solver());
         try
         {
+            NameAssignmentCases();
             NamingCases();
             using var world = backend is { } selected ? new World(selected) : new World("NodeNames");
             using var shape = new CircleShape { Radius = 2 };
@@ -38,7 +39,7 @@ public static partial class BackendChecks
             var retired = RenameSnapshotChecks(root); Collect(); Check(!retired.TryGetTarget(out _), "Retained rename storage releases removed children");
             var id = moving.GetRID(); var version = moving.InstanceID; var callbacks = 0;
             PhysicsServer.BodySetForceIntegrationCallback(id, _ => callbacks++);
-            foreach (var action in new Action[] { () => root.AddChild(next, true), () => moving.AddSibling(next, true), () => moving.Name = "Mover2" })
+            foreach (var action in new Action[] { () => root.AddChild(next, true), () => moving.AddSibling(next, true), () => moving.Name = "Mover2", () => moving.Name = moving.Name })
                 Task.Run(() => Reject<InvalidOperationException>(action)).GetAwaiter().GetResult();
             Check(next.Parent is null && next.Name == "Rejected" && moving.Name == "Mover", "Rejected foreign operations preserve names and hierarchy");
             if (solver is not null)
@@ -47,6 +48,7 @@ public static partial class BackendChecks
                 {
                     Reject<InvalidOperationException>(() => root.AddChild(next, true));
                     Reject<InvalidOperationException>(() => moving.Name = "Mover2");
+                    Reject<InvalidOperationException>(() => moving.Name = moving.Name);
                 };
                 tree.PhysicsFrame(1d / 60); solver.StepHook = null;
             }
@@ -63,6 +65,15 @@ public static partial class BackendChecks
             Action<Node> fail = _ => throw new InvalidOperationException("Expected rename observer failure"); moving.Renamed += fail;
             Reject<AggregateException>(() => moving.Name = "Mover2"); moving.Renamed -= fail;
             Check(moving.Name == "Mover9" && root.GetNode("Mover9") == moving, "Failed rename callbacks preserve committed paths");
+            moving.Name = "Mover:/";
+            Check(moving.Name == "Mover__" && root.GetNode("Mover__") == moving && moving.GetRID() == id,
+                "Physical renames normalize path tokens without replacing the selected collider");
+            foreach (var role in roles)
+            {
+                var identity = role.InstanceID; role.Name = "Role:/"; role.Name = role.Name;
+                Check(role.InstanceID == identity && root.GetNode(role.Name) == role,
+                    "Every inherited physical role preserves identity and lookup through normalized and unchanged assignments");
+            }
             for (var i = 0; i < 128; i++) Frame();
             var start = moving.Position.X; var count = callbacks;
             Collect(); var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
@@ -78,10 +89,57 @@ public static partial class BackendChecks
             void Frame()
             {
                 moving.Name = moving.Name == "Mover" ? "Moving" : "Mover";
+                moving.Name = moving.Name;
                 Check(root.GetNode(moving.Name) == moving && moving.GetRID() == id, "Warm names resolve the same physical object"); tree.PhysicsFrame(1d / 60);
             }
         }
         finally { ProjectSettings.Set(ProjectSettings.NodeNameNumberSeparator, oldSeparator); ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, old); }
+    }
+
+    private static void NameAssignmentCases()
+    {
+        using var root = new NameNotificationNode { Name = "Detached" };
+        var child = new NameNotificationNode { Name = "Child" }; root.AddChild(child);
+        var trace = new List<string>(); var renamed = 0;
+        root.Hook = () => trace.Add("root"); child.Hook = () => trace.Add("child");
+        root.Renamed += _ => renamed++;
+        root.Name = root.Name;
+        Check(trace.SequenceEqual(["root", "child"]) && renamed == 0 && root.GetPath() == "",
+            "Same-name assignment propagates detached subtree path notifications without an active rename event");
+        trace.Clear(); root.Name = " .:@/\"%😀é ";
+        Check(root.Name == " ______😀é " && trace.SequenceEqual(["root", "child"]),
+            "Every reserved character normalizes to underscore while Unicode and whitespace stay exact");
+        var property = (PropertyDescriptor<Node, string>)root.GetPropertyList().Single(p => p.Name == nameof(Node.Name));
+        property.SetValue(root, "../:%@\"");
+        Check(root.Name == "_______", "Typed descriptor authoring uses the same normalization");
+        trace.Clear(); var before = root.Name;
+        foreach (var invalid in new[] { null!, "", " \t" }) Reject<ArgumentException>(() => root.Name = invalid);
+        Check(root.Name == before && trace.Count == 0, "Invalid blank assignments reject before mutation or notification");
+        root.Hook = () => { trace.Add("root"); throw new InvalidOperationException("Expected detached path failure"); };
+        Reject<AggregateException>(() => root.Name = "DetachedAgain");
+        Check(root.Name == "DetachedAgain" && trace.SequenceEqual(["root", "child"]) && renamed == 0,
+            "Detached failures preserve the committed name and notify remaining descendants");
+        root.Hook = () => trace.Add("root");
+        using var tree = new SceneTree(root);
+        root.Renamed += _ => trace.Add("renamed");
+        tree.NodeRenamed += (_, _) => trace.Add("tree-node"); tree.TreeChanged += _ => trace.Add("tree");
+        trace.Clear(); root.Name = root.Name;
+        Check(trace.SequenceEqual(["root", "child", "renamed", "tree-node", "tree"]) && renamed == 1,
+            "Same-name active assignment preserves path, node and tree notification order");
+        trace.Clear();
+        root.Hook = () => { trace.Add("root"); throw new InvalidOperationException("Expected root path failure"); };
+        child.Hook = () => { trace.Add("child"); throw new InvalidOperationException("Expected child path failure"); };
+        Action<Node> nodeFailure = _ => throw new InvalidOperationException("Expected renamed failure");
+        Action<SceneTree, Node> treeNodeFailure = (_, _) => throw new InvalidOperationException("Expected tree node failure");
+        Action<SceneTree> treeFailure = _ => throw new InvalidOperationException("Expected tree change failure");
+        root.Renamed += nodeFailure; tree.NodeRenamed += treeNodeFailure; tree.TreeChanged += treeFailure;
+        AggregateException? failure = null;
+        try { root.Name = "Committed:/"; } catch (AggregateException error) { failure = error; }
+        root.Renamed -= nodeFailure; tree.NodeRenamed -= treeNodeFailure; tree.TreeChanged -= treeFailure;
+        Check(failure?.Flatten().InnerExceptions.Count == 5 && root.Name == "Committed__" &&
+            child.GetPath() == "/Committed__/Child" && trace.SequenceEqual(["root", "child", "renamed", "tree-node", "tree"]),
+            "All five path, node and tree failures are retained after remaining observers see committed paths");
+        root.Hook = child.Hook = null;
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -163,6 +221,9 @@ public static partial class BackendChecks
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var errors = child.StandardError.ReadToEndAsync();
             if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Node names fresh load"); }
             Check(child.ExitCode == 0 && output.Result.Contains("Fresh node names passed"), "Fresh scene/config load: " + output.Result + errors.Result);
+            var generated = third.Name; third.Name = generated;
+            Check(third.Name == generated.Replace('@', '_') && root.GetNode(third.Name) == third,
+                "Publicly reassigning a generated name normalizes it while stored copies retain exact internal identities");
         }
         finally { Directory.Delete(directory, true); }
     }

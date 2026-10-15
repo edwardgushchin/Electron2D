@@ -62,7 +62,8 @@ public sealed partial class PackedScene : Resource
     /// <param name="editState">The editor-state policy. Runtime instantiation accepts only <see cref="PackedSceneEditState.Disabled"/>.</param>
     /// <returns>The live, detached root node. It has not entered a <see cref="SceneTree"/>.</returns>
     /// <remarks>
-    /// Nodes are constructed parent-first. Stored properties and persistent groups are restored before parenting;
+    /// Nodes are constructed parent-first. Validated stored names retain internal generated identities without
+    /// authoring normalization or rename delivery. Stored properties and persistent groups are restored before parenting;
     /// owners and typed node references are resolved after the hierarchy is complete, followed by scene-local resources. Only the root receives
     /// <see cref="Node.NotificationSceneInstantiated"/>.
     /// </remarks>
@@ -111,7 +112,7 @@ public sealed partial class PackedScene : Resource
                 node.BeginSceneInstantiation();
                 ValidateFactoryResult(stored, node);
 
-                node.Name = stored.Name;
+                node.RestoreSceneName(stored.Name);
                 RestoreProperties(node, stored, resources);
 
                 foreach (var group in stored.Groups)

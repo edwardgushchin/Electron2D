@@ -175,7 +175,7 @@ internal static partial class ResourceArchiveTests
         using var sprite = (Sprite)loaded.Instantiate();
         loaded.Dispose();
         using var pixels = sprite.Texture!.GetImage();
-        Check(sprite.Name == "Sprite:@%\0\uFEFF" && pixels is not null && pixels.Width == 1 && pixels.GetPixel(0, 0).R == 1, "Serialized sprite/atlas/image texture has real copied pixels.");
+        Check(sprite.Name == "Sprite___\0\uFEFF" && pixels is not null && pixels.Width == 1 && pixels.GetPixel(0, 0).R == 1, "Serialized normalized sprite name, control text and atlas/image texture retain real copied pixels.");
     }
     private static void Composite(string folder)
     {

@@ -166,7 +166,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public event Action<Node, Node>? ChildRemoved`](#e-electron2d-node-childremoved) | Occurs on the former parent after a direct child is detached and child order is reported. |
 | [`public event Action<Node>? Ready`](#e-electron2d-node-ready) | Occurs after child-first ready notification delivery. |
 | [`public event Action<Node>? ReplacingBy`](#e-electron2d-node-replacingby) | Occurs after the replacement enters the former parent and before children move. |
-| [`public event Action<Node>? Renamed`](#e-electron2d-node-renamed) | Occurs after an active node's own name changes and path notifications propagate. |
+| [`public event Action<Node>? Renamed`](#e-electron2d-node-renamed) | Occurs after an active node accepts a name assignment and path notifications propagate. |
 | [`public event Action<Node>? TreeEntered`](#e-electron2d-node-treeentered) | Occurs when this node enters an active scene tree. |
 | [`public event Action<Node>? TreeExited`](#e-electron2d-node-treeexited) | Occurs after this node has left its scene tree. |
 | [`public event Action<Node>? TreeExiting`](#e-electron2d-node-treeexiting) | Occurs while this node is exiting its active scene tree. |
@@ -196,7 +196,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public const int NotificationOsImeUpdate = 2013`](#f-electron2d-node-notificationosimeupdate) | Identifies an input-method composition update supplied by the operating system. |
 | [`public const int NotificationOsMemoryWarning = 2009`](#f-electron2d-node-notificationosmemorywarning) | Identifies an operating-system low-memory warning propagated by the active scene tree. |
 | [`public const int NotificationParented = 18`](#f-electron2d-node-notificationparented) | Identifies the notification sent after a parent reference is assigned. |
-| [`public const int NotificationPathRenamed = 23`](#f-electron2d-node-notificationpathrenamed) | Identifies the notification propagated when this node's path changes. |
+| [`public const int NotificationPathRenamed = 23`](#f-electron2d-node-notificationpathrenamed) | Identifies the notification propagated after an accepted name assignment, including an unchanged name. |
 | [`public const int NotificationPaused = 14`](#f-electron2d-node-notificationpaused) | Identifies the notification sent when the owning tree becomes paused. |
 | [`public const int NotificationPhysicsProcess = 16`](#f-electron2d-node-notificationphysicsprocess) | Identifies a physics-process callback notification. |
 | [`public const int NotificationPostEnterTree = 27`](#f-electron2d-node-notificationpostentertree) | Identifies the notification sent after this node and its descendants finish entering a tree. |
@@ -288,15 +288,15 @@ Gets or sets the node name used in sibling lookup and paths.
 
 **Value:** The nonblank name, initialized to `ElectronObject.ClassName`.
 
-**Remarks:** Sibling collisions receive readable numeric suffixes. Names use ordinal equality and cannot be ., .., or contain /. Renaming to a name already claimed in the same owner scope clears `UniqueNameInOwner`. Renaming an active node propagates `Node.NotificationPathRenamed` through its subtree and then raises `Node.Renamed` on this node. A different requested name follows this notification path even when collision resolution returns the current name.
+**Remarks:** Every `.`, `:`, `@`, `/`, `"` and `%` in an authored name becomes `_` before readable sibling collision resolution. Unicode and other characters remain exact. Every accepted assignment, including the same input, propagates `Node.NotificationPathRenamed` through the subtree, even while detached. An active node then raises `Node.Renamed`, `SceneTree.NodeRenamed` and `SceneTree.TreeChanged`. Names and path caches commit before observers; errors are combined after remaining descendants and event phases are attempted. The first snapshot capacity growth and new normalized/collision strings allocate; prepared assignments of existing clean names do not. Renaming to a name already claimed in the same owner scope clears `UniqueNameInOwner`. Scene reconstruction preserves validated stored internal names directly, including generated `@Class@number` names.
 
-**System.ArgumentException:** The assigned name is invalid.
+**System.ArgumentException:** The assigned name is null, empty or whitespace-only.
 
 **System.InvalidOperationException:** An attached node is mutated off the owner thread.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
-**System.AggregateException:** One or more path, node-renamed, or tree-renamed callbacks fail after the name changes.
+**System.AggregateException:** One or more path, node-renamed, or tree-renamed callbacks fail after the assignment commits.
 
 <a id="p-electron2d-node-owner"></a>
 ### `public Node? Owner { get; set; }`
@@ -1271,9 +1271,9 @@ Occurs after the replacement enters the former parent and before children move. 
 <a id="e-electron2d-node-renamed"></a>
 ### `public event Action<Node>? Renamed`
 
-Occurs after an active node's own name changes and path notifications propagate.
+Occurs after an active node accepts a name assignment and path notifications propagate.
 
-**Remarks:** The argument is this node. Detached-node renames do not raise the event.
+**Remarks:** The argument is this node. Unchanged names also raise the event; detached assignments only propagate path notifications.
 
 <a id="e-electron2d-node-treeentered"></a>
 ### `public event Action<Node>? TreeEntered`
@@ -1395,7 +1395,7 @@ Identifies the notification sent after a parent reference is assigned.
 <a id="f-electron2d-node-notificationpathrenamed"></a>
 ### `public const int NotificationPathRenamed = 23`
 
-Identifies the notification propagated when this node's path changes.
+Identifies the notification propagated after an accepted name assignment, including an unchanged name.
 
 <a id="f-electron2d-node-notificationpaused"></a>
 ### `public const int NotificationPaused = 14`

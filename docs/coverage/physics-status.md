@@ -219,13 +219,13 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 82 | 27 | 6 | 0 | 0 |
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
-| [Node](classes/Node.md) | [Object](classes/Object.md) | 119 | 65 | 6 | 23 | 1 |
+| [Node](classes/Node.md) | [Object](classes/Object.md) | 121 | 63 | 6 | 23 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
 | [Object](classes/Object.md) | — | 19 | 16 | 2 | 22 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 20 | 5 | 0 | 2 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 284 | 120 | 17 | 47 | 23 |
+| **Total** | | 286 | 118 | 17 | 47 | 23 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -345,7 +345,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Node::method:set_thread_safe(StringName:,Variant:)`](classes/Node.md) | Partial | ADRs0006/0104: all six typed call/set/notify methods route to actual inherited processing-group queues. Pinned wrappers return nil, so void loses no result. The scene owner or current target group may invoke immediately; other callers enqueue. Active groups drain before/after callbacks and masks also permit empty-group delivery. Weak receiver identity, current-owner transfer, retained slots, closure discard and error continuation remain. Public CPU/software-GPU/registered serial/separate JIT/NativeAOT group and message consumers verify real worker callbacks, barriers, main physical collection, queue masks, lifecycle and zero warmed managed allocations. Evidence: bin/physics-process-groups/2026-10-15/validation.json. General worker access across Node/CanvasItem/Entity and physical/render backend mutation remains Partial; group execution and configuration are no longer absent. |
 | [`Node::property:auto_translate_mode`](classes/Node.md) | Partial | Automatic policy, singular/plural source fallback, root setting and change notifications execute in NodeLocalizationTests. Control default contexts, actual GUI text consumers and fresh-file/native glyph output execute in GUITranslationContextTests. Exact locale/catalog parity remains Partial on TranslationServer; global locale-change scene notification and inherited full-family acceptance remain separate prerequisites. |
 | [`Node::property:editor_description`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
-| [`Node::property:name`](classes/Node.md) | Partial | Readable sibling collision resolution, committed callbacks, inherited physical identity, paths and packed/fresh-file persistence execute in CPU/software-GPU/registered serial/separate JIT/NativeAOT profiles; requesting another occupied name still notifies when the resolved name is unchanged. Evidence: bin/physics-node-names/2026-10-15/validation.json. Remains Partial: complete reserved-character normalization, notifications on same-input assignment and detached path notifications require implementation and focused checks against pinned node.cpp set_name. The accepted typed nonblank class-name initial value is retained. |
 | [`Node::property:owner`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Node::property:process_mode`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Node::property:process_physics_priority`](classes/Node.md) | Partial | ADRs 0006/0008/0011: public/internal lane membership is now captured only for enabled nodes; every changed flag invalidates later retained snapshots. Absent participants wait for the next frame, captured participants retain current callback/eligibility checks, and priority changes apply to the next snapshot. Same-tree and self reentry cannot revive an old attachment. Public neutral/spatial/RigidBody consumers exercise four lane combinations, disable/enable, current mode eligibility, priority order, failure continuation, actual selected solver motion/queries and repeatedly rebuilt zero owner/all-thread allocation schedules on CPU/software-Vulkan/registered serial/separate JIT/NativeAOT hosts. SceneHierarchyTests explicitly disables the ready-enabled fixture before late activation and preserves tree-order/regression checks. Evidence: bin/physics-node-scheduling/2026-10-15/validation.json. Actual ordered groups and destination mailboxes now execute with own-group processing controls; see bin/physics-process-groups/2026-10-15/validation.json. General inherited scene/backend worker access remains open, so these rows retain Partial rather than certifying the whole Node processing family. |
@@ -360,7 +359,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Node::signal:editor_description_changed(Node:)`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::signal:editor_state_changed()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::signal:ready()`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
-| [`Node::signal:renamed()`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Node::signal:tree_entered()`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Node::signal:tree_exited()`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Node::signal:tree_exiting()`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |

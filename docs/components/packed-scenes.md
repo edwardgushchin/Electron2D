@@ -1,6 +1,6 @@
 # Packed scenes component
 
-Last updated: 2026-10-05
+Last updated: 2026-10-15
 
 ## Scope
 
@@ -20,7 +20,7 @@ All three types ship in `Electron2D.dll`. Production sources live in `src/Scene/
 
 1. `Pack(root)` clears a previous non-null capture, freezes the complete source hierarchy against mutation, selects the root plus depth-first branches owned by it, and captures static factories, names, parent/owner relationships, persistent groups, and storage-enabled typed properties.
 2. A live `SceneState` is updated whenever packed data or the source resource path changes. A disposed state is replaced; an external state survives source disposal as a final snapshot.
-3. `Instantiate()` captures immutable packed data, creates fresh exact-type nodes parent-first, restores typed properties and persistent groups, builds the hierarchy, and assigns owners.
+3. `Instantiate()` captures immutable packed data, creates fresh exact-type nodes parent-first, restores validated stored names directly without public normalization or rename delivery, then restores typed properties and persistent groups, builds the hierarchy, and assigns owners. Internal generated `@Class@number` names remain exact across memory/file reconstruction; other reserved path characters reject instead of silently changing stored identity.
 4. One graph session duplicates scene-local resource graphs with aliases and cycles preserved, assigns the new root before setup, invokes setup once per local duplicate, and transfers ownership of every created resource to the root.
 5. Each new node remains under an instantiation barrier while unfinished. The root receives the external scene path when applicable. The complete topology is validated, only the root receives notification `20`, topology is validated again, the barriers are removed, and the detached root is returned.
 6. Any failure attempts to dispose every returned node and resource duplicate acquired by the operation and aggregates rollback failures. Source nodes and shared source resources are never disposed by this rollback; an allocation a factory never returns remains outside engine ownership.

@@ -111,7 +111,7 @@ tree.ProcessFrame(1.0 / 60.0);
 | [`public event Action<SceneTree, Node>? NodeConfigurationWarningChanged`](#diagnostics-nodeconfigurationwarningchanged) | Occurs when a node in EditedSceneRoot's subtree requests a configuration-warning refresh. |
 | [`public event Action<SceneTree, Node> NodeAdded`](#e-electron2d-scenetree-nodeadded) | Occurs after a node enters this tree. |
 | [`public event Action<SceneTree, Node> NodeRemoved`](#e-electron2d-scenetree-noderemoved) | Occurs after a node exits this tree. |
-| [`public event Action<SceneTree, Node> NodeRenamed`](#e-electron2d-scenetree-noderenamed) | Occurs after an active node is renamed. |
+| [`public event Action<SceneTree, Node> NodeRenamed`](#e-electron2d-scenetree-noderenamed) | Occurs after an active node accepts a name assignment, including an unchanged name. |
 | [`public event Action<SceneTree> ProcessFrameStarted`](#e-electron2d-scenetree-processframestarted) | Occurs before the idle transform-delivery phase and eligible node process callbacks. |
 | [`public event Action<SceneTree> PhysicsFrameStarted`](#e-electron2d-scenetree-physicsframestarted) | Occurs after pending transform delivery and before eligible node physics-process callbacks. |
 | [`public event Action<SceneTree> TreeChanged`](#e-electron2d-scenetree-treechanged) | Occurs after the active hierarchy is structurally changed or an active node is renamed. |
@@ -717,7 +717,7 @@ remaining exit work.
 <a id="e-electron2d-scenetree-noderenamed"></a>
 ### `public event Action<SceneTree, Node> NodeRenamed`
 
-Occurs after an active node is renamed.
+Occurs after an active node accepts a name assignment, including an unchanged name.
 
 **Remarks:** Path-change notifications and the node's own renamed event run first. [`SceneTree.TreeChanged`](SceneTree.md#e-electron2d-scenetree-treechanged) is still
 attempted when this event invocation fails, and both failures are aggregated. A throwing subscriber prevents

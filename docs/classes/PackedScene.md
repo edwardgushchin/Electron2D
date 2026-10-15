@@ -1,6 +1,6 @@
 # PackedScene
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 **Inherits:** [Resource](Resource.md)
 
@@ -213,7 +213,7 @@ Supported stored values are strings, `Resource` subtypes, value types that conta
 
 1. The current immutable packed data and path classification are captured under the packed-scene lock.
 2. Exact-type nodes are created parent-first. Factory execution is guarded so neither a new `SceneTree` nor entry into an existing tree can begin in that execution context before the node is returned. A factory result must be new for this packed state, live, detached, parentless, childless, unowned, unqueued, and free of a scene path. Returning the source, a previously issued node, a wrong type, or state retained through a capturing delegate is rejected.
-3. Stored properties are resolved against the new node's current typed descriptor schema and restored before parenting. Persistent groups are then applied.
+3. Validated stored names are restored directly, retaining generated `@Class@number` identities without public authoring normalization or rename delivery. Stored names allow internal `@` and reject the other reserved path characters. Stored properties are resolved against the new node's current typed descriptor schema and restored before parenting. Persistent groups are then applied.
 4. Nodes are parented in captured order, then `Owner` references are assigned.
 5. Scene-local resource graphs are duplicated with alias/cycle preservation. Their owning root is assigned before setup callbacks, and each local duplicate is set up once.
 6. The root adopts every created resource. An external packed-scene path is copied only to the root's `SceneFilePath`; built-in paths remain empty.

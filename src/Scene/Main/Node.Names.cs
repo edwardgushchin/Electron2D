@@ -6,6 +6,22 @@ public partial class Node
 {
     private static long _generatedChildName = 1;
 
+    private static string NormalizeNodeName(string name) => name.AsSpan().IndexOfAny(".:@/\"%") < 0 ? name :
+        string.Create(name.Length, name, static (target, source) =>
+        {
+            for (var i = 0; i < source.Length; i++)
+                target[i] = source[i] is '.' or ':' or '@' or '/' or '"' or '%' ? '_' : source[i];
+        });
+
+    internal void RestoreSceneName(string name)
+    {
+        EnsureMutable();
+        if (!IsValidStoredNodeName(name)) throw new InvalidDataException("Invalid stored scene node name.");
+        // Stored internal names are identities, not fresh authoring inputs.
+        _name = name;
+        InvalidatePathCache();
+    }
+
     private string ResolveChildName(Node child, string name, bool readable)
     {
         if (!ChildNameExists(name, child)) return name;
