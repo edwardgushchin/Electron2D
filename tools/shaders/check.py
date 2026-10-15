@@ -69,10 +69,15 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
     invoke(external, output, success=False)
     assert output.read_bytes() == previous, 'Invalid bytecode replaced the usable artifact'
     for stage, stem in [('vertex', 'Canvas.vert'), ('vertex', 'CanvasInstanced.vert'), ('fragment', 'Canvas.frag'), ('fragment', 'Clip.frag')]:
-        source = root / f'src/Servers/Rendering/Shaders/{stem}.hlsl'
+        source = root / f'tests/Electron2D.Tests/Shaders/{stem}.hlsl'
         invoke(source, output, stage)
         if stem == 'Canvas.frag':
             assert output.read_bytes() == (root / 'tests/Electron2D.Tests/Shaders/CanvasHLSL.spv').read_bytes()
+    # Built-in glyph channels belong to the private renderer interface.
+    for stage, stem in [('vertex', 'Canvas.vert'), ('vertex', 'CanvasInstanced.vert'), ('fragment', 'Canvas.frag'), ('fragment', 'Clip.frag')]:
+        previous = output.read_bytes()
+        invoke(root / f'src/Servers/Rendering/Shaders/{stem}.hlsl', output, stage, success=False)
+        assert output.read_bytes() == previous, 'A private built-in interface replaced a public material artifact'
     for stem, artifact in [('Canvas', 'CanvasGLSL'), ('CanvasUV', 'CanvasUV')]:
         invoke(root / f'tests/Electron2D.Tests/Shaders/{stem}.frag.glsl', output)
         assert output.read_bytes() == (root / f'tests/Electron2D.Tests/Shaders/{artifact}.spv').read_bytes()

@@ -36,7 +36,12 @@ built assembly. A game/package consumer needs no Python, CMake or shader compile
 Generated runtime `.spv` files are excluded from Git. The fixed `.spv` files in
 `tests/Electron2D.Tests/Shaders` are a separate reference corpus for external-bytecode
 compatibility, malformed-input tests and DXC/GLSL importer regression checks;
-they remain versioned so a compiler regression cannot silently rewrite the oracle.
+they remain versioned so a compiler regression cannot silently rewrite the oracle. The fixed
+Canvas HLSL source fixtures live beside this corpus and exercise the material
+interface independently of private channels added to built-in renderer programs.
+The material check also verifies rejection of the live private glyph interface;
+`check_runtime.py` and `check_canvas_glyphs.py` validate built-in delivery and
+composition.
 The user-material importer below still uses ShaderCross/DXC for HLSL and emits
 logical-type metadata. Its output need not be byte-identical to built-in glslang output.
 
