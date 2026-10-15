@@ -11874,6 +11874,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TextParagraph",
+    "kind": "type",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "TextParagraph",
+    "signature": "public sealed class Electron2D.TextParagraph",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TextSpacingType",
     "kind": "type",
     "declaringType": "Electron2D.TextSpacingType",
@@ -22818,6 +22833,19 @@
     "declaringType": "Electron2D.TextObjectKey",
     "name": ".ctor",
     "signature": "public TextObjectKey()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.TextParagraph..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": ".ctor",
+    "signature": "public TextParagraph()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -47113,19 +47141,6 @@
     "parameters": [],
     "returnType": "Electron2D.TextLineBreakFlags",
     "value": "0"
-  },
-  {
-    "id": "enumValue:Electron2D.TextLineBreakFlags.TrimEdgeSpaces()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.TextLineBreakFlags",
-    "name": "TrimEdgeSpaces",
-    "signature": "public const Electron2D.TextLineBreakFlags TrimEdgeSpaces = 16",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.TextLineBreakFlags",
-    "value": "16"
   },
   {
     "id": "enumValue:Electron2D.TextLineBreakFlags.TrimEndEdgeSpaces()",
@@ -176889,6 +176904,939 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextParagraph.AddObject(Electron2D.TextObjectKey,Electron2D.Vector2,Electron2D.InlineAlignment,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "AddObject",
+    "signature": "public System.Boolean AddObject(Electron2D.TextObjectKey key, Electron2D.Vector2 size, Electron2D.InlineAlignment inlineAlign = Center, System.Int32 length = 1, System.Single baseline = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "key",
+        "type": "Electron2D.TextObjectKey",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "inlineAlign",
+        "type": "Electron2D.InlineAlignment",
+        "default": "Center"
+      },
+      {
+        "name": "length",
+        "type": "System.Int32",
+        "default": "1"
+      },
+      {
+        "name": "baseline",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.AddString(System.String,Electron2D.Font,System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "AddString",
+    "signature": "public System.Boolean AddString(System.String text, Electron2D.Font font, System.Int32 fontSize, System.String language = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "font",
+        "type": "Electron2D.Font",
+        "default": null
+      },
+      {
+        "name": "fontSize",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.AddString\u00601(System.String,Electron2D.Font,System.Int32,System.String,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "AddString",
+    "signature": "public System.Boolean AddString\u003CT\u003E(System.String text, Electron2D.Font font, System.Int32 fontSize, System.String language, T metadata)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "font",
+        "type": "Electron2D.Font",
+        "default": null
+      },
+      {
+        "name": "fontSize",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "metadata",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.ClearDropcap()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "ClearDropcap",
+    "signature": "public System.Void ClearDropcap()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.Draw(Electron2D.CanvasItem,Electron2D.Vector2,System.Nullable\u003CElectron2D.Color\u003E,System.Nullable\u003CElectron2D.Color\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "Draw",
+    "signature": "public System.Void Draw(Electron2D.CanvasItem canvas, Electron2D.Vector2 position, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Nullable\u003CElectron2D.Color\u003E dropcapColor = null, System.Single oversampling = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvas",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "dropcapColor",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "oversampling",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.DrawDropcap(Electron2D.CanvasItem,Electron2D.Vector2,System.Nullable\u003CElectron2D.Color\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "DrawDropcap",
+    "signature": "public System.Void DrawDropcap(Electron2D.CanvasItem canvas, Electron2D.Vector2 position, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Single oversampling = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvas",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "oversampling",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.DrawDropcapOutline(Electron2D.CanvasItem,Electron2D.Vector2,System.Int32,System.Nullable\u003CElectron2D.Color\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "DrawDropcapOutline",
+    "signature": "public System.Void DrawDropcapOutline(Electron2D.CanvasItem canvas, Electron2D.Vector2 position, System.Int32 outlineSize = 1, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Single oversampling = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvas",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "outlineSize",
+        "type": "System.Int32",
+        "default": "1"
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "oversampling",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.DrawLine(Electron2D.CanvasItem,Electron2D.Vector2,System.Int32,System.Nullable\u003CElectron2D.Color\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "DrawLine",
+    "signature": "public System.Void DrawLine(Electron2D.CanvasItem canvas, Electron2D.Vector2 position, System.Int32 line, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Single oversampling = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvas",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "oversampling",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.DrawLineOutline(Electron2D.CanvasItem,Electron2D.Vector2,System.Int32,System.Int32,System.Nullable\u003CElectron2D.Color\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "DrawLineOutline",
+    "signature": "public System.Void DrawLineOutline(Electron2D.CanvasItem canvas, Electron2D.Vector2 position, System.Int32 line, System.Int32 outlineSize = 1, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Single oversampling = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvas",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "outlineSize",
+        "type": "System.Int32",
+        "default": "1"
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "oversampling",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.DrawOutline(Electron2D.CanvasItem,Electron2D.Vector2,System.Int32,System.Nullable\u003CElectron2D.Color\u003E,System.Nullable\u003CElectron2D.Color\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "DrawOutline",
+    "signature": "public System.Void DrawOutline(Electron2D.CanvasItem canvas, Electron2D.Vector2 position, System.Int32 outlineSize = 1, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Nullable\u003CElectron2D.Color\u003E dropcapColor = null, System.Single oversampling = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvas",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "outlineSize",
+        "type": "System.Int32",
+        "default": "1"
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "dropcapColor",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "oversampling",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.Duplicate()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "Duplicate",
+    "signature": "public Electron2D.TextParagraph Duplicate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextParagraph",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetDropcapLines()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetDropcapLines",
+    "signature": "public System.Int32 GetDropcapLines()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetDropcapRID()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetDropcapRID",
+    "signature": "public Electron2D.RID GetDropcapRID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetDropcapSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetDropcapSize",
+    "signature": "public Electron2D.Vector2 GetDropcapSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetInferredDirection()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetInferredDirection",
+    "signature": "public Electron2D.TextDirection GetInferredDirection()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetLineAscent(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetLineAscent",
+    "signature": "public System.Single GetLineAscent(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetLineCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetLineCount",
+    "signature": "public System.Int32 GetLineCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetLineDescent(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetLineDescent",
+    "signature": "public System.Single GetLineDescent(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetLineObjectRect(System.Int32,Electron2D.TextObjectKey)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetLineObjectRect",
+    "signature": "public Electron2D.Rect2 GetLineObjectRect(System.Int32 line, Electron2D.TextObjectKey key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "Electron2D.TextObjectKey",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetLineObjects(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetLineObjects",
+    "signature": "public Electron2D.TextObjectKey[] GetLineObjects(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextObjectKey[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetLineRID(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetLineRID",
+    "signature": "public Electron2D.RID GetLineRID(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetLineRange(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetLineRange",
+    "signature": "public Electron2D.Vector2i GetLineRange(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetLineSize(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetLineSize",
+    "signature": "public Electron2D.Vector2 GetLineSize(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetLineUnderlinePosition(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetLineUnderlinePosition",
+    "signature": "public System.Single GetLineUnderlinePosition(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetLineUnderlineThickness(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetLineUnderlineThickness",
+    "signature": "public System.Single GetLineUnderlineThickness(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetLineWidth(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetLineWidth",
+    "signature": "public System.Single GetLineWidth(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetNonWrappedSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetNonWrappedSize",
+    "signature": "public Electron2D.Vector2 GetNonWrappedSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetRID()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetRID",
+    "signature": "public Electron2D.RID GetRID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetRange()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetRange",
+    "signature": "public Electron2D.Vector2i GetRange()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.GetSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "GetSize",
+    "signature": "public Electron2D.Vector2 GetSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.HasObject(Electron2D.TextObjectKey)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "HasObject",
+    "signature": "public System.Boolean HasObject(Electron2D.TextObjectKey key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "key",
+        "type": "Electron2D.TextObjectKey",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.HitTest(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "HitTest",
+    "signature": "public System.Int32 HitTest(Electron2D.Vector2 coords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.ResizeObject(Electron2D.TextObjectKey,Electron2D.Vector2,Electron2D.InlineAlignment,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "ResizeObject",
+    "signature": "public System.Boolean ResizeObject(Electron2D.TextObjectKey key, Electron2D.Vector2 size, Electron2D.InlineAlignment inlineAlign = Center, System.Single baseline = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "key",
+        "type": "Electron2D.TextObjectKey",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "inlineAlign",
+        "type": "Electron2D.InlineAlignment",
+        "default": "Center"
+      },
+      {
+        "name": "baseline",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.SetBIDIOverride(System.ReadOnlySpan\u003CElectron2D.TextBIDIRange\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "SetBIDIOverride",
+    "signature": "public System.Void SetBIDIOverride(System.ReadOnlySpan\u003CElectron2D.TextBIDIRange\u003E ranges)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ranges",
+        "type": "System.ReadOnlySpan\u003CElectron2D.TextBIDIRange\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.SetDropcap(System.String,Electron2D.Font,System.Int32,Electron2D.Rect2,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "SetDropcap",
+    "signature": "public System.Boolean SetDropcap(System.String text, Electron2D.Font font, System.Int32 fontSize, Electron2D.Rect2 dropcapMargins = default, System.String language = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "font",
+        "type": "Electron2D.Font",
+        "default": null
+      },
+      {
+        "name": "fontSize",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "dropcapMargins",
+        "type": "Electron2D.Rect2",
+        "default": "default"
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.TabAlign(System.ReadOnlySpan\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "TabAlign",
+    "signature": "public System.Void TabAlign(System.ReadOnlySpan\u003CSystem.Single\u003E tabStops)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabStops",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.TryGetSpanMetadata\u00601(System.Int32,ref T)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "TryGetSpanMetadata",
+    "signature": "public System.Boolean TryGetSpanMetadata\u003CT\u003E(System.Int32 spanIndex, out T metadata)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "spanIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "metadata",
+        "type": "ref T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextParagraph.ValidateMutation()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "ValidateMutation",
+    "signature": "protected override System.Void ValidateMutation()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Texture.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Texture",
@@ -235704,6 +236652,188 @@
     "id": "property:Electron2D.TextLine.Width()",
     "kind": "property",
     "declaringType": "Electron2D.TextLine",
+    "name": "Width",
+    "signature": "public System.Single Width { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextParagraph.Alignment()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "Alignment",
+    "signature": "public Electron2D.HorizontalAlignment Alignment { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HorizontalAlignment",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextParagraph.BreakFlags()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "BreakFlags",
+    "signature": "public Electron2D.TextLineBreakFlags BreakFlags { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextLineBreakFlags",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextParagraph.CustomPunctuation()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "CustomPunctuation",
+    "signature": "public System.String CustomPunctuation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextParagraph.Direction()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "Direction",
+    "signature": "public Electron2D.TextDirection Direction { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextParagraph.EllipsisChar()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "EllipsisChar",
+    "signature": "public System.String EllipsisChar { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextParagraph.JustificationFlags()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "JustificationFlags",
+    "signature": "public Electron2D.TextJustificationFlags JustificationFlags { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextJustificationFlags",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextParagraph.LineSpacing()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "LineSpacing",
+    "signature": "public System.Single LineSpacing { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextParagraph.MaxLinesVisible()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "MaxLinesVisible",
+    "signature": "public System.Int32 MaxLinesVisible { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextParagraph.Orientation()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "Orientation",
+    "signature": "public Electron2D.TextOrientation Orientation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextOrientation",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextParagraph.PreserveControl()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "PreserveControl",
+    "signature": "public System.Boolean PreserveControl { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextParagraph.PreserveInvalid()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "PreserveInvalid",
+    "signature": "public System.Boolean PreserveInvalid { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextParagraph.SpanCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "SpanCount",
+    "signature": "public System.Int32 SpanCount { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextParagraph.TextOverrunBehavior()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextParagraph",
+    "name": "TextOverrunBehavior",
+    "signature": "public Electron2D.TextOverrunBehavior TextOverrunBehavior { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextOverrunBehavior",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextParagraph.Width()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextParagraph",
     "name": "Width",
     "signature": "public System.Single Width { get; set; }",
     "visibility": "public",

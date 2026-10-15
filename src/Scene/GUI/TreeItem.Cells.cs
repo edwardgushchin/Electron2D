@@ -11,7 +11,8 @@ public sealed partial class TreeItem
     /// <summary>Returns one cell's AutowrapMode configuration.</summary><param name="column">Existing column.</param><returns>Configured typed value.</returns>
     public TextAutowrapMode GetAutowrapMode(int column) => At(column).Autowrap;
     /// <summary>Sets one cell's AutowrapTrimFlags configuration and refreshes its presentation.</summary><param name="column">Existing column.</param><param name="flags">Typed configuration.</param>
-    public void SetAutowrapTrimFlags(int column, TextLineBreakFlags flags) { MutableItem(); At(column).Trim = flags; Changed(); }
+    /// <exception cref="ArgumentOutOfRangeException">Flags contain unknown or retired bits.</exception>
+    public void SetAutowrapTrimFlags(int column, TextLineBreakFlags flags) { MutableItem(); if (((int)flags & ~239) != 0) throw new ArgumentOutOfRangeException(nameof(flags)); At(column).Trim = flags; Changed(); }
     /// <summary>Returns one cell's AutowrapTrimFlags configuration.</summary><param name="column">Existing column.</param><returns>Configured typed value.</returns>
     public TextLineBreakFlags GetAutowrapTrimFlags(int column) => At(column).Trim;
     /// <summary>Changes the cell mode and resets its numeric, checked, text/icon and icon-width fields.</summary><param name="column">Existing column.</param><param name="mode">Typed configuration.</param>

@@ -154,6 +154,256 @@
       "godot": "TextLine::property:width",
       "electron2d": "property:Electron2D.TextLine.Width()",
       "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "class:TextParagraph",
+      "electron2d": "T:Electron2D.TextParagraph",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:add_object(Variant:,Vector2:,int:InlineAlignment,int:,float:)",
+      "electron2d": "method:Electron2D.TextParagraph.AddObject(Electron2D.TextObjectKey,Electron2D.Vector2,Electron2D.InlineAlignment,System.Int32,System.Single)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:add_string(String:,Font:,int:,String:,Variant:)",
+      "electron2d": "method:Electron2D.TextParagraph.AddString(System.String,Electron2D.Font,System.Int32,System.String)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:clear()",
+      "electron2d": "method:Electron2D.TextParagraph.Clear()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:clear_dropcap()",
+      "electron2d": "method:Electron2D.TextParagraph.ClearDropcap()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:draw(RID:,Vector2:,Color:,Color:,float:)",
+      "electron2d": "method:Electron2D.TextParagraph.Draw(Electron2D.CanvasItem,Electron2D.Vector2,System.Nullable<Electron2D.Color>,System.Nullable<Electron2D.Color>,System.Single)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:draw_dropcap(RID:,Vector2:,Color:,float:)",
+      "electron2d": "method:Electron2D.TextParagraph.DrawDropcap(Electron2D.CanvasItem,Electron2D.Vector2,System.Nullable<Electron2D.Color>,System.Single)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:draw_dropcap_outline(RID:,Vector2:,int:,Color:,float:)",
+      "electron2d": "method:Electron2D.TextParagraph.DrawDropcapOutline(Electron2D.CanvasItem,Electron2D.Vector2,System.Int32,System.Nullable<Electron2D.Color>,System.Single)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:draw_line(RID:,Vector2:,int:,Color:,float:)",
+      "electron2d": "method:Electron2D.TextParagraph.DrawLine(Electron2D.CanvasItem,Electron2D.Vector2,System.Int32,System.Nullable<Electron2D.Color>,System.Single)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:draw_line_outline(RID:,Vector2:,int:,int:,Color:,float:)",
+      "electron2d": "method:Electron2D.TextParagraph.DrawLineOutline(Electron2D.CanvasItem,Electron2D.Vector2,System.Int32,System.Int32,System.Nullable<Electron2D.Color>,System.Single)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:draw_outline(RID:,Vector2:,int:,Color:,Color:,float:)",
+      "electron2d": "method:Electron2D.TextParagraph.DrawOutline(Electron2D.CanvasItem,Electron2D.Vector2,System.Int32,System.Nullable<Electron2D.Color>,System.Nullable<Electron2D.Color>,System.Single)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:duplicate()",
+      "electron2d": "method:Electron2D.TextParagraph.Duplicate()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_dropcap_lines()",
+      "electron2d": "method:Electron2D.TextParagraph.GetDropcapLines()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_dropcap_rid()",
+      "electron2d": "method:Electron2D.TextParagraph.GetDropcapRID()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_dropcap_size()",
+      "electron2d": "method:Electron2D.TextParagraph.GetDropcapSize()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_inferred_direction()",
+      "electron2d": "method:Electron2D.TextParagraph.GetInferredDirection()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_line_ascent(int:)",
+      "electron2d": "method:Electron2D.TextParagraph.GetLineAscent(System.Int32)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_line_count()",
+      "electron2d": "method:Electron2D.TextParagraph.GetLineCount()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_line_descent(int:)",
+      "electron2d": "method:Electron2D.TextParagraph.GetLineDescent(System.Int32)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_line_object_rect(int:,Variant:)",
+      "electron2d": "method:Electron2D.TextParagraph.GetLineObjectRect(System.Int32,Electron2D.TextObjectKey)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_line_objects(int:)",
+      "electron2d": "method:Electron2D.TextParagraph.GetLineObjects(System.Int32)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_line_range(int:)",
+      "electron2d": "method:Electron2D.TextParagraph.GetLineRange(System.Int32)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_line_rid(int:)",
+      "electron2d": "method:Electron2D.TextParagraph.GetLineRID(System.Int32)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_line_size(int:)",
+      "electron2d": "method:Electron2D.TextParagraph.GetLineSize(System.Int32)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_line_underline_position(int:)",
+      "electron2d": "method:Electron2D.TextParagraph.GetLineUnderlinePosition(System.Int32)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_line_underline_thickness(int:)",
+      "electron2d": "method:Electron2D.TextParagraph.GetLineUnderlineThickness(System.Int32)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_line_width(int:)",
+      "electron2d": "method:Electron2D.TextParagraph.GetLineWidth(System.Int32)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_non_wrapped_size()",
+      "electron2d": "method:Electron2D.TextParagraph.GetNonWrappedSize()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_range()",
+      "electron2d": "method:Electron2D.TextParagraph.GetRange()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_rid()",
+      "electron2d": "method:Electron2D.TextParagraph.GetRID()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:get_size()",
+      "electron2d": "method:Electron2D.TextParagraph.GetSize()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:has_object(Variant:)",
+      "electron2d": "method:Electron2D.TextParagraph.HasObject(Electron2D.TextObjectKey)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:hit_test(Vector2:)",
+      "electron2d": "method:Electron2D.TextParagraph.HitTest(Electron2D.Vector2)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:resize_object(Variant:,Vector2:,int:InlineAlignment,float:)",
+      "electron2d": "method:Electron2D.TextParagraph.ResizeObject(Electron2D.TextObjectKey,Electron2D.Vector2,Electron2D.InlineAlignment,System.Single)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:set_bidi_override(Array:)",
+      "electron2d": "method:Electron2D.TextParagraph.SetBIDIOverride(System.ReadOnlySpan<Electron2D.TextBIDIRange>)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:set_dropcap(String:,Font:,int:,Rect2:,String:)",
+      "electron2d": "method:Electron2D.TextParagraph.SetDropcap(System.String,Electron2D.Font,System.Int32,Electron2D.Rect2,System.String)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::method:tab_align(PackedFloat32Array:)",
+      "electron2d": "method:Electron2D.TextParagraph.TabAlign(System.ReadOnlySpan<System.Single>)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::property:alignment",
+      "electron2d": "property:Electron2D.TextParagraph.Alignment()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::property:break_flags",
+      "electron2d": "property:Electron2D.TextParagraph.BreakFlags()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::property:custom_punctuation",
+      "electron2d": "property:Electron2D.TextParagraph.CustomPunctuation()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::property:direction",
+      "electron2d": "property:Electron2D.TextParagraph.Direction()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::property:ellipsis_char",
+      "electron2d": "property:Electron2D.TextParagraph.EllipsisChar()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::property:justification_flags",
+      "electron2d": "property:Electron2D.TextParagraph.JustificationFlags()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::property:line_spacing",
+      "electron2d": "property:Electron2D.TextParagraph.LineSpacing()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::property:max_lines_visible",
+      "electron2d": "property:Electron2D.TextParagraph.MaxLinesVisible()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::property:orientation",
+      "electron2d": "property:Electron2D.TextParagraph.Orientation()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::property:preserve_control",
+      "electron2d": "property:Electron2D.TextParagraph.PreserveControl()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::property:preserve_invalid",
+      "electron2d": "property:Electron2D.TextParagraph.PreserveInvalid()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::property:text_overrun_behavior",
+      "electron2d": "property:Electron2D.TextParagraph.TextOverrunBehavior()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
+    },
+    {
+      "godot": "TextParagraph::property:width",
+      "electron2d": "property:Electron2D.TextParagraph.Width()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
     }
   ],
   "extras": [
@@ -206,6 +456,38 @@
       "electron2d": "property:Electron2D.TextLine.SpanCount()",
       "reason": "Typed construction/object tokens, exact span metadata access and live descriptors/owner/lifetime protection under ADR 0107.",
       "adr": "ADRs 0001/0003/0005/0107"
+    },
+    {
+      "electron2d": "constructor:Electron2D.TextParagraph..ctor()",
+      "reason": "ADR 0107 typed paragraph construction/metadata observability and live descriptor/lifetime overrides; these project the same retained paragraph capability without universal values, serialization of transient buffers or an additional backend."
+    },
+    {
+      "electron2d": "method:Electron2D.TextParagraph.AddString`1(System.String,Electron2D.Font,System.Int32,System.String,T)",
+      "reason": "ADR 0107 typed paragraph construction/metadata observability and live descriptor/lifetime overrides; these project the same retained paragraph capability without universal values, serialization of transient buffers or an additional backend."
+    },
+    {
+      "electron2d": "method:Electron2D.TextParagraph.Dispose(System.Boolean)",
+      "reason": "ADR 0107 typed paragraph construction/metadata observability and live descriptor/lifetime overrides; these project the same retained paragraph capability without universal values, serialization of transient buffers or an additional backend."
+    },
+    {
+      "electron2d": "method:Electron2D.TextParagraph.GetPropertyDescriptors()",
+      "reason": "ADR 0107 typed paragraph construction/metadata observability and live descriptor/lifetime overrides; these project the same retained paragraph capability without universal values, serialization of transient buffers or an additional backend."
+    },
+    {
+      "electron2d": "method:Electron2D.TextParagraph.TryGetSpanMetadata`1(System.Int32,ref T)",
+      "reason": "ADR 0107 typed paragraph construction/metadata observability and live descriptor/lifetime overrides; these project the same retained paragraph capability without universal values, serialization of transient buffers or an additional backend."
+    },
+    {
+      "electron2d": "method:Electron2D.TextParagraph.ValidateDisposal()",
+      "reason": "ADR 0107 typed paragraph construction/metadata observability and live descriptor/lifetime overrides; these project the same retained paragraph capability without universal values, serialization of transient buffers or an additional backend."
+    },
+    {
+      "electron2d": "method:Electron2D.TextParagraph.ValidateMutation()",
+      "reason": "ADR 0107 typed paragraph construction/metadata observability and live descriptor/lifetime overrides; these project the same retained paragraph capability without universal values, serialization of transient buffers or an additional backend."
+    },
+    {
+      "electron2d": "property:Electron2D.TextParagraph.SpanCount()",
+      "reason": "ADR 0107 typed paragraph construction/metadata observability and live descriptor/lifetime overrides; these project the same retained paragraph capability without universal values, serialization of transient buffers or an additional backend."
     }
   ],
   "statusGroups": [
@@ -299,8 +581,8 @@
         "TextParagraph::property:text_overrun_behavior",
         "TextParagraph::property:width"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: complete paragraph owner using the retained typed span/object builder with wrapping/line RID ownership, line slicing/carets/object rectangles, line spacing, dropcap reservation/drawing and independent paragraph/line alignment/overrun/duplicate integration under ADRs 0046/0107. The executable single-line TextLine alone does not execute these paragraph contracts."
+      "state": "Implemented",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained paragraph on the existing native text backend; borrowed multi-font spans/typed metadata and inline identity keys, scalar ranges/CRLF, wrapping and every hidden-line metric/object/RID consumer, signed spacing/margins, full/display geometry, independent dropcap and paragraph/line/dropcap drawing with outline/raster/clipping, BIDI/tabs/punctuation, visibility/overrun, duplicate/clear and bounded coherent font-generation reads. Reflow retires weak borrowed line identities consumed by drawing. Source coordinate defects are corrected explicitly: positive dropcap flow, shared leading-margin origin, vertical cross-axis and negative-cross hits. Native, package, foreign-platform, native-allocation, performance and owner acceptance retain separate evidence."
     }
   ]
 }

@@ -1,6 +1,6 @@
 # RichTextLabel
 
-Last updated: 2026-10-13
+Last updated: 2026-10-15
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.RichTextLabel`. **Source:** [source](../../src/Scene/GUI/RichTextLabel.cs). **Component:** [Rich text](../components/rich-text.md).
 
@@ -1462,3 +1462,5 @@ Font tags now create independent FontVariation spans borrowing generic Font reso
 `public RichTextEffect InstallEffect(Script script)` constructs an exact registered compiled RichTextEffect subtype through the Script asset. The returned instance belongs to the label; CustomEffects removal and label teardown dispose it. Script stays borrowed and its disposal does not stop the effect’s ordinary virtual callback. Constructor/type/schema failures are reported; metadata/source loading remains a cold operation. The direct RichTextEffect overload keeps borrowed ownership.
 
 Source Text reparsing use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation.
+
+Autowrap trimming accepts only current TextLineBreakFlags bits; unknown and retired bits throw ArgumentOutOfRangeException before publication. Use TrimStartEdgeSpaces | TrimEndEdgeSpaces for both edges.

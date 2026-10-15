@@ -847,7 +847,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [TextEdit](classes/TextEdit.md) | Control | Partial | 299 |
 | [TextLine](classes/TextLine.md) | RefCounted | Implemented | 30 |
 | [TextMesh](classes/TextMesh.md) | PrimitiveMesh | Excluded | 18 |
-| [TextParagraph](classes/TextParagraph.md) | RefCounted | Blocked | 49 |
+| [TextParagraph](classes/TextParagraph.md) | RefCounted | Implemented | 49 |
 | [TextServer](classes/TextServer.md) | RefCounted | Blocked | 378 |
 | [TextServerAdvanced](classes/TextServerAdvanced.md) | TextServerExtension | Blocked | 0 |
 | [TextServerDummy](classes/TextServerDummy.md) | TextServerExtension | Blocked | 0 |

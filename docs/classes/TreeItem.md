@@ -1,6 +1,6 @@
 # TreeItem
 
-Last updated: 2026-10-07
+Last updated: 2026-10-15
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.TreeItem`. **Source:** [source](../../src/Scene/GUI/TreeItem.cs). **Component:** [Hierarchical cells](../components/hierarchical-cells.md).
 
@@ -1620,3 +1620,5 @@ Gets or sets local branch visibility.
 ## Lifecycle, invariants and verification
 
 Attached operations require the owning scene thread and a live item/control. Invalid indices, invalid enum values, nonfinite required configuration and ownership/cycle violations throw before mutation. Item/metadata/resource lifetimes follow the description above. See [hierarchical cells](../components/hierarchical-cells.md) for runtime flow, exercised editor and native workflows, allocation boundaries and dependency limits; [Tree coverage](../coverage/classes/Tree.md) and [TreeItem coverage](../coverage/classes/TreeItem.md) account for the applicable comparison surface. Relevant decisions: ADRs 0004, 0008, 0014, 0023, 0038, 0046, 0051 and 0083.
+
+Autowrap trimming accepts only current TextLineBreakFlags bits; unknown and retired bits throw ArgumentOutOfRangeException before publication. Use TrimStartEdgeSpaces | TrimEndEdgeSpaces for both edges.

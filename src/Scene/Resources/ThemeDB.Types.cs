@@ -394,6 +394,7 @@ public sealed partial class ThemeDB
         ["TabContainer"] = ["TabContainer", "Container", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["TextEdit"] = ["TextEdit", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["TextLine"] = ["TextLine", "ElectronObject"],
+        ["TextParagraph"] = ["TextParagraph", "ElectronObject"],
         ["Texture"] = ["Texture", "Resource", "ElectronObject"],
         ["TextureArray"] = ["TextureArray", "ImageTextureLayered", "TextureLayered", "Resource", "ElectronObject"],
         ["TextureArrayRD"] = ["TextureArrayRD", "TextureLayeredRD", "TextureLayered", "Resource", "ElectronObject"],

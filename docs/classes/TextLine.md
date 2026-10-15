@@ -68,3 +68,5 @@ line.Draw(canvas, new(12, 14));
 ## Protected integration
 
 GetPropertyDescriptors exposes live nonstored policy descriptors. ValidateMutation/ValidateDisposal protect the owner and active native work; Dispose unregisters the identity and retires owned neutral-font/layout state. Runtime lines are reconstructed from authored source/font data by scene consumers. See [text objects](../components/text-objects.md) and [ADR 0107](../decisions/text-objects.md#adr-0107).
+
+Related paragraph preparation shares the typed span builder. All captured font read scopes must remain current before the shape/display pair is published; cross-font replacement retries preparation within the existing 64-attempt bound. [TextParagraph](TextParagraph.md) supplies wrapping and independent line/dropcap consumers.

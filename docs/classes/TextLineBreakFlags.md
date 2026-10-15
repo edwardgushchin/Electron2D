@@ -15,7 +15,6 @@ Controls mandatory and width-dependent text line breaks.
 | [WordBound](#wordbound) | `2` | Allows Unicode word-boundary line breaks. |
 | [GraphemeBound](#graphemebound) | `4` | Allows breaks at grapheme boundaries. |
 | [Adaptive](#adaptive) | `8` | Falls back to grapheme boundaries when a word cannot fit. |
-| [TrimEdgeSpaces](#trimedgespaces) | `16` | Trims both start and end spaces. |
 | [TrimIndent](#trimindent) | `32` | Trims indentation after the initial line. |
 | [TrimStartEdgeSpaces](#trimstartedgespaces) | `64` | Trims spaces at line starts. |
 | [TrimEndEdgeSpaces](#trimendedgespaces) | `128` | Trims spaces at line ends. |
@@ -45,11 +44,6 @@ Controls mandatory and width-dependent text line breaks.
 
 `Adaptive = 8` — Falls back to grapheme boundaries when a word cannot fit.
 
-<a id="trimedgespaces"></a>
-### TrimEdgeSpaces
-
-`TrimEdgeSpaces = 16` — Trims both start and end spaces.
-
 <a id="trimindent"></a>
 ### TrimIndent
 
@@ -68,3 +62,5 @@ Controls mandatory and width-dependent text line breaks.
 ## Use and validation
 
 Consumed by [Font](Font.md) and canvas text entrypoints. Values and defaults are part of the typed text contract; each consumer documents whether unknown bits or values are retained or rejected. [FontTests](../../tests/Electron2D.Tests/FontTests.cs) and the native text gate cover the implemented consumer behavior. The declaration does not imply that public TextServer services are implemented. See [ADR 0046](../decisions/rendering.md#adr-0046).
+
+Use TrimStartEdgeSpaces | TrimEndEdgeSpaces to trim both ends. The retired combined flag is absent; paragraph/rich/tree authoring rejects unknown or retired bits. Label retains its documented mask of current trimming bits.

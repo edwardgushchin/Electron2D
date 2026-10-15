@@ -681,6 +681,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BAR_CHILD") is { } 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BAR") == "1") { MenuBarTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_UNDO_RENDER") is { } undoBackend) { UndoRedoRenderingTests.Run(undoBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POLYGON_PATH_RENDER") is { } polygonBackend) { PolygonPathRenderingTests.Run(polygonBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_PARAGRAPH_RENDER") is { } paragraphBackend) { TextParagraphRenderingTests.Run(paragraphBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_PARAGRAPH") == "1") { TextParagraphTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_LINE_RENDER") is { } textLineBackend) { TextLineRenderingTests.Run(textLineBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_LINE") == "1") { TextLineTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POLYGON_PATH") == "1") { PolygonPathFinderTests.Run(); return; }

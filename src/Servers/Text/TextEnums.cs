@@ -73,8 +73,6 @@ public enum TextLineBreakFlags
     GraphemeBound = 4,
     /// <summary>Falls back to grapheme boundaries when a word cannot fit.</summary>
     Adaptive = 8,
-    /// <summary>Trims both start and end spaces.</summary>
-    TrimEdgeSpaces = 16,
     /// <summary>Trims indentation after the initial line.</summary>
     TrimIndent = 32,
     /// <summary>Trims spaces at line starts.</summary>

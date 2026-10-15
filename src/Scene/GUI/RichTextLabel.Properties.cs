@@ -31,7 +31,8 @@ public partial class RichTextLabel
     /// <summary>Gets or sets the paragraph wrapping policy.</summary><value>TextAutowrapMode.WordSmart initially.</value>
     public TextAutowrapMode AutowrapMode { get { CheckRich(); return _autowrap; } set { MutableRich(); if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); if (_autowrap == value) return; _autowrap = value; Changed(); } }
     /// <summary>Gets or sets the whitespace trimming flags at wrapped edges.</summary><value>TextLineBreakFlags.TrimStartEdgeSpaces | TextLineBreakFlags.TrimEndEdgeSpaces initially.</value>
-    public TextLineBreakFlags AutowrapTrimFlags { get { CheckRich(); return _trim; } set { MutableRich(); if (_trim == value) return; _trim = value; Changed(); } }
+    /// <exception cref="ArgumentOutOfRangeException">Flags contain unknown or retired bits.</exception>
+    public TextLineBreakFlags AutowrapTrimFlags { get { CheckRich(); return _trim; } set { MutableRich(); if (((int)value & ~239) != 0) throw new ArgumentOutOfRangeException(nameof(value)); if (_trim == value) return; _trim = value; Changed(); } }
     /// <summary>Gets or sets the paragraph fill rules.</summary><value>(TextJustificationFlags)163 initially.</value>
     public TextJustificationFlags JustificationFlags { get { CheckRich(); return _justification; } set { MutableRich(); if (_justification == value) return; _justification = value; Changed(); } }
     /// <summary>Gets or sets the default paragraph alignment.</summary><value>HorizontalAlignment.Left initially.</value>

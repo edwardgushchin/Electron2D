@@ -1136,11 +1136,6 @@
       "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
-      "godot": "TextServer::enum_value:LineBreakFlag.BREAK_TRIM_EDGE_SPACES",
-      "electron2d": "enumValue:Electron2D.TextLineBreakFlags.TrimEdgeSpaces()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
-    },
-    {
       "godot": "TextServer::enum_value:LineBreakFlag.BREAK_TRIM_END_EDGE_SPACES",
       "electron2d": "enumValue:Electron2D.TextLineBreakFlags.TrimEndEdgeSpaces()",
       "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
@@ -4631,7 +4626,6 @@
         "TextServer::enum_value:LineBreakFlag.BREAK_GRAPHEME_BOUND",
         "TextServer::enum_value:LineBreakFlag.BREAK_MANDATORY",
         "TextServer::enum_value:LineBreakFlag.BREAK_NONE",
-        "TextServer::enum_value:LineBreakFlag.BREAK_TRIM_EDGE_SPACES",
         "TextServer::enum_value:LineBreakFlag.BREAK_TRIM_END_EDGE_SPACES",
         "TextServer::enum_value:LineBreakFlag.BREAK_TRIM_INDENT",
         "TextServer::enum_value:LineBreakFlag.BREAK_TRIM_START_EDGE_SPACES",
@@ -5422,6 +5416,13 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0004/0046: primary realized source uses native OpenType metadata, copied numeric feature descriptions and deep language/name snapshots. FontMetadataTests checks independently authored multilingual GSUB/GPOS fixtures, typed policy, optional/unknown/empty names, duplicate precedence, lifetime/replacement, selected collection/variation/system sources and actual feature-driven shaping/native GPU/compatibility pixels."
+    },
+    {
+      "godot": [
+        "TextServer::enum_value:LineBreakFlag.BREAK_TRIM_EDGE_SPACES"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned TextServer.xml marks BREAK_TRIM_EDGE_SPACES deprecated: Use [code]BREAK_TRIM_START_EDGE_SPACES | BREAK_TRIM_END_EDGE_SPACES[/code] instead. No public alias or inert numeric-bit behavior is retained."
     }
   ],
   "extras": [

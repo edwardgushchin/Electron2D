@@ -87,6 +87,29 @@ internal sealed partial class TextLayout
         }
         return best;
     }
+    internal int HitLine(int lineIndex, float position)
+    {
+        var line = _lines[lineIndex]; position = Math.Clamp(position, -1, MathF.Ceiling(line.Width) + 1); var result = line.Start; var distance = double.PositiveInfinity;
+        for (var i = line.GlyphStart; i < line.GlyphStart + line.GlyphCount;)
+        {
+            var glyph = _glyphs[i]; var end = i + 1; var advance = glyph.Advance * glyph.Repeat;
+            while (end < line.GlyphStart + line.GlyphCount && _glyphs[end].Start == glyph.Start && _glyphs[end].End == glyph.End) { advance += _glyphs[end].Advance * _glyphs[end].Repeat; end++; }
+            if (!glyph.Virtual && glyph.End > glyph.Start)
+            {
+                var rtl = (_levels[glyph.Start] & 1) != 0;
+                var start = Key.Orientation == TextOrientation.Horizontal ? glyph.Position.X - glyph.Offset.X : glyph.Position.Y - glyph.Offset.Y;
+                for (var column = glyph.Start; column <= glyph.End; column++)
+                {
+                    if (!_grapheme[column]) continue;
+                    var coordinate = start + advance * (rtl ? glyph.End - column : column - glyph.Start) / (glyph.End - glyph.Start);
+                    var candidate = Math.Abs((double)coordinate - position);
+                    if (candidate < distance) { result = column; distance = candidate; }
+                }
+            }
+            i = end;
+        }
+        return result;
+    }
     internal void SelectionRanges(int from, int to, List<Vector2> output)
     {
         output.Clear();
