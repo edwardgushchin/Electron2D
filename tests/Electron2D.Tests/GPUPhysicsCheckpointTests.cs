@@ -161,6 +161,7 @@ internal static class GPUPhysicsCheckpointTests
         store.AddJoint(new(PhysicsServer.JointType.Pin, bodies[0], default, Transform.Identity, Transform.Identity));
         Step(store, 1, 0); using var checkpoint = store.CreateCheckpoint();
         for (var i = 0; i < 64; i++) Cycle();
+        var memory = store.BufferMemory;
         var copied = store.DeviceCopyBytes; var up = store.UploadBytes; var down = store.ReadbackBytes; var submits = store.SubmissionCount; var wait = store.WaitMS;
         var times = new double[128];
         var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true); var begin = Stopwatch.GetTimestamp();
@@ -169,8 +170,16 @@ internal static class GPUPhysicsCheckpointTests
         var elapsed = Stopwatch.GetElapsedTime(begin).TotalMilliseconds;
         owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
         Check(owner == 0 && all == 0, "Warm GPU checkpoint capture/restore allocates zero managed bytes");
+        Check(store.BufferMemory == memory, "Warm checkpoint copies allocate no native buffers");
         Array.Sort(times);
         Console.WriteLine($"GPU checkpoint: 1024 bodies/512 colliding pairs/1 world pin, 64 warmups/128 capture+restore samples, mean={elapsed / 128:F4}, p50/p95/p99={times[64]:F4}/{times[121]:F4}/{times[126]:F4} ms, wait={(store.WaitMS - wait) / 128:F4} ms, {owner}/{all} owner/all managed B; device copies={(store.DeviceCopyBytes - copied) / 128} B, up/down={(store.UploadBytes - up) / 128}/{(store.ReadbackBytes - down) / 128} B, submissions={(store.SubmissionCount - submits) / 128}; checkpoint device/authored-array capacity={checkpoint.DeviceCapacityBytes}/{checkpoint.ManagedCapacityBytes} B.");
+        var checkpointBytes = checkpoint.DeviceCapacityBytes;
+        checkpoint.Dispose();
+        var released = store.BufferMemory;
+        Check(released.DeviceBytes == memory.DeviceBytes - checkpointBytes && released.TransferBytes == memory.TransferBytes,
+            "Checkpoint retirement releases exactly its device copies and retains world transfer capacity");
+        Console.WriteLine($"GPU complete buffer capacity, world/checkpoint: device {released.DeviceBytes}/{checkpointBytes}, transfer {released.TransferBytes}, transient peak {memory.PeakBytes} B; live buffers {memory.DeviceBuffers}+{memory.TransferBuffers}, allocations/releases {memory.Allocations}/{memory.Releases}.");
+        store.Dispose(); GPUPhysicsMemoryTests.Empty(store);
         void Cycle() { checkpoint.Capture(); store.ApplyImpulse(bodies[0], new(1, 0), 0); Step(store, 1, 0); checkpoint.Restore(); }
     }
     private static void Exact(GPUPhysicsBodyStore.Snapshot[] expected, GPUPhysicsBodyStore.Snapshot[] actual) =>

@@ -6,7 +6,7 @@ using Float4 = System.Numerics.Vector4;
 
 namespace Electron2D;
 
-/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad/narrow phase, directed collision filtering, device-colored contact/joint solving with compact iterative state, connected sleep/wake, continuous collision and explicit reads; no CPU solver world.</summary>
+/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad/narrow phase, directed collision filtering, device-colored contact/joint solving with compact iterative state, connected sleep/wake, continuous collision, explicit reads and requested buffer accounting; no CPU solver world.</summary>
 internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
 {
     [StructLayout(LayoutKind.Sequential)]
@@ -349,17 +349,15 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     internal static Action<nint, nint, uint>? BufferCreatedForTesting { get; set; }
     private nint CreateBuffer(uint size)
     {
-        var value = SDL.CreateGPUBuffer(Device, new SDL.GPUBufferCreateInfo
-        { Size = size, Usage = SDL.GPUBufferUsageFlags.ComputeStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageWrite });
-        if (value == 0) throw GPUPhysicsDevice.Failure("create resident buffer");
+        var value = RegisterBuffer(SDL.CreateGPUBuffer(Device, new SDL.GPUBufferCreateInfo
+        { Size = size, Usage = SDL.GPUBufferUsageFlags.ComputeStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageWrite }), size, false);
         try { BufferCreatedForTesting?.Invoke(Device, value, size); }
-        catch { SDL.ReleaseGPUBuffer(Device, value); throw; }
+        catch { ReleaseBuffer(value); throw; }
         return value;
     }
     private RenderHandle Buffer(uint size) => new(CreateBuffer(size),
-        handle => SDL.ReleaseGPUBuffer(Device, handle), _context.Handle);
-    private RenderHandle Transfer(uint size, SDL.GPUTransferBufferUsage usage) => new(SDL.CreateGPUTransferBuffer(Device,
-        new SDL.GPUTransferBufferCreateInfo { Size = size, Usage = usage }), handle => SDL.ReleaseGPUTransferBuffer(Device, handle), _context.Handle);
+        ReleaseBuffer, _context.Handle);
+    private RenderHandle Transfer(uint size, SDL.GPUTransferBufferUsage usage) => new(CreateTransfer(size, usage), ReleaseBuffer, _context.Handle);
 
     private void Reserve(int required)
     {

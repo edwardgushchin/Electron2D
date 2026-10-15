@@ -1,5 +1,7 @@
 # Physics domain
 
+[Resident GPU buffer accounting](../components/gpu-memory.md) now distinguishes storage, transfer and transient growth capacity, including replay copies and failed preparation. Full CPU/managed/native/driver memory budgets remain open.
+
 Last updated: 2026-10-15
 
 [Multi-impact CCD history](../components/physics-snapshots.md#multi-impact-ccd-contact-history)

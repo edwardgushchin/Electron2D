@@ -1,6 +1,8 @@
 # GPUPhysicsBodyStore
 
-Last updated: 2026-10-14
+[Buffer memory observations](../components/gpu-memory.md) are implemented in [GPUPhysicsBodyStore.Memory.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.Memory.cs). They track all requested storage/transfer resources, growth overlap and checkpoint copies through native release, without a simulation mirror or extra GPU work. Complete driver/native and managed memory remains outside this counter.
+
+Last updated: 2026-10-15
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable`
 

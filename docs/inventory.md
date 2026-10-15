@@ -1748,3 +1748,5 @@ Current coupled-joint verification also covers initial raw RigidLinear lock deli
 | [Core](domains/core.md) | [Movie writing](components/movie-writing.md) | [PNGMovieWriter](classes/PNGMovieWriter.md) | [PNGMovieWriter.cs](../src/Servers/Movie/PNGMovieWriter.cs) | Current | Internal PNG/PCM WAV output |
 | [Core](domains/core.md) | [Movie writing](components/movie-writing.md) | [AVIMovieWriter](classes/AVIMovieWriter.md) | [AVIMovieWriter.cs](../src/Servers/Movie/AVIMovieWriter.cs) | Current | Internal indexed AVI/MJPEG/PCM16/32 output |
 | [Core](domains/core.md) | [Movie writing](components/movie-writing.md) | [OGVMovieWriter](classes/OGVMovieWriter.md) | [OGVMovieWriter.cs](../src/Servers/Movie/OGVMovieWriter.cs) | Current | Internal Theora/Vorbis/Ogg output |
+
+[GPUPhysicsBodyStore](classes/GPUPhysicsBodyStore.md) now includes [internal buffer accounting](components/gpu-memory.md) for all requested storage/transfer resources, transient growth overlap and checkpoint retirement; no new production type or public API is introduced.

@@ -1,5 +1,7 @@
 # Physics contract and backend audit
 
+[Resident GPU buffer accounting](gpu-memory.md) now covers requested storage/transfer resources, simultaneous growth peaks and private replay copies, with preparation-failure and retirement checks. This does not measure complete native/driver or CPU/managed history memory and changes no coverage status. Its extended query investigation found a stale mismatched-angle fixture and, after equalizing poses, a separate CPU polygon point-containment discrepancy. Both remain open in the linked investigation; the temporary fixture candidate was reverted.
+
 [Tile owner projections and failure cleanup](tiles.md) now execute through explicit CPU/GPU tests, including object deduplication, shape/RID payloads, canvas and weak lifetime, scene/server motion and callback-failed replacement/retirement. The formerly tile-blocked Area, KinematicCollision, PhysicsTestMotionResult and point-query rows are reconciled against actual production paths. This closes those recorded implementation triggers; full inherited, numerical-extension, network/platform and performance acceptance remain open.
 
 Last updated: 2026-10-15

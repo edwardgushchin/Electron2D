@@ -137,20 +137,19 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }
             }
             var adopted = replacement; replacement = 0;
-            if (target is null) target = new(adopted, handle => SDL.ReleaseGPUBuffer(Device, handle), _context.Handle);
+            if (target is null) target = new(adopted, ReleaseBuffer, _context.Handle);
             else target.ReplaceNative(adopted);
             capacity = next;
         }
-        finally { if (replacement != 0) SDL.ReleaseGPUBuffer(Device, replacement); }
+        finally { if (replacement != 0) ReleaseBuffer(replacement); }
     }
 
     private void GrowTransfer(ref RenderHandle? target, ref int capacity, int bytes, SDL.GPUTransferBufferUsage usage)
     {
         if (bytes <= capacity) return;
         var next = Capacity(bytes);
-        var replacement = SDL.CreateGPUTransferBuffer(Device, new SDL.GPUTransferBufferCreateInfo { Size = (uint)next, Usage = usage });
-        if (replacement == 0) throw GPUPhysicsDevice.Failure("create resident transfer buffer");
-        if (target is null) target = new(replacement, handle => SDL.ReleaseGPUTransferBuffer(Device, handle), _context.Handle);
+        var replacement = CreateTransfer((uint)next, usage);
+        if (target is null) target = new(replacement, ReleaseBuffer, _context.Handle);
         else target.ReplaceNative(replacement);
         capacity = next;
     }

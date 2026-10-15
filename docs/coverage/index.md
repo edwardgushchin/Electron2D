@@ -1,5 +1,7 @@
 # API coverage register
 
+[Resident GPU buffer accounting](../components/gpu-memory.md) now covers all storage/transfer allocations, growth peaks and replay retirement. This internal measurement changes no public declaration status and leaves complete retained/native/device budgets open.
+
 Last updated: 2026-10-15
 
 [Multi-impact CCD history](../components/physics-snapshots.md#multi-impact-ccd-contact-history)

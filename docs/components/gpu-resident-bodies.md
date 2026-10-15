@@ -1,6 +1,8 @@
 # Resident GPU physics stages
 
-Last updated: 2026-10-14
+[Complete buffer accounting](gpu-memory.md) now sums requested storage/transfer resources and temporary growth overlap, including checkpoint copies and failed preparation. Driver heaps and CPU/managed retained memory remain separate open measurements.
+
+Last updated: 2026-10-15
 
 ## Implemented boundary
 

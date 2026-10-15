@@ -5,6 +5,7 @@ internal static class GPUPhysicsBodyStoreTests
 {
     internal static void Run()
     {
+        GPUPhysicsMemoryTests.Run();
         VerifyMotionAndEdits();
         VerifyFailure();
         VerifyResidencyAndAllocation();
@@ -107,6 +108,7 @@ internal static class GPUPhysicsBodyStoreTests
         for (var i = 0; i < warmup; i++) store.Step(1f / 120, Vector2.Zero);
         var timings = new double[samples];
         var upload = store.UploadBytes; var readback = store.ReadbackBytes; var wait = store.WaitMS; var uniforms = store.UniformBytes;
+        var preparedMemory = store.BufferMemory;
         var allocated = GC.GetAllocatedBytesForCurrentThread();
         for (var i = 0; i < samples; i++)
         {
@@ -117,6 +119,7 @@ internal static class GPUPhysicsBodyStoreTests
         allocated = GC.GetAllocatedBytesForCurrentThread() - allocated;
         var measuredWait = store.WaitMS - wait;
         Check(allocated == 0, "Warmed resident body steps allocate zero managed bytes.");
+        Check(store.BufferMemory == preparedMemory, "Warmed resident body steps allocate no native buffers");
         Check(store.UploadBytes - upload == 8 * samples && store.ReadbackBytes - readback == 8 * samples && store.UniformBytes - uniforms == 32 * samples,
             "Resident steps exchange a eight-byte status reset/result and 32 uniform bytes, not poses or velocities.");
         var snapshots = new GPUPhysicsBodyStore.Snapshot[count];
@@ -133,6 +136,9 @@ internal static class GPUPhysicsBodyStoreTests
             Near(snapshots[i].Position, new Vector2(i % 256, i / 256) + travel, 0.02f, "Every resident body advances without CPU publication");
         Array.Sort(timings);
         Console.WriteLine($"Resident integration only: {count} bodies, {warmup} warmup, {samples} samples, p50={timings[samples / 2]:F4} ms, p95={timings[(int)(samples * 0.95)]:F4} ms, wait={measuredWait / samples:F4} ms/tick, {allocated} B/tick, 8 B buffer upload + 32 B uniforms + 8 B readback/tick; driver={store.Driver}, device={store.DeviceName}, runtime={Environment.Version}; diagnostic full read={fullReadMS:F4} ms (outside step samples); authored body/command capacity={store.AuthoredBodyCapacityBytes} B.");
+        var memory = store.BufferMemory;
+        Console.WriteLine($"Resident integration buffer capacity: device/transfer {memory.DeviceBytes}/{memory.TransferBytes}, growth peak {memory.PeakBytes} B; live buffers {memory.DeviceBuffers}+{memory.TransferBuffers}, allocations/releases {memory.Allocations}/{memory.Releases}.");
+        store.Dispose(); GPUPhysicsMemoryTests.Empty(store);
     }
 
     private static void Near(Vector2 actual, Vector2 expected, float tolerance, string message) => Check(actual.DistanceTo(expected) <= tolerance, message);
