@@ -1428,3 +1428,16 @@ capture/transport/apply/replay allocation brackets. This is same-process evidenc
 it changes no runtime signature, packet format or declaration status. Arbitrary
 feature churn/geometry, registered numerical owners, full retained/native/device
 memory, target hardware, rendered FPS and final goal acceptance remain open.
+
+## Multi-impact CCD portable history, 2026-10-15
+
+[The transient CCD fixture](physics-snapshots.md#multi-impact-ccd-contact-history)
+extends fixed dense contacts to 64 logical pairs against two shapes of one peer,
+with three physical impacts in one outer frame. Separate per-wall impulse totals
+and summed momentum, true departed contact/event history, bounded reports and
+silent portable restoration are checked through scene/raw CPU/GPU operations.
+Both CCD policies and numerical lanes retain the strict complete warmed
+capture/transport/apply/replay allocation gate. This adds no runtime declaration,
+packet format or coverage-state promotion. Arbitrary rotating features, wider
+geometry/extension/inherited behavior and final memory/platform/hardware/FPS
+acceptance remain open.

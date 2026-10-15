@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-15
 
+[Multi-impact CCD history](../components/physics-snapshots.md#multi-impact-ccd-contact-history)
+checks 64 departed contact pairs, per-wall impulse totals, scene events, caps and
+portable continuation across CPU/GPU scene/raw worlds. This bounded verification
+changes no declaration status; wider features and full native/device, platform
+and hardware/performance acceptance remain open.
+
 [Dense portable contact history](../components/physics-snapshots.md#dense-same-collider-contact-history)
 checks 32 same-peer logical slots, physical impulse balance, report caps, remapped
 payloads and continued scene events across CPU/GPU scene/raw worlds. This bounded

@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-15
 
+[Multi-impact CCD history](../components/physics-snapshots.md#multi-impact-ccd-contact-history)
+checks 64 logical pairs against both walls of one peer after three impacts in one
+frame, including complete per-wall impulse totals, transient scene events and
+portable continuation. Rotating features, wider geometry, native/device memory
+and final hardware/performance acceptance remain open.
+
 [Dense portable contact history](../components/physics-snapshots.md#dense-same-collider-contact-history)
 now checks 32 same-peer logical slots, physical impulse balance, report caps,
 remapped payloads and continued scene events across CPU/GPU scene/raw worlds.

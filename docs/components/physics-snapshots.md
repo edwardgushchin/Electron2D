@@ -84,6 +84,63 @@ bitwise continuation is not promised. Capture a new local checkpoint after corre
 can invalidate older points under their fixed-configuration contract. Local
 checkpoints retain the full backend-private history for subsequent replay.
 
+## Multi-impact CCD contact history
+
+`PhysicsTransientContactTests` uses 32 circle slots of radius 2 with five-unit
+vertical spacing on a mass-2 RigidLinear body. One static peer owns both corridor
+walls: four-unit rectangles centered at x=-22/+22, with fixed pose and surface
+velocity (0,120). Gravity/damping are zero; both materials contribute bounce .5.
+Starting at the origin with velocity (6000,0), one 1/60-second frame strikes the
+right wall twice and the left once. Both CastRay and CastShape run through scene
+and raw body APIs in serial/separate execution.
+
+The complete report retains all 64 local/remote logical pairs exactly once, even
+though the body ends away from both walls. Each point must name the local corridor
+RID/instance/object, the appropriate horizontal unit normal and the authored circle
+index. A 2.1-unit tangential association band allows the at-most-two-unit sampled
+motion over this frame while rejecting a five-unit neighbour-index swap. Summed
+impulse must match mass times actual velocity change within 2 kg-unit/s. Independent
+per-wall totals must be +24000 and -48000 on X, proving the three impacts; real
+friction changes Y momentum. This error is below .01 percent of a single impact.
+Final pose/speed bounds allow the implementations' contact slop; independent
+trajectories and private encounter order need not match.
+
+Scene observers require one object entry and all 64 distinct shape-event pairs.
+The target creates bodies in reverse order. Capture/encode/decode/apply preserves
+every sampled point/normal/impulse and both logical indices exactly, remaps the
+peer identity and retains the direct view and authoritative tick. Apply is silent;
+the following real continuation must not repeat imported entries, and its reported
+impulse must balance its own velocity change. Limits 63, 7, 1, 0 and 64 clear old
+reports and bound valid unique feature pairs. Disabling either wall must prevent
+complete 64-pair history.
+
+The four CPU/GPU transfer directions, two CCD modes, scene/raw and serial/separate
+execution form 32 cases. Each prepares 96 cycles, completes a blocking collection
+and finalizers, warms another 32, then measures 64 source-reset/frame, portable
+capture/write/read/apply and destination-replay cycles at strict 0/0 owner/all-thread
+managed bytes. Both final physical reports still balance actual motion; source
+per-wall totals still prove three impacts. The focused selector is
+`ELECTRON2D_TEST_TRANSIENT_CONTACTS=cpu` or `gpu`. The default suite runs the matrix;
+the public-only consumer links the same file as `--transient-contacts --cpu/--gpu`
+for NativeAOT. Arbitrary rotating features, other geometry, registered numerical
+owners, full retained/native/device memory, hardware benefit and real-window FPS
+remain separate acceptance work. This same-process fixture adds no ENet scenario.
+
+On 2026-10-15, the 32-case matrix passed in managed and strict NativeAOT Linux x64
+execution, with an additional eight-case CPU-only/no-device profile in each host.
+The default managed suite also passed and repeated all 32 cases. All 112 executed
+cases retained strict 0/0 sampled owner/all-thread managed bytes over 7168 cycles
+and 14336 complete physical frames. Process maps confirmed lavapipe for GPU,
+no NVIDIA library and no CoreCLR in NativeAOT. Packet lengths were 6560 bytes for
+scene and 4920 for raw receivers; these are not retained memory totals.
+
+Evidence is retained under ignored `bin/physics-transient-contacts/2026-10-15/final/`,
+on main `ee418cb8` plus this fixture. PDB checksums and complete MSBuild Compile
+document sets match current runtime/test/consumer sources, including the independent
+AVI-writing integration. Release/source-native builds, format checks, compiled
+coverage and wiki tests/generation/check passed. This verification adds no runtime
+signature, portable format or declaration-status change.
+
 ## Dense same-collider contact history
 
 `PhysicsDenseContactTests` exercises 32 separated circle slots on one rotation-locked
