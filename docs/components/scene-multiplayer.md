@@ -1,6 +1,9 @@
 # Typed scene multiplayer
 
-Last updated: 2026-10-04
+Last updated: 2026-10-15
+
+Default construction derives the absolute root configuration from the known root name
+before node entry; it does not query the inactive node's empty GetPath result.
 
 ## Public surface and ownership
 

@@ -11,7 +11,7 @@ public partial class SceneTree
     public bool MultiplayerPoll { get { ThrowIfDisposed(); EnsureOwnerThread(); return _multiplayerPoll; } set { ThrowIfDisposed(); EnsureOwnerThread(); _multiplayerPoll = value; } }
     private void InitializeMultiplayer()
     {
-        var api = MultiplayerAPI.CreateDefaultInterface(); try { api.Attach(this, Root.GetPath()); _defaultMultiplayer = api; _ownsDefaultMultiplayer = true; } catch { api.Dispose(); throw; }
+        var api = MultiplayerAPI.CreateDefaultInterface(); try { api.Attach(this, "/" + Root.Name); _defaultMultiplayer = api; _ownsDefaultMultiplayer = true; } catch { api.Dispose(); throw; }
     }
     /// <summary>Gets a branch-specific override or the tree's default multiplayer interface.</summary><param name="forPath">Absolute branch path; empty selects default. The most specific ancestor override wins.</param><returns>A borrowed live interface.</returns>
     public MultiplayerAPI GetMultiplayer(string forPath = "")

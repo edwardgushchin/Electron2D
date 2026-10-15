@@ -4,6 +4,13 @@ Last updated: 2026-10-15
 
 [Scalable SVG textures](../components/scalable-svg.md) execute source paint maps, native processing, viewport/font oversampling, borrowed scale identities, theme icons and typed resource/scene storage. Local GPU/compatibility pixels and warmed replay are measured; native allocation and foreign-host gates remain separate.
 
+[Exact inherited node paths](../components/scene-hierarchy.md#exact-node-paths) now use
+active-only cached absolute paths and allocation-free exact, absolute and unique
+lookups. Empty/malformed inputs, typed failures, callback failures, membership and
+owner/current-processing-group access have a public physical consumer. The three
+previously Partial lookup/absolute-path rows are Implemented; numerical, full
+inherited coverage, native memory, hardware performance and window gates remain open.
+
 [Typed undo history](../components/undo-history.md) now executes reversible scene/resource edits, complete named merge/cursor/version policies and conditional object ownership through public runtime API. Native undo/redo pixels and warmed playback are exercised; editor context/UI, foreign/native allocator and owner gates remain separate.
 
 [GUI primitives](../components/gui-primitives.md) now execute solid fills and both themed separator axes with exact pixel placement, live edits and saved scenes. Native GPU/compatibility pixels and warm managed checks are exercised; Scalable SVG textures are integrated separately; public text objects and editor reference frames retain their own recorded dependencies.

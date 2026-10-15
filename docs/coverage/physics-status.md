@@ -219,13 +219,13 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 82 | 27 | 6 | 0 | 0 |
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
-| [Node](classes/Node.md) | [Object](classes/Object.md) | 112 | 70 | 6 | 25 | 1 |
+| [Node](classes/Node.md) | [Object](classes/Object.md) | 115 | 67 | 6 | 25 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
 | [Object](classes/Object.md) | — | 19 | 16 | 2 | 22 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 20 | 5 | 0 | 2 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 277 | 125 | 17 | 49 | 23 |
+| **Total** | | 280 | 122 | 17 | 49 | 23 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -310,11 +310,8 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Node::method:get_accessibility_element()`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
 | [`Node::method:get_groups()`](classes/Node.md) | Partial | The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit. |
 | [`Node::method:get_last_exclusive_window()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
-| [`Node::method:get_node(NodePath:)`](classes/Node.md) | Partial | Ordinary and owner-scoped unique paths resolve, and absolute paths now require an active tree and root-name segment. NodeUniqueNameTests covers those transitions. The typed string mapping still needs the full NodePath subname and error-surface audit. Colon-separated property subnames now parse with the resource endpoint grammar and do not participate in node traversal; SubtreeResourceAuthoringTests verifies this sibling integration.; Typed generic lookup projects get_node through ordinary and owner-scoped unique paths, including attached absolute roots. NodeUniqueNameTests covers the shared resolver; NodePath subnames and exact typed failure behavior remain to audit. Colon-separated property subnames now parse with the resource endpoint grammar and do not participate in node traversal; SubtreeResourceAuthoringTests verifies this sibling integration. |
-| [`Node::method:get_node_or_null(NodePath:)`](classes/Node.md) | Partial | Relative and owner-scoped unique paths resolve in detached and active trees; absolute paths require an active root-name segment, and attached queries enforce the owner thread. NodeUniqueNameTests covers these paths. Full NodePath subname and malformed-path parity remains to audit. Colon-separated property subnames now parse with the resource endpoint grammar and do not participate in node traversal; SubtreeResourceAuthoringTests verifies this sibling integration. |
 | [`Node::method:get_orphan_node_ids()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:get_parent()`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
-| [`Node::method:get_path()`](classes/Node.md) | Partial | The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit. |
 | [`Node::method:get_scene_instance_load_placeholder()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:get_tree()`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Node::method:get_viewport()`](classes/Node.md) | Partial | Root-window native/input projection under ADRs 0004 and 0008; tests cover the supported window lifecycle. Root rendering and canvas transforms are integrated; nested viewport, content scaling and multiwindow behavior remain absent. |
