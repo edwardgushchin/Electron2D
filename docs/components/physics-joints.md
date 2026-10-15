@@ -1,6 +1,6 @@
 # Physics joints component
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 ## Physical skeletal integration
 
@@ -153,3 +153,13 @@ processes exercise the same contract and observe the numerical lane only when
 requested. This bounded contact-rich path does not certify larger/extreme graphs,
 complete extension/inherited behavior, native/foreign execution, real networking
 or hardware/window performance.
+
+## Coupled support, continuous motion and sleep
+
+Steady spring tension can balance contact and joint reactions without preventing automatic sleep. CPU spring preparation skips an island whose endpoints are asleep; the resident GPU graph uses actual motion, quiet clocks and authored changes rather than treating every relaxed-length error as an unconditional wake request. Rest-length edits and external impulses still wake connected bodies.
+
+The public joint/contact consumer now runs CPU, GPU and an independent registered implementation with scene/server bodies and scene/server joints. It checks three simultaneous joint families against a frictional floor, analytic support and complete contact identity, negative controls, silent private replay and release of constraint rows. A separate fixture checks stable automatic sleep, authored spring wake, CastRay/CastShape high-speed impacts after lifting both bodies ten units, and sleeping-history replay. Every measured bracket retains full frames and strict zero owner/all-thread managed bytes; native allocator totals and target-device performance remain separate.
+
+The independent consumer solves joint/contact constraints before advancing poses and bounds coupled motion intervals to a quarter tick while retaining full-step force/impulse budgets. Its closed four-body pin/groove/spring loop retains the existing anchor, momentum and energy tolerances, private replay and encoded correction from a distinct CPU authority. This in-process transport is separate from multi-process network acceptance. Evidence: bin/physics-coupled-extension/2026-10-15/validation.json.
+
+Changed spring rest length, stiffness and damping now dispatch the live solver policy immediately, while equal-value writes preserve quiet state. CPU pose edits wake linked native constraints, including shapeless static anchors; internal pose restoration keeps its silent path. The shared profile checks both coefficient and static-anchor wake, return to sleep, unchanged-value writes and private impact replay.

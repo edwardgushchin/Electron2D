@@ -10,6 +10,12 @@ PhysicsAOTPrerequisiteTests.Run();
 
 var backend = args.Length > 0 && args[0] == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
 if (args.Contains("--process-groups")) BackendChecks.RunProcessGroups(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));
+else if (args.Contains("--portable-joints")) BackendChecks.RunPortableJoints(args.Contains("threaded"), args.Length > 0 && args[0] == "registered" ? null : backend);
+else if (args.Contains("--spring-anchors")) BackendChecks.RunSpringAnchors(args.Contains("threaded"), args.Length > 0 && args[0] == "registered" ? null : backend);
+else if (args.Contains("--sleep")) BackendChecks.RunSleep(args.Length > 0 && args[0] == "registered" ? null : backend);
+else if (args.Contains("--motion-roles")) BackendChecks.RunMotionRoles(args.Contains("threaded"));
+else if (args.Contains("--joint-contacts")) BackendChecks.RunJointContacts(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));
+else if (args.Contains("--coupled-joints")) BackendChecks.RunCoupledJoints(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));
 else if (args.Contains("--thread-messages")) BackendChecks.RunThreadMessages(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));
 else if (args.Contains("--node-scheduling")) BackendChecks.RunNodeScheduling(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));
 else if (args.Contains("--resource-identity")) BackendChecks.RunResourceIdentity(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));

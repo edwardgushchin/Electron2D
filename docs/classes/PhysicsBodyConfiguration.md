@@ -1,6 +1,6 @@
 # PhysicsBodyConfiguration
 
-Last updated: 2026-10-08
+Last updated: 2026-10-15
 
 **Declaration:** `public readonly record struct PhysicsBodyConfiguration`
 
@@ -44,3 +44,5 @@ allocation and numerical-response checks retain their original bounds.
 This immutable value is now public and crosses the [registered implementation boundary](../components/physics-registered-adapter.md); complete sampled fields retain the contracts above. No backend storage or native handles are exposed.
 
 Initial/live scene LockRotation now supplies the exact RigidLinear role, matching raw locked body configuration. Freeze and MakeStatic override the role until restored. See [role verification](../components/physics-registered-adapter.md#exact-scene-motion-roles).
+
+Initial raw RigidLinear attachment supplies both Mode=RigidLinear and LockRotation=true, matching the existing scene role. The inverse-inertia projection is zero immediately; a torque impulse cannot rotate it before its first step. Live mode changes retain the same complete projection. The public motion-role and coupled joint/contact consumers exercise this contract.

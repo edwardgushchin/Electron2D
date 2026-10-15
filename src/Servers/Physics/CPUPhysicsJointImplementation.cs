@@ -82,7 +82,11 @@ internal sealed partial class CPUPhysicsJointImplementation(PhysicsSpace space, 
         var angularForce = settings.MaxForce == float.MaxValue ? float.MaxValue : settings.MaxForce * (PhysicsSpace.MetersPerUnit * PhysicsSpace.MetersPerUnit);
         var softness = settings.Type == PhysicsServer.JointType.Pin ? settings.PinSoftness : 0;
         if (joint.correctionBias == bias && joint.maxLinearBias == linearBias && joint.maxAngularBias == angularBias &&
-            joint.maxLinearForce == linearForce && joint.maxAngularForce == angularForce && joint.linearSoftness == softness) return;
+            joint.maxLinearForce == linearForce && joint.maxAngularForce == angularForce && joint.linearSoftness == softness)
+        {
+            if (settings.Type == PhysicsServer.JointType.DampedSpring) b2Joint_WakeBodies(ID);
+            return;
+        }
         b2Joint_WakeBodies(ID);
         joint = b2GetJointSim(world, b2GetJointFullId(world, ID));
         joint.correctionBias = bias; joint.maxLinearBias = linearBias; joint.maxAngularBias = angularBias;

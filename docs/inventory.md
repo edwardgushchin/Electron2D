@@ -1729,3 +1729,5 @@ Node.ThreadMessages.cs and SceneTree.ThreadMessages.cs implement the complete ty
 | Domain | Component | Types | Source | State | Contract |
 | --- | --- | --- | --- | --- | --- |
 | [Scene](domains/scene.md) | [Scene tree](components/scene-tree.md) | [`Node.ProcessThreadGroupMode`](classes/Node.ProcessThreadGroupMode.md), [`Node.ProcessThreadMessageFlags`](classes/Node.ProcessThreadMessageFlags.md) | [Node.ProcessGroups.cs](../src/Scene/Main/Node.ProcessGroups.cs), [SceneTree.ProcessGroups.cs](../src/Scene/Main/SceneTree.ProcessGroups.cs) | Current | Real inherited group partition, retained worker stages, main barriers, masks, portable settings and weak typed destination queues; broad worker scene/backend access remains Partial. |
+
+Current coupled-joint verification also covers initial raw RigidLinear lock delivery through PhysicsBodyConfiguration and supported spring-island sleep/wake on CPU/GPU/registered profiles; [the joint component](components/physics-joints.md#coupled-support-continuous-motion-and-sleep) records exact evidence and limits. No production type was added by this correction.
