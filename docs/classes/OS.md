@@ -171,3 +171,8 @@ A restart attempt clears its retained flag and arguments before subsequent manag
 The native host check covers both an explicit SceneTree.Quit and a queued native WM-close event. In either case the old host has completed Engine.Run cleanup before normal process shutdown launches the replacement.
 
 CreateInstance resolves a framework-dependent entry DLL by assembly name in AppContext.BaseDirectory, verifies that the file exists, and launches with literal arguments. Application executables relaunch directly. The path no longer depends on Assembly.Location.
+
+
+Runtime messages now use [diagnostic delivery](../components/diagnostics.md). Engine output flags affect its physical stream; typed logger callbacks retain delivery. Host Console writers retain ordinary C# semantics.
+
+`AddLogger(Logger)`/`RemoveLogger(Logger)` retain registration identity. `LogMessage(string, bool)` and `LogError(string, LoggerErrorType, string, string, string, int)` provide typed message/error ingress with compiler caller metadata.

@@ -49,6 +49,8 @@ public sealed partial class Engine : ElectronObject
                 engine => engine.TimeScaleCore,
                 (engine, value) => engine.TimeScaleCore = value,
                 _ => 1d),
+            new PropertyDescriptor<Engine, bool>(nameof(PrintToSTDOUT), _ => PrintToSTDOUT, (_, value) => PrintToSTDOUT = value, _ => true),
+            new PropertyDescriptor<Engine, bool>(nameof(PrintErrorMessages), _ => PrintErrorMessages, (_, value) => PrintErrorMessages = value, _ => true),
             new PropertyDescriptor<Engine, int>(nameof(MaxFPS), engine => engine.MaxFPSCore, (engine, value) => engine.MaxFPSCore = value, _ => 0),
             new PropertyDescriptor<Engine, ulong>(nameof(ProcessFrames), engine => engine.ProcessFramesCore),
             new PropertyDescriptor<Engine, ulong>(nameof(PhysicsFrames), engine => engine.PhysicsFramesCore),
@@ -185,8 +187,9 @@ public sealed partial class Engine : ElectronObject
             ResetRunState();
             Volatile.Write(ref _runtimeState, RuntimeRunning);
         }
-        catch
+        catch (Exception error)
         {
+            if (Volatile.Read(ref _applicationRun) == 0) RuntimeDiagnostics.Instance.ReportException(error);
             Volatile.Write(ref _mainLoop, null);
             Volatile.Write(ref _runtimeOwnerThreadId, 0);
             Volatile.Write(ref _runtimeState, RuntimeIdle);
@@ -277,6 +280,11 @@ public sealed partial class Engine : ElectronObject
             ProjectSettings.FlushChanges();
             return stopRequested;
         }
+        catch (Exception error)
+        {
+            if (Volatile.Read(ref _applicationRun) == 0) RuntimeDiagnostics.Instance.ReportException(error);
+            throw;
+        }
         finally
         {
             Volatile.Write(ref _inPhysicsFrame, 0);
@@ -295,9 +303,9 @@ public sealed partial class Engine : ElectronObject
 
         List<Exception>? errors = null;
         try { (Volatile.Read(ref _mainLoop) ?? throw new InvalidOperationException("The running engine has no MainLoop.")).FinalizeLoop(); }
-        catch (Exception error) { Node.CollectException(ref errors, error); }
+        catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); Node.CollectException(ref errors, error); }
         try { AudioServer.CloseForEngine(); }
-        catch (Exception error) { Node.CollectException(ref errors, error); }
+        catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); Node.CollectException(ref errors, error); }
         finally
         {
             Volatile.Write(ref _mainLoop, null);

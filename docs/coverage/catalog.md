@@ -434,7 +434,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Line2D](classes/Line2D.md) | Node2D | Partial | 32 |
 | [LineEdit](classes/LineEdit.md) | Control | Partial | 131 |
 | [LinkButton](classes/LinkButton.md) | BaseButton | Implemented | 27 |
-| [Logger](classes/Logger.md) | RefCounted | Blocked | 7 |
+| [Logger](classes/Logger.md) | RefCounted | Implemented | 7 |
 | [LookAtModifier3D](classes/LookAtModifier3D.md) | SkeletonModifier3D | Excluded | 37 |
 | [MainLoop](classes/MainLoop.md) | Object | Partial | 17 |
 | [MarginContainer](classes/MarginContainer.md) | Container | Implemented | 4 |
@@ -751,7 +751,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [SceneTree](classes/SceneTree.md) | MainLoop | Partial | 51 |
 | [SceneTreeTimer](classes/SceneTreeTimer.md) | RefCounted | Implemented | 2 |
 | [Script](classes/Script.md) | Resource | Partial | 18 |
-| [ScriptBacktrace](classes/ScriptBacktrace.md) | RefCounted | Blocked | 16 |
+| [ScriptBacktrace](classes/ScriptBacktrace.md) | RefCounted | Partial | 16 |
 | [ScriptCreateDialog](classes/ScriptCreateDialog.md) | ConfirmationDialog | Blocked | 5 |
 | [ScriptEditor](classes/ScriptEditor.md) | PanelContainer | Blocked | 18 |
 | [ScriptEditorBase](classes/ScriptEditorBase.md) | VBoxContainer | Blocked | 12 |

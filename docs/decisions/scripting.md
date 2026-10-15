@@ -79,3 +79,5 @@ Live GetScript/SetScript binding/replacement, implementation Reload and keep-sta
 - Empty Script/CSharpScript shells or a per-frame wrapper around existing nodes: these add no executable asset/authoring capability.
 - A new general Behaviour hierarchy, interpreter or DLL for every source file: ordinary compiled C# nodes/projects cover the current execution need.
 - Declaring all scripting implemented, excluding live attachment, or losing inherited members after merging names: type accounting and Node callbacks do not prove the remaining resource/binding contract.
+
+Compiled C# stack metadata and logger delivery are owned by [ADR 0108](diagnostics.md#adr-0108). This does not introduce a live CLR variable debugger or an untyped variable store.

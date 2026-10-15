@@ -277,3 +277,5 @@ See [typed handler storage](../classes/EventHandlers.Generic.md) and [ADR 0010](
 [Typed undo history](../components/undo-history.md) adds thread-owned reversible Action/property authoring, named cursor/version/merge policies and conditional non-Resource ownership. It is public runtime infrastructure for game/tool/editor consumers; it does not introduce an editor-only dependency or dynamic property lookup. See ADR 0105 and the component for executed behavior and verification boundaries.
 
 - [PCKPacker](../classes/PCKPacker.md) and static ProjectSettings.LoadResourcePack execute the [resource pack](../components/resource-packs.md) writer, mounting and shared FileAccess/DirAccess/ResourceLoader path.
+
+- [Runtime diagnostics](../components/diagnostics.md): retained Logger registration, typed OS message/error ingress, Engine output flags and immutable C# ScriptBacktrace metadata integrate lifecycle failures and lazily loaded native logs. CLR live-variable debugging remains a separate backend.

@@ -25,7 +25,13 @@ internal static partial class NativeLibraries
         OperatingSystem.IsMacOS() ? "osx" : OperatingSystem.IsLinux() && !OperatingSystem.IsAndroid() ? "linux" : null;
     internal static string RuntimeRID { get; } = DesktopPlatform is null ? RuntimeInformation.RuntimeIdentifier :
         DesktopPlatform + "-" + RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant();
-    private static readonly Lazy<nint> Sdl = new(() => LoadRuntime(OperatingSystem.IsWindows() ? "SDL3.dll" : OperatingSystem.IsAndroid() ? "libSDL3.so" : OperatingSystem.IsMacOS() ? "libSDL3.0.dylib" : "libSDL3.so.0", typeof(NativeLibraries).Assembly, null));
+    private static readonly Lazy<nint> Sdl = new(LoadSDLCore);
+    private static nint LoadSDLCore()
+    {
+        var handle = LoadRuntime(OperatingSystem.IsWindows() ? "SDL3.dll" : OperatingSystem.IsAndroid() ? "libSDL3.so" : OperatingSystem.IsMacOS() ? "libSDL3.0.dylib" : "libSDL3.so.0", typeof(NativeLibraries).Assembly, null);
+        RuntimeDiagnostics.Instance.SDLAvailable(handle);
+        return handle;
+    }
 
     [ModuleInitializer]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2255", Justification = "Register the assembly's native resolver before any SDL binding can load a second core library.")]

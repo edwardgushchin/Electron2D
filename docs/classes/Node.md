@@ -1718,3 +1718,6 @@ The receiver is an immutable weak identity; disposal/collection skips delivery w
 Current-group worker callbacks may observe their deltas and change their own processing flags/priorities under the ordinary validation hook. Access to another group's processing state is rejected. Typed calls are immediate for the scene owner or current target group; other callers queue to the destination group. General Node/CanvasItem/Entity access, rendering and physical backend mutation retain their current owner guards and remaining Partial coverage. A main collector after the worker barrier can apply computed results to actual physics.
 
 [Public group consumers](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.ProcessGroups.cs) prove parallelism with two independent workers, inherited member order, main collection at equal order, current-group access, masks, error draining, reconfiguration, queue retirement, packed/fresh-process settings and full selected physical frames/queries with zero owner/all-thread allocations. Evidence: `bin/physics-process-groups/2026-10-15/validation.json`.
+
+
+Runtime messages now use [diagnostic delivery](../components/diagnostics.md). Engine output flags affect its physical stream; typed logger callbacks retain delivery. Host Console writers retain ordinary C# semantics.

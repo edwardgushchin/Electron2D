@@ -9,6 +9,14 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIAGNOSTICS") == "portable") { DiagnosticsTests.RunPortable(); return; }
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIAGNOSTICS") is "gpu" or "compatibility" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIAGNOSTICS") is { } diagnosticsBackend) { DiagnosticsFlowTests.Run(diagnosticsBackend); return; }
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIAGNOSTICS") == "native") { DiagnosticsNativeTests.Run(); return; }
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIAGNOSTICS") == "managed") { DiagnosticsTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PACK_FILE_SYSTEM") == "1")
 {
     VerifyFileAccess(); VerifyDirAccess(); VerifyProjectSettings();

@@ -1437,11 +1437,11 @@ public partial class Node : ElectronObject
 
     /// <summary>Writes the relative tree string to standard output.</summary>
     /// <remarks>The tree string already ends in a newline; printing adds another, matching the reference diagnostic.</remarks>
-    public void PrintTree() => Console.WriteLine(GetTreeString());
+    public void PrintTree() => OS.LogMessage(GetTreeString());
 
     /// <summary>Writes the indented tree string to standard output.</summary>
     /// <remarks>The tree string already ends in a newline; printing adds another.</remarks>
-    public void PrintTreePretty() => Console.WriteLine(GetTreeStringPretty());
+    public void PrintTreePretty() => OS.LogMessage(GetTreeStringPretty());
 
     /// <summary>Delivers a notification to this node and then every descendant in parent-first order.</summary>
     /// <param name="what">The notification identifier.</param>

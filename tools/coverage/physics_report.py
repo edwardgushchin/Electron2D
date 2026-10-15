@@ -115,4 +115,12 @@ def render_physics(upstream, classified, coverage_target):
         for name, identity, state, reason in open_rows:
             lines.append(f"| [`{identity}`](classes/{coverage_target(name)}) | {state} | {reason.replace('|', '&#124;')} |")
         lines.append("")
-    return "\n".join(lines)
+    return "\n".join(lines) + (
+        '\n'
+        '\n'
+        'The [networked coupled support profile](../components/physics-network-example.md#coupled-support-across-network-correction-2026-10-15)\n'
+        'adds actual loaded pin/groove/spring contacts, sleep/wake and imported-contact/sleep\n'
+        'assertions to the public separate-process scenario. No engine declaration or\n'
+        'coverage state changes: this bounded graph does not close arbitrary/dense coupling,\n'
+        'the complete inherited/extension contract or hardware/window/performance gates.\n'
+    )

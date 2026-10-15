@@ -222,6 +222,7 @@ public sealed partial class ThemeDB
         ["Line"] = ["Line", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["LineEdit"] = ["LineEdit", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["LinkButton"] = ["LinkButton", "BaseButton", "Control", "CanvasItem", "Node", "ElectronObject"],
+        ["Logger"] = ["Logger", "ElectronObject"],
         ["MainLoop"] = ["MainLoop", "ElectronObject"],
         ["MarginContainer"] = ["MarginContainer", "Container", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["Material"] = ["Material", "Resource", "ElectronObject"],

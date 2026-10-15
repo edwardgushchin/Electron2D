@@ -124,7 +124,7 @@ public sealed class PCKPacker : ElectronObject
                     writer.Write(padded); writer.Write(bytes); for (var j = bytes.Length; j < padded; j++) writer.Write((byte)0);
                     writer.Write(e.Offset); writer.Write(e.Length); writer.Write(e.MD5); writer.Write(e.Flags);
                     if (directory.Length > PCKFormat.DirectoryLimit) throw new IOException("The PCK directory exceeds its size budget.");
-                    if (verbose) Console.WriteLine($"[{i + 1}/{_entries.Count}] PCKPacker flush: res://{e.Path}");
+                    if (verbose) OS.LogMessage($"[{i + 1}/{_entries.Count}] PCKPacker flush: res://{e.Path}");
                 }
             }
             var start = _stream.Position;

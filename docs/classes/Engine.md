@@ -510,3 +510,8 @@ Root startup applies ProjectSettings.MSAA2D when the supplied window has no expl
 ## Shared address resolution
 
 The [IP service](../classes/IP.md) and [address-resolution component](../components/address-resolution.md) now retain the hostname/family cache and bounded asynchronous queue. Existing transport hostname helpers and HTTP asynchronous resolution use this common backend; cold DNS and connection setup remain outside warmed polling budgets. Engine named lookup includes the permanent IP object and rejects disposal/unregistration.
+
+
+Runtime messages now use [diagnostic delivery](../components/diagnostics.md). Engine output flags affect its physical stream; typed logger callbacks retain delivery. Host Console writers retain ordinary C# semantics.
+
+`PrintToSTDOUT` and `PrintErrorMessages` are static bool properties with retained Engine descriptors; `CaptureScriptBacktraces()` returns immutable current-thread C# metadata. Live variable inspection retains its debugger dependency.

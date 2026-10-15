@@ -137,6 +137,7 @@ public sealed partial class Engine
         }
         catch (Exception error)
         {
+            RuntimeDiagnostics.Instance.ReportException(error);
             failures.Add(error);
         }
         finally
@@ -144,11 +145,11 @@ public sealed partial class Engine
             // Keep the engine reserved until user teardown callbacks and native release have finished.
             Volatile.Write(ref _runtimeState, RuntimeStopping);
             try { if (tree is not null) tree.Dispose(); else window.Dispose(); }
-            catch (Exception error) { failures.Add(error); }
+            catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
             try { AudioServer.CloseForEngine(); }
-            catch (Exception error) { failures.Add(error); }
+            catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
             try { window.CloseNative(); }
-            catch (Exception error) { failures.Add(error); }
+            catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
             ReleaseWindowRun();
         }
 

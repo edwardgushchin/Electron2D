@@ -1,0 +1,187 @@
+{
+  "mappings": [
+    {
+      "godot": "class:Logger",
+      "electron2d": "T:Electron2D.Logger",
+      "reason": "ADR 0108: retained static OS registration, copied dispatch snapshots, synchronous typed callbacks, all four exact categories, reentry/failure isolation, physical output flags, lazy native SDL interception/restoration and C# runtime error boundaries execute. Managed/native/concurrent/GC/host and NativeAOT verification limits are recorded in diagnostics.md; no host Console replacement or universal payload."
+    },
+    {
+      "godot": "Logger::enum:ErrorType",
+      "electron2d": "T:Electron2D.LoggerErrorType",
+      "reason": "ADR 0108: retained static OS registration, copied dispatch snapshots, synchronous typed callbacks, all four exact categories, reentry/failure isolation, physical output flags, lazy native SDL interception/restoration and C# runtime error boundaries execute. Managed/native/concurrent/GC/host and NativeAOT verification limits are recorded in diagnostics.md; no host Console replacement or universal payload."
+    },
+    {
+      "godot": "Logger::enum_value:ErrorType.ERROR_TYPE_ERROR",
+      "electron2d": "enumValue:Electron2D.LoggerErrorType.Error()",
+      "reason": "ADR 0108: retained static OS registration, copied dispatch snapshots, synchronous typed callbacks, all four exact categories, reentry/failure isolation, physical output flags, lazy native SDL interception/restoration and C# runtime error boundaries execute. Managed/native/concurrent/GC/host and NativeAOT verification limits are recorded in diagnostics.md; no host Console replacement or universal payload."
+    },
+    {
+      "godot": "Logger::enum_value:ErrorType.ERROR_TYPE_SCRIPT",
+      "electron2d": "enumValue:Electron2D.LoggerErrorType.Script()",
+      "reason": "ADR 0108: retained static OS registration, copied dispatch snapshots, synchronous typed callbacks, all four exact categories, reentry/failure isolation, physical output flags, lazy native SDL interception/restoration and C# runtime error boundaries execute. Managed/native/concurrent/GC/host and NativeAOT verification limits are recorded in diagnostics.md; no host Console replacement or universal payload."
+    },
+    {
+      "godot": "Logger::enum_value:ErrorType.ERROR_TYPE_SHADER",
+      "electron2d": "enumValue:Electron2D.LoggerErrorType.Shader()",
+      "reason": "ADR 0108: retained static OS registration, copied dispatch snapshots, synchronous typed callbacks, all four exact categories, reentry/failure isolation, physical output flags, lazy native SDL interception/restoration and C# runtime error boundaries execute. Managed/native/concurrent/GC/host and NativeAOT verification limits are recorded in diagnostics.md; no host Console replacement or universal payload."
+    },
+    {
+      "godot": "Logger::enum_value:ErrorType.ERROR_TYPE_WARNING",
+      "electron2d": "enumValue:Electron2D.LoggerErrorType.Warning()",
+      "reason": "ADR 0108: retained static OS registration, copied dispatch snapshots, synchronous typed callbacks, all four exact categories, reentry/failure isolation, physical output flags, lazy native SDL interception/restoration and C# runtime error boundaries execute. Managed/native/concurrent/GC/host and NativeAOT verification limits are recorded in diagnostics.md; no host Console replacement or universal payload."
+    },
+    {
+      "godot": "Logger::method:_log_error(String:,String:,int:,String:,String:,bool:,int:,ScriptBacktrace[]:)",
+      "electron2d": "method:Electron2D.Logger.OnLogError(System.String,System.String,System.Int32,System.String,System.String,System.Boolean,Electron2D.LoggerErrorType,System.ReadOnlySpan<Electron2D.ScriptBacktrace>)",
+      "reason": "ADR 0108: retained static OS registration, copied dispatch snapshots, synchronous typed callbacks, all four exact categories, reentry/failure isolation, physical output flags, lazy native SDL interception/restoration and C# runtime error boundaries execute. Managed/native/concurrent/GC/host and NativeAOT verification limits are recorded in diagnostics.md; no host Console replacement or universal payload."
+    },
+    {
+      "godot": "Logger::method:_log_message(String:,bool:)",
+      "electron2d": "method:Electron2D.Logger.OnLogMessage(System.String,System.Boolean)",
+      "reason": "ADR 0108: retained static OS registration, copied dispatch snapshots, synchronous typed callbacks, all four exact categories, reentry/failure isolation, physical output flags, lazy native SDL interception/restoration and C# runtime error boundaries execute. Managed/native/concurrent/GC/host and NativeAOT verification limits are recorded in diagnostics.md; no host Console replacement or universal payload."
+    },
+    {
+      "godot": "class:ScriptBacktrace",
+      "electron2d": "T:Electron2D.ScriptBacktrace",
+      "reason": "ADR 0108/0091: immutable managed C# stack metadata, checked frame access and deterministic formatting execute; available debug symbols supply file/line, unavailable trimmed names are explicit. Snapshot retains strings only. CLR variable name/count inspection requires an actual debugger/symbol adapter and an accepted typed variable projection; value APIs remain excluded under ADR 0001. No constant-zero inspectors or inert capture-locals option."
+    },
+    {
+      "godot": "ScriptBacktrace::method:format(int:,int:)",
+      "electron2d": "method:Electron2D.ScriptBacktrace.Format(System.Int32,System.Int32)",
+      "reason": "ADR 0108/0091: immutable managed C# stack metadata, checked frame access and deterministic formatting execute; available debug symbols supply file/line, unavailable trimmed names are explicit. Snapshot retains strings only. CLR variable name/count inspection requires an actual debugger/symbol adapter and an accepted typed variable projection; value APIs remain excluded under ADR 0001. No constant-zero inspectors or inert capture-locals option."
+    },
+    {
+      "godot": "ScriptBacktrace::method:get_frame_count()",
+      "electron2d": "method:Electron2D.ScriptBacktrace.GetFrameCount()",
+      "reason": "ADR 0108/0091: immutable managed C# stack metadata, checked frame access and deterministic formatting execute; available debug symbols supply file/line, unavailable trimmed names are explicit. Snapshot retains strings only. CLR variable name/count inspection requires an actual debugger/symbol adapter and an accepted typed variable projection; value APIs remain excluded under ADR 0001. No constant-zero inspectors or inert capture-locals option."
+    },
+    {
+      "godot": "ScriptBacktrace::method:get_frame_file(int:)",
+      "electron2d": "method:Electron2D.ScriptBacktrace.GetFrameFile(System.Int32)",
+      "reason": "ADR 0108/0091: immutable managed C# stack metadata, checked frame access and deterministic formatting execute; available debug symbols supply file/line, unavailable trimmed names are explicit. Snapshot retains strings only. CLR variable name/count inspection requires an actual debugger/symbol adapter and an accepted typed variable projection; value APIs remain excluded under ADR 0001. No constant-zero inspectors or inert capture-locals option."
+    },
+    {
+      "godot": "ScriptBacktrace::method:get_frame_function(int:)",
+      "electron2d": "method:Electron2D.ScriptBacktrace.GetFrameFunction(System.Int32)",
+      "reason": "ADR 0108/0091: immutable managed C# stack metadata, checked frame access and deterministic formatting execute; available debug symbols supply file/line, unavailable trimmed names are explicit. Snapshot retains strings only. CLR variable name/count inspection requires an actual debugger/symbol adapter and an accepted typed variable projection; value APIs remain excluded under ADR 0001. No constant-zero inspectors or inert capture-locals option."
+    },
+    {
+      "godot": "ScriptBacktrace::method:get_frame_line(int:)",
+      "electron2d": "method:Electron2D.ScriptBacktrace.GetFrameLine(System.Int32)",
+      "reason": "ADR 0108/0091: immutable managed C# stack metadata, checked frame access and deterministic formatting execute; available debug symbols supply file/line, unavailable trimmed names are explicit. Snapshot retains strings only. CLR variable name/count inspection requires an actual debugger/symbol adapter and an accepted typed variable projection; value APIs remain excluded under ADR 0001. No constant-zero inspectors or inert capture-locals option."
+    },
+    {
+      "godot": "ScriptBacktrace::method:get_language_name()",
+      "electron2d": "method:Electron2D.ScriptBacktrace.GetLanguageName()",
+      "reason": "ADR 0108/0091: immutable managed C# stack metadata, checked frame access and deterministic formatting execute; available debug symbols supply file/line, unavailable trimmed names are explicit. Snapshot retains strings only. CLR variable name/count inspection requires an actual debugger/symbol adapter and an accepted typed variable projection; value APIs remain excluded under ADR 0001. No constant-zero inspectors or inert capture-locals option."
+    },
+    {
+      "godot": "ScriptBacktrace::method:is_empty()",
+      "electron2d": "method:Electron2D.ScriptBacktrace.IsEmpty()",
+      "reason": "ADR 0108/0091: immutable managed C# stack metadata, checked frame access and deterministic formatting execute; available debug symbols supply file/line, unavailable trimmed names are explicit. Snapshot retains strings only. CLR variable name/count inspection requires an actual debugger/symbol adapter and an accepted typed variable projection; value APIs remain excluded under ADR 0001. No constant-zero inspectors or inert capture-locals option."
+    },
+    {
+      "godot": "OS::method:add_logger(Logger:)",
+      "electron2d": "method:Electron2D.OS.AddLogger(Electron2D.Logger)",
+      "reason": "ADR 0108: retained static OS registration, copied dispatch snapshots, synchronous typed callbacks, all four exact categories, reentry/failure isolation, physical output flags, lazy native SDL interception/restoration and C# runtime error boundaries execute. Managed/native/concurrent/GC/host and NativeAOT verification limits are recorded in diagnostics.md; no host Console replacement or universal payload."
+    },
+    {
+      "godot": "OS::method:remove_logger(Logger:)",
+      "electron2d": "method:Electron2D.OS.RemoveLogger(Electron2D.Logger)",
+      "reason": "ADR 0108: retained static OS registration, copied dispatch snapshots, synchronous typed callbacks, all four exact categories, reentry/failure isolation, physical output flags, lazy native SDL interception/restoration and C# runtime error boundaries execute. Managed/native/concurrent/GC/host and NativeAOT verification limits are recorded in diagnostics.md; no host Console replacement or universal payload."
+    },
+    {
+      "godot": "Engine::property:print_to_stdout",
+      "electron2d": "property:Electron2D.Engine.PrintToSTDOUT()",
+      "reason": "ADR 0108: retained static OS registration, copied dispatch snapshots, synchronous typed callbacks, all four exact categories, reentry/failure isolation, physical output flags, lazy native SDL interception/restoration and C# runtime error boundaries execute. Managed/native/concurrent/GC/host and NativeAOT verification limits are recorded in diagnostics.md; no host Console replacement or universal payload."
+    },
+    {
+      "godot": "Engine::property:print_error_messages",
+      "electron2d": "property:Electron2D.Engine.PrintErrorMessages()",
+      "reason": "ADR 0108: retained static OS registration, copied dispatch snapshots, synchronous typed callbacks, all four exact categories, reentry/failure isolation, physical output flags, lazy native SDL interception/restoration and C# runtime error boundaries execute. Managed/native/concurrent/GC/host and NativeAOT verification limits are recorded in diagnostics.md; no host Console replacement or universal payload."
+    },
+    {
+      "godot": "Engine::method:capture_script_backtraces(bool:)",
+      "electron2d": "method:Electron2D.Engine.CaptureScriptBacktraces()",
+      "reason": "ADR 0108/0091: immutable managed C# stack metadata, checked frame access and deterministic formatting execute; available debug symbols supply file/line, unavailable trimmed names are explicit. Snapshot retains strings only. CLR variable name/count inspection requires an actual debugger/symbol adapter and an accepted typed variable projection; value APIs remain excluded under ADR 0001. No constant-zero inspectors or inert capture-locals option."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:Logger",
+        "Logger::enum:ErrorType",
+        "Logger::enum_value:ErrorType.ERROR_TYPE_ERROR",
+        "Logger::enum_value:ErrorType.ERROR_TYPE_SCRIPT",
+        "Logger::enum_value:ErrorType.ERROR_TYPE_SHADER",
+        "Logger::enum_value:ErrorType.ERROR_TYPE_WARNING",
+        "Logger::method:_log_error(String:,String:,int:,String:,String:,bool:,int:,ScriptBacktrace[]:)",
+        "Logger::method:_log_message(String:,bool:)",
+        "ScriptBacktrace::method:format(int:,int:)",
+        "ScriptBacktrace::method:get_frame_count()",
+        "ScriptBacktrace::method:get_frame_file(int:)",
+        "ScriptBacktrace::method:get_frame_function(int:)",
+        "ScriptBacktrace::method:get_frame_line(int:)",
+        "ScriptBacktrace::method:get_language_name()",
+        "ScriptBacktrace::method:is_empty()",
+        "OS::method:add_logger(Logger:)",
+        "OS::method:remove_logger(Logger:)",
+        "Engine::property:print_to_stdout",
+        "Engine::property:print_error_messages",
+        "Engine::method:capture_script_backtraces(bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0108: retained static OS registration, copied dispatch snapshots, synchronous typed callbacks, all four exact categories, reentry/failure isolation, physical output flags, lazy native SDL interception/restoration and C# runtime error boundaries execute. Managed/native/concurrent/GC/host and NativeAOT verification limits are recorded in diagnostics.md; no host Console replacement or universal payload."
+    },
+    {
+      "godot": [
+        "class:ScriptBacktrace"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0108/0091: immutable managed C# stack metadata, checked frame access and deterministic formatting execute; available debug symbols supply file/line, unavailable trimmed names are explicit. Snapshot retains strings only. CLR variable name/count inspection requires an actual debugger/symbol adapter and an accepted typed variable projection; value APIs remain excluded under ADR 0001. No constant-zero inspectors or inert capture-locals option."
+    },
+    {
+      "godot": [
+        "ScriptBacktrace::method:get_global_variable_count()",
+        "ScriptBacktrace::method:get_global_variable_name(int:)",
+        "ScriptBacktrace::method:get_local_variable_count(int:)",
+        "ScriptBacktrace::method:get_local_variable_name(int:,int:)",
+        "ScriptBacktrace::method:get_member_variable_count(int:)",
+        "ScriptBacktrace::method:get_member_variable_name(int:,int:)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: executing CLR debugger/symbol adapter with a separately accepted typed local/member/global variable projection (ADRs 0001/0091/0108). Ordinary .NET stack metadata cannot inspect live variables; no empty inspectors are exposed."
+    },
+    {
+      "godot": [
+        "ScriptBacktrace::method:get_global_variable_value(int:)",
+        "ScriptBacktrace::method:get_local_variable_value(int:,int:)",
+        "ScriptBacktrace::method:get_member_variable_value(int:,int:)"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0001/0091/0108: Variant-valued live variable getters would recreate a universal value carrier; no object/dynamic fallback is exposed. Future CLR debugging requires a separately accepted typed projection."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.Logger..ctor()",
+      "reason": "ADR 0108: explicit typed CLR diagnostic ingress, deterministic receiver lifetime or immutable snapshot string formatting; no universal values or platform identity exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.Logger.Dispose(System.Boolean)",
+      "reason": "ADR 0108: explicit typed CLR diagnostic ingress, deterministic receiver lifetime or immutable snapshot string formatting; no universal values or platform identity exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.OS.LogError(System.String,Electron2D.LoggerErrorType,System.String,System.String,System.String,System.Int32)",
+      "reason": "ADR 0108: explicit typed CLR diagnostic ingress, deterministic receiver lifetime or immutable snapshot string formatting; no universal values or platform identity exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.OS.LogMessage(System.String,System.Boolean)",
+      "reason": "ADR 0108: explicit typed CLR diagnostic ingress, deterministic receiver lifetime or immutable snapshot string formatting; no universal values or platform identity exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.ScriptBacktrace.ToString()",
+      "reason": "ADR 0108: explicit typed CLR diagnostic ingress, deterministic receiver lifetime or immutable snapshot string formatting; no universal values or platform identity exposed."
+    }
+  ]
+}

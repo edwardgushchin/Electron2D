@@ -6453,6 +6453,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Logger",
+    "kind": "type",
+    "declaringType": "Electron2D.Logger",
+    "name": "Logger",
+    "signature": "public class Electron2D.Logger",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.LoggerErrorType",
+    "kind": "type",
+    "declaringType": "Electron2D.LoggerErrorType",
+    "name": "LoggerErrorType",
+    "signature": "public enum Electron2D.LoggerErrorType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.MainLoop",
     "kind": "type",
     "declaringType": "Electron2D.MainLoop",
@@ -10502,6 +10535,19 @@
     "interfaces": [
       "System.IDisposable"
     ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ScriptBacktrace",
+    "kind": "type",
+    "declaringType": "Electron2D.ScriptBacktrace",
+    "name": "ScriptBacktrace",
+    "signature": "public sealed class Electron2D.ScriptBacktrace",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -18840,6 +18886,19 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.Logger..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Logger",
+    "name": ".ctor",
+    "signature": "public Logger()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -37548,6 +37607,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.LinkButton.UnderlineMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.LoggerErrorType.Error()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.LoggerErrorType",
+    "name": "Error",
+    "signature": "public const Electron2D.LoggerErrorType Error = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.LoggerErrorType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.LoggerErrorType.Script()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.LoggerErrorType",
+    "name": "Script",
+    "signature": "public const Electron2D.LoggerErrorType Script = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.LoggerErrorType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.LoggerErrorType.Shader()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.LoggerErrorType",
+    "name": "Shader",
+    "signature": "public const Electron2D.LoggerErrorType Shader = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.LoggerErrorType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.LoggerErrorType.Warning()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.LoggerErrorType",
+    "name": "Warning",
+    "signature": "public const Electron2D.LoggerErrorType Warning = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.LoggerErrorType",
     "value": "1"
   },
   {
@@ -90847,6 +90958,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Engine.CaptureScriptBacktraces()",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "CaptureScriptBacktraces",
+    "signature": "public static Electron2D.ScriptBacktrace[] CaptureScriptBacktraces()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScriptBacktrace[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Engine.GetFramesDrawn()",
     "kind": "method",
     "declaringType": "Electron2D.Engine",
@@ -111088,6 +111212,103 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Logger.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Logger",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Logger.OnLogError(System.String,System.String,System.Int32,System.String,System.String,System.Boolean,Electron2D.LoggerErrorType,System.ReadOnlySpan\u003CElectron2D.ScriptBacktrace\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Logger",
+    "name": "OnLogError",
+    "signature": "protected virtual System.Void OnLogError(System.String function, System.String file, System.Int32 line, System.String code, System.String rationale, System.Boolean editorNotify, Electron2D.LoggerErrorType errorType, System.ReadOnlySpan\u003CElectron2D.ScriptBacktrace\u003E scriptBacktraces)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "function",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "file",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "code",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "rationale",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "editorNotify",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "errorType",
+        "type": "Electron2D.LoggerErrorType",
+        "default": null
+      },
+      {
+        "name": "scriptBacktraces",
+        "type": "System.ReadOnlySpan\u003CElectron2D.ScriptBacktrace\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Logger.OnLogMessage(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Logger",
+    "name": "OnLogMessage",
+    "signature": "protected virtual System.Void OnLogMessage(System.String message, System.Boolean error)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "message",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "error",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.MainLoop.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.MainLoop",
@@ -125173,6 +125394,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.AddLogger(Electron2D.Logger)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "AddLogger",
+    "signature": "public static System.Void AddLogger(Electron2D.Logger logger)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "logger",
+        "type": "Electron2D.Logger",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.CreateInstance(System.ReadOnlySpan\u003CSystem.String\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -125686,6 +125926,74 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.LogError(System.String,Electron2D.LoggerErrorType,System.String,System.String,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "LogError",
+    "signature": "public static System.Void LogError(System.String rationale, Electron2D.LoggerErrorType errorType = Error, System.String code = \u0022\u0022, System.String function = \u0022\u0022, System.String file = \u0022\u0022, System.Int32 line = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rationale",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "errorType",
+        "type": "Electron2D.LoggerErrorType",
+        "default": "Error"
+      },
+      {
+        "name": "code",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "function",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "file",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.LogMessage(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "LogMessage",
+    "signature": "public static System.Void LogMessage(System.String message, System.Boolean error = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "message",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "error",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.MoveToTrash(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -125740,6 +126048,25 @@
       }
     ],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.RemoveLogger(Electron2D.Logger)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "RemoveLogger",
+    "signature": "public static System.Void RemoveLogger(Electron2D.Logger logger)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "logger",
+        "type": "Electron2D.Logger",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -161500,6 +161827,139 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScriptBacktrace.Format(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ScriptBacktrace",
+    "name": "Format",
+    "signature": "public System.String Format(System.Int32 indentAll = 0, System.Int32 indentFrames = 4)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "indentAll",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "indentFrames",
+        "type": "System.Int32",
+        "default": "4"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScriptBacktrace.GetFrameCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.ScriptBacktrace",
+    "name": "GetFrameCount",
+    "signature": "public System.Int32 GetFrameCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScriptBacktrace.GetFrameFile(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ScriptBacktrace",
+    "name": "GetFrameFile",
+    "signature": "public System.String GetFrameFile(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScriptBacktrace.GetFrameFunction(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ScriptBacktrace",
+    "name": "GetFrameFunction",
+    "signature": "public System.String GetFrameFunction(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScriptBacktrace.GetFrameLine(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ScriptBacktrace",
+    "name": "GetFrameLine",
+    "signature": "public System.Int32 GetFrameLine(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScriptBacktrace.GetLanguageName()",
+    "kind": "method",
+    "declaringType": "Electron2D.ScriptBacktrace",
+    "name": "GetLanguageName",
+    "signature": "public System.String GetLanguageName()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScriptBacktrace.IsEmpty()",
+    "kind": "method",
+    "declaringType": "Electron2D.ScriptBacktrace",
+    "name": "IsEmpty",
+    "signature": "public System.Boolean IsEmpty()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScriptBacktrace.ToString()",
+    "kind": "method",
+    "declaringType": "Electron2D.ScriptBacktrace",
+    "name": "ToString",
+    "signature": "public override System.String ToString()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -216411,6 +216871,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Engine.PrintErrorMessages()",
+    "kind": "property",
+    "declaringType": "Electron2D.Engine",
+    "name": "PrintErrorMessages",
+    "signature": "public static System.Boolean PrintErrorMessages { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Engine.PrintToSTDOUT()",
+    "kind": "property",
+    "declaringType": "Electron2D.Engine",
+    "name": "PrintToSTDOUT",
+    "signature": "public static System.Boolean PrintToSTDOUT { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

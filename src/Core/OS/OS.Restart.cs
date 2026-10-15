@@ -63,7 +63,7 @@ public sealed partial class OS
         try { CreateInstance(arguments); }
         catch (Exception error)
         {
-            try { Console.Error.WriteLine("Application restart failed: " + error.Message); }
+            try { RuntimeDiagnostics.Instance.Error("", "", 0, error.GetType().Name, "Application restart failed: " + error.Message, LoggerErrorType.Error); }
             catch { }
         }
         finally
