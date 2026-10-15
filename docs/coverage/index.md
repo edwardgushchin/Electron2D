@@ -953,3 +953,5 @@ The [JSON-RPC document/typed-dispatch slice](../components/jsonrpc.md) closes al
 [ResourcePreloader](../components/resource-preloading.md) closes all seven own class/method rows. Typed borrowed lookup, first-free suffix editing, canonical Unicode storage, local/shared aliases, ordinary/compressed/big-endian files and graph retirement execute. Prepared Get/Has cycles allocate zero owner managed bytes. Author/save/load and Ready resource lookup produce actual blue pixels on current GPU/compatibility Window backends. Inherited Node gaps remain on Node; fresh/foreign/native allocator and human/owner acceptance retain their own gates.
 
 - PolygonPathFinder closes nine standalone polygon-path rows under ADR 0106 with typed setup/query, private stored geometry/penalties and resource/scene integration. Owning behavior and verification are recorded in [polygon paths](../components/polygon-paths.md).
+
+- TextLine closes 31 retained text-object rows under ADR 0107, with exact typed metadata/inline keys, full and display geometry, native glyph integration and owner/lifetime protections. TextParagraph retains its exact paragraph/sliced-line/dropcap dependency.

@@ -58,8 +58,8 @@ internal static class LabelTests
         using var scene = new PackedScene(); scene.Pack(source); using var copy = (Label)scene.Instantiate();
         Check(copy.GetType() == typeof(Label) && copy.Text == "AV" && copy.Uppercase && copy.Language == "en" && copy.ParagraphSeparator == "|" && copy.ClipText && copy.TextDirection == TextDirection.RTL &&
             copy.StructuredTextBIDIOverride == StructuredTextParser.List && copy.StructuredTextBIDIOverrideOptions.SequenceEqual(new[] { "|" }) && copy.TabStops.SequenceEqual(new[] { 12f, 24f }) &&
-            copy.VisibleCharacters == 1 && copy.VisibleRatio == .5f && copy.LabelSettings is not null && copy.LabelSettings != settings && copy.LabelSettings.Font != font,
-            "Packing restores exact label type, coupled visibility, arrays and independently owned local resource graphs.");
+            copy.VisibleCharacters == 1 && copy.VisibleRatio == .5f && copy.LabelSettings is not null && copy.LabelSettings != settings && ReferenceEquals(copy.LabelSettings.Font, font),
+            "Packing restores exact label type, coupled visibility, arrays and independent local settings while retaining their borrowed non-local font.");
         var tabs = copy.TabStops; tabs[0] = 99; Check(copy.TabStops[0] == 12, "Array getters cannot mutate stored text configuration.");
         var descriptors = plain.GetPropertyList();
         var mouse = descriptors.Single(property => property.Name == nameof(Label.MouseFilter));

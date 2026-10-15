@@ -845,7 +845,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [TabBar](classes/TabBar.md) | Control | Implemented | 99 |
 | [TabContainer](classes/TabContainer.md) | Container | Implemented | 85 |
 | [TextEdit](classes/TextEdit.md) | Control | Partial | 299 |
-| [TextLine](classes/TextLine.md) | RefCounted | Blocked | 30 |
+| [TextLine](classes/TextLine.md) | RefCounted | Implemented | 30 |
 | [TextMesh](classes/TextMesh.md) | PrimitiveMesh | Excluded | 18 |
 | [TextParagraph](classes/TextParagraph.md) | RefCounted | Blocked | 49 |
 | [TextServer](classes/TextServer.md) | RefCounted | Blocked | 378 |

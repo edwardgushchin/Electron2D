@@ -9,7 +9,7 @@ internal readonly record struct TextLayoutKey(string Text, int FontSize, float W
     int MaxLines, TextLineBreakFlags Breaks, TextJustificationFlags Justification, TextDirection Direction, TextOrientation Orientation, bool Multiline = false);
 
 internal readonly record struct TextLayoutOptions(float LineSpacing = 0, float ParagraphSpacing = 0, string Language = "",
-    float[]? TabStops = null, int Overrun = 1, string Ellipsis = "\u2026", int VisibleCharacters = -1, int VisibleBehavior = 1, IReadOnlyList<TextBIDIRange>? BIDIOverride = null, bool ApplyAlignment = true, bool? WrappedBehavior = null, bool PreserveControl = false, IReadOnlyList<TextLayoutStyleSpan>? Styles = null, IReadOnlyList<TextLayoutInlineObject>? Objects = null, float DropcapWidth = 0, float DropcapHeight = 0);
+    float[]? TabStops = null, int Overrun = 1, string Ellipsis = "\u2026", int VisibleCharacters = -1, int VisibleBehavior = 1, IReadOnlyList<TextBIDIRange>? BIDIOverride = null, bool ApplyAlignment = true, bool? WrappedBehavior = null, bool PreserveControl = false, IReadOnlyList<TextLayoutStyleSpan>? Styles = null, IReadOnlyList<TextLayoutInlineObject>? Objects = null, float DropcapWidth = 0, float DropcapHeight = 0, bool PreserveInvalid = true, bool GlobalObjectMetrics = false);
 
 internal readonly record struct TextLayoutLine(int Start, int End, int GlyphStart, int GlyphCount, float Width, float Ascent,
     float Descent, float CrossOffset, bool ParagraphEnd, int ParagraphLevel)
@@ -384,7 +384,19 @@ internal sealed partial class TextLayout
         foreach (var run in _runs)
         {
             var runStyle = StyleAt(run.Start); var inline = _richObjects[run.Start];
-            if (inline.At >= 0) { var metrics = runStyle.Font.GetAscent(runStyle.Size); var descent = runStyle.Font.GetDescent(runStyle.Size); var anchor = ((int)inline.Alignment & 12) switch { 0 => -metrics, 4 => (descent - metrics) / 2, 8 => 0, _ => descent }; var own = ((int)inline.Alignment & 3) switch { 0 => 0, 1 => inline.Size.Y / 2, 2 => inline.Size.Y, _ => inline.Baseline >= 0 ? inline.Baseline : inline.Size.Y }; var top = anchor - own; _lineGlyphs.Add(new(null, 0, run.Start, run.End, inline.Size.X, Vector2.Zero, 0, false, false, Size: runStyle.Size, ObjectIndex: inline.Index, ObjectAscent: Math.Max(0, -top), ObjectDescent: Math.Max(0, top + inline.Size.Y))); continue; }
+            if (inline.At >= 0)
+            {
+                var ascent = runStyle.Font.GetAscent(runStyle.Size); var descent = runStyle.Font.GetDescent(runStyle.Size);
+                if (_options.GlobalObjectMetrics && _options.Styles is { } styles)
+                    foreach (var style in styles) if (style.Start < end && style.End > start) { ascent = Math.Max(ascent, style.Font.GetAscent(style.Size)); descent = Math.Max(descent, style.Font.GetDescent(style.Size)); }
+                var vertical = Key.Orientation == TextOrientation.Vertical; var cross = vertical ? inline.Size.X : inline.Size.Y;
+                var anchor = ((int)inline.Alignment & 12) switch { 0 => -ascent, 4 => (descent - ascent) / 2, 8 => 0, _ => descent };
+                var own = ((int)inline.Alignment & 3) switch { 0 => 0, 1 => cross / 2, 2 => cross, _ => inline.ExplicitBaseline || inline.Baseline >= 0 ? inline.Baseline : cross };
+                var top = anchor - own;
+                _lineGlyphs.Add(new(null, 0, run.Start, run.End, vertical ? inline.Size.Y : inline.Size.X, Vector2.Zero, 0, false, false, Size: runStyle.Size, ObjectIndex: inline.Index, ObjectAscent: Math.Max(0, -top), ObjectDescent: Math.Max(0, top + cross)));
+                for (var index = run.Start; index < run.End; index++) _clusterEnds[index] = run.End;
+                continue;
+            }
             if (_options.PreserveControl && _nonprinting[run.Start]) { AddMissingGlyph(run.Start); continue; }
             if (IsSpecial(_scalars[run.Start]))
             {
@@ -448,7 +460,7 @@ internal sealed partial class TextLayout
         for (var i = start; i < end;)
         {
             var level = i >= trailing ? paragraphLevel : _levels[i];
-            var runEnd = i + 1; var special = IsSpecial(_scalars[i]) || _richObjects[i].At >= 0 || _options.PreserveControl && _nonprinting[i];
+            var runEnd = _richObjects[i].At >= 0 ? Math.Min(end, _richObjects[i].At + _richObjects[i].Length) : i + 1; var special = IsSpecial(_scalars[i]) || _richObjects[i].At >= 0 || _options.PreserveControl && _nonprinting[i];
             if (!special)
                 while (runEnd < end && _richObjects[runEnd].At < 0 && StyleAt(runEnd) == StyleAt(i) && !IsSpecial(_scalars[runEnd]) && !(_options.PreserveControl && _nonprinting[runEnd]) && ReferenceEquals(_faces[runEnd], _faces[i]) &&
                     _scripts[runEnd] == _scripts[i] && (runEnd >= trailing ? paragraphLevel : _levels[runEnd]) == level) runEnd++;
@@ -473,11 +485,12 @@ internal sealed partial class TextLayout
     private void AddMissingGlyph(int index)
     {
         var scalar = _scalars[index];
+        if (!_options.PreserveInvalid && !(_options.PreserveControl && _nonprinting[index])) return;
         if (!_options.PreserveControl && (IsIgnorable(index) || scalar is 0x200b or 0x2060 or 0xfeff)) return;
-        var size = TextMissingGlyph.Size(Key.FontSize, scalar);
+        var fontSize = StyleAt(index).Size; var size = TextMissingGlyph.Size(fontSize, scalar);
         var vertical = Key.Orientation == TextOrientation.Vertical;
         var offset = vertical ? new Vector2(-MathF.Round(size.X * .5f, MidpointRounding.AwayFromZero), size.Y) : Vector2.Zero;
-        _lineGlyphs.Add(new(null, scalar, index, index + 1, vertical ? size.Y : size.X, offset, 0, IsSpace(scalar), false, Missing: true));
+        _lineGlyphs.Add(new(null, scalar, index, index + 1, vertical ? size.Y : size.X, offset, 0, IsSpace(scalar), false, Missing: true, Size: fontSize));
     }
 
     private float LayoutAdvance()
@@ -509,9 +522,10 @@ internal sealed partial class TextLayout
         if (addEllipsis)
         {
             _ellipsis ??= new();
-            var key = new TextLayoutKey(_options.Ellipsis ?? "\u2026", Key.FontSize, -1, HorizontalAlignment.Left, 1,
+            var style = _options.GlobalObjectMetrics && _lineGlyphs.Count > 0 ? StyleAt(_lineGlyphs[^1].Start) : new TextLayoutStyleSpan(0, _count, _font, Key.FontSize, _options.Language);
+            var key = new TextLayoutKey(_options.Ellipsis ?? "\u2026", style.Size, -1, HorizontalAlignment.Left, 1,
                 TextLineBreakFlags.None, TextJustificationFlags.None, Key.Direction, Key.Orientation);
-            _ellipsis.Build(_font, key, new TextLayoutOptions(Overrun: 0, VisibleCharacters: -1));
+            _ellipsis.Build(style.Font, key, new TextLayoutOptions(Language: style.Language, Overrun: 0, VisibleCharacters: -1, PreserveInvalid: _options.PreserveInvalid));
             ellipsisWidth = Key.Orientation == TextOrientation.Horizontal ? _ellipsis.Size.X : _ellipsis.Size.Y;
         }
         var available = Math.Max(0, Key.Width - ellipsisWidth);
@@ -661,7 +675,7 @@ internal sealed partial class TextLayout
     }
 
     internal void Draw(CanvasItem canvas, Vector2 baseline, Color color, int outline = 0, float oversampling = 0,
-        int firstLine = 0, int maxLines = -1, int visibleCharacters = -1, int visibleBehavior = 1, bool outlinePass = false, bool clipToWidth = false, Rect2? clipRect = null, ReadOnlySpan<Color> characterColors = default)
+        int firstLine = 0, int maxLines = -1, int visibleCharacters = -1, int visibleBehavior = 1, bool outlinePass = false, bool clipToWidth = false, Rect2? clipRect = null, ReadOnlySpan<Color> characterColors = default, float clipStart = 0)
     {
         if (IsBusy) throw new InvalidOperationException("An active text layout cannot record itself recursively.");
         for (var attempt = 0; attempt < Font.MaximumReadAttempts; attempt++)
@@ -670,14 +684,14 @@ internal sealed partial class TextLayout
             if (_builtFontGeneration != read.Generation) { Build(_font, Key, _options); continue; }
             if (!read.IsCurrent) continue;
             _active++;
-            try { DrawCore(canvas, baseline, color, outline, oversampling, firstLine, maxLines, visibleCharacters, visibleBehavior, outlinePass, clipToWidth, clipRect, characterColors); return; }
+            try { DrawCore(canvas, baseline, color, outline, oversampling, firstLine, maxLines, visibleCharacters, visibleBehavior, outlinePass, clipToWidth, clipRect, characterColors, clipStart); return; }
             finally { _active--; }
         }
         throw Font.UnsettledRead();
     }
 
     private void DrawCore(CanvasItem canvas, Vector2 baseline, Color color, int outline, float oversampling,
-        int firstLine, int maxLines, int visibleCharacters, int visibleBehavior, bool outlinePass, bool clipToWidth, Rect2? clipRect, ReadOnlySpan<Color> characterColors)
+        int firstLine, int maxLines, int visibleCharacters, int visibleBehavior, bool outlinePass, bool clipToWidth, Rect2? clipRect, ReadOnlySpan<Color> characterColors, float clipStart)
     {
         if (firstLine < 0 || firstLine >= _lines.Count) return;
         var end = Key.MaxLines < 0 ? _lines.Count : Math.Min(Key.MaxLines, _lines.Count);
@@ -702,7 +716,7 @@ internal sealed partial class TextLayout
                 if ((!glyph.Missing && (glyph.Face is null || glyph.Index == 0)) || glyph.Tab || glyph.Virtual && glyph.Index == 0) continue;
                 if (glyph.Missing)
                 {
-                    if (clipToWidth && Key.Width > 0 && (glyph.Position.X - glyph.Offset.X < 0 || glyph.Position.X - glyph.Offset.X + glyph.Advance > Key.Width)) continue;
+                    if (clipToWidth && Key.Width > 0) { var pen = Key.Orientation == TextOrientation.Horizontal ? glyph.Position.X - glyph.Offset.X : glyph.Position.Y - glyph.Offset.Y; if (pen < clipStart || pen + glyph.Advance > clipStart + Key.Width) continue; }
                     if (!outlinePass) TextMissingGlyph.Draw(canvas, GlyphSize(glyph), origin + glyph.Position, glyph.Index, glyphColor, clipRect, _options.PreserveControl);
                     continue;
                 }
@@ -710,8 +724,8 @@ internal sealed partial class TextLayout
                 {
                     if (clipToWidth && Key.Width > 0 && (!glyph.Virtual || glyph.Elongation))
                     {
-                        var pen = glyph.Position.X - glyph.Offset.X + repeat * glyph.Advance;
-                        if (pen < 0 || pen + glyph.Advance > Key.Width) continue;
+                        var pen = (Key.Orientation == TextOrientation.Horizontal ? glyph.Position.X - glyph.Offset.X : glyph.Position.Y - glyph.Offset.Y) + repeat * glyph.Advance;
+                        if (pen < clipStart || pen + glyph.Advance > clipStart + Key.Width) continue;
                     }
                     var offset = Key.Orientation == TextOrientation.Horizontal ? new Vector2(repeat * glyph.Advance, 0) : new Vector2(0, repeat * glyph.Advance);
                     var position = origin + glyph.Position + offset;

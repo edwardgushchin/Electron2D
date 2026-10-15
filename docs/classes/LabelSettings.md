@@ -414,3 +414,5 @@ Uses the inherited [Resource graph/lifecycle contract](Resource.md) for the conc
 ## Verification and limits
 
 [LabelSettingsTests](../../tests/Electron2D.Tests/LabelSettingsTests.cs) verifies defaults, scalar notifications, finite guards, layer insertion/removal/movement, bounds failures, structural callback behavior, typed storage, alias ownership, duplication and warm allocation behavior. Actual Label layout and native effects are verified with the consumer's tests; a resource test alone does not establish native rendering. See [coverage](../coverage/classes/LabelSettings.md) and [ADR 0046](../decisions/rendering.md#adr-0046).
+
+Scene-local LabelSettings instances copy their settings state while borrowing a non-local Font unchanged. An explicitly local Font copies once per scene graph and preserves aliases across local settings; scene cleanup owns only those localized copies under ADRs 0013/0023.

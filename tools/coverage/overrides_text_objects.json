@@ -1,0 +1,306 @@
+{
+  "mappings": [
+    {
+      "godot": "class:TextLine",
+      "electron2d": "T:Electron2D.TextLine",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:add_object(Variant:,Vector2:,int:InlineAlignment,int:,float:)",
+      "electron2d": "method:Electron2D.TextLine.AddObject(Electron2D.TextObjectKey,Electron2D.Vector2,Electron2D.InlineAlignment,System.Int32,System.Single)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:add_string(String:,Font:,int:,String:,Variant:)",
+      "electron2d": "method:Electron2D.TextLine.AddString(System.String,Electron2D.Font,System.Int32,System.String)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:clear()",
+      "electron2d": "method:Electron2D.TextLine.Clear()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:draw(RID:,Vector2:,Color:,float:)",
+      "electron2d": "method:Electron2D.TextLine.Draw(Electron2D.CanvasItem,Electron2D.Vector2,System.Nullable<Electron2D.Color>,System.Single)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:draw_outline(RID:,Vector2:,int:,Color:,float:)",
+      "electron2d": "method:Electron2D.TextLine.DrawOutline(Electron2D.CanvasItem,Electron2D.Vector2,System.Int32,System.Nullable<Electron2D.Color>,System.Single)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:duplicate()",
+      "electron2d": "method:Electron2D.TextLine.Duplicate()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:get_inferred_direction()",
+      "electron2d": "method:Electron2D.TextLine.GetInferredDirection()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:get_line_ascent()",
+      "electron2d": "method:Electron2D.TextLine.GetLineAscent()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:get_line_descent()",
+      "electron2d": "method:Electron2D.TextLine.GetLineDescent()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:get_line_underline_position()",
+      "electron2d": "method:Electron2D.TextLine.GetLineUnderlinePosition()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:get_line_underline_thickness()",
+      "electron2d": "method:Electron2D.TextLine.GetLineUnderlineThickness()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:get_line_width()",
+      "electron2d": "method:Electron2D.TextLine.GetLineWidth()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:get_object_rect(Variant:)",
+      "electron2d": "method:Electron2D.TextLine.GetObjectRect(Electron2D.TextObjectKey)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:get_objects()",
+      "electron2d": "method:Electron2D.TextLine.GetObjects()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:get_rid()",
+      "electron2d": "method:Electron2D.TextLine.GetRID()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:get_size()",
+      "electron2d": "method:Electron2D.TextLine.GetSize()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:has_object(Variant:)",
+      "electron2d": "method:Electron2D.TextLine.HasObject(Electron2D.TextObjectKey)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:hit_test(float:)",
+      "electron2d": "method:Electron2D.TextLine.HitTest(System.Single)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:resize_object(Variant:,Vector2:,int:InlineAlignment,float:)",
+      "electron2d": "method:Electron2D.TextLine.ResizeObject(Electron2D.TextObjectKey,Electron2D.Vector2,Electron2D.InlineAlignment,System.Single)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:set_bidi_override(Array:)",
+      "electron2d": "method:Electron2D.TextLine.SetBIDIOverride(System.ReadOnlySpan<Electron2D.TextBIDIRange>)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::method:tab_align(PackedFloat32Array:)",
+      "electron2d": "method:Electron2D.TextLine.TabAlign(System.ReadOnlySpan<System.Single>)",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::property:alignment",
+      "electron2d": "property:Electron2D.TextLine.Alignment()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::property:direction",
+      "electron2d": "property:Electron2D.TextLine.Direction()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::property:ellipsis_char",
+      "electron2d": "property:Electron2D.TextLine.EllipsisChar()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::property:flags",
+      "electron2d": "property:Electron2D.TextLine.Flags()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::property:orientation",
+      "electron2d": "property:Electron2D.TextLine.Orientation()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::property:preserve_control",
+      "electron2d": "property:Electron2D.TextLine.PreserveControl()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::property:preserve_invalid",
+      "electron2d": "property:Electron2D.TextLine.PreserveInvalid()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::property:text_overrun_behavior",
+      "electron2d": "property:Electron2D.TextLine.TextOverrunBehavior()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": "TextLine::property:width",
+      "electron2d": "property:Electron2D.TextLine.Width()",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.TextObjectKey",
+      "reason": "Typed construction/object tokens, exact span metadata access and live descriptors/owner/lifetime protection under ADR 0107.",
+      "adr": "ADRs 0001/0003/0005/0107"
+    },
+    {
+      "electron2d": "constructor:Electron2D.TextLine..ctor()",
+      "reason": "Typed construction/object tokens, exact span metadata access and live descriptors/owner/lifetime protection under ADR 0107.",
+      "adr": "ADRs 0001/0003/0005/0107"
+    },
+    {
+      "electron2d": "constructor:Electron2D.TextObjectKey..ctor()",
+      "reason": "Typed construction/object tokens, exact span metadata access and live descriptors/owner/lifetime protection under ADR 0107.",
+      "adr": "ADRs 0001/0003/0005/0107"
+    },
+    {
+      "electron2d": "method:Electron2D.TextLine.AddString`1(System.String,Electron2D.Font,System.Int32,System.String,T)",
+      "reason": "Typed construction/object tokens, exact span metadata access and live descriptors/owner/lifetime protection under ADR 0107.",
+      "adr": "ADRs 0001/0003/0005/0107"
+    },
+    {
+      "electron2d": "method:Electron2D.TextLine.Dispose(System.Boolean)",
+      "reason": "Typed construction/object tokens, exact span metadata access and live descriptors/owner/lifetime protection under ADR 0107.",
+      "adr": "ADRs 0001/0003/0005/0107"
+    },
+    {
+      "electron2d": "method:Electron2D.TextLine.GetPropertyDescriptors()",
+      "reason": "Typed construction/object tokens, exact span metadata access and live descriptors/owner/lifetime protection under ADR 0107.",
+      "adr": "ADRs 0001/0003/0005/0107"
+    },
+    {
+      "electron2d": "method:Electron2D.TextLine.TryGetSpanMetadata`1(System.Int32,ref T)",
+      "reason": "Typed construction/object tokens, exact span metadata access and live descriptors/owner/lifetime protection under ADR 0107.",
+      "adr": "ADRs 0001/0003/0005/0107"
+    },
+    {
+      "electron2d": "method:Electron2D.TextLine.ValidateDisposal()",
+      "reason": "Typed construction/object tokens, exact span metadata access and live descriptors/owner/lifetime protection under ADR 0107.",
+      "adr": "ADRs 0001/0003/0005/0107"
+    },
+    {
+      "electron2d": "method:Electron2D.TextLine.ValidateMutation()",
+      "reason": "Typed construction/object tokens, exact span metadata access and live descriptors/owner/lifetime protection under ADR 0107.",
+      "adr": "ADRs 0001/0003/0005/0107"
+    },
+    {
+      "electron2d": "property:Electron2D.TextLine.SpanCount()",
+      "reason": "Typed construction/object tokens, exact span metadata access and live descriptors/owner/lifetime protection under ADR 0107.",
+      "adr": "ADRs 0001/0003/0005/0107"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:TextLine",
+        "TextLine::method:add_object(Variant:,Vector2:,int:InlineAlignment,int:,float:)",
+        "TextLine::method:add_string(String:,Font:,int:,String:,Variant:)",
+        "TextLine::method:clear()",
+        "TextLine::method:draw(RID:,Vector2:,Color:,float:)",
+        "TextLine::method:draw_outline(RID:,Vector2:,int:,Color:,float:)",
+        "TextLine::method:duplicate()",
+        "TextLine::method:get_inferred_direction()",
+        "TextLine::method:get_line_ascent()",
+        "TextLine::method:get_line_descent()",
+        "TextLine::method:get_line_underline_position()",
+        "TextLine::method:get_line_underline_thickness()",
+        "TextLine::method:get_line_width()",
+        "TextLine::method:get_object_rect(Variant:)",
+        "TextLine::method:get_objects()",
+        "TextLine::method:get_rid()",
+        "TextLine::method:get_size()",
+        "TextLine::method:has_object(Variant:)",
+        "TextLine::method:hit_test(float:)",
+        "TextLine::method:resize_object(Variant:,Vector2:,int:InlineAlignment,float:)",
+        "TextLine::method:set_bidi_override(Array:)",
+        "TextLine::method:tab_align(PackedFloat32Array:)",
+        "TextLine::property:alignment",
+        "TextLine::property:direction",
+        "TextLine::property:ellipsis_char",
+        "TextLine::property:flags",
+        "TextLine::property:orientation",
+        "TextLine::property:preserve_control",
+        "TextLine::property:preserve_invalid",
+        "TextLine::property:text_overrun_behavior",
+        "TextLine::property:width"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0051/0090: complete typed retained line over the existing FreeType/HarfBuzz/TextLayout owner, borrowed font spans and typed metadata reader, identity-keyed multi-scalar inline objects, BIDI/tabs/both axes, full-buffer carets/objects versus ceiled trimmed display, real native draw/outline/raster scale, duplicate/clear/owner/lifetime and weak borrowed buffer RID consumed by drawing. Prepared queries/draw reuse storage; arrays/authoring are cold. Native visual/package/foreign/performance/owner acceptance remains independently reported."
+    },
+    {
+      "godot": [
+        "class:TextParagraph",
+        "TextParagraph::method:add_object(Variant:,Vector2:,int:InlineAlignment,int:,float:)",
+        "TextParagraph::method:add_string(String:,Font:,int:,String:,Variant:)",
+        "TextParagraph::method:clear()",
+        "TextParagraph::method:clear_dropcap()",
+        "TextParagraph::method:draw(RID:,Vector2:,Color:,Color:,float:)",
+        "TextParagraph::method:draw_dropcap(RID:,Vector2:,Color:,float:)",
+        "TextParagraph::method:draw_dropcap_outline(RID:,Vector2:,int:,Color:,float:)",
+        "TextParagraph::method:draw_line(RID:,Vector2:,int:,Color:,float:)",
+        "TextParagraph::method:draw_line_outline(RID:,Vector2:,int:,int:,Color:,float:)",
+        "TextParagraph::method:draw_outline(RID:,Vector2:,int:,Color:,Color:,float:)",
+        "TextParagraph::method:duplicate()",
+        "TextParagraph::method:get_dropcap_lines()",
+        "TextParagraph::method:get_dropcap_rid()",
+        "TextParagraph::method:get_dropcap_size()",
+        "TextParagraph::method:get_inferred_direction()",
+        "TextParagraph::method:get_line_ascent(int:)",
+        "TextParagraph::method:get_line_count()",
+        "TextParagraph::method:get_line_descent(int:)",
+        "TextParagraph::method:get_line_object_rect(int:,Variant:)",
+        "TextParagraph::method:get_line_objects(int:)",
+        "TextParagraph::method:get_line_range(int:)",
+        "TextParagraph::method:get_line_rid(int:)",
+        "TextParagraph::method:get_line_size(int:)",
+        "TextParagraph::method:get_line_underline_position(int:)",
+        "TextParagraph::method:get_line_underline_thickness(int:)",
+        "TextParagraph::method:get_line_width(int:)",
+        "TextParagraph::method:get_non_wrapped_size()",
+        "TextParagraph::method:get_range()",
+        "TextParagraph::method:get_rid()",
+        "TextParagraph::method:get_size()",
+        "TextParagraph::method:has_object(Variant:)",
+        "TextParagraph::method:hit_test(Vector2:)",
+        "TextParagraph::method:resize_object(Variant:,Vector2:,int:InlineAlignment,float:)",
+        "TextParagraph::method:set_bidi_override(Array:)",
+        "TextParagraph::method:set_dropcap(String:,Font:,int:,Rect2:,String:)",
+        "TextParagraph::method:tab_align(PackedFloat32Array:)",
+        "TextParagraph::property:alignment",
+        "TextParagraph::property:break_flags",
+        "TextParagraph::property:custom_punctuation",
+        "TextParagraph::property:direction",
+        "TextParagraph::property:ellipsis_char",
+        "TextParagraph::property:justification_flags",
+        "TextParagraph::property:line_spacing",
+        "TextParagraph::property:max_lines_visible",
+        "TextParagraph::property:orientation",
+        "TextParagraph::property:preserve_control",
+        "TextParagraph::property:preserve_invalid",
+        "TextParagraph::property:text_overrun_behavior",
+        "TextParagraph::property:width"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: complete paragraph owner using the retained typed span/object builder with wrapping/line RID ownership, line slicing/carets/object rectangles, line spacing, dropcap reservation/drawing and independent paragraph/line alignment/overrun/duplicate integration under ADRs 0046/0107. The executable single-line TextLine alone does not execute these paragraph contracts."
+    }
+  ]
+}

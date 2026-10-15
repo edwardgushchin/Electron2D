@@ -3,7 +3,7 @@ using System.Text;
 namespace Electron2D;
 
 internal readonly record struct TextLayoutStyleSpan(int Start, int End, Font Font, int Size, string Language = "", int Group = 0);
-internal readonly record struct TextLayoutInlineObject(int At, Vector2 Size, InlineAlignment Alignment, int Index, float Baseline = -1);
+internal readonly record struct TextLayoutInlineObject(int At, Vector2 Size, InlineAlignment Alignment, int Index, float Baseline = -1, int Length = 1, bool ExplicitBaseline = false);
 internal sealed class TextGlyphDrawing
 {
     internal Font? Font;
@@ -39,7 +39,7 @@ internal sealed partial class TextLayout
         if (_options.Styles is not null) for (var at = 0; at < _options.Styles.Count; at++)
             { var span = _options.Styles[at]; Font.ValidateSize(span.Size); for (var i = Math.Max(0, span.Start); i < Math.Min(_count, span.End); i++) _richStyles[i] = span; }
         if (_options.Objects is not null) for (var at = 0; at < _options.Objects.Count; at++)
-            { var item = _options.Objects[at]; if ((uint)item.At >= _count || !item.Size.IsFinite() || item.Size.X < 0 || item.Size.Y < 0) throw new ArgumentException("Invalid inline object geometry."); _richObjects[item.At] = item; }
+            { var item = _options.Objects[at]; if ((uint)item.At >= _count || item.Length <= 0 || item.Length > _count - item.At || !item.Size.IsFinite() || item.Size.X < 0 || item.Size.Y < 0) throw new ArgumentException("Invalid inline object geometry."); for (var index = item.At; index < item.At + item.Length; index++) _richObjects[index] = item; }
     }
 
     internal int HitCharacter(Vector2 point)
@@ -107,5 +107,33 @@ internal sealed partial class TextLayout
             }
         }
         finally { _active--; }
+    }
+}
+
+
+internal sealed partial class TextLayout
+{
+    internal Rect2 InlineRect(int index, Vector2 size)
+    {
+        foreach (var glyph in _glyphs)
+        {
+            if (glyph.ObjectIndex != index) continue;
+            var vertical = Key.Orientation == TextOrientation.Vertical; var cross = vertical ? size.X : size.Y;
+            var top = glyph.ObjectAscent > 0 ? -glyph.ObjectAscent : glyph.ObjectDescent - cross;
+            return new(glyph.Position + (vertical ? new Vector2(top, 0) : new Vector2(0, top)), size);
+        }
+        return default;
+    }
+}
+
+
+internal sealed partial class TextLayout
+{
+    internal void ReleaseContent()
+    {
+        if (IsBusy) throw new InvalidOperationException("Active text layout cannot release its content.");
+        _richReadFonts.Clear(); _richReads.Clear(); _options = default; Key = default; _font = null!; _ellipsis = null; _count = 0; CharacterCount = 0; Size = default;
+        _glyphs.Clear(); _rawGlyphs.Clear(); _lineGlyphs.Clear(); _lines.Clear(); _runs.Clear(); _shaped.Clear();
+        Array.Clear(_faces); Array.Clear(_richStyles); Array.Clear(_richObjects); _caretsReady = false;
     }
 }

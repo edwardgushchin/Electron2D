@@ -55,7 +55,7 @@ internal sealed partial class TextLayout
             if (!glyph.Virtual && glyph.End > glyph.Start)
             {
                 var rtl = (_levels[glyph.Start] & 1) != 0; var direction = rtl ? TextDirection.RTL : TextDirection.LTR;
-                var start = glyph.Position.X - glyph.Offset.X;
+                var start = Key.Orientation == TextOrientation.Horizontal ? glyph.Position.X - glyph.Offset.X : glyph.Position.Y - glyph.Offset.Y;
                 for (var column = glyph.Start; column <= glyph.End; column++)
                 {
                     var x = start + advance * (rtl ? glyph.End - column : column - glyph.Start) / (glyph.End - glyph.Start);

@@ -117,9 +117,13 @@ internal static class LabelSettingsTests
         settings.ResourceLocalToScene = true; shallow.ResourceLocalToScene = true;
         using var consumer = new SettingsConsumer { First = settings, Second = shallow }; using var packed = new PackedScene(); packed.Pack(consumer);
         var instance = (SettingsConsumer)packed.Instantiate(); var localFirst = instance.First!; var localSecond = instance.Second!; var localFont = localFirst.Font!;
-        Check(!ReferenceEquals(localFirst, settings) && !ReferenceEquals(localSecond, shallow) && !ReferenceEquals(localFont, firstFont) && ReferenceEquals(localFont, localSecond.Font),
-            "Scene-local settings duplicate independently while a common built-in font preserves alias identity within the scene graph.");
-        instance.Dispose(); Check(localFirst.IsDisposed && localSecond.IsDisposed && localFont.IsDisposed && !settings.IsDisposed && !firstFont.IsDisposed, "Scene ownership releases localized settings/font copies without owning source resources.");
+        Check(!ReferenceEquals(localFirst, settings) && !ReferenceEquals(localSecond, shallow) && ReferenceEquals(localFont, firstFont) && ReferenceEquals(localFont, localSecond.Font),
+            "Scene-local settings copy independently while a non-local font remains the same borrowed source across both copies.");
+        instance.Dispose(); Check(localFirst.IsDisposed && localSecond.IsDisposed && !localFont.IsDisposed && !settings.IsDisposed && !firstFont.IsDisposed, "Scene cleanup releases localized settings while preserving their borrowed non-local font.");
+        firstFont.ResourceLocalToScene = true; packed.Pack(consumer);
+        var localized = (SettingsConsumer)packed.Instantiate(); var localizedFirst = localized.First!; var localizedSecond = localized.Second!; var localizedFont = localizedFirst.Font!;
+        Check(!ReferenceEquals(localizedFont, firstFont) && ReferenceEquals(localizedFont, localizedSecond.Font), "An explicitly local shared font copies once per scene and preserves both aliases.");
+        localized.Dispose(); Check(localizedFirst.IsDisposed && localizedSecond.IsDisposed && localizedFont.IsDisposed && !firstFont.IsDisposed, "Scene cleanup owns only the explicitly localized font copy.");
         settings.Dispose(); Check(!firstFont.IsDisposed, "Disposing settings never disposes a borrowed font.");
     }
 
