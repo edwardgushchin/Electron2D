@@ -95,7 +95,7 @@ public partial class FontFile
             for (var pageIndex = 0; pageIndex < input.Pages; pageIndex++)
             {
                 if (!input.Files.TryGetValue(pageIndex, out var file)) throw new InvalidDataException("Bitmap font pages must have contiguous indices.");
-                var absolute = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(ProjectSettings.GlobalizePath(path))!, file.Replace('\\', System.IO.Path.DirectorySeparatorChar));
+                var absolute = ResourcePacks.CombineRelative(path, file);
                 using var image = Image.LoadFromFile(absolute); image.Convert(Image.Format.Rgba8); var pixels = image.GetData();
                 if (image.Width <= 0 || image.Width > 16384 || image.Height <= 0 || image.Height > 16384) throw new InvalidDataException("Bitmap page exceeds canvas limits.");
                 foreach (var converted in ConvertBitmapPage(input, image.Width, image.Height, pixels))
@@ -142,11 +142,11 @@ public partial class FontFile
     {
         var input = ReadBitmapInput(path);
         if (input.Pages is <= 0 or > 16384 || input.Files.Count != input.Pages) throw new InvalidDataException("Invalid bitmap page count.");
-        var directory = System.IO.Path.GetDirectoryName(ProjectSettings.GlobalizePath(path))!; var result = new string[input.Pages];
+        var result = new string[input.Pages];
         for (var i = 0; i < result.Length; i++)
         {
             if (!input.Files.TryGetValue(i, out var file)) throw new InvalidDataException("Bitmap page indices must be contiguous.");
-            result[i] = System.IO.Path.GetFullPath(System.IO.Path.Combine(directory, file.Replace('\\', System.IO.Path.DirectorySeparatorChar))) + (addTypes ? "::ImageTexture" : "");
+            result[i] = ResourcePacks.CombineRelative(path, file) + (addTypes ? "::ImageTexture" : "");
         }
         return result;
     }

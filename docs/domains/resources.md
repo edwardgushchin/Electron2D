@@ -261,3 +261,6 @@ Internal resource graph IDs are staged before persistence: first authored IDs re
 [ResourcePreloader](../components/resource-preloading.md) supplies case-sensitive named resource slots with numbered duplicate/rename handling and copied name enumeration. Existing PackedScene and archive graphs retain aliases, local-scene copying and file ownership through exact typed reserved slot recovery. The holder borrows ordinary assets and exposes no loading task. Runtime/test details and verification boundaries are in the component.
 
 Physical copy-failure consumers now verify partial-state publication, nested/reentrant batches and throwing graph cleanup against actual selected simulation/query identities. The precise enum policy excludes ordinary Script references and allows explicit force/never fields. These results extend the exercised base/physical contract; the component and coverage retain wider Resource obligations instead of a blanket completion claim.
+
+
+Mounted res:// resources now share [resource pack resolution](../components/resource-packs.md). PCK/ZIP overlays, synthetic directories, read-only packed metadata, relative scene dependencies and bitmap-font pages use the mounted bytes. Ordinary absolute paths and user:// retain physical access. Cached resources keep their normal cache-mode policy.

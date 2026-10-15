@@ -573,7 +573,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [OpenXRVisibilityMask](classes/OpenXRVisibilityMask.md) | VisualInstance3D | Excluded | 0 |
 | [OptimizedTranslation](classes/OptimizedTranslation.md) | Translation | Partial | 1 |
 | [OptionButton](classes/OptionButton.md) | Button | Implemented | 50 |
-| [PCKPacker](classes/PCKPacker.md) | RefCounted | Blocked | 5 |
+| [PCKPacker](classes/PCKPacker.md) | RefCounted | Implemented | 5 |
 | [PackedByteArray](classes/PackedByteArray.md) | — | Excluded | 76 |
 | [PackedColorArray](classes/PackedColorArray.md) | — | Excluded | 30 |
 | [PackedDataContainer](classes/PackedDataContainer.md) | Resource | Blocked | 2 |

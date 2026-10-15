@@ -9,6 +9,17 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PACK_FILE_SYSTEM") == "1")
+{
+    VerifyFileAccess(); VerifyDirAccess(); VerifyProjectSettings();
+    Console.WriteLine("Resource pack adjacent physical file/directory/project regressions passed.");
+    return;
+}
+
+if (args.Length == 3 && args[0] == "--resource-pack") { ResourcePackFlowTests.Run(args[1], args[2]); return; }
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_PACKS") == "1") { ResourcePackTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_CHILD") is { } fontRasterPath) { FontRasterPolicyTests.RunChild(fontRasterPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER_HOST") == "1") { FontRasterPolicyTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_RASTER") == "1") { FontRasterPolicyTests.Run(); return; }

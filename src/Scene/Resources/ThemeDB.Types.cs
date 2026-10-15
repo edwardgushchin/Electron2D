@@ -258,6 +258,7 @@ public sealed partial class ThemeDB
         ["OggPacketSequencePlayback"] = ["OggPacketSequencePlayback", "ElectronObject"],
         ["OptimizedTranslation"] = ["OptimizedTranslation", "Translation", "Resource", "ElectronObject"],
         ["OptionButton"] = ["OptionButton", "Button", "BaseButton", "Control", "CanvasItem", "Node", "ElectronObject"],
+        ["PCKPacker"] = ["PCKPacker", "ElectronObject"],
         ["PackedScene"] = ["PackedScene", "Resource", "ElectronObject"],
         ["PacketPeer"] = ["PacketPeer", "ElectronObject"],
         ["PacketPeerDTLS"] = ["PacketPeerDTLS", "PacketPeer", "ElectronObject"],

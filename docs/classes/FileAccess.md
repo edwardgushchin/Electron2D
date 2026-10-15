@@ -1290,3 +1290,6 @@ See [resource-file contracts](../components/resource-files.md) for registered ty
 ## Process-pipe streams
 
 OS.ExecuteWithPipe supplies owned stdin/stdout and stderr FileAccess streams. Byte, numeric, strict text/line and CSV operations use the existing stream boundary; Length, Position, Seek, Resize and whole-file ReadAllText reject non-seekable storage. Nonblocking temporary emptiness is not EOF, and partial writes expose PipeWriteException.BytesWritten. Exact reads may consume partial data before an IOException; byte buffers permit incremental framing. Closing a stream does not own the child. Generic FileAccess.Open("pipe://name") remains a named-pipe connector dependency. See [process ownership and checks](../components/processes.md).
+
+
+Mounted res:// resources now share [resource pack resolution](../components/resource-packs.md). PCK/ZIP overlays, synthetic directories, read-only packed metadata, relative scene dependencies and bitmap-font pages use the mounted bytes. Ordinary absolute paths and user:// retain physical access. Cached resources keep their normal cache-mode policy.

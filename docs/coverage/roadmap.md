@@ -4,8 +4,8 @@ Last updated: 2026-10-08
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1555 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 738 missing declarations in already represented type families; split each type by its documented dependency trigger.
+1. Close 1556 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+2. Complete 737 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -23,8 +23,8 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [Engine](classes/Engine.md) | 15 | 11 |
 | [Input](classes/Input.md) | 12 | 30 |
 | [Performance](classes/Performance.md) | 12 | 2 |
-| [ProjectSettings](classes/ProjectSettings.md) | 6 | 43 |
 | [SceneTree](classes/SceneTree.md) | 6 | 19 |
+| [ProjectSettings](classes/ProjectSettings.md) | 5 | 44 |
 | [SceneState](classes/SceneState.md) | 5 | 15 |
 | [Control](classes/Control.md) | 3 | 60 |
 | [Image](classes/Image.md) | 2 | 73 |
@@ -116,7 +116,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. | 1 |
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
 | Trigger: actual editor execution-context reporting through Engine.IsEditorHint and editor/runtime border drawing under ADRs 0015/0027/0090. The current runtime has no editor-context producer; do not introduce a constant hint or inert EditorOnly switch. | 1 |
-| Trigger: an accepted PCK archive/encryption/removal writer-reader contract plus ProjectSettings.LoadResourcePack mounting and packed virtual res:// lookup integrated with FileAccess/DirAccess/ResourceLoader under ADRs 0019/0013/0023/0039. Current directory-backed project resolution and ZIP utilities do not provide packed overlays, pack keys or removal entries. | 1 |
 | Trigger: an installed compiler-consumed built-in include library with stable names, source lookup and all three retained static discovery operations (ADR 0028). ShaderInclude user-source files and native compiler preprocessing now execute; they do not supply a built-in library or invent empty lookup results. | 1 |
 | Trigger: complete SVG Color-to-Color paint remapping in the native SVG path plus retained per-canvas/viewport oversampling variants and scaled RID ownership under ADRs 0028/0039/0083. Current Image SVG rasterization and static theme icons alone do not execute these contracts. | 1 |
 | Trigger: complete typed thread start/result, priority, main-owner identity and join/retirement, plus a resolved executable safety-check override contract: the pinned set_thread_safety_checks_enabled(bool) must not be an inert flag and current ADRs 0006/0011/0104 require owner-affine scene mutation. | 1 |

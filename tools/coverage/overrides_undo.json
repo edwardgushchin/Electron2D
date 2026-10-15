@@ -202,18 +202,6 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0105 with 0001/0002/0003/0005/0014/0027/0090: executable thread-owned runtime history, typed Action/PropertyDescriptor operations, nested/record-only commits, named 800ms All/Ends/forced merging, cursor/unsigned version/limits and conditional non-Resource ownership. Source do-force omission is corrected; pending authoring leaves committed merge state intact. All operations/observers/cleanup are attempted with documented failure publication, guarded reentry and linear cold retirement. Managed scene/resource/file and actual GPU/compatibility undo/redo plus warmed playback execute; independent/native/foreign/editor/owner gates remain separate."
-    },
-    {
-      "godot": [
-        "class:PCKPacker",
-        "PCKPacker::method:add_file(String:,String:,bool:)",
-        "PCKPacker::method:add_file_from_buffer(String:,PackedByteArray:,bool:)",
-        "PCKPacker::method:add_file_removal(String:)",
-        "PCKPacker::method:flush(bool:)",
-        "PCKPacker::method:pck_start(String:,int:,String:,bool:)"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: an accepted PCK archive/encryption/removal writer-reader contract plus ProjectSettings.LoadResourcePack mounting and packed virtual res:// lookup integrated with FileAccess/DirAccess/ResourceLoader under ADRs 0019/0013/0023/0039. Current directory-backed project resolution and ZIP utilities do not provide packed overlays, pack keys or removal entries."
     }
   ]
 }

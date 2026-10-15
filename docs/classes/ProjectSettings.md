@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 **Inherits:** [ProjectSettingsRegistry](ProjectSettingsRegistry.md)
 
@@ -1498,3 +1498,8 @@ This verifies ordinary reflection-disabled managed execution, not a NativeAOT pu
 ## WebP codec settings
 
 The built-in `ProjectSettings.WebPCompressionMethod` and `WebPLosslessCompressionFactor` definitions default to 2 and 25, with ranges 0–6 and finite 0–100. Every independent registry registers them too. They control executable cold image saving and support ordinary typed persistence and feature overrides. See [WebP saving](../components/image-webp.md).
+
+
+Mounted res:// resources now share [resource pack resolution](../components/resource-packs.md). PCK/ZIP overlays, synthetic directories, read-only packed metadata, relative scene dependencies and bitmap-font pages use the mounted bytes. Ordinary absolute paths and user:// retain physical access. Cached resources keep their normal cache-mode policy.
+
+`LoadResourcePack(string pack, bool replaceFiles = true, long offset = 0)` and `LoadResourcePack(string pack, ReadOnlySpan<byte> decryptionKey, bool replaceFiles = true, long offset = 0)` mount process-wide overlays transactionally. The default key is 32 zero bytes; explicit keys are copied. False means invalid/unreadable/unsupported pack; invalid arguments throw. Sparse/delta export formats remain unsupported.

@@ -84,6 +84,14 @@ public sealed class ZIPReader : ElectronObject
         lock (_gate)
         {
             RequireOpen(); var index = Find(path, caseSensitive); if (index < 0) throw new FileNotFoundException("The ZIP entry is absent.", path);
+            return ReadFileAt(index);
+        }
+    }
+    internal byte[] ReadFileAt(int index)
+    {
+        lock (_gate)
+        {
+            RequireOpen();
             var entry = _entries[index]; if (entry.Length > Array.MaxLength) throw new InvalidDataException("ZIP entry exceeds managed array capacity.");
             using var decoded = entry.Open(); var bytes = GC.AllocateUninitializedArray<byte>((int)entry.Length); var read = 0; uint crc = uint.MaxValue;
             while (read < bytes.Length)

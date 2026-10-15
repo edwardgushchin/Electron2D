@@ -8,7 +8,7 @@ using IoFileAccess = System.IO.FileAccess;
 
 namespace Electron2D;
 
-/// <summary>Provides binary and text access to ordinary files, directory-backed virtual files and process pipes.</summary>
+/// <summary>Provides binary and text access to ordinary files, mounted or directory-backed virtual files and process pipes.</summary>
 /// <remarks>
 /// Instances own their stream until <see cref="Close"/> or disposal. Seekable operations are serialized; process
 /// pipes serialize each read/write direction independently. A
@@ -36,6 +36,7 @@ public sealed partial class FileAccess : ElectronObject
     private readonly object _gate = new();
     private readonly object? _pipeWriteGate;
     private object WriteGate => _pipeWriteGate ?? _gate;
+    private readonly bool _packed;
     private readonly string _path;
     private readonly string _absolutePath;
     private readonly FileAccessModeFlags _mode;
@@ -52,16 +53,20 @@ public sealed partial class FileAccess : ElectronObject
         string absolutePath,
         FileAccessModeFlags mode,
         Stream stream,
-        Func<byte[], byte[]>? encoder = null)
+        Func<byte[], byte[]>? encoder = null,
+        bool packed = false)
     {
+        _packed = packed;
         _path = path;
-        _absolutePath = absolutePath;
+        _absolutePath = packed ? "res://" + PCKFormat.Normalize(ResourceUID.EnsurePath(path)) : absolutePath;
         _mode = mode;
         _stream = stream;
         _pipeWriteGate = stream is ProcessPipeStream ? new object() : null;
         _encoder = encoder;
         _dirty = encoder is not null && Truncates(mode);
     }
+
+    internal Stream BorrowStream => EnsureOpen();
 
     internal static FileAccess FromProcessPipe(string path, Stream stream, FileAccessModeFlags mode) => new(path, path, mode, stream);
 
@@ -94,8 +99,8 @@ public sealed partial class FileAccess : ElectronObject
     /// <value>The original virtual or ordinary path.</value>
     public string Path => _path;
 
-    /// <summary>Gets the normalized absolute operating-system path.</summary>
-    /// <value>The resolved path used for physical file operations.</value>
+    /// <summary>Gets the normalized absolute file path or mounted resource identity.</summary>
+    /// <value>The resolved native path, or res:// identity for a mounted read-only file.</value>
     public string AbsolutePath => _absolutePath;
 
     /// <summary>Gets whether the owned stream is still open.</summary>
@@ -176,7 +181,7 @@ public sealed partial class FileAccess : ElectronObject
             lock (_gate)
             {
                 EnsureOpen();
-                return IsHidden(_absolutePath);
+                return _packed ? false : IsHidden(_absolutePath);
             }
         }
         set
@@ -185,6 +190,7 @@ public sealed partial class FileAccess : ElectronObject
             lock (_gate)
             {
                 EnsureOpen();
+                if (_packed) throw new UnauthorizedAccessException("Packed file metadata is read-only.");
                 SetHidden(_absolutePath, value);
             }
         }
@@ -205,7 +211,7 @@ public sealed partial class FileAccess : ElectronObject
             lock (_gate)
             {
                 EnsureOpen();
-                return IsReadOnly(_absolutePath);
+                return _packed || IsReadOnly(_absolutePath);
             }
         }
         set
@@ -214,6 +220,7 @@ public sealed partial class FileAccess : ElectronObject
             lock (_gate)
             {
                 EnsureOpen();
+                if (_packed) throw new UnauthorizedAccessException("Packed file metadata is read-only.");
                 SetReadOnly(_absolutePath, value);
             }
         }
@@ -262,6 +269,10 @@ public sealed partial class FileAccess : ElectronObject
     {
         var absolutePath = ResolvePath(path);
         ValidateMode(mode);
+        if (CanWrite(mode)) ResourcePacks.Runtime.EnsureWritable(path);
+        ResourcePacks.Runtime.EnsureReadablePath(path);
+        if (mode == FileAccessModeFlags.Read && ResourcePacks.Runtime.TryOpen(path, out var packed))
+            return new FileAccess(path, "res://" + PCKFormat.Normalize(ResourceUID.EnsurePath(path)), mode, packed, packed: true);
         var stream = OpenPhysical(absolutePath, mode);
         return new FileAccess(path, absolutePath, mode, stream);
     }
@@ -350,10 +361,12 @@ public sealed partial class FileAccess : ElectronObject
         ValidateCompressionMode(compressionMode);
         var absolutePath = ResolvePath(path);
         ValidateMode(mode);
-        var data = Truncates(mode) ? [] : DecodeCompressed(File.ReadAllBytes(absolutePath), compressionMode);
+        if (CanWrite(mode)) ResourcePacks.Runtime.EnsureWritable(path);
+        var packed = false;
+        var data = Truncates(mode) ? [] : DecodeCompressed(ResourcePacks.ReadBytes(path, out packed), compressionMode);
         var stream = CreateMemoryStream(data);
         if (mode == FileAccessModeFlags.Read)
-            return new FileAccess(path, absolutePath, mode, stream);
+            return new FileAccess(path, absolutePath, mode, stream, packed: packed);
 
         return new FileAccess(path, absolutePath, mode, stream, bytes => EncodeCompressed(bytes, compressionMode));
     }
@@ -377,11 +390,13 @@ public sealed partial class FileAccess : ElectronObject
         EnsureEncryptionSupported();
         var absolutePath = ResolvePath(path);
         ValidateMode(mode);
-        var data = Truncates(mode) ? [] : Decrypt(File.ReadAllBytes(absolutePath), key, RawKeyEncryption, out _);
+        if (CanWrite(mode)) ResourcePacks.Runtime.EnsureWritable(path);
+        var packed = false;
+        var data = Truncates(mode) ? [] : Decrypt(ResourcePacks.ReadBytes(path, out packed), key, RawKeyEncryption, out _);
         var stream = CreateMemoryStream(data);
         CryptographicOperations.ZeroMemory(data);
         if (mode == FileAccessModeFlags.Read)
-            return new FileAccess(path, absolutePath, mode, stream);
+            return new FileAccess(path, absolutePath, mode, stream, packed: packed);
 
         var keyCopy = key.ToArray();
         var result = new FileAccess(
@@ -415,7 +430,9 @@ public sealed partial class FileAccess : ElectronObject
         EnsureEncryptionSupported();
         var absolutePath = ResolvePath(path);
         ValidateMode(mode);
+        if (CanWrite(mode)) ResourcePacks.Runtime.EnsureWritable(path);
 
+        var packed = false;
         byte[] salt;
         byte[] data;
         if (Truncates(mode))
@@ -425,7 +442,7 @@ public sealed partial class FileAccess : ElectronObject
         }
         else
         {
-            var envelope = File.ReadAllBytes(absolutePath);
+            var envelope = ResourcePacks.ReadBytes(path, out packed);
             ParseEncryptionEnvelope(envelope, PasswordEncryption, out _, out var saltOffset, out var saltLength);
             salt = envelope.AsSpan(saltOffset, saltLength).ToArray();
             var readKey = DeriveKey(password, salt);
@@ -444,7 +461,7 @@ public sealed partial class FileAccess : ElectronObject
         if (mode == FileAccessModeFlags.Read)
         {
             CryptographicOperations.ZeroMemory(salt);
-            return new FileAccess(path, absolutePath, mode, stream);
+            return new FileAccess(path, absolutePath, mode, stream, packed: packed);
         }
 
         var key = DeriveKey(password, salt);
@@ -958,7 +975,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="UnauthorizedAccessException">A virtual path escapes its configured root.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
-    public static bool FileExists(string path) => File.Exists(ResolvePath(path));
+    public static bool FileExists(string path) => ResourcePacks.Runtime.TrySize(path, out _) || !ResourcePacks.Runtime.HasFileAncestor(path) && File.Exists(ResolvePath(path));
 
     /// <summary>Reads a complete physical or directory-backed virtual file.</summary>
     /// <param name="path">The file path.</param>
@@ -968,7 +985,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="IOException">The file cannot be read.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access or a virtual path escapes its root.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
-    public static byte[] GetFileAsBytes(string path) => File.ReadAllBytes(ResolvePath(path));
+    public static byte[] GetFileAsBytes(string path) => ResourcePacks.ReadBytes(path);
 
     /// <summary>Reads a complete physical or directory-backed virtual file as strict UTF-8.</summary>
     /// <param name="path">The file path.</param>
@@ -989,7 +1006,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="FileNotFoundException">The file does not exist.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access or a virtual path escapes its root.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
-    public static long GetAccessTime(string path) => new DateTimeOffset(GetFileInfo(path).LastAccessTimeUtc).ToUnixTimeSeconds();
+    public static long GetAccessTime(string path) => ResourcePacks.Runtime.TrySize(path, out _) ? 0 : new DateTimeOffset(GetFileInfo(path).LastAccessTimeUtc).ToUnixTimeSeconds();
 
     /// <summary>Gets the last-modification time as Unix seconds.</summary>
     /// <param name="path">The file path.</param>
@@ -999,7 +1016,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="FileNotFoundException">The file does not exist.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access or a virtual path escapes its root.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
-    public static long GetModifiedTime(string path) => new DateTimeOffset(GetFileInfo(path).LastWriteTimeUtc).ToUnixTimeSeconds();
+    public static long GetModifiedTime(string path) => ResourcePacks.Runtime.TrySize(path, out _) ? 0 : new DateTimeOffset(GetFileInfo(path).LastWriteTimeUtc).ToUnixTimeSeconds();
 
     /// <summary>Gets a file's length without opening a persistent instance.</summary>
     /// <param name="path">The file path.</param>
@@ -1009,7 +1026,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="FileNotFoundException">The file does not exist.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access or a virtual path escapes its root.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
-    public static long GetSize(string path) => GetFileInfo(path).Length;
+    public static long GetSize(string path) => ResourcePacks.Runtime.TrySize(path, out var size) ? size : GetFileInfo(path).Length;
 
     /// <summary>Computes a file's MD5 digest.</summary>
     /// <param name="path">The file path.</param>
@@ -1043,6 +1060,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="PlatformNotSupportedException">The current platform does not expose this file attribute.</exception>
     public static bool IsHidden(string path)
     {
+        if (ResourcePacks.Runtime.TrySize(path, out _)) return false;
         EnsurePortableFileAttributesSupported();
         return (File.GetAttributes(ResolvePath(path)) & FileAttributes.Hidden) != 0;
     }
@@ -1073,6 +1091,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="PlatformNotSupportedException">The current platform does not expose this file attribute.</exception>
     public static bool IsReadOnly(string path)
     {
+        if (ResourcePacks.Runtime.TrySize(path, out _)) return true;
         EnsurePortableFileAttributesSupported();
         return (File.GetAttributes(ResolvePath(path)) & FileAttributes.ReadOnly) != 0;
     }
@@ -1105,6 +1124,7 @@ public sealed partial class FileAccess : ElectronObject
     {
         if (OperatingSystem.IsWindows())
             throw new PlatformNotSupportedException("Unix file modes are unavailable on Windows.");
+        if (ResourcePacks.Runtime.TrySize(path, out _)) return (UnixPermissionFlags)292;
         return (UnixPermissionFlags)(int)File.GetUnixFileMode(ResolvePath(path));
     }
 
@@ -1123,6 +1143,7 @@ public sealed partial class FileAccess : ElectronObject
         ValidateUnixPermissions(permissions);
         if (OperatingSystem.IsWindows())
             throw new PlatformNotSupportedException("Unix file modes are unavailable on Windows.");
+        ResourcePacks.Runtime.EnsureWritable(path);
         File.SetUnixFileMode(ResolvePath(path), (UnixFileMode)(int)permissions);
     }
 
@@ -1145,7 +1166,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
     /// <exception cref="PlatformNotSupportedException">The platform has no implemented extended-attribute backend.</exception>
     public static byte[] GetExtendedAttribute(string path, string name) =>
-        ExtendedAttributes.Get(ResolvePath(path), name);
+        ExtendedAttributes.Get(ResolveMetadataPath(path), name);
 
     /// <summary>Gets one extended attribute as strict UTF-8.</summary>
     /// <param name="path">The ordinary or supported virtual file path.</param>
@@ -1169,7 +1190,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
     /// <exception cref="PlatformNotSupportedException">The platform has no implemented extended-attribute backend.</exception>
     public static IReadOnlyList<string> GetExtendedAttributesList(string path) =>
-        Array.AsReadOnly(ExtendedAttributes.List(ResolvePath(path)));
+        Array.AsReadOnly(ExtendedAttributes.List(ResolveMetadataPath(path)));
 
     /// <summary>Sets one extended attribute from bytes.</summary>
     /// <param name="path">The ordinary or supported virtual file path.</param>
@@ -1181,7 +1202,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
     /// <exception cref="PlatformNotSupportedException">The platform has no implemented extended-attribute backend.</exception>
     public static void SetExtendedAttribute(string path, string name, ReadOnlySpan<byte> value) =>
-        ExtendedAttributes.Set(ResolvePath(path), name, value);
+        ExtendedAttributes.Set(ResolveMetadataPath(path), name, value);
 
     /// <summary>Sets one extended attribute from UTF-8 text.</summary>
     /// <param name="path">The ordinary or supported virtual file path.</param>
@@ -1208,7 +1229,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
     /// <exception cref="PlatformNotSupportedException">The platform has no implemented extended-attribute backend.</exception>
     public static void RemoveExtendedAttribute(string path, string name) =>
-        ExtendedAttributes.Remove(ResolvePath(path), name);
+        ExtendedAttributes.Remove(ResolveMetadataPath(path), name);
 
     /// <inheritdoc/>
     protected override void Dispose(bool disposing)
@@ -1224,6 +1245,7 @@ public sealed partial class FileAccess : ElectronObject
 
     private static void ChangeAttribute(string path, FileAttributes attribute, bool enabled)
     {
+        ResourcePacks.Runtime.EnsureWritable(path);
         var absolutePath = ResolvePath(path);
         var attributes = File.GetAttributes(absolutePath);
         File.SetAttributes(absolutePath, enabled ? attributes | attribute : attributes & ~attribute);
@@ -1296,12 +1318,13 @@ public sealed partial class FileAccess : ElectronObject
     private static string ComputeHash(string path, HashAlgorithm algorithm)
     {
         using (algorithm)
-        using (var stream = File.OpenRead(ResolvePath(path)))
+        using (var stream = ResourcePacks.OpenRead(path))
             return Convert.ToHexString(algorithm.ComputeHash(stream)).ToLowerInvariant();
     }
 
     private static FileInfo GetFileInfo(string path)
     {
+        ResourcePacks.Runtime.EnsureReadablePath(path);
         var info = new FileInfo(ResolvePath(path));
         if (!info.Exists)
             throw new FileNotFoundException("The file does not exist.", info.FullName);
@@ -1748,11 +1771,18 @@ public sealed partial class FileAccess : ElectronObject
             throw new EndOfStreamException("The stream ended unexpectedly.");
     }
 
+    private static string ResolveMetadataPath(string path)
+    {
+        if (ResourcePacks.Runtime.TrySize(path, out _)) throw new NotSupportedException("Mounted files have no mutable operating-system metadata.");
+        return ResolvePath(path);
+    }
+
     private static string ResolvePath(string path)
     {
         ArgumentNullException.ThrowIfNull(path);
         if (path.Length == 0)
             throw new ArgumentException("A file path cannot be empty.", nameof(path));
+        ResourcePacks.Runtime.EnsureReadablePath(path);
         return ProjectSettings.GlobalizePath(path);
     }
 

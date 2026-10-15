@@ -7556,6 +7556,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PCKPacker",
+    "kind": "type",
+    "declaringType": "Electron2D.PCKPacker",
+    "name": "PCKPacker",
+    "signature": "public sealed class Electron2D.PCKPacker",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PackedScene",
     "kind": "type",
     "declaringType": "Electron2D.PackedScene",
@@ -19377,6 +19392,19 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PCKPacker..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PCKPacker",
+    "name": ".ctor",
+    "signature": "public PCKPacker()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -127237,6 +127265,155 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PCKPacker.AddFile(System.String,System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PCKPacker",
+    "name": "AddFile",
+    "signature": "public System.Void AddFile(System.String targetPath, System.String sourcePath, System.Boolean encrypt = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "targetPath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "sourcePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "encrypt",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PCKPacker.AddFileFromBuffer(System.String,System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PCKPacker",
+    "name": "AddFileFromBuffer",
+    "signature": "public System.Void AddFileFromBuffer(System.String targetPath, System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Boolean encrypt = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "targetPath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "encrypt",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PCKPacker.AddFileRemoval(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.PCKPacker",
+    "name": "AddFileRemoval",
+    "signature": "public System.Void AddFileRemoval(System.String targetPath)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "targetPath",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PCKPacker.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PCKPacker",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PCKPacker.Flush(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PCKPacker",
+    "name": "Flush",
+    "signature": "public System.Void Flush(System.Boolean verbose = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "verbose",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PCKPacker.PCKStart(System.String,System.Int32,System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PCKPacker",
+    "name": "PCKStart",
+    "signature": "public System.Void PCKStart(System.String pckPath, System.Int32 alignment = 32, System.String key = \u00220000000000000000000000000000000000000000000000000000000000000000\u0022, System.Boolean encryptDirectory = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pckPath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "alignment",
+        "type": "System.Int32",
+        "default": "32"
+      },
+      {
+        "name": "key",
+        "type": "System.String",
+        "default": "\u00220000000000000000000000000000000000000000000000000000000000000000\u0022"
+      },
+      {
+        "name": "encryptDirectory",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PackedScene.CanInstantiate()",
     "kind": "method",
     "declaringType": "Electron2D.PackedScene",
@@ -143351,6 +143528,69 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ProjectSettings.LoadResourcePack(System.String,System.Boolean,System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "LoadResourcePack",
+    "signature": "public static System.Boolean LoadResourcePack(System.String pack, System.Boolean replaceFiles = true, System.Int64 offset = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pack",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "replaceFiles",
+        "type": "System.Boolean",
+        "default": "true"
+      },
+      {
+        "name": "offset",
+        "type": "System.Int64",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ProjectSettings.LoadResourcePack(System.String,System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Boolean,System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "LoadResourcePack",
+    "signature": "public static System.Boolean LoadResourcePack(System.String pack, System.ReadOnlySpan\u003CSystem.Byte\u003E decryptionKey, System.Boolean replaceFiles = true, System.Int64 offset = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pack",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "decryptionKey",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "replaceFiles",
+        "type": "System.Boolean",
+        "default": "true"
+      },
+      {
+        "name": "offset",
+        "type": "System.Int64",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

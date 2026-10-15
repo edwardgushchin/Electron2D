@@ -1,0 +1,74 @@
+{
+  "mappings": [
+    {
+      "godot": "class:PCKPacker",
+      "electron2d": "T:Electron2D.PCKPacker",
+      "reason": "ADRs 0019/0020/0013/0023: complete synchronous ordinary PCK v4 writer, immediate file/span bytes, positive alignment, AES-256-CFB128/MD5 entry and directory envelopes, removals, verbose Flush and deterministic disposal. Ordinary v2-v4 reader and PCK/ZIP res:// overlays integrate FileAccess, DirAccess and typed resource/scene dependency loading. Managed edge cases, independent OpenSSL interoperability and fresh-process host checks are recorded in resource-packs.md; foreign platforms and export formats remain distinct gates. Standard C# exceptions replace Error returns."
+    },
+    {
+      "godot": "PCKPacker::method:add_file(String:,String:,bool:)",
+      "electron2d": "method:Electron2D.PCKPacker.AddFile(System.String,System.String,System.Boolean)",
+      "reason": "ADRs 0019/0020/0013/0023: complete synchronous ordinary PCK v4 writer, immediate file/span bytes, positive alignment, AES-256-CFB128/MD5 entry and directory envelopes, removals, verbose Flush and deterministic disposal. Ordinary v2-v4 reader and PCK/ZIP res:// overlays integrate FileAccess, DirAccess and typed resource/scene dependency loading. Managed edge cases, independent OpenSSL interoperability and fresh-process host checks are recorded in resource-packs.md; foreign platforms and export formats remain distinct gates. Standard C# exceptions replace Error returns."
+    },
+    {
+      "godot": "PCKPacker::method:add_file_from_buffer(String:,PackedByteArray:,bool:)",
+      "electron2d": "method:Electron2D.PCKPacker.AddFileFromBuffer(System.String,System.ReadOnlySpan<System.Byte>,System.Boolean)",
+      "reason": "ADRs 0019/0020/0013/0023: complete synchronous ordinary PCK v4 writer, immediate file/span bytes, positive alignment, AES-256-CFB128/MD5 entry and directory envelopes, removals, verbose Flush and deterministic disposal. Ordinary v2-v4 reader and PCK/ZIP res:// overlays integrate FileAccess, DirAccess and typed resource/scene dependency loading. Managed edge cases, independent OpenSSL interoperability and fresh-process host checks are recorded in resource-packs.md; foreign platforms and export formats remain distinct gates. Standard C# exceptions replace Error returns."
+    },
+    {
+      "godot": "PCKPacker::method:add_file_removal(String:)",
+      "electron2d": "method:Electron2D.PCKPacker.AddFileRemoval(System.String)",
+      "reason": "ADRs 0019/0020/0013/0023: complete synchronous ordinary PCK v4 writer, immediate file/span bytes, positive alignment, AES-256-CFB128/MD5 entry and directory envelopes, removals, verbose Flush and deterministic disposal. Ordinary v2-v4 reader and PCK/ZIP res:// overlays integrate FileAccess, DirAccess and typed resource/scene dependency loading. Managed edge cases, independent OpenSSL interoperability and fresh-process host checks are recorded in resource-packs.md; foreign platforms and export formats remain distinct gates. Standard C# exceptions replace Error returns."
+    },
+    {
+      "godot": "PCKPacker::method:flush(bool:)",
+      "electron2d": "method:Electron2D.PCKPacker.Flush(System.Boolean)",
+      "reason": "ADRs 0019/0020/0013/0023: complete synchronous ordinary PCK v4 writer, immediate file/span bytes, positive alignment, AES-256-CFB128/MD5 entry and directory envelopes, removals, verbose Flush and deterministic disposal. Ordinary v2-v4 reader and PCK/ZIP res:// overlays integrate FileAccess, DirAccess and typed resource/scene dependency loading. Managed edge cases, independent OpenSSL interoperability and fresh-process host checks are recorded in resource-packs.md; foreign platforms and export formats remain distinct gates. Standard C# exceptions replace Error returns."
+    },
+    {
+      "godot": "PCKPacker::method:pck_start(String:,int:,String:,bool:)",
+      "electron2d": "method:Electron2D.PCKPacker.PCKStart(System.String,System.Int32,System.String,System.Boolean)",
+      "reason": "ADRs 0019/0020/0013/0023: complete synchronous ordinary PCK v4 writer, immediate file/span bytes, positive alignment, AES-256-CFB128/MD5 entry and directory envelopes, removals, verbose Flush and deterministic disposal. Ordinary v2-v4 reader and PCK/ZIP res:// overlays integrate FileAccess, DirAccess and typed resource/scene dependency loading. Managed edge cases, independent OpenSSL interoperability and fresh-process host checks are recorded in resource-packs.md; foreign platforms and export formats remain distinct gates. Standard C# exceptions replace Error returns."
+    },
+    {
+      "godot": "ProjectSettings::method:load_resource_pack(String:,bool:,int:)",
+      "electron2d": "method:Electron2D.ProjectSettings.LoadResourcePack(System.String,System.Boolean,System.Int64)",
+      "reason": "Ordinary PCK v2-v4 and ZIP mounting, replacement/removal overlays, offsets/appended trailers, encryption keys and FileAccess/DirAccess/ResourceLoader integration execute under ADRs 0019/0020. Exact remaining dependency: sparse bundle producer/key derivation and binary-delta patch decoder plus native executable-section discovery under the export pipeline. Unknown flags reject transactionally; no stub or ordinary-file reinterpretation. Explicit-key overload is the typed CLR host key projection."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.PCKPacker..ctor()",
+      "reason": "ADR 0020: Typed deterministic disposable package session construction."
+    },
+    {
+      "electron2d": "method:Electron2D.PCKPacker.Dispose(System.Boolean)",
+      "reason": "ADR 0020: Inherited ElectronObject lifetime hook flushes and releases the owned package session."
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.LoadResourcePack(System.String,System.ReadOnlySpan<System.Byte>,System.Boolean,System.Int64)",
+      "reason": "ADR 0020: Typed explicit PCK decryption key projection for a managed library host; bytes copy into retained mount ownership."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:PCKPacker",
+        "PCKPacker::method:add_file(String:,String:,bool:)",
+        "PCKPacker::method:add_file_from_buffer(String:,PackedByteArray:,bool:)",
+        "PCKPacker::method:add_file_removal(String:)",
+        "PCKPacker::method:flush(bool:)",
+        "PCKPacker::method:pck_start(String:,int:,String:,bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0019/0020/0013/0023: complete synchronous ordinary PCK v4 writer, immediate file/span bytes, positive alignment, AES-256-CFB128/MD5 entry and directory envelopes, removals, verbose Flush and deterministic disposal. Ordinary v2-v4 reader and PCK/ZIP res:// overlays integrate FileAccess, DirAccess and typed resource/scene dependency loading. Managed edge cases, independent OpenSSL interoperability and fresh-process host checks are recorded in resource-packs.md; foreign platforms and export formats remain distinct gates. Standard C# exceptions replace Error returns."
+    },
+    {
+      "godot": [
+        "ProjectSettings::method:load_resource_pack(String:,bool:,int:)"
+      ],
+      "state": "Partial",
+      "reason": "Ordinary PCK v2-v4 and ZIP mounting, replacement/removal overlays, offsets/appended trailers, encryption keys and FileAccess/DirAccess/ResourceLoader integration execute under ADRs 0019/0020. Exact remaining dependency: sparse bundle producer/key derivation and binary-delta patch decoder plus native executable-section discovery under the export pipeline. Unknown flags reject transactionally; no stub or ordinary-file reinterpretation. Explicit-key overload is the typed CLR host key projection."
+    }
+  ]
+}

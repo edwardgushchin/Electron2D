@@ -1,6 +1,6 @@
 # Typed resource and scene files
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 ## Executable mesh skin integration
 
@@ -146,3 +146,6 @@ Exact FoldableContainer and FoldableGroup registrations preserve typed configura
 Internal resource graph IDs are staged before persistence: first authored IDs remain stable, missing and duplicate IDs are generated without colliding with reserved authored values. IDs commit only after atomic writing, while source path replacement follows its explicit flag. Post-write path-hook failures attempt later paths and retain the committed IDs/file. Read validation rejects duplicate resolved embedded paths before factories or cache replacement, including legacy fallback indices. Public-only physical scene identity checks exercise actual saved aliases and backend simulation; exact executable evidence and platform limits are recorded with the current validation cohort.
 
 The current resource-identity cohort passes eight managed profiles and six strict NativeAOT profiles, including twelve real fresh-process physical scene consumers with changed local creation order. Repeated saves retain corrected IDs, names and physical aliases; failed writes preserve source metadata, and malformed resolved paths reject before factories/cache replacement. Twelve brackets warm 128 and measure 128 active full frames with queries and ID reads at 0/0 owner/all-thread managed bytes. GPU runs use explicit lavapipe; hardware performance and native allocations remain separate gates. Exact manifests/results are retained in bin/physics-resource-identity/2026-10-14/validation.json.
+
+
+Mounted res:// resources now share [resource pack resolution](resource-packs.md). PCK/ZIP overlays, synthetic directories, read-only packed metadata, relative scene dependencies and bitmap-font pages use the mounted bytes. Ordinary absolute paths and user:// retain physical access. Cached resources keep their normal cache-mode policy.

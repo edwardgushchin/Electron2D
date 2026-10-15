@@ -102,7 +102,7 @@ public sealed class DirAccess : ElectronObject
     {
         var roots = ProjectSettings.Service.GetPathRootsSnapshot();
         var (absolutePath, scope, root) = ResolveOpenPath(path, roots);
-        RequireExistingDirectory(absolutePath);
+        RequireExistingDirectory(scope == AccessScope.Resources ? ResourcePath(absolutePath, root!) : absolutePath);
         return new DirAccess(absolutePath, scope, root);
     }
 
@@ -143,7 +143,7 @@ public sealed class DirAccess : ElectronObject
         lock (_gate)
         {
             ThrowIfDisposed();
-            _listing = CaptureEntries(_currentDirectory, includeNavigationalCandidates: true);
+            _listing = CaptureEntries(AccessPath(_currentDirectory), includeNavigationalCandidates: true);
             _listingIndex = 0;
             ClearCurrentEntryLocked();
         }
@@ -324,7 +324,7 @@ public sealed class DirAccess : ElectronObject
             ThrowIfDisposed();
             var resolved = ResolveLocked(path);
             RequireExistingDirectory(resolved);
-            _currentDirectory = resolved;
+            _currentDirectory = Physical(resolved);
             EndListingLocked();
         }
     }
@@ -401,7 +401,7 @@ public sealed class DirAccess : ElectronObject
         lock (_gate)
         {
             ThrowIfDisposed();
-            Directory.CreateDirectory(ResolveLocked(path));
+            Directory.CreateDirectory(WritablePhysical(ResolveLocked(path)));
         }
     }
 
@@ -412,7 +412,7 @@ public sealed class DirAccess : ElectronObject
     /// <exception cref="IOException">The directory tree cannot be created.</exception>
     /// <exception cref="UnauthorizedAccessException">The virtual path escapes its root or access is denied.</exception>
     /// <exception cref="NotSupportedException"><paramref name="path"/> uses an unsupported virtual scheme.</exception>
-    public static void MakeDirRecursiveAbsolute(string path) => Directory.CreateDirectory(ResolveStaticAbsolute(path));
+    public static void MakeDirRecursiveAbsolute(string path) => Directory.CreateDirectory(WritablePhysical(ResolveStaticAbsolute(path)));
 
     /// <summary>Reports whether a file exists at a relative or in-scope absolute path.</summary>
     /// <param name="path">The file path to test.</param>
@@ -678,16 +678,16 @@ public sealed class DirAccess : ElectronObject
             var resolvedSource = ResolveLocked(source);
             var resolvedTarget = ResolveLocked(target);
             var storedSource = IOPath.IsPathFullyQualified(source) || source.Contains("://", StringComparison.Ordinal)
-                ? resolvedSource
+                ? Physical(resolvedSource)
                 : source;
             if (TryGetAttributes(resolvedSource, out var attributes) &&
                 (attributes & FileAttributes.Directory) != 0)
             {
-                Directory.CreateSymbolicLink(resolvedTarget, storedSource);
+                Directory.CreateSymbolicLink(WritablePhysical(resolvedTarget), storedSource);
             }
             else
             {
-                File.CreateSymbolicLink(resolvedTarget, storedSource);
+                File.CreateSymbolicLink(WritablePhysical(resolvedTarget), storedSource);
             }
         }
     }
@@ -714,7 +714,8 @@ public sealed class DirAccess : ElectronObject
             var resolved = ResolveLocked(path);
             if (!IsExistingDirectory(resolved))
                 return false;
-            return GetMacBundleStatus(resolved);
+            if (ResourcePacks.Runtime.IsDirectory(resolved)) return false;
+            return GetMacBundleStatus(Physical(resolved));
         }
     }
 
@@ -759,7 +760,9 @@ public sealed class DirAccess : ElectronObject
         lock (_gate)
         {
             ThrowIfDisposed();
-            return ProbeCaseSensitivity(ResolveLocked(path));
+            var resolved = ResolveLocked(path);
+            if (ResourcePacks.Runtime.TrySize(resolved, out _) || ResourcePacks.Runtime.IsDirectory(resolved)) return true;
+            return ProbeCaseSensitivity(Physical(resolved));
         }
     }
 
@@ -782,8 +785,11 @@ public sealed class DirAccess : ElectronObject
         lock (_gate)
         {
             ThrowIfDisposed();
-            var first = GetFileIdentity(ResolveLocked(pathA));
-            var second = GetFileIdentity(ResolveLocked(pathB));
+            var firstPath = ResolveLocked(pathA); var secondPath = ResolveLocked(pathB);
+            var same = ResourcePacks.Runtime.IsSameFile(firstPath, secondPath, out var packed);
+            if (packed) return same;
+            var first = GetFileIdentity(Physical(firstPath));
+            var second = GetFileIdentity(Physical(secondPath));
             return first.HasValue && second.HasValue && first.Value == second.Value;
         }
     }
@@ -814,7 +820,7 @@ public sealed class DirAccess : ElectronObject
         lock (_gate)
         {
             ThrowIfDisposed();
-            var names = CaptureEntries(_currentDirectory, includeNavigationalCandidates: directories)
+            var names = CaptureEntries(AccessPath(_currentDirectory), includeNavigationalCandidates: directories)
                 .Where(entry => entry.IsDirectory == directories &&
                                 (_includeHidden || !entry.IsHidden) &&
                                 (_includeNavigational || !entry.IsNavigational))
@@ -825,7 +831,19 @@ public sealed class DirAccess : ElectronObject
         }
     }
 
-    private string ResolveLocked(string path)
+    private string AccessPath(string path) => _scope == AccessScope.Resources && StringComparer.Ordinal.Equals(_scopeRoot, ProjectSettings.ProjectRoot) ? ResourcePath(path, _scopeRoot!) : path;
+    private static string ResourcePath(string path, string root)
+    {
+        var relative = IOPath.GetRelativePath(root, path).Replace('\\', '/');
+        return relative == "." ? "res://" : "res://" + relative;
+    }
+    private static string Physical(string path) => ProjectSettings.GlobalizePath(path);
+    private static string WritablePhysical(string path, bool descendants = false)
+    {
+        ResourcePacks.Runtime.EnsureWritable(path, descendants); return Physical(path);
+    }
+    private string ResolveLocked(string path) => AccessPath(ResolvePhysicalLocked(path));
+    private string ResolvePhysicalLocked(string path)
     {
         ValidatePath(path); path = ResourceUID.EnsurePath(path);
         if (path.StartsWith("res://", StringComparison.Ordinal))
@@ -878,7 +896,7 @@ public sealed class DirAccess : ElectronObject
         ValidateAbsolutePath(path);
         var roots = ProjectSettings.Service.GetPathRootsSnapshot();
         var (resolved, scope, root) = ResolveOpenPath(path, roots);
-        RequireExistingDirectory(resolved);
+        RequireExistingDirectory(scope == AccessScope.Resources ? ResourcePath(resolved, root!) : resolved);
         return new DirAccess(resolved, scope, root);
     }
 
@@ -894,7 +912,7 @@ public sealed class DirAccess : ElectronObject
     {
         path = ResourceUID.EnsurePath(path);
         if (path.StartsWith("res://", StringComparison.Ordinal))
-            return ResolveWithinRoot(roots.ProjectRoot, path[6..]);
+            return ResourcePath(ResolveWithinRoot(roots.ProjectRoot, path[6..]), roots.ProjectRoot);
         if (path.StartsWith("user://", StringComparison.Ordinal))
             return ResolveWithinRoot(roots.UserDataRoot, path[7..]);
         if (path.Contains("://", StringComparison.Ordinal))
@@ -959,7 +977,12 @@ public sealed class DirAccess : ElectronObject
             entries.Add(new DirectoryEntry("..", IsDirectory: true, IsHidden: false, IsNavigational: true));
         }
 
-        foreach (var path in Directory.EnumerateFileSystemEntries(directory))
+        ResourcePacks.Runtime.EnsureReadablePath(directory);
+        var physical = Physical(directory);
+        if (ResourcePacks.Runtime.TrySize(directory, out _)) throw new DirectoryNotFoundException("A mounted file occupies this path.");
+        var mounted = ResourcePacks.Runtime.List(directory);
+        if (!Directory.Exists(physical) && !ResourcePacks.Runtime.IsDirectory(directory)) throw new DirectoryNotFoundException(directory);
+        foreach (var path in Directory.Exists(physical) ? Directory.EnumerateFileSystemEntries(physical) : [])
         {
             var name = IOPath.GetFileName(path);
             var attributes = File.GetAttributes(path);
@@ -970,6 +993,11 @@ public sealed class DirAccess : ElectronObject
                 (attributes & FileAttributes.Hidden) != 0,
                 IsNavigational: false));
         }
+        foreach (var entry in mounted)
+        {
+            entries.RemoveAll(e => !e.IsNavigational && e.Name == entry.Name);
+            entries.Add(new DirectoryEntry(entry.Name, entry.Directory, entry.Name.StartsWith('.'), false));
+        }
         return entries.ToArray();
     }
 
@@ -977,10 +1005,10 @@ public sealed class DirAccess : ElectronObject
     {
         if (TryGetAttributes(path, out _))
             throw new IOException($"An entry already exists at '{path}'.");
-        var parent = IOPath.GetDirectoryName(IOPath.TrimEndingDirectorySeparator(path));
+        var parent = path.StartsWith("res://", StringComparison.Ordinal) ? ResourcePacks.CombineRelative(path, ".") : IOPath.GetDirectoryName(IOPath.TrimEndingDirectorySeparator(path));
         if (string.IsNullOrEmpty(parent) || !IsExistingDirectory(parent))
             throw new DirectoryNotFoundException($"Parent directory '{parent}' does not exist.");
-        Directory.CreateDirectory(path);
+        Directory.CreateDirectory(WritablePhysical(path));
     }
 
     private static void CopyPhysical(string source, string destination, UnixPermissionFlags? permissions)
@@ -993,13 +1021,15 @@ public sealed class DirAccess : ElectronObject
         {
             throw new FileNotFoundException("The source file does not exist.", source);
         }
-        File.Copy(source, destination, overwrite: true);
+        using (var input = ResourcePacks.OpenRead(source))
+        using (var output = new FileStream(WritablePhysical(destination), FileMode.Create, System.IO.FileAccess.Write, FileShare.None)) input.CopyTo(output);
         if (permissions.HasValue)
             FileAccess.SetUnixPermissions(destination, permissions.Value);
     }
 
     private static void MovePhysical(string source, string destination)
     {
+        source = WritablePhysical(source, descendants: true); destination = WritablePhysical(destination, descendants: true);
         EnsureDistinct(source, destination);
         var attributes = GetExistingAttributes(source);
         if ((attributes & FileAttributes.Directory) == 0)
@@ -1043,6 +1073,7 @@ public sealed class DirAccess : ElectronObject
 
     private static void RemovePhysical(string path)
     {
+        path = WritablePhysical(path, descendants: true);
         var attributes = GetExistingAttributes(path);
         if ((attributes & FileAttributes.Directory) != 0)
             Directory.Delete(path, recursive: false);
@@ -1059,9 +1090,12 @@ public sealed class DirAccess : ElectronObject
 
     private static bool TryGetAttributes(string path, out FileAttributes attributes)
     {
+        if (ResourcePacks.Runtime.TrySize(path, out _)) { attributes = FileAttributes.ReadOnly; return true; }
+        if (ResourcePacks.Runtime.IsDirectory(path)) { attributes = FileAttributes.Directory | FileAttributes.ReadOnly; return true; }
+        if (ResourcePacks.Runtime.HasFileAncestor(path)) { attributes = default; return false; }
         try
         {
-            attributes = File.GetAttributes(path);
+            attributes = File.GetAttributes(Physical(path));
             return true;
         }
         catch (FileNotFoundException)
@@ -1100,6 +1134,9 @@ public sealed class DirAccess : ElectronObject
 
     private static string? GetLinkTarget(string path)
     {
+        ResourcePacks.Runtime.EnsureReadablePath(path);
+        if (ResourcePacks.Runtime.TrySize(path, out _) || ResourcePacks.Runtime.IsDirectory(path)) return null;
+        path = Physical(path);
         var fileTarget = new FileInfo(path).LinkTarget;
         return fileTarget ?? new DirectoryInfo(path).LinkTarget;
     }

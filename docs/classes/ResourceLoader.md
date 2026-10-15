@@ -254,3 +254,6 @@ ShaderInclude source (`.hlslinc`/`.glslinc`) participates in the existing ordere
 UTF-8 PO and ordinary MO string-table files load as Translation through the built-in format registration, including typed discovery, all root cache modes and threaded preparation. Imported plural definitions persist when saved as `.e2dres`. See [localization import](../components/localization.md#po-and-mo-catalog-import) for malformed-input rejection and limits.
 
 The [EXR I/O slice](../components/image-exr.md) supplies precision-preserving HDR file/buffer load and lossless save. Image and texture resource discovery includes DDS and EXR alongside PNG/JPEG/WebP/BMP/TGA/SVG; typed archives also expose their registered extensions. GPU float sampling, explicit Compatibility byte conversion and float-driver rejection are separate exercised profiles.
+
+
+Mounted res:// resources now share [resource pack resolution](../components/resource-packs.md). PCK/ZIP overlays, synthetic directories, read-only packed metadata, relative scene dependencies and bitmap-font pages use the mounted bytes. Ordinary absolute paths and user:// retain physical access. Cached resources keep their normal cache-mode policy.

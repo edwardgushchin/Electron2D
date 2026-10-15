@@ -10,6 +10,7 @@ internal static partial class ResourceArchive
     internal static string Absolute(string path) => ProjectSettings.GlobalizePath(ResourceUID.EnsurePath(path));
     internal static void AtomicWrite(string path, byte[] bytes)
     {
+        ResourcePacks.Runtime.EnsureWritable(path);
         var absolute = Absolute(path);
         var temporary = absolute + ".tmp-" + Guid.NewGuid().ToString("N");
         try
@@ -57,9 +58,8 @@ internal static partial class ResourceArchive
     }
     internal static long ReadUID(string path)
     {
-        var absolute = Absolute(path);
-        if (!System.IO.File.Exists(absolute)) return ResourceUID.InvalidID;
-        using var stream = System.IO.File.OpenRead(absolute);
+        if (!FileAccess.FileExists(path)) return ResourceUID.InvalidID;
+        using var stream = ResourcePacks.OpenRead(path);
         Span<byte> header = stackalloc byte[24];
         if (stream.Read(header) != header.Length || !header[..8].SequenceEqual("E2DASSET"u8)) return ResourceUID.InvalidID;
         if (BinaryPrimitives.ReadInt32LittleEndian(header[8..]) is not (1 or 2 or 3) || stream.Length < 64) throw new InvalidDataException("Unsupported resource UID header.");
@@ -78,10 +78,9 @@ internal static partial class ResourceArchive
     }
     internal static byte[] ReadFile(string path)
     {
-        var absolute = Absolute(path);
-        var info = new FileInfo(absolute);
-        if (info.Length is < 64 or > Limit + 64) throw new InvalidDataException("Invalid resource file size.");
-        var bytes = System.IO.File.ReadAllBytes(absolute);
+        var length = FileAccess.GetSize(path);
+        if (length is < 64 or > Limit + 64) throw new InvalidDataException("Invalid resource file size.");
+        var bytes = FileAccess.GetFileAsBytes(path);
         if (!bytes.AsSpan(0, 8).SequenceEqual("E2DASSET"u8) || BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(8)) is not (1 or 2 or 3)) throw new InvalidDataException("Unsupported resource archive version.");
         if (BinaryPrimitives.ReadInt64LittleEndian(bytes.AsSpan(16)) < 0) throw new InvalidDataException("Invalid archive UID.");
         return bytes;
@@ -470,11 +469,11 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
             if (d.Path.Length != 0)
             {
                 var target = d.UID >= 0 && ResourceUID.HasID(d.UID) ? ResourceUID.GetIDPath(d.UID) : d.Path;
-                if (!target.Contains("://", StringComparison.Ordinal) && !System.IO.Path.IsPathRooted(target)) target = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(ResourceArchive.Absolute(path))!, target);
+                if (!target.Contains("://", StringComparison.Ordinal) && !System.IO.Path.IsPathRooted(target)) target = ResourcePacks.CombineRelative(path, target);
                 var dependencyMode = mode is ResourceLoader.CacheMode.IgnoreDeep or ResourceLoader.CacheMode.ReplaceDeep ? mode : ResourceLoader.CacheMode.Reuse;
                 var stage = ResourceLoadGraph.Current;
                 var cachedDependency = stage is null ? Resource.GetRegisteredPath(target) : null;
-                if (!abortOnMissing && version >= 2 && Resource.GetRegisteredPath(target) is null && ResourceArchive.IsPath(target) && !System.IO.File.Exists(ResourceArchive.Absolute(target)))
+                if (!abortOnMissing && version >= 2 && Resource.GetRegisteredPath(target) is null && ResourceArchive.IsPath(target) && !FileAccess.FileExists(target))
                 {
                     var missing = ResourceArchive.CreateMissing(d.Type.ID, d.Role, d.Bounds); missing.SetPathCache(target); Owned.Add(missing); _resources[i] = missing; return;
                 }

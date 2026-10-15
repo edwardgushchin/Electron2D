@@ -120,9 +120,9 @@ Values persist through `ConfigFile`. Unknown entries survive loading. Registrati
 
 Feature overrides are explicit typed operations. Tags normalize to lowercase; the first matching stored override wins. Built-in active tags describe managed runtime, release/debug build, current OS, and process architecture. Custom feature changes queue one coalesced typed event for affected override owners. Engine flushes one pending event after a successful process callback; standalone hosts can call `FlushChanges()` directly.
 
-`res://` and `user://` map to configured directories. Resolution blocks lexical `..` escape, supports reverse localization and upward project discovery, and explicitly does not claim symbolic-link or packed-filesystem security/semantics.
+`res://` and `user://` map to configured directories. Resolution blocks lexical `..` escape, supports reverse localization and upward project discovery, and explicitly does not claim symbolic-link security. Mounted resource overlays are defined below.
 
-Script global classes, pack mounting, editor-only metadata/UI, and settings for absent domains remain documented deferrals. Three-dimensional settings are permanently excluded.
+Script global classes, editor-only metadata/UI, and settings for absent domains remain documented deferrals. Three-dimensional settings are permanently excluded.
 
 ### Consequences
 
@@ -144,7 +144,7 @@ Script global classes, pack mounting, editor-only metadata/UI, and settings for 
 
 ### Verification boundary
 
-Executable tests cover the typed registry, exact identity, mutable snapshots, validators/rollback/re-entry, metadata/property discovery, feature precedence/normalization, unsaved/version/event semantics, persistence/overrides/order/unknown entries, path traversal and discovery, concurrency, disposal, and Engine integration/allocation. They do not verify editor behavior, archive mounts, hostile symlink races, unavailable domain settings, or every filesystem's crash durability.
+Executable tests cover the typed registry, exact identity, mutable snapshots, validators/rollback/re-entry, metadata/property discovery, feature precedence/normalization, unsaved/version/event semantics, persistence/overrides/order/unknown entries, path traversal and discovery, concurrency, disposal, and Engine integration/allocation. They do not verify editor behavior, hostile symlink races, unavailable domain settings, or every filesystem's crash durability.
 
 ### References
 
@@ -173,7 +173,7 @@ The BCL supplies robust streams, hashes, DEFLATE/GZip/Brotli, PBKDF2, and AES-GC
 
 `FileAccess` derives directly from `ElectronObject` and owns one stream until idempotent `Close` or disposal. Exact reference enum numbers are preserved in `FileAccessModeFlags`, `FileCompressionMode`, and `UnixPermissionFlags`. Public members use typed PascalCase C# and standard exceptions; acronyms in method names stay fully uppercase under [ADR 0045](product.md#adr-0045). No process-global last error exists.
 
-Ordinary, `res://`, and `user://` paths resolve through `ProjectSettings`; the latter two remain directory-backed. Raw access uses `FileStream`. The cursor, EOF state, endian state, and individual seekable-file operations are serialized by one instance lock. Process pipes use independent read/write operation locks because their two directions have no shared cursor; native lifetime calls retain a shared process gate. OS.ExecuteWithPipe additionally supplies owned non-seekable FileAccess process streams; these are existing open pipes, not a named-pipe filesystem connector. Compound caller sequences are explicitly not transactional.
+Ordinary, `res://`, and `user://` paths resolve through `ProjectSettings`; the latter two support directory-backed paths and the mounted resource overlays below. Raw access uses `FileStream`. The cursor, EOF state, endian state, and individual seekable-file operations are serialized by one instance lock. Process pipes use independent read/write operation locks because their two directions have no shared cursor; native lifetime calls retain a shared process gate. OS.ExecuteWithPipe additionally supplies owned non-seekable FileAccess process streams; these are existing open pipes, not a named-pipe filesystem connector. Compound caller sequences are explicitly not transactional.
 
 Fixed-width binary values and Pascal strings require complete reads. Buffer reads return the available prefix. `ReadReal`/`WriteReal` use binary32 because Electron2D's 2D numeric types are single-precision; explicit double methods remain available. Text is strict UTF-8; CSV supports quoting and multiline fields. `get_var`/`store_var` have no replacement because ADR 0001 excludes a universal value boundary.
 
@@ -186,6 +186,18 @@ Filesystem attributes are exposed through native BCL behavior where the referenc
 The static retained OS service supplies independent process launch/capture/ID/exit/kill operations. ExecuteWithPipe's fixed result dictionary projects to an owned ProcessPipes with PID/StandardIO/StandardError; it does not expose a universal value carrier. PipeWriteException.BytesWritten projects partial-write error state without a mutable numeric last-error slot. Literal argv never implicitly enters a shell. Blocking pipe I/O stays on the caller; native nonblocking readiness is distinct from EOF, and partial writes preserve a retryable consumed-prefix count. Closing streams never owns process termination. SafeHandles retain native stream/process lifetime. General named pipe connections and mobile/application-bundle/console adapters remain separate exact backend dependencies; [processes](../components/processes.md) records exercised behavior and limits.
 
 Desktop restart-on-exit configuration uses that same retained OS and CreateInstance launch path. Copy literal arguments and atomically replace the flag and snapshot; expose independent reads. A single normal managed process-shutdown handler captures the final request and launches after the standalone host has completed Engine.Run cleanup and returned. The library does not terminate its host when a loop ends. Borrowed/owned loop restarts alone do not launch a process. Launch failure is reported to standard error without changing the original exit code; crashes and forced termination do not guarantee normal shutdown. Non-desktop profiles reject this absent independent-process capability explicitly. This is the typed library-host projection of process exit, not a second engine loop.
+
+### Mounted resource packs
+
+PCKPacker is an ElectronObject-owned synchronous writer. PCKStart validates the 256-bit hexadecimal key and positive alignment before replacing a session. AddFile/AddFileFromBuffer consume data immediately; file entries retain MD5, independent offsets and encryption flags. Removal records affect previously mounted pack entries. Flush writes the directory, optionally reports each entry, closes the session and is also performed on deterministic disposal. Standard C# exceptions replace numeric error returns, consistently with FileAccess and ZIP utilities.
+
+The writer emits the pinned PCK version-4 ordinary container. The reader accepts ordinary version-2/3/4 directories, relative file bases, explicit nonnegative offsets and appended-size/magic trailers. Unsupported sparse-bundle and binary-delta flags reject before publication; these exported patch formats require a separate producer and patch decoder, not an inert interpretation as ordinary files. Directory and entry encryption use the PCK envelope (MD5, plaintext length, random 128-bit IV, AES-256-CFB128 over zero-padded blocks); this interoperability envelope is separate from FileAccess's authenticated E2DFILE format and is not an authenticity boundary.
+
+ProjectSettings.LoadResourcePack is a process-wide static operation backed by retained internal mount state under ADR 0095. It mounts PCK and ZIP files, preserving ordinal res:// keys and the replaceFiles policy. An overload accepting a borrowed 32-byte decryption key copies it into mounted ownership; the reference-signature overload uses the all-zero build-default key. Mount parsing is transactional. Existing streams retain their selected entry when later mounts replace or remove its key. Removal records remove a pack overlay and reveal an underlying physical resource, rather than deleting a physical file. Invalid paths and corrupt/truncated/unknown flags cannot publish a partial overlay.
+
+FileAccess, resource loaders and DirAccess share read-only mounted res:// resolution. Physical absolute paths and user:// retain physical semantics. Resource directory listings combine immediate physical and mounted names, with mounted file identities winning collisions. Reading an ordinary packed entry uses a bounded seekable stream with independent cursor and an owned pack file handle; encrypted entries are fully decoded and checked before exposure. Packed metadata has size, zero timestamps and read-only permissions; no fabricated OS handle or mutable file metadata is exposed. Writes/removes/renames targeting mounted identities or mounted directory descendants reject. Copying a packed file out remains supported. CacheMode.Reuse intentionally retains already cached resources; Replace/Ignore see the current mount.
+
+These are asset preparation and loading operations, with allocations and blocking I/O. Runtime frames consume retained resources; mount calls do not run on an automatic frame path. Foreign platforms, native executable section discovery and sparse/delta export acceptance remain distinct verification/dependency gates.
 
 ### Named ZIP archive utilities
 
@@ -210,7 +222,7 @@ Implemented: raw open modes, temporary files, close/flush/seek/resize, position/
 
 Adapted: reference counting to managed memory and `IDisposable`; numeric error returns and static open error to exceptions; encryption to authenticated private containers; snake_case to typed PascalCase.
 
-Dependency-blocked: older native bundles missing the general file-codec ABI, packed/exported virtual filesystem paths and arbitrary named pipe:// connections. Registered UID resolution now executes under ADR 0013; this does not mount resource packs.
+Dependency-blocked: older native bundles missing the general file-codec ABI, sparse/delta exported resource pack formats and arbitrary named pipe:// connections. Registered UID resolution and mounted PCK/ZIP resource overlays execute under ADRs 0013/0019/0020.
 
 Permanently excluded: `Variant` read/write and a shared mutable numeric error slot.
 
@@ -267,7 +279,7 @@ Link creation/detection/reading is enabled only on Linux, Windows, and macOS unt
 
 Drive enumeration uses a private platform snapshot: Windows logical drives with native labels, visible macOS mounts, and Linux `/dev` mounts plus home, desktop, and GTK 3 file bookmarks. Android's StorageVolume/permission semantics and iOS enumeration remain explicit host-integration gaps and throw rather than return misleading zero/empty results. Current-drive, available-space, and filesystem-type queries select the most specific visible mount root containing the current path; Windows space queries accept UNC paths directly and UNC filesystem type is reported as `Network Share`.
 
-The current `res://` and `user://` backends remain directories. Packed/exported resource contents, import remapping, and resource-loader views are not simulated.
+The `user://` backend remains directory-backed. The `res://` backend combines directories with read-only PCK/ZIP mounts under ADR 0020; FileAccess, DirAccess and ResourceLoader share this namespace. Import remapping and sparse/delta exported contents retain separate dependencies.
 
 ### Consequences
 
@@ -276,7 +288,7 @@ The current `res://` and `user://` backends remain directories. Packed/exported 
 - Individual instance calls are thread-safe, but compound caller sequences and external filesystem races remain non-transactional.
 - Copy is not atomic and rename does not simulate cross-volume copy/delete.
 - Native platform behavior requires native-host tests in addition to compilation.
-- Future pack/resource-loader integration can provide another backend without changing current physical-directory semantics.
+- Resource pack lookup is shared with FileAccess/ResourceLoader while physical absolute paths preserve ordinary directory semantics.
 
 ### Rejected alternatives
 
