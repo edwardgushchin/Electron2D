@@ -129,8 +129,8 @@ public sealed partial class AudioServer : ElectronObject
     internal void UnlockCore() { CheckAudioReentrancy(); Monitor.Exit(_gate); }
     internal void EnsureNative()
     {
-        Check(); if (_native is not null) return; _native = new FAudioContext(gate: _gate);
-        try { if (_outputDevice != "Default") _native.SetOutput(_outputDevice); RebuildGraph(); } catch { _native?.Dispose(); _native = null; _samples.Clear(); foreach (var bus in _buses) bus.Voice = 0; throw; }
+        Check(); if (_native is not null) return; _native = new FAudioContext(gate: _gate, movieRate: _movieRate, movieChannels: _movieChannels);
+        try { if (_movieRate == 0 && _outputDevice != "Default") _native.SetOutput(_outputDevice); RebuildGraph(); } catch { _native?.Dispose(); _native = null; _samples.Clear(); foreach (var bus in _buses) bus.Voice = 0; throw; }
     }
     internal FAudioContext Native { get { EnsureNative(); return _native!; } }
     internal nint ResolveBus(string name) { EnsureNative(); var index = GetBusIndexCore(name); return _buses[index < 0 ? 0 : index].InputVoice; }
@@ -140,7 +140,7 @@ public sealed partial class AudioServer : ElectronObject
         return buffer.Read(pair, frames);
     }
     internal void Attach(AudioStreamPlayer player) { Check(); if (!_players.Contains(player)) _players.Add(player); }
-    internal void Detach(AudioStreamPlayer player) { Check(); _players.Remove(player); if (_players.Count == 0 && _native?.HasStandaloneSamples != true) CloseNative(closeInput: false); }
+    internal void Detach(AudioStreamPlayer player) { Check(); _players.Remove(player); if (_movieRate == 0 && _players.Count == 0 && _native?.HasStandaloneSamples != true) CloseNative(closeInput: false); }
     private void RebuildGraph()
     {
         try { RebuildGraphCore(); }
@@ -210,7 +210,12 @@ public sealed partial class AudioServer : ElectronObject
         foreach (var player in _players) player.RefreshVolume();
         _native?.RefreshStandaloneSampleGains();
     }
-    internal static void CloseForEngine() { if (Singleton.IsValueCreated && !Singleton.Value.IsDisposed) Singleton.Value.CloseNative(); }
+    internal static void CloseForEngine()
+    {
+        if (!Singleton.IsValueCreated || Singleton.Value.IsDisposed) return;
+        var server = Singleton.Value;
+        try { server.CloseNative(); } finally { server._movieRate = server._movieChannels = 0; }
+    }
     internal void CloseNative(bool closeInput = true)
     {
         Check(); List<Exception>? errors = null;

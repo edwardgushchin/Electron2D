@@ -183,6 +183,13 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>audio/buses/channel_disable_time; two seconds initially. Read at output preparation.</value>
     public static ProjectSetting<float> AudioBusesChannelDisableTime { get; } = new("audio/buses/channel_disable_time", 2f, value => float.IsFinite(value) && value >= 0);
 
+    /// <summary>Defines the built-in movie writer's synchronous audio rate.</summary>
+    /// <value>editor/movie_writer/mix_rate; 48000 Hz initially, bounded to 1000 through 200000.</value>
+    public static ProjectSetting<int> MovieWriterMixRate { get; } = new("editor/movie_writer/mix_rate", 48000, value => value is >= 1000 and <= 200000);
+    /// <summary>Defines the built-in movie writer's channel arrangement.</summary>
+    /// <value>editor/movie_writer/speaker_mode; Stereo initially.</value>
+    public static ProjectSetting<AudioServer.SpeakerMode> MovieWriterSpeakerMode { get; } = new("editor/movie_writer/speaker_mode", AudioServer.SpeakerMode.Stereo, Enum.IsDefined);
+
     /// <summary>Defines the fixed-step callback frequency used by <see cref="Engine"/>.</summary>
     public static ProjectSetting<int> PhysicsTicksPerSecond { get; } =
         new("physics/common/physics_ticks_per_second", 60, value => value > 0);

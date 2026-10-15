@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-15
 
+MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (48000 Hz, 1000..200000); MovieWriterSpeakerMode is ProjectSetting<AudioServer.SpeakerMode> for editor/movie_writer/speaker_mode (Stereo). Both are registered nonbasic settings, support feature overrides and are sampled by the built-in recording handler. See [movie writing](../components/movie-writing.md).
+
 **Inherits:** [ProjectSettingsRegistry](ProjectSettingsRegistry.md)
 
 **Inherited By:** —
@@ -61,6 +63,8 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 
 | Member | Description |
 | --- | --- |
+| [`public static ProjectSetting<int> MovieWriterMixRate { get; }`](#moviewritermixrate) | Built-in recording rate; 48000 Hz, supported 1000..200000. |
+| [`public static ProjectSetting<AudioServer.SpeakerMode> MovieWriterSpeakerMode { get; }`](#moviewriterspeakermode) | Built-in recording channel mode; Stereo initially. |
 | [`public static ProjectSetting<Color> DebugPathsColor { get; }`](#diagnostics-debugpathscolor) | Defines the color of path curves and tangent markers when scene path diagnostics are enabled. |
 | [`public static ProjectSetting<string> ApplicationName { get; }`](#p-electron2d-projectsettings-applicationname) | Defines the human-readable application name. |
 | [`public static ProjectSetting<string> ApplicationVersion { get; }`](#p-electron2d-projectsettings-applicationversion) | Defines the application version string. |
@@ -196,6 +200,17 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 Allows AudioServer or AudioStreamMicrophone to activate the recording device. Set it in ProjectSettings before Start/Play/manual activation; feature overrides resolve through GetWithOverride. False rejects a new request before activation, while existing capture continues until explicit stop, last automatic release or engine closure. Merely querying/preparing input frequency or selecting generator Input mode opens a paused device and does not record. OS permission/device failure is separate from this typed setting. Isolated registries register independent values and built-in metadata; normal persistence/default suppression applies. Native recording acceptance is documented in the [audio component](../components/audio-playback.md#recording-input).
 
 ## Property Descriptions
+
+<a id="moviewritermixrate"></a>
+### `public static ProjectSetting<int> MovieWriterMixRate { get; }`
+
+Projects editor/movie_writer/mix_rate. Registered nonbasic setting, 48000 Hz by default; FAudio rates 1000..200000 are accepted and other values reject before mutation. Supports ordinary registry storage/feature overrides; the built-in PNG/WAV handler samples it once at recording preparation.
+
+<a id="moviewriterspeakermode"></a>
+### `public static ProjectSetting<AudioServer.SpeakerMode> MovieWriterSpeakerMode { get; }`
+
+Projects editor/movie_writer/speaker_mode. Registered nonbasic typed setting, Stereo by default; undefined enum values reject. All four modes select real 2/4/6/8-channel offline output. Supports registry storage and feature overrides. Does not switch a physical device.
+
 
 <a id="diagnostics-debugpathscolor"></a>
 ### `public static ProjectSetting<Color> DebugPathsColor { get; }`

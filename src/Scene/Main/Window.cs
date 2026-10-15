@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>A configurable native root window that owns scene children.</summary>
-/// <remarks>Pass a detached window to <see cref="Engine.Run"/> or <see cref="Engine.RunAsync"/>. The runtime opens its native window before
+/// <remarks>Pass a detached window to <see cref="Engine.Run(Window)"/> or <see cref="Engine.RunAsync(Window)"/>. The runtime opens its native window before
 /// scene entry and releases it after scene teardown. One native root window is supported. The client size uses pixels
 /// on Wayland, Android, iOS, tvOS and browsers, and native window units elsewhere. The root canvas renders after scene processing;
 /// embedded child windows use a containing viewport configured with GUIEmbedSubwindows.</remarks>
@@ -34,7 +34,7 @@ public partial class Window : Viewport
     private bool _mouseInWindow, _mouseInContent;
 
     /// <summary>Creates a detached visible window with an empty title and a 100 by 100 client area.</summary>
-    /// <remarks>Initial pixel-snapping choices read active project settings. No native resources are acquired until <see cref="Engine.Run"/>.</remarks>
+    /// <remarks>Initial pixel-snapping choices read active project settings. No native resources are acquired until <see cref="Engine.Run(Window)"/>.</remarks>
     public Window()
     {
         SnapTransformsToPixel = ProjectSettings.GetWithOverride(ProjectSettings.SnapTransformsToPixel);

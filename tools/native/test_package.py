@@ -103,11 +103,11 @@ class NativePackageTests(unittest.TestCase):
                     return "cmd LC_ID_DYLIB\n"
                 if args[1] == "-L":
                     return str(library) + ":\n@rpath/libSDL3.0.dylib (compatibility version 0.0.0)\n"
-                return "000001 T _e2d_audio_output_latency\n000002 T _e2d_audio_select_output\n"
+                return "000001 T _e2d_audio_output_latency\n000002 T _e2d_audio_select_output\n000003 T _e2d_audio_create_offline_master\n000004 T _e2d_audio_mix_offline\n"
 
             with patch.object(package.subprocess, "check_output", side_effect=command):
                 self.assertEqual(package.macos_exports(library, "osx-arm64", library.name),
-                                 {"e2d_audio_output_latency", "e2d_audio_select_output"})
+                                 {"e2d_audio_output_latency", "e2d_audio_select_output", "e2d_audio_create_offline_master", "e2d_audio_mix_offline"})
                 with self.assertRaises(ValueError):
                     package.macos_exports(library, "osx-x64", library.name)
             with patch.object(package.subprocess, "check_output", return_value=str(library) + ":\n/build-machine/libFAudio.0.dylib\n"):

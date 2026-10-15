@@ -10,8 +10,10 @@ internal static class AndroidWindowHost
     private static Window? _window;
     private static TaskCompletionSource<int>? _completion;
     private static bool _started;
+    private static string? _moviePath;
+    private static int _movieFPS;
 
-    internal static Task<int> RunAsync(Window window)
+    internal static Task<int> RunAsync(Window window, string? moviePath = null, int movieFPS = 60)
     {
         lock (Gate)
         {
@@ -19,7 +21,7 @@ internal static class AndroidWindowHost
                 throw new InvalidOperationException("An Android window lifecycle is already pending or active.");
             var completion = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
             Engine.Service.ReserveWindowRun();
-            _window = window;
+            _window = window; _moviePath = moviePath; _movieFPS = movieFPS;
             _completion = completion;
             return _completion.Task;
         }
@@ -54,9 +56,9 @@ internal static class AndroidWindowHost
         }
         var code = 0;
         Exception? failure = null;
-        try { code = Engine.Service.RunReservedWindowCore(window); }
+        try { code = Engine.Service.RunReservedWindowCore(window, _moviePath, _movieFPS); }
         catch (Exception error) { failure = error; }
-        finally { lock (Gate) { _window = null; _completion = null; _started = false; } }
+        finally { lock (Gate) { _window = null; _completion = null; _started = false; _moviePath = null; _movieFPS = 0; } }
         if (failure is null) completion.TrySetResult(code);
         else completion.TrySetException(failure);
     }

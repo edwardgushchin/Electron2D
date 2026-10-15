@@ -1,6 +1,8 @@
 # Audio domain
 
-Last updated: 2026-10-06
+Last updated: 2026-10-15
+
+[Movie writing](../components/movie-writing.md) reuses this domain's FAudio graph through an offline mastering voice without an SDL output stream. Prepared PCM is consumed on the recording owner; native sample/stream sources and bus effects retain their ordinary roles.
 
 iOS/tvOS now connect the target static FAudio/SDL closure and native captured-PCM/lifecycle test app. Native simulator execution remains required; unsigned device profiles are build-only. The accepted FAudio backend and ownership semantics are unchanged.
 

@@ -61,3 +61,35 @@ FAUDIOAPI int e2d_audio_select_output(FAudio *audio, SDL_AudioDeviceID id)
     FAudio_PlatformQuit(old);
     return 1;
 }
+
+/* Adapted from the pinned FAudio master initialization. Offline output owns no
+ * SDL stream; the ordinary voice destructor accepts a null platform. */
+FAUDIOAPI uint32_t e2d_audio_create_offline_master(FAudio *audio,
+    FAudioMasteringVoice **master, uint32_t channels, uint32_t rate)
+{
+    if (!audio || audio->master || !master ||
+        (channels != 2 && channels != 4 && channels != 6 && channels != 8) ||
+        rate < FAUDIO_MIN_SAMPLE_RATE || rate > FAUDIO_MAX_SAMPLE_RATE) return FAUDIO_E_INVALID_CALL;
+    FAudioMasteringVoice *voice = audio->pMalloc(sizeof(FAudioVoice));
+    if (!voice) return FAUDIO_E_OUT_OF_MEMORY;
+    FAudio_zero(voice, sizeof(FAudioVoice));
+    voice->audio = audio;
+    voice->type = FAUDIO_VOICE_MASTER;
+    voice->effectLock = FAudio_PlatformCreateMutex();
+    voice->volumeLock = FAudio_PlatformCreateMutex();
+    voice->volume = 1.0f;
+    voice->master.inputChannels = channels;
+    voice->master.inputSampleRate = rate;
+    FAudioVoice_SetEffectChain(voice, NULL);
+    audio->master = voice;
+    WriteWaveFormatExtensible(&audio->mixFormat, channels, rate, &DATAFORMAT_SUBTYPE_IEEE_FLOAT);
+    audio->updateSize = rate / 100;
+    *master = voice;
+    return 0;
+}
+
+FAUDIOAPI void e2d_audio_mix_offline(FAudio *audio, float *output)
+{
+    FAudio_zero(output, audio->updateSize * audio->master->outputChannels * sizeof(float));
+    FAudio_INTERNAL_UpdateEngine(audio, output);
+}

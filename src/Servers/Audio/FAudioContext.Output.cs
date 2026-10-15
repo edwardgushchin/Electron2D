@@ -17,6 +17,7 @@ internal sealed unsafe partial class FAudioContext
     internal double BufferedOutputLatency => AtomicFloatingPoint.Read(ref _outputLatency);
     internal void SetOutput(string name)
     {
+        if (_offlinePCM is not null) throw new InvalidOperationException("Movie recording does not use an output device.");
         EnsureOwner(); var id = SDL.AudioDeviceDefaultPlayback;
         if (name != "Default")
         {

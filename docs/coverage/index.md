@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-15
 
+[Movie writing](../components/movie-writing.md) connects typed writer hooks, fixed-cadence Engine capture, a synchronous no-device FAudio graph and PNG/WAV output. The generic protocol does not close the separately missing built-in AVI/MJPEG and OGV encoder mechanisms.
+
 [Compound slots and free ray network state](../components/physics-network-example.md#compound-slots-and-rotating-ray-under-correction-2026-10-15)
 now require positive per-slot impulse/restoration evidence, geometric contact-index
 association and actual ray angular motion/correction, retaining the preceding

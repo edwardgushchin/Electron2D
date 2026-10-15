@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-15
 
+[Movie writing](../components/movie-writing.md) adds typed recording hooks and fixed-cadence Engine entry points over the ordinary window lifecycle. The current built-in output is a real PNG sequence with synchronous WAV; additional built-in encoders remain implementation work.
+
 ## Skeletal schema policy
 
 The existing PropertyDescriptor/Resource scene-copy machinery now supports an internal force-subresource policy, used by Skeleton stacks to prevent shared mutable scene bindings. Existing DuplicationSession tracking retains aliases, rollback and instance-owned lifetime; no new public selector or reflection path is added.

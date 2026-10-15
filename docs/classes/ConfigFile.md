@@ -1,6 +1,8 @@
 # ConfigFile
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
+
+The built-in JSON context includes AudioServer.SpeakerMode for typed movie project settings, including reflection-disabled NativeAOT storage. This adds metadata for the existing enum and does not introduce untyped configuration values.
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 

@@ -1,6 +1,12 @@
 # Electron2D NuGet delivery
 
-Last updated: 2026-10-12
+Last updated: 2026-10-15
+
+A private prerelease consumer supplies its exact expected native version to the notice audit with --native-package-version; the ordinary release default still requires the product version. Native dependency versions, 70 ELF classification and all 78 notice byte comparisons remain strict.
+
+The desktop publish checker accepts an optional third application-name argument (default CharacterMovement); the movie consumer uses Consumer. It checks a self-contained managed publish, since NativeAOT embeds the engine instead of shipping Electron2D.dll.
+
+Movie recording requires the current four-export audio bridge: e2d_audio_select_output, e2d_audio_output_latency, e2d_audio_create_offline_master and e2d_audio_mix_offline. Source receipts/package and publish validators require all four; an older native bundle does not provide the new offline entry points. [Movie writing](components/movie-writing.md) records the executed package and host scope.
 
 ## Installation model
 

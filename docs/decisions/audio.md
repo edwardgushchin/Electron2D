@@ -1,6 +1,8 @@
 # Electron2D audio decisions
 
-Last updated: 2026-10-04
+Last updated: 2026-10-15
+
+Synchronous movie output uses the same FAudio graph with a private no-device master and owned quantum buffer under [ADR 0109](movie-writing.md#adr-0109). This adds no second mixer or vendor modification; realtime output remains the default.
 
 
 Public process-wide service operations delegate statically to retained objects under [ADR 0095](singleton-services.md#adr-0095). Owning lifetime, threading and native resource contracts below continue to apply.

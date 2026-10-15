@@ -7,6 +7,8 @@ public sealed partial class Engine
 {
     private int _applicationRun;
     private int _maxFps;
+    private string _writeMoviePath = "";
+    internal bool IsRuntimeIdle => Volatile.Read(ref _runtimeState) == RuntimeIdle;
 
     internal bool OwnsWindowRun => Volatile.Read(ref _applicationRun) != 0 && Volatile.Read(ref _runtimeState) != RuntimeStopping;
 
@@ -49,13 +51,14 @@ public sealed partial class Engine
 
     internal void ReserveWindowRun()
     {
+        MovieWriter.EnsureStartupAllowed();
         if (Interlocked.CompareExchange(ref _runtimeState, RuntimeStarting, RuntimeIdle) != RuntimeIdle)
             throw new InvalidOperationException("The engine already has an active MainLoop lifecycle.");
         Volatile.Write(ref _applicationRun, 1);
     }
 
-    internal int RunReservedWindowCore(Window window) =>
-        RunWindowCore(window, asynchronous: false, reserved: true).GetAwaiter().GetResult();
+    internal int RunReservedWindowCore(Window window, string? moviePath = null, int movieFPS = 60) =>
+        RunWindowCore(window, asynchronous: false, reserved: true, moviePath: moviePath, movieFPS: movieFPS).GetAwaiter().GetResult();
 
     internal void CancelReservedWindowCore(Window window)
     {
@@ -68,13 +71,14 @@ public sealed partial class Engine
 
     private void ReleaseWindowRun()
     {
+        Volatile.Write(ref _writeMoviePath, "");
         Volatile.Write(ref _mainLoop, null);
         Volatile.Write(ref _runtimeOwnerThreadId, 0);
         Volatile.Write(ref _applicationRun, 0);
         Volatile.Write(ref _runtimeState, RuntimeIdle);
     }
 
-    private async Task<int> RunWindowCore(Window window, bool asynchronous, bool reserved = false)
+    private async Task<int> RunWindowCore(Window window, bool asynchronous, bool reserved = false, string? moviePath = null, int movieFPS = 60)
     {
         if (!reserved)
         {
@@ -83,7 +87,9 @@ public sealed partial class Engine
         }
         if (Interlocked.CompareExchange(ref _runtimeOwnerThreadId, Environment.CurrentManagedThreadId, 0) != 0)
             throw new InvalidOperationException("The window run already has an owner thread.");
+        Volatile.Write(ref _writeMoviePath, moviePath ?? "");
         SceneTree? tree = null;
+        MovieRecording? movie = null;
         List<Exception> failures = [];
         try
         {
@@ -96,6 +102,10 @@ public sealed partial class Engine
             Input.IgnoreJoypadOnUnfocusedApplication = ProjectSettings.GetWithOverride(ProjectSettings.IgnoreJoypadOnUnfocusedApplication);
             window.OpenNative();
             window.ApplyProjectMSAA();
+            if (moviePath is not null)
+            {
+                movie = new MovieRecording(window.TextureDimensions, movieFPS, moviePath);
+            }
             tree = new SceneTree(window, attachToEngine: true);
             Volatile.Write(ref _mainLoop, tree);
             tree.StartForEngine();
@@ -109,14 +119,15 @@ public sealed partial class Engine
                 if (tree.QuitRequested)
                     break;
                 var now = Stopwatch.GetTimestamp();
-                var elapsed = Stopwatch.GetElapsedTime(lastFrame, now).TotalSeconds;
+                var elapsed = movie is null ? Stopwatch.GetElapsedTime(lastFrame, now).TotalSeconds : 1d / movieFPS;
                 lastFrame = now;
-                if (AdvanceFrameCore(elapsed, out var renderStep))
+                if (AdvanceFrameCore(elapsed, out var renderStep, fixedFPS: movie is null ? 0 : movieFPS))
                     break;
                 window.Render(tree, renderStep);
+                movie?.Write(window);
                 while (!tree.QuitRequested)
                 {
-                    var limit = MaxFPSCore;
+                    var limit = movie is null ? MaxFPSCore : 0;
                     if (limit == 0 && !asynchronous)
                         break;
                     var remaining = limit == 0 ? 0d : 1d / limit - Stopwatch.GetElapsedTime(lastFrame).TotalSeconds;
@@ -144,6 +155,8 @@ public sealed partial class Engine
         {
             // Keep the engine reserved until user teardown callbacks and native release have finished.
             Volatile.Write(ref _runtimeState, RuntimeStopping);
+            try { movie?.Dispose(); }
+            catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
             try { if (tree is not null) tree.Dispose(); else window.Dispose(); }
             catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
             try { AudioServer.CloseForEngine(); }

@@ -1,6 +1,6 @@
 # Engine
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -12,7 +12,7 @@ Last updated: 2026-10-14
 
 > Coordinates process-wide frame scheduling, runtime metrics, and named engine singletons.
 
-Public static declarations are in [`Engine.API.cs`](../../src/Core/Config/Engine.API.cs).
+Public static declarations are in [`Engine.API.cs`](../../src/Core/Config/Engine.API.cs) and [`Engine.Movie.cs`](../../src/Core/Config/Engine.Movie.cs).
 
 ## Description
 
@@ -66,6 +66,9 @@ int exitCode = Engine.Run(window);
 | --- | --- |
 | [`public static int Run(Window window)`](#m-electron2d-engine-run-electron2d-window) | Consumes a validated detached root Window after reserving the idle engine. |
 | [`public static Task<int> RunAsync(Window window)`](#m-electron2d-engine-runasync-electron2d-window) | Owns a yielding root-window lifecycle on the platform application thread. |
+| [`public static int Run(Window window, string moviePath, int fps = 60)`](#m-electron2d-engine-run-electron2d-window-system-string-system-int32) | Records fixed-duration real frames and synchronous audio. |
+| [`public static Task<int> RunAsync(Window window, string moviePath, int fps = 60)`](#m-electron2d-engine-runasync-electron2d-window-system-string-system-int32) | Records while yielding on the application owner context. |
+| [`public static string GetWriteMoviePath()`](#m-electron2d-engine-getwritemoviepath) | Requested movie path during startup/hooks/teardown, otherwise empty. |
 | [`public static void Start(MainLoop mainLoop)`](#m-electron2d-engine-start-electron2d-mainloop) | Attaches and, when necessary, initializes one application loop. |
 | [`public static bool AdvanceFrame(double elapsedSeconds)`](#m-electron2d-engine-advanceframe-system-double) | Advances fixed-step callbacks followed by one process callback. |
 | [`public static void Stop()`](#m-electron2d-engine-stop) | Finalizes and detaches the current application loop. |
@@ -456,11 +459,11 @@ TimeScale, FPS and interpolation snapshots use bit-preserving integer atomics, i
 
 The thread that successfully calls `Start()` owns runtime lifecycle and frames until `Stop()` completes. Wrong-thread frame and stop calls fail before changing runtime state. Timing configuration, metrics, `MainLoop` reads, and registry operations are cross-thread safe. User callbacks, event subscription, registered object state, and the attached loop are not made thread-safe by `Engine`.
 
-No background thread, clock, sleep, synchronization context, or native pump is created. Real cadence depends on the host that measures elapsed time and calls `AdvanceFrame()`.
+Manual embedding creates no background game thread, clock, sleep, synchronization context or native pump. Its cadence depends on the host that supplies AdvanceFrame; Run/RunAsync own the windowed pump and optional recording lifecycle.
 
 ## Dependencies and interactions
 
-The class depends on `ElectronObject`, `MainLoop`, `EngineVersionInfo`, `ProjectSettings`, `Input`, `InputMap`, `AudioServer`, the .NET Base Class Library, and reflection over its own assembly metadata. `SceneTree` can be attached because it is already initialized after successful construction. There is no SDL3-CS, logger, scripting, movie writer, editor, collision-physics, or asset dependency in manual frame scheduling. Engine.Run integrates the root-window renderer/input lifecycle, and both run/stop paths close AudioServer native output.
+The class depends on `ElectronObject`, `MainLoop`, `EngineVersionInfo`, `ProjectSettings`, `Input`, `InputMap`, `AudioServer`, the .NET Base Class Library, and reflection over its own assembly metadata. `SceneTree` can be attached because it is already initialized after successful construction. Manual frame execution invokes no window renderer or movie encoder; startup shares the recording-registry reentry guard. Runtime diagnostics report failures through the existing service. Engine.Run integrates the root-window renderer/input lifecycle, and both run/stop paths close AudioServer native output.
 
 ## Verification and known limitations
 
@@ -515,3 +518,18 @@ The [IP service](../classes/IP.md) and [address-resolution component](../compone
 Runtime messages now use [diagnostic delivery](../components/diagnostics.md). Engine output flags affect its physical stream; typed logger callbacks retain delivery. Host Console writers retain ordinary C# semantics.
 
 `PrintToSTDOUT` and `PrintErrorMessages` are static bool properties with retained Engine descriptors; `CaptureScriptBacktraces()` returns immutable current-thread C# metadata. Live variable inspection retains its debugger dependency.
+
+<a id="m-electron2d-engine-run-electron2d-window-system-string-system-int32"></a>
+### `public static int Run(Window window, string moviePath, int fps = 60)`
+
+Consumes a validated root after reservation, sharing ordinary Run ownership and native owner rules. Positive FPS supplies exact unscaled process/render delta 1/FPS before TimeScale, all due fixed physics steps and no MaxFPS wait. The writer receives actual pixels and synchronous PCM. Invalid path/FPS preserves the root; later selection/format/hook/native failure cleans it. Custom writers remain borrowed. End and later cleanup continue after failures; distinct errors aggregate. Readback/encoding may allocate/block. Built-in .png writes a numbered RGB sequence plus PCM WAV. Returns SceneTree's quit code. See [MovieWriter](MovieWriter.md) and [movie writing](../components/movie-writing.md) for hooks, clocks, file replacement and verification limits.
+
+<a id="m-electron2d-engine-runasync-electron2d-window-system-string-system-int32"></a>
+### `public static Task<int> RunAsync(Window window, string moviePath, int fps = 60)`
+
+Shares the recording Run overload's contract while retaining RunAsync's application synchronization-context/native-owner requirements. Android passes recording configuration through its existing reserved native host. The returned task completes after writer, scene and native cleanup. Non-browser/non-Android startup without an application context fails before ownership. Foreign-host recording execution remains unverified.
+
+<a id="m-electron2d-engine-getwritemoviepath"></a>
+### `public static string GetWriteMoviePath()`
+
+Returns the unchanged requested path throughout recording startup, hooks and owned teardown; returns empty after reservation release and for nonrecording runs. Atomic reads are allowed from any thread. Does not open native services.

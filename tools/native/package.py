@@ -45,7 +45,7 @@ def required_exports(name):
     if "TextBreak" in name:
         return TEXT_EXPORTS
     if "FAudio" in name:
-        return {"e2d_audio_select_output", "e2d_audio_output_latency"}
+        return {"e2d_audio_select_output", "e2d_audio_output_latency", "e2d_audio_create_offline_master", "e2d_audio_mix_offline"}
     if "Electron2DMesh" in name:
         return {"e2d_mesh_scale", "e2d_mesh_simplify"}
     if "ENet" in name:

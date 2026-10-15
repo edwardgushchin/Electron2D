@@ -233,6 +233,7 @@ public sealed partial class ThemeDB
         ["MeshDataTool"] = ["MeshDataTool", "ElectronObject"],
         ["MeshInstance"] = ["MeshInstance", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["MissingResource"] = ["MissingResource", "Resource", "ElectronObject"],
+        ["MovieWriter"] = ["MovieWriter", "ElectronObject"],
         ["MultiMesh"] = ["MultiMesh", "Resource", "ElectronObject"],
         ["MultiMeshInstance"] = ["MultiMeshInstance", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["MultiplayerAPI"] = ["MultiplayerAPI", "ElectronObject"],

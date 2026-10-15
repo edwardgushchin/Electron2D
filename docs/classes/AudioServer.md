@@ -1,6 +1,8 @@
 # AudioServer
 
-Last updated: 2026-10-06
+Last updated: 2026-10-15
+
+During [movie recording](../components/movie-writing.md), the ordinary bus graph targets an offline master at the selected writer rate/channel mode. Last-player detachment retains that graph until runtime cleanup. Changing OutputDevice rejects in this mode; input remains a separately timed external device.
 
 **Declaration:** `public sealed partial class Electron2D.AudioServer` · **Source:** [AudioServer.cs](../../src/Servers/Audio/AudioServer.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 

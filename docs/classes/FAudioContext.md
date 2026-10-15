@@ -1,6 +1,8 @@
 # FAudioContext
 
-Last updated: 2026-10-05
+Last updated: 2026-10-15
+
+Movie mode prepares a no-platform-output master through e2d_audio_create_offline_master and invokes the existing engine procedure synchronously through e2d_audio_mix_offline. Prepared quantum float storage carries unused PCM between movie frames. It retains normal voice destruction and configuration/thread guards; device selection rejects and output latency is zero. See [movie writing](../components/movie-writing.md).
 
 **Declaration:** `internal sealed unsafe partial class Electron2D.FAudioContext : IDisposable` · **Source:** [FAudioContext.cs](../../src/Servers/Audio/FAudioContext.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 

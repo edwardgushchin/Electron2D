@@ -1,6 +1,8 @@
 # Audio playback and routed buses
 
-Last updated: 2026-10-13
+Last updated: 2026-10-15
+
+[Movie recording](movie-writing.md) drives this same prepared FAudio graph synchronously through a no-output-device master. Existing buses/effects, native sample voices and stream sources feed the recording PCM. Prepared quantum storage survives frame boundaries; source/effect failures abort capture. Live playback/input remain separate capabilities.
 
 Private native binaries come from versioned Linux/macOS/Windows packages in ordinary desktop builds. [Native delivery](../native-packaging.md) separates source production, audited packages, executable checks and public publication; complete Windows/macOS target verification remains pending.
 

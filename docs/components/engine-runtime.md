@@ -1,6 +1,8 @@
 # Engine runtime component
 
-Last updated: 2026-10-13
+Last updated: 2026-10-15
+
+[Movie recording](movie-writing.md) uses Run/RunAsync path/FPS overloads over this same lifecycle, an exact fixed process delta and all due physics steps. GetWriteMoviePath remains visible through owned teardown. The offline FAudio graph is prepared before SceneTree construction/Autoplay; writer cleanup precedes scene/native cleanup.
 
 ## Scope
 
@@ -48,7 +50,7 @@ The component depends on Core object lifecycle, MainLoop, ProjectSettings, Trans
 
 ## Current implementation status and exclusions
 
-Managed scheduling, lifecycle integration, timing properties, metrics, architecture/version reporting, and registry behavior are implemented and verified. Engine.Run and Engine.RunAsync supply the monotonic clock, event pumping through Window, MaxFPS waiting and complete scene/window lifetime. Rendering/draw counts, logging flags, generated attribution/license data, script debugging/languages, movie writing, and editor hints remain absent. Their exact reference-API disposition is in the [`Engine` class inventory](../coverage/classes/Engine.md).
+Managed scheduling, lifecycle integration, timing properties, metrics, architecture/version reporting, and registry behavior are implemented and verified. Engine.Run and Engine.RunAsync supply the monotonic clock, event pumping through Window, MaxFPS waiting and complete scene/window lifetime. Rendering draw counts and runtime diagnostic flags/delivery are integrated; [movie writing](movie-writing.md) now provides typed fixed-cadence capture and synchronous audio. Generated attribution/license maps, live script debugging and editor hints retain their coverage dependencies. Their exact reference-API disposition is in the [`Engine` class inventory](../coverage/classes/Engine.md).
 
 ## Verification
 

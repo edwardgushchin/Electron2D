@@ -65,6 +65,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(AudioBusesChannelDisableThresholdDB, isBasic: false);
         RegisterInternal(AudioBusesChannelDisableTime, isBasic: false);
         RegisterInternal(AudioBusesDefaultBusLayout, isBasic: true);
+        RegisterInternal(MovieWriterMixRate, isBasic: false);
+        RegisterInternal(MovieWriterSpeakerMode, isBasic: false);
         RegisterInternal(PhysicsTicksPerSecond, isBasic: true);
         RegisterInternal(Physics2DEngine, isBasic: true);
         RegisterInternal(Physics2DAllowCPUFallback, isBasic: false);
@@ -1168,6 +1170,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
 
     private static bool IsBuiltIn<T>(ProjectSetting<T> setting)
         where T : notnull =>
+        ReferenceEquals(setting, MovieWriterMixRate) ||
+        ReferenceEquals(setting, MovieWriterSpeakerMode) ||
         ReferenceEquals(setting, ApplicationName) ||
         ReferenceEquals(setting, ApplicationVersion) ||
         ReferenceEquals(setting, AudioDriverEnableInput) ||

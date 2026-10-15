@@ -170,6 +170,7 @@ public sealed partial class Engine : ElectronObject
 
     internal void StartCore(MainLoop mainLoop)
     {
+        MovieWriter.EnsureStartupAllowed();
         ArgumentNullException.ThrowIfNull(mainLoop);
 
         if (Interlocked.CompareExchange(ref _runtimeState, RuntimeStarting, RuntimeIdle) != RuntimeIdle)
@@ -204,7 +205,7 @@ public sealed partial class Engine : ElectronObject
         return AdvanceFrameCore(elapsedSeconds, out _);
     }
 
-    private bool AdvanceFrameCore(double elapsedSeconds, out double renderStep)
+    private bool AdvanceFrameCore(double elapsedSeconds, out double renderStep, int fixedFPS = 0)
     {
         if (!double.IsFinite(elapsedSeconds) || elapsedSeconds < 0d)
             throw new ArgumentOutOfRangeException(nameof(elapsedSeconds), elapsedSeconds, "Elapsed time must be finite and non-negative.");
@@ -219,7 +220,8 @@ public sealed partial class Engine : ElectronObject
             var mainLoop = Volatile.Read(ref _mainLoop) ??
                 throw new InvalidOperationException("The running engine has no MainLoop.");
             var physicsTicksPerSecond = PhysicsTicksPerSecondCore;
-            var maxPhysicsSteps = MaxPhysicsStepsPerFrameCore;
+            var fixedCadence = fixedFPS != 0;
+            var maxPhysicsSteps = fixedCadence ? int.MaxValue : MaxPhysicsStepsPerFrameCore;
             var jitterFix = PhysicsJitterFixCore;
             var timeScale = TimeScaleCore;
             var physicsStep = 1d / physicsTicksPerSecond;
@@ -230,8 +232,8 @@ public sealed partial class Engine : ElectronObject
                 _scheduledPhysicsTicksPerSecond = physicsTicksPerSecond;
             }
 
-            var schedulingElapsed = LimitCatchUp(elapsedSeconds, physicsStep, maxPhysicsSteps);
-            var timing = _frameSynchronizer.Advance(physicsStep, physicsTicksPerSecond, schedulingElapsed, jitterFix);
+            var schedulingElapsed = fixedCadence ? elapsedSeconds : LimitCatchUp(elapsedSeconds, physicsStep, maxPhysicsSteps);
+            var timing = _frameSynchronizer.Advance(physicsStep, physicsTicksPerSecond, schedulingElapsed, jitterFix, fixedFPS);
             var unscaledProcessStep = timing.ProcessStep;
 
             if (timing.PhysicsSteps > maxPhysicsSteps)
@@ -498,6 +500,7 @@ public sealed partial class Engine : ElectronObject
         private readonly int[] _typicalPhysicsSteps = new int[ControlSteps];
         private double _timeAccumulator;
         private double _timeDeficit;
+        private long _fixedTickRemainder;
 
         public FrameSynchronizer() => Reset();
 
@@ -505,6 +508,7 @@ public sealed partial class Engine : ElectronObject
         {
             _timeAccumulator = 0d;
             _timeDeficit = 0d;
+            _fixedTickRemainder = 0;
 
             for (var index = 0; index < ControlSteps; index++)
             {
@@ -517,8 +521,14 @@ public sealed partial class Engine : ElectronObject
             double physicsStep,
             int physicsTicksPerSecond,
             double processStep,
-            double jitterFix)
+            double jitterFix,
+            int fixedFPS = 0)
         {
+            if (fixedFPS != 0)
+            {
+                var count = Math.DivRem(_fixedTickRemainder + physicsTicksPerSecond, fixedFPS, out _fixedTickRemainder);
+                return new FrameTiming(processStep, (int)count, _fixedTickRemainder / (double)fixedFPS);
+            }
             if (processStep == 0d)
                 return new FrameTiming(0d, 0, _timeAccumulator / physicsStep);
 

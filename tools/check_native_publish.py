@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check a self-contained CharacterMovement publish and its private Linux text/ENet ABIs."""
+"""Check a self-contained desktop application and its private native ABIs."""
 
 import json
 import re
@@ -31,18 +31,20 @@ def check_private_text(rid: str, library: Path) -> None:
     assert sonames == ["libElectron2DTextBreak.so"], f"Unexpected private text SONAME: {sonames}"
 
 
-def check(rid: str, publish: Path) -> None:
+def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
+    if not app_name or Path(app_name).name != app_name:
+        raise ValueError("The application name must be a nonempty basename")
     if rid.startswith("win-"):
-        platform, host, names = "Windows", "CharacterMovement.exe", ("SDL3.dll", "SDL3_image.dll", "SDL3_shadercross.dll", "Electron2DFreeType.dll", "libHarfBuzzSharp.dll")
+        platform, host, names = "Windows", app_name + ".exe", ("SDL3.dll", "SDL3_image.dll", "SDL3_shadercross.dll", "Electron2DFreeType.dll", "libHarfBuzzSharp.dll")
     elif rid.startswith("osx-"):
-        platform, host, names = "MacOS", "CharacterMovement", ("libSDL3.dylib", "libSDL3_image.dylib", "libSDL3_shadercross.dylib", "libElectron2DFreeType.dylib", "libHarfBuzzSharp.dylib")
+        platform, host, names = "MacOS", app_name, ("libSDL3.dylib", "libSDL3_image.dylib", "libSDL3_shadercross.dylib", "libElectron2DFreeType.dylib", "libHarfBuzzSharp.dylib")
     elif rid.startswith("linux-"):
-        platform, host, names = "Linux", "CharacterMovement", ("libSDL3.so", "libSDL3_image.so", "libSDL3_shadercross.so", "libfreetype.so", "libHarfBuzzSharp.so")
+        platform, host, names = "Linux", app_name, ("libSDL3.so", "libSDL3_image.so", "libSDL3_shadercross.so", "libfreetype.so", "libHarfBuzzSharp.so")
     else:
         raise ValueError(f"No self-contained desktop host for {rid}")
 
     assert (publish / host).is_file() and (publish / "Electron2D.dll").is_file(), "Missing application host or engine"
-    packages = json.loads((publish / "CharacterMovement.deps.json").read_text())["libraries"]
+    packages = json.loads((publish / (app_name + ".deps.json")).read_text())["libraries"]
     expected = {
         f"SDL3-CS.{platform}/3.4.18",
         f"SDL3-CS.{platform}.Image/3.4.6.12",
@@ -87,7 +89,7 @@ def check(rid: str, publish: Path) -> None:
         assert "libSDL3.so.0" in needed and not any("SDL2" in name for name in needed), f"Audio must share SDL3: {needed}"
         audio_symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(audio)], text=True)
         audio_exports = {line.split()[-1] for line in audio_symbols.splitlines()}
-        assert {"e2d_audio_select_output", "e2d_audio_output_latency"} <= audio_exports, "Audio output bridge exports are missing"
+        assert {"e2d_audio_select_output", "e2d_audio_output_latency", "e2d_audio_create_offline_master", "e2d_audio_mix_offline"} <= audio_exports, "Audio output bridge exports are missing"
         assert re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic) == ["libFAudio.so.0"], "Audio SONAME mismatch"
         assert not (publish / "FAudio.dll").exists(), "Managed backend leaked outside the engine assembly"
         assert not list(publish.rglob("libicu*")), "A private text publish must not deliver global ICU libraries"
@@ -100,6 +102,6 @@ def check(rid: str, publish: Path) -> None:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        raise SystemExit("Usage: python3 tools/check_native_publish.py RID PUBLISH_DIRECTORY")
-    check(sys.argv[1], Path(sys.argv[2]))
+    if len(sys.argv) not in (3, 4):
+        raise SystemExit("Usage: python3 tools/check_native_publish.py RID PUBLISH_DIRECTORY [APPLICATION_NAME]")
+    check(sys.argv[1], Path(sys.argv[2]), sys.argv[3] if len(sys.argv) > 3 else "CharacterMovement")

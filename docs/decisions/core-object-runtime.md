@@ -1,6 +1,8 @@
 # Electron2D core object and runtime decisions
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
+
+Recording Run/RunAsync overloads and GetWriteMoviePath follow [ADR 0109](movie-writing.md#adr-0109): the existing scheduler accepts explicit fixed cadence without realtime jitter/catch-up dropping, and the same lifecycle owns real rendered capture plus synchronous audio. Ordinary and manual frame scheduling retain their contracts.
 
 This bounded log owns the complete architectural records for core object and runtime. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -242,7 +244,7 @@ Runtime lifecycle is one atomic owner-thread state machine. Callback exceptions 
 
 The reference singleton registry is adapted to ordinal string names and `ElectronObject`, with a generic typed lookup. It starts with a permanent self-registration named `Engine`; ADR 0019 adds the permanent `ProjectSettings` entry and project-backed timing values. The registry is thread-safe and treats user entries as explicitly non-owning. Untyped dictionaries are not introduced: assembly version data uses immutable `EngineVersionInfo`.
 
-APIs that cannot act without an absent domain are not exposed as stored-but-unused state. MaxFPS now controls Run waiting (zero means unlimited), with no effect on manual AdvanceFrame; persistent project-backed maximum-FPS configuration remains unimplemented; draw counts to rendering; output flags and diagnostic delivery to the executable service in [ADR 0108](diagnostics.md#adr-0108); author/license maps to generated distribution metadata; script backtraces/languages to scripting; movie paths to capture; and editor hints to an editor runtime.
+APIs that cannot act without an absent domain are not exposed as stored-but-unused state. MaxFPS now controls Run waiting (zero means unlimited), with no effect on manual AdvanceFrame; persistent project-backed maximum-FPS configuration remains unimplemented; draw counts to rendering; output flags and diagnostic delivery to the executable service in [ADR 0108](diagnostics.md#adr-0108); author/license maps to generated distribution metadata; script backtraces/languages to scripting; movie paths to the executable capture lifecycle in ADR 0109; and editor hints to an editor runtime.
 
 `Engine.RunAsync(Window)` is the nonblocking projection of that same owned window lifecycle. The browser's single-threaded scheduler and UIKit's native main-thread synchronization context retain window ownership while the runtime yields between frames through one reusable periodic timer. Console callers continue to use Run; non-browser asynchronous startup without a main-thread context fails before ownership. Android's internal GameActivity receives a root queued by RunAsync from Application.OnCreate and invokes the same synchronous video-thread lifecycle. The host binding remains internal; examples use platform SDK entry points and public Electron2D operations, not backend bindings. Borrowed resources stay alive until the returned task completes. This adds no separate game loop, renderer or divergent public platform type set.
 

@@ -456,7 +456,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [MissingResource](classes/MissingResource.md) | Resource | Implemented | 2 |
 | [MobileVRInterface](classes/MobileVRInterface.md) | XRInterface | Excluded | 11 |
 | [ModifierBoneTarget3D](classes/ModifierBoneTarget3D.md) | SkeletonModifier3D | Excluded | 2 |
-| [MovieWriter](classes/MovieWriter.md) | Object | Blocked | 8 |
+| [MovieWriter](classes/MovieWriter.md) | Object | Partial | 8 |
 | [MultiMesh](classes/MultiMesh.md) | Resource | Implemented | 31 |
 | [MultiMeshInstance2D](classes/MultiMeshInstance2D.md) | Node2D | Implemented | 3 |
 | [MultiMeshInstance3D](classes/MultiMeshInstance3D.md) | GeometryInstance3D | Excluded | 1 |

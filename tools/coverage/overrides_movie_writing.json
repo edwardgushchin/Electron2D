@@ -1,0 +1,134 @@
+{
+  "mappings": [
+    {
+      "godot": "class:MovieWriter",
+      "electron2d": "T:Electron2D.MovieWriter",
+      "reason": "ADR 0109: typed writer hooks execute real fixed-cadence viewport capture and synchronous FAudio stream/sample/bus/effect PCM, with borrowed RGB8 Images and Int32 spans, balanced callback/error cleanup and PNG/PCM WAV output. Non-divisible rates use an exact cumulative sample clock. Local Linux GPU/compatibility and package/NativeAOT verification limits are recorded in movie-writing.md."
+    },
+    {
+      "godot": "MovieWriter::method:_get_audio_mix_rate()",
+      "electron2d": "method:Electron2D.MovieWriter.OnGetAudioMixRate()",
+      "reason": "ADR 0109: typed writer hooks execute real fixed-cadence viewport capture and synchronous FAudio stream/sample/bus/effect PCM, with borrowed RGB8 Images and Int32 spans, balanced callback/error cleanup and PNG/PCM WAV output. Non-divisible rates use an exact cumulative sample clock. Local Linux GPU/compatibility and package/NativeAOT verification limits are recorded in movie-writing.md."
+    },
+    {
+      "godot": "MovieWriter::method:_get_audio_speaker_mode()",
+      "electron2d": "method:Electron2D.MovieWriter.OnGetAudioSpeakerMode()",
+      "reason": "ADR 0109: typed writer hooks execute real fixed-cadence viewport capture and synchronous FAudio stream/sample/bus/effect PCM, with borrowed RGB8 Images and Int32 spans, balanced callback/error cleanup and PNG/PCM WAV output. Non-divisible rates use an exact cumulative sample clock. Local Linux GPU/compatibility and package/NativeAOT verification limits are recorded in movie-writing.md."
+    },
+    {
+      "godot": "MovieWriter::method:_get_supported_extensions()",
+      "electron2d": "method:Electron2D.MovieWriter.OnGetSupportedExtensions()",
+      "reason": "ADR 0109: typed writer hooks execute real fixed-cadence viewport capture and synchronous FAudio stream/sample/bus/effect PCM, with borrowed RGB8 Images and Int32 spans, balanced callback/error cleanup and PNG/PCM WAV output. Non-divisible rates use an exact cumulative sample clock. Local Linux GPU/compatibility and package/NativeAOT verification limits are recorded in movie-writing.md."
+    },
+    {
+      "godot": "MovieWriter::method:_handles_file(String:)",
+      "electron2d": "method:Electron2D.MovieWriter.OnHandlesFile(System.String)",
+      "reason": "ADR 0109: typed writer hooks execute real fixed-cadence viewport capture and synchronous FAudio stream/sample/bus/effect PCM, with borrowed RGB8 Images and Int32 spans, balanced callback/error cleanup and PNG/PCM WAV output. Non-divisible rates use an exact cumulative sample clock. Local Linux GPU/compatibility and package/NativeAOT verification limits are recorded in movie-writing.md."
+    },
+    {
+      "godot": "MovieWriter::method:_write_begin(Vector2i:,int:,String:)",
+      "electron2d": "method:Electron2D.MovieWriter.OnWriteBegin(Electron2D.Vector2i,System.Int32,System.String)",
+      "reason": "ADR 0109: typed writer hooks execute real fixed-cadence viewport capture and synchronous FAudio stream/sample/bus/effect PCM, with borrowed RGB8 Images and Int32 spans, balanced callback/error cleanup and PNG/PCM WAV output. Non-divisible rates use an exact cumulative sample clock. Local Linux GPU/compatibility and package/NativeAOT verification limits are recorded in movie-writing.md."
+    },
+    {
+      "godot": "MovieWriter::method:_write_end()",
+      "electron2d": "method:Electron2D.MovieWriter.OnWriteEnd()",
+      "reason": "ADR 0109: typed writer hooks execute real fixed-cadence viewport capture and synchronous FAudio stream/sample/bus/effect PCM, with borrowed RGB8 Images and Int32 spans, balanced callback/error cleanup and PNG/PCM WAV output. Non-divisible rates use an exact cumulative sample clock. Local Linux GPU/compatibility and package/NativeAOT verification limits are recorded in movie-writing.md."
+    },
+    {
+      "godot": "MovieWriter::method:_write_frame(Image:,const void*:)",
+      "electron2d": "method:Electron2D.MovieWriter.OnWriteFrame(Electron2D.Image,System.ReadOnlySpan<System.Int32>)",
+      "reason": "ADR 0109: typed writer hooks execute real fixed-cadence viewport capture and synchronous FAudio stream/sample/bus/effect PCM, with borrowed RGB8 Images and Int32 spans, balanced callback/error cleanup and PNG/PCM WAV output. Non-divisible rates use an exact cumulative sample clock. Local Linux GPU/compatibility and package/NativeAOT verification limits are recorded in movie-writing.md."
+    },
+    {
+      "godot": "MovieWriter::method:add_writer(MovieWriter:)",
+      "electron2d": "method:Electron2D.MovieWriter.AddWriter(Electron2D.MovieWriter)",
+      "reason": "ADR 0109: typed writer hooks execute real fixed-cadence viewport capture and synchronous FAudio stream/sample/bus/effect PCM, with borrowed RGB8 Images and Int32 spans, balanced callback/error cleanup and PNG/PCM WAV output. Non-divisible rates use an exact cumulative sample clock. Local Linux GPU/compatibility and package/NativeAOT verification limits are recorded in movie-writing.md."
+    },
+    {
+      "godot": "Engine::method:get_write_movie_path()",
+      "electron2d": "method:Electron2D.Engine.GetWriteMoviePath()",
+      "reason": "ADR 0109: typed writer hooks execute real fixed-cadence viewport capture and synchronous FAudio stream/sample/bus/effect PCM, with borrowed RGB8 Images and Int32 spans, balanced callback/error cleanup and PNG/PCM WAV output. Non-divisible rates use an exact cumulative sample clock. Local Linux GPU/compatibility and package/NativeAOT verification limits are recorded in movie-writing.md."
+    },
+    {
+      "godot": "ProjectSettings::property:editor/movie_writer/mix_rate",
+      "electron2d": "property:Electron2D.ProjectSettings.MovieWriterMixRate()",
+      "reason": "ADR 0109: typed writer hooks execute real fixed-cadence viewport capture and synchronous FAudio stream/sample/bus/effect PCM, with borrowed RGB8 Images and Int32 spans, balanced callback/error cleanup and PNG/PCM WAV output. Non-divisible rates use an exact cumulative sample clock. Local Linux GPU/compatibility and package/NativeAOT verification limits are recorded in movie-writing.md."
+    },
+    {
+      "godot": "ProjectSettings::property:editor/movie_writer/speaker_mode",
+      "electron2d": "property:Electron2D.ProjectSettings.MovieWriterSpeakerMode()",
+      "reason": "ADR 0109: typed writer hooks execute real fixed-cadence viewport capture and synchronous FAudio stream/sample/bus/effect PCM, with borrowed RGB8 Images and Int32 spans, balanced callback/error cleanup and PNG/PCM WAV output. Non-divisible rates use an exact cumulative sample clock. Local Linux GPU/compatibility and package/NativeAOT verification limits are recorded in movie-writing.md."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADR 0109: typed writer hooks execute real fixed-cadence viewport capture and synchronous FAudio stream/sample/bus/effect PCM, with borrowed RGB8 Images and Int32 spans, balanced callback/error cleanup and PNG/PCM WAV output. Non-divisible rates use an exact cumulative sample clock. Local Linux GPU/compatibility and package/NativeAOT verification limits are recorded in movie-writing.md.",
+      "godot": [
+        "MovieWriter::method:_get_audio_mix_rate()",
+        "MovieWriter::method:_get_audio_speaker_mode()",
+        "MovieWriter::method:_get_supported_extensions()",
+        "MovieWriter::method:_handles_file(String:)",
+        "MovieWriter::method:_write_begin(Vector2i:,int:,String:)",
+        "MovieWriter::method:_write_end()",
+        "MovieWriter::method:_write_frame(Image:,const void*:)",
+        "MovieWriter::method:add_writer(MovieWriter:)",
+        "Engine::method:get_write_movie_path()",
+        "ProjectSettings::property:editor/movie_writer/mix_rate",
+        "ProjectSettings::property:editor/movie_writer/speaker_mode"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0109: registered typed writers and real PNG/WAV recording execute. Built-in AVI/MJPEG still needs RIFF video/audio interleaving/index over the existing JPEG encoder; OGV requires packaged Theora/Vorbis encoding and Ogg muxing, beyond the current decoder. Enter those mechanisms in the next executable recording-codec slices; they are not exclusions or implemented by generic hooks.",
+      "godot": [
+        "class:MovieWriter"
+      ]
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:editor/movie_writer/audio_bit_depth",
+        "ProjectSettings::property:editor/movie_writer/video_quality"
+      ],
+      "state": "Blocked",
+      "reason": "ADR 0109: built-in AVI/MJPEG needs a RIFF video/audio interleaver and index over the existing JPEG encoder. Its first executable encoder slice must consume typed video quality and PCM 16/32-bit settings; PNG/WAV uses fixed 32-bit PCM. No editor runtime is required for this dependency."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:editor/movie_writer/ogv/audio_quality",
+        "ProjectSettings::property:editor/movie_writer/ogv/encoding_speed",
+        "ProjectSettings::property:editor/movie_writer/ogv/keyframe_interval"
+      ],
+      "state": "Blocked",
+      "reason": "ADR 0109: first executable OGV encoder slice must supply native Theora/Vorbis encoding and Ogg muxing through the source/native package gates, with the three real quality/speed/keyframe controls. The existing Vorbis decoder cannot encode. Implementing that layer is authorized; no separate user command is required."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:editor/movie_writer/fps",
+        "ProjectSettings::property:editor/movie_writer/movie_file",
+        "ProjectSettings::property:editor/movie_writer/disable_vsync"
+      ],
+      "state": "Blocked",
+      "reason": "ADRs 0090/0109: the current host accepts explicit path/FPS. The first movie project/profile startup adapter must bind configured path/cadence and native presentation override with explicit-argument precedence before recording startup. That adapter is absent; these are not implemented by the explicit Run overloads and do not require a self-hosted editor."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.MovieWriter..ctor()",
+      "reason": "ADR 0109: typed construction/disposal guard or Engine-owned host projection of the same non-real-time movie path/FPS startup role, without a command-line-only frontend or backend pointers."
+    },
+    {
+      "electron2d": "method:Electron2D.MovieWriter.ValidateDisposal()",
+      "reason": "ADR 0109: typed construction/disposal guard or Engine-owned host projection of the same non-real-time movie path/FPS startup role, without a command-line-only frontend or backend pointers."
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.Run(Electron2D.Window,System.String,System.Int32)",
+      "reason": "ADR 0109: typed construction/disposal guard or Engine-owned host projection of the same non-real-time movie path/FPS startup role, without a command-line-only frontend or backend pointers."
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.RunAsync(Electron2D.Window,System.String,System.Int32)",
+      "reason": "ADR 0109: typed construction/disposal guard or Engine-owned host projection of the same non-real-time movie path/FPS startup role, without a command-line-only frontend or backend pointers."
+    }
+  ]
+}

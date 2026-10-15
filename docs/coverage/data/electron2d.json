@@ -6816,6 +6816,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.MovieWriter",
+    "kind": "type",
+    "declaringType": "Electron2D.MovieWriter",
+    "name": "MovieWriter",
+    "signature": "public abstract class Electron2D.MovieWriter",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.MultiMesh",
     "kind": "type",
     "declaringType": "Electron2D.MultiMesh",
@@ -19073,6 +19088,19 @@
     "name": ".ctor",
     "signature": "public MissingResource()",
     "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.MovieWriter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.MovieWriter",
+    "name": ".ctor",
+    "signature": "protected MovieWriter()",
+    "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -91310,6 +91338,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Engine.GetWriteMoviePath()",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "GetWriteMoviePath",
+    "signature": "public static System.String GetWriteMoviePath()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Engine.HasSingleton(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.Engine",
@@ -91372,6 +91413,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Engine.Run(Electron2D.Window,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "Run",
+    "signature": "public static System.Int32 Run(Electron2D.Window window, System.String moviePath, System.Int32 fps = 60)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "window",
+        "type": "Electron2D.Window",
+        "default": null
+      },
+      {
+        "name": "moviePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fps",
+        "type": "System.Int32",
+        "default": "60"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Engine.RunAsync(Electron2D.Window)",
     "kind": "method",
     "declaringType": "Electron2D.Engine",
@@ -91385,6 +91455,35 @@
         "name": "window",
         "type": "Electron2D.Window",
         "default": null
+      }
+    ],
+    "returnType": "System.Threading.Tasks.Task\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Engine.RunAsync(Electron2D.Window,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "RunAsync",
+    "signature": "public static System.Threading.Tasks.Task\u003CSystem.Int32\u003E RunAsync(Electron2D.Window window, System.String moviePath, System.Int32 fps = 60)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "window",
+        "type": "Electron2D.Window",
+        "default": null
+      },
+      {
+        "name": "moviePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fps",
+        "type": "System.Int32",
+        "default": "60"
       }
     ],
     "returnType": "System.Threading.Tasks.Task\u003CSystem.Int32\u003E",
@@ -117278,6 +117377,162 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MovieWriter.AddWriter(Electron2D.MovieWriter)",
+    "kind": "method",
+    "declaringType": "Electron2D.MovieWriter",
+    "name": "AddWriter",
+    "signature": "public static System.Void AddWriter(Electron2D.MovieWriter writer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "writer",
+        "type": "Electron2D.MovieWriter",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MovieWriter.OnGetAudioMixRate()",
+    "kind": "method",
+    "declaringType": "Electron2D.MovieWriter",
+    "name": "OnGetAudioMixRate",
+    "signature": "protected virtual System.Int32 OnGetAudioMixRate()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MovieWriter.OnGetAudioSpeakerMode()",
+    "kind": "method",
+    "declaringType": "Electron2D.MovieWriter",
+    "name": "OnGetAudioSpeakerMode",
+    "signature": "protected virtual Electron2D.AudioServer.SpeakerMode OnGetAudioSpeakerMode()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioServer.SpeakerMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MovieWriter.OnGetSupportedExtensions()",
+    "kind": "method",
+    "declaringType": "Electron2D.MovieWriter",
+    "name": "OnGetSupportedExtensions",
+    "signature": "protected abstract System.String[] OnGetSupportedExtensions()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MovieWriter.OnHandlesFile(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.MovieWriter",
+    "name": "OnHandlesFile",
+    "signature": "protected abstract System.Boolean OnHandlesFile(System.String path)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MovieWriter.OnWriteBegin(Electron2D.Vector2i,System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.MovieWriter",
+    "name": "OnWriteBegin",
+    "signature": "protected abstract System.Void OnWriteBegin(Electron2D.Vector2i movieSize, System.Int32 fps, System.String basePath)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "movieSize",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "fps",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "basePath",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MovieWriter.OnWriteEnd()",
+    "kind": "method",
+    "declaringType": "Electron2D.MovieWriter",
+    "name": "OnWriteEnd",
+    "signature": "protected abstract System.Void OnWriteEnd()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MovieWriter.OnWriteFrame(Electron2D.Image,System.ReadOnlySpan\u003CSystem.Int32\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.MovieWriter",
+    "name": "OnWriteFrame",
+    "signature": "protected abstract System.Void OnWriteFrame(Electron2D.Image frameImage, System.ReadOnlySpan\u003CSystem.Int32\u003E audioFrameBlock)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "frameImage",
+        "type": "Electron2D.Image",
+        "default": null
+      },
+      {
+        "name": "audioFrameBlock",
+        "type": "System.ReadOnlySpan\u003CSystem.Int32\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MovieWriter.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.MovieWriter",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -230595,6 +230850,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.MovieWriterMixRate()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "MovieWriterMixRate",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E MovieWriterMixRate { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.MovieWriterSpeakerMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "MovieWriterSpeakerMode",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.AudioServer.SpeakerMode\u003E MovieWriterSpeakerMode { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.AudioServer.SpeakerMode\u003E",
     "value": null
   },
   {

@@ -42,7 +42,7 @@ NATIVE_GROUPS = {
 }
 
 
-def check(publish: Path, application_licenses=()) -> None:
+def check(publish: Path, application_licenses=(), native_package_version: str | None = None) -> None:
     deps_files = list(publish.glob("*.deps.json"))
     assert len(deps_files) == 1, "Expected one application deps.json"
     app = deps_files[0].name.removesuffix(".deps.json")
@@ -50,7 +50,7 @@ def check(publish: Path, application_licenses=()) -> None:
     runtime = [p for p in packages if p.startswith("runtimepack.Microsoft.NETCore.App.Runtime.")]
     assert runtime == ["runtimepack.Microsoft.NETCore.App.Runtime.linux-x64/10.0.1"], f"Unreviewed runtime pack: {runtime}"
     private_packages = {p for p in packages if p.startswith("Electron2D.") and p.split("/", 1)[0] in {"Electron2D." + name for name in ("Linux", "MacOS", "Windows", "Android", "iOS", "tvOS", "Web")}}
-    version = ET.parse(ROOT / "tools/native-package.props").findtext(".//Electron2DVersion")
+    version = native_package_version or ET.parse(ROOT / "tools/native-package.props").findtext(".//Electron2DVersion")
     assert private_packages == {"Electron2D.Linux/" + version}, f"Wrong selected native package: {private_packages}"
     assert PACKAGES <= packages, f"Unreviewed native package versions: {PACKAGES - packages}"
 
@@ -89,5 +89,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("publish", type=Path)
     parser.add_argument("--application-license", type=Path, action="append", default=[])
+    parser.add_argument("--native-package-version", help="Exact expected native package version; defaults to the product version")
     args = parser.parse_args()
-    check(args.publish, args.application_license)
+    check(args.publish, args.application_license, args.native_package_version)

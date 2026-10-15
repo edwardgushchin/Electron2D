@@ -89,7 +89,7 @@ internal sealed unsafe partial class FAudioContext : IDisposable
             Check(F.FAudioVoice_GetEffectParameters(voice, (uint)_busEffects[voice].MeterIndex, (nint)(&levels), (uint)sizeof(Levels)), "read bus meter"); return peaks[channel];
         }
     }
-    internal FAudioContext(uint deviceIndex = 0, object? gate = null)
+    internal FAudioContext(uint deviceIndex = 0, object? gate = null, int movieRate = 0, int movieChannels = 2)
     {
         Gate = gate ?? new();
         if (!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid() && !OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS() && !OperatingSystem.IsBrowser()) throw new NotSupportedException("Native audio output requires a packaged desktop, mobile or browser FAudio backend.");
@@ -97,14 +97,24 @@ internal sealed unsafe partial class FAudioContext : IDisposable
         {
             Check(Create(out _engine, 0, F.FAUDIO_DEFAULT_PROCESSOR, AllocateAddress, FreeAddress, ReallocateAddress), "create engine");
             _self = GCHandle.Alloc(this); SetProcedure(_engine, (nint)(delegate* unmanaged[Cdecl]<nint, nint, float*, nint, void>)&Process, GCHandle.ToIntPtr(_self));
-            Check(F.FAudio_GetDeviceDetails(_engine, deviceIndex, out var device), "query output format");
-            MixRate = checked((int)device.OutputFormat.Format.nSamplesPerSec); Channels = Math.Max(2, checked((int)device.OutputFormat.Format.nChannels)); if (Channels is not (2 or 4 or 6 or 8)) throw new NotSupportedException("The output layout has no supported stereo-pair profile."); QuantumFrames = MixRate / 100;
-            Check(F.FAudio_CreateMasteringVoice(_engine, out _master, (uint)Channels, (uint)MixRate, 0, deviceIndex, 0), "create output voice");
-            F.FAudio_GetProcessingQuantum(_engine, out var frames, out _); QuantumFrames = checked((int)frames); if (QuantumFrames == 0) throw new InvalidOperationException("The native output has an empty processing quantum.");
+            if (movieRate != 0)
+            {
+                MixRate = movieRate; Channels = movieChannels;
+                Check(CreateOfflineMaster(_engine, out _master, (uint)Channels, (uint)MixRate), "create offline output voice");
+                QuantumFrames = MixRate / 100;
+                _offlinePCM = new float[QuantumFrames * Channels]; _offlinePosition = _offlinePCM.Length;
+            }
+            else
+            {
+                Check(F.FAudio_GetDeviceDetails(_engine, deviceIndex, out var device), "query output format");
+                MixRate = checked((int)device.OutputFormat.Format.nSamplesPerSec); Channels = Math.Max(2, checked((int)device.OutputFormat.Format.nChannels)); if (Channels is not (2 or 4 or 6 or 8)) throw new NotSupportedException("The output layout has no supported stereo-pair profile."); QuantumFrames = MixRate / 100;
+                Check(F.FAudio_CreateMasteringVoice(_engine, out _master, (uint)Channels, (uint)MixRate, 0, deviceIndex, 0), "create output voice");
+                F.FAudio_GetProcessingQuantum(_engine, out var frames, out _); QuantumFrames = checked((int)frames); if (QuantumFrames == 0) throw new InvalidOperationException("The native output has an empty processing quantum.");
+            }
             var settings = ProjectSettings.Service; var time = settings.GetWithOverrideCore(ProjectSettings.AudioBusesChannelDisableTime); var threshold = settings.GetWithOverrideCore(ProjectSettings.AudioBusesChannelDisableThresholdDB);
             if (!float.IsFinite(time) || time < 0 || time * (double)MixRate > long.MaxValue || !float.IsFinite(threshold)) throw new ArgumentOutOfRangeException(nameof(settings), "Bus activity settings require a finite threshold and nonnegative representable timeout.");
             _disableFrames = (long)(time * MixRate); _disableThreshold = (float)Mathf.DBToLinear(threshold);
-            UpdateOutputSnapshot();
+            if (movieRate == 0) UpdateOutputSnapshot();
         }
         catch { Dispose(); throw; }
     }
