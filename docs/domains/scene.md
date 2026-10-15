@@ -1,6 +1,6 @@
 # Scene domain
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 ## Tile grid and terrain integration
 
@@ -353,6 +353,8 @@ and hardware/window/performance acceptance remains open.
 
 The NativeAOT prerequisite slice uses bound virtual delegates for CodeEdit/GraphEdit, exact existing types for empty custom-data arrays and prepared string JSON metadata. Script source registration retains its explicit file/PDB and untrimmed metadata prerequisites; metadata is captured once and queried through copied snapshots. Public-only executable evidence is recorded in bin/physics-aot-prerequisites/2026-10-14; this does not establish native rendering, foreign-platform or complete scripting acceptance.
 
-Node scheduling now captures actual enabled public/internal lane membership, with next-frame activation of absent participants and immediate suppression of disabled captured callbacks. Exit/reentry cannot revive a stale entry. Public neutral/spatial/physical consumers exercise this alongside real selected frames and queries; the scene-tree component retains the open process-thread-group/mailbox and wider acceptance gates.
+Node scheduling now captures actual enabled public/internal lane membership, with next-frame activation of absent participants and immediate suppression of disabled captured callbacks. Exit/reentry cannot revive a stale entry. Public neutral/spatial/physical consumers exercise this alongside real selected frames and queries; the scene-tree component describes the current group/mailbox profile and wider acceptance gates.
 
-The Node call/set/notify thread-safe and deferred-group family now publishes typed operations to the current main processing owner. A distinct FIFO runs before and after callbacks, preserving weak receiver lifetime, current-owner transfer, error continuation and prepared zero-byte delivery alongside actual physical frames. Explicit worker processing groups and message masks remain open; see the scene-tree component.
+The Node call/set/notify thread-safe and deferred-group family now publishes typed operations to the current main processing owner. A distinct FIFO runs before and after callbacks, preserving weak receiver lifetime, current-owner transfer, error continuation and prepared zero-byte delivery alongside actual physical frames. Explicit worker processing groups and message masks are implemented by the profile below; broader worker scene/backend access remains open.
+
+Node processing now includes real inherited main/worker groups, ordered barriers, per-lane message-only masks, cached member schedules and typed cross-group dispatch. Public tests connect worker results to actual physics on the owner and retain general Node/CanvasItem/Entity/backend worker-access gaps as Partial.

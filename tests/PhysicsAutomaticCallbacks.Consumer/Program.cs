@@ -1,5 +1,6 @@
 using Electron2D;
 
+if (args.Contains("--process-groups-child")) { BackendChecks.ReadGroupSettings(args[Array.IndexOf(args, "--process-groups-child") + 1]); return; }
 if (args.Contains("--resource-identity-child"))
 {
     BackendChecks.ReadResourceIdentity(args[Array.IndexOf(args, "--resource-identity-child") + 1], args[0] == "gpu" ? PhysicsServer.Backend.GPU : args[0] == "cpu" ? PhysicsServer.Backend.CPU : null, args.Contains("threaded"));
@@ -8,7 +9,8 @@ if (args.Contains("--resource-identity-child"))
 PhysicsAOTPrerequisiteTests.Run();
 
 var backend = args.Length > 0 && args[0] == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
-if (args.Contains("--thread-messages")) BackendChecks.RunThreadMessages(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));
+if (args.Contains("--process-groups")) BackendChecks.RunProcessGroups(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));
+else if (args.Contains("--thread-messages")) BackendChecks.RunThreadMessages(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));
 else if (args.Contains("--node-scheduling")) BackendChecks.RunNodeScheduling(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));
 else if (args.Contains("--resource-identity")) BackendChecks.RunResourceIdentity(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));
 else if (args.Contains("--local-scenes")) BackendChecks.RunLocalScenes(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));

@@ -7280,6 +7280,42 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Node.ProcessThreadGroupMode",
+    "kind": "type",
+    "declaringType": "Electron2D.Node.ProcessThreadGroupMode",
+    "name": "ProcessThreadGroupMode",
+    "signature": "public enum Electron2D.Node.ProcessThreadGroupMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Node.ProcessThreadMessageFlags",
+    "kind": "type",
+    "declaringType": "Electron2D.Node.ProcessThreadMessageFlags",
+    "name": "ProcessThreadMessageFlags",
+    "signature": "public enum Electron2D.Node.ProcessThreadMessageFlags",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.NodeAutoTranslateMode",
     "kind": "type",
     "declaringType": "Electron2D.NodeAutoTranslateMode",
@@ -38834,6 +38870,84 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Node.InternalMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Node.ProcessThreadGroupMode.Inherit()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Node.ProcessThreadGroupMode",
+    "name": "Inherit",
+    "signature": "public const Electron2D.Node.ProcessThreadGroupMode Inherit = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.ProcessThreadGroupMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Node.ProcessThreadGroupMode.MainThread()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Node.ProcessThreadGroupMode",
+    "name": "MainThread",
+    "signature": "public const Electron2D.Node.ProcessThreadGroupMode MainThread = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.ProcessThreadGroupMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Node.ProcessThreadGroupMode.SubThread()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Node.ProcessThreadGroupMode",
+    "name": "SubThread",
+    "signature": "public const Electron2D.Node.ProcessThreadGroupMode SubThread = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.ProcessThreadGroupMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Node.ProcessThreadMessageFlags.All()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Node.ProcessThreadMessageFlags",
+    "name": "All",
+    "signature": "public const Electron2D.Node.ProcessThreadMessageFlags All = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.ProcessThreadMessageFlags",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.Node.ProcessThreadMessageFlags.Physics()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Node.ProcessThreadMessageFlags",
+    "name": "Physics",
+    "signature": "public const Electron2D.Node.ProcessThreadMessageFlags Physics = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.ProcessThreadMessageFlags",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Node.ProcessThreadMessageFlags.Process()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Node.ProcessThreadMessageFlags",
+    "name": "Process",
+    "signature": "public const Electron2D.Node.ProcessThreadMessageFlags Process = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.ProcessThreadMessageFlags",
     "value": "1"
   },
   {
@@ -223026,6 +223140,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Node.ProcessThreadGroup()",
+    "kind": "property",
+    "declaringType": "Electron2D.Node",
+    "name": "ProcessThreadGroup",
+    "signature": "public Electron2D.Node.ProcessThreadGroupMode ProcessThreadGroup { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.ProcessThreadGroupMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Node.ProcessThreadGroupOrder()",
+    "kind": "property",
+    "declaringType": "Electron2D.Node",
+    "name": "ProcessThreadGroupOrder",
+    "signature": "public System.Int32 ProcessThreadGroupOrder { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Node.ProcessThreadMessages()",
+    "kind": "property",
+    "declaringType": "Electron2D.Node",
+    "name": "ProcessThreadMessages",
+    "signature": "public Electron2D.Node.ProcessThreadMessageFlags ProcessThreadMessages { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.ProcessThreadMessageFlags",
     "value": null
   },
   {

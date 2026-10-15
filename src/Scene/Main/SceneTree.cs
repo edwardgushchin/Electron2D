@@ -43,11 +43,8 @@ public sealed partial class SceneTree : MainLoop
     private readonly int _ownerThreadId = Environment.CurrentManagedThreadId;
     private readonly HashSet<GroupOperationKey> _uniqueGroupOperations = [];
     private readonly List<Node> _scheduleTraversal = [];
-    private readonly List<ScheduledNode> _processSchedule = [], _physicsSchedule = [];
     private ulong _scheduleRevision;
-    private ulong _processScheduleRevision = ulong.MaxValue, _physicsScheduleRevision = ulong.MaxValue;
-    private ulong _processSchedulePath = ulong.MaxValue, _physicsSchedulePath = ulong.MaxValue;
-    internal void InvalidateProcessOrder() => _scheduleRevision++;
+    internal void InvalidateProcessOrder() => Interlocked.Increment(ref _scheduleRevision);
     private readonly List<SceneTreeTimer> _timerSnapshot = [];
     private readonly List<SceneTreeTimer> _timers = [];
     private readonly List<Tween> _tweenSnapshot = [];
@@ -1103,7 +1100,7 @@ public sealed partial class SceneTree : MainLoop
 
         _tweens.Clear();
         _scheduleTraversal.Clear();
-        _processSchedule.Clear(); _physicsSchedule.Clear();
+        foreach (var group in _processingGroups.Values) { group.IdleSchedule.Clear(); group.PhysicsSchedule.Clear(); }
         _timerSnapshot.Clear();
         _tweenSnapshot.Clear();
 
@@ -1287,29 +1284,7 @@ public sealed partial class SceneTree : MainLoop
                 try { NavigationServer.Service.StepAvoidance(delta, this); } catch (Exception error) { CollectException(ref errors, error); }
             }
 
-            FlushProcessMessages(ref errors);
-            var scheduledNodes = CaptureScheduledNodes(physics);
-
-            foreach (var item in scheduledNodes)
-            {
-                var node = item.Node;
-                if (!node.HasProcessCallback(physics))
-                    continue;
-
-                if (node.IsDisposed || !ReferenceEquals(node.Tree, this) || node.TreeAttachmentVersion != item.Attachment || !node.CanProcess())
-                    continue;
-
-                try
-                {
-                    node.RunProcess(unscaledDelta, physics);
-                }
-                catch (Exception error)
-                {
-                    CollectException(ref errors, error);
-                }
-            }
-
-            FlushProcessMessages(ref errors);
+            ProcessNodeGroups(unscaledDelta, physics, ref errors);
             if (physics) StepPhysicsWorlds(delta, ref errors);
 
             if (!physics) FlushTransformNotifications(ref errors);
@@ -1398,43 +1373,6 @@ public sealed partial class SceneTree : MainLoop
                 CollectException(ref errors, error);
             }
         }
-    }
-
-    private List<ScheduledNode> CaptureScheduledNodes(bool physics)
-    {
-        var schedule = physics ? _physicsSchedule : _processSchedule;
-        ref var path = ref (physics ? ref _physicsSchedulePath : ref _processSchedulePath);
-        ref var revision = ref (physics ? ref _physicsScheduleRevision : ref _processScheduleRevision);
-        if (path == PathRevision && revision == _scheduleRevision) return schedule;
-        schedule.Clear();
-        _scheduleTraversal.Clear();
-        _scheduleTraversal.Add(Root);
-        var order = 0;
-        var previousPriority = int.MinValue;
-        var sorted = true;
-
-        while (_scheduleTraversal.Count != 0)
-        {
-            var last = _scheduleTraversal.Count - 1;
-            var node = _scheduleTraversal[last];
-            _scheduleTraversal.RemoveAt(last);
-            if (node.HasProcessCallback(physics))
-            {
-                var priority = physics ? node.PhysicsProcessPriority : node.ProcessPriority;
-                if (priority < previousPriority) sorted = false;
-                previousPriority = priority;
-                schedule.Add(new ScheduledNode(node, priority, order++, node.TreeAttachmentVersion));
-            }
-
-            var children = node.AllChildren;
-            for (var index = children.Count - 1; index >= 0; index--)
-                _scheduleTraversal.Add(children[index]);
-        }
-        if (!sorted) schedule.Sort();
-        // Preparing either lane also prepares storage for the other lane's first frame.
-        (physics ? _processSchedule : _physicsSchedule).EnsureCapacity(schedule.Capacity);
-        path = PathRevision; revision = _scheduleRevision;
-        return schedule;
     }
 
     private void CaptureInputNodes()
@@ -2023,7 +1961,7 @@ public sealed partial class SceneTree : MainLoop
     {
         _cursorRefreshWindows.Clear();
         DiscardDeferred(_deferred); if (_deferredSpare is not null) DiscardDeferred(_deferredSpare);
-        DiscardDeferred(_processMessages);
+        foreach (var group in _processingGroups.Values) DiscardDeferred(group.Messages);
         _deletions = new ConcurrentQueue<DeletionRequest>();
         _uniqueGroupOperations.Clear();
         _transformChanges.Clear(); _nextTransformNotification = null;
@@ -2091,7 +2029,7 @@ public sealed partial class SceneTree : MainLoop
             throw new AggregateException(message, errors);
     }
 
-    private readonly record struct ScheduledNode(Node Node, int Priority, int Order, ulong Attachment) : IComparable<ScheduledNode>
+    internal readonly record struct ScheduledNode(Node Node, int Priority, int Order, ulong Attachment) : IComparable<ScheduledNode>
     {
         public int CompareTo(ScheduledNode other)
         {
