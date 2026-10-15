@@ -271,7 +271,7 @@ public partial class Window : Viewport
         base.Dispose(disposing);
     }
 
-    internal void OpenNative()
+    internal void OpenNative(bool disableVSync = false)
     {
         if (_keepTitleVisible) throw new NotSupportedException("Native title measurement is unavailable.");
         _display = DisplayServer.OpenForRendering(_title, _size, hidden: !Visible);
@@ -306,6 +306,7 @@ public partial class Window : Viewport
         _display.TextInputCore += HandleTextInput;
         _display.TextEditingCore += HandleTextEditing;
         _display.FilesDroppedCore += HandleFilesDropped;
+        if (disableVSync) DisplayServer.WindowSetVSyncMode(DisplayServer.VSyncMode.Disabled);
         _renderer = RenderingServer.Open(this, _display.AcquireRenderingWindow());
         _display.SetGraphicsHandleQuery(_renderer.GetNativeHandle);
     }

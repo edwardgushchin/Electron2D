@@ -183,6 +183,17 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>audio/buses/channel_disable_time; two seconds initially. Read at output preparation.</value>
     public static ProjectSetting<float> AudioBusesChannelDisableTime { get; } = new("audio/buses/channel_disable_time", 2f, value => float.IsFinite(value) && value >= 0);
 
+    /// <summary>Recording cadence used by Engine.RunMovie and Engine.RunMovieAsync.</summary>
+    /// <value>editor/movie_writer/fps; 60 initially, accepts positive frames per second.</value>
+    public static ProjectSetting<int> MovieWriterFPS { get; } = new("editor/movie_writer/fps", 60, value => value > 0);
+    /// <summary>Output path used by Engine.RunMovie and Engine.RunMovieAsync.</summary>
+    /// <value>editor/movie_writer/movie_file; empty initially. A profile run requires a nonblank path.</value>
+    public static ProjectSetting<string> MovieWriterFile { get; } = new("editor/movie_writer/movie_file", "");
+    /// <summary>Requests immediate presentation when a movie window is prepared.</summary>
+    /// <value>editor/movie_writer/disable_vsync; false initially.</value>
+    /// <remarks>Applies to configured and explicit movie runs, before renderer creation. Unsupported native policies follow DisplayServer's fallback.</remarks>
+    public static ProjectSetting<bool> MovieWriterDisableVSync { get; } = new("editor/movie_writer/disable_vsync", false);
+
     /// <summary>Defines the built-in movie writer's synchronous audio rate.</summary>
     /// <value>editor/movie_writer/mix_rate; 48000 Hz initially, bounded to 1000 through 200000.</value>
     public static ProjectSetting<int> MovieWriterMixRate { get; } = new("editor/movie_writer/mix_rate", 48000, value => value is >= 1000 and <= 200000);

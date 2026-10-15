@@ -67,6 +67,9 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<AudioServer.SpeakerMode> MovieWriterSpeakerMode { get; }`](#moviewriterspeakermode) | Built-in recording channel mode; Stereo initially. |
 | [`public static ProjectSetting<float> MovieWriterVideoQuality { get; }`](#moviewritervideoquality) | AVI/Theora quality, 0.75 initially; finite 0..1. |
 | [`public static ProjectSetting<int> MovieWriterAudioBitDepth { get; }`](#moviewriteraudiobitdepth) | AVI PCM depth, 16 initially; accepts 16 or 32. |
+| [`public static ProjectSetting<int> MovieWriterFPS { get; }`](#moviewriterfps) | Configured recording cadence, 60 initially; positive FPS. |
+| [`public static ProjectSetting<string> MovieWriterFile { get; }`](#moviewriterfile) | Configured recording output, empty initially. |
+| [`public static ProjectSetting<bool> MovieWriterDisableVSync { get; }`](#moviewriterdisablevsync) | Request immediate movie presentation, false initially. |
 | [`public static ProjectSetting<float> MovieWriterOGVAudioQuality { get; }`](#moviewriterogvaudioquality) | Vorbis quality, 0.5 initially; finite -0.1..1. |
 | [`public static ProjectSetting<int> MovieWriterOGVEncodingSpeed { get; }`](#moviewriterogvencodingspeed) | Theora speed, 4 initially; 1..4. |
 | [`public static ProjectSetting<int> MovieWriterOGVKeyframeInterval { get; }`](#moviewriterogvkeyframeinterval) | Maximum keyframe spacing, 64 initially; 1..1024 frames. |
@@ -1548,3 +1551,18 @@ Projects editor/movie_writer/ogv/encoding_speed. Nonbasic, default 4, range 1..4
 ### `public static ProjectSetting<int> MovieWriterOGVKeyframeInterval { get; }`
 
 Projects editor/movie_writer/ogv/keyframe_interval. Nonbasic, default 64, range 1..1024 inclusive, measured in recorded video frames. OGV sets the actual maximum forced interval, including non-powers of two; spontaneous earlier keyframes are allowed. Invalid values throw ArgumentOutOfRangeException before mutation. Serialization and feature overrides apply; sampled at Begin.
+
+<a id="moviewriterfps"></a>
+### `public static ProjectSetting<int> MovieWriterFPS { get; }`
+
+Nonbasic editor/movie_writer/fps setting, default 60 and positive Int32 values. Engine.RunMovie/RunMovieAsync sample its active feature override before startup. Explicit recording Run/RunAsync FPS arguments retain precedence, including their optional 60 FPS default. Invalid nonpositive assignments reject.
+
+<a id="moviewriterfile"></a>
+### `public static ProjectSetting<string> MovieWriterFile { get; }`
+
+Nonbasic editor/movie_writer/movie_file setting, default empty. Configured movie entry points sample its active feature override; a blank value fails before reservation/ownership. Paths use the existing recording output resolution and GetWriteMoviePath retains the requested string. Explicit recording paths retain precedence. Setting this value alone does not turn an ordinary window run into a recording.
+
+<a id="moviewriterdisablevsync"></a>
+### `public static ProjectSetting<bool> MovieWriterDisableVSync { get; }`
+
+Nonbasic editor/movie_writer/disable_vsync setting, default false. Every recording entry point samples its feature override before startup. True retains the Disabled presentation request before renderer creation; unsupported native presentation follows DisplayServer fallback. False leaves the backend default. This request is scoped to the recording's display lifetime and does not change persisted settings or a later ordinary window. Scene code can subsequently request another mode through DisplayServer. This is a presentation request, not a guarantee about physical compositor timing.

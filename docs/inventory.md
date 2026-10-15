@@ -1750,3 +1750,5 @@ Current coupled-joint verification also covers initial raw RigidLinear lock deli
 | [Core](domains/core.md) | [Movie writing](components/movie-writing.md) | [OGVMovieWriter](classes/OGVMovieWriter.md) | [OGVMovieWriter.cs](../src/Servers/Movie/OGVMovieWriter.cs) | Current | Internal Theora/Vorbis/Ogg output |
 
 [GPUPhysicsBodyStore](classes/GPUPhysicsBodyStore.md) now includes [internal buffer accounting](components/gpu-memory.md) for all requested storage/transfer resources, transient growth overlap and checkpoint retirement; no new production type or public API is introduced.
+
+Engine.Movie.cs also owns configured RunMovie/RunMovieAsync startup over the existing MovieWriter family; it adds no production type. File/FPS/disable-VSync project descriptors share the existing registry and native window lifecycle.

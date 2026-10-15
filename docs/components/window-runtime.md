@@ -1,6 +1,6 @@
 # Window runtime component
 
-Last updated: 2026-10-13
+Last updated: 2026-10-15
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -83,3 +83,5 @@ mutation/thread errors, committed rectangles, all eight injected SDL dummy event
 later delegates/events after failure and teardown. Its 1024 warmed notification/event
 operations require zero owner/all-thread managed bytes. Real compositor, GPU and
 foreign-platform acceptance are not established by this check.
+
+Configured recording uses Engine.RunMovie/RunMovieAsync and the typed MovieWriterFile/FPS settings. All recording entry points sample MovieWriterDisableVSync before startup; the root window retains an immediate-presentation request after display creation and before renderer creation when selected, subject to native fallback. The request ends with that display lifetime. See [movie writing](movie-writing.md#project-movie-startup) for precedence, ownership and verification limits.

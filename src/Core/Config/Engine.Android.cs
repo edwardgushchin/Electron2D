@@ -12,8 +12,9 @@ internal static class AndroidWindowHost
     private static bool _started;
     private static string? _moviePath;
     private static int _movieFPS;
+    private static bool _movieDisableVSync;
 
-    internal static Task<int> RunAsync(Window window, string? moviePath = null, int movieFPS = 60)
+    internal static Task<int> RunAsync(Window window, string? moviePath = null, int movieFPS = 60, bool movieDisableVSync = false)
     {
         lock (Gate)
         {
@@ -21,7 +22,7 @@ internal static class AndroidWindowHost
                 throw new InvalidOperationException("An Android window lifecycle is already pending or active.");
             var completion = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
             Engine.Service.ReserveWindowRun();
-            _window = window; _moviePath = moviePath; _movieFPS = movieFPS;
+            _window = window; _moviePath = moviePath; _movieFPS = movieFPS; _movieDisableVSync = movieDisableVSync;
             _completion = completion;
             return _completion.Task;
         }
@@ -38,6 +39,7 @@ internal static class AndroidWindowHost
             completion = _completion!;
             _window = null;
             _completion = null;
+            _moviePath = null; _movieFPS = 0; _movieDisableVSync = false;
         }
         try { Engine.Service.CancelReservedWindowCore(window); completion.TrySetCanceled(); }
         catch (Exception error) { completion.TrySetException(error); }
@@ -56,9 +58,9 @@ internal static class AndroidWindowHost
         }
         var code = 0;
         Exception? failure = null;
-        try { code = Engine.Service.RunReservedWindowCore(window, _moviePath, _movieFPS); }
+        try { code = Engine.Service.RunReservedWindowCore(window, _moviePath, _movieFPS, _movieDisableVSync); }
         catch (Exception error) { failure = error; }
-        finally { lock (Gate) { _window = null; _completion = null; _started = false; _moviePath = null; _movieFPS = 0; } }
+        finally { lock (Gate) { _window = null; _completion = null; _started = false; _moviePath = null; _movieFPS = 0; _movieDisableVSync = false; } }
         if (failure is null) completion.TrySetResult(code);
         else completion.TrySetException(failure);
     }

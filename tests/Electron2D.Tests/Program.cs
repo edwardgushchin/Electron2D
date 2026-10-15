@@ -9,6 +9,14 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length >= 2 && args[0] == "--movie-profile-project")
+{
+    if (args[1] == "write" && args.Length == 4) MovieProfileTests.WriteProject(args[2], args[3]);
+    else if (args[1] == "read" && args.Length == 2) MovieProfileTests.ReadProject();
+    else throw new ArgumentException("Invalid movie project test command.");
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MOVIE_WRITER") is { } movieMode)
 {
     if (movieMode == "portable") MovieWriterTests.Portable();

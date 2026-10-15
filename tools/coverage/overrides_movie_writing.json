@@ -84,6 +84,21 @@
       "godot": "ProjectSettings::property:editor/movie_writer/ogv/keyframe_interval",
       "electron2d": "property:Electron2D.ProjectSettings.MovieWriterOGVKeyframeInterval()",
       "reason": "ADR 0109: the built-in OGV handler executes real RGB8 capture through private Theora/Vorbis encoding and timestamp-ordered Ogg muxing, with quality/speed/keyframe controls sampled before scene activation. Exact rational PCM clocks include short/empty blocks, EOS finalization and failure-safe native/file ownership. Source/native package integration and verification limits are recorded in movie-writing.md."
+    },
+    {
+      "godot": "ProjectSettings::property:editor/movie_writer/fps",
+      "electron2d": "property:Electron2D.ProjectSettings.MovieWriterFPS()",
+      "reason": "ADR 0109: Engine.RunMovie/RunMovieAsync consume the configured path/FPS with feature overrides; explicit recording arguments retain precedence. The per-recording presentation override is sampled before native startup, propagated through deferred hosts and applied before renderer creation with supported-mode fallback. Ordinary runs retain their own lifecycle. MovieProfileTests verifies real outputs, snapshots, async ownership, native presentation and failure cleanup on the local Linux profile."
+    },
+    {
+      "godot": "ProjectSettings::property:editor/movie_writer/movie_file",
+      "electron2d": "property:Electron2D.ProjectSettings.MovieWriterFile()",
+      "reason": "ADR 0109: Engine.RunMovie/RunMovieAsync consume the configured path/FPS with feature overrides; explicit recording arguments retain precedence. The per-recording presentation override is sampled before native startup, propagated through deferred hosts and applied before renderer creation with supported-mode fallback. Ordinary runs retain their own lifecycle. MovieProfileTests verifies real outputs, snapshots, async ownership, native presentation and failure cleanup on the local Linux profile."
+    },
+    {
+      "godot": "ProjectSettings::property:editor/movie_writer/disable_vsync",
+      "electron2d": "property:Electron2D.ProjectSettings.MovieWriterDisableVSync()",
+      "reason": "ADR 0109: Engine.RunMovie/RunMovieAsync consume the configured path/FPS with feature overrides; explicit recording arguments retain precedence. The per-recording presentation override is sampled before native startup, propagated through deferred hosts and applied before renderer creation with supported-mode fallback. Ordinary runs retain their own lifecycle. MovieProfileTests verifies real outputs, snapshots, async ownership, native presentation and failure cleanup on the local Linux profile."
     }
   ],
   "statusGroups": [
@@ -122,8 +137,8 @@
         "ProjectSettings::property:editor/movie_writer/movie_file",
         "ProjectSettings::property:editor/movie_writer/disable_vsync"
       ],
-      "state": "Blocked",
-      "reason": "ADRs 0090/0109: the current host accepts explicit path/FPS. The first movie project/profile startup adapter must bind configured path/cadence and native presentation override with explicit-argument precedence before recording startup. That adapter is absent; these are not implemented by the explicit Run overloads and do not require a self-hosted editor."
+      "state": "Implemented",
+      "reason": "ADR 0109: Engine.RunMovie/RunMovieAsync consume the configured path/FPS with feature overrides; explicit recording arguments retain precedence. The per-recording presentation override is sampled before native startup, propagated through deferred hosts and applied before renderer creation with supported-mode fallback. Ordinary runs retain their own lifecycle. MovieProfileTests verifies real outputs, snapshots, async ownership, native presentation and failure cleanup on the local Linux profile."
     }
   ],
   "extras": [
@@ -142,6 +157,14 @@
     {
       "electron2d": "method:Electron2D.Engine.RunAsync(Electron2D.Window,System.String,System.Int32)",
       "reason": "ADR 0109: typed construction/disposal guard or Engine-owned host projection of the same non-real-time movie path/FPS startup role, without a command-line-only frontend or backend pointers."
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.RunMovie(Electron2D.Window)",
+      "reason": "ADR 0109: typed library-host projection of configured project movie startup over the existing fixed-cadence capture lifecycle; consumes editor/movie_writer/movie_file and fps without a command-line frontend or a second game loop."
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.RunMovieAsync(Electron2D.Window)",
+      "reason": "ADR 0109: typed library-host projection of configured project movie startup over the existing fixed-cadence capture lifecycle; consumes editor/movie_writer/movie_file and fps without a command-line frontend or a second game loop."
     }
   ]
 }

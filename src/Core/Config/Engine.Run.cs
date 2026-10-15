@@ -57,8 +57,8 @@ public sealed partial class Engine
         Volatile.Write(ref _applicationRun, 1);
     }
 
-    internal int RunReservedWindowCore(Window window, string? moviePath = null, int movieFPS = 60) =>
-        RunWindowCore(window, asynchronous: false, reserved: true, moviePath: moviePath, movieFPS: movieFPS).GetAwaiter().GetResult();
+    internal int RunReservedWindowCore(Window window, string? moviePath = null, int movieFPS = 60, bool movieDisableVSync = false) =>
+        RunWindowCore(window, asynchronous: false, reserved: true, moviePath: moviePath, movieFPS: movieFPS, movieDisableVSync: movieDisableVSync).GetAwaiter().GetResult();
 
     internal void CancelReservedWindowCore(Window window)
     {
@@ -78,7 +78,7 @@ public sealed partial class Engine
         Volatile.Write(ref _runtimeState, RuntimeIdle);
     }
 
-    private async Task<int> RunWindowCore(Window window, bool asynchronous, bool reserved = false, string? moviePath = null, int movieFPS = 60)
+    private async Task<int> RunWindowCore(Window window, bool asynchronous, bool reserved = false, string? moviePath = null, int movieFPS = 60, bool movieDisableVSync = false)
     {
         if (!reserved)
         {
@@ -100,7 +100,7 @@ public sealed partial class Engine
             ThemeDB.LoadProjectTheme();
             AudioServer.LoadDefaultLayout();
             Input.IgnoreJoypadOnUnfocusedApplication = ProjectSettings.GetWithOverride(ProjectSettings.IgnoreJoypadOnUnfocusedApplication);
-            window.OpenNative();
+            window.OpenNative(movieDisableVSync);
             window.ApplyProjectMSAA();
             if (moviePath is not null)
             {

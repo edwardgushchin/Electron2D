@@ -122,7 +122,7 @@ internal static class MovieWriterTests
             Check(loaded.Get(ProjectSettings.MovieWriterMixRate) == 44100 && loaded.Get(ProjectSettings.MovieWriterSpeakerMode) == AudioServer.SpeakerMode.Surround71, "Independent project settings round-trip.");
         }
         finally { Directory.Delete(folder, recursive: true); }
-        AVIMovieWriterTests.Portable(); OGVMovieWriterTests.Portable();
+        AVIMovieWriterTests.Portable(); OGVMovieWriterTests.Portable(); MovieProfileTests.Portable();
         Console.WriteLine("Movie writer portable: arguments, registry ownership/capacity/duplicates, failure and reclamation passed.");
     }
     internal static AudioStreamWAV Source()
@@ -142,6 +142,7 @@ internal static class MovieWriterTests
     internal static void Native(string backend, string folder)
     {
         Directory.CreateDirectory(folder);
+        if (backend.StartsWith("profile-", StringComparison.Ordinal)) { MovieProfileTests.Native(backend[8..], folder); return; }
         if (backend.StartsWith("ogv-", StringComparison.Ordinal)) { OGVMovieWriterTests.Native(backend[4..], folder); return; }
         if (backend.StartsWith("avi-", StringComparison.Ordinal))
         {
@@ -241,7 +242,7 @@ internal static class MovieWriterTests
         { protected override void OnProcess(ReadOnlySpan<Vector2> source, Span<Vector2> destination) => throw new FormatException("native effect failure"); }
     }
     private sealed class HookLoop : MainLoop { }
-    private sealed class PumpContext : SynchronizationContext
+    internal sealed class PumpContext : SynchronizationContext
     {
         private readonly System.Collections.Concurrent.ConcurrentQueue<(SendOrPostCallback Callback, object? State)> _queue = new();
         public override void Post(SendOrPostCallback callback, object? state) => _queue.Enqueue((callback, state));

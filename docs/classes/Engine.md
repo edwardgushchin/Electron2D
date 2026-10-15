@@ -66,6 +66,8 @@ int exitCode = Engine.Run(window);
 | --- | --- |
 | [`public static int Run(Window window)`](#m-electron2d-engine-run-electron2d-window) | Consumes a validated detached root Window after reserving the idle engine. |
 | [`public static Task<int> RunAsync(Window window)`](#m-electron2d-engine-runasync-electron2d-window) | Owns a yielding root-window lifecycle on the platform application thread. |
+| [`public static int RunMovie(Window window)`](#runmovie) | Records using the project's movie file and FPS profile. |
+| [`public static Task<int> RunMovieAsync(Window window)`](#runmovieasync) | Records the project profile on its yielding application owner. |
 | [`public static int Run(Window window, string moviePath, int fps = 60)`](#m-electron2d-engine-run-electron2d-window-system-string-system-int32) | Records fixed-duration real frames and synchronous audio. |
 | [`public static Task<int> RunAsync(Window window, string moviePath, int fps = 60)`](#m-electron2d-engine-runasync-electron2d-window-system-string-system-int32) | Records while yielding on the application owner context. |
 | [`public static string GetWriteMoviePath()`](#m-electron2d-engine-getwritemoviepath) | Requested movie path during startup/hooks/teardown, otherwise empty. |
@@ -533,3 +535,22 @@ Shares the recording Run overload's contract while retaining RunAsync's applicat
 ### `public static string GetWriteMoviePath()`
 
 Returns the unchanged requested path throughout recording startup, hooks and owned teardown; returns empty after reservation release and for nonrecording runs. Atomic reads are allowed from any thread. Does not open native services.
+
+<a id="runmovie"></a>
+### `public static int RunMovie(Window window)`
+
+Samples active feature overrides for ProjectSettings.MovieWriterFile and MovieWriterFPS, then uses the recording Run lifecycle. The empty default file rejects before runtime reservation or window ownership; positive FPS defaults to 60. Populating the file setting does not enable recording for ordinary Run(Window). Explicit recording path/FPS arguments, including the optional 60 FPS default, take precedence over the profile. MovieWriterDisableVSync is sampled for every recording entry point and passed through reserved/deferred startup; when true it requests Disabled after display creation and before renderer creation. Native fallback remains observable through DisplayServer.WindowGetVSyncMode. Later scene callbacks may explicitly change that policy. A subsequent ordinary run starts with its own backend default.
+
+```csharp
+ProjectSettings.Set(ProjectSettings.MovieWriterFile, "capture.ogv");
+ProjectSettings.Set(ProjectSettings.MovieWriterFPS, 30);
+ProjectSettings.Set(ProjectSettings.MovieWriterDisableVSync, true);
+return Engine.RunMovie(new Window { Size = new(640, 360) });
+```
+
+The scene must request termination through SceneTree.Quit, as for other Run entry points. MovieProfileTests exercises all three built-ins, snapshots, feature overrides, precedence, async/failure cleanup and native presentation on Linux GPU/Compatibility. Foreign execution and physical presentation remain separate gates.
+
+<a id="runmovieasync"></a>
+### `public static Task<int> RunMovieAsync(Window window)`
+
+Uses the same configured profile and validation as RunMovie while retaining RunAsync's application synchronization-context/main-thread requirements. The returned task completes after writer, scene and native cleanup. A missing application context rejects before consuming the window; Android carries the sampled configuration through its deferred reserved host. Foreign profile execution is unverified.

@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-10-13
+Last updated: 2026-10-15
 
 **Inherits:** [Viewport](Viewport.md)
 
@@ -751,3 +751,5 @@ operations require zero owner/all-thread managed bytes. Real compositor, GPU and
 foreign-platform acceptance are not established by this check.
 
 PackedScene captures Position only after an authored position request. An untouched root Window restores automatic native placement instead of silently requesting `(0,0)`; explicit zero remains stored and retains the platform coordinate gate. This permits saved default root windows to start on Wayland. CanvasModulateTests checks both forms, and its published scene consumer executes actual native output.
+
+Engine.RunMovie/RunMovieAsync consume this root using a project movie profile. A recording's sampled MovieWriterDisableVSync request is retained between native display and renderer creation, subject to DisplayServer fallback. The display's destruction ends the request; ordinary later windows retain their backend defaults. See [project movie startup](../components/movie-writing.md#project-movie-startup).

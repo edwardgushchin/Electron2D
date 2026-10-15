@@ -281,3 +281,5 @@ See [typed handler storage](../classes/EventHandlers.Generic.md) and [ADR 0010](
 - [PCKPacker](../classes/PCKPacker.md) and static ProjectSettings.LoadResourcePack execute the [resource pack](../components/resource-packs.md) writer, mounting and shared FileAccess/DirAccess/ResourceLoader path.
 
 - [Runtime diagnostics](../components/diagnostics.md): retained Logger registration, typed OS message/error ingress, Engine output flags and immutable C# ScriptBacktrace metadata integrate lifecycle failures and lazily loaded native logs. CLR live-variable debugging remains a separate backend.
+
+Configured movie startup is available through Engine.RunMovie/RunMovieAsync, with typed file/FPS settings, feature overrides, explicit Run argument precedence and a per-recording presentation override. It shares the existing frame/PCM/cleanup path for every built-in codec. See [project movie startup](../components/movie-writing.md#project-movie-startup) for executable checks and platform limits.
