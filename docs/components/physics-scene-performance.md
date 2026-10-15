@@ -769,8 +769,8 @@ assemblies execute the identical fixture binary. At 64 bodies/one history, the
 live owner graph adds 4,096 bytes and the world-plus-history graph adds 8,192
 bytes: one larger pair-key array in each owner. After history release only the
 world's 4,096-byte increase remains; after source-world release the difference
-is zero. The 1,024-body/four-history fixture already grew its table beyond the
-prepared budget, so all six selected-graph measurements remain unchanged. These
+is zero. The 1,024-body/four-history fixture already reached this pair-table capacity
+during simulation, so all six selected-graph measurements remain unchanged. These
 are controlled graph deltas, not RSS/native totals or all-scene memory estimates.
 
 The five managed regressions cover backend ownership, private replay, separate
