@@ -16,7 +16,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         var point = PhysicsShapeBackend.ToBackend(position);
         var shapes = NativeCollider(area.Backend).Shapes;
         for (var index = 0; index < shapes.Count; index++)
-            if (b2Shape_TestPoint(shapes[index], point)) return true;
+            if (ShapeContainsPoint(shapes[index], point)) return true;
         return false;
     }
 

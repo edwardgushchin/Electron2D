@@ -36,9 +36,7 @@ internal static class GPUPhysicsQueryTests
                 var id = PhysicsServer.BodyCreate(); bodies[family] = id; PhysicsServer.BodySetMode(id, Mode.Static);
                 PhysicsServer.BodySetCollisionLayer(id, 1u << family); PhysicsServer.BodySetCollisionMask(id, 0);
                 PhysicsServer.BodySetTransform(id, new(angle, position)); PhysicsServer.BodyAddShape(id, shapes[family].GetRID()); PhysicsServer.BodySetSpace(id, space);
-                // Compare queries at the same actual pose; CPU uses a deterministic approximate sine/cosine.
-                var rotation = Box2D.NET.B2MathFunction.b2MakeRot(angle);
-                var body = Body(s, position, MathF.Atan2(rotation.s, rotation.c)); var shape = s.AddShape(body, shapes[family], layer: 1u << family, mask: 0); s.SetQueryIdentity(shape, (ulong)id.GetID(), 0);
+                var body = Body(s, position, angle); var shape = s.AddShape(body, shapes[family], layer: 1u << family, mask: 0); s.SetQueryIdentity(shape, (ulong)id.GetID(), 0);
                 for (var sample = 0; sample < 64; sample++)
                 {
                     var y = (float)(random.NextDouble() * 36 - 18); var direction = (sample & 1) == 0 ? 1 : -1;
@@ -49,15 +47,21 @@ internal static class GPUPhysicsQueryTests
                     if (expected is { } hit)
                     {
                         Check(actual[0].Collider == (ulong)hit.ColliderRID.GetID() && actual[0].LogicalShape == hit.ShapeIndex, "Ray logical identity");
-                        Near(actual[0].Position, hit.Position, .004f, "Ray position"); Near(actual[0].Normal, hit.Normal, .001f, "Ray outward normal");
+                        Near(actual[0].Position, hit.Position, .004f, "Ray position"); Near(actual[0].Normal, hit.Normal, .001f, $"Ray outward normal family={family}, sample={sample}");
+                        if (family == 1)
+                        {
+                            var normal = new Vector2(-direction, 0).Rotated(angle);
+                            Near(hit.Normal, normal, .00001f, "CPU rectangle normal follows authored basis");
+                            Near(actual[0].Normal, normal, .00001f, "GPU rectangle normal follows authored basis");
+                        }
                     }
                     point.Position = position + new Vector2((float)(random.NextDouble() * 30 - 15), y).Rotated(angle); point.CollisionMask = ray.CollisionMask;
                     var points = view.IntersectPoint(point, expectedPoint); count = Execute(s, new(point.Position, Mask: point.CollisionMask, Limit: 1), actual);
-                    // CPU GJK and GPU half-planes may classify opposite sides within float roundoff at an edge.
+                    // Unit conversion and relative transforms may round opposite sides of a contour edge.
                     if (count != points)
                     {
                         Check(shapes[family] is ConvexPolygonShape, $"Point membership family={family}, sample={sample}");
-                        var local = (point.Position - position).Rotated(-MathF.Atan2(rotation.s, rotation.c));
+                        var local = (point.Position - position).Rotated(-angle);
                         var contour = shapes[family].GetGeometry().Points; var distance = float.NegativeInfinity;
                         var winding = family == 9 ? -1 : 1;
                         for (var edge = 0; edge < contour.Length; edge++)

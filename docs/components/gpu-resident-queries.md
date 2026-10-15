@@ -1,6 +1,6 @@
 # Resident GPU ray and point queries
 
-Last updated: 2026-10-09
+Last updated: 2026-10-15
 
 ## Boundary
 
@@ -95,14 +95,15 @@ also bounds complete-frame readback for one selected shape among 1,024 bodies.
 
 GPUPhysicsQueryTests compares 64 rays and 64 points per geometry case against
 public CPU queries, including body rotation, clockwise/counterclockwise 12-gons,
-hollow/degenerate segments and collapsed capsules. The CPU rotation uses an
-approximate deterministic sine/cosine, so the oracle gives GPU the same actual
-rotation before comparing query positions/normals; no CPU arithmetic is added to
-GPU execution. Initial tests using equal authored angles found that pose difference,
-then the compound-inside regression. A sampled polygon point also differed within
-0.0004 scene units of an edge: the test allows a 0.001 edge band only when an
-independent analytic half-plane check confirms GPU membership. Positions/normals
-use 0.004/0.001 tolerances. Bitwise boundary classification is not promised. The suite also checks sorted caps, duplicate
+hollow/degenerate segments and collapsed capsules. Both implementations now receive the same authored pose. The former fixture
+converted GPU input through approximate CPU-backend trigonometry; the .37 versus
+.37121636-rad inputs caused a spurious normal mismatch. An independent authored
+rectangle-basis oracle now uses .00001 unit-vector tolerance. The CPU adapter also
+corrects unrounded polygon false-inside results through shared half-planes.
+Float coordinate conversion may still classify opposite sides in a .001 scene-unit
+edge band only when an independent contour oracle confirms GPU membership.
+Positions/normals retain .004/.001 comparison bounds. Bitwise boundary classification
+is not promised. See [containment checks](physics-point-containment.md). The suite also checks sorted caps, duplicate
 point identities, exclusions, sensor/canvas filters, bit 31, batched mixed results,
 tangency, segment normals, inside/zero rays, very short crossings, integrated motion,
 query/contact interleaving, edits, reuse, growth, errors and caller-tail preservation.

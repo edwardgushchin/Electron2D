@@ -12,7 +12,24 @@ internal sealed class PhysicsQueryTests(PhysicsServer.Backend backend)
         VerifyServerResourcesAndPointQueries();
         VerifyServerShapeFamilies();
         VerifyCompoundInside();
+        PhysicsPointContainmentTests.RunBackend(backend);
+        VerifyPolygonAreaAudio();
         Console.WriteLine($"Physics RID, scene/server ray and point query checks passed on {backend}; 64 warmed compound rays use 0/0 owner/all B.");
+    }
+
+    private void VerifyPolygonAreaAudio()
+    {
+        using var polygon = new ConvexPolygonShape { Points = PhysicsPointContainmentTests.Polygon(true) };
+        using var world = new World(backend);
+        using var root = new SubViewport { World = world };
+        var area = new Area { Position = new(1800, 80), Rotation = .37f, AudioBusOverride = true, AudioBusName = "Polygon boundary" };
+        area.AddChild(new CollisionShape { Shape = polygon }); root.AddChild(area);
+        using var tree = new SceneTree(root);
+        tree.PhysicsFrame(1d / 60);
+        var space = world.Runtime.Space;
+        Check(space.FindAudioBusOverride(new(1790.1703f, 73.80258f), uint.MaxValue) is null,
+            "Polygon Area audio cannot include an exterior point through distance convergence.");
+        Check(space.FindAudioBusOverride(new(1800, 80), uint.MaxValue) == "Polygon boundary", "Polygon Area audio retains a true interior.");
     }
 
     private void VerifyParameters()

@@ -1,6 +1,8 @@
 # SeparationRayShape
 
-Last updated: 2026-10-14
+[Unrounded polygon origin containment](../components/physics-point-containment.md) now uses the same exact CPU edge test for directed query/proxy regions. An exterior start cannot be discarded through distance-convergence slack; genuinely contained logical slots still hide their partition seams.
+
+Last updated: 2026-10-15
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 

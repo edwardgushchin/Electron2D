@@ -1,6 +1,8 @@
 # PhysicsDirectSpaceState
 
-Last updated: 2026-10-14
+[Unrounded polygon containment](../components/physics-point-containment.md) now excludes an exterior CPU point through fixture half-planes and applies the same decision to ordinary/directed ray origins. Logical seams, inside-start policy, filters and result identity retain their existing contract; float boundary rounding remains bounded separately.
+
+Last updated: 2026-10-15
 
 **Inherits:** ElectronObject · **Inherited By:** [PhysicsDirectSpaceStateExtension](PhysicsDirectSpaceStateExtension.md) · **Source:** [PhysicsDirectSpaceState.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.cs)
 

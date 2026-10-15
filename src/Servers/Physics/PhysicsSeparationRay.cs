@@ -5,6 +5,7 @@ using static Box2D.NET.B2MathFunction;
 
 namespace Electron2D;
 
+/// <summary>Combines directed ray contacts and swept regions in CPU solver units with explicit origin containment.</summary>
 internal static class PhysicsSeparationRay
 {
     // Receives body-local fixture geometry and returns world-space normals/points with origin-relative anchors.
@@ -159,7 +160,7 @@ internal static class PhysicsSeparationRay
         if (proxy.count == 2)
             return b2PointInCapsule(new B2Capsule(proxy.points[0], proxy.points[1], proxy.radius), point);
         var polygon = b2MakePolygon(new B2Hull { points = proxy.points, count = proxy.count }, proxy.radius);
-        return b2PointInPolygon(ref polygon, point);
+        return PhysicsShapeBackend.ContainsPoint(ref polygon, point);
     }
 
     internal static B2ShapeProxy WorldProxy(in SeparationRayData ray, in B2Transform transform, in B2Vec2 offset) =>

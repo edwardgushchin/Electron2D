@@ -1,5 +1,7 @@
 # API coverage register
 
+[Polygon point containment](../components/physics-point-containment.md) closes a confirmed CPU exterior-point defect and the stale mismatched-angle query fixture. Shared public scene/server checks preserve ray-origin policy and filters. No declaration status changes; wider inherited/numerical/platform/performance acceptance remains open.
+
 [Resident GPU buffer accounting](../components/gpu-memory.md) now covers all storage/transfer allocations, growth peaks and replay retirement. This internal measurement changes no public declaration status and leaves complete retained/native/device budgets open.
 
 Last updated: 2026-10-15

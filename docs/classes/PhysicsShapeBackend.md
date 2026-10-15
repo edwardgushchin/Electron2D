@@ -1,6 +1,8 @@
 # PhysicsShapeBackend
 
-Last updated: 2026-10-14
+Unrounded convex point containment uses outward fixture half-planes through `ContainsPoint(ref B2Polygon, B2Vec2)`. Native fixed-array references require stable writable storage; rounded polygons keep their distance path. [The shared query regression](../components/physics-point-containment.md) covers points, ray origins, Area audio and directed shape queries.
+
+Last updated: 2026-10-15
 
 **Declaration:** `internal static class PhysicsShapeBackend`
 

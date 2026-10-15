@@ -1,5 +1,7 @@
 # Physics domain
 
+[Polygon point containment and ray origins](../components/physics-point-containment.md) now exclude CPU points outside unrounded contours without distance-convergence slack. Scene/server, both windings, offset slots and serial/separate checks cover point/ray/directed queries and Area audio; broader contract/platform/performance gates remain open.
+
 [Resident GPU buffer accounting](../components/gpu-memory.md) now distinguishes storage, transfer and transient growth capacity, including replay copies and failed preparation. Full CPU/managed/native/driver memory budgets remain open.
 
 Last updated: 2026-10-15

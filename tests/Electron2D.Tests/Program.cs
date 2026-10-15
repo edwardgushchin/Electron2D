@@ -612,6 +612,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_CCD") == "1
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_SLEEP") == "1") { GPUPhysicsSleepStoreTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_MASS") == "1") { GPUPhysicsMassStoreTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_BODY") == "1") { GPUPhysicsBodyStoreTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POINT_CONTAINMENT") is { } pointMode) { PhysicsPointContainmentTests.Run(pointMode == "gpu"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TRANSIENT_CONTACTS") is { } transientMode) { PhysicsTransientContactTests.Run(transientMode == "gpu"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DENSE_CONTACTS") is { } denseMode) { PhysicsDenseContactTests.Run(denseMode == "gpu"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_SNAPSHOT") is { } snapshotMode) { PhysicsSnapshotTests.Run(snapshotMode == "gpu"); return; }

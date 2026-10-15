@@ -10,7 +10,7 @@ using Kind = Electron2D.PhysicsShapeGeometry.ShapeKind;
 
 namespace Electron2D;
 
-/// <summary>Compiles borrowed scene geometry into the current CPU backend's fixtures and query proxies.</summary>
+/// <summary>Compiles borrowed scene geometry into CPU fixtures/query proxies and tests exact unrounded convex containment.</summary>
 internal static class PhysicsShapeBackend
 {
     // The compiled cache neither owns nor keeps a resource alive. Points remain the authoring source.
@@ -32,6 +32,20 @@ internal static class PhysicsShapeBackend
 
     /// <summary>Converts authored angles without approximating an unbounded collider or query orientation.</summary>
     internal static B2Rot RotationToBackend(float angle) => new(MathF.Cos(angle), MathF.Sin(angle));
+
+    /// <summary>Tests unrounded convex edges without distance-convergence slack, preserving rounded geometry.</summary>
+    /// <remarks>Native fixed-array element references require stable writable polygon storage.</remarks>
+    internal static bool ContainsPoint(ref B2Polygon polygon, B2Vec2 point)
+    {
+        if (polygon.radius != 0)
+        {
+            var rounded = polygon;
+            return b2PointInPolygon(ref rounded, point);
+        }
+        for (var i = 0; i < polygon.count; i++)
+            if (b2Dot(polygon.normals[i], point - polygon.vertices[i]) > 0) return false;
+        return true;
+    }
 
     private sealed record PolygonCache(ulong Revision, B2Hull[] Hulls);
     internal static void ValidateAndCachePolygon(ConvexPolygonShape shape, ReadOnlySpan<Vector2> points) =>

@@ -164,7 +164,7 @@ internal sealed partial class CPUPhysicsWorldBackend
             var tag = _shapeCandidates[first].Tag; var end = CandidateGroupEnd(first);
             var inside = false;
             if (_queryRaySlide is not null && end - first > 1 && b2Shape_GetType(_shapeCandidates[first].ShapeID) == B2ShapeType.b2_polygonShape)
-                for (var i = first; i < end && !inside; i++) inside = b2Shape_TestPoint(_shapeCandidates[i].ShapeID, _queryProxies[0].points[0]);
+                for (var i = first; i < end && !inside; i++) inside = ShapeContainsPoint(_shapeCandidates[i].ShapeID, _queryProxies[0].points[0]);
             if (_queryCompoundConvex && tag.SeparationRay is { } ray)
             {
                 var pose = b2Body_GetTransform(b2Shape_GetBody(_shapeCandidates[first].ShapeID));

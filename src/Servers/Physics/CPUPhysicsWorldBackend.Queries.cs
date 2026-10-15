@@ -1,4 +1,6 @@
 using Box2D.NET;
+using static Box2D.NET.B2Bodies;
+using static Box2D.NET.B2MathFunction;
 using static Box2D.NET.B2Shapes;
 
 namespace Electron2D;
@@ -81,9 +83,9 @@ internal sealed partial class CPUPhysicsWorldBackend
             var first = index;
             while (index + 1 < shapes.Count && b2Shape_GetUserData(shapes[index + 1]).GetRef<PhysicsFixtureTag>() is { } next &&
                    next.ColliderRID == tag.ColliderRID && next.ShapeIndex == tag.ShapeIndex) index++;
-            var startsInside = b2Shape_TestPoint(shape, input.origin);
+            var startsInside = ShapeContainsPoint(shape, input.origin);
             for (var piece = first + 1; piece <= index && !startsInside; piece++)
-                startsInside = b2Shape_TestPoint(shapes[piece], input.origin);
+                startsInside = ShapeContainsPoint(shapes[piece], input.origin);
             if (startsInside && !hitFromInside) continue;
             for (var piece = first; piece <= (startsInside ? first : index); piece++)
             {
@@ -111,9 +113,17 @@ internal sealed partial class CPUPhysicsWorldBackend
         for (var index = 0; index < shapes.Count; index++)
         {
             var shape = shapes[index];
-            if (!Eligible(shape, mask, excluded, out var tag) || !b2Shape_TestPoint(shape, point)) continue;
+            if (!Eligible(shape, mask, excluded, out var tag) || !ShapeContainsPoint(shape, point)) continue;
             hits.Add(new(tag.ColliderRID, PhysicsServer.Service.ResolveSceneObject(tag.ColliderRID), tag.ObjectIdentity, tag.ShapeIndex));
         }
+    }
+
+    private static bool ShapeContainsPoint(B2ShapeId shape, B2Vec2 point)
+    {
+        if (b2Shape_GetType(shape) != B2ShapeType.b2_polygonShape) return b2Shape_TestPoint(shape, point);
+        var polygon = b2Shape_GetPolygon(shape);
+        var local = b2InvTransformPoint(b2Body_GetTransform(b2Shape_GetBody(shape)), point);
+        return PhysicsShapeBackend.ContainsPoint(ref polygon, local);
     }
 
     private static bool Eligible(B2ShapeId shape, uint mask, RID[] excluded, out PhysicsFixtureTag tag,

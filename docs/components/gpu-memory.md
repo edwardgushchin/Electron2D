@@ -100,7 +100,7 @@ twice:
 
 The table above promotes none of these unmeasured owners to accepted totals.
 
-## Open query investigation found during validation
+## Query investigation found during validation
 
 The extended resident-query profile fails its ray-normal comparison because the
 existing fixture authors a .37-rad CPU pose but converts it through backend-specific
@@ -114,10 +114,11 @@ separate CPU point-containment case: clockwise 12-vertex polygon, random seed 31
 family 9/sample 29, point `(1790.1703, 73.80258)`. Its local point
 `(-11.405591, -2.2234466)` is outside by .0013154149 scene units; GPU excludes it,
 while the CPU GJK point test includes it. The actual CPU body basis is
-`(0.93232733, 0.36161548)`, matching .37 rad. This is an open numerical-query
-investigation. The temporary fixture candidate was reverted rather than claiming
-that the complete query contract passed. Production query code and its existing
-tolerances are unchanged in this buffer-accounting change.
+`(0.93232733, 0.36161548)`, matching .37 rad. The memory change left this numerical-query investigation open. It is now
+corrected by the [unrounded point-containment slice](physics-point-containment.md),
+which replaces CPU zero-radius polygon distance membership and fixes the stale
+fixture input without widening the existing bounds. The original memory validation
+remains recorded with its failure; the later query verification has separate evidence.
 
 The original failure, previous-runtime comparison and causal diagnostic sources/logs
 are retained under `query-diagnostic/` and `queries-prior-runtime.*` alongside the

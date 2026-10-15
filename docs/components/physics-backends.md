@@ -1,5 +1,7 @@
 # Physics backend selection and shared worlds
 
+[Polygon point containment](physics-point-containment.md) corrects CPU GJK false-inside observations across points, ray origins, Area audio and directed proxy regions. CPU/GPU tests use equal authored poses and independent geometric controls.
+
 Last updated: 2026-10-15
 
 [Same-revision mass measurements](physics-current-performance.md) record complete
