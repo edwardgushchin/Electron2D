@@ -35,6 +35,8 @@ parser.add_argument("--network", action="store_true", help="Measure the full thr
 parser.add_argument("--native-phases", action="store_true", help="Compare cold compiler/device controls and both public GPU retirement policies without heap attachment")
 parser.add_argument("--client-backend", choices=["cpu", "gpu"], default="gpu", help="Primary network client backend")
 parser.add_argument("--threaded", action="store_true", help="Use a separate numerical thread in network or retirement fixtures")
+parser.add_argument("--unpaced", action="store_true", help="Use ordinary network sessions without authority phase/input barriers")
+parser.add_argument("--client-poll-delay-ms", type=int, default=0, help="Add 0 through 250 ms between primary network client polls")
 parser.add_argument("--cycles", type=int, default=0, help="Measure 1 through 32 retirement cycles; native phases default to 32")
 args = parser.parse_args()
 if args.native_phases and (args.network or args.threaded or not args.icd):
@@ -49,6 +51,10 @@ if args.threaded and not (args.network or args.cycles):
     parser.error("Separate-thread selection applies to network or retirement fixtures")
 if args.network and args.client_backend == "gpu" and not args.icd:
     parser.error("The GPU network client requires an explicit lavapipe ICD")
+if not 0 <= args.client_poll_delay_ms <= 250:
+    parser.error("Client poll delay must be between 0 and 250 milliseconds")
+if (args.unpaced or args.client_poll_delay_ms) and not args.network:
+    parser.error("Unpaced sessions and client poll delay require --network")
 repo = Path(__file__).resolve().parents[2]
 output = args.output.resolve()
 output.mkdir(parents=True, exist_ok=False)
@@ -100,6 +106,9 @@ elif args.network:
                "--client-backend", args.client_backend, "--ticks", "900", "--late-join-tick", "310"]
     if args.threaded:
         command.append("--threaded")
+    if args.unpaced:
+        command.append("--unpaced")
+    command.extend(["--client-poll-delay-ms", str(args.client_poll_delay_ms)])
     with (output / "network.log").open("w") as log, (output / "network.err").open("w") as error:
         run_probe(command, cwd=repo, env=env, stdout=log, stderr=error, timeout=120)
 for backend in [] if args.network or args.native_phases else ["cpu", *(["gpu"] if driver else [])]:
@@ -118,6 +127,6 @@ if args.native_phases:
     artifact_paths.extend([output / "Tests/Electron2D.Tests.dll", output / "Tests/Electron2D.dll"])
 artifacts = {str(p.relative_to(output)): hashlib.file_digest(p.open("rb"), "sha256").hexdigest() for p in artifact_paths}
 (output / "environment.json").write_text(json.dumps({"driver": driver, "bodies": args.bodies, "history": args.history,
-    "network": args.network, "nativePhases": args.native_phases, "clientBackend": args.client_backend, "threaded": args.threaded, "cycles": args.cycles, "artifacts": artifacts,
+    "network": args.network, "unpaced": args.unpaced, "clientPollDelayMS": args.client_poll_delay_ms, "nativePhases": args.native_phases, "clientBackend": args.client_backend, "threaded": args.threaded, "cycles": args.cycles, "artifacts": artifacts,
     "host": {"kernel": platform.release(), "architecture": platform.machine(), "pageSize": os.sysconf("SC_PAGESIZE"),
              "libcVersion": abi["LibcVersion"], "mallocArenaMax": env.get("MALLOC_ARENA_MAX")}}, indent=2) + "\n")

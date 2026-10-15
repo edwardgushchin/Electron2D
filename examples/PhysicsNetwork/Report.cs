@@ -122,6 +122,10 @@ internal sealed class SessionReport
     public int Delayed { get; set; }
     public int Duplicated { get; set; }
     public int Reordered { get; set; }
+    public int PendingPackets { get; set; }
+    public int PeakPendingPackets { get; set; }
+    public long PendingBytes { get; set; }
+    public long PeakPendingBytes { get; set; }
     public long SentBytes { get; set; }
     public long ReceivedBytes { get; set; }
     public long WarmStepAllocations { get; set; }
@@ -239,6 +243,10 @@ internal sealed partial class NetworkSession
             Delayed = _link.Delayed,
             Duplicated = _link.Duplicated,
             Reordered = _link.Reordered,
+            PendingPackets = _link.PendingPackets,
+            PeakPendingPackets = _link.PeakPendingPackets,
+            PendingBytes = _link.PendingBytes,
+            PeakPendingBytes = _link.PeakPendingBytes,
             SentBytes = _link.SentBytes,
             ReceivedBytes = ReceivedBytes,
             WarmStepAllocations = StepAllocations,

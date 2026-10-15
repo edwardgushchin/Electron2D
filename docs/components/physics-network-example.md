@@ -1106,3 +1106,13 @@ validation.json names the final eleven cohorts. This closes the recorded ordinar
 slow-client verification gap for this Linux recipe. Arbitrary/dense workloads,
 complete native/driver/history memory, foreign platforms, real-window FPS and
 physical-GPU advantage remain open. No coverage declaration status is promoted.
+
+The [current queue/history budget](physics-network-memory.md#current-slow-client-queue-and-history-budget-2026-10-16)
+now measures these ordinary sessions with both backend/thread policies. Queue
+reports add current and lifetime-maximum pending packet/application-payload counts;
+drain, drop and peer retirement have executable controls. Each paused inventory
+checks counters against retained slots and deduplicated owner bytes. Four cohorts,
+60 heap observations and one public NativeAOT paced regression pass. Collection
+pauses change wall-clock traffic, so the existing unpaused timing records retain
+their original scope. Complete native/driver/total-process and hardware acceptance
+remain separate.

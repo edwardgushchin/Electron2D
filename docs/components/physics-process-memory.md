@@ -1,6 +1,6 @@
 # Physics process and allocator memory
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 ## Scope and measurement
 
@@ -178,3 +178,18 @@ separate-lane glibc arena retention even when selected owners collect; the issue
 remains open. The subsequent [owner pipeline preparation](physics-retirement-memory.md#owner-pipeline-preparation)
 reduces that large threaded growth without global allocator tuning; residual
 retention remains open. The one-arena diagnostic control is not a runtime policy change.
+
+## Current ordinary network observations, 2026-10-16
+
+The [current scene/network budget](physics-network-memory.md#current-slow-client-queue-and-history-budget-2026-10-16)
+adds 60 calibrated observations on the post-ordering/wake source. Each quiescent
+phase retains GC, glibc and procfs alongside the deduplicated graph and queue
+inventory. In the software-GPU/separate client's completed sample, selected
+managed owners are 5,455,424 B, last-GC heap/committed are 6,580,392/10,035,200 B,
+glibc used arena/mmap regions are 191,967,952/417,792 B and rollup RSS/PSS are
+623,124,480/550,829,056 B. These are overlapping samples with different ownership
+boundaries. RSS minus the selected graph is not a native-memory measurement.
+Lifetime queue payload high water is now observed by the application, independently
+of periodic heap pauses; its allocated wrapper/arrays are already in the graph.
+Foreign/native ownership, unseen process peaks and hardware GPU/FPS acceptance
+remain open.

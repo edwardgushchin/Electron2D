@@ -160,6 +160,16 @@ internal static class ProtocolChecks
         Check(reused.Sent == 4, "A long-tail packet remains queued after the short delays expire");
         reused.Send(a, [1], .1); reused.Flush(.3);
         Check(reused.Sent == 6 && reused.Reordered == before + 1, "Slot reuse preserves packet age when measuring same-peer reordering");
+        Check(reused.PendingPackets == 0 && reused.PendingBytes == 0 && reused.PeakPendingPackets == 5 && reused.PeakPendingBytes == 5,
+            "Draining reused slots preserves queue high water while removing current payload bytes");
+        reused.Send(a, [1, 2, 3], 1);
+        Check(reused.Dropped == 1 && reused.PendingPackets == 0 && reused.PendingBytes == 0, "Dropped input never occupies a queue slot");
+        var forgotten = new ImpairedLink(multiplayer, false);
+        forgotten.Send(a, [1, 2], 0); forgotten.Send(b, [1, 2, 3], 0); forgotten.Forget(a); forgotten.Forget(a);
+        Check(forgotten.PendingPackets == 1 && forgotten.PendingBytes == 3 && forgotten.PeakPendingPackets == 2 && forgotten.PeakPendingBytes == 5,
+            "Forgetting a peer removes only its live payload once");
+        forgotten.Flush(1);
+        Check(forgotten.Sent == 1 && forgotten.PendingPackets == 0 && forgotten.PendingBytes == 0, "The retained peer's payload still sends and drains");
     }
 
     private static void RejectInput(byte[] bytes)

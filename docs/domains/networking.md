@@ -83,3 +83,12 @@ sleep/wake correction and strict zero warmed physical bytes. Bounded queue age i
 tracked per recipient and verified across slot reuse. This verifies the Linux
 software-GPU recipe; general inherited/extension, native/driver memory, foreign
 platform and target-device/window/performance acceptance remain open.
+
+[Current ordinary network memory](../components/physics-network-memory.md#current-slow-client-queue-and-history-budget-2026-10-16)
+now has 60 CoreCLR heap observations across CPU/GPU and both numerical policies,
+with exact owner-union checks, queue-array inventory and actual lifetime payload
+high water. Twelve selected children release all chosen scene/network/history
+owners; held disposal has zero requested GPU buffers. A separate NativeAOT paced
+cohort verifies the report/counter path without establishing native object sizes.
+These bounded results preserve open full native/driver/global ownership, unseen
+peaks, arbitrary workloads, foreign platforms and target-device/window gates.

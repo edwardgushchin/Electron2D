@@ -111,6 +111,26 @@ omit `--threaded` for the owner numerical lane. This mode uses the existing full
 and every existing physical/identity/event/convergence/allocation assertion.
 The driver option still permits only the explicit software device.
 
+Add `--unpaced --client-poll-delay-ms 250` to measure the ordinary slow-client
+session without check-only authority barriers. Poll delay is 0–250 ms and both
+options require `--network`; invalid combinations reject before creating output.
+The environment receipt records both values. For example:
+
+```bash
+python3 -B tools/physics-memory/run.py bin/physics-memory-slow-new --network \
+  --client-backend cpu --unpaced --client-poll-delay-ms 250 --threaded
+```
+
+Each live/held heap report includes `PacketQueue`: the six backing-array types,
+lengths and CLR-reported object bytes, wrapper size, and current/lifetime-maximum
+queued packet and application-payload counts. The probe independently sums the
+actual `_sizes` array and checks the counters, bounds and equal slot capacities.
+The wrapper/array total is already inside the `delayed-packets` owner partition.
+Queue payload is occupancy within that reservation; do not add it to object bytes.
+These counts include each queued duplicate and exclude multiplayer/ENet/UDP
+framing, native transport buffers and physical link traffic.
+
+
 The probe launches the check parent and inspects only descendants of that process.
 A test-only partial pauses each of the authority, primary client and late CPU
 client before startup, after completion, with four newly captured local scene checkpoints (the

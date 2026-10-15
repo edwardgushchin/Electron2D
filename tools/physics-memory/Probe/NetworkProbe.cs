@@ -146,11 +146,44 @@ internal static class NetworkProbe
             DisposedSpaces = spaces.Count(o => o.ReadField<bool>("_disposed")),
             SnapshotLength = packet.ReadField<int>("_length"),
             SnapshotCapacity = packet.ReadObjectField("_data").AsArray().Length,
-            RequestedGPU = gpu
+            RequestedGPU = gpu,
+            PacketQueue = InspectQueue(session.ReadObjectField("_link"))
         };
 
         void Add(string name, params ClrObject[] roots) { groups.Add((name, roots.Where(o => !o.IsNull).ToList())); }
         void Fields(string name, params string[] fields) => Add(name, fields.Select(field => session.ReadObjectField(field)).ToArray());
+    }
+
+    private static object InspectQueue(ClrObject link)
+    {
+        string[] fields = ["_storage", "_due", "_order", "_sizes", "_peers", "_modes"];
+        var arrays = fields.Select(name =>
+        {
+            var value = link.ReadObjectField(name);
+            return new { Field = name, Type = value.Type!.Name, Length = value.AsArray().Length, Bytes = value.Size };
+        }).ToArray();
+        var slots = link.ReadObjectField("_sizes").AsArray();
+        var sizes = slots.ReadValues<int>(0, slots.Length) ?? throw new InvalidDataException("Queue slot payloads could not be read.");
+        var storage = arrays.Single(a => a.Field == "_storage");
+        var capacity = slots.Length; var packetBytes = storage.Length / capacity;
+        var pending = link.ReadField<int>("PendingPackets"); var bytes = link.ReadField<long>("PendingBytes");
+        var peak = link.ReadField<int>("PeakPendingPackets"); var peakBytes = link.ReadField<long>("PeakPendingBytes");
+        if (storage.Length % capacity != 0 || arrays.Any(a => a.Field != "_storage" && a.Length != capacity) ||
+            sizes.Any(size => size < 0 || size > packetBytes) || pending != sizes.Count(size => size != 0) || bytes != sizes.Sum(size => (long)size) ||
+            peak < pending || peak > capacity || peakBytes < bytes || peakBytes > storage.Length)
+            throw new InvalidDataException("Packet queue occupancy, high water or retained capacities disagree.");
+        return new
+        {
+            Capacity = capacity,
+            PacketBytes = packetBytes,
+            PendingPackets = pending,
+            PendingBytes = bytes,
+            PeakPendingPackets = peak,
+            PeakPendingBytes = peakBytes,
+            WrapperBytes = link.Size,
+            Arrays = arrays,
+            WrapperAndArrayBytes = checked((long)link.Size + arrays.Sum(a => checked((long)a.Bytes)))
+        };
     }
 
     private static bool IsDerived(ClrType? type, string baseName)

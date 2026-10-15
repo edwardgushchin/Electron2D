@@ -70,7 +70,8 @@ internal sealed class ImpairedLink(SceneMultiplayer multiplayer, bool impaired)
     private readonly TransferMode[] _modes = new TransferMode[Capacity];
     private uint _random = 0x371fac53;
     private int _sequence;
-    internal long SentBytes, AttemptedBytes;
+    internal long SentBytes, AttemptedBytes, PendingBytes, PeakPendingBytes;
+    internal int PendingPackets, PeakPendingPackets;
     internal int Dropped, Duplicated, Delayed, Reordered, Sent;
     private uint Next() { _random ^= _random << 13; _random ^= _random >> 17; _random ^= _random << 5; return _random; }
     internal void Send(int peer, ReadOnlySpan<byte> packet, double now, TransferMode mode = TransferMode.Unreliable)
@@ -89,11 +90,14 @@ internal sealed class ImpairedLink(SceneMultiplayer multiplayer, bool impaired)
         _order[slot] = ++_nextOrder;
         _sizes[slot] = packet.Length; _peers[slot] = peer; _modes[slot] = mode;
         packet.CopyTo(_storage.AsSpan(slot * PacketBytes, packet.Length));
+        PendingPackets++; PendingBytes += packet.Length;
+        PeakPendingPackets = Math.Max(PeakPendingPackets, PendingPackets); PeakPendingBytes = Math.Max(PeakPendingBytes, PendingBytes);
         if (impaired) Delayed++;
     }
     internal void Forget(int peer)
     {
-        for (var i = 0; i < Capacity; i++) if (_peers[i] == peer) _sizes[i] = 0;
+        for (var i = 0; i < Capacity; i++)
+            if (_peers[i] == peer && _sizes[i] != 0) { PendingPackets--; PendingBytes -= _sizes[i]; _sizes[i] = 0; }
     }
     internal void Flush(double now)
     {
@@ -104,7 +108,7 @@ internal sealed class ImpairedLink(SceneMultiplayer multiplayer, bool impaired)
             if (slot < 0) return;
             for (var i = 0; i < Capacity; i++)
                 if (_sizes[i] != 0 && _peers[i] == _peers[slot] && _order[i] < _order[slot]) { Reordered++; break; }
-            var size = _sizes[slot]; _sizes[slot] = 0;
+            var size = _sizes[slot]; _sizes[slot] = 0; PendingPackets--; PendingBytes -= size;
             multiplayer.SendBytes(_storage.AsSpan(slot * PacketBytes, size), _peers[slot], _modes[slot]); SentBytes += size; Sent++;
         }
     }

@@ -201,3 +201,10 @@ for a GPU early client and add `--threaded` for separate numerical execution;
 CPU authority and late CPU client still require denied GPU startup. These checks
 retain the ordinary physical, protocol, event, convergence and warm allocation
 assertions. Platform and device acceptance must be recorded for the actual run.
+
+The JSON report also records `PendingPackets`/`PendingBytes` at report capture and
+`PeakPendingPackets`/`PeakPendingBytes` over the session. These are application
+payloads waiting in the bounded impairment queue; duplicate copies count
+separately. Sending or forgetting a peer removes its current payload, while the
+lifetime maximum stays recorded. The queue's preallocated storage and transport
+framing/native buffers have separate memory scopes.

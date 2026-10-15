@@ -1,6 +1,10 @@
 # Scene, network and local history memory
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
+
+The following original tables retain their 2026-10-15 source/candidate scope.
+[The current slow-client update](#current-slow-client-queue-and-history-budget-2026-10-16)
+remeasures the application after the ordering and sleep/wake verification changes.
 
 ## Exercised contract and scope
 
@@ -176,3 +180,80 @@ pre-startup baseline to each child and record GC, glibc and procfs alongside the
 owned graph. Each new cohort has fifteen observations. Existing tables above
 retain their four-phase/candidate scope; process counters are separate overlapping
 measurements rather than additional disjoint owners.
+
+## Current slow-client queue and history budget, 2026-10-16
+
+Four frozen-source ordinary CPU/GPU cohorts now use both numerical policies,
+900 authority ticks, late admission after tick 310 and 250 ms first-client poll
+delay, without check-progress traffic or authority phase/input waits. All retain
+28 final objects, physical/contact/joint/geometry, actual reordered-state,
+sleep/wake restoration, input trust, event identity and .002 convergence gates.
+Every measured warm physical ordinary/replay interval is 0/0 owner/all-thread
+managed bytes. Collection pauses perturb the session clock and packet schedule;
+these measurements do not replace the unpaused performance record.
+
+The collector takes five phases per selected process, including baseline and
+release: 12 children and 60 heap observations. Calibration, exact owner-union
+partitioning, own-descendant attachment, disposed-space/zero-requested-GPU checks
+all pass. Every released observation has zero selected scene/network/history
+owners; the known static CPU pool is reported separately and remains excluded
+from this table.
+
+| Primary / lane | Process | Completed graph B | With four local points B | Disposed, held graph B |
+| --- | --- | ---: | ---: | ---: |
+| cpu-serial | server | 6,656,096 | 7,025,680 | 5,051,492 |
+| cpu-serial | cpu | 6,625,616 | 6,986,440 | 5,053,628 |
+| cpu-serial | late | 6,627,162 | 6,988,194 | 5,054,972 |
+| cpu-threaded | server | 6,656,672 | 7,026,080 | 5,051,828 |
+| cpu-threaded | cpu | 6,625,912 | 6,986,656 | 5,053,964 |
+| cpu-threaded | late | 6,627,498 | 6,988,354 | 5,055,308 |
+| gpu-serial | server | 6,656,096 | 7,025,680 | 5,051,492 |
+| gpu-serial | gpu | 5,455,088 | 5,845,504 | 5,112,360 |
+| gpu-serial | late | 6,627,162 | 6,988,194 | 5,054,972 |
+| gpu-threaded | server | 6,656,432 | 7,025,840 | 5,051,828 |
+| gpu-threaded | gpu | 5,455,424 | 5,845,840 | 5,112,696 |
+| gpu-threaded | late | 6,627,258 | 6,988,114 | 5,055,308 |
+
+The queue owner is 4,198,184 CLR-reported bytes in every live/held process: a
+152-byte wrapper plus 4,198,032 bytes for six arrays. The byte pool contains
+4,194,304 payload bytes (4,194,328 object bytes), `_due` and `_order` each contain
+128 values (1,048 object bytes each), and `_sizes`, `_peers` and `_modes` each
+contain 128 values (536 object bytes each). The historical queue owner was
+4,197,096 bytes; the measured 1,088-byte difference is the new 1,048-byte order
+array and 40 more wrapper bytes, including the new queue accounting fields.
+Other graph differences also include application/engine state and are not
+attributed to those fields alone.
+
+The current lifetime payload maxima are 6 packets / 64,828 B for every authority,
+2 / 1,080 B for primary CPU clients, 2 / 888 B for GPU clients and 5 / 2,700 B
+for late CPU clients. Packet-count and byte maxima are independent observations.
+The CLRMD pause independently reads `_sizes`, verifies current occupancy against
+counters and compares all four queue values with the original completed report.
+Duplication contributes each copy; flush and peer retirement release current
+occupancy without resetting the lifetime maxima. Startup controls cover drain,
+drop, repeated peer retirement and preservation of another peer's payload.
+These are application bytes before framing, not ENet/native/kernel/network peaks.
+
+In the GPU/separate cohort, four common checkpoint roots own 188,752 managed B
+for each process. Their selected solver partitions own 180,600 B on the CPU
+server, 198,576 B on the GPU client and 172,048 B on the late CPU client. These
+partitions are already in the checkpointed totals. Total graph growth may also
+include scratch retained by capture/restore. Requested GPU device/transfer storage
+is 159,576/40,760 B at completion and 225,656/40,760 B with four points; recorded
+peak is 266,416 B. Held disposal reports zero requested device/transfer bytes.
+These are reservations and managed objects, not physical VRAM or native ownership.
+
+The same current report/queue controls also pass one public NativeAOT GPU/separate
+paced cohort. Its four observed processes execute the same native ELF without
+CoreCLR. This establishes native report/control behavior; the heap tables above
+are CoreCLR sizes and do not claim NativeAOT layout equivalence.
+
+Artifacts, all 60 phase reports, per-type partitions, queue inventories, calibrated
+process observations and original session assertions remain under
+bin/physics-network-memory-current/2026-10-16. `validation.json` records the exact
+source/binary identities, four cohorts and native smoke. Source/PDB matches cover
+2,223 runtime, 16 measurement-host, five probe and 713 executable-test inputs.
+Release/API/wiki checks pass; the engine snapshot and coverage states are unchanged.
+Complete static/global/native/driver ownership, peaks beyond these scoped counters,
+NativeAOT object sizes, arbitrary workloads, foreign platforms, target-device
+advantage and window FPS remain open. The RTX power-cable prerequisite remains.

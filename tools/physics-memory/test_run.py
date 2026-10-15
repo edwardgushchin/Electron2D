@@ -49,4 +49,11 @@ with tempfile.TemporaryDirectory() as folder:
     for extra in [[], ["--icd", "missing.json", "--network"], ["--icd", "missing.json", "--threaded"]]:
         result = subprocess.run([sys.executable, str(Path(__file__).with_name("run.py")), str(output), "--native-phases", *extra], capture_output=True, text=True)
         assert result.returncode == 2 and "Native phases require" in result.stderr and not output.exists()
-print("PASS: timeout retires nested processes; success/nonzero exits and native-phase preflight are preserved.")
+with tempfile.TemporaryDirectory() as folder:
+    output = Path(folder) / "must-not-start"
+    for extra, error in [(["--unpaced"], "require --network"), (["--client-poll-delay-ms", "1"], "require --network"),
+                         (["--network", "--client-backend", "cpu", "--client-poll-delay-ms", "-1"], "between 0 and 250"),
+                         (["--network", "--client-backend", "cpu", "--client-poll-delay-ms", "251"], "between 0 and 250")]:
+        result = subprocess.run([sys.executable, str(Path(__file__).with_name("run.py")), str(output), *extra], capture_output=True, text=True)
+        assert result.returncode == 2 and error in result.stderr and not output.exists()
+print("PASS: timeout retires nested processes; success/nonzero exits and native-phase/network option preflight are preserved.")
