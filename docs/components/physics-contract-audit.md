@@ -1415,3 +1415,16 @@ allocation and final convergence gates; it uses 28 objects in 32 slots and an
 application version-four header. No runtime API or portable format changes, broad
 coverage-state promotion or final hardware/native/performance acceptance follows
 from this bounded scenario.
+
+## Dense same-collider portable history, 2026-10-15
+
+[The dense snapshot fixture](physics-snapshots.md#dense-same-collider-contact-history)
+extends the two-slot network evidence to 32 logical circle slots against one peer.
+It checks physical momentum including friction, bounded reports, local point/index
+association, remapped floor identity, scene object/shape deduplication and silent
+portable import followed by actual continuation. Scene and raw receivers use every
+CPU/GPU transfer direction in serial/separate execution, with complete warmed
+capture/transport/apply/replay allocation brackets. This is same-process evidence;
+it changes no runtime signature, packet format or declaration status. Arbitrary
+feature churn/geometry, registered numerical owners, full retained/native/device
+memory, target hardware, rendered FPS and final goal acceptance remain open.

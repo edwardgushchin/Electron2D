@@ -84,6 +84,59 @@ bitwise continuation is not promised. Capture a new local checkpoint after corre
 can invalidate older points under their fixed-configuration contract. Local
 checkpoints retain the full backend-private history for subsequent replay.
 
+## Dense same-collider contact history
+
+`PhysicsDenseContactTests` exercises 32 separated circle slots on one rotation-locked
+mass-2 body against one rectangular conveyor floor, with scene and raw receivers.
+The circles have radius 2 and five-unit center spacing; a reported world point must
+map within 2.1 units of its local slot center, so adjacent swapped indices cannot
+pass. The complete report must include every index exactly once, one floor RID and
+instance/object identity, unit normals within .002 and finite impulses. Scene
+monitoring must produce one object entry and 32 shape-entry callbacks.
+
+The first 1/60-second interval starts with downward speed 40, zero gravity/damping
+and constant downward force 60. Summed normal/friction impulse must agree with
+mass times velocity change minus the known external impulse within .08 kg-unit/s.
+The floor's stationary pose and 120-unit/s surface velocity produce actual normal
+and tangential response. This tolerance is below one tenth of one percent of the
+initial normal momentum and cannot hide omission of the external impulse. Reporting
+limits 7, 1, 0 and 32 clear the preceding point report, retain the requested count
+and keep valid unique slot/point/identity associations.
+
+The receiver starts far from the floor with no contacts and creates its objects in
+the opposite order. Capture/encode/decode/apply must preserve all sampled slots,
+points, normals and impulses exactly while resolving the local floor identity and
+retaining the direct-view object. Apply is silent, and the first following physical
+step must not repeat imported object/shape entries. Exact copied payloads do not
+require independent solver trajectories or backend encounter order to match.
+
+The matrix covers all four CPU/GPU transfer directions, scene/raw receivers and
+serial/separate numerical execution. Each case prepares 96 cycles, drains a blocking
+collection/finalizers, warms another 32, then measures 64 complete cycles. A cycle
+includes a source frame, portable capture/write/read/apply and a destination replay
+frame; owner and all-thread managed-byte deltas must both be zero. This is a
+same-process portable-history check, separate from the real ENet process example.
+The focused selector is `ELECTRON2D_TEST_DENSE_CONTACTS=cpu` or `gpu`; the default
+runner includes the complete matrix. The public-only PhysicsBackendExtension.Consumer
+links the same fixture for `--dense-contacts --cpu` or `--dense-contacts --gpu`,
+including both numerical lanes, so it can also execute under strict NativeAOT.
+Arbitrary feature churn, other geometry,
+registered numerical owners, native/device memory and final target performance
+retain their own acceptance work.
+
+On 2026-10-15, the complete sixteen-case matrix passed in managed and strict
+NativeAOT Linux x64 execution. Each also passed a four-case CPU-only profile with
+an unavailable Vulkan ICD and no display/rendering services. Process maps confirmed
+lavapipe for the GPU profiles, no NVIDIA library and no CoreCLR in NativeAOT.
+Encoded payloads were 3616 bytes for scene receivers and 2744 for raw receivers;
+these are packet lengths, not retained managed/native/device memory totals. Source,
+binary and process evidence is retained under ignored
+`bin/physics-dense-contacts/2026-10-15/current-main/`, built from main `94e289d2`
+with this fixture change. The default managed suite also passed,
+including another complete sixteen-case run. Release/source-native builds,
+format checks, compiled API coverage and wiki tests/generation/check passed.
+This fixture change adds no runtime signatures or portable encoding changes.
+
 ## Portable body roles
 
 The public-only consumer --portable-roles transfers CPU state to its independent

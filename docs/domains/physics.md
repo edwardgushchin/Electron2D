@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-15
 
+[Dense portable contact history](../components/physics-snapshots.md#dense-same-collider-contact-history)
+now checks 32 same-peer logical slots, physical impulse balance, report caps,
+remapped payloads and continued scene events across CPU/GPU scene/raw worlds.
+Its bounded serial/separate allocation evidence does not close arbitrary feature
+histories, native/device memory or final hardware/performance acceptance.
+
 [Compound slots and free ray network state](../components/physics-network-example.md#compound-slots-and-rotating-ray-under-correction-2026-10-15)
 now require positive per-slot impulse/restoration evidence, geometric contact-index
 association and actual ray angular motion/correction, retaining the preceding

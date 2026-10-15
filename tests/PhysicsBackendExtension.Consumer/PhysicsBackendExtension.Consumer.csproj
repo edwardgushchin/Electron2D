@@ -8,6 +8,6 @@
     <TieredCompilation Condition="'$(Configuration)' == 'Release'">false</TieredCompilation>
   </PropertyGroup>
   <ItemGroup><ProjectReference Include="../../Electron2D.csproj" /></ItemGroup>
-  <ItemGroup><Compile Include="../Electron2D.Tests/AllocationWarmupCheck.cs" Link="AllocationWarmupCheck.cs" /><Compile Include="../PhysicsSpaceExtension.Consumer/CircleQueries.cs" Link="CircleQueries.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../Electron2D.Tests/AllocationWarmupCheck.cs" Link="AllocationWarmupCheck.cs" /><Compile Include="../PhysicsSpaceExtension.Consumer/CircleQueries.cs" Link="CircleQueries.cs" /><Compile Include="../Electron2D.Tests/PhysicsDenseContactTests.cs" Link="PhysicsDenseContactTests.cs" /></ItemGroup>
   <Import Project="../../tools/native-consumer.props" />
 </Project>
