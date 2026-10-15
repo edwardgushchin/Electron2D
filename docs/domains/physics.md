@@ -1,5 +1,7 @@
 # Physics domain
 
+[Retained world and history measurement](../components/physics-retained-memory.md) now partitions managed object storage for raw CPU/software-GPU worlds, maps, portable payloads and local checkpoints. The fixture also exposed and fixes CPU fixed-joint endpoint capacity at power-of-two populations. Native/driver/static-global/scene-network histories and hardware/performance acceptance remain open.
+
 [CPU pool lifetime](../components/cpu-checkpoints.md#retired-pool-payloads) releases
 retired body/shape/joint payloads and superseded move-event references, including
 checkpoint recapture. Class spares remain reusable; full retained/native/device

@@ -1,4 +1,5 @@
-if (args.Contains("--history-storage")) BackendChecks.RunHistoryStorage(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+if (args.Contains("--anchor-capacity")) BackendChecks.RunAnchorCapacity(args.Contains("--gpu"), args.Contains("--threaded"));
+else if (args.Contains("--history-storage")) BackendChecks.RunHistoryStorage(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--point-containment")) PhysicsPointContainmentTests.Run(args.Contains("--gpu"));
 else if (args.Contains("--transient-contacts")) PhysicsTransientContactTests.Run(args.Contains("--gpu"));

@@ -23,7 +23,7 @@ The query partials own native ray/point scans, standalone query proxies, candida
 
 CreateCollider constructs a fresh CPUPhysicsColliderImplementation for each body/Area attachment. The retained collider identity facade delegates all engine-unit body and shape operations to that concrete owner; reattachment never retargets its immutable world.
 
-CreateJoint creates a fresh CPUPhysicsJointImplementation for each constraint attachment. Shared settings and physical RID stay in PhysicsJointRuntime. GetJointWorldBody lazily creates and reuses the CPU world's shape-free static anchor with ordinary lifetime/solver guards. Generic policy/setters/portable-frame/release operations dispatch to that attachment.
+CreateJoint creates a fresh CPUPhysicsJointImplementation for each constraint attachment. Shared settings and physical RID stay in PhysicsJointRuntime. GetJointWorldBody lazily creates and reuses the CPU world's shape-free static anchor with ordinary lifetime/solver guards. Creating that endpoint also prepares solver and contact-motion storage for its added body slot, including a power-of-two collider population; [capacity regression and retained storage](../components/physics-retained-memory.md) record the exercised boundary. Generic policy/setters/portable-frame/release operations dispatch to that attachment.
 
 Source partials: [policy](../../src/Servers/Physics/CPUPhysicsWorldBackend.Policy.cs), [capacity](../../src/Servers/Physics/CPUPhysicsWorldBackend.Capacity.cs), [statistics](../../src/Servers/Physics/CPUPhysicsWorldBackend.Statistics.cs).
 

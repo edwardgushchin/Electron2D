@@ -70,6 +70,7 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
     internal override float ReadPortableSleepTime(PhysicsColliderBackend collider) => NativeCollider(collider).PortableSleepTime;
     internal override void ApplyPortableSleep(PhysicsColliderBackend collider, float time, bool canSleep, bool sleeping) =>
         NativeCollider(collider).ApplyPortableSleep(time, canSleep, sleeping);
+    /// <summary>Creates or borrows the fixed joint endpoint and prepares solver and contact-motion capacity for its body slot.</summary>
     internal B2BodyId GetJointWorldBody()
     {
         EnsureAccess();
@@ -78,6 +79,8 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
             var definition = B2Types.b2DefaultBodyDef();
             definition.type = B2BodyType.b2_staticBody;
             _jointWorldBody = B2Bodies.b2CreateBody(WorldID, definition);
+            // The fixed anchor consumes a body slot just like a collider attachment.
+            PrepareSolverCapacity();
         }
         return _jointWorldBody;
     }

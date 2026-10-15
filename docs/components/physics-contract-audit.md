@@ -388,6 +388,8 @@ world replacement, angular limits/motor and invalid replacement. The CPU spring
 preflight/apply ordering was preserved during extraction. Current public GPU spring
 and policy execution is covered by the shared scene/server suites.
 
+[Retained world/history graphs](physics-retained-memory.md) now have explicit managed object-size measurements for controlled raw CPU/software-GPU fixtures. The no-GPU CPU and software-GPU anchor-capacity regression covers the newly found fixed-endpoint slot defect; native/driver/static-global/scene-network budgets and performance acceptance remain open.
+
 ## Open behavior groups
 
 This table groups the complete declaration ledger into implementation work. A

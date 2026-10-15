@@ -82,6 +82,8 @@ not close the broader memory and hardware gates listed above.
 
 ## Remaining memory owners
 
+[Retained managed graph measurements](physics-retained-memory.md) now cover controlled raw CPU/software-GPU worlds, common/selected checkpoints, maps and peak portable payloads at 1024/4096 bodies. These fixture partitions do not close the complete total below.
+
 [CPU pool payload retirement](cpu-checkpoints.md#retired-pool-payloads) releases
 borrowed user data, names, manifold delegates and replaced move-event references
 from retired records and checkpoint copies. The pool shells and backing array
@@ -92,9 +94,9 @@ release removed shape resources and retired contact identities from reusable
 array tails after replacement. Live-prefix payload and allocated capacity remain
 owned by their map/checkpoint; a collection check does not measure their byte size.
 
-Requested GPU resources are one part of the required total. The next retained
-budget must also account for these current owners without counting shared objects
-twice:
+Requested GPU resources are one part of the required total. The complete retained
+budget must cover these owners beyond the controlled raw fixture without counting
+shared objects twice:
 
 - `GPUPhysicsBodyStore` authored slots, sparse commands, geometry, readback scratch
   and the resource-size dictionary, including what remains after store retirement.
@@ -108,7 +110,7 @@ twice:
 - `examples/PhysicsNetwork` owns bounded input/event/presentation histories and
   transport queues. Its encoded packet length alone cannot describe this memory.
 
-The table above promotes none of these unmeasured owners to accepted totals.
+The controlled graph measurements do not promote these broader owners to accepted totals.
 
 [Local checkpoint disposal](physics-space-checkpoints.md#released-history-references)
 now releases the selected history reference even after a cleanup exception.
