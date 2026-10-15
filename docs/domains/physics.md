@@ -306,14 +306,22 @@ and resolved body fields now use shared internal adapters. This preserves the
 existing public contract while isolating vendor-dependent operations. Built-in
 shape resources now expose borrowed scene-unit geometry internally; CPU fixture,
 query and mass compilation is isolated in PhysicsShapeBackend. Independent GPU
-ownership and public backend selection remain open. Joint identity, sampled frames
+ownership and public backend selection now execute; complete acceptance remains
+open. Joint identity, sampled frames
 and settings now also sit outside vendor storage; the selected PhysicsJointImplementation owns current
 constraint handles and CPU spring evaluation. A separate GPUPhysicsBodyStore now
 retains and integrates device body state, shared shape geometry, transformed bounds,
 complete broad-phase pairs and narrow-phase contact points without a CPU world or
 CPU spatial/contact mirror. Contact impulse/material response, warm history and
 separate correction now execute on GPU. Joints, automatic mass-center profiles, sleep,
-CCD and public selection/publication still need to be connected.
+CCD and public selection/publication now connect through the selected owner and
+the shared public checks; their broader conformance/performance gates remain open.
+
+Cold GPU numerical pipelines now prepare on the original world owner before a
+separate solver borrows the device. Existing per-store handles, numerical command
+ownership and disposal remain retained. [Ownership and retirement evidence](../components/physics-retirement-memory.md#owner-pipeline-preparation)
+records the cold-feature/error and warmed allocation checks plus reduced software
+allocator growth; residual native memory and target-hardware acceptance stay open.
 
 Physics readiness requires both CPU/Box2D.NET behavior and a complete selectable
 independent GPU world. The [source audit](../components/physics-contract-audit.md)

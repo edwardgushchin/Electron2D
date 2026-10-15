@@ -1,6 +1,6 @@
 # GPUPhysicsDevice
 
-Last updated: 2026-10-08
+Last updated: 2026-10-15
 
 **Declaration:** `internal sealed class GPUPhysicsDevice : IDisposable`
 
@@ -12,6 +12,13 @@ device. No window or renderer is created. SDL video lifetime remains retained fo
 the device, because the current Vulkan loader uses it. The existing GPU stage host
 and independent resident body store share this device/pipeline ownership code.
 Pipelines load checked offline SPIR-V resources through ShaderCompiler.
+
+The device retains its creating thread identity. The scoped internal
+`PipelineCreationForTesting` hook observes the shader name, owner and actual
+creation thread before native allocation. Normal runtime leaves it unset.
+The selected world prepares cold numerical pipelines on that owner before
+borrowing; existing per-store handles and disposal retain their lifetime.
+See [the executable ownership check](../components/physics-retirement-memory.md#owner-pipeline-preparation).
 
 Initialization reuses DisplayServer's existing GTK/Wayland environment preparation.
 An inherited X11-only GDK choice in a Wayland session is corrected before SDL video

@@ -8,7 +8,8 @@ The [memory runner](../../tools/physics-memory/README.md#repeated-world-retireme
 now repeats complete raw-world creation, simulation, history and disposal in one
 process through the public API. Linux x64/CoreCLR uses a denied Vulkan ICD for CPU
 and the pinned lavapipe device for GPU, without fallback, renderer, window or
-NVIDIA mapping. The runtime implementation is unchanged.
+NVIDIA mapping. The initial cohorts left the runtime unchanged; the owner-side
+pipeline correction and its follow-up measurements are recorded below.
 
 Each world contains 64 or 1024 awake radius-2 circles in isolated overlapping pairs,
 one origin pin, zero ordinary gravity and one or four independent checkpoints.
@@ -35,22 +36,22 @@ distinct. Shared library RSS includes shared pages; mapping names do not identif
 every native allocator or the stack that allocated a block. Rollup and per-mapping
 reads happen sequentially before attachment, so their sums need not be identical.
 
-## Open native-growth finding
+## Initial native-growth finding
 
-Default separate-lane software-GPU processes show large growth in resident free
+The initial default separate-lane software-GPU processes showed large growth in resident free
 glibc arena storage across retired worlds. The selected owners disappear and
 process threads return to seven; reported used arena bytes fall rather than grow
 with the large RSS increase. Serial CPU profiles settle after initial warmup.
-This is an unresolved process-retention/performance issue, not evidence that a
+This exposed a process-retention/performance issue, not evidence that a
 particular engine wrapper or physical state mirror remains alive.
 
 A fresh matched 64-body separate-lane control changes only the child process's
 `MALLOC_ARENA_MAX` environment value to `1`. That control greatly reduces repeated
 RSS/arena growth while preserving the lifetime/error assertions. The runner
 records the inherited value and does not impose it. The [glibc arena tunable](https://sourceware.org/glibc/manual/2.35/html_node/Malloc-Tunable-Parameters.html)
-supports interpreting this as allocator-arena retention; the exact allocation
-sites and a production remedy remain unverified. No global allocator tuning or
-runtime ownership change is shipped, and no speed benefit is inferred.
+supports interpreting this as allocator-arena retention. These initial measurements
+did not identify allocation sites or verify a remedy. The control shipped no global
+allocator tuning or runtime ownership change, and established no speed benefit.
 
 The initial fault candidate used a huge duration with zero velocities/gravity and
 did not fail. Explicit gravity supplies the required unrepresentable numerical
@@ -59,11 +60,12 @@ public terminal boundary and subsequent retirement, not hardware device loss.
 
 ## Remaining acceptance
 
-The default threaded GPU growth stays open. Investigate cold pipeline/driver work
-and fresh numerical/device thread lifetimes before choosing a remedy; verify any
-change with repeated worlds, real public behavior and same-workload timing.
+Owner-side pipeline preparation below reduces the large default threaded GPU
+growth. Residual growth and a complete native-memory ceiling stay open. Investigate
+remaining driver/compiler/device lifetimes with native allocation stacks and
+same-workload timing before claiming complete retention/performance acceptance.
 The one-arena control is diagnostic evidence, not the accepted application policy.
-Longer runs, mixed scene/network retirement, registered backends, native ownership
+Runs beyond 32 cycles, mixed scene/network retirement, registered backends, native ownership
 stacks, continuous peaks, NativeAOT/foreign memory and target-hardware/window
 acceptance remain open. Real RTX loading remains deferred while its cable is
 unverified. No public API row or overall physics acceptance is promoted.
@@ -139,3 +141,128 @@ remain in JSON; every completed phase is also noted in the error-stream log.
 - Fixture/Electron2D.dll SHA-256: `b7ee4937601f8b6f68f13a8e756d46810a14991b5ea4df61de484e31f95c221f`.
 - Fixture/Fixture.dll SHA-256: `89233c24f3d3918729e9560893a6d00ca0677dbb0ecc5a7da47a739776678e05`.
 - Probe/Probe.dll SHA-256: `068a659f5054fa32f750850d569982a8a137667f98ec86d6574bc39e07be8152`.
+
+## Owner pipeline preparation
+
+A scoped pre-allocation probe on `GPUPhysicsDevice.CreatePipeline` reproduced
+13 of 14 initial world kernels being created on the separate numerical thread;
+the serial control created all on owner. The world now calls
+`PrepareSimulationPipelines` at the end of owner preparation, after authored
+motion/joint/exception/report/wake work and before solver borrowing. Authored
+feature counts prepare possible numerical handles without simulation, buffer
+resizing, readback, submissions or waits. The existing per-store handles and
+release paths remain unchanged. Cold preparation time belongs to
+`GPUPrepareBodiesMS` and the complete step; warm calls reuse handles. No allocator
+tunable, shared device/compiler cache or solver-thread pool is introduced.
+
+`GPUPhysicsPipelineTests` executes empty and active selected GPU worlds, an
+origin pin, first kinematic/CCD transitions, late field/report/debug enablement,
+and a cold solver-compilation failure. Preparation failure leaves tick zero and
+the same GPU world usable; retry succeeds without CPU replay. Started numerical
+failures remain terminal in the retirement fixture. Both scheduling policies
+create all 17 normal feature kernels on owner; including failed/retried setup,
+each observes 26 creation attempts. Two 128-warm/128-measured full-step brackets
+require exactly 0/0 owner/all-thread managed bytes and no new pipeline. The
+managed and strict Linux x64 NativeAOT hosts pass the same tests.
+
+### Matched eight-cycle follow-up
+
+The unchanged public retirement workloads now run on the corrected runtime,
+with default glibc policy and the same pinned software driver. All 64 complete
+world lifetimes, including 16 terminal GPU intervals, pass the original heap
+owner/error assertions. The 144 observations retain zero selected graph after
+retirement; the idle CPU pool stays 631,832 bytes. Every retired GPU process has
+seven threads. This is separate from warmed throughput/allocation evidence.
+
+| Bodies / histories / policy | Backend | RSS 1 | RSS 8 | Used 8 | Free 8 |
+| --- | --- | ---: | ---: | ---: | ---: |
+| 64 / 1 / owner | CPU | 75,079,680 | 75,587,584 | 11,220,832 | 821,408 |
+| 64 / 1 / owner | GPU | 234,475,520 | 263,356,416 | 1,929,296 | 165,220,272 |
+| 64 / 1 / separate | CPU | 75,296,768 | 75,800,576 | 11,112,576 | 1,126,272 |
+| 64 / 1 / separate | GPU | 236,118,016 | 271,499,264 | 1,931,472 | 172,676,912 |
+| 1024 / 4 / owner | CPU | 119,480,320 | 119,345,152 | 1,395,184 | 11,302,416 |
+| 1024 / 4 / owner | GPU | 244,441,088 | 277,102,592 | 1,930,688 | 165,739,072 |
+| 1024 / 4 / separate | CPU | 119,181,312 | 119,566,336 | 1,392,128 | 11,489,792 |
+| 1024 / 4 / separate | GPU | 246,231,040 | 284,495,872 | 1,938,032 | 172,694,928 |
+
+Compared with the initial default cohorts, the large separate-lane growth is
+substantially reduced. Retired RSS/free arenas still increase; selected wrapper
+collection does not establish complete native release or an eventual ceiling.
+The creation-thread evidence and matched change support cold compilation on
+fresh numerical threads as a major contributor, without naming every native
+allocation stack.
+
+### Thirty-two-cycle process-only follow-up
+
+A first 32-cycle heap-attached CPU run stalled in CLRMD attachment after cycle 18;
+it was interrupted and its whole owned process group was reaped. It is excluded
+from accepted measurements. Four fresh processes then ran the same 64-body/one-
+history fixture for 32 cycles without debugger attachment. They preserve the
+fixture's physical/error/disposal assertions and sample full-GC, glibc and procfs
+at every pause, but make no heap-graph/owner-collection claim. This separates
+diagnostic attachment behavior from application process retention.
+
+| Policy | Backend | RSS 1 | RSS 8 | RSS 16 | RSS 32 | Arena 32 | Used 32 |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Owner | CPU | 70,197,248 | 70,582,272 | 70,578,176 | 70,578,176 | 12,054,528 | 11,229,376 |
+| Owner | GPU | 229,765,120 | 258,465,792 | 261,693,440 | 261,914,624 | 169,893,888 | 1,953,952 |
+| Separate | CPU | 70,418,432 | 70,795,264 | 70,795,264 | 70,795,264 | 12,242,944 | 11,127,120 |
+| Separate | GPU | 231,550,976 | 271,581,184 | 271,757,312 | 272,797,696 | 180,142,080 | 1,966,576 |
+
+These 128 lifetimes, 32 terminal GPU intervals and 264 process observations show
+much smaller later growth in this bounded software profile. All retired thread
+counts are seven. Residual allocator retention, heap-attached long-run
+reliability, native allocation stacks, foreign/NativeAOT memory, real GPU/window
+performance and the overall physics objective remain open.
+
+Local evidence: `bin/physics-owner-pipelines/2026-10-15/`, including `red.log`,
+`pipeline.log`, `native.log`, `accepted8-{64,1024}-{serial,threaded}/`,
+`long-{cpu,gpu}-{serial,threaded}.json` and the rejected attachment log under
+`accepted-64-serial/`. Source/PDB and validation reports identify the actual
+compiled runtime and preserve distinct graph/process scopes.
+
+### Functional, network and complete-step checks
+
+Seven managed hosts pass pipeline ownership, both scheduling policies of the
+shared CPU/GPU CCD/boundary/directed-ray suite, shared GPU shape/body/joint/world
+checks, backend ownership, Area behavior and report-only contacts. The source-
+matched NativeAOT ownership host also passes. Two complete three-process network
+runs use a denied-GPU CPU server and a software-GPU primary client, in owner and
+separate modes, through tick 900 with late join at 310. Original impairment,
+correction/replay, identity/lifecycle/event and 0/0 warm step/replay assertions
+remain unchanged. Their 30 heap/process observations are additional to the
+retirement cohorts. These memory hosts do not instrument numerical thread identity.
+
+A first 64-body monitored scene with only 128 warmup frames failed the CPU zero-
+allocation gate at 4,120 owner/all-thread bytes in Solve. It is retained under
+`timing-serial/` and is not a passing benchmark. The documented canonical 1,600-
+frame warmup then runs 128 measured complete PhysicsFrames on the same runtime,
+with all 64 awake bodies, four walls, contact monitoring, 16 solver iterations,
+four substeps, interpolation and 144 Hz fixed input. All four physical and 0/0
+managed-byte gates pass. This verifies that warmup profile; the shorter evolving
+scene's allocation remains unaccepted, and no allowance or subtraction was added.
+
+| Policy | Backend | Whole step p50 / p95 / p99 (ms) | Included wait p50 (ms) | Upload / readback / uniforms per tick (B) |
+| --- | --- | --- | ---: | --- |
+| Owner | CPU | 0.3619 / 0.5429 / 0.6093 | 0.0000 | 0 / 0 / 0 |
+| Owner | GPU | 14.1081 / 15.4117 / 16.4305 | 13.4025 | 1304 / 47456 / 31216.25 |
+| Separate | CPU | 0.3781 / 0.4430 / 0.4635 | 0.0000 | 0 / 0 / 0 |
+| Separate | GPU | 13.6929 / 15.0062 / 15.3443 | 12.9807 | 1304 / 47456 / 31247.75 |
+
+These are software-device measurements of a small scene, not target-hardware
+advantage, real-window FPS or a before/after speed claim. Cold setup and owner
+compilation remain inside complete setup/step accounting, not warmed samples.
+No RTX device is loaded while its power cable remains unverified.
+
+Release runtime build, both format checks, compiled API coverage, wiki generator
+checks and production identity search pass. Seven source/PDB sets match all
+Compile inputs: 2,221 runtime files in both profiles, 710 test files, two focused
+AOT-host files, four raw-fixture files, 16 network files and four probe files,
+with zero missing or mismatched inputs. The current source/validation manifests
+remain ignored evidence rather than shipped engine artifacts. Coverage stays
+Partial for separate numerical execution and the overall objective stays open.
+
+- Matched runtime SHA-256: `b2ed5fd923de2056cfff69387815e9b049e9b0b8cb8eed9b54859db3247b3794`.
+- Raw fixture SHA-256: `46fa3d0b4790353fbc8aa5e8ac67b4f05f43a993249945c3094a5c92dde29408`.
+- Network fixture SHA-256: `71fbe4e9b60c3ab38d277d1bb75f2caa4d3296d3ef9036ff50f1d4a20dfd5396`.
+- Probe SHA-256: `9d86a2937f3ac376b4b35cadd7eb15d6fb60319910f63d0a7be9a96d35deb787`.

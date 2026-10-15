@@ -54,7 +54,9 @@ internal sealed partial class GPUPhysicsWorldBackend
         if (ProfilingEnabled) { Space.GPUPrepareReportsMS = System.Diagnostics.Stopwatch.GetElapsedTime(mark).TotalMilliseconds; mark = System.Diagnostics.Stopwatch.GetTimestamp(); }
         var wait = ProfilingEnabled ? GPUStore.WaitMS : 0;
         Space.FlushGPUWakes();
-        if (ProfilingEnabled) { Space.GPUPrepareWakesMS = System.Diagnostics.Stopwatch.GetElapsedTime(mark).TotalMilliseconds; Space.GPUPrepareWakeWaitMS = GPUStore.WaitMS - wait; }
+        if (ProfilingEnabled) { Space.GPUPrepareWakesMS = System.Diagnostics.Stopwatch.GetElapsedTime(mark).TotalMilliseconds; Space.GPUPrepareWakeWaitMS = GPUStore.WaitMS - wait; mark = System.Diagnostics.Stopwatch.GetTimestamp(); }
+        GPUStore.PrepareSimulationPipelines(GPUFields(Space.DefaultAreaFields));
+        if (ProfilingEnabled) Space.GPUPrepareBodiesMS += System.Diagnostics.Stopwatch.GetElapsedTime(mark).TotalMilliseconds;
     }
     internal override void Solve(double delta)
     {

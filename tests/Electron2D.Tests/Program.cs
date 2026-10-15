@@ -623,6 +623,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_WORLD_LIFETIME") == 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_POOL_LIFETIME") == "1") { CPUPhysicsPoolLifetimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_CHECKPOINT") == "1") { CPUPhysicsCheckpointTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_CHECKPOINT") == "1") { GPUPhysicsCheckpointTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PIPELINES") == "1") { GPUPhysicsPipelineTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PHYSICS") == "1") { GPUPhysicsTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_FINALIZATION") == "1") { GPUPhysicsTests.VerifyBodyFinalization(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_ISLAND_GRAPH") == "1") { GPUPhysicsTests.VerifyIslandGraph(); return; }
@@ -1300,6 +1301,7 @@ PhysicsSpaceCheckpointTests.Run();
 CPUPhysicsCheckpointTests.Run();
 CPUPhysicsPoolLifetimeTests.Run();
 CPUPhysicsWorldLifetimeTests.Run();
+GPUPhysicsPipelineTests.Run();
 PinJointTests.Run(); PinJointTests.Run(PhysicsServer.Backend.GPU);
 GrooveJointTests.Run(); GrooveJointTests.Run(PhysicsServer.Backend.GPU);
 DampedSpringJointTests.Run(); DampedSpringJointTests.Run(PhysicsServer.Backend.GPU);

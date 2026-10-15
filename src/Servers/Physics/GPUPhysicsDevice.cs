@@ -9,6 +9,9 @@ internal sealed class GPUPhysicsDevice : IDisposable
     internal nint Device => Handle.DangerousGetHandle();
     internal string Driver { get; }
     internal string DeviceName { get; }
+    /// <summary>Observes cold pipeline creation for scoped executable ownership checks.</summary>
+    internal static Action<string, int, int>? PipelineCreationForTesting { get; set; }
+    private readonly int _ownerThreadID = Environment.CurrentManagedThreadId;
     private bool _disposed;
 
     internal GPUPhysicsDevice()
@@ -40,6 +43,7 @@ internal sealed class GPUPhysicsDevice : IDisposable
 
     internal RenderHandle CreatePipeline(string name)
     {
+        PipelineCreationForTesting?.Invoke(name, _ownerThreadID, Environment.CurrentManagedThreadId);
         using var source = typeof(GPUPhysicsDevice).Assembly.GetManifestResourceStream("Electron2D.PhysicsShaders." + name)
             ?? throw new InvalidOperationException("The physics shader is missing: " + name);
         using var bytes = new MemoryStream(); source.CopyTo(bytes);

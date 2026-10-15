@@ -1472,4 +1472,7 @@ normal CPU/GPU and terminal GPU intervals with held histories, both numerical
 policies, collected owners and per-mapping process RSS. Default threaded lavapipe
 exhibits substantial free glibc arena growth across worlds; the matched one-arena
 control supports allocator retention as the main measured contributor. This
-native-memory/performance gate remains open pending a verified production remedy.
+native-memory/performance gate remains open. Subsequent [owner pipeline preparation](physics-retirement-memory.md#owner-pipeline-preparation)
+moves cold numerical compilation before borrowing and reduces the large threaded
+growth without allocator tuning. Residual retention, complete native attribution
+and hardware/performance acceptance remain open.

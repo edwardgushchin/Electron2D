@@ -1,6 +1,6 @@
 # Separate numerical physics thread
 
-Last updated: 2026-10-13
+Last updated: 2026-10-15
 
 ## Contract and runtime flow
 
@@ -19,6 +19,10 @@ ordinary explicit Step/query workflows and prevent observing an in-flight world.
 Inactive and zero-duration intervals create no numerical work or thread.
 
 The worker may borrow GPUPhysicsBodyStore privately while the owner is waiting.
+Cold numerical pipelines now prepare on the original owner before that borrow;
+the retained per-store handles are reused on the worker. Feature edits prepare
+newly needed kernels before dispatch, and cold preparation errors remain before
+numerical entry. See [ownership and retirement evidence](physics-retirement-memory.md#owner-pipeline-preparation).
 GPU commands are acquired, recorded and submitted on that same worker; device
 creation/retirement, public reads and authoring keep the original owner. No CPU
 numerical replacement, full GPU mirror or new device fence is introduced.

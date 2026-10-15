@@ -170,4 +170,6 @@ this change adds no public runtime declaration or coverage-state promotion.
 [Repeated raw-world retirement](physics-retirement-memory.md) subsequently measures
 eight cycles with ordinary and failed GPU intervals. It exposes substantial default
 separate-lane glibc arena retention even when selected owners collect; the issue
-remains open. The one-arena diagnostic control is not a runtime policy change.
+remains open. The subsequent [owner pipeline preparation](physics-retirement-memory.md#owner-pipeline-preparation)
+reduces that large threaded growth without global allocator tuning; residual
+retention remains open. The one-arena diagnostic control is not a runtime policy change.

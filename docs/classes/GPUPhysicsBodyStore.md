@@ -22,6 +22,7 @@ snapshot. Capture/apply at tick zero preserves subsequent physical motion.
 [live body parameters](../../src/Servers/Physics/GPUPhysicsBodyStore.Parameters.cs),
 [sleep](../../src/Servers/Physics/GPUPhysicsBodyStore.Sleep.cs),
 [continuous collision](../../src/Servers/Physics/GPUPhysicsBodyStore.Continuous.cs),
+[owner pipeline preparation](../../src/Servers/Physics/GPUPhysicsBodyStore.Pipelines.cs),
 [spatial work](../../src/Servers/Physics/GPUPhysicsBodyStore.Spatial.cs),
 [contacts](../../src/Servers/Physics/GPUPhysicsBodyStore.Contacts.cs),
 [solver](../../src/Servers/Physics/GPUPhysicsBodyStore.Solver.cs),
@@ -40,6 +41,15 @@ snapshot. Capture/apply at tick zero preserves subsequent physical motion.
 `ReadPoses(ReadOnlySpan<BodyHandle>, Span<System.Numerics.Vector4>)` selects only position and cosine/sine basis. It validates every handle and output capacity, flushes pending edits/masses, gathers the requested sequence, then downloads 16 bytes per request plus eight status bytes with one fence. Duplicate requests may exceed resident population; capacity grows for the request count without adding physical bodies. The existing snapshot read retains its exact 64-byte ABI; integer result storage preserves mode/flag bits. A submission/read failure retains the terminal store policy.
 
 ## Responsibility
+
+`PrepareSimulationPipelines(in FieldParameters defaults)` prepares potentially
+needed numerical kernels on the original owner before a solver interval borrows
+the store. Authored body/shape, field, joint/exception, CCD/kinematic and report
+counts select the existing per-store handles. Contact existence is a GPU result,
+so two or more shapes prepare possible contact/color kernels without reading
+contacts back. Empty stores prepare none. This operation does not simulate,
+resize buffers, submit commands or wait for GPU results; warm calls reuse handles.
+See [pipeline ownership and retirement](../components/physics-retirement-memory.md#owner-pipeline-preparation).
 
 [Collider attachments](../../src/Servers/Physics/GPUPhysicsBodyStore.Colliders.cs)
 are retained by common identity in this store. Creation binds the actual store;

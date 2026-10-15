@@ -1,6 +1,6 @@
 # GPUPhysicsWorldBackend
 
-Last updated: 2026-10-13
+Last updated: 2026-10-15
 
 **Declaration:** `internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend` · **Source:** [GPUPhysicsWorldBackend.cs](../../src/Servers/Physics/GPUPhysicsWorldBackend.cs) · **Component:** [Physics backends](../components/physics-backends.md)
 
@@ -37,6 +37,12 @@ CPU capacity preparation keeps a conservative flag once any dynamic attachment c
 [PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs) checks typed policy, invalid values, independent worlds, CPU native settings, selected statistics, no GPU CPU-motion storage, live role changes and disposed-owner guards. Common sleep/contact/iteration/statistics, replay and network suites remain the behavioral acceptance boundary.
 
 ## Selected step phases
+
+At the end of owner-side `PrepareBodies`, after report/wake preparation, the store
+prepares potentially needed numerical pipelines. Its cold cost is included in
+`GPUPrepareBodiesMS` and the complete step. A compilation failure here precedes
+numerical entry, leaves the tick unchanged and permits retry on the same selected
+GPU world. A begun submitted failure retains the existing terminal policy.
 
 GPU step phases prepare authored policies and the required pre-step activity snapshot, enqueue motion/Area/joint/filter/report work, solve resident fields and synchronize consumer state/reports. ResultsReady becomes true after required publication completes. EndStep retains the started-submission failure marker without CPU replay. The [common phase/lifetime boundary](PhysicsWorldBackend.md#selected-step-phases) owns observer publication and ordered callbacks. Source: [GPU phases](../../src/Servers/Physics/GPUPhysicsWorldBackend.Step.cs).
 
