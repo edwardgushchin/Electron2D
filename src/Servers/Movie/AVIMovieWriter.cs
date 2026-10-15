@@ -83,7 +83,7 @@ internal sealed class AVIMovieWriter : MovieWriter
         _dataEnd = next; _samples = samples; _frames++;
         _videoBuffer = Math.Max(_videoBuffer, (uint)jpeg.Length); _audioBuffer = Math.Max(_audioBuffer, (uint)bytes);
     }
-    private static void WriteChunk(Stream stream, ReadOnlySpan<byte> id, ReadOnlySpan<byte> data)
+    internal static void WriteChunk(Stream stream, ReadOnlySpan<byte> id, ReadOnlySpan<byte> data)
     {
         Span<byte> header = stackalloc byte[8]; id.CopyTo(header); Put(header, 4, (uint)data.Length);
         stream.Write(header); stream.Write(data); if ((data.Length & 1) != 0) stream.WriteByte(0);

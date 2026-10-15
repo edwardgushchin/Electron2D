@@ -7,6 +7,12 @@ internal static class AVIMovieWriterTests
 {
     internal static void Portable()
     {
+        using (var chunks = new MemoryStream())
+        {
+            AVIMovieWriter.WriteChunk(chunks, "00dc"u8, [1, 2, 3]);
+            AVIMovieWriter.WriteChunk(chunks, "01wb"u8, [4, 5]);
+            Check(chunks.ToArray().AsSpan().SequenceEqual(new byte[] { 48, 48, 100, 99, 3, 0, 0, 0, 1, 2, 3, 0, 48, 49, 119, 98, 2, 0, 0, 0, 4, 5 }), "RIFF chunks retain unpadded lengths, one zero byte after odd payloads and exact next-chunk alignment.");
+        }
         Check(AVIMovieWriter.CheckFrameSize(324, 0, 3, 4) == 348, "Odd JPEG padding is included before the index.");
         Check(AVIMovieWriter.CheckFrameSize(uint.MaxValue - 52L, 0, 0, 4) == uint.MaxValue - 32L, "Exact RIFF boundary includes both index entries.");
         Reject<IOException>(() => AVIMovieWriter.CheckFrameSize(uint.MaxValue - 51L, 0, 0, 4));
@@ -32,7 +38,7 @@ internal static class AVIMovieWriterTests
     }
     internal static void Native(string folder)
     {
-        using var source = Source(); var odd = false; var lowSize = 0; var highSize = 0;
+        using var source = Source(); var lowSize = 0; var highSize = 0;
         try
         {
             foreach (var mode in Enum.GetValues<AudioServer.SpeakerMode>())
@@ -42,17 +48,17 @@ internal static class AVIMovieWriterTests
                     ProjectSettings.Set(ProjectSettings.MovieWriterMixRate, 44100); ProjectSettings.Set(ProjectSettings.MovieWriterVideoQuality, .75f);
                     var path = Path.Combine(folder, $"recording-{mode}-{bits}.AVI");
                     var window = Pattern(source); window.AddChild(new Finish(5)); Engine.Run(window, path, 59);
-                    odd |= Validate(path, 4, 44100, 2 + (int)mode * 2, bits, 59).Odd;
+                    Validate(path, 4, 44100, 2 + (int)mode * 2, bits, 59);
                 }
             ProjectSettings.Set(ProjectSettings.MovieWriterSpeakerMode, AudioServer.SpeakerMode.Stereo);
             foreach (var quality in new[] { 0f, 1f })
             {
                 ProjectSettings.Set(ProjectSettings.MovieWriterVideoQuality, quality);
                 var path = Path.Combine(folder, $"quality-{quality}.avi"); var window = Pattern(source); window.AddChild(new Finish(3));
-                Engine.Run(window, path, 7); var result = Validate(path, 2, 44100, 2, 32, 7); odd |= result.Odd;
-                if (quality == 0) lowSize = result.FirstJPEG; else highSize = result.FirstJPEG;
+                Engine.Run(window, path, 7); var result = Validate(path, 2, 44100, 2, 32, 7);
+                if (quality == 0) lowSize = result; else highSize = result;
             }
-            Check(highSize > lowSize && odd, "Quality affects JPEG output and an odd-length payload exercises padding.");
+            Check(highSize > lowSize, "Quality affects JPEG output.");
             var fastPath = Path.Combine(folder, "zero-audio-blocks.avi"); var fast = Pattern(source); fast.AddChild(new Finish(5));
             Engine.Run(fast, fastPath, 100000); Validate(fastPath, 4, 44100, 2, 32, 100000, expectSignal: false);
             var emptyPath = Path.Combine(folder, "empty.avi"); var empty = Pattern(source); empty.Ready += _ => empty.Tree!.Quit();
@@ -84,17 +90,17 @@ internal static class AVIMovieWriterTests
         window.AddChild(pattern); return window;
     }
     private static uint U(byte[] bytes, int offset) => BinaryPrimitives.ReadUInt32LittleEndian(bytes.AsSpan(offset));
-    private static (bool Odd, int FirstJPEG) Validate(string path, int frames, int rate, int channels, int bits, int fps, bool expectSignal = true)
+    private static int Validate(string path, int frames, int rate, int channels, int bits, int fps, bool expectSignal = true)
     {
         var b = File.ReadAllBytes(path); Check(b.AsSpan(0, 4).SequenceEqual("RIFF"u8) && b.AsSpan(8, 4).SequenceEqual("AVI "u8) && U(b, 4) == b.Length - 8, "RIFF file extent.");
         Check(U(b, 48) == frames && U(b, 56) == 2 && U(b, 140) == frames && U(b, 132) == fps && U(b, 128) == 1, "Two streams and exact video time base.");
         Check(U(b, 264) == (long)frames * rate / fps && U(b, 300) == rate && BinaryPrimitives.ReadUInt16LittleEndian(b.AsSpan(298)) == channels && BinaryPrimitives.ReadUInt16LittleEndian(b.AsSpan(310)) == bits, "PCM format and cumulative frame count.");
-        var end = checked(320 + (int)U(b, 316)); var cursor = 324; var index = new List<(int Position, int Size)>(); var audioSamples = 0L; var nonzero = false; var odd = false; var first = 0;
+        var end = checked(320 + (int)U(b, 316)); var cursor = 324; var index = new List<(int Position, int Size)>(); var audioSamples = 0L; var nonzero = false; var first = 0;
         for (var frame = 0; frame < frames; frame++)
         {
             Check(b.AsSpan(cursor, 4).SequenceEqual("00dc"u8), "Compressed video stream chunk."); var size = checked((int)U(b, cursor + 4)); index.Add((cursor, size));
             using var image = new Image(); image.LoadJPGFromBuffer(b.AsSpan(cursor + 8, size)); Check(image.Size == new Vector2i(64, 48) && image.GetPixel(5, 5).R > .8f, "Actual MJPEG pixels decode.");
-            if (frame == 0) first = size; odd |= (size & 1) != 0; cursor += 8 + size; if ((size & 1) != 0) { Check(b[cursor] == 0, "RIFF zero padding."); cursor++; }
+            if (frame == 0) first = size; cursor += 8 + size; if ((size & 1) != 0) { Check(b[cursor] == 0, "RIFF zero padding."); cursor++; }
             Check(b.AsSpan(cursor, 4).SequenceEqual("01wb"u8), "Interleaved audio chunk."); var audio = checked((int)U(b, cursor + 4)); index.Add((cursor, audio));
             var count = ((long)(frame + 1) * rate / fps - (long)frame * rate / fps) * channels;
             Check(audio == count * bits / 8, "Rational PCM chunk length.");
@@ -112,7 +118,7 @@ internal static class AVIMovieWriterTests
             Check(b.AsSpan(at, 4).SequenceEqual(b.AsSpan(item.Position, 4)) && U(b, at + 4) == 16 && U(b, at + 8) + 320 == item.Position && U(b, at + 12) == item.Size, "Seek index uses unpadded payload sizes and relative chunk offsets.");
         }
         Check(audioSamples == (long)frames * rate / fps && (!expectSignal || frames == 0 || nonzero), "Complete native PCM clock and signal.");
-        return (odd, first);
+        return first;
     }
     private sealed class Finish(int limit, bool fail = false) : Node
     {
