@@ -43,6 +43,7 @@ namespace Box2D.NET
         public static void b2Array_Resize<T>(ref B2Array<T> a, int count) where T : new()
         {
             b2Array_Reserve(ref a, count);
+            ClearValueReferences(a, count, a.count - count);
             a.count = count;
         }
 
@@ -118,6 +119,7 @@ namespace Box2D.NET
             }
 
             a.count -= 1;
+            ClearValueReferences(a, a.count, 1);
             return movedIndex;
         }
 
@@ -139,6 +141,7 @@ namespace Box2D.NET
             }
 
             a.count -= 1;
+            ClearValueReferences(a, a.count, 1);
             return value;
         }
 
@@ -146,7 +149,18 @@ namespace Box2D.NET
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void b2Array_Clear<T>(ref B2Array<T> a)
         {
+            ClearValueReferences(a, 0, a.count);
             a.count = 0;
+        }
+
+        // Value records release borrowed payloads; class records retain reusable shells.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void ClearValueReferences<T>(in B2Array<T> a, int start, int count)
+        {
+            if (typeof(T).IsValueType && RuntimeHelpers.IsReferenceOrContainsReferences<T>() && count > 0)
+            {
+                Array.Clear(a.data, start, count);
+            }
         }
 
         /* ByteCount */

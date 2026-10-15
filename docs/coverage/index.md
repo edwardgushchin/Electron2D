@@ -1,5 +1,10 @@
 # API coverage register
 
+[CPU pool lifetime](../components/cpu-checkpoints.md#retired-pool-payloads) now clears
+borrowed record payloads and obsolete event references without discarding class
+spares. This fixes retained-owner paths; it changes no declaration status and does
+not establish a complete memory or performance budget.
+
 [Replay storage reuse](../components/physics-snapshots.md#temporary-reference-lifetime)
 clears references outside the current shape/contact prefix while preserving warm
 capacity. Public scene/raw body/Area checks cover recapture and accepted/rejected

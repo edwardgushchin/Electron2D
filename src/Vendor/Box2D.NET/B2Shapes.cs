@@ -375,6 +375,8 @@ namespace Box2D.NET
             // Return shape to free list.
             b2FreeId(world.shapeIdPool, shapeId);
             shape.id = B2_NULL_INDEX;
+            shape.userData = default;
+            shape.manifoldOverride = null;
             world.shapeFilterChanged?.Invoke(shapeId);
             world.shapeGeometryChanged?.Invoke(shapeId);
 

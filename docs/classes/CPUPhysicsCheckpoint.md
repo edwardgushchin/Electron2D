@@ -1,6 +1,6 @@
 # CPUPhysicsCheckpoint
 
-Last updated: 2026-10-10
+Last updated: 2026-10-15
 
 **Declaration:** `internal sealed class CPUPhysicsCheckpoint : IDisposable`
 
@@ -11,6 +11,11 @@ Last updated: 2026-10-10
 An owner-thread checkpoint of one live managed CPU solver. Construction captures
 immediately. Storage contains independent persistent solver data and retained
 borrowed user-data/callback references; the backend world ID remains internal.
+
+Recapture clears borrowed references beyond a shortened completed-event prefix;
+it keeps reusable array capacity and current borrowed objects. The
+[pool lifetime suite](../components/cpu-checkpoints.md#retired-pool-payloads) verifies
+live restore without cloning mutable contents, event replacement and disposal.
 
 | Operation | Behavior |
 | --- | --- |

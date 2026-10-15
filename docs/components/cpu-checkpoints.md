@@ -40,6 +40,32 @@ window, serialization or runtime-generated copy code is involved.
 
 ## Executable checks and measurement
 
+### Retired pool payloads
+
+Retiring a CPU body, shape or joint clears its borrowed user data; bodies release
+their retained names and shapes release manifold delegates. Both explicit child
+removal and body-driven destruction use this lifetime boundary. Solver record
+shells and numeric capacities remain reusable.
+
+Value records containing managed references clear removed array slots on resize,
+clear, pop and swap removal. Class record spares keep their distinct reusable
+objects. A checkpoint's completed event copy uses the same shrinking-prefix rule:
+an older move-event payload is released when a new capture replaces that history.
+Current published events remain borrowed until the next interval, and current
+checkpoint payloads remain retained until replacement or disposal.
+
+`ELECTRON2D_TEST_CPU_POOL_LIFETIME=1` checks collection after explicit/body-driven
+body/shape/joint retirement, ordinary and checkpoint event replacement, value
+array removals and engine collider detachment. It also checks that a live history
+retains and restores the same mutable borrowed object, and that class-spare reuse
+allocates zero managed bytes after warmup. These ownership checks do not measure
+the total retained heap or native/device memory.
+
+Focused Linux NativeAOT verification compiles these same pool-lifetime and CPU
+checkpoint test files in an isolated test host. The general test executable's
+strict AOT publish currently fails on existing reflection, JSON and assembly-path
+diagnostics in the wider harness; focused execution does not close that gate.
+
 `ELECTRON2D_TEST_CPU_CHECKPOINT=1` runs `CPUPhysicsCheckpointTests`; the default test
 runner also includes it. A focused run completed with DISPLAY/WAYLAND_DISPLAY unset
 and SDL_VIDEODRIVER=invalid. Tests exercise:

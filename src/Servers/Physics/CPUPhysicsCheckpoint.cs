@@ -5,6 +5,7 @@ using static Box2D.NET.B2Worlds;
 namespace Electron2D;
 
 /// <summary>Owner-thread CPU solver history for an unchanged set of authored object identities.</summary>
+/// <remarks>Recapture replaces borrowed event payloads and releases references outside the current prefix while reusing capacity.</remarks>
 internal sealed class CPUPhysicsCheckpoint : IDisposable
 {
     private readonly B2WorldId _id;
@@ -155,7 +156,7 @@ internal sealed class CPUPhysicsCheckpoint : IDisposable
     private static void Values<T>(in B2Array<T> a, ref B2Array<T> b, bool prepare) where T : struct
     {
         b2Array_Reserve(ref b, a.count);
-        if (!prepare) { a.data.AsSpan(0, a.count).CopyTo(b.data); b.count = a.count; }
+        if (!prepare) { a.data.AsSpan(0, a.count).CopyTo(b.data); b2Array_Resize(ref b, a.count); }
     }
     private static void Records<T>(in B2Array<T> a, ref B2Array<T> b, Action<T, T, bool> copy, bool prepare) where T : class, new()
     {

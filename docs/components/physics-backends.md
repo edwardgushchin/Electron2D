@@ -20,6 +20,11 @@ the late-growth failure and continuation scope in [the network example](physics-
 
 ## CPU collider ownership
 
+Retired solver records now release their borrowed metadata and manifold delegates;
+event buffers and checkpoint copies release superseded payload references. Class
+record shells remain reusable. The [pool lifetime checks](cpu-checkpoints.md#retired-pool-payloads)
+cover engine collider collection as well as the private kernel boundary.
+
 CPUPhysicsWorldBackend now retains its concrete collider attachments by the shared
 collider identity. Body/shape handles stay in that owner and the concrete CPU
 attachment; CollisionObject, PhysicsBody, raw server colliders and the common

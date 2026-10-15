@@ -82,6 +82,11 @@ not close the broader memory and hardware gates listed above.
 
 ## Remaining memory owners
 
+[CPU pool payload retirement](cpu-checkpoints.md#retired-pool-payloads) releases
+borrowed user data, names, manifold delegates and replaced move-event references
+from retired records and checkpoint copies. The pool shells and backing array
+capacities remain reusable and still belong in the retained byte budget.
+
 [Retained common histories](physics-snapshots.md#temporary-reference-lifetime)
 release removed shape resources and retired contact identities from reusable
 array tails after replacement. Live-prefix payload and allocated capacity remain

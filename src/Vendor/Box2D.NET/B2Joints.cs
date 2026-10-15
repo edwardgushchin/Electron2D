@@ -742,6 +742,7 @@ namespace Box2D.NET
             joint.localIndex = B2_NULL_INDEX;
             joint.colorIndex = B2_NULL_INDEX;
             joint.jointId = B2_NULL_INDEX;
+            joint.userData = default;
             b2FreeId(world.jointIdPool, jointId);
 
             if (wakeBodies)

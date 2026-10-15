@@ -416,6 +416,8 @@ namespace Box2D.NET
                 // Return shape to free list.
                 b2FreeId(world.shapeIdPool, shapeId);
                 shape.id = B2_NULL_INDEX;
+                shape.userData = default;
+                shape.manifoldOverride = null;
 
                 shapeId = shape.nextShapeId;
             }
@@ -469,6 +471,8 @@ namespace Box2D.NET
             body.setIndex = B2_NULL_INDEX;
             body.localIndex = B2_NULL_INDEX;
             body.id = B2_NULL_INDEX;
+            body.userData = default;
+            body.name = string.Empty;
             world.islandGraphChanged?.Invoke(1, bodyId.index1 - 1);
 
             b2ValidateSolverSets(world);

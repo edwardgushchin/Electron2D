@@ -1,5 +1,10 @@
 # Physics domain
 
+[CPU pool lifetime](../components/cpu-checkpoints.md#retired-pool-payloads) releases
+retired body/shape/joint payloads and superseded move-event references, including
+checkpoint recapture. Class spares remain reusable; full retained/native/device
+budgets and platform/performance acceptance remain open.
+
 [Replay storage reuse](../components/physics-snapshots.md#temporary-reference-lifetime)
 releases retired shape/contact references on recapture and portable preparation,
 including later guard rejection. Prepared storage remains reusable; complete
