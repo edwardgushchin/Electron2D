@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-15
 
-MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (48000 Hz, 1000..200000); MovieWriterSpeakerMode is ProjectSetting<AudioServer.SpeakerMode> for editor/movie_writer/speaker_mode (Stereo). Both are registered nonbasic settings, support feature overrides and are sampled by the built-in recording handler. See [movie writing](../components/movie-writing.md).
+MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (48000 Hz, 1000..200000); MovieWriterSpeakerMode is ProjectSetting<AudioServer.SpeakerMode> for editor/movie_writer/speaker_mode (Stereo). MovieWriterVideoQuality is ProjectSetting<float> for editor/movie_writer/video_quality (0.75, finite 0..1); MovieWriterAudioBitDepth is ProjectSetting<int> for editor/movie_writer/audio_bit_depth (16, accepts 16 or 32). These are registered nonbasic settings, support feature overrides and are sampled by the built-in recording handler. See [movie writing](../components/movie-writing.md).
 
 **Inherits:** [ProjectSettingsRegistry](ProjectSettingsRegistry.md)
 
@@ -65,6 +65,8 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | --- | --- |
 | [`public static ProjectSetting<int> MovieWriterMixRate { get; }`](#moviewritermixrate) | Built-in recording rate; 48000 Hz, supported 1000..200000. |
 | [`public static ProjectSetting<AudioServer.SpeakerMode> MovieWriterSpeakerMode { get; }`](#moviewriterspeakermode) | Built-in recording channel mode; Stereo initially. |
+| [`public static ProjectSetting<float> MovieWriterVideoQuality { get; }`](#moviewritervideoquality) | AVI JPEG quality, 0.75 initially; finite 0..1. |
+| [`public static ProjectSetting<int> MovieWriterAudioBitDepth { get; }`](#moviewriteraudiobitdepth) | AVI PCM depth, 16 initially; accepts 16 or 32. |
 | [`public static ProjectSetting<Color> DebugPathsColor { get; }`](#diagnostics-debugpathscolor) | Defines the color of path curves and tangent markers when scene path diagnostics are enabled. |
 | [`public static ProjectSetting<string> ApplicationName { get; }`](#p-electron2d-projectsettings-applicationname) | Defines the human-readable application name. |
 | [`public static ProjectSetting<string> ApplicationVersion { get; }`](#p-electron2d-projectsettings-applicationversion) | Defines the application version string. |
@@ -204,7 +206,7 @@ Allows AudioServer or AudioStreamMicrophone to activate the recording device. Se
 <a id="moviewritermixrate"></a>
 ### `public static ProjectSetting<int> MovieWriterMixRate { get; }`
 
-Projects editor/movie_writer/mix_rate. Registered nonbasic setting, 48000 Hz by default; FAudio rates 1000..200000 are accepted and other values reject before mutation. Supports ordinary registry storage/feature overrides; the built-in PNG/WAV handler samples it once at recording preparation.
+Projects editor/movie_writer/mix_rate. Registered nonbasic setting, 48000 Hz by default; FAudio rates 1000..200000 are accepted and other values reject before mutation. Supports ordinary registry storage/feature overrides; the built-in PNG/WAV and AVI handlers sample it once at recording preparation.
 
 <a id="moviewriterspeakermode"></a>
 ### `public static ProjectSetting<AudioServer.SpeakerMode> MovieWriterSpeakerMode { get; }`
@@ -1518,3 +1520,13 @@ The built-in `ProjectSettings.WebPCompressionMethod` and `WebPLosslessCompressio
 Mounted res:// resources now share [resource pack resolution](../components/resource-packs.md). PCK/ZIP overlays, synthetic directories, read-only packed metadata, relative scene dependencies and bitmap-font pages use the mounted bytes. Ordinary absolute paths and user:// retain physical access. Cached resources keep their normal cache-mode policy.
 
 `LoadResourcePack(string pack, bool replaceFiles = true, long offset = 0)` and `LoadResourcePack(string pack, ReadOnlySpan<byte> decryptionKey, bool replaceFiles = true, long offset = 0)` mount process-wide overlays transactionally. The default key is 32 zero bytes; explicit keys are copied. False means invalid/unreadable/unsupported pack; invalid arguments throw. Sparse/delta export formats remain unsupported.
+
+<a id="moviewritervideoquality"></a>
+### `public static ProjectSetting<float> MovieWriterVideoQuality { get; }`
+
+Projects editor/movie_writer/video_quality. Nonbasic, default 0.75, finite 0..1 inclusive; invalid values reject before mutation. Supports registry serialization and feature overrides. AVI samples it at Begin, clamps values below 0.01 to the JPEG encoder's minimum quality, and remains lossy at 1. PNG is lossless and ignores it. OGV consumption awaits its encoder.
+
+<a id="moviewriteraudiobitdepth"></a>
+### `public static ProjectSetting<int> MovieWriterAudioBitDepth { get; }`
+
+Projects editor/movie_writer/audio_bit_depth. Nonbasic, default 16; only 16 or 32 is accepted. Supports registry serialization and feature overrides. AVI samples it at Begin; 16-bit output uses signed Int32 high bits and 32-bit output preserves the full mixed PCM. PNG/WAV always writes 32-bit PCM. Invalid values throw ArgumentOutOfRangeException without mutation.

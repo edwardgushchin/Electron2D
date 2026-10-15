@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-15
 
-Source: [MovieWriter.cs](../../src/Servers/Movie/MovieWriter.cs). Declaration: `public abstract class MovieWriter : ElectronObject`. Inherits [ElectronObject](ElectronObject.md). Internal implementation: [PNGMovieWriter](PNGMovieWriter.md).
+Source: [MovieWriter.cs](../../src/Servers/Movie/MovieWriter.cs). Declaration: `public abstract class MovieWriter : ElectronObject`. Inherits [ElectronObject](ElectronObject.md). Internal implementations: [PNGMovieWriter](PNGMovieWriter.md), [AVIMovieWriter](AVIMovieWriter.md).
 
 ## Description
 
@@ -79,4 +79,4 @@ End runs once after Begin was attempted, including startup/callback failure, bef
 
 ## Verification and remaining work
 
-MovieWriterTests exercises portable registration and actual Linux GPU/Compatibility recording. [The component](../components/movie-writing.md) records the exact checks and package/foreign limits. Built-in AVI/MJPEG and OGV encoders remain in coverage; they are not provided by the generic hooks or the PNG/WAV backend. [ADR 0109](../decisions/movie-writing.md#adr-0109).
+MovieWriterTests exercises portable registration and actual Linux GPU/Compatibility recording. [The component](../components/movie-writing.md) records the exact checks and package/foreign limits. Built-in AVI writes indexed MJPEG and PCM16/32; its quality/depth and shared rate/channel settings are sampled once before scene activation. OGV remains an encoder dependency in coverage. [ADR 0109](../decisions/movie-writing.md#adr-0109).

@@ -4,7 +4,7 @@ public sealed partial class Engine
 {
     /// <summary>Runs and consumes a root Window while recording fixed-duration rendered frames and synchronous audio.</summary>
     /// <param name="window">A live detached root, owned after successful runtime reservation.</param>
-    /// <param name="moviePath">Output path accepted by a registered MovieWriter; .png selects PNG/WAV.</param>
+    /// <param name="moviePath">Output path accepted by a registered MovieWriter; .png selects PNG/WAV; .avi selects MJPEG/PCM.</param>
     /// <param name="fps">Positive recording frames per second, initially 60.</param>
     /// <returns>The SceneTree quit code after writer, scene and native cleanup.</returns>
     /// <remarks>Uses the ordinary window lifecycle, process/physics scheduler and actual renderer. Process delta is

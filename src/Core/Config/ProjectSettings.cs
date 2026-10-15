@@ -190,6 +190,14 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>editor/movie_writer/speaker_mode; Stereo initially.</value>
     public static ProjectSetting<AudioServer.SpeakerMode> MovieWriterSpeakerMode { get; } = new("editor/movie_writer/speaker_mode", AudioServer.SpeakerMode.Stereo, Enum.IsDefined);
 
+    /// <summary>Lossy video quality sampled when a built-in AVI recording begins.</summary>
+    /// <value>editor/movie_writer/video_quality; 0.75 initially, finite range 0 through 1.</value>
+    /// <remarks>AVI uses the JPEG encoder's minimum one-percent quality for values below 0.01. PNG is lossless.</remarks>
+    public static ProjectSetting<float> MovieWriterVideoQuality { get; } = new("editor/movie_writer/video_quality", .75f, value => float.IsFinite(value) && value is >= 0 and <= 1);
+    /// <summary>PCM sample depth sampled when a built-in AVI recording begins.</summary>
+    /// <value>editor/movie_writer/audio_bit_depth; 16 initially, accepts 16 or 32. PNG/WAV remains 32-bit.</value>
+    public static ProjectSetting<int> MovieWriterAudioBitDepth { get; } = new("editor/movie_writer/audio_bit_depth", 16, value => value is 16 or 32);
+
     /// <summary>Defines the fixed-step callback frequency used by <see cref="Engine"/>.</summary>
     public static ProjectSetting<int> PhysicsTicksPerSecond { get; } =
         new("physics/common/physics_ticks_per_second", 60, value => value > 0);

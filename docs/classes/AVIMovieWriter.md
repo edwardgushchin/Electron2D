@@ -1,0 +1,5 @@
+# AVIMovieWriter
+
+Last updated: 2026-10-15
+
+Internal sealed [MovieWriter](MovieWriter.md) implementation in [AVIMovieWriter.cs](../../src/Servers/Movie/AVIMovieWriter.cs). Selected per recording after custom writers decline a .avi path, including uppercase extensions. The lease owns disposal. It borrows RGB8 frame Images, owns one FileAccess, a prepared PCM conversion buffer and cold seek-index storage. It samples the four movie format settings before scene activation, writes MJPEG and little-endian PCM16/32 with exact rational sample counts, then finalizes classic RIFF AVI lengths and idx1 entries. Index offsets address chunk headers relative to movi; sizes exclude word padding. End truncates a partially failed frame to the last complete pair and always disposes the file, even on finalization errors. The requested destination is replaced and parent directories must exist. See [movie writing](../components/movie-writing.md) for quality semantics, size/dimension limits, executable tests and outstanding OGV dependencies. This internal encoder adds no public subclass or backend API.

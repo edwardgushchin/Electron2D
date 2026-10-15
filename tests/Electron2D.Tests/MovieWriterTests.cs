@@ -122,14 +122,15 @@ internal static class MovieWriterTests
             Check(loaded.Get(ProjectSettings.MovieWriterMixRate) == 44100 && loaded.Get(ProjectSettings.MovieWriterSpeakerMode) == AudioServer.SpeakerMode.Surround71, "Independent project settings round-trip.");
         }
         finally { Directory.Delete(folder, recursive: true); }
+        AVIMovieWriterTests.Portable();
         Console.WriteLine("Movie writer portable: arguments, registry ownership/capacity/duplicates, failure and reclamation passed.");
     }
-    private static AudioStreamWAV Source()
+    internal static AudioStreamWAV Source()
     {
         var data = new byte[48000 * 2]; for (var i = 0; i < 48000; i++) BinaryPrimitives.WriteInt16LittleEndian(data.AsSpan(i * 2), 8192);
         return new AudioStreamWAV { SampleFormat = AudioStreamWAV.Format.PCM16, Stereo = false, MixRate = 48000, Data = data, Loop = AudioLoopMode.Forward, LoopEnd = 47999 };
     }
-    private static Window Scene(AudioStream source, bool sample = false, bool failReady = false)
+    internal static Window Scene(AudioStream source, bool sample = false, bool failReady = false)
     {
         var window = new Window { Size = new(64, 48), Title = "Electron2D offline movie" };
         var canvas = new Entity(); canvas.Draw += item => item.DrawRect(new(0, 0, 64, 48), Colors.Red); window.AddChild(canvas);
@@ -141,6 +142,11 @@ internal static class MovieWriterTests
     internal static void Native(string backend, string folder)
     {
         Directory.CreateDirectory(folder);
+        if (backend.StartsWith("avi-", StringComparison.Ordinal))
+        {
+            ProjectSettings.Set(ProjectSettings.RenderingMethod, backend[4..]); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
+            AVIMovieWriterTests.Native(folder); return;
+        }
         ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         using var source = Source(); using var writer = new Writer { CheckGuards = true }; MovieWriter.AddWriter(writer);
         foreach (var mode in Enum.GetValues<AudioServer.SpeakerMode>())
@@ -218,6 +224,7 @@ internal static class MovieWriterTests
         finally { ProjectSettings.Set(ProjectSettings.MovieWriterMixRate, 48000); ProjectSettings.Set(ProjectSettings.MovieWriterSpeakerMode, AudioServer.SpeakerMode.Stereo); }
         var empty = new Window { Size = new(64, 48) }; empty.Ready += _ => empty.Tree!.Quit(); Engine.Run(empty, Path.Combine(folder, "empty.png"));
         Check(File.ReadAllBytes(Path.Combine(folder, "empty.wav")).Length == 44, "Ready quit produces a finalized empty recording.");
+        AVIMovieWriterTests.Native(folder);
         Console.WriteLine($"Movie writer {backend}: 2/4/6/8 channel PCM, stream/sample voices, fixed deltas, rational clock, actual pixels, hooks/failures, PNG/WAV and zero-allocation native PCM passed.");
     }
     private static void ExpectFailure(string message, Action action)

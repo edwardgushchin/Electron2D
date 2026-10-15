@@ -11,7 +11,7 @@ public abstract class MovieWriter : ElectronObject
     private static readonly List<MovieWriter> Writers = [];
     private readonly int _owner = Environment.CurrentManagedThreadId;
     private int _active, _callback;
-    private bool _registered;
+    private bool _registered, _owned;
     [ThreadStatic] private static int _registrationDepth;
     internal static void EnsureStartupAllowed()
     { if (_registrationDepth != 0) throw new InvalidOperationException("Runtime startup cannot reenter writer registration."); }
@@ -93,7 +93,8 @@ public abstract class MovieWriter : ElectronObject
             if (writer._active != 0) throw new InvalidOperationException("Writer is already recording.");
             writer._active = 1; return writer;
         }
-        if (System.IO.Path.GetExtension(path).Equals(".png", StringComparison.OrdinalIgnoreCase)) return new PNGMovieWriter { _active = 1 };
+        if (System.IO.Path.GetExtension(path).Equals(".png", StringComparison.OrdinalIgnoreCase)) return new PNGMovieWriter { _active = 1, _owned = true };
+        if (System.IO.Path.GetExtension(path).Equals(".avi", StringComparison.OrdinalIgnoreCase)) return new AVIMovieWriter { _active = 1, _owned = true };
         throw new NotSupportedException("No movie writer accepts this path.");
     }
     internal (int Rate, int Channels) GetAudioFormat()
@@ -110,7 +111,7 @@ public abstract class MovieWriter : ElectronObject
     internal void Begin(Vector2i size, int fps, string path) { _callback++; try { OnWriteBegin(size, fps, path); } finally { _callback--; } }
     internal void Write(Image image, ReadOnlySpan<int> pcm) { _callback++; try { OnWriteFrame(image, pcm); } finally { _callback--; } }
     internal void End() { _callback++; try { OnWriteEnd(); } finally { _callback--; } }
-    internal void Release() { _active = 0; if (this is PNGMovieWriter) Dispose(); }
+    internal void Release() { _active = 0; if (_owned) Dispose(); }
     /// <inheritdoc/>
     /// <exception cref="InvalidOperationException">A registered runtime, hook or recording is active, or disposal occurs off-owner.</exception>
     protected override void ValidateDisposal()

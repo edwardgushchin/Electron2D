@@ -230853,6 +230853,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.MovieWriterAudioBitDepth()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "MovieWriterAudioBitDepth",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E MovieWriterAudioBitDepth { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.MovieWriterMixRate()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -230876,6 +230889,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CElectron2D.AudioServer.SpeakerMode\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.MovieWriterVideoQuality()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "MovieWriterVideoQuality",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E MovieWriterVideoQuality { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
     "value": null
   },
   {

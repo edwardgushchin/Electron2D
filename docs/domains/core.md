@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-15
 
-[Movie writing](../components/movie-writing.md) adds typed recording hooks and fixed-cadence Engine entry points over the ordinary window lifecycle. The current built-in output is a real PNG sequence with synchronous WAV; additional built-in encoders remain implementation work.
+[Movie writing](../components/movie-writing.md) adds typed recording hooks and fixed-cadence Engine entry points over the ordinary window lifecycle. Built-in outputs are a real PNG sequence with synchronous WAV and indexed AVI/MJPEG with PCM16/32; OGV encoding remains implementation work.
 
 ## Skeletal schema policy
 
