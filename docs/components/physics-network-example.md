@@ -1,6 +1,6 @@
 # Authoritative physics network example
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 [PhysicsNetwork](../../examples/PhysicsNetwork/README.md) connects the existing
 `SceneMultiplayer`/`ENetMultiplayerPeer`, `PhysicsSnapshotMap`, `PhysicsSnapshot` and
@@ -126,8 +126,10 @@ confirmed the eight events after its baseline. Actual numerical intervals were
 360/1315/860 in serial and 360/1267/845 with a separate thread (authority/early/late).
 Each client's prepared prediction and replay allocated zero owner/all-thread bytes.
 These are individual live network observations, not a scheduling benchmark.
-Evidence is retained under bin/physics-network-thread/2026-10-13. GPU/native,
-foreign-platform, native allocator and final performance acceptance remain open.
+Evidence is retained under bin/physics-network-thread/2026-10-13. These are CPU-only
+observations; [the current mixed-backend regression](#network-regression-after-spring-sleep-fixes-2026-10-15)
+provides later headless GPU evidence. Native/foreign-platform, native allocator and
+final performance acceptance remain open.
 
 A subsequent same-source check exposed a late client joining at tick 308 with only
 81 completed steps. The old tick-only classification called its first cold replay
@@ -156,8 +158,9 @@ confirmed exactly nine events after its baseline from the authority's 21-event
 journal and observed four wakes. Its 5696 cold replay bytes remain reported.
 The matrix and manifests are retained in
 bin/physics-network-thread/2026-10-13/final-verified. These runs establish CPU
-integration through the stated public protocol; current GPU and window runs are
-still unverified.
+integration through the stated public protocol. Later headless GPU evidence is
+recorded in [the current regression](#network-regression-after-spring-sleep-fixes-2026-10-15);
+this CPU-only matrix establishes no window rendering.
 
 On source baseline ba48113bd825f3542a76b1b2e1ee4081cc01c6fd plus this change, the
 late separate-thread CPU run reports the following full step/correction costs.
@@ -600,3 +603,65 @@ Evidence: bin/physics-production-network/2026-10-14/validation.json and its
 retained reports/logs/manifests. The frozen source has 4,222 files, SHA-256
 3a99a26f06b8e368a50a20bdfcd17fda6ccf6e647374dbef7367e16d5fe4c919; both hosts load engine DLL SHA-256
 40477b2239d37517f14141c5d40f84af8590bdaa3383de0547dd1adfe37c2bf5.
+
+
+## Network regression after spring sleep fixes, 2026-10-15
+
+Eight frozen-source 900-tick runs refresh the existing headless workload after
+the initial RigidLinear lock and supported-spring sleep/wake fixes. Six runs use
+a CPU authority, software-Vulkan early client and late CPU client; two CPU-only
+controls retain the same protocol and physical workload. Both public example
+and instrumented hosts execute. Requested late admission is 90, or 310 in the
+two explicitly labelled late profiles. All 24 selected child processes pass.
+
+| Profile | Early / late admission | Early warm step / replay | Late warm step / replay |
+| --- | ---: | ---: | ---: |
+| instrumented-gpu-serial-900 | 1 / 131 | 59 / 590 | 601 / 1884 |
+| instrumented-gpu-threaded-900 | 1 / 141 | 28 / 325 | 601 / 1861 |
+| instrumented-gpu-serial-late310-900 | 0 / 363 | 27 / 324 | 460 / 1445 |
+| instrumented-gpu-threaded-late310-900 | 1 / 365 | 26 / 312 | 456 / 1423 |
+| public-gpu-serial-900 | 1 / 132 | 27 / 320 | 601 / 1793 |
+| public-gpu-threaded-900 | 1 / 135 | 24 / 277 | 600 / 1837 |
+| instrumented-cpu-serial-900 | 1 / 139 | 600 / 1808 | 601 / 2006 |
+| instrumented-cpu-threaded-900 | 1 / 140 | 600 / 1846 | 601 / 1835 |
+
+Every authority has 601 warmed measured physical steps. All measured ordinary
+and replayed physical steps retain 0/0 owner/all-thread managed bytes. The
+unchanged checks require positive impaired delivery, correction/replay,
+interpolation/smoothing, lifecycle/ownership, sleep/wake, joint kicks and exact
+post-admission confirmed effects. Final fourteen-object identities, state and
+sleep converge at the existing .002 numerical bounds. Maximum pin/groove errors
+are 0.218787/0.000031 scene units; maximum spring length is 65.816680 units.
+Their existing .5/.5/130-unit bounds remain unchanged.
+
+One initial 600-tick separate-GPU late-admission candidate completed but did not
+reach 128 local physical steps, so its warm acceptance correctly failed. The
+canonical comparison extends every profile to 900 ticks without reducing its
+objects, features, tolerances or positive-sample requirements. The ignored
+observer enumerates children of all parent tasks; its first main-task-only
+sample missed two otherwise passing children and is retained as a candidate.
+
+The instrumented separate-thread late-admission run reports full step and
+correction/replay distributions below. These software-driver loopback timings
+are diagnostics, not an isolated scheduling or target-GPU comparison.
+
+| Process | Step p50 / p95 / p99 ms | Correction p50 / p95 / p99 ms | Sent / received application B |
+| --- | --- | --- | ---: |
+| server | 0.2199 / 0.3660 / 2.1104 | 0.0000 / 0.0000 / 0.0000 | 1768684 / 141092 |
+| gpu | 23.8583 / 28.2263 / 28.2293 | 289.7416 / 332.4032 / 399.2790 | 15700 / 1045052 |
+| late | 0.2247 / 0.3671 / 0.4850 | 1.8742 / 2.8157 / 5.8518 | 125644 / 654384 |
+
+GPU lifetime totals: 838,384 upload B, 2,889,656 readback B,
+15,933 submissions and 10383.1286 summed wait ms across setup,
+prediction, correction and replay. Each process retains 131,072 command-record
+and 36,864 event-record payload bytes; these exclude headers, packet slabs and
+other managed/native/device storage. Only GPU children map lavapipe; all CPU
+children exercise explicit GPU-startup denial. Named solver threads occur only
+in separate profiles, with instrumented CPU intervals verified on that lane.
+
+This refreshes the scripted workload rather than adding networking features.
+Arbitrary/dense coupled graphs, NativeAOT network execution, foreign platforms,
+native allocator totals, target GPU advantage and real-window FPS remain open.
+No window or physical GPU was used. Evidence:
+bin/physics-network-current/2026-10-15/validation.json and its frozen manifests,
+reports and logs.

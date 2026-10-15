@@ -1329,3 +1329,20 @@ The current joint profile exercises initial raw RigidLinear lock delivery and a 
 The portable-contact slide-history failure recorded by the coupled profile was traced to an outdated consumer setup: it called MoveAndSlide outside a physical frame without supplying a process duration. The shared contact fixture and the platform-continuation scenario now explicitly run the process frame used by their external movement calls. Zero duration and phase selection remain unchanged. Current verification and the original failure are retained in bin/physics-character-history/2026-10-15/validation.json.
 
 The generic shader source check was using private built-in glyph programs as public material fixtures. It now uses fixed material HLSL sources, keeps the existing bytecode oracle, and verifies that private built-ins reject without replacing a usable material artifact. Runtime built-in generation/delivery and all 732 glyph composition modules have separate executable checks. Evidence and the original rejection are retained in bin/physics-shader-gates/2026-10-15/validation.json. This restores the shader gate without changing the canvas ABI or proving rendered physics/window performance.
+
+
+## Post-spring network regression, 2026-10-15
+
+The existing impaired ENet workload is reverified after the initial RigidLinear
+attachment and supported-spring sleep/wake fixes. Eight frozen-source 900-tick
+profiles execute 24 real processes: six CPU-authority/software-GPU-client scenarios
+and two CPU-only controls, serial/separate numerical lanes, public and instrumented
+hosts, and both early/late admission boundaries. Positive correction/replay and
+warm samples, zero owner/all-thread measured physical bytes, all three joint
+families, lifecycle/sleep/events and unchanged final state bounds pass. This is
+current regression evidence rather than a new networking capability. Exact
+profiles, timings, traffic, histories and retained failed candidates are in
+[the network component](physics-network-example.md#network-regression-after-spring-sleep-fixes-2026-10-15)
+and bin/physics-network-current/2026-10-15/validation.json. Dense coupled graphs,
+NativeAOT networking, hardware/window performance and the complete inherited
+physical/extension contract remain open.
