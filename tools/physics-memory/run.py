@@ -5,7 +5,25 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import signal
 import subprocess
+
+
+def run_probe(command, *, cwd, env, stdout, stderr, timeout):
+    # A stuck live attachment may leave its fixture suspended; retire the whole owned process group.
+    with subprocess.Popen(command, cwd=cwd, env=env, stdout=stdout, stderr=stderr, start_new_session=True) as child:
+        try:
+            code = child.wait(timeout=timeout)
+        except BaseException:
+            try:
+                os.killpg(child.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            child.wait()
+            raise
+        if code:
+            raise subprocess.CalledProcessError(code, command)
+
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("output", type=Path)
@@ -51,13 +69,13 @@ if args.network:
     if args.threaded:
         command.append("--threaded")
     with (output / "network.log").open("w") as log, (output / "network.err").open("w") as error:
-        subprocess.run(command, cwd=repo, env=env, stdout=log, stderr=error, check=True, timeout=120)
+        run_probe(command, cwd=repo, env=env, stdout=log, stderr=error, timeout=120)
 for backend in [] if args.network else ["cpu", *(["gpu"] if driver else [])]:
     icd = args.icd if backend == "gpu" else output / "missing-icd.json"
     env.update(VK_DRIVER_FILES=str(icd), VK_ICD_FILENAMES=str(icd))
     command = ["dotnet", str(output / "Probe/Probe.dll"), str(output / "Fixture/Fixture.dll"), backend, str(args.bodies), str(args.history)]
     with (output / f"{backend}.json").open("w") as log, (output / f"{backend}.err").open("w") as error:
-        subprocess.run(command, cwd=repo, env=env, stdout=log, stderr=error, check=True, timeout=300)
+        run_probe(command, cwd=repo, env=env, stdout=log, stderr=error, timeout=300)
     report = json.loads((output / f"{backend}.json").read_text())
     print(backend, [(p["Measurement"]["Metadata"]["Phase"], p["Measurement"]["ManagedObjectBytes"]) for p in report["Phases"]], flush=True)
 artifacts = {str(p.relative_to(output)): hashlib.file_digest(p.open("rb"), "sha256").hexdigest()

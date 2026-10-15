@@ -36,6 +36,9 @@ It disposes each attachment before advancing the fixture and terminates its chil
 on failure. This needs the ordinary parent-to-child ptrace permission; it changes
 no system ptrace configuration and writes no process dump. The package lock
 applies only to the probe, never the engine or game consumers.
+The runner gives each probe an owned process group and kills the group on timeout
+or interruption, including a fixture left suspended by a stuck attachment.
+`python3 -B tools/physics-memory/test_run.py` checks this with a nested child.
 
 Each managed object is counted once by its CLR-reported `Size`. The probe cuts
 other owner roots, attributes the world first, then map, packet, and each common
@@ -50,12 +53,21 @@ analysis or total process retained size. Shared empty arrays/comparers go to the
 first owner that reaches them. The fixture has no user callbacks or scene tree;
 do not apply this ownership convention to arbitrary game graphs. Weak targets and
 conditional dependent handles are not traversed. The fixture anchors and RID array,
-static service tables, unreachable/static pool shells after world disposal, native
+static service tables, other static pools after world disposal, native
 heaps, thread stacks, CLR bookkeeping, GPU pipelines, driver heaps and allocator
 padding beyond CLR-reported sizes are outside the managed result. Requested SDL
 device/transfer buffer bytes are reported separately and include private history;
 they do not measure physical VRAM. CoreCLR heap sizes do not establish NativeAOT
 sizes, allocations per step, hardware timing or window FPS.
+
+`CPUWorldPool` separately reads the actual static CPU world-slot array without
+initializing it in the target. It walks idle slots and their strong references,
+counts active slot object shells without traversing their borrowed callbacks,
+and reports per-type bytes. `AdditionalManagedObjectBytes` excludes objects already
+in the selected owner graph; only that additional value can be added to the main
+managed total. Idle slots retaining graph-color or solver-block arrays reject the
+measurement. A GPU-only process can report an uninitialized pool with zero slots.
+This covers one identified static root, not all engine or runtime globals.
 
 Recorded scope and measurements: [retained physics memory](../../docs/components/physics-retained-memory.md).
 

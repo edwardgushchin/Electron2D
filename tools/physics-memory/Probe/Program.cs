@@ -124,6 +124,7 @@ static object Inspect(int pid, string phase, JsonElement metadata)
         ClrMDReportedRuntimeVersion = target.ClrVersions.Single().Version.ToString(),
         CalibrationBytes = calibrationBytes,
         ManagedObjectBytes = seen.Sum(a => checked((long)heap.GetObject(a).Size)),
+        CPUWorldPool = CPUWorldPool(runtime, seen),
         Owners = owners,
         SnapshotCapacity = snapshot.IsNull ? 0 : snapshot.ReadObjectField("_data").AsArray().Length,
         RequestedGPU = requested

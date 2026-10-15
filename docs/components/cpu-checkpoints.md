@@ -42,6 +42,16 @@ window, serialization or runtime-generated copy code is involved.
 
 ### Retired pool payloads
 
+World destruction also clears the reusable graph-block segments and drops the
+source constraint-graph array from its static world slot. Active steps retain
+scratch reuse; a caller-held checkpoint keeps its independent solver copy rather
+than the destroyed world's transient arrays. `ELECTRON2D_TEST_CPU_WORLD_LIFETIME=1`
+creates 32 real contact worlds in four simultaneous slots, with ordinary/separate
+numerical lanes, with/without held histories and injected failed intervals. All 64
+weak array targets must collect after world retirement. The check passes on
+CoreCLR and a focused Linux NativeAOT host. [Static-pool accounting](physics-retained-memory.md#static-cpu-world-pool)
+measures the remaining fixed contexts separately from selected owner graphs.
+
 Retiring a CPU body, shape or joint clears its borrowed user data; bodies release
 their retained names and shapes release manifold delegates. Both explicit child
 removal and body-driven destruction use this lifetime boundary. Solver record

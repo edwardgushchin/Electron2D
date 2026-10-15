@@ -35,6 +35,8 @@ network example history. Arbitrary user handlers and dependent handles need a
 separate ownership audit. CoreCLR sizes establish no NativeAOT size guarantee.
 Requested SDL storage/transfer bytes below are separate reservations, not physical
 VRAM; lavapipe may place them in host memory. No timing or FPS acceptance follows.
+The later [static CPU world-pool measurement](#static-cpu-world-pool) adds one
+identified static root separately; it does not change the historical tables below.
 
 ## Measured managed object bytes
 
@@ -163,8 +165,76 @@ Raw report checksums:
 The complete retained/native/device/history budget remains open. Subsequent
 [scene and network measurements](physics-network-memory.md) cover the controlled
 PhysicsNetwork observer/map/input/event/presentation/transport graph and additional
-local scene checkpoints. Static/global pools and native/driver storage remain open.
+local scene checkpoints. The static CPU world-slot pool is now measured below;
+other static/global roots and native/driver storage remain open.
 Process peaks, larger mixed geometry/CCD/sleep/Area loads, platform/AOT memory,
 full-step timing, real-window FPS and target-hardware GPU benefit remain separate
 acceptance work. Real RTX load remains deferred while its power cable is unverified.
 No applicable API row is promoted by these bounded memory measurements.
+
+## Static CPU world pool
+
+The live owner graph did not expose static-slot references after a world was
+destroyed. A focused regression found two retained source arrays per world:
+reusable color segments still pointed at arena solver blocks, and the slot still
+held its source graph-color array. World reset now clears both references. The
+test creates four simultaneous 32-body contact worlds for each combination of
+ordinary/separate numerical lanes, with/without held independent checkpoints,
+and normal/injected-failed intervals. The old candidate retains all 64 weak array
+targets across 32 worlds; the fixed CoreCLR and focused Linux NativeAOT candidates
+retain zero. Active steps still reuse the same block storage. This is a lifetime
+regression, not a new public capability or a numerical-tolerance change.
+
+The probe now reads the actual `B2Worlds.b2_worlds` static field without running
+target code or initializing that field. It traverses the array and idle slots,
+cuts active slots before their callbacks can borrow game objects, then counts
+only each active slot's object shell. Shared bytes already in the selected owner
+union are reported separately. Add only `AdditionalManagedObjectBytes` to that
+union; the two unadjusted totals overlap. Idle slots retaining solver-block or
+graph-color arrays reject the observation. This is one static-root audit, not
+complete global ownership, dominator retention, native memory or RSS.
+
+On the fixed Linux x64/CoreCLR candidate, both the 64-body/one-checkpoint CPU
+profile and the 1024-body/four-checkpoint CPU profile leave the same fully idle
+pool: **8,961 objects, 631,832 bytes, 128 slots, zero active slots**.
+
+| Remaining static storage | Objects | Object bytes |
+| --- | ---: | ---: |
+| worker contexts | 8,192 | 327,680 |
+| world shells | 128 | 117,760 |
+| worker reference arrays | 128 | 68,608 |
+| cleared color-segment arrays | 128 | 52,224 |
+| reset step contexts | 128 | 50,176 |
+| contact-end event descriptor arrays | 128 | 7,168 |
+| sensor-end event descriptor arrays | 128 | 7,168 |
+| world reference array | 1 | 1,048 |
+
+With one live CPU world the reported pool is 627,824 bytes, including its
+920-byte shell already counted in the owner graph; the additional amount is
+626,904 bytes. After world release the held 1024-body map/packet/history graph
+is 436,688 bytes, so that graph plus this static pool is 1,068,520 bytes. This
+combined subtotal still excludes all other global and native/process storage.
+The independent GPU-only 1024-body process never initializes this CPU pool and
+reports zero slots/bytes.
+
+Raw evidence is under `bin/physics-static-memory/2026-10-15/`: `red.log`,
+`managed-cpu_world_lifetime.log`, `aot-world.log`, and `accepted-1024/`.
+The source-native engine SHA-256 for the managed raw/network fixtures is
+`f338f62e25da376de1dbaf8c12d03d174405c96a59a1f4c9d8a51f2809bdb2c8`.
+`network-cpu/` and `network-gpu/` repeat the full 900-tick, late-310 three-process
+checks with separate numerical scheduling selected, with 24 calibrated heap
+observations.
+All five CPU children leave that same fully idle pool; the GPU child never
+initializes it. Existing gameplay, correction and zero warmed allocation gates
+remain active. These public-API memory hosts do not enable internal backend
+telemetry, so their reports do not verify numerical thread identity or device
+transfer timing. Their pauses are not speed measurements.
+
+One 64-body software-GPU probe stalled with its fixture in a ptrace stop and
+timed out; it is not an accepted GPU result. A fresh `retry-64/` cohort completes
+both CPU/GPU profiles on the same assemblies. The runner now starts each probe in
+an owned process group and kills that group on timeout/interruption. A nested-child
+timeout check verifies cleanup. The successful 1024-body and network profiles do
+not prove general live-attachment reliability. Native/driver heaps, other globals,
+whole-process peaks, NativeAOT sizes, wider workloads and final hardware/window
+acceptance remain open.

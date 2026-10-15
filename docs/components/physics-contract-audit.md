@@ -1450,3 +1450,13 @@ capture/transport/apply/replay allocation gate. This adds no runtime declaration
 packet format or coverage-state promotion. Arbitrary rotating features, wider
 geometry/extension/inherited behavior and final memory/platform/hardware/FPS
 acceptance remain open.
+
+## Static CPU world retirement, 2026-10-15
+
+CPU world reset now clears graph-block segments and source graph-color roots.
+The reproducer retained 64 source arrays after 32 destroyed real contact worlds;
+after the fix all collect on CoreCLR and focused Linux NativeAOT, across both
+numerical lanes, held histories and injected failed steps. [Static-pool accounting](physics-retained-memory.md#static-cpu-world-pool)
+adds the fixed idle world/context/worker shells to the existing controlled graph
+measurements without double counting active owners. Full global/native/driver,
+platform memory, hardware advantage and real-window/FPS acceptance remain open.

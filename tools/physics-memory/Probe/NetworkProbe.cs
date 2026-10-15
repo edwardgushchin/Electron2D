@@ -83,7 +83,7 @@ internal static class NetworkProbe
                 o.Type?.Name == prefix + "NetworkWorld" || o.Type?.Name == prefix + "NetworkSession").ToArray();
             if (remaining.Length != 0)
                 throw new InvalidDataException("Released scene/network owners still exist: " + string.Join(", ", remaining.GroupBy(o => o.Type!.Name).Select(g => g.Key + "=" + g.Count())));
-            return new { CalibrationBytes = calibrationBytes, ManagedObjectBytes = 0, RemainingOwners = remaining.Length, Owners = Array.Empty<object>() };
+            return new { CalibrationBytes = calibrationBytes, ManagedObjectBytes = 0, RemainingOwners = remaining.Length, Owners = Array.Empty<object>(), CPUWorldPool = CPUWorldPool(runtime, []) };
         }
         var session = sessions.Single(); var simulation = session.ReadObjectField("Simulation");
         var tree = simulation.ReadObjectField("Tree");
@@ -139,6 +139,7 @@ internal static class NetworkProbe
         {
             CalibrationBytes = calibrationBytes,
             ManagedObjectBytes = full.Sum(o => checked((long)o.Size)),
+            CPUWorldPool = CPUWorldPool(runtime, reachable),
             Owners = owners,
             Nodes = nodes.Count,
             PhysicsSpaces = spaces.Length,

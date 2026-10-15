@@ -1283,3 +1283,10 @@ authoritative contact/sleep restoration are required alongside the earlier
 network/lifecycle/event assertions. Runtime declarations and portable format are
 unchanged; wider inherited/extension, dense-world, native memory, foreign and
 hardware/window/performance acceptance remain open.
+
+CPU world retirement now drops static-slot graph segments and source contact-graph
+arrays after normal or failed intervals, including source destruction with held
+independent checkpoints. [The lifetime and pool budget](../components/physics-retained-memory.md#static-cpu-world-pool)
+records CoreCLR/focused NativeAOT checks and separates fixed idle-slot storage from
+live world/history graphs. Other global/native/driver and full process budgets
+remain open.

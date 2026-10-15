@@ -55,6 +55,14 @@ checks the real late-client regression rather than a capacity-field assertion.
 
 ## Ownership and verification
 
+Native world destruction clears graph-block segment references and drops its
+source graph-color array from the reusable static slot. Fixed step/worker shells
+remain allocated; active-world scratch reuse is unchanged. The [world lifetime
+regression](../components/cpu-checkpoints.md#retired-pool-payloads) checks actual
+contact worlds after normal and failed intervals, including source destruction
+while independent checkpoints are still held. The [retained memory report](../components/physics-retained-memory.md#static-cpu-world-pool)
+accounts for the idle static pool without adding active world state twice.
+
 The space owner thread controls lifecycle and stepping. [PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs) checks fresh implementations, distinct physical stores, unchanged requested/actual diagnostics, real published motion, independent ticks, warmed full-step allocation, native lifetime, injected worker-cleanup failure and a no-device child process. It also checks all six direct-space operations, access/lifetime/failure guards and 64 warmed hit/miss query cycles at zero owner/all-thread allocation. Existing common physics, checkpoint and network checks remain separate acceptance evidence.
 
 ## Limits and decisions

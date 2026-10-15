@@ -24,6 +24,10 @@ Retired solver records now release their borrowed metadata and manifold delegate
 event buffers and checkpoint copies release superseded payload references. Class
 record shells remain reusable. The [pool lifetime checks](cpu-checkpoints.md#retired-pool-payloads)
 cover engine collider collection as well as the private kernel boundary.
+Whole-world retirement clears graph-block segments and source graph-color arrays
+from static slots, including failed intervals and still-held checkpoint copies.
+[World lifetime and static memory](physics-retained-memory.md#static-cpu-world-pool)
+record the CoreCLR/NativeAOT regression and the remaining fixed pool footprint.
 
 CPUPhysicsWorldBackend now retains its concrete collider attachments by the shared
 collider identity. Body/shape handles stay in that owner and the concrete CPU

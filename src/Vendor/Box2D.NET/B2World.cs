@@ -189,6 +189,8 @@ namespace Box2D.NET
         public void Clear()
         {
             reusableStepContext.Reset();
+            System.Array.Clear(reusableGraphColorBlocks);
+            constraintGraph = default;
             integrateBodyStage = null;
             solveConstraints = null;
             finalizeBodyStates = null;

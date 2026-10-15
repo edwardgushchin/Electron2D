@@ -158,7 +158,12 @@ to its recorded candidate. Current development-tool refactoring shares calibrati
 and traversal; it does not change that engine implementation or rewrite old reports.
 The historical 16-slot network command budget is distinguished from today's 32 slots.
 
-Next work remains static/global vendor pools and native/driver allocations, complete
+The subsequent [static CPU world-pool audit](physics-retained-memory.md#static-cpu-world-pool)
+repeats CPU/GPU cohorts with separate scheduling selected and 24 observations on the fixed retirement
+candidate and measures the idle pool independently. The historical tables and
+assembly hashes above retain their own candidate scope.
+
+Next work remains other static/global roots and native/driver allocations, complete
 process peaks and transport high-water traffic. NativeAOT sizes, wider workloads,
 foreign platforms, full physics/API acceptance, hardware GPU advantage and real
 window FPS remain open. Collection pauses perturb elapsed session time, so this
