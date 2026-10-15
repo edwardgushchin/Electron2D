@@ -2,6 +2,9 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text.Json;
 using Microsoft.Diagnostics.Runtime;
+using static HeapGraph;
+
+if (args.Length > 0 && args[0] == "--network") { await NetworkProbe.Run(args[1..]); return; }
 
 if (args.Length != 4) throw new ArgumentException("Expected Fixture.dll, cpu|gpu, body count, checkpoint count.");
 var fixture = Path.GetFullPath(args[0]);
@@ -59,13 +62,7 @@ static object Inspect(int pid, string phase, JsonElement metadata)
     if (!heap.CanWalkHeap) throw new InvalidOperationException("Heap is not walkable.");
     var all = heap.EnumerateObjects().Where(o => o.IsValid && !o.IsFree).ToArray();
     var anchors = all.Single(o => o.Type?.Name == "MemoryRoots");
-    var calibration = anchors.ReadObjectField("Calibration");
-    var left = calibration.ReadObjectField("Left");
-    var weak = calibration.ReadObjectField("Weak");
-    var check = Walk(calibration, []);
-    if (left.Address != calibration.ReadObjectField("Right").Address || check.Count != 3 ||
-        check.Sum(o => checked((long)o.Size)) != checked((long)(calibration.Size + left.Size + weak.Size)))
-        throw new InvalidDataException("Heap calibration failed: shared array or weak-target ownership.");
+    var calibrationBytes = Calibrate(anchors.ReadObjectField("Calibration"));
 
     var spaces = all.Where(o => o.Type?.Name == "Electron2D.PhysicsSpace").ToArray();
     if (spaces.Length != (phase == "released-world" ? 0 : 1)) throw new InvalidDataException("Unexpected retained physics spaces.");
@@ -125,7 +122,7 @@ static object Inspect(int pid, string phase, JsonElement metadata)
     {
         Metadata = metadata,
         ClrMDReportedRuntimeVersion = target.ClrVersions.Single().Version.ToString(),
-        CalibrationBytes = check.Sum(o => checked((long)o.Size)),
+        CalibrationBytes = calibrationBytes,
         ManagedObjectBytes = seen.Sum(a => checked((long)heap.GetObject(a).Size)),
         Owners = owners,
         SnapshotCapacity = snapshot.IsNull ? 0 : snapshot.ReadObjectField("_data").AsArray().Length,
@@ -133,17 +130,4 @@ static object Inspect(int pid, string phase, JsonElement metadata)
     };
 
     void Add(string name, ClrObject o) { if (!o.IsNull) roots.Add((name, o)); }
-}
-
-static List<ClrObject> Walk(ClrObject root, HashSet<ulong> boundaries, HashSet<ulong>? seen = null)
-{
-    seen ??= []; var result = new List<ClrObject>(); var pending = new Stack<ClrObject>(); pending.Push(root);
-    while (pending.TryPop(out var o))
-    {
-        if (o.IsNull || boundaries.Contains(o.Address) || !seen.Add(o.Address)) continue;
-        if (!o.IsValid || o.IsFree) throw new InvalidDataException("Invalid object in the owned graph.");
-        result.Add(o);
-        foreach (var next in o.EnumerateReferences(carefully: true, considerDependantHandles: false)) pending.Push(next);
-    }
-    return result;
 }

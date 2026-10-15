@@ -160,9 +160,10 @@ Raw report checksums:
 | accepted-4096-four/cpu.json | `4a38354eb36b0fe8558fb5336f4e93cf8f41396e7b242de74cde667d5a500eb2` |
 | accepted-4096-four/gpu.json | `80496d6a9f4156e36fe470444f8d21fd172692054cd1593607e4df0533604621` |
 
-The complete retained/native/device/history budget remains open. Next owners are
-scene observer histories and the separate-process PhysicsNetwork input/event/
-presentation/transport queues, then static/global pools and native/driver storage.
+The complete retained/native/device/history budget remains open. Subsequent
+[scene and network measurements](physics-network-memory.md) cover the controlled
+PhysicsNetwork observer/map/input/event/presentation/transport graph and additional
+local scene checkpoints. Static/global pools and native/driver storage remain open.
 Process peaks, larger mixed geometry/CCD/sleep/Area loads, platform/AOT memory,
 full-step timing, real-window FPS and target-hardware GPU benefit remain separate
 acceptance work. Real RTX load remains deferred while its power cable is unverified.

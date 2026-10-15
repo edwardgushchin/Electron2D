@@ -58,3 +58,48 @@ they do not measure physical VRAM. CoreCLR heap sizes do not establish NativeAOT
 sizes, allocations per step, hardware timing or window FPS.
 
 Recorded scope and measurements: [retained physics memory](../../docs/components/physics-retained-memory.md).
+
+## Scene and network histories
+
+The same runner can link the unmodified PhysicsNetwork example into a test host:
+
+```bash
+python3 -B tools/physics-memory/run.py bin/physics-network-memory-new --network \
+  --client-backend gpu --icd /absolute/path/to/lavapipe.json --threaded
+```
+
+Use `--client-backend cpu` without an ICD for an entirely GPU-denied cohort;
+omit `--threaded` for the owner numerical lane. This mode uses the existing full
+900-tick check, late admission at 310, all 28 objects, adverse real ENet delivery
+and every existing physical/identity/event/convergence/allocation assertion.
+The driver option still permits only the explicit software device.
+
+The probe launches the check parent and inspects only descendants of that process.
+A test-only partial pauses each of the authority, primary client and late CPU
+client after completion, with four newly captured local scene checkpoints (the
+first restored), after disposal while wrappers are held, and after releasing all
+references. These extra local points measure an additional application choice;
+ordinary PhysicsNetwork uses portable correction plus input replay without them.
+The hooks run after step measurements and are absent from the shipped example.
+Their caller handle array and calibration anchors are excluded from the graph.
+
+Atomic ready/go files coordinate each attachment. The probe counts the union of
+the session and public checkpoint roots, with boundaries for every owned Node,
+world resource, SceneTree, default/session multiplayer, ENet peer, impairment link,
+snapshot/map, input/events/presentation, wire authoring and timing arrays, and
+common/selected checkpoint state. Other owner links are borrowed; each group can
+traverse its own roots. The partition must equal the unrestricted union. The
+known-array/weak calibration runs at each pause. This convention is specific to
+this example's real callbacks and scene, not arbitrary user scripts.
+
+Held disposal requires disposed physics spaces and zero requested GPU buffers.
+Final collection requires no remaining session/world, Nodes, Shapes, SceneTree,
+World, PhysicsSpace, checkpoint/map, selected CPU/GPU owner, SceneMultiplayer,
+ENetMultiplayerPeer or ENetConnection objects. JSON contains per-type byte counts,
+array capacities and requested GPU bytes. Existing process-check reports remain
+under `network/sessions/`, twelve memory observations under `network/`, and
+`environment.json` records assembly hashes. Pauses/collection perturb wall time;
+these observations are not a fresh speed benchmark, traffic-queue high-water
+sample, native ENet/driver heap total, NativeAOT size or window/FPS evidence.
+
+Recorded results: [scene and network memory](../../docs/components/physics-network-memory.md).

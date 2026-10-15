@@ -44,6 +44,11 @@ Consumer-defined transports inherit StreamPeer or PacketPeer and override typed 
 
 ## Authoritative physics consumer
 
+[Managed scene/network storage](../components/physics-network-memory.md) now has
+deduplicated object-size measurements for the actual three-process example and
+additional local scene checkpoints, with held disposal and final collection gates.
+Native ENet/driver heaps, traffic peaks, AOT sizes and hardware performance remain open.
+
 The [PhysicsNetwork example](../components/physics-network-example.md) runs the existing
 SceneMultiplayer/ENet byte API with PhysicsSnapshot and complete game manifests.
 It exercises CPU authority, GPU prediction/replay, later joining, control transfer,

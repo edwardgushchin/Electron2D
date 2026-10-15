@@ -478,6 +478,11 @@ portable authoritative networking rows.
 
 ## Acceptance and continuation
 
+[Scene/network memory](physics-network-memory.md) now measures the controlled
+three-process scene, input/event/presentation/transport and checkpoint graph.
+These CoreCLR object sizes and requested GPU buffers preserve the remaining
+static/native/driver/traffic-peak/AOT/platform and hardware performance gates.
+
 1. Keep the CPU runtime working while extracting vendor ownership from common
    scene/server identities, geometry, body state, joints and queries. Choose the
    smallest connected extraction that preserves real scene and server behavior;

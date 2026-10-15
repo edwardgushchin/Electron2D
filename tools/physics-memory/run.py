@@ -12,7 +12,16 @@ parser.add_argument("output", type=Path)
 parser.add_argument("--icd", type=Path, help="Optional lavapipe ICD; without it only the no-GPU CPU fixture runs")
 parser.add_argument("--bodies", type=int, default=1024)
 parser.add_argument("--history", type=int, default=4)
+parser.add_argument("--network", action="store_true", help="Measure the full three-process network example instead of the raw world")
+parser.add_argument("--client-backend", choices=["cpu", "gpu"], default="gpu", help="Primary network client backend")
+parser.add_argument("--threaded", action="store_true", help="Use the network example's separate numerical thread")
 args = parser.parse_args()
+if args.network and (args.bodies != 1024 or args.history != 4):
+    parser.error("Body/history options apply only to the raw fixture")
+if args.threaded and not args.network:
+    parser.error("Separate-thread selection currently applies to the network fixture")
+if args.network and args.client_backend == "gpu" and not args.icd:
+    parser.error("The GPU network client requires an explicit lavapipe ICD")
 repo = Path(__file__).resolve().parents[2]
 output = args.output.resolve()
 output.mkdir(parents=True, exist_ok=False)
@@ -29,11 +38,21 @@ if args.icd:
     if library.name != "libvulkan_lvp.so" or not library.is_file():
         raise ValueError("GPU memory profiling requires an explicit existing lavapipe library")
     driver = {"icd": str(args.icd), "library": str(library), "sha256": hashlib.file_digest(library.open("rb"), "sha256").hexdigest()}
-for name, extra in [("Probe", []), ("Fixture", ["-p:Electron2DBuildNativeFromSource=true"])]:
+fixture = "NetworkFixture" if args.network else "Fixture"
+for name, extra in [("Probe", []), (fixture, ["-p:Electron2DBuildNativeFromSource=true"])]:
     command = ["dotnet", "build", str(repo / f"tools/physics-memory/{name}/{name}.csproj"), "-c", "Release", "-o", str(output / name), *extra]
     with (output / f"build-{name}.log").open("w") as log:
         subprocess.run(command, cwd=repo, env=env, stdout=log, stderr=subprocess.STDOUT, check=True)
-for backend in ["cpu", *(["gpu"] if driver else [])]:
+if args.network:
+    icd = args.icd if args.client_backend == "gpu" else output / "missing-icd.json"
+    env.update(VK_DRIVER_FILES=str(icd), VK_ICD_FILENAMES=str(icd))
+    command = ["dotnet", str(output / "Probe/Probe.dll"), "--network", str(output / fixture / (fixture + ".dll")), str(output / "network"),
+               "--client-backend", args.client_backend, "--ticks", "900", "--late-join-tick", "310"]
+    if args.threaded:
+        command.append("--threaded")
+    with (output / "network.log").open("w") as log, (output / "network.err").open("w") as error:
+        subprocess.run(command, cwd=repo, env=env, stdout=log, stderr=error, check=True, timeout=120)
+for backend in [] if args.network else ["cpu", *(["gpu"] if driver else [])]:
     icd = args.icd if backend == "gpu" else output / "missing-icd.json"
     env.update(VK_DRIVER_FILES=str(icd), VK_ICD_FILENAMES=str(icd))
     command = ["dotnet", str(output / "Probe/Probe.dll"), str(output / "Fixture/Fixture.dll"), backend, str(args.bodies), str(args.history)]
@@ -41,4 +60,7 @@ for backend in ["cpu", *(["gpu"] if driver else [])]:
         subprocess.run(command, cwd=repo, env=env, stdout=log, stderr=error, check=True, timeout=300)
     report = json.loads((output / f"{backend}.json").read_text())
     print(backend, [(p["Measurement"]["Metadata"]["Phase"], p["Measurement"]["ManagedObjectBytes"]) for p in report["Phases"]], flush=True)
-(output / "environment.json").write_text(json.dumps({"driver": driver, "bodies": args.bodies, "history": args.history}, indent=2) + "\n")
+artifacts = {str(p.relative_to(output)): hashlib.file_digest(p.open("rb"), "sha256").hexdigest()
+             for p in [output / "Probe/Probe.dll", output / fixture / (fixture + ".dll"), output / fixture / "Electron2D.dll"]}
+(output / "environment.json").write_text(json.dumps({"driver": driver, "bodies": args.bodies, "history": args.history,
+    "network": args.network, "clientBackend": args.client_backend, "threaded": args.threaded, "artifacts": artifacts}, indent=2) + "\n")

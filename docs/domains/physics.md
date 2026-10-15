@@ -1,5 +1,10 @@
 # Physics domain
 
+[Scene and network history memory](../components/physics-network-memory.md) now
+partitions the full three-process example's managed scene, replay and transport
+storage, plus four additional local scene checkpoints. Native/static-global/AOT
+memory, traffic peaks and hardware/performance gates remain open.
+
 [Retained world and history measurement](../components/physics-retained-memory.md) now partitions managed object storage for raw CPU/software-GPU worlds, maps, portable payloads and local checkpoints. The fixture also exposed and fixes CPU fixed-joint endpoint capacity at power-of-two populations. Native/driver/static-global/scene-network histories and hardware/performance acceptance remain open.
 
 [CPU pool lifetime](../components/cpu-checkpoints.md#retired-pool-payloads) releases

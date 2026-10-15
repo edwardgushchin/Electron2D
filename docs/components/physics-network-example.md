@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-15
 
+[Retained scene/network memory](physics-network-memory.md) now measures the actual
+three-process example, its managed histories/queues and an additional four-point
+local scene-history choice. Completed and disposed graphs are separate from final
+collection. These CoreCLR object sizes do not close native/driver/AOT or hardware
+performance acceptance.
+
 [PhysicsNetwork](../../examples/PhysicsNetwork/README.md) connects the existing
 `SceneMultiplayer`/`ENetMultiplayerPeer`, `PhysicsSnapshotMap`, `PhysicsSnapshot` and
 world-tick APIs. Its CPU authority and GPU/CPU clients are separate OS processes.
@@ -292,8 +298,10 @@ one impaired loopback run, not an isolated scheduling or GPU comparison.
 | Early CPU client | 0.0899 / 0.1373 / 0.2855 | 0.8510 / 1.4539 / 18.5147 | 141456 / 463700 |
 | Late CPU client | 0.0846 / 0.1253 / 0.1553 | 0.8011 / 1.1100 / 2.7161 | 59192 / 222196 |
 
-Each process retains 131072 command-history bytes and 36864 event-history bytes,
-excluding array headers and the other storage listed above. Cold replay totals
+That recorded sixteen-slot matrix retains 131072 command-history bytes and 36864
+event-history bytes, excluding array headers and other storage. The current
+32-slot scene uses 262144 command bytes; [measured object totals](physics-network-memory.md)
+include headers and the complete controlled scene/network graph. Cold replay totals
 are 11696/5696 bytes on early/late clients, while all measured warm groups remain
 0/0. No window, GPU transfer/wait or native allocator measurement is inferred.
 

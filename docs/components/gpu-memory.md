@@ -82,6 +82,11 @@ not close the broader memory and hardware gates listed above.
 
 ## Remaining memory owners
 
+[Scene/network graph measurements](physics-network-memory.md) extend the raw-world
+budget to the complete example's managed scene, histories and transport capacities,
+including an additional four-point local scene history. Native/driver/static-global
+storage and traffic peaks are still outside the measured partition.
+
 [Retained managed graph measurements](physics-retained-memory.md) now cover controlled raw CPU/software-GPU worlds, common/selected checkpoints, maps and peak portable payloads at 1024/4096 bodies. These fixture partitions do not close the complete total below.
 
 [CPU pool payload retirement](cpu-checkpoints.md#retired-pool-payloads) releases

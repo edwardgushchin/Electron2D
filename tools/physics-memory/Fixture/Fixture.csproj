@@ -8,5 +8,6 @@
     <TieredCompilation>false</TieredCompilation>
   </PropertyGroup>
   <ItemGroup><ProjectReference Include="../../../Electron2D.csproj" /></ItemGroup>
+  <ItemGroup><Compile Include="../Calibration.cs" Link="Calibration.cs" /></ItemGroup>
   <Import Project="../../native-consumer.props" />
 </Project>
