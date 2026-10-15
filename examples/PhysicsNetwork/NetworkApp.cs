@@ -28,6 +28,9 @@ internal static class NetworkApp
                 _ => throw new ArgumentException("Backend must be cpu or gpu.")
             };
             var requireNoGPU = args.Contains("--require-no-gpu");
+            var clientPollDelayMS = int.Parse(Value("--client-poll-delay-ms", "0"));
+            if (clientPollDelayMS is < 0 or > 250) throw new ArgumentException("Client poll delay must be between 0 and 250 milliseconds.");
+            if ((windowed || authority) && clientPollDelayMS != 0) throw new ArgumentException("Slow polling is only available to headless clients.");
             if (requireNoGPU && backend != PhysicsServer.Backend.CPU) throw new ArgumentException("GPU denial verification requires CPU selection.");
             var gpuUnavailable = requireNoGPU && VerifyGPUUnavailable();
             var port = int.Parse(Value("--port", "7777")); var ticks = int.Parse(Value("--ticks", "360"));
@@ -36,7 +39,7 @@ internal static class NetworkApp
             if (lateJoinTick < 90 || lateJoinTick >= ticks) throw new ArgumentException("Late join must be between tick 90 and the final tick.");
             var token = Guid.Parse(Value("--token", "dccdb93a-948e-4dda-b4ec-714c7dd69a91"));
             var reportPath = Value("--report", authority ? "physics-server.json" : "physics-client.json");
-            using var session = new NetworkSession(authority, backend, port, token, ticks, args.Contains("--impaired"));
+            using var session = new NetworkSession(authority, backend, port, token, ticks, args.Contains("--impaired"), args.Contains("--check-progress"));
             if (authority) { Console.WriteLine($"LISTENING {session.Port}"); Console.Out.Flush(); }
             var windowReport = new SessionReport();
             if (windowed) NetworkWindow.Run(session, windowReport, Value("--renderer", "gpu"), Value("--capture", ""));
@@ -48,9 +51,10 @@ internal static class NetworkApp
                 {
                     Console.WriteLine($"LATE_JOIN_READY {session.Simulation.Tick}"); Console.Out.Flush(); announcedLateJoin = true;
                 }
-                Thread.Sleep(1);
+                Thread.Sleep(1 + clientPollDelayMS);
             }
             var report = session.Report(); report.GPUUnavailableVerified = gpuUnavailable;
+            report.ClientPollDelayMS = clientPollDelayMS;
             report.SeparateThread = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DRunOnSeparateThread);
             report.RequestedWindowVSync = windowReport.RequestedWindowVSync; report.WindowVSync = windowReport.WindowVSync; report.WindowMaxFPS = windowReport.WindowMaxFPS;
             report.Renderer = windowReport.Renderer; report.WindowFrames = windowReport.WindowFrames; report.WindowFPS = windowReport.WindowFPS;

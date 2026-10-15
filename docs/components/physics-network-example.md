@@ -1,6 +1,6 @@
 # Authoritative physics network example
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 [Retained scene/network memory](physics-network-memory.md) now measures the actual
 three-process example, its managed histories/queues and an additional four-point
@@ -14,6 +14,73 @@ world-tick APIs. Its CPU authority and GPU/CPU clients are separate OS processes
 All example code uses public Electron2D types; the test-only partial probe supplies
 private GPU transfer counters. No alternative physics solver or private engine API
 is embedded in the consumer.
+
+## Deterministic validation phases and control handoff
+
+The application check explicitly coordinates all impulse phases from tick 240
+in 120-tick intervals. A client records a phase only after its actual physical
+step and invariant checks complete. Ready authenticated peers send bounded phase
+masks over the existing impaired link; duplicate/reordered masks merge by union.
+Zero, out-of-budget and too-far-future claims reject before changing progress.
+Each client also sends one invalid future-mask probe for the protocol guard.
+
+The check authority waits before a required phase until all admitted clients have
+executed it. It also waits for matching numbered input from the current controller,
+generation and epoch. Polling and snapshot delivery continue during waits; physical
+dt remains 1/60 and the scripted impulses retain their original tick numbers.
+Check-only prediction stops at fourteen ticks ahead of confirmed state, retaining
+two live prediction ticks beyond the twelve replay lead ticks within the existing
+sixteen-tick input resend span. Ordinary sessions keep their prior clock/prediction
+policy. Headless clients accept an explicit 0–250 ms poll delay for slow-client
+checks. Coordinated checks allow simulated duration plus 120 seconds; ordinary
+sessions retain simulated duration plus 30 seconds. These paced timings are a
+functional coverage envelope, not a throughput/window-performance result.
+
+A related application-input defect is corrected in every session: after current
+owner/generation/epoch validation, future input replaces an obsolete queued entry
+for the same network ID/tick. Same-incarnation/epoch duplicates remain idempotent
+and conflicting values reject. The command preflight decodes actual wire payloads
+through the receiver and checks duplicates, conflicts, retired-controller and
+retired-incarnation replacement. Process checks additionally require real handoff
+replacements. No physical backend or public engine API changes.
+
+Reports retain completed phase masks, separate wait counts/time and twelve-byte
+progress-payload attempt totals, including invalid probes; transport framing is
+outside these application-byte counters. Failed checks stop owned children, drain
+their logs, then dispose streams, retaining the diagnostic output.
+
+The final Linux x64 source passes nine coordinated three-process profiles:
+five instrumented test-host cases (CPU default, slow threaded CPU, serial GPU,
+threaded GPU during full Release compilation, slow threaded GPU), one standalone
+managed example build with slow serial GPU, and three strict NativeAOT cases
+(CPU default, serial GPU, slow threaded GPU). Defaults use 360/90 ticks; the other
+seven profiles use 600/310. Slow cases delay primary polling by 250 ms. All 27
+participants complete their required phases, contact/impulse/sleep/wake checks,
+28-object final state and original .002 convergence tolerances. Every warmed
+owner/all-thread authority, prediction and replay byte counter is zero with
+positive required samples. The authority replaces 6–23 retired future commands
+per profile. Maximum observed geometry penetration is .36610413, below .65.
+Process maps confirm pinned lavapipe, no physical GPU driver, and no CoreCLR in
+all nine NativeAOT child processes.
+
+The coordinated software-GPU checks take 61–123 seconds in this loaded cohort;
+these durations include deliberate waits. A separate ordinary 250 ms GPU control
+under parallel software-GPU load reaches tick 600 with 104 local steps and no
+warmed sample, correctly failing its positive-sample assertion. Its zero counters
+are not allocation evidence. Three isolated ordinary controls (serial/separate GPU
+and separate CPU, all with 250 ms polling) pass in 13.17–13.37 seconds. Check
+progress and wait counters remain disabled; actual snapshot coalescing, corrections,
+replay, exact confirmed events and 28-object final convergence execute. GPU clients
+complete 173 steps each, including four warmed prediction and 41 replay samples;
+all measured warm byte counters are zero. This smaller sampling envelope does not
+replace the strict phase checks. Ordinary sessions do not gain check pacing or a
+wider deadline. Complete throughput, native/device memory, real-window and
+physical-GPU acceptance remain open. Artifacts, the failed loaded control and rejected implementation candidates:
+`bin/physics-network-phases/2026-10-15/`. Release/source-native and strict AOT
+builds, three format checks, compiled coverage and wiki tests/generation/check
+pass. Six PDB/source sets have no missing or mismatched declared sources. Runtime
+source/API and coverage classifications are unchanged; the default full runtime
+suite was not rerun for this consumer-only change.
 
 ## Compound slots and rotating ray under correction, 2026-10-15
 

@@ -146,6 +146,8 @@ internal sealed partial class NetworkSession
     private void PredictStep()
     {
         if (Simulation.Tick >= (ulong)_ticks || Simulation.Tick - _confirmedTick >= History - 1) return;
+        // Leave two live prediction ticks inside the existing sixteen-tick input resend window.
+        if (_checkProgress && Simulation.Tick >= _confirmedTick + CheckLead) return;
         PreparePredictedInputs(Simulation.Tick + 1, replay: false); MeasureStep(SimulationPhase.Prediction);
     }
     private void PreparePredictedInputs(ulong tick, bool replay)

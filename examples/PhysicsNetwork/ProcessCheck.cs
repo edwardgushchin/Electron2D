@@ -20,6 +20,9 @@ internal static class ProcessCheck
         if (clientBackend is not ("cpu" or "gpu")) throw new ArgumentException("Client backend must be cpu or gpu.");
         if (windowed && clientBackend == "cpu") throw new ArgumentException("The CPU-only process check requires headless clients.");
         var threaded = args.Contains("--threaded");
+        var clientPollDelayMS = int.Parse(Value("--client-poll-delay-ms", "0"));
+        if (clientPollDelayMS is < 0 or > 250) throw new ArgumentException("Client poll delay must be between 0 and 250 milliseconds.");
+        if (windowed && clientPollDelayMS != 0) throw new ArgumentException("Slow poll checks require a headless client.");
         var primary = clientBackend;
         var ticks = int.Parse(Value("--ticks", "360"));
         if (ticks is < 360 or > 1800) throw new ArgumentException("Tick count must be between 360 and 1800.");
@@ -28,6 +31,7 @@ internal static class ProcessCheck
         var renderer = Value("--renderer", "gpu");
         if (renderer is not ("gpu" or "compatibility")) throw new ArgumentException("Renderer must be gpu or compatibility.");
         var output = System.IO.Path.GetFullPath(Value("--output", "bin/physics-network-check")); Directory.CreateDirectory(output);
+        var checkDeadline = TimeSpan.FromSeconds(ticks * NetworkWorld.FixedStep + 120);
         var token = Guid.NewGuid().ToString();
         var children = new List<Process>(); var drains = new List<Task>();
         try
@@ -39,9 +43,9 @@ internal static class ProcessCheck
             var port = int.Parse(ready[10..]); drains.Add(Drain(server, "server", ready, lateJoinReady));
             var clientProcess = Start(primary, port, clientBackend, headless: clientBackend == "cpu");
             children.Add(clientProcess); drains.Add(Drain(clientProcess, primary, ""));
-            await lateJoinReady.Task.WaitAsync(TimeSpan.FromSeconds(30));
+            await lateJoinReady.Task.WaitAsync(checkDeadline);
             var late = Start("late", port, "cpu", headless: true); children.Add(late); drains.Add(Drain(late, "late", ""));
-            foreach (var child in children) await child.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(40));
+            foreach (var child in children) await child.WaitForExitAsync().WaitAsync(checkDeadline);
             await Task.WhenAll(drains);
             foreach (var child in children) if (child.ExitCode != 0) throw new InvalidOperationException("A child process failed; inspect the saved logs.");
             if (windowed)
@@ -51,11 +55,24 @@ internal static class ProcessCheck
                     rendered.RenderedPhysicsPreserved && File.Exists(System.IO.Path.Combine(output, "gpu-window.png")), "Actual networked window renders smoothing/interpolation while preserving portable physics");
             }
             var authority = Read("server"); Check(authority.Role == "server" && authority.Backend == "CPU" && authority.Tick == (ulong)ticks, "CPU server completed all real ticks");
+            Check(authority.CheckProgressReceived > 0 && authority.RejectedCheckProgress >= 2,
+                "The check receives real phase progress and rejects forged future phase masks");
+            Check(authority.CheckInputWaitPolls > 0 && authority.CheckWaitPolls == authority.CheckInputWaitPolls + authority.CheckPhaseWaitPolls && authority.CheckWaitMS > 0,
+                "Check-only pacing waits for actual numbered inputs and accounts separately for missing phases");
+            Check(authority.RetiredCommandReplacements > 0, "New control epochs replace retired future commands without losing the handoff input");
             Check(authority.GPUUnavailableVerified && Read("late").GPUUnavailableVerified && Read(primary).GPUUnavailableVerified == (clientBackend == "cpu"),
                 "All CPU processes exercised actual denied GPU startup before their working network worlds");
             foreach (var name in new[] { "server", primary, "late" })
             {
                 var report = Read(name);
+                uint requiredPhases = 0;
+                for (ulong phase = 240; phase <= (ulong)ticks; phase += 120)
+                    if (phase > report.JoinTick) requiredPhases |= 1u << (int)(phase / 120 - 2);
+                Check(report.CheckProgressEnabled && requiredPhases != 0 && (report.CheckPhases & requiredPhases) == requiredPhases &&
+                    report.ClientPollDelayMS == (name == primary ? clientPollDelayMS : 0),
+                    "Every participant actually solves each required post-admission phase at its original tick");
+                if (name != "server") Check(report.CheckProgressSent > 0 && report.CheckProgressAttemptedBytes == report.CheckProgressSent * 12L,
+                    "Client phase progress uses the existing impaired transport with accounted control bytes");
                 Check(report.SeparateThread == threaded, "Every process uses the requested numerical thread policy");
                 Check(report.CompletedSteps > report.WarmupSteps && report.WarmSteps + report.WarmReplaySteps <= report.CompletedSteps - report.WarmupSteps,
                     "Every process excludes its own physical warmup before measured samples");
@@ -117,12 +134,20 @@ internal static class ProcessCheck
             Console.WriteLine($"PASS: separate CPU authority, {clientBackend.ToUpperInvariant()} prediction, late CPU client, threaded={threaded}, impaired packets, lifecycle, ownership, event confirmation and final convergence."); return 0;
         }
         catch (Exception error) { Console.Error.WriteLine(error); return 1; }
-        finally { foreach (var child in children) { if (!child.HasExited) child.Kill(entireProcessTree: true); child.Dispose(); } }
+        finally
+        {
+            foreach (var child in children) if (!child.HasExited) child.Kill(entireProcessTree: true);
+            try { await Task.WhenAll(drains); }
+            finally { foreach (var child in children) child.Dispose(); }
+        }
         Process Start(string role, int port, string backend, bool headless)
         {
             var command = Environment.ProcessPath!; var info = new ProcessStartInfo(command) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
             if (System.IO.Path.GetFileNameWithoutExtension(command) == "dotnet") info.ArgumentList.Add(Environment.GetCommandLineArgs()[0]);
             info.ArgumentList.Add("--physics-network");
+            info.ArgumentList.Add("--check-progress");
+            if (role == primary)
+                foreach (var argument in new[] { "--client-poll-delay-ms", clientPollDelayMS.ToString() }) info.ArgumentList.Add(argument);
             if (threaded) info.ArgumentList.Add("--threaded");
             if (role == "server") info.ArgumentList.Add("--server");
             foreach (var argument in new[] { "--port", port.ToString(), "--backend", backend, "--ticks", ticks.ToString(), "--late-join-tick", lateJoinTick.ToString(), "--token", token, "--report", System.IO.Path.Combine(output, role + ".json"), "--impaired" }) info.ArgumentList.Add(argument);

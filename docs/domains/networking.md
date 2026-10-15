@@ -1,8 +1,10 @@
 # Networking
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 ## Responsibility and public surface
+
+The [physics example check](../components/physics-network-example.md#deterministic-validation-phases-and-control-handoff) coordinates actual client phase execution and current-epoch input under slow polling. Its ordinary application receiver now replaces retired future input on control/incarnation handoff while preserving same-epoch conflict rejection. This changes no public engine API.
 
 Desktop DTLS oracles now use actual UDP binding readiness and exact byte-stream packet exchange with shared TLS process diagnostics. Native DTLS and ENet cold stage markers narrow target failures without changing protocol assertions, deadlines or warmed allocation intervals. Focused Linux checks passed; the remaining Windows/macOS full-suite failures retain their target gates.
 

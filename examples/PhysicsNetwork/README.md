@@ -18,6 +18,32 @@ must reject strict GPU startup before running CPU physics. Omit `--threaded` for
 owner-thread numerical execution. The default GPU scenario remains required for
 cross-backend verification; a CPU-only pass does not establish that result.
 
+The check coordinates coverage of the scripted impulse phases at ticks 240, 360
+and each later multiple of 120. It waits for actual post-admission client steps
+and current-epoch player input before advancing the authority, while continuing
+packet polling and state delivery. Fixed physical steps and impulse ticks stay
+unchanged. Twelve replay lead ticks plus two live prediction ticks fit inside the
+existing input resend window. Headless clients accept `--client-poll-delay-ms`
+from 0 through 250 to reproduce slow polling. For example:
+
+```sh
+dotnet run --project examples/PhysicsNetwork -c Release -- --check --client-backend cpu --threaded --ticks 600 --late-join-tick 310 --client-poll-delay-ms 250 --output bin/physics-network-slow
+```
+
+Reports include the completed `CheckPhases` mask, separate phase/input wait
+counts, wait milliseconds and attempted progress-message bytes, including the
+deliberately invalid future-mask probes. Progress travels through the existing
+impaired link and duplicate/reordered masks merge idempotently. The coordinated
+check has a bounded deadline of simulated run duration plus 120 seconds, allowing
+slow polling and software execution. Ordinary server/client launches retain their
+wall-clock drive and simulated-duration-plus-30-second deadline. Check timings
+include deliberate authority waits and do not measure game throughput or FPS.
+
+Future input from the current controller/incarnation replaces a queued command
+from a retired control epoch or object generation at the same tick. Conflicting
+commands in the same epoch remain rejected. Failure cleanup preserves child logs
+before closing their streams.
+
 `--ticks` extends the run without changing the lifecycle script; the default remains
 360. `--late-join-tick 310 --ticks 600` reproduces admission after the server's
 measurement threshold. Warm allocation samples require 128 actual completed steps

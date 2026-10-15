@@ -7,14 +7,23 @@ internal sealed partial class NetworkSession : IDisposable
 {
     internal const int History = 256, EventCapacity = 256;
     private const int Lead = 12;
+    private const int CheckLead = Lead + 2;
     private sealed class PeerState(int id, ulong baseline)
     {
         internal readonly int ID = id;
         internal readonly ulong Baseline = baseline;
         internal ulong StateAck, EventAck = baseline;
+        internal uint CheckPhases;
         internal bool Ready;
     }
     private readonly bool _authority;
+    private readonly bool _checkProgress;
+    private bool _sentInvalidCheckProgress;
+    private double _checkWaitStarted = -1;
+    internal uint CheckPhases;
+    internal int CheckWaitPolls, CheckPhaseWaitPolls, CheckInputWaitPolls, CheckProgressSent, CheckProgressReceived, RejectedCheckProgress;
+    internal long CheckProgressAttemptedBytes;
+    internal double CheckWaitMS;
     private readonly Guid _token;
     private readonly int _ticks;
     internal readonly NetworkWorld Simulation;
@@ -46,7 +55,7 @@ internal sealed partial class NetworkSession : IDisposable
     private readonly bool[] _wasSleeping = new bool[NetworkWorld.Capacity];
     private readonly uint[] _sleepGenerations = new uint[NetworkWorld.Capacity];
     internal long StepAllocations, ReplayAllocations, WarmReplayAllocations, WarmStepTotalAllocations, WarmReplayTotalAllocations, ReceivedBytes;
-    internal int AcceptedCommands, AppliedCommands, CoalescedStates, WarmSteps, WarmReplaySteps, InvalidHello, GenerationCommands;
+    internal int AcceptedCommands, AppliedCommands, CoalescedStates, WarmSteps, WarmReplaySteps, InvalidHello, GenerationCommands, RetiredCommandReplacements;
     internal const int WarmupSteps = 128;
     internal int CompletedSteps;
     internal double MaxCorrectionDistance, MaxVisualOffset, StepMS, CorrectionMS;
@@ -54,9 +63,9 @@ internal sealed partial class NetworkSession : IDisposable
     internal int StepSampleCount, CorrectionSampleCount;
     internal int Port => _peer.Host!.GetLocalPort();
     internal bool Done => _done;
-    internal NetworkSession(bool authority, PhysicsServer.Backend backend, int port, Guid token, int ticks, bool impaired)
+    internal NetworkSession(bool authority, PhysicsServer.Backend backend, int port, Guid token, int ticks, bool impaired, bool checkProgress = false)
     {
-        _authority = authority; _token = token; _ticks = ticks;
+        _authority = authority; _token = token; _ticks = ticks; _checkProgress = checkProgress;
         Simulation = new(backend); Simulation.Observed = Observe;
         PrepareBackendProbe();
         _peer.SetBindIP("127.0.0.1");
@@ -85,7 +94,7 @@ internal sealed partial class NetworkSession : IDisposable
     internal void Poll()
     {
         _now = _clock.Elapsed.TotalSeconds;
-        if (_now > _ticks * NetworkWorld.FixedStep + 30) throw new TimeoutException($"Physics network deadline: authority={_authority}, started={_started}, tick={Simulation.Tick}, corrections={Corrections}, malformed={MalformedPackets}, received={ReceivedBytes}, event={_confirmedEvent}, peer={_peer.GetConnectionStatus()}.");
+        if (_now > _ticks * NetworkWorld.FixedStep + (_checkProgress ? 120 : 30)) throw new TimeoutException($"Physics network deadline: authority={_authority}, started={_started}, tick={Simulation.Tick}, corrections={Corrections}, malformed={MalformedPackets}, received={ReceivedBytes}, event={_confirmedEvent}, peer={_peer.GetConnectionStatus()}, phaseWaits={CheckPhaseWaitPolls}, inputWaits={CheckInputWaitPolls}.");
         _network.Poll();
         if (_pendingStateLength > 0)
         {
@@ -98,13 +107,17 @@ internal sealed partial class NetworkSession : IDisposable
         { SendHello(); _nextHello = _now + .1; }
         if (_started && !_finalState && _now >= _nextStep)
         {
-            if (_authority) AuthorityStep(); else PredictStep();
-            _nextStep += NetworkWorld.FixedStep;
-            if (_nextStep < _now - .25) _nextStep = _now;
+            if (!_authority || CheckProgressAllowsStep())
+            {
+                if (_authority) AuthorityStep(); else PredictStep();
+                _nextStep += NetworkWorld.FixedStep;
+                if (_nextStep < _now - .25) _nextStep = _now;
+            }
         }
         if (_started && _now >= _nextSend)
         {
-            if (_authority) BroadcastState(); else SendInputs();
+            if (_authority) BroadcastState();
+            else { SendInputs(); SendCheckProgress(); }
             _nextSend = _now + (_authority ? 4 * NetworkWorld.FixedStep : 2 * NetworkWorld.FixedStep);
         }
         if (_authority && _finalState)
@@ -132,6 +145,7 @@ internal sealed partial class NetworkSession : IDisposable
             {
                 if (kind == 1) ReceiveHello(sender, ref reader);
                 else if (kind == 2) ReceiveInputs(sender, ref reader);
+                else if (kind == 5) ReceiveCheckProgress(sender, ref reader);
                 else RejectedCommands++;
             }
             else
@@ -151,6 +165,60 @@ internal sealed partial class NetworkSession : IDisposable
         catch (InvalidDataException error) { MalformedPackets++; if (MalformedPackets < 3) Console.Error.WriteLine($"Rejected protocol packet ({bytes.Length} bytes): {error}"); }
     }
     private bool _sentInvalidHello;
+    private bool CheckProgressAllowsStep()
+    {
+        if (!_checkProgress) return true;
+        var tick = Simulation.Tick + 1;
+        var waiting = false;
+        if (tick >= 240 && tick % 120 == 0)
+        {
+            var bit = 1u << (int)(tick / 120 - 2);
+            foreach (var peer in _peers)
+                if (peer is { Ready: true } && (peer.CheckPhases & bit) == 0)
+                {
+                    CheckPhaseWaitPolls++; waiting = true; break;
+                }
+        }
+        if (!waiting)
+            foreach (var actor in Simulation.Actors)
+            {
+                if (actor?.Body is not RigidBody || actor.Spec.Owner == 0 || FindPeer(actor.Spec.Owner) is not { Ready: true }) continue;
+                var command = _commands[CommandSlot(tick, actor.Spec.ID)];
+                if (command.Tick != tick || command.ID != actor.Spec.ID || command.Generation != actor.Spec.Generation || command.Epoch != actor.Spec.ControlEpoch)
+                {
+                    CheckInputWaitPolls++; waiting = true; break;
+                }
+            }
+        if (waiting)
+        {
+            if (_checkWaitStarted < 0) _checkWaitStarted = _now;
+            CheckWaitPolls++; return false;
+        }
+        if (_checkWaitStarted >= 0) { CheckWaitMS += (_now - _checkWaitStarted) * 1000; _checkWaitStarted = -1; }
+        return true;
+    }
+    private void SendCheckProgress()
+    {
+        if (!_checkProgress || CheckPhases == 0) return;
+        if (!_sentInvalidCheckProgress)
+        {
+            var invalid = new WireWriter(_send); invalid.Header(5); invalid.U32(uint.MaxValue);
+            _network.SendBytes(_send.AsSpan(0, invalid.Count), 1, TransferMode.Reliable); _sentInvalidCheckProgress = true;
+            CheckProgressSent++; CheckProgressAttemptedBytes += invalid.Count;
+        }
+        var writer = new WireWriter(_send); writer.Header(5); writer.U32(CheckPhases);
+        CheckProgressSent++; CheckProgressAttemptedBytes += writer.Count;
+        _link.Send(1, _send.AsSpan(0, writer.Count), _now);
+    }
+    private void ReceiveCheckProgress(int sender, ref WireReader reader)
+    {
+        var phases = reader.U32(); reader.End(); var peer = FindPeer(sender);
+        var count = (int)(Math.Min((ulong)_ticks, Simulation.Tick + CheckLead) / 120);
+        var allowed = count < 2 ? 0 : (1u << (count - 1)) - 1;
+        if (!_checkProgress || peer is not { Ready: true } || phases == 0 || (phases & ~allowed) != 0)
+        { RejectedCheckProgress++; RejectedCommands++; return; }
+        peer.CheckPhases |= phases; CheckProgressReceived++;
+    }
     private void SendHello()
     {
         var writer = new WireWriter(_send); writer.Header(1); Span<byte> token = stackalloc byte[16]; _token.TryWriteBytes(token);
@@ -240,7 +308,11 @@ internal sealed partial class NetworkSession : IDisposable
             { RejectedCommands++; continue; }
             var index = CommandSlot(command.Tick, command.ID); var current = _commands[index];
             if (current.Tick == command.Tick && current.ID == command.ID)
-            { if (current != command) RejectedCommands++; continue; }
+            {
+                if (current.Generation == command.Generation && current.Epoch == command.Epoch)
+                { if (current != command) RejectedCommands++; continue; }
+                RetiredCommandReplacements++;
+            }
             _commands[index] = command; AcceptedCommands++;
         }
     }
@@ -261,6 +333,8 @@ internal sealed partial class NetworkSession : IDisposable
         var total = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread(); var started = Stopwatch.GetTimestamp(); Simulation.Step(phase);
         var elapsed = Stopwatch.GetElapsedTime(started).TotalMilliseconds; var allocated = GC.GetAllocatedBytesForCurrentThread() - before; var allAllocated = GC.GetTotalAllocatedBytes(true) - total;
         CompletedSteps++;
+        var tick = Simulation.Tick;
+        if (_checkProgress && tick >= 240 && tick % 120 == 0) CheckPhases |= 1u << (int)(tick / 120 - 2);
         if (phase == SimulationPhase.Replay) { ReplayAllocations += allocated; if (warm) { WarmReplayAllocations += allocated; WarmReplayTotalAllocations += allAllocated; WarmReplaySteps++; } }
         else
         {

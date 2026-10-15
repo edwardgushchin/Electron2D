@@ -22,6 +22,18 @@ internal sealed class SessionReport
     public bool RenderedPhysicsPreserved { get; set; }
     public bool BackendInstrumented { get; set; }
     public bool SeparateThread { get; set; }
+    public int ClientPollDelayMS { get; set; }
+    public int RetiredCommandReplacements { get; set; }
+    public bool CheckProgressEnabled { get; set; }
+    public uint CheckPhases { get; set; }
+    public int CheckWaitPolls { get; set; }
+    public int CheckPhaseWaitPolls { get; set; }
+    public int CheckInputWaitPolls { get; set; }
+    public double CheckWaitMS { get; set; }
+    public int CheckProgressSent { get; set; }
+    public int CheckProgressReceived { get; set; }
+    public int RejectedCheckProgress { get; set; }
+    public long CheckProgressAttemptedBytes { get; set; }
     public int JointSteps { get; set; }
     public int JointKicks { get; set; }
     public float MaxPinError { get; set; }
@@ -140,6 +152,17 @@ internal sealed partial class NetworkSession
         {
             Role = _authority ? "server" : "client",
             Backend = Simulation.World.PhysicsBackend.ToString(),
+            RetiredCommandReplacements = RetiredCommandReplacements,
+            CheckProgressEnabled = _checkProgress,
+            CheckPhases = CheckPhases,
+            CheckWaitPolls = CheckWaitPolls,
+            CheckPhaseWaitPolls = CheckPhaseWaitPolls,
+            CheckInputWaitPolls = CheckInputWaitPolls,
+            CheckWaitMS = CheckWaitMS,
+            CheckProgressSent = CheckProgressSent,
+            CheckProgressReceived = CheckProgressReceived,
+            RejectedCheckProgress = RejectedCheckProgress,
+            CheckProgressAttemptedBytes = CheckProgressAttemptedBytes,
             JointSteps = Simulation.JointSteps,
             JointKicks = Simulation.JointKicks,
             MaxPinError = Simulation.MaxPinError,

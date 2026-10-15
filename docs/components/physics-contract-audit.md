@@ -4,7 +4,7 @@
 
 [Tile owner projections and failure cleanup](tiles.md) now execute through explicit CPU/GPU tests, including object deduplication, shape/RID payloads, canvas and weak lifetime, scene/server motion and callback-failed replacement/retirement. The formerly tile-blocked Area, KinematicCollision, PhysicsTestMotionResult and point-query rows are reconciled against actual production paths. This closes those recorded implementation triggers; full inherited, numerical-extension, network/platform and performance acceptance remain open.
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 [Complete name assignment](scene-hierarchy.md#child-name-collisions) now normalizes
 reserved path characters, propagates unchanged/detached subtree notifications,
@@ -230,21 +230,22 @@ prerequisites remain in the ledger rather than disappearing from this audit.
 
 Fresh source review distinguishes concrete omissions from acceptance limits:
 
-- Slow software-GPU process-check coverage remains timing-dependent under host
-  load. At the name-assignment revision, the mixed 600/310 threaded check run
-  alongside Release compilation reached tick 600 in all three participants at
-  zero warm step/replay managed bytes, but the GPU client completed only 182 local
-  steps: SupportKicks/SupportWakes and GeometryWakes were zero, so the strict
-  shared-graph assertion failed. An otherwise identical isolated run passed with
-  462 local GPU steps, five support kicks/wakes and all geometry wake bits. The
-  source schedules those kicks at exact tick multiples while authority correction
-  can advance past local ticks. These counters and source paths indicate skipped
-  local fixture phases; exact progress needs a deterministic coverage check.
-  Keep this acceptance limit open until slow clients
-  exercise the required phases deterministically, without shifting gameplay
-  impulses or relaxing the physical assertions. Both runs and binary identities
-  are retained in `bin/physics-node-name-assignment/2026-10-15/`; the failing
-  artifacts have the `concurrent-build-failed-` prefix / matching network directory.
+- The former slow-client fixture-phase omission is closed by an explicit
+  [coordinated application check](physics-network-example.md#deterministic-validation-phases-and-control-handoff).
+  Original impulse ticks and physical assertions remain intact; clients report
+  actually solved phases and the authority waits for phase/input coverage. Nine
+  CPU/software-GPU process profiles pass, including the mixed 600/310 threaded
+  case during a full Release compile and 250 ms client polling. A real queued-input
+  handoff defect is also fixed: valid current-epoch/incarnation input replaces a
+  retired future entry. This is bounded functional coverage, not acceptance of
+  ordinary slow-client throughput. An uncoordinated 250 ms GPU run under parallel
+  software-GPU load reaches tick 600 but completes only 104 local steps, below its
+  128-step warmup, so its allocation-sample assertion correctly fails. That
+  loaded/undersampled limit stays open; isolated ordinary controls are recorded
+  separately. The original name-assignment failure remains in
+  `bin/physics-node-name-assignment/2026-10-15/`; current passing and failing
+  controls, exact binary identities and source audits are retained in
+  `bin/physics-network-phases/2026-10-15/`.
 
 - Viewport's On (1) default now agrees in construction and Node property metadata,
   including Window/SubViewport. Shared real-body CPU/GPU and native nested pixels

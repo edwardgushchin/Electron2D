@@ -1,6 +1,6 @@
 # Scene hierarchy component
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 ## Child-name collisions
 
@@ -69,10 +69,13 @@ publicly reassigning that same generated text applies ordinary normalization.
 The measured full frames now include both changed and unchanged clean assignments.
 Current Linux x64 follow-up passes 18 naming profiles, twelve path/orphan
 regressions and four hierarchy/scheduling/resource selectors, plus Release/API/wiki
-and eleven PDB/source sets. An isolated mixed 600/310 process check passes; its
-concurrent-build control misses local GPU wake phases and remains an open
-[network acceptance limit](physics-contract-audit.md#current-requirement-audit).
-Evidence: `bin/physics-node-name-assignment/2026-10-15/`.
+and eleven PDB/source sets. Its isolated mixed 600/310 process check passes;
+the retained concurrent-build control misses local GPU wake phases. A later
+[coordinated network check](physics-network-example.md#deterministic-validation-phases-and-control-handoff)
+now exercises those original phases during Release compilation and under explicit
+slow polling. Ordinary slow-client throughput remains a separate acceptance gate.
+Naming evidence: `bin/physics-node-name-assignment/2026-10-15/`;
+network follow-up: `bin/physics-network-phases/2026-10-15/`.
 
 ## Orphan node diagnostics
 

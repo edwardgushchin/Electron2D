@@ -51,6 +51,7 @@ internal static class ProtocolChecks
         CheckJointContinuations();
         CheckSupportControls();
         CheckGeometryControls();
+        NetworkSession.CheckInputCommands();
     }
     private static void CheckJointContinuations()
     {
@@ -115,4 +116,40 @@ internal static class ProtocolChecks
         throw new InvalidOperationException("Malformed game input was accepted.");
     }
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
+}
+
+internal sealed partial class NetworkSession
+{
+    internal static void CheckInputCommands()
+    {
+        using var session = new NetworkSession(true, PhysicsServer.Backend.CPU, 0, Guid.NewGuid(), 360, false);
+        session._peers[0] = new(2, 0) { Ready = true }; session._peers[1] = new(3, 0) { Ready = true };
+        session.SetOwner(10, 2);
+        var first = new InputCommand(7, 10, 1, session.Simulation.Find(10)!.Spec.ControlEpoch, new(1, false));
+        Feed(2, first); Feed(2, first); Feed(2, first with { Input = new(-1, false) });
+        Check(session.AcceptedCommands == 1 && session.RejectedCommands == 1 && Stored() == first,
+            "Exact duplicates are idempotent and conflicting same-epoch input cannot replace the first command");
+        session.SetOwner(10, 3);
+        var next = first with { Epoch = session.Simulation.Find(10)!.Spec.ControlEpoch, Input = new(-.5f, false) };
+        Feed(2, first); Feed(3, first); Feed(3, next); Feed(3, next);
+        Check(session.AcceptedCommands == 2 && session.RetiredCommandReplacements == 1 && Stored() == next,
+            "A valid new controller replaces retired future input after old-controller and old-epoch packets reject");
+        Feed(3, next with { Input = new(.8f, false) });
+        Check(Stored() == next && session.RejectedCommands == 4, "New-epoch conflicting input also remains immutable");
+        var count = session.Simulation.Describe(session._manifest);
+        for (var i = 0; i < count; i++)
+            if (session._manifest[i].ID == 10) session._manifest[i] = session._manifest[i] with { Generation = 2 };
+        session.Simulation.Reconcile(session._manifest.AsSpan(0, count));
+        Feed(3, next); var incarnation = next with { Generation = 2 }; Feed(3, incarnation);
+        Check(session.AcceptedCommands == 3 && session.RejectedCommands == 5 && session.RetiredCommandReplacements == 2 && Stored() == incarnation,
+            "A new object incarnation replaces retired future input while stale generations reject");
+
+        InputCommand Stored() => session._commands[CommandSlot(7, 10)];
+        void Feed(int sender, InputCommand command)
+        {
+            var writer = new WireWriter(session._send); writer.U64(0); writer.U64(0); writer.I32(1); writer.Input(command);
+            var reader = new WireReader(session._send.AsSpan(0, writer.Count)); session.ReceiveInputs(sender, ref reader);
+        }
+        static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
+    }
 }
