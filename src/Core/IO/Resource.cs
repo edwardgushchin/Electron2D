@@ -25,6 +25,45 @@ public class Resource : ElectronObject
 
     private static readonly object PathCacheGate = new();
     private static readonly Dictionary<string, WeakReference<Resource>> PathCache = new(StringComparer.Ordinal);
+    private static readonly Dictionary<(string Referrer, string Resource), string> PathIDs = new();
+
+    /// <summary>Returns the authoring ID for this resource's current path in a referring file.</summary>
+    /// <param name="path">The exact referring path; no normalization is applied.</param>
+    /// <returns>The cached ID, or an empty string when this path pair has no entry.</returns>
+    /// <remarks>The process-wide cache is shared by resources with the same ResourcePath, including unregistered
+    /// aliases. It retains strings rather than resource instances and is available to format extensions without an editor UI.</remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is null.</exception>
+    /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
+    public string GetIDForPath(string path)
+    {
+        ThrowIfDisposed();
+        ArgumentNullException.ThrowIfNull(path);
+        lock (PathCacheGate)
+        {
+            ThrowIfDisposed();
+            return PathIDs.GetValueOrDefault((path, _resourcePath), string.Empty);
+        }
+    }
+
+    /// <summary>Stores or clears the authoring ID for this resource's current path in a referring file.</summary>
+    /// <param name="path">The exact referring path; empty paths are permitted.</param>
+    /// <param name="id">An opaque ID, or an empty string to remove the entry.</param>
+    /// <remarks>Does not emit Changed, modify ResourceSceneUniqueID or persist the cache. Format extensions own
+    /// saving and restoring their IDs. Changing ResourcePath selects another cache key.</remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> or <paramref name="id"/> is null.</exception>
+    /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
+    public void SetIDForPath(string path, string id)
+    {
+        ThrowIfDisposed();
+        ArgumentNullException.ThrowIfNull(path);
+        ArgumentNullException.ThrowIfNull(id);
+        lock (PathCacheGate)
+        {
+            ThrowIfDisposed();
+            if (id.Length == 0) PathIDs.Remove((path, _resourcePath));
+            else PathIDs[(path, _resourcePath)] = id;
+        }
+    }
 
     internal static Resource? GetRegisteredPath(string path)
     {

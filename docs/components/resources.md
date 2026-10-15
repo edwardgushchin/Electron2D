@@ -1,6 +1,6 @@
 # Resource base component
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 [Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
@@ -26,6 +26,50 @@ Both types are production members of `Electron2D.dll`.
 6. Packed-scene instantiation uses the same graph machinery to duplicate local resource graphs. It assigns the new scene root before setup, invokes setup once per local duplicate, and transfers every created resource to root ownership.
 7. Failure disposes every partial duplicate in reverse order; normal resource disposal unregisters its path, clears local-scene association, and clears subscribers.
 
+## Per-referrer path IDs
+
+`Resource.GetIDForPath(path)` and `SetIDForPath(path, id)` expose the shared
+process authoring cache. Its key is the exact ordinal pair of referring file path
+and the resource's current `ResourcePath`. No normalization is performed; empty
+paths remain keys. Missing entries return empty; an empty ID removes an entry.
+IDs are opaque strings and do not use `ResourceSceneUniqueID` validation.
+
+Raw aliases, path takeover and newly loaded objects at the same path see the same
+entry. Changing a resource path selects another key; clearing/disposal does not
+erase previous keys. The cache retains only strings, which remain until explicitly
+cleared or process exit. It does not retain resources, change ownership, emit
+`Changed`, or participate in resource copying/reset and geometry invalidation.
+Operations serialize with path assignment, so each call samples one current path.
+
+[ADR 0013](../decisions/resources.md#adr-0013) makes this authoring metadata
+available without editor UI under ADR 0090. Custom file formats explicitly persist
+and restore their labels. The cache itself is process-local; built-in archive
+bindings, embedded scene IDs and numeric resource UIDs retain their own contracts.
+This API does not add an editor-mode setting or change the built-in file schema.
+
+The public-only `--resource-path-ids` consumer exercises the base resource, every
+implemented concrete shape, an application Shape, PhysicsMaterial, World and
+PackedScene. It checks exact pairs, raw/registered aliases, takeover, copy/duplicate,
+null/disposed input, concurrent callers and weak resource retirement. A real custom
+ResourceFormatSaver/Loader writes a scene referencing two external shape files,
+keeps byte-identical dependency labels across saves, leaves file/cache unchanged
+on injected encoding failure and restores aliased resources in a fresh process.
+Loaded scenes execute actual motion and exact query identities. Each parent profile
+warms 128 full frames and measures another 128 including ID reads/writes at zero
+owner/all-thread managed bytes; file work is outside this bracket. The default
+resource-base suite also runs the inherited cache checks. Evidence and precise
+platform/build limits: `bin/physics-resource-path-ids/2026-10-16/`.
+
+Twelve Linux x64 profiles pass on the final source: CPU/software-GPU/registered
+selection in both numerical thread policies, under Release CoreCLR and strict
+NativeAOT. All twelve fresh child processes reconstruct and run the physical
+scene; process maps show lavapipe only for GPU cases, no NVIDIA driver and no
+CoreCLR in native executables. The related resource-base, archive and local-scene
+suites pass. Release/API, three format checks and wiki generation/check pass;
+six PDB/source sets have no missing or mismatched declared sources. These are
+bounded file/identity/frame checks; complete native memory, foreign platforms,
+real windows and target-hardware performance remain open.
+
 ## Dependencies
 
 The component depends on Core object lifetime and typed property descriptors plus .NET collections, weak references, locking, and cryptographic random generation. `Resource.GetLocalScene()` introduces one narrow dependency on Scene's [`Node`](../classes/Node.md), while the [Packed scenes](packed-scenes.md) component consumes Resource duplication. ADR 0023 records this intentional in-assembly cycle.
@@ -50,11 +94,11 @@ Base state supports concurrent access, and copy batches on one target serialize 
 
 ## Current implementation status
 
-The typed base operations, deep policies and packed-scene lifecycle execute. The coverage register still keeps full derived stored-state copying, renderer RID families and editor path-ID integration open; passing base/physical consumers does not certify those wider families.
+The typed base operations, deep policies and packed-scene lifecycle execute. The coverage register still keeps full derived stored-state copying and wider renderer RID families open; per-referrer path IDs now execute through their public authoring contract; passing base/physical consumers does not certify those wider families.
 
 ## Exclusions and deferred integration
 
-The component does not expose a public manual reference counter: managed memory remains owned by the runtime, while `IDisposable` performs deterministic logical cleanup. The first synchronous image-texture loader uses this weak path cache; it adds no manager-owned native payload or lease. A future shared-payload asset manager may use internal disposable leases when a concrete ownership transition requires them. Renderer IDs, further concrete payload schemas, imports, automatic reflection-based discovery and editor path IDs remain deferred. Runtime packed scenes implement per-instance local duplication and automatic setup; persistent endpoint storage remains absent; typed archive resource/scene persistence executes through the resource-file component.
+The component does not expose a public manual reference counter: managed memory remains owned by the runtime, while `IDisposable` performs deterministic logical cleanup. The first synchronous image-texture loader uses this weak path cache; it adds no manager-owned native payload or lease. A future shared-payload asset manager may use internal disposable leases when a concrete ownership transition requires them. Renderer IDs, further concrete payload schemas, imports, automatic reflection-based discovery and wider editor/import workflows remain deferred. Runtime packed scenes implement per-instance local duplication and automatic setup; persistent endpoint storage remains absent; typed archive resource/scene persistence executes through the resource-file component.
 
 ## Verification
 

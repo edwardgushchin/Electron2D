@@ -222,13 +222,19 @@ operations remain open in the ledger.
 The complete generated ledger remains the per-declaration list. Current own
 physics families contain 687 Implemented, 150 Partial and 55 Excluded rows,
 with no own Blocked or Unimplemented rows. The 491 shared inherited declarations
-contain 286 Implemented, 118 Partial, 17 Blocked, 47 Unimplemented and 23 Excluded
+contain 288 Implemented, 118 Partial, 17 Blocked, 45 Unimplemented and 23 Excluded
 rows. The 78 selected cross-domain consumer declarations contain 76 Implemented
 and two Partial rows. These are declaration counts, including class and enum rows,
 not a claim that all numerical behaviors pass. The exact inherited names and
 prerequisites remain in the ledger rather than disappearing from this audit.
 
 Fresh source review distinguishes concrete omissions from acceptance limits:
+
+- [Inherited resource path IDs](resources.md#per-referrer-path-ids) now preserve
+  exact referrer/resource-path cache identity across aliases, takeover and reload.
+  A public custom file format retains opaque labels, failed-save boundaries and
+  fresh-process physical reconstruction. The two Resource rows are Implemented;
+  other inherited, numerical, memory and hardware/performance gates remain open.
 
 - The former slow-client fixture-phase omission is closed by an explicit
   [coordinated application check](physics-network-example.md#deterministic-validation-phases-and-control-handoff).

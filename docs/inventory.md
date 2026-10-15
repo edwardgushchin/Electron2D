@@ -1,6 +1,6 @@
 # Engine inventory
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 Private native libraries are owned by the Linux/macOS/Windows native packages in ordinary desktop builds; [native delivery](native-packaging.md) records source production and target verification limits. Windows resolution/full-suite checks are connected with execution pending. No public runtime type or managed backend assembly is added; internal floating-point atomics preserve Engine/audio snapshots on 32-bit hosts.
 
@@ -597,7 +597,7 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 | [Resources](domains/resources.md) | [Curves](components/curves.md) | [`CurveTexture`](classes/CurveTexture.md) | [`CurveTexture.cs`](../src/Scene/Resources/CurveTexture.cs) | Current | Scalar RGB/Red float textures with live borrowed curves |
 | [Resources](domains/resources.md) | [Curves](components/curves.md) | [`CurveXYZTexture`](classes/CurveXYZTexture.md) | [`CurveXYZTexture.cs`](../src/Scene/Resources/CurveXYZTexture.cs) | Current | Three independent scalar channels with deduplicated subscriptions |
 | [Resources](domains/resources.md) | [Curves](components/curves.md) | [`CurveTexture.TextureModeEnum`](classes/CurveTexture.TextureModeEnum.md) | [`CurveTexture.cs`](../src/Scene/Resources/CurveTexture.cs) | Current | RGB and Red channel storage modes |
-| [Resources](domains/resources.md) | [Resource base](components/resources.md) | [`Resource`](classes/Resource.md) | [`Resource.cs`](../src/Core/IO/Resource.cs) | Current | Audited reset/path/cache/content lifecycle, per-edge graph identity, borrowed scenes, stored translation policy, fresh-factory guards and staged archive IDs; broader inherited acceptance remains open |
+| [Resources](domains/resources.md) | [Resource base](components/resources.md) | [`Resource`](classes/Resource.md) | [`Resource.cs`](../src/Core/IO/Resource.cs) | Current | Audited reset/path/cache/content lifecycle, per-edge graph identity, borrowed scenes, stored translation policy, fresh-factory guards, staged archive IDs and shared per-referrer path IDs; broader inherited acceptance remains open |
 | [Resources](domains/resources.md) | [Resource loading](components/resource-loading.md) | [`ResourceLoader`](classes/ResourceLoader.md) | [`ResourceLoader.cs`](../src/Core/IO/ResourceLoader.cs) | Current | Synchronous image-texture file loading and weak cache; broader formats and threaded API incomplete |
 | [Resources](domains/resources.md) | [Resource loading](components/resource-loading.md) | [`ResourceLoader.CacheMode`](classes/ResourceLoader.CacheMode.md) | [`ResourceLoader.cs`](../src/Core/IO/ResourceLoader.cs) | Current | Five numeric cache policies executable for dependency-free image textures |
 | [Resources](domains/resources.md) | [Resource base](components/resources.md) | [`DeepDuplicateMode`](classes/DeepDuplicateMode.md) | [`DeepDuplicateMode.cs`](../src/Core/IO/DeepDuplicateMode.cs) | Current | Exact 0/1/2 edge policies, Script sharing, force/never overrides and invalid-value rejection verified |

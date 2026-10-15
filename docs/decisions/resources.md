@@ -9,7 +9,7 @@ Decisions in this log: [0013](#adr-0013), [0014](#adr-0014), [0039](#adr-0039).
 <a id="adr-0013"></a>
 ## ADR 0013: Managed typed Resource contract
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 ### Status
 
@@ -37,9 +37,13 @@ Ordinary nested Script references are shared in every shallow/deep mode, includi
 
 `CopyFromResource` requires exact runtime types, preserves target identity, resets non-stored state, shallow-copies stored state, and coalesces notifications. It is non-transactional for arbitrary derived state and therefore emits one change even after a failed attempt.
 
-Invalid scene-ID assignments throw without mutation; setters do not silently replace invalid caller input. Saving an internal resource graph stages unique IDs: the first encountered owner keeps a valid authored ID, missing/later duplicate IDs use GenerateSceneUniqueID while reserving all authored IDs. Successful atomic persistence commits these IDs independently of ReplaceSubresourcePaths, which alone changes source paths. Encode/write failure preserves source metadata. After persistence all planned IDs commit before path callbacks; every requested path update is attempted, then callback failures are aggregated without rolling back the committed file. Readers reject duplicate resolved embedded paths, including collisions with legacy numeric fallback IDs. Editor per-path ID mapping remains its separate authoring prerequisite.
+Invalid scene-ID assignments throw without mutation; setters do not silently replace invalid caller input. Saving an internal resource graph stages unique IDs: the first encountered owner keeps a valid authored ID, missing/later duplicate IDs use GenerateSceneUniqueID while reserving all authored IDs. Successful atomic persistence commits these IDs independently of ReplaceSubresourcePaths, which alone changes source paths. Encode/write failure preserves source metadata. After persistence all planned IDs commit before path callbacks; every requested path update is attempted, then callback failures are aggregated without rolling back the committed file. Readers reject duplicate resolved embedded paths, including collisions with legacy numeric fallback IDs.
 
-Renderer RID, further concrete file schemas, editor path-ID mapping and automatic reflection-based discovery remain deferred to their missing domains. The first synchronous image-texture loader and its cache modes follow the profile below. Packed-scene local duplication, root ownership, association and setup automation are implemented under ADR 0023.
+Per-referrer path IDs are separate process-wide authoring metadata keyed by the exact ordinal pair (referrer path, resource ResourcePath), not by object identity or ResourceSceneUniqueID. GetIDForPath returns empty for a missing pair; SetIDForPath stores an opaque nonempty string or removes the pair for empty input. Path changes select a different key, and aliases/reloads with the same resource path observe the same value. The cache retains strings only and does not emit Changed or alter paths, scene IDs, resource ownership or geometry. Custom formats explicitly persist and restore their labels; this cache itself is not serialized or a resource UID registry.
+
+The pinned [path cache implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/io/resource.cpp#L657-L684) limits this cache to tools builds. Electron2D makes the same data operation executable in its single runtime assembly for authoring without editor UI under ADR 0090, just as ResourceSaver/Loader already execute there. It introduces no editor singleton, global editor-mode switch or no-op game-build mirror. Typed format extensions can preserve their external resource labels across saves and fresh-process loads; ordinary scene/archive numeric bindings and embedded IDs retain their existing contracts. This is an explicit authoring-context adaptation of availability, not a new cache identity or path-normalization policy.
+
+Further concrete file schemas and automatic reflection-based discovery retain their owning domain prerequisites; per-path authoring IDs are available independently of editor UI. The first synchronous image-texture loader and its cache modes follow the profile below. Packed-scene local duplication, root ownership, association and setup automation are implemented under ADR 0023.
 
 ### First synchronous resource-loader profile
 

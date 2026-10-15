@@ -1,6 +1,6 @@
 # Resource
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -63,6 +63,8 @@ resource.Changed += _ => Console.WriteLine("Changed");
 
 | Member | Description |
 | --- | --- |
+| [`public string GetIDForPath(string path)`](#m-electron2d-resource-getidforpath-system-string) | Returns this current resource path's cached ID in a referring file. |
+| [`public void SetIDForPath(string path, string id)`](#m-electron2d-resource-setidforpath-system-string-system-string) | Stores an opaque ID or clears that exact path pair. |
 | [`public Node GetLocalScene()`](#m-electron2d-resource-getlocalscene) | Gets the root node whose scene instance owns this scene-local resource. |
 | [`public void CopyFromResource(Resource source)`](#m-electron2d-resource-copyfromresource-electron2d-resource) | Copies stored data from another resource of the exact same runtime type while preserving this resource's path and scene ID.
 
@@ -460,6 +462,38 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 
 Every local duplicate receives the new root through `GetLocalScene()` before setup begins. The current `OnSetupLocalToScene()` hook runs once for each local duplicate. After successful setup, the root adopts every resource created by the session, including explicit force-duplicated resources. `Node.ReplaceBy` transfers those created resources and local-scene associations to the replacement root. Root disposal disposes owned resources after child-node cleanup and clears each resource's local-scene reference through resource disposal. Failed instantiation disposes the partial duplicate graph instead. Shared non-local resources are never owned or disposed by the instance.
 
+## Per-referrer authoring IDs
+
+`GetIDForPath(string path)` reads and `SetIDForPath(string path, string id)`
+updates a process-wide cache keyed by the exact ordinal pair `(path, ResourcePath)`.
+No path normalization occurs. Empty paths are allowed, missing entries return
+empty and an empty ID removes the pair. IDs are opaque non-null strings; they
+are independent of `ResourceSceneUniqueID`, its validation and numeric resource
+UIDs. Null arguments and disposed resources throw before cache mutation.
+
+Aliases/reloads and explicit path takeover share IDs by path rather than object
+identity. Changing a resource path selects another key without moving old IDs.
+Disposal, reset and copying do not erase those keys; entries retain strings only
+until explicitly cleared or process exit. Cache reads/writes serialize with path
+assignment and publish no content event. Format extensions explicitly save and
+restore IDs; the cache itself is not serialized. This authoring operation is
+available without an editor UI under ADR 0013. See the [executable format and
+physics checks](../components/resources.md#per-referrer-path-ids).
+
+<a id="m-electron2d-resource-getidforpath-system-string"></a>
+### `public string GetIDForPath(string path)`
+
+Returns the current resource path's cached ID for the exact referring `path`, or
+empty when absent. The call samples the current `ResourcePath` atomically with
+cache lookup.
+
+<a id="m-electron2d-resource-setidforpath-system-string-system-string"></a>
+### `public void SetIDForPath(string path, string id)`
+
+Stores a nonempty `id`, or removes the current path pair for an empty `id`.
+Neither path ownership nor `ResourceSceneUniqueID` changes. Custom format code
+should publish newly generated labels only after its successful file commit.
+
 ## Path lifecycle and invariants
 
 The process-wide path cache uses ordinal comparison and weak references; it does not keep resources alive. Normal assignment is serialized under a shared lock, so concurrent claims yield one owner. Occupied assignment is transactional. `TakeOverPath` is the explicit destructive transfer. `SetPathCache` is a loader-oriented bypass and therefore its visible value is not ownership proof. Disposal unregisters only when the cache still points to that exact resource.
@@ -483,7 +517,7 @@ The reference inheritance chain is `Resource -> RefCounted -> Object`. Electron2
 | `copy_from`, `duplicate`, `duplicate_deep`, `emit_changed`, `generate_scene_unique_id`, `is_built_in`, `reset_state`, `set_path_cache`, `take_over_path` | Implemented with the typed adaptations documented above; explicit hook delegates replace reflective always/never-duplicate property flags |
 | `_get_rid`, `get_rid` | Typed virtual GetRID executes for base managed resources, physics Shape and rendering Texture; material/shader identities remain incomplete |
 | `get_local_scene` and automatic local-to-scene duplication/setup | Implemented for in-memory `PackedScene`; root association precedes setup and persists until resource disposal |
-| `get_id_for_path`, `set_id_for_path` | Deferred with editor/import serialization because their mapping is tooling-only |
+| `get_id_for_path`, `set_id_for_path` | Implemented as exact path-pair authoring metadata; available without editor UI under ADR 0013 |
 | Synchronous loader cache modes for image textures | Implemented through typed [`ResourceLoader`](ResourceLoader.md) on this weak path registry |
 | General loader/saver formats and serialized stored-property discovery | Deferred until concrete file-format and dependency integrations exist |
 
@@ -499,7 +533,7 @@ Pure managed `Resource` instances are reclaimed by the runtime. `Dispose` perfor
 
 `tests/Electron2D.Tests/Program.cs` verifies defaults, property descriptors, event rules, validation, concurrent ID generation, path conflict/transfer/raw-cache/disposal behavior, concurrent path claims, built-in classification, setup ordering and failure aggregation, every duplication mode, forced and forbidden nested duplication, shallow and typed-container semantics, aliases, cycles, external resources, serialized concurrent copy/reset/coalescing behavior, unsupported and invalid factories, partial-graph rollback, packed-scene local duplication/aliasing/root association/setup/ownership, and access after disposal.
 
-The first synchronous image-texture file loader uses the existing weak path cache; it does not own loaded resources or introduce native-payload leases. The typed archive loader/saver persists registered stored schemas and scene graphs. General import pipeline, further resource payload schemas, renderer material/shader RID ownership, editor path-ID tables and automatic reflection-based discovery remain absent. In-memory packed scenes implement automatic scene-local behavior, but derived resources still implement typed copying explicitly.
+The first synchronous image-texture file loader uses the existing weak path cache; it does not own loaded resources or introduce native-payload leases. The typed archive loader/saver persists registered stored schemas and scene graphs. General import pipeline, further resource payload schemas, renderer material/shader RID ownership, automatic reflection-based discovery and broader editor/import workflows retain their owning prerequisites. In-memory packed scenes implement automatic scene-local behavior, but derived resources still implement typed copying explicitly.
 
 Engine consumers can detect content changes through an internal monotonic revision advanced by EmitChanged before public observers, including inside notification-coalescing batches. This preserves Changed ordering and permits retained controls to recover when an earlier observer throws. It is not a public version or serialization identity. Custom resource authors still report meaningful mutations through EmitChanged.
 
@@ -528,6 +562,6 @@ World targets also apply a copy-specific preflight to the incoming runtime befor
 
 The final active-body cohort also passes strict current-source NativeAOT publication and six native CPU/GPU/registered ordinary/separate profiles. Seven managed profiles cover the same local scenes plus base/packed/replacement/isolated authoring; the existing complete CPU/GPU physical suites pass against the identical retained runtime. Each of twelve local brackets drives two worlds with active rigid integration at 3 units/s and dt 1/60, position-increment tolerance 0.00005 for float accumulation, live queries and borrowed root reads: 128 warm/128 measured intervals remain 0/0 owner/all-thread managed bytes. Four native full-callback/PackedScene profiles also pass at zero warm bytes. GPU uses lavapipe only; separate local profiles observe two real solver threads for the two worlds. Source/runtime/ELF manifests and exact limits are retained in bin/physics-local-scenes/2026-10-14/validation.json.
 
-Graph persistence stages scene-relative IDs for every internal subresource, preserves the first authored owner, avoids every reserved authored ID and repairs missing/later duplicate IDs. Successful writes commit IDs independently of ReplaceSubresourcePaths; that flag changes source paths. Failed encoding or writes preserve IDs and paths. After persistence all IDs commit before path hooks; later paths are attempted even when an earlier callback fails. Readers reject ambiguous embedded paths, including legacy numeric fallback collisions, before constructing resources. Editor per-path ID caches remain separate prerequisites.
+Graph persistence stages scene-relative IDs for every internal subresource, preserves the first authored owner, avoids every reserved authored ID and repairs missing/later duplicate IDs. Successful writes commit IDs independently of ReplaceSubresourcePaths; that flag changes source paths. Failed encoding or writes preserve IDs and paths. After persistence all IDs commit before path hooks; later paths are attempted even when an earlier callback fails. Readers reject ambiguous embedded paths, including legacy numeric fallback collisions, before constructing resources. Per-referrer authoring IDs are available separately through GetIDForPath/SetIDForPath; custom formats own their persistence.
 
 The current resource-identity cohort passes eight managed profiles and six strict NativeAOT profiles, including twelve real fresh-process physical scene consumers with changed local creation order. Repeated saves retain corrected IDs, names and physical aliases; failed writes preserve source metadata, and malformed resolved paths reject before factories/cache replacement. Twelve brackets warm 128 and measure 128 active full frames with queries and ID reads at 0/0 owner/all-thread managed bytes. GPU runs use explicit lavapipe; hardware performance and native allocations remain separate gates. Exact manifests/results are retained in bin/physics-resource-identity/2026-10-14/validation.json.

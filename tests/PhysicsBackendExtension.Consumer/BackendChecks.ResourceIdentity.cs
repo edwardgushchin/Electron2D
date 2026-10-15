@@ -103,17 +103,17 @@ public static partial class BackendChecks
     {
         PhysicsServerManager.RegisterServer("ResourceIdentity", () => new Solver()); return new World("ResourceIdentity");
     }
-    private static void RunIdentityChild(string path, PhysicsServer.Backend? backend, bool threaded)
+    private static void RunIdentityChild(string path, PhysicsServer.Backend? backend, bool threaded, string selector = "--resource-identity-child", string expected = "Fresh resource identity passed")
     {
         var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true };
         if (string.Equals(Path.GetFileNameWithoutExtension(Environment.ProcessPath), "dotnet", StringComparison.OrdinalIgnoreCase))
             start.ArgumentList.Add(Path.Combine(AppContext.BaseDirectory, Assembly.GetEntryAssembly()!.GetName().Name + ".dll"));
         start.ArgumentList.Add(backend?.ToString().ToLowerInvariant() ?? "registered");
         if (threaded) start.ArgumentList.Add("threaded");
-        start.ArgumentList.Add("--resource-identity-child"); start.ArgumentList.Add(path);
+        start.ArgumentList.Add(selector); start.ArgumentList.Add(path);
         using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync();
         if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Fresh resource identity scene."); }
-        Check(child.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh resource identity passed"), error.GetAwaiter().GetResult());
+        Check(child.ExitCode == 0 && output.GetAwaiter().GetResult().Contains(expected), error.GetAwaiter().GetResult());
     }
 
     public static void ReadResourceIdentity(string path, PhysicsServer.Backend? backend, bool threaded)

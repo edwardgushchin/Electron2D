@@ -13084,6 +13084,7 @@ static void VerifySceneTreeFailureSafety()
 
 static void VerifyResources()
 {
+    BackendChecks.VerifyResourcePathIDs();
     using var resource = new Resource();
     Require(!resource.ResourceLocalToScene && resource.ResourceName.Length == 0 &&
             resource.ResourcePath.Length == 0 && resource.ResourceSceneUniqueID.Length == 0 && resource.IsBuiltIn,

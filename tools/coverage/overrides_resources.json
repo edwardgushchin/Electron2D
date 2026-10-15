@@ -1,6 +1,16 @@
 {
   "mappings": [
     {
+      "godot": "Resource::method:get_id_for_path(String:)",
+      "electron2d": "method:Electron2D.Resource.GetIDForPath(System.String)",
+      "reason": "ADR 0013: typed authoring cache lookup by exact referrer and current resource path."
+    },
+    {
+      "godot": "Resource::method:set_id_for_path(String:,String:)",
+      "electron2d": "method:Electron2D.Resource.SetIDForPath(System.String,System.String)",
+      "reason": "ADR 0013: typed opaque ID assignment and empty-ID removal for an exact path pair."
+    },
+    {
       "godot": "ImageFormatLoader::enum:LoaderFlags",
       "electron2d": "T:Electron2D.ImageFormatLoader.LoaderFlags",
       "state": "Implemented",
@@ -517,6 +527,14 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "Resource::method:get_id_for_path(String:)",
+        "Resource::method:set_id_for_path(String:,String:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0013/0090: executable authoring metadata without editor UI; exact ordinal (referrer path, current ResourcePath) process-wide string cache. Missing/empty-ID removal, raw/registered aliases, takeover, path changes, duplication/copy, disposal/null guards, concurrency and weak resource lifetime execute through the public-only consumer. Its custom ResourceFormatSaver/Loader persists stable opaque IDs, rejects an injected failed save before cache/file commitment, reconstructs aliased physical resources in a fresh process, and checks active CPU/software-GPU/registered serial/separate full frames with zero warmed owner/all-thread managed bytes. Embedded scene IDs, resource UIDs and built-in archive bindings remain distinct. Full inherited/foreign/native-memory/hardware-performance acceptance stays open."
+    },
     {
       "godot": [
         "Resource::enum:DeepDuplicateMode"
