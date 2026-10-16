@@ -1,6 +1,6 @@
 # CollisionObject
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 [Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
 keeps sampled public values while rejecting portable capture of retired/reindexed
@@ -265,3 +265,10 @@ controls, character movement and unchanged rigid momentum. The shared CPU/GPU/
 registered profile covers five 128-warmup/128-measured full-frame brackets at zero
 managed allocation. Wider registered contact settings and complete numerical,
 native/network/platform/performance acceptance remain open.
+
+## Immutable one-way slot values
+
+Each scene slot reuses its last immutable OneWayContactData while resolved
+rotation/direction/margin remain equal. Changed values create a new record;
+retained prior values remain unchanged. This leaves deferred scene preparation
+and public owner identity intact. See [shape-edit allocation boundaries](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse).

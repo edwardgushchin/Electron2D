@@ -1590,3 +1590,13 @@ crosses nested viewport boundaries to its containing Window. Manual notification
 callback failures, fresh-process scene load and weak retirement have distinct
 checks. Broader inherited/extension, numerical, native-memory, foreign-platform
 and target-device/window/performance gates remain open.
+
+[Failed raw shape edits](physics-queries.md#failed-raw-shape-edits-and-warmed-reuse)
+now preserve original authoring/history, aggregate restoration errors and retry
+before public geometry queries or simulation. The public-only consumer injects 45
+failures and retains eight rotating geometry families, sensor effects and real
+motion/callback controls. CPU sensor/fixture scratch and GPU sensor lease wrappers
+reuse capacity; unchanged one-way publication is cached while changed immutable
+values retain a separately measured authoring allocation. No open physical
+census row is promoted by this bounded fixture; complete numerical-extension,
+native/driver/foreign and final network/hardware/window acceptance remains open.

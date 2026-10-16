@@ -68,7 +68,9 @@ public abstract class PhysicsBackendCollider
     /// <summary>Supplies the selected implementation operation: rebuild shapes.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.
     /// Nested body/Area shape-slot, filter, shared server-shape data and release writes reject before changing retained authoring,
-    /// including initial attachment before the public space binding is committed.</remarks>
+    /// including initial attachment before the public space binding is committed.
+    /// A failed raw server slot edit invokes this hook again with the previous authoring. If restoration also fails,
+    /// both errors are reported and preparation is retried before a later query or step; support rebuilding after a failed call.</remarks>
     protected internal abstract void RebuildShapes(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce);
     /// <summary>Supplies the selected implementation operation: get pose.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

@@ -1,6 +1,6 @@
 # PhysicsServer
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 **Inherits:** ElectronObject · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs), [PhysicsServer.Resources.cs](../../src/Servers/Physics/PhysicsServer.Resources.cs), [PhysicsServer.Mass.cs](../../src/Servers/Physics/PhysicsServer.Mass.cs)
 
@@ -1123,3 +1123,10 @@ receding/tangent and angular-only velocities do not enlarge recovery depth.
 PhysicsMovingOneWayTests checks raw/scene callers, roles, rotated slots, six finite
 source families and eight 128-warmup/128-measured complete-frame brackets at zero
 managed allocation. Native/platform/hardware/performance acceptance remains open.
+
+### Failed raw shape edits
+
+Attached raw Body/Area shape edits restore prior logical authoring and attempt
+numerical restoration after an error. A failed restoration aggregates both errors
+and leaves preparation pending before the next query/step. Scene slot edits keep
+deferred preparation. See [the complete edit family and verification](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse).

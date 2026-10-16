@@ -1379,3 +1379,14 @@ now gives physical Node roles the same detached/null, nested-window, callback,
 reparent and processing-group query rules. These hierarchy reads preserve the
 selected world and live body identity during measured physical frames; full
 inherited/extension and hardware/native-memory requirements remain open.
+
+## Failed raw shape edits and reusable preparation
+
+[Raw body/Area shape edits](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse)
+now restore prior logical authoring after numerical rebuild failure, preserve both
+apply/restoration errors and retry pending geometry before query/step publication.
+CPU fixture/sensor scratch and GPU sensor query wrappers reuse prepared capacity
+without owning retired Shape resources. Immutable one-way values reuse unchanged
+policy; changed values publish separately from the strict zero-allocation physics
+step. Full numerical-extension, native/foreign, network and hardware/window
+performance acceptance remains open.

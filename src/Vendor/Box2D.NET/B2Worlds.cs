@@ -343,6 +343,13 @@ namespace Box2D.NET
             }
 
             b2Array_Destroy(ref world.sensors);
+            foreach (B2Sensor sensor in world.reusableSensors)
+            {
+                b2Array_Destroy(ref sensor.hits);
+                b2Array_Destroy(ref sensor.overlaps1);
+                b2Array_Destroy(ref sensor.overlaps2);
+            }
+            world.reusableSensors.Clear();
 
             b2Array_Destroy(ref world.bodies);
             b2Array_Destroy(ref world.shapes);

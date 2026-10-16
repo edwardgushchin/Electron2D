@@ -1016,3 +1016,5 @@ The [JSON-RPC document/typed-dispatch slice](../components/jsonrpc.md) closes al
 - PolygonPathFinder closes nine standalone polygon-path rows under ADR 0106 with typed setup/query, private stored geometry/penalties and resource/scene integration. Owning behavior and verification are recorded in [polygon paths](../components/polygon-paths.md).
 
 - TextLine closes 31 retained text-object rows under ADR 0107, with exact typed metadata/inline keys, full and display geometry, native glyph integration and owner/lifetime protections. TextParagraph retains its exact paragraph/sliced-line/dropcap dependency.
+
+[Failed raw shape edits and warmed reuse](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse) now have public-only ordinary, injected-error, resource-lifetime and eight-family rotation evidence. Physical steps retain strict zero owner/all-thread allocation; changed immutable one-way authoring is separately calibrated. Existing coverage states and every open numerical/native/platform/network/performance gate remain unchanged.

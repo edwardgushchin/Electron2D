@@ -1,6 +1,6 @@
 # PhysicsFixtureTag
 
-Last updated: 2026-10-10
+Last updated: 2026-10-16
 
 **Declaration:** `internal sealed record PhysicsFixtureTag`
 
@@ -25,3 +25,12 @@ Owner borrows the shared collider adapter for current object association. Query/
 ## Procedural resource geometry
 
 Runtime geometry decisions now use ShapeGeometry's represented primitive rather than concrete resource classes. Caller-defined Shape resources retain the same full-contour, infinite-boundary, directed-ray and zero-geometric-mass policies. Compound CPU contour metadata borrows any Shape with a large convex payload. Scene/raw geometry construction is preflighted before retiring existing CPU/GPU fixtures, so a failing protected hook leaves preparation retryable. See [procedural shape verification](../components/physics-shapes.md#caller-defined-shape-resources).
+
+## Reuse during shape edits
+
+Tags are private mutable compilation metadata. The owning CPU attachment retires
+all fixtures before repopulating its retained tag list; published public results
+contain sampled values, never these tags. Piece tags keep independent weak source
+references and share only the current compound contour. Reuse refreshes every
+logical, one-way and directed field. [Shape-edit checks](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse)
+cover transformed compound/directed queries and stable Area effects.

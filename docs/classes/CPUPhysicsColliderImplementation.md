@@ -1,6 +1,6 @@
 # CPUPhysicsColliderImplementation
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 **Declaration:** `internal sealed partial class CPUPhysicsColliderImplementation : PhysicsColliderImplementation` · **Source:** [CPUPhysicsColliderImplementation.cs](../../src/Servers/Physics/CPUPhysicsColliderImplementation.cs) · **Component:** [Physics backends](../components/physics-backends.md#runtime-flow-and-ownership)
 
@@ -30,7 +30,7 @@ A failed attachment attempts cleanup and leaves the common facade detached. Reti
 
 ## Limits and decisions
 
-Only internal CPU/GPU implementations are currently constructed. Public backend registration, server/direct-state extension contexts and custom geometry remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103); this type is not a public plugin API. Native allocator, foreign-platform and real-window FPS acceptance remain separate gates.
+Built-in CPU/GPU implementations remain internal. Public registered implementations and typed direct-state/custom-geometry paths execute under [ADR 0103](../decisions/physics-extensions.md#adr-0103), with bounded numerical evidence and complete extension acceptance still open; this concrete type is not a public plugin API. Native allocator, foreign-platform and real-window FPS acceptance remain separate gates.
 
 CPU dynamic attachment creation, sleep enabling and live mode changes now notify the owning CPU world before sleeping capacity can be needed. The conservative world flag persists across replay and retired attachments, avoiding repeated no-sleep population scans without reducing dormant capacity.
 
@@ -50,7 +50,7 @@ Resolved fields and exception invalidation dispatch through the selected collide
 
 ## Value-only integration preparation
 
-[Force and policy inputs](../components/physics-backends.md#value-only-body-integration-inputs) now separate engine-owned authoring/command state from numerical preparation. Default forces use PhysicsBodyForceConfiguration; CPU fields and GPU parameters use PhysicsBodyIntegrationConfiguration. Pending command retirement and GPU dirty flags stay in the binding layer; numerical methods receive finite authored values and return complete field/preparation results. CPU/GPU/no-device, replay, parameter and full operation checks remain the acceptance boundaries; public registration stays open.
+[Force and policy inputs](../components/physics-backends.md#value-only-body-integration-inputs) now separate engine-owned authoring/command state from numerical preparation. Default forces use PhysicsBodyForceConfiguration; CPU fields and GPU parameters use PhysicsBodyIntegrationConfiguration. Pending command retirement and GPU dirty flags stay in the binding layer; numerical methods receive finite authored values and return complete field/preparation results. CPU/GPU/no-device, replay, parameter and full operation checks remain the acceptance boundaries; complete registered numerical acceptance stays open.
 
 [Custom collision geometry](../components/physics-custom-geometry.md) now provides copied canonical data, exact mass/bounds, diagnostic segments and standalone pair callbacks to registered implementations. Built-in compilation rejects unsupported custom geometry before mutation. Portable schema covers the custom authoring payload; detached force preparation resolves exact custom mass while automatic getters retain cached-resolution semantics.
 
@@ -74,3 +74,12 @@ scene units; the shared public consumer now verifies the rotated plane at tangen
 distance 6,000 within .005 units. Numerical integration is unchanged. See
 [boundary verification](../components/physics-registered-adapter.md#registered-boundary-numerics)
 for the zero-allocation, lifecycle, impulse and remaining acceptance limits.
+
+## Reusable shape compilation metadata
+
+Actual geometry changes retire every old fixture before reusing private fixture
+tags. Each tag refreshes logical identity, weak geometry source, one-way policy,
+compound contour pose/piece and directed-ray values. Sensor visitor capacity is
+reused by the owning CPU world and released on world destruction. Neither cache
+owns application Shape resources. [Shared edit verification](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse)
+keeps compound/ray queries and sensor history alongside strict warm allocation checks.

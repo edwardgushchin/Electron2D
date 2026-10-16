@@ -86,6 +86,7 @@ namespace Box2D.NET
 
         // This is a dense array of sensor data.
         public B2Array<B2Sensor> sensors;
+        internal readonly System.Collections.Generic.Stack<B2Sensor> reusableSensors = new();
 
         // Per thread storage
         public B2Array<B2TaskContext> taskContexts;
@@ -240,6 +241,7 @@ namespace Box2D.NET
             chainShapes = new B2Array<B2ChainShape>();
 
             sensors = new B2Array<B2Sensor>();
+            reusableSensors.Clear();
 
             taskContexts = new B2Array<B2TaskContext>();
             sensorTaskContexts = new B2Array<B2SensorTaskContext>();

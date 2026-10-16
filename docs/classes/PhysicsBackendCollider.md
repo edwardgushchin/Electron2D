@@ -1,6 +1,6 @@
 # PhysicsBackendCollider
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 **Declaration:** `public abstract class PhysicsBackendCollider` · **Source:** [PhysicsBackendCollider.cs](../../src/Servers/Physics/PhysicsBackendCollider.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
 
@@ -138,3 +138,11 @@ contact/pin convergence use nineteen complete 128-warmup/128-measured brackets
 at zero managed allocation. Registered contact-cache, arbitrary coupled/custom,
 full inherited/extension/network and native/platform/performance acceptance remain
 open.
+
+## Shape rebuild failure recovery
+
+RebuildShapes may be called again with prior authoring after a failed raw server
+edit. A provider must support rebuilding after its own partial failure. A second
+failure is retained with the first; later preparation retries before query/step
+publication. Scene authoring remains deferred. The public-only failure fixture
+checks 45 injected cases without duplicate sensor effects; see [shared shape edits](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse).

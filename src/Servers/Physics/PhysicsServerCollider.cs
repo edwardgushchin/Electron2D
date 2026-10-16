@@ -10,6 +10,7 @@ internal sealed class PhysicsServerShape(RID rid, Shape geometry, bool ownsGeome
 internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
 {
     private readonly List<ShapeSlot> _slots = [];
+    private ShapeSlot[] _clearBackup = [];
     private readonly PhysicsColliderBackend _backend = new(rid);
     private Transform _transform = Transform.Identity;
     private uint _layer = 1;
@@ -88,10 +89,10 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
         _slots.Add(new(shape, localTransform, disabled));
         if (Space is null) return;
         try { RebuildShapes(); }
-        catch
+        catch (Exception error)
         {
             _slots.RemoveAt(_slots.Count - 1);
-            RebuildShapes();
+            RestoreShapes(error);
             throw;
         }
     }
@@ -119,7 +120,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
         if (!disabled) PhysicsShapeBackend.RequireSupported(Space, previous.Shape.Geometry);
         _slots[index] = previous with { Disabled = disabled };
         try { RebuildShapes(); }
-        catch { _slots[index] = previous; RebuildShapes(); throw; }
+        catch (Exception error) { _slots[index] = previous; RestoreShapes(error); throw; }
     }
 
     private ShapeSlot Slot(int index) => (uint)index < (uint)_slots.Count ? _slots[index] :
@@ -146,13 +147,28 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
         if (!next.Disabled) PhysicsShapeBackend.RequireSupported(Space, next.Shape.Geometry);
         _slots[index] = next;
         try { RebuildShapes(); }
-        catch { _slots[index] = previous; RebuildShapes(); throw; }
+        catch (Exception error) { _slots[index] = previous; RestoreShapes(error); throw; }
     }
 
     internal void ClearShapes()
     {
         if (_slots.Count == 0) return;
-        _slots.Clear(); RebuildShapes();
+        if (Space is null) { _slots.Clear(); return; }
+        var count = _slots.Count;
+        if (_clearBackup.Length < count) Array.Resize(ref _clearBackup, Math.Max(8, count));
+        _slots.CopyTo(_clearBackup);
+        try
+        {
+            _slots.Clear();
+            try { RebuildShapes(); }
+            catch (Exception error)
+            {
+                for (var i = 0; i < count; i++) _slots.Add(_clearBackup[i]);
+                RestoreShapes(error);
+                throw;
+            }
+        }
+        finally { Array.Clear(_clearBackup, 0, count); }
     }
 
     internal void RemoveShapeAt(int index)
@@ -161,7 +177,13 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
         var previous = _slots[index];
         _slots.RemoveAt(index);
         try { RebuildShapes(); }
-        catch { _slots.Insert(index, previous); RebuildShapes(); throw; }
+        catch (Exception error) { _slots.Insert(index, previous); RestoreShapes(error); throw; }
+    }
+
+    private void RestoreShapes(Exception error)
+    {
+        try { RebuildShapes(); }
+        catch (Exception rollback) { throw new AggregateException("Collider shape edit and restoration failed.", error, rollback); }
     }
 
     internal void SetMode(PhysicsServer.BodyMode mode)
@@ -328,6 +350,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     internal void RebuildShapes()
     {
         if (Space is null) return;
+        _shapesDirty = true;
         var runtime = IsArea ? null : PhysicsServer.Service.BodyRuntime(RID);
         _backend.RebuildShapes(_slots, _layer, _mask, IsArea,
             !IsArea && _mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear ? 1 : 0,

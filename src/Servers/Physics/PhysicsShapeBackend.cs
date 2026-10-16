@@ -61,7 +61,7 @@ internal static class PhysicsShapeBackend
     }
 
     internal static void AppendToBody(Shape shape, B2BodyId bodyID, Vector2 localPosition, float localRotation,
-        in B2ShapeDef definition, List<B2ShapeId> fixtures)
+        in B2ShapeDef definition, List<B2ShapeId> fixtures, CPUPhysicsColliderImplementation tags)
     {
         var geometry = shape.GetGeometry();
         var radius = geometry.Radius * PhysicsSpace.MetersPerUnit;
@@ -99,7 +99,7 @@ internal static class PhysicsShapeBackend
                 {
                     var pieceDefinition = definition;
                     if (definition.userData.GetRef<PhysicsFixtureTag>() is { Compound: not null } compoundTag)
-                        pieceDefinition.userData = new B2UserData(compoundTag with { CompoundPiece = i });
+                        pieceDefinition.userData = new B2UserData(tags.PieceTag(compoundTag, i));
                     fixtures.Add(b2CreatePolygonShape(bodyID, pieceDefinition, b2MakeOffsetPolygon(hulls[i], position, rotation)));
                 }
                 break;
@@ -121,7 +121,7 @@ internal static class PhysicsShapeBackend
                 var tag = definition.userData.GetRef<PhysicsFixtureTag>() ??
                     throw new InvalidOperationException("A separation ray requires a tagged collision owner.");
                 var settings = definition;
-                settings.userData = new B2UserData(tag with { SeparationRay = new(from, to, geometry.SlideOnSlope) });
+                settings.userData = new B2UserData(tags.PieceTag(tag, 0, new(from, to, geometry.SlideOnSlope)));
                 settings.density = 0; settings.manifoldOverride = PhysicsSeparationRay.SolverContact;
                 fixtures.Add(CreateSegmentOrPoint(bodyID, settings, from, to));
                 break;

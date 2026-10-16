@@ -1,6 +1,6 @@
 # PhysicsColliderBackend
 
-Last updated: 2026-10-13
+Last updated: 2026-10-16
 
 **Declaration:** `internal sealed partial class PhysicsColliderBackend`
 
@@ -22,7 +22,7 @@ The count owns no collider or world and does not replace world/thread/borrow
 validation while any attachment exists. Scene geometry preflight has a separate
 presence count because it can run before the first attachment.
 
-The retained PhysicsColliderBackend now keeps common RID, weak object/canvas association, priority and attachment generation. PhysicsWorldBackend.CreateCollider creates a fresh PhysicsColliderImplementation for the actual selected solver. CPUPhysicsColliderImplementation owns native body/world references, fixture IDs, exact saved pose and mass/contact-policy scratch; GPUPhysicsColliderImplementation owns resident handles, shape/query leases, authored policy and qualified publication/replay caches. Pose, motion, sleep, locks, forces, mass, shape rebuild/filtering, surface velocity, contacts and portable operations dispatch to that same attachment. A world transfer retires the old implementation while retaining public identity and authored/observable state. Native CPU and resident GPU facets remain exclusively in concrete owners; public registration and complete extension contexts are still open under ADR 0103.
+The retained PhysicsColliderBackend now keeps common RID, weak object/canvas association, priority and attachment generation. PhysicsWorldBackend.CreateCollider creates a fresh PhysicsColliderImplementation for the actual selected solver. CPUPhysicsColliderImplementation owns native body/world references, fixture IDs, exact saved pose and mass/contact-policy scratch; GPUPhysicsColliderImplementation owns resident handles, shape/query leases, authored policy and qualified publication/replay caches. Pose, motion, sleep, locks, forces, mass, shape rebuild/filtering, surface velocity, contacts and portable operations dispatch to that same attachment. A world transfer retires the old implementation while retaining public identity and authored/observable state. Native CPU and resident GPU facets remain exclusively in concrete owners; public registration and typed extension contexts execute under ADR 0103, with complete numerical acceptance still open.
 
 PhysicsBody, Area and PhysicsServerCollider share the retained identity facade. The
 selected world constructs concrete attachment storage; the facade holds no CPU world/body
@@ -188,7 +188,7 @@ Resolved fields and exception invalidation dispatch through the selected collide
 
 ## Value-only integration preparation
 
-[Force and policy inputs](../components/physics-backends.md#value-only-body-integration-inputs) now separate engine-owned authoring/command state from numerical preparation. Default forces use PhysicsBodyForceConfiguration; CPU fields and GPU parameters use PhysicsBodyIntegrationConfiguration. Pending command retirement and GPU dirty flags stay in the binding layer; numerical methods receive finite authored values and return complete field/preparation results. CPU/GPU/no-device, replay, parameter and full operation checks remain the acceptance boundaries; public registration stays open.
+[Force and policy inputs](../components/physics-backends.md#value-only-body-integration-inputs) now separate engine-owned authoring/command state from numerical preparation. Default forces use PhysicsBodyForceConfiguration; CPU fields and GPU parameters use PhysicsBodyIntegrationConfiguration. Pending command retirement and GPU dirty flags stay in the binding layer; numerical methods receive finite authored values and return complete field/preparation results. CPU/GPU/no-device, replay, parameter and full operation checks remain the acceptance boundaries; complete registered numerical acceptance stays open.
 
 
 Object/canvas/priority writes reject a borrowed extension scope before changing retained values. Registered attachments publish current metadata after numerical Attach, before shape preparation; [the metadata protocol](../components/physics-registered-adapter.md#initial-collider-metadata) preserves detached authoring and fresh-world transfer.
@@ -199,3 +199,11 @@ retaining the same full validation and finally cleanup without boxed enumerators
 The scene body likewise records applied shape revisions by index.
 [Changed material/full-frame checks](../components/physics-registered-adapter.md#independent-contact-response)
 verify strict 0/0 owner/all-thread bytes on registered/CPU/GPU paths.
+
+## Immutable one-way input reuse
+
+Raw shape projection caches its latest resolved OneWayContactData by logical slot;
+scene projection uses the scene slot's corresponding cache. Equal values reuse the
+immutable record, changed direction/margin publishes a fresh record, and unused
+raw suffixes clear. Borrowed shape spans still clear every Shape reference after
+the hook. See [shape-edit allocation boundaries](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse).

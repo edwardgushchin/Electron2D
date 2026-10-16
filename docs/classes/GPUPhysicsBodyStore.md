@@ -2,7 +2,7 @@
 
 [Buffer memory observations](../components/gpu-memory.md) are implemented in [GPUPhysicsBodyStore.Memory.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.Memory.cs). They track all requested storage/transfer resources, growth overlap and checkpoint copies through native release, without a simulation mirror or extra GPU work. Complete driver/native and managed memory remains outside this counter.
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 [Portable reconstruction](../components/physics-snapshots.md#temporary-reference-lifetime)
 prepares spatial/sleep inputs for a shapeless world before applying its first
@@ -412,3 +412,11 @@ receding/tangent and angular-only velocities do not enlarge recovery depth.
 PhysicsMovingOneWayTests checks raw/scene callers, roles, rotated slots, six finite
 source families and eight 128-warmup/128-measured complete-frame brackets at zero
 managed allocation. Native/platform/hardware/performance acceptance remains open.
+
+## Collider sensor query reuse
+
+QueryGeometry retains ordinary terminal Dispose/Replace behavior. A separate
+internal RebindColliderSlot path lets its sole collider owner reuse a released
+wrapper, validating owner thread, live source and the same store. Every clear
+releases geometry; empty cached wrappers hold no Shape reference. See [sensor edit
+ownership and checks](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse).

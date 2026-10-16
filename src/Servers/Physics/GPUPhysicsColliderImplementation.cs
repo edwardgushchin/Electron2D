@@ -8,6 +8,7 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
     internal uint GPUMask;
     internal GPUPhysicsBodyStore.BodyHandle GPUHandle { get; private set; }
     internal readonly List<(GPUPhysicsBodyStore.ShapeHandle Handle, int Slot, GPUPhysicsBodyStore.QueryGeometry? Query, Transform Pose)> GPUShapes = [];
+    private GPUPhysicsBodyStore.QueryGeometry?[] _sensorQueries = [];
     internal override int ShapeCount => GPUShapes.Count;
     private GPUPhysicsBodyStore GPU => store;
     private GPUPhysicsBodyStore.Snapshot _gpuState;
@@ -94,6 +95,7 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
     private void ClearGPUShapes()
     {
         foreach (var shape in GPUShapes) { shape.Query?.Dispose(); Space!.UnregisterGPUShape(shape.Handle); GPU!.RemoveShape(shape.Handle); }
+        foreach (var query in _sensorQueries) query?.Dispose();
         GPUShapes.Clear();
     }
     private void AddGPUShape(Shape shape, Transform transform, int index, bool sensor, uint layer, uint mask,
@@ -103,7 +105,14 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
         GPU.SetQueryIdentity(handle, (ulong)Owner.RID.GetID(), index, Owner.CanvasInstanceID, Owner.ObjectIdentity.ID);
         if (oneWay is not null) GPU.SetShapeOneWay(handle, new(true, oneWay.LocalDirection.Rotated(-transform.Rotation), oneWay.Margin));
         Space!.RegisterGPUShape(Owner, handle, index);
-        GPUShapes.Add((handle, index, sensor ? GPU.RetainQueryGeometry(shape) : null, transform)); GPUStateValid = false;
+        GPUPhysicsBodyStore.QueryGeometry? query = null;
+        if (sensor)
+        {
+            if (_sensorQueries.Length <= index) Array.Resize(ref _sensorQueries, Math.Max(8, index + 1));
+            query = _sensorQueries[index] ??= GPU.RetainQueryGeometry(shape);
+            query.RebindColliderSlot(shape);
+        }
+        GPUShapes.Add((handle, index, query, transform)); GPUStateValid = false;
     }
     internal override void RefreshIdentity()
     {

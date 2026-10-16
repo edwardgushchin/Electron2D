@@ -2,7 +2,7 @@
 
 Unrounded convex point containment uses outward fixture half-planes through `ContainsPoint(ref B2Polygon, B2Vec2)`. Native fixed-array references require stable writable storage; rounded polygons keep their distance path. [The shared query regression](../components/physics-point-containment.md) covers points, ray origins, Area audio and directed shape queries.
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 **Declaration:** `internal static class PhysicsShapeBackend`
 
@@ -66,3 +66,9 @@ scene units; the shared public consumer now verifies the rotated plane at tangen
 distance 6,000 within .005 units. Numerical integration is unchanged. See
 [boundary verification](../components/physics-registered-adapter.md#registered-boundary-numerics)
 for the zero-allocation, lifecycle, impulse and remaining acceptance limits.
+
+CPU AppendToBody borrows its owning attachment's reusable metadata allocator for
+compound and directed pieces. It does not allocate replacement record copies on
+every geometry edit. All prior fixtures retire before tags are rewritten; [shape
+edit checks](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse)
+retain exact logical indices and weak resource ownership.

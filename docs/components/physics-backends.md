@@ -1383,3 +1383,13 @@ remain in ignored bin/physics-current-audit/2026-10-16. Native AOT and the full
 default renderer/editor/network runner were not rerun in this slice. Physical GPU,
 complete inherited/extension, native/driver memory, foreign-platform and final
 performance/window acceptance remain open in their owning records.
+
+## Reusable collider geometry preparation
+
+CPU fixture tags/compound metadata and world-local sensor visitor arrays now reuse
+prepared capacity; GPU sensor slots reuse released query wrappers without retaining
+geometry resources. Scene/raw one-way projection caches unchanged immutable values.
+Actual solver ownership, GPU residency and query disposal guarantees remain with
+their existing owners. [Shape-edit recovery and allocation checks](physics-queries.md#failed-raw-shape-edits-and-warmed-reuse)
+cover changed geometry and the real full physics step; native/driver totals and
+hardware performance remain separate acceptance gates.

@@ -193,13 +193,16 @@ namespace Box2D.NET
             if (def.isSensor)
             {
                 shape.sensorIndex = world.sensors.count;
-                B2Sensor sensor = new B2Sensor
+                if (!world.reusableSensors.TryPop(out B2Sensor sensor))
                 {
-                    hits = b2Array_Create<B2Visitor>(4),
-                    overlaps1 = b2Array_Create<B2Visitor>(16),
-                    overlaps2 = b2Array_Create<B2Visitor>(16),
-                    shapeId = shapeId
-                };
+                    sensor = new B2Sensor
+                    {
+                        hits = b2Array_Create<B2Visitor>(4),
+                        overlaps1 = b2Array_Create<B2Visitor>(16),
+                        overlaps2 = b2Array_Create<B2Visitor>(16),
+                    };
+                }
+                sensor.shapeId = shapeId;
                 b2Array_Push(ref world.sensors, sensor);
             }
             else
@@ -357,10 +360,11 @@ namespace Box2D.NET
                     b2Array_Push(ref world.sensorEndEvents[world.endEventArrayIndex], @event);
                 }
 
-                // Destroy sensor
-                b2Array_Destroy(ref sensor.hits);
-                b2Array_Destroy(ref sensor.overlaps1);
-                b2Array_Destroy(ref sensor.overlaps2);
+                b2Array_Clear(ref sensor.hits);
+                b2Array_Clear(ref sensor.overlaps1);
+                b2Array_Clear(ref sensor.overlaps2);
+                sensor.shapeId = B2_NULL_INDEX;
+                world.reusableSensors.Push(sensor);
 
                 int movedIndex = b2Array_RemoveSwap(ref world.sensors, shape.sensorIndex);
                 if (movedIndex != B2_NULL_INDEX)

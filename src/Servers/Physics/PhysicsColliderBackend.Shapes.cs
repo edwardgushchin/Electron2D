@@ -3,16 +3,19 @@ namespace Electron2D;
 internal sealed partial class PhysicsColliderBackend
 {
     private PhysicsColliderShape[] _shapeInputs = [];
+    private OneWayContactData?[] _oneWayInputs = [];
     private bool _rebuildingShapes;
     private void BeginShapeInputs(int count)
     {
         if (_rebuildingShapes) throw new InvalidOperationException("Collider geometry cannot rebuild recursively.");
         if (_shapeInputs.Length < count) Array.Resize(ref _shapeInputs, Math.Max(8, count));
+        if (_oneWayInputs.Length < count) Array.Resize(ref _oneWayInputs, Math.Max(8, count));
         _rebuildingShapes = true;
     }
     private void EndShapeInputs(int count)
     {
         Array.Clear(_shapeInputs, 0, count);
+        Array.Clear(_oneWayInputs, count, _oneWayInputs.Length - count);
         _rebuildingShapes = false;
     }
     internal void RebuildShapes(IReadOnlyList<CollisionObject.ShapeSlot> slots, uint layer, uint mask,
@@ -57,7 +60,7 @@ internal sealed partial class PhysicsColliderBackend
             {
                 var slot = slots[index]; var shape = slot.Shape.Geometry;
                 var oneWay = !sensor && !slot.Disabled && !shape.IsDisposed && slot.OneWay
-                    ? new OneWayContactData(slot.Direction.Rotated(slot.LocalTransform.Rotation), slot.Margin) : null;
+                    ? OneWayContactData.Capture(ref _oneWayInputs[index], slot.Direction.Rotated(slot.LocalTransform.Rotation), slot.Margin) : null;
                 _shapeInputs[index] = new(shape, slot.LocalTransform, index, !slot.Disabled, oneWay);
             }
             Attached.RebuildShapes(_shapeInputs.AsSpan(0, count), layer, mask, sensor, density, friction, bounce);

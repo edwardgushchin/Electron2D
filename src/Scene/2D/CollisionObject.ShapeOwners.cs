@@ -34,8 +34,9 @@ public abstract partial class CollisionObject
         internal int Index = index;
         internal ulong Revision => Shape.IsDisposed ? ulong.MaxValue : Shape.GeometryRevision;
         internal bool Active => !(DisabledOverride ?? Owner.Disabled) && !Shape.IsDisposed;
+        private OneWayContactData? _oneWay;
         internal OneWayContactData? OneWay => (OneWayOverride ?? Owner.OneWay)
-            ? new((OneWayOverride.HasValue ? DirectionOverride : Owner.Direction).Rotated(Transform.Rotation),
+            ? OneWayContactData.Capture(ref _oneWay, (OneWayOverride.HasValue ? DirectionOverride : Owner.Direction).Rotated(Transform.Rotation),
                 OneWayOverride.HasValue ? MarginOverride : Owner.Margin) : null;
     }
 

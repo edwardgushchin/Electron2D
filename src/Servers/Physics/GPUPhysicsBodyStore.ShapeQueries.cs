@@ -30,6 +30,13 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             var next = _store.RetainGeometry(source);
             _store.ReleaseGeometry(_entry); _entry = next;
         }
+        // Only the owning collider cache reuses released wrappers; ordinary leases retain terminal disposal.
+        internal void RebindColliderSlot(Shape source)
+        {
+            _store.EnsureAccess(); ArgumentNullException.ThrowIfNull(source); ObjectDisposedException.ThrowIf(source.IsDisposed, source);
+            if (_entry is null) _entry = _store.RetainGeometry(source);
+            else Replace(source);
+        }
         public void Dispose()
         {
             if (_entry is null) return;

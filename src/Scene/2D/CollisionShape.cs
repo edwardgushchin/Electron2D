@@ -227,4 +227,8 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
 /// <summary>Immutable logical one-way collision policy supplied to a backend shape attachment.</summary>
 /// <param name="LocalDirection">Normalized local passing direction.</param>
 /// <param name="Margin">Finite nonnegative contact margin in scene units.</param>
-public sealed record OneWayContactData(Vector2 LocalDirection, float Margin);
+public sealed record OneWayContactData(Vector2 LocalDirection, float Margin)
+{
+    internal static OneWayContactData Capture(ref OneWayContactData? cached, Vector2 direction, float margin) =>
+        cached is { } value && value.LocalDirection == direction && value.Margin == margin ? value : cached = new(direction, margin);
+}

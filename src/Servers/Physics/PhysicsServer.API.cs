@@ -1017,6 +1017,9 @@ public sealed partial class PhysicsServer
     /// <param name="transform">Finite local pose, or null for identity.</param>
     /// <param name="disabled">Whether this slot initially contributes no fixtures.</param>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
+    /// <remarks>Raw server slot edits restore previous authoring after a failed rebuild and attempt numerical restoration.
+    /// If restoration fails, preparation retries before a later query or step. Scene slots use deferred preparation.</remarks>
+    /// <exception cref="AggregateException">The raw slot rebuild and its restoration both fail; both errors are retained.</exception>
     public static void BodyAddShape(RID body, RID shape, Transform? transform = null, bool disabled = false) => Service.BodyAddShapeCore(body, shape, transform, disabled);
 
     /// <summary>Adds a typed server shape to an Area sensor as one indexed owner slot.</summary>
@@ -1025,6 +1028,9 @@ public sealed partial class PhysicsServer
     /// <param name="transform">Finite local pose, or null for identity.</param>
     /// <param name="disabled">Whether this slot initially contributes no fixtures.</param>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
+    /// <remarks>Raw server slot edits restore previous authoring after a failed rebuild and attempt numerical restoration.
+    /// If restoration fails, preparation retries before a later query or step. Scene slots use deferred preparation.</remarks>
+    /// <exception cref="AggregateException">The raw slot rebuild and its restoration both fail; both errors are retained.</exception>
     public static void AreaAddShape(RID area, RID shape, Transform? transform = null, bool disabled = false) => Service.AreaAddShapeCore(area, shape, transform, disabled);
 
     /// <summary>Gets the number of indexed shape slots on a body, including disabled slots.</summary>
@@ -1042,6 +1048,9 @@ public sealed partial class PhysicsServer
     /// <param name="index">Zero-based shape-owner slot index.</param>
     /// <param name="disabled">Whether the slot contributes no fixtures.</param>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
+    /// <remarks>Raw server slot edits restore previous authoring after a failed rebuild and attempt numerical restoration.
+    /// If restoration fails, preparation retries before a later query or step. Scene slots use deferred preparation.</remarks>
+    /// <exception cref="AggregateException">The raw slot rebuild and its restoration both fail; both errors are retained.</exception>
     public static void BodySetShapeDisabled(RID body, int index, bool disabled) => Service.BodySetShapeDisabledCore(body, index, disabled);
 
     /// <summary>Enables or disables one indexed Area shape slot.</summary>
@@ -1049,18 +1058,27 @@ public sealed partial class PhysicsServer
     /// <param name="index">Zero-based shape-owner slot index.</param>
     /// <param name="disabled">Whether the slot contributes no sensor fixtures.</param>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
+    /// <remarks>Raw server slot edits restore previous authoring after a failed rebuild and attempt numerical restoration.
+    /// If restoration fails, preparation retries before a later query or step. Scene slots use deferred preparation.</remarks>
+    /// <exception cref="AggregateException">The raw slot rebuild and its restoration both fail; both errors are retained.</exception>
     public static void AreaSetShapeDisabled(RID area, int index, bool disabled) => Service.AreaSetShapeDisabledCore(area, index, disabled);
 
     /// <summary>Removes one indexed body shape slot and its fixtures.</summary>
     /// <param name="body">A live scene or server body RID.</param>
     /// <param name="index">Zero-based shape-owner slot index.</param>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
+    /// <remarks>Raw server slot edits restore previous authoring after a failed rebuild and attempt numerical restoration.
+    /// If restoration fails, preparation retries before a later query or step. Scene slots use deferred preparation.</remarks>
+    /// <exception cref="AggregateException">The raw slot rebuild and its restoration both fail; both errors are retained.</exception>
     public static void BodyRemoveShape(RID body, int index) => Service.BodyRemoveShapeCore(body, index);
 
     /// <summary>Removes one indexed Area shape slot and its fixtures.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="index">Zero-based shape-owner slot index.</param>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
+    /// <remarks>Raw server slot edits restore previous authoring after a failed rebuild and attempt numerical restoration.
+    /// If restoration fails, preparation retries before a later query or step. Scene slots use deferred preparation.</remarks>
+    /// <exception cref="AggregateException">The raw slot rebuild and its restoration both fail; both errors are retained.</exception>
     public static void AreaRemoveShape(RID area, int index) => Service.AreaRemoveShapeCore(area, index);
 
     /// <summary>Moves a body into a live space, or detaches it with an empty RID.</summary>
@@ -1289,54 +1307,72 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live scene or server body RID.</param>
     /// <param name="index">Zero-based global logical slot.</param>
     /// <param name="shape">A live owned or borrowed shape RID.</param>
-    /// <remarks>The collider borrows geometry; it does not free either resource. Child node properties are unchanged.</remarks>
+    /// <remarks>The collider borrows geometry; it does not free either resource. Child node properties are unchanged.
+    /// Raw server slot edits restore previous authoring after a failed rebuild and attempt numerical restoration.
+    /// If restoration fails, preparation retries before a later query or step. Scene slots use deferred preparation.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The index is absent.</exception>
     /// <exception cref="ArgumentException">An owner or shape RID is stale or has the wrong kind.</exception>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
+    /// <exception cref="AggregateException">The raw slot rebuild and its restoration both fail; both errors are retained.</exception>
     public static void BodySetShape(RID body, int index, RID shape) => Service.BodySetShapeCore(body, index, shape);
 
     /// <summary>Replaces one Area's slot resource while retaining its index and local policies.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="index">Zero-based global logical slot.</param>
     /// <param name="shape">A live owned or borrowed shape RID.</param>
-    /// <remarks>The collider borrows geometry; it does not free either resource. Child node properties are unchanged.</remarks>
+    /// <remarks>The collider borrows geometry; it does not free either resource. Child node properties are unchanged.
+    /// Raw server slot edits restore previous authoring after a failed rebuild and attempt numerical restoration.
+    /// If restoration fails, preparation retries before a later query or step. Scene slots use deferred preparation.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The index is absent.</exception>
     /// <exception cref="ArgumentException">An owner or shape RID is stale or has the wrong kind.</exception>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
+    /// <exception cref="AggregateException">The raw slot rebuild and its restoration both fail; both errors are retained.</exception>
     public static void AreaSetShape(RID area, int index, RID shape) => Service.AreaSetShapeCore(area, index, shape);
 
     /// <summary>Changes one body slot's local pose without moving the body or other slots.</summary>
     /// <param name="body">A live scene or server body RID.</param>
     /// <param name="index">Zero-based global logical slot.</param>
     /// <param name="transform">Finite translation/rotation with unit scale and zero skew.</param>
-    /// <remarks>A later group or child transform edit replaces its slot overrides.</remarks>
+    /// <remarks>A later group or child transform edit replaces its slot overrides.
+    /// Raw server slot edits restore previous authoring after a failed rebuild and attempt numerical restoration.
+    /// If restoration fails, preparation retries before a later query or step. Scene slots use deferred preparation.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The index is absent.</exception>
     /// <exception cref="ArgumentException">The pose is nonfinite/scaled/skewed or the RID has the wrong kind.</exception>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
+    /// <exception cref="AggregateException">The raw slot rebuild and its restoration both fail; both errors are retained.</exception>
     public static void BodySetShapeTransform(RID body, int index, Transform transform) => Service.BodySetShapeTransformCore(body, index, transform);
 
     /// <summary>Changes one Area slot's local pose without moving the Area or other slots.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="index">Zero-based global logical slot.</param>
     /// <param name="transform">Finite translation/rotation with unit scale and zero skew.</param>
-    /// <remarks>A later group or child transform edit replaces its slot overrides.</remarks>
+    /// <remarks>A later group or child transform edit replaces its slot overrides.
+    /// Raw server slot edits restore previous authoring after a failed rebuild and attempt numerical restoration.
+    /// If restoration fails, preparation retries before a later query or step. Scene slots use deferred preparation.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The index is absent.</exception>
     /// <exception cref="ArgumentException">The pose is nonfinite/scaled/skewed or the RID has the wrong kind.</exception>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
+    /// <exception cref="AggregateException">The raw slot rebuild and its restoration both fail; both errors are retained.</exception>
     public static void AreaSetShapeTransform(RID area, int index, Transform transform) => Service.AreaSetShapeTransformCore(area, index, transform);
 
     /// <summary>Removes all body slots and fixtures without freeing their shape resources.</summary>
     /// <param name="body">A live scene or server body RID.</param>
-    /// <remarks>Scene owner identities and child nodes remain; a later child resource edit can rebuild its group.</remarks>
+    /// <remarks>Scene owner identities and child nodes remain; a later child resource edit can rebuild its group.
+    /// Raw server slot edits restore previous authoring after a failed rebuild and attempt numerical restoration.
+    /// If restoration fails, preparation retries before a later query or step. Scene slots use deferred preparation.</remarks>
     /// <exception cref="ArgumentException">The owner RID is stale or not a body.</exception>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
+    /// <exception cref="AggregateException">The raw slot rebuild and its restoration both fail; both errors are retained.</exception>
     public static void BodyClearShapes(RID body) => Service.BodyClearShapesCore(body);
 
     /// <summary>Removes all Area slots and sensor fixtures without freeing their shape resources.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
-    /// <remarks>Scene owner identities and child nodes remain; a later child resource edit can rebuild its group.</remarks>
+    /// <remarks>Scene owner identities and child nodes remain; a later child resource edit can rebuild its group.
+    /// Raw server slot edits restore previous authoring after a failed rebuild and attempt numerical restoration.
+    /// If restoration fails, preparation retries before a later query or step. Scene slots use deferred preparation.</remarks>
     /// <exception cref="ArgumentException">The owner RID is stale or not an Area.</exception>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
+    /// <exception cref="AggregateException">The raw slot rebuild and its restoration both fail; both errors are retained.</exception>
     public static void AreaClearShapes(RID area) => Service.AreaClearShapesCore(area);
 
     /// <summary>Changes one body slot's one-way policy for contacts and body motion tests.</summary>
@@ -1348,6 +1384,9 @@ public sealed partial class PhysicsServer
     /// <exception cref="ArgumentOutOfRangeException">The index is absent or margin is invalid.</exception>
     /// <exception cref="ArgumentException">Direction is nonfinite, or the RID is stale/wrong-kind.</exception>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
+    /// <remarks>Raw server slot edits restore previous authoring after a failed rebuild and attempt numerical restoration.
+    /// If restoration fails, preparation retries before a later query or step. Scene slots use deferred preparation.</remarks>
+    /// <exception cref="AggregateException">The raw slot rebuild and its restoration both fail; both errors are retained.</exception>
     public static void BodySetShapeAsOneWayCollision(RID body, int index, bool enable, float margin, Vector2? direction = null) => Service.BodySetShapeAsOneWayCollisionCore(body, index, enable, margin, direction);
 
     /// <summary>Returns a live direct-query view of a physics space.</summary>

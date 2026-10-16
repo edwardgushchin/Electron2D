@@ -1,6 +1,6 @@
 # GPUPhysicsColliderImplementation
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 **Declaration:** `internal sealed partial class GPUPhysicsColliderImplementation : PhysicsColliderImplementation` · **Source:** [GPUPhysicsColliderImplementation.cs](../../src/Servers/Physics/GPUPhysicsColliderImplementation.cs) · **Component:** [Physics backends](../components/physics-backends.md#runtime-flow-and-ownership)
 
@@ -33,7 +33,7 @@ A failed attachment attempts cleanup and leaves the common facade detached. Reti
 
 ## Limits and decisions
 
-Only internal CPU/GPU implementations are currently constructed. Public backend registration, server/direct-state extension contexts and custom geometry remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103); this type is not a public plugin API. Native allocator, foreign-platform and real-window FPS acceptance remain separate gates.
+Built-in CPU/GPU implementations remain internal. Public registered implementations and typed direct-state/custom-geometry paths execute under [ADR 0103](../decisions/physics-extensions.md#adr-0103), with bounded numerical evidence and complete extension acceptance still open; this concrete type is not a public plugin API. Native allocator, foreign-platform and real-window FPS acceptance remain separate gates.
 
 World-point platform velocity now dispatches through the current selected attachment. Common lookup uses the shared scene/raw RID registry and checks current world ownership, including transfer/detach/free. CPU keeps direct world-point native conversion; GPU keeps resident center-aware surface motion. See [motion ownership and checks](PhysicsWorldBackend.md#body-motion-and-platform-lookup).
 
@@ -60,7 +60,7 @@ The internal resource/resource and body-slot/resource bridge now executes throug
 
 ## Value-only integration preparation
 
-[Force and policy inputs](../components/physics-backends.md#value-only-body-integration-inputs) now separate engine-owned authoring/command state from numerical preparation. Default forces use PhysicsBodyForceConfiguration; CPU fields and GPU parameters use PhysicsBodyIntegrationConfiguration. Pending command retirement and GPU dirty flags stay in the binding layer; numerical methods receive finite authored values and return complete field/preparation results. CPU/GPU/no-device, replay, parameter and full operation checks remain the acceptance boundaries; public registration stays open.
+[Force and policy inputs](../components/physics-backends.md#value-only-body-integration-inputs) now separate engine-owned authoring/command state from numerical preparation. Default forces use PhysicsBodyForceConfiguration; CPU fields and GPU parameters use PhysicsBodyIntegrationConfiguration. Pending command retirement and GPU dirty flags stay in the binding layer; numerical methods receive finite authored values and return complete field/preparation results. CPU/GPU/no-device, replay, parameter and full operation checks remain the acceptance boundaries; complete registered numerical acceptance stays open.
 
 [Custom collision geometry](../components/physics-custom-geometry.md) now provides copied canonical data, exact mass/bounds, diagnostic segments and standalone pair callbacks to registered implementations. Built-in compilation rejects unsupported custom geometry before mutation. Portable schema covers the custom authoring payload; detached force preparation resolves exact custom mass while automatic getters retain cached-resolution semantics.
 
@@ -107,3 +107,11 @@ selects current incremental or complete state by estimated transfer cost. Cached
 mode/sleep is a hint only; scalar values and wake/private/portable continuation
 retain authoritative device reads. Existing API and coverage states remain unchanged;
 hardware, native, foreign and full acceptance remain open.
+
+## Reusable sensor query wrappers
+
+Each logical sensor slot retains an empty QueryGeometry wrapper across rebuilds.
+Clear releases every active geometry lease and resident shape before reuse; detach
+leaves no leased resource. Only this private cache can rebind a released wrapper,
+so ordinary disposed query leases remain invalid. Logical query indices and
+resource lifetime retain [shared edit verification](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse).

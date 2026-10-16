@@ -1,6 +1,6 @@
 # PhysicsServerCollider
 
-Last updated: 2026-10-13
+Last updated: 2026-10-16
 
 [Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
 keeps sampled public values while rejecting portable capture of retired/reindexed
@@ -92,3 +92,11 @@ Releasing prevents rebind or recursive free from departure callbacks. Detach att
 
 
 EnsureAuthoringAccess retains release and geometry-borrow checks without treating filter metadata as a hierarchy change. EnsureGeometryLifetimeAccess additionally rejects borrowed extension hierarchy mutation; logical body filter setters use the common body write guard and this authoring preflight. Ordinary body-state forwarding remains available, with numerical hooks rejected before mutation.
+
+## Failed shape authoring
+
+Raw indexed edits restore previous slots and private history identity when the
+selected rebuild fails. Clear retains a capacity-bounded backup and clears saved
+resource references in finally. Restoration failures aggregate after the original
+error and leave geometry dirty for retry before the next query/step. Resource
+free still commits retirement. See [transaction and verification](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse).

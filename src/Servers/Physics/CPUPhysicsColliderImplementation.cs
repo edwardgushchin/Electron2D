@@ -96,6 +96,8 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
         if (Space is null) throw new InvalidOperationException("A collider must be attached before creating shapes.");
         foreach (var id in _shapes) b2DestroyShape(id, updateBodyMass: false);
         _shapes.Clear();
+        // Former fixtures must retire before their private tags can be rewritten.
+        _fixtureTagCount = 0;
         var definition = b2DefaultShapeDef();
         // The owning body applies its complete mass profile after all pieces are created.
         definition.updateBodyMass = false;
@@ -110,17 +112,36 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
     private void AppendShape(Shape shape, Transform transform, int index, OneWayContactData? oneWay, ref B2ShapeDef definition)
     {
         var geometry = shape.GetGeometry();
-        definition.userData = new B2UserData(new PhysicsFixtureTag(Owner.RID, index, oneWay)
+        var tag = TakeFixtureTag();
+        tag.ColliderRID = Owner.RID; tag.ShapeIndex = index; tag.OneWay = oneWay; tag.SeparationRay = null;
+        tag.Owner = Owner; tag.SceneOwner = Owner.SceneOwnerReference; tag.Source!.SetTarget(shape); tag.CompoundPiece = 0;
+        tag.Compound = null;
+        if (geometry.Kind == PhysicsShapeGeometry.ShapeKind.ConvexPolygon && geometry.Points.Length > B2Constants.B2_MAX_POLYGON_VERTICES)
         {
-            Owner = this.Owner,
-            SceneOwner = Owner.SceneOwnerReference,
-            Source = new(shape),
-            Compound = geometry.Kind == PhysicsShapeGeometry.ShapeKind.ConvexPolygon && geometry.Points.Length > B2Constants.B2_MAX_POLYGON_VERTICES
-                ? new(new(shape), transform) : null
-        });
+            tag.CachedCompound ??= new(tag.Source, transform);
+            tag.CachedCompound.LocalPose = transform; tag.Compound = tag.CachedCompound;
+        }
+        definition.userData = new B2UserData(tag);
         definition.enablePreSolveEvents = !definition.isSensor && (oneWay is not null || PhysicsServer.Service.HasBodyCollisionExceptions(Owner.RID));
         var first = _shapes.Count;
-        PhysicsShapeBackend.AppendToBody(shape, BodyID, transform.Origin, transform.Rotation, definition, _shapes);
+        PhysicsShapeBackend.AppendToBody(shape, BodyID, transform.Origin, transform.Rotation, definition, _shapes, this);
         for (var i = first; i < _shapes.Count; i++) b2GetShape(_world!, _shapes[i]).customSolverBias = shape.CustomSolverBias;
+    }
+
+    private readonly List<PhysicsFixtureTag> _fixtureTags = [];
+    private int _fixtureTagCount;
+    private PhysicsFixtureTag TakeFixtureTag()
+    {
+        if (_fixtureTagCount == _fixtureTags.Count) _fixtureTags.Add(new(Owner.RID, 0, null) { Source = new(null!) });
+        return _fixtureTags[_fixtureTagCount++];
+    }
+    internal PhysicsFixtureTag PieceTag(PhysicsFixtureTag source, int piece, SeparationRayData? ray = null)
+    {
+        var tag = TakeFixtureTag();
+        tag.ColliderRID = source.ColliderRID; tag.ShapeIndex = source.ShapeIndex; tag.OneWay = source.OneWay;
+        tag.SeparationRay = ray; tag.Owner = source.Owner; tag.SceneOwner = source.SceneOwner;
+        source.Source!.TryGetTarget(out var shape); tag.Source!.SetTarget(shape!);
+        tag.Compound = source.Compound; tag.CompoundPiece = piece;
+        return tag;
     }
 }

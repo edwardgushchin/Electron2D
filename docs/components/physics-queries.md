@@ -196,3 +196,64 @@ never enter wire data. Current GPU/native and broader topology acceptance stay o
 
 
 [Borrowed motion output](physics-registered-adapter.md#borrowed-motion-output-2026-10-14) preserves selected scratch lifetime and owner scope while retaining caller-owned snapshots, error continuation and retirement failures. The inherited disposal preflight is a reviewed C# adaptation; full numerical/foreign/hardware acceptance stays open.
+
+## Failed raw shape edits and warmed reuse
+
+Attached raw Body/Area add, replacement, local pose, enabled state, removal and
+clear operations synchronously rebuild the selected numerical attachment. Body
+one-way edits use the same transaction. A failed rebuild restores the exact prior
+logical slots, including their private history identities, then attempts numerical
+restoration. Successful restoration rethrows the original error. If restoration
+also fails, an AggregateException retains the original and restoration errors in
+that order. Geometry remains dirty until preparation succeeds; a subsequent query
+or step retries before publishing results. This does not turn an authoring error
+into a failed numerical step. Scene slot edits retain their existing deferred
+preparation, and freeing a shape commits resource retirement rather than restoring
+its removed uses.
+
+Clear uses a collider-local backup array, grows only for new slot capacity and
+clears every saved reference in finally. CPU attachments retire all old fixtures
+before rewriting their private reusable tags. Compound pieces retain logical
+indices, their own weak source references and a shared current contour pose;
+directed pieces refresh their ray data. World-local retired sensor shells retain
+cleared visitor-array capacity, and world destruction releases both active and
+retired sensor arrays. GPU sensor slots reuse empty query-lease wrappers while
+releasing geometry on every clear/detach. Ordinary query leases retain terminal
+disposal; only the owning collider cache can rebind its released wrapper. These
+caches introduce no host simulation-state mirror.
+
+OneWayContactData remains an immutable public record. Scene/raw slots reuse the
+last resolved direction/margin value when unchanged. A changed resolved value
+publishes a new record; previously borrowed values remain unchanged. Thus rotated
+one-way authoring has a separate explicit publication allocation, while warmed
+PhysicsFrame intervals retain their strict zero-managed-byte requirement.
+
+The public-only `--shape-edits` consumer exercises both raw roles through the real
+selected CPU, GPU or registered attachment. Fifteen successful operations cover
+all seven shared edit kinds plus body one-way policy. Its registered provider
+injects 45 failures, including partially changed numerical geometry, failed
+restoration and another failed preparation retry. Queries check exact geometry
+and logical indices, association checks retain full 64-bit canvas/object identity,
+and subsequent physical frames check stable sensor effects. Retired geometry is
+checked through weak references for both body and Area clears.
+
+The allocation profile retains 128 warm and 128 measured edit/query/full-frame
+cycles, moving a real body by 12.8 units within .01 units and delivering 128 force
+callbacks. A second profile repeats rotating body/Area edits and compound queries
+for all eight built-in shape families, including a twelve-vertex convex contour,
+paired concave edges, infinite boundary and directed ray. Rays query a surface
+entry rather than an invalid start-inside hit. Every measured physics step has a
+strict 0/0 owner/all-thread managed-byte assertion. The complete rotating authoring
+interval permits exactly one independently calibrated immutable policy object per
+frame, with no other allocation. See the current validation receipt under
+`bin/physics-shape-edit-failures/2026-10-16/`; native/driver budgets, arbitrary custom
+solvers, foreign platforms and target-device/window performance remain open.
+
+The final local run passed twelve fresh CoreCLR/NativeAOT processes across
+CPU/software-GPU/registered serial/separate profiles, fifteen existing consumer
+resource/owner/Area/geometry regressions and six CPU/software-GPU scene/shared/
+portable-snapshot profiles. CPU used an absent Vulkan ICD; GPU used pinned
+lavapipe, and sampled process maps loaded no hardware driver. The basic edited
+interval fell from 430,080 CPU / 20,480 GPU bytes per 128 frames to 0/0; each
+rotating profile measured 4,096 authoring bytes plus 0/0 physical-step bytes.
+These are functional/allocation results, not a native-memory or GPU-speedup claim.

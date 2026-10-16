@@ -2462,3 +2462,13 @@ relaxed. Current evidence is in bin/physics-current-audit/2026-10-16 and the
 The earlier circle-only verification description no longer represents this fixture.
 Full external numerical, inherited/network, native/driver memory and target-device
 performance acceptance remain open; coverage states are unchanged.
+
+## Failed shape rebuilds
+
+The complete shared raw shape-edit family now restores authoring and retries prior
+numerical geometry after failure. The registered consumer deliberately damages its
+numerical shape table before throwing, checks 45 apply/restore/retry failure cases,
+and preserves object/canvas identity and sensor effects. [Shared shape-edit
+verification](physics-queries.md#failed-raw-shape-edits-and-warmed-reuse) retains
+CPU/GPU geometry, resource lifetime and separate physical-step/immutable-authoring
+allocation gates. Complete arbitrary numerical/extension acceptance remains open.

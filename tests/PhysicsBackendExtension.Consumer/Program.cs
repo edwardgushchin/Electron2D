@@ -1,4 +1,6 @@
-if (args.Contains("--viewport-ownership-child")) BackendChecks.ReadViewportOwnership(args[Array.IndexOf(args, "--viewport-ownership-child") + 1],
+if (args.Contains("--shape-edits")) BackendChecks.RunShapeEdits(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--viewport-ownership-child")) BackendChecks.ReadViewportOwnership(args[Array.IndexOf(args, "--viewport-ownership-child") + 1],
     args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--viewport-ownership")) BackendChecks.RunViewportOwnership(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
