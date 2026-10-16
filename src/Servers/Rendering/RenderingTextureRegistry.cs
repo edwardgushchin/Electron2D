@@ -37,7 +37,7 @@ internal static class RenderingTextureRegistry
             {
                 _registrationsSinceSweep = 0; Stale.Clear();
                 foreach (var pair in Entries)
-                    if (!pair.Value.Borrowed.TryGetTarget(out var target) || target.IsDisposed) Stale.Add(pair.Key);
+                    if (!pair.Value.Borrowed.TryGetTarget(out var target) || target.IsDisposalCommitted) Stale.Add(pair.Key);
                 foreach (var stale in Stale) Entries.Remove(stale);
                 Stale.Clear();
             }
@@ -50,9 +50,10 @@ internal static class RenderingTextureRegistry
     {
         lock (Gate)
         {
-            if (Entries.TryGetValue(rid, out var entry) && entry.Borrowed.TryGetTarget(out var texture) && !texture.IsDisposed)
+            Resource? texture = null;
+            if (Entries.TryGetValue(rid, out var entry) && entry.Borrowed.TryGetTarget(out texture) && !texture.IsDisposed)
                 return texture;
-            Entries.Remove(rid);
+            if (texture is null || texture.IsDisposalCommitted) Entries.Remove(rid);
             throw new ArgumentException("The RID does not identify a live rendering texture.", nameof(rid));
         }
     }

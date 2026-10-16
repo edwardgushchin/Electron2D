@@ -23,14 +23,14 @@ public abstract partial class Viewport
             if (_viewportRID.IsValid()) return _viewportRID;
             if (++_ridRegistrations >= 256)
             {
-                _ridRegistrations = 0; StaleViewportRIDs.Clear(); foreach (var entry in ViewportRIDs) if (!entry.Value.TryGetTarget(out var target) || target.IsDisposed) StaleViewportRIDs.Add(entry.Key); foreach (var stale in StaleViewportRIDs) ViewportRIDs.Remove(stale); StaleViewportRIDs.Clear();
+                _ridRegistrations = 0; StaleViewportRIDs.Clear(); foreach (var entry in ViewportRIDs) if (!entry.Value.TryGetTarget(out var target) || target.IsDisposalCommitted) StaleViewportRIDs.Add(entry.Key); foreach (var stale in StaleViewportRIDs) ViewportRIDs.Remove(stale); StaleViewportRIDs.Clear();
             }
             _viewportRID = RID.Allocate(); ViewportRIDs.Add(_viewportRID, new(this)); return _viewportRID;
         }
     }
     internal static Viewport? FindViewportRID(RID rid)
     {
-        lock (ViewportRIDGate) { if (ViewportRIDs.TryGetValue(rid, out var entry) && entry.TryGetTarget(out var viewport) && !viewport.IsDisposed) return viewport; ViewportRIDs.Remove(rid); return null; }
+        lock (ViewportRIDGate) { Viewport? viewport = null; if (ViewportRIDs.TryGetValue(rid, out var entry) && entry.TryGetTarget(out viewport) && !viewport.IsDisposed) return viewport; if (viewport is null || viewport.IsDisposalCommitted) ViewportRIDs.Remove(rid); return null; }
     }
     internal static Viewport ResolveViewportRID(RID rid) => FindViewportRID(rid) ?? throw new ArgumentException("The RID does not identify a live viewport.", nameof(rid));
     private void ReleaseViewportRID() { lock (ViewportRIDGate) { ViewportRIDs.Remove(_viewportRID); _viewportRID = default; } }

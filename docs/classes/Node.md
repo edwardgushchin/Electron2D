@@ -16,6 +16,10 @@ Authoring guards inspect affected scene colliders and their actual physical atta
 
 Changing PhysicsInterpolationMode republishes the effective source policy for affected borrowed canvas items and resets their retained histories. Explicit renderer state remains session-local; a node reset updates its own source/retained presentation endpoints and propagated descendants. See [contract and native verification](../components/canvas-rendering.md#retained-canvas-item-interpolation).
 
+The inherited [CancelDisposal](ElectronObject.md#m-electron2d-electronobject-canceldisposal) vetoes automatic pre-delete independently of CancelFree. A direct veto leaves the node and owned subtree attached and alive. Queued deletion already detaches the node before attempting disposal; its consumed request is released after a veto and the live subtree can be reattached. When an owning parent is destroyed, a child that vetoes or rejects disposal survives detached; unparent callbacks remain inside the teardown barrier, errors aggregate and siblings continue.
+
+Vetoable pre-delete retains authored reverse ownership and unique-name reservations, including a temporarily closed detached authoring owner. Ordinary live lookup hides closed targets; another authoring write cannot prune or steal their registration before the attempt commits.
+
 ## Resource endpoints and subtree operations
 
 `GetNodeAndResource(string path)` resolves slash-separated node names followed by colon-separated typed property names. It returns a C# tuple `(Node? Node, Resource? Resource, string RemainingPath)` rather than a heterogeneous array. Each resource-valued property becomes the next owner. The result retains the last borrowed resource and stops at the first existing scalar, node, other non-resource value or null, returning that component and later components as a colon-prefixed remainder. It does not validate the remainder. A missing node/property returns a null Node; a resource already found remains in the tuple. `HasNodeAndResource` tests the Node field, so an existing null property is a successful remainder. Getter/schema errors remain visible; disposed resolved resources reject access.

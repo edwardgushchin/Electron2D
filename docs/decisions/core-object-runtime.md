@@ -11,7 +11,7 @@ Decisions in this log: [0003](#adr-0003), [0005](#adr-0005), [0009](#adr-0009), 
 <a id="adr-0003"></a>
 ## ADR 0003: Use deterministic IDisposable lifetime for engine objects
 
-Last updated: 2026-09-20
+Last updated: 2026-10-16
 
 - Status: Accepted; refined by [0009](core-object-runtime.md#adr-0009) and clarified by [0014](resources.md#adr-0014)
 - Scope: `ElectronObject` and future resource-owning derived types
@@ -27,13 +27,19 @@ Godot objects use engine-managed validity and explicit `free()`. Electron2D runs
 - public non-virtual idempotent `Dispose()`;
 - protected virtual `Dispose(bool disposing)` for derived cleanup;
 - protected precondition validation before disposal begins, used by owner-thread-bound derived types;
-- immediate disposed-state publication when disposal begins;
+- immediate disposed-state publication for each active disposal attempt, restored to live only when its pre-delete notification vetoes that attempt;
 - a typed `Disposed` event after successful cleanup;
 - `ThrowIfDisposed()` for live-object preconditions.
 
-An internal ObjectIdentity pairs the immutable instance ID with a lazily cached BCL weak reference. A consumer copies this value when sampling identity; retargeting that consumer does not mutate previous samples. Resolution returns null immediately when deterministic disposal begins or after collection. The cache belongs to the target object, introduces no process-wide strong registry and adds no finalizer; physics object association under ADR 0063 is its first consumer.
+An internal ObjectIdentity pairs the immutable instance ID with a lazily cached BCL weak reference. A consumer copies this value when sampling identity; retargeting that consumer does not mutate previous samples. Resolution returns null during an active disposal attempt and after terminal disposal or collection; a vetoed attempt restores resolution of the same instance ID after notification returns. The cache belongs to the target object, introduces no process-wide strong registry and adds no finalizer; physics object association under ADR 0063 is its first consumer.
 
-`IsQueuedForDeletion` is a nonvirtual readonly observation on ElectronObject, inherited by resources, nodes and services. It covers explicit SceneTree.QueueDelete requests and the current Node.QueueFree request without querying numerical or native state. Independently accepted explicit requests are counted until execution or discard; cancellation of Node work does not cancel them. The observation stays true through claimed deletion and pre-delete/cleanup, becomes false after terminal disposal, and is false for descendants merely owned by a queued parent. Direct disposal without a request never marks the object queued. Its readonly nonstored typed descriptor has no revert value. This observation does not add a scheduler, a public free alias, or a pre-delete veto to the base object.
+`IsQueuedForDeletion` is a nonvirtual readonly observation on ElectronObject, inherited by resources, nodes and services. It covers explicit SceneTree.QueueDelete requests and the current Node.QueueFree request without querying numerical or native state. Independently accepted explicit requests are counted until execution or discard; cancellation of Node work does not cancel them. The observation stays true through claimed deletion and pre-delete/cleanup, becomes false after terminal disposal, and is false for descendants merely owned by a queued parent. Direct disposal without a request never marks the object queued. Its readonly nonstored typed descriptor has no revert value. This observation adds no scheduler or public free alias.
+
+`CancelDisposal()` is the typed IDisposable projection of the pinned Object.cancel_free capability. It vetoes only the current automatic pre-delete notification, on the exact disposing thread, and is idempotent within that window. Manual notification without an active attempt, foreign callers, ordinary live calls and calls after cleanup starts have no effect and cannot arm a future veto or resurrect terminal objects. Keep Node.CancelFree as the separate existing queue-cancellation operation; no hiding/alias changes its meaning. The helper introduces no stored policy, public event, scheduler or backend dependency.
+
+A veto skips derived cleanup, final state publication, subscriber clearing and finalization suppression. The attempt remains IsDisposed=true until notification returns, then restores Alive and clears its disposing thread. Preserve identity, subscriptions and owned resources. Pre-delete callback failures still propagate after this restoration; they cannot override a veto. Side effects of notifications and nested user work are not rolled back. Without a veto, existing notification/cleanup ordering, error aggregation and at-most-once cleanup remain unchanged. Concurrent/reentrant disposal during an attempt returns without a second attempt; a later caller may retry after a veto.
+
+Weak registries retain temporarily closed identities until the attempt either commits cleanup or the target is collected. Internal retirement uses the committed phase, distinct from public IsDisposed availability. Keep physics/rendering RIDs, weak ResourcePath entries, authored owner reverse records, unique-name/path reservations and group/writer registration through a veto. Read-side lookup may remain unavailable during notification; it must not irreversibly prune that identity. Registration reservations account for a temporarily closed owner/target without returning it through ordinary live lookup.
 
 The base uses atomic state transitions so concurrent disposal runs cleanup at most once. It has no finalizer. Native handles must be owned by `SafeHandle`-derived wrappers, whose finalization protects against missed disposal without putting every engine object on the finalizer queue.
 
@@ -93,7 +99,7 @@ Godot's `Object` exposes numeric notifications plus Variant-based property disco
 <a id="adr-0009"></a>
 ## ADR 0009: Permit teardown inspection on the disposing thread
 
-Last updated: 2026-09-23
+Last updated: 2026-10-16
 
 - Status: Accepted
 - Scope: `ElectronObject.ThrowIfDisposed()` during deterministic teardown
@@ -104,9 +110,9 @@ ADR 0003 publishes `IsDisposed` as soon as disposal starts so concurrent callers
 
 ### Decision
 
-- `IsDisposed` remains `true` from the start of disposal.
+- `IsDisposed` remains `true` throughout each active attempt, including its pre-delete cancellation request. A veto restores Alive only after automatic notification returns, under ADR 0003.
 - The atomic winner records its managed thread before invoking pre-delete and `Dispose(bool)`.
-- `ThrowIfDisposed()` permits that exact thread while the state is `Disposing`.
+- `ThrowIfDisposed()` permits that exact thread during automatic pre-delete, its vetoed window and committed cleanup.
 - Every other thread is rejected during disposal, and every thread is rejected after the final `Disposed` state is published.
 - The exception exists for teardown inspection and cleanup. It is not a promise that arbitrary re-entrant mutation during disposal is safe.
 
@@ -291,7 +297,7 @@ Managed checks use deterministic deltas to cover state transitions, ordering, fa
 <a id="adr-0050"></a>
 ## ADR 0050: Typed weak references to engine objects
 
-Last updated: 2026-09-24
+Last updated: 2026-10-16
 
 ### Status
 
@@ -299,13 +305,13 @@ Accepted.
 
 ### Context
 
-The reference weak-reference utility observes an engine object by identity without extending its lifetime and returns null after destruction. Electron2D uses managed memory and deterministic `Dispose`; a plain BCL weak reference can still return an object after its logical engine lifetime has ended.
+The reference weak-reference utility observes an engine object by identity without extending its lifetime and returns null after destruction. Electron2D uses managed memory and deterministic `Dispose`; a plain BCL weak reference can still return an object while its engine disposal attempt is active or after its logical lifetime has ended.
 
 ### Decision
 
-`WeakRef<T> : ElectronObject`, with `T : ElectronObject`, owns a standard `System.WeakReference<T>` and no target resource. Its constructor is the typed C# projection of the reference weakref factory and accepts null or an already disposed object as an empty reference. `GetRef()` returns the live typed target, or null after target disposal or collection. The returned reference is strong for the caller while held; the wrapper never disposes or retains its target. Disposing the wrapper follows ADR 0003 and rejects later calls.
+`WeakRef<T> : ElectronObject`, with `T : ElectronObject`, owns a standard `System.WeakReference<T>` and no target resource. Its constructor is the typed C# projection of the reference weakref factory and accepts null or an already disposed object as an empty reference. `GetRef()` returns the live typed target, or null during a target disposal attempt and after terminal cleanup or collection. An existing live wrapper resolves the same target again after a pre-delete veto returns under ADR 0003. A wrapper constructed while IsDisposed is true remains empty; its construction snapshot does not change after a veto. The returned reference is strong for the caller while held; the wrapper never disposes or retains its target. Disposing the wrapper follows ADR 0003 and rejects later calls.
 
-Only engine objects cross this public weak boundary. Arbitrary CLR object and value types have their ordinary BCL facilities; no universal `Variant` weak container is introduced. Collection timing remains controlled by the .NET GC; deterministic disposal makes a target unavailable immediately even while a strong managed reference still exists.
+Only engine objects cross this public weak boundary. Arbitrary CLR object and value types have their ordinary BCL facilities; no universal `Variant` weak container is introduced. Collection timing remains controlled by the .NET GC; an active or terminal disposal state makes a target unavailable immediately even while a strong managed reference still exists.
 
 ### Consequences and verification limits
 

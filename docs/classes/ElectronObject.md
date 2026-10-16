@@ -95,6 +95,7 @@ sealed class Meter : ElectronObject
 
 | Member | Description |
 | --- | --- |
+| [`public void CancelDisposal()`](#m-electron2d-electronobject-canceldisposal) | Vetoes the current automatic pre-delete disposal attempt on its exact thread. |
 | [`public void SetBlockSignals(bool enable)`](#m-electron2d-electronobject-setblocksignals-system-boolean) | Changes the per-object ordinary emission policy. |
 | [`public bool IsBlockingSignals()`](#m-electron2d-electronobject-isblockingsignals) | Reads the atomic policy, initially false. |
 | [`protected TDelegate? BeginEventEmission<TDelegate>(TDelegate? handlers) where TDelegate : Delegate`](#m-electron2d-electronobject-begineventemission) | Selects the typed snapshot once for a custom publisher. |
@@ -161,7 +162,7 @@ Gets the unqualified runtime class name.
 
 Gets whether deterministic disposal has started.
 
-**Value:** `true` from the moment a caller wins the disposal transition; otherwise `false`.
+**Value:** True during each active attempt and after terminal cleanup. An automatic pre-delete veto restores false only after notification returns.
 
 <a id="p-electron2d-electronobject-isqueuedfordeletion"></a>
 ### `public bool IsQueuedForDeletion { get; }`
@@ -196,6 +197,26 @@ Gets or sets the translation domain used by this object.
 - `ObjectDisposedException`: The object is disposing on another thread or has finished disposing.
 
 ## Method Descriptions
+
+<a id="m-electron2d-electronobject-canceldisposal"></a>
+### `public void CancelDisposal()`
+
+Vetoes only the current automatic pre-delete attempt on its exact disposing thread. Call it from `OnNotification(NotificationPreDelete)`. Repeated calls are harmless. Manual notifications without an active attempt, foreign threads, ordinary live calls and calls after cleanup starts have no effect; they cannot arm a future veto or resurrect a terminal object.
+
+During notification, IsDisposed remains true and foreign guarded inspection/weak resolution remain closed. When a vetoed notification returns, the same object becomes live again, retaining InstanceID, subscriptions and owned resources; derived cleanup, Disposed delivery, subscriber clearing and finalization suppression are skipped. A notification exception propagates after restoring live state. User callback side effects are not rolled back. Concurrent or reentrant Dispose returns during that attempt; a later caller may retry. Node.CancelFree retains its separate queued-request cancellation meaning.
+
+```csharp
+class ProtectedNode : Node
+{
+    public bool KeepAlive { get; set; }
+    protected override void OnNotification(int what)
+    {
+        base.OnNotification(what);
+        if (what == NotificationPreDelete && KeepAlive) CancelDisposal();
+    }
+}
+```
+
 
 <a id="m-electron2d-electronobject-setblocksignals-system-boolean"></a>
 ### `public void SetBlockSignals(bool enable)`
@@ -346,11 +367,11 @@ Deterministically releases resources owned by this object.
 Validation failure leaves this caller from starting disposal; a [`ElectronObject.Disposed`](ElectronObject.md#e-electron2d-electronobject-disposed) handler failure occurs
 after the final disposed state has been published.
 
-**Remarks:** Disposal is idempotent. The winning caller synchronously sends [`ElectronObject.NotificationPreDelete`](ElectronObject.md#f-electron2d-electronobject-notificationpredelete), invokes
+**Remarks:** Committed cleanup is idempotent. Unless automatic pre-delete is vetoed, the winning caller synchronously sends [`ElectronObject.NotificationPreDelete`](ElectronObject.md#f-electron2d-electronobject-notificationpredelete), invokes
 [`ElectronObject.Dispose(Boolean)`](ElectronObject.md#m-electron2d-electronobject-dispose-system-boolean), publishes the final state, clears base event subscribers, and suppresses finalization.
 Callers that lose the atomic transition return without repeating cleanup, although caller-specific
 [`ElectronObject.ValidateDisposal`](ElectronObject.md#m-electron2d-electronobject-validatedisposal) may already have run and may throw before that transition. The disposing thread
-may access guarded state during pre-delete and cleanup callbacks; every other thread is rejected after disposal starts.
+may access guarded state during pre-delete and cleanup callbacks; every other thread is rejected after disposal starts. A pre-delete veto restores live state after notification returns, preserving identity, subscribers and resources. Notification errors still propagate after that restoration; a later caller may retry.
 
 <a id="m-electron2d-electronobject-onnotification-system-int32"></a>
 ### `protected virtual void OnNotification(int what)`
@@ -504,7 +525,7 @@ Identifies the notification delivered immediately before owned resources are rel
 
 ## Lifecycle contract
 
-`Dispose()` first returns when disposal has already started, then calls `ValidateDisposal()` before that caller attempts the atomic transition from alive to disposing. The winning caller records its thread, sends notification `1`, calls `Dispose(bool)`, publishes the final disposed state, clears the `Disposed`, `PropertyListChanged`, and `ScriptChanged` subscriber lists, and suppresses finalization. Concurrent calls that reach the transition after another caller return without repeating work.
+`Dispose()` first returns when disposal has already started, then calls `ValidateDisposal()` before that caller attempts the atomic transition from alive to disposing. The winning caller records its thread and sends notification `1`. A veto restores live state after notification without invoking cleanup; otherwise it calls `Dispose(bool)`, publishes the final disposed state, clears the `Disposed`, `PropertyListChanged`, and `ScriptChanged` subscriber lists, and suppresses finalization. Concurrent calls that reach the transition after another caller return without repeating work.
 
 `IsDisposed` is already `true` during notification and cleanup. `ThrowIfDisposed()` nevertheless permits the recorded disposing thread to inspect guarded state so pre-delete and derived teardown callbacks can identify and detach the object. Other threads are rejected as soon as disposal starts; after final publication every thread, including the former disposing thread, is rejected.
 
@@ -547,6 +568,9 @@ The class has no finalizer. Derived SDL resource types must put native handles i
 - No queued deletion; that behavior belongs to [`Node`](Node.md) and [`SceneTree`](SceneTree.md).
 
 ## Verification
+
+The public-only disposal-veto consumer checks automatic/manual/foreign/late windows, callback errors, identity and subscriptions, independent queued attempts, rejected child cleanup, root reactivation and provider retirement. CPU/software-Vulkan/registered owner/separate profiles measure 128 complete veto/simulation/query frames at zero owner/all-thread managed bytes.
+
 
 [`tests/Electron2D.Tests/Program.cs`](../../tests/Electron2D.Tests/Program.cs) verifies identity, diagnostics, notification dispatch, pre-delete state access on the disposing thread, concurrent idempotent disposal, property-list and script-change event delivery, duplicate subscription/removal, typed event connections, typed property behavior, translation delegation, and invalid access after disposal.
 

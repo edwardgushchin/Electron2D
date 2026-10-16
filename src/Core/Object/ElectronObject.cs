@@ -23,6 +23,8 @@ public abstract partial class ElectronObject : IDisposable
     private const int Alive = 0;
     private const int Disposing = 1;
     private const int DisposedState = 2;
+    private const int PreDeleting = 3;
+    private const int PreDeleteCanceled = 4;
 
     private static long _lastInstanceId;
     internal static ulong LastIssuedInstanceID => unchecked((ulong)Volatile.Read(ref _lastInstanceId));
@@ -95,9 +97,11 @@ public abstract partial class ElectronObject : IDisposable
         return false;
     }
 
-    /// <summary>Gets whether deterministic disposal has started.</summary>
-    /// <value><see langword="true"/> from the moment a caller wins the disposal transition; otherwise <see langword="false"/>.</value>
+    /// <summary>Gets whether a disposal attempt is active or terminal cleanup has completed.</summary>
+    /// <value>True during an active disposal attempt and after terminal cleanup; false again after a pre-delete veto returns.</value>
     public bool IsDisposed => Volatile.Read(ref _disposeState) != Alive;
+
+    internal bool IsDisposalCommitted => Volatile.Read(ref _disposeState) is Disposing or DisposedState;
 
     /// <summary>Gets whether a scene-tree deletion request is pending or executing for this object.</summary>
     /// <value>True for an accepted SceneTree.QueueDelete request or the current Node.QueueFree request until disposal finishes.</value>
@@ -290,18 +294,35 @@ public abstract partial class ElectronObject : IDisposable
             : count == 1 ? singular : plural;
     }
 
+    /// <summary>Vetoes this object's current automatic pre-delete disposal attempt.</summary>
+    /// <remarks>
+    /// Call from OnNotification during NotificationPreDelete on the exact disposing thread. The attempt remains
+    /// IsDisposed until notification returns, then becomes live again without derived cleanup or subscriber clearing.
+    /// Repeated calls are harmless. Calls outside that window, including manual notification, foreign threads and
+    /// committed cleanup, have no effect and cannot arm a future veto. Notification failures still propagate after
+    /// a veto; user callback side effects are not rolled back. Node.CancelFree separately cancels queued node work.
+    /// </remarks>
+    public void CancelDisposal()
+    {
+        if (Volatile.Read(ref _disposingThreadId) == Environment.CurrentManagedThreadId)
+            Interlocked.CompareExchange(ref _disposeState, PreDeleteCanceled, PreDeleting);
+    }
+
     /// <summary>Deterministically releases resources owned by this object.</summary>
     /// <remarks>
-    /// Disposal is idempotent. The winning caller synchronously sends <see cref="NotificationPreDelete"/>, invokes
+    /// Committed cleanup is idempotent. The winning caller synchronously sends <see cref="NotificationPreDelete"/>, invokes
     /// <see cref="Dispose(bool)"/>, publishes the final state, clears base event subscribers, and suppresses finalization.
     /// Callers that lose the atomic transition return without repeating cleanup, although caller-specific
     /// <see cref="ValidateDisposal"/> may already have run and may throw before that transition. The disposing thread
     /// may access guarded state during pre-delete and cleanup callbacks; every other thread is rejected after disposal starts.
+    /// CancelDisposal during automatic pre-delete skips cleanup and restores live state after notification returns.
+    /// A later call may retry a vetoed attempt; notification errors still propagate without forcing cleanup.
     /// </remarks>
     /// <exception cref="AggregateException">Both notification delivery and derived cleanup fail.</exception>
     /// <exception cref="Exception">
     /// Disposal validation, a pre-delete callback, derived cleanup, or a <see cref="Disposed"/> handler fails.
-    /// Validation failure leaves this caller from starting disposal; a <see cref="Disposed"/> handler failure occurs
+    /// Validation failure leaves this caller from starting disposal. A veto restores live state before a notification
+    /// error propagates; a <see cref="Disposed"/> handler failure occurs
     /// after the final disposed state has been published.
     /// </exception>
     public void Dispose()
@@ -311,7 +332,7 @@ public abstract partial class ElectronObject : IDisposable
 
         ValidateDisposal();
 
-        if (Interlocked.CompareExchange(ref _disposeState, Disposing, Alive) != Alive)
+        if (Interlocked.CompareExchange(ref _disposeState, PreDeleting, Alive) != Alive)
             return;
 
         Volatile.Write(ref _disposingThreadId, Environment.CurrentManagedThreadId);
@@ -319,6 +340,7 @@ public abstract partial class ElectronObject : IDisposable
         Action<ElectronObject>? disposed = null;
         Exception? notificationError = null;
         Exception? disposalError = null;
+        var canceled = false;
 
         try
         {
@@ -331,23 +353,35 @@ public abstract partial class ElectronObject : IDisposable
                 notificationError = error;
             }
 
-            try
+            canceled = Interlocked.CompareExchange(ref _disposeState, Disposing, PreDeleting) == PreDeleteCanceled;
+            if (!canceled)
             {
-                Dispose(disposing: true);
-            }
-            catch (Exception error)
-            {
-                disposalError = error;
+                try
+                {
+                    Dispose(disposing: true);
+                }
+                catch (Exception error)
+                {
+                    disposalError = error;
+                }
             }
         }
         finally
         {
-            Volatile.Write(ref _disposeState, DisposedState);
-            disposed = Disposed;
-            Disposed = null;
-            PropertyListChanged = null;
-            ScriptChanged = null;
-            GC.SuppressFinalize(this);
+            if (canceled)
+            {
+                Volatile.Write(ref _disposingThreadId, 0);
+                Volatile.Write(ref _disposeState, Alive);
+            }
+            else
+            {
+                Volatile.Write(ref _disposeState, DisposedState);
+                disposed = Disposed;
+                Disposed = null;
+                PropertyListChanged = null;
+                ScriptChanged = null;
+                GC.SuppressFinalize(this);
+            }
         }
 
         if (notificationError is not null && disposalError is not null)
@@ -451,7 +485,7 @@ public abstract partial class ElectronObject : IDisposable
     protected void ThrowIfDisposed()
     {
         var state = Volatile.Read(ref _disposeState);
-        if (state == Alive || state == Disposing && Volatile.Read(ref _disposingThreadId) == Environment.CurrentManagedThreadId)
+        if (state == Alive || (state is Disposing or PreDeleting or PreDeleteCanceled) && Volatile.Read(ref _disposingThreadId) == Environment.CurrentManagedThreadId)
             return;
 
         throw new ObjectDisposedException(GetType().FullName);

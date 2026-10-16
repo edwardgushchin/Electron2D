@@ -13,6 +13,8 @@ assignments only notify their subtree. See [child names](scene-hierarchy.md#chil
 
 All engine objects expose inherited ElectronObject.IsQueuedForDeletion. Each explicit QueueDelete entry retains one independent mark until execution or discard, including duplicate and multiple-tree requests. Node cancellation cannot release an explicit entry. Claimed QueueFree stays observable through exit/pre-delete/cleanup; a failed validation releases the consumed claim for a later request. Terminal objects always read false.
 
+A queued deletion detaches its node before Dispose. An inherited CancelDisposal veto consumes only that attempt: the node remains alive and detached, the claim/explicit mark is released, and a later request may retry. Duplicate explicit entries remain distinct attempts. A root veto cannot keep a finalized SceneTree alive; its detached subtree may be reactivated by a later tree.
+
 ## Owned types
 
 | Type | Role |

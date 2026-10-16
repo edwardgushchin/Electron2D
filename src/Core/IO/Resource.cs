@@ -70,7 +70,11 @@ public class Resource : ElectronObject
         lock (PathCacheGate)
         {
             if (!PathCache.TryGetValue(path, out var weak)) return null;
-            if (weak.TryGetTarget(out var resource) && !resource.IsDisposed) return resource;
+            if (weak.TryGetTarget(out var resource))
+            {
+                if (!resource.IsDisposed) return resource;
+                if (!resource.IsDisposalCommitted) return null;
+            }
             PathCache.Remove(path);
             return null;
         }
@@ -700,7 +704,7 @@ public class Resource : ElectronObject
             Resource? existing = null;
             if (path.Length != 0 && PathCache.TryGetValue(path, out var weak))
             {
-                if (!weak.TryGetTarget(out existing) || existing.IsDisposed)
+                if (!weak.TryGetTarget(out existing) || existing.IsDisposalCommitted)
                 {
                     PathCache.Remove(path);
                     existing = null;

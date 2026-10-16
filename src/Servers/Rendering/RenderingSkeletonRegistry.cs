@@ -18,8 +18,8 @@ internal static class RenderingSkeletonRegistry
     }
     private static int _registrations;
     private static readonly List<RID> Stale = [];
-    internal static RID Register(Skeleton skeleton) { var rid = RID.Allocate(); lock (Gate) { if (++_registrations == 256) { _registrations = 0; foreach (var pair in Items) if (!pair.Value.TryGetTarget(out var target) || target.IsDisposed) Stale.Add(pair.Key); foreach (var old in Stale) Items.Remove(old); Stale.Clear(); } Items.Add(rid, new(skeleton)); } return rid; }
+    internal static RID Register(Skeleton skeleton) { var rid = RID.Allocate(); lock (Gate) { if (++_registrations == 256) { _registrations = 0; foreach (var pair in Items) if (!pair.Value.TryGetTarget(out var target) || target.IsDisposalCommitted) Stale.Add(pair.Key); foreach (var old in Stale) Items.Remove(old); Stale.Clear(); } Items.Add(rid, new(skeleton)); } return rid; }
     internal static bool Contains(RID rid) { lock (Gate) return Items.ContainsKey(rid) || OwnedItems.ContainsKey(rid); }
     internal static void Remove(RID rid) { lock (Gate) { Items.Remove(rid); OwnedItems.Remove(rid); } }
-    internal static Skeleton? Resolve(RID rid) { lock (Gate) { if (Items.TryGetValue(rid, out var weak) && weak.TryGetTarget(out var target) && !target.IsDisposed) return target; Items.Remove(rid); return null; } }
+    internal static Skeleton? Resolve(RID rid) { lock (Gate) { Skeleton? target = null; if (Items.TryGetValue(rid, out var weak) && weak.TryGetTarget(out target) && !target.IsDisposed) return target; if (target is null || target.IsDisposalCommitted) Items.Remove(rid); return null; } }
 }

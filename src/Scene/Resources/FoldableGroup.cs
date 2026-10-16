@@ -75,7 +75,8 @@ public class FoldableGroup : Resource
             ThrowIfDisposed(); var result = _snapshots.Count == 0 ? [] : _snapshots.Pop();
             for (var i = 0; i < _containers.Count;)
             {
-                if (!_containers[i].TryGetTarget(out var b) || b.IsDisposed || !ReferenceEquals(b.MembershipGroup, this)) { _containers.RemoveAt(i); continue; }
+                if (!_containers[i].TryGetTarget(out var b) || b.IsDisposalCommitted || !ReferenceEquals(b.MembershipGroup, this)) { _containers.RemoveAt(i); continue; }
+                if (b.IsDisposed) { i++; continue; }
                 result.Add((b, b.MembershipGeneration)); i++;
             }
             return result;

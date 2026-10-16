@@ -8258,8 +8258,8 @@
       "godot": [
         "Object::method:cancel_free()"
       ],
-      "state": "Unimplemented",
-      "reason": "Pinned Object.xml defines veto of actual destruction during NOTIFICATION_PREDELETE; neither declaration nor owner is deprecated. Node.CancelFree cancels a queued scene request under ADR 0006 and is an independently reviewed extra, not this operation. Existing ValidateDisposal rejects before the disposal transition under ADR 0009; it does not implement a pre-delete notification veto. Trigger: accepted lifetime-veto/failure/concurrency semantics and their complete implementation under ADRs 0003/0009; preserve the existing Node cancellation meaning."
+      "state": "Implemented",
+      "reason": "Pinned Object.xml owner and cancel_free declaration have no deprecated metadata. ADRs 0003/0009 project actual pre-delete veto as ElectronObject.CancelDisposal, inherited by all object roles, while Node.CancelFree remains queued cancellation. Only the exact automatic notification thread may veto; outside/manual/foreign/cleanup calls cannot arm cancellation or revive terminal objects. A veto restores the same live identity after notification, preserves subscriptions/resources/weak reservations, skips derived cleanup, and propagates notification errors. Child refusal/veto produces coherent detached subtrees; queued attempts, root reactivation and finished provider retirement retain ownership. Public CPU/software-GPU/registered owner/separate consumers verify the contract and 128 prepared full veto/simulation/query frames at zero owner/all-thread managed allocations; full native/hardware/foreign acceptance remains separate."
     },
     {
       "godot": [

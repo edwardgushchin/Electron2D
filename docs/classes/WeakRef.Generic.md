@@ -1,6 +1,6 @@
 # WeakRef\<T\>
 
-Last updated: 2026-09-24
+Last updated: 2026-10-16
 
 **Inherits:** [`ElectronObject`](ElectronObject.md)
 
@@ -14,7 +14,7 @@ Last updated: 2026-09-24
 
 ## Description
 
-`WeakRef<T>` observes an engine object without keeping it alive or owning its disposal. `GetRef()` returns the same object while it remains alive. It returns `null` when the target has begun disposal or has been collected, including when a disposed object is still strongly held by caller code. A null or already disposed target creates an empty reference. The wrapper itself has the ordinary [`ElectronObject`](ElectronObject.md) disposal lifetime.
+`WeakRef<T>` observes an engine object without keeping it alive or owning its disposal. `GetRef()` returns the same object while it remains alive. It returns `null` during an active disposal attempt, after terminal cleanup or after collection, including when a disposed object is still strongly held by caller code. A null or already disposed target creates an empty reference. A reference created while the target was live resolves the same target again after a pre-delete veto returns. A wrapper constructed while IsDisposed is true stays empty even if that attempt is later vetoed. The wrapper itself has the ordinary [`ElectronObject`](ElectronObject.md) disposal lifetime.
 
 ## Example
 

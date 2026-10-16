@@ -221,11 +221,11 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
 | [Node](classes/Node.md) | [Object](classes/Object.md) | 168 | 17 | 6 | 22 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
-| [Object](classes/Object.md) | — | 22 | 15 | 2 | 20 | 15 |
+| [Object](classes/Object.md) | — | 23 | 15 | 2 | 19 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 22 | 5 | 0 | 0 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 338 | 71 | 17 | 42 | 23 |
+| **Total** | | 339 | 71 | 17 | 41 | 23 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -330,7 +330,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Object::method:_notification(int:)`](classes/Object.md) | Partial | ADR 0005 retains ordinary C# virtual OnNotification dispatch and explicit base calls. Notify has no reversed parameter or per-class reversal mechanism; reserved post-initialization 0 is not automatically emitted. These remain explicit inherited capability/ordering gaps, not completion inferred from the numeric callback declarations. Existing Node/Timer/SceneTree hooks retain their documented typed lifecycle behavior. |
 | [`Object::method:call_deferred(StringName:)`](classes/Object.md) | Partial | Typed Action scheduling replaces dynamic deferred call; ADRs 0001/0006. Return type differs: Variant → System.Void; audit observable contract. |
 | [`Object::method:can_translate_messages()`](classes/Object.md) | Partial | C# property form of upstream Object operation (ADRs 0005 and 0007). |
-| [`Object::method:cancel_free()`](classes/Object.md) | Unimplemented | Pinned Object.xml defines veto of actual destruction during NOTIFICATION_PREDELETE; neither declaration nor owner is deprecated. Node.CancelFree cancels a queued scene request under ADR 0006 and is an independently reviewed extra, not this operation. Existing ValidateDisposal rejects before the disposal transition under ADR 0009; it does not implement a pre-delete notification veto. Trigger: accepted lifetime-veto/failure/concurrency semantics and their complete implementation under ADRs 0003/0009; preserve the existing Node cancellation meaning. |
 | [`Object::method:get_incoming_connections()`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:get_method_argument_count(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:get_script()`](classes/Object.md) | Blocked | Trigger: ADR 0091 Script resource/type-catalog slice and executable owner-to-script metadata association for supported C# objects. The single concrete Script identity is accepted, but neither the resource nor this getter is implemented; a Node subtype or reserved ScriptChanged event is not that association. |

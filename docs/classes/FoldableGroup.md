@@ -1,6 +1,6 @@
 # FoldableGroup
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 **Namespace:** `Electron2D`. **Declaration:** `public class FoldableGroup : Resource`.
 
@@ -17,3 +17,5 @@ Coordinates [FoldableContainer](FoldableContainer.md) expansion without owning i
 | `public event Action<FoldableContainer>? Expanded` | Peers are folded; source is not yet committed expanded. |
 
 Attached members require their scene owner for group operations. No callbacks run under the membership lock. Failures propagate after mandatory fold commitment; later reentrant selection supersedes older work. Resource disposal clears membership/events without disposing containers. XML, managed/fresh-process/native tests and [coverage](../coverage/classes/FoldableGroup.md) describe current behavior, without other-platform or owner acceptance claims.
+
+Snapshots hide members during an active pre-delete attempt without removing their weak membership. A veto restores their presence automatically; terminal disposal/collection or explicit group reassignment retires the record.

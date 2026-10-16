@@ -1,6 +1,6 @@
 # Global canvas shader parameters
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 ## Responsibility and ownership
 
@@ -68,3 +68,5 @@ Base reads/writes retain their session semantics. Activation publishes authored 
 ShaderGlobalsOverrideTests passed 25-role authoring with a shared image alias, fresh-process storage, live unset-descriptor restoration, real membership and ancestor-order changes, independent tree transfer, capture/thread guards, failed exit/activation repair, disposed-image preflight and 1024 prepared updates at 0 owner managed bytes. GLSL/HLSL each passed 160 software-Vulkan frames on Linux Wayland and X11, with twelve pixel phases and 64 active/64 idle intervals at 0 owner managed bytes. A separate public-only GLSL JIT and NativeAOT application passed fresh-file numeric/image schema loading, native pixels and base restoration on both display protocols; NativeAOT maps contained no CoreCLR and no hardware graphics drivers were loaded. Project registry settings, external image ownership and broader platform/native allocation acceptance remain separate.
 
 Edited-scene warning refreshes follow actual shader-node registration, including owner-thread subtree reordering inside pre-delete. Internal selection work publishes through the tree warning dispatcher, preserving the public mutation guard while allowing observers to see each committed warning state. A regression observes waiting/active states one and zero during pre-delete; callback failures retain the ordinary aggregate/continuation rules.
+
+Pre-delete cancellation now has direct integrated verification: an active ShaderGlobalsOverride remains registered with its data and subscriptions after CancelDisposal, even when a notification handler also fails. Subsequent committed disposal retires it normally. Managed and software-Vulkan HLSL/GLSL tests and a public-only fresh-scene JIT/NativeAOT consumer exercise this lifecycle together with ordering, warnings, pixels and base restoration.

@@ -89,13 +89,24 @@ internal static class ShaderGlobalsOverrideTests
         lifecycleTree.EditedSceneRoot = lifecycleRoot;
         var warningStates = new List<int>();
         lifecycleTree.NodeConfigurationWarningChanged += (_, changed) => { if (ReferenceEquals(changed, pending)) warningStates.Add(pending.GetConfigurationWarnings().Length); };
+        pending.SetShaderParameter<float>("retained", Kind.Float, .75f);
+        var notifications = 0; pending.Disposed += _ => notifications++;
+        var propertyChanges = 0; pending.PropertyListChanged += _ => propertyChanges++;
         pending.BeforeDelete = () =>
         {
             lifecycleRoot.MoveChild(west, 1); Check(lifecycleTree.SelectedShaderGlobals == waiting, "Pre-delete reordering selects actual tree order.");
             lifecycleRoot.MoveChild(west, 0); Check(lifecycleTree.SelectedShaderGlobals == pending, "Pending deletion remains a real member until exit, including a cancellable pre-delete phase.");
             Check(warningStates.SequenceEqual(new[] { 1, 0 }), $"Pre-delete selection warnings must deliver [1, 0], got [{string.Join(", ", warningStates)}].");
+            pending.CancelDisposal();
         };
-        pending.Dispose(); Check(lifecycleTree.SelectedShaderGlobals == waiting, "Actual exit retires pending selection.");
+        pending.Dispose();
+        Check(!pending.IsDisposed && pending.Tree == lifecycleTree && lifecycleTree.SelectedShaderGlobals == pending && pending.GetShaderParameter<float>("retained") == .75f && notifications == 0, "Canceled disposal preserves active selection, membership and authored data.");
+        pending.SetShaderParameter<float>("after-veto", Kind.Float, .25f); Check(propertyChanges == 1, "Canceled disposal preserves property subscriptions.");
+        pending.BeforeDelete = () => { pending.CancelDisposal(); throw new InvalidOperationException("Vetoed notification failure."); };
+        Reject<Exception>(() => pending.Dispose());
+        Check(!pending.IsDisposed && lifecycleTree.SelectedShaderGlobals == pending && pending.IsInGroup("shader_overrides_group_active") && notifications == 0, "Veto plus callback failure preserves live active state.");
+        pending.BeforeDelete = null; pending.Dispose();
+        Check(lifecycleTree.SelectedShaderGlobals == waiting && notifications == 1 && pending.Parameters.Names().Length == 0, "Later committed disposal retires values and delivers the retained subscriber once.");
         Console.WriteLine("Scene globals: 25 roles, fresh-file graph, lifecycle/order/ownership and 1024 updates=0 B passed.");
     }
     internal static void RunArchive(string path)
@@ -143,6 +154,7 @@ internal static class ShaderGlobalsOverrideTests
         var first = new ShaderGlobalsOverride(); first.SetShaderParameter<float>("gain", Kind.Float, .75f);
         var second = new ShaderGlobalsOverride(); second.SetShaderParameter<float>("gain", Kind.Float, .25f);
         window.AddChild(first); window.AddChild(second);
+        var vetoNode = new PreDeleteOverride(); vetoNode.SetShaderParameter<float>("gain", Kind.Float, .75f); window.AddChild(vetoNode); window.MoveChild(vetoNode, 0);
         var frame = 0; long before = 0, active = 0, idle = 0;
         window.Ready += _ =>
         {
@@ -163,6 +175,8 @@ internal static class ShaderGlobalsOverrideTests
             Reject<AggregateException>(() => incompatible.SetShaderParameter<float>("deferred", Kind.Float, .2f));
             Check(notified && incompatible.GetShaderParameter<float>("deferred") == .2f, "Committed descriptor changes remain observable after unrelated publication failure.");
             incompatible.SetShaderParameter<float>("gain", Kind.Float, null); window.RemoveChild(incompatible); incompatible.Dispose();
+            vetoNode.BeforeDelete = () => { window.MoveChild(first, 0); window.MoveChild(vetoNode, 0); vetoNode.CancelDisposal(); };
+            vetoNode.Dispose(); Check(!vetoNode.IsDisposed && vetoNode.IsInGroup("shader_overrides_group_active") && vetoNode.GetShaderParameter<float>("gain") == .75f, "Canceled node remains the rendered global override after actual reorder.");
             window.Tree!.ProcessFrameStarted += _ =>
             {
                 before = GC.GetAllocatedBytesForCurrentThread();
@@ -179,7 +193,7 @@ internal static class ShaderGlobalsOverrideTests
                     Check(MathF.Abs(color.R - gain * gain) < .01f && MathF.Abs(color.G - gain * gain * (frame == 5 ? 0 : .5f)) < .01f, $"Scene {profile} phase {frame}: {color}, gain={gain}.");
                     switch (frame)
                     {
-                        case 0: RenderingServer.GlobalShaderParameterSet("gain", .1f); break;
+                        case 0: RenderingServer.GlobalShaderParameterSet("gain", .1f); vetoNode.BeforeDelete = null; vetoNode.Dispose(); break;
                         case 1: first.SetShaderParameter<float>("gain", Kind.Float, null); break;
                         case 2: first.SetShaderParameter<float>("gain", Kind.Float, .5f); break;
                         case 3: window.MoveChild(second, 0); break;
@@ -197,7 +211,7 @@ internal static class ShaderGlobalsOverrideTests
             };
         };
         try { Check(Engine.Run(window) == 0 && frame == 160, "Scene-global frame lifecycle completed."); }
-        finally { if (!window.IsDisposed) window.Dispose(); if (!first.IsDisposed) first.Dispose(); }
+        finally { vetoNode.BeforeDelete = null; if (!window.IsDisposed) window.Dispose(); if (!vetoNode.IsDisposed) vetoNode.Dispose(); if (!first.IsDisposed) first.Dispose(); }
         Check(!texture.IsDisposed && !array.IsDisposed && !red.IsDisposed, "Borrowed images survive scene/session cleanup.");
         Console.WriteLine($"Scene globals {profile}: 12 pixel phases, 64 active={active} B/64 idle={idle} B passed.");
     }

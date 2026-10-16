@@ -12,6 +12,8 @@ Fixed mode uses a rational integer physics-tick remainder and bypasses realtime 
 
 The private audio bridge initializes a master with no platform output stream and invokes the existing FAudio engine procedure. Voices, native SRC, source callbacks, ordered effects and meters use the same graph as live output. The native procedure still contains callback failures; the owner checks source/effect failures before publishing a movie frame. Device switching rejects. Last-player detachment retains the offline graph until Engine cleanup. Recording does not make external microphone input deterministic.
 
+Automatic pre-delete veto retains a borrowed custom writer registration; later AddWriter calls reclaim only committed disposal entries. Runtime-active and callback owner guards still reject before notification.
+
 ## Lifetime and failures
 
 The creating thread registers/disposes custom writers; runtime hooks execute serially on the runtime owner. Registered instances remain borrowed and cannot be disposed while any runtime is reserved. Hook reentry into registration, nested runs and active disposal rejects. Invalid public path/FPS arguments preserve an unconsumed root; after reservation the runtime owns and cleans the root even if selection, metadata, native preparation, Begin, Ready, frame or End fails.

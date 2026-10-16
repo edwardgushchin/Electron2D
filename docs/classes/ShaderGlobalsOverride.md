@@ -1,6 +1,6 @@
 # ShaderGlobalsOverride
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 Source: [ShaderGlobalsOverride.cs](../../src/Scene/Main/ShaderGlobalsOverride.cs). Declaration: `public class ShaderGlobalsOverride : Node`.
 Inherits [Node](Node.md). No spatial or visibility role is added.
@@ -70,7 +70,7 @@ Return authored names and logical roles only. Mutating the returned list changes
 
 ### GetConfigurationWarnings
 
-An attached waiting node reports that another node precedes it. Detached and selected nodes add no selection warning. Selection, renderer publication and edited-scene warning refreshes are mandatory membership work, independent of overridable notifications. Warning refreshes follow actual registration even during owner-thread pre-delete reordering; the temporary disposed flag does not suppress them. Callback failures are aggregated after attempting remaining cleanup/promotion and warning delivery.
+An attached waiting node reports that another node precedes it. Detached and selected nodes add no selection warning. Selection, renderer publication and edited-scene warning refreshes are mandatory membership work, independent of overridable notifications. Warning refreshes follow actual registration even during owner-thread pre-delete reordering; the pending pre-delete phase does not suppress them. Callback failures are aggregated after attempting remaining cleanup/promotion and warning delivery.
 
 ### GetPropertyDescriptors and CreateSceneInstanceFactory
 
@@ -81,3 +81,5 @@ Expose the complete inherited schema plus typed scene values and preserve exact 
 [ShaderGlobalsOverrideTests](../../tests/Electron2D.Tests/ShaderGlobalsOverrideTests.cs) owns all-role authoring/archive, fresh-process load, real membership/ordering, tree transfer, guards and prepared owner-allocation checks, plus GLSL/HLSL pixel phases and active/idle rendering checks. Actual results are recorded with the completed slice in the [component](../components/global-shader-parameters.md#scene-owned-overrides).
 
 The node adds no source compiler or backend. Shader drawing retains the GPU requirement. Project-default registry loading, external samplers, foreign platforms, native allocator measurements and human visual acceptance remain separate obligations. See ADRs [0004](../decisions/product.md#adr-0004), [0023](../decisions/scene.md#adr-0023), [0028](../decisions/rendering.md#adr-0028) and [0090](../decisions/agent-native.md#adr-0090).
+
+Integration with committed disposal cancellation is verified on the merged runtime. CancelDisposal from pre-delete preserves tree membership, active selection, authored parameters and property/disposal subscribers, including callback failure after a veto. A later accepted disposal clears values and delivers Disposed once. Both-language Wayland/X11 frame checks retain the canceled override, observe actual reorder warnings, then verify later retirement and base restoration. Public-only JIT/NativeAOT consumers exercise fresh stored scenes, cancellation, warning states and real pixels; native allocation and hardware/foreign-host gates remain separate.

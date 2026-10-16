@@ -17,6 +17,8 @@ assignments and complete physical frames allocate no managed memory.
 
 Node inherits queued-deletion observation from ElectronObject. Explicit SceneTree.QueueDelete and cancellable Node.QueueFree remain visible until their request is consumed or cleanup finishes; cancellation affects only node work and parent requests do not mark children.
 
+Inherited pre-delete cancellation is distinct from queued node cancellation. Rejected/vetoed children survive destruction of their owner as detached subtrees; each queued entry consumes one attempt, and a vetoed finalized root can enter a later tree.
+
 ## Orphan node diagnostics
 
 [Debug orphan diagnostics](../components/scene-hierarchy.md#orphan-node-diagnostics)
