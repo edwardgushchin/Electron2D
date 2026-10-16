@@ -7,6 +7,9 @@ namespace Electron2D;
 /// embedded child windows use a containing viewport configured with GUIEmbedSubwindows.</remarks>
 public partial class Window : Viewport
 {
+    /// <summary>Notifies this window immediately before its visibility-change event.</summary>
+    public const int NotificationVisibilityChanged = 30;
+
     private static readonly PropertyDescriptor[] WindowProperties =
     [
         new PropertyDescriptor<Window, bool>(nameof(Visible), w => w.Visible, (w, v) => w.Visible = v, _ => true, stored: true),
@@ -161,6 +164,8 @@ public partial class Window : Viewport
             List<Exception>? errors = null;
             try { UpdateExclusiveSelection(); } catch (Exception error) { CollectException(ref errors, error); }
             try { EmbeddedVisibilityChanged(); } catch (Exception error) { CollectException(ref errors, error); }
+            try { Notify(NotificationVisibilityChanged); } catch (Exception error) { CollectException(ref errors, error); }
+            if (IsDisposed) { ThrowCollected("Window visibility callbacks failed.", errors); return; }
             try { BeginEventEmission(VisibilityChanged)?.Invoke(); }
             catch (Exception error) { CollectException(ref errors, error); }
             foreach (var node in EnumerateDepthFirst())
@@ -253,6 +258,7 @@ public partial class Window : Viewport
             AboutToPopup = null;
             CloseRequested = null;
             VisibilityChanged = null;
+            WindowInput = null;
             TitleChanged = null;
             FocusEntered = null;
             FocusExited = null;

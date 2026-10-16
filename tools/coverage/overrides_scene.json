@@ -5797,6 +5797,21 @@
       "godot": "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_KEYBOARD_FOCUS",
       "electron2d": "enumValue:Electron2D.Window.WindowInitialPosition.CenterScreenWithKeyboardFocus()",
       "reason": "ADRs 0040/0004/0090: six stored typed Window placement policies execute through existing native screen selectors before root scene entry and through actual embedded viewport centering on entry/show. Absolute retains authored/unset placement; changing a visible policy does not move the window. Native managers may constrain placement, Wayland root global coordinates reject with host cleanup, and embedded modes execute there. ResetSize shares positive client extent, authored/title bounds and scaled wrapped-content minima with Size and native requests; invalid/overflow/reentrant measurement preserves state. WindowPlacementTests verifies packed/archive configuration, owner/capture/lifetime, actual software-Vulkan embedded and native geometry/pixels; other hosts and owner/hardware acceptance remain separate."
+    },
+    {
+      "godot": "Window::constant:NOTIFICATION_VISIBILITY_CHANGED",
+      "electron2d": "constant:Electron2D.Window.NotificationVisibilityChanged()",
+      "reason": "ADRs 0002/0004/0038/0040: executable Window reception before viewport processing, internal-device filtering, window-client coordinates before final content transforms, embedded/nested forwarding, pause and GUI-disable semantics, borrowed event mutation, observer-failure continuation and lifecycle guards. WindowInputTests exercises managed and native SDL queue/software-Vulkan pixels; public JIT/NativeAOT consumers verify the host flow. Visibility notification 30 precedes the existing typed visibility event; repeated assignments are silent and callback failures preserve committed state. Other native platforms remain unverified."
+    },
+    {
+      "godot": "Window::signal:window_input(InputEvent:)",
+      "electron2d": "event:Electron2D.Window.WindowInput()",
+      "reason": "ADRs 0002/0004/0038/0040: executable Window reception before viewport processing, internal-device filtering, window-client coordinates before final content transforms, embedded/nested forwarding, pause and GUI-disable semantics, borrowed event mutation, observer-failure continuation and lifecycle guards. WindowInputTests exercises managed and native SDL queue/software-Vulkan pixels; public JIT/NativeAOT consumers verify the host flow. Visibility notification 30 precedes the existing typed visibility event; repeated assignments are silent and callback failures preserve committed state. Other native platforms remain unverified."
+    },
+    {
+      "godot": "Window::signal:visibility_changed()",
+      "electron2d": "event:Electron2D.Window.VisibilityChanged()",
+      "reason": "ADRs 0002/0004/0038/0040: executable Window reception before viewport processing, internal-device filtering, window-client coordinates before final content transforms, embedded/nested forwarding, pause and GUI-disable semantics, borrowed event mutation, observer-failure continuation and lifecycle guards. WindowInputTests exercises managed and native SDL queue/software-Vulkan pixels; public JIT/NativeAOT consumers verify the host flow. Visibility notification 30 precedes the existing typed visibility event; repeated assignments are silent and callback failures preserve committed state. Other native platforms remain unverified."
     }
   ],
   "extras": [
@@ -10091,7 +10106,6 @@
       "state": "Unimplemented",
       "reason": "Next Window native-control projection and platform capability audit over the existing DisplayServer, including modes, flags, IME, native notifications and geometry (ADR 0040).",
       "godot": [
-        "Window::constant:NOTIFICATION_VISIBILITY_CHANGED",
         "Window::property:auto_translate",
         "Window::property:exclude_from_capture",
         "Window::property:extend_to_title",
@@ -10099,11 +10113,6 @@
         "Window::property:mouse_passthrough_polygon",
         "Window::property:nonclient_area",
         "Window::property:sharp_corners",
-        "Window::signal:go_back_requested()",
-        "Window::signal:nonclient_window_input(InputEvent:)",
-        "Window::signal:titlebar_changed()",
-        "Window::signal:visibility_changed()",
-        "Window::signal:window_input(InputEvent:)",
         "Window::theme_item:close",
         "Window::theme_item:close_h_offset",
         "Window::theme_item:close_pressed",
@@ -11697,6 +11706,36 @@
       "godot": [
         "Window::method:move_to_foreground()"
       ]
+    },
+    {
+      "godot": [
+        "Window::constant:NOTIFICATION_VISIBILITY_CHANGED",
+        "Window::signal:window_input(InputEvent:)",
+        "Window::signal:visibility_changed()"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0002/0004/0038/0040: executable Window reception before viewport processing, internal-device filtering, window-client coordinates before final content transforms, embedded/nested forwarding, pause and GUI-disable semantics, borrowed event mutation, observer-failure continuation and lifecycle guards. WindowInputTests exercises managed and native SDL queue/software-Vulkan pixels; public JIT/NativeAOT consumers verify the host flow. Visibility notification 30 precedes the existing typed visibility event; repeated assignments are silent and callback failures preserve committed state. Other native platforms remain unverified."
+    },
+    {
+      "godot": [
+        "Window::signal:titlebar_changed()"
+      ],
+      "state": "Unimplemented",
+      "reason": "Exact prerequisite: native title-bar decoration-change producer, including macOS fullscreen/extend-to-title integration; changing Title emits the separate TitleChanged text signal and does not implement decoration changes (ADR 0040)."
+    },
+    {
+      "godot": [
+        "Window::signal:nonclient_window_input(InputEvent:)"
+      ],
+      "state": "Unimplemented",
+      "reason": "Exact prerequisite: executable Window.NonclientArea custom-decoration input ownership and native/embedded exclusive-child bypass routing. Ordinary WindowInput does not supply this separate path (ADR 0040)."
+    },
+    {
+      "godot": [
+        "Window::signal:go_back_requested()"
+      ],
+      "state": "Unimplemented",
+      "reason": "Exact prerequisite: typed host go-back request producer and containing-window notification routing, followed by SceneTree.QuitOnGoBack policy. Generic key delivery does not imply native system-back requests (ADR 0040)."
     }
   ]
 }

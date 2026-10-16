@@ -220,6 +220,7 @@ public partial class Node : ElectronObject
 
     private bool _isExitingTree;
     private bool _hasPendingTreeExit;
+    internal bool IsDepartingTree => _isExitingTree || _hasPendingTreeExit;
 
     private int _processPriority;
 

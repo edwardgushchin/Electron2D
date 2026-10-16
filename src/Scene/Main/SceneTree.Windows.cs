@@ -54,7 +54,7 @@ public sealed partial class SceneTree
         if (_embeddedWindowHover.GetValueOrDefault(host) == window)
         {
             _embeddedWindowHover.Remove(host);
-            try { window.ExitWindowMouse(); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (!window.IsDisposed) window.ExitWindowMouse(); } catch (Exception error) { CollectException(ref errors, error); }
         }
         try { DisableGUIViewport(window); } catch (Exception error) { CollectException(ref errors, error); }
         if (_embeddedMouseCapture.GetValueOrDefault(host) == window) _embeddedMouseCapture.Remove(host);
@@ -64,16 +64,17 @@ public sealed partial class SceneTree
         {
             _embeddedFocus.Remove(host);
             try { if (!window.IsDisposed) window.EmitEmbeddedFocus(false); } catch (Exception error) { CollectException(ref errors, error); }
-            Window? next = null; for (var i = host.EmbeddedWindows.Count - 1; i >= 0; i--) { var candidate = host.EmbeddedWindows[i]; if (candidate != window && !candidate.IsDisposed && candidate.Visible && !candidate.Unfocusable) { next = candidate; break; } }
+            if (IsClosing || host.IsDepartingTree) { ThrowCollected("Embedded window hide callbacks failed.", errors); return; }
+            Window? next = null; for (var i = host.EmbeddedWindows.Count - 1; i >= 0; i--) { var candidate = host.EmbeddedWindows[i]; if (candidate != window && !candidate.IsDisposed && !candidate.IsDepartingTree && candidate.Visible && !candidate.Unfocusable) { next = candidate; break; } }
             try { if (next is not null) FocusEmbeddedWindow(next); else if (host is Window { IsDisposed: false } parent) parent.EmitEmbeddedFocus(true); } catch (Exception error) { CollectException(ref errors, error); }
         }
         ThrowCollected("Embedded window hide callbacks failed.", errors);
     }
     internal Window GetEmbeddedTextWindow(Window root) { var window = root; while (_embeddedFocus.GetValueOrDefault(window) is { IsDisposed: false, Visible: true } next) window = next; return window; }
-    private InputEvent? RouteEmbeddedInput(Viewport host, InputEvent input, out Viewport target)
+    private InputEvent? RouteEmbeddedInput(Viewport host, InputEvent input, out Viewport target, ref List<Exception>? errors)
     {
         if (input is InputEventMouse windowMouse) UpdateEmbeddedWindowHover(host, windowMouse.Position);
-        target = host; if (host.EmbeddedWindows.Count == 0) { if (host is Popup directPopup) directPopup.HandlePopupInput(input); return input; }
+        target = host; if (host.EmbeddedWindows.Count == 0) return input;
         Vector2? point = input switch { InputEventMouse mouse => mouse.Position, InputEventScreenTouch touch => touch.Position, InputEventScreenDrag drag => drag.Position, InputEventGesture gesture => gesture.Position, _ => null };
         if (_embeddedDecorDrag.TryGetValue(host, out var decor))
         {
@@ -131,21 +132,34 @@ public sealed partial class SceneTree
             if (input is InputEventScreenTouch touchEvent) { if (touchEvent.Pressed && chosen is not null) _embeddedTouchCapture[(host, touchEvent.Index)] = chosen; else if (!touchEvent.Pressed) _embeddedTouchCapture.Remove((host, touchEvent.Index)); }
         }
         else _embeddedFocus.TryGetValue(host, out chosen);
-        if (chosen is null || chosen.IsDisposed || !chosen.Visible) { if (host is Popup directPopup) directPopup.HandlePopupInput(input); return input; }
+        if (chosen is null || chosen.IsDisposed || !chosen.Visible) return input;
         if (point != null && input is InputEventMouseMotion && chosen is PopupMenu menu)
         {
             while (menu.Parent is PopupMenu parentMenu) menu = parentMenu;
             if (menu.Parent is Control owner && (owner is MenuButton { SwitchOnHover: true } || owner is MenuBar { SwitchOnHover: true }) && !menu.EmbeddedHitRect.HasPoint(point.Value)) RefreshMenuBarHover(owner, host, point.Value);
         }
         target = chosen;
-        var localized = input.XformedBy(chosen.GetFinalTransform().AffineInverse() * new Transform(0, -(Vector2)chosen.Position));
-        if (localized is InputEventMouse mouseLocal) mouseLocal.GlobalPosition = mouseLocal.Position;
+        InputEvent? windowLocal = null, localized = null, result = null;
         try
         {
-            if (chosen.EmbeddedWindows.Count > 0) { var nested = RouteEmbeddedInput(chosen, localized, out target); if (!ReferenceEquals(nested, localized)) localized.Dispose(); return nested; }
-            if (chosen is Popup popup) popup.HandlePopupInput(localized); return localized;
+            windowLocal = input.XformedBy(new Transform(0, -(Vector2)chosen.Position));
+            ReceiveWindowInput(chosen, windowLocal, ref errors);
+            if (chosen.IsDisposed || !ReferenceEquals(chosen.Tree, this) || chosen.GUIDisableInput) return null;
+            localized = chosen.MakeViewportInputLocal(windowLocal);
+            result = chosen.EmbeddedWindows.Count > 0 ? RouteEmbeddedInput(chosen, localized, out target, ref errors) : localized;
+            return result;
         }
-        catch { if (!ReferenceEquals(localized, input)) localized.Dispose(); throw; }
+        finally
+        {
+            if (localized is not null && !ReferenceEquals(localized, input) && !ReferenceEquals(localized, result)) localized.Dispose();
+            if (windowLocal is not null && !ReferenceEquals(windowLocal, input) && !ReferenceEquals(windowLocal, localized) && !ReferenceEquals(windowLocal, result)) windowLocal.Dispose();
+        }
+    }
+    private void ReceiveWindowInput(Window window, InputEvent input, ref List<Exception>? errors)
+    {
+        if (window is Popup popup) try { popup.HandlePopupInput(input); } catch (Exception error) { CollectException(ref errors, error); }
+        if (window.IsDisposed || !ReferenceEquals(window.Tree, this)) return;
+        try { window.EmitWindowInput(input); } catch (Exception error) { CollectException(ref errors, error); }
     }
     private void RefreshMenuBarHover(Control owner, Viewport host, Vector2 point)
     {

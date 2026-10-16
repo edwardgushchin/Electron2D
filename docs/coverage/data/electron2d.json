@@ -15538,6 +15538,19 @@
     "value": "32"
   },
   {
+    "id": "constant:Electron2D.Window.NotificationVisibilityChanged()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Window",
+    "name": "NotificationVisibilityChanged",
+    "signature": "public const System.Int32 NotificationVisibilityChanged = 30",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "30"
+  },
+  {
     "id": "constructor:Electron2D.AESContext..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.AESContext",
@@ -55644,6 +55657,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Window.WindowInput()",
+    "kind": "event",
+    "declaringType": "Electron2D.Window",
+    "name": "WindowInput",
+    "signature": "public event System.Action\u003CElectron2D.InputEvent\u003E WindowInput",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.InputEvent\u003E",
     "value": null
   },
   {

@@ -116,14 +116,18 @@ internal static class WindowNotificationTests
         using var world = new World(PhysicsServer.Backend.CPU);
         var window = new ProbeWindow(log, "native") { World = world, Visible = false };
         var body = new ProbeBody(log, "body"); window.AddChild(body);
-        var afterFailure = false;
+        var afterFailure = false; var positionSupported = false;
         window.FocusEntered += () => throw new InvalidOperationException("native event observer");
         window.FocusEntered += () => afterFailure = true;
         window.CloseRequested += () => log.Add("signal-close");
         body.Ready += _ =>
         {
+            window.Show();
             log.Clear();
             var windows = SDL.GetWindows(out var count); Check(count == 1, "Native host owns one window.");
+            Check(SDL.SetWindowSize(windows![0], 320, 240) && SDL.SyncWindow(windows[0]), "Native resize commits a real changed client size before its queued notification.");
+            positionSupported = SDL.GetCurrentVideoDriver() != "wayland";
+            if (positionSupported) Check(SDL.SetWindowPosition(windows[0], 200, 300) && SDL.SyncWindow(windows[0]), "Position-capable host commits a real move before its queued notification.");
             foreach (var type in new[] { SDL.EventType.WindowFocusGained, SDL.EventType.WindowFocusLost, SDL.EventType.WindowMouseEnter, SDL.EventType.WindowMouseLeave, SDL.EventType.WindowDisplayScaleChanged, SDL.EventType.WindowMoved, SDL.EventType.WindowResized, SDL.EventType.WindowCloseRequested })
             {
                 var input = new SDL.Event { Window = new SDL.WindowEvent { Type = type, WindowID = SDL.GetWindowID(windows![0]), Data1 = 127, Data2 = 109 } };
@@ -131,14 +135,15 @@ internal static class WindowNotificationTests
             }
         };
         Reject<AggregateException>(() => Engine.Run(window));
-        foreach (var what in new[] { 1002, 1003, 1004, 1005, 1006, 1009, 1012 })
+        foreach (var what in new[] { 1002, 1003, 1004, 1005, 1006, 1009 })
         {
             var owner = log.IndexOf("native:" + what); var receiver = log.IndexOf("body:" + what);
-            Check(owner >= 0 && receiver == owner + 1, "Native queued notifications reach physical descendants in order.");
+            Check(owner >= 0 && receiver == owner + 1, $"Native queued notification {what} reaches physical descendants in order: {string.Join(",", log)}.");
         }
+        if (positionSupported) Check(log.IndexOf("native:1012") >= 0 && log.IndexOf("body:1012") == log.IndexOf("native:1012") + 1, "Native position notification follows an actual supported move.");
         Check(log.Contains("native:1008") && !log.Contains("body:1008"), "Native size stays on Window.");
         Check(afterFailure && log.Contains("signal-close") && window.IsDisposed && body.IsDisposed && !DisplayServer.IsAvailable && Engine.MainLoop is null, "Native callback failure retains later delegates/events and full teardown.");
-        Console.WriteLine("Dummy native queue: eight window notification kinds, handler failure, later events and teardown passed.");
+        Console.WriteLine("Native queue: supported geometry, focus, pointer, scale and close notifications, handler failure and teardown passed.");
     }
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }

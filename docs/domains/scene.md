@@ -4,6 +4,8 @@
 
 Last updated: 2026-10-17
 
+[Window input reception](../classes/Window.md#window-input-reception-and-visibility-notification) now runs before viewport localization and scene callbacks for native and forwarded embedded events. Visibility changes also deliver notification 30 before their typed signal; input ownership and failure cleanup remain in the existing host/tree lifetime.
+
 ## Runtime child names
 
 [Child-name collision policy](../components/scene-hierarchy.md#child-name-collisions)

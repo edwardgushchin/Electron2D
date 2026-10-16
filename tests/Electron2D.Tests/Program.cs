@@ -258,6 +258,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_CCD_CONTRACT") == "1
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_INPUT") is { } windowInput) { if (windowInput == "managed") WindowInputTests.RunManaged(); else WindowInputTests.RunNative(windowInput == "failure"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_PLACEMENT") is { } placement) { if (placement == "managed") WindowPlacementTests.RunManaged(); else WindowPlacementTests.RunNative(placement); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_NOTIFICATIONS") == "1") { WindowNotificationTests.Run(); return; }
 
@@ -1640,6 +1641,7 @@ TranslationDomainTests.Run();
 LocalizationProjectSettingsTests.Run();
 ProjectLayoutDirectionTests.Run();
 WindowContentScaleTests.Run();
+WindowInputTests.RunManaged();
 VerifyMathF();
 VerifyColors();
 SpriteTests.Run();

@@ -1,5 +1,7 @@
 # API coverage register
 
+[Window input reception](../classes/Window.md#window-input-reception-and-visibility-notification) now executes native and nested embedded stages, before content transforms and scene/GUI processing. Notification 30 completes the visibility delivery pair. Three reference rows are Implemented; decoration, nonclient and system-back producers retain their exact independent prerequisites.
+
 [Scene-owned shader globals](../components/global-shader-parameters.md#scene-owned-overrides) now provide typed portable values, actual tree-order selection and automatic base restoration. One class is implemented; its typed dynamic-property and inherited-lifecycle projections are explicitly accounted. Project registry startup and the compiler-consumed built-in include library remain separate prerequisites.
 
 [Prepared control handoff](../components/physics-network-example.md#prepared-future-input-at-control-handoff-2026-10-16) now makes the process check require actual queued old input and applied new-epoch replacements at the same future tick. This verification change leaves the 286-declaration physics census and remaining implementation gates unchanged.

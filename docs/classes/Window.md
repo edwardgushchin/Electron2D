@@ -791,3 +791,40 @@ Embedded windows center in their actual containing viewport for every non-absolu
 The same minimum calculation is used by Size and wrapped-content growth, including native-root requests. Access follows existing disposal, owner-thread and capture rules. Rendering, other-host and compositor acceptance are distinct from detached authoring checks.
 
 Verification for this family: WindowPlacementTests covers all policies, invalid values, scaled fractional minima/maxima, overflow, failed/reentrant/disposal hooks, packed/archive storage and owner/capture/lifetime guards. Eleven native profiles pass on Linux x64: embedded pixels and actual native reset/readback on Wayland/X11, all six X11 root placements, and explicit Wayland root-position rejection with cleanup. A public-only consumer authors a scene in NativeAOT and reloads it in fresh JIT/NativeAOT processes, exercising five shown policy phases and green pixels on both drivers. AOT maps no CoreCLR. Popup and content-scale managed regressions also pass. Other operating systems, physical GPU and human acceptance remain separate.
+
+
+## Window input reception and visibility notification
+
+`WindowInput` is a typed `Action<InputEvent>` event for input arriving through the
+window host, before ordinary viewport input. The native root sees client coordinates;
+each forwarded embedded window sees coordinates with its position removed, before
+its own final content transform. Nested windows each receive their own stage.
+The borrowed event is live only during synchronous delivery. Edits to it participate
+in subsequent localization; callers needing retained data must copy the values.
+Internal cursor-refresh events are filtered. Process pause and GUIDisableInput do
+not suppress this reception signal, while a disabled embedder stops child forwarding.
+Direct `PushInput` bypasses the receiver's own WindowInput signal and can still
+forward to embedded children. Use Node/Control input callbacks for input consumption.
+
+Handler failures are collected while scene input continues; recursive input and
+cross-thread delivery reject use. Retiring a window during its reception callback
+prevents later dispatch to that retired viewport. Engine-owned transformed events
+are disposed after dispatch; nonpositional caller events remain borrowed.
+
+`NotificationVisibilityChanged` has value 30. A real visibility assignment commits
+state, notifies the window, then emits VisibilityChanged before canvas-root visibility
+propagation. Assigning the current value is silent. Signal blocking retains numeric
+notifications; notification failure cannot suppress the following event and canvas
+cleanup. Disposal during notification prevents stale delivery. Native refusal occurs
+before either phase, retaining the documented Wayland remapping limitation.
+
+WindowInputTests covers managed routing and native queued input on software Vulkan.
+Public-only saved-scene consumers exercise authoring, fresh load, actual GUI input,
+rendered pixels and cleanup with JIT and NativeAOT. Their single-owner synchronization
+context schedules injected Input.ParseInputEvent calls between RunAsync iterations;
+input injection during scene callbacks, lifecycle delivery or rendering remains rejected. Physical input devices, hardware
+GPU performance and foreign native hosts remain separate acceptance gates.
+
+Hovered-window disposal clears routing ownership without invoking live mutation on the
+retired window. Focus cleanup does not raise another departing child during subtree
+removal or tree shutdown. Regression checks cover both cleanup paths.

@@ -876,20 +876,30 @@ public sealed partial class SceneTree : MainLoop
 
     internal override void DispatchInputEvent(InputEvent @event)
     {
-        if (Root is Viewport viewport) DispatchViewportInput(viewport, @event, inLocalCoordinates: false);
+        if (Root is Viewport viewport) DispatchViewportInput(viewport, @event, inLocalCoordinates: false, fromWindow: viewport is Window);
         else DispatchLocalInputEvent(@event);
     }
 
-    internal void DispatchViewportInput(Viewport viewport, InputEvent inputEvent, bool inLocalCoordinates, bool executionOwned = false)
+    internal void DispatchViewportInput(Viewport viewport, InputEvent inputEvent, bool inLocalCoordinates, bool executionOwned = false, bool fromWindow = false)
     {
         ArgumentNullException.ThrowIfNull(inputEvent); inputEvent.EnsureUsable();
         ThrowIfDisposed(); EnsureOwnerThread(); EnsureAcceptingWork(); if (!executionOwned) EnsureExecutionAvailable();
         if (!ReferenceEquals(viewport.Tree, this)) throw new InvalidOperationException("Viewport is not attached to this tree.");
-        var localized = inLocalCoordinates ? inputEvent : viewport.MakeViewportInputLocal(inputEvent);
-        InputEvent? routed = null;
+        InputEvent? localized = null, routed = null;
+        List<Exception>? errors = null;
         if (!executionOwned) BeginExecution();
-        try { routed = RouteEmbeddedInput(viewport, localized, out var target); if (routed is not null) DispatchLocalInputEvent(routed, target, executionOwned: true); }
-        finally { if (routed is not null && !ReferenceEquals(routed, localized)) routed.Dispose(); if (!ReferenceEquals(localized, inputEvent)) localized.Dispose(); if (!executionOwned) EndExecution(); }
+        try
+        {
+            if (fromWindow && viewport is Window window) ReceiveWindowInput(window, inputEvent, ref errors);
+            if (!viewport.IsDisposed && ReferenceEquals(viewport.Tree, this) && !viewport.GUIDisableInput)
+            {
+                localized = inLocalCoordinates ? inputEvent : viewport.MakeViewportInputLocal(inputEvent);
+                routed = RouteEmbeddedInput(viewport, localized, out var target, ref errors);
+                if (routed is not null) try { DispatchLocalInputEvent(routed, target, executionOwned: true); } catch (Exception error) { CollectException(ref errors, error); }
+            }
+            ThrowCollected("Window input callbacks failed.", errors);
+        }
+        finally { if (routed is not null && !ReferenceEquals(routed, localized)) routed.Dispose(); if (localized is not null && !ReferenceEquals(localized, inputEvent)) localized.Dispose(); if (!executionOwned) EndExecution(); }
     }
 
     internal void DispatchEmbeddedViewportInput(SubViewportContainer container, SubViewport viewport, InputEvent input)
@@ -897,8 +907,13 @@ public sealed partial class SceneTree : MainLoop
         if (!_isDispatchingInput || !ReferenceEquals(container.GetViewport(), _inputViewport) || !ReferenceEquals(viewport.Parent, container) || !ReferenceEquals(viewport.Tree, this))
             throw new InvalidOperationException("Embedded input forwarding requires its active parent viewport dispatch.");
         if (viewport.GUIDisableInput) return;
-        var localized = viewport.MakeViewportInputLocal(input); InputEvent? routed = null;
-        try { routed = RouteEmbeddedInput(viewport, localized, out var target); if (routed is not null) DispatchLocalInputEvent(routed, target, embedded: true); }
+        var localized = viewport.MakeViewportInputLocal(input); InputEvent? routed = null; List<Exception>? errors = null;
+        try
+        {
+            routed = RouteEmbeddedInput(viewport, localized, out var target, ref errors);
+            if (routed is not null) try { DispatchLocalInputEvent(routed, target, embedded: true); } catch (Exception error) { CollectException(ref errors, error); }
+            ThrowCollected("Embedded window input callbacks failed.", errors);
+        }
         finally { if (routed is not null && !ReferenceEquals(routed, localized)) routed.Dispose(); if (!ReferenceEquals(localized, input)) localized.Dispose(); }
     }
     private Viewport? _inputViewport;

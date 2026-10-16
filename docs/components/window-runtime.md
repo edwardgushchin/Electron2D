@@ -98,3 +98,19 @@ the inherited Node getters; attached hidden windows retain their association.
 ## Initial placement and constrained reset
 
 [Window initial placement](../classes/Window.md#initial-placement-and-minimum-size-reset) supplies six stored policies through the existing DisplayServer screen selectors. Native root requests run before scene entry; embedded non-absolute policies center on entry/show. Policy edits do not move a visible window. Wayland retains its explicit native-position limitation while embedded centering executes. Native managers may restrict placement. ResetSize and ordinary Size share scaled wrapped-content, title and authored bounds; resizing a native root uses the actual native request/event path.
+
+
+## Input reception and visibility phases
+
+[Window input reception](../classes/Window.md#window-input-reception-and-visibility-notification)
+connects the existing native event queue and embedded-window routing to WindowInput.
+Input polling commits first; reception follows before final viewport localization,
+Node callbacks and GUI handling. Window observers retain the existing execution
+barrier and synchronous borrowed-event lifetime. NotificationVisibilityChanged (30)
+precedes VisibilityChanged after a committed show/hide operation. Managed and native
+checks cover failure continuation, pause/blocking, nested coordinates and retirement.
+
+The native decoration producer for TitlebarChanged, custom nonclient input ownership
+for NonclientWindowInput, and host go-back request/policy integration are distinct
+prerequisites. TitleChanged already covers text changes and does not establish a
+native decoration-change signal.
