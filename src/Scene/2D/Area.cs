@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>A two-dimensional region that reports physics bodies and other areas crossing its shapes.</summary>
 /// <remarks>Attach direct <see cref="CollisionShape"/> children and add the area to a scene tree.
-/// Overlap snapshots update after each nonzero fixed physics step; changing a transform does not update a snapshot immediately.</remarks>
+/// Overlap snapshots update after each nonzero fixed physics step; changing a transform does not update a snapshot immediately.
+/// The sensor remains bound through TreeExiting and releases during engine membership cleanup before NodeRemoved and TreeExited.</remarks>
 public sealed partial class Area : CollisionObject
 {
     private EventHandlers<Action<Area>>? _eventAreaEntered;
@@ -363,11 +364,11 @@ public sealed partial class Area : CollisionObject
         UpdatePhysicsParticipation();
     }
 
-    /// <inheritdoc />
-    protected override void OnExitTree()
+    internal override void OnTreeMembershipChanged(bool entering)
     {
+        if (entering) { base.OnTreeMembershipChanged(true); return; }
         try { Tree?.UnregisterPhysicsArea(this); }
-        finally { base.OnExitTree(); }
+        finally { base.OnTreeMembershipChanged(false); }
     }
 
     /// <inheritdoc />

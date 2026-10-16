@@ -688,6 +688,8 @@ def render():
             updated = "2026-10-12"
         if name in {"DPITexture", "Viewport"}:
             updated = "2026-10-15"
+        if name in {"Node", "SceneTree"}:
+            updated = "2026-10-16"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

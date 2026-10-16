@@ -272,6 +272,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_NAMES") == "1") { V
 if (args.Length >= 2 && args[0] == "--node-groups-child") { BackendChecks.ReadNodeGroups(args[1], args.Contains("--gpu") ? PhysicsServer.Backend.GPU : args.Contains("--cpu") ? PhysicsServer.Backend.CPU : null, args.Contains("--threaded")); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GROUP_TLS") == "1") { PhysicsGroupAllocationTests.ThreadStaticControl(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GROUP_ALLOCATIONS") is { } allocationGroupMode) { PhysicsGroupAllocationTests.Run(allocationGroupMode); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_LIFECYCLE") == "1") { CanvasLifecycleTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_PAUSE") == "1") { VerifyNodeHierarchyAndTransforms(); VerifySceneTree(); VerifySceneTreeFailureSafety(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_SCHEDULING") == "1") { SceneHierarchyTests.Run(); NodeInternalProcessingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_INTERNAL") == "1") { NodeInternalProcessingTests.Run(); return; }

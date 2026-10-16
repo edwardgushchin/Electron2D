@@ -114,7 +114,7 @@ tree.ProcessFrame(1.0 / 60.0);
 | --- | --- |
 | [`public event Action<SceneTree, Node>? NodeConfigurationWarningChanged`](#diagnostics-nodeconfigurationwarningchanged) | Occurs when a node in EditedSceneRoot's subtree requests a configuration-warning refresh. |
 | [`public event Action<SceneTree, Node> NodeAdded`](#e-electron2d-scenetree-nodeadded) | Occurs after a node enters this tree. |
-| [`public event Action<SceneTree, Node> NodeRemoved`](#e-electron2d-scenetree-noderemoved) | Occurs after a node exits this tree. |
+| [`public event Action<SceneTree, Node> NodeRemoved`](#e-electron2d-scenetree-noderemoved) | Occurs after exit callbacks and engine membership release, before the node clears its tree association. |
 | [`public event Action<SceneTree, Node> NodeRenamed`](#e-electron2d-scenetree-noderenamed) | Occurs after an active node accepts a name assignment, including an unchanged name. |
 | [`public event Action<SceneTree> ProcessFrameStarted`](#e-electron2d-scenetree-processframestarted) | Occurs before the idle transform-delivery phase and eligible node process callbacks. |
 | [`public event Action<SceneTree> PhysicsFrameStarted`](#e-electron2d-scenetree-physicsframestarted) | Occurs after pending transform delivery and before eligible node physics-process callbacks. |
@@ -706,17 +706,15 @@ Contract: Arguments are this tree and the requesting node. Delivery is synchrono
 Occurs after a node enters this tree.
 
 **Remarks:** The first argument is this tree and the second is the entering node. Delivery is synchronous after the node's
-own enter event and before descendant entry. A throwing subscriber stops later subscribers of this event
+own enter event, before the parent's ChildEnteredTree and before descendant entry. A throwing subscriber stops later subscribers of this event
 invocation, but the failure is aggregated after remaining lifecycle work.
 
 <a id="e-electron2d-scenetree-noderemoved"></a>
 ### `public event Action<SceneTree, Node> NodeRemoved`
 
-Occurs after a node exits this tree.
+Occurs after exit callbacks and engine membership release, before the node clears its tree association.
 
-**Remarks:** The node's [`Node.Tree`](Node.md#p-electron2d-node-tree) is already `null` when handlers run. Delivery is child-first;
-a throwing subscriber stops later subscribers of this event invocation, but the failure is aggregated after
-remaining exit work.
+**Remarks:** The node retains its Tree association through this event and the parent's ChildExitingTree. Physical release has completed. Siblings exit in reverse order, children before parents. A throwing subscriber stops later subscribers of this invocation; remaining exit stages still run and errors aggregate.
 
 <a id="e-electron2d-scenetree-noderenamed"></a>
 ### `public event Action<SceneTree, Node> NodeRenamed`

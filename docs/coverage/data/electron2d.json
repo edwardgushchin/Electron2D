@@ -65076,19 +65076,6 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Area.OnExitTree()",
-    "kind": "method",
-    "declaringType": "Electron2D.Area",
-    "name": "OnExitTree",
-    "signature": "protected override System.Void OnExitTree()",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.Area.OverlapsArea(Electron2D.Node)",
     "kind": "method",
     "declaringType": "Electron2D.Area",
@@ -110300,19 +110287,6 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Joint.OnExitTree()",
-    "kind": "method",
-    "declaringType": "Electron2D.Joint",
-    "name": "OnExitTree",
-    "signature": "protected override System.Void OnExitTree()",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.Joint.OnNotification(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.Joint",
@@ -132193,19 +132167,6 @@
     "declaringType": "Electron2D.PhysicsBody",
     "name": "OnEnterTree",
     "signature": "protected override System.Void OnEnterTree()",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PhysicsBody.OnExitTree()",
-    "kind": "method",
-    "declaringType": "Electron2D.PhysicsBody",
-    "name": "OnExitTree",
-    "signature": "protected override System.Void OnExitTree()",
     "visibility": "protected",
     "baseType": null,
     "interfaces": null,

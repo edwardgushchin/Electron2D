@@ -391,3 +391,15 @@ container, layout, drag and popup regressions also pass. Actual offscreen popup
 pixels and 64 warmed placement/render frames pass on GPU/lavapipe and SDL software;
 these renderer checks establish no compositor, physical-input or RTX performance
 acceptance.
+
+## Entry, readiness and departure
+
+Entry runs parent-first: enter notification, OnEnterTree, TreeEntered, tree NodeAdded, parent ChildEnteredTree, then descendants. OnEnterTree is a managed tree-transition hook; a manual enter notification does not invoke it. Existing class-specific setup in typed overrides still follows ordinary C# base calls.
+
+After the hierarchy enters, readiness visits children first. Every attachment receives PostEnterTree after descendant ready delivery and before its own optional ready notification/OnReady/Ready. Readiness is consumed before the hook. Reentry keeps the one-shot state; RequestReady rearms only that node, including requests from its own ready hook. Children added during entry wait for the parent's ready pass. Children added during ready can complete immediately. Attachment-qualified snapshots skip a removed/reentered sibling's old entry. IsNodeReady and RequestReady permit the owner/current processing group; mutation rejects capture and cannot wake a physical body. Detached/disposed IsNodeReady retains its stored value.
+
+Departure visits siblings in reverse order, children before parents. OnExitTree and TreeExiting precede the exit notification and engine membership/physical release. NodeRemoved then ChildExitingTree still observe the old Tree association. The complete subtree clears those associations before TreeExited runs in a second reverse child-first pass. Ordinary removal also clears its root Parent and invalid owners first. Pending exit guards prevent activation, hierarchy escape and disposal during both passes, including intermediate structural callbacks. Manual exit notification does not invoke OnExitTree. Callback failures aggregate after remaining transitions/cleanup; constructor failure additionally restores consumed ready state.
+
+The public-only --node-lifecycle consumer checks exact neutral/spatial/RigidBody ordering with internal children, reentry, self requests, insertion and stale snapshots, 11 activation-failure stages, six simultaneous exit errors, live body/Area/joint exit bindings, lifecycle barriers, actual worker ready metadata, fresh file activation and 128 warmed/measured moving frames with strict zero owner/all-thread bytes. CPU/software-Vulkan/registered serial/separate and CoreCLR/NativeAOT profiles are recorded in bin/physics-node-lifecycle/2026-10-16/validation.json. Native/driver allocation, hardware/window/performance, foreign platforms and full inherited physics remain separate gates.
+
+The managed CanvasLifecycleTests fixture separately verifies numeric manual enter/exit delivery without typed tree hooks or canvas membership changes; run it with ELECTRON2D_TEST_CANVAS_LIFECYCLE=1. The original full regression rejection and the corrected complete rerun are retained with the lifecycle receipt.

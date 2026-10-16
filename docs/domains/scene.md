@@ -413,3 +413,5 @@ rules. Packed scenes reconstruct active links at activation.
 current processing-group access and exact physical/file consumers. Physical
 mutations retain their owner guard before virtual consumer hooks. Runtime
 Node duplication retains its separate ADR 0091 binding/identity prerequisite.
+
+The [node lifecycle contract](../components/scene-hierarchy.md#entry-readiness-and-departure) now orders complete notifications, typed hooks and parent/tree signals, per-attachment post-enter and child-first ready, reverse sibling exit and a final detached-subtree TreeExited pass. Body/Area/joint membership retires after TreeExiting through private cleanup even after callback errors. Ready observations/requests allow current processing groups without waking physical bodies. Public physical and fresh-file consumers preserve the remaining native/platform/hardware and full physics acceptance boundaries.

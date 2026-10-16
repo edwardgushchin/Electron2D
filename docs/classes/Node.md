@@ -200,7 +200,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public const int NotificationPathRenamed = 23`](#f-electron2d-node-notificationpathrenamed) | Identifies the notification propagated after an accepted name assignment, including an unchanged name. |
 | [`public const int NotificationPaused = 14`](#f-electron2d-node-notificationpaused) | Identifies the notification sent when the owning tree becomes paused. |
 | [`public const int NotificationPhysicsProcess = 16`](#f-electron2d-node-notificationphysicsprocess) | Identifies a physics-process callback notification. |
-| [`public const int NotificationPostEnterTree = 27`](#f-electron2d-node-notificationpostentertree) | Identifies the notification sent after this node and its descendants finish entering a tree. |
+| [`public const int NotificationPostEnterTree = 27`](#f-electron2d-node-notificationpostentertree) | Identifies the child-first notification sent on every attachment after descendant ready delivery and before this node's optional ready notification. |
 | [`public const int NotificationProcess = 17`](#f-electron2d-node-notificationprocess) | Identifies a process callback notification. |
 | [`public const int NotificationReady = 13`](#f-electron2d-node-notificationready) | Identifies the child-first notification sent when a node becomes ready. |
 | [`public const int NotificationResetPhysicsInterpolation = 2001`](#f-electron2d-node-notificationresetphysicsinterpolation) | Identifies a recursive presentation-history reset. |
@@ -273,7 +273,9 @@ Gets whether SceneTree-managed ready delivery has occurred since construction or
 
 **Value:** The stored ready state. It remains true after detachment until `Node.RequestReady` is called.
 
-**Remarks:** Manual `ElectronObject.Notify(int)` delivery of `Node.NotificationReady` does not change this value.
+**Remarks:** Manual `ElectronObject.Notify(int)` delivery of `Node.NotificationReady` does not change this value. Attached reads require the owner/current processing group; detached/disposed nodes retain this stored observation.
+
+**System.InvalidOperationException:** Attached access is outside the owner or current processing group.
 
 <a id="p-electron2d-node-isqueuedfordeletion"></a>
 ### `public bool IsQueuedForDeletion { get; }`
@@ -1075,14 +1077,14 @@ Moves a direct child to another sibling index.
 
 Called synchronously when this node enters an active scene tree.
 
-**Remarks:** `Node.Tree` is already assigned. The callback runs parent-first, before `Node.TreeEntered`, before descendants enter, and on the tree owner thread during SceneTree-managed lifecycle.
+**Remarks:** `Node.Tree` is already assigned. The complete enter notification returns before this hook; then TreeEntered, tree NodeAdded and parent ChildEnteredTree run before descendants. Managed transitions run on the owner thread; manual enter notification does not invoke this hook.
 
 <a id="m-electron2d-node-onexittree"></a>
 ### `protected virtual void OnExitTree()`
 
 Called synchronously when this node exits an active scene tree.
 
-**Remarks:** Descendants have already exited and `Node.Tree` remains assigned. The callback precedes `Node.TreeExiting` and runs on the tree owner thread during SceneTree-managed lifecycle.
+**Remarks:** Descendants have exited in reverse sibling order and Tree remains assigned. This hook precedes TreeExiting, exit notification and engine membership/physical release. Manual exit notification does not invoke it. Failures cannot suppress remaining exit stages.
 
 <a id="m-electron2d-node-oninput-electron2d-inputevent"></a>
 ### `protected virtual void OnInput(InputEvent event)`
@@ -1098,7 +1100,7 @@ Receives an input event during the first scene-input propagation stage.
 
 Handles an engine notification delivered to this object.
 
-**Remarks:** Calls the base implementation, then maps enter, exit, ready, process, and physics-process notification IDs to the corresponding typed virtual callbacks. Manual `ElectronObject.Notify(int)` calls invoke those callbacks but do not mutate tree membership, ready state, or delta values.
+**Remarks:** Maps ready/process/physics-process notifications to typed callbacks. Enter/exit hooks belong to managed tree transitions and are not called by manual tree notification. Manual ready still runs OnReady without consuming managed readiness; process notifications do not advance stored deltas. Pause/application-suspend notifications retain interpolation reset policy.
 
 <a id="m-electron2d-node-onphysicsprocess-system-double"></a>
 ### `protected virtual void OnPhysicsProcess(double delta)`
@@ -1235,9 +1237,9 @@ Replaces this node at its sibling index with a live detached node. The replaceme
 
 Requests ready delivery the next time SceneTree attachment reaches the ready phase.
 
-**Remarks:** The method only resets stored ready state; it never delivers ready immediately.
+**Remarks:** The method rearms only this node; it never delivers ready immediately or changes descendants. A request during ready applies on the next attachment. The owner/current processing group may update it, including on a physical node, without waking it.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** Attached access is outside the owner/current processing group or scene capture is active.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
@@ -1274,14 +1276,14 @@ Occurs on the parent after a direct child is structurally attached and child ord
 
 Occurs on the direct parent when a child enters the active tree.
 
-**Remarks:** The first argument is the publishing parent and the second is the entering child. Delivery follows that child's enter notification and event.
+**Remarks:** The first argument is the publishing parent and the second is the entering child. Delivery follows that child's enter notification, hook, TreeEntered and tree NodeAdded.
 
 <a id="e-electron2d-node-childexitingtree"></a>
 ### `public event Action<Node, Node>? ChildExitingTree`
 
 Occurs on the direct parent while a child is exiting the active tree.
 
-**Remarks:** The first argument is the publishing parent and the second is the exiting child. Descendants have already exited, and the child's `Node.Tree` is still set.
+**Remarks:** The first argument is the publishing parent and the second is the exiting child. Descendants have exited. Exit notification, physical release and tree NodeRemoved have run, and the child's Tree is still set.
 
 <a id="e-electron2d-node-childorderchanged"></a>
 ### `public event Action<Node>? ChildOrderChanged`
@@ -1321,21 +1323,21 @@ Occurs after an active node accepts a name assignment and path notifications pro
 
 Occurs when this node enters an active scene tree.
 
-**Remarks:** Delivery follows `Node.NotificationEnterTree` and precedes descendant entry.
+**Remarks:** Delivery follows the complete enter notification and OnEnterTree, then tree NodeAdded and parent ChildEnteredTree follow before descendant entry.
 
 <a id="e-electron2d-node-treeexited"></a>
 ### `public event Action<Node>? TreeExited`
 
 Occurs after this node has left its scene tree.
 
-**Remarks:** `Node.Tree` is already `null` when handlers run.
+**Remarks:** The complete departing subtree has no Tree association. Ordinary removal clears the subtree root Parent and invalid owners first. A separate reverse child-first pass delivers this event; pending lifecycle barriers reject reentry, hierarchy escape and disposal through the transition.
 
 <a id="e-electron2d-node-treeexiting"></a>
 ### `public event Action<Node>? TreeExiting`
 
 Occurs while this node is exiting its active scene tree.
 
-**Remarks:** Descendants have exited, `Node.NotificationExitTree` has run, and `Node.Tree` remains available.
+**Remarks:** Descendants and OnExitTree have completed. Tree remains available and physical bindings are live; exit notification and engine membership release follow this event.
 
 ## Constant Descriptions
 
@@ -1451,7 +1453,7 @@ Identifies a physics-process callback notification.
 <a id="f-electron2d-node-notificationpostentertree"></a>
 ### `public const int NotificationPostEnterTree = 27`
 
-Identifies the notification sent after this node and its descendants finish entering a tree.
+Identifies the child-first notification sent on every attachment after descendant ready delivery and before this node's optional ready notification.
 
 <a id="f-electron2d-node-notificationprocess"></a>
 ### `public const int NotificationProcess = 17`
@@ -1824,3 +1826,5 @@ Runtime messages now use [diagnostic delivery](../components/diagnostics.md). En
 current processing-group access and exact physical/file consumers. Physical
 mutations retain their owner guard before virtual consumer hooks. Runtime
 Node duplication retains its separate ADR 0091 binding/identity prerequisite.
+
+The [entry/readiness/departure contract](../components/scene-hierarchy.md#entry-readiness-and-departure) specifies parent/tree signal order, entry-added and ready-added children, consumed readiness, stale attachment snapshots, failure cleanup, physical release and processing-group ready metadata. The public-only lifecycle consumer retains a real selected solver and fresh-process file activation.

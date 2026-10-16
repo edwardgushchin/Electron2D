@@ -1,6 +1,6 @@
 # Physics joints component
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 ## Physical skeletal integration
 
@@ -171,3 +171,5 @@ authoritative correction and replay in separate processes. It checks contact
 identity, awake impulse balance, natural sleep and impulse wake independently of
 final authoritative convergence. This is one bounded loaded graph; arbitrary/dense
 coupling and complete hardware/platform/performance acceptance remain open.
+
+Scene departure follows the [shared node transition order](scene-hierarchy.md#entry-readiness-and-departure). Physical bindings remain live through OnExitTree/TreeExiting and retire in engine membership cleanup before NodeRemoved/TreeExited, including callback failures. The typed hook is inherited from Node; backend retirement cannot depend on a user calling its base implementation.

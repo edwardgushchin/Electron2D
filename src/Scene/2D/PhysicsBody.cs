@@ -1,6 +1,8 @@
 namespace Electron2D;
 
 /// <summary>A spatial collision object that participates in a scene tree's physics world.</summary>
+/// <remarks>Scene departure releases the physical binding after TreeExiting, before NodeRemoved and TreeExited,
+/// even when a user exit callback throws. The inherited OnExitTree hook does not own backend retirement.</remarks>
 public abstract partial class PhysicsBody : CollisionObject
 {
     private readonly List<ulong> _appliedShapeRevisions = [];
@@ -307,11 +309,11 @@ public abstract partial class PhysicsBody : CollisionObject
         UpdatePhysicsParticipation();
     }
 
-    /// <inheritdoc />
-    protected override void OnExitTree()
+    internal override void OnTreeMembershipChanged(bool entering)
     {
+        if (entering) { base.OnTreeMembershipChanged(true); return; }
         try { Tree?.UnregisterPhysicsBody(this); }
-        finally { base.OnExitTree(); }
+        finally { base.OnTreeMembershipChanged(false); }
     }
 
     /// <summary>Checks scene and dependent joint world ownership before beginning disposal.</summary>

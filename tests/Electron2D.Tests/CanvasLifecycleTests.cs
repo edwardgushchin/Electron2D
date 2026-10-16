@@ -28,8 +28,13 @@ internal static class CanvasLifecycleTests
         Check(log.SequenceEqual(new[] { "parent:32:False", "parent:visible:True", "parent:enter", "child:32:False", "child:visible:True", "child:enter" }), "Entry order and visible activation.");
         log.Clear(); parent.TopLevel = true; parent.TopLevel = true;
         Check(log.SequenceEqual(new[] { "parent:33:False", "parent:32:True" }), "TopLevel only rebinds itself once, preserving old/new notification state.");
-        log.Clear(); parent.Notify(Node.NotificationEnterTree); parent.Notify(Node.NotificationExitTree);
-        Check(log.SequenceEqual(new[] { "parent:enter", "parent:exit" }) && parent.IsVisibleInTree, "Manual tree notifications do not alter canvas membership.");
+        log.Clear();
+        var notifications = new List<int>(); var previousNotification = parent.Notified;
+        parent.Notified = notifications.Add;
+        parent.Notify(Node.NotificationEnterTree); parent.Notify(Node.NotificationExitTree);
+        parent.Notified = previousNotification;
+        Check(notifications.SequenceEqual(new[] { Node.NotificationEnterTree, Node.NotificationExitTree }) && log.Count == 0 &&
+            ReferenceEquals(parent.Tree, tree) && parent.IsVisibleInTree, "Manual tree notifications deliver numeric callbacks without tree hooks or canvas membership changes.");
         log.Clear(); parent.Notify(CanvasItem.NotificationVisibilityChanged);
         Check(log.SequenceEqual(new[] { "parent:visible:True" }), "Manual visibility notifications project to the typed signal without changing visibility.");
         log.Clear(); root.RemoveChild(parent);

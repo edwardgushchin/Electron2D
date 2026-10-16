@@ -6,7 +6,8 @@ namespace Electron2D;
 /// node alone does not retune it. Concrete engine-owned subclasses supply the constraint.
 /// Path, geometry and parameter writes reject while a selected numerical hook is borrowed, including initial
 /// attachment and unchanged assignments. Server clear and connection replacement share this guard.
-/// Ordinary game callbacks may author the next interval.</remarks>
+/// Ordinary game callbacks may author the next interval. Scene departure retains the joint through TreeExiting;
+/// engine membership cleanup then releases it even when a user exit callback fails.</remarks>
 public abstract class Joint : Entity
 {
     private static readonly PropertyDescriptor[] JointProperties =
@@ -262,12 +263,12 @@ public abstract class Joint : Entity
         PrepareBackend();
     }
 
-    /// <inheritdoc />
-    protected override void OnExitTree()
+    internal override void OnTreeMembershipChanged(bool entering)
     {
+        if (entering) { base.OnTreeMembershipChanged(true); return; }
         if (Tree is { } tree) tree.NodeRenamed -= OnNodeRenamed;
         try { Tree?.UnregisterPhysicsJoint(this); }
-        finally { base.OnExitTree(); }
+        finally { base.OnTreeMembershipChanged(false); }
     }
 
     /// <inheritdoc />

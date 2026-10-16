@@ -1,6 +1,6 @@
 # Joint
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 [Shared joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance)
 exercises this family through explicitly selected CPU and independent GPU worlds.
@@ -52,7 +52,7 @@ The snippet assumes `root` is a Node, the two named bodies are or will be its ch
 | `protected override void OnNotification(int what)` | — | Record local anchor/guide diagnostics before user draw callbacks. |
 | `protected override void ValidateDisposal()` | — | Check scene/dependent world ownership before beginning disposal. |
 | `public override string[] GetConfigurationWarnings()` | — | Return current missing/invalid endpoint warnings. |
-| `protected override void OnEnterTree()` / `OnReady()` / `OnExitTree()` | — | Register, configure and release the scene constraint. |
+| `protected override void OnEnterTree()` / `OnReady()` | — | Register and configure the scene constraint. Engine membership cleanup releases it after TreeExiting. |
 | `protected override void Dispose(bool disposing)` | — | Release the constraint before base disposal. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | — | Store path and collision settings in PackedScene. |
 
@@ -146,3 +146,5 @@ hardware, broader geometry/graphs and network acceptance remain open.
 
 
 [Joint and contact support](../components/physics-joints.md#joint-and-contact-support-2026-10-14) verifies spring-loaded pin/groove constraints, real floor friction, contact identity/normal/surface-velocity/impulse, monitored checkpoint continuation and post-clear motion on CPU/GPU. Warm full frames allocate no managed bytes; broader numerical/native/foreign/network/performance acceptance remains open and declaration states are unchanged.
+
+Scene departure retains the physical binding through the inherited OnExitTree hook and TreeExiting. Non-public membership cleanup then retires it before NodeRemoved/TreeExited even if a user hook or event fails. The OnExitTree hook is inherited from Node; no separate public cleanup alias is added. The [public lifecycle consumer](../components/scene-hierarchy.md#entry-readiness-and-departure) verifies live body/Area bindings, joint snapshot-map admission/removal and multi-error release on selected CPU/software-GPU/registered worlds.

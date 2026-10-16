@@ -372,16 +372,16 @@ public sealed partial class SceneTree : MainLoop
     /// <summary>Occurs after a node enters this tree.</summary>
     /// <remarks>
     /// The first argument is this tree and the second is the entering node. Delivery is synchronous after the node's
-    /// own enter event and before descendant entry. A throwing subscriber stops later subscribers of this event
+    /// own enter event, before the parent's child-entered event and before descendant entry. A throwing subscriber stops later subscribers of this event
     /// invocation, but the failure is aggregated after remaining lifecycle work.
     /// </remarks>
     public event Action<SceneTree, Node>? NodeAdded;
 
-    /// <summary>Occurs after a node exits this tree.</summary>
+    /// <summary>Occurs after exit callbacks and engine membership release, before the node clears its tree association.</summary>
     /// <remarks>
-    /// The node's <see cref="Node.Tree"/> is already <see langword="null"/> when handlers run. Delivery is child-first;
-    /// a throwing subscriber stops later subscribers of this event invocation, but the failure is aggregated after
-    /// remaining exit work.
+    /// The node's <see cref="Node.Tree"/> remains assigned until its parent's child-exiting event completes.
+    /// Siblings exit in reverse order, children before parents. A throwing subscriber stops later subscribers of
+    /// this event invocation, but the failure is aggregated after remaining exit work.
     /// </remarks>
     public event Action<SceneTree, Node>? NodeRemoved;
 
@@ -1147,7 +1147,7 @@ public sealed partial class SceneTree : MainLoop
         {
             node.EnterTree(this);
 
-            if (ReferenceEquals(node.Tree, this))
+            if (ReferenceEquals(node.Tree, this) && (node.Parent is null || node.Parent.HasStartedReady))
                 node.MakeReady(_activationReadied);
         }
         finally
@@ -1163,12 +1163,27 @@ public sealed partial class SceneTree : MainLoop
 
         try
         {
-            node.ExitTree(this);
+            node.ExitTree(this, deferExited: true);
         }
         finally
         {
             _lifecycleExecutionDepth--;
         }
+    }
+
+    internal void BeginNodeLifecycle()
+    {
+        EnsureOwnerThread();
+        _lifecycleExecutionDepth++;
+    }
+
+    internal void EndNodeLifecycle() => _lifecycleExecutionDepth--;
+
+    internal void CompleteSubtreeExit(Node node)
+    {
+        _lifecycleExecutionDepth++;
+        try { node.CompleteExitTree(); }
+        finally { _lifecycleExecutionDepth--; }
     }
 
     internal bool IsOwnerThread => Environment.CurrentManagedThreadId == _ownerThreadId;

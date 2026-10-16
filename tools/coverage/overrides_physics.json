@@ -2941,10 +2941,6 @@
       "reason": "Inherited Node lifecycle hook registers the scene joint with its world (ADR 0084)."
     },
     {
-      "electron2d": "method:Electron2D.Joint.OnExitTree()",
-      "reason": "Inherited Node lifecycle hook releases the scene joint before tree departure (ADR 0084)."
-    },
-    {
       "electron2d": "method:Electron2D.Joint.OnReady()",
       "reason": "Inherited Node lifecycle hook configures a joint after sibling bodies enter (ADR 0084)."
     },
@@ -3531,11 +3527,6 @@
       "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
     },
     {
-      "electron2d": "method:Electron2D.PhysicsBody.OnExitTree()",
-      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
-      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
-    },
-    {
       "electron2d": "method:Electron2D.RectangleShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
       "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
       "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
@@ -3607,11 +3598,6 @@
     },
     {
       "electron2d": "method:Electron2D.Area.OnEnterTree()",
-      "reason": "Typed C# construction, scene packing or lifecycle projection of the existing area role.",
-      "adr": "ADRs 0003, 0005, 0008, 0055"
-    },
-    {
-      "electron2d": "method:Electron2D.Area.OnExitTree()",
       "reason": "Typed C# construction, scene packing or lifecycle projection of the existing area role.",
       "adr": "ADRs 0003, 0005, 0008, 0055"
     },

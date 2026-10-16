@@ -1,5 +1,14 @@
 # API coverage register
 
+[Node tree transitions](../components/scene-hierarchy.md#entry-readiness-and-departure)
+now implement eleven inherited lifecycle/ready rows plus the two SceneTree
+node-added/removed events. Exact ordering, repeated attachment, ready requests,
+worker metadata, failure cleanup and physical binding lifetime have public
+CoreCLR/NativeAOT CPU/software-Vulkan/registered serial/separate evidence.
+The unique physics census is 311 open declarations (251 Partial, 43 Unimplemented,
+17 Blocked); full inheritance, extension, native/device and hardware/window gates
+remain open.
+
 [CPU pool lifetime](../components/cpu-checkpoints.md#retired-pool-payloads) now clears
 borrowed record payloads and obsolete event references without discarding class
 spares. This fixes retained-owner paths; it changes no declaration status and does

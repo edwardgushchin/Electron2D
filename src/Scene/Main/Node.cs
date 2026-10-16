@@ -110,7 +110,7 @@ public partial class Node : ElectronObject
     /// <remarks>The InternalPhysicsProcessEnabled lane precedes ordinary PhysicsProcessEnabled callbacks.</remarks>
     public const int NotificationInternalPhysicsProcess = 26;
 
-    /// <summary>Identifies the notification sent after this node and its descendants finish entering a tree.</summary>
+    /// <summary>Identifies the child-first notification sent on every attachment after descendant ready delivery and before this node's optional ready notification.</summary>
     public const int NotificationPostEnterTree = 27;
 
     /// <summary>Identifies the notification sent when the effective process mode becomes disabled.</summary>
@@ -208,12 +208,14 @@ public partial class Node : ElectronObject
     private int _sceneInstantiationDepth;
 
     private bool _readyCalled;
+    internal bool HasStartedReady { get; private set; }
 
     private bool _isEnteringTree;
 
     private bool _isMakingReady;
 
     private bool _isExitingTree;
+    private bool _hasPendingTreeExit;
 
     private int _processPriority;
 
@@ -566,8 +568,10 @@ public partial class Node : ElectronObject
 
     /// <summary>Gets whether SceneTree-managed ready delivery has occurred since construction or the last ready reset.</summary>
     /// <value>The stored ready state. It remains true after detachment until <see cref="RequestReady"/> is called.</value>
-    /// <remarks>Manual <see cref="ElectronObject.Notify(int)"/> delivery of <see cref="NotificationReady"/> does not change this value.</remarks>
-    public bool IsNodeReady => _readyCalled;
+    /// <remarks>Manual <see cref="ElectronObject.Notify(int)"/> delivery of <see cref="NotificationReady"/> does not change this value.
+    /// Attached reads require the owner or current processing group. Detached and disposed nodes retain this stored observation.</remarks>
+    /// <exception cref="InvalidOperationException">Attached access is outside the owner or current processing group.</exception>
+    public bool IsNodeReady { get { Tree?.EnsureProcessingAccess(this); return _readyCalled; } }
 
     /// <summary>Gets whether deletion has been requested through <see cref="QueueFree"/>.</summary>
     /// <value>An atomic snapshot of the deletion-request flag.</value>
@@ -898,14 +902,14 @@ public partial class Node : ElectronObject
     /// <summary>Occurs on the direct parent when a child enters the active tree.</summary>
     /// <remarks>
     /// The first argument is the publishing parent and the second is the entering child. Delivery follows that child's
-    /// enter notification and event.
+    /// enter notification, callback, event and SceneTree node-added event.
     /// </remarks>
     public event Action<Node, Node>? ChildEnteredTree;
 
     /// <summary>Occurs on the direct parent while a child is exiting the active tree.</summary>
     /// <remarks>
     /// The first argument is the publishing parent and the second is the exiting child. Descendants have already exited,
-    /// and the child's <see cref="Tree"/> is still set.
+    /// and the child's <see cref="Tree"/> is still set. Delivery follows its exit notification, physical release and SceneTree node-removed event.
     /// </remarks>
     public event Action<Node, Node>? ChildExitingTree;
 
@@ -918,15 +922,15 @@ public partial class Node : ElectronObject
     public event Action<Node>? Renamed;
 
     /// <summary>Occurs when this node enters an active scene tree.</summary>
-    /// <remarks>Delivery follows <see cref="NotificationEnterTree"/> and precedes descendant entry.</remarks>
+    /// <remarks>Delivery follows <see cref="NotificationEnterTree"/> and <see cref="OnEnterTree"/>, and precedes descendant entry.</remarks>
     public event Action<Node>? TreeEntered;
 
     /// <summary>Occurs while this node is exiting its active scene tree.</summary>
-    /// <remarks>Descendants have exited, <see cref="NotificationExitTree"/> has run, and <see cref="Tree"/> remains available.</remarks>
+    /// <remarks>Descendants have exited and <see cref="OnExitTree"/> has run. Delivery precedes <see cref="NotificationExitTree"/> and engine membership release; <see cref="Tree"/> remains available.</remarks>
     public event Action<Node>? TreeExiting;
 
     /// <summary>Occurs after this node has left its scene tree.</summary>
-    /// <remarks><see cref="Tree"/> is already <see langword="null"/> when handlers run.</remarks>
+    /// <remarks>The complete departing subtree has no <see cref="Tree"/> association. Structural removal has cleared its root parent and invalid owners. Delivery visits siblings in reverse order, children before parents; lifecycle reentry remains rejected.</remarks>
     public event Action<Node>? TreeExited;
 
     /// <summary>Occurs after child-first ready notification delivery.</summary>
@@ -1080,7 +1084,7 @@ public partial class Node : ElectronObject
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(newParent);
 
-        if (_isEnteringTree || _isMakingReady || _isExitingTree)
+        if (_isEnteringTree || _isMakingReady || _isExitingTree || _hasPendingTreeExit)
             throw new InvalidOperationException("A node cannot be reparented while its tree lifecycle is in progress.");
 
         if (Parent is null)
@@ -1624,12 +1628,13 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Requests ready delivery the next time SceneTree attachment reaches the ready phase.</summary>
-    /// <remarks>The method only resets stored ready state; it never delivers ready immediately.</remarks>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <remarks>The method only resets this node's stored ready state; it never delivers ready immediately or changes descendants.
+    /// A request during ready takes effect on the next attachment. The owner or current processing group may update it, including on physical nodes, without waking the body.</remarks>
+    /// <exception cref="InvalidOperationException">Attached access is outside the owner/current processing group or scene capture is active.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public void RequestReady()
     {
-        EnsureMutable();
+        EnsureProcessingAccess();
         _readyCalled = false;
     }
 
@@ -1726,7 +1731,8 @@ public partial class Node : ElectronObject
     /// <summary>Called synchronously when this node enters an active scene tree.</summary>
     /// <remarks>
     /// <see cref="Tree"/> is already assigned. The callback runs parent-first, before <see cref="TreeEntered"/>, before
-    /// descendants enter, and on the tree owner thread during SceneTree-managed lifecycle.
+    /// descendants enter, and on the tree owner thread during SceneTree-managed lifecycle. Enter notification dispatch
+    /// has completed before this callback. Manual tree notifications do not invoke it.
     /// </remarks>
     protected virtual void OnEnterTree()
     {
@@ -1735,7 +1741,8 @@ public partial class Node : ElectronObject
     /// <summary>Called synchronously when this node exits an active scene tree.</summary>
     /// <remarks>
     /// Descendants have already exited and <see cref="Tree"/> remains assigned. The callback precedes
-    /// <see cref="TreeExiting"/> and runs on the tree owner thread during SceneTree-managed lifecycle.
+    /// <see cref="TreeExiting"/>, the exit notification and engine membership release, and runs on the tree owner thread.
+    /// Manual tree notifications do not invoke this callback.
     /// </remarks>
     protected virtual void OnExitTree()
     {
@@ -1838,10 +1845,9 @@ public partial class Node : ElectronObject
 
     /// <inheritdoc />
     /// <remarks>
-    /// Calls the base implementation, then maps enter, exit, ready, process, and physics-process notification IDs to
-    /// the corresponding typed virtual callbacks. Pause and application-suspend notifications reset eligible physics
-    /// presentation history. Manual <see cref="ElectronObject.Notify(int)"/> calls invoke callbacks but do not mutate
-    /// tree membership, ready state, or delta values.
+    /// Calls the base implementation, then maps ready, process and physics-process notifications to typed callbacks.
+    /// Pause and application-suspend notifications reset eligible physics presentation history. Enter/exit callbacks
+    /// belong to SceneTree-managed transitions. Manual notification does not mutate membership, ready state or deltas.
     /// </remarks>
     protected override void OnNotification(int what)
     {
@@ -1849,12 +1855,6 @@ public partial class Node : ElectronObject
 
         switch (what)
         {
-            case NotificationEnterTree:
-                OnEnterTree();
-                break;
-            case NotificationExitTree:
-                OnExitTree();
-                break;
             case NotificationReady:
                 EnableOverriddenCallbacks();
                 OnReady();
@@ -1898,7 +1898,7 @@ public partial class Node : ElectronObject
         if (Volatile.Read(ref _sceneCaptureDepth) != 0)
             throw new InvalidOperationException("A node cannot be disposed while a packed-scene capture is active.");
 
-        if (_isEnteringTree || _isMakingReady || _isExitingTree)
+        if (_isEnteringTree || _isMakingReady || _isExitingTree || _hasPendingTreeExit)
             throw new InvalidOperationException("A node cannot be disposed from its in-progress tree lifecycle callbacks.");
 
         if (Parent?._isExitingTree == true)
@@ -2287,6 +2287,9 @@ public partial class Node : ElectronObject
             CollectException(ref errors, error);
         }
 
+        try { OnEnterTree(); }
+        catch (Exception error) { CollectException(ref errors, error); }
+
         if (CanAutoTranslate())
         {
             try { DispatchNotification(NotificationTranslationChanged); }
@@ -2305,25 +2308,12 @@ public partial class Node : ElectronObject
         try { NotifyPhysicsObjectBindings(entering: true); }
         catch (Exception error) { CollectException(ref errors, error); }
 
+        try { tree.NotifyNodeAdded(this); }
+        catch (Exception error) { CollectException(ref errors, error); }
+
         var parent = Parent;
-
-        try
-        {
-            parent?.ChildEnteredTree?.Invoke(parent, this);
-        }
-        catch (Exception error)
-        {
-            CollectException(ref errors, error);
-        }
-
-        try
-        {
-            tree.NotifyNodeAdded(this);
-        }
-        catch (Exception error)
-        {
-            CollectException(ref errors, error);
-        }
+        try { parent?.ChildEnteredTree?.Invoke(parent, this); }
+        catch (Exception error) { CollectException(ref errors, error); }
 
         if (!ReferenceEquals(Tree, tree))
         {
@@ -2344,15 +2334,6 @@ public partial class Node : ElectronObject
             {
                 CollectException(ref errors, error);
             }
-        }
-
-        try
-        {
-            DispatchNotification(NotificationPostEnterTree);
-        }
-        catch (Exception error)
-        {
-            CollectException(ref errors, error);
         }
 
         if (IsQueuedForDeletion)
@@ -2393,14 +2374,15 @@ public partial class Node : ElectronObject
 
     private void MakeReadyCore(SceneTree expectedTree, List<Node>? readied)
     {
+        HasStartedReady = true;
         List<Exception>? errors = null;
 
-        foreach (var child in _children.ToArray())
+        foreach (var (child, attachment) in _children.Select(static child => (child, child.TreeAttachmentVersion)).ToArray())
         {
             if (IsDisposed || !ReferenceEquals(Tree, expectedTree))
                 break;
 
-            if (!ReferenceEquals(child.Parent, this) || !ReferenceEquals(child.Tree, expectedTree))
+            if (!ReferenceEquals(child.Parent, this) || !ReferenceEquals(child.Tree, expectedTree) || child.TreeAttachmentVersion != attachment)
                 continue;
 
             try
@@ -2418,6 +2400,9 @@ public partial class Node : ElectronObject
             ThrowCollected("One or more ready callbacks failed.", errors);
             return;
         }
+
+        try { DispatchNotification(NotificationPostEnterTree); }
+        catch (Exception error) { CollectException(ref errors, error); }
 
         if (!_readyCalled)
         {
@@ -2446,94 +2431,52 @@ public partial class Node : ElectronObject
         ThrowCollected("One or more ready callbacks failed.", errors);
     }
 
-    internal void ExitTree(SceneTree tree)
+    internal void ExitTree(SceneTree tree, bool deferExited = false)
     {
         EnsurePhysicsObjectAccess();
         if (_isEnteringTree)
             throw new InvalidOperationException($"Node '{Name}' cannot exit a SceneTree while it is still entering.");
-
-        if (!ReferenceEquals(Tree, tree) || _isExitingTree)
-            return;
+        if (!ReferenceEquals(Tree, tree) || _isExitingTree) return;
 
         _isExitingTree = true;
+        _hasPendingTreeExit = true;
         List<Exception>? errors = null;
-
         try
         {
-            foreach (var child in _children.ToArray())
-            {
-                try
-                {
-                    child.ExitTree(tree);
-                }
-                catch (Exception error)
-                {
-                    CollectException(ref errors, error);
-                }
-            }
+            var children = _children.ToArray();
+            for (var i = children.Length - 1; i >= 0; i--)
+                try { children[i].ExitTree(tree, deferExited: true); }
+                catch (Exception error) { CollectException(ref errors, error); }
 
-            try
-            {
-                DispatchNotification(NotificationExitTree);
-            }
-            catch (Exception error)
-            {
-                CollectException(ref errors, error);
-            }
-
+            try { OnExitTree(); }
+            catch (Exception error) { CollectException(ref errors, error); }
+            try { TreeExiting?.Invoke(this); }
+            catch (Exception error) { CollectException(ref errors, error); }
+            try { DispatchNotification(NotificationExitTree); }
+            catch (Exception error) { CollectException(ref errors, error); }
             try { OnTreeMembershipChanged(entering: false); }
             catch (Exception error) { CollectException(ref errors, error); }
-
             try { NotifyPhysicsObjectBindings(entering: false); }
             catch (Exception error) { CollectException(ref errors, error); }
-
-            try
-            {
-                TreeExiting?.Invoke(this);
-            }
-            catch (Exception error)
-            {
-                CollectException(ref errors, error);
-            }
-
+            try { tree.NotifyNodeRemoved(this); }
+            catch (Exception error) { CollectException(ref errors, error); }
             var parent = Parent;
-
-            try
-            {
-                parent?.ChildExitingTree?.Invoke(parent, this);
-            }
-            catch (Exception error)
-            {
-                CollectException(ref errors, error);
-            }
+            try { parent?.ChildExitingTree?.Invoke(parent, this); }
+            catch (Exception error) { CollectException(ref errors, error); }
 
             tree.UnbindProcessingGroup(this);
             _activeViewport = null;
             Tree = null;
+            HasStartedReady = false;
             _absolutePathCache = null;
-
-            try
-            {
-                TreeExited?.Invoke(this);
-            }
-            catch (Exception error)
-            {
-                CollectException(ref errors, error);
-            }
-
-            try
-            {
-                tree.NotifyNodeRemoved(this);
-            }
-            catch (Exception error)
-            {
-                CollectException(ref errors, error);
-            }
+            if (!deferExited)
+                try { CompleteExitTree(); }
+                catch (Exception error) { CollectException(ref errors, error); }
         }
         finally
         {
             _isExitingTree = false;
-
+            HasStartedReady = false;
             if (ReferenceEquals(Tree, tree))
             {
                 tree.UnbindProcessingGroup(this);
@@ -2542,8 +2485,26 @@ public partial class Node : ElectronObject
                 _absolutePathCache = null;
             }
         }
-
         ThrowCollected("One or more exit-tree callbacks failed.", errors);
+    }
+
+    internal void CompleteExitTree()
+    {
+        if (!_hasPendingTreeExit) return;
+        var wasExiting = _isExitingTree;
+        _isExitingTree = true;
+        List<Exception>? errors = null;
+        try
+        {
+            var children = _children.ToArray();
+            for (var i = children.Length - 1; i >= 0; i--)
+                try { children[i].CompleteExitTree(); }
+                catch (Exception error) { CollectException(ref errors, error); }
+            try { TreeExited?.Invoke(this); }
+            catch (Exception error) { CollectException(ref errors, error); }
+        }
+        finally { _hasPendingTreeExit = false; _isExitingTree = wasExiting; }
+        ThrowCollected("One or more after-exit callbacks failed.", errors);
     }
 
     internal void ResetReadyAfterFailedActivation() => _readyCalled = false;
@@ -2714,6 +2675,8 @@ public partial class Node : ElectronObject
         ArgumentNullException.ThrowIfNull(child);
         child.EnsureNotSceneCapture();
         child.EnsurePhysicsObjectAccess();
+        if (child._isEnteringTree || child._isMakingReady || child._isExitingTree || child._hasPendingTreeExit)
+            throw new InvalidOperationException("A node cannot be inserted while its tree lifecycle is in progress.");
         if (child is Window { Visible: true } && Tree is not null && !EnumerateAncestorsForEmbedding())
             throw new NotSupportedException("Visible child windows require an embedding viewport.");
         Tree?.EnsureOwnerThread();
@@ -2751,61 +2714,75 @@ public partial class Node : ElectronObject
             throw new InvalidOperationException("A node cannot be structurally removed while its tree lifecycle callbacks are running.");
 
         var tree = Tree;
-        List<Exception>? errors = null;
-
+        tree?.BeginNodeLifecycle();
         try
         {
-            tree?.DetachSubtree(child);
-        }
-        catch (Exception error)
-        {
-            CollectException(ref errors, error);
-        }
+            List<Exception>? errors = null;
 
-        _children.Remove(child);
-        ChangeInternalChildCount(child._internalMode, -1);
-        child.Parent = null;
-        child.InvalidatePathCache();
-        child.ClearInvalidOwnersRecursive();
+            try
+            {
+                tree?.DetachSubtree(child);
+            }
+            catch (Exception error)
+            {
+                CollectException(ref errors, error);
+            }
 
-        try
-        {
-            child.DispatchNotification(NotificationUnparented);
-        }
-        catch (Exception error)
-        {
-            CollectException(ref errors, error);
-        }
+            child._isExitingTree = tree is not null;
+            try
+            {
+                _children.Remove(child);
+                ChangeInternalChildCount(child._internalMode, -1);
+                child.Parent = null;
+                child.InvalidatePathCache();
+                child.ClearInvalidOwnersRecursive();
 
-        try
-        {
-            NotifyChildOrderChanged();
-        }
-        catch (Exception error)
-        {
-            CollectException(ref errors, error);
-        }
+                try
+                {
+                    child.DispatchNotification(NotificationUnparented);
+                }
+                catch (Exception error)
+                {
+                    CollectException(ref errors, error);
+                }
 
-        try
-        {
-            ChildRemoved?.Invoke(this, child);
-        }
-        catch (Exception error)
-        {
-            CollectException(ref errors, error);
-        }
+                try
+                {
+                    NotifyChildOrderChanged();
+                }
+                catch (Exception error)
+                {
+                    CollectException(ref errors, error);
+                }
 
-        try
-        {
-            tree?.NotifyTreeChanged();
-        }
-        catch (Exception error)
-        {
-            CollectException(ref errors, error);
-        }
+                try
+                {
+                    ChildRemoved?.Invoke(this, child);
+                }
+                catch (Exception error)
+                {
+                    CollectException(ref errors, error);
+                }
 
-        ThrowCollected("One or more child-removal callbacks failed.", errors);
-        return true;
+                try
+                {
+                    tree?.NotifyTreeChanged();
+                }
+                catch (Exception error)
+                {
+                    CollectException(ref errors, error);
+                }
+
+                if (tree is not null)
+                    try { tree.CompleteSubtreeExit(child); }
+                    catch (Exception error) { CollectException(ref errors, error); }
+            }
+            finally { child._isExitingTree = false; }
+
+            ThrowCollected("One or more child-removal callbacks failed.", errors);
+            return true;
+        }
+        finally { tree?.EndNodeLifecycle(); }
     }
 
     private void NotifyChildOrderChanged()
@@ -2901,6 +2878,8 @@ public partial class Node : ElectronObject
 
     private void EnsureChildOrderMutable()
     {
+        for (Node? ancestor = this; ancestor is not null; ancestor = ancestor.Parent)
+            if (ancestor._hasPendingTreeExit) throw new InvalidOperationException("Children cannot be changed until subtree exit delivery completes.");
         EnsurePhysicsObjectAccess();
         Tree?.EnsureExtensionHierarchyChange();
         if (_notificationPropagationDepth != 0)

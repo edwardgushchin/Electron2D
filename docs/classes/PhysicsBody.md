@@ -46,7 +46,7 @@ The inherited [CollisionObject.GetRID](CollisionObject.md#getrid) remains stable
 | `public PhysicsBody?[] GetCollisionExceptions()` | Caller-owned deduplicated explicit/joint array; a server-only or freed RID has a null scene slot. |
 | `public KinematicCollision? MoveAndCollide(Vector2 motion, bool testOnly = false, float safeMargin = 0.08f, bool recoveryAsCollision = false)` | Move to safe travel or test without moving; return a caller-owned contact or null. |
 | `public bool TestMove(Transform from, Vector2 motion, KinematicCollision? collision = null, float safeMargin = 0.08f, bool recoveryAsCollision = false)` | Query from an arbitrary global pose without moving; optionally fill a caller-owned result. |
-| `protected override void OnEnterTree()` / `OnExitTree()` | Attaches or detaches the backend body from this SceneTree's world. |
+| `protected override void OnEnterTree()` | Attaches the backend body; custom overrides retain ordinary base setup. Departure release belongs to engine membership cleanup after TreeExiting. |
 | `protected override void Dispose(bool disposing)` | Releases any remaining backend body and shape slots before inherited cleanup. |
 
 ## State and failures
@@ -153,3 +153,5 @@ HasServerMode/CollisionResponseEnabled gate before publication. Configured value
 remain committed during failed hooks and repair uses the current effective role.
 CPU Area sensing now uses EffectiveCollisionLayer too, matching inactive follower
 fixtures and motion queries. See [filter failures and sensing](../components/physics-filters.md#failed-updates-and-effective-sensing).
+
+Scene departure retains the physical binding through the inherited OnExitTree hook and TreeExiting. Non-public membership cleanup then retires it before NodeRemoved/TreeExited even if a user hook or event fails. The OnExitTree hook is inherited from Node; no separate public cleanup alias is added. The [public lifecycle consumer](../components/scene-hierarchy.md#entry-readiness-and-departure) verifies live body/Area bindings, joint snapshot-map admission/removal and multi-error release on selected CPU/software-GPU/registered worlds.

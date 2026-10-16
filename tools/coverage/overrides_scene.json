@@ -1061,14 +1061,14 @@
     {
       "electron2d": "method:Electron2D.Node.OnEnterTree()",
       "godot": "Node::method:_enter_tree()",
-      "state": "Partial",
-      "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed lifecycle projection; the lifecycle status group records ordering, readiness, failure cleanup, worker access and physical evidence."
     },
     {
       "electron2d": "method:Electron2D.Node.OnExitTree()",
       "godot": "Node::method:_exit_tree()",
-      "state": "Partial",
-      "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed lifecycle projection; the lifecycle status group records ordering, readiness, failure cleanup, worker access and physical evidence."
     },
     {
       "electron2d": "method:Electron2D.Node.OnInput(Electron2D.InputEvent)",
@@ -1097,8 +1097,8 @@
     {
       "electron2d": "method:Electron2D.Node.OnReady()",
       "godot": "Node::method:_ready()",
-      "state": "Partial",
-      "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed lifecycle projection; the lifecycle status group records ordering, readiness, failure cleanup, worker access and physical evidence."
     },
     {
       "electron2d": "method:Electron2D.Node.OnUnhandledInput(Electron2D.InputEvent)",
@@ -1331,8 +1331,8 @@
     {
       "electron2d": "property:Electron2D.Node.IsNodeReady()",
       "godot": "Node::method:is_node_ready()",
-      "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed lifecycle projection; the lifecycle status group records ordering, readiness, failure cleanup, worker access and physical evidence."
     },
     {
       "electron2d": "property:Electron2D.Node.IsQueuedForDeletion()",
@@ -5652,6 +5652,60 @@
       "godot": "SceneTree::property:paused",
       "electron2d": "property:Electron2D.SceneTree.Paused()",
       "reason": "ADR 0011: complete inherited process policy preserves identities 0..4, silent detached edits, Pausable root normalization and attached-root rejection, current-group reads/owner writes, 50 mode transitions in both pause states, ordered eligibility then disabled notifications, explicit descendant boundaries and internal children, nested mode/tree-pause supersession, pending physical Enabled delivery under nested explicit child policy and failure continuation. Tree pause stops tree-driven numerical integration while Always/WhenPaused callbacks continue; explicit owned-space steps remain independent. Public CPU/software-Vulkan/registered serial/separate managed and strict NativeAOT consumers verify actual motion, force callbacks, storage, guards and 128 warmed mode/pause/full-frame cycles with zero owner/all-thread managed bytes. Evidence: bin/physics-process-modes/2026-10-16/validation.json. Hardware/native allocator/foreign/full physics acceptance remains separate."
+    },
+    {
+      "godot": "Node::method:request_ready()",
+      "electron2d": "method:Electron2D.Node.RequestReady()",
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed lifecycle projection; the lifecycle status group records ordering, readiness, failure cleanup, worker access and physical evidence."
+    },
+    {
+      "godot": "Node::signal:child_entered_tree(Node:)",
+      "electron2d": "event:Electron2D.Node.ChildEnteredTree()",
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed lifecycle projection; the lifecycle status group records ordering, readiness, failure cleanup, worker access and physical evidence."
+    },
+    {
+      "godot": "Node::signal:child_exiting_tree(Node:)",
+      "electron2d": "event:Electron2D.Node.ChildExitingTree()",
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed lifecycle projection; the lifecycle status group records ordering, readiness, failure cleanup, worker access and physical evidence."
+    },
+    {
+      "godot": "Node::signal:ready()",
+      "electron2d": "event:Electron2D.Node.Ready()",
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed lifecycle projection; the lifecycle status group records ordering, readiness, failure cleanup, worker access and physical evidence."
+    },
+    {
+      "godot": "Node::signal:tree_entered()",
+      "electron2d": "event:Electron2D.Node.TreeEntered()",
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed lifecycle projection; the lifecycle status group records ordering, readiness, failure cleanup, worker access and physical evidence."
+    },
+    {
+      "godot": "Node::signal:tree_exited()",
+      "electron2d": "event:Electron2D.Node.TreeExited()",
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed lifecycle projection; the lifecycle status group records ordering, readiness, failure cleanup, worker access and physical evidence."
+    },
+    {
+      "godot": "Node::signal:tree_exiting()",
+      "electron2d": "event:Electron2D.Node.TreeExiting()",
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed lifecycle projection; the lifecycle status group records ordering, readiness, failure cleanup, worker access and physical evidence."
+    },
+    {
+      "godot": "SceneTree::signal:node_added(Node:)",
+      "electron2d": "event:Electron2D.SceneTree.NodeAdded()",
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed lifecycle projection; the lifecycle status group records ordering, readiness, failure cleanup, worker access and physical evidence."
+    },
+    {
+      "godot": "SceneTree::signal:node_removed(Node:)",
+      "electron2d": "event:Electron2D.SceneTree.NodeRemoved()",
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed lifecycle projection; the lifecycle status group records ordering, readiness, failure cleanup, worker access and physical evidence."
     }
   ],
   "extras": [
@@ -11489,6 +11543,25 @@
         "Node::method:can_process()",
         "Node::property:process_mode",
         "SceneTree::property:paused"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: audited parent-first entry notification/hook/tree/parent signals; child-first per-attachment PostEnterTree and one-shot ready with self RequestReady; reverse child-first exit retains Tree and physical binding through TreeExiting, then private release, NodeRemoved/ChildExitingTree and whole-subtree detachment before TreeExited. Complete-removal barriers reject frame/reentry/disposal in intermediate callbacks; activation/exit failures continue and aggregate, rollback restores ready state. Owner/current-group ready metadata does not wake bodies. Public CPU/software-Vulkan/registered serial/separate CoreCLR/strict NativeAOT consumers verify mixed/internal hierarchy, stale snapshots, 11 activation stages, six exit errors, body/Area/joint bindings, fresh scene file and 128 warm/128 measured moving frames at 0/0 owner/all-thread bytes. Transition setup allocations, full inheritance, native/device, hardware/window and foreign-platform gates remain separate. Evidence: bin/physics-node-lifecycle/2026-10-16/validation.json.",
+      "godot": [
+        "Node::method:_enter_tree()",
+        "Node::method:_exit_tree()",
+        "Node::method:_ready()",
+        "Node::method:is_node_ready()",
+        "Node::method:request_ready()",
+        "Node::signal:child_entered_tree(Node:)",
+        "Node::signal:child_exiting_tree(Node:)",
+        "Node::signal:ready()",
+        "Node::signal:tree_entered()",
+        "Node::signal:tree_exited()",
+        "Node::signal:tree_exiting()",
+        "SceneTree::signal:node_added(Node:)",
+        "SceneTree::signal:node_removed(Node:)"
       ]
     }
   ]
