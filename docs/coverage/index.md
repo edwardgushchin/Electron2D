@@ -1073,3 +1073,5 @@ entry/exit histories and zero warmed managed bytes. Wider acceptance stays open.
 current processing-group access and exact physical/file consumers. Physical
 mutations retain their owner guard before virtual consumer hooks. Runtime
 Node duplication retains its separate ADR 0091 binding/identity prerequisite.
+
+The inherited ordinary signal policy now maps SetBlockSignals/IsBlockingSignals under ADRs 0002/0010. It filters engine publishers once while preserving typed snapshots, one-shot/deferred acceptance, notifications and deterministic lifetime cleanup. See the [current physics audit](../components/physics-contract-audit.md#inherited-per-object-signal-blocking); other named signal inspection and connection-policy gaps remain open.

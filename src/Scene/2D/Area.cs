@@ -313,23 +313,23 @@ public sealed partial class Area : CollisionObject
             {
                 if (pair.IsArea && other is Area area)
                 {
-                    using var listeners = (change.Entered ? _eventAreaEntered : _eventAreaExited)?.Acquire() ?? default;
+                    using var listeners = BeginBufferedEvent((change.Entered ? _eventAreaEntered : _eventAreaExited));
                     for (var i = 0; i < listeners.Count; i++) listeners[i](area);
                 }
                 else if (!pair.IsArea && other is Entity body)
                 {
-                    using var listeners = (change.Entered ? _eventBodyEntered : _eventBodyExited)?.Acquire() ?? default;
+                    using var listeners = BeginBufferedEvent((change.Entered ? _eventBodyEntered : _eventBodyExited));
                     for (var i = 0; i < listeners.Count; i++) listeners[i](body);
                 }
             }
             else if (pair.IsArea)
             {
-                using var listeners = (change.Entered ? _eventAreaShapeEntered : _eventAreaShapeExited)?.Acquire() ?? default;
+                using var listeners = BeginBufferedEvent((change.Entered ? _eventAreaShapeEntered : _eventAreaShapeExited));
                 for (var i = 0; i < listeners.Count; i++) listeners[i](pair.RID, other as Area, pair.OtherShape, pair.LocalShape);
             }
             else
             {
-                using var listeners = (change.Entered ? _eventBodyShapeEntered : _eventBodyShapeExited)?.Acquire() ?? default;
+                using var listeners = BeginBufferedEvent((change.Entered ? _eventBodyShapeEntered : _eventBodyShapeExited));
                 for (var i = 0; i < listeners.Count; i++) listeners[i](pair.RID, other as Entity, pair.OtherShape, pair.LocalShape);
             }
         }

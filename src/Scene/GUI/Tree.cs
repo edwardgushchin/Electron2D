@@ -106,9 +106,9 @@ public partial class Tree : Control
             {
                 if (IsDisposed || change.Item.IsDisposed || change.Item.Owner != this) continue;
                 var target = change.Item == item && change.Column == column;
-                if (target) try { CellSelected?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+                if (target) try { BeginEventEmission(CellSelected)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
                 if ((!target || notify) && !IsDisposed && !change.Item.IsDisposed && change.Item.Owner == this)
-                    try { MultiSelected?.Invoke(change.Item, change.Column, target); } catch (Exception error) { CollectException(ref errors, error); }
+                    try { BeginEventEmission(MultiSelected)?.Invoke(change.Item, change.Column, target); } catch (Exception error) { CollectException(ref errors, error); }
             }
             ThrowCollected("Tree selection callbacks failed.", errors);
         }
@@ -124,16 +124,16 @@ public partial class Tree : Control
     public void DeselectAll() { EnsureTreeMutable(); for (var item = _root; item != null; item = item.WalkNext(false, true)) foreach (var cell in item.Cells) cell.Selected = false; _selected = null; _selectedColumn = -1; QueueRedraw(); }
     internal void SelectItemCell(TreeItem item, int column, bool selected, bool cursor, bool notifyMulti = true)
     {
-        EnsureTreeMutable(); RequireItem(item); var cell = item.At(column); if (selected && !cell.Selectable) return; var changed = cell.Selected != selected; if (!changed && !_allowReselect) { if (selected && cursor && (_selected != item || _selectedColumn != column)) { _selected = item; _selectedColumn = column; QueueRedraw(); if (_selectMode == SelectMode.Multi && notifyMulti) CellSelected?.Invoke(); } return; }
+        EnsureTreeMutable(); RequireItem(item); var cell = item.At(column); if (selected && !cell.Selectable) return; var changed = cell.Selected != selected; if (!changed && !_allowReselect) { if (selected && cursor && (_selected != item || _selectedColumn != column)) { _selected = item; _selectedColumn = column; QueueRedraw(); if (_selectMode == SelectMode.Multi && notifyMulti) BeginEventEmission(CellSelected)?.Invoke(); } return; }
         if (selected && _selectMode != SelectMode.Multi) DeselectAll(); if (_selectMode == SelectMode.Row) foreach (var c in item.Cells) c.Selected = selected && c.Selectable; else cell.Selected = selected;
         if (cursor && selected) { _selected = item; _selectedColumn = column; } else if (!selected) { if (_selectMode != SelectMode.Multi && _selected == item && (_selectMode == SelectMode.Row || _selectedColumn == column)) { _selected = null; _selectedColumn = -1; } }
         QueueRedraw(); List<Exception>? errors = null;
-        try { if (cursor && selected && _selectMode != SelectMode.Row && (_selectMode != SelectMode.Multi || notifyMulti)) CellSelected?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed) { if (_selectMode == SelectMode.Multi) { if (notifyMulti) MultiSelected?.Invoke(item, column, selected); } else if (selected) ItemSelected?.Invoke(); } } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (cursor && selected && _selectMode != SelectMode.Row && (_selectMode != SelectMode.Multi || notifyMulti)) BeginEventEmission(CellSelected)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!IsDisposed) { if (_selectMode == SelectMode.Multi) { if (notifyMulti) BeginEventEmission(MultiSelected)?.Invoke(item, column, selected); } else if (selected) BeginEventEmission(ItemSelected)?.Invoke(); } } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Tree selection callbacks failed.", errors);
     }
-    internal void PublishCollapsed(TreeItem item) { if (!IsDisposed) ItemCollapsed?.Invoke(item); }
-    internal void PublishCheck(TreeItem item, int column) { if (!IsDisposed) CheckPropagatedToItem?.Invoke(item, column); }
+    internal void PublishCollapsed(TreeItem item) { if (!IsDisposed) BeginEventEmission(ItemCollapsed)?.Invoke(item); }
+    internal void PublishCheck(TreeItem item, int column) { if (!IsDisposed) BeginEventEmission(CheckPropagatedToItem)?.Invoke(item, column); }
     /// <summary>Occurs when a selection cursor cell changes.</summary>
     public event Action? CellSelected;
     /// <summary>Occurs after a single selection.</summary>

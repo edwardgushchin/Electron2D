@@ -221,11 +221,11 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
 | [Node](classes/Node.md) | [Object](classes/Object.md) | 167 | 18 | 6 | 22 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
-| [Object](classes/Object.md) | — | 19 | 17 | 2 | 21 | 15 |
+| [Object](classes/Object.md) | — | 21 | 17 | 2 | 19 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 22 | 5 | 0 | 0 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 334 | 74 | 17 | 43 | 23 |
+| **Total** | | 336 | 74 | 17 | 41 | 23 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -341,13 +341,11 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Object::method:has_method(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:has_signal(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:has_user_signal(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
-| [`Object::method:is_blocking_signals()`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:is_connected(StringName:,Callable:)`](classes/Object.md) | Partial | ADRs 0002/0010: EventConnection.IsConnected reports logical acceptance for the exact owned typed subscription. Existing EventConnection checks cover reusable/one-shot/disposed state, recursion/concurrency, queued cancellation and accessor/scheduler errors; EventConnectionPhysicsTests retains actual CPU/GPU Area/body callbacks and strict zero warmed immediate frame bytes. This token cannot detect a publisher independently clearing/replacing its invocation list, enumerate another publisher/handler pair or supply dynamic-name introspection; those remaining capabilities are not certified by this mapping. |
 | [`Object::method:is_queued_for_deletion()`](classes/Object.md) | Partial | The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit. |
 | [`Object::method:notification(int:,bool:)`](classes/Object.md) | Partial | ADR 0005 retains ordinary C# virtual OnNotification dispatch and explicit base calls. Notify has no reversed parameter or per-class reversal mechanism; reserved post-initialization 0 is not automatically emitted. These remain explicit inherited capability/ordering gaps, not completion inferred from the numeric callback declarations. Existing Node/Timer/SceneTree hooks retain their documented typed lifecycle behavior. |
 | [`Object::method:notify_property_list_changed()`](classes/Object.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Object::method:remove_user_signal(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
-| [`Object::method:set_block_signals(bool:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:set_deferred(StringName:,Variant:)`](classes/Object.md) | Partial | ADRs 0001/0006: existing typed SceneTree.SetDeferred retains individual values in reusable Scene-owned slots, mixed Action FIFO/captured-batch order, atomic lifetime acceptance and error continuation. Warm typed setter and CPU/GPU deferred-event frames retain zero owner/all-thread bytes; execution/failure/discard release reference values. Dynamic property/name resolution remains excluded by the typed projection, and this does not establish arbitrary custom scheduler or full inherited/native/network/platform acceptance. |
 | [`Object::method:set_message_translation(bool:)`](classes/Object.md) | Partial | C# property form of upstream Object operation (ADRs 0005 and 0007). Return type differs: void → System.Boolean; audit observable contract. |
 | [`Object::method:set_script(Variant:)`](classes/Object.md) | Blocked | Trigger: accepted typed live script-attachment contract for owner identity, instance ownership, replacement, callback ordering and failure rollback, followed by its first executable binding slice under ADR 0091. A factory-created CLR subtype does not change the type of an existing owner. Applicable behavior remains pending; no inert setter or implicit exclusion is accepted. |

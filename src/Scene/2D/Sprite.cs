@@ -53,7 +53,7 @@ public class Sprite : Entity
             _texture = value;
             if (_texture is not null) _texture.Changed += TextureContentChanged;
             InvalidateCanvas();
-            TextureChanged?.Invoke();
+            BeginEventEmission(TextureChanged)?.Invoke();
             if (!IsDisposed) NotifyItemRectChanged();
         }
     }
@@ -194,7 +194,7 @@ public class Sprite : Entity
             if ((uint)value >= (uint)(_hframes * _vframes)) throw new ArgumentOutOfRangeException(nameof(value));
             if (_frame == value) return;
             _frame = value; InvalidateCanvas(); NotifyItemRectChanged();
-            if (!IsDisposed) FrameChanged?.Invoke();
+            if (!IsDisposed) BeginEventEmission(FrameChanged)?.Invoke();
         }
     }
 

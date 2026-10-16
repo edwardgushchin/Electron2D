@@ -101,8 +101,8 @@ public partial class TabBar : Control
             _previous = _current; _current = value; var revision = ++_selectionRevision;
             var changed = _previous != _current; if (changed) InvalidateTabs();
             List<Exception>? errors = null;
-            try { TabSelected?.Invoke(value); } catch (Exception error) { Node.CollectException(ref errors, error); }
-            if (changed && !IsDisposed && revision == _selectionRevision) try { TabChanged?.Invoke(value); } catch (Exception error) { Node.CollectException(ref errors, error); }
+            try { BeginEventEmission(TabSelected)?.Invoke(value); } catch (Exception error) { Node.CollectException(ref errors, error); }
+            if (changed && !IsDisposed && revision == _selectionRevision) try { BeginEventEmission(TabChanged)?.Invoke(value); } catch (Exception error) { Node.CollectException(ref errors, error); }
             Node.ThrowCollected("Tab selection observers failed.", errors);
         }
     }
@@ -201,7 +201,7 @@ public partial class TabBar : Control
             _offset = Math.Min(_offset, _tabs.Count - 1);
         }
         _selectionRevision++; ResetInteraction(); InvalidateTabs(); NotifyPropertyListChanged();
-        if (selected && Tree is not null && !IsDisposed) TabChanged?.Invoke(_current); return selected;
+        if (selected && Tree is not null && !IsDisposed) BeginEventEmission(TabChanged)?.Invoke(_current); return selected;
     }
     /// <summary>Moves a tab to another existing index while preserving selected and previous tab identities.</summary>
     /// <param name="from">Source index.</param><param name="to">Destination index after removal/reinsertion.</param>

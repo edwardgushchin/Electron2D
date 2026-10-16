@@ -188,8 +188,8 @@ public partial class TileMapLayer : Entity
     {
         ThrowIfDisposed(); return _cells.TryGetValue(coords, out var c) && (c.Alternative & bit) != 0;
     }
-    private void MarkCell(Vector2i coords) { _drawingDirty = true; _dirtyCells.Add(coords); Schedule(); Changed?.Invoke(); }
-    private void MarkAll(bool scenes = true) { _sceneAllDirty |= scenes; _drawingDirty = true; _allDirty = true; Schedule(); Changed?.Invoke(); }
+    private void MarkCell(Vector2i coords) { _drawingDirty = true; _dirtyCells.Add(coords); Schedule(); BeginEventEmission(Changed)?.Invoke(); }
+    private void MarkAll(bool scenes = true) { _sceneAllDirty |= scenes; _drawingDirty = true; _allDirty = true; Schedule(); BeginEventEmission(Changed)?.Invoke(); }
     private void Schedule() { QueueRedraw(); if (_queued || !IsInsideTree) return; _queued = true; Tree!.Defer(_deferredUpdate); }
     private void DeferredUpdate() { _queued = false; if (!IsDisposed && IsInsideTree) UpdateInternals(); }
     private void SetChanged(Resource _) => MarkAll();

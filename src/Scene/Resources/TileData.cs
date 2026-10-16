@@ -133,7 +133,7 @@ public sealed partial class TileData : ElectronObject
     private PhysicsLayer Layer(int index) { ThrowIfDisposed(); return Layers[index]; }
     private static void Finite(float value) { if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value)); }
     private void TransformAllowed(bool value) { ThrowIfDisposed(); if (value && !_allowTransform) throw new InvalidOperationException("Transform flags belong to alternative tiles or cells."); }
-    private void Change() { NotifyPropertyListChanged(); Changed?.Invoke(); }
+    private void Change() { NotifyPropertyListChanged(); BeginEventEmission(Changed)?.Invoke(); }
     internal void ResizeLayers(int count)
     {
         ThrowIfDisposed(); if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));

@@ -86,10 +86,10 @@ public class HTTPRequest : Node
         if (what == NotificationExitTree) { CancelRequest(); return; }
         if (what != NotificationInternalProcess || _operation is null) return;
         var operation = _operation; _elapsed += ProcessDeltaTime;
-        if (_activeTimeout > 0 && _elapsed >= _activeTimeout) { CancelRequest(); RequestCompleted?.Invoke(HTTPRequestResult.Timeout, 0, [], []); return; }
+        if (_activeTimeout > 0 && _elapsed >= _activeTimeout) { CancelRequest(); BeginEventEmission(RequestCompleted)?.Invoke(HTTPRequestResult.Timeout, 0, [], []); return; }
         if (!_threads) operation.Step();
         if (!operation.IsDone || _threads && Volatile.Read(ref operation.WorkerStopped) == 0) return;
-        var result = operation.Result; var code = operation.Code; var headers = operation.ResponseHeaders; var data = operation.ResponseBody; CancelRequest(); RequestCompleted?.Invoke(result, code, headers, data);
+        var result = operation.Result; var code = operation.Code; var headers = operation.ResponseHeaders; var data = operation.ResponseBody; CancelRequest(); BeginEventEmission(RequestCompleted)?.Invoke(result, code, headers, data);
     }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(HTTPRequest) ? CreateRequestNode : base.CreateSceneInstanceFactory();

@@ -47,7 +47,7 @@ public class NinePatchRect : Control
             if (_texture is { } next) { next.Changed += TextureUpdated; next.Disposed += TextureDisposed; }
             List<Exception>? errors = null;
             try { QueueRedraw(); UpdateMinimumSize(); } catch (Exception error) { CollectException(ref errors, error); }
-            try { TextureChanged?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+            try { BeginEventEmission(TextureChanged)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
             ThrowCollected("Nine-patch texture notifications failed.", errors);
         }
     }

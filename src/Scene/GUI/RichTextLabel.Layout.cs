@@ -66,7 +66,7 @@ public partial class RichTextLabel
     }
     private Task StartWorker(Frame root, float width, ThemeValues theme) => Task.Run(() => { try { ShapeFrame(root, width, theme, 0, true); } catch (Exception error) { _workerError = error; } });
     private void ObserveWorker() { if (_worker is { IsCompleted: false }) { var ready = Volatile.Read(ref _workerReadyParagraphs); if (ready > _workerPublishedParagraphs) { _workerPublishedParagraphs = ready; PublishLayout(ready, false); } return; } if (_worker is not { IsCompleted: true }) return; _worker.GetAwaiter().GetResult(); _worker = null; if (_workerError != null) { var error = _workerError; _workerError = null; throw new InvalidOperationException("Rich-text shaping failed.", error); } PublishLayout(); DeliverFinished(); }
-    private void DeliverFinished() { if (!_notifyFinished || _building || IsDisposed) return; _notifyFinished = false; Finished?.Invoke(); }
+    private void DeliverFinished() { if (!_notifyFinished || _building || IsDisposed) return; _notifyFinished = false; BeginEventEmission(Finished)?.Invoke(); }
     private void PublishLayout(int paragraphs = -1, bool complete = true)
     {
         if (_publishing) return; _publishing = true; try

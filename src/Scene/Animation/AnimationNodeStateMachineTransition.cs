@@ -80,7 +80,7 @@ public sealed partial class AnimationNodeStateMachineTransition : Resource
         var handlers = PolicyUpdated; List<Exception>? errors = null;
         try { EmitChanged(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
         if (handlers is not null) foreach (Action handler in handlers.GetInvocationList()) try { handler(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
-        if (condition && !IsDisposed) try { AdvanceConditionChanged?.Invoke(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
+        if (condition && !IsDisposed) try { BeginEventEmission(AdvanceConditionChanged)?.Invoke(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
         AnimationNode.ThrowCollected("State transition notification failed.", errors);
     }
     /// <summary>Occurs after assigning the typed condition key, including an equal assignment.</summary>

@@ -1,6 +1,6 @@
 # ElectronObject
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 **Inherits:** —
 
@@ -70,10 +70,33 @@ Console.WriteLine(value.InstanceID);
 | [`public bool CanTranslateMessages { get; set; }`](#p-electron2d-electronobject-cantranslatemessages) | Gets or sets whether this object resolves messages through [`TranslationServer`](TranslationServer.md). |
 | [`public virtual string TranslationDomain { get; set; }`](#p-electron2d-electronobject-translationdomain) | Gets or sets the translation domain used by this object; Node overrides it for inheritance. |
 
+## Ordinary event delivery
+
+`SetBlockSignals(true)` suppresses subsequent ordinary event emissions from this object. The initial policy is false. Existing subscriptions stay attached, one-shot tokens stay unconsumed and blocked emissions create no deferred work. Unblocking does not replay dropped emissions. Already accepted deferred callbacks still execute; disposing their token remains the cancellation mechanism. A handler changing the flag affects the next emission, while the selected current snapshot retains its order and exception behavior.
+
+Numeric notifications, virtual processing/input/integration callbacks, actual state changes and resource revisions continue. `Disposed` is an independent deterministic lifecycle event and always performs endpoint cleanup. Internal bookkeeping channels and caller-supplied operation callbacks are independent of ordinary public events. Static service facades use their retained publisher's policy, accessible through the existing `Engine.GetSingleton` identity API.
+
+Custom typed publishers use the protected gateway once at publication. It preserves any concrete delegate signature, including borrowed spans, and allocates nothing. Publishers still validate lifetime/thread access. Ordinary CLR delegate invocation cannot intercept this object policy automatically.
+
+```csharp
+sealed class Meter : ElectronObject
+{
+    public event Action<Meter, int>? Changed;
+    public void Update(int value)
+    {
+        ThrowIfDisposed();
+        BeginEventEmission(Changed)?.Invoke(this, value);
+    }
+}
+```
+
 ## Methods
 
 | Member | Description |
 | --- | --- |
+| [`public void SetBlockSignals(bool enable)`](#m-electron2d-electronobject-setblocksignals-system-boolean) | Changes the per-object ordinary emission policy. |
+| [`public bool IsBlockingSignals()`](#m-electron2d-electronobject-isblockingsignals) | Reads the atomic policy, initially false. |
+| [`protected TDelegate? BeginEventEmission<TDelegate>(TDelegate? handlers) where TDelegate : Delegate`](#m-electron2d-electronobject-begineventemission) | Selects the typed snapshot once for a custom publisher. |
 | [`public bool IsClass(string className)`](#m-electron2d-electronobject-isclass-system-string) | Tests the actual compiled class and engine base-class names. |
 | [`public void Notify(int what)`](#m-electron2d-electronobject-notify-system-int32) | Synchronously delivers a numeric engine notification to this object. |
 | [`public IReadOnlyList<PropertyDescriptor> GetPropertyList()`](#m-electron2d-electronobject-getpropertylist) | Builds the current validated list of typed properties exposed to tooling. |
@@ -165,6 +188,21 @@ Gets or sets the translation domain used by this object.
 - `ObjectDisposedException`: The object is disposing on another thread or has finished disposing.
 
 ## Method Descriptions
+
+<a id="m-electron2d-electronobject-setblocksignals-system-boolean"></a>
+### `public void SetBlockSignals(bool enable)`
+
+True suppresses new ordinary emissions; false enables them. `ValidateMutation` runs before every assignment, including an unchanged value. A rejected write retains the old policy. The flag is atomic base metadata; it neither observes solver state nor introduces additional scene-owner affinity beyond the existing derived validator. Disposing on another thread or terminal disposal throws `ObjectDisposedException`; a derived validator can reject with `InvalidOperationException`. The exact teardown thread retains the base lifecycle access rules.
+
+<a id="m-electron2d-electronobject-isblockingsignals"></a>
+### `public bool IsBlockingSignals()`
+
+Returns false initially, then the latest atomic delivery policy. It validates base lifetime without reading scene/backend state. Disposing on another thread or completed disposal throws `ObjectDisposedException`. Each object has its own policy; there is no parent/child propagation or subscription removal.
+
+<a id="m-electron2d-electronobject-begineventemission"></a>
+### `protected TDelegate? BeginEventEmission<TDelegate>(TDelegate? handlers) where TDelegate : Delegate`
+
+`handlers` is the concrete captured event delegate or null. Returns that same delegate when enabled, otherwise null. Immediately invoke the returned snapshot with the existing typed arguments. This does not validate publisher lifetime/affinity, allocate, change exception policy or recheck between listeners. A later flag change cannot cancel this selected emission. Null remains null; custom span signatures retain borrowed argument lifetime. This is the typed C# extension under ADRs 0002/0010.
 
 <a id="m-electron2d-electronobject-isclass-system-string"></a>
 ### `public bool IsClass(string className)`

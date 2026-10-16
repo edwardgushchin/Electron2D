@@ -34,14 +34,14 @@ public partial class ColorPicker
     /// <summary>Returns a caller-owned copy of recent swatches, oldest first.</summary><returns>An independent array containing at most nine colors.</returns>
     public Color[] GetRecentPresets() { CheckPicker(); return _recent.ToArray(); }
     private void PaletteEdited() { if (_paletteLabel.Text.Length != 0) _paletteLabel.Text = _paletteLabel.Text.TrimEnd('*') + "*"; }
-    private void AddFromUser() { var color = _color; AddPreset(color); if (!IsDisposed) PresetAdded?.Invoke(color); }
-    private void RemoveFromUser(Color color) { ErasePreset(color); if (!IsDisposed) PresetRemoved?.Invoke(color); }
+    private void AddFromUser() { var color = _color; AddPreset(color); if (!IsDisposed) BeginEventEmission(PresetAdded)?.Invoke(color); }
+    private void RemoveFromUser(Color color) { ErasePreset(color); if (!IsDisposed) BeginEventEmission(PresetRemoved)?.Invoke(color); }
     private void ChooseSwatch(Color color, bool recent)
     {
         SetColor(color, true);
         if (recent) { var index = _recent.IndexOf(color); if (index >= 0) { _recent.RemoveAt(index); _recent.Add(color); var button = _recentButtons[index]; _recentButtons.RemoveAt(index); _recentButtons.Add(button); _recentRow.MoveChild(button, 0); } }
         else AddRecentPreset(color);
-        ColorChanged?.Invoke(color);
+        BeginEventEmission(ColorChanged)?.Invoke(color);
     }
     private readonly record struct PresetDrag(ColorPicker Owner, SwatchButton Button);
     private sealed class SwatchButton : Button

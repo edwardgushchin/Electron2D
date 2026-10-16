@@ -115,7 +115,7 @@ public sealed partial class ThemeDB : ElectronObject
     {
         Exception? contextError = null, fallbackError = null;
         try { ContextChanged?.Invoke(); } catch (Exception error) { contextError = error; }
-        try { FallbackChangedCore?.Invoke(); } catch (Exception error) { fallbackError = error; }
+        try { BeginEventEmission(FallbackChangedCore)?.Invoke(); } catch (Exception error) { fallbackError = error; }
         Resource.ThrowCombined(contextError, fallbackError);
     }
     internal float FallbackBaseScaleCore

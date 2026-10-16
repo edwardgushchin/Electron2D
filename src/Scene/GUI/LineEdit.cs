@@ -57,7 +57,7 @@ public partial class LineEdit : Control
     public int MaxLength { get { CheckLineEdit(); return _maxLength; } set { EnsureMutable(); ArgumentOutOfRangeException.ThrowIfNegative(value); _maxLength = value; AssignText(_text); } }
     /// <summary>Gets or sets whether native edits are allowed. Programmatic assignments remain available.</summary>
     /// <value>True initially.</value>
-    public bool Editable { get { CheckLineEdit(); return _editable; } set { EnsureMutable(); if (_editable == value) return; _editable = value; var was = _editing; if (!value) Unedit(); else if (IsInsideTree && HasFocus()) Edit(); Invalidate(); if (was != _editing) EditingToggled?.Invoke(_editing); } }
+    public bool Editable { get { CheckLineEdit(); return _editable; } set { EnsureMutable(); if (_editable == value) return; _editable = value; var was = _editing; if (!value) Unedit(); else if (IsInsideTree && HasFocus()) Edit(); Invalidate(); if (was != _editing) BeginEventEmission(EditingToggled)?.Invoke(_editing); } }
     private bool _editable = true;
     /// <summary>Gets or sets whether pointer and keyboard selection are allowed.</summary>
     /// <value>True initially. Disabling clears an existing selection.</value>

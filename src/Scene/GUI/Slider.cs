@@ -180,7 +180,7 @@ public abstract class Slider : Range
         var grabber = RequiredIcon(_mouseInside || HasFocus(true) ? "grabber_highlight" : "grabber");
         var pixel = Pixel(_vertical ? position.Y : position.X); var tree = Tree; var generation = ++_interactionGeneration;
         _grabPosition = pixel; _ratioBeforeDrag = Ratio; _grabActive = false; List<Exception>? errors = null;
-        try { DragStarted?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { BeginEventEmission(DragStarted)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         if (InteractionCurrent(generation, tree))
         {
             var ratioReady = false;
@@ -206,7 +206,7 @@ public abstract class Slider : Range
     private void EndDrag()
     {
         _grabActive = false; _interactionGeneration++; List<Exception>? errors = null;
-        try { DragEnded?.Invoke(!Mathf.IsEqualApprox(_ratioBeforeDrag, Ratio)); } catch (Exception error) { CollectException(ref errors, error); }
+        try { BeginEventEmission(DragEnded)?.Invoke(!Mathf.IsEqualApprox(_ratioBeforeDrag, Ratio)); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Slider release callbacks failed.", errors);
     }
     private void Wheel(bool increase)

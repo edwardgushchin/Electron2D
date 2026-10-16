@@ -1,6 +1,6 @@
 # NavigationServer
 
-Last updated: 2026-10-10
+Last updated: 2026-10-16
 
 - Source: [NavigationServer.cs](../../src/Servers/Navigation/NavigationServer.cs), [NavigationServer.API.cs](../../src/Servers/Navigation/NavigationServer.API.cs), [NavigationServer.Links.cs](../../src/Servers/Navigation/NavigationServer.Links.cs), [NavigationServer.Query.cs](../../src/Servers/Navigation/NavigationServer.Query.cs), [NavigationServer.Agents.cs](../../src/Servers/Navigation/NavigationServer.Agents.cs)
 - Inherits: [ElectronObject](ElectronObject.md)
@@ -1764,3 +1764,5 @@ public static void RegionSetUseAsyncIterations(RID region, bool enabled)
 ```
 
 Changes the following geometry builds. Queries retain completed snapshots until owner publication.
+
+Inherited [ordinary event blocking](../classes/ElectronObject.md#ordinary-event-delivery) suppresses new event emissions at the publisher, preserving subscriptions and already accepted deferred work. Notifications, virtual callbacks, committed physical state and resource revisions continue; Disposed cleanup remains independent.

@@ -22,12 +22,12 @@ public sealed partial class AnimationLibrary : Resource
     {
         ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(animation); ObjectDisposedException.ThrowIf(animation.IsDisposed, animation);
         if (!ValidName(name, false)) throw new ArgumentException("Invalid animation name.", nameof(name));
-        Action<Resource> changed = _ => { AnimationChanged?.Invoke(name); };
+        Action<Resource> changed = _ => { BeginEventEmission(AnimationChanged)?.Invoke(name); };
         var replaced = _animations.Remove(name, out var prior);
         if (replaced) prior.Animation.Changed -= prior.Changed;
         _animations[name] = (animation, changed); animation.Changed += changed;
-        EmitChanged(); NotifyPropertyListChanged(); if (replaced) AnimationRemoved?.Invoke(name);
-        if (!IsDisposed && _animations.TryGetValue(name, out var current) && current.Changed == changed) AnimationAdded?.Invoke(name);
+        EmitChanged(); NotifyPropertyListChanged(); if (replaced) BeginEventEmission(AnimationRemoved)?.Invoke(name);
+        if (!IsDisposed && _animations.TryGetValue(name, out var current) && current.Changed == changed) BeginEventEmission(AnimationAdded)?.Invoke(name);
     }
     /// <summary>Returns a borrowed animation, or throws for a missing name.</summary>
     /// <param name="name">The ordinal animation, library or marker name; empty names are accepted only where explicitly documented.</param>
@@ -41,7 +41,7 @@ public sealed partial class AnimationLibrary : Resource
     public int GetAnimationListSize() { ThrowIfDisposed(); return _animations.Count; }
     /// <summary>Removes a name and detaches its resource observer.</summary>
     /// <param name="name">The exact ordinal name.</param>
-    public void RemoveAnimation(string name) { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(name); if (!_animations.Remove(name, out var item)) throw new KeyNotFoundException(name); item.Animation.Changed -= item.Changed; NotifyPropertyListChanged(); EmitChanged(); AnimationRemoved?.Invoke(name); }
+    public void RemoveAnimation(string name) { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(name); if (!_animations.Remove(name, out var item)) throw new KeyNotFoundException(name); item.Animation.Changed -= item.Changed; NotifyPropertyListChanged(); EmitChanged(); BeginEventEmission(AnimationRemoved)?.Invoke(name); }
     /// <summary>Renames an animation, rejecting invalid or occupied names before mutation.</summary>
     /// <param name="newName">An unoccupied valid replacement name.</param>
     /// <param name="name">The exact ordinal name.</param>
@@ -49,9 +49,9 @@ public sealed partial class AnimationLibrary : Resource
     {
         ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(name);
         if (!ValidName(newName, false) || _animations.ContainsKey(newName)) throw new ArgumentException("Invalid or occupied animation name.", nameof(newName));
-        var prior = _animations[name]; Action<Resource> changed = _ => { AnimationChanged?.Invoke(newName); };
+        var prior = _animations[name]; Action<Resource> changed = _ => { BeginEventEmission(AnimationChanged)?.Invoke(newName); };
         _animations.Remove(name); prior.Animation.Changed -= prior.Changed; _animations.Add(newName, (prior.Animation, changed)); prior.Animation.Changed += changed;
-        EmitChanged(); AnimationRenamed?.Invoke(name, newName);
+        EmitChanged(); BeginEventEmission(AnimationRenamed)?.Invoke(name, newName);
     }
     internal static bool ValidName(string? name, bool allowEmpty) => name is not null && (allowEmpty || name.Length != 0) && name.AsSpan().IndexOfAny("/:,[") < 0;
     /// <inheritdoc />

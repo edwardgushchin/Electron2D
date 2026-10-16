@@ -10,7 +10,7 @@ public partial class TileMapLayer
     /// <summary>Gets or sets whether enabled tiles generate navigation regions, independently of drawing visibility.</summary>
     public bool NavigationEnabled { get { ThrowIfDisposed(); return _navigationEnabled; } set { EnsureMutable(); if (_navigationEnabled == value) return; _navigationEnabled = value; MarkAll(scenes: false); } }
     /// <summary>Gets or sets navigation polygon overlay visibility; Default follows the tree navigation hint.</summary>
-    public DebugVisibilityMode NavigationVisibilityMode { get { ThrowIfDisposed(); return _navigationVisibility; } set { EnsureMutable(); if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); if (_navigationVisibility == value) return; _navigationVisibility = value; QueueRedraw(); Changed?.Invoke(); } }
+    public DebugVisibilityMode NavigationVisibilityMode { get { ThrowIfDisposed(); return _navigationVisibility; } set { EnsureMutable(); if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); if (_navigationVisibility == value) return; _navigationVisibility = value; QueueRedraw(); BeginEventEmission(Changed)?.Invoke(); } }
     /// <summary>Returns the borrowed explicit map, the current world map inside a tree, or an empty RID while detached.</summary>
     public RID GetNavigationMap() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _navigationMap.IsValid() ? _navigationMap : IsInsideTree ? GetWorld()!.NavigationMap : default; }
     /// <summary>Assigns a borrowed map; an empty RID restores the current world map.</summary>

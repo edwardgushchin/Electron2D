@@ -246,12 +246,12 @@ public partial class Control
     internal void DispatchGUIInput(InputEvent inputEvent)
     {
         OnGUIInput(inputEvent);
-        GUIInput?.Invoke(inputEvent);
+        BeginEventEmission(GUIInput)?.Invoke(inputEvent);
     }
     internal void NotifyFocusEntered() => NotifyFocusChange(NotificationFocusEnter);
     internal void NotifyFocusExited() => NotifyFocusChange(NotificationFocusExit);
-    internal void NotifyMouseEntered() => MouseEntered?.Invoke();
-    internal void NotifyMouseExited() => MouseExited?.Invoke();
+    internal void NotifyMouseEntered() => BeginEventEmission(MouseEntered)?.Invoke();
+    internal void NotifyMouseExited() => BeginEventEmission(MouseExited)?.Invoke();
 
     private void NotifyFocusChange(int notification)
     {
@@ -261,9 +261,9 @@ public partial class Control
         {
             if (notification == NotificationFocusEnter)
             {
-                if (Tree?.HasGUIFocus(this, ignoreHiddenFocus: false) == true) FocusEntered?.Invoke();
+                if (Tree?.HasGUIFocus(this, ignoreHiddenFocus: false) == true) BeginEventEmission(FocusEntered)?.Invoke();
             }
-            else FocusExited?.Invoke();
+            else BeginEventEmission(FocusExited)?.Invoke();
         }
         catch (Exception error) { CollectException(ref errors, error); }
         try { if (!IsDisposed) QueueRedraw(); } catch (Exception error) { CollectException(ref errors, error); }

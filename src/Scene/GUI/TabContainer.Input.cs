@@ -17,7 +17,7 @@ public partial class TabContainer
     private void PopupHover(bool hover) { if (_popupButton is null || _popupButton.IsDisposed) return; _popupButton.Icon = GetThemeIcon(hover ? "menu_highlight" : "menu"); }
     private void OpenPopup()
     {
-        var popup = GetPopup(); if (popup is null) return; PrePopupPressed?.Invoke(); if (IsDisposed || popup.IsDisposed) return;
+        var popup = GetPopup(); if (popup is null) return; BeginEventEmission(PrePopupPressed)?.Invoke(); if (IsDisposed || popup.IsDisposed) return;
         var at = _popupButton.GetGlobalRect(); var position = at.Position;
         if (GetViewport() is Window { Embedder: not null } window) position += (Vector2)window.Position;
         position.X += IsLayoutRTL() ? 0 : at.Size.X - popup.Size.X; position.Y += _position == BarPosition.Bottom ? -popup.Size.Y : at.Size.Y;
@@ -44,7 +44,7 @@ public partial class TabContainer
         if (source == this)
         {
             if (from == destination) return; var target = _pages[destination].Control; try { MoveChild(control, target.GetIndex()); } catch (Exception e) { CollectException(ref errors, e); }
-            var index = FindPage(control); if (index >= 0 && !IsDisposed) { try { ActiveTabRearranged?.Invoke(index); } catch (Exception e) { CollectException(ref errors, e); } if (control.Parent == this && !control.IsDisposed) try { _bar.CurrentTab = FindPage(control); } catch (Exception e) { CollectException(ref errors, e); } }
+            var index = FindPage(control); if (index >= 0 && !IsDisposed) { try { BeginEventEmission(ActiveTabRearranged)?.Invoke(index); } catch (Exception e) { CollectException(ref errors, e); } if (control.Parent == this && !control.IsDisposed) try { _bar.CurrentTab = FindPage(control); } catch (Exception e) { CollectException(ref errors, e); } }
         }
         else
         {

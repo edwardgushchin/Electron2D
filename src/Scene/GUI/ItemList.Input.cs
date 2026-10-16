@@ -51,7 +51,7 @@ public partial class ItemList
             var deferred = _deferSelectSingle;
             _deferSelectSingle = -1;
             Select(deferred);
-            MultiSelected?.Invoke(deferred, true);
+            BeginEventEmission(MultiSelected)?.Invoke(deferred, true);
             return;
         }
 
@@ -70,7 +70,7 @@ public partial class ItemList
             }
 
             var index = GetItemAtPosition(button.Position, exact: true);
-            if (index < 0) { EmptyClicked?.Invoke(button.Position, button.ButtonIndex); return; }
+            if (index < 0) { BeginEventEmission(EmptyClicked)?.Invoke(button.Position, button.ButtonIndex); return; }
             var item = GetItem(index);
             if (item.Disabled) return;
             if (button.ButtonIndex == MouseButton.Left || button.ButtonIndex == MouseButton.Right && _allowRmbSelect)
@@ -78,7 +78,7 @@ public partial class ItemList
                 if (_selectMode == SelectMode.Multi && item.Selected && button.IsCommandOrControlPressed())
                 {
                     Deselect(index);
-                    MultiSelected?.Invoke(index, false);
+                    BeginEventEmission(MultiSelected)?.Invoke(index, false);
                 }
                 else if (_selectMode == SelectMode.Multi && button.ShiftPressed && (uint)_current < (uint)_items.Count && _current != index)
                 {
@@ -89,7 +89,7 @@ public partial class ItemList
                         var candidate = _items[selectedIndex];
                         if (candidate.Selected || !candidate.Selectable || candidate.Disabled) continue;
                         Select(selectedIndex, single: false);
-                        MultiSelected?.Invoke(selectedIndex, true);
+                        BeginEventEmission(MultiSelected)?.Invoke(selectedIndex, true);
                     }
                 }
                 else if (_selectMode == SelectMode.Toggle)
@@ -99,7 +99,7 @@ public partial class ItemList
                         if (item.Selected) Deselect(index);
                         else Select(index, single: false);
                         _current = index;
-                        MultiSelected?.Invoke(index, item.Selected);
+                        BeginEventEmission(MultiSelected)?.Invoke(index, item.Selected);
                     }
                 }
                 else if (_selectMode == SelectMode.Multi && !button.DoubleClick &&
@@ -111,13 +111,13 @@ public partial class ItemList
                 else if (item.Selectable && (!item.Selected || _allowReselect))
                 {
                     Select(index, _selectMode == SelectMode.Single || !button.IsCommandOrControlPressed());
-                    if (_selectMode == SelectMode.Single) ItemSelected?.Invoke(index);
-                    else MultiSelected?.Invoke(index, true);
+                    if (_selectMode == SelectMode.Single) BeginEventEmission(ItemSelected)?.Invoke(index);
+                    else BeginEventEmission(MultiSelected)?.Invoke(index, true);
                 }
-                ItemClicked?.Invoke(index, button.Position, button.ButtonIndex);
-                if (button.ButtonIndex == MouseButton.Left && button.DoubleClick) ItemActivated?.Invoke(index);
+                BeginEventEmission(ItemClicked)?.Invoke(index, button.Position, button.ButtonIndex);
+                if (button.ButtonIndex == MouseButton.Left && button.DoubleClick) BeginEventEmission(ItemActivated)?.Invoke(index);
             }
-            else ItemClicked?.Invoke(index, button.Position, button.ButtonIndex);
+            else BeginEventEmission(ItemClicked)?.Invoke(index, button.Position, button.ButtonIndex);
             return;
         }
 
@@ -150,18 +150,18 @@ public partial class ItemList
             if (!item.Selectable || item.Disabled) return;
             if (item.Selected) Deselect(_current);
             else Select(_current, single: false);
-            MultiSelected?.Invoke(_current, item.Selected);
+            BeginEventEmission(MultiSelected)?.Invoke(_current, item.Selected);
             AcceptEvent();
         }
         else if (inputEvent.IsAction("ui_menu", true) && _allowRmbSelect && (uint)_current < (uint)_items.Count && !_items[_current].Disabled)
         {
-            ItemClicked?.Invoke(_current, GetItemRect(_current).Position, MouseButton.Right);
+            BeginEventEmission(ItemClicked)?.Invoke(_current, GetItemRect(_current).Position, MouseButton.Right);
             AcceptEvent();
         }
         else if (inputEvent.IsAction("ui_accept", true) && (uint)_current < (uint)_items.Count && !_items[_current].Disabled)
         {
             _searchString = string.Empty;
-            ItemActivated?.Invoke(_current);
+            BeginEventEmission(ItemActivated)?.Invoke(_current);
             AcceptEvent();
         }
         else if (inputEvent.IsAction("ui_cancel", true)) _searchString = string.Empty;
@@ -179,7 +179,7 @@ public partial class ItemList
             if ((uint)index >= (uint)_items.Count) continue;
             Current = index;
             EnsureCurrentIsVisible();
-            if (_selectMode == SelectMode.Single) ItemSelected?.Invoke(index);
+            if (_selectMode == SelectMode.Single) BeginEventEmission(ItemSelected)?.Invoke(index);
             AcceptEvent();
             return;
         }
@@ -197,7 +197,7 @@ public partial class ItemList
             if (!_items[index].Selectable || _items[index].Disabled) continue;
             Current = index;
             EnsureCurrentIsVisible();
-            if (_selectMode == SelectMode.Single) ItemSelected?.Invoke(index);
+            if (_selectMode == SelectMode.Single) BeginEventEmission(ItemSelected)?.Invoke(index);
             AcceptEvent();
             return;
         }
@@ -218,7 +218,7 @@ public partial class ItemList
             if (!item.Selectable || item.Disabled || !item.Text.StartsWith(_searchString, StringComparison.OrdinalIgnoreCase)) continue;
             Current = index;
             EnsureCurrentIsVisible();
-            if (_selectMode == SelectMode.Single) ItemSelected?.Invoke(index);
+            if (_selectMode == SelectMode.Single) BeginEventEmission(ItemSelected)?.Invoke(index);
             break;
         }
     }
@@ -236,7 +236,7 @@ public partial class ItemList
             if (item.Selected == shouldSelect) continue;
             if (shouldSelect) Select(index, single: false);
             else Deselect(index);
-            MultiSelected?.Invoke(index, shouldSelect);
+            BeginEventEmission(MultiSelected)?.Invoke(index, shouldSelect);
         }
         _current = to;
         EnsureCurrentIsVisible();

@@ -1652,3 +1652,13 @@ entry/exit histories and zero warmed managed bytes. Wider acceptance stays open.
 current processing-group access and exact physical/file consumers. Physical
 mutations retain their owner guard before virtual consumer hooks. Runtime
 Node duplication retains its separate ADR 0091 binding/identity prerequisite.
+
+## Inherited per-object signal blocking
+
+`ElectronObject.SetBlockSignals(bool)` and `IsBlockingSignals()` implement the two previously missing Object rows under ADRs 0002/0010. The pinned class and declarations have no deprecated metadata. The accepted typed publisher gateway filters ordinary public/protected events once per emission, including Area/contact/sleep/picking buffers, resource change batches, packet span delegates and retained static service publishers. `Disposed`, numeric notifications, virtual/direct callbacks and committed resource/physical state retain their independent contracts. Blocking preserves listeners and one-shot acceptance; unblocking drops no pending accepted deferred work and replays no suppressed emissions.
+
+The source audit follows all 301 current public/protected events through direct delegates, helper arguments, captures, pattern variables and switch-selected lists. Internal state/lifetime channels remain independent. Reentrant navigation batches select the policy for each map event. ObjectSignalBlockingTests covers lifecycle, failed unchanged writes, errors, typed spans, deferred/one-shot behavior, batched copies, static service identity, viewport/window/animation/avoidance paths and current-snapshot changes. EventHandlerTests checks blocked and resumed delivery for all 18 physical accessors with strict zero owner/all-thread managed bytes.
+
+The public-only SignalBlockingPhysicsTests consumer exercises selected CPU/GPU owner/separate full frames, actual body and shape transitions, current overlap membership, picking virtual callbacks, material revision polling, enlarged geometry and continued integration. Its warm interval contains 128 full steps and alternating policy writes; exact expected deliveries and zero owner/all-thread managed bytes are required. CPU profiles make the Vulkan driver unavailable; GPU profiles use the private CPU-only Vulkan implementation. NativeAOT uses the same public consumer. Hardware advantage, real-window FPS, full native memory and foreign acceptance remain separate open gates.
+
+Only these two rows change state. Named signal inspection/connection flags, broader inherited/extension coverage and all other physics gaps remain open.

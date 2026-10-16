@@ -79,7 +79,7 @@ public partial class Node
             }
         }
 
-        try { ReplacingBy?.Invoke(node); }
+        try { BeginEventEmission(ReplacingBy)?.Invoke(node); }
         catch (Exception error) { CollectException(ref errors, error); }
         if (IsDisposed || node.IsDisposed)
         {

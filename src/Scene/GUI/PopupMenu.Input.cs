@@ -13,7 +13,7 @@ public partial class PopupMenu
     private int ItemAt(float y) { Measure(); for (var i = 0; i < _items.Count; i++) { var item = _items[i]; if (item.Visible && y >= item.Rect.Position.Y && y < item.Rect.End.Y) return i; } return -1; }
     private bool Eligible(int index) => (uint)index < (uint)_items.Count && _items[index].Visible && !_items[index].Disabled && !_items[index].Separator;
     private void FocusItem(int index, bool signal)
-    { if (!Eligible(index) || _focused == index) return; _focused = index; _view.QueueRedraw(); ScrollToItem(index); if (signal) IDFocused?.Invoke(_items[index].ID); }
+    { if (!Eligible(index) || _focused == index) return; _focused = index; _view.QueueRedraw(); ScrollToItem(index); if (signal) BeginEventEmission(IDFocused)?.Invoke(_items[index].ID); }
     private void Navigate(int direction)
     { if (_items.Count == 0) return; for (var n = 1; n <= _items.Count; n++) { var candidate = (_focused + direction * n + _items.Count * 2) % _items.Count; if (Eligible(candidate)) { FocusItem(candidate, true); _view.GrabFocus(); return; } } }
     private void NavigateEvent(InputEvent input, int direction)
@@ -44,8 +44,8 @@ public partial class PopupMenu
                 try { parent.Hide(); } catch (Exception error) { CollectException(ref errors, error); }
             try { Hide(); } catch (Exception error) { CollectException(ref errors, error); }
         }
-        try { IDPressed?.Invoke(id); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed) IndexPressed?.Invoke(index); } catch (Exception error) { CollectException(ref errors, error); }
+        try { BeginEventEmission(IDPressed)?.Invoke(id); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!IsDisposed) BeginEventEmission(IndexPressed)?.Invoke(index); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Menu activation callbacks failed.", errors);
     }
     private void ItemsInput(InputEvent input)

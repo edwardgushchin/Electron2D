@@ -16,7 +16,7 @@ public class Popup : Window
     }
     /// <summary>Occurs after this popup becomes hidden, before canvas visibility propagation completes.</summary>
     public event Action? PopupHide;
-    private void ChangedVisibility() { _closePending = false; if (!Visible) PopupHide?.Invoke(); }
+    private void ChangedVisibility() { _closePending = false; if (!Visible) BeginEventEmission(PopupHide)?.Invoke(); }
     private void ClosePopup()
     {
         if (_closePending || !Visible) return;

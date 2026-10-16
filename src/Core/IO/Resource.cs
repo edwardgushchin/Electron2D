@@ -405,6 +405,7 @@ public class Resource : ElectronObject
 
     /// <summary>Synchronously reports that this resource's meaningful content changed.</summary>
     /// <remarks>Calls made inside a copy batch are coalesced into one event when the outermost batch ends.
+    /// Revisions advance even when <see cref="ElectronObject.SetBlockSignals"/> suppresses publication; unblocking does not replay it.
     /// Ordinary publication runs handlers in subscription order on the publishing thread. Handler failures stop
     /// subsequent handlers and propagate; a reentrant publication uses its own captured subscription list.</remarks>
     /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
@@ -425,7 +426,7 @@ public class Resource : ElectronObject
                 return;
             }
 
-            handlers = Changed;
+            handlers = BeginEventEmission(Changed);
         }
 
         handlers?.Invoke(this);
@@ -844,7 +845,7 @@ public class Resource : ElectronObject
             if (_changeBlockDepth == 0)
             {
                 if (emitAtEnd && _changePending)
-                    handlers = Changed;
+                    handlers = BeginEventEmission(Changed);
 
                 _changePending = false;
                 _changeBlockOwnerThreadId = 0;

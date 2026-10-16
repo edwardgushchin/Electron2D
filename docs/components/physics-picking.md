@@ -1,6 +1,6 @@
 # Physics pointer picking
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 [Viewport](../classes/Viewport.md#physics-picking) queues unhandled pointer events
 for [CollisionObject](../classes/CollisionObject.md#pointer-input) callbacks and
@@ -135,3 +135,5 @@ Each emission leases an ordered immutable handler snapshot. Duplicate handlers a
 EventHandlerTests compares 1,024 mixed delegate add/remove operations with native delegate lists, checks nested snapshot changes/errors, 256 concurrent producers and weak-reference release from disposed publishers. All 18 physical accessors each deliver 128 prepared first one-shot callbacks at strict zero owner/all-thread managed bytes. EventConnectionPhysicsTests adds a real full selected CPU/GPU Area transition with 128 one-shot listeners and a permanent listener. Serial/separate numerical profiles use CPU-only Vulkan for GPU kernels; native allocations, hardware performance, real-window FPS and foreign acceptance remain open.
 
 See [typed handler storage](../classes/EventHandlers.Generic.md) and [ADR 0010](../decisions/core-object-runtime.md#adr-0010).
+
+Inherited [ordinary event blocking](../classes/ElectronObject.md#ordinary-event-delivery) suppresses new event emissions at the publisher, preserving subscriptions and already accepted deferred work. Notifications, virtual callbacks, committed physical state and resource revisions continue; Disposed cleanup remains independent.

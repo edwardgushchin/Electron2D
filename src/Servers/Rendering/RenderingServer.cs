@@ -180,7 +180,7 @@ public sealed partial class RenderingServer : ElectronObject
         try
         {
             AnimatedTexture.AdvanceAll(this, Stopwatch.GetTimestamp(), _animatedChanges);
-            FramePreDrawCore?.Invoke();
+            BeginEventEmission(FramePreDrawCore)?.Invoke();
             UpdatePhysicsContacts(tree);
             CanvasTime = (CanvasTime + step) % ProjectSettings.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
             _interpolationFraction = tree.PhysicsInterpolation ? (float)Engine.PhysicsInterpolationFraction : 1f;
@@ -202,7 +202,7 @@ public sealed partial class RenderingServer : ElectronObject
             foreach (var frame in _activeFrames) if (frame.Drawn) { UseFrame(frame); try { DispatchScreenVisibility(tree); } catch (Exception error) { AddCanvasVisibilityError(ref frameError, error); } }
             DeliverCanvasVisibilityChanges(ref frameError);
             _renderingDevice?.CompleteRendererReadbacks();
-            FramePostDrawCore?.Invoke();
+            BeginEventEmission(FramePostDrawCore)?.Invoke();
         }
         catch (Exception error) { AddCanvasVisibilityError(ref frameError, error); }
         finally

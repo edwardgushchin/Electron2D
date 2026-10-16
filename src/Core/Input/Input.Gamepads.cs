@@ -170,10 +170,10 @@ public sealed partial class Input
             _joyVibrations.Remove(device);
             _connectedJoypads[device] = new JoypadState(name, guid, info, known, vibration, light);
         }
-        if (notify) JoyConnectionChangedCore?.Invoke(device, true);
+        if (notify) BeginEventEmission(JoyConnectionChangedCore)?.Invoke(device, true);
     }
 
-    internal void EmitNativeJoypadConnection(int device) => JoyConnectionChangedCore?.Invoke(device, true);
+    internal void EmitNativeJoypadConnection(int device) => BeginEventEmission(JoyConnectionChangedCore)?.Invoke(device, true);
 
     internal string? GetCustomJoyMapping(string guid)
     {
@@ -206,7 +206,7 @@ public sealed partial class Input
                 { state.ExactProcessJustReleased = true; state.ExactPhysicsJustReleased = true; state.ExactLastReleasedEventId = 0; }
             }
         }
-        if (notify) JoyConnectionChangedCore?.Invoke(device, false);
+        if (notify) BeginEventEmission(JoyConnectionChangedCore)?.Invoke(device, false);
     }
 
     internal void StopNativeJoypadVibration(int device)

@@ -785,7 +785,7 @@ public sealed class Tween : ElectronObject
                 if (active)
                     continue;
 
-                StepFinished?.Invoke(this, _currentStep);
+                BeginEventEmission(StepFinished)?.Invoke(this, _currentStep);
                 if (!_valid || !_started)
                     return _valid;
 
@@ -801,11 +801,11 @@ public sealed class Tween : ElectronObject
                 {
                     _running = false;
                     _dead = true;
-                    Finished?.Invoke(this);
+                    BeginEventEmission(Finished)?.Invoke(this);
                     return true;
                 }
 
-                LoopFinished?.Invoke(this, _loopsDone);
+                BeginEventEmission(LoopFinished)?.Invoke(this, _loopsDone);
                 if (!_valid || !_started)
                     return _valid;
                 _currentStep = 0;

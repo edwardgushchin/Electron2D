@@ -15,7 +15,7 @@ public partial class ScrollContainer
         if (!IsDisposed) SetInternalProcessing(false, false);
         if (!ended || IsDisposed) return;
         List<Exception>? errors = null;
-        try { ScrollEnded?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { BeginEventEmission(ScrollEnded)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         try { PropagateNotification(NotificationScrollEnd); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Scroll end callbacks failed.", errors);
     }
@@ -73,7 +73,7 @@ public partial class ScrollContainer
                     _dragAccum = -motion.Relative;
                     List<Exception>? errors = null;
                     try { PropagateNotification(NotificationScrollBegin); } catch (Exception error) { CollectException(ref errors, error); }
-                    try { ScrollStarted?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+                    try { BeginEventEmission(ScrollStarted)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
                     ThrowCollected("Scroll begin callbacks failed.", errors);
                 }
                 if (HEnabled) _hBar.ScrollTo(_dragFrom.X + _dragAccum.X);

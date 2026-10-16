@@ -1,6 +1,6 @@
 # PhysicsMaterial
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 **Inherits:** [Resource](Resource.md), ElectronObject
 
@@ -113,3 +113,5 @@ identities are exact. Structural copies/file I/O are outside the 128 warm/128
 measured full-contact-frame bracket, which retains strict zero owner/all managed
 allocations. Native/platform/hardware/network and full extension acceptance remain
 separate gates.
+
+Inherited [ordinary event blocking](../classes/ElectronObject.md#ordinary-event-delivery) suppresses new event emissions at the publisher, preserving subscriptions and already accepted deferred work. Notifications, virtual callbacks, committed physical state and resource revisions continue; Disposed cleanup remains independent.

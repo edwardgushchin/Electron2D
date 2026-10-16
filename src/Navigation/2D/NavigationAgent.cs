@@ -213,20 +213,20 @@ public sealed partial class NavigationAgent : Node
             {
                 var map = GetNavigationMap(); _query.Map = map; _query.StartPosition = origin; _query.TargetPosition = _target;
                 if (map.IsValid()) NavigationServer.QueryPath(_query, _result); else _result.Reset();
-                _path = _result.Snapshot(); _finished = _lastReached = false; _index = 0; Deliver(PathChanged, ref errors); if (_invalidated) return;
+                _path = _result.Snapshot(); _finished = _lastReached = false; _index = 0; Deliver(BeginEventEmission(PathChanged), ref errors); if (_invalidated) return;
             }
             if (_path.Path.Length == 0 || _finished) return;
             if (!_lastReached)
                 while (Distance(origin, _path.Path[_index]) < _pathDesiredDistance)
                 {
                     var waypoint = Details(_index); if (_index == _path.Path.Length - 1) _lastReached = true; else _index++;
-                    Deliver(WaypointReached, waypoint, ref errors); if (waypoint.Type == NavigationPathQueryResult.PathSegmentType.Link) Deliver(LinkReached, waypoint, ref errors);
+                    Deliver(BeginEventEmission(WaypointReached), waypoint, ref errors); if (waypoint.Type == NavigationPathQueryResult.PathSegmentType.Link) Deliver(BeginEventEmission(LinkReached), waypoint, ref errors);
                     if (_invalidated) return;
                     if (_lastReached) break;
                 }
             if (Distance(origin, _target) < _targetDesiredDistance)
-            { _targetReached = true; Deliver(TargetReached, ref errors); if (_invalidated) return; _finished = true; _submitted = false; StopAvoidance(); Deliver(NavigationFinished, ref errors); }
-            else if (_lastReached && !Reachable()) { _finished = true; _submitted = false; StopAvoidance(); Deliver(NavigationFinished, ref errors); }
+            { _targetReached = true; Deliver(BeginEventEmission(TargetReached), ref errors); if (_invalidated) return; _finished = true; _submitted = false; StopAvoidance(); Deliver(BeginEventEmission(NavigationFinished), ref errors); }
+            else if (_lastReached && !Reachable()) { _finished = true; _submitted = false; StopAvoidance(); Deliver(BeginEventEmission(NavigationFinished), ref errors); }
         }
         finally { _updating = false; if (_invalidated) { _invalidated = false; Repath(); } if (errors is not null) throw new AggregateException("Navigation transitions completed with observer failures.", errors); }
     }

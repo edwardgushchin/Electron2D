@@ -77,7 +77,7 @@ public partial class CodeEdit : TextEdit
         LayoutDirection = LayoutDirection.LTR; TextDirection = TextDirection.LTR;
         AddStringDelimiter("\"", "\""); AddStringDelimiter("'", "'");
         AddCodeGutter("main_gutter", DrawMainGutter, true); AddCodeGutter("line_numbers", DrawLineNumber, false); AddCodeGutter("fold_gutter", DrawFoldGutter, false); RefreshGutterIndices();
-        _symbolTimer = new(this) { Name = "_symbol_tooltip", WaitTime = .5, OneShot = true }; _symbolTimer.Timeout += _ => { if (_symbolTooltip && _hoverWord.Length > 0) SymbolHovered?.Invoke(_hoverWord, _hoverPosition.Y, _hoverPosition.X); }; AddChild(_symbolTimer, InternalMode.Front);
+        _symbolTimer = new(this) { Name = "_symbol_tooltip", WaitTime = .5, OneShot = true }; _symbolTimer.Timeout += _ => { if (_symbolTooltip && _hoverWord.Length > 0) BeginEventEmission(SymbolHovered)?.Invoke(_hoverWord, _hoverPosition.Y, _hoverPosition.X); }; AddChild(_symbolTimer, InternalMode.Front);
         GutterAdded += RefreshGutterIndices; GutterRemoved += RefreshGutterIndices; GutterClicked += GutterClick; TextChanged += CodeTextChanged; TextSet += CodeTextSet; CaretChanged += CodeCaretChanged;
     }
     private void CheckCode() => CheckTextEdit();

@@ -126,6 +126,14 @@ internal static class EventHandlerTests
             var tokens = new EventConnection[128];
             for (var i = 0; i < tokens.Length; i++) tokens[i] = item.Subscribe(increment);
             GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
+            var publisher = item.Name.StartsWith("Area", StringComparison.Ordinal) ? (ElectronObject)area : body;
+            publisher.SetBlockSignals(true); item.Emit();
+            var blockedOwner = GC.GetAllocatedBytesForCurrentThread(); var blockedAll = GC.GetTotalAllocatedBytes(true);
+            for (var i = 0; i < 128; i++) item.Emit();
+            var blockedOwnerBytes = GC.GetAllocatedBytesForCurrentThread() - blockedOwner; var blockedAllBytes = GC.GetTotalAllocatedBytes(true) - blockedAll;
+            Check(count == 0 && tokens.All(t => t.IsConnected) && blockedOwnerBytes == 0 && blockedAllBytes == 0,
+                $"Blocked {item.Name}: no consumed tokens or callbacks; {blockedOwnerBytes}/{blockedAllBytes} B.");
+            publisher.SetBlockSignals(false);
             var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
             item.Emit();
             var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; var allBytes = GC.GetTotalAllocatedBytes(true) - all;

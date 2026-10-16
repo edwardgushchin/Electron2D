@@ -113,7 +113,7 @@ public abstract class AudioStream : Resource
     public event Action? ParameterListChanged;
     /// <summary>Reports an actual custom parameter-list change.</summary>
     /// <exception cref="ObjectDisposedException">The stream is disposed.</exception>
-    protected void NotifyParameterListChanged() { ThrowIfDisposed(); ParameterListChanged?.Invoke(); }
+    protected void NotifyParameterListChanged() { ThrowIfDisposed(); BeginEventEmission(ParameterListChanged)?.Invoke(); }
     internal virtual void ReloadFrom(AudioStream source)
     {
         ThrowIfDisposed(); if (source.GetType() != GetType()) throw new InvalidOperationException("Audio reload types differ.");

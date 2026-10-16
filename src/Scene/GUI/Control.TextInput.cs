@@ -24,7 +24,7 @@ public partial class Control
         ThrowIfDisposed();
         List<Exception>? errors = null;
         try { OnTextInput(text); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed) TextInput?.Invoke(text); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!IsDisposed) BeginEventEmission(TextInput)?.Invoke(text); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Control text input callbacks failed.", errors);
     }
 
@@ -33,7 +33,7 @@ public partial class Control
         ThrowIfDisposed();
         List<Exception>? errors = null;
         try { OnIMECompositionChanged(text, selection); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed) IMECompositionChanged?.Invoke(text, selection); }
+        try { if (!IsDisposed) BeginEventEmission(IMECompositionChanged)?.Invoke(text, selection); }
         catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Control IME composition callbacks failed.", errors);
     }

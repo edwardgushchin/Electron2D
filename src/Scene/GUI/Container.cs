@@ -50,9 +50,9 @@ public class Container : Control
         try
         {
             try { DispatchNotification(NotificationPreSortChildren); } catch (Exception error) { CollectException(ref errors, error); }
-            try { if (Current()) PreSortChildren?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (Current()) BeginEventEmission(PreSortChildren)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
             try { if (Current()) DispatchNotification(NotificationSortChildren); } catch (Exception error) { CollectException(ref errors, error); }
-            try { if (Current()) SortChildren?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (Current()) BeginEventEmission(SortChildren)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         }
         finally
         {

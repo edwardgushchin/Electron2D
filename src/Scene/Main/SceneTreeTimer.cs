@@ -121,7 +121,7 @@ public sealed class SceneTreeTimer : ElectronObject
 
         try
         {
-            Timeout?.Invoke(this);
+            BeginEventEmission(Timeout)?.Invoke(this);
         }
         catch (Exception error)
         {

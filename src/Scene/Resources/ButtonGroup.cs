@@ -82,7 +82,7 @@ public class ButtonGroup : Resource
         finally { ReturnSnapshot(snapshot); }
         Node.ThrowCollected("Button group callbacks failed.", errors);
     }
-    internal void NotifyPressed(BaseButton button) { ThrowIfDisposed(); Pressed?.Invoke(button); }
+    internal void NotifyPressed(BaseButton button) { ThrowIfDisposed(); BeginEventEmission(Pressed)?.Invoke(button); }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => GetType() == typeof(ButtonGroup) ? new ButtonGroup() : base.CreateDuplicateInstance();
     /// <inheritdoc />

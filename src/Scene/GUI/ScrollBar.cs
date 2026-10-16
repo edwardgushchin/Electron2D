@@ -63,7 +63,7 @@ public abstract class ScrollBar : Range
         var previous = Value;
         try { if (ratio) Ratio = position; else Value = position; } catch (Exception e) { CollectException(ref errors, e); }
         if (Current(generation, tree) && !Mathf.IsEqualApprox(previous, Value))
-            try { Scrolling?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
+            try { BeginEventEmission(Scrolling)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
     }
     private double ButtonStep => _customStep >= 0 ? _customStep : Step;
     private double Axis(Vector2 value) => _vertical ? value.Y : value.X;

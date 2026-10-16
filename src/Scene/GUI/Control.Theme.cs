@@ -237,7 +237,7 @@ public partial class Control
     private void ProcessThemeNotification()
     {
         List<Exception>? errors = null;
-        try { ThemeChanged?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { BeginEventEmission(ThemeChanged)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         ThemeOwner.Invalidate();
         if (!IsDisposed)
         {

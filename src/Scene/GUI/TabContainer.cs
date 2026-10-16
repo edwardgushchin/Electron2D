@@ -24,7 +24,7 @@ public partial class TabContainer : Container
         _bar = new(this) { Name = "_tabs", CloseWithMiddleMouse = false, UseParentMaterial = true };
         _popupButton = new Button { Name = "_popup", Visible = false, Flat = true, ActionMode = ButtonActionMode.ButtonPress, UseParentMaterial = true };
         AddChild(_bar, InternalMode.Front); AddChild(_popupButton, InternalMode.Front);
-        _bar.TabSelected += Selected; _bar.TabChanged += Changed; _bar.TabClicked += i => TabClicked?.Invoke(i); _bar.TabHovered += i => TabHovered?.Invoke(i); _bar.TabButtonPressed += i => TabButtonPressed?.Invoke(i);
+        _bar.TabSelected += Selected; _bar.TabChanged += Changed; _bar.TabClicked += i => BeginEventEmission(TabClicked)?.Invoke(i); _bar.TabHovered += i => BeginEventEmission(TabHovered)?.Invoke(i); _bar.TabButtonPressed += i => BeginEventEmission(TabButtonPressed)?.Invoke(i);
         _bar.MinimumSizeChanged += LayoutChanged; _popupButton.Pressed += OpenPopup; _popupButton.MouseEntered += () => PopupHover(true); _popupButton.MouseExited += () => PopupHover(false);
         ChildAdded += ChildEntered; ChildRemoved += ChildLeft; ChildOrderChanged += OrderChanged; Resized += LayoutChanged;
     }
@@ -159,8 +159,8 @@ public partial class TabContainer : Container
         }
         ThrowCollected("Tab page synchronization failed.", errors);
     }
-    private void Selected(int index) { List<Exception>? errors = null; try { Paint(); } catch (Exception e) { CollectException(ref errors, e); } try { TabSelected?.Invoke(index); } catch (Exception e) { CollectException(ref errors, e); } ThrowCollected("Tab selection callbacks failed.", errors); }
-    private void Changed(int index) { List<Exception>? errors = null; try { Paint(); } catch (Exception e) { CollectException(ref errors, e); } try { TabChanged?.Invoke(index); } catch (Exception e) { CollectException(ref errors, e); } ThrowCollected("Tab change callbacks failed.", errors); }
+    private void Selected(int index) { List<Exception>? errors = null; try { Paint(); } catch (Exception e) { CollectException(ref errors, e); } try { BeginEventEmission(TabSelected)?.Invoke(index); } catch (Exception e) { CollectException(ref errors, e); } ThrowCollected("Tab selection callbacks failed.", errors); }
+    private void Changed(int index) { List<Exception>? errors = null; try { Paint(); } catch (Exception e) { CollectException(ref errors, e); } try { BeginEventEmission(TabChanged)?.Invoke(index); } catch (Exception e) { CollectException(ref errors, e); } ThrowCollected("Tab change callbacks failed.", errors); }
     private void PageVisibility(CanvasItem item)
     {
         if (_visibility || _disposing || item is not Control control) return; var index = FindPage(control); if (index < 0) return; _visibility = true;

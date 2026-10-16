@@ -242,7 +242,7 @@ public abstract class BaseButton : Control
         if (pressed && (accept || _hovered || input is InputEventScreenTouch && _inside))
         {
             _attempt = true; _inside = true;
-            if (!_down) { _down = true; try { ButtonDown?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); } }
+            if (!_down) { _down = true; try { BeginEventEmission(ButtonDown)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); } }
         }
         if (Current(generation, tree) && _attempt && _inside &&
             (pressed && _actionMode == ButtonActionMode.ButtonPress || input.IsReleased() && _actionMode == ButtonActionMode.ButtonRelease))
@@ -274,18 +274,18 @@ public abstract class BaseButton : Control
     {
         var pressed = _pressed;
         try { OnToggled(pressed); } catch (Exception e) { CollectException(ref errors, e); }
-        if (Current(generation, tree)) try { Toggled?.Invoke(pressed); } catch (Exception e) { CollectException(ref errors, e); }
+        if (Current(generation, tree)) try { BeginEventEmission(Toggled)?.Invoke(pressed); } catch (Exception e) { CollectException(ref errors, e); }
     }
     private void NotifyPressed(ulong generation, SceneTree? tree, ref List<Exception>? errors)
     {
         try { OnPressed(); } catch (Exception e) { CollectException(ref errors, e); }
-        if (Current(generation, tree)) try { Pressed?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
+        if (Current(generation, tree)) try { BeginEventEmission(Pressed)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
     }
     private void ClearAttempt() { _attempt = false; _inside = false; _touch = -1; }
     private void ReleaseHeld(ref List<Exception>? errors)
     {
         if (!_down) return; _down = false;
-        try { ButtonUp?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
+        try { BeginEventEmission(ButtonUp)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
     }
     /// <inheritdoc />
     /// <exception cref="ArgumentNullException">The input event is null.</exception>

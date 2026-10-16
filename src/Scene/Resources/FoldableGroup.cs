@@ -98,7 +98,7 @@ public class FoldableGroup : Resource
         finally { ReturnSnapshot(snapshot); }
         Node.ThrowCollected("Container group callbacks failed.", errors);
     }
-    internal void NotifyExpanded(FoldableContainer container) { ThrowIfDisposed(); Expanded?.Invoke(container); }
+    internal void NotifyExpanded(FoldableContainer container) { ThrowIfDisposed(); BeginEventEmission(Expanded)?.Invoke(container); }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => GetType() == typeof(FoldableGroup) ? new FoldableGroup() : base.CreateDuplicateInstance();
     /// <inheritdoc />

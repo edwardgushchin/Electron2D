@@ -183,13 +183,13 @@ public sealed partial class DisplayServer
         }
         if (type == SDL.EventType.Quit)
         {
-            QuitRequestedCore?.Invoke();
+            BeginEventEmission(QuitRequestedCore)?.Invoke();
             return;
         }
 
         if (type == SDL.EventType.SystemThemeChanged)
         {
-            SystemThemeChangedCore?.Invoke();
+            BeginEventEmission(SystemThemeChangedCore)?.Invoke();
             return;
         }
 
@@ -218,14 +218,14 @@ public sealed partial class DisplayServer
                 if (!_mouseHovering)
                 {
                     _mouseHovering = true;
-                    WindowMouseEnteredCore?.Invoke();
+                    BeginEventEmission(WindowMouseEnteredCore)?.Invoke();
                 }
                 break;
             case SDL.EventType.WindowMouseLeave:
                 if (_mouseHovering)
                 {
                     _mouseHovering = false;
-                    WindowMouseExitedCore?.Invoke();
+                    BeginEventEmission(WindowMouseExitedCore)?.Invoke();
                 }
                 break;
             case SDL.EventType.WindowDisplayScaleChanged:
@@ -234,11 +234,11 @@ public sealed partial class DisplayServer
                     ReapplyWaylandWindowLimits();
                     RefreshBlankWindowSurface();
                 }
-                WindowDpiChangedCore?.Invoke();
+                BeginEventEmission(WindowDpiChangedCore)?.Invoke();
                 break;
             case SDL.EventType.WindowCloseRequested:
                 _pendingDroppedFiles = null;
-                CloseRequestedCore?.Invoke();
+                BeginEventEmission(CloseRequestedCore)?.Invoke();
                 break;
             case SDL.EventType.WindowResized when !_pixelWindowCoordinates:
             case SDL.EventType.WindowPixelSizeChanged when _pixelWindowCoordinates:
@@ -249,7 +249,7 @@ public sealed partial class DisplayServer
                 if (resizedRect != _windowRect)
                 {
                     _windowRect = resizedRect;
-                    WindowRectChangedCore?.Invoke(resizedRect);
+                    BeginEventEmission(WindowRectChangedCore)?.Invoke(resizedRect);
                 }
                 break;
             case SDL.EventType.WindowMoved:
@@ -260,7 +260,7 @@ public sealed partial class DisplayServer
                 if (movedRect != _windowRect)
                 {
                     _windowRect = movedRect;
-                    WindowRectChangedCore?.Invoke(movedRect);
+                    BeginEventEmission(WindowRectChangedCore)?.Invoke(movedRect);
                 }
                 break;
             case SDL.EventType.WindowFocusGained:
@@ -285,13 +285,13 @@ public sealed partial class DisplayServer
             case SDL.EventType.TextInput:
                 _imeText = string.Empty;
                 _imeSelection = Vector2i.Zero;
-                TextInputCore?.Invoke(Marshal.PtrToStringUTF8(nativeEvent.Text.Text) ?? string.Empty);
+                BeginEventEmission(TextInputCore)?.Invoke(Marshal.PtrToStringUTF8(nativeEvent.Text.Text) ?? string.Empty);
                 break;
             case SDL.EventType.TextEditing:
                 _imeText = Marshal.PtrToStringUTF8(nativeEvent.Edit.Text) ?? string.Empty;
                 _imeSelection = new Vector2i(Math.Max(0, nativeEvent.Edit.Start),
                     Math.Max(0, nativeEvent.Edit.Length));
-                TextEditingCore?.Invoke(_imeText, _imeSelection);
+                BeginEventEmission(TextEditingCore)?.Invoke(_imeText, _imeSelection);
                 break;
             case SDL.EventType.MouseMotion when nativeEvent.Motion.Which != SDL.TouchMouseID:
                 DispatchMouseMotion(nativeEvent.Motion);
@@ -313,7 +313,7 @@ public sealed partial class DisplayServer
         {
             try
             {
-                WindowFocusChangedCore?.Invoke(focused);
+                BeginEventEmission(WindowFocusChangedCore)?.Invoke(focused);
             }
             catch (Exception exception)
             {
@@ -356,14 +356,14 @@ public sealed partial class DisplayServer
                 if (_pendingDroppedFiles is { } pending)
                     pending.Add(path ?? string.Empty);
                 else
-                    FilesDroppedCore?.Invoke(new[] { path ?? string.Empty });
+                    BeginEventEmission(FilesDroppedCore)?.Invoke(new[] { path ?? string.Empty });
                 break;
             case SDL.EventType.DropComplete:
                 {
                     var completed = _pendingDroppedFiles;
                     _pendingDroppedFiles = null;
                     if (completed is { Count: > 0 })
-                        FilesDroppedCore?.Invoke(completed.ToArray());
+                        BeginEventEmission(FilesDroppedCore)?.Invoke(completed.ToArray());
                     break;
                 }
         }

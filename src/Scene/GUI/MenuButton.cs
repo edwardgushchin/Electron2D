@@ -56,7 +56,7 @@ public partial class MenuButton : Button
         _opening = true; List<Exception>? errors = null;
         try
         {
-            AboutToPopup?.Invoke(); if (IsDisposed || !IsInsideTree || _popup.IsDisposed) return;
+            BeginEventEmission(AboutToPopup)?.Invoke(); if (IsDisposed || !IsInsideTree || _popup.IsDisposed) return;
             var transform = GetGlobalTransformWithCanvas(); var rect = new Rect2(transform.Origin, transform.Scale * Size); var at = rect.Position + new Vector2(0, rect.Size.Y);
             if (viewport is Window { Embedder: not null } window && _popup.Embedder != viewport) at += (Vector2)window.Position;
             _popup.LayoutDirection = LayoutDirection;

@@ -1214,20 +1214,20 @@ public sealed partial class SceneTree : MainLoop
         tween.InvalidateFromTree();
     }
 
-    internal void NotifyNodeAdded(Node node) => NodeAdded?.Invoke(this, node);
+    internal void NotifyNodeAdded(Node node) => BeginEventEmission(NodeAdded)?.Invoke(this, node);
 
     internal void NotifyNodeRemoved(Node node)
     {
         if (ReferenceEquals(_editedSceneRoot, node)) _editedSceneRoot = null;
         if (ReferenceEquals(_currentScene, node)) _currentScene = null;
-        NodeRemoved?.Invoke(this, node);
+        BeginEventEmission(NodeRemoved)?.Invoke(this, node);
     }
 
     internal void NotifyConfigurationWarningsChanged(Node node)
     {
         if (_editedSceneRoot is { } root && ReferenceEquals(root.Tree, this) &&
             (ReferenceEquals(root, node) || root.IsAncestorOf(node)))
-            NodeConfigurationWarningChanged?.Invoke(this, node);
+            BeginEventEmission(NodeConfigurationWarningChanged)?.Invoke(this, node);
     }
 
     internal ulong PathRevision { get; private set; }
@@ -1239,7 +1239,7 @@ public sealed partial class SceneTree : MainLoop
 
         try
         {
-            NodeRenamed?.Invoke(this, node);
+            BeginEventEmission(NodeRenamed)?.Invoke(this, node);
         }
         catch (Exception error)
         {
@@ -1248,7 +1248,7 @@ public sealed partial class SceneTree : MainLoop
 
         try
         {
-            TreeChanged?.Invoke(this);
+            BeginEventEmission(TreeChanged)?.Invoke(this);
         }
         catch (Exception error)
         {
@@ -1258,7 +1258,7 @@ public sealed partial class SceneTree : MainLoop
         ThrowCollected("One or more node-renamed tree events failed.", errors);
     }
 
-    internal void NotifyTreeChanged() { PathRevision++; InvalidateMultiplayerPaths(); TreeChanged?.Invoke(this); }
+    internal void NotifyTreeChanged() { PathRevision++; InvalidateMultiplayerPaths(); BeginEventEmission(TreeChanged)?.Invoke(this); }
 
     private void RunFrame(double delta, double unscaledDelta, bool physics)
     {
@@ -1287,9 +1287,9 @@ public sealed partial class SceneTree : MainLoop
             try
             {
                 if (physics)
-                    PhysicsFrameStarted?.Invoke(this);
+                    BeginEventEmission(PhysicsFrameStarted)?.Invoke(this);
                 else
-                    ProcessFrameStarted?.Invoke(this);
+                    BeginEventEmission(ProcessFrameStarted)?.Invoke(this);
             }
             catch (Exception error)
             {

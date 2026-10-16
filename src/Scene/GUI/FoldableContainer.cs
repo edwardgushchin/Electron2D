@@ -81,7 +81,7 @@ public partial class FoldableContainer : Container
     {
         EnsureMutable(); List<Exception>? errors = null;
         try { SetFoldedCore(value); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed) FoldingChanged?.Invoke(_folded); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!IsDisposed) BeginEventEmission(FoldingChanged)?.Invoke(_folded); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Folding callbacks failed.", errors);
     }
     internal void SetFoldedCore(bool value, bool forced = false)

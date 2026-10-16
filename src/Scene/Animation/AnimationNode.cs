@@ -208,16 +208,16 @@ public partial class AnimationNode : Resource
     {
         List<Exception>? errors = null;
         try { EmitChanged(); } catch (Exception error) { CollectException(ref errors, error); }
-        if (TreeChanged is { } handlers) foreach (Action handler in handlers.GetInvocationList()) try { handler(); } catch (Exception error) { CollectException(ref errors, error); }
+        if (BeginEventEmission(TreeChanged) is { } handlers) foreach (Action handler in handlers.GetInvocationList()) try { handler(); } catch (Exception error) { CollectException(ref errors, error); }
         if (!IsDisposed) try { NotifyPropertyListChanged(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Animation graph notification failed.", errors);
     }
     internal void Removed(ulong id, string name)
-    { List<Exception>? errors = null; if (AnimationNodeRemoved is { } handlers) foreach (Action<ulong, string> handler in handlers.GetInvocationList()) try { handler(id, name); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("Animation graph removal notification failed.", errors); }
+    { List<Exception>? errors = null; if (BeginEventEmission(AnimationNodeRemoved) is { } handlers) foreach (Action<ulong, string> handler in handlers.GetInvocationList()) try { handler(id, name); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("Animation graph removal notification failed.", errors); }
     internal void Renamed(ulong id, string oldName, string newName)
-    { List<Exception>? errors = null; if (AnimationNodeRenamed is { } handlers) foreach (Action<ulong, string, string> handler in handlers.GetInvocationList()) try { handler(id, oldName, newName); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("Animation graph rename notification failed.", errors); }
+    { List<Exception>? errors = null; if (BeginEventEmission(AnimationNodeRenamed) is { } handlers) foreach (Action<ulong, string, string> handler in handlers.GetInvocationList()) try { handler(id, oldName, newName); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("Animation graph rename notification failed.", errors); }
     internal void Updated(ulong id)
-    { List<Exception>? errors = null; if (NodeUpdated is { } handlers) foreach (Action<ulong> handler in handlers.GetInvocationList()) try { handler(id); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("Animation graph input notification failed.", errors); }
+    { List<Exception>? errors = null; if (BeginEventEmission(NodeUpdated) is { } handlers) foreach (Action<ulong> handler in handlers.GetInvocationList()) try { handler(id); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("Animation graph input notification failed.", errors); }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new AnimationNode();
     /// <inheritdoc />

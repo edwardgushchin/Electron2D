@@ -332,7 +332,7 @@ public sealed class VideoStreamPlayer : Control
             }
         }
         ThrowCollected("Video notification callbacks failed.", errors);
-        if (finished) Finished?.Invoke();
+        if (finished) BeginEventEmission(Finished)?.Invoke();
     }
     /// <inheritdoc />
     protected override void ValidateMutation() { base.ValidateMutation(); if (_operating && !_ownMutation) throw new InvalidOperationException("Video decoder callbacks cannot mutate their player."); }

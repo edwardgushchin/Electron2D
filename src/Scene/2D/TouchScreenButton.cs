@@ -106,7 +106,7 @@ public partial class TouchScreenButton : Entity
     {
         if (_finger is not null || !InputEnabled || GetViewport()?.GUIDisableInput == true || IsEdited || !IsInsideTree || !IsVisibleInTree || !DeviceVisible) return; _finger = finger; SetInternalProcessing(true, false); _revision++; _binding.Set(_action, 1); List<Exception>? errors = null;
         try { if (_binding.Action.Length != 0) Tree?.QueueVirtualAction(this, _binding.Action, true); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed && _finger == finger) Pressed?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!IsDisposed && _finger == finger) BeginEventEmission(Pressed)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         try { if (!IsDisposed) QueueRedraw(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Touch press callbacks failed.", errors);
     }
@@ -115,7 +115,7 @@ public partial class TouchScreenButton : Entity
         if (_finger is null) { _binding.Release(); return; }
         _finger = null; SetInternalProcessing(false, false); _revision++; var action = _binding.Action; _binding.Release(); List<Exception>? errors = null;
         try { if (!exiting && action.Length != 0) Tree?.QueueVirtualAction(this, action, false); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!exiting && !IsDisposed) Released?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!exiting && !IsDisposed) BeginEventEmission(Released)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         try { if (!exiting && !IsDisposed) QueueRedraw(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Touch release callbacks failed.", errors);
     }
