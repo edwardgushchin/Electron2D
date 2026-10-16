@@ -1,0 +1,22 @@
+<Project>
+  <PropertyGroup>
+    <Electron2DKTXNativeRID Condition="'$(Electron2DKTXNativeRID)' == ''">$(_Electron2DPrivateNativeRID)</Electron2DKTXNativeRID>
+    <_Electron2DKTXName>libElectron2DKTX.so</_Electron2DKTXName>
+    <_Electron2DKTXName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libElectron2DKTX.dylib</_Electron2DKTXName>
+    <_Electron2DKTXName Condition="'$(Electron2DNativePlatform)' == 'Windows'">Electron2DKTX.dll</_Electron2DKTXName>
+    <_Electron2DKTXBuild>$(MSBuildThisFileDirectory)../obj/ktx-native/$(Electron2DKTXNativeRID)</_Electron2DKTXBuild>
+    <_Electron2DKTXLibrary>$(_Electron2DKTXBuild)/$(_Electron2DKTXName)</_Electron2DKTXLibrary>
+    <_Electron2DKTXLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true'">$(PkgElectron2D_Linux)/runtimes/$(Electron2DKTXNativeRID)/native/$(_Electron2DKTXName)</_Electron2DKTXLibrary>
+    <_Electron2DKTXLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_MacOS)/runtimes/$(Electron2DKTXNativeRID)/native/$(_Electron2DKTXName)</_Electron2DKTXLibrary>
+    <_Electron2DKTXLibrary Condition="'$(Electron2DKTXNativeLibrary)' != ''">$(Electron2DKTXNativeLibrary)</_Electron2DKTXLibrary>
+  </PropertyGroup>
+  <ItemGroup>
+    <_Electron2DKTXInput Include="$(MSBuildThisFileDirectory)ktx-native/*;$(MSBuildThisFileFullPath)" />
+    <None Include="$(_Electron2DKTXLibrary)" Condition="('$(Electron2DNativePlatform)' == 'Linux' or '$(Electron2DNativePlatform)' == 'MacOS') and ('$(Electron2DBuildNativeFromSource)' == 'true' or Exists('$(_Electron2DKTXLibrary)'))" Link="runtimes/$(Electron2DKTXNativeRID)/native/$(_Electron2DKTXName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" Visible="false" />
+  </ItemGroup>
+  <Target Name="BuildElectron2DKTXNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DKTXNativeLibrary)' == '' and ('$(Electron2DNativePlatform)' == 'Linux' or '$(Electron2DNativePlatform)' == 'MacOS')" Inputs="@(_Electron2DKTXInput)" Outputs="$(_Electron2DKTXLibrary)">
+    <Error Condition="'$(Electron2DKTXNativeRID)' != '$(NETCoreSdkRuntimeIdentifier)'" Text="Private KTX compilation requires the matching target host; foreign profiles use the native bundle producers." />
+    <Exec Command="cmake -S &quot;$(MSBuildThisFileDirectory)ktx-native&quot; -B &quot;$(_Electron2DKTXBuild)&quot; -G Ninja -DCMAKE_BUILD_TYPE=Release" />
+    <Exec Command="cmake --build &quot;$(_Electron2DKTXBuild)&quot; --target Electron2DKTX --parallel 2" />
+  </Target>
+</Project>

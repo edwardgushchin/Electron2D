@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-16
 
-A private prerelease consumer supplies its exact expected native version to the notice audit with --native-package-version; the ordinary release default still requires the product version. Native dependency versions, 71 ELF classification and all 81 notice byte comparisons remain strict.
+A private prerelease consumer supplies its exact expected native version to the notice audit with --native-package-version; the ordinary release default still requires the product version. Native dependency versions, 72 ELF classification and all 91 notice byte comparisons remain strict.
 
 The desktop publish checker accepts an optional third application-name argument (default CharacterMovement); the movie consumer uses Consumer. It checks a self-contained managed publish, since NativeAOT embeds the engine instead of shipping Electron2D.dll.
 
@@ -135,3 +135,7 @@ The private ENet bridge now also carries `e2d_file_encode` and `e2d_file_decode`
 Electron2DOGV is included in every platform payload as a shared desktop/Android library or a self-contained static archive for Apple/Web. It links pinned libtheora 1.2.0, libvorbis 1.3.7 and libogg 1.3.6 privately, preserves original license texts and contains e2d_ogv_create/frame/finish/destroy and the five video decoder entry points described below. Source receipts include tools/ogv-native, its guarded residue allocation adaptation and the build recipes. Desktop producers run native codec/lifecycle and residue initialization checks; cross producers build the same source closure. The publish audit rejects a global codec dependency. New OGV users require this updated native payload; older package evidence does not establish it. [Movie writing](components/movie-writing.md) records local proof and foreign execution limits.
 
 Video playback extends Electron2DOGV to exactly nine bridge exports: the existing four encoder functions plus e2d_video_create, e2d_video_frame, e2d_video_audio, e2d_video_seek_audio and e2d_video_destroy. Every producer uses the same portable decoder source list and merged static closure. Fresh bundles are required; old four-export bundles cannot execute playback. Package/publish auditors reject missing or extra private exports. Foreign-host execution of this decoder remains unverified.
+
+## KTX/Basis private assets
+
+Flat KTX/Basis decoding adds `Electron2DKTX` to all eighteen producer profiles, using the platform shared-library name or a single merged static archive. Source fingerprints include its codec pin, generated validation correction and Zstandard namespace. Validators require exactly the three private exports and forbid a global KTX/Basis/Zstandard dependency. The [KTX component](components/image-ktx.md) records codec, source and execution limits. Updated foreign bundles and public package publication remain separate gates.

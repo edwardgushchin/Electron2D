@@ -1,6 +1,6 @@
 # Image
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 **Inherits:** [Resource](Resource.md) → [ElectronObject](ElectronObject.md)
 
@@ -72,6 +72,7 @@ byte[] ownedCopy = image.GetData();
 | [`public void Compress(Image.CompressMode mode, Image.CompressSource source = Image.CompressSource.Generic, Image.ASTCFormat astcFormat = Image.ASTCFormat.Format4X4)`](#compress) | Atomically compresses all stored mips with detected channels. |
 | [`public void CompressFromChannels(Image.CompressMode mode, Image.UsedChannels channels, Image.ASTCFormat astcFormat = Image.ASTCFormat.Format4X4)`](#compressfromchannels) | Compresses with an explicit channel role. |
 | [`public void Decompress()`](#decompress) | Decodes BC1–BC7, preserving mips. |
+| [`public void LoadKTXFromBuffer(ReadOnlySpan<byte> buffer)`](#loadktxfrombuffer) | Loads flat KTX1/KTX2 and portable Basis LDR/HDR pixels with complete mip chains. |
 | [`public void LoadDDSFromBuffer(ReadOnlySpan<byte> buffer)`](#loadddsfrombuffer) | Validates and loads copied DDS pixels. |
 | [`public byte[] SaveDDSToBuffer()`](#saveddstobuffer) | Returns an independent DDS container without recompressing blocks. |
 | [`public void SaveDDS(string path)`](#savedds) | Atomically saves DDS to an existing parent directory. |
@@ -113,7 +114,7 @@ byte[] ownedCopy = image.GetData();
 | [`public void NormalMapToXY()`](#normalmaptoxy) | Packs normal X/Y into `La8`. |
 | [`public Image RGBEToSRGB()`](#rgbetosrgb) | Decodes `Rgbe9995` into a new `Rgb8` image. |
 | [`public ImageMetrics ComputeImageMetrics(Image comparedImage, bool useLuma)`](#computeimagemetrics) | Computes absolute-error statistics over the common area. |
-| [`public void Load(string path)`](#load) | Replaces pixels from a PNG, JPEG, WebP, BMP, TGA or SVG file. |
+| [`public void Load(string path)`](#load) | Replaces pixels from a supported raster, vector, DDS, EXR or KTX image file. |
 | [`public static Image LoadFromFile(string path)`](#loadfromfile) | Returns an independent caller-owned image decoded from a file. |
 | [`public void LoadPNGFromBuffer(ReadOnlySpan<byte> buffer)`](#loadpngfrombuffer) | Replaces pixels from PNG bytes. |
 | [`public void LoadJPGFromBuffer(ReadOnlySpan<byte> buffer)`](#loadjpgfrombuffer) | Replaces pixels from JPEG bytes. |
@@ -472,7 +473,7 @@ The current native codec profile decodes to copied `Rgba8` base pixels without m
 <a id="load"></a>
 ### `public void Load(string path)`
 
-Replaces pixels from a PNG, JPEG, WebP, BMP, TGA or SVG file. SVG uses scale 1. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The path accepts operating-system paths and existing `res://`/`user://` directory mappings through `FileAccess`. Extensions are case-insensitive; unknown extensions raise `NotSupportedException`. Normal path and I/O errors propagate.
+Replaces pixels from a supported raster, vector, DDS, EXR or KTX image file. SVG uses scale 1. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The path accepts operating-system paths and existing `res://`/`user://` directory mappings through `FileAccess`. Extensions are case-insensitive; unknown extensions raise `NotSupportedException`. Normal path and I/O errors propagate.
 
 <a id="loadfromfile"></a>
 ### `public static Image LoadFromFile(string path)`
@@ -589,7 +590,7 @@ Public state reads and writes are safe for concurrent calls on the same image. M
 
 The implemented surface covers all backend-independent CPU operations in the audited reference API, adapted to typed C# properties, exceptions, arrays, and `ImageMetrics`. The following members are intentionally absent, not stubs:
 
-- PNG/JPEG/WebP/BMP/TGA/SVG/DDS/EXR file and buffer loading and PNG/JPEG/WebP/EXR saving are executable under their documented codec profiles. WebP saving uses the private exact/lossy encoder; EXR retains HDR channels and precision. SVG raster dimensions use the documented XML preflight and may differ from SVG renderers with other CSS sizing rules. KTX and complete color/metadata semantics remain unfinished.
+- PNG/JPEG/WebP/BMP/TGA/SVG/DDS/EXR/KTX file and buffer loading and PNG/JPEG/WebP/EXR saving are executable under their documented codec profiles. WebP saving uses the private exact/lossy encoder; EXR retains HDR channels and precision. SVG raster dimensions use the documented XML preflight and may differ from SVG renderers with other CSS sizing rules. KTX1/KTX2 and Basis LDR/HDR loading execute under their [documented profile](../components/image-ktx.md); complete color/metadata semantics remain unfinished.
 - Compress/CompressFromChannels execute S3TC/BPTC; ETC/EAC/ASTC require selected portable encoders and complete texture consumers.
 - `Decompress` executes BC1–BC7 and RA-as-RG; ETC/EAC/ASTC require separate portable decoders.
 - ImageTexture converts copied pixels for GPU sampling in the first rendering slice; ordinary texture drawing and additional formats remain unfinished.
@@ -636,3 +637,8 @@ Writes supported raw precision/channel layouts or exact BC blocks and all mips. 
 ### SaveDDS
 
 Uses FileAccess path resolution and existing atomic replacement. The parent directory must exist. Encoding failure preserves an existing destination.
+
+<a id="loadktxfrombuffer"></a>
+### `public void LoadKTXFromBuffer(ReadOnlySpan<byte> buffer)`
+
+Loads copied flat KTX1/KTX2 bytes through the private reader and Basis LDR/HDR transcoder. Preserves supported raw precision and complete mip chains, removes KTX1 row padding, normalizes endian/orientation/swizzles and converts RGB8 sRGB data to linear pixels. Failure preserves the image; success emits Changed after publication. Source/output/expanded pixels are bounded to 64 MiB; key/value metadata to 1 MiB and 4096 entries. Unsupported image roles and unavailable block transformations reject explicitly. See [KTX image integration](../components/image-ktx.md) for native ownership, source corrections, packages and verification limits.

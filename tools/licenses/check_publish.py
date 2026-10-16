@@ -28,6 +28,7 @@ NATIVE_GROUPS = {
     "FAudio": ("libFAudio.so.0",),
     "ENet": ("libElectron2DENet.so",),
     "OGV": ("libElectron2DOGV.so",),
+    "KTX": ("libElectron2DKTX.so",),
     "meshoptimizer": ("libElectron2DMesh.so",),
     "ICUText": ("libElectron2DTextBreak.so",),
     "libaom": ("libaom.so*",),
@@ -56,7 +57,7 @@ def check(publish: Path, application_licenses=(), native_package_version: str | 
     assert PACKAGES <= packages, f"Unreviewed native package versions: {PACKAGES - packages}"
 
     elf = [p.name for p in publish.rglob("*") if p.is_file() and p.open("rb").read(4) == b"\x7fELF"]
-    assert len(elf) == 71, f"Expected 71 audited ELF files, found {len(elf)}"
+    assert len(elf) == 72, f"Expected 72 audited ELF files, found {len(elf)}"
     assert app in elf, "Expected the native application host"
     for name in elf:
         groups = [group for group, patterns in NATIVE_GROUPS.items()
@@ -70,7 +71,7 @@ def check(publish: Path, application_licenses=(), native_package_version: str | 
     source = ROOT / "licence"
     expected = {p.name for p in source.iterdir() if p.is_file()} - {"ReferenceData-LICENSE.txt"}
     delivered = publish / "licence"
-    assert len(expected) == 81, f"Expected 81 license and notice files, found {len(expected)}"
+    assert len(expected) == 91, f"Expected 91 license and notice files, found {len(expected)}"
     extra = {p.name: p for p in application_licenses}
     assert len(extra) == len(application_licenses) and not expected.intersection(extra), "Duplicate application notice names"
     assert {p.name for p in delivered.iterdir() if p.is_file()} == expected | extra.keys(), "Unexpected published license files"

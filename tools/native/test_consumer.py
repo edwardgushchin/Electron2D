@@ -73,10 +73,20 @@ try
         }
         finally { System.IO.File.Delete(compressedPath); }
     }
-    Console.WriteLine("Public text, audio, ENet, WebP, EXR, file codecs and mesh consumer passed");
+    Console.WriteLine("Public text, audio, ENet, WebP, EXR, KTX/Basis, file codecs and mesh consumer passed");
 }
 finally { Engine.Stop(); }
 '''
+
+
+for index, fixture in enumerate(json.loads((ROOT / "tests/Electron2D.Tests/TestData/KTX/oracle.json").read_text())["fixtures"]):
+    if fixture["name"] not in ("basis-lz", "hdr-4x4"):
+        continue
+    snippet = f"""using var ktx{index} = new Image();
+ktx{index}.LoadKTXFromBuffer(Convert.FromBase64String("{fixture['encoded']}"));
+if (ktx{index}.MIPMapCount != 2 || !ktx{index}.GetData().AsSpan().SequenceEqual(Convert.FromBase64String("{fixture['pixels']}"))) throw new Exception("KTX/Basis package consumer failed");
+"""
+    PROGRAM = PROGRAM.replace("using Electron2D;\n", "using Electron2D;\n" + snippet, 1)
 
 
 def run(args, cwd, environment):
@@ -141,7 +151,7 @@ def check(feed, rid):
         environment.pop("LD_LIBRARY_PATH", None)
         environment.pop("Electron2DBuildNativeFromSource", None)
         run([dotnet, "build", "Electron2D.csproj", "-c", "Release", "--nologo"], engine, environment)
-        if any((engine / "obj" / name).exists() for name in ("text-native", "audio-native", "enet-native", "tls-native", "font-native", "mesh-native", "webp-native", "ogv-native", "native-windows", "native-cross")):
+        if any((engine / "obj" / name).exists() for name in ("text-native", "audio-native", "enet-native", "tls-native", "font-native", "mesh-native", "webp-native", "ogv-native", "ktx-native", "native-windows", "native-cross")):
             raise RuntimeError("Consumer build created native compilation directories")
         # A package consumer has no reference to the engine source or its private build targets.
         engine_feed = work / "feed"

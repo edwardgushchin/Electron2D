@@ -103022,6 +103022,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Image.LoadKTXFromBuffer(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "LoadKTXFromBuffer",
+    "signature": "public System.Void LoadKTXFromBuffer(System.ReadOnlySpan\u003CSystem.Byte\u003E buffer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "buffer",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Image.LoadPNGFromBuffer(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.Image",

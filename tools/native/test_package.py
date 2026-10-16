@@ -15,6 +15,26 @@ import test_consumer
 
 
 class NativePackageTests(unittest.TestCase):
+    def test_ktx_bridge_is_required_in_every_profile(self):
+        for profile, names in package.LIBRARIES.items():
+            name = next(name for name in names if "Electron2DKTX" in name)
+            self.assertEqual(package.required_exports(name), {"e2d_ktx_create", "e2d_ktx_level", "e2d_ktx_destroy"})
+
+    def test_ktx_static_symbols_cannot_collide_with_font_codecs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name in package.LIBRARIES["iOS"]:
+                (root / name).write_bytes(b"!<arch>\n")
+            def exports(path, rid):
+                return package.required_exports(path.name) | ({symbol} if "Electron2DKTX" in path.name else set())
+            for symbol in ("ZSTD_getFrameContentSize", "ZSTDMT_freeCCtx", "XXH64", "FSE_decompress"):
+                with patch.object(package, "archive_exports", side_effect=exports):
+                    with self.assertRaisesRegex(ValueError, "global codec symbols"):
+                        package.inspect("ios-arm64", root)
+            symbol = "e2d_ktx_private_ZSTDMT_freeCCtx"
+            with patch.object(package, "archive_exports", side_effect=exports):
+                self.assertEqual(set(package.inspect("ios-arm64", root)), set(package.LIBRARIES["iOS"]))
+
     def test_ogv_bridge_is_required_in_every_profile(self):
         for profile, names in package.LIBRARIES.items():
             name = next(name for name in names if "Electron2DOGV" in name)

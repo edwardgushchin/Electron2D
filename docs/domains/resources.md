@@ -274,3 +274,5 @@ Mounted res:// resources now share [resource pack resolution](../components/reso
 [DPITexture](../components/scalable-svg.md) stores SVG source and typed paint maps as resource data, with independent scene-local copies and transient viewport raster caches. Existing Image SVG codec limits remain separate from this retained texture/resource integration.
 
 [Video resources](../components/video-playback.md) now load bounded Ogg sources, instantiate independent prepared decoders and persist exact source/player configuration through resource and scene archives. Fresh-process authoring is exercised separately from rendered playback.
+
+The [KTX image slice](../components/image-ktx.md) adds flat KTX1/KTX2 file/buffer and resource loading, raw precision/mips, portable Basis LDR/HDR transcoding, bounded metadata/DFD validation and independent rendered-pixel checks. Compressed array assets remain dependent on their container, legacy Basis channel roles and resource integration; the codec prerequisite alone does not implement those types.

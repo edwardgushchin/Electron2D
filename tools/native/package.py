@@ -19,14 +19,14 @@ PLATFORMS = {"Linux": ("linux-x64", "linux-arm64"), "MacOS": ("osx-x64", "osx-ar
              "iOS": ("ios-arm64", "iossimulator-arm64", "iossimulator-x64"),
              "tvOS": ("tvos-arm64", "tvossimulator-arm64", "tvossimulator-x64"), "Web": ("browser-wasm",)}
 RIDS = tuple(rid for values in PLATFORMS.values() for rid in values)
-LIBRARIES = {"Linux": ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so", "libElectron2DMesh.so", "libElectron2DWebP.so", "libElectron2DOGV.so"),
-             "MacOS": ("libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib", "libElectron2DMesh.dylib", "libElectron2DWebP.dylib", "libElectron2DOGV.dylib",
+LIBRARIES = {"Linux": ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so", "libElectron2DMesh.so", "libElectron2DWebP.so", "libElectron2DOGV.so", "libElectron2DKTX.so"),
+             "MacOS": ("libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib", "libElectron2DMesh.dylib", "libElectron2DWebP.dylib", "libElectron2DOGV.dylib", "libElectron2DKTX.dylib",
                        "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib", "libElectron2DFreeType.dylib"),
-             "Windows": ("Electron2DTextBreak.dll", "FAudio.dll", "Electron2DENet.dll", "Electron2DMesh.dll", "Electron2DWebP.dll", "Electron2DOGV.dll",
+             "Windows": ("Electron2DTextBreak.dll", "FAudio.dll", "Electron2DENet.dll", "Electron2DMesh.dll", "Electron2DWebP.dll", "Electron2DOGV.dll", "Electron2DKTX.dll",
                          "libcrypto-3-Electron2D.dll", "libssl-3-Electron2D.dll", "Electron2DFreeType.dll")}
-LIBRARIES["Android"] = ("libElectron2DTextBreak.so", "libFAudio.so", "libElectron2DENet.so", "libElectron2DMesh.so", "libElectron2DWebP.so", "libElectron2DOGV.so",
+LIBRARIES["Android"] = ("libElectron2DTextBreak.so", "libFAudio.so", "libElectron2DENet.so", "libElectron2DMesh.so", "libElectron2DWebP.so", "libElectron2DOGV.so", "libElectron2DKTX.so",
                         "libElectron2DCrypto.so", "libElectron2DSSL.so", "libElectron2DFreeType.so", "libElectron2DHarfBuzz.so")
-ARCHIVES = ("libElectron2DTextBreak.a", "libFAudio.a", "libElectron2DENet.a", "libElectron2DMesh.a", "libElectron2DWebP.a", "libElectron2DOGV.a", "libwebp.a", "libsharpyuv.a", "libElectron2DCrypto.a",
+ARCHIVES = ("libElectron2DTextBreak.a", "libFAudio.a", "libElectron2DENet.a", "libElectron2DMesh.a", "libElectron2DWebP.a", "libElectron2DOGV.a", "libElectron2DKTX.a", "libwebp.a", "libsharpyuv.a", "libElectron2DCrypto.a",
             "libElectron2DSSL.a", "libElectron2DFreeType.a", "libElectron2DHarfBuzz.a", "libElectron2DZlib.a",
             "libElectron2DPNG.a", "libElectron2DBrotliDec.a", "libElectron2DBrotliCommon.a", "libElectron2DZstd.a")
 LIBRARIES.update(iOS=ARCHIVES, tvOS=ARCHIVES, Web=(*ARCHIVES, "libSDL3.a", "libElectron2DWasmCompat.a",
@@ -34,6 +34,8 @@ LIBRARIES.update(iOS=ARCHIVES, tvOS=ARCHIVES, Web=(*ARCHIVES, "libSDL3.a", "libE
 
 
 def required_exports(name):
+    if "Electron2DKTX" in name:
+        return {"e2d_ktx_create", "e2d_ktx_level", "e2d_ktx_destroy"}
     if "Electron2DOGV" in name:
         return {"e2d_ogv_create", "e2d_ogv_frame", "e2d_ogv_finish", "e2d_ogv_destroy",
                 "e2d_video_create", "e2d_video_frame", "e2d_video_audio", "e2d_video_seek_audio", "e2d_video_destroy"}
@@ -153,7 +155,7 @@ def source_hash():
     files = set()
     for directory in ("src/Vendor/ICU", "src/Vendor/MSDFGen", "src/Vendor/FAudio", "src/Vendor/ENet",
                       "src/Vendor/FastLZ", "src/Vendor/meshoptimizer", "src/Servers/Text/Native",
-                      "tools/audio-native", "tools/enet-native", "tools/mesh-native", "tools/webp-native", "tools/ogv-native", "tools/font-native", "tools/native"):
+                      "tools/audio-native", "tools/enet-native", "tools/mesh-native", "tools/webp-native", "tools/ogv-native", "tools/ktx-native", "tools/font-native", "tools/native"):
         files.update(p for p in (ROOT / directory).rglob("*") if p.is_file()
                      and not {"bin", "obj", "__pycache__"} & set(p.relative_to(ROOT).parts))
     files.update((ROOT / "tools").glob("*-native.targets"))
@@ -185,12 +187,14 @@ def inspect(rid, directory):
             exports = archive_exports(path, rid)
             if not required_exports(name) <= exports:
                 raise ValueError(f"Missing engine or dependency ABI in archive: {path}")
+            if "Electron2DKTX" in name and any(symbol.startswith(("ZSTD", "XXH", "POOL_", "FSE_", "HUF_", "HIST_", "ZDICT_", "COVER_", "FASTCOVER_", "ERR_")) for symbol in exports):
+                raise ValueError(f"KTX static archive contains global codec symbols: {path}")
             checksums[name] = hashlib.sha256(data).hexdigest()
             continue
         if rid.startswith(("osx-", "win-")):
             exports = windows_exports(path, rid, name) if rid.startswith("win-") else macos_exports(path, rid, name)
             required = required_exports(name)
-            if not required <= exports or ("TextBreak" in name or "ENet" in name or "Electron2DMesh" in name or "Electron2DOGV" in name) and exports != required:
+            if not required <= exports or ("TextBreak" in name or "ENet" in name or "Electron2DMesh" in name or "Electron2DOGV" in name or "Electron2DKTX" in name) and exports != required:
                 raise ValueError(f"Missing or foreign engine ABI exports: {path}")
             checksums[name] = hashlib.sha256(data).hexdigest()
             continue
@@ -208,7 +212,7 @@ def inspect(rid, directory):
             raise ValueError("FAudio must share the packaged SDL3 core")
         exports = elf_exports(path)
         required = required_exports(name)
-        if ("Electron2DMesh" in name or "Electron2DOGV" in name) and exports != required:
+        if ("Electron2DMesh" in name or "Electron2DOGV" in name or "Electron2DKTX" in name) and exports != required:
             raise ValueError(f"Private codec/mesh must export only its engine bridge: {path}")
         if name != "libElectron2DTextBreak.so" and not required <= exports:
             raise ValueError(f"Missing engine bridge exports: {path}: {required - exports}")

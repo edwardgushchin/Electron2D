@@ -524,6 +524,11 @@
       "godot": "Image::method:save_exr_to_buffer(bool:,bool:,float:)",
       "electron2d": "method:Electron2D.Image.SaveEXRToBuffer(System.Boolean,System.Boolean,System.Single)",
       "reason": "Executable pure managed EXR file/buffer load and PIZ save, with 12 source roles, HALF/FLOAT/channel preservation, monochrome Y, numeric UINT input, raw negative/nonfinite data and color/upper clamps. Bounded metadata/materialization/output, failure atomicity, resource archive ownership and native GPU/Compatibility consumers under ADR 0039. Deep/multipart and unsupported compression reject consistently with the flat Image role; foreign/AOT execution remains unverified. See docs/components/image-exr.md."
+    },
+    {
+      "godot": "Image::method:load_ktx_from_buffer(PackedByteArray:)",
+      "electron2d": "method:Electron2D.Image.LoadKTXFromBuffer(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0039: copied bounded flat KTX1/KTX2 input, complete mip/precision/raw-block layouts, portable Basis LDR/HDR decoding, row padding, endian/orientation/swizzle and sRGB handling; Image file/resource/texture consumers share atomic publication. Independent codec oracles and Linux GPU/Compatibility sampling are exercised; unsupported ETC/EAC/ASTC transformation and foreign/native package publication remain explicit gates."
     }
   ],
   "statusGroups": [
@@ -712,13 +717,6 @@
     },
     {
       "godot": [
-        "Image::method:load_ktx_from_buffer(PackedByteArray:)"
-      ],
-      "state": "Unimplemented",
-      "reason": "ADR 0039: KTX requires a mature KTX2/Basis-aware container/transcoder integration, complete container validation, orientation/mip/format roles and file/buffer/texture consumers. BCn supplies KTX1 primitives and BC blocks, but KTX1 alone does not satisfy the complete pinned loader. ETC/EAC/ASTC remain separate codec dependencies."
-    },
-    {
-      "godot": [
         "Image::method:create(int:,int:,bool:,int:Image.Format)"
       ],
       "state": "Excluded",
@@ -774,6 +772,13 @@
       ],
       "state": "Implemented",
       "reason": "Executable pure managed EXR file/buffer load and PIZ save, with 12 source roles, HALF/FLOAT/channel preservation, monochrome Y, numeric UINT input, raw negative/nonfinite data and color/upper clamps. Bounded metadata/materialization/output, failure atomicity, resource archive ownership and native GPU/Compatibility consumers under ADR 0039. Deep/multipart and unsupported compression reject consistently with the flat Image role; foreign/AOT execution remains unverified. See docs/components/image-exr.md."
+    },
+    {
+      "godot": [
+        "Image::method:load_ktx_from_buffer(PackedByteArray:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0039: copied bounded flat KTX1/KTX2 input, complete mip/precision/raw-block layouts, portable Basis LDR/HDR decoding, row padding, endian/orientation/swizzle and sRGB handling; Image file/resource/texture consumers share atomic publication. Independent codec oracles and Linux GPU/Compatibility sampling are exercised; unsupported ETC/EAC/ASTC transformation and foreign/native package publication remain explicit gates."
     }
   ],
   "extras": [

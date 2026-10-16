@@ -298,7 +298,7 @@ def reason_for_type(item, lookup):
     if name in {"CameraFeed", "CameraServer", "CameraTexture"}:
         return "Blocked", "Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021)."
     if name in {"CompressedTexture2DArray", "CompressedTextureLayered"}:
-        return "Blocked", "Trigger: compressed array-file parsing/decoding or direct compressed native upload, source format/mipmap ownership and reproducible sampling over the executable TextureArray pipeline (ADR 0028)."
+        return "Blocked", "ADRs 0028/0039: raw/BC/PNG/WebP and KTX2 Basis LDR/HDR decoding execute. Remaining prerequisite: GSTL array parsing and homogeneous mip/layer validation, legacy .basis channel-role decoding, CompressedTextureLayered/CompressedTextureArray ownership and LoadPath/cache/archive integration, then verified layer/mip sampling through TextureArray."
     if name in {"PlaceholderMaterial", "PlaceholderTexture2D"}:
         return "Blocked", "Trigger: first typed missing-asset placeholder and loader slice (ADRs 0013 and 0023)."
     if name in {"BlitMaterial", "DrawableTexture2D"}:

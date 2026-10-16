@@ -11,7 +11,7 @@ public sealed partial class Image
 
     /// <summary>Replaces this image with decoded pixels from a file.</summary>
     /// <param name="path">An operating-system, res://, user:// or registered UID path to an image file.</param>
-    /// <remarks>Input is bounded to 64 MiB. Built-in decoding produces a copied RGBA8 base image without mipmaps.
+    /// <remarks>Input is bounded to 64 MiB. The six standard raster/vector decoders produce copied RGBA8 base pixels. DDS and KTX retain stored mip layouts; EXR and KTX retain applicable channel precision.
     /// Registered extensions may return other valid Image layouts. Their state is copied before publication.
     /// A failure preserves the previous image. Changed is emitted after a successful replacement.
     /// Custom decoders execute on this thread using borrowed temporary Image and FileAccess objects.
@@ -143,6 +143,7 @@ public sealed partial class Image
         {
             ".exr" => "EXR",
             ".dds" => "DDS",
+            ".ktx" or ".ktx2" => "KTX",
             ".png" => "PNG",
             ".jpg" or ".jpeg" => "JPG",
             ".webp" => "WEBP",

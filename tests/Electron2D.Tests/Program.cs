@@ -88,6 +88,7 @@ if (args.Length == 2 && args[0] == "--image-exr-oracle") { ImageEXRTests.RunOrac
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_EXR") is { } exrProfile) { if (exrProfile == "managed") { VerifyImages(); ImageEXRTests.RunManaged(); } else ImageEXRTests.RunNative(exrProfile); return; }
 if (args.Length == 2 && args[0] == "--image-webp-archive") { ImageWebPTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_WEBP") is { } webpProfile) { if (webpProfile == "managed") { VerifyImages(); ImageWebPTests.RunManaged(); } else ImageWebPTests.RunNative(webpProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_KTX") is { } ktxProfile) { if (ktxProfile == "managed") { VerifyImages(); ImageKTXTests.RunManaged(); } else ImageKTXTests.RunNative(ktxProfile); return; }
 if (args.Length == 2 && args[0] == "--image-bcn-archive") { ImageBCnTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_BCN") is { } bcnProfile) { if (bcnProfile == "managed") { VerifyImages(); ImageBCnTests.RunManaged(); } else ImageBCnTests.RunNative(bcnProfile); return; }
 if (args.Length == 2 && args[0] == "--font-type1-archive") { Type1FontTests.RunArchive(args[1]); return; }
@@ -255,6 +256,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "1")
 {
     ImageCodecTests.Run();
     ImageWebPTests.RunManaged();
+    ImageKTXTests.RunManaged();
     ImageEXRTests.RunManaged();
     return;
 }
@@ -2842,6 +2844,7 @@ static void VerifyImages()
         [nameof(Image.CompressFromChannels)] = 1,
         [nameof(Image.Decompress)] = 1,
         [nameof(Image.LoadEXRFromBuffer)] = 1,
+        [nameof(Image.LoadKTXFromBuffer)] = 1,
         [nameof(Image.SaveEXR)] = 1,
         [nameof(Image.SaveEXRToBuffer)] = 1,
         [nameof(Image.LoadDDSFromBuffer)] = 1,

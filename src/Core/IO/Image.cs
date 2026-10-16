@@ -6,7 +6,7 @@ namespace Electron2D;
 /// <remarks>
 /// Image state is held in a managed byte buffer. Reads and writes are serialized per image, mutations commit atomically,
 /// and <see cref="Resource.Changed"/> is raised synchronously after a successful commit. File and buffer codecs
-/// copy decoded native pixels into managed storage. BC1–BC7 compression/decompression and DDS preserve stored mip chains. Renderer handles remain separate.
+/// copy decoded native pixels into managed storage. BC1–BC7 compression/decompression and DDS/KTX loading preserve stored mip chains. Renderer handles remain separate.
 /// </remarks>
 public sealed partial class Image : Resource
 {
