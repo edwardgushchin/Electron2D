@@ -35,9 +35,9 @@ internal sealed class PhysicsAreaRuntime(RID rid)
     internal void SetCallback(Action<PhysicsServer.AreaBodyStatus, RID, ulong, int, int>? callback, bool area)
     {
         EnsureAccess(true);
+        Space?.PrepareMonitoringCapacity();
         if (area) AreaCallback = callback; else BodyCallback = callback;
         Reset();
-        Space?.PrepareMonitoringCapacity();
     }
 
     internal void Prepare(int pairs)

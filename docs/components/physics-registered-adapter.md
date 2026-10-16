@@ -2472,3 +2472,15 @@ and preserves object/canvas identity and sensor effects. [Shared shape-edit
 verification](physics-queries.md#failed-raw-shape-edits-and-warmed-reuse) retains
 CPU/GPU geometry, resource lifetime and separate physical-step/immutable-authoring
 allocation gates. Complete arbitrary numerical/extension acceptance remains open.
+
+## Area observer registration transactions
+
+PrepareMonitoringCapacity executes before a shared Area callback setter publishes
+its delegate or resets logical pair history. The selected provider reserves
+current collider/shape capacity; it does not need prospective callback state.
+A preparation failure propagates once and preserves old observers and queued
+generation. The public-only [transaction profile](physics-queries.md#area-observer-registration-transactions)
+checks 24 registered failures across scene/raw body/Area callback lanes, rejected
+weak candidate targets, exact nonzero logical indices and cross-receiver queued publication.
+The full-frame warm path retains strict zero managed allocation. Complete
+numerical/custom/native/foreign/performance acceptance remains open.

@@ -1600,3 +1600,11 @@ reuse capacity; unchanged one-way publication is cached while changed immutable
 values retain a separately measured authoring allocation. No open physical
 census row is promoted by this bounded fixture; complete numerical-extension,
 native/driver/foreign and final network/hardware/window acceptance remains open.
+
+[Area observer registration](physics-queries.md#area-observer-registration-transactions)
+now preserves old delegates, logical pair histories and queued generations after
+a preparation failure. Both lanes and scene/raw receivers have initial/replacement/
+clear/same-handler, rejected weak target and cross-receiver queued-event checks.
+Independent slots 0/2, exact entry/exit counts and complete warm frames execute;
+this does not certify arbitrary external numerical/compound algorithms or change
+the remaining extension/native/foreign/network/performance gates.

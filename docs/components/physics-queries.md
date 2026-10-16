@@ -91,7 +91,7 @@ The body runtime now owns one-step pending force/torque and routes scene/direct-
 
 ## Server Area sensor receivers
 
-Typed [PhysicsServer](../classes/PhysicsServer.md) body/Area monitor callbacks now use the existing exact overlap kernel for scene/server receiver identities. The internal [Area runtime](../../src/Servers/Physics/PhysicsAreaRuntime.cs) stores optional delegates, logical pair snapshots and epochs; the [space scanner](../../src/Servers/Physics/PhysicsSpace.AreaMonitoring.cs) commits before callback dispatch, filters other layers directionally and retains monitorable gating. Payload includes other RID, stable scene InstanceID or zero, and both logical indices. Receiver reentry resets history while retaining registration; peer removal/free, reentrant removal and callback failures drain without stale entry replay. Scene snapshots remain independent. [PhysicsAreaMonitorTests](../../tests/Electron2D.Tests/PhysicsAreaMonitorTests.cs) checks 64 warmed entry/exit cycles with zero managed allocation on Linux/.NET 10. Native allocation, large-world performance, other platforms and owner acceptance remain unverified. [ADR 0077](../decisions/physics-monitoring.md#adr-0077) owns current semantics; server Area fields retain their next separate slice.
+Typed [PhysicsServer](../classes/PhysicsServer.md) body/Area monitor callbacks now use the existing exact overlap kernel for scene/server receiver identities. The internal [Area runtime](../classes/PhysicsAreaRuntime.md) stores optional delegates, logical pair snapshots and epochs; the [space scanner](../../src/Servers/Physics/PhysicsSpace.AreaMonitoring.cs) commits before callback dispatch, filters other layers directionally and retains monitorable gating. Payload includes other RID, stable scene InstanceID or zero, and both logical indices. Receiver reentry resets history while retaining registration; peer removal/free, reentrant removal and callback failures drain without stale entry replay. Scene snapshots remain independent. [PhysicsAreaMonitorTests](../../tests/Electron2D.Tests/PhysicsAreaMonitorTests.cs) checks 64 warmed entry/exit cycles with zero managed allocation on Linux/.NET 10. Native allocation, large-world performance, other platforms and owner acceptance remain unverified. [ADR 0077](../decisions/physics-monitoring.md#adr-0077) owns current semantics; [typed server Area fields](../classes/PhysicsServer.md#typed-area-fields-and-space-defaults) execute through their own shared profile.
 
 Typed PhysicsServer Area field getter/setters now share scene/server profiles and address a space default Area by its Space RID. Bounded fields use current exact overlap and descending mixed priority; monitor flags/callbacks are independent. Initial space defaults sample ProjectSettings, then explicit live edits apply on the next nonzero step without changing other worlds. Point/default gravity, body damping/scaling, wakeup and failure recovery are verified by [PhysicsServerAreaFieldTests](../../tests/Electron2D.Tests/PhysicsServerAreaFieldTests.cs) under [ADR 0056](../decisions/physics-fields.md#adr-0056). Native allocation, other platforms and owner visual acceptance remain unverified.
 
@@ -257,3 +257,48 @@ lavapipe, and sampled process maps loaded no hardware driver. The basic edited
 interval fell from 430,080 CPU / 20,480 GPU bytes per 128 frames to 0/0; each
 rotating profile measured 4,096 authoring bytes plus 0/0 physical-step bytes.
 These are functional/allocation results, not a native-memory or GPU-speedup claim.
+
+## Area observer registration transactions
+
+AreaSetMonitorCallback and AreaSetAreaMonitorCallback share PhysicsAreaRuntime.
+For attached receivers, registration first prepares all common/backend monitoring
+capacity while the previous callbacks and pair histories are still current. Only
+a successful preparation publishes the replacement and clears both histories,
+including same-delegate and null assignments. Preparation needs collider/shape
+capacity, not a prospective callback value. A failure propagates its original
+exception without a second fallible rollback; the old delegates, logical pairs,
+generation and already queued deliveries remain intact. Retained capacity may
+have grown before failure. This is an authoring failure, not a started solve.
+
+A successful registration still invalidates older queued entries immediately.
+Current overlaps reenter at the next nonzero scan, while scene-owned snapshots
+remain independent. Cross-receiver registration from an ordinary callback keeps
+these epoch rules; own-receiver configuration and numerical-hook writes retain
+their existing guards. Detached registration has no numerical capacity hook and
+still commits immediately. Disposing/releasing owners retains the existing
+callback/history cleanup.
+
+The public-only `--area-callback-transactions` profile drives both callback lanes
+on scene and raw receivers with enabled logical slots 0/2 and a disabled gap.
+Two body peers include scene and assigned raw identities; a monitorable Area peer
+supplies the other lane. It checks first publication, clear/same/new handlers,
+zero-delta timing, independent scene snapshots, exact entry/exit counts and
+successful versus failed publication while later receiver events are queued.
+The registered implementation injects 24 capacity failures, including four weak
+candidate-target checks. Failed replacements preserve both lanes, and physical
+departure/reentry reaches the prior handler. The shared warm interval re-registers
+all four observers and reads live overlap/shape state during 128 full frames,
+retaining strict 0/0 owner/all-thread managed-byte gates, 128 force callbacks,
+stable RID and 12.8 units of real motion within .01 units.
+
+The receipt lives under `bin/physics-area-callback-transactions/2026-10-16/`.
+This verifies observer publication through the actual selected implementation;
+arbitrary numerical/custom geometry, native/driver budgets, foreign platforms,
+separate-process networking and hardware/window performance remain separate gates.
+
+The final local run passed twelve CoreCLR/NativeAOT serial/separate profiles on
+CPU, software GPU and the registered implementation, six existing Area-monitor/
+resource consumer regressions, and the complete Area contract selector on both
+CPU and software GPU. Every new warm registration interval measured 0/0 managed
+bytes. CPU used an absent Vulkan ICD; GPU used pinned lavapipe with no hardware
+driver observed.

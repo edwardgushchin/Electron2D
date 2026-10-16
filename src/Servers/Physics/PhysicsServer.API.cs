@@ -210,8 +210,9 @@ public sealed partial class PhysicsServer
 
     /// <summary>Sets or clears the receiver's body-pair overlap callback.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
-    /// <param name="callback">Status, other RID, object instance ID (zero for server-only), other logical shape and local shape; null clears.</param>
-    /// <remarks>Registration resets pending pair history; current overlaps enter at the next nonzero scan.
+    /// <param name="callback">Status, other RID, object instance ID (zero when unassigned), other logical shape and local shape; null clears.</param>
+    /// <remarks>Successful registration resets both pending pair histories; current overlaps enter at the next nonzero scan.
+    /// Capacity preparation completes before publication. If preparation fails, the previous callbacks, histories and queued deliveries remain unchanged.
     /// Scene-owned overlap snapshots/events remain mandatory and independent of this observer.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live Area.</exception>
     /// <exception cref="InvalidOperationException">Attached access is off-owner, solver-owned, or receiver configuration is mutated from its own callback.</exception>
@@ -220,7 +221,9 @@ public sealed partial class PhysicsServer
     /// <summary>Sets or clears the receiver's monitorable-Area pair callback.</summary>
     /// <param name="area">A live Area RID.</param>
     /// <param name="callback">Status, other RID, object instance ID, other logical shape index and local index; null clears.</param>
-    /// <remarks>Replacing either callback resets both pair histories. Only monitorable other Areas enter this lane.</remarks>
+    /// <remarks>Successfully replacing either callback resets both pair histories, including repeated or null assignments.
+    /// Capacity preparation completes before publication. If preparation fails, the previous callbacks, histories and queued deliveries remain unchanged.
+    /// Only monitorable other Areas enter this lane.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live Area.</exception>
     /// <exception cref="InvalidOperationException">Attached access is off-owner, solver-owned, or receiver configuration is mutated from its own callback.</exception>
     public static void AreaSetAreaMonitorCallback(RID area, Action<AreaBodyStatus, RID, ulong, int, int>? callback) => Service.AreaSetAreaMonitorCallbackCore(area, callback);

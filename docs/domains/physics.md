@@ -1390,3 +1390,13 @@ without owning retired Shape resources. Immutable one-way values reuse unchanged
 policy; changed values publish separately from the strict zero-allocation physics
 step. Full numerical-extension, native/foreign, network and hardware/window
 performance acceptance remains open.
+
+## Area observer registration failures
+
+[Observer callback publication](../components/physics-queries.md#area-observer-registration-transactions)
+now prepares common/selected capacity before replacing the handler and resetting
+pair history. Failure preserves both previous callback lanes and pending event
+epochs; successful registration keeps the existing reset semantics. This shared
+path covers scene and raw receivers without changing numerical ownership or
+scene-owned overlap snapshots. Full solver, native/driver, network and hardware
+performance acceptance remains open.

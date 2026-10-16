@@ -230,11 +230,11 @@ Signed material values feed actual fixture coefficients and rough/absorbent comb
 | `uint AreaGetCollisionMask(RID area)` | Current accepted other-category bits. |
 | `Transform AreaGetTransform(RID area)` | Current global scene/server pose. |
 
-All live scene/server Area RIDs are accepted; pose/layer/monitorable setters use that same projection. [AreaBodyStatus](PhysicsServer.AreaBodyStatus.md) reports Added=0/Removed=1. Remaining payload is other RID, stable scene InstanceID or zero for server-only, other global logical shape index and local index. Compound fixtures deduplicate per logical pair. The receiver mask tests other layer without reciprocal masks. Area callbacks include only monitorable peers; explicit server Areas default non-monitorable.
+All live scene/server Area RIDs are accepted; pose/layer/monitorable setters use that same projection. [AreaBodyStatus](PhysicsServer.AreaBodyStatus.md) reports Added=0/Removed=1. Remaining payload is other RID, sampled assigned InstanceID or zero when unassigned, other global logical shape index and local index. Compound fixtures deduplicate per logical pair. The receiver mask tests other layer without reciprocal masks. Area callbacks include only monitorable peers; explicit server Areas default non-monitorable.
 
-Registration resets both histories even for the same delegate; null clears without synthetic exits, and current overlaps enter again at the next nonzero scan. Scene-owned overlap arrays/events remain independent and mandatory; an external observer is not its replacement and can observe while scene Monitoring is false. Snapshot state commits before dispatch; failures continue later events and do not replay. Own receiver configuration mutation from a raw or scene overlap callback rejects, while reads are allowed. Epoch changes suppress stale queued callbacks. Other collider removal/free emits retained exits immediately; removal from an entry callback suppresses stale later entries and safely delivers departures.
+Successful registration resets both histories even for the same delegate; null clears without synthetic exits, and current overlaps enter again at the next nonzero scan. Scene-owned overlap arrays/events remain independent and mandatory; an external observer is not its replacement and can observe while scene Monitoring is false. Snapshot state commits before dispatch; failures continue later events and do not replay. Own receiver configuration mutation from a raw or scene overlap callback rejects, while reads are allowed. Epoch changes suppress stale queued callbacks. Other collider removal/free emits retained exits immediately; removal from an entry callback suppresses stale later entries and safely delivers departures.
 
-Receiver detach clears history silently and retains configuration for reentry. Receiver free/world disposal clears history/event storage; cleanup of a freed other collider completes even if its departure callbacks throw. Wrong-kind/freed RID and off-owner/solver-owned access reject. [PhysicsAreaMonitorTests](../../tests/Electron2D.Tests/PhysicsAreaMonitorTests.cs) verifies payload/filter/lifetime/errors and 64 warmed active entry/exit cycles with zero managed allocation. [ADR 0077](../decisions/physics-monitoring.md#adr-0077) records the ownership adaptation. Server field parameters and remaining extension and process-info operations retain their own coverage gaps; native allocation, large-world performance, other platforms and owner acceptance remain unverified.
+Receiver detach clears history silently and retains configuration for reentry. Receiver free/world disposal clears history/event storage; cleanup of a freed other collider completes even if its departure callbacks throw. Wrong-kind/freed RID and off-owner/solver-owned access reject. [PhysicsAreaMonitorTests](../../tests/Electron2D.Tests/PhysicsAreaMonitorTests.cs) verifies payload/filter/lifetime/errors and 64 warmed active entry/exit cycles with zero managed allocation. [ADR 0077](../decisions/physics-monitoring.md#adr-0077) records the ownership adaptation. Typed fields and completed process statistics have their own verified profiles; full registered numerical/extension, native allocation, large-world performance, other platforms and owner acceptance remain open.
 
 ## Typed Area fields and space defaults
 
@@ -1130,3 +1130,10 @@ Attached raw Body/Area shape edits restore prior logical authoring and attempt
 numerical restoration after an error. A failed restoration aggregates both errors
 and leaves preparation pending before the next query/step. Scene slot edits keep
 deferred preparation. See [the complete edit family and verification](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse).
+
+### Observer preparation failure
+
+Both Area callback setters prepare common/selected monitoring capacity before
+publishing a replacement. Failure preserves the old delegates, both histories
+and queued-event generation. Successful null/equal/new registrations retain
+ordinary reset and next-nonzero-scan semantics. See [transactions and checks](../components/physics-queries.md#area-observer-registration-transactions).

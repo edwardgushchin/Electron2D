@@ -1,6 +1,6 @@
 # PhysicsSpace
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 **Declaration:** `internal sealed partial class PhysicsSpace : IDisposable`
 
@@ -317,3 +317,11 @@ selects current incremental or complete state by estimated transfer cost. Cached
 mode/sleep is a hint only; scalar values and wake/private/portable continuation
 retain authoritative device reads. Existing API and coverage states remain unchanged;
 hardware, native, foreign and full acceptance remain open.
+
+## Pending observer publication
+
+Monitoring capacity is prepared from current colliders/shapes before an Area
+callback replacement commits. A failed preparation does not advance the receiver
+generation, so its already queued events retain delivery. Successful registration
+still retires older queued epochs and reenters on the next nonzero scan. See
+[observer transactions](../components/physics-queries.md#area-observer-registration-transactions).

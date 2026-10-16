@@ -1,6 +1,6 @@
 # Area
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 [Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
 keeps sampled public values while rejecting portable capture of retired/reindexed
@@ -252,3 +252,12 @@ count. Its CPU-only Vulkan values are transfer/function evidence, not hardware
 speedup, native allocator totals, real-window FPS or final performance acceptance.
 
 The resident point-field reducer preserves guarded float operation order with GLSL precise intermediates and propagates reconstruction validity separately from the value. Values beyond the finite output range do not enter subsequent arithmetic as infinity sentinels. A later Replace/ReplaceCombine contribution resets validity with the channel; Combine retains an invalid earlier contribution. Final invalid fields fail before body-field publication or solver motion through the existing eight-byte status read and terminal GPU-world policy. Mantissa/exponent normalization avoids reciprocals outside the normal range for large/tiny coordinates. No CPU mirror, buffer growth, new readback or wait is introduced. See [hardware point-field guards](../components/physics-areas.md#hardware-point-field-guards-2026-10-14).
+
+## External observer registration
+
+The two PhysicsServer Area callback lanes are independent of this node's mandatory
+snapshots. Their capacity preparation now precedes publication, so a failed
+registration preserves prior external callbacks/history and queued deliveries.
+Successful registration still resets both external histories. [Shared transaction
+checks](../components/physics-queries.md#area-observer-registration-transactions)
+exercise scene/raw receivers and disabled logical index gaps.
