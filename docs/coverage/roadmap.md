@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1527 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 1530 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 724 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -66,6 +66,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [Animation](classes/Animation.md) | 0 | 2 |
 | [AudioStreamPlayback](classes/AudioStreamPlayback.md) | 0 | 2 |
 | [Camera2D](classes/Camera2D.md) | 0 | 2 |
+| [CompressedTexture2D](classes/CompressedTexture2D.md) | 0 | 2 |
 | [CompressedTextureLayered](classes/CompressedTextureLayered.md) | 0 | 2 |
 | [GraphNode](classes/GraphNode.md) | 0 | 2 |
 | [ImageTextureLayered](classes/ImageTextureLayered.md) | 0 | 2 |
@@ -103,7 +104,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
 | Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 3 |
 | Trigger: actual GPU particle simulation, process-material shader/data integration, native storage and compute/collision/attractor ownership under ADR 0028. CPUParticles baseline does not provide GPU compute or process-material conversion. | 2 |
-| Trigger: first compressed-texture import, decoder and verified GPU sampling slice (ADRs 0028 and 0039). | 2 |
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 2 |
 | Trigger: first typed missing-asset placeholder and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
@@ -120,6 +120,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first 2D light/mesh texture renderer integration (ADR 0028). | 1 |
 | Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 1 |
 | Trigger: first applicable typed 2D procedural geometry producer with concrete generation parameters and visible mesh output; static surface rendering already executes (ADR 0092). | 1 |
+| Trigger: first compressed-texture import, decoder and verified GPU sampling slice (ADRs 0028 and 0039). | 1 |
 | Trigger: first missing 2D material, canvas-modulation and shader-global renderer integration (ADR 0028). | 1 |
 | Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041). | 1 |
 | Trigger: first portable external-image ownership and native texture-import decision (ADRs 0021 and 0028). | 1 |

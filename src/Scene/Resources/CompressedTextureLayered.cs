@@ -38,7 +38,7 @@ public abstract class CompressedTextureLayered : TextureLayered
     public void Load(string path)
     {
         ThrowIfDisposed(); ArgumentException.ThrowIfNullOrEmpty(path);
-        var pixels = CompressedArraySource.Read(path);
+        var pixels = CompressedTextureSource.ReadArray(path);
         var visiblePath = ResourcePath;
         lock (_gate) { ThrowIfDisposed(); _pixels = pixels; _loadPath = path; _renderPath = visiblePath.Length == 0 ? path : visiblePath; }
         NotifyPropertyListChanged(); EmitChanged();

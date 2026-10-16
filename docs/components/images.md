@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-16
 
+[Imported image textures](compressed-textures.md) retain raw/PNG/WebP/Basis and block source mips through CompressedTexture, with separate logical drawing size, ordinary canvas consumers and embedded resource/scene storage.
+
 ## Scope
 
 This Resources component owns portable managed 2D pixel buffers, binary masks, raw format identity, mipmap layout, CPU image processing, and typed image metrics. It also owns file/buffer decoding, PNG/JPEG/DDS saving and BC1–BC7 CPU block codecs. Texture sampling and renderer handles consume prepared immutable snapshots; importing remains separate.

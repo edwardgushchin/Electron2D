@@ -1,11 +1,11 @@
 # Texture
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 - Declaration: `public abstract class Texture : Resource`
 - Source: [Texture.cs](../../src/Scene/Resources/Texture.cs)
 - Inherits: [Resource](Resource.md)
-- Inherited by: [ImageTexture](ImageTexture.md), [AtlasTexture](AtlasTexture.md), [CurveTexture](CurveTexture.md), [CurveXYZTexture](CurveXYZTexture.md), [GradientRampTexture](GradientRampTexture.md), [GradientTexture](GradientTexture.md), [NoiseTexture](NoiseTexture.md)
+- Inherited by: [ImageTexture](ImageTexture.md), [CompressedTexture](CompressedTexture.md), [AtlasTexture](AtlasTexture.md), [CurveTexture](CurveTexture.md), [CurveXYZTexture](CurveXYZTexture.md), [GradientRampTexture](GradientRampTexture.md), [GradientTexture](GradientTexture.md), [NoiseTexture](NoiseTexture.md)
 - Component: [Shader materials](../components/shader-materials.md)
 
 ## Description
@@ -14,6 +14,8 @@ A two-dimensional image texture with a logical drawing size, original pixel meta
 
 GradientRampTexture and GradientTexture always report HasAlpha true, including before initialization. Their source edits lazily invalidate pixels without forwarding Changed; native consumers capture new pixels on the next use.
 NoiseTexture reports HasAlpha false according to its reference declaration, even when an optional color ramp produces RGBA pixels; GetImage and IsPixelOpaque retain the actual pixel alpha.
+CompressedTexture also reports HasAlpha false while preserving actual pixel alpha;
+its imported logical drawing size is independent from GetImage's physical pixels.
 
 AtlasTexture overrides metadata queries with its view defaults (unspecified format and no own mipmaps); rendering still uses the full source storage. See [AtlasTexture metadata](AtlasTexture.md#pixelformat).
 

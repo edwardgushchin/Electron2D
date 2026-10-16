@@ -8,7 +8,8 @@ Last updated: 2026-10-16
 `CompressedTextureArray` is its concrete independent-array resource. It loads
 `.ctexarray` assets through `Load`, the stored `LoadPath` setter, or ResourceLoader.
 It does not inherit the mutable `CreateFromImages`/`UpdateLayer` surface.
-Ordinary texture drawing and cube/volume sampling retain their separate boundaries.
+The ordinary [CompressedTexture](compressed-textures.md) branch uses GST2 and the
+same internal image-payload reader. Cube/volume sampling retains its separate boundary.
 
 ## Container and pixels
 

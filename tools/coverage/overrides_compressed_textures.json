@@ -1,0 +1,104 @@
+{
+  "mappings": [
+    {
+      "godot": "class:CompressedTexture2D",
+      "electron2d": "T:Electron2D.CompressedTexture",
+      "reason": "ADRs 0004/0013/0014/0028/0039: executable ordinary GST2 image imports with separate logical/physical dimensions, bounded raw/PNG/WebP and legacy/KTX2 Basis LDR/HDR payloads, original complete source mips and prepared BC/ETC/EAC/ASTC sampling. Atomic Load/LoadPath, stable resource RID, copied images, logical opacity, typed weak cache/Replace/worker preparation, independent duplication, scene-local graphs and embedded resource/scene archives execute. Linux Wayland GPU and Compatibility source/oracle pairs verify Sprite/TextureRect/direct/transposed/region draws and replacement; GPU also verifies named sampler defaults/overrides, physical mip readback and borrowed storage expiration. Partial: R16I/Rg16I/Rgb16I/Rgba16I require integer sampler reflection/binding and prepared/upload storage integration; these formats reject before publication. Foreign execution, native allocation totals and public bundle publication remain separate verification gates."
+    },
+    {
+      "godot": "CompressedTexture2D::method:load(String:)",
+      "electron2d": "method:Electron2D.CompressedTexture.Load(System.String)",
+      "reason": "ADRs 0004/0013/0014/0028/0039: executable ordinary GST2 image imports with separate logical/physical dimensions, bounded raw/PNG/WebP and legacy/KTX2 Basis LDR/HDR payloads, original complete source mips and prepared BC/ETC/EAC/ASTC sampling. Atomic Load/LoadPath, stable resource RID, copied images, logical opacity, typed weak cache/Replace/worker preparation, independent duplication, scene-local graphs and embedded resource/scene archives execute. Linux Wayland GPU and Compatibility source/oracle pairs verify Sprite/TextureRect/direct/transposed/region draws and replacement; GPU also verifies named sampler defaults/overrides, physical mip readback and borrowed storage expiration. Partial: R16I/Rg16I/Rgb16I/Rgba16I require integer sampler reflection/binding and prepared/upload storage integration; these formats reject before publication. Foreign execution, native allocation totals and public bundle publication remain separate verification gates."
+    },
+    {
+      "godot": "CompressedTexture2D::property:load_path",
+      "electron2d": "property:Electron2D.CompressedTexture.LoadPath()",
+      "reason": "ADRs 0004/0013/0014/0028/0039: executable ordinary GST2 image imports with separate logical/physical dimensions, bounded raw/PNG/WebP and legacy/KTX2 Basis LDR/HDR payloads, original complete source mips and prepared BC/ETC/EAC/ASTC sampling. Atomic Load/LoadPath, stable resource RID, copied images, logical opacity, typed weak cache/Replace/worker preparation, independent duplication, scene-local graphs and embedded resource/scene archives execute. Linux Wayland GPU and Compatibility source/oracle pairs verify Sprite/TextureRect/direct/transposed/region draws and replacement; GPU also verifies named sampler defaults/overrides, physical mip readback and borrowed storage expiration. Partial: R16I/Rg16I/Rgb16I/Rgba16I require integer sampler reflection/binding and prepared/upload storage integration; these formats reject before publication. Foreign execution, native allocation totals and public bundle publication remain separate verification gates."
+    },
+    {
+      "godot": "CompressedTexture2D::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "The inherited Resource.ResourceLocalToScene property retains its false default without a shadow declaration. Executable packed/saved scene instances preserve shared texture edges within each instance and independent scene-local texture identities/pixels between instances; source files are not reopened during duplication or archive restoration (ADRs 0013/0039)."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Partial",
+      "godot": [
+        "class:CompressedTexture2D",
+        "CompressedTexture2D::method:load(String:)",
+        "CompressedTexture2D::property:load_path"
+      ],
+      "reason": "ADRs 0004/0013/0014/0028/0039: executable ordinary GST2 image imports with separate logical/physical dimensions, bounded raw/PNG/WebP and legacy/KTX2 Basis LDR/HDR payloads, original complete source mips and prepared BC/ETC/EAC/ASTC sampling. Atomic Load/LoadPath, stable resource RID, copied images, logical opacity, typed weak cache/Replace/worker preparation, independent duplication, scene-local graphs and embedded resource/scene archives execute. Linux Wayland GPU and Compatibility source/oracle pairs verify Sprite/TextureRect/direct/transposed/region draws and replacement; GPU also verifies named sampler defaults/overrides, physical mip readback and borrowed storage expiration. Partial: R16I/Rg16I/Rgb16I/Rgba16I require integer sampler reflection/binding and prepared/upload storage integration; these formats reject before publication. Foreign execution, native allocation totals and public bundle publication remain separate verification gates."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "CompressedTexture2D::property:resource_local_to_scene"
+      ],
+      "reason": "The inherited Resource.ResourceLocalToScene property retains its false default without a shadow declaration. Executable packed/saved scene instances preserve shared texture edges within each instance and independent scene-local texture identities/pixels between instances; source files are not reopened during duplication or archive restoration (ADRs 0013/0039)."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.CompressedTexture..ctor()",
+      "reason": "Typed construction and inherited Texture/Resource metadata, alpha, logical opacity, path, copying and disposal overrides for the executable ordinary imported texture. No mutable ImageTexture authoring surface or backend handle is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction and inherited Texture/Resource metadata, alpha, logical opacity, path, copying and disposal overrides for the executable ordinary imported texture. No mutable ImageTexture authoring surface or backend handle is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTexture.CreateDuplicateInstance()",
+      "reason": "Typed construction and inherited Texture/Resource metadata, alpha, logical opacity, path, copying and disposal overrides for the executable ordinary imported texture. No mutable ImageTexture authoring surface or backend handle is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTexture.Dispose(System.Boolean)",
+      "reason": "Typed construction and inherited Texture/Resource metadata, alpha, logical opacity, path, copying and disposal overrides for the executable ordinary imported texture. No mutable ImageTexture authoring surface or backend handle is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTexture.GetHeight()",
+      "reason": "Typed construction and inherited Texture/Resource metadata, alpha, logical opacity, path, copying and disposal overrides for the executable ordinary imported texture. No mutable ImageTexture authoring surface or backend handle is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTexture.GetImage()",
+      "reason": "Typed construction and inherited Texture/Resource metadata, alpha, logical opacity, path, copying and disposal overrides for the executable ordinary imported texture. No mutable ImageTexture authoring surface or backend handle is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTexture.GetPropertyDescriptors()",
+      "reason": "Typed construction and inherited Texture/Resource metadata, alpha, logical opacity, path, copying and disposal overrides for the executable ordinary imported texture. No mutable ImageTexture authoring surface or backend handle is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTexture.GetSize()",
+      "reason": "Typed construction and inherited Texture/Resource metadata, alpha, logical opacity, path, copying and disposal overrides for the executable ordinary imported texture. No mutable ImageTexture authoring surface or backend handle is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTexture.GetWidth()",
+      "reason": "Typed construction and inherited Texture/Resource metadata, alpha, logical opacity, path, copying and disposal overrides for the executable ordinary imported texture. No mutable ImageTexture authoring surface or backend handle is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTexture.IsPixelOpaque(System.Int32,System.Int32)",
+      "reason": "Typed construction and inherited Texture/Resource metadata, alpha, logical opacity, path, copying and disposal overrides for the executable ordinary imported texture. No mutable ImageTexture authoring surface or backend handle is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTexture.OnResourcePathChanged(System.String)",
+      "reason": "Typed construction and inherited Texture/Resource metadata, alpha, logical opacity, path, copying and disposal overrides for the executable ordinary imported texture. No mutable ImageTexture authoring surface or backend handle is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "property:Electron2D.CompressedTexture.HasAlpha()",
+      "reason": "Typed construction and inherited Texture/Resource metadata, alpha, logical opacity, path, copying and disposal overrides for the executable ordinary imported texture. No mutable ImageTexture authoring surface or backend handle is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    }
+  ]
+}

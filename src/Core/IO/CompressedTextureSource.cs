@@ -2,21 +2,42 @@ using System.Buffers.Binary;
 
 namespace Electron2D;
 
-internal static class CompressedArraySource
+internal static class CompressedTextureSource
 {
     internal const int MaximumBytes = 64 * 1024 * 1024;
 
-    internal static LayeredTexturePixels Read(string path)
+    private static byte[] ReadFile(string path)
     {
         using var file = FileAccess.Open(path, FileAccessModeFlags.Read);
         var length = file.Length;
-        if (length is < 36 or > MaximumBytes) throw new InvalidDataException("Compressed array file size is outside its bounds.");
+        if (length is < 36 or > MaximumBytes) throw new InvalidDataException("Compressed image file size is outside its bounds.");
         var data = file.ReadBytes((int)length);
-        if (data.Length != length || file.Length != length) throw new IOException("Compressed array source changed while it was read.");
-        return Read(data);
+        if (data.Length != length || file.Length != length) throw new IOException("Compressed image source changed while it was read.");
+        return data;
     }
 
-    internal static LayeredTexturePixels Read(ReadOnlySpan<byte> data)
+    internal static LayeredTexturePixels ReadArray(string path) => ReadArray(ReadFile(path));
+
+    internal static (TexturePixels Pixels, Vector2i Size) ReadTexture(string path)
+    {
+        var data = ReadFile(path);
+        if (!data.AsSpan(0, 4).SequenceEqual("GST2"u8)) throw new InvalidDataException("Invalid compressed texture header.");
+        var source = new Reader(data.AsSpan(4));
+        if (source.UInt32() > 1) throw new InvalidDataException("Compressed texture version is unsupported.");
+        var width = source.UInt32(); var height = source.UInt32();
+        if (width is 0 or > int.MaxValue || height is 0 or > int.MaxValue)
+            throw new InvalidDataException("Invalid compressed texture logical size.");
+        for (var field = 0; field < 5; ++field) _ = source.UInt32();
+        try
+        {
+            using var image = ReadImage(ref source);
+            if (!source.AtEnd) throw new InvalidDataException("Trailing compressed texture data.");
+            return (TexturePixels.FromImage(image, LayeredTexturePixels.MaximumBytes), new((int)width, (int)height));
+        }
+        catch (ArgumentException error) { throw new InvalidDataException("Compressed texture pixels exceed their limits or are invalid.", error); }
+    }
+
+    private static LayeredTexturePixels ReadArray(ReadOnlySpan<byte> data)
     {
         if (data.Length is < 36 or > MaximumBytes || !data[..4].SequenceEqual("GSTL"u8)) throw new InvalidDataException("Invalid compressed array header.");
         var source = new Reader(data[4..]);
@@ -85,7 +106,7 @@ internal static class CompressedArraySource
         internal bool AtEnd => _remaining.IsEmpty;
         internal ReadOnlySpan<byte> Bytes(int count)
         {
-            if (count < 0 || count > _remaining.Length) throw new InvalidDataException("Truncated compressed array data.");
+            if (count < 0 || count > _remaining.Length) throw new InvalidDataException("Truncated compressed image data.");
             var result = _remaining[..count]; _remaining = _remaining[count..]; return result;
         }
         internal uint UInt32() => BinaryPrimitives.ReadUInt32LittleEndian(Bytes(4));

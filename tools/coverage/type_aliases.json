@@ -101,7 +101,8 @@
     "DirectionalLight2D": "DirectionalLight",
     "LightOccluder2D": "LightOccluder",
     "OccluderPolygon2D": "OccluderPolygon",
-    "CompressedTexture2DArray": "CompressedTextureArray"
+    "CompressedTexture2DArray": "CompressedTextureArray",
+    "CompressedTexture2D": "CompressedTexture"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",

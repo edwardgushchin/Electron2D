@@ -10,6 +10,8 @@ Private native runtime binaries come from versioned Linux/macOS packages in ordi
 
 
 
+[Imported image textures](../components/compressed-textures.md) add ordinary `.ctex` loading, independent logical/physical dimensions, exact source mips and retained Texture consumers. Atomic replacement, typed cache/worker loading and embedded resource/scene archives run through the shared resource pipeline.
+
 [File-backed arrays](../components/compressed-arrays.md) load raw/PNG/WebP and Basis LDR/HDR layers with complete mips, atomic source replacement, typed caching/worker loading and embedded archives. They reuse the existing GPU array consumer and borrowed RenderingDevice lifetime; Compatibility keeps its explicit custom-shader gate.
 
 ## Native text coverage modes

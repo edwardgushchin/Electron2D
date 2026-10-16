@@ -293,6 +293,13 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
                 stream.Put32(texture.GetWidth());
                 stream.Put32(texture.GetHeight());
             }
+            else if (resource is CompressedTexture compressed)
+            {
+                var state = compressed.CaptureFileState(); ResourceArchiveStrings.Write(stream, state.Path);
+                stream.Put32(state.Size.X); stream.Put32(state.Size.Y);
+                stream.PutU8(state.Pixels is null ? (byte)0 : (byte)1);
+                if (state.Pixels is not null) { using var storedImage = state.Pixels.CopyImage(); WriteImage(stream, storedImage); }
+            }
             else if (resource is CompressedTextureLayered imported)
             {
                 var state = imported.CaptureFileState(); ResourceArchiveStrings.Write(stream, state.Path);
@@ -528,6 +535,19 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
                     texture.SetImage(pixels);
                 }
                 texture.SetSizeOverride(new Vector2i(value.Get32(), value.Get32()));
+            }
+            else if (resource is CompressedTexture compressed)
+            {
+                var sourcePath = ResourceArchiveStrings.Read(value); var size = new Vector2i(value.Get32(), value.Get32());
+                var marker = value.GetU8();
+                if (marker > 1) throw new InvalidDataException("Invalid stored imported texture marker.");
+                TexturePixels? pixels = null;
+                if (marker != 0)
+                {
+                    using var storedImage = new Image(); ReadImage(value, storedImage);
+                    pixels = TexturePixels.FromImage(storedImage, LayeredTexturePixels.MaximumBytes);
+                }
+                compressed.RestoreFileState(pixels, size, sourcePath);
             }
             else if (resource is CompressedTextureLayered imported)
             {

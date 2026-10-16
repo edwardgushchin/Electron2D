@@ -189,7 +189,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CompositorEffect](classes/CompositorEffect.md) | Resource | Excluded | 15 |
 | [CompressedCubemap](classes/CompressedCubemap.md) | CompressedTextureLayered | Excluded | 0 |
 | [CompressedCubemapArray](classes/CompressedCubemapArray.md) | CompressedTextureLayered | Excluded | 0 |
-| [CompressedTexture2D](classes/CompressedTexture2D.md) | Texture2D | Blocked | 3 |
+| [CompressedTexture2D](classes/CompressedTexture2D.md) | Texture2D | Partial | 3 |
 | [CompressedTexture2DArray](classes/CompressedTextureArray.md) | CompressedTextureLayered | Partial | 0 |
 | [CompressedTexture3D](classes/CompressedTexture3D.md) | Texture3D | Excluded | 2 |
 | [CompressedTextureLayered](classes/CompressedTextureLayered.md) | TextureLayered | Partial | 2 |
