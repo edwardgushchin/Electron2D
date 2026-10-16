@@ -288,3 +288,5 @@ owner additions and CollisionShape assignments of borrowed views reject before
 changing storage. Detached existing consumers also reject edits and release.
 The guard is released on supplier/status failure and before committed old-view
 retirement, so later ordinary bindings remain available.
+
+The [complete processing metadata contract](../components/scene-tree.md#complete-processing-metadata-and-callbacks) permits coordinated stored-value reads and current-group writes for all callback switches and priorities. All six public callback switches are stored; internal switches are runtime-only. Actual input remains owner-delivered, and this metadata grants no physical/render/hierarchy mutation.

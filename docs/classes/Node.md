@@ -253,9 +253,9 @@ Gets or sets whether this node receives the first input-propagation stage.
 
 **Value:** False initially; ready notification enables an overridden callback before OnReady.
 
-**Remarks:** Eligible nodes are visited in reverse depth-first order before unhandled-input stages.
+**Remarks:** Eligible nodes are visited in reverse depth-first order before unhandled-input stages. Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot. Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation. Packed scenes store this configuration before ready applies automatic callback preparation.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -365,7 +365,9 @@ Gets or sets whether this node participates in host-driven physics-process frame
 
 **Value:** False initially; ready notification enables an overridden callback before OnReady.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**Remarks:** A node absent from the captured physics schedule starts on the next physics frame. Disabling a captured node suppresses later delivery immediately. An existing internal participant may enable its public callback in that frame. Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot. Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation. Packed scenes store this configuration before ready applies automatic callback preparation.
+
+**System.InvalidOperationException:** Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -374,9 +376,11 @@ Gets or sets whether this node participates in host-driven physics-process frame
 
 Gets or sets this node's ascending physics-process order key.
 
-**Value:** Any integer; the default is zero. Equal priorities retain captured tree order.
+**Value:** Any integer; the default is zero. Equal priorities retain captured tree order within the group.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**Remarks:** Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot. Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation.
+
+**System.InvalidOperationException:** Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -398,7 +402,9 @@ Gets or sets whether this node participates in host-driven process frames.
 
 **Value:** False initially; ready notification enables an overridden callback before OnReady.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**Remarks:** A node absent from the captured idle schedule starts on the next idle frame. Disabling a captured node suppresses later delivery immediately. An existing internal participant may enable its public callback in that frame. Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot. Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation. Packed scenes store this configuration before ready applies automatic callback preparation.
+
+**System.InvalidOperationException:** Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -424,9 +430,11 @@ Gets or sets the pause policy used by both process callback lanes.
 
 Gets or sets this node's ascending process-frame order key.
 
-**Value:** Any integer; the default is zero. Equal priorities retain captured tree order.
+**Value:** Any integer; the default is zero. Equal priorities retain captured tree order within the group.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**Remarks:** Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot. Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation.
+
+**System.InvalidOperationException:** Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -455,9 +463,9 @@ Gets or sets whether this node receives input left unhandled by earlier stages.
 
 **Value:** False initially; ready notification enables an overridden callback before OnReady.
 
-**Remarks:** This final stage runs for every event that remains unhandled.
+**Remarks:** This final stage runs for every event that remains unhandled. Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot. Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation. Packed scenes store this configuration before ready applies automatic callback preparation.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -468,9 +476,9 @@ Gets or sets whether this node receives unhandled keyboard events before general
 
 **Value:** False initially; ready notification enables an overridden callback before OnReady.
 
-**Remarks:** The stage is skipped for non-keyboard events and after `SceneTree.SetInputAsHandled`.
+**Remarks:** The stage is skipped for non-keyboard events and after SceneTree.SetInputAsHandled. Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot. Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation. Packed scenes store this configuration before ready applies automatic callback preparation.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -1117,7 +1125,7 @@ Called during an eligible host-driven physics-process frame.
 
 **Parameter `delta`:** The finite non-negative physics-step delta in seconds.
 
-**Remarks:** Ready notification enables an override before OnReady; later `Node.PhysicsProcessEnabled` writes control delivery. It executes on the tree owner thread after `Node.PhysicsProcessDeltaTime` is updated and does not perform simulation.
+**Remarks:** Ready enables an actual override before OnReady; later callback-switch writes control delivery. Runs on the selected processing group before the tree-owned numerical step, independently of that solver thread. PhysicsProcessDeltaTime is updated before delivery; the callback itself does not integrate the world. Callback failures aggregate after remaining eligible deliveries and frame work. Input, rendering and physical authoring retain their own access guards.
 
 <a id="m-electron2d-node-onprocess-system-double"></a>
 ### `protected virtual void OnProcess(double delta)`
@@ -1126,7 +1134,7 @@ Called during an eligible host-driven process frame.
 
 **Parameter `delta`:** The finite non-negative frame delta in seconds.
 
-**Remarks:** Ready notification enables an override before OnReady; later `Node.ProcessEnabled` writes control delivery. It executes on the tree owner thread after `Node.ProcessDeltaTime` is updated.
+**Remarks:** Ready enables an actual override before OnReady; later callback-switch writes control delivery. Runs on the selected processing group: the scene owner for a main group or a joined worker for a subthread group. ProcessDeltaTime is updated before delivery. Callback failures aggregate after remaining eligible deliveries and frame work. Input, rendering and physical authoring retain their own access guards.
 
 <a id="m-electron2d-node-onready"></a>
 ### `protected virtual void OnReady()`
@@ -1541,7 +1549,7 @@ ProcessMode transition snapshots now reuse preorder lists separately for each ac
 
 ## Shortcut input stage
 
-`public bool ShortcutInputEnabled { get; set; }` defaults to false. `protected virtual void OnShortcutInput(InputEvent @event)` receives borrowed key, gamepad-button and direct shortcut events after GUI delivery and before unhandled-key/general input. Overriding the hook does not enable it. Delivery follows reverse captured hierarchy order, owner-thread and CanProcess policy; handling stops later stages, while callback errors are collected after eligible delivery. These processing flags remain runtime configuration, as with the existing input stages. See [Shortcut](Shortcut.md), [ShortcutTests](../../tests/Electron2D.Tests/ShortcutTests.cs) and [ADR 0038](../decisions/input.md#adr-0038).
+`public bool ShortcutInputEnabled { get; set; }` defaults to false. `protected virtual void OnShortcutInput(InputEvent @event)` receives borrowed key, gamepad-button and direct shortcut events after GUI delivery and before unhandled-key/general input. Ready enables an actual override before OnReady; later writes can disable it. Delivery follows reverse captured hierarchy order, owner-thread and CanProcess policy; handling stops later stages, while callback errors are collected after eligible delivery. All six public callback switches have stored typed descriptors; internal processing switches remain runtime-only. See [Shortcut](Shortcut.md), [ShortcutTests](../../tests/Electron2D.Tests/ShortcutTests.cs) and [ADR 0038](../decisions/input.md#adr-0038).
 
 Node.EnsureMutable retains its disposal/capture/tree-thread guards and then dispatches the virtual ValidateMutation hook. This lets subclasses with retained native ownership reject mutations after tree exit; AudioLifetimeTests checks detached audio registration and rejection before state changes.
 
@@ -1716,7 +1724,7 @@ Internal engine mouse motion refreshes GUI and physics hover without invoking th
 
 `public bool InternalProcessEnabled { get; set; }` and `public bool InternalPhysicsProcessEnabled { get; set; }` project each internal-lane setter/query pair. Plain Node defaults are false; built-in nodes may enable their own work. Each switch preserves the other lane and the ordinary ProcessEnabled/PhysicsProcessEnabled flags. Enabled internal notifications run before ordinary callbacks in their selected idle/fixed frame. An internal callback can enable or disable the ordinary callback for the same frame. Detach/dispose prevents further ordinary delivery; failures still attempt the remaining ordinary/sibling callbacks under the scene-tree cleanup policy.
 
-The resolved ProcessMode and SceneTree pause policy gate both lanes. Internal processing is independent of ordinary callback enablement, and does not bypass pausing. Detached nodes retain the runtime switches but receive no frames. Setters require the attached tree's owner and reject scene capture; disposed access rejects. Typed property descriptors expose writable runtime state with IsStored false. Ordinary PackedScene capture omits the flags, while constructors rebuild built-in internal behavior. No hidden thread or scheduler is added.
+The resolved ProcessMode and SceneTree pause policy gate both lanes. Internal processing is independent of ordinary callback enablement, and does not bypass pausing. Detached nodes retain the runtime switches but receive no frames. Setters allow the scene owner or current processing group and reject scene capture; coordinated stored-value reads and disposed-access rejection apply to all eight switches and both priorities. Typed property descriptors expose writable runtime state with IsStored false. Ordinary PackedScene capture omits the flags, while constructors rebuild built-in internal behavior. No hidden thread or scheduler is added.
 
 Changing a built-in node's internal switches directly affects its implementation: for example it suspends and resumes Timer countdowns. Such nodes can overwrite the switch when their playback/callback policy changes. Do not disable internal work unless that is the intended effect. See [Node](Node.md) and [Timer](Timer.md).
 
@@ -1780,11 +1788,15 @@ physical receivers, failure/teardown and 1024 zero-allocation operations.
 <a id="p-electron2d-node-shortcutinputenabled"></a>
 ### `public bool ShortcutInputEnabled { get; set; }`
 
-Selects the keyboard, gamepad-button and direct-shortcut stage after GUI handling,
-before unhandled-key and general unhandled input. False while detached; ready
-enables an overridden OnShortcutInput before OnReady. Callers can disable it in
-OnReady or later. The resolved process mode, pause policy, lifetime and scene owner
-still apply. The switch uses the existing stored typed Node descriptor.
+Gets or sets whether this node receives keyboard, gamepad-button and shortcut events after GUI handling.
+
+**Value:** False initially; ready notification enables an overridden callback before OnReady.
+
+**Remarks:** The stage precedes unhandled-key and general unhandled input and obeys the node's process policy. Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot. Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation. Packed scenes store this configuration before ready applies automatic callback preparation.
+
+**System.InvalidOperationException:** Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.
+
+**System.ObjectDisposedException:** The node has finished disposing.
 
 <a id="m-electron2d-node-onshortcutinput-electron2d-inputevent"></a>
 ### `protected virtual void OnShortcutInput(InputEvent event)`
@@ -1838,3 +1850,31 @@ Node duplication retains its separate ADR 0091 binding/identity prerequisite.
 The [entry/readiness/departure contract](../components/scene-hierarchy.md#entry-readiness-and-departure) specifies parent/tree signal order, entry-added and ready-added children, consumed readiness, stale attachment snapshots, failure cleanup, physical release and processing-group ready metadata. The public-only lifecycle consumer retains a real selected solver and fresh-process file activation.
 
 The [membership and authoring-owner contract](../components/scene-hierarchy.md#membership-and-authoring-ownership) separates structural parents, active tree membership, borrowed owner registrations and physical worlds. Detached ownership and owner expiry are exercised through public CPU/software-GPU/registered managed and NativeAOT consumers.
+
+<a id="p-electron2d-node-internalprocessenabled"></a>
+### `public bool InternalProcessEnabled { get; set; }`
+
+Gets or sets whether this node receives internal idle-frame notifications.
+
+**Value:** False for a plain Node. Built-in subclasses may enable their own internal work.
+
+**Remarks:** This lane is independent of ProcessEnabled and runs before ordinary processing. The resolved ProcessMode and tree pause state still gate both lanes. Changes are runtime state, not stored scene data. Disabling a built-in node's internal work can suspend animation, timers or other implementation logic. Participation is captured together with ordinary idle processing. A newly enabled node waits for the next idle snapshot; a node already included through its ordinary callback can enable internal delivery in this frame. Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot. Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation.
+
+**System.InvalidOperationException:** Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.
+
+**System.ObjectDisposedException:** The node is disposed.
+
+<a id="p-electron2d-node-internalphysicsprocessenabled"></a>
+### `public bool InternalPhysicsProcessEnabled { get; set; }`
+
+Gets or sets whether this node receives internal fixed-frame notifications.
+
+**Value:** False for a plain Node. Built-in subclasses may enable their own internal work.
+
+**Remarks:** This lane is independent of PhysicsProcessEnabled and runs before ordinary physics processing. The resolved ProcessMode and tree pause state still apply. This runtime switch is not stored in scenes. Disabling built-in internal physics can suspend casts, timers or other implementation logic. Participation is captured together with ordinary physics processing. A newly enabled node waits for the next physics snapshot; a node already included through its ordinary callback can enable internal delivery in this frame. Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot. Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation.
+
+**System.InvalidOperationException:** Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.
+
+**System.ObjectDisposedException:** The node is disposed.
+
+The complete [processing metadata and callback contract](../components/scene-tree.md#complete-processing-metadata-and-callbacks) covers coordinated reads, current-group configuration, all six stored callback switches, signed priorities, input delivery and allocation-free worker schedule rebuilding. Physical, hierarchy and renderer mutation retain their own guards.

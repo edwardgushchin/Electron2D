@@ -9,7 +9,8 @@ namespace Electron2D;
 /// after node processing and after timers, tweens and deferred actions; physics frames deliver before the frame
 /// event and after those updates. Delivery precedes queued deletion and follows pending-list order;
 /// callback failures and cancellation do not skip other pending items.
-/// Electron2D does not create a frame-pump thread. A host can drive the loop through <see cref="Engine.AdvanceFrame"/>,
+/// The first worker stage prepares work-gate contention with one temporary joined helper, without game callbacks
+/// or caller execution context. This cold preparation does not create a frame-pump thread. A host can drive the loop through <see cref="Engine.AdvanceFrame"/>,
 /// call <see cref="MainLoop.Process"/> and <see cref="MainLoop.PhysicsProcess"/> directly, or use this class's wrappers.
 /// </remarks>
 public sealed partial class SceneTree : MainLoop

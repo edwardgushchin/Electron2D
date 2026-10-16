@@ -9,6 +9,7 @@ public partial class SceneTree
 
     private readonly Dictionary<ulong, ProcessingGroup> _processingGroups = [];
     private static readonly Comparison<GroupEntry> ProcessingGroupOrder = static (left, right) => left.CompareTo(right);
+    private static readonly Comparison<ScheduledNode> ProcessingNodeOrder = static (left, right) => left.CompareTo(right);
     private readonly List<GroupEntry> _groupFrame = [];
     private readonly List<ProcessingGroup> _groupStage = [];
     private Action<int>? _runGroupWorker;
@@ -98,6 +99,32 @@ public partial class SceneTree
             foreach (var child in current.AllChildren) Rebind(child, selected);
         }
     }
+    private bool _processingWorkGatePrepared;
+    private void PrepareProcessingWorkGate()
+    {
+        if (_processingWorkGatePrepared) return;
+        var entering = false;
+        var helper = new System.Threading.Thread(() =>
+        {
+            Volatile.Write(ref entering, true);
+            lock (_workGate) { }
+        })
+        { IsBackground = true, Name = "Electron2D scene gate preparation" };
+        var started = false;
+        try
+        {
+            lock (_workGate)
+            {
+                using var flow = System.Threading.ExecutionContext.IsFlowSuppressed() ? default : System.Threading.ExecutionContext.SuppressFlow();
+                helper.Start(); started = true;
+                System.Threading.SpinWait.SpinUntil(() => Volatile.Read(ref entering) &&
+                    (helper.ThreadState & System.Threading.ThreadState.WaitSleepJoin) != 0);
+            }
+        }
+        finally { if (started) helper.Join(); }
+        _processingWorkGatePrepared = true;
+    }
+
     private void ProcessNodeGroups(double unscaledDelta, bool physics, ref List<Exception>? errors)
     {
         _groupPhysics = physics; _groupUnscaledDelta = unscaledDelta;
@@ -119,6 +146,7 @@ public partial class SceneTree
             {
                 try
                 {
+                    if (!_processingWorkGatePrepared) PrepareProcessingWorkGate();
                     _runGroupWorker ??= index => RunProcessingGroup(_groupStage[index]);
                     var task = WorkerThreadPool.AddGroupTask(_runGroupWorker, _groupStage.Count, highPriority: true);
                     WorkerThreadPool.WaitForGroupTaskCompletion(task);
@@ -180,7 +208,7 @@ public partial class SceneTree
                     schedule.Add(new(node, priority, node.ProcessingTreeOrder, node.TreeAttachmentVersion));
                 }
                 // Membership insertion can differ from current tree order after hierarchy edits.
-                if (!sorted || schedule.Count > 1) schedule.Sort();
+                if (!sorted || schedule.Count > 1) schedule.Sort(ProcessingNodeOrder);
                 revision = capturedRevision; path = PathRevision;
             }
             foreach (var item in schedule)

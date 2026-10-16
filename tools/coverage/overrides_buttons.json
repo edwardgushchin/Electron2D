@@ -568,17 +568,17 @@
     {
       "godot": "Node::method:_shortcut_input(InputEvent:)",
       "electron2d": "method:Electron2D.Node.OnShortcutInput(Electron2D.InputEvent)",
-      "reason": "ADR 0038: the enabled protected shortcut-input lane runs after unhandled GUI and before unhandled-key/general input, using reverse scene order, current process policy and captured event lifetime. The typed boolean property projects the getter/setter pair; Control shortcut context permits focus only within its weak context subtree. ShortcutTests and BaseButtonTests exercise stage ordering, handling, focus filtering, reentry and packing. This does not add callable/string dispatch or native accessibility."
+      "reason": "ADR 0038/0006: the complete Node processing status group owns coordinated metadata, stored shortcut state, current-group writes and owner-delivered shortcut callbacks."
     },
     {
       "godot": "Node::method:is_processing_shortcut_input()",
       "electron2d": "property:Electron2D.Node.ShortcutInputEnabled()",
-      "reason": "ADR 0038: the enabled protected shortcut-input lane runs after unhandled GUI and before unhandled-key/general input, using reverse scene order, current process policy and captured event lifetime. The typed boolean property projects the getter/setter pair; Control shortcut context permits focus only within its weak context subtree. ShortcutTests and BaseButtonTests exercise stage ordering, handling, focus filtering, reentry and packing. This does not add callable/string dispatch or native accessibility."
+      "reason": "ADR 0038/0006: the complete Node processing status group owns coordinated metadata, stored shortcut state, current-group writes and owner-delivered shortcut callbacks."
     },
     {
       "godot": "Node::method:set_process_shortcut_input(bool:)",
       "electron2d": "property:Electron2D.Node.ShortcutInputEnabled()",
-      "reason": "ADR 0038: the enabled protected shortcut-input lane runs after unhandled GUI and before unhandled-key/general input, using reverse scene order, current process policy and captured event lifetime. The typed boolean property projects the getter/setter pair; Control shortcut context permits focus only within its weak context subtree. ShortcutTests and BaseButtonTests exercise stage ordering, handling, focus filtering, reentry and packing. This does not add callable/string dispatch or native accessibility."
+      "reason": "ADR 0038/0006: the complete Node processing status group owns coordinated metadata, stored shortcut state, current-group writes and owner-delivered shortcut callbacks."
     },
     {
       "godot": "ProjectSettings::property:display/mouse_cursor/tooltip_position_offset",
@@ -1158,8 +1158,6 @@
     },
     {
       "godot": [
-        "Node::method:is_processing_shortcut_input()",
-        "Node::method:set_process_shortcut_input(bool:)",
         "Control::property:shortcut_context"
       ],
       "state": "Implemented",
@@ -1265,13 +1263,6 @@
         "OptionButton::theme_item:arrow_margin",
         "OptionButton::theme_item:modulate_arrow"
       ]
-    },
-    {
-      "godot": [
-        "Node::method:_shortcut_input(InputEvent:)"
-      ],
-      "state": "Implemented",
-      "reason": "ADR 0038: the enabled protected shortcut-input lane runs after unhandled GUI and before unhandled-key/general input, using reverse scene order, current process policy and captured event lifetime. The typed boolean property projects the getter/setter pair; Control shortcut context permits focus only within its weak context subtree. ShortcutTests and BaseButtonTests exercise stage ordering, handling, focus filtering, reentry and packing. This does not add callable/string dispatch or native accessibility. ADR 0006: ready enables the actual six bound typed virtual callback targets before OnReady, including inherited overrides; hidden methods/plain nodes stay off. PhysicsAutomaticCallbackTests verifies full selected CPU/GPU physical and input delivery, explicit disabling, requested/manual ready, reentry, packed state, pause, weak retirement and 128-warm/128-measured zero owner/all-thread byte frames in ordinary/separate modes. Bound metadata is cached under weak Type keys; no reflection invocation or dynamic name dispatch. Wider callback/default/lifecycle and full inherited/native/foreign/hardware acceptance remain open."
     }
   ],
   "extras": [

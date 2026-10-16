@@ -508,3 +508,5 @@ CPUParticles is an implemented spatial subclass. It inherits logical positioning
 Inherited transform setters on a physics body reject during a borrowed numerical implementation call before changing pose. This includes local/global transform, translation, rotation, scale, skew and movement helpers. Ordinary scene and force/state callbacks retain transform access.
 
 Reparent preserves the inherited [membership/owner and failure contract](../components/scene-hierarchy.md#membership-and-authoring-ownership). Its validated inverse and final transform restoration complete around callback-failed insertion; the neutral base owns topology, borrowed authoring metadata and error collection.
+
+The [complete processing metadata contract](../components/scene-tree.md#complete-processing-metadata-and-callbacks) permits coordinated stored-value reads and current-group writes for all callback switches and priorities. All six public callback switches are stored; internal switches are runtime-only. Actual input remains owner-delivered, and this metadata grants no physical/render/hierarchy mutation.

@@ -1,6 +1,6 @@
 # Input domain
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 ## Responsibility
 
@@ -120,3 +120,5 @@ owner/all-thread managed bytes. A public-only standalone consumer supports the
 same compiled test in ordinary and NativeAOT hosts. Evidence and exact limits are
 retained under bin/physics-auto-callbacks/2026-10-14; full inherited, native/foreign
 and hardware/window/performance acceptance remains open.
+
+The [complete Node processing contract](../components/scene-tree.md#complete-processing-metadata-and-callbacks) joins local metadata, worker configuration, six stored callback switches, signed priorities, typed frame/input delivery and retained worker schedule sorting. Public managed/NativeAOT CPU/software-Vulkan/registered checks include actual selected motion and zero warmed owner/all-thread bytes; broader native/hardware/inherited acceptance remains open.

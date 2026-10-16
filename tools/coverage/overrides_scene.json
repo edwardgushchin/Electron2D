@@ -136,22 +136,26 @@
     {
       "godot": "Node::method:set_process_internal(bool:)",
       "electron2d": "property:Electron2D.Node.InternalProcessEnabled()",
-      "reason": "ADRs 0006/0008/0011: typed runtime InternalProcessEnabled/InternalPhysicsProcessEnabled project each set/query pair, independently retain detached state and share the existing owner-checked internal lanes. NodeInternalProcessingTests checks false defaults, captured participation versus current callback enable/disable, notification order/deltas, pause modes, detach/reentry, disposal/off-owner rejection, transient descriptors/scene capture, actual Timer countdowns and zero owner bytes across 1024 warm operations; actual GPU/compatibility pixels verify suspend/resume. Pinned scene_tree.cpp can_process gates both lanes; foreign/native-allocation/editor gates remain separate. Enabled-only retained snapshots now rebuild on all four flag changes; absent participants wait for the next frame, existing captured nodes retain current flags/eligibility, and same-tree/self reentry cannot revive stale entries. Public neutral/spatial/RigidBody consumers exercise four lanes, priority capture, error continuation and selected CPU/software-GPU/registered ordinary/separate frames and queries with zero warmed owner/all-thread bytes. Evidence: bin/physics-node-scheduling/2026-10-15/validation.json. Thread-group and mailbox APIs remain separately unimplemented."
+      "reason": "ADRs 0006/0008/0011/0038: the complete processing status group revalidates this sibling with coordinated reads, current-group writes, stored shortcut state and runtime-only internal switches.",
+      "state": "Implemented"
     },
     {
       "godot": "Node::method:is_processing_internal()",
       "electron2d": "property:Electron2D.Node.InternalProcessEnabled()",
-      "reason": "ADRs 0006/0008/0011: typed runtime InternalProcessEnabled/InternalPhysicsProcessEnabled project each set/query pair, independently retain detached state and share the existing owner-checked internal lanes. NodeInternalProcessingTests checks false defaults, captured participation versus current callback enable/disable, notification order/deltas, pause modes, detach/reentry, disposal/off-owner rejection, transient descriptors/scene capture, actual Timer countdowns and zero owner bytes across 1024 warm operations; actual GPU/compatibility pixels verify suspend/resume. Pinned scene_tree.cpp can_process gates both lanes; foreign/native-allocation/editor gates remain separate. Enabled-only retained snapshots now rebuild on all four flag changes; absent participants wait for the next frame, existing captured nodes retain current flags/eligibility, and same-tree/self reentry cannot revive stale entries. Public neutral/spatial/RigidBody consumers exercise four lanes, priority capture, error continuation and selected CPU/software-GPU/registered ordinary/separate frames and queries with zero warmed owner/all-thread bytes. Evidence: bin/physics-node-scheduling/2026-10-15/validation.json. Thread-group and mailbox APIs remain separately unimplemented."
+      "reason": "ADRs 0006/0008/0011/0038: the complete processing status group revalidates this sibling with coordinated reads, current-group writes, stored shortcut state and runtime-only internal switches.",
+      "state": "Implemented"
     },
     {
       "godot": "Node::method:set_physics_process_internal(bool:)",
       "electron2d": "property:Electron2D.Node.InternalPhysicsProcessEnabled()",
-      "reason": "ADRs 0006/0008/0011: typed runtime InternalProcessEnabled/InternalPhysicsProcessEnabled project each set/query pair, independently retain detached state and share the existing owner-checked internal lanes. NodeInternalProcessingTests checks false defaults, captured participation versus current callback enable/disable, notification order/deltas, pause modes, detach/reentry, disposal/off-owner rejection, transient descriptors/scene capture, actual Timer countdowns and zero owner bytes across 1024 warm operations; actual GPU/compatibility pixels verify suspend/resume. Pinned scene_tree.cpp can_process gates both lanes; foreign/native-allocation/editor gates remain separate. Enabled-only retained snapshots now rebuild on all four flag changes; absent participants wait for the next frame, existing captured nodes retain current flags/eligibility, and same-tree/self reentry cannot revive stale entries. Public neutral/spatial/RigidBody consumers exercise four lanes, priority capture, error continuation and selected CPU/software-GPU/registered ordinary/separate frames and queries with zero warmed owner/all-thread bytes. Evidence: bin/physics-node-scheduling/2026-10-15/validation.json. Thread-group and mailbox APIs remain separately unimplemented."
+      "reason": "ADRs 0006/0008/0011/0038: the complete processing status group revalidates this sibling with coordinated reads, current-group writes, stored shortcut state and runtime-only internal switches.",
+      "state": "Implemented"
     },
     {
       "godot": "Node::method:is_physics_processing_internal()",
       "electron2d": "property:Electron2D.Node.InternalPhysicsProcessEnabled()",
-      "reason": "ADRs 0006/0008/0011: typed runtime InternalProcessEnabled/InternalPhysicsProcessEnabled project each set/query pair, independently retain detached state and share the existing owner-checked internal lanes. NodeInternalProcessingTests checks false defaults, captured participation versus current callback enable/disable, notification order/deltas, pause modes, detach/reentry, disposal/off-owner rejection, transient descriptors/scene capture, actual Timer countdowns and zero owner bytes across 1024 warm operations; actual GPU/compatibility pixels verify suspend/resume. Pinned scene_tree.cpp can_process gates both lanes; foreign/native-allocation/editor gates remain separate. Enabled-only retained snapshots now rebuild on all four flag changes; absent participants wait for the next frame, existing captured nodes retain current flags/eligibility, and same-tree/self reentry cannot revive stale entries. Public neutral/spatial/RigidBody consumers exercise four lanes, priority capture, error continuation and selected CPU/software-GPU/registered ordinary/separate frames and queries with zero warmed owner/all-thread bytes. Evidence: bin/physics-node-scheduling/2026-10-15/validation.json. Thread-group and mailbox APIs remain separately unimplemented."
+      "reason": "ADRs 0006/0008/0011/0038: the complete processing status group revalidates this sibling with coordinated reads, current-group writes, stored shortcut state and runtime-only internal switches.",
+      "state": "Implemented"
     },
     {
       "godot": "Node::enum:PhysicsInterpolationMode",
@@ -1073,8 +1077,8 @@
     {
       "electron2d": "method:Electron2D.Node.OnInput(Electron2D.InputEvent)",
       "godot": "Node::method:_input(InputEvent:)",
-      "state": "Partial",
-      "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     },
     {
       "electron2d": "method:Electron2D.Node.OnNotification(System.Int32)",
@@ -1085,14 +1089,14 @@
     {
       "electron2d": "method:Electron2D.Node.OnPhysicsProcess(System.Double)",
       "godot": "Node::method:_physics_process(float:)",
-      "state": "Partial",
-      "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     },
     {
       "electron2d": "method:Electron2D.Node.OnProcess(System.Double)",
       "godot": "Node::method:_process(float:)",
-      "state": "Partial",
-      "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     },
     {
       "electron2d": "method:Electron2D.Node.OnReady()",
@@ -1103,14 +1107,14 @@
     {
       "electron2d": "method:Electron2D.Node.OnUnhandledInput(Electron2D.InputEvent)",
       "godot": "Node::method:_unhandled_input(InputEvent:)",
-      "state": "Partial",
-      "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     },
     {
       "electron2d": "method:Electron2D.Node.OnUnhandledKeyInput(Electron2D.InputEventKey)",
       "godot": "Node::method:_unhandled_key_input(InputEvent:)",
-      "state": "Partial",
-      "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     },
     {
       "electron2d": "method:Electron2D.PackedScene.GetState()",
@@ -1313,14 +1317,14 @@
     {
       "electron2d": "property:Electron2D.Node.InputEnabled()",
       "godot": "Node::method:is_processing_input()",
-      "state": "Partial",
-      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     },
     {
       "electron2d": "property:Electron2D.Node.InputEnabled()",
       "godot": "Node::method:set_process_input(bool:)",
-      "state": "Partial",
-      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     },
     {
       "electron2d": "property:Electron2D.Node.IsInsideTree()",
@@ -1373,56 +1377,56 @@
     {
       "electron2d": "property:Electron2D.Node.PhysicsProcessEnabled()",
       "godot": "Node::method:is_physics_processing()",
-      "state": "Partial",
-      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     },
     {
       "electron2d": "property:Electron2D.Node.PhysicsProcessEnabled()",
       "godot": "Node::method:set_physics_process(bool:)",
-      "state": "Partial",
-      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     },
     {
       "electron2d": "property:Electron2D.Node.PhysicsProcessPriority()",
       "godot": "Node::property:process_physics_priority",
-      "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     },
     {
       "electron2d": "property:Electron2D.Node.ProcessEnabled()",
       "godot": "Node::method:is_processing()",
-      "state": "Partial",
-      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     },
     {
       "electron2d": "property:Electron2D.Node.ProcessEnabled()",
       "godot": "Node::method:set_process(bool:)",
-      "state": "Partial",
-      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     },
     {
       "electron2d": "property:Electron2D.Node.UnhandledInputEnabled()",
       "godot": "Node::method:is_processing_unhandled_input()",
-      "state": "Partial",
-      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     },
     {
       "electron2d": "property:Electron2D.Node.UnhandledInputEnabled()",
       "godot": "Node::method:set_process_unhandled_input(bool:)",
-      "state": "Partial",
-      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     },
     {
       "electron2d": "property:Electron2D.Node.UnhandledKeyInputEnabled()",
       "godot": "Node::method:is_processing_unhandled_key_input()",
-      "state": "Partial",
-      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     },
     {
       "electron2d": "property:Electron2D.Node.UnhandledKeyInputEnabled()",
       "godot": "Node::method:set_process_unhandled_key_input(bool:)",
-      "state": "Partial",
-      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     },
     {
       "electron2d": "method:Electron2D.Node.GetViewport()",
@@ -5748,6 +5752,12 @@
       "electron2d": "method:Electron2D.Control.Reparent(Electron2D.Node,System.Boolean)",
       "state": "Implemented",
       "reason": "Control is the inherited Node reparent placement projection: restore only global origin; the membership status group covers complete virtual-family guards and error handling."
+    },
+    {
+      "godot": "Node::property:process_priority",
+      "electron2d": "property:Electron2D.Node.ProcessPriority()",
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
     }
   ],
   "extras": [
@@ -8207,18 +8217,6 @@
     },
     {
       "godot": [
-        "Node::method:is_processing()",
-        "Node::method:set_process(bool:)",
-        "Node::method:is_physics_processing()",
-        "Node::method:set_physics_process(bool:)",
-        "Node::property:process_priority",
-        "Node::property:process_physics_priority"
-      ],
-      "state": "Partial",
-      "reason": "ADRs 0006/0008/0011: public/internal lane membership is now captured only for enabled nodes; every changed flag invalidates later retained snapshots. Absent participants wait for the next frame, captured participants retain current callback/eligibility checks, and priority changes apply to the next snapshot. Same-tree and self reentry cannot revive an old attachment. Public neutral/spatial/RigidBody consumers exercise four lane combinations, disable/enable, current mode eligibility, priority order, failure continuation, actual selected solver motion/queries and repeatedly rebuilt zero owner/all-thread allocation schedules on CPU/software-Vulkan/registered serial/separate JIT/NativeAOT hosts. SceneHierarchyTests explicitly disables the ready-enabled fixture before late activation and preserves tree-order/regression checks. Evidence: bin/physics-node-scheduling/2026-10-15/validation.json. Actual ordered groups and destination mailboxes now execute with own-group processing controls; see bin/physics-process-groups/2026-10-15/validation.json. General inherited scene/backend worker access remains open, so these rows retain Partial rather than certifying the whole Node processing family."
-    },
-    {
-      "godot": [
         "Window::signal:close_requested()",
         "Window::signal:focus_entered()",
         "Window::signal:focus_exited()",
@@ -8250,16 +8248,6 @@
       ],
       "state": "Unimplemented",
       "reason": "Exact prerequisite: observed per-window output linear/HDR capability, change events and a typed Window value/signal bridge. No inert identity is exposed before that integration."
-    },
-    {
-      "godot": [
-        "Node::method:set_process_internal(bool:)",
-        "Node::method:is_processing_internal()",
-        "Node::method:set_physics_process_internal(bool:)",
-        "Node::method:is_physics_processing_internal()"
-      ],
-      "state": "Implemented",
-      "reason": "ADRs 0006/0008/0011: typed runtime InternalProcessEnabled/InternalPhysicsProcessEnabled project each set/query pair, independently retain detached state and share the existing owner-checked internal lanes. NodeInternalProcessingTests checks false defaults, current-frame enable/disable, notification order/deltas, pause modes, detach/reentry, disposal/off-owner rejection, transient descriptors/scene capture, actual Timer countdowns and zero owner bytes across 1024 warm operations; actual GPU/compatibility pixels verify suspend/resume. Pinned scene_tree.cpp can_process gates both lanes; foreign/native-allocation/editor gates remain separate."
     },
     {
       "godot": [
@@ -11486,17 +11474,6 @@
     },
     {
       "godot": [
-        "Node::method:_process(float:)",
-        "Node::method:_physics_process(float:)",
-        "Node::method:_input(InputEvent:)",
-        "Node::method:_unhandled_input(InputEvent:)",
-        "Node::method:_unhandled_key_input(InputEvent:)"
-      ],
-      "state": "Partial",
-      "reason": "ADR 0006: ready enables the actual six bound typed virtual callback targets before OnReady, including inherited overrides; hidden methods/plain nodes stay off. PhysicsAutomaticCallbackTests verifies full selected CPU/GPU physical and input delivery, explicit disabling, requested/manual ready, reentry, packed state, pause, weak retirement and 128-warm/128-measured zero owner/all-thread byte frames in ordinary/separate modes. Bound metadata is cached under weak Type keys; no reflection invocation or dynamic name dispatch. Wider callback/default/lifecycle and full inherited/native/foreign/hardware acceptance remain open."
-    },
-    {
-      "godot": [
         "Node::method:find_child(String:,bool:,bool:)",
         "Node::method:find_children(String:,String:,bool:,bool:)",
         "Node::method:find_parent(String:)"
@@ -11614,6 +11591,36 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0003/0006/0008/0011: structural Parent/strict ancestry, active Tree/IsInsideTree and borrowed authoring Owner have coordinated public observations, independent of numerical world selection. Detached topology retains owner and unique registration; weak identity resolution expires at owner disposal/collection without retaining or disposing separately parented nodes. Active removal retains owners through structural callbacks, then clears unreachable owners before TreeExited. Reparent preflights destination child-order access; removal errors cannot suppress possible insertion, reachable shared-owner restoration through ordinary descendants or Entity/Control placement restoration. Same-parent calls retain lifecycle/capture/thread guards; callback-retired targets are not resurrected. Child-order publication/notification/signal continue after prior failures. Typed bool removal and validation exceptions retain their established projections. Public CPU/software-Vulkan/registered serial/separate CoreCLR/strict NativeAOT consumers cover failure identities, capture/foreign/worker guards, GC, unique scope, cross-world RID/pose/actual solving, fresh file and 128 warm/128 measured moving frames with two real owner edits per frame at 0/0 owner/all-thread managed bytes. Structural snapshots and initial weak/list capacity are cold; full inherited/native/device/hardware/foreign gates remain open. Evidence: bin/physics-node-membership/2026-10-16/validation.json."
+    },
+    {
+      "godot": [
+        "Node::method:_input(InputEvent:)",
+        "Node::method:_physics_process(float:)",
+        "Node::method:_process(float:)",
+        "Node::method:_shortcut_input(InputEvent:)",
+        "Node::method:_unhandled_input(InputEvent:)",
+        "Node::method:_unhandled_key_input(InputEvent:)",
+        "Node::method:is_physics_processing()",
+        "Node::method:is_physics_processing_internal()",
+        "Node::method:is_processing()",
+        "Node::method:is_processing_input()",
+        "Node::method:is_processing_internal()",
+        "Node::method:is_processing_shortcut_input()",
+        "Node::method:is_processing_unhandled_input()",
+        "Node::method:is_processing_unhandled_key_input()",
+        "Node::method:set_physics_process(bool:)",
+        "Node::method:set_physics_process_internal(bool:)",
+        "Node::method:set_process(bool:)",
+        "Node::method:set_process_input(bool:)",
+        "Node::method:set_process_internal(bool:)",
+        "Node::method:set_process_shortcut_input(bool:)",
+        "Node::method:set_process_unhandled_input(bool:)",
+        "Node::method:set_process_unhandled_key_input(bool:)",
+        "Node::property:process_physics_priority",
+        "Node::property:process_priority"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011/0038: all eight switches and both priorities use live coordinated stored-value reads and owner/current-group writes, with capture/lifetime and derived validation. Input metadata does not grant worker input dispatch or physical/hierarchy/render mutation. All six public callback switches have stored descriptors; internal switches are runtime-only. Public neutral/spatial/RigidBody callbacks preserve lane deltas, selected group execution, full signed priority range/ties, independent lane switches, input reverse order/kinds/handling/borrowed identity and failure continuation through actual numerical work. The separate --node-processing consumer checks ten controls on ten neutral/canvas/physical roles, 64 stored configurations, fresh-process selected motion, capture/foreign/current-group guards and unchanged body sleep/RID. CPU/software-Vulkan/registered serial/separate CoreCLR/strict NativeAOT profiles measure 128 full idle/physics/input frames at 0/0 owner/all-thread bytes, motion 1.28 within .002, 128 force callbacks, 256 actual worker callbacks and 512 owner input callbacks configured by workers. A retained member comparator removes the NativeAOT rebuilt-worker schedule adapter. Existing scheduling/group/policy regressions retain their separate scope. Built-in numerical reconciliation stays owner-bound; general worker geometry/joint mutation, full inherited/extension, native/driver/hardware/window/platform acceptance remain open. Evidence: bin/physics-node-processing/2026-10-16/validation.json."
     }
   ]
 }

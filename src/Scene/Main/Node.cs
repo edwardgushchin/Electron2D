@@ -51,6 +51,7 @@ public partial class Node : ElectronObject
         new PropertyDescriptor<Node, bool>(nameof(InternalProcessEnabled), node => node.InternalProcessEnabled, (node, value) => node.InternalProcessEnabled = value, _ => false),
         new PropertyDescriptor<Node, bool>(nameof(InternalPhysicsProcessEnabled), node => node.InternalPhysicsProcessEnabled, (node, value) => node.InternalPhysicsProcessEnabled = value, _ => false),
         new PropertyDescriptor<Node, bool>(nameof(InputEnabled), node => node.InputEnabled, (node, value) => node.InputEnabled = value, _ => false, stored: true),
+        new PropertyDescriptor<Node, bool>(nameof(ShortcutInputEnabled), node => node.ShortcutInputEnabled, (node, value) => node.ShortcutInputEnabled = value, _ => false, stored: true),
         new PropertyDescriptor<Node, bool>(nameof(UnhandledInputEnabled), node => node.UnhandledInputEnabled, (node, value) => node.UnhandledInputEnabled = value, _ => false, stored: true),
         new PropertyDescriptor<Node, bool>(nameof(UnhandledKeyInputEnabled), node => node.UnhandledKeyInputEnabled, (node, value) => node.UnhandledKeyInputEnabled = value, _ => false, stored: true),
         new PropertyDescriptor<Node, int>(nameof(ProcessPriority), node => node.ProcessPriority, (node, value) => node.ProcessPriority = value, _ => 0, stored: true),
@@ -700,14 +701,18 @@ public partial class Node : ElectronObject
     /// <summary>Gets or sets whether this node participates in host-driven process frames.</summary>
     /// <value>False initially; ready notification enables an overridden callback before OnReady.</value>
     /// <remarks>A node absent from the captured idle schedule starts on the next idle frame. Disabling a captured
-    /// node suppresses later delivery immediately. An existing internal participant may enable its public callback in that frame.</remarks>
-    /// <exception cref="InvalidOperationException">Access is outside the scene owner/current processing group, or mutation violates scene capture or physical authoring guards.</exception>
+    /// node suppresses later delivery immediately. An existing internal participant may enable its public callback in that frame.
+    /// Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot.
+    /// Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture
+    /// even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation.
+    /// Packed scenes store this configuration before ready applies automatic callback preparation.</remarks>
+    /// <exception cref="InvalidOperationException">Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool ProcessEnabled
     {
         get
         {
-            ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
+            ThrowIfDisposed();
             return _processEnabled;
         }
         set
@@ -722,14 +727,18 @@ public partial class Node : ElectronObject
     /// <summary>Gets or sets whether this node participates in host-driven physics-process frames.</summary>
     /// <value>False initially; ready notification enables an overridden callback before OnReady.</value>
     /// <remarks>A node absent from the captured physics schedule starts on the next physics frame. Disabling a captured
-    /// node suppresses later delivery immediately. An existing internal participant may enable its public callback in that frame.</remarks>
-    /// <exception cref="InvalidOperationException">Access is outside the scene owner/current processing group, or mutation violates scene capture or physical authoring guards.</exception>
+    /// node suppresses later delivery immediately. An existing internal participant may enable its public callback in that frame.
+    /// Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot.
+    /// Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture
+    /// even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation.
+    /// Packed scenes store this configuration before ready applies automatic callback preparation.</remarks>
+    /// <exception cref="InvalidOperationException">Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool PhysicsProcessEnabled
     {
         get
         {
-            ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
+            ThrowIfDisposed();
             return _physicsProcessEnabled;
         }
         set
@@ -747,12 +756,15 @@ public partial class Node : ElectronObject
     /// ProcessMode and tree pause state still gate both lanes. Changes are runtime state, not stored scene data.
     /// Disabling a built-in node's internal work can suspend animation, timers or other implementation logic.
     /// Participation is captured together with ordinary idle processing. A newly enabled node waits for
-    /// the next idle snapshot; a node already included through its ordinary callback can enable internal delivery in this frame.</remarks>
-    /// <exception cref="InvalidOperationException">Access is outside the scene owner/current processing group, or mutation violates scene capture or physical authoring guards.</exception>
+    /// the next idle snapshot; a node already included through its ordinary callback can enable internal delivery in this frame.
+    /// Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot.
+    /// Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture
+    /// even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation.</remarks>
+    /// <exception cref="InvalidOperationException">Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public bool InternalProcessEnabled
     {
-        get { ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this); return _internalProcessEnabled; }
+        get { ThrowIfDisposed(); return _internalProcessEnabled; }
         set { EnsureProcessingAccess(); if (_internalProcessEnabled == value) return; _internalProcessEnabled = value; Tree?.InvalidateProcessOrder(); }
     }
 
@@ -762,19 +774,26 @@ public partial class Node : ElectronObject
     /// The resolved ProcessMode and tree pause state still apply. This runtime switch is not stored in scenes.
     /// Disabling built-in internal physics can suspend casts, timers or other implementation logic.
     /// Participation is captured together with ordinary physics processing. A newly enabled node waits for
-    /// the next physics snapshot; a node already included through its ordinary callback can enable internal delivery in this frame.</remarks>
-    /// <exception cref="InvalidOperationException">Access is outside the scene owner/current processing group, or mutation violates scene capture or physical authoring guards.</exception>
+    /// the next physics snapshot; a node already included through its ordinary callback can enable internal delivery in this frame.
+    /// Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot.
+    /// Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture
+    /// even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation.</remarks>
+    /// <exception cref="InvalidOperationException">Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public bool InternalPhysicsProcessEnabled
     {
-        get { ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this); return _internalPhysicsProcessEnabled; }
+        get { ThrowIfDisposed(); return _internalPhysicsProcessEnabled; }
         set { EnsureProcessingAccess(); if (_internalPhysicsProcessEnabled == value) return; _internalPhysicsProcessEnabled = value; Tree?.InvalidateProcessOrder(); }
     }
 
     /// <summary>Gets or sets whether this node receives the first input-propagation stage.</summary>
     /// <value>False initially; ready notification enables an overridden callback before OnReady.</value>
-    /// <remarks>Eligible nodes are visited in reverse depth-first order before unhandled-input stages.</remarks>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <remarks>Eligible nodes are visited in reverse depth-first order before unhandled-input stages.
+    /// Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot.
+    /// Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture
+    /// even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation.
+    /// Packed scenes store this configuration before ready applies automatic callback preparation.</remarks>
+    /// <exception cref="InvalidOperationException">Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool InputEnabled
     {
@@ -785,26 +804,34 @@ public partial class Node : ElectronObject
         }
         set
         {
-            EnsureMutable();
+            EnsureProcessingAccess();
             _inputEnabled = value;
         }
     }
 
     /// <summary>Gets or sets whether this node receives keyboard, gamepad-button and shortcut events after GUI handling.</summary>
     /// <value>False initially; ready notification enables an overridden callback before OnReady.</value>
-    /// <remarks>The stage precedes unhandled-key and general unhandled input and obeys the node's process policy.</remarks>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <remarks>The stage precedes unhandled-key and general unhandled input and obeys the node's process policy.
+    /// Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot.
+    /// Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture
+    /// even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation.
+    /// Packed scenes store this configuration before ready applies automatic callback preparation.</remarks>
+    /// <exception cref="InvalidOperationException">Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.</exception>
     /// <exception cref="ObjectDisposedException">The node has finished disposing.</exception>
     public bool ShortcutInputEnabled
     {
         get { ThrowIfDisposed(); return _shortcutInputEnabled; }
-        set { EnsureMutable(); _shortcutInputEnabled = value; }
+        set { EnsureProcessingAccess(); _shortcutInputEnabled = value; }
     }
 
     /// <summary>Gets or sets whether this node receives input left unhandled by earlier stages.</summary>
     /// <value>False initially; ready notification enables an overridden callback before OnReady.</value>
-    /// <remarks>This final stage runs for every event that remains unhandled.</remarks>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <remarks>This final stage runs for every event that remains unhandled.
+    /// Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot.
+    /// Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture
+    /// even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation.
+    /// Packed scenes store this configuration before ready applies automatic callback preparation.</remarks>
+    /// <exception cref="InvalidOperationException">Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool UnhandledInputEnabled
     {
@@ -815,15 +842,19 @@ public partial class Node : ElectronObject
         }
         set
         {
-            EnsureMutable();
+            EnsureProcessingAccess();
             _unhandledInputEnabled = value;
         }
     }
 
     /// <summary>Gets or sets whether this node receives unhandled keyboard events before general unhandled input.</summary>
     /// <value>False initially; ready notification enables an overridden callback before OnReady.</value>
-    /// <remarks>The stage is skipped for non-keyboard events and after <see cref="SceneTree.SetInputAsHandled"/>.</remarks>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <remarks>The stage is skipped for non-keyboard events and after <see cref="SceneTree.SetInputAsHandled"/>.
+    /// Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot.
+    /// Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture
+    /// even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation.
+    /// Packed scenes store this configuration before ready applies automatic callback preparation.</remarks>
+    /// <exception cref="InvalidOperationException">Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool UnhandledKeyInputEnabled
     {
@@ -834,20 +865,23 @@ public partial class Node : ElectronObject
         }
         set
         {
-            EnsureMutable();
+            EnsureProcessingAccess();
             _unhandledKeyInputEnabled = value;
         }
     }
 
     /// <summary>Gets or sets this node's ascending process-frame order key.</summary>
     /// <value>Any integer; the default is zero. Equal priorities retain captured tree order within the group.</value>
-    /// <exception cref="InvalidOperationException">Access is outside the scene owner/current processing group, or mutation violates scene capture or physical authoring guards.</exception>
+    /// <remarks>Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot.
+    /// Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture
+    /// even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation.</remarks>
+    /// <exception cref="InvalidOperationException">Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public int ProcessPriority
     {
         get
         {
-            ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
+            ThrowIfDisposed();
             return _processPriority;
         }
         set
@@ -861,13 +895,16 @@ public partial class Node : ElectronObject
 
     /// <summary>Gets or sets this node's ascending physics-process order key.</summary>
     /// <value>Any integer; the default is zero. Equal priorities retain captured tree order within the group.</value>
-    /// <exception cref="InvalidOperationException">Access is outside the scene owner/current processing group, or mutation violates scene capture or physical authoring guards.</exception>
+    /// <remarks>Reads require a live receiver and caller coordination with metadata changes; they are not an atomic snapshot.
+    /// Writes require the scene owner or current processing group, including on physical nodes, and reject scene capture
+    /// even for unchanged values. These local switches do not authorize physical, rendering or hierarchy mutation.</remarks>
+    /// <exception cref="InvalidOperationException">Mutation is outside the scene owner/current processing group, scene capture is active, or a derived validation hook rejects it.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public int PhysicsProcessPriority
     {
         get
         {
-            ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
+            ThrowIfDisposed();
             return _physicsProcessPriority;
         }
         set
@@ -1790,20 +1827,22 @@ public partial class Node : ElectronObject
 
     /// <summary>Called during an eligible host-driven process frame.</summary>
     /// <param name="delta">The finite non-negative frame delta in seconds.</param>
-    /// <remarks>
-    /// Ready notification enables an override before OnReady; later <see cref="ProcessEnabled"/> writes control delivery. It executes on
-    /// the tree owner thread after <see cref="ProcessDeltaTime"/> is updated.
-    /// </remarks>
+    /// <remarks>Ready enables an actual override before OnReady; later callback-switch writes control delivery.
+    /// Runs on the selected processing group: the scene owner for a main group or a joined worker for a subthread group.
+    /// ProcessDeltaTime is updated before delivery.
+    /// Callback failures aggregate after remaining eligible deliveries and frame work. Input, rendering and physical
+    /// authoring retain their own access guards.</remarks>
     protected virtual void OnProcess(double delta)
     {
     }
 
     /// <summary>Called during an eligible host-driven physics-process frame.</summary>
     /// <param name="delta">The finite non-negative physics-step delta in seconds.</param>
-    /// <remarks>
-    /// Ready notification enables an override before OnReady; later <see cref="PhysicsProcessEnabled"/> writes control delivery. It executes
-    /// on the tree owner thread after <see cref="PhysicsProcessDeltaTime"/> is updated and does not perform simulation.
-    /// </remarks>
+    /// <remarks>Ready enables an actual override before OnReady; later callback-switch writes control delivery.
+    /// Runs on the selected processing group before the tree-owned numerical step, independently of that solver thread.
+    /// PhysicsProcessDeltaTime is updated before delivery; the callback itself does not integrate the world.
+    /// Callback failures aggregate after remaining eligible deliveries and frame work. Input, rendering and physical
+    /// authoring retain their own access guards.</remarks>
     protected virtual void OnPhysicsProcess(double delta)
     {
     }

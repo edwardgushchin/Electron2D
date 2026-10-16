@@ -1,5 +1,16 @@
 # API coverage register
 
+[Complete Node processing metadata and callbacks](../components/scene-tree.md#complete-processing-metadata-and-callbacks)
+now close seventeen inherited rows. All ten controls share coordinated reads and
+current-group writes; six stored callback switches, signed priorities, typed
+frame/input dispatch, error continuation and fresh-file motion have public
+CPU/software-Vulkan/registered CoreCLR/NativeAOT serial/separate evidence.
+Retained schedule comparisons and actual work-gate contention preparation preserve
+strict warmed allocation budgets. The unique physics census is 286 open declarations:
+226 Partial, 43 Unimplemented, 17 Blocked. General worker physical authoring,
+complete inheritance/extension, native/device and hardware/window/performance
+acceptance remain open.
+
 [Unsigned image texture sources](../components/integer-textures.md) now execute all four UInt16 layouts across ordinary/layered resources, imports, public server identities and GLSL/HLSL consumers. Thirteen format-dependent Partial rows are Implemented; native integer filtering and Compatibility limits remain explicit.
 
 [Node membership and authoring ownership](../components/scene-hierarchy.md#membership-and-authoring-ownership)
@@ -7,8 +18,8 @@ now close eight inherited membership/owner/reparent/child-order rows. Borrowed
 owner expiry and detached unique-name scope, callback-failed transfer, virtual
 placement, cross-world RID/pose and fresh scene activation have public
 CPU/software-Vulkan/registered CoreCLR/NativeAOT serial/separate evidence.
-The unique physics census is 303 open declarations: 243 Partial, 43 Unimplemented,
-17 Blocked. Native/device, foreign, hardware/window/performance and full inherited
+That membership slice left 303 open declarations; the complete processing slice
+above records the current census. Native/device, foreign, hardware/window/performance and full inherited
 or extension acceptance remain open.
 
 [Node tree transitions](../components/scene-hierarchy.md#entry-readiness-and-departure)

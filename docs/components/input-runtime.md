@@ -1,6 +1,6 @@
 # Input runtime component
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 ## Scope
 
@@ -157,3 +157,5 @@ owner/all-thread managed bytes. A public-only standalone consumer supports the
 same compiled test in ordinary and NativeAOT hosts. Evidence and exact limits are
 retained under bin/physics-auto-callbacks/2026-10-14; full inherited, native/foreign
 and hardware/window/performance acceptance remains open.
+
+The [complete processing metadata contract](scene-tree.md#complete-processing-metadata-and-callbacks) permits coordinated stored-value reads and current-group writes for all callback switches and priorities. All six public callback switches are stored; internal switches are runtime-only. Actual input remains owner-delivered, and this metadata grants no physical/render/hierarchy mutation.

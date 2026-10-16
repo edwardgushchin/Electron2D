@@ -1094,3 +1094,5 @@ Node duplication retains its separate ADR 0091 binding/identity prerequisite.
 ## Prepared group workers
 
 Every pool worker prepares its thread-local group context during synchronized pool startup. A late-selected worker therefore retains the warmed group allocation contract. Group callback ordering, current-group access and owner-thread physical mutation keep their existing rules. See [allocation attribution](../components/node-groups.md#worker-context-preparation-and-allocation-attribution).
+
+The [complete processing contract](../components/scene-tree.md#complete-processing-metadata-and-callbacks) uses retained member comparisons and prepares actual work-gate contention before the first worker stage. Cold preparation uses one temporary joined helper without game callbacks or execution-context flow; frames remain host-driven, with no retained pump thread. Worker-owned trees in a one-worker pool are included in the public verification.

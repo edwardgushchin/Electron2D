@@ -484,3 +484,5 @@ Null assignment throws `ArgumentNullException`; disposed access throws `ObjectDi
 [VirtualJoystick](VirtualJoystick.md) consumes the inherited local GUI touch lane, ordinary themed StyleBoxes and owner/capture/lifetime rules for analog game controls.
 
 Reparent preserves the inherited [membership/owner and failure contract](../components/scene-hierarchy.md#membership-and-authoring-ownership), including same-parent lifecycle/capture/thread checks. It restores only global position after possible insertion, even when earlier callbacks failed.
+
+The [complete processing metadata contract](../components/scene-tree.md#complete-processing-metadata-and-callbacks) permits coordinated stored-value reads and current-group writes for all callback switches and priorities. All six public callback switches are stored; internal switches are runtime-only. Actual input remains owner-delivered, and this metadata grants no physical/render/hierarchy mutation.
