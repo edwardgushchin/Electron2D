@@ -1,6 +1,6 @@
 # Shader
 
-Last updated: 2026-10-12
+Last updated: 2026-10-16
 
 - Declaration: `public sealed class Shader : Resource`
 - Source: [Shader.cs](../../src/Scene/Resources/Shader.cs)
@@ -9,7 +9,7 @@ Last updated: 2026-10-12
 
 ## Description
 
-A managed canvas fragment program loaded from copied SPIR-V. HLSL and GLSL source compilation belongs to import/build tooling. Code and reflected layout are published as one immutable version; failed replacement preserves the previous version. GPU pipelines belong to the renderer and are created on demand. Resource duplication shares immutable program data safely. Disposal prevents further resource access and does not dispose materials that borrow the shader.
+A managed canvas program loaded from copied fragment SPIR-V, with an optional authored vertex module. HLSL and GLSL source compilation belongs to import/build tooling. Code and reflected layout are published as one immutable version; failed replacement preserves the previous version. GPU pipelines belong to the renderer and are created on demand. Resource duplication shares immutable program data safely. Disposal prevents further resource access and does not dispose materials that borrow the shader.
 
 Runtime loading checks module structure, capabilities and reflected interfaces through the shared engine/SDL3-CS Shadercross path. Import tooling additionally runs instruction-level validation. Runtime loading does not guarantee that it detects every invalid instruction; successful reflection does not establish that arbitrary SPIR-V is valid. Translation and native program-creation failures propagate when the program is first used by a renderer.
 
@@ -24,6 +24,17 @@ using var material = new ShaderMaterial { Shader = shader };
 material.SetShaderParameter("tint", Colors.White);
 ```
 
+A paired program uses the same material API; this snippet assumes matching imported modules that declare gain and offset:
+
+```csharp
+using var paired = Shader.CreateFromSPIRV(
+    System.IO.File.ReadAllBytes("material.vert.spv"),
+    System.IO.File.ReadAllBytes("material.frag.spv"));
+using var pairedMaterial = new ShaderMaterial { Shader = paired };
+pairedMaterial.SetShaderParameter("gain", 1f);
+pairedMaterial.SetShaderParameter("offset", new Vector2(16, 0));
+```
+
 ## API summary
 
 | Declaration | Contract |
@@ -33,7 +44,10 @@ material.SetShaderParameter("tint", Colors.White);
 | `Mode GetMode()` | Returns `Mode.CanvasItem`. |
 | `static Shader CreateFromSPIRV(ReadOnlySpan<byte> bytecode)` | Copies and validates a fragment program. |
 | `void SetSPIRV(ReadOnlySpan<byte> bytecode)` | Validates then atomically replaces the program and emits `Changed`. |
-| `byte[] GetSPIRV()` | Returns an independent copy of the compiled module. |
+| `byte[] GetSPIRV()` | Returns an independent copy of the fragment module. |
+| `static Shader CreateFromSPIRV(ReadOnlySpan<byte> vertexBytecode, ReadOnlySpan<byte> fragmentBytecode)` | Creates one validated vertex/fragment program. |
+| `void SetSPIRV(ReadOnlySpan<byte> vertexBytecode, ReadOnlySpan<byte> fragmentBytecode)` | Replaces both stages atomically and emits Changed once. |
+| `byte[] GetSPIRV(RenderingDevice.ShaderStage stage)` | Copies the selected authored Vertex or Fragment module. |
 | `IReadOnlyList<PropertyDescriptor> GetShaderUniformList()` | Immutable typed material descriptors for the current program version. |
 | `void SetDefaultTextureParameter(string name, Texture? texture, int index = 0)` | Sets or clears a borrowed default texture. |
 | `Texture? GetDefaultTextureParameter(string name, int index = 0)` | Gets the borrowed default texture. |
@@ -53,7 +67,7 @@ Returns `Shader.Mode.CanvasItem` (1). Throws `ObjectDisposedException` after dis
 
 ### CreateFromSPIRV
 
-Copies `bytecode` before validation. The input must contain the supported canvas fragment interface, one `main` entry point and a little-endian SPIR-V header, within 16 MiB. Invalid structure/reflection throws `ArgumentException`; unsupported interfaces/resources throw `NotSupportedException`. Native-library initialization/load failures remain visible. Named sampled images use fixed linear filtering, clamp-to-edge coordinates and LOD zero independently of canvas policies. The complete current profile is in the component page.
+The one-module overload copies `bytecode` before validation. The input must contain the supported canvas fragment interface, one `main` entry point and a little-endian SPIR-V header, within 16 MiB. Invalid structure/reflection throws `ArgumentException`; unsupported interfaces/resources throw `NotSupportedException`. Native-library initialization/load failures remain visible. Named sampled images use fixed linear filtering, clamp-to-edge coordinates and LOD zero independently of canvas policies. The complete current profile is in the component page.
 
 ### SetSPIRV
 
@@ -61,15 +75,15 @@ Uses the same copied-input validation and errors as creation. No mutation occurs
 
 ### GetSPIRV
 
-Returns copied bytes and never exposes the backing module. The snapshot may safely outlive subsequent reload or disposal. Calling on a disposed shader throws.
+The parameterless overload returns copied fragment bytes and never exposes the backing module. It is not a complete export of a paired program. The stage overload copies Vertex or Fragment; Vertex is empty for a fragment-only program. Undefined stage values throw ArgumentOutOfRangeException; other defined stages throw NotSupportedException. The snapshot may safely outlive subsequent reload or disposal. Calling on a disposed shader throws.
 
 ### GetShaderUniformList
 
-Returns a read-only list with exact uniform names. Descriptors use `ShaderMaterial` as owner, scalar/vector/matrix element types, `T[]` for fixed arrays, or `Texture?` for texture bindings. Float4 descriptors use `Vector4`; typed parameter calls also accept `Color` and `Rect2`. Float2x2 uses `Transform` with identity defaults; row/column matrix storage and strides are reflected. Float3 uses `Color` (RGB, canonical alpha one). Signed/unsigned integer vectors use `Vector2i`/`Vector4i`, retaining component bits. Logical bool uses bool; bool2/3/4 use int component masks with false/zero defaults, backed by validated [artifact metadata](../components/shader-materials.md#boolean-type-information). Fixed arrays use the corresponding canonical element descriptors. Getter/setter delegates use the material's current matching parameter, so an incompatible shader replacement is rejected on access. The list itself remains a snapshot after reload. Reserved TEXTURE and TIME are omitted. There are no grouping hints in the current import format.
+Returns a read-only list with exact uniform names. Descriptors use `ShaderMaterial` as owner, scalar/vector/matrix element types, `T[]` for fixed arrays, or `Texture?` for texture bindings. Float4 descriptors use `Vector4`; typed parameter calls also accept `Color` and `Rect2`. Float2x2 uses `Transform` with identity defaults; row/column matrix storage and strides are reflected. Float3 uses `Vector3`, with `Color` as an RGB alias and canonical alpha one. Signed/unsigned integer vectors use `Vector2i`/`Vector3i`/`Vector4i`, retaining component bits. Logical bool uses bool; bool2/3/4 use int component masks with false/zero defaults, backed by validated [artifact metadata](../components/shader-materials.md#boolean-type-information). Fixed arrays use the corresponding canonical element descriptors. Getter/setter delegates use the material's current matching parameter, so an incompatible shader replacement is rejected on access. The list itself remains a snapshot after reload. Reserved TEXTURE and TIME are omitted. There are no grouping hints in the current import format.
 
 ### SetDefaultTextureParameter
 
-Validates a named sampled texture and stores a borrowed default. Null clears it. A material override wins over this default. Texture arrays are not integrated, so a nonzero index throws ArgumentOutOfRangeException. Bad names/types throw ArgumentException; a disposed shader or supplied texture throws ObjectDisposedException. Mutation precedes Changed; callback failure does not undo it. Matching named defaults survive shader reload.
+Validates a named sampled texture and stores a borrowed default. Null clears it. A material override wins over this default. Arrays of sampled bindings are not integrated, so a nonzero index throws ArgumentOutOfRangeException. Bad names/types throw ArgumentException; a disposed shader or supplied texture throws ObjectDisposedException. Mutation precedes Changed; callback failure does not undo it. Matching named defaults survive shader reload.
 
 ### GetDefaultTextureParameter
 
@@ -81,11 +95,11 @@ Returns the assigned default or null, without transferring ownership. Uses the s
 
 ## Limits and checks
 
-Logical boolean annotations are retained in copied bytecode and checked against the physical buffer layout for all input origins. Invalid annotations preserve the previous program. Runtime validation is structural and reflective; full semantic validation currently runs during import. Texture arrays and sampler configuration, matrices other than float2x2, nested structs, other shader modes, source preservation and editor code inspection remain unimplemented. Both language import paths, copied payloads, invalid replacement and live uniform reload have executable checks in [RenderingRuntimeTests.cs](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs); native execution has been checked on Linux Wayland/Vulkan only. See [ADR 0028](../decisions/rendering.md#adr-0028).
+Logical boolean annotations are retained in copied bytecode and checked against the physical buffer layout for all input origins. Invalid annotations preserve the previous program. Runtime validation is structural and reflective; full semantic validation currently runs during import. Arrays of sampled bindings and named sampler configuration, matrices other than float2x2, nested structs, other shader modes, source preservation and editor code inspection remain unimplemented. Both language import paths, copied payloads, invalid replacement and live uniform reload have executable checks in [RenderingRuntimeTests.cs](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs); native execution has been checked on Linux X11/Wayland Vulkan. See [ADR 0028](../decisions/rendering.md#adr-0028).
 
 ## Instance data input
 
-Fragment programs may consume raw float4 at location two, alongside tint location zero and UV location one. MultiMesh supplies its optional custom-data components independently of color multiplication; ordinary canvas geometry supplies zero. HLSL input semantics must compile to these locations (the tested signature uses active TEXCOORD0, TEXCOORD1 and TEXCOORD2 inputs). GLSL can use explicit layout locations. The built-in vertex stage forwards this channel; custom vertex programs remain pending. MultiMeshRenderingTests verifies two independent colors, live data replacement and compatibility's explicit shader rejection.
+Fragment programs may consume raw float4 at location two, alongside tint location zero and UV location one. MultiMesh supplies its optional custom-data components independently of color multiplication; ordinary canvas geometry supplies zero. HLSL input semantics must compile to these locations (the tested signature uses active TEXCOORD0, TEXCOORD1 and TEXCOORD2 inputs). GLSL can use explicit layout locations. The built-in vertex stage forwards this channel; authored vertex programs use the paired-stage factory. MultiMeshRenderingTests verifies two independent colors, live data replacement and compatibility's explicit shader rejection.
 
 Reserved SCREEN_TEXTURE and optional float2 SCREEN_PIXEL_SIZE now share the validated SPIR-V path with TEXTURE/TIME. They are excluded from material/default parameter lists and value migration; the renderer supplies the screen image and inverse current target dimensions. HLSL/GLSL fixtures exercise actual screen copying and group LOD. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
 
@@ -179,3 +193,15 @@ The reserved Instance block has separate reflection/descriptor storage. File fac
 ## Mesh custom shader inputs
 
 Four optional mesh-local float4 inputs occupy fragment locations 7, 8, 9 and 10, forwarded from vertex locations 10 through 13. Each MeshSurfaceData custom payload has its own packed format. Missing stored components use zero RGB/one alpha; a wholly absent channel supplies zero. Instance custom data remains independent at location 2. See [the custom mesh contract](../components/meshes.md#numerical-custom-channels).
+
+## Paired canvas stages
+
+`CreateFromSPIRV(vertexBytecode, fragmentBytecode)` and paired `SetSPIRV` copy each module, validate each stage and matching varyings, then publish a single version. Each module has the same sixteen-MiB bound. Failure preserves both prior stages and defaults without emitting Changed. A successful replacement commits before Changed; observer failure does not roll the replacement back. The single-module setter returns to the built-in vertex stage.
+
+Authored vertices receive transformed framebuffer-pixel positions at location zero, command color at one, UV at two and optional raw instance custom data at three. The renderer applies hardware instance transforms and colors before invoking the authored main function, then applies canvas modulation and forwards its private glyph/lighting channels. Programs convert pixel positions to clip space using the renderer-owned Frame float2 client size at set one, binding zero. This is the native HLSL/GLSL canvas ABI. Vertex deformation does not change CPU hit testing, clipping bounds, light culling or retained command bounds. Hardware instance attributes four through six are reserved; see the complete [paired-stage interface](../components/shader-materials.md#authored-vertex-stages).
+
+Each stage may expose typed material and per-item parameters and sampled textures. Shared names form one logical parameter when type, signedness, boolean width, array length and sampled shape match; stage bindings, offsets, strides and matrix storage order may differ. A name cannot mix material, instance and texture roles. Defaults, material overrides, typed descriptors and migration use this combined namespace. Shared values are copied into the correct stage buffer at submission, without prepared managed allocations. Renderer uniforms remain excluded from public parameter lists.
+
+Resource duplication shares the immutable paired version. Resource archives retain both modules in a versioned envelope inside the existing SPIRV storage property; old fragment-only archives remain readable. No native GPU identity is serialized. Runtime loading retains the structural/reflection validation boundary; import tools provide instruction-level validation.
+
+The public-only source consumer also verifies paired creation/export, resource archives and actual GPU pixels in JIT and NativeAOT on Linux X11 and Wayland. Its source build imports the existing native-consumer delivery props; compilation without native delivery alone does not establish runtime acceptance.

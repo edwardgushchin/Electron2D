@@ -1,6 +1,6 @@
 # SpirvReflection
 
-Last updated: 2026-10-07
+Last updated: 2026-10-16
 
 - Declaration: `internal static unsafe partial class SpirvReflection`
 - Sources: [SpirvReflection.cs](../../src/Servers/Rendering/SpirvReflection.cs), [SpirvReflection.Booleans.cs](../../src/Servers/Rendering/SpirvReflection.Booleans.cs)
@@ -48,3 +48,7 @@ Reflection validates reserved SCREEN_PIXEL_SIZE as a non-array fragment float32 
 SPIRV-Cross reflection imports now resolve the already packaged runtime-directory shared library directly before any SDL shadercross/device initialization. CPUParticlesTests creates its custom-data Shader in a fresh GPU host process before Engine.Run, then checks actual native pixels. Windows/macOS/Android names were checked against package artifacts; this Linux execution does not establish their native runtime acceptance. Static browser/Apple shader integrations keep their existing separate gates.
 
 Fragment block type Instance/type.Instance routes its members into InstanceUniforms. It rejects more than sixteen fields, arrays, matrices and renderer-owned uniform names there. Boolean annotation covers both shared and instance dictionaries. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).
+
+## Stage resources
+
+Vertex resources now share the same typed scalar/vector/matrix/array and Instance reflection as fragments. Uniform sets remain one for vertex and three for fragment; sampled resources use zero and two respectively. Each stage has an independent sixteen-sampler limit. Renderer TIME, SCREEN_PIXEL_SIZE and SDF_COORDS accept the same types in vertex material blocks. Frame ownership and cross-stage name/layout merging are validated by ShaderProgram before publication.

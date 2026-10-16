@@ -354,3 +354,7 @@ Theme resource archives and scenes now persist complete typed theme data, resour
 [UInt16 image texture sources](../components/integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.
 
 [Viewport screen attachment](../components/canvas-rendering.md#viewport-screen-attachment) now presents scene or caller-owned targets directly in the main native window, with one final GPU/Compatibility composition, clipping, update scheduling and HDR/MSAA source handling. Additional native-window identities depend on the native multiwindow ownership/routing slice.
+
+## Authored canvas vertices
+
+Paired compiled Shader stages now execute vertex deformation through existing CanvasItem, Mesh/MultiMesh, glyph, lighting and viewport GPU consumers. Typed material/instance/default-texture state merges across stages while native bindings remain stage-specific. Engine-owned wrappers preserve hardware instancing, canvas modulation and private glyph/light data. The [shader ABI](../components/shader-materials.md#authored-vertex-stages) records framebuffer coordinates, exact capacities, retained-bounds limitations, storage and Linux native evidence. Compatibility continues its explicit shader rejection; foreign platforms remain unverified.

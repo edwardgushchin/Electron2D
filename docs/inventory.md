@@ -820,6 +820,7 @@ These types stay inside Electron2D.dll. Games and editor consumers use the publi
 | [GradientTextureData](classes/GradientTextureData.md) | [GradientTextureData.cs](../src/Scene/Resources/GradientTextureData.cs) | [gradients](components/gradients.md) |
 | [CurveTextureData](classes/CurveTextureData.md) | [CurveTextureData.cs](../src/Scene/Resources/CurveTextureData.cs) | [curves](components/curves.md) |
 | [Image.State](classes/Image.State.md) | [Image.cs](../src/Core/IO/Image.cs) | [images](components/images.md) |
+| [CanvasVertexProgram](classes/CanvasVertexProgram.md) | [CanvasVertexProgram.cs](../src/Servers/Rendering/CanvasVertexProgram.cs) | [shader-materials](components/shader-materials.md) |
 | [ShaderProgram](classes/ShaderProgram.md) | [ShaderProgram.cs](../src/Servers/Rendering/ShaderProgram.cs) | [shader-materials](components/shader-materials.md) |
 | [ShaderUniform](classes/ShaderUniform.md) | [ShaderProgram.cs](../src/Servers/Rendering/ShaderProgram.cs) | [shader-materials](components/shader-materials.md) |
 | [ShaderTexture](classes/ShaderTexture.md) | [ShaderProgram.cs](../src/Servers/Rendering/ShaderProgram.cs) | [shader-materials](components/shader-materials.md) |

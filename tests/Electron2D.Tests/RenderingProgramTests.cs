@@ -38,8 +38,8 @@ internal static class RenderingProgramTests
         using var pixels = Image.CreateEmpty(1, 1, false, Image.Format.Rgba8); pixels.Fill(Colors.Red); using var red = ImageTexture.CreateFromImage(pixels); pixels.Fill(Colors.Blue); using var blue = ImageTexture.CreateFromImage(pixels);
         var window = new Window { Size = new(80, 40) }; var source = new Paint { Material = authored }; window.AddChild(source);
         RID shader = default, material = default, item = default, textureShader = default, textureMaterial = default, textureItem = default, cleanupShader = default, cleanupMaterial = default;
-        var submissionChecks = 0; var phase = -4; var preparedDraws = 0; long warmBytes = 0;
-        using var submissionTexture = new SubmissionTexture(pixels, () => { Reject<InvalidOperationException>(() => RenderingServer.MaterialSetParam(material, "gain", 2f)); Reject<InvalidOperationException>(() => RenderingServer.FreeRID(material)); submissionChecks++; });
+        var submissionChecks = 0; var submissionArmed = false; var phase = -4; var preparedDraws = 0; long warmBytes = 0;
+        using var submissionTexture = new SubmissionTexture(pixels, () => { if (!submissionArmed) return; Reject<InvalidOperationException>(() => RenderingServer.MaterialSetParam(material, "gain", 2f)); Reject<InvalidOperationException>(() => RenderingServer.FreeRID(material)); submissionChecks++; });
         window.Ready += _ =>
         {
             Check(RenderingServer.GetCurrentRenderingMethod() == backend, "Requested backend is active."); RenderingServer.SetDefaultClearColor(Colors.Black);
@@ -68,6 +68,9 @@ internal static class RenderingProgramTests
             }
             RenderingServer.CanvasItemSetMaterial(source.GetCanvasItem(), blend.GetRID()); Check(ReferenceEquals(source.Material, authored), "Server material override preserves source getter.");
             cleanupShader = RenderingServer.ShaderCreate(); cleanupMaterial = RenderingServer.MaterialCreate();
+            // Assignment also captures custom pixels to validate their sampled scalar type.
+            submissionArmed = true;
+            submissionTexture.EmitChanged();
             RenderingServer.FramePostDraw += () =>
             {
                 using var image = window.GetTexture().GetImage()!;

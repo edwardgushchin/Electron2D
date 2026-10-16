@@ -160,7 +160,7 @@ internal sealed unsafe partial class GPUCanvasBackend
         if (channels?.NormalTexture is { } normal) bindings[count++] = CanvasBinding(plain with { Texture = normal }, color: false);
         if (channels?.SpecularTexture is { } specular) bindings[count++] = CanvasBinding(plain with { Texture = specular }, color: false);
         if (_materialMasks) bindings[count++] = new() { Texture = _lightAtlas!.DangerousGetHandle(), Sampler = Sampler(TextureFilter.Linear, TextureRepeat.Disabled) };
-        if (count != 0) SDL.BindGPUFragmentSamplers(pass, (uint)batch.Material!.Program.Textures.Length, new ReadOnlySpan<SDL.GPUTextureSamplerBinding>(bindings, count), (uint)count);
+        if (count != 0) SDL.BindGPUFragmentSamplers(pass, (uint)batch.Material!.Program.FragmentTextureCount, new ReadOnlySpan<SDL.GPUTextureSamplerBinding>(bindings, count), (uint)count);
         var buffer = _vertexBuffer!.DangerousGetHandle(); SDL.BindGPUFragmentStorageBuffers(pass, 0, (nint)(&buffer), 1);
     }
 

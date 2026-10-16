@@ -133,7 +133,7 @@ public sealed partial class RenderingServer : ElectronObject
         internal readonly List<RenderEntry> Order = [];
         internal readonly Dictionary<CanvasItem, Transform> Repeats = [], Transforms = [];
         internal readonly List<YSortEntry> YSort = [];
-        internal readonly Resource?[] TextureScratch = new Resource?[16];
+        internal readonly Resource?[] TextureScratch = new Resource?[32];
         internal int State;
         internal bool Wanted, Drawn;
     }

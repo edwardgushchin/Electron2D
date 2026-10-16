@@ -1,6 +1,6 @@
 # ShaderCompiler
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 - Declaration: `internal static unsafe class ShaderCompiler`
 - Source: [ShaderCompiler.cs](../../src/Servers/Rendering/ShaderCompiler.cs)
@@ -53,7 +53,7 @@ Runs the shared interface validation for the public canvas fragment resource.
 
 `internal static ShaderProgram ValidateInterface(ReadOnlySpan<byte> bytecode, bool fragment, IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null)`
 
-Rejects lengths below 20 bytes, above 16 MiB or not divisible by four before copying. Checks little-endian header, SPIR-V versions 1.0 through 1.6, bounded IDs, nonzero/in-bounds instruction word counts, a single selected-stage main entry point, baseline Shader capability and logical GLSL450 memory model when declared. Reflection then checks active resources, std140 values, contiguous bindings and fixed canvas varyings. Fragment inputs are optional float4 color/location 0 and float2 UV/location 1, with one float4 output/location 0. The internal vertex profile requires float2 position/location 0, float4 color/location 1, float2 UV/location 2, one uniform buffer and color/UV outputs. Malformed data raises ArgumentException; unsupported interfaces raise NotSupportedException. This is not full instruction-semantic validation; import runs spirv-val separately.
+Rejects lengths below 20 bytes, above 16 MiB or not divisible by four before copying. Checks little-endian header, SPIR-V versions 1.0 through 1.6, bounded IDs, nonzero/in-bounds instruction word counts, a single selected-stage main entry point, baseline Shader capability and logical GLSL450 memory model when declared. Reflection then checks active resources, std140 values, contiguous bindings and fixed canvas varyings. Fragment inputs are optional float4 color/location 0 and float2 UV/location 1, with one float4 output/location 0. The internal vertex profile requires float2 position/location 0, float4 color/location 1, float2 UV/location 2, a reserved Frame block and optional material/Instance blocks, plus color/UV outputs. Malformed data raises ArgumentException; unsupported interfaces raise NotSupportedException. This is not full instruction-semantic validation; import runs spirv-val separately.
 
 The optional internal sourceTypes table is used only by import preflight to recover logical booleans before annotation. Every reflected member must have a source entry. Already annotated input is rejected in this mode. Published artifacts and runtime callers omit the table and validate embedded boolean records against unsigned physical width/array layout; unmatched or malformed records fail. The importer validates the final annotated output again through this ordinary path. See [the schema](../components/shader-materials.md#boolean-type-information).
 
@@ -64,3 +64,7 @@ The optional internal sourceTypes table is used only by import preflight to reco
 SPIRV-Cross reflection imports now resolve the already packaged runtime-directory shared library directly before any SDL shadercross/device initialization. CPUParticlesTests creates its custom-data Shader in a fresh GPU host process before Engine.Run, then checks actual native pixels. Windows/macOS/Android names were checked against package artifacts; this Linux execution does not establish their native runtime acceptance. Static browser/Apple shader integrations keep their existing separate gates.
 
 SamplerCount reflects only the composed stage sampler count through the existing serialized ShaderCross lifetime. Glyph composition uses it on cold cache creation, never on prepared frames. Native metadata is freed in finally.
+
+## Paired canvas validation
+
+ValidateCanvasProgram checks both module lengths before copying either, validates each canvas stage, compares vertex outputs to fragment inputs and rejects authored hardware instance locations four through six. ShaderProgram.WithVertex enforces shared logical parameter types and roles, then prepares all four derived vertex variants before publication. ValidateBytecodeLength retains the sixteen-MiB, header and word-alignment boundary. Vertex Frame validation applies during source/external import as well as runtime pair loading; renderer builtins in Frame are rejected.

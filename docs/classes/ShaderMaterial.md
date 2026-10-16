@@ -1,6 +1,6 @@
 # ShaderMaterial
 
-Last updated: 2026-10-11
+Last updated: 2026-10-16
 
 - Declaration: `public sealed class ShaderMaterial : Material`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
@@ -155,3 +155,7 @@ Integer device image consumers now validate float/signed/unsigned sampled scalar
 [Automatic scene lighting](../components/shader-materials.md#automatic-scene-lighting) composes the computed fragment color before blend, preserving parameters, texture roles, discard, returns, reload and hardware instancing. Normal/specular and point-mask samplers share the native sixteen-binding stage capacity; four user uniform slots remain available. Current rendered evidence is Linux/Vulkan.
 
 Instance fields are excluded from shared material setters/descriptors. Its portable factory restores the Shader graph first, then shared parameters. [Per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters) provides independent item values over the same borrowed material.
+
+## Paired stages
+
+An authored vertex stage uses the same Shader property and typed material/default/instance namespace as fragments. Names merge only with matching logical types and roles; physical bindings, offsets and matrix layouts may differ. Reload migrates values by logical name/type. Three vertex material blocks follow renderer-owned Frame; all four fragment slots remain available. Native textures are bound per stage from one logical resource list. See [the paired-stage contract](../components/shader-materials.md#authored-vertex-stages).

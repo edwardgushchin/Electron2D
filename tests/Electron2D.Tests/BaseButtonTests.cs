@@ -121,6 +121,8 @@ internal static class BaseButtonTests
             var p = new Vector2((i & 1) == 0 ? 10 : 70, 10); motion.Position = p; press.Position = p; release.Position = p;
             root.PushInput(motion, true); root.PushInput(press, true); root.PushInput(release, true);
         }
+        // Finish background collection accounting before comparing independent allocation intervals.
+        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: true); GC.WaitForPendingFinalizers();
         for (var i = 0; i < 64; i++) PointerCycle(i); var before = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 64; i++) PointerCycle(i);
         var routed = GC.GetAllocatedBytesForCurrentThread() - before;
         Check(ReferenceEquals(group.GetPressedButton(), b), "Real routed pointer input retains complete hover, capture, release and group activation.");

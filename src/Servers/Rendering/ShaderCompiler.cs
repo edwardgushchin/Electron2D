@@ -120,11 +120,11 @@ internal static unsafe class ShaderCompiler
     internal static ShaderProgram ValidateInterface(ReadOnlySpan<byte> bytecode, bool fragment,
         IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null)
     {
-        if (bytecode.Length < 20 || bytecode.Length > MaximumBytecodeBytes || bytecode.Length % 4 != 0)
-            throw new ArgumentException("SPIR-V must contain aligned words and a header, within 16 MiB.", nameof(bytecode));
+        ValidateBytecodeLength(bytecode);
         var code = bytecode.ToArray();
         ValidateStructure(code, fragment);
         var program = SpirvReflection.Read(code, fragment, sourceTypes);
+        if (!fragment) program.ValidateVertexFrame();
         Run(() =>
         {
             fixed (byte* pointer = code)
@@ -136,7 +136,7 @@ internal static unsafe class ShaderCompiler
                     var metadata = Marshal.PtrToStructure<ShaderCross.GraphicsShaderMetadata>(memory);
                     var r = metadata.ResourceInfo;
                     if (r.NumSamplers != program.Textures.Length || r.NumStorageTextures != 0 || r.NumStorageBuffers != 0 ||
-                        r.NumUniformBuffers != program.BufferSizes.Length || !fragment && r.NumUniformBuffers != 1)
+                        r.NumUniformBuffers != program.BufferSizes.Length)
                         throw new NotSupportedException($"The reflected resources do not match the canvas stage interface (samplers={r.NumSamplers}/{program.Textures.Length}, storage images={r.NumStorageTextures}, buffers={r.NumStorageBuffers}, uniforms={r.NumUniformBuffers}/{program.BufferSizes.Length}).");
                     if (metadata.NumInputs > (fragment ? 10 : 14) || (fragment ? metadata.NumOutputs != 1 : metadata.NumOutputs is < 2 or > 10))
                         throw new NotSupportedException("Canvas shaders use color at zero, UV at one, optional instance data at two, secondary UV at four, normal/tangent at five/six, mesh custom float4 at seven through ten and one fragment color output.");
@@ -164,6 +164,23 @@ internal static unsafe class ShaderCompiler
             return true;
         });
         return program;
+    }
+
+    internal static void ValidateBytecodeLength(ReadOnlySpan<byte> bytecode)
+    {
+        if (bytecode.Length < 20 || bytecode.Length > MaximumBytecodeBytes || bytecode.Length % 4 != 0)
+            throw new ArgumentException("SPIR-V must contain aligned words and a header, within 16 MiB.", nameof(bytecode));
+    }
+
+    internal static ShaderProgram ValidateCanvasProgram(ReadOnlySpan<byte> vertexBytecode, ReadOnlySpan<byte> fragmentBytecode)
+    {
+        ValidateBytecodeLength(vertexBytecode); ValidateBytecodeLength(fragmentBytecode);
+        var vertex = ValidateInterface(vertexBytecode, fragment: false);
+        var fragment = ValidateFragmentInterface(fragmentBytecode);
+        var graphics = ValidateDeviceGraphics(vertex.Code, fragment.Code);
+        if (graphics.Inputs.Any(input => input.Location is >= 4 and <= 6))
+            throw new NotSupportedException("Canvas programs receive raw instance custom data at location three; hardware instance transforms and colors belong to the renderer.");
+        var program = ShaderProgram.WithVertex(fragment, vertex); program.PrepareVertexVariants(); return program;
     }
 
     private static void ValidateVaryings(nint pointer, uint count, bool requireBase = false)

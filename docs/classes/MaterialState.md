@@ -87,3 +87,7 @@ While holding the same gate used by setters, writes the supplied finite float32 
 CopyTextures leaves renderer-owned command/screen sampler slots null for native binding. PushUniforms additionally writes inverse target dimensions into SCREEN_PIXEL_SIZE under the material lock; TIME remains independent. The state owns no native backbuffer. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
 
 PushUniforms additionally accepts the owning CanvasItem. It selects reusable item bytes for Instance blocks and shared bytes for other blocks immediately before drawing; reserved renderer values remain shared engine bindings. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).
+
+## Stage upload
+
+SynchronizeSharedUniforms(byte[]?[]? instanceBuffers = null) copies canonical logical values to their other-stage layouts after renderer builtin and per-item preparation. Arrays preserve element strides; matrices round-trip through Transform basis to honor independent row/column layouts. Effective per-item storage is used when present. PushUniforms uploads the fragment buffer prefix to fragment bindings, then remaining buffers to vertex bindings starting at one; vertex binding zero remains renderer-owned. Prepared propagation and native submission allocate no managed storage.

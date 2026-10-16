@@ -12,6 +12,14 @@ public sealed partial class RenderingServer
         catch (ArgumentException error) when (entry.PathHint.Length != 0) { throw new ArgumentException($"Shader '{entry.PathHint}' rejected the compiled module: {error.Message}", nameof(code), error); }
         catch (NotSupportedException error) when (entry.PathHint.Length != 0) { throw new NotSupportedException($"Shader '{entry.PathHint}' rejected the compiled module: {error.Message}", error); }
     }
+    internal void ShaderSetSPIRVCore(RID rid, ReadOnlySpan<byte> vertexBytecode, ReadOnlySpan<byte> fragmentBytecode)
+    {
+        EnsureTextureChange(); var entry = RenderingProgramRegistry<Shader>.OwnedEntry(rid, this);
+        try { entry.Retained!.SetSPIRV(vertexBytecode, fragmentBytecode); }
+        catch (ArgumentException error) when (entry.PathHint.Length != 0) { throw new ArgumentException($"Shader '{entry.PathHint}' rejected the compiled stages: {error.Message}", nameof(vertexBytecode), error); }
+        catch (NotSupportedException error) when (entry.PathHint.Length != 0) { throw new NotSupportedException($"Shader '{entry.PathHint}' rejected the compiled stages: {error.Message}", error); }
+    }
+    internal byte[] ShaderGetSPIRVCore(RID rid, RenderingDevice.ShaderStage stage) { EnsureOwner(); return RenderingProgramRegistry<Shader>.Resolve(rid).GetSPIRV(stage); }
     internal byte[] ShaderGetSPIRVCore(RID rid) { EnsureOwner(); return RenderingProgramRegistry<Shader>.Resolve(rid).GetSPIRV(); }
     internal void ShaderSetPathHintCore(RID rid, string path) { EnsureTextureChange(); ArgumentNullException.ThrowIfNull(path); RenderingProgramRegistry<Shader>.OwnedEntry(rid, this).PathHint = path; }
     internal IReadOnlyList<PropertyDescriptor> GetShaderParameterListCore(RID rid) { EnsureOwner(); return RenderingProgramRegistry<Shader>.Resolve(rid).GetShaderUniformList(); }

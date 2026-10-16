@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-/// <summary>A canvas fragment program loaded from compiled SPIR-V bytecode.</summary>
+/// <summary>A canvas program loaded from compiled fragment SPIR-V with an optional authored vertex stage.</summary>
 /// <remarks>HLSL and GLSL source is compiled during import or build. Runtime loading checks module structure and
 /// reflected interfaces without compiling source; it does not perform full instruction-level semantic validation.
 /// This interface accepts optional float4 color at location zero,
@@ -14,12 +14,12 @@ namespace Electron2D;
 /// by ProjectSettings.RenderingTimeRolloverSeconds. It continues during scene pause and is not a material parameter.
 /// Logical boolean types are retained by validated metadata in the imported SPIR-V payload. External modules may
 /// supply the same metadata; unannotated unsigned storage retains its numeric type.
-/// A fragment uniform block named Instance (type.Instance in imported HLSL) owns at most sixteen scalar/vector
+/// A stage uniform block named Instance (type.Instance in imported HLSL) owns at most sixteen scalar/vector
 /// per-item fields. CanvasItem and RenderingServer instance access is independent of shared material values.
 /// Instance arrays, matrices and renderer-owned fields are rejected; supported declaration defaults are zero.
 /// Material uniforms use validated std140 buffers at descriptor
 /// set three and sampled 2D or image-array textures at set two. Named textures use linear/base-level/clamp sampling, independently
-/// of canvas properties. Sampler configuration, matrices other than float2x2, nested uniform structs and user vertex programs remain pending.</remarks>
+/// of canvas properties. The paired-stage API adds vertex Frame at set one/binding zero, material blocks at set one/bindings one through three and sampled textures at set zero. Shared names use one typed parameter namespace across stages. Sampler configuration, matrices other than float2x2 and nested uniform structs remain pending.</remarks>
 public sealed partial class Shader : Resource
 {
     /// <summary>Identifies the supported two-dimensional shader domain.</summary>
@@ -49,12 +49,13 @@ public sealed partial class Shader : Resource
     /// <exception cref="NotSupportedException">The module uses unsupported stages, capabilities or interfaces.</exception>
     public static Shader CreateFromSPIRV(ReadOnlySpan<byte> bytecode)
     {
-        return new Shader { _program = ShaderCompiler.ValidateFragmentInterface(bytecode) };
+        var program = ShaderCompiler.ValidateFragmentInterface(bytecode);
+        return new Shader { _program = program };
     }
 
     /// <summary>Replaces the program after copying the input and checking its structure and reflected interface.</summary>
     /// <param name="bytecode">Compiled SPIR-V with the supported canvas fragment interface.</param>
-    /// <remarks>A failure preserves the prior program. A successful replacement emits Changed. Native pipelines
+    /// <remarks>A failure preserves the prior program. Success selects the built-in vertex stage and emits Changed. Native pipelines
     /// are rebuilt by the renderer on demand; the resource itself owns no device handles. Native reflection
     /// resolves the selected platform package independently of renderer startup.</remarks>
     /// <exception cref="ArgumentException">The bytecode is malformed or reflection fails.</exception>
@@ -64,6 +65,11 @@ public sealed partial class Shader : Resource
     {
         ThrowIfDisposed();
         var program = ShaderCompiler.ValidateFragmentInterface(bytecode);
+        PublishProgram(program);
+    }
+
+    private void PublishProgram(ShaderProgram program)
+    {
         lock (_codeGate)
         {
             ThrowIfDisposed(); _program = program;
@@ -74,7 +80,7 @@ public sealed partial class Shader : Resource
     }
 
     /// <summary>Returns an independent copy of this program's compiled SPIR-V bytecode.</summary>
-    /// <returns>The compiled shader payload, suitable for later binary loading.</returns>
+    /// <returns>The copied fragment payload, suitable for fragment-only loading. Use the stage overload to export an authored vertex module.</returns>
     /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>
     public byte[] GetSPIRV() => (byte[])GetProgram().Code.Clone();
 
@@ -182,7 +188,7 @@ public sealed partial class Shader : Resource
 
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
-        [new PropertyDescriptor<Shader, byte[]>("SPIRV", shader => shader.GetSPIRV(), (shader, code) => shader.SetSPIRV(code), stored: true)])
+        [new PropertyDescriptor<Shader, byte[]>("SPIRV", shader => shader.GetStoredSPIRV(), (shader, code) => shader.SetStoredSPIRV(code), stored: true)])
         .Concat(GetProgram().Textures.Where(texture => !texture.IsEngineTexture).Select(texture => texture.DescribeDefault()));
 
     /// <inheritdoc />

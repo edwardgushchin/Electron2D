@@ -73,6 +73,10 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
         invoke(source, output, stage)
         if stem == 'Canvas.frag':
             assert output.read_bytes() == (root / 'tests/Electron2D.Tests/Shaders/CanvasHLSL.spv').read_bytes()
+    for stem, language in [('CanvasUserVertexGLSL', 'glsl'), ('CanvasUserVertexHLSL', 'hlsl'), ('CanvasUserResources', 'glsl')]:
+        for stage, suffix in [('vertex', 'vert'), ('fragment', 'frag')]:
+            invoke(root / f'tests/Electron2D.Tests/Shaders/{stem}.{suffix}.{language}', output, stage)
+            assert output.read_bytes() == (root / f'tests/Electron2D.Tests/Shaders/{stem}.{suffix}.spv').read_bytes(), f'{stem} {stage} differs from its fixed oracle'
     # Built-in glyph channels belong to the private renderer interface.
     for stage, stem in [('vertex', 'Canvas.vert'), ('vertex', 'CanvasInstanced.vert'), ('fragment', 'Canvas.frag'), ('fragment', 'Clip.frag')]:
         previous = output.read_bytes()
@@ -185,10 +189,13 @@ void main() { gl_Position=vec4((position+uv)/frame.size,0,1); tint=color; data=c
     assert 'TIME' in invoke(external, output, success=False)
     assert output.read_bytes() == previous
     vertex = directory / 'vertex-time.hlsl'
-    vertex.write_text((root / 'src/Servers/Rendering/Shaders/Canvas.vert.hlsl').read_text()
-                      .replace('float2 size;', 'float2 size; float TIME;').replace('o.color = color;', 'o.color = color * TIME;'))
-    assert 'TIME' in invoke(vertex, output, stage='vertex', success=False)
-    assert output.read_bytes() == previous
+    vertex_source = (root / 'tests/Electron2D.Tests/Shaders/CanvasUserVertexHLSL.vert.hlsl').read_text()
+    vertex.write_text(vertex_source.replace('float gain;', 'float gain; float TIME;').replace('offset * gain', 'offset * (gain + TIME)'))
+    invoke(vertex, output, stage='vertex')
+    previous_vertex = output.read_bytes()
+    vertex.write_text(vertex_source.replace('float2 size;', 'float2 size; float TIME;').replace('offset * gain', 'offset * (gain + TIME)'))
+    assert 'Frame' in invoke(vertex, output, stage='vertex', success=False)
+    assert output.read_bytes() == previous_vertex
     # External vector producers use the same layout checks, without source-only metadata.
     vectors = (root / 'tests/Electron2D.Tests/Shaders/ValuesGLSL.spv').read_bytes()
     external.write_bytes(vectors)

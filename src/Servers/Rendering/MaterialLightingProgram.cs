@@ -4,7 +4,7 @@ namespace Electron2D;
 
 internal static class MaterialLightingProgram
 {
-    private sealed class Module(byte[] bytes)
+    internal sealed class Module(byte[] bytes)
     {
         internal readonly uint[] Header = MemoryMarshal.Cast<byte, uint>(bytes.AsSpan(0, 20)).ToArray();
         internal readonly List<uint[]> Instructions = Read(bytes);
@@ -16,13 +16,13 @@ internal static class MaterialLightingProgram
         }
     }
     private sealed record Value(uint Variable, uint Type, uint[] Path);
-    private static uint Op(uint[] instruction) => instruction[0] & 65535;
-    private static uint[] Instruction(uint opcode, params uint[] operands) => [(uint)((operands.Length + 1) << 16) | opcode, .. operands];
-    private static int Category(uint opcode) => opcode switch { 17 => 0, 10 => 1, 11 => 2, 14 => 3, 15 => 4, 16 or 331 => 5, 2 or 3 or 4 or 7 => 6, 5 or 6 => 7, 330 => 8, 71 or 72 or 73 or 74 or 75 or 332 or 5632 or 5633 => 9, _ => 10 };
+    internal static uint Op(uint[] instruction) => instruction[0] & 65535;
+    internal static uint[] Instruction(uint opcode, params uint[] operands) => [(uint)((operands.Length + 1) << 16) | opcode, .. operands];
+    internal static int Category(uint opcode) => opcode switch { 17 => 0, 10 => 1, 11 => 2, 14 => 3, 15 => 4, 16 or 331 => 5, 2 or 3 or 4 or 7 => 6, 5 or 6 => 7, 330 => 8, 71 or 72 or 73 or 74 or 75 or 332 or 5632 or 5633 => 9, _ => 10 };
     private static bool UniqueType(uint opcode) => opcode is >= 19 and <= 27 or 32 or 33 or 11;
     private static string TypeKey(uint[] instruction) => instruction[0] + ":" + string.Join(',', instruction.AsSpan(2).ToArray());
     private static uint Alias(Dictionary<uint, uint> aliases, uint id) { while (aliases.TryGetValue(id, out var replacement)) id = replacement; return id; }
-    private static int StringEnd(uint[] instruction, int first)
+    internal static int StringEnd(uint[] instruction, int first)
     {
         for (var i = first; i < instruction.Length; i++)
             if ((instruction[i] & 255) == 0 || (instruction[i] & 65280) == 0 || (instruction[i] & 16711680) == 0 || (instruction[i] & 4278190080) == 0) return i + 1;
@@ -31,16 +31,18 @@ internal static class MaterialLightingProgram
 
     internal static byte[] Compose(ShaderProgram program, int normal, int specular, bool masks)
     {
+        program = program.Fragment ?? program;
         var extraSamplers = (normal >= 0 ? 1 : 0) + (specular >= 0 ? 1 : 0) + (masks ? 1 : 0);
         if (program.Textures.Length + extraSamplers > 16) throw new NotSupportedException("Material textures and scene-light channels exceed the native sixteen-sampler stage limit.");
         var key = ((normal + 1) * 4 + specular + 1) * 2 + (masks ? 1 : 0);
         return ComposeLibrary(program, $"LightCompose{key}");
     }
 
-    internal static byte[] ComposeGlyph(ShaderProgram program, bool lcd) => ComposeLibrary(program, lcd ? "GlyphLCD" : "GlyphDecode", glyph: true, inputs: !lcd);
+    internal static byte[] ComposeGlyph(ShaderProgram program, bool lcd) => ComposeLibrary(program.Fragment ?? program, lcd ? "GlyphLCD" : "GlyphDecode", glyph: true, inputs: !lcd);
 
     private static byte[] ComposeLibrary(ShaderProgram program, string name, bool glyph = false, bool inputs = false)
     {
+        program = program.Fragment ?? program;
         var original = new Module(program.Code);
         var libraryBytes = BuiltInShaders.Read(name + ".frag.spv");
         var relocations = MemoryMarshal.Cast<byte, uint>(BuiltInShaders.Read(name + ".frag.reloc"));

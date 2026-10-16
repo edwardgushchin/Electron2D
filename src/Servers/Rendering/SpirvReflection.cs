@@ -66,7 +66,7 @@ internal static unsafe partial class SpirvReflection
             if (binding >= bufferCount || sizes[binding] != 0)
                 throw new NotSupportedException("Uniform buffer bindings must be unique and contiguous, starting at zero.");
             var typeName = Marshal.PtrToStringUTF8(GetName(compiler, resource.BaseTypeId));
-            if (fragment && typeName is "Instance" or "type.Instance") instanceBuffers.Add((int)binding);
+            if (typeName is "Instance" or "type.Instance") instanceBuffers.Add((int)binding);
             var type = GetType(compiler, resource.BaseTypeId);
             if (GetArrayDimensions(GetType(compiler, resource.TypeId)) != 0)
                 throw new NotSupportedException("Arrays of uniform buffers are not supported by the canvas interface.");
@@ -83,12 +83,12 @@ internal static unsafe partial class SpirvReflection
                 var width = GetVectorSize(field);
                 var dimensions = GetArrayDimensions(field);
                 var matrix = GetBaseType(field) == 13 && width == 2 && GetColumns(field) == 2;
-                if (name == "TIME" && (!fragment || GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 1 || GetColumns(field) != 1 || dimensions != 0))
-                    throw new NotSupportedException("The built-in TIME requires a non-array float32 scalar in a fragment uniform buffer.");
-                if (name == "SCREEN_PIXEL_SIZE" && (!fragment || GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 2 || GetColumns(field) != 1 || dimensions != 0))
-                    throw new NotSupportedException("The built-in SCREEN_PIXEL_SIZE requires a non-array float32 vector of width two in a fragment uniform buffer.");
-                if (name == "SDF_COORDS" && (!fragment || GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 4 || GetColumns(field) != 1 || dimensions != 0))
-                    throw new NotSupportedException("SDF_COORDS requires a non-array float32 vector of width four in a fragment uniform buffer.");
+                if (name == "TIME" && (GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 1 || GetColumns(field) != 1 || dimensions != 0))
+                    throw new NotSupportedException("The built-in TIME requires a non-array float32 scalar in a stage uniform buffer.");
+                if (name == "SCREEN_PIXEL_SIZE" && (GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 2 || GetColumns(field) != 1 || dimensions != 0))
+                    throw new NotSupportedException("The built-in SCREEN_PIXEL_SIZE requires a non-array float32 vector of width two in a stage uniform buffer.");
+                if (name == "SDF_COORDS" && (GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 4 || GetColumns(field) != 1 || dimensions != 0))
+                    throw new NotSupportedException("SDF_COORDS requires a non-array float32 vector of width four in a stage uniform buffer.");
                 if (name is "SCREEN_TEXTURE" or "SDF_TEXTURE") throw new NotSupportedException("Renderer-owned texture names require sampled texture bindings.");
                 if (GetBitWidth(field) != 32 || GetColumns(field) != 1 && !matrix || dimensions > 1)
                     throw new NotSupportedException($"Uniform '{name}' requires a supported 32-bit scalar/vector, float2x2 matrix or a fixed one-dimensional array; other matrices and nested structs are not integrated yet.");
@@ -162,14 +162,14 @@ internal static unsafe partial class SpirvReflection
         if (combinedCount != 0 && (imageCount != 0 || samplerCount != 0) || samplerCount > imageCount)
             throw new NotSupportedException("Use combined sampled images or separate images paired one-to-one with samplers.");
         var textureCount = combinedCount + imageCount;
-        if (textureCount > 16 || !fragment && textureCount != 0)
-            throw new NotSupportedException("The canvas fragment interface supports at most sixteen texture bindings; vertex textures are not integrated.");
+        if (textureCount > 16)
+            throw new NotSupportedException("Each canvas stage supports at most sixteen sampled image bindings.");
         var textures = new ShaderTexture[(int)textureCount];
         uint TextureBinding(ReflectedResource resource)
         {
             if (HasDecoration(compiler, resource.Id, DescriptorSet) == 0 || HasDecoration(compiler, resource.Id, Binding) == 0 ||
-                GetDecoration(compiler, resource.Id, DescriptorSet) != 2)
-                throw new NotSupportedException("Fragment texture/sampler resources require explicit bindings in descriptor set 2.");
+                GetDecoration(compiler, resource.Id, DescriptorSet) != (fragment ? 2u : 0u))
+                throw new NotSupportedException($"Sampled image resources require explicit bindings in descriptor set {(fragment ? 2 : 0)}.");
             var slot = GetDecoration(compiler, resource.Id, Binding);
             if (slot >= textureCount) throw new NotSupportedException("Texture bindings must be contiguous, starting at zero.");
             if (GetArrayDimensions(GetType(compiler, resource.TypeId)) != 0)
@@ -181,7 +181,7 @@ internal static unsafe partial class SpirvReflection
             var slot = TextureBinding(resource);
             var name = Marshal.PtrToStringUTF8(resource.Name);
             if (name is "TIME" or "SCREEN_PIXEL_SIZE" or "SDF_COORDS") throw new NotSupportedException($"The built-in {name} requires a renderer-owned uniform, not a texture parameter.");
-            if (name == "TEXTURE" && slot != 0) throw new NotSupportedException("The built-in TEXTURE requires binding zero in descriptor set 2.");
+            if (name == "TEXTURE" && slot != 0) throw new NotSupportedException("The built-in TEXTURE requires binding zero in its stage descriptor set.");
             if (string.IsNullOrWhiteSpace(name) || uniforms.ContainsKey(name) || textures.Any(t => t is not null && t.Name == name) || textures[slot] is not null)
                 throw new NotSupportedException("Texture names and bindings must be unique and must not collide with material uniforms.");
             var imageType = GetType(compiler, resource.BaseTypeId);

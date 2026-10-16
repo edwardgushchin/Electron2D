@@ -28,6 +28,22 @@ public sealed partial class RenderingServer
     /// <exception cref="InvalidOperationException">The service is unavailable or owner/submission/lifetime rules reject the operation.</exception>
     public static byte[] ShaderGetSPIRV(RID shader) => RequireService().ShaderGetSPIRVCore(shader);
 
+    /// <summary>Atomically replaces both copied canvas stages of a caller-owned shader.</summary>
+    /// <param name="shader">The shader RID owned by the current renderer session.</param>
+    /// <param name="vertexBytecode">The authored vertex module.</param><param name="fragmentBytecode">The matching fragment module.</param>
+    /// <remarks>Both stages validate before publication; path hints annotate failures. Shared material parameters retain one typed namespace.</remarks>
+    /// <exception cref="ArgumentException">The identity, code or shared interface is invalid.</exception>
+    /// <exception cref="NotSupportedException">A stage uses an unsupported canvas profile.</exception>
+    /// <exception cref="InvalidOperationException">The shader is borrowed, the renderer is unavailable or owner/submission rules are violated.</exception>
+    public static void ShaderSetSPIRV(RID shader, ReadOnlySpan<byte> vertexBytecode, ReadOnlySpan<byte> fragmentBytecode) => RequireService().ShaderSetSPIRVCore(shader, vertexBytecode, fragmentBytecode);
+    /// <summary>Copies a selected authored stage from a live owned or borrowed shader.</summary>
+    /// <param name="shader">The live shader RID.</param><param name="stage">Vertex or Fragment.</param>
+    /// <returns>The copied module; empty vertex bytes select the renderer's built-in vertex program.</returns>
+    /// <exception cref="ArgumentException">The identity or stage value is invalid.</exception>
+    /// <exception cref="NotSupportedException">The selected stage is outside the canvas domain.</exception>
+    /// <exception cref="InvalidOperationException">The renderer is unavailable or access is off-owner.</exception>
+    public static byte[] ShaderGetSPIRV(RID shader, RenderingDevice.ShaderStage stage) => RequireService().ShaderGetSPIRVCore(shader, stage);
+
     /// <summary>Sets diagnostic metadata used in later bytecode validation errors; does not load a file.</summary>
     /// <param name="shader">Live owned/borrowed shader identity as allowed by the operation; mutations require caller ownership.</param>
     /// <param name="path">Non-null diagnostic hint; empty clears it.</param>

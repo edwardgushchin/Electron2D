@@ -12,7 +12,7 @@ Decisions in this log: [0028](#adr-0028), [0046](#adr-0046).
 <a id="adr-0028"></a>
 ## ADR 0028: GPU-first 2D rendering, shared SPIR-V shaders, browser WebGPU, and SDL_Renderer fallback
 
-Last updated: 2026-10-13
+Last updated: 2026-10-16
 
 ### Status
 
@@ -117,7 +117,7 @@ Viewport.UseHDR2D, static RenderingServer.ViewportSetUseHDR2D and the typed rend
 
 ### Current implementation boundary
 
-The canvas vertex interface retains float2 position at location zero, float4 tint at one and float2 UV at two, with optional float4 raw instance data at three. Built-in vertex output adds optional float4 data at location two beside color zero and UV one. Fragment programs may consume this value; ordinary geometry supplies zero. Native GPU tests verify independent per-instance data and shader mutation. Compatibility keeps geometry/color behavior and explicitly rejects custom shaders. User vertex programs remain pending.
+The canvas vertex interface retains float2 position at location zero, float4 tint at one and float2 UV at two, with optional float4 raw instance data at three. Built-in vertex output adds optional float4 data at location two beside color zero and UV one. Fragment programs may consume this value; ordinary geometry supplies zero. Native GPU tests verify independent per-instance data and shader mutation. Compatibility keeps geometry/color behavior and explicitly rejects custom shaders. User vertex programs now use paired Shader SPIR-V factory/setter overloads and stage-selected copied export. Preserve a single typed material/instance/texture namespace across independently bound stages. The native canvas ABI supplies framebuffer-pixel position, command color, UV and optional mesh/custom channels; renderer-owned Frame at vertex binding zero carries client size. Apply hardware instance transforms/tints before the authored main, then canvas modulation and private glyph/lighting outputs. Keep instanced submission native. The native ABI does not redefine retained CPU bounds, input geometry or light selection. Vertex material blocks use the remaining three slots and textures use their independent sixteen-sampler limit. Resource storage and reload publish both stages together; fragment-only setters retain their established built-in vertex behavior. The exact ABI and runtime validation boundary are in [shader materials](../components/shader-materials.md#authored-vertex-stages).
 
 The initial canvas integration is executable. Engine.Run creates a renderer for the root Window; retained rectangles, lines and texture drawing use visibility, transforms, Z order and modulation. The GPU and compatibility paths have native Linux Wayland pixel checks. This is not complete rendering API coverage or cross-platform acceptance.
 

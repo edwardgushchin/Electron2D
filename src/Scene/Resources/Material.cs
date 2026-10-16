@@ -13,13 +13,13 @@ public abstract partial class Material : Resource
     internal virtual BlendMode GetCanvasBlendMode() => BlendMode.Mix;
 }
 
-/// <summary>Applies a programmable fragment shader to a node's canvas commands.</summary>
+/// <summary>Applies a programmable canvas shader to a node's canvas commands.</summary>
 /// <remarks>A null shader uses normal color drawing. An assigned shader requires the GPU backend, including
 /// an identity shader. Shader resources are borrowed; resource duplication follows the requested graph policy.
 /// Reserved TIME and SCREEN_PIXEL_SIZE uniforms and SCREEN_TEXTURE sampling are filled by the renderer
 /// and excluded from parameter access, stored properties and value migration. Scene lights compose the authored fragment color before blend while preserving discard and parameters.
 /// Normal/specular channels and point masks share the native sixteen-sampler stage capacity; overflow rejects
-/// before drawing. All four user uniform-buffer slots remain available.</remarks>
+/// before drawing. All four fragment uniform-buffer slots remain available; an authored vertex stage has three material slots after its renderer-owned Frame. Matching parameter names share typed values across both stages.</remarks>
 public sealed class ShaderMaterial : Material
 {
     private readonly object _gate = new();
@@ -29,7 +29,7 @@ public sealed class ShaderMaterial : Material
     /// <summary>Creates a material using ordinary canvas colors.</summary>
     public ShaderMaterial() { }
 
-    /// <summary>Gets or sets the borrowed shader applied to canvas fragments.</summary>
+    /// <summary>Gets or sets the borrowed shader applied to canvas geometry and fragments.</summary>
     /// <value>Null by default.</value>
     /// <exception cref="ObjectDisposedException">The material or supplied shader is disposed.</exception>
     public Shader? Shader
@@ -335,6 +335,22 @@ internal sealed class MaterialState
             }
     }
 
+    internal void SynchronizeSharedUniforms(byte[]?[]? instanceBuffers = null)
+    {
+        foreach (var copy in Program.UniformCopies)
+        {
+            var source = instanceBuffers is not null && instanceBuffers[copy.Source.Buffer] is { } ownSource ? ownSource : Buffers[copy.Source.Buffer];
+            var target = instanceBuffers is not null && instanceBuffers[copy.Target.Buffer] is { } ownTarget ? ownTarget : Buffers[copy.Target.Buffer];
+            for (var i = 0; i < copy.Source.Count; i++)
+            {
+                var from = source.AsSpan(copy.Source.Offset + i * copy.Source.Stride, copy.Source.ElementSize);
+                var to = target.AsSpan(copy.Target.Offset + i * copy.Target.Stride, copy.Target.ElementSize);
+                if (copy.Source.Type == typeof(Transform)) copy.Target.Write(to, copy.Source.Read<Transform>(from));
+                else from.CopyTo(to);
+            }
+        }
+    }
+
     internal void PushUniforms(nint command, float time, Vector2 screenPixelSize, Vector4 sdfCoords = default, CanvasItem? instance = null)
     {
         lock (_gate)
@@ -346,10 +362,12 @@ internal sealed class MaterialState
             if (Program.SDFCoordsUniform is { } sdf)
                 MemoryMarshal.Write(Buffers[sdf.Buffer].AsSpan(sdf.Offset, sizeof(float) * 4), in sdfCoords);
             var instanceBuffer = Program.HasInstanceUniforms ? instance?.InstanceUniforms.Prepare(Program) : null;
+            SynchronizeSharedUniforms(instanceBuffer);
             for (var i = 0; i < Buffers.Length; i++)
             {
                 var bytes = instanceBuffer is not null && instanceBuffer[i] is { } own ? own : Buffers[i];
-                SDL.PushGPUFragmentUniformData(command, (uint)i, bytes.AsSpan(), (uint)bytes.Length);
+                if (i < Program.FragmentBufferCount) SDL.PushGPUFragmentUniformData(command, (uint)i, bytes.AsSpan(), (uint)bytes.Length);
+                else SDL.PushGPUVertexUniformData(command, (uint)(i - Program.FragmentBufferCount + 1), bytes.AsSpan(), (uint)bytes.Length);
             }
         }
     }

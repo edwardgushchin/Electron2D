@@ -1,6 +1,6 @@
 # MaterialLightingProgram
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 - Declaration: `internal static class MaterialLightingProgram`
 - Source: [MaterialLightingProgram.cs](../../src/Servers/Rendering/MaterialLightingProgram.cs)
@@ -14,3 +14,7 @@ The helper's sampler representation follows the source module's combined or pair
 MaterialLightingTests executes native output and error cleanup; the independent pinned validator checks 257 lighting source/profile combinations. Native-driver success alone is insufficient proof of module validity. Other platform and native allocation acceptance remain unverified.
 
 ComposeGlyph reuses the same exact relocation linker for incoming COLOR decoding and a post-output LCD helper. Component access chains become by-value extracts; paired source image depth metadata is retained, interpolation decorations and entry interfaces are deduplicated. An extra sampler shifts only set-two storage bindings, preserving set-three material uniform slots. Original discard/return control flow remains intact. check_canvas_glyphs.py independently validates 732 glyph variants; check_material_lighting.py validates 257 existing lighting variants.
+
+## Paired material projection
+
+Lighting/glyph fragment composition uses Program.Fragment when a paired program is supplied. Vertex-only textures and buffers therefore cannot change fragment resource bindings or consume fragment lighting/glyph capacity. The selected CanvasVertexProgram variant supplies matching private lighting/glyph varyings.

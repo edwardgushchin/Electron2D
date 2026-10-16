@@ -105,3 +105,7 @@ Returns the named texture index, excluding reserved TEXTURE. Null/blank or unkno
 The immutable reflected program includes UsesScreenTexture and optional ScreenPixelSizeUniform. Descriptors/FindTexture exclude both renderer-owned texture roles; resource uniforms retain their previous behavior. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
 
 InstanceUniforms, HasInstanceUniforms, InstanceDescriptors and CanvasInstanceDescriptors publish separate per-item layout and typed metadata. BufferSizes includes every shared/instance block under the four-slot fragment limit. The constructor also accepts SDFCoordsUniform and instanceUniforms. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).
+
+## Paired program metadata
+
+WithVertex validates the exact Frame layout and merges stage uniforms, builtins, instance fields and texture names. Vertex and Fragment retain the original immutable modules. FragmentBufferCount and FragmentTextureCount delimit the fragment prefix; VertexTextureIndices maps vertex sampler slots to combined resource indices. UniformCopies maps canonical shared fields to each target physical layout. ValidateVertexFrame reserves binding zero exclusively for client size. PrepareVertexVariants creates four cold CanvasVertexProgram variants, selected by VertexCode(instanced, lighting). No published collection or derived payload may mutate.
