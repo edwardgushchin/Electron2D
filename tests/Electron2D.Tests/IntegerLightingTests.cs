@@ -8,10 +8,11 @@ internal static class IntegerLightingTests
         protected override void OnDraw() => DrawTextureRect(texture, new(0, 0, size, size), false, color == default ? Colors.White : color);
     }
     private static Color Bits(Color value) => new(BitConverter.Int32BitsToSingle((int)value.R), BitConverter.Int32BitsToSingle((int)value.G), BitConverter.Int32BitsToSingle((int)value.B), BitConverter.Int32BitsToSingle((int)value.A));
-    internal static void Run(bool programmable = false, bool ordinaryUnsigned = false)
+    internal static void Run(bool programmable = false, bool ordinaryUnsigned = false, bool HDR = false)
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
-        var root = new Window { Size = new(256, 128), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
+        var root = new Window { Size = new(256, 128), UseHDR2D = HDR, CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
+        var ambient = HDR ? new Color(.05f, .05f, .05f).SRGBToLinear().R : .05f;
         var resources = new List<Resource>(); var native = new Texture[3, 3]; var reference = new Texture[3, 3]; var ids = new RID[3, 3];
         var values = new Color[,] { { new(1, 1, 1), new(2, -1, 1), new(2, 1, 0) }, { new(.5f, .5f, 0), new(-1, 1, 0), new(0, 0, 0) }, { new(.3f, .5f, .6f, .4f), new(-1, 2, 1, 0), new(1, 2, 0, 0) } };
         var materials = new ShaderMaterial?[3];
@@ -92,9 +93,9 @@ internal static class IntegerLightingTests
                 {
                     using var pixels = root.GetTexture().GetImage()!;
                     for (var index = 0; index < 27; index++) Equal(pixels.GetPixel(index % 9 * 24 + 6, index / 9 * 24 + 6), pixels.GetPixel(index % 9 * 24 + 16, index / 9 * 24 + 6), $"Scalar combination {index}");
-                    var expected = frames % 2 == 0 ? new Color(.3f, .3f, .3f) : new Color(.05f, .3f, .05f);
+                    var expected = frames % 2 == 0 ? new Color(ambient + .25f, ambient + .25f, ambient + .25f) : new Color(ambient, ambient + .25f, ambient);
                     foreach (var x in new[] { 8, 32, 56 }) Equal(pixels.GetPixel(x, 92), expected, "Live point mask");
-                    Equal(pixels.GetPixel(50, 86), new(.05f, .05f, .05f), "Atlas transparent margin");
+                    Equal(pixels.GetPixel(50, 86), new(ambient, ambient, ambient), "Atlas transparent margin");
                     Equal(pixels.GetPixel(84, 92), frames % 2 == 0 ? new(.5f, 0, 0) : Colors.Black, "Signed alpha clip");
                     Equal(pixels.GetPixel(108, 92), frames % 2 == 0 ? new(.5f, 0, 0) : Colors.Black, "Unsigned alpha clip");
                 }

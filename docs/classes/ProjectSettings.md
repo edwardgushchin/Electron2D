@@ -21,9 +21,13 @@ Public static declarations are in [`ProjectSettings.API.cs`](../../src/Core/Conf
 
 `ProjectSettings.LCDSubpixelLayout` is a built-in `ProjectSetting<FontLCDSubpixelLayout>` for `gui/theme/lcd_subpixel_layout`, default HorizontalRGB. None through VerticalBGR are selectable; Max and undefined values reject. The text owner captures the value before first native font use. Live assignments persist a restart-required preference. See [raster and consumer contract](../components/text.md#native-font-antialiasing-and-lcd-layout).
 
+## Root canvas HDR
+
+`public static ProjectSetting<bool> HDR2D { get; }` names `rendering/viewport/hdr_2d`, default false. Active feature overrides select linear half-float rendering for an unassigned root at startup. Explicit Window.UseHDR2D assignments take precedence and SubViewport targets keep their authored selection. Compatibility rejects true. Stored project files preserve base and feature values; [HDR canvas](../components/hdr-canvas.md) describes actual rendering, readback and output transfer.
+
 ## Root canvas antialiasing
 
-`ProjectSettings.MSAA2D` is a typed `ProjectSetting<Viewport.MSAA>` for `rendering/anti_aliasing/quality/msaa_2d`. Disabled is the default; Max and undefined values reject. Engine startup reads active feature overrides for an unconfigured root window. Explicit window and offscreen viewport selections remain independent. Enabled values require GPU RGBA8 support for the requested sample count; compatibility fails explicitly. See [canvas MSAA](../components/canvas-rendering.md#canvas-multisample-antialiasing).
+`ProjectSettings.MSAA2D` is a typed `ProjectSetting<Viewport.MSAA>` for `rendering/anti_aliasing/quality/msaa_2d`. Disabled is the default; Max and undefined values reject. Engine startup reads active feature overrides for an unconfigured root window. Explicit window and offscreen viewport selections remain independent. Enabled values require GPU support for the selected byte/half-float format and requested sample count; compatibility fails explicitly. See [canvas MSAA](../components/canvas-rendering.md#canvas-multisample-antialiasing).
 
 
 ## Project theme startup

@@ -72,17 +72,18 @@ internal sealed class CanvasPolygon
         }
     }
 
-    internal void Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap, CanvasItem? skinOwner = null)
+    internal void Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap, CanvasItem? skinOwner = null, bool linear = false)
     {
-        if (_rawTriangles) { CanvasMesh.AppendTriangleData(output, _triangleData!, IndexCount, transform, modulation, snap, skinOwner); return; }
+        if (_rawTriangles) { CanvasMesh.AppendTriangleData(output, _triangleData!, IndexCount, transform, modulation, snap, skinOwner, linear); return; }
+        if (linear) modulation = CanvasGeometry.LinearColor(modulation);
         var skinned = _skinEnabled && _skin?.Prepare(Vertices, VertexCount) == true;
         if (VertexCount >= 3)
         {
-            for (var i = 0; i < IndexCount; i++) output.Add(TransformVertex(skinned ? Vertices[Indices[i]] with { Position = _skin!.Position(Indices[i]) } : Vertices[Indices[i]], transform, modulation, snap));
+            for (var i = 0; i < IndexCount; i++) output.Add(TransformVertex(skinned ? Vertices[Indices[i]] with { Position = _skin!.Position(Indices[i]) } : Vertices[Indices[i]], transform, modulation, snap, linear));
             return;
         }
-        var a = TransformVertex(Vertices[0], transform, modulation, snap);
-        var b = VertexCount == 1 ? a : TransformVertex(Vertices[1], transform, modulation, snap);
+        var a = TransformVertex(Vertices[0], transform, modulation, snap, linear);
+        var b = VertexCount == 1 ? a : TransformVertex(Vertices[1], transform, modulation, snap, linear);
         if (VertexCount == 2 && a.Position == b.Position) return;
         var dx = (double)b.Position.X - a.Position.X; var dy = (double)b.Position.Y - a.Position.Y;
         var length = Math.Sqrt(dx * dx + dy * dy);
@@ -93,9 +94,9 @@ internal sealed class CanvasPolygon
         output.Add(q0); output.Add(q1); output.Add(q2); output.Add(q0); output.Add(q2); output.Add(q3);
     }
 
-    private static CanvasVertex TransformVertex(CanvasVertex vertex, Transform transform, Color modulation, bool snap)
+    private static CanvasVertex TransformVertex(CanvasVertex vertex, Transform transform, Color modulation, bool snap, bool linear)
     {
-        var position = transform * vertex.Position; var color = vertex.Color * modulation;
+        var position = transform * vertex.Position; var color = (linear ? CanvasGeometry.LinearColor(vertex.Color) : vertex.Color) * modulation;
         if (!position.IsFinite() || !color.IsFinite()) throw new InvalidOperationException("Canvas geometry overflowed finite values.");
         return vertex with { Position = snap ? CanvasGeometry.Snap(position) : position, Color = color };
     }

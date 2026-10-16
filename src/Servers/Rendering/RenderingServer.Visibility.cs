@@ -4,15 +4,16 @@ public sealed partial class RenderingServer
 {
     private readonly List<(VisibleOnScreenNotifier Node, ulong Generation)> _screenChanges = [];
 
-    private void AppendScreenCanvas(CanvasItem node, Transform transform, Rect2i? clip, Vector2i pixels)
+    private void AppendScreenCanvas(CanvasItem node, Transform transform, Rect2i? clip, Vector2i pixels, bool unshaded = false)
     {
         var first = _vertices.Count;
         var batchStart = _batches.Count;
-        var mode = (node.CanvasMaterial as CanvasItemMaterial)?.LightMode ?? LightMode.Normal;
+        var mode = unshaded ? LightMode.Unshaded : (node.CanvasMaterial as CanvasItemMaterial)?.LightMode ?? LightMode.Normal;
         var layer = 0; node.RenderCanvas()?.View(_viewport, out _, out layer, out _);
         var illumination = _lighting.Affects(node.RenderLightMask, node.RenderZ, layer) || mode != LightMode.Normal;
+        var canvasModulation = illumination ? (Color?)null : node.RenderCanvas()?.Modulate ?? Colors.White;
         // A command boundary prevents items with different masks from merging into one lighting batch.
-        var boundary = illumination || _batches.Count != 0 && _batches[^1].Lighting is not null;
+        var boundary = illumination || _batches.Count != 0 && (_batches[^1].Lighting is not null || _batches[^1].CanvasModulation != canvasModulation);
         if (boundary) _batches.Add(new(0, 0, null, Operation: CanvasOperation.MaskFinish));
         node.AppendCanvas(_vertices, _batches, transform, CanvasTime, clip, pixels, _viewport, illumination);
         if (boundary) _batches.RemoveAt(batchStart);
@@ -23,7 +24,7 @@ public sealed partial class RenderingServer
             var filter = channels?.TextureFilter is { } ownFilter && ownFilter != TextureFilter.ParentNode ? ownFilter : batch.Filter;
             var repeat = channels?.TextureRepeat is { } ownRepeat && ownRepeat != TextureRepeat.ParentNode ? ownRepeat : batch.Repeat;
             var shaded = illumination && mode != LightMode.Unshaded;
-            _batches[i] = batch with { Filter = filter, Repeat = repeat, MaxAnisotropy = filter >= TextureFilter.NearestWithMipmapsAnisotropic ? 1 << (int)_viewport.AnisotropicFilteringLevel : 1, Lighting = shaded ? new(node.RenderCanvas()?.Modulate ?? Colors.White, node.RenderLightMask, node.RenderZ, layer, mode) : null };
+            _batches[i] = batch with { Filter = filter, Repeat = repeat, MaxAnisotropy = filter >= TextureFilter.NearestWithMipmapsAnisotropic ? 1 << (int)_viewport.AnisotropicFilteringLevel : 1, CanvasModulation = canvasModulation, Lighting = shaded ? new(node.RenderCanvas()?.Modulate ?? Colors.White, node.RenderLightMask, node.RenderZ, layer, mode) : null };
         }
         SampleCanvasVisibility(node, transform, clip, pixels);
         if (node is not VisibleOnScreenNotifier notifier || notifier.ScreenCandidate || notifier.RenderInheritedModulate.A < 0.007f) return;

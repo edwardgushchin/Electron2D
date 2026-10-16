@@ -34,9 +34,9 @@ internal sealed unsafe partial class GPUCanvasBackend
         var pass = BeginPass(command, output.MultisampleBackBuffer!.DangerousGetHandle(), SDL.GPULoadOp.DontCare, default);
         try
         {
-            SDL.BindGPUGraphicsPipeline(pass, _seedPipelines[(int)output.MSAA]!.DangerousGetHandle());
+            SDL.BindGPUGraphicsPipeline(pass, _seedPipelines[output.HDR ? 1 : 0, (int)output.MSAA]!.DangerousGetHandle());
             var dimensions = new Vector4(output.Size.X, output.Size.Y, 0, 0);
-            SDL.PushGPUVertexUniformData(command, 0, (nint)(&dimensions), (uint)sizeof(Vector4));
+            PushFrame(command, dimensions, Colors.White);
             var binding = new SDL.GPUBufferBinding { Buffer = _vertexBuffer!.DangerousGetHandle(), Offset = (uint)vertexOffset };
             SDL.BindGPUVertexBuffers(pass, 0, new ReadOnlySpan<SDL.GPUBufferBinding>(&binding, 1), 1);
             var sampler = new SDL.GPUTextureSamplerBinding { Texture = output.BackBuffer!.DangerousGetHandle(), Sampler = Sampler(TextureFilter.Nearest, TextureRepeat.Disabled) };

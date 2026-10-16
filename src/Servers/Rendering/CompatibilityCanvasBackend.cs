@@ -243,6 +243,12 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                 else Check(SDL.SetTextureBlendMode(texture, blend), "set canvas texture blending");
                 if (texture != 0) Check(SDL.SetTextureScaleMode(texture,
                     batch.Filter == TextureFilter.Linear ? SDL.ScaleMode.Linear : SDL.ScaleMode.Nearest), "set canvas texture filtering");
+                for (var vertex = batch.First; vertex < batch.First + batch.Count; ++vertex)
+                {
+                    var color = vertices[vertex].Color * (batch.CanvasModulation ?? Colors.White);
+                    if (!color.IsFinite()) throw new InvalidOperationException("Canvas modulation overflowed finite colors.");
+                    _vertices[vertex].Color = new() { R = color.R, G = color.G, B = color.B, A = color.A };
+                }
                 // SDL 3.4.16's software quad shortcut loses transposed/constant UVs. Separate triangles bypass it.
                 var step = Driver == "software" && texture != 0 ? 3 : batch.Count;
                 for (var first = batch.First; first < batch.First + batch.Count; first += step)
@@ -316,8 +322,9 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         if (texture is ViewportTexture view) { var viewport = view.Bound ?? throw new InvalidOperationException("The sampled viewport texture is unresolved."); return (FindTarget(viewport) ?? throw new InvalidOperationException("The sampled viewport has no native target.")).Current.DangerousGetHandle(); }
         return _textures[texture].Handle.DangerousGetHandle();
     }
-    internal override RenderHandle CreateTarget(Vector2i size, Color clear, bool mipmaps = false)
+    internal override RenderHandle CreateTarget(Vector2i size, Color clear, bool mipmaps = false, bool HDR = false)
     {
+        ValidateHDR(HDR);
         if (mipmaps) throw new NotSupportedException("The compatibility renderer cannot generate canvas backbuffer mipmaps.");
         var renderer = _renderer.DangerousGetHandle(); var target = new RenderHandle(SDL.CreateTexture(renderer, BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888, SDL.TextureAccess.Target, size.X, size.Y), SDL.DestroyTexture, _renderer);
         try

@@ -14,7 +14,7 @@ public sealed partial class RenderingServer
     internal bool CanInstance(CanvasItem? owner) => _rendering && _backend is GPUCanvasBackend &&
         owner is not null && owner is not VisibleOnScreenNotifier && !IsCompositor(owner) && ParentGroup(owner) is null or CanvasGroup;
 
-    internal bool TryAppendInstances(MultiMesh resource, Transform canvas, Color modulation, Rect2 bounds, float fraction, out int first)
+    internal bool TryAppendInstances(MultiMesh resource, Transform canvas, Color modulation, Rect2 bounds, float fraction, out int first, bool linear = false)
     {
         first = _instances.Count;
         Rect2? combined = null;
@@ -22,7 +22,7 @@ public sealed partial class RenderingServer
         for (var i = 0; i < resource.DrawCount; i++)
         {
             resource.Presentation(i, fraction, out var pose, out var color, out var custom);
-            pose = canvas * pose; color *= modulation;
+            pose = canvas * pose; color = (linear ? CanvasGeometry.LinearColor(color) : color) * modulation;
             var transformedBounds = pose * bounds;
             if (!pose.IsFinite() || !color.IsFinite() || !transformedBounds.IsFinite() || !transformedBounds.End.IsFinite())
             {

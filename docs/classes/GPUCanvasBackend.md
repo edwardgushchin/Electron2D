@@ -31,8 +31,8 @@ using CanvasBackend backend = new GPUCanvasBackend(nativeWindow);
 | `internal override string Method { get; }` | [Method](#method) |
 | `internal override string Driver { get; }` | [Driver](#driver) |
 | `internal override Vector2i GetPixelSize()` | [Pixel size](#pixel-size) |
-| `internal override void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present, double time)` | [Draw](#draw) |
-| `internal override Image Readback()` | [Readback](#readback) |
+| `internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)` | [Draw](#draw) |
+| `internal override Image Readback(CanvasRenderTarget target, bool backBuffer = false)` | [Readback](#readback) |
 | `public override void Dispose()` | [Disposal](#disposal) |
 
 ## Member descriptions
@@ -63,15 +63,15 @@ Uses the window physical pixel dimensions.
 
 ### Draw
 
-`internal override void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present, double time)`
+`internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)`
 
 Prepares program/texture resources before encoding, prunes unused caches, resizes target/buffers, uploads changed pixels and vertices, and emits ordered render batches. Uniforms serialize with material updates. Before each upload, optional reserved TIME receives the current float32 render time at its reflected offset/binding. A shader requiring TIME rejects a clock outside finite float32 range during resource preflight, before encoding or drawing. Programs without TIME use their existing buffers unchanged. TEXTURE binds the command texture or owned white pixel. Submission commits texture upload versions only on success. An unsubmitted command is cancelled unless a swapchain was acquired, in which case it must be submitted for release. Runtime backend switching/device recovery are absent.
 
 ### Readback
 
-`internal override Image Readback()`
+`internal override Image Readback(CanvasRenderTarget target, bool backBuffer = false)`
 
-Copies the last target through a download transfer buffer and fence, waits for completion and returns a caller-owned tightly packed RGBA8 Image. Native staging rows are padded to 64 pixels. Temporary handles are released on failure.
+Copies the last target through a download transfer buffer and fence, waits for completion and returns a caller-owned tightly packed RGBA8 or linear RGBA half-float Image with its actual target format and four/eight-byte pixel stride. Native staging rows are padded to 64 pixels. Temporary handles are released on failure.
 
 ### Disposal
 
@@ -98,3 +98,5 @@ ClipChildren MaskBegin copies main background into BackBuffer, then captures chi
 [GPUCanvasBackend.DeviceTextures.cs](../../src/Servers/Rendering/GPUCanvasBackend.DeviceTextures.cs) creates/reuses the actual upload cache allocation and exports completed viewport target pairs. Borrowed ordinary/array exports retain cache residency until release or retirement. Allocation metadata and optional storage flags match native format/usage support. Device upload versions commit before canvas submission to avoid a second upload overwriting device writes. RenderingServer.TextureGetRDTexture exports actual renderer-managed ordinary uploads, independent arrays and completed viewport images to the retained device without CPU copying. Compatible authored updates keep the RID; replacing allocation, disposing the source, rebinding the viewport or retiring its target expires it. A viewport RID resolves the completed ping-pong image when each command is recorded. FreeRID releases only the borrowed wrapper; queued native operations retain the old allocation through completion. Device writes change GPU storage, while authored CPU snapshots remain unchanged; the next authored update overwrites device changes. Sampling, raw update/copy/read and supported storage roles reflect actual native allocation flags. Prepare changed uploads before starting a draw list. Empty storage, unrendered targets and the compatibility renderer return an empty RID. Distinct sRGB views still require native format-view ownership.
 
 GPUCanvasBackend.Glyphs composes and caches encoded coverage programs on cold source/mode identities, binds an extra backing-image sampler for materials without TEXTURE and evicts unused compositions with native pipelines. LCD adds a component-blend pipeline key and per-batch blend constant; masks use ordinary scalar-alpha blend and transparent groups use their rewritten premultiplied capture. Integer sampled values reject this coverage profile. Glyph stages share the existing device, target and MSAA resolution path.
+
+[HDR target/color helpers](../../src/Servers/Rendering/GPUCanvasBackend.HDR.cs) retain half-float derived source views, refresh native mip data before consumer filtering, and encode root presentation into a separate SDR target. Vertex frame constants retain per-batch canvas color independently of command/mesh colors; shared color/mask ranges always convert their original source. Readback and borrowed device identities report actual target precision. See [HDR canvas behavior and verification](../components/hdr-canvas.md).

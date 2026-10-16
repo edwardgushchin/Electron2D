@@ -6,9 +6,13 @@ Last updated: 2026-10-16
 
 **Inherited By:** [Window](Window.md), [SubViewport](SubViewport.md)
 
-- **Source:** [Viewport.cs](../../src/Scene/Main/Viewport.cs), [Viewport.Targets.cs](../../src/Scene/Main/Viewport.Targets.cs), [Viewport.Drag.cs](../../src/Scene/Main/Viewport.Drag.cs), [Viewport.PhysicsInterpolation.cs](../../src/Scene/Main/Viewport.PhysicsInterpolation.cs), [Viewport.Audio.cs](../../src/Scene/Main/Viewport.Audio.cs)
+- **Source:** [Viewport.cs](../../src/Scene/Main/Viewport.cs), [Viewport.Targets.cs](../../src/Scene/Main/Viewport.Targets.cs), [Viewport.Drag.cs](../../src/Scene/Main/Viewport.Drag.cs), [Viewport.PhysicsInterpolation.cs](../../src/Scene/Main/Viewport.PhysicsInterpolation.cs), [Viewport.Audio.cs](../../src/Scene/Main/Viewport.Audio.cs), [Viewport.HDR.cs](../../src/Scene/Main/Viewport.HDR.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public abstract partial class Viewport : Node`
+
+## HDR canvas rendering
+
+`public bool UseHDR2D { get; set; }` enables linear RGBA half-float targets, default false. An unassigned root uses `ProjectSettings.HDR2D` at startup; offscreen authoring remains independent. Equal assignments republish renderer-session overrides. Changes notify texture views after state publication, preserve the logical RID and replace native targets on the next submission; observer failures aggregate without rollback. GetTexture().GetImage() returns completed linear `Rgbah` pixels while the root screen is SDR encoded. Compatibility and unsupported GPU formats/sample counts reject enabled HDR. See [color roles, storage, capture and executable verification](../components/hdr-canvas.md).
 
 ## Canvas MSAA
 

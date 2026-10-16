@@ -6,7 +6,7 @@ namespace Electron2D;
 /// <summary>Renders retained two-dimensional window and offscreen canvas commands.</summary>
 /// <remarks>Public static operations delegate to the retained service object; state, identity and ownership remain object-scoped.
 /// Engine.Run owns startup, frame submission and shutdown on the scene owner thread. Geometry uses
-/// source-alpha blending into an RGBA8 framebuffer. GPU initialization may fall back according to project settings.
+/// source-alpha blending into byte or linear RGBA half-float canvas targets. GPU initialization may fall back according to project settings.
 /// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, strokes, curves, filled polygons, short primitives, image textures, retained animation intervals and Control descendant clipping are integrated. Shader materials require the GPU path. Independent single-layer viewport targets and texture dependencies execute on both backends. Programmable-material light composition, general canvas clipping and device recovery
 /// are not integrated. Owned two-dimensional texture RIDs support copied images, compatible updates, replacement,
 /// placeholders and explicit free; resource texture RIDs remain borrowed. Screen notifier bounds and processing enablers follow submitted canvas culling. Owned SDL handles remain internal; DisplayServer can expose borrowed native context identities.</remarks>
@@ -314,7 +314,7 @@ public sealed partial class RenderingServer : ElectronObject
         return item is Parallax parallax ? (parallax.RepeatSize, parallax.RepeatTimes) : item is ParallaxLayer layer ? (layer.RepeatPeriod, 1) : (Vector2.Zero, 0);
     }
     private static bool IsRepeatSource(CanvasItem item) { var repeat = RepeatSettings(item); return repeat.Times != 0 && repeat.Size != Vector2.Zero; }
-    private void AppendOrderedCanvas(RenderEntry item, Vector2i pixels)
+    private void AppendOrderedCanvas(RenderEntry item, Vector2i pixels, bool unshaded = false)
     {
         CanvasItem? repeatSource = null;
         for (var ancestor = item.Node; ancestor is not null; ancestor = ancestor.RenderParent)
@@ -328,7 +328,7 @@ public sealed partial class RenderingServer : ElectronObject
             var clip = GetClip(item.Node, pixels);
             if (((clip is null || clip.Value.HasArea()) && !HasEmptyOwnClip(item.Node, pixels) || item.Node.MayIgnoreClip))
             {
-                AppendScreenCanvas(item.Node, item.Transform, clip, pixels);
+                AppendScreenCanvas(item.Node, item.Transform, clip, pixels, unshaded);
             }
             return;
         }
@@ -344,7 +344,7 @@ public sealed partial class RenderingServer : ElectronObject
                 var displacement = new Vector2((float)((x - times / 2) * (double)size.X), (float)((y - times / 2) * (double)size.Y));
                 transform.Origin += sourceTransform.BasisXform(displacement);
                 if (!transform.IsFinite()) throw new InvalidOperationException("Canvas repetition overflowed finite coordinates.");
-                AppendScreenCanvas(item.Node, transform, repeatedClip, pixels);
+                AppendScreenCanvas(item.Node, transform, repeatedClip, pixels, unshaded);
             }
     }
 

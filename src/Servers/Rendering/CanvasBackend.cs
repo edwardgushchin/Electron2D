@@ -9,7 +9,7 @@ internal enum CanvasOperation { Draw, Copy, GroupBegin, GroupEnd, MaskBegin, Mas
 internal readonly record struct CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null,
     TextureFilter Filter = TextureFilter.Nearest,
     TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1,
-    BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool MIPMaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0, CanvasLightingItem? Lighting = null, CanvasItem? InstanceOwner = null, CanvasGlyph Glyph = default, Color GlyphModulation = default)
+    BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool MIPMaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0, CanvasLightingItem? Lighting = null, CanvasItem? InstanceOwner = null, CanvasGlyph Glyph = default, Color GlyphModulation = default, bool LinearColors = false, Color? CanvasModulation = null)
 {
     internal byte[]? ShaderCode => Material?.Program.Code;
 }
@@ -23,7 +23,7 @@ internal abstract class CanvasBackend : IDisposable
     {
         // Native blit regions must fit their backing texture; crop the completed client region afterwards.
         var client = GetPixelSize(); var size = client.Max(PresentationRect.End);
-        _usesPresentation = content.Size != client || PresentationRect != new Rect2i(Vector2i.Zero, client);
+        _usesPresentation = content.HDR || content.Size != client || PresentationRect != new Rect2i(Vector2i.Zero, client);
         if (!_usesPresentation) return null;
         if (size.X is < 1 or > 16384 || size.Y is < 1 or > 16384) throw new NotSupportedException("Fitted presentation targets require 1..16384 pixels per axis on this backend profile.");
         if (_presentation?.Size == size) return _presentation;
@@ -45,24 +45,26 @@ internal abstract class CanvasBackend : IDisposable
     internal abstract string Driver { get; }
     internal abstract Vector2i GetPixelSize();
     private readonly Dictionary<Viewport, CanvasRenderTarget> _targets = new(ReferenceEqualityComparer.Instance);
-    internal abstract RenderHandle CreateTarget(Vector2i size, Color clear, bool mipmaps = false);
+    internal abstract RenderHandle CreateTarget(Vector2i size, Color clear, bool mipmaps = false, bool HDR = false);
+    internal virtual void ValidateHDR(bool enabled) { if (enabled) throw new NotSupportedException("The compatibility renderer cannot use linear HDR canvas targets."); }
     internal virtual void ValidateMSAA(Viewport.MSAA mode) { if (mode != Viewport.MSAA.Disabled) throw new NotSupportedException("The compatibility renderer cannot use canvas multisample antialiasing."); }
-    internal virtual RenderHandle CreateMultisampleTarget(Vector2i size, Color clear, Viewport.MSAA mode) => throw new NotSupportedException("Multisample canvas targets require GPU rendering.");
+    internal virtual RenderHandle CreateMultisampleTarget(Vector2i size, Color clear, Viewport.MSAA mode, bool HDR = false) => throw new NotSupportedException("Multisample canvas targets require GPU rendering.");
     internal CanvasRenderTarget Target(Viewport viewport, Vector2i size, Color clear)
     {
         var mode = viewport.RenderingOwner?.ViewportMSAA(viewport) ?? viewport.MSAA2D; ValidateMSAA(mode);
-        if (_targets.TryGetValue(viewport, out var target) && target.Size == size && target.MSAA == mode) return target;
+        var hdr = viewport.RenderingOwner?.ViewportHDR(viewport) ?? viewport.UseHDR2D; ValidateHDR(hdr);
+        if (_targets.TryGetValue(viewport, out var target) && target.Size == size && target.MSAA == mode && target.HDR == hdr) return target;
         if (size.X is < 1 or > 16384 || size.Y is < 1 or > 16384) throw new NotSupportedException("Canvas targets require 1..16384 pixels per axis on this backend profile.");
-        var current = CreateTarget(size, clear); RenderHandle next;
-        try { next = CreateTarget(size, clear); } catch { current.Dispose(); throw; }
-        var replacement = new CanvasRenderTarget(current, next, size) { MSAA = mode };
-        try { if (mode != Viewport.MSAA.Disabled) replacement.Multisample = CreateMultisampleTarget(size, clear, mode); } catch { replacement.Dispose(); throw; }
+        var current = CreateTarget(size, clear, HDR: hdr); RenderHandle next;
+        try { next = CreateTarget(size, clear, HDR: hdr); } catch { current.Dispose(); throw; }
+        var replacement = new CanvasRenderTarget(current, next, size) { MSAA = mode, HDR = hdr };
+        try { if (mode != Viewport.MSAA.Disabled) replacement.Multisample = CreateMultisampleTarget(size, clear, mode, hdr); } catch { replacement.Dispose(); throw; }
         target?.Dispose(); _targets[viewport] = replacement; return replacement;
     }
     internal RenderHandle BackBuffer(CanvasRenderTarget target, bool mipmaps)
     {
         if (target.BackBuffer is not null && (!mipmaps || target.BackBufferMipmaps)) return target.BackBuffer;
-        var replacement = CreateTarget(target.Size, default, mipmaps); target.BackBuffer?.Dispose();
+        var replacement = CreateTarget(target.Size, default, mipmaps, target.HDR); target.BackBuffer?.Dispose();
         target.BackBuffer = replacement; target.BackBufferMipmaps = mipmaps; return replacement;
     }
     internal CanvasRenderTarget? FindTarget(Viewport viewport) => _targets.GetValueOrDefault(viewport);

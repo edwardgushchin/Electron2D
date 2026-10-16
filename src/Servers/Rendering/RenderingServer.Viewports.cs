@@ -14,6 +14,7 @@ public sealed partial class RenderingServer
         internal TextureFilter? CanvasFilter;
         internal TextureRepeat? CanvasRepeat;
         internal Viewport.MSAA? MSAA;
+        internal bool? HDR;
         internal ViewportUpdateMode Update = ViewportUpdateMode.Always;
         internal ViewportClearMode Clear;
     }

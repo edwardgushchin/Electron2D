@@ -2,6 +2,7 @@ cbuffer Frame : register(b0, space1) { float2 size;
 #ifdef E2D_LIGHTING
 uint lightingItem; uint padding;
 #endif
+float4 canvasModulation;
  };
 struct Output { float4 position : SV_Position; [[vk::location(0)]] float4 color : TEXCOORD0; [[vk::location(1)]] float2 uv : TEXCOORD1; [[vk::location(2)]] float4 instanceCustom : TEXCOORD2; [[vk::location(4)]] float2 uv2 : TEXCOORD4; [[vk::location(5)]] float3 normal : TEXCOORD5; [[vk::location(6)]] float4 tangent : TEXCOORD6; [[vk::location(7)]] float4 custom0 : TEXCOORD7; [[vk::location(8)]] float4 custom1 : TEXCOORD8; [[vk::location(9)]] float4 custom2 : TEXCOORD9; [[vk::location(10)]] float4 custom3 : TEXCOORD10; [[vk::location(11)]] nointerpolation float4 glyph : TEXCOORD11;
 #ifdef E2D_LIGHTING
@@ -14,7 +15,7 @@ Output main([[vk::location(0)]] float2 position : TEXCOORD0, [[vk::location(1)]]
     Output o;
     precise float2 p = position.x * basis.xy + position.y * basis.zw + translation.xy;
     o.position = float4(p.x / size.x * 2 - 1, 1 - p.y / size.y * 2, 0, 1);
-    o.color = color * tint;
+    o.color = color * tint * canvasModulation;
     o.uv = uv;
     o.uv2 = uv2; o.normal = normal; o.tangent = tangent; o.custom0 = custom0; o.custom1 = custom1; o.custom2 = custom2; o.custom3 = custom3;
     o.glyph = glyph;

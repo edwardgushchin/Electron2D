@@ -758,13 +758,15 @@ public sealed partial class Image
         return state;
     }
 
-    private static State ConvertState(State state, Format destinationFormat)
+    internal void ConvertMovieRGB(bool linear) => Mutate(state => ConvertState(state, Format.Rgb8, linear));
+
+    private static State ConvertState(State state, Format destinationFormat, bool encodeSRGB = false)
     {
         ValidateFormat(destinationFormat);
         RequireReadablePixels(state);
         if (IsCompressedFormat(destinationFormat))
             throw new InvalidOperationException("Conversion to a block-compressed format requires a compression backend.");
-        if (state.Format == destinationFormat)
+        if (state.Format == destinationFormat && !encodeSRGB)
             return state;
 
         var levelCount = GetRequiredMIPMapCount(state.Width, state.Height, state.HasMIPMaps) + 1;
@@ -779,7 +781,7 @@ public sealed partial class Image
             for (var pixel = 0; pixel < pixels; pixel++)
             {
                 var color = ReadColor(state.Data, level.Offset + (pixel * sourceBytes), state.Format);
-                WriteColor(data, destinationOffset + (pixel * destinationBytes), destinationFormat, color);
+                WriteColor(data, destinationOffset + (pixel * destinationBytes), destinationFormat, encodeSRGB ? color.LinearToSRGB() : color);
             }
 
             destinationOffset += pixels * destinationBytes;

@@ -40,7 +40,7 @@ internal sealed class MovieRecording : IDisposable
                 cropped = image.GetRegion(new Rect2i((image.Width - width) / 2, (image.Height - height) / 2, width, height));
                 image = cropped; image.Resize(_size.X, _size.Y);
             }
-            image.Convert(Image.Format.Rgb8);
+            image.ConvertMovieRGB(captured.PixelFormat == Image.Format.Rgbah);
             var frames = Math.DivRem((long)_remainder + _rate, _fps, out var rest); _remainder = (int)rest;
             var pcm = _pcm.AsSpan(0, checked((int)frames * _channels));
             AudioServer.Service.ReadMoviePCM(pcm); AudioServer.ReportEffectErrors();

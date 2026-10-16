@@ -35,7 +35,7 @@ internal sealed unsafe partial class GPUCanvasBackend
         try
         {
             SDL.BindGPUGraphicsPipeline(pass, _sdfPipeline!.DangerousGetHandle());
-            var dimensions = new Vector4(frame.SDFSize.X, frame.SDFSize.Y, 0, 0); SDL.PushGPUVertexUniformData(command, 0, (nint)(&dimensions), (uint)sizeof(Vector4));
+            var dimensions = new Vector4(frame.SDFSize.X, frame.SDFSize.Y, 0, 0); PushFrame(command, dimensions, Colors.White);
             var uniform = new SDFUniforms(new(frame.SDFRect.Position.X, frame.SDFRect.Position.Y, frame.SDFRect.Size.X, frame.SDFRect.Size.Y), new(dimensions.X, dimensions.Y, 0, 0), new(frame.LightCount, frame.SegmentCount, 0, 0));
             SDL.PushGPUFragmentUniformData(command, 0, (nint)(&uniform), (uint)sizeof(SDFUniforms));
             var binding = new SDL.GPUBufferBinding { Buffer = _vertexBuffer!.DangerousGetHandle(), Offset = (uint)lightingBytes };

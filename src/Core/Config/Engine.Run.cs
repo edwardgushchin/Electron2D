@@ -102,6 +102,7 @@ public sealed partial class Engine
             Input.IgnoreJoypadOnUnfocusedApplication = ProjectSettings.GetWithOverride(ProjectSettings.IgnoreJoypadOnUnfocusedApplication);
             window.OpenNative(movieDisableVSync);
             window.ApplyProjectMSAA();
+            window.ApplyProjectHDR();
             if (moviePath is not null)
             {
                 movie = new MovieRecording(window.TextureDimensions, movieFPS, moviePath);

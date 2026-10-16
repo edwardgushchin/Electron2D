@@ -13,6 +13,7 @@ public sealed partial class RenderingServer
     }
     private void ComposeFrame(Vector2i pixels)
     {
+        var linear = ViewportHDR(_viewport);
         CanvasItem? active = null; var begin = 0; var first = 0; Rect2? notifierBounds = null;
         foreach (var item in _order)
         {
@@ -47,7 +48,7 @@ public sealed partial class RenderingServer
                         var inserted = end - maskBatch - 1; maskBatch += inserted; end += inserted;
                     }
                     for (var i = maskBatch + 1; i < end; i++)
-                        _batches[i] = _batches[i] with { Operation = CanvasOperation.MaskEnd, MaskShader = maskBuiltIn, Material = maskBuiltIn ? null : _batches[i].Material, Blend = maskBuiltIn ? BlendMode.Mix : _batches[i].Blend };
+                        _batches[i] = _batches[i] with { Operation = CanvasOperation.MaskEnd, MaskShader = maskBuiltIn, Material = maskBuiltIn ? null : _batches[i].Material, Blend = maskBuiltIn ? BlendMode.Mix : _batches[i].Blend, CanvasModulation = maskBuiltIn ? null : _batches[i].CanvasModulation, Lighting = maskBuiltIn ? null : _batches[i].Lighting };
                     _batches[maskBatch] = _batches[maskBatch] with { MaskShader = maskBuiltIn, MIPMaps = settings.BlurMIPMaps };
                     _batches[begin] = new(0, 0, null, Operation: CanvasOperation.MaskBegin, Region: region);
                     _batches.Add(new(0, 0, null, Operation: CanvasOperation.MaskFinish, Region: region, MaskShader: maskBuiltIn));
@@ -71,7 +72,10 @@ public sealed partial class RenderingServer
                             var value = _vertices[vertex]; var tint = batch.GlyphModulation;
                             _vertices[vertex] = value with { Color = new(tint.R, tint.G, tint.B, value.Color.A) };
                         }
-                    _batches[i] = batch with { Operation = CanvasOperation.GroupEnd, GroupShader = builtIn, Glyph = builtIn ? default : batch.Glyph };
+                    if (builtIn && linear && !batch.LinearColors)
+                        for (var vertex = batch.First; vertex < batch.First + batch.Count; ++vertex)
+                            _vertices[vertex] = _vertices[vertex] with { Color = CanvasGeometry.LinearColor(_vertices[vertex].Color) };
+                    _batches[i] = batch with { Operation = CanvasOperation.GroupEnd, GroupShader = builtIn, Glyph = builtIn ? default : batch.Glyph, LinearColors = builtIn && linear || batch.LinearColors };
                 }
                 if (builtIn) for (var i = ownFirst; i < _vertices.Count; i++)
                     {
@@ -114,16 +118,16 @@ public sealed partial class RenderingServer
     }
     private void AppendGroupOwner(RenderEntry item, Vector2i pixels, CanvasGroupSettings settings, Rect2? childBounds)
     {
-        if (item.Node.HasCanvasCommands) { AppendOrderedCanvas(item, pixels); return; }
+        if (item.Node.HasCanvasCommands) { AppendOrderedCanvas(item, pixels, unshaded: item.Node.CanvasMaterial is null && settings.Mode != CanvasGroupMode.ClipAndDraw); return; }
         if (!settings.FitEmpty || childBounds is null) return;
         var fit = childBounds.Value == default ? new Rect2(childBounds.Value.Position, Vector2.One) : childBounds.Value;
         fit = GrowFinite(fit, settings.FitMargin);
         var material = item.Node.CanvasMaterial;
-        var color = item.Node.RenderInheritedModulate * item.Node.RenderSelfModulate * (item.Node.RenderCanvas()?.Modulate ?? Colors.White);
+        var color = item.Node.RenderInheritedModulate * item.Node.RenderSelfModulate;
         var localFit = item.Transform.AffineInverse() * fit;
         var first = _vertices.Count; Quad(localFit, color, pixels, item.Transform);
         var state = material?.GetCanvasState();
-        _batches.Add(new(first, 6, state, Blend: material?.GetCanvasBlendMode() ?? BlendMode.Mix, Clip: GetClip(item.Node, pixels), InstanceOwner: state?.Program.HasInstanceUniforms == true ? item.Node : null));
+        _batches.Add(new(first, 6, state, Blend: material?.GetCanvasBlendMode() ?? BlendMode.Mix, Clip: GetClip(item.Node, pixels), InstanceOwner: state?.Program.HasInstanceUniforms == true ? item.Node : null, CanvasModulation: material is null or CanvasItemMaterial { LightMode: LightMode.Unshaded } ? null : item.Node.RenderCanvas()?.Modulate ?? Colors.White));
     }
     private Rect2? VertexBounds(int first, int end, Rect2? initial)
     {

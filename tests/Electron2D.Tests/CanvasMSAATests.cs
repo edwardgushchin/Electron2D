@@ -41,14 +41,14 @@ internal static class CanvasMSAATests
         internal Action? Attempt;
         protected override void OnDraw() => Attempt?.Invoke();
     }
-    internal static void RunNative(string backend)
+    internal static void RunNative(string backend, bool HDR = false)
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         ProjectSettings.Set(ProjectSettings.MSAA2D, Viewport.MSAA.Disabled);
         if (backend == "compatibility") { Compatibility(); return; }
         using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData { Vertices = [new(2.2f, 2.4f), new(34.4f, 3.9f), new(7.3f, 31.8f)] });
-        var window = new Window { Size = new(128, 96), MSAA2D = Viewport.MSAA.Samples2X };
-        var view = new SubViewport { Size = new(128, 96), MSAA2D = Viewport.MSAA.Samples4X, RenderTargetUpdateMode = ViewportUpdateMode.Always }; window.AddChild(view);
+        var window = new Window { Size = new(128, 96), MSAA2D = Viewport.MSAA.Samples2X, UseHDR2D = HDR };
+        var view = new SubViewport { Size = new(128, 96), MSAA2D = Viewport.MSAA.Samples4X, UseHDR2D = HDR, RenderTargetUpdateMode = ViewportUpdateMode.Always }; window.AddChild(view);
         using var rootTexture = window.GetTexture(); using var viewTexture = view.GetTexture();
         var capture = new CaptureProbe(); window.AddChild(capture);
         RID canvas = default, item = default, owned = default, ownedTexture = default; var phase = 0; var warm = 0; long before = 0, active = 0, idle = 0; Vector2 sizeBefore = default, lastSize = default;
@@ -61,7 +61,7 @@ internal static class CanvasMSAATests
             Reject<InvalidOperationException>(() => Task.Run(() => view.MSAA2D).GetAwaiter().GetResult());
             using (var foreign = new SubViewport()) Reject<InvalidOperationException>(() => RenderingServer.ViewportSetMSAA2D(foreign.GetViewportRID(), Viewport.MSAA.Disabled));
             owned = RenderingServer.ViewportCreate(); RenderingServer.ViewportSetSize(owned, 128, 96); RenderingServer.ViewportSetActive(owned, true);
-            RenderingServer.ViewportSetUpdateMode(owned, ViewportUpdateMode.Always); RenderingServer.ViewportSetMSAA2D(owned, Viewport.MSAA.Samples8X); ownedTexture = RenderingServer.ViewportGetTexture(owned);
+            RenderingServer.ViewportSetUpdateMode(owned, ViewportUpdateMode.Always); RenderingServer.ViewportSetMSAA2D(owned, Viewport.MSAA.Samples8X); ownedTexture = RenderingServer.ViewportGetTexture(owned); RenderingServer.ViewportSetUseHDR2D(owned, HDR);
             canvas = RenderingServer.CanvasCreate(); item = RenderingServer.CanvasItemCreate(); RenderingServer.CanvasItemSetParent(item, canvas);
             foreach (var target in new[] { window.GetViewportRID(), view.GetViewportRID(), owned }) RenderingServer.ViewportAttachCanvas(target, canvas);
             RenderingServer.CanvasItemAddMesh(item, mesh.GetRID(), Transform.Identity, Colors.White);
@@ -116,7 +116,7 @@ internal static class CanvasMSAATests
         };
         Check(Engine.Run(window) == 0 && warm == 160, "MSAA host completed.");
         Reject<ArgumentException>(() => Viewport.ResolveViewportRID(owned)); Check(window.IsDisposed && window.RenderingOwner is null, "All MSAA targets retire at shutdown.");
-        Console.WriteLine($"GPU coverage samples 1/2/4/8, independent viewports, clear history and warm frames passed ({active}/{idle} bytes).");
+        Console.WriteLine($"GPU HDR={HDR}, coverage samples 1/2/4/8, independent viewports, clear history and warm frames passed ({active}/{idle} bytes).");
     }
     private static int CountPartial(Image image)
     {

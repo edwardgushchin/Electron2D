@@ -43,6 +43,10 @@ The current backend profile implements one RGBA8 image layer. ViewportSetSize re
 
 Skeleton.GetSkeleton supplies a weak scene palette identity consumed by Polygon skin replay. FreeRID rejects it on an active owner rather than disposing a scene node. Caller-created palette storage and actual scene-canvas attachment now execute through the mesh skin API below, with distinct borrowed/owned lifetime and replay callback guards. Caller-owned canvases and Mesh/MultiMesh command authoring now execute through the API below.
 
+## ViewportSetUseHDR2D
+
+`public static void ViewportSetUseHDR2D(RID viewport, bool enabled)` selects linear half-float output for a live scene or caller-owned viewport. The renderer-session override preserves the authored UseHDR2D getter; an equal scene assignment republishes it. Texture metadata/notifications commit immediately, while dependent native storage replaces on the next submission and expires old device aliases. Wrong/stale/foreign identities, off-owner access and capture/submission mutation reject. Compatibility and unsupported native capabilities reject enabled targets. See [HDR canvas targets](../components/hdr-canvas.md).
+
 ## Description
 
 `public static bool IsAvailable { get; }` reports whether an active object is published. It is an observation, not a lifetime reservation; false means ordinary service calls and event subscription changes throw `InvalidOperationException`.
@@ -144,7 +148,7 @@ Returns the current color, initialized from ProjectSettings.DefaultClearColor. R
 
 ### SetDefaultClearColor
 
-Validates all channels before changing state. Nonfinite values throw ArgumentException without mutation. Normalized framebuffer channels clamp to zero through one; this is not an HDR framebuffer. Requires the owner thread.
+Validates all channels before changing state. Nonfinite values throw ArgumentException without mutation. Byte framebuffer channels clamp to zero through one. HDR viewports convert the authored clear color to linear RGB and store half-float values. Requires the owner thread.
 
 ### Texture2DCreate
 

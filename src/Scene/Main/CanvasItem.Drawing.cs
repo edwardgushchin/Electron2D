@@ -316,8 +316,9 @@ public abstract partial class CanvasItem
     {
         var commands = ServerState?.Commands?._canvasCommands ?? _canvasCommands;
         if (commands is null) return;
-        var color = RenderInheritedModulate * RenderSelfModulate * (illumination ? Colors.White : RenderCanvas()?.Modulate ?? Colors.White);
+        var color = RenderInheritedModulate * RenderSelfModulate;
         var viewport = renderViewport ?? ServerState?.Owner?.CurrentCanvasViewport ?? CanvasViewport;
+        var linear = viewport is not null && (viewport.RenderingOwner?.ViewportHDR(viewport) ?? viewport.UseHDR2D);
         var filter = RenderFilter;
         if (filter == TextureFilter.ParentNode) filter = viewport?.RenderingOwner?.CanvasFilter(viewport) ?? viewport?.TextureFilterInTree ?? TextureFilter.Linear;
         var inheritedRepeat = RenderRepeat;
@@ -355,13 +356,13 @@ public abstract partial class CanvasItem
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.GetCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
                 var fraction = IsPhysicsInterpolatedAndEnabled() ? (float)Engine.PhysicsInterpolationFraction : 1f;
-                instances.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, fraction, outputSize, this);
+                instances.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, fraction, outputSize, this, linear);
                 continue;
             }
             if (replay.Mesh is { } mesh)
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.GetCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
-                mesh.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, skinOwner: this);
+                mesh.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, skinOwner: this, linear: linear);
                 continue;
             }
             if (replay.ParticleCustom is { } custom)
@@ -381,7 +382,7 @@ public abstract partial class CanvasItem
             var glyph = replay.Glyph;
             var glyphModulation = glyph.Mode == CanvasGlyphMode.LCD ? replay.Color * color : default;
             var first = vertices.Count;
-            CanvasGeometry.Append(vertices, replay, transform * drawingTransform, color, viewport?.SnapVerticesToPixel == true, this);
+            CanvasGeometry.Append(vertices, replay, transform * drawingTransform, color, viewport?.SnapVerticesToPixel == true, this, linear);
             if (replay.ParticleCustom is { } particleCustom)
                 for (var vertex = first; vertex < vertices.Count; vertex++) vertices[vertex] = vertices[vertex] with { InstanceCustom = particleCustom };
             if (glyph.Mode != CanvasGlyphMode.None)
@@ -390,6 +391,7 @@ public abstract partial class CanvasItem
                     var value = vertices[index];
                     vertices[index] = value with { Glyph = glyph.Parameters, Color = glyph.Mode == CanvasGlyphMode.LCD ? new Color(1, 1, 1, value.Color.A) : value.Color };
                 }
+            var linearColors = linear && replay.Polygon is not null;
             var count = vertices.Count - first;
             if (count == 0) continue;
             if (!capturedMaterial)
@@ -401,10 +403,10 @@ public abstract partial class CanvasItem
             }
             var repeat = command.Tile ? TextureRepeat.Enabled : inheritedRepeat;
             if (batches.Count != 0 && batches[^1] is var last && last.Operation == CanvasOperation.Draw && last.InstanceCount == 0 && last.Material == material && last.InstanceOwner == (material?.Program.HasInstanceUniforms == true ? this : null) && last.Texture == replay.Texture &&
-                last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == commandClip && last.Glyph == glyph && last.GlyphModulation == glyphModulation)
+                last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == commandClip && last.Glyph == glyph && last.GlyphModulation == glyphModulation && last.LinearColors == linearColors)
 
                 batches[^1] = last with { Count = last.Count + count };
-            else batches.Add(new(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, commandClip, InstanceOwner: material?.Program.HasInstanceUniforms == true ? this : null, Glyph: glyph, GlyphModulation: glyphModulation));
+            else batches.Add(new(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, commandClip, InstanceOwner: material?.Program.HasInstanceUniforms == true ? this : null, Glyph: glyph, GlyphModulation: glyphModulation, LinearColors: linearColors));
         }
 
     }

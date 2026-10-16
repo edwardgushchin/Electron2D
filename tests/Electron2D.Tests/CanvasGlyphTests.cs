@@ -32,7 +32,7 @@ internal static partial class CanvasGlyphTests
         using var lcd = ImageTexture.CreateFromImage(lcdImage); using var msdf = ImageTexture.CreateFromImage(msdfImage);
         var parentColor = new Color(.5f, .8f, .5f, .8f); var transparent = profile.Contains("transparent", StringComparison.Ordinal);
         var clear = transparent ? default : new Color(.6f, .2f, .4f, 1);
-        var window = new Window { Size = new(240, 128), TransparentBG = transparent }; var parent = new Entity { Modulate = parentColor }; window.AddChild(parent);
+        var window = new Window { Size = new(240, 128), TransparentBG = transparent, UseHDR2D = profile.Contains("hdr", StringComparison.Ordinal) }; var parent = new Entity { Modulate = parentColor }; window.AddChild(parent);
         var painter = new Painter(lcd, msdf) { TextureFilter = TextureFilter.Nearest }; parent.AddChild(painter);
         using var target = window.GetTexture(); RID item = default; var frame = 0; var warm = 0; long before = 0, active = 0, idle = 0;
         window.Ready += _ =>
@@ -63,12 +63,13 @@ internal static partial class CanvasGlyphTests
                     return;
                 }
                 using var pixels = target.GetImage()!;
-                var tint = new Color(.2f, .6f, .8f, .5f) * parentColor; var coverage = new Color(64 / 255f, 128 / 255f, 191 / 255f, 1);
-                var lcdExpected = new Color(coverage.R * tint.A * tint.R + clear.R * (1 - coverage.R * tint.A), coverage.G * tint.A * tint.G + clear.G * (1 - coverage.G * tint.A), coverage.B * tint.A * tint.B + clear.B * (1 - coverage.B * tint.A), tint.A + clear.A * (1 - tint.A));
-                Pixel(pixels, 20, 12, lcdExpected); Pixel(pixels, 92, 12, lcdExpected); Pixel(pixels, 60, 12, clear); Pixel(pixels, 132, 12, clear);
-                var color = new Color(.8f, .3f, .1f, .5f) * parentColor;
-                Pixel(pixels, 20, 44, clear); Pixel(pixels, 52, 44, Blend(color, clear)); Pixel(pixels, 52, 68, Blend(color, clear));
-                var alpha = Math.Clamp((128 / 255f - .5f) * 96 + .5f, 0, 1); Pixel(pixels, 84, 44, Blend(color with { A = color.A * alpha }, clear));
+                var targetClear = window.UseHDR2D ? clear.SRGBToLinear() : clear;
+                var tint = new Color(.2f, .6f, .8f, .5f) * parentColor; if (window.UseHDR2D) tint = tint.SRGBToLinear(); var coverage = new Color(64 / 255f, 128 / 255f, 191 / 255f, 1);
+                var lcdExpected = new Color(coverage.R * tint.A * tint.R + targetClear.R * (1 - coverage.R * tint.A), coverage.G * tint.A * tint.G + targetClear.G * (1 - coverage.G * tint.A), coverage.B * tint.A * tint.B + targetClear.B * (1 - coverage.B * tint.A), tint.A + targetClear.A * (1 - tint.A));
+                Pixel(pixels, 20, 12, lcdExpected); Pixel(pixels, 92, 12, lcdExpected); Pixel(pixels, 60, 12, targetClear); Pixel(pixels, 132, 12, targetClear);
+                var color = new Color(.8f, .3f, .1f, .5f) * parentColor; if (window.UseHDR2D) color = color.SRGBToLinear();
+                Pixel(pixels, 20, 44, targetClear); Pixel(pixels, 52, 44, Blend(color, targetClear)); Pixel(pixels, 52, 68, Blend(color, targetClear));
+                var alpha = Math.Clamp((128 / 255f - .5f) * 96 + .5f, 0, 1); Pixel(pixels, 84, 44, Blend(color with { A = color.A * alpha }, targetClear));
                 ++frame;
             };
         };

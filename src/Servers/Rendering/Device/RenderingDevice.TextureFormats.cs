@@ -4,6 +4,32 @@ namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
+    internal static bool CanvasEncodedColor(DataFormat format) => format is
+        DataFormat.R8UNORM or
+        DataFormat.R8G8UNORM or
+        DataFormat.R8G8B8A8UNORM or
+        DataFormat.B8G8R8A8UNORM or
+        DataFormat.BC1RGBAUNORMBLOCK or
+        DataFormat.BC2UNORMBLOCK or
+        DataFormat.BC3UNORMBLOCK or
+        DataFormat.BC4UNORMBLOCK or
+        DataFormat.BC5UNORMBLOCK or
+        DataFormat.BC7UNORMBLOCK or
+        DataFormat.ASTC4X4UNORMBLOCK or
+        DataFormat.ASTC5X4UNORMBLOCK or
+        DataFormat.ASTC5X5UNORMBLOCK or
+        DataFormat.ASTC6X5UNORMBLOCK or
+        DataFormat.ASTC6X6UNORMBLOCK or
+        DataFormat.ASTC8X5UNORMBLOCK or
+        DataFormat.ASTC8X6UNORMBLOCK or
+        DataFormat.ASTC8X8UNORMBLOCK or
+        DataFormat.ASTC10X5UNORMBLOCK or
+        DataFormat.ASTC10X6UNORMBLOCK or
+        DataFormat.ASTC10X8UNORMBLOCK or
+        DataFormat.ASTC10X10UNORMBLOCK or
+        DataFormat.ASTC12X10UNORMBLOCK or
+        DataFormat.ASTC12X12UNORMBLOCK;
+
     private static SDL.GPUTextureFormat NativeFormat(DataFormat format) => format switch
     {
         DataFormat.R8UNORM => SDL.GPUTextureFormat.R8Unorm,

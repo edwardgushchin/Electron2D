@@ -20,7 +20,7 @@ internal sealed class CanvasLightingFrame
     private static float Bits(uint value) => BitConverter.UInt32BitsToSingle(value);
     private static float Bits(int value) => BitConverter.Int32BitsToSingle(value);
 
-    internal void AddLight(Light light, Transform transform)
+    internal void AddLight(Light light, Transform transform, bool linear = false)
     {
         var directional = light is DirectionalLight || light is RetainedCanvasLight { Mode: CanvasLightMode.Directional };
         Texture? texture = directional ? null : (light as PointLight)?.Texture;
@@ -35,7 +35,8 @@ internal sealed class CanvasLightingFrame
             inverse = mask.AffineInverse(); height *= MathF.Sqrt(MathF.Abs(transform.Determinant()));
         }
         if (!transform.IsFinite() || !inverse.IsFinite() || !float.IsFinite(height)) throw new InvalidOperationException("Light transforms exceed the finite canvas range.");
-        var lightColor = new Color(light.Color.R * light.Energy, light.Color.G * light.Energy, light.Color.B * light.Energy, light.Color.A);
+        var sourceColor = linear ? light.Color.SRGBToLinear() : light.Color;
+        var lightColor = new Color(sourceColor.R * light.Energy, sourceColor.G * light.Energy, sourceColor.B * light.Energy, sourceColor.A);
         if (!lightColor.IsFinite()) throw new InvalidOperationException("Light color and energy products must be finite.");
         var first = Data.Count;
         Data.Add(new(inverse.X.X, inverse.Y.X, inverse.Origin.X, kind));

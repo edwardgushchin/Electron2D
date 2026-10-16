@@ -7,10 +7,10 @@ public sealed partial class RenderingServer
         _lighting.Clear();
         foreach (var node in _nodes)
             if (node is Light { Enabled: true } light && light.RenderCanvas() is { } canvas && canvas.View(_viewport, out var basis, out _, out _, _interpolationFraction))
-                _lighting.AddLight(light, framebuffer * basis * light.RenderGlobal(_interpolationFraction));
+                _lighting.AddLight(light, framebuffer * basis * light.RenderGlobal(_interpolationFraction), ViewportHDR(_viewport));
         foreach (var light in _retainedLights.Values)
             if (light.Enabled && RenderingCanvasRegistry.ResolveOrNull(light.Canvas) is { } canvas && canvas.View(_viewport, out var basis, out _, out _, _interpolationFraction))
-                _lighting.AddLight(light, framebuffer * basis * light.Interpolation.Render(light.Transform, _interpolationFraction, CanvasSceneTree?.IsPhysicsInterpolationActive == true));
+                _lighting.AddLight(light, framebuffer * basis * light.Interpolation.Render(light.Transform, _interpolationFraction, CanvasSceneTree?.IsPhysicsInterpolationActive == true), ViewportHDR(_viewport));
         _lighting.PackMasks();
         foreach (var node in _nodes)
             if (node is LightOccluder { Occluder: { IsDisposed: false } polygon } occluder && occluder.RenderCanvas() is { } canvas && canvas.View(_viewport, out var basis, out var layer, out _, _interpolationFraction))

@@ -4454,7 +4454,7 @@
       "godot": "RenderingServer::method:texture_get_rd_texture(RID:,bool:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureGetRDTexture(Electron2D.RID,System.Boolean)",
       "state": "Partial",
-      "reason": "ADR 0028: exports actual ordinary/array renderer uploads and completed viewport native allocations, resolves device wrappers and nested proxies, retains cache/SafeHandle lifetime through queued operations, preserves compatible-update identity and expires on replacement/disposal/rebinding. Viewport commands resolve completed ping-pong storage at record time; native update/copy/read and supported storage roles execute. RGBA8/HDR mip, GLSL/HLSL compute, canvas pixels, resize/readback and 64 active +64 idle zero-managed frames have Linux Wayland evidence. Partial only for distinct sRGB reinterpretation: add native shared format-view ownership and lifetime before exposing a distinct view; already-sRGB device storage returns directly."
+      "reason": "ADR 0028: exports actual ordinary/array renderer uploads and completed viewport native allocations, resolves device wrappers and nested proxies, retains cache/SafeHandle lifetime through queued operations, preserves compatible-update identity and expires on replacement/disposal/rebinding. Viewport commands resolve completed ping-pong storage at record time; native update/copy/read and supported storage roles execute. RGBA8/HDR mip, GLSL/HLSL compute, canvas pixels, resize/readback and 64 active +64 idle zero-managed frames have Linux Wayland evidence. Partial only for distinct sRGB reinterpretation: add native shared format-view ownership and lifetime before exposing a distinct view; already-sRGB device storage returns directly. HDR canvas targets report actual RGBA half-float format and eight-byte readback; explicit native sRGB aliases retain their separate capability gate."
     },
     {
       "godot": "RenderingServer::method:texture_replace(RID:,RID:)",
@@ -4711,6 +4711,21 @@
       "godot": "CanvasModulate::property:color",
       "electron2d": "property:Electron2D.CanvasModulate.Color()",
       "reason": "ADR 0028: real whole-canvas scene modulation through one visible Entity per logical canvas, waiting-node promotion, layer/shared-World arbitration, actual membership and warning/failure handling. Typed Color and exact factories restore fresh scene files. CanvasModulateTests exercises managed ownership/lifetime/guards and native GPU/Compatibility pixels, with 64 warmed zero-allocation owner frames. Existing compatibility lighting/shader gates and other-platform/native allocator/owner acceptance remain separate."
+    },
+    {
+      "godot": "Viewport::property:use_hdr_2d",
+      "electron2d": "property:Electron2D.Viewport.UseHDR2D()",
+      "reason": "ADRs 0028/0095: stored scene and root feature configuration plus renderer-session overrides execute linear RGBA half-float canvas targets with stable logical identities and expiring native aliases. Authored colors and byte color sampling convert before filtering/blending; float/integer/data inputs retain typed meaning. MSAA, screen/group/mask composition, readback/device formats, SDR presentation and RGB8 movie transfer before quantization execute. Native pixels, source mips/device writes, GLSL/HLSL color/data inputs, fresh scene/project files, movie PCM/lifetimes and bounded zero-managed-byte replay intervals are checked. Compatibility and unsupported native formats/sample counts reject explicitly. HDR monitors, tone mapping, browser/foreign platforms, native allocation totals and owner acceptance remain separate."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_set_use_hdr_2d(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetUseHDR2D(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0028/0095: stored scene and root feature configuration plus renderer-session overrides execute linear RGBA half-float canvas targets with stable logical identities and expiring native aliases. Authored colors and byte color sampling convert before filtering/blending; float/integer/data inputs retain typed meaning. MSAA, screen/group/mask composition, readback/device formats, SDR presentation and RGB8 movie transfer before quantization execute. Native pixels, source mips/device writes, GLSL/HLSL color/data inputs, fresh scene/project files, movie PCM/lifetimes and bounded zero-managed-byte replay intervals are checked. Compatibility and unsupported native formats/sample counts reject explicitly. HDR monitors, tone mapping, browser/foreign platforms, native allocation totals and owner acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:rendering/viewport/hdr_2d",
+      "electron2d": "property:Electron2D.ProjectSettings.HDR2D()",
+      "reason": "ADRs 0028/0095: stored scene and root feature configuration plus renderer-session overrides execute linear RGBA half-float canvas targets with stable logical identities and expiring native aliases. Authored colors and byte color sampling convert before filtering/blending; float/integer/data inputs retain typed meaning. MSAA, screen/group/mask composition, readback/device formats, SDR presentation and RGB8 movie transfer before quantization execute. Native pixels, source mips/device writes, GLSL/HLSL color/data inputs, fresh scene/project files, movie PCM/lifetimes and bounded zero-managed-byte replay intervals are checked. Compatibility and unsupported native formats/sample counts reject explicitly. HDR monitors, tone mapping, browser/foreign platforms, native allocation totals and owner acceptance remain separate."
     }
   ],
   "statusGroups": [
@@ -6663,6 +6678,15 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0028: real whole-canvas scene modulation through one visible Entity per logical canvas, waiting-node promotion, layer/shared-World arbitration, actual membership and warning/failure handling. Typed Color and exact factories restore fresh scene files. CanvasModulateTests exercises managed ownership/lifetime/guards and native GPU/Compatibility pixels, with 64 warmed zero-allocation owner frames. Existing compatibility lighting/shader gates and other-platform/native allocator/owner acceptance remain separate."
+    },
+    {
+      "godot": [
+        "Viewport::property:use_hdr_2d",
+        "RenderingServer::method:viewport_set_use_hdr_2d(RID:,bool:)",
+        "ProjectSettings::property:rendering/viewport/hdr_2d"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0028/0095: stored scene and root feature configuration plus renderer-session overrides execute linear RGBA half-float canvas targets with stable logical identities and expiring native aliases. Authored colors and byte color sampling convert before filtering/blending; float/integer/data inputs retain typed meaning. MSAA, screen/group/mask composition, readback/device formats, SDR presentation and RGB8 movie transfer before quantization execute. Native pixels, source mips/device writes, GLSL/HLSL color/data inputs, fresh scene/project files, movie PCM/lifetimes and bounded zero-managed-byte replay intervals are checked. Compatibility and unsupported native formats/sample counts reject explicitly. HDR monitors, tone mapping, browser/foreign platforms, native allocation totals and owner acceptance remain separate."
     }
   ],
   "extras": [

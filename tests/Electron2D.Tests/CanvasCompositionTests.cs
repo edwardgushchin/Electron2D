@@ -61,6 +61,19 @@ internal static class CanvasCompositionTests
         }
         finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, prior); }
     }
+    internal static void RunHDR()
+    {
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
+        ProjectSettings.Set(ProjectSettings.HDR2D, true);
+        try
+        {
+            Group("gpu"); ParentYSort("gpu"); Copy("gpu", null); Offscreen("gpu", true); Warm("gpu");
+            foreach (var language in new[] { "Hlsl", "Glsl" })
+            { using var shader = Load(language); using var material = Screen(shader); Copy("gpu", material); Effects(material, language); }
+            RejectNested();
+        }
+        finally { ProjectSettings.Set(ProjectSettings.HDR2D, false); }
+    }
     private static void Group(string backend)
     {
         var window = new Window { Size = new(128, 96) }; var group = new CanvasGroup { ClipChildren = ClipChildrenMode.Only, Position = new(8, 8), FitMargin = 0, ClearMargin = 0, SelfModulate = new(1, 1, 1, .5f) }; var a = new Box(); var b = new Box { Position = new(8, 0) }; var escaped = new Box { Position = new(0, 24), Fill = Colors.Lime, ZIndex = 1 }; group.AddChild(a); group.AddChild(new BackBufferCopy { CopyMode = BackBufferCopyMode.Viewport }); group.AddChild(b); group.AddChild(escaped); window.AddChild(group); window.AddChild(new Box { Position = new(80, 8), Fill = Colors.Blue }); var mask = new MaskedGroup { Name = "mask", Position = new(48, 48), FitMargin = 500, SelfModulate = new(1, 1, 1, .5f) }; mask.AddChild(new Box()); window.AddChild(mask); window.AddChild(new MaskedGroup { Name = "empty", Position = new(80, 48) }); var stage = 0;
@@ -68,7 +81,7 @@ internal static class CanvasCompositionTests
         {
             var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>
             {
-                using var image = renderer.Readback();
+                using var image = window.UseHDR2D ? window.GetTexture().GetImage()! : renderer.Readback();
                 if (stage == 0) { Pixel(image, 12, 12, new(.5f, 0, 0)); Pixel(image, 20, 12, new(.5f, 0, 0)); Pixel(image, 12, 36, Colors.Lime); group.SelfModulate = new(1, 1, 1, .25f); }
                 else if (stage == 1) { Pixel(image, 20, 12, new(.25f, 0, 0)); group.Position = new(64, 16); group.Rotation = Mathf.Pi / 2; }
                 else if (stage == 2) { Pixel(image, 56, 28, new(.25f, 0, 0)); Pixel(image, 12, 12, Colors.Black); group.Visible = false; }
@@ -90,7 +103,7 @@ internal static class CanvasCompositionTests
         {
             var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>
         {
-            using var image = renderer.Readback(); Pixel(image, 4, 20, stage == 0 ? Colors.Blue : new(.5f, 0, 0));
+            using var image = window.UseHDR2D ? window.GetTexture().GetImage()! : renderer.Readback(); Pixel(image, 4, 20, stage == 0 ? Colors.Blue : new(.5f, 0, 0));
             if (stage++ == 0) outside.Position = new(0, -8); else window.Tree!.Quit();
         };
         };
@@ -103,7 +116,7 @@ internal static class CanvasCompositionTests
         {
             var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>
             {
-                using var screen = renderer.ReadbackBackBuffer(window); using var image = renderer.Readback();
+                using var screen = renderer.ReadbackBackBuffer(window); using var image = window.UseHDR2D ? window.GetTexture().GetImage()! : renderer.Readback();
                 if (stage == 0) { Pixel(screen, 12, 12, Colors.Red); if (material is not null) Pixel(image, 12, 12, Colors.Red); copy.CopyMode = BackBufferCopyMode.Viewport; }
                 else if (stage == 1) { Pixel(screen, 72, 48, Colors.Red); copy.CopyMode = BackBufferCopyMode.Rect; copy.Rect = default; }
                 else if (stage == 2) { Pixel(screen, 72, 48, Colors.Red); copy.Rect = new(0, 0, 16, 16); copy.Position = new(-8, 8); reader.Position = new(0, 8); reader.Extent = new(8, 16); reader.QueueRedraw(); }
@@ -118,17 +131,17 @@ internal static class CanvasCompositionTests
         };
         Check(Engine.Run(window) == 0 && stage == 9, "Copy host lifecycle."); Console.WriteLine($"BackBufferCopy rect/full/sentinel/clipping/disabled/visibility/mask/Z/negative-size passed ({backend}, shader={material is not null}).");
     }
-    private static void Offscreen(string backend)
+    private static void Offscreen(string backend, bool HDR = false)
     {
         using var premultiplied = new CanvasItemMaterial { BlendMode = BlendMode.PremultAlpha };
-        var window = new Window { Size = new(96, 64) }; var view = new SubViewport { Size = new(32, 32), TransparentBG = true, RenderTargetUpdateMode = ViewportUpdateMode.Always };
+        var window = new Window { Size = new(96, 64) }; var view = new SubViewport { Size = new(32, 32), TransparentBG = true, UseHDR2D = HDR, RenderTargetUpdateMode = ViewportUpdateMode.Always };
         var group = new CanvasGroup { FitMargin = 0, ClearMargin = 0, SelfModulate = new(1, 1, 1, .5f) }; group.AddChild(new Box()); view.AddChild(group); var texture = view.GetTexture();
         window.AddChild(view); window.AddChild(new Sprite { Texture = texture, Centered = false, Position = new(8, 8), TextureFilter = TextureFilter.Nearest, Material = premultiplied }); var stage = 0;
         window.Ready += _ =>
         {
             var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>
         {
-            using var output = renderer.Readback(); using var target = texture.GetImage(); var opacity = stage == 0 ? .5f : .25f;
+            using var output = window.UseHDR2D ? window.GetTexture().GetImage()! : renderer.Readback(); using var target = texture.GetImage(); var opacity = stage == 0 ? .5f : .25f;
             Check(target is not null && Math.Abs(target.GetPixel(4, 4).A - opacity) < .03, "Independent group target alpha."); Pixel(output, 12, 12, new(opacity, 0, 0));
             if (stage == 0) group.SelfModulate = new(1, 1, 1, .25f); else if (stage == 1) view.Size = new(64, 32); else window.Tree!.Quit(); stage++;
         };
@@ -143,7 +156,7 @@ internal static class CanvasCompositionTests
         {
             var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>
             {
-                using var image = renderer.Readback();
+                using var image = window.UseHDR2D ? window.GetTexture().GetImage()! : renderer.Readback();
                 if (stage == 0) { Pixel(image, 28, 12, Colors.Red); group.ClearMargin = 10; }
                 else if (stage == 1) { Pixel(image, 28, 12, Colors.Blue); material.SetShaderParameter("offset", Vector2.Zero); material.SetShaderParameter("lod", 1f); group.UseMIPMaps = true; child.Stripes = true; child.QueueRedraw(); }
                 else if (stage == 2) { Pixel(image, 16, 16, new(.5f, 0, .5f)); group.SelfModulate = new(1, 1, 1, .5f); }

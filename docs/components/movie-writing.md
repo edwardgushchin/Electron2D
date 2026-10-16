@@ -18,6 +18,10 @@ The creating thread registers/disposes custom writers; runtime hooks execute ser
 
 End is attempted after an attempted Begin, including a partially failed Begin. Metadata/selection failures do not invoke End. End runs before scene/native teardown; later cleanup always continues. Callback exceptions remain failures, and distinct cleanup errors aggregate. The requested movie path stays visible through teardown and clears when the reservation releases. Captured Images and PCM spans are borrowed only for OnWriteFrame; retention requires an explicit caller copy.
 
+## HDR input
+
+Every writer receives screen-encoded RGB8. Linear half-float viewport pixels retain source precision through centered crop/resize, then apply RGB output transfer before byte quantization. Alpha remains untransferred and is discarded. Alternating HDR/SDR selections preserve the same writer lifetime, dimensions and rational PCM clock. [HDR canvas targets](hdr-canvas.md) records native dark-gradient/PNG checks and output limits.
+
 ## Built-in output
 
 A .png path writes basename00000000.png onward and basename.wav. Frame images are opaque RGB8. Size changes use a centered aspect-cover crop and bilinear resize to the initial dimensions. WAV stores little-endian 32-bit signed PCM and finalizes RIFF/data lengths on End, including after a failed frame. RIFF overflow rejects before appending. The destination directory must exist. Prior files matching the exact basename plus eight decimal digits and .png are removed at Begin; other files are preserved. Produced filenames are overwritten; codec/file failure can leave a valid partial recording. Two typed project settings select the built-in audio rate (48000 Hz default, 1000..200000) and speaker mode (Stereo default).

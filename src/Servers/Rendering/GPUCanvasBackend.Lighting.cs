@@ -50,8 +50,8 @@ internal sealed unsafe partial class GPUCanvasBackend
         if (UsesCanvasTexture(batch)) _ = CanvasBinding(batch);
         var plain = batch with { Material = null };
         _ = CanvasBinding(plain with { Texture = null });
-        if (channels?.NormalTexture is { } normal) _ = CanvasBinding(plain with { Texture = normal });
-        if (channels?.SpecularTexture is { } specular) _ = CanvasBinding(plain with { Texture = specular });
+        if (channels?.NormalTexture is { } normal) _ = CanvasBinding(plain with { Texture = normal }, color: false);
+        if (channels?.SpecularTexture is { } specular) _ = CanvasBinding(plain with { Texture = specular }, color: false);
     }
 
     private void PrepareLightingAtlas(CanvasLightingFrame frame)
@@ -118,7 +118,7 @@ internal sealed unsafe partial class GPUCanvasBackend
         try
         {
             var dimensions = new Vector4(frame.AtlasSize.X, frame.AtlasSize.Y, 0, 0);
-            SDL.PushGPUVertexUniformData(command, 0, (nint)(&dimensions), (uint)sizeof(Vector4));
+            PushFrame(command, dimensions, Colors.White);
             var binding = new SDL.GPUBufferBinding { Buffer = _vertexBuffer!.DangerousGetHandle(), Offset = (uint)lightingBytes };
             SDL.BindGPUVertexBuffers(pass, 0, new ReadOnlySpan<SDL.GPUBufferBinding>(&binding, 1), 1);
             for (var index = 0; index < frame.Masks.Count; index++)
@@ -144,8 +144,9 @@ internal sealed unsafe partial class GPUCanvasBackend
             _lightingOffsets[index] = 0;
             var batch = batches[index]; if (batch.Lighting is not { } item || batch.Material is null || batch.MaskShader || batch.GroupShader) continue;
             var channels = Channels(batch.Texture); var specular = channels?.SpecularColor ?? Colors.White;
+            var ambient = _currentHDR ? LinearColor(item.Ambient) : item.Ambient; if (_currentHDR) specular = LinearColor(specular);
             _lightingOffsets[index] = frame.Data.Count;
-            frame.Data.Add(new(item.Ambient.R, item.Ambient.G, item.Ambient.B, item.Ambient.A));
+            frame.Data.Add(new(ambient.R, ambient.G, ambient.B, ambient.A));
             frame.Data.Add(new(specular.R, specular.G, specular.B, channels?.SpecularShininess ?? 1));
             frame.Data.Add(new(BitConverter.UInt32BitsToSingle(item.Mask), BitConverter.Int32BitsToSingle(item.Z), BitConverter.Int32BitsToSingle(item.Layer), BitConverter.Int32BitsToSingle((int)item.Mode)));
             frame.Data.Add(new(BitConverter.Int32BitsToSingle(frame.LightCount), BitConverter.Int32BitsToSingle(frame.SegmentCount), BitConverter.Int32BitsToSingle(channels?.NormalTexture is null ? 0 : 1), BitConverter.Int32BitsToSingle(channels?.SpecularTexture is null ? 0 : 1)));
@@ -156,8 +157,8 @@ internal sealed unsafe partial class GPUCanvasBackend
     private void BindMaterialLighting(nint pass, CanvasBatch batch)
     {
         var bindings = stackalloc SDL.GPUTextureSamplerBinding[3]; var count = 0; var plain = batch with { Material = null }; var channels = Channels(batch.Texture);
-        if (channels?.NormalTexture is { } normal) bindings[count++] = CanvasBinding(plain with { Texture = normal });
-        if (channels?.SpecularTexture is { } specular) bindings[count++] = CanvasBinding(plain with { Texture = specular });
+        if (channels?.NormalTexture is { } normal) bindings[count++] = CanvasBinding(plain with { Texture = normal }, color: false);
+        if (channels?.SpecularTexture is { } specular) bindings[count++] = CanvasBinding(plain with { Texture = specular }, color: false);
         if (_materialMasks) bindings[count++] = new() { Texture = _lightAtlas!.DangerousGetHandle(), Sampler = Sampler(TextureFilter.Linear, TextureRepeat.Disabled) };
         if (count != 0) SDL.BindGPUFragmentSamplers(pass, (uint)batch.Material!.Program.Textures.Length, new ReadOnlySpan<SDL.GPUTextureSamplerBinding>(bindings, count), (uint)count);
         var buffer = _vertexBuffer!.DangerousGetHandle(); SDL.BindGPUFragmentStorageBuffers(pass, 0, (nint)(&buffer), 1);
@@ -170,7 +171,8 @@ internal sealed unsafe partial class GPUCanvasBackend
     {
         var item = batch.Lighting!.Value; var channels = Channels(batch.Texture);
         var specular = channels?.SpecularColor ?? Colors.White;
-        var uniform = new LightingUniforms(new(item.Ambient.R, item.Ambient.G, item.Ambient.B, item.Ambient.A),
+        var ambient = _currentHDR ? LinearColor(item.Ambient) : item.Ambient; if (_currentHDR) specular = LinearColor(specular);
+        var uniform = new LightingUniforms(new(ambient.R, ambient.G, ambient.B, ambient.A),
             new(specular.R, specular.G, specular.B, channels?.SpecularShininess ?? 1),
             new(unchecked((int)item.Mask), item.Z, item.Layer, (int)item.Mode),
             new(frame.LightCount, frame.SegmentCount, channels?.NormalTexture is null ? 0 : 1, channels?.SpecularTexture is null ? 0 : 1), new(1f / _lightAtlasSize.X, 1f / _lightAtlasSize.Y, 0, 0));
@@ -178,8 +180,8 @@ internal sealed unsafe partial class GPUCanvasBackend
         var white = CanvasBinding(batch with { Texture = null });
         var bindings = stackalloc SDL.GPUTextureSamplerBinding[4];
         bindings[0] = CanvasBinding(batch);
-        bindings[1] = channels?.NormalTexture is { } normal ? CanvasBinding(batch with { Texture = normal }) : white;
-        bindings[2] = channels?.SpecularTexture is { } reflection ? CanvasBinding(batch with { Texture = reflection }) : white;
+        bindings[1] = channels?.NormalTexture is { } normal ? CanvasBinding(batch with { Texture = normal }, color: false) : white;
+        bindings[2] = channels?.SpecularTexture is { } reflection ? CanvasBinding(batch with { Texture = reflection }, color: false) : white;
         bindings[3] = new() { Texture = _lightAtlas!.DangerousGetHandle(), Sampler = Sampler(TextureFilter.Linear, TextureRepeat.Disabled) };
         SDL.BindGPUFragmentSamplers(pass, 0, new ReadOnlySpan<SDL.GPUTextureSamplerBinding>(bindings, 4), 4);
         var buffer = _vertexBuffer!.DangerousGetHandle();

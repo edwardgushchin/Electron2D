@@ -1,6 +1,6 @@
 # MovieWriter
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 Source: [MovieWriter.cs](../../src/Servers/Movie/MovieWriter.cs). Declaration: `public abstract class MovieWriter : ElectronObject`. Inherits [ElectronObject](ElectronObject.md). Internal implementations: [PNGMovieWriter](PNGMovieWriter.md), [AVIMovieWriter](AVIMovieWriter.md), [OGVMovieWriter](OGVMovieWriter.md).
 
@@ -68,7 +68,7 @@ Receives fixed positive pixel dimensions, positive FPS and the unchanged path. N
 <a id="frame"></a>
 ### OnWriteFrame
 
-Runs after actual rendering/readback and synchronous native audio mixing. Images are opaque RGB8 at the initial size; later viewport resizes are centered-cover cropped/resized. The audio length is channels times the difference between consecutive cumulative floor(frameCount*rate/FPS) values, preventing non-divisible-rate drift. Values span Int32.MinValue through Int32.MaxValue with finite output clamped to PCM range. Data is borrowed; callbacks may perform cold encoding/file work. No fake headless image or realtime game-recording promise is provided.
+Runs after actual rendering/readback and synchronous native audio mixing. Images are opaque screen-encoded RGB8 at the initial size. Linear HDR input is transferred before quantization; later viewport resizes are centered-cover cropped/resized. The audio length is channels times the difference between consecutive cumulative floor(frameCount*rate/FPS) values, preventing non-divisible-rate drift. Values span Int32.MinValue through Int32.MaxValue with finite output clamped to PCM range. Data is borrowed; callbacks may perform cold encoding/file work. No fake headless image or realtime game-recording promise is provided.
 
 <a id="onwriteend"></a>
 <a id="validatedisposal"></a>

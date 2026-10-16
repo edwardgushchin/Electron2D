@@ -12,7 +12,7 @@ public sealed unsafe partial class RenderingDevice
         if (_rendererTextures.TryGetValue(source, out var cached) && _entries.TryGetValue(cached, out var existing) && existing.Borrowed?.Alive == true) { PrepareRendererTexture(existing); return cached; }
         var width = (uint)(target?.Size.X ?? pixels!.Pixels.Source.Width); var height = (uint)(target?.Size.Y ?? pixels!.Pixels.Source.Height);
         var mips = (uint)(target is not null ? 1 : pixels!.Pixels.Levels); var layers = (uint)(pixels?.ArrayPixels?.Layers.Length ?? 1);
-        var format = pixels?.NativeTextureFormat switch
+        var format = target is { HDR: true } ? DataFormat.R16G16B16A16SFLOAT : pixels?.NativeTextureFormat switch
         {
             SDL.GPUTextureFormat.BC1RGBAUnorm => DataFormat.BC1RGBAUNORMBLOCK,
             SDL.GPUTextureFormat.BC2RGBAUnorm => DataFormat.BC2UNORMBLOCK,

@@ -150,6 +150,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES_CHILD") is
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES_HOST") == "1") { CPUParticlesTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES") == "1") { CPUParticlesTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_BACKBUFFER") is { } copyProfile) { if (copyProfile == "managed") CanvasBackBufferTests.RunManaged(); else CanvasBackBufferTests.RunNative(copyProfile); return; }
+if (args.Length == 2 && args[0] == "--hdr-storage") { CanvasHDRTests.ReadStorage(args[1]); return; }
 if (args.Length == 2 && args[0] == "--msaa-scene") { CanvasMSAATests.ReadFile(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTERPOLATION_NATIVE") == "1")
 {
@@ -159,6 +160,19 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTERPOLATION_NATIVE") =
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_INTERPOLATION") is { } canvasInterpolationBackend) { if (canvasInterpolationBackend == "managed") CanvasItemInterpolationTests.RunManaged(); else CanvasItemInterpolationTests.RunNative(canvasInterpolationBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MSAA_OWNED") == "1") { ProjectSettings.Set(ProjectSettings.MSAA2D, Viewport.MSAA.Samples4X); RenderingCanvasTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MSAA") is { } msaaBackend) { if (msaaBackend == "managed") CanvasMSAATests.RunManaged(); else CanvasMSAATests.RunNative(msaaBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") == "managed") { CanvasHDRTests.RunManaged(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") is "glyph" or "glyph-msaa" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") is { } hdrGlyph) { CanvasGlyphTests.RunNative(hdrGlyph == "glyph" ? "hdr" : "hdr-msaa"); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") == "modulation") { CanvasHDRTests.RunModulation(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") == "modulation-byte") { CanvasHDRTests.RunModulation(HDR: false); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") == "modulation-compatibility") { CanvasHDRTests.RunModulation("compatibility", HDR: false); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") == "sources") { CanvasHDRTests.RunSources(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") == "mesh") { CanvasHDRTests.RunMesh(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") == "msaa") { CanvasMSAATests.RunNative("gpu", HDR: true); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") == "composition") { CanvasCompositionTests.RunHDR(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") == "movie") { CanvasHDRTests.RunMovie(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") == "color") { CanvasHDRTests.RunColor(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") is "lighting" or "programmable-lighting" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") is { } hdrLighting) { IntegerLightingTests.Run(programmable: hdrLighting == "programmable-lighting", ordinaryUnsigned: true, HDR: true); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") is { } hdrBackend) { CanvasHDRTests.RunStorage(hdrBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MSAA_LIGHTING") == "1") { ProjectSettings.Set(ProjectSettings.MSAA2D, Viewport.MSAA.Samples4X); LightingTests.RunNative(includeCompatibility: false); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MSAA_COMPOSITION") == "1") { ProjectSettings.Set(ProjectSettings.MSAA2D, Viewport.MSAA.Samples4X); CanvasCompositionTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_VIEW_CONFIG") is { } viewportBackend) { CanvasViewportConfigurationTests.Run(viewportBackend); return; }
@@ -1416,6 +1430,7 @@ AnimationSpecialTrackTests.Run();
 AnimationNestedTrackTests.Run();
 AnimationAudioTrackTests.Run();
 SubViewportTests.Run();
+CanvasHDRTests.RunManaged();
 CanvasCompositionTests.Run();
 SubViewportContainerTests.Run();
 LineEditTests.Run();

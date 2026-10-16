@@ -68,7 +68,7 @@ public abstract class MovieWriter : ElectronObject
     /// <remarks>Throw on failure. OnWriteEnd is attempted even if this hook partially prepares and throws.</remarks>
     protected abstract void OnWriteBegin(Vector2i movieSize, int fps, string basePath);
     /// <summary>Writes one completed rendered frame and its exact duration of audio.</summary>
-    /// <param name="frameImage">A borrowed RGB8 frame at the initial recording size.</param>
+    /// <param name="frameImage">A borrowed screen-encoded RGB8 frame at the initial recording size. Linear HDR input is encoded before quantization.</param>
     /// <param name="audioFrameBlock">Borrowed interleaved PCM in AudioServer channel order; full range is signed Int32.</param>
     /// <remarks>For nonintegral rates, block lengths alternate to preserve the cumulative sample clock without drift.</remarks>
     protected abstract void OnWriteFrame(Image frameImage, ReadOnlySpan<int> audioFrameBlock);

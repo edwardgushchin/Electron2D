@@ -1414,6 +1414,12 @@ WindowNotificationTests exercises eight event kinds through embedded/public and 
 dummy routes plus 1024 zero-byte warmed operations. DPI/position platform limits and
 missing go-back/HDR sources remain open; see [window runtime](components/window-runtime.md#containing-window-notifications).
 
+## Linear HDR canvas output
+
+| Domain | Component | Type | Source | State | Behavior |
+| --- | --- | --- | --- | --- | --- |
+| [Rendering](domains/rendering.md) | [HDR canvases](components/hdr-canvas.md) | [Viewport](classes/Viewport.md), [RenderingServer](classes/RenderingServer.md), [ProjectSettings](classes/ProjectSettings.md) | [scene selection](../src/Scene/Main/Viewport.HDR.cs), [server selection](../src/Servers/Rendering/RenderingServer.HDR.cs), [GPU color views](../src/Servers/Rendering/GPUCanvasBackend.HDR.cs) | Current | Stored/root/session HDR selection, half-float target and pipeline variants, native linear sampling/composition, explicit readback, SDR presentation and movie transfer. Compatibility rejects enabled HDR. |
+
 ## Canvas multisample coverage
 
 | Domain | Component | Class | Source | State | Behavior |

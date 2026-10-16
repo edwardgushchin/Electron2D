@@ -20,11 +20,18 @@ internal readonly record struct CanvasAnimationSlice(double Length, double Begin
 
 internal static class CanvasGeometry
 {
-    internal static void Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false, CanvasItem? skinOwner = null)
+    internal static Color LinearColor(Color value)
+    {
+        var linear = value.SRGBToLinear();
+        if (!linear.IsFinite()) throw new InvalidOperationException("HDR color conversion exceeds the finite component range.");
+        return linear;
+    }
+
+    internal static void Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false, CanvasItem? skinOwner = null, bool linear = false)
     {
         if (command.NinePatch is { } ninePatch) { ninePatch.Append(output, command, transform, modulation, snapVertices); return; }
         if (command.Stroke is { } stroke) { stroke.Append(output, transform, modulation, snapVertices); return; }
-        if (command.Polygon is { } polygon) { polygon.Append(output, transform, modulation, snapVertices, skinOwner); return; }
+        if (command.Polygon is { } polygon) { polygon.Append(output, transform, modulation, snapVertices, skinOwner, linear); return; }
         var color = command.Color * modulation;
         if (!color.IsFinite()) throw new InvalidOperationException("Canvas modulation overflowed finite colors.");
         if (command.Texture is not null) { AppendTexture(output, command, transform, color, snapVertices); return; }

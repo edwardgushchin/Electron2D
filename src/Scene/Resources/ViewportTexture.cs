@@ -55,7 +55,15 @@ public sealed class ViewportTexture : Texture
     /// <inheritdoc />
     public override int GetHeight() => Bound?.TextureDimensions.Y ?? 0;
     /// <inheritdoc />
-    public override Image.Format PixelFormat { get { ThrowIfDisposed(); return Image.Format.Rgba8; } }
+    public override Image.Format PixelFormat
+    {
+        get
+        {
+            ThrowIfDisposed(); if (Bound is not { } view) return Image.Format.Rgba8;
+            var authored = view.UseHDR2D;
+            return (view.RenderingOwner?.ViewportHDR(view) ?? authored) ? Image.Format.Rgbah : Image.Format.Rgba8;
+        }
+    }
     /// <inheritdoc />
     public override bool HasAlpha { get { ThrowIfDisposed(); return false; } }
     /// <inheritdoc />
@@ -63,7 +71,7 @@ public sealed class ViewportTexture : Texture
     /// <inheritdoc />
     public override int MIPMapCount { get { ThrowIfDisposed(); return 0; } }
     /// <summary>Copies the completed native image, or returns null before rendering or after target loss.</summary>
-    /// <returns>A caller-owned RGBA8 image; null when no active completed target exists.</returns>
+    /// <returns>A caller-owned RGBA8 image, or linear RGBA half-float for a completed HDR target; null when no active completed target exists.</returns>
     /// <remarks>This explicit cold readback synchronizes native execution and allocates. It is not part of ordinary drawing.</remarks>
     /// <exception cref="ObjectDisposedException">The texture is disposed.</exception>
     /// <exception cref="InvalidOperationException">Readback is off-owner or occurs during native submission.</exception>

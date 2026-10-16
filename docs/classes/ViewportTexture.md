@@ -1,6 +1,6 @@
 # ViewportTexture
 
-Last updated: 2026-10-12
+Last updated: 2026-10-16
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.ViewportTexture` · **Source:** [ViewportTexture.cs](../../src/Scene/Resources/ViewportTexture.cs).
 
@@ -10,7 +10,7 @@ Last updated: 2026-10-12
 
 A scene-local live view of a viewport's completed native canvas image.
 
-A scene-local weak borrowed view with stable resource RID independent of native reallocation. Viewport.GetTexture supplies a cached direct view. Authored ViewportPath resolves relative to GetLocalScene during reconstruction; separate PackedScene instances bind their own copied targets. Direct view duplication computes a scene-relative path while ordinary unattached duplication can retain its borrowed direct target. Missing required local bindings fail explicitly. Viewport disposal leaves an unresolved, live texture with zero dimensions and null image. GetImage returns a caller-owned completed RGBA8 native readback, or null when no active completed target exists; it allocates and synchronizes explicitly. Drawing/material sampling uses native images without CapturePixels or per-frame upload/readback. PixelFormat is RGBA8, HasAlpha metadata false, HasMIPMaps false and MIPMapCount zero. Stored RGBA can contain alpha; premultiplied blending is available through CanvasItemMaterial. Size notifications are delivered to borrowed texture consumers before public viewport observers, and exceptions cannot skip subsequent delivery. Disposing the texture detaches observers and releases its logical RID without owning the viewport.
+A scene-local weak borrowed view with stable resource RID independent of native reallocation. Viewport.GetTexture supplies a cached direct view. Authored ViewportPath resolves relative to GetLocalScene during reconstruction; separate PackedScene instances bind their own copied targets. Direct view duplication computes a scene-relative path while ordinary unattached duplication can retain its borrowed direct target. Missing required local bindings fail explicitly. Viewport disposal leaves an unresolved, live texture with zero dimensions and null image. GetImage returns a caller-owned completed RGBA8 or linear RGBA half-float native readback, or null when no active completed target exists; it allocates and synchronizes explicitly. Drawing/material sampling uses native images without CapturePixels or per-frame upload/readback. PixelFormat reflects effective byte/HDR selection (Rgba8/Rgbah); completed readback keeps its actual submitted format until replacement. HasAlpha metadata is false, HasMIPMaps false and MIPMapCount zero. Stored RGBA can contain alpha; premultiplied blending is available through CanvasItemMaterial. Size notifications are delivered to borrowed texture consumers before public viewport observers, and exceptions cannot skip subsequent delivery. Disposing the texture detaches observers and releases its logical RID without owning the viewport.
 
 Native targets belong to RenderingServer, which reuses the active device. Completed/write image pairs avoid writable-attachment feedback; producers update before consumers and cycles observe available completed data. Scene input is isolated by viewport, with explicit PushInput removing that viewport final transform. Rendering/mutation/query uses the attached owner thread. No new clock, vendor patch or backend dependency is introduced. [The offscreen component](../components/canvas-rendering.md#offscreen-canvas-targets) records actual behavior and exact gaps.
 
@@ -180,7 +180,7 @@ Returns: Height in pixels, as defined by the concrete texture.
 
 Copies the completed native image, or returns null before rendering or after target loss.
 
-Returns: A caller-owned RGBA8 image; null when no active completed target exists.
+Returns: A caller-owned RGBA8 or linear RGBA half-float image; null when no active completed target exists.
 
 Remarks: This explicit cold readback synchronizes native execution and allocates. It is not part of ordinary drawing.
 

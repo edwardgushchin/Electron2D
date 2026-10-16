@@ -350,6 +350,11 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<Viewport.MSAA> MSAA2D { get; } =
         new("rendering/anti_aliasing/quality/msaa_2d", Viewport.MSAA.Disabled, value => (uint)value < (uint)Viewport.MSAA.Max);
 
+    /// <summary>Selects linear half-float canvas output for an unassigned root window at startup.</summary>
+    /// <value>rendering/viewport/hdr_2d; false initially.</value>
+    /// <remarks>Offscreen viewports retain their authored selections. Enabled HDR requires GPU rendering and supported half-float color targets.</remarks>
+    public static ProjectSetting<bool> HDR2D { get; } = new("rendering/viewport/hdr_2d", false);
+
     /// <summary>Selects the LCD subpixel arrangement captured when the native text owner first starts.</summary>
     /// <value>gui/theme/lcd_subpixel_layout; HorizontalRGB initially. None through VerticalBGR are valid.</value>
     /// <remarks>Set before first native font use. Later assignments persist the next process's preference and require restart.
