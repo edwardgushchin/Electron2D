@@ -284,7 +284,7 @@ Gets whether SceneTree-managed ready delivery has occurred since construction or
 
 Gets whether deletion has been requested through `Node.QueueFree`.
 
-**Value:** An atomic snapshot of the deletion-request flag.
+**Value:** An atomic snapshot of the current cancellable request, including publication. A claimed, canceled or terminally closed request reads false. Children do not inherit a parent's pending flag. This property observes QueueFree; explicit SceneTree.QueueDelete remains independent.
 
 <a id="p-electron2d-node-name"></a>
 ### `public string Name { get; set; }`
@@ -689,7 +689,7 @@ Atomically cancels a pending deletion request.
 
 **Returns:** `true` when a request was pending; otherwise `false`.
 
-**Remarks:** A stale queue entry may remain, but the tree ignores it when flushing.
+**Remarks:** Cancellation invalidates exactly the current request, so a stale entry cannot consume a later reissued request. A later QueueFree gets a new FIFO position. Returns false once the request has been claimed for destruction. This does not veto an executing Dispose or cancel an independent SceneTree.QueueDelete.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
@@ -1166,11 +1166,11 @@ Receives a keyboard event that remains unhandled after the first input stage.
 
 Atomically requests this node's deferred disposal at a future scene-tree safe point.
 
-**Remarks:** A request made while already detached is queued if the node later enters a tree. Removing the node before its current tree flushes does not cancel deletion: that tree disposes the detached node at its safe point. If the node has entered another tree first, the old entry leaves the request intact for the new tree. Repeated calls are idempotent. The method may be called from a non-owner thread.
+**Remarks:** A request made while already detached is queued if the node later enters a tree. Removing the node before its current tree flushes does not cancel deletion: that tree disposes the detached node at its safe point. If the node has entered another tree first, the old entry leaves the request intact for the new tree. Repeated calls are idempotent. Cancellation and reissue create a new request identity and FIFO position. A request reissued during a captured deletion batch waits for the next batch. The method may be called from a non-owner thread.
 
 **System.InvalidOperationException:** This node is the active scene-tree root.
 
-**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+**System.ObjectDisposedException:** Deletion publication has closed, or this node is disposing on another thread or has finished disposing.
 
 <a id="m-electron2d-node-removechild-electron2d-scenenode"></a>
 ### `public bool RemoveChild(Node child)`

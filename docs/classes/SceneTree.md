@@ -591,7 +591,7 @@ Executes one captured deferred-action batch followed by one captured deletion ba
 **Remarks:** Every captured entry is attempted. Deferred actions queued after action capture wait for a later flush. The
 deletion batch is captured after those actions, so deletion requested by a captured action runs in the same
 flush. Re-entrant execution and execution during node lifecycle or pause delivery are rejected. Failures are
-reported after both phases.
+reported after both phases. Deletions enqueued after deletion capture wait for a later flush. Each cancellable entry identifies one request generation; stale entries cannot consume replacements. Two retained queues preserve prepared capacity across batches.
 
 <a id="m-electron2d-scenetree-getpropertydescriptors"></a>
 ### `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`

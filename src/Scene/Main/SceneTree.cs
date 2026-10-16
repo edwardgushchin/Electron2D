@@ -57,6 +57,7 @@ public sealed partial class SceneTree : MainLoop
     private Queue<Action> _deferred = new();
     private Queue<Action>? _deferredSpare = new();
     private ConcurrentQueue<DeletionRequest> _deletions = new();
+    private ConcurrentQueue<DeletionRequest>? _deletionsSpare = new();
     private List<Node>? _activationReadied;
     private bool _acceptingWork = true;
     internal bool IsClosing { get { lock (_workGate) return !_acceptingWork || IsDisposed; } }
@@ -802,7 +803,7 @@ public sealed partial class SceneTree : MainLoop
                 throw new InvalidOperationException("A node owned by another SceneTree cannot be queued here.");
         }
 
-        EnqueueDeletion(new DeletionRequest(instance, RequiresNodeRequest: false));
+        EnqueueDeletion(new DeletionRequest(instance, NodeTicket: 0));
     }
 
     /// <summary>Executes one captured deferred-action batch followed by one captured deletion batch.</summary>
@@ -810,7 +811,8 @@ public sealed partial class SceneTree : MainLoop
     /// Every captured entry is attempted. Deferred actions queued after action capture wait for a later flush. The
     /// deletion batch is captured after those actions, so deletion requested by a captured action runs in the same
     /// flush. Re-entrant execution and execution during node lifecycle or pause delivery are rejected. Failures are
-    /// reported after both phases.
+    /// reported after both phases. Deletions queued after deletion capture wait for a later flush. Canceled entries
+    /// cannot consume a newly issued request. Captured queues retain their prepared capacity after draining.
     /// </remarks>
     /// <exception cref="InvalidOperationException">The method is called off the owner thread, re-entered, or called during node lifecycle or pause delivery.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
@@ -1128,14 +1130,14 @@ public sealed partial class SceneTree : MainLoop
 
     internal bool IsRoot(Node node) => ReferenceEquals(Root, node);
 
-    internal void QueueForDeletion(Node node)
+    internal void QueueForDeletion(Node node, long ticket)
     {
         lock (_workGate)
         {
             EnsureAcceptingWorkUnderLock();
 
-            if (node.TryPublishQueuedDeletion())
-                _deletions.Enqueue(new DeletionRequest(node, RequiresNodeRequest: true));
+            if (node.TryPublishQueuedDeletion(ticket))
+                _deletions.Enqueue(new DeletionRequest(node, ticket));
         }
     }
 
@@ -1746,7 +1748,8 @@ public sealed partial class SceneTree : MainLoop
             if (!_deletions.IsEmpty)
             {
                 deletions = _deletions;
-                _deletions = new ConcurrentQueue<DeletionRequest>();
+                _deletions = _deletionsSpare ?? throw new InvalidOperationException("Deletion batches cannot be captured recursively.");
+                _deletionsSpare = null;
             }
         }
 
@@ -1761,6 +1764,7 @@ public sealed partial class SceneTree : MainLoop
                 CollectException(ref errors, error);
             }
         }
+        if (deletions is not null) lock (_workGate) _deletionsSpare = deletions;
     }
 
     private void ExecuteDeletion(DeletionRequest request)
@@ -1776,15 +1780,15 @@ public sealed partial class SceneTree : MainLoop
 
         if (node.Tree is not null && !ReferenceEquals(node.Tree, this))
         {
-            if (request.RequiresNodeRequest)
+            if (request.NodeTicket != 0)
                 return;
 
             throw new InvalidOperationException("A queued node became owned by another SceneTree before deletion.");
         }
 
-        if (request.RequiresNodeRequest)
+        if (request.NodeTicket != 0)
         {
-            if (!node.TryConsumeQueuedDeletion())
+            if (!node.TryConsumeQueuedDeletion(request.NodeTicket))
                 return;
 
             if (node.Tree is not null && !ReferenceEquals(node.Tree, this))
@@ -1982,7 +1986,8 @@ public sealed partial class SceneTree : MainLoop
         _cursorRefreshWindows.Clear();
         DiscardDeferred(_deferred); if (_deferredSpare is not null) DiscardDeferred(_deferredSpare);
         foreach (var group in _processingGroups.Values) DiscardDeferred(group.Messages);
-        _deletions = new ConcurrentQueue<DeletionRequest>();
+        while (_deletions.TryDequeue(out _)) { }
+        if (_deletionsSpare is { } spare) while (spare.TryDequeue(out _)) { }
         _uniqueGroupOperations.Clear();
         _transformChanges.Clear(); _nextTransformNotification = null;
     }
@@ -2058,7 +2063,7 @@ public sealed partial class SceneTree : MainLoop
         }
     }
 
-    private readonly record struct DeletionRequest(ElectronObject Instance, bool RequiresNodeRequest);
+    private readonly record struct DeletionRequest(ElectronObject Instance, long NodeTicket);
 
     private enum InputStage
     {
