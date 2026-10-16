@@ -78,15 +78,22 @@ public sealed partial class PhysicsServer
         if (!entry.OwnsGeometry)
             throw new InvalidOperationException("A Shape resource owns this RID and must be edited through the resource.");
         entry.Geometry.EnsureCollisionMutationAccess();
+        // Establish owner/phase access before observing any selected status hook.
         var users = new List<PhysicsServerCollider>();
         foreach (var collider in SnapshotColliders())
             if (collider.UsesShape(entry))
             {
-                EnsureColliderSpaceAccessible(collider, writing: true);
+                collider.EnsureGeometryLifetimeAccess();
+                collider.Space?.EnsureReleaseAccess();
                 users.Add(collider);
             }
         var sceneUsers = SceneShapeUsers(entry);
-        foreach (var scene in sceneUsers) EnsureSceneShapeAccess(scene, writing: true);
+        foreach (var scene in sceneUsers)
+        {
+            scene.Tree?.EnsureOwnerThread(); scene.EnsureGeometryAuthoringAccess();
+            scene.Tree?.EnsurePhysicsParticipationChange(releasing: true);
+            scene.Backend.Space?.EnsureReleaseAccess(); scene.Backend.Space?.EnsureImplementationWriteAccess();
+        }
         var spaces = new List<PhysicsSpace>();
         foreach (var collider in users)
             if (collider.Space is { } space && !spaces.Contains(space)) spaces.Add(space);
@@ -95,29 +102,41 @@ public sealed partial class PhysicsServer
             var space = scene is PhysicsBody body ? body.Space : ((Area)scene).Space;
             if (space is not null && !spaces.Contains(space)) spaces.Add(space);
         }
-        var copy = CopyServerShapeData(entry.Geometry, data, spaces);
         var previous = entry.Geometry;
-        copy.BindServerOwnedRID(shape);
-        entry.Geometry = copy;
+        var borrowed = 0;
         try
         {
-            foreach (var collider in users) collider.RebuildShapes();
-            foreach (var scene in sceneUsers) scene.MarkShapesDirty();
-        }
-        catch (Exception error)
-        {
-            entry.Geometry = previous;
-            List<Exception>? errors = [error];
-            foreach (var collider in users)
+            foreach (var space in spaces) { space.BeginImplementationCallback(); borrowed++; }
+            foreach (var collider in users) collider.Space?.EnsureQueryAccess();
+            foreach (var scene in sceneUsers)
             {
-                collider.MarkShapesDirty();
-                PhysicsSpace.Cleanup(collider.RebuildShapes, ref errors);
+                scene.Tree?.EnsurePhysicsParticipationChange();
+                EnsureSceneShapeAccess(scene);
             }
-            foreach (var scene in sceneUsers) scene.MarkShapesDirty();
-            PhysicsSpace.Cleanup(copy.ReleaseServerGeometry, ref errors);
-            PhysicsSpace.FinishCleanup(errors);
-            throw;
+            var copy = CopyServerShapeData(previous, data, spaces);
+            copy.BindServerOwnedRID(shape);
+            entry.Geometry = copy;
+            try
+            {
+                foreach (var collider in users) collider.RebuildShapes();
+                foreach (var scene in sceneUsers) scene.MarkShapesDirty();
+            }
+            catch (Exception error)
+            {
+                entry.Geometry = previous;
+                List<Exception>? errors = [error];
+                foreach (var collider in users)
+                {
+                    collider.MarkShapesDirty();
+                    PhysicsSpace.Cleanup(collider.RebuildShapes, ref errors);
+                }
+                foreach (var scene in sceneUsers) scene.MarkShapesDirty();
+                PhysicsSpace.Cleanup(copy.ReleaseServerGeometry, ref errors);
+                PhysicsSpace.FinishCleanup(errors);
+                throw;
+            }
         }
+        finally { for (var i = borrowed - 1; i >= 0; i--) spaces[i].EndImplementationCallback(); }
         previous.ReleaseServerGeometry();
     }
 
@@ -172,19 +191,30 @@ public sealed partial class PhysicsServer
         ThrowIfDisposed();
         var entry = GetShape(shape);
         var spaces = new List<PhysicsSpace>();
-        foreach (var collider in SnapshotColliders())
+        var users = SnapshotColliders(); var sceneUsers = SceneShapeUsers(entry);
+        foreach (var collider in users)
             if (collider.UsesShape(entry))
             {
-                EnsureColliderSpaceAccessible(collider);
+                collider.Space?.EnsureReleaseAccess();
                 if (collider.Space is { } space && !spaces.Contains(space)) spaces.Add(space);
             }
-        foreach (var scene in SceneShapeUsers(entry))
+        foreach (var scene in sceneUsers)
         {
-            EnsureSceneShapeAccess(scene);
+            scene.Tree?.EnsureOwnerThread();
             var space = scene is PhysicsBody body ? body.Space : ((Area)scene).Space;
+            space?.EnsureReleaseAccess();
             if (space is not null && !spaces.Contains(space)) spaces.Add(space);
         }
-        return CopyServerShapeData(entry.Geometry, entry.Geometry, spaces);
+        var borrowed = 0;
+        try
+        {
+            foreach (var space in spaces) { space.BeginImplementationCallback(); borrowed++; }
+            foreach (var collider in users)
+                if (collider.UsesShape(entry)) EnsureColliderSpaceAccessible(collider);
+            foreach (var scene in sceneUsers) EnsureSceneShapeAccess(scene);
+            return CopyServerShapeData(entry.Geometry, entry.Geometry, spaces);
+        }
+        finally { for (var i = borrowed - 1; i >= 0; i--) spaces[i].EndImplementationCallback(); }
     }
 
     internal void BodyAddShapeCore(RID body, RID shape, Transform? transform = null, bool disabled = false) =>

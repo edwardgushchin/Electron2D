@@ -334,3 +334,9 @@ current effective owner bits. Step does this before BeginStep and the stepping
 phase, preserving existing built-in query guards and leaving a failed repair's
 tick/publication unchanged. Another failure retains the flag. [Filter verification](../components/physics-filters.md#failed-updates-and-effective-sensing)
 checks both retry routes and all scene/raw roles.
+
+Shared ShapeSetData now retains this world's numerical borrowing throughout all
+participating rebuilds, rollback and rejected-copy retirement, even while another
+world's provider hook runs. Committed old-view retirement follows borrow release.
+[Mixed-world checks](../components/physics-shape-data.md#shared-cpugpuregistered-replacement)
+exercise scene/raw authoring and lifetime guards without adding a frame-loop phase.

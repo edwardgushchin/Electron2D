@@ -1775,3 +1775,8 @@ Engine.Movie.cs also owns configured RunMovie/RunMovieAsync startup over the exi
 type or public declaration. Existing PhysicsServer data operations copy canonical
 geometry and common resource state into concrete wrappers while borrowing all
 using worlds; both owned import and borrowed-RID export support no-factory Shapes.
+
+[Shared shape-data replacement](components/physics-shape-data.md#shared-cpugpuregistered-replacement)
+adds no production type or public declaration. PhysicsServer retains world borrows
+through numerical rebuild/rollback/failed retirement and releases them before
+committed old-view retirement. Existing collider/world owners remain authoritative.

@@ -18,12 +18,18 @@ Immutable Custom geometry retains its existing canonical format/mass/drawing/pai
 algorithm contract; built-in worlds still reject enabling unsupported Custom data.
 
 Access preflights every using scene/raw body and Area, including disabled slots.
-While evaluating/copying data, the common layer borrows each distinct using world
+Owner/phase checks first run without selected status callbacks. The common layer
+borrows every participating world before status hooks, so those observers cannot
+change another participant during preflight. While evaluating/copying data it borrows each distinct using world
 as a numerical callback and borrows both geometry resources. Nested physics,
 hierarchy and physical-world lifetime changes reject. The scope releases in
 finally after supplier errors. Wrapper disposal still follows ordinary World
 lease ownership; borrowing does not turn a retained wrapper into the runtime.
 Only a complete validated copy enters the existing replacement transaction.
+All participating worlds stay borrowed through numerical rebuilds, rollback and
+rejected-copy retirement; a provider cannot edit a different participating world
+from its rebuild or failed-retirement callback. World borrowing ends before the
+old committed view retires, preserving ordinary committed callback mutation.
 Rebuild rollback, dirty retry, private-view retirement and committed cleanup errors
 keep their existing semantics. These are cold explicit copy operations; no work
 is added to ordinary simulation frames.
@@ -47,3 +53,29 @@ distance allows .00001 units. These tolerances cover float normalization only.
 Evidence lives in bin/physics-procedural-data/2026-10-16/. This does not establish
 arbitrary solver algorithms, native/driver budgets, foreign platforms, networking
 or target-device/window performance acceptance.
+
+## Shared CPU/GPU/registered replacement
+
+The public-only --shared-data profile shares one owned circle RID between three
+worlds: CPU, CPU/GPU and an independent registered provider. Each world contains a
+scene body, scene Area, raw body and raw Area, with logical slots 0/2 and a disabled
+gap. Creation order and solver-thread policy vary independently. Explicit backend
+assertions and real numerical point results verify each participant.
+
+Both concrete and no-factory procedural inputs exercise eight partial failures per
+profile: application failure, optional rollback failure and optional rejected-view
+retirement failure. Rebuild and rejected-retirement hooks attempt scene/raw filter,
+space reassignment, raw release and tree teardown in all participating worlds.
+Original errors remain exact; rollback restores original private scene views,
+repairs numerical geometry before queries and leaves ticks unchanged. Subsequent
+real steps retain exact observer histories without duplicate effects. Successful
+replacement publishes expanded geometry to all twelve roles; committed-retirement
+handlers retain ordinary mutation access. These are logical observer-history
+checks, not private-checkpoint validity through numerical geometry recompilation.
+
+After 128 warm groups, 128 measured groups each execute 24 caller-buffer point
+queries and three full physical intervals. Each real awake body moves 12.8 units
+within .01, retains RID and delivers 128 force callbacks. Owner/all-thread managed
+bytes remain strictly zero. Explicit copy/failure paths remain cold. Evidence is
+retained under bin/physics-shared-data/2026-10-16/. Full custom/numerical/native/
+foreign/network and hardware/window performance acceptance remains open.

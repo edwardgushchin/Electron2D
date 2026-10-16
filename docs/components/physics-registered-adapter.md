@@ -2503,3 +2503,12 @@ concrete resources. A no-factory public provider exercises nine canonical kinds,
 two-world borrowing, supplier failures, exact logical indices and real selected
 queries; complete warmed frames retain strict zero managed bytes. Full arbitrary
 custom/numerical/native/foreign/network/hardware acceptance remains open.
+
+## Shared replacement participants
+
+A registered RebuildShapes hook cannot mutate a different world participating
+in the same owned shape-data replacement. Common world borrows span numerical
+rebuild, rollback and rejected-copy retirement; committed old-view retirement
+keeps ordinary mutation access. [Three-world checks](physics-shape-data.md#shared-cpugpuregistered-replacement)
+cover CPU/GPU/registered scene/raw roles, both input representations, partial
+failures and complete warm groups without changing solver ownership.

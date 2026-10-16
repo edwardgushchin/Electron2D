@@ -1418,3 +1418,9 @@ geometry kind and concrete independent resource copies for procedural inputs and
 borrowed resource RIDs. Source evaluation borrows all using worlds; supplier errors
 preserve the old data. Selected CPU/GPU/registered geometry queries and complete
 warm intervals exercise the boundary; wider physics acceptance remains open.
+
+Shared owned shape-data replacement now protects every participating world through
+numerical rebuilding and rollback. The [mixed-world profile](../components/physics-shape-data.md#shared-cpugpuregistered-replacement)
+preserves scene/raw identity, exact geometry and observer histories under apply,
+rollback and rejected-retirement errors; committed callbacks keep normal access.
+Full numerical/custom/native/foreign/network/hardware acceptance remains open.

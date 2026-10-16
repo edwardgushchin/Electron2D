@@ -1153,3 +1153,9 @@ without a duplicate factory. Copies use concrete engine wrappers, retain common
 resource metadata and solver bias, and keep geometry independent from the source.
 Both operations borrow every using world while suppliers run; existing replacement
 rollback and view-retirement semantics remain intact.
+
+[Shared shape replacement](../components/physics-shape-data.md#shared-cpugpuregistered-replacement)
+now holds every participating world through numerical rebuild, rollback and
+rejected-copy retirement. One implementation hook cannot edit or retire another
+participant. Old committed-view retirement occurs after those world borrows end,
+preserving ordinary callback mutation and committed error semantics.

@@ -1006,7 +1006,9 @@ public sealed partial class PhysicsServer
     /// Rejected private geometry is retired even if rollback fails. A committed replacement remains committed if old-view retirement fails.
     /// Procedural resources supply immutable geometry and solver policy without a duplicate factory; the server copies these into a concrete engine resource.
     /// Common resource name, local-to-scene and translation settings are retained; subclass-specific fields and resource path/scene identity are not server data.
-    /// Geometry suppliers run while all destination worlds and the source geometry are borrowed; they cannot mutate authoring or lifetime.</remarks>
+    /// Geometry suppliers run while all destination worlds and the source geometry are borrowed; they cannot mutate authoring or lifetime.
+    /// Pure owner/phase checks precede selected status observation; every participating world is borrowed before status hooks run.
+    /// World borrowing continues through numerical rebuilding, rollback and rejected-copy retirement. The old committed view retires after borrowing ends.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live shape or the resource represents another geometry type.</exception>
     /// <exception cref="ObjectDisposedException">The supplied resource is disposed.</exception>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
@@ -1017,7 +1019,7 @@ public sealed partial class PhysicsServer
     /// <param name="shape">A live server shape RID.</param>
     /// <returns>An independent caller-owned Shape resource.</returns>
     /// <remarks>Borrowed procedural resources export the same immutable geometry and common resource settings as ShapeSetData,
-    /// without requiring a subclass duplicate factory. Source-world authoring and lifetime remain borrowed while suppliers run.</remarks>
+    /// without requiring a subclass duplicate factory. Source-world authoring and lifetime remain borrowed while status hooks and suppliers run.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or does not identify a shape.</exception>
     /// <exception cref="ObjectDisposedException">The service or source resource is disposed.</exception>
     /// <exception cref="InvalidOperationException">A using world is inaccessible or the procedural supplier violates its geometry contract.</exception>

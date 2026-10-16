@@ -257,10 +257,14 @@ interception would leave scene behavior and direct queries outside the extension
   inputs retain their ordinary duplication contract. ShapeGetData returns an
   independent concrete resource, including reads of borrowed procedural shape RIDs.
   A read borrows every source world and never requires the subclass factory.
-  Borrow all destination worlds and both geometry resources while evaluating
-  source data, before replacing the retained geometry;
-  numerical/lifetime reentry rejects and failures preserve the old data. Existing
-  rebuilding rollback and committed retirement semantics remain required.
+  Validate pure ownership/phase access before selected status observation, then
+  borrow all participating worlds before invoking status hooks. Borrow both
+  geometry resources while evaluating source data. Keep every participating world borrowed through numerical
+  rebuilding, rollback and rejected-copy retirement so one implementation hook
+  cannot mutate another participant. Release the world borrows before retiring
+  the old committed view, preserving ordinary committed-retirement callback
+  mutation. Numerical/lifetime reentry rejects and failures preserve old data;
+  existing rebuild rollback and committed retirement semantics remain required.
 
 ### Current implementation boundary
 

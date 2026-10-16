@@ -208,3 +208,8 @@ through its immutable ShapeGeometry without implementing a duplicate factory.
 ShapeSetData checks represented ShapeType; ShapeGetData on a borrowed resource RID
 returns an independent concrete engine resource. This projection copies geometry,
 solver bias and common resource state, rather than arbitrary subclass fields.
+
+Shared owned-RID replacement now holds all participating world borrows through
+rebuild and rollback, including rejected-copy retirement. Successful old-view
+retirement follows the end of borrowing. [Mixed-world verification](../components/physics-shape-data.md#shared-cpugpuregistered-replacement)
+preserves scene/raw geometry, logical slots and observer history after failures.

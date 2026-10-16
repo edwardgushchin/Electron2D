@@ -1622,3 +1622,10 @@ and ShapeGetData for resources without duplicate factories. Canonical kind, comm
 metadata, geometry independence and all using-world/source borrowing are exercised
 through nine kinds and scene/raw Body/Area queries. Existing declaration states and
 full numerical/custom/native/foreign/network/hardware gates remain open.
+
+[Shared shape-data participants](physics-shape-data.md#shared-cpugpuregistered-replacement)
+now retain numerical borrowing through rebuild, rollback and rejected-copy
+retirement. The mixed CPU/GPU/registered fixture checks twelve scene/raw roles,
+eight partial failures, exact original errors and logical sensor histories. Warm
+groups retain strict zero managed bytes; global acceptance and declaration states
+remain open.
