@@ -1,6 +1,6 @@
 # PackedScene
 
-Last updated: 2026-10-15
+Last updated: 2026-10-17
 
 **Inherits:** [Resource](Resource.md)
 
@@ -15,6 +15,12 @@ Last updated: 2026-10-15
 ## Skeletal resource restoration
 
 RestoreProperties honors the internal force-copy descriptor for a Skeleton stack using the existing SceneDuplicationScope. Repeated scene instances receive independent stacks and modifications, while aliases within each stack remain shared. Copied resources join normal instance-owned cleanup; failures follow the existing rollback path. SkeletonTests verifies in-memory and fresh-process file restoration with actual LookAt execution.
+
+## Editable ownership capture
+
+Descriptions are stored; folded presentation resets to false. A selected nonroot node with a nonempty SceneFilePath retains its source origin and, when enabled, its editable-instance flag. This metadata uses reserved typed scene fields `__SceneInstanceOrigin` and `__EditableInstance`; conflicting consumer property descriptors reject packing/restoration. Ordinary noninstance flags and the root's flag are not stored. SceneState exposes these captured typed fields through its existing property queries.
+
+Editable owners extend the existing flattened graph selection. Linked nested/inherited override graphs, non-Disabled edit modes and editor UI remain unsupported. Public CPU, software Vulkan and registered-provider consumers verify in-memory duplication, fresh-process file reconstruction, actual body motion/point queries and 128 warmed physical frames. This establishes authoring and headless simulation only; it is not rendered or hardware GPU acceptance.
 
 ## Description
 
@@ -133,8 +139,7 @@ Replaces this resource's contents with a typed snapshot of a node hierarchy.
 - `ObjectDisposedException`: This resource, a captured node, or a captured resource is disposing or disposed.
 - `Exception`: Property discovery, capture, change notification, or cleanup fails.
 
-**Remarks:** The root is always captured. A descendant branch is captured only when its first node is owned by
-`root`; rejected branches are pruned. After capture starts, any failure leaves this resource empty.
+**Remarks:** The root is always captured. A descendant branch is captured when owned by `root` or an editable strict descendant owner; rejected branches are pruned. After capture starts, any failure leaves this resource empty.
 
 <a id="m-electron2d-packedscene-createduplicateinstance"></a>
 ### `protected override Resource CreateDuplicateInstance()`
@@ -196,14 +201,14 @@ Public and protected members inherited from [Resource](Resource.md). Their lifec
 
 ## Capture selection and stored state
 
-The root is always included and does not own itself. Capture then walks children depth-first in sibling order. A descendant branch is included only when its first node has `Owner` equal to the packed root; a rejected branch and all of its descendants are pruned, even if a deeper node names the root as owner.
+The root is always included and does not own itself. Capture then walks children depth-first in sibling order. A descendant branch is included when its first node has `Owner` equal to the packed root or an editable strict descendant owner; a rejected branch and all of its descendants are pruned, even if a deeper node names the root as owner.
 
 For each included node, capture stores:
 
 - a source-independent static factory for the exact runtime type and the source instance identity used to reject source reuse;
 - the node name, relative path, parent/owner indices, and persistent groups;
 - every writable [`PropertyDescriptor`](PropertyDescriptor.md) whose `IsStored` flag is `true`, except `Name`, which has its dedicated field;
-- runtime-only empty metadata for nested-scene instances and placeholders, which are not authored by the current implementation.
+- typed nonroot instance origin and editable flag where a source path exists; linked instance/placeholder records remain empty.
 
 Supported stored values are strings, `Resource` subtypes, value types that contain no managed references, and copied `string[]`, `int[]`, `float[]`, `Vector2[]`, `Color[]`, and nested `int[][]` contour arrays. This includes [`Color`](Color.md), [`Vector2`](Vector2.md), [`Vector2i`](Vector2i.md), [`Vector3`](Vector3.md), [`Vector3i`](Vector3i.md), [`Vector4`](Vector4.md), [`Vector4i`](Vector4i.md), [`Rect2`](Rect2.md), [`Rect2i`](Rect2i.md), [`Transform`](Transform.md), and enums such as [`ProcessPhase`](ProcessPhase.md), whose numeric, ordinary/HDR, negative, integer, affine, or enum components are copied exactly. Other reference-shaped values such as arbitrary objects, collections and delegates are rejected; supported typed Node references use relative paths with `NotSupportedException`; no reflection-driven discovery or invocation, dynamic value container, or string-addressed property call is used.
 
@@ -249,13 +254,13 @@ No hard real-time or allocation-free guarantee is made for packing or instantiat
 
 ## Dependencies and interactions
 
-`PackedScene` depends on `Resource`, `Node`, `PropertyDescriptor`, `SceneState`, `PackedSceneEditState`, standard collections, weak identity tracking, and deterministic disposal. It uses `Resource`'s internal graph duplication machinery for local resources. It does not depend on SDL3-CS, rendering, input, audio, physics, a filesystem scene format, an asset loader/saver, scripting, networking, or an editor.
+`PackedScene` depends on `Resource`, `Node`, `PropertyDescriptor`, `SceneState`, `PackedSceneEditState`, standard collections, weak identity tracking, and deterministic disposal. It uses `Resource`'s internal graph duplication machinery for local resources. It does not depend on SDL3-CS, rendering, input, audio, physics, scripting, networking, or an editor.
 
 ## Verification and limitations
 
 `tests/Electron2D.Tests/Program.cs` covers empty state, runtime and invalid edit modes, owned-branch pruning, paths/owners/groups, typed state queries including `Color`, all six vector values, `Rect2`, `Rect2i`, `Transform`, and Timer configuration restoration, source disposal independence, scene-local aliasing and setup, repeated independent instances, packed-scene duplication, live-state replacement and disposal races, concurrent path updates, failed capture clearing, capture mutation rejection, capturing/source-returning/wrong-type/reused factories, detached-parent and active-tree escape rollback, setup failure cleanup, and state survival after packed-scene disposal.
 
-The current contract is runtime-only and in-memory. It has no `.tscn`/binary loader or saver, resource UID/import remapping, inherited-scene authoring, nested packed-scene overrides, editable instances, placeholders, missing-resource recovery, script state, persistent event endpoint schema, or editor mode implementation. `SceneState` exposes honest empty/null answers for those absent metadata categories.
+Typed `.e2dscene` persistence, registered authored connections and generic/mesh missing-resource recovery execute through the resource archive. This slice adds programmatic Node metadata and flattened editable-owner capture. Linked nested/inherited overrides, import remapping, placeholders, script state, non-Disabled edit modes and full editor UI remain absent. SceneState exposes origin/flag fields through typed property queries; unsupported linked-instance/inheritance categories retain empty/null answers.
 
 ## Decision
 

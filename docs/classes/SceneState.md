@@ -1,6 +1,6 @@
 # SceneState
 
-Last updated: 2026-09-27
+Last updated: 2026-10-17
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -11,6 +11,10 @@ Last updated: 2026-09-27
 - **Declaration:** `public sealed class SceneState : ElectronObject`
 
 > Provides read-only typed metadata for the current contents of a [`PackedScene`](PackedScene.md).
+
+## Authoring fields
+
+Captured Node descriptions use their public stored property. Nonroot source instances can also expose reserved typed `__SceneInstanceOrigin` strings and `__EditableInstance` bools through the existing property queries. Folding is transient. These fields restore the flattened graph; linked nested/inherited overrides remain unsupported.
 
 ## Description
 
@@ -327,9 +331,9 @@ Disposing the source packed scene does not dispose externally held states. Such 
 
 ## Verification and limitations
 
-The executable harness verifies empty/live state identity, path propagation, node ordering and paths, owner/group metadata, absent connection/placeholder/inheritance metadata, typed property name/type/value access including Timer configuration, invalid indices/casts, successful repack observation, concurrent cached-state disposal and path updates, and survival after source disposal.
+The executable harness verifies empty/live state identity, path propagation, node ordering and paths, owner/group metadata, registered connection and absent placeholder/inheritance metadata, typed property name/type/value access including Timer configuration, invalid indices/casts, successful repack observation, concurrent cached-state disposal and path updates, and survival after source disposal.
 
-The type intentionally omits connection-detail accessors, editable-instance metadata, inherited base state, placeholder loading, node-reference remapping metadata, and file-format internals because those producers do not exist. `GetNodeType()` is a diagnostic unqualified name, not a reflection-based factory key.
+Registered connection accessors and typed captured Node authoring fields execute. Linked instance/inherited base state, placeholder loading and general override-remapping metadata remain absent; file-format internals stay private. `GetNodeType()` is a diagnostic unqualified name, not a reflection-based factory key.
 
 ## Decision
 

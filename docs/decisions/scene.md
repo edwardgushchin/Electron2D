@@ -1,6 +1,6 @@
 # Electron2D scene decisions
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 This bounded document owns the current architectural decisions for scene. Node is the neutral scene-tree base and Entity is the spatial canvas base under ADR 0008; current class pages describe the implemented API. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0006](#adr-0006), [0008](#adr-0008), [0011](#adr-0011), 
 <a id="adr-0006"></a>
 ## ADR 0006: Own hierarchy, deferred work, and queued deletion in SceneTree
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 - Status: Accepted; frame scheduling refined by [0008](scene.md#adr-0008), lifecycle and queue safety refined by [0011](scene.md#adr-0011)
 - Scope: `Node` hierarchy and `SceneTree` scheduling
@@ -98,6 +98,10 @@ Last updated: 2026-10-16
 Owner is borrowed authoring metadata, independent of scene membership and physical-world ownership. Assignment requires a current ancestor. Removing or reparenting a node outside an active tree retains the previous owner, even when it is no longer an ancestor; its unique-name registration remains reachable through that owner. Active-tree removal clears unreachable owners after structural callbacks and before the final exited signals. Reparent preserves its own reachable outside owner and ordinary descendants sharing that owner; it does not restore unrelated descendant owners or traverse internal branches for restoration. Local owners within the moved subtree remain valid. Preserve the established typed bool RemoveChild observation and typed validation exceptions.
 
 Use Core ObjectIdentity under ADR 0003 for owner references and reverse owned-node membership: neither direction retains another node. Owner disposal/collection makes borrowed metadata unavailable, and deterministic disposal releases the records without disposing separately parented owned nodes. Unique-name lookup traverses live owned identities, including detached owned nodes, rather than assuming ownership is the current structural subtree. Registration prepares weak/list capacity before changing ownership; changed graph/owner authoring is cold. Public Parent/Tree/IsInsideTree and live Owner/ancestry observations are coordinated reads, not atomic multi-field snapshots or permission to mutate a foreign scene.
+
+Node authoring metadata executes in the runtime assembly under ADR 0090. EditorDescription is stored typed text and emits EditorDescriptionChanged only after a different value is committed, in every build. DisplayFolded is transient presentation state and never changes visibility, processing or physical participation. SetEditableInstance requires a strict descendant and sets the target's flag, observable through every current strict ancestor; disabling also unfolds the receiver. The flag follows target topology. Null editability queries return false; invalid nonnull relationships reject with typed exceptions.
+
+The existing SceneTree.EditedSceneRoot selection is the explicit authoring context for IsPartOfEditedScene and EditorStateChanged, including selection of the tree root. Membership is the selected root and its descendants; detached nodes have no context. This replaces the external engine's global editor-hint/editor-viewport-parent convention with the established per-tree typed selection. Relevant process-mode, owner, unique-name, persistent-group, source-path, editable-instance and authored-connection changes notify the affected selected node. Ordinary runtime-only groups and nonpersistent CLR subscriptions do not. Signal blocking applies, callbacks run after commitment outside internal locks, and their errors retain the owning operation's documented failure policy. This supplies programmatic authoring observations without creating editor UI or enabling tool scripts.
 
 The complete chain is `ElectronObject → Node → CanvasItem → Entity → Sprite`; the UI branch is `CanvasItem → Control`. Resources stay outside the scene hierarchy. The former `SceneNode` name is retired. No `Node2D`, `Node3D`, `TransformNode`, duplicate compatibility base, or second public game-object hierarchy is introduced.
 
@@ -255,7 +259,7 @@ Group queues use the existing weak typed invocation infrastructure. Active callb
 <a id="adr-0023"></a>
 ## ADR 0023: Typed in-memory packed scenes
 
-Last updated: 2026-10-14
+Last updated: 2026-10-17
 
 ### Status
 
@@ -281,7 +285,7 @@ Add one runtime-only packed-scene component to the Scene domain and the existing
 
 #### Capture and storage
 
-`Node.Owner` is the storage-selection boundary. The root is always stored; traversal is parent-first depth-first, and only branches whose first descendant is owned by that root are included. The root does not own itself. Persistent group flags are captured; runtime-only groups are not. Authored typed connections under ADR 0010 are captured in publisher traversal/registration order; endpoints outside the selected graph are omitted. Connections are restored after reference resolution, before lifecycle notification. Archive version 3 adds this table; versions 1 and 2 load with no connections.
+`Node.Owner` is the storage-selection boundary. The root is always stored; traversal is parent-first depth-first. A descendant is selected when its owner is the capture root or a current descendant of that root marked as an editable instance. An excluded or internal branch remains excluded under the existing internal-child policy. The root does not own itself. EditorDescription uses an ordinary stored string descriptor. DisplayFolded remains transient. Nonroot scene-instance origin paths and enabled editable-instance flags use reserved typed node storage records, restored before parenting; flag capture requires a nonempty instance origin, matching the reference instance role. These records preserve authoring metadata in the existing concrete hierarchy format; linked nested-scene override/inheritance data and non-Disabled PackedSceneEditState modes remain separate gaps. Persistent group flags are captured; runtime-only groups are not. Authored typed connections under ADR 0010 are captured in publisher traversal/registration order; endpoints outside the selected graph are omitted. Connections are restored after reference resolution, before lifecycle notification. Archive version 3 adds this table; versions 1 and 2 load with no connections.
 
 ResourcePreloader additionally recovers its reserved canonical named Resource slots under [ADR 0013](resources.md#adr-0013); this is an exact owner/schema binding, not reflected member dispatch.
 
@@ -315,7 +319,7 @@ The dependency is restricted to local-scene association, borrows the existing Co
 
 Ordinary C# event subscribers and EventConnection tokens remain runtime objects. Authored SceneConnectionBinding subscriptions store only registered compiled schema IDs, selected endpoint indices and typed bound payloads under ADR 0010. They are restored before lifecycle notification; source delegates and Nodes are never serialized.
 
-ResourceSaver/ResourceLoader now persist the typed PackedScene model as version-3 archives under ADR 0013, with version-1/2 schemas retained. Registered compiled factory IDs replace in-memory delegates in files; no assembly loading or script serialization occurs. File roots own decoded graphs and instances retain internal leases under ADR 0014, including replacement/disposal. Import remapping, editor/inheritance authoring, missing-node placeholders and editable instances remain absent. Generic/Mesh missing-resource recovery executes under ADR 0013; other exact asset substitutions retain their stated prerequisites. The unsupported `PackedSceneEditState` values fail explicitly.
+ResourceSaver/ResourceLoader now persist the typed PackedScene model as version-3 archives under ADR 0013, with version-1/2 schemas retained. Registered compiled factory IDs replace in-memory delegates in files; no assembly loading or script serialization occurs. File roots own decoded graphs and instances retain internal leases under ADR 0014, including replacement/disposal. Import remapping, linked nested/inherited overrides, missing-node placeholders and non-Disabled edit states remain absent. Programmatic descriptions, transient folding, explicit edited-scene membership and flattened editable-owner capture execute as described above. Generic/Mesh missing-resource recovery executes under ADR 0013; other exact asset substitutions retain their stated prerequisites. The unsupported `PackedSceneEditState` values fail explicitly.
 
 ### Consequences
 
@@ -348,7 +352,7 @@ It does not establish disk format compatibility, editor behavior, performance on
 <a id="adr-0031"></a>
 ## ADR 0031: Make Node trees and reusable scenes the primary game-object model
 
-Last updated: 2026-09-23
+Last updated: 2026-10-17
 
 - Status: Accepted
 - Scope: Public game-object, world-composition, and scene-reuse model
@@ -373,7 +377,7 @@ The intended model follows the proven Node-based, scene-oriented structure famil
 
 ### Current implementation boundary
 
-The implemented `PackedScene` contract is typed, runtime-only, and in-memory. It can capture one owned Node hierarchy and construct independent detached instances now. Typed scene-file persistence and file-based change/reload now execute under ADR 0013. Editor authoring, nested scene-instance metadata, inherited scenes, editable overrides, scripting and persistent typed event endpoints remain absent. Composition is currently performed by ordinary Node parenting and packing; this decision does not claim those future authoring workflows are implemented.
+The implemented `PackedScene` contract captures a typed owned Node hierarchy and creates independent detached instances. Typed scene-file persistence and file-based change/reload execute under ADR 0013; registered persistent typed connections execute under ADR 0010. Programmatic Node authoring metadata and flattened editable-owner selection execute under ADRs 0008/0023. Linked nested/inherited scene overrides, non-Disabled edit modes, scripting and full editor UI remain prerequisites. Ordinary parenting and packing remain the composition model.
 
 ### Consequences
 

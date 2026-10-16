@@ -1,5 +1,9 @@
 # SceneConnectionBinding<TPublisher, TSubscriber, TBindings>
 
+## Authoring-event rollback
+
+A successful subscription requests the selected publisher's EditorStateChanged after retaining the typed connection. If that callback fails, the new record and token are removed without a second authoring event. Subscription and rollback errors are preserved together. Manual token disposal emits once; endpoint lifetime cleanup and consumed one-shot connections emit no disconnect event.
+
 ## Overview
 
 A compiled typed definition of one authored subscription between Node roles. Create it through `ResourceFileTypes.RegisterSceneConnection`; its stable ID selects the same compiled factory during file loading. No delegate or original Node is stored in a packed scene.

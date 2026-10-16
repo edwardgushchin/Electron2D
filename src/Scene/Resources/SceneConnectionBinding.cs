@@ -18,7 +18,9 @@ public sealed class SceneConnectionBinding<TPublisher, TSubscriber, TBindings>
     /// <param name="bindings">A snapshotted typed bound payload.</param>
     /// <returns>The caller-disposable subscription, also cleaned up by either endpoint.</returns>
     /// <remarks>Duplicate calls create distinct subscriptions. Consumed one-shot or disposed tokens are
-    /// omitted by Pack. Active tree endpoints require their owner thread. The factory must be static.</remarks>
+    /// omitted by Pack. Active tree endpoints require their owner thread. The factory must be static.
+    /// A selected edited scene receives EditorStateChanged after retention. If that callback fails, the new
+    /// connection is removed without a second authoring event; callback and rollback failures are preserved.</remarks>
     public EventConnection Subscribe(TPublisher publisher, TSubscriber subscriber, TBindings bindings) =>
         Schema.Subscribe(publisher, subscriber, new StoredPropertyValue<TBindings>(StoredPropertyValue<TBindings>.Snapshot(bindings)));
 }
@@ -66,7 +68,11 @@ internal sealed class SceneConnectionSchema<TPublisher, TSubscriber, TBindings>(
             publisher.EnsureConnectionMutation(); subscriber.EnsureConnectionMutation();
             publisher.RetainSceneConnection(new SceneConnectionRuntime(this, publisher, subscriber, bindings, token));
         }
-        catch { token.Dispose(); throw; }
+        catch (Exception error)
+        {
+            try { token.Dispose(); } catch (Exception cleanup) { throw new AggregateException(error, cleanup); }
+            throw;
+        }
         return token;
     }
 }

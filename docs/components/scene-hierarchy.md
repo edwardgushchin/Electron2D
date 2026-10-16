@@ -1,6 +1,20 @@
 # Scene hierarchy component
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
+
+## Node authoring observations
+
+`EditorDescription` stores nonnull text and emits `EditorDescriptionChanged(this)` after an ordinal change, including detached nodes. Equal writes are silent; blocking signals suppresses delivery while preserving the committed value. Callback errors propagate after commitment and nested edits observe the committed text. `DisplayFolded` defaults false, remains transient, and changes neither processing, visibility nor physics.
+
+`SceneTree.EditedSceneRoot` explicitly selects the authoring subtree. `IsPartOfEditedScene` includes that live root and its descendants; selection of the tree root is allowed. Detachment clears membership. This context creates no editor UI and changes no simulation policy.
+
+`SetEditableInstance(node, isEditable)` requires a live strict descendant. Its flag belongs to the target and follows reparenting; any current ancestor can query it with `IsEditableInstance`. Null queries return false; invalid nonnull relationships throw `ArgumentException`. Disabling also unfolds the receiver. Both mutation guards run before writes. Every accepted call, even an equal flag, requests `EditorStateChanged` on the selected target.
+
+Selected nodes also emit `EditorStateChanged(this)` for attached process-mode changes, nonnull owner changes, unique-name changes, successful persistent group add/remove, source-path assignment and authored connection changes. Folding, selection, ordinary runtime groups and CLR subscriptions emit no state event. Delivery is synchronous on the mutating thread outside internal locks and respects signal blocking. A process-mode callback failure joins other notification failures; owner/unique/group operations retain committed progress when a callback throws. A failed authored subscription rolls back without a second authoring event; rollback errors are preserved. Manual disconnection emits once, while consumed one-shots and endpoint teardown do not.
+
+Attached reads require the owner or current processing group. Description/folding/editability writes require the scene owner and reject capture or physical borrowing. Persistent group changes retain current-group access and deliver state events on that worker. Committed disposal clears the new events; canceled disposal preserves them.
+
+Editable-owned physical children now participate in flattened PackedScene capture; descriptions and instance-origin/flag metadata survive fresh-process files, while folding stays transient. Linked nested/inherited overrides and full editor UI remain open.
 
 ## Child-name collisions
 

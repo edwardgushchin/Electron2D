@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -13,6 +13,10 @@ Last updated: 2026-10-16
 > Owns one active node hierarchy and coordinates its lifecycle, input, frames, groups, timers, tweens, and deferred work.
 
 AnimatedSprite uses the existing internal idle lane and tree pause/process policy. Worker SpriteFrames changes remain pending until owner-thread reconciliation; they do not dispatch scene callbacks from a worker. No new public scheduling API is introduced.
+
+## Selected authoring context
+
+EditedSceneRoot also selects Node.IsPartOfEditedScene and EditorStateChanged membership. The selected live root, including this tree's Root, and all its descendants participate. Detached nodes do not. Selection changes emit no Node authoring event and create no editor UI or simulation mode. See [Node authoring state](Node.md#scene-authoring-state).
 
 ## Retained canvas presentation
 

@@ -1,6 +1,10 @@
 # Scene tree component
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
+
+## Selected authoring context
+
+EditedSceneRoot also selects Node.IsPartOfEditedScene and EditorStateChanged membership. The selected live root, including this tree's Root, and all its descendants participate. Detached nodes do not. Selection changes emit no Node authoring event and create no editor UI or simulation mode. See [Node authoring state](../classes/Node.md#scene-authoring-state).
 
 ## Scope
 

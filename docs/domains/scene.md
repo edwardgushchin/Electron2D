@@ -6,6 +6,10 @@ Last updated: 2026-10-17
 
 [Window input reception](../classes/Window.md#window-input-reception-and-visibility-notification) now runs before viewport localization and scene callbacks for native and forwarded embedded events. Visibility changes also deliver notification 30 before their typed signal; input ownership and failure cleanup remain in the existing host/tree lifetime.
 
+## Node scene-authoring metadata
+
+[Node authoring state](../classes/Node.md#scene-authoring-state) supplies stored descriptions, transient folding, explicit edited-subtree membership and target-owned editable flags. [PackedScene](../classes/PackedScene.md#editable-ownership-capture) includes editable-owned physical children in its flattened graph and restores typed origin/flag metadata from fresh-process files. Authoring observations cover persistent connections and groups; physical owner/borrow/capture guards remain applicable. Linked nested/inherited override graphs, full editor UI, hardware GPU and full-goal acceptance remain open.
+
 ## Runtime child names
 
 [Child-name collision policy](../components/scene-hierarchy.md#child-name-collisions)
@@ -151,7 +155,7 @@ The [Physics domain](physics.md) supplies RigidBody, StaticBody, CollisionShape,
 - Tweens use one captured process/physics batch after lightweight timers. They are owner-thread mutable: a finished tween remains valid until its next eligible tree step; killing invalidates immediately but retains its registry entry until that sweep. Failures invalidate immediately. Parallel siblings are attempted on failure; no second scheduler or background clock is created.
 - Typed group operations run in hierarchy/reverse order, revalidate membership, and can be deferred and coalesced without reflection or untyped values.
 - Typed node events pass their publisher first when an additional payload is present; Core event connections can schedule handlers through `SceneTree.Defer`.
-- Packed-scene capture stores only root-owned branches, static exact-type factories, persistent groups, and explicitly storage-enabled typed properties. It stores no live source nodes or event subscribers.
+- Packed-scene capture stores root-owned and enabled descendant-owned branches, static exact-type factories, persistent groups, and explicitly storage-enabled typed properties. It stores no live source nodes or event subscribers.
 - Packed-scene instances are reconstructed detached. Node factories and unfinished instances cannot activate a `SceneTree`; scene-local resource graphs preserve aliases/cycles, know their new root before setup, and are disposed with that root.
 - Capture blocks source hierarchy mutation. Failed reconstruction attempts cleanup of every returned node and resource duplicate it acquired, reports cleanup failures, and never returns a partial result.
 - `SceneTree` is initialized when construction succeeds, returns no quit request from its two inherited frame lanes, and releases all owned scene state from explicit finalization or disposal.
@@ -164,7 +168,7 @@ The [Physics domain](physics.md) supplies RigidBody, StaticBody, CollisionShape,
 - Canvas membership emits entry/exit notifications; local and inherited visibility delivery includes Hidden, and showing schedules redraw. Manual tree notifications do not mutate membership.
 - Visibility and canvas-root, behind-parent, nested local Y and effective Z ordering govern retained commands. Rendering order does not change process/input scheduling.
 - Root-window drawing and its input/client Viewport are integrated. Root viewport Control hit testing, mouse bubbling and focused keyboard delivery run; complete GUI routing remains absent. In-memory scene switching exists, but scene file loading/reloading does not. There is no independent offscreen viewport, wider physics server/area/joint API, RPC/multiplayer, accessibility backend, or scripting. Tweening is runtime-only and has no editor/serialization surface.
-- Packed scenes support in-memory capture and typed archive persistence. Nested/inherited scene authoring, placeholders, editable instances, persistent event endpoint storage, general node-reference remapping and import integration, and every editor edit mode remain absent.
+- Packed scenes support in-memory capture and typed archive persistence. Programmatic Node metadata, flattened editable-owner capture and registered persistent event endpoints execute. Linked nested/inherited overrides, placeholders, general override-remapping/import integration and non-Disabled editor edit modes remain absent.
 - Paths are typed as `string`, not a separate `NodePath`; groups are strings; wildcard search covers names with `*` and `?`.
 - A detached node may remember `QueueFree`, but deletion occurs only after attachment to a tree and a flush/frame boundary.
 - There is no complete target host/package/test matrix; current executable verification is Linux-only.

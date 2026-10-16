@@ -171,7 +171,11 @@ public sealed partial class PackedScene : Resource
     /// <param name="root">The live root to capture. A <see langword="null"/> argument is rejected without changing existing state.</param>
     /// <remarks>
     /// The root is always captured. A descendant branch is captured only when its first node is owned by
-    /// <paramref name="root"/>; rejected branches are pruned. After capture starts, any failure leaves this resource empty.
+    /// <paramref name="root"/> or an editable strict descendant owner; rejected branches are pruned.
+    /// Descriptions are stored, folding is transient, and nonroot instance origins/editable flags round-trip
+    /// with the flattened typed graph. Linked nested/inherited overrides remain unsupported.
+    /// Consumer descriptors cannot use reserved __SceneInstanceOrigin or __EditableInstance names.
+    /// After capture starts, any failure leaves this resource empty.
     /// Unrequested Window.Position is omitted to preserve automatic native placement; explicit zero remains stored.
     /// Authored owned FoldableContainer title controls are captured with their typed relative membership references.
     /// </remarks>
@@ -341,6 +345,7 @@ public sealed partial class PackedScene : Resource
                     !(node is Window window && property.Name == nameof(Window.Position) && !window.HasAuthoredPosition) &&
                     !(node is FoldableContainer && property.Name.StartsWith("__TitleControl/", StringComparison.Ordinal)))
                 .Concat(node is FoldableContainer foldable ? foldable.CapturedTitleProperties(root) : [])
+                .Concat(node.CapturedEditorProperties(root))
                 .Select(property => new ScenePropertyData(property.Name, property.CaptureStoredValue(node)))
                 .ToArray();
 
@@ -372,7 +377,7 @@ public sealed partial class PackedScene : Resource
         {
             var child = parent.GetChild(index, includeInternal: true);
             if (child.IsInternalChild && !(parent is FoldableContainer foldable && foldable.IsTitleControl(child))) continue;
-            if (!ReferenceEquals(child.Owner, root))
+            if (!root.OwnsEditableCapture(child))
                 continue;
 
             selected.Add(child);
@@ -404,6 +409,7 @@ public sealed partial class PackedScene : Resource
         Resource.SceneDuplicationScope resources,
         bool nodeReferences = false)
     {
+        Node.ValidateEditorPropertyNames(node.GetPropertyList());
         var descriptors = node.GetPropertyList().ToDictionary(property => property.Name, StringComparer.Ordinal);
         foreach (var property in stored.Properties)
         {
@@ -411,6 +417,7 @@ public sealed partial class PackedScene : Resource
             if (!descriptors.TryGetValue(property.Name, out var descriptor))
             {
                 // A preceding stored count can expose indexed typed properties on this same node.
+                Node.ValidateEditorPropertyNames(node.GetPropertyList());
                 descriptors = node.GetPropertyList().ToDictionary(candidate => candidate.Name, StringComparer.Ordinal);
                 descriptors.TryGetValue(property.Name, out descriptor);
             }
@@ -420,6 +427,7 @@ public sealed partial class PackedScene : Resource
             if (descriptor is null && node is FoldableContainer) descriptor = FoldableContainer.StoredTitleControl(property.Name, property.Value.ValueType);
             if (descriptor is null && node is ResourcePreloader) descriptor = ResourcePreloader.StoredResource(property.Name, property.Value.ValueType);
             if (node is ShaderGlobalsOverride && descriptor?.IsStored != true) descriptor = ShaderGlobalParameters.StoredSceneParameter(node, property.Name, property.Value.ValueType) ?? descriptor;
+            descriptor ??= Node.StoredEditorProperty(property.Name, property.Value.ValueType);
             if (descriptor is null || !descriptor.IsStored ||
                 descriptor.ValueType != property.Value.ValueType)
             {

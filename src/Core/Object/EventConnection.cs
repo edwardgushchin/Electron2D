@@ -27,6 +27,8 @@ public sealed class EventConnection : IDisposable
         callback();
     }
     internal bool OneShot => _oneShot;
+    private bool _disconnectedByDisposal;
+    internal bool WasConnectedAtDisposal { get { lock (_gate) return _disconnectedByDisposal; } }
     internal bool Deferred { get; }
     private readonly object _gate = new();
     private readonly bool _oneShot;
@@ -289,7 +291,7 @@ public sealed class EventConnection : IDisposable
     /// The operation is idempotent and safe to race with event delivery. It does not wait for a handler that has already
     /// started. The connection remains terminal even if the supplied removal accessor throws.
     /// </remarks>
-    /// <exception cref="Exception">The supplied event removal accessor throws.</exception>
+    /// <exception cref="Exception">Removal or an authored-scene change callback throws. Multiple cleanup errors are aggregated.</exception>
     public void Dispose()
     {
         Action? unsubscribe;
@@ -299,6 +301,7 @@ public sealed class EventConnection : IDisposable
             if (_state is ConnectionState.Completed or ConnectionState.Disposed)
                 return;
 
+            _disconnectedByDisposal = _state == ConnectionState.Active;
             _state = ConnectionState.Disposed;
             unsubscribe = _unsubscribe;
             _unsubscribe = null;
@@ -306,7 +309,12 @@ public sealed class EventConnection : IDisposable
             _handler = null; _typedScheduler = null; _typedCallback = null;
         }
 
-        try { ReleaseTyped(); unsubscribe?.Invoke(); } finally { Interlocked.Exchange(ref Finished, null)?.Invoke(); }
+        List<Exception>? errors = null;
+        try { ReleaseTyped(); } catch (Exception error) { (errors ??= []).Add(error); }
+        try { unsubscribe?.Invoke(); } catch (Exception error) { (errors ??= []).Add(error); }
+        try { Interlocked.Exchange(ref Finished, null)?.Invoke(); } catch (Exception error) { (errors ??= []).Add(error); }
+        if (errors?.Count == 1) ExceptionDispatchInfo.Capture(errors[0]).Throw();
+        if (errors is not null) throw new AggregateException(errors);
     }
 
     private static EventConnection Create<TDelegate>(

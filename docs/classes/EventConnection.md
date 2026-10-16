@@ -1,6 +1,6 @@
 # EventConnection
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 **Inherits:** —
 
@@ -11,6 +11,10 @@ Last updated: 2026-10-16
 - **Declaration:** `public sealed class EventConnection`
 
 > Owns a typed event subscription that can be disconnected, delivered once, or scheduled for later delivery.
+
+## Authored-scene removal
+
+Manual disposal of an authored scene token requests EditorStateChanged on its selected publisher after removal. One-shot completion and endpoint teardown do not. Cleanup attempts release, unsubscription and completion notification even after errors; a sole error propagates, while multiple errors are aggregated. The token stays terminal.
 
 ## Description
 

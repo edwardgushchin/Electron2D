@@ -54087,6 +54087,32 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.Node.EditorDescriptionChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Node",
+    "name": "EditorDescriptionChanged",
+    "signature": "public event System.Action\u003CElectron2D.Node\u003E EditorDescriptionChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Node.EditorStateChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Node",
+    "name": "EditorStateChanged",
+    "signature": "public event System.Action\u003CElectron2D.Node\u003E EditorStateChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.Node.Ready()",
     "kind": "event",
     "declaringType": "Electron2D.Node",
@@ -126196,6 +126222,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.IsEditableInstance(Electron2D.Node)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "IsEditableInstance",
+    "signature": "public System.Boolean IsEditableInstance(Electron2D.Node node)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.Node",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.IsGreaterThan(Electron2D.Node)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -126861,6 +126906,30 @@
       {
         "name": "value",
         "type": "TValue",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.SetEditableInstance(Electron2D.Node,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "SetEditableInstance",
+    "signature": "public System.Void SetEditableInstance(Electron2D.Node node, System.Boolean isEditable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.Node",
+        "default": null
+      },
+      {
+        "name": "isEditable",
+        "type": "System.Boolean",
         "default": null
       }
     ],
@@ -228336,6 +228405,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Node.DisplayFolded()",
+    "kind": "property",
+    "declaringType": "Electron2D.Node",
+    "name": "DisplayFolded",
+    "signature": "public System.Boolean DisplayFolded { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Node.EditorDescription()",
+    "kind": "property",
+    "declaringType": "Electron2D.Node",
+    "name": "EditorDescription",
+    "signature": "public System.String EditorDescription { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Node.InputEnabled()",
     "kind": "property",
     "declaringType": "Electron2D.Node",
@@ -228393,6 +228488,19 @@
     "declaringType": "Electron2D.Node",
     "name": "IsNodeReady",
     "signature": "public System.Boolean IsNodeReady { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Node.IsPartOfEditedScene()",
+    "kind": "property",
+    "declaringType": "Electron2D.Node",
+    "name": "IsPartOfEditedScene",
+    "signature": "public System.Boolean IsPartOfEditedScene { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

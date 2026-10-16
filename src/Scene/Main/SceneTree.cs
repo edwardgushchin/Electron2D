@@ -327,7 +327,7 @@ public sealed partial class SceneTree : MainLoop
     /// <summary>Gets or selects the root of the scene selected for configuration warnings and control authoring previews.</summary>
     /// <value>Null initially. A nonnull value must be a live node in this tree; this tree's Root is allowed.</value>
     /// <remarks>This is a borrowed tooling selection, independent of packed-scene ownership. It enables warning
-    /// change events and control-specific authoring previews only for the selected subtree, without enabling an editor
+    /// change events, node authoring-state observations and control-specific authoring previews only for the selected subtree, without enabling an editor
     /// or changing general scene processing policy. Exiting the
     /// tree clears the selection before NodeRemoved. Selection itself emits no warning-change event.</remarks>
     /// <exception cref="ArgumentException">The selected node belongs to another tree or is detached.</exception>
@@ -344,6 +344,9 @@ public sealed partial class SceneTree : MainLoop
             _editedSceneRoot = value;
         }
     }
+
+    internal bool IsEditedSceneMember(Node node) => _editedSceneRoot is { IsDisposed: false } root &&
+        ReferenceEquals(root.Tree, this) && (ReferenceEquals(root, node) || root.IsAncestorOf(node));
 
     /// <summary>Gets or sets whether paths draw their curves and tangent direction markers.</summary>
     /// <value>False initially.</value>

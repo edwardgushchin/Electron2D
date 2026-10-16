@@ -23,6 +23,11 @@ public partial class Node : ElectronObject
             stored: true),
         new PropertyDescriptor<Node, bool>(nameof(UniqueNameInOwner), node => node.UniqueNameInOwner,
             (node, value) => node.UniqueNameInOwner = value, _ => false, stored: true),
+        new PropertyDescriptor<Node, string>(nameof(EditorDescription), node => node.EditorDescription,
+            (node, value) => node.EditorDescription = value, _ => string.Empty, stored: true),
+        new PropertyDescriptor<Node, bool>(nameof(DisplayFolded), node => node.DisplayFolded,
+            (node, value) => node.DisplayFolded = value, _ => false),
+        new PropertyDescriptor<Node, bool>(nameof(IsPartOfEditedScene), node => node.IsPartOfEditedScene),
         new PropertyDescriptor<Node, ProcessMode>(
             nameof(ProcessMode),
             node => node.ProcessMode,
@@ -533,6 +538,7 @@ public partial class Node : ElectronObject
 
             SetSceneOwner(value);
             ClaimUniqueName();
+            if (value is not null) EmitEditorStateChanged();
         }
     }
 
@@ -550,6 +556,8 @@ public partial class Node : ElectronObject
             if (_uniqueNameInOwner == value) return;
             _uniqueNameInOwner = value;
             ClaimUniqueName();
+            Tree?.NotifyConfigurationWarningsChanged(this);
+            EmitEditorStateChanged();
         }
     }
 
@@ -692,6 +700,8 @@ public partial class Node : ElectronObject
                     }
                     bool Current() => !node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.TreeAttachmentVersion == state.Attachment;
                 }
+                try { EmitEditorStateChanged(); }
+                catch (Exception error) { CollectException(ref errors, error); }
                 ThrowCollected("Process mode notification callbacks failed.", errors);
             }
             finally { states.Clear(); _processModeDepth--; }
@@ -1635,7 +1645,7 @@ public partial class Node : ElectronObject
     {
         EnsureProcessingAccess();
         ArgumentException.ThrowIfNullOrEmpty(group);
-        _groups.TryAdd(group, persistent);
+        if (_groups.TryAdd(group, persistent) && persistent) EmitEditorStateChanged();
     }
 
     /// <summary>Removes this node from a case-sensitive group.</summary>
@@ -1648,7 +1658,9 @@ public partial class Node : ElectronObject
     {
         EnsureProcessingAccess();
         ArgumentNullException.ThrowIfNull(group);
-        return _groups.Remove(group);
+        if (!_groups.Remove(group, out var persistent)) return false;
+        if (persistent) EmitEditorStateChanged();
+        return true;
     }
 
     /// <summary>Determines whether this node belongs to a case-sensitive group.</summary>
@@ -2067,6 +2079,8 @@ public partial class Node : ElectronObject
             TreeExited = null;
             Ready = null;
             ReplacingBy = null;
+            EditorDescriptionChanged = null;
+            EditorStateChanged = null;
         }
 
         try
@@ -2169,6 +2183,7 @@ public partial class Node : ElectronObject
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(path);
         _sceneFilePath = path;
+        EmitEditorStateChanged();
     }
 
     internal void BeginSceneInstantiation()

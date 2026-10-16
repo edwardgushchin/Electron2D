@@ -9,6 +9,7 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length >= 2 && args[0] == "--editor-state-child") { BackendChecks.ReadEditorState(args[1], args.Contains("--gpu") ? PhysicsServer.Backend.GPU : args.Contains("--cpu") ? PhysicsServer.Backend.CPU : null, args.Contains("--threaded")); return; }
 if (args.Length == 2 && args[0] == "--video-archive") { VideoPlaybackTests.ReadArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIDEO") == "managed") { VideoPlaybackTests.Managed(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIDEO") is "gpu" or "compatibility" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIDEO") is { } videoBackend) { VideoRenderingTests.Run(videoBackend, Environment.GetEnvironmentVariable("ELECTRON2D_VIDEO_OUTPUT") ?? IOPath.Combine(IOPath.GetTempPath(), "electron2d-video-" + videoBackend)); return; }
@@ -326,6 +327,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_VISIBILITY") == "
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CURSOR_REFRESH_NATIVE") == "1") { CursorRefreshTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CURSOR_REFRESH") == "1") { CursorRefreshTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_CONNECTIONS_NATIVE") == "1") { SceneConnectionTests.RunNative(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_EDITOR_STATE") is { } editorProfile)
+{
+    if (editorProfile == "all") { BackendChecks.RunEditorState(); BackendChecks.RunEditorState(PhysicsServer.Backend.CPU); BackendChecks.RunEditorState(PhysicsServer.Backend.GPU); return; }
+    BackendChecks.RunEditorState(editorProfile == "cpu" ? PhysicsServer.Backend.CPU : editorProfile == "gpu" ? PhysicsServer.Backend.GPU : null,
+        Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_THREAD") == "1"); return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_CONNECTIONS") == "1") { SceneConnectionTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INDEXED_PROPERTIES_NATIVE") == "1") { IndexedPropertyTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INDEXED_PROPERTIES") == "1") { IndexedPropertyTests.Run(); return; }
@@ -1632,6 +1639,7 @@ VerifyEventConnections();
 ObjectSignalBlockingTests.Run();
 ObjectDisposalRegistryTests.Run();
 BackendChecks.RunDisposalVeto(); BackendChecks.RunDisposalVeto(PhysicsServer.Backend.CPU); BackendChecks.RunDisposalVeto(PhysicsServer.Backend.GPU);
+BackendChecks.RunEditorState(); BackendChecks.RunEditorState(PhysicsServer.Backend.CPU); BackendChecks.RunEditorState(PhysicsServer.Backend.GPU);
 BackendChecks.RunQueuedObservation(); BackendChecks.RunQueuedObservation(PhysicsServer.Backend.CPU); BackendChecks.RunQueuedObservation(PhysicsServer.Backend.GPU);
 SignalBlockingPhysicsTests.Run(PhysicsServer.Backend.CPU, false); SignalBlockingPhysicsTests.Run(PhysicsServer.Backend.GPU, false);
 EventConnectionPhysicsTests.Run(PhysicsServer.Backend.CPU); EventConnectionPhysicsTests.Run(PhysicsServer.Backend.GPU);

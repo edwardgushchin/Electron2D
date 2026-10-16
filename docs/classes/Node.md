@@ -1,6 +1,6 @@
 # Node
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -29,6 +29,18 @@ Node names retain ordinary relative, absolute active-tree and owner-unique rules
 `PropagateCall(Action<Node>, bool parentFirst=false)` runs a compiled operation on every node in a subtree, including internal children. Generic overloads filter by a Node role and optionally pass one typed argument, including tuples. Children-first is the default; parent-first visits each parent before descendants. Ordered child traversal uses the existing hierarchy barrier: changing the currently traversed child list, reparenting/disposal through that parent, and disposal of the current node reject, while ordinary properties may change. Mutating a descendant before its own traversal retains the existing live hierarchy semantics. Nested calls retain independent depth. Callback failures are combined after the remaining nodes are attempted, and finally restores every traversal guard. Attached calls require the scene owner.
 
 SubtreeResourceAuthoringTests verifies path/error/null/last-resource semantics, custom typed getters, relative/absolute/unique names, all operation orders and roles, typed arguments, internal children, structural/disposal guards, error continuation, guard release and 1000 warmed propagation calls with zero managed allocation. Edited Sprite/AtlasTexture state survives `.e2dscene` save/load/reconstruction. Linux Wayland GPU and hardware compatibility hosts verify edited atlas pixels and propagated positions. Other platforms, full editor automation, large hierarchy stack limits, native allocation and human acceptance remain unverified. Node duplicate and persistent connections remain their own executable prerequisites.
+
+## Scene authoring state
+
+`EditorDescription` stores nonnull text and emits `EditorDescriptionChanged(this)` after an ordinal change, including detached nodes. Equal writes are silent; blocking signals suppresses delivery while preserving the committed value. Callback errors propagate after commitment and nested edits observe the committed text. `DisplayFolded` defaults false, remains transient, and changes neither processing, visibility nor physics.
+
+`SceneTree.EditedSceneRoot` explicitly selects the authoring subtree. `IsPartOfEditedScene` includes that live root and its descendants; selection of the tree root is allowed. Detachment clears membership. This context creates no editor UI and changes no simulation policy.
+
+`SetEditableInstance(node, isEditable)` requires a live strict descendant. Its flag belongs to the target and follows reparenting; any current ancestor can query it with `IsEditableInstance`. Null queries return false; invalid nonnull relationships throw `ArgumentException`. Disabling also unfolds the receiver. Both mutation guards run before writes. Every accepted call, even an equal flag, requests `EditorStateChanged` on the selected target.
+
+Selected nodes also emit `EditorStateChanged(this)` for attached process-mode changes, nonnull owner changes, unique-name changes, successful persistent group add/remove, source-path assignment and authored connection changes. Folding, selection, ordinary runtime groups and CLR subscriptions emit no state event. Delivery is synchronous on the mutating thread outside internal locks and respects signal blocking. A process-mode callback failure joins other notification failures; owner/unique/group operations retain committed progress when a callback throws. A failed authored subscription rolls back without a second authoring event; rollback errors are preserved. Manual disconnection emits once, while consumed one-shots and endpoint teardown do not.
+
+Attached reads require the owner or current processing group. Description/folding/editability writes require the scene owner and reject capture or physical borrowing. Persistent group changes retain current-group access and deliver state events on that worker. Committed disposal clears the new events; canceled disposal preserves them.
 
 ## Description
 
@@ -60,6 +72,9 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 
 | Member | Contract |
 | --- | --- |
+| [`public string EditorDescription { get; set; }`](#p-electron2d-node-editordescription) | Stored description; emits after an ordinal change. |
+| [`public bool DisplayFolded { get; set; }`](#p-electron2d-node-displayfolded) | Transient authoring presentation. |
+| [`public bool IsPartOfEditedScene { get; }`](#p-electron2d-node-ispartofeditedscene) | Membership in the explicitly selected subtree. |
 | [`public NodeAutoTranslateMode AutoTranslateMode { get; set; }`](#p-electron2d-node-autotranslatemode) | Gets or sets the inherited automatic translation policy. |
 | [`public int ChildCount { get; }`](#p-electron2d-node-childcount) | Gets the ordinary direct-child count. |
 | [`public IReadOnlyList<Node> Children { get; }`](#p-electron2d-node-children) | Gets a live read-only view of ordinary direct children. |
@@ -89,6 +104,8 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 
 | Member | Contract |
 | --- | --- |
+| [`public void SetEditableInstance(Node node, bool isEditable)`](#m-electron2d-node-seteditableinstance-electron2d-node-system-boolean) | Sets the strict descendant's flag; false also unfolds the receiver. |
+| [`public bool IsEditableInstance(Node? node)`](#m-electron2d-node-iseditableinstance-electron2d-node) | Queries the target flag through a current ancestor; null is false. |
 | [`public void UpdateConfigurationWarnings()`](#diagnostics-updateconfigurationwarnings) | Requests a configuration-warning refresh for this node in the selected edited scene. |
 | [`public virtual string[] GetConfigurationWarnings()`](#diagnostics-getconfigurationwarnings) | Returns this node's current configuration warnings for tooling. |
 | [`public void AddChild(Node child, InternalMode internalMode = InternalMode.Disabled)`](#m-electron2d-node-addchild-electron2d-scenenode) | Adds an ordinary or front/back internal direct child. |
@@ -163,6 +180,8 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 
 | Member | Contract |
 | --- | --- |
+| [`public event Action<Node>? EditorDescriptionChanged`](#e-electron2d-node-editordescriptionchanged) | Description committed; sender is this node. |
+| [`public event Action<Node>? EditorStateChanged`](#e-electron2d-node-editorstatechanged) | Selected node authoring state committed. |
 | [`public event Action<Node, Node>? ChildAdded`](#e-electron2d-node-childadded) | Occurs on the parent after a direct child is structurally attached and child order is reported. |
 | [`public event Action<Node, Node>? ChildEnteredTree`](#e-electron2d-node-childenteredtree) | Occurs on the direct parent when a child enters the active tree. |
 | [`public event Action<Node, Node>? ChildExitingTree`](#e-electron2d-node-childexitingtree) | Occurs on the direct parent while a child is exiting the active tree. |
@@ -1879,3 +1898,40 @@ Gets or sets whether this node receives internal fixed-frame notifications.
 The complete [processing metadata and callback contract](../components/scene-tree.md#complete-processing-metadata-and-callbacks) covers coordinated reads, current-group configuration, all six stored callback switches, signed priorities, input delivery and allocation-free worker schedule rebuilding. Physical, hierarchy and renderer mutation retain their own guards.
 
 Scene-authored global shader values now use [ShaderGlobalsOverride](ShaderGlobalsOverride.md). Its typed portable values, tree-order arbitration and renderer-session restoration are described in the [global parameter component](../components/global-shader-parameters.md#scene-owned-overrides).
+
+## Authoring member descriptions
+
+<a id="p-electron2d-node-editordescription"></a>
+### `public string EditorDescription { get; set; }`
+
+Initially empty. Null throws ArgumentNullException. Only different ordinal values emit; state commits before synchronous callback errors. Stored with scenes.
+
+<a id="p-electron2d-node-displayfolded"></a>
+### `public bool DisplayFolded { get; set; }`
+
+Initially false; transient and silent. Runtime visibility, process eligibility and physics are unchanged.
+
+<a id="p-electron2d-node-ispartofeditedscene"></a>
+### `public bool IsPartOfEditedScene { get; }`
+
+True for the live selected root and descendants. False when detached or unselected. Reads use owner/current-group access.
+
+<a id="m-electron2d-node-seteditableinstance-electron2d-node-system-boolean"></a>
+### `public void SetEditableInstance(Node node, bool isEditable)`
+
+Null throws ArgumentNullException; self or unrelated targets throw ArgumentException. Both nodes must permit authoring before fields change. The target flag follows reparenting; false unfolds this receiver. Equal writes still request the target state event.
+
+<a id="m-electron2d-node-iseditableinstance-electron2d-node"></a>
+### `public bool IsEditableInstance(Node? node)`
+
+Null returns false. Any live strict ancestor reads the same target flag; invalid nonnull relationships throw ArgumentException.
+
+<a id="e-electron2d-node-editordescriptionchanged"></a>
+### `public event Action<Node>? EditorDescriptionChanged`
+
+Emits this node after a changed description, independently of selection. Signal blocking applies.
+
+<a id="e-electron2d-node-editorstatechanged"></a>
+### `public event Action<Node>? EditorStateChanged`
+
+Emits this selected node after the supported authoring mutations listed in Scene authoring state. Delivery uses the mutating thread and committed state; signal blocking applies.

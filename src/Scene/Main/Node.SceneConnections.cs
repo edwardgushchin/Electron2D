@@ -14,6 +14,8 @@ public partial class Node
                 (connection.Subscriber._sceneConnections ??= []).Add(connection);
         }
         connection.Token.OnFinished(() => RemoveSceneConnection(connection));
+        try { if (connection.Token.IsConnected) EmitEditorStateChanged(); }
+        catch { RemoveSceneConnection(connection, notify: false); throw; }
     }
     internal SceneConnectionRuntime[] CaptureSceneConnections()
     {
@@ -21,13 +23,16 @@ public partial class Node
         lock (SceneConnectionGate) snapshot = _sceneConnections?.ToArray() ?? [];
         return snapshot.Where(c => ReferenceEquals(c.Publisher, this) && c.Token.IsConnected).ToArray();
     }
-    private static void RemoveSceneConnection(SceneConnectionRuntime connection)
+    private static void RemoveSceneConnection(SceneConnectionRuntime connection, bool notify = true)
     {
+        bool removed;
         lock (SceneConnectionGate)
         {
-            connection.Publisher._sceneConnections?.Remove(connection);
+            removed = connection.Publisher._sceneConnections?.Remove(connection) == true;
             connection.Subscriber._sceneConnections?.Remove(connection);
         }
+        if (notify && removed && connection.Token.WasConnectedAtDisposal && !connection.Subscriber.IsDisposed)
+            connection.Publisher.EmitEditorStateChanged();
     }
     private void DisposeSceneConnections()
     {
