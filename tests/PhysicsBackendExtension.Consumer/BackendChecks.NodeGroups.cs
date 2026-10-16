@@ -7,7 +7,7 @@ public static partial class BackendChecks
     {
         protected override void ValidateMutation() { }
     }
-    public static void RunNodeGroups(PhysicsServer.Backend? backend = null, bool threaded = false)
+    public static void RunNodeGroups(PhysicsServer.Backend? backend = null, bool threaded = false, Func<long>? samplePool = null)
     {
         using (var source = new Node())
         using (var packed = new PackedScene())
@@ -28,7 +28,7 @@ public static partial class BackendChecks
         var old = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread); var workers = ProjectSettings.Get(ProjectSettings.WorkerPoolMaxThreads);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded); ProjectSettings.Set(ProjectSettings.WorkerPoolMaxThreads, 2);
         var providers = new List<Solver>();
-        if (backend is null) PhysicsServerManager.RegisterServer("NodeGroups", () => { var solver = new Solver(); providers.Add(solver); return solver; });
+        if (backend is null) PhysicsServerManager.RegisterServer("NodeGroups", () => { var solver = new Solver { CountSolveAllocations = true }; providers.Add(solver); return solver; });
         try
         {
             using var first = Selected(); using var second = Selected(); using var disk = new CircleShape { Radius = 1 };
@@ -88,6 +88,16 @@ public static partial class BackendChecks
                 Reject<InvalidOperationException>(() => mover.AddToGroup("bad"));
                 Reject<InvalidOperationException>(() => workerBody.Position = Vector2.Zero); workerRan = true;
             };
+            long workerBytes = 0;
+            var injectAllocation = false; byte[]? allocationSink = null;
+            Action allocate = () => allocationSink = new byte[8];
+            var callback = worker.Signal;
+            worker.Signal = (node, physics) =>
+            {
+                var allocated = GC.GetAllocatedBytesForCurrentThread();
+                try { callback!(node, physics); if (injectAllocation) allocate(); }
+                finally { Interlocked.Add(ref workerBytes, GC.GetAllocatedBytesForCurrentThread() - allocated); }
+            };
             worker.PhysicsProcessEnabled = true; tree.PhysicsFrame(1d / 60); Check(workerRan, "Worker frame executes");
             if (providers.Count != 0)
             {
@@ -102,12 +112,29 @@ public static partial class BackendChecks
             for (var i = 0; i < 128; i++) Frame();
             workerBody.Sleeping = true; Frame();
             var start = mover.Position.X; var initial = forceCount; var rid = mover.GetRID();
-            Collect(); var own = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+            workerBytes = 0; foreach (var provider in providers) provider.SolveAllocatedBytes = 0;
+            Collect();
+            var poolStart = samplePool?.Invoke() ?? 0;
+            var own = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < 128; i++) Frame();
             own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
+            var poolBytes = samplePool is null ? 0 : samplePool() - poolStart;
+            var callbackBytes = workerBytes;
+            var solver0 = providers.Count > 0 ? providers[0].SolveAllocatedBytes : 0;
+            var solver1 = providers.Count > 1 ? providers[1].SolveAllocatedBytes : 0;
+            var unattributed = all - own - (samplePool is null ? callbackBytes : poolBytes) - (threaded ? solver0 + solver1 : 0);
             Check(workerBody.Sleeping, "Group metadata changes do not wake a sleeping physical body");
-            Check(own == 0 && all == 0 && Math.Abs(mover.Position.X - start - 12.8f) < .01f && mover.GetRID() == rid && forceCount == initial + 128,
-                $"Full group/worker/two-world frames retain motion, RID and zero allocation: {own}/{all} B");
+            Check(own == 0 && all == 0 && callbackBytes == 0 && solver0 == 0 && solver1 == 0 && Math.Abs(mover.Position.X - start - 12.8f) < .01f && mover.GetRID() == rid && forceCount == initial + 128,
+                $"Full group/worker/two-world frames retain motion, RID and zero allocation: {own}/{all} B; callback={callbackBytes}, solver0={solver0}, solver1={solver1}, pool={poolBytes} (available={samplePool is not null}), unattributed={unattributed} B (serial solver samples overlap owner)");
+            workerBytes = 0; foreach (var provider in providers) { provider.SolveAllocatedBytes = 0; provider.StepHook = allocate; }
+            var calibrationOwner = GC.GetAllocatedBytesForCurrentThread(); allocate();
+            calibrationOwner = GC.GetAllocatedBytesForCurrentThread() - calibrationOwner;
+            injectAllocation = true; Frame(); injectAllocation = false;
+            Check(calibrationOwner == 32 && workerBytes == 32 && providers.All(provider => provider.SolveAllocatedBytes == 32),
+                "Owner, actual group callback and each registered numerical lane observe an injected 32-byte array exactly");
+            foreach (var provider in providers) provider.StepHook = null;
+            GC.KeepAlive(allocationSink);
+            Console.WriteLine($"Allocation calibration owner/callback/registered-solvers: 32/32/{providers.Count}x32 B; warm attribution callback={callbackBytes}, solver0={solver0}, solver1={solver1}, pool={poolBytes} (available={samplePool is not null}), unattributed={unattributed} B; built-in solver allocation is not sampled separately.");
             ArchiveGroups(backend, threaded);
             otherRoot.RemoveChild(mover); Check(mover.IsInGroup("actors") && other.GetNodeCountInGroup("actors") == 0, "Detached nodes retain local groups and leave tree queries");
             var detached = new Thread(() => { mover.AddToGroup("detached"); Check(mover.GetGroups().Contains("detached"), "Detached caller coordination permits group access"); }); detached.Start(); detached.Join();

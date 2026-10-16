@@ -1,6 +1,6 @@
 # Worker execution component
 
-Last updated: 2026-10-10
+Last updated: 2026-10-16
 
 ## Scope and ownership
 
@@ -20,7 +20,7 @@ The public-only [WorkerRoutes example](../../examples/WorkerRoutes/README.md) ow
 
 WorkerThreadPoolTests checks validation and capacity recovery; regular/group caller IDs; parallel callbacks and progress; priority/reserved slots; negative/oversized runner limits; single-worker nested regular/group waits and failure context restoration; older/self rejection; FIFO preservation while helping; concurrent waiters; failure draining and deterministic lowest-index failure; callback target release; caller context suppression; named service/static access; draining shutdown; and public independent routes with owner publication.
 
-After 128 warm cycles, 1024 regular/group submit/query/wait cycles allocate zero managed bytes on the sender and within measured worker dispatch. WorkerRoutesRenderingTests executes Linux Wayland GPU and compatibility independently: 88 groups, 352 deferred publications, endpoint pixel checks and cleanup. Each backend's final 64 active frames after 24 warm frames allocates zero managed bytes on the scene owner. Worker/owner managed counters do not measure native/OS allocations. Foreign targets, threaded browser bootstrap, AOT and human acceptance remain unverified; browser submissions explicitly reject until that prerequisite exists.
+After 128 warm cycles, 1024 regular/group submit/query/wait cycles allocate zero managed bytes on the sender and within measured worker dispatch. WorkerRoutesRenderingTests executes Linux Wayland GPU and compatibility independently: 88 groups, 352 deferred publications, endpoint pixel checks and cleanup. Each backend's final 64 active frames after 24 warm frames allocates zero managed bytes on the scene owner. Worker/owner managed counters do not measure native/OS allocations. These rendered profiles have no foreign-target, threaded-browser, NativeAOT or human acceptance; targeted NativeAOT startup/physical evidence follows below. Browser submissions explicitly reject until their threaded prerequisite exists.
 
 ResourceLoader threaded requests now implement staged graph ownership, progress, cancellation, owner publication and actual dependency parallelism; see [threaded resource loading](threaded-resource-loading.md). Baking and other asynchronous domains still need their concrete consumers. Public explicit Thread/Mutex/Semaphore APIs remain separate slices over this foundation.
 
@@ -31,3 +31,9 @@ Internal loader waits select only the dependency group. Older root-task waits ve
 ## Caller-owned synchronization
 
 [Mutex](../classes/Mutex.md) and [Semaphore](../classes/Semaphore.md) now provide recursive protected data and counted worker signals. See [synchronization](synchronization.md) for ownership, blocking dependencies, failures and verified public scene consumers. These primitives grant no off-owner scene/native access and do not replace the requirement to wait every accepted task ID.
+
+## Ready workers and scene context
+
+Validated pool creation captures engine thread initializers and starts every worker with suppressed caller context. Each worker prepares its engine-local state and signals readiness before accepting jobs. Construction holds the shared gate until all signals have arrived and every prepared worker has actually blocked on that gate, preparing runtime contention state before dispatch. Entering flags are published after readiness signalling; only then does the constructor observe WaitSleepJoin while it still owns the gate. This cold observation adds no polling to frame execution. An initializer failure returns on the constructor thread after all started workers join. Shutdown releases the retained readiness barrier after joining. Scene's assembly initializer registers only thread-local group preparation, preserving Core's dependency direction and lazy sampling of worker settings. Existing pools cannot gain late game/plugin initializers; no public registration API is added.
+
+The group-context control exposes the former 32-byte first touch on a newly selected worker even after many frames had warmed another worker. Startup preparation makes both distinct workers' first/repeated accesses zero. A forced-contention NativeAOT control also exposes the former 120-byte lazy gate event; prepared contention must use zero bytes. Blocking/failing startup tests, the worker pool suite and the [physical group attribution profile](node-groups.md#worker-context-preparation-and-allocation-attribution) verify readiness, cleanup and zero warmed execution. Hardware/native/foreign acceptance remains separate.

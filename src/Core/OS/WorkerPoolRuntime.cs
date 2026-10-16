@@ -5,6 +5,9 @@ namespace Electron2D;
 
 internal sealed class WorkerPoolRuntime : IDisposable
 {
+    internal static Action? InitializeThread;
+    private readonly Action? _initializeThread;
+    private readonly CountdownEvent _ready;
     [DebuggerDisplay("{ID}: {Description}")]
     private sealed class Job
     {
@@ -26,12 +29,18 @@ internal sealed class WorkerPoolRuntime : IDisposable
         internal long WaitFloor = -1;
         internal int LowDepth;
         internal long AllocatedBytes, AllocationStart;
+        internal ExceptionDispatchInfo? StartupFailure;
+        internal bool EnteringGate;
         internal void Run()
         {
             CurrentWorker = this;
-            AllocationStart = GC.GetAllocatedBytesForCurrentThread();
             try
             {
+                try { Pool._initializeThread?.Invoke(); _ = GC.GetAllocatedBytesForCurrentThread(); }
+                catch (Exception error) { StartupFailure = ExceptionDispatchInfo.Capture(error); return; }
+                finally { Pool._ready.Signal(); }
+                AllocationStart = GC.GetAllocatedBytesForCurrentThread();
+                Volatile.Write(ref EnteringGate, true);
                 while (true)
                 {
                     Job? job;
@@ -67,6 +76,8 @@ internal sealed class WorkerPoolRuntime : IDisposable
         ArgumentOutOfRangeException.ThrowIfLessThan(capacity, 1);
         if (!float.IsFinite(lowRatio) || lowRatio < 0 || lowRatio > 1) throw new ArgumentOutOfRangeException(nameof(lowRatio));
         var tickets = checked(workers * capacity);
+        _initializeThread = InitializeThread;
+        _ready = new(workers);
         _capacity = capacity;
         _jobs = new(capacity); _free = new(capacity); _high = new(tickets); _low = new(tickets);
         for (var i = 0; i < capacity; i++) _free.Push(new());
@@ -75,17 +86,27 @@ internal sealed class WorkerPoolRuntime : IDisposable
         try
         {
             using var flow = System.Threading.ExecutionContext.IsFlowSuppressed() ? default : System.Threading.ExecutionContext.SuppressFlow();
-            for (var i = 0; i < workers; i++)
+            lock (_gate)
             {
-                var worker = new Worker(this);
-                worker.Thread = new(worker.Run) { IsBackground = true, Name = "Electron2D worker " + i };
-                _workers[i] = worker; worker.Thread.Start(); started++;
+                for (var i = 0; i < workers; i++)
+                {
+                    var worker = new Worker(this);
+                    worker.Thread = new(worker.Run) { IsBackground = true, Name = "Electron2D worker " + i };
+                    _workers[i] = worker; worker.Thread.Start(); started++;
+                }
+                _ready.Wait();
+                foreach (var worker in _workers) worker.StartupFailure?.Throw();
+                // Keep ownership until every prepared worker has blocked on this gate. This prepares
+                // the runtime's contention wait state before jobs can race to create it in a frame.
+                foreach (var worker in _workers)
+                    SpinWait.SpinUntil(() => Volatile.Read(ref worker.EnteringGate) && (worker.Thread.ThreadState & System.Threading.ThreadState.WaitSleepJoin) != 0);
             }
         }
         catch
         {
             lock (_gate) { _stopping = true; System.Threading.Monitor.PulseAll(_gate); }
             for (var i = 0; i < started; i++) _workers[i].Thread.Join();
+            _ready.Dispose();
             throw;
         }
     }
@@ -240,6 +261,7 @@ internal sealed class WorkerPoolRuntime : IDisposable
         if (CurrentWorker?.Pool == this) throw new InvalidOperationException("A worker cannot dispose its own pool.");
         lock (_gate) { _stopping = true; System.Threading.Monitor.PulseAll(_gate); }
         foreach (var worker in _workers) worker.Thread.Join();
+        _ready.Dispose();
         lock (_gate) { _jobs.Clear(); _free.Clear(); }
     }
 }

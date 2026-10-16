@@ -1,6 +1,6 @@
 # Core domain
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 Scene archives use the [stored node-name contract](../components/packed-scenes.md) during input validation: internal `@` names remain exact; other reserved path characters reject before reconstruction. Public Name authoring separately normalizes those characters.
 
@@ -287,3 +287,5 @@ See [typed handler storage](../classes/EventHandlers.Generic.md) and [ADR 0010](
 - [Runtime diagnostics](../components/diagnostics.md): retained Logger registration, typed OS message/error ingress, Engine output flags and immutable C# ScriptBacktrace metadata integrate lifecycle failures and lazily loaded native logs. CLR live-variable debugging remains a separate backend.
 
 Configured movie startup is available through Engine.RunMovie/RunMovieAsync, with typed file/FPS settings, feature overrides, explicit Run argument precedence and a per-recording presentation override. It shares the existing frame/PCM/cleanup path for every built-in codec. See [project movie startup](../components/movie-writing.md#project-movie-startup) for executable checks and platform limits.
+
+Worker pool startup now waits for every thread's registered engine-context preparation; failures join started threads before construction rejects. Scene registers group context initialization across the existing Core worker boundary. Startup also forces actual contention on the shared gate before accepting jobs, preparing its runtime wait storage. This closes the observed late-worker 32-byte TLS and NativeAOT 120-byte gate-event paths without adding public API or changing lazy project-setting capture. See [ready workers](../components/worker-pool.md#ready-workers-and-scene-context).

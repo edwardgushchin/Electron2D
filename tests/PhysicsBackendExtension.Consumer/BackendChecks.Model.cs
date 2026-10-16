@@ -144,24 +144,34 @@ public static partial class BackendChecks
         protected override void BeginStep(double delta) { LifecycleHook?.Invoke(LifecyclePhase.Begin); Ready = false; }
         protected override void PrepareWorld(double delta, in PhysicsAreaFieldConfiguration fields) { Fields = fields; PrepareFieldAreas(); }
         protected override void PrepareBodies(double delta) { }
+        internal bool CountSolveAllocations;
+        internal long SolveAllocatedBytes;
         protected override void Solve(double delta)
         {
-            LifecycleHook?.Invoke(LifecyclePhase.Solve); StepHook?.Invoke();
-            Pairs = 0; DebugPointCount = 0; Delta = (float)delta;
-            _framePairs.Clear();
-            foreach (var b in Bodies.Values)
+            var allocated = CountSolveAllocations ? GC.GetAllocatedBytesForCurrentThread() : 0;
+            try
             {
-                if (!b.IsArea) b.ReportedLimit = PhysicsServer.BodyGetMaxContactsReported(b.RID);
-                if (!b.IsArea) b.ReportedDepth = PhysicsServer.BodyGetContactsReportedDepthThreshold(b.RID);
-                b.Contacts.Clear();
+                LifecycleHook?.Invoke(LifecyclePhase.Solve); StepHook?.Invoke();
+                Pairs = 0; DebugPointCount = 0; Delta = (float)delta;
+                _framePairs.Clear();
+                foreach (var b in Bodies.Values)
+                {
+                    if (!b.IsArea) b.ReportedLimit = PhysicsServer.BodyGetMaxContactsReported(b.RID);
+                    if (!b.IsArea) b.ReportedDepth = PhysicsServer.BodyGetContactsReportedDepthThreshold(b.RID);
+                    b.Contacts.Clear();
+                }
+                if (Joints.Count != 0 || HasContinuousBodies()) SolveContinuous((float)delta);
+                else
+                {
+                    foreach (var b in Bodies.Values) b.Advance((float)delta);
+                    SolveConstraints((float)delta, true); UpdateSleep((float)delta);
+                }
+                Steps++;
             }
-            if (Joints.Count != 0 || HasContinuousBodies()) SolveContinuous((float)delta);
-            else
+            finally
             {
-                foreach (var b in Bodies.Values) b.Advance((float)delta);
-                SolveConstraints((float)delta, true); UpdateSleep((float)delta);
+                if (CountSolveAllocations) Interlocked.Add(ref SolveAllocatedBytes, GC.GetAllocatedBytesForCurrentThread() - allocated);
             }
-            Steps++;
         }
         private readonly HashSet<(RID, int, RID, int)> _framePairs = [];
         protected override void SyncResults()

@@ -1092,3 +1092,7 @@ and hardware/window/performance acceptance remains open.
 current processing-group access and exact physical/file consumers. Physical
 mutations retain their owner guard before virtual consumer hooks. Runtime
 Node duplication retains its separate ADR 0091 binding/identity prerequisite.
+
+## Prepared group workers
+
+Every pool worker prepares its thread-local group context during synchronized pool startup. A late-selected worker therefore retains the warmed group allocation contract. Group callback ordering, current-group access and owner-thread physical mutation keep their existing rules. See [allocation attribution](../components/node-groups.md#worker-context-preparation-and-allocation-attribution).

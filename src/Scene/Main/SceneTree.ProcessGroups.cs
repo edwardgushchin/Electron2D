@@ -3,6 +3,10 @@ namespace Electron2D;
 public partial class SceneTree
 {
     [ThreadStatic] internal static ProcessingGroup? CurrentProcessingGroup;
+    [System.Runtime.CompilerServices.ModuleInitializer]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2255", Justification = "Prepare per-thread group storage before pooled workers accept jobs.")]
+    internal static void RegisterWorkerThreadPreparation() => WorkerPoolRuntime.InitializeThread += static () => CurrentProcessingGroup = null;
+
     private readonly Dictionary<ulong, ProcessingGroup> _processingGroups = [];
     private static readonly Comparison<GroupEntry> ProcessingGroupOrder = static (left, right) => left.CompareTo(right);
     private readonly List<GroupEntry> _groupFrame = [];

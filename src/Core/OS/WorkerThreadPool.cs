@@ -3,7 +3,8 @@ namespace Electron2D;
 /// <summary>Schedules typed regular and indexed group callbacks on process-owned background workers.</summary>
 /// <remarks>Wait every accepted ID to release retained callback state. Callbacks must synchronize shared data and
 /// publish scene mutations through SceneTree.Defer. Startup settings prepare bounded storage; successful repeated
-/// submission, dispatch and waiting reuse it. Invalid requests do not start workers or freeze settings. Browser submissions require a threaded runtime and reject explicitly.</remarks>
+/// submission, dispatch and waiting reuse it. Every worker prepares engine thread-local state and the shared contention gate
+/// before the first job is accepted. Invalid requests do not start workers or freeze settings. Browser submissions require a threaded runtime and reject explicitly.</remarks>
 public sealed class WorkerThreadPool : ElectronObject
 {
     internal static WorkerThreadPool Service { get; } = new();
