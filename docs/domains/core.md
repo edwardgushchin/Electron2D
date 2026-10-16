@@ -1,6 +1,6 @@
 # Core domain
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 Scene archives use the [stored node-name contract](../components/packed-scenes.md) during input validation: internal `@` names remain exact; other reserved path characters reject before reconstruction. Public Name authoring separately normalizes those characters.
 
@@ -299,3 +299,5 @@ Worker pool startup now waits for every thread's registered engine-context prepa
 The inherited [ElectronObject delivery policy](../classes/ElectronObject.md#ordinary-event-delivery) applies at publication, including direct C# subscribers and EventConnection tokens. A blocked publisher drops new ordinary emissions without removing listeners, consuming one-shot tokens or submitting deferred calls. Existing accepted deferred work retains its usual cancellation rules. Each emission selects once; changing the flag inside a handler affects the next emission. Unblocking does not replay suppressed transitions.
 
 Numeric notifications, virtual callbacks, operation callbacks, committed state and resource revisions remain active. Deterministic Disposed cleanup remains independent. Physical handler buffers select an empty snapshot while blocked, preserving existing payloads, per-handler eligibility, exception policy and subscription capacity. Resource geometry/material polling still observes committed edits. Static facades use their retained service object's policy.
+
+Registered `shader_globals/name` definitions use [GlobalShaderParameterSettings<T>](../classes/GlobalShaderParameterSettings.Generic.md) with exact numeric carriers, copied matrices or image-path strings. Rendering-session preparation samples active features before scene Ready and owns loaded images through shutdown; later setting edits apply to the next session. Headless configuration authoring remains independent of a renderer. See [project global behavior](../components/global-shader-parameters.md#project-authored-globals).

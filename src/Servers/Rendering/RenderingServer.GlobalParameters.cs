@@ -59,7 +59,7 @@ public sealed partial class RenderingServer
         Max = 29,
     }
 
-    private readonly ShaderGlobalParameters _globalParameters = new();
+    private readonly ShaderGlobalParameters _globalParameters;
     internal static ShaderGlobalParameters? ActiveGlobalParameters => Service?._globalParameters;
     internal static IEnumerable<PropertyDescriptor> SceneGlobalDescriptors(ShaderGlobalParameters authored)
     {

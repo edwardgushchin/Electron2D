@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -1333,3 +1333,5 @@ See [screen attachment verification and dependencies](../components/canvas-rende
 The static GlobalShaderParameterAdd/Get/GetList/GetType/Remove/Set/SetOverride family controls shared typed values for every consuming canvas material. Matrices and both borrowed image roles have concrete overloads. See the [complete declarations and member contracts](../components/global-shader-parameters.md#public-api), [logical enum](RenderingServer.GlobalShaderParameterType.md) and [execution/ownership rules](../components/global-shader-parameters.md). Base values remain independent of temporary overrides; the registry belongs to the active renderer session.
 
 Scene-authored global shader values now use [ShaderGlobalsOverride](ShaderGlobalsOverride.md). Its typed portable values, tree-order arbitration and renderer-session restoration are described in the [global parameter component](../components/global-shader-parameters.md#scene-owned-overrides).
+
+Registered `shader_globals/name` definitions use [GlobalShaderParameterSettings<T>](GlobalShaderParameterSettings.Generic.md) with exact numeric carriers, copied matrices or image-path strings. Rendering-session preparation samples active features before scene Ready and owns loaded images through shutdown; later setting edits apply to the next session. Headless configuration authoring remains independent of a renderer. See [project global behavior](../components/global-shader-parameters.md#project-authored-globals).

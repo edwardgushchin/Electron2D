@@ -17,7 +17,7 @@ public sealed partial class Engine
     /// <param name="window">A live, detached, parentless window, not queued for deletion.</param>
     /// <returns>The exit code supplied by SceneTree.Quit, or zero for an automatically accepted close.</returns>
     /// <remarks>The runtime owns the window and children after validation and successful reservation of the idle
-    /// engine, including failed native startup or scene activation. It opens the native window before ready, pumps
+    /// engine, including failed native startup or scene activation. It prepares registered project shader globals while opening the renderer before ready, pumps
     /// events before frames, limits cadence with MaxFPS, finalizes and disposes the scene, then releases native resources.
     /// A new window may be run after successful cleanup. Native services opened directly through DisplayServer must
     /// finish before teardown; pending asynchronous dialogs can reject native disposal and the error is reported. Manual Start/AdvanceFrame/Stop cannot interfere with this run.
@@ -41,6 +41,7 @@ public sealed partial class Engine
     /// Other platforms require a main-thread application synchronization context; console applications use Run instead.
     /// Borrowed textures and fonts must remain alive until the task completes. No background game thread is created
     /// except the Android platform's required native video entry thread. MaxFPS also applies to asynchronous runs.
+    /// Registered project shader globals prepare with the renderer before scene readiness.
     /// Manual lifecycle operations cannot interfere with an active run, including pending Android startup.
     /// If the Android activity is destroyed before native startup, the task is cancelled after its root is disposed
     /// and the engine reservation is released. Asynchronous scheduling yields at least once per frame even when MaxFPS is zero.</remarks>

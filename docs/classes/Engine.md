@@ -1,6 +1,6 @@
 # Engine
 
-Last updated: 2026-10-15
+Last updated: 2026-10-17
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -554,3 +554,5 @@ The scene must request termination through SceneTree.Quit, as for other Run entr
 ### `public static Task<int> RunMovieAsync(Window window)`
 
 Uses the same configured profile and validation as RunMovie while retaining RunAsync's application synchronization-context/main-thread requirements. The returned task completes after writer, scene and native cleanup. A missing application context rejects before consuming the window; Android carries the sampled configuration through its deferred reserved host. Foreign profile execution is unverified.
+
+Registered `shader_globals/name` definitions use [GlobalShaderParameterSettings<T>](GlobalShaderParameterSettings.Generic.md) with exact numeric carriers, copied matrices or image-path strings. Rendering-session preparation samples active features before scene Ready and owns loaded images through shutdown; later setting edits apply to the next session. Headless configuration authoring remains independent of a renderer. See [project global behavior](../components/global-shader-parameters.md#project-authored-globals).

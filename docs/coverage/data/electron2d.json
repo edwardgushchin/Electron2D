@@ -4754,6 +4754,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.GlobalShaderParameterSettings\u003CT\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.GlobalShaderParameterSettings\u003CT\u003E",
+    "name": "GlobalShaderParameterSettings\u00601",
+    "signature": "public sealed class Electron2D.GlobalShaderParameterSettings\u003CT\u003E",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Gradient",
     "kind": "type",
     "declaringType": "Electron2D.Gradient",
@@ -18296,6 +18309,19 @@
     "declaringType": "Electron2D.GlobalClassAttribute",
     "name": ".ctor",
     "signature": "public GlobalClassAttribute()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.GlobalShaderParameterSettings\u003CT\u003E..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.GlobalShaderParameterSettings\u003CT\u003E",
+    "name": ".ctor",
+    "signature": "public GlobalShaderParameterSettings()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -222479,6 +222505,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GlobalShaderParameterSettings\u003CT\u003E.Type()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalShaderParameterSettings\u003CT\u003E",
+    "name": "Type",
+    "signature": "public Electron2D.RenderingServer.GlobalShaderParameterType Type { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GlobalShaderParameterSettings\u003CT\u003E.Value()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalShaderParameterSettings\u003CT\u003E",
+    "name": "Value",
+    "signature": "public T Value { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GlobalShaderParameterSettings\u003CT\u003E.Version()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalShaderParameterSettings\u003CT\u003E",
+    "name": "Version",
+    "signature": "public System.Int32 Version { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {

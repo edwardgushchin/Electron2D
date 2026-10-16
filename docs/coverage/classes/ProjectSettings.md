@@ -1,6 +1,6 @@
 # ProjectSettings API coverage
 
-Last updated: 2026-10-04
+Last updated: 2026-10-17
 
 Godot source: [doc/classes/ProjectSettings.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -854,7 +854,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`property bool rendering/lights_and_shadows/tighter_shadow_caster_culling = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) | — | Blocked | Trigger: first SDL3 GPU 2D renderer and typed rendering-settings slice (ADR 0028). |
 | [`property bool rendering/lights_and_shadows/use_physical_light_units = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) | — | Blocked | Trigger: first SDL3 GPU 2D renderer and typed rendering-settings slice (ADR 0028). |
 | [`property float rendering/limits/cluster_builder/max_clustered_elements = 512`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) | — | Blocked | Trigger: first SDL3 GPU 2D renderer and typed rendering-settings slice (ADR 0028). |
-| [`property int rendering/limits/global_shader_variables/buffer_size = 65536`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) | — | Blocked | Trigger: first SDL3 GPU 2D renderer and typed rendering-settings slice (ADR 0028). |
+| [`property int rendering/limits/global_shader_variables/buffer_size = 65536`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) | — | Blocked | Project-authored shader_globals/name loading is executable through typed registered definitions and session-owned images. This separate pool-size property still requires an actual configurable shared global-buffer arena: the current backend writes per-stage Globals blocks through ordinary 16-KiB uniform bindings. A stored 65536 setting cannot change that ABI or native allocation policy; implement the arena/capacity consumer before exposing this property (ADR 0028). |
 | [`property int rendering/limits/opengl/max_lights_per_object = 8`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) | — | Blocked | Trigger: first SDL3 GPU 2D renderer and typed rendering-settings slice (ADR 0028). |
 | [`property int rendering/limits/opengl/max_renderable_elements = 65536`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) | — | Blocked | Trigger: first SDL3 GPU 2D renderer and typed rendering-settings slice (ADR 0028). |
 | [`property int rendering/limits/opengl/max_renderable_lights = 32`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) | — | Blocked | Trigger: first SDL3 GPU 2D renderer and typed rendering-settings slice (ADR 0028). |

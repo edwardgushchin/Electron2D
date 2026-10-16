@@ -1,6 +1,6 @@
 # Project settings component
 
-Last updated: 2026-10-15
+Last updated: 2026-10-17
 
 ## Scope
 
@@ -103,3 +103,5 @@ The permanent `ProjectSettings.RootNodeLayoutDirection` integer selector accepts
 ## WebP codec settings
 
 The built-in `ProjectSettings.WebPCompressionMethod` and `WebPLosslessCompressionFactor` definitions default to 2 and 25, with ranges 0–6 and finite 0–100. Every independent registry registers them too. They control executable cold image saving and support ordinary typed persistence and feature overrides. See [WebP saving](../components/image-webp.md).
+
+Registered `shader_globals/name` definitions use [GlobalShaderParameterSettings<T>](../classes/GlobalShaderParameterSettings.Generic.md) with exact numeric carriers, copied matrices or image-path strings. Rendering-session preparation samples active features before scene Ready and owns loaded images through shutdown; later setting edits apply to the next session. Headless configuration authoring remains independent of a renderer. See [project global behavior](global-shader-parameters.md#project-authored-globals).

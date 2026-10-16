@@ -4,7 +4,7 @@ Last updated: 2026-10-17
 
 ## Responsibility and ownership
 
-The retained RenderingServer owns one typed registry per renderer session. Public operations use static access; games never obtain a second global service or backend handle. One update affects every consuming ShaderMaterial without replacing materials or recording geometry again. Entries retain borrowed Texture/TextureLayered references; removal and renderer shutdown release references without disposing user resources. A restarted renderer starts with an empty registry. Shader import, validation, duplication and archive restoration require no active registry.
+The retained RenderingServer owns one typed registry per renderer session. Public operations use static access; games never obtain a second global service or backend handle. One update affects every consuming ShaderMaterial without replacing materials or recording geometry again. Entries retain borrowed Texture/TextureLayered references; removal and renderer shutdown release references without disposing user resources. A restarted renderer prepares a new snapshot of registered project globals. Shader import, validation, duplication and archive restoration require no active registry.
 
 Every operation requires an active renderer and its owner thread. Mutations additionally reject native submission and shutdown through the ordinary server guard. Use Window.Ready or the owner's frame callbacks to author session values. Missing numeric declarations, mismatched logical roles and absent/disposed/mismatched sampled resources reject a consuming submission; there is no silent default or texture substitution. Entries may be removed before their shaders are used again.
 
@@ -55,7 +55,7 @@ Both stages share one logical namespace. Matching global names require identical
 
 ShaderGlobalParametersTests exercises copied matrices, invalid finite/shape/type edits, base-versus-override reads, independent layout storage, borrowed resources and 1024 prepared updates at zero owner managed bytes. Native GLSL/HLSL profiles draw two separate materials with all 23 numeric roles and both image roles. They verify both stages, true planar translation, integer/boolean values, base/override transitions and 64 active/64 idle owner frames. HDR/MSAA use the same path. Tests run on Linux software Vulkan with hardware mappings absent; these results do not establish physical-device performance, native allocation totals or foreign-platform execution.
 
-The fallback retains its explicit custom-shader rejection. ShaderGlobalsOverride supplies the scene-node priority/lifetime/portable authoring consumer below; a project-settings registry loader retains its exact dependency. External samplers require the external-image ownership layer. Three-dimensional transform, volume and cube roles stay outside the product boundary under ADR 0004. [ADR 0028](../decisions/rendering.md#adr-0028) owns this contract.
+The fallback retains its explicit custom-shader rejection. ShaderGlobalsOverride supplies the scene-node priority/lifetime/portable authoring consumer below; registered project globals now prepare typed session bases and owned image resources. External samplers require the external-image ownership layer. Three-dimensional transform, volume and cube roles stay outside the product boundary under ADR 0004. [ADR 0028](../decisions/rendering.md#adr-0028) owns this contract.
 
 ## Scene-owned overrides
 
@@ -70,3 +70,47 @@ ShaderGlobalsOverrideTests passed 25-role authoring with a shared image alias, f
 Edited-scene warning refreshes follow actual shader-node registration, including owner-thread subtree reordering inside pre-delete. Internal selection work publishes through the tree warning dispatcher, preserving the public mutation guard while allowing observers to see each committed warning state. A regression observes waiting/active states one and zero during pre-delete; callback failures retain the ordinary aggregate/continuation rules.
 
 Pre-delete cancellation now has direct integrated verification: an active ShaderGlobalsOverride remains registered with its data and subscriptions after CancelDisposal, even when a notification handler also fails. Subsequent committed disposal retires it normally. Managed and software-Vulkan HLSL/GLSL tests and a public-only fresh-scene JIT/NativeAOT consumer exercise this lifecycle together with ordering, warnings, pixels and base restoration.
+
+## Project-authored globals
+
+Register `ProjectSetting<GlobalShaderParameterSettings<T>>` with a `shader_globals/name`
+identity before opening the renderer. The exact typed carrier must agree with Type;
+Version is one. Built-in JSON metadata covers every supported carrier in trimmed and
+NativeAOT consumers. Unknown fields, unsupported carriers/versions, invalid roles,
+nonfinite components, malformed matrices, unavailable images and a wrong ordinary/array
+resource family reject preparation. Sampled scalar/format and device capabilities
+retain their material-submission validation. Configuration remains a cold operation.
+
+```csharp
+var brightness = new ProjectSetting<GlobalShaderParameterSettings<float>>(
+    "shader_globals/brightness", new() { Type = RenderingServer.GlobalShaderParameterType.Float, Value = 1f });
+ProjectSettings.Register(brightness);
+ProjectSettings.Set(brightness, new() { Type = RenderingServer.GlobalShaderParameterType.Float, Value = .5f });
+ProjectSettings.SaveCustom("project-globals.cfg");
+```
+
+Register the same compiled definitions before consuming preloaded project values.
+The project registry preserves unregistered entries but cannot apply them as typed
+globals until their definitions register. Project storage snapshots mutable values;
+active feature overrides follow ordinary setting precedence. The renderer prepares
+all values before publishing its service and before scene Ready. A later project
+edit affects the next rendering session; live base/temporary operations retain their
+existing contracts. Scene overrides are applied over these bases when the tree starts.
+Headless authoring needs no display. A rendered project requires its ordinary window host.
+
+For Sampler2D and Sampler2DArray use string resource paths; an empty path is an
+explicit unassigned base. Paths resolve against the registry roots. Each distinct
+normalized path loads independently of the ordinary resource cache, and configured
+aliases share the same loaded object. Those resources belong to the rendering
+session; global image getters borrow them until session shutdown. Removing a global
+does not dispose its configured resource early. Publicly supplied images remain
+borrowed. Failure retires every staged resource; disposal callback failures are
+collected while the remaining configured images retire.
+
+ProjectShaderGlobalsTests exercises 25 roles, persistence into a fresh process,
+feature precedence, prepared snapshots, image aliases, unknown schemas and late
+validation/cleanup failures. Native profiles verify startup before Ready, actual
+shader output, scene override restoration and restart. The same shader backend
+limits apply: Compatibility can retain typed project data and draw ordinary
+geometry, while custom programmable shader submission requires GPU support.
+Foreign execution and native allocation totals remain separate checks.

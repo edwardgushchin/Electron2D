@@ -1,6 +1,6 @@
 # Rendering domain
 
-[Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. The registry has explicit owner/session lifetime and no material-property aliases.
+[Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
 Last updated: 2026-10-17
 

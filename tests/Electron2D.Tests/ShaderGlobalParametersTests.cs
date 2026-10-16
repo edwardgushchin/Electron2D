@@ -66,6 +66,10 @@ internal static class ShaderGlobalParametersTests
         g.Add("rectangle", Kind.Rect2, new Rect2(5, 6, 7, 8)); g.Add("basis", Kind.Mat2, Transform.Identity); g.Add("affine", Kind.Transform2D, new Transform(0, new Vector2(24, 0)));
         g.AddTexture("map", texture, false); g.AddTexture("layers", array, true);
     }
+    internal static ShaderGlobalParameters Fixture(Texture texture, TextureLayered array)
+    {
+        var seed = new ShaderGlobalParameters(); seed.Add("gain", Kind.Float, .5f); seed.AddMatrix("matrix3", Kind.Mat3, Matrix3Value); seed.AddMatrix("matrix4", Kind.Mat4, Matrix4Value); Populate(seed, texture, array); return seed;
+    }
     internal static void PopulatePublic(Texture texture, TextureLayered array)
     {
         var seed = new ShaderGlobalParameters(); seed.Add("gain", Kind.Float, .5f); seed.AddMatrix("matrix3", Kind.Mat3, Matrix3Value); seed.AddMatrix("matrix4", Kind.Mat4, Matrix4Value); Populate(seed, texture, array);

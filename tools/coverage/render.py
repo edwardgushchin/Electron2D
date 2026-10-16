@@ -17,7 +17,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "movie_writing", "video_playback", "diagnostics", "zip", "resource_packs", "jobs", "display", "key_names", "rendering", "texture_arrays", "compressed_arrays", "compressed_textures", "device", "navigation", "navigation_baking", "polygon_path", "resources", "dpi_textures", "preloader", "threaded_resources", "physics", "text", "text_objects", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "movie_writing", "video_playback", "diagnostics", "zip", "resource_packs", "jobs", "display", "key_names", "rendering", "project_shader_globals", "texture_arrays", "compressed_arrays", "compressed_textures", "device", "navigation", "navigation_baking", "polygon_path", "resources", "dpi_textures", "preloader", "threaded_resources", "physics", "text", "text_objects", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -690,6 +690,8 @@ def render():
             updated = "2026-10-15"
         if name in {"Node", "SceneTree", "ImageTextureLayered", "Texture2DArray", "CompressedTexture2D", "CompressedTexture2DArray", "CompressedTextureLayered", "RenderingServer"}:
             updated = "2026-10-16"
+        if name in {"RenderingServer", "ProjectSettings"}:
+            updated = "2026-10-17"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

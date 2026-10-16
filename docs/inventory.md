@@ -828,7 +828,8 @@ These types stay inside Electron2D.dll. Games and editor consumers use the publi
 | [ShaderProgram](classes/ShaderProgram.md) | [ShaderProgram.cs](../src/Servers/Rendering/ShaderProgram.cs) | [shader-materials](components/shader-materials.md) |
 | [ShaderUniform](classes/ShaderUniform.md) | [ShaderProgram.cs](../src/Servers/Rendering/ShaderProgram.cs) | [shader-materials](components/shader-materials.md) |
 | [ShaderTexture](classes/ShaderTexture.md) | [ShaderProgram.cs](../src/Servers/Rendering/ShaderProgram.cs) | [shader-materials](components/shader-materials.md) |
-| [ShaderGlobalParameters](classes/ShaderGlobalParameters.md) | [ShaderGlobalParameters.cs](../src/Servers/Rendering/ShaderGlobalParameters.cs) | [Global shader parameters](components/global-shader-parameters.md) |
+| [GlobalShaderParameterSettings<T>](classes/GlobalShaderParameterSettings.Generic.md) | [GlobalShaderParameterSettings.cs](../src/Servers/Rendering/GlobalShaderParameterSettings.cs) | [Global shader parameters](components/global-shader-parameters.md#project-authored-globals) |
+| [ShaderGlobalParameters](classes/ShaderGlobalParameters.md) | [ShaderGlobalParameters.cs](../src/Servers/Rendering/ShaderGlobalParameters.cs), [project preparation](../src/Servers/Rendering/ShaderGlobalParameters.Project.cs) | [Global shader parameters](components/global-shader-parameters.md) |
 | [MaterialState](classes/MaterialState.md) | [Material.cs](../src/Scene/Resources/Material.cs) | [shader-materials](components/shader-materials.md) |
 | [BuiltInShaders](classes/BuiltInShaders.md) | [BuiltInShaders.cs](../src/Servers/Rendering/BuiltInShaders.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [InstanceUniformState](classes/InstanceUniformState.md) | [InstanceUniformState.cs](../src/Servers/Rendering/InstanceUniformState.cs) | [shader-materials](components/shader-materials.md#per-item-shader-parameters) |

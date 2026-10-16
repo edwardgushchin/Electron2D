@@ -1,0 +1,11 @@
+{
+  "statusGroups": [
+    {
+      "godot": [
+        "ProjectSettings::property:rendering/limits/global_shader_variables/buffer_size"
+      ],
+      "state": "Blocked",
+      "reason": "Project-authored shader_globals/name loading is executable through typed registered definitions and session-owned images. This separate pool-size property still requires an actual configurable shared global-buffer arena: the current backend writes per-stage Globals blocks through ordinary 16-KiB uniform bindings. A stored 65536 setting cannot change that ABI or native allocation policy; implement the arena/capacity consumer before exposing this property (ADR 0028)."
+    }
+  ]
+}

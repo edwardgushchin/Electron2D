@@ -345,6 +345,8 @@ if (args.Length == 2 && args[0] == "--builtin-include-render") { ShaderIncludeDB
 if (args.Length == 2 && args[0] == "--scene-globals-archive") { ShaderGlobalsOverrideTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_GLOBALS") is { } sceneGlobalsProfile) { if (sceneGlobalsProfile == "managed") ShaderGlobalsOverrideTests.RunManaged(); else ShaderGlobalsOverrideTests.RunNative(sceneGlobalsProfile); return; }
 if (args.Length == 2 && args[0] == "--global-shader-archive") { ShaderGlobalParametersTests.RunArchive(args[1]); return; }
+if (args is ["--project-shader-globals-read", var globalsProject]) { ProjectShaderGlobalsTests.RunArchive(globalsProject); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_SHADER_GLOBALS") is { } projectGlobalsProfile) { if (projectGlobalsProfile == "managed") ProjectShaderGlobalsTests.RunManaged(); else ProjectShaderGlobalsTests.RunNative(projectGlobalsProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_GLOBALS") is { } globalProfile) { if (globalProfile == "managed") ShaderGlobalParametersTests.RunManaged(); else ShaderGlobalParametersTests.RunNative(globalProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_VERTEX") is { } canvasVertexProfile) { if (canvasVertexProfile == "managed") CanvasVertexProgramTests.RunManaged(); else CanvasVertexProgramTests.RunNative(canvasVertexProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_PRESENTATION") is { } presentationProfile) { ViewportPresentationTests.Run(presentationProfile); return; }
@@ -1652,6 +1654,7 @@ ProjectLayoutDirectionTests.Run();
 WindowContentScaleTests.Run();
 WindowInputTests.RunManaged();
 KeyCodeNamesTests.Run();
+ProjectShaderGlobalsTests.RunManaged();
 VerifyMathF();
 VerifyColors();
 SpriteTests.Run();

@@ -53,6 +53,7 @@ public sealed partial class RenderingServer : ElectronObject
         _viewport = window;
         _backend = backend;
         _clearColor = ProjectSettings.GetWithOverride(ProjectSettings.DefaultClearColor);
+        _globalParameters = ShaderGlobalParameters.PrepareProject(ProjectSettings.Service);
     }
 
     internal static RenderingServer? Service => Volatile.Read(ref _instance);
@@ -538,6 +539,7 @@ public sealed partial class RenderingServer : ElectronObject
             List<Exception>? errors = null;
             try
             {
+                try { _globalParameters.RetireProjectImages(); } catch (Exception error) { (errors ??= []).Add(error); }
                 try { ReleaseOwnedMultiMeshes(); } catch (Exception error) { (errors ??= []).Add(error); }
                 ReleaseOwnedSkeletons();
                 ReleaseServerViewports();
