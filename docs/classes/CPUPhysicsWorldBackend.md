@@ -2,7 +2,7 @@
 
 The query/Area partials now share body-local unrounded polygon containment through PhysicsShapeBackend. Direct points, ordinary ray inside-start policy, directed shape-query origin filtering and Area audio no longer inherit GJK zero-distance slack outside an edge. [Public CPU/GPU checks](../components/physics-point-containment.md) preserve logical identity and warmed allocation bounds.
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 **Declaration:** `internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend` · **Source:** [CPUPhysicsWorldBackend.cs](../../src/Servers/Physics/CPUPhysicsWorldBackend.cs) · **Component:** [Physics backends](../components/physics-backends.md)
 
@@ -142,3 +142,8 @@ scene units; the shared public consumer now verifies the rotated plane at tangen
 distance 6,000 within .005 units. Numerical integration is unchanged. See
 [boundary verification](../components/physics-registered-adapter.md#registered-boundary-numerics)
 for the zero-allocation, lifecycle, impulse and remaining acceptance limits.
+
+Scene-Area scans and external server-Area scans now use each scene body's
+effective collision layer. This preserves zero-layer inactive PhysicalBone
+followers while retaining configured public bits. [Filter conformance](../components/physics-filters.md#failed-updates-and-effective-sensing)
+checks exact sensing, queries, ordinary edits and warm allocation on both owners.

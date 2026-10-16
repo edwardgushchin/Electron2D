@@ -218,7 +218,7 @@ public sealed partial class Area : CollisionObject
     }
 
     internal override void MarkShapesDirty() => _shapesDirty = true;
-    internal override void OnCollisionFilterChanged() { if (Space is not null) Backend.UpdateFilter(CollisionLayer, CollisionMask, wakeBody: false); }
+    internal override void OnCollisionFilterChanged(uint layer, uint mask) { if (Space is not null) Backend.UpdateFilter(layer, mask, wakeBody: false); }
 
     internal void AttachBackend(PhysicsSpace space)
     {

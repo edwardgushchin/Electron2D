@@ -1,6 +1,6 @@
 # PhysicalBone
 
-Last updated: 2026-10-13
+Last updated: 2026-10-16
 
 - Declaration: `public class PhysicalBone : RigidBody`
 - Source: [PhysicalBone.cs](../../src/Scene/2D/PhysicalBone.cs)
@@ -135,3 +135,8 @@ PhysicalBoneTests exercises actual velocity/Freeze, inherited body geometry reco
 [Direct server modes](../components/physics-registered-adapter.md#common-server-mode-family) retain a separate runtime role. Animatable target staging follows that direct profile while it is active; physical-bone binding/role writes reject numerical borrowing before authoring changes. Scene role edits restore configured control.
 
 The complete PhysicalBoneTests now executes on explicitly selected public CPU/GPU worlds, including command/follow and custom integration fixtures and restored graphs in a separate fresh process. It retains motion/filter identity, strength/disable/follow/freeze behavior, binding/hierarchy recovery, actual pin constraints, named commands, modifier failure rollback, phase/owner guards and existing numerical bounds. The ordinary full suite runs both backends; ELECTRON2D_TEST_PHYSICAL_BONE=1 with ELECTRON2D_PHYSICAL_BONE_BACKEND=cpu|gpu selects one. After 128 warmup frames, 128 complete physics/pose/weighted Polygon cycles require 0/0 owner/all-thread managed bytes. Native hosts select physics independently from ELECTRON2D_PHYSICAL_BONE_RENDERER=gpu|compatibility, reject renderer fallback and assert both actual selections. All four CPU/GPU-physics by hardware-renderer combinations verify real changed skin pixels and matching Bone/body pose; 64 prepared draw/velocity-update intervals require zero owner-thread managed bytes. This rendering interval is separate from full physical allocation measurement. Native allocations, large rigs, foreign platforms, human acceptance and final network/massive GPU/window FPS gates remain open.
+
+CPU scene/server Area scans now use the same effective zero layer as an inactive
+follower's fixtures and motion queries. Editing configured bits cannot make that
+inactive follower visible to sensors. The [shared eight-role filter profile](../components/physics-filters.md#failed-updates-and-effective-sensing)
+checks this alongside failure recovery and ordinary layer/mask publication.

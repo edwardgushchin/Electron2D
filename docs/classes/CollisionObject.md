@@ -272,3 +272,11 @@ Each scene slot reuses its last immutable OneWayContactData while resolved
 rotation/direction/margin remain equal. Changed values create a new record;
 retained prior values remain unchanged. This leaves deferred scene preparation
 and public owner identity intact. See [shape-edit allocation boundaries](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse).
+
+## Filter publication failures
+
+The common setter forwards proposed layer/mask values before committing either
+field. Direct properties, bit helpers and server projections therefore retain
+previous authoring on numerical failure, including inside borrowed hooks. Pending
+numerical metadata repairs before the next query or active step. [Filter checks](../components/physics-filters.md#failed-updates-and-effective-sensing)
+cover all scene body siblings and Area without recompiling geometry.

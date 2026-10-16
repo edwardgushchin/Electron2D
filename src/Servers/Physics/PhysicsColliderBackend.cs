@@ -89,6 +89,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
         finally
         {
             _implementation = null;
+            _filterDirty = false;
             if (Space is not null) { Space = null; Interlocked.Decrement(ref _attachmentCount); }
         }
         if (bindingError is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(bindingError).Throw();
@@ -97,6 +98,16 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     internal bool HasMotionMode(PhysicsServer.BodyMode mode) => Attached.HasMotionMode(mode);
     internal void SetMotionMode(PhysicsServer.BodyMode mode) => Attached.SetMotionMode(mode);
     internal void SetContactReporting(bool enabled) => Attached.SetContactReporting(enabled);
-    internal void UpdateFilter(uint layer, uint mask, bool wakeBody) => Attached.UpdateFilter(layer, mask, wakeBody);
+    private bool _filterDirty;
+    internal void UpdateFilter(uint layer, uint mask, bool wakeBody)
+    {
+        _filterDirty = true;
+        try { Attached.UpdateFilter(layer, mask, wakeBody); _filterDirty = false; }
+        catch { Space?.MarkFiltersDirty(); throw; }
+    }
+    internal void PrepareFilter(uint layer, uint mask)
+    {
+        if (_filterDirty) UpdateFilter(layer, mask, wakeBody: false);
+    }
 
 }

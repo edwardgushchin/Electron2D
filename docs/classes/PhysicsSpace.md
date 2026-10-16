@@ -325,3 +325,12 @@ callback replacement commits. A failed preparation does not advance the receiver
 generation, so its already queued events retain delivery. Successful registration
 still retires older queued epochs and reenters on the next nonzero scan. See
 [observer transactions](../components/physics-queries.md#area-observer-registration-transactions).
+
+## Filter repair before numerical work
+
+A world-local pending flag bypasses filter repair traversal on ordinary frames.
+After a failed update, query preparation and Step repair flagged colliders from
+current effective owner bits. Step does this before BeginStep and the stepping
+phase, preserving existing built-in query guards and leaving a failed repair's
+tick/publication unchanged. Another failure retains the flag. [Filter verification](../components/physics-filters.md#failed-updates-and-effective-sensing)
+checks both retry routes and all scene/raw roles.

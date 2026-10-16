@@ -146,3 +146,12 @@ edit. A provider must support rebuilding after its own partial failure. A second
 failure is retained with the first; later preparation retries before query/step
 publication. Scene authoring remains deferred. The public-only failure fixture
 checks 45 injected cases without duplicate sensor effects; see [shared shape edits](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse).
+
+## Failed numerical filter updates
+
+UpdateFilter receives proposed effective bits while guarded authored getters
+retain committed configuration. After failure, query/step preparation resubmits
+the current effective bits with wakeBody=false; implement complete replacement
+even after partial failure. Implementations own consistency of any additional
+private side effects. The [shared profile](../components/physics-filters.md#failed-updates-and-effective-sensing)
+checks 160 registered failures, repeated retry, topology and logical history.

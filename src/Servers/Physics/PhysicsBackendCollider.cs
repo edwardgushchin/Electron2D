@@ -63,7 +63,12 @@ public abstract class PhysicsBackendCollider
     protected internal abstract void SetCollisionPriority(float value);
     /// <summary>Supplies the selected implementation operation: update filter.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Nested body/Area shape-slot,
-    /// filter, shared server-shape data and release writes reject before changing retained authoring. Reads remain guarded and available.</remarks>
+    /// filter, shared server-shape data and release writes reject before changing retained authoring. Reads remain guarded and available.
+    /// After failure, query/step preparation retries the owner's current effective bits without rebuilding shapes.
+    /// Reapplying after a partial failure must replace the filter completely; a failed retry remains pending.</remarks>
+    /// <param name="layer">The complete collision category bits.</param>
+    /// <param name="mask">The complete accepted category bits.</param>
+    /// <param name="wakeBody">True requests body and neighbor wakeup. Filter repair passes false.</param>
     protected internal abstract void UpdateFilter(uint layer, uint mask, bool wakeBody);
     /// <summary>Supplies the selected implementation operation: rebuild shapes.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.

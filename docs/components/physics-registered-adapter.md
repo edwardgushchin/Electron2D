@@ -2484,3 +2484,13 @@ checks 24 registered failures across scene/raw body/Area callback lanes, rejecte
 weak candidate targets, exact nonzero logical indices and cross-receiver queued publication.
 The full-frame warm path retains strict zero managed allocation. Complete
 numerical/custom/native/foreign/performance acceptance remains open.
+
+## Failed filter publication
+
+The common scene/raw layer/mask family now commits authoring after the selected
+UpdateFilter returns. A partial numerical failure queues current effective-filter
+repair before query/step work, and a failed retry remains pending. The public-only
+[eight-role profile](physics-filters.md#failed-updates-and-effective-sensing) checks
+160 failures, committed borrowed reads, no hidden shape rebuild, logical gaps,
+exact sensing and local replay. Full numerical/custom/native/platform/performance
+acceptance remains open.

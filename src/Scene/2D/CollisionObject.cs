@@ -77,23 +77,32 @@ public abstract partial class CollisionObject : Entity
     }
 
     /// <summary>Gets or sets the 32-bit collision category mask.</summary>
-    /// <remarks>Assignments update existing fixtures without rebuilding geometry. Body assignments also wake the body and contact neighbors, including for unchanged bits.</remarks>
+    /// <remarks>Assignments update existing fixtures without rebuilding geometry. Body assignments also wake the body and contact neighbors, including for unchanged bits.
+    /// A failed numerical update preserves authored bits. Queries and the next nonzero step retry the current effective filter before numerical publication.</remarks>
     /// <value>One by default.</value>
     public uint CollisionLayer
     {
         get { ThrowIfDisposed(); return _collisionLayer; }
-        set { EnsureMutable(); EnsurePhysicsParticipationChange(); _collisionLayer = value; OnCollisionFilterChanged(); }
+        set => SetCollisionFilter(value, _collisionMask);
     }
 
     /// <summary>Gets or sets the 32-bit categories accepted for collision.</summary>
     /// <remarks>Each dynamic body responds when its own mask includes the other layer; either direction admits the pair.
     /// Body motion queries use only the moving mask against target layers. Body assignments wake the body and contact neighbors.
-    /// Changed contact and overlap membership is published on the next physical step.</remarks>
+    /// Changed contact and overlap membership is published on the next physical step.
+    /// A failed numerical update preserves authored bits. Queries and the next nonzero step retry the current effective filter before numerical publication.</remarks>
     /// <value>One by default.</value>
     public uint CollisionMask
     {
         get { ThrowIfDisposed(); return _collisionMask; }
-        set { EnsureMutable(); EnsurePhysicsParticipationChange(); _collisionMask = value; OnCollisionFilterChanged(); }
+        set => SetCollisionFilter(_collisionLayer, value);
+    }
+
+    private void SetCollisionFilter(uint layer, uint mask)
+    {
+        EnsureMutable(); EnsurePhysicsParticipationChange();
+        OnCollisionFilterChanged(layer, mask);
+        _collisionLayer = layer; _collisionMask = mask;
     }
 
     /// <summary>Tests a one-based collision-layer bit.</summary>
@@ -167,7 +176,7 @@ public abstract partial class CollisionObject : Entity
 
     internal abstract void UpdatePhysicsParticipation();
 
-    internal virtual void OnCollisionFilterChanged() { }
+    internal virtual void OnCollisionFilterChanged(uint layer, uint mask) { }
 
     internal abstract void MarkShapesDirty();
 

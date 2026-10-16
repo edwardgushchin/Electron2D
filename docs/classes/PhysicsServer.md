@@ -1137,3 +1137,10 @@ Both Area callback setters prepare common/selected monitoring capacity before
 publishing a replacement. Failure preserves the old delegates, both histories
 and queued-event generation. Successful null/equal/new registrations retain
 ordinary reset and next-nonzero-scan semantics. See [transactions and checks](../components/physics-queries.md#area-observer-registration-transactions).
+
+### Filter update failures
+
+Body/Area layer and mask setters commit configured bits after numerical success.
+A failed update preserves authoring and queues current effective-filter repair
+before the next numerical query or active positive-duration step. A failed retry
+propagates without advancing the interval. See [the complete scene/raw family](../components/physics-filters.md#failed-updates-and-effective-sensing).

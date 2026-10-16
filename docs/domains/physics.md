@@ -1400,3 +1400,13 @@ epochs; successful registration keeps the existing reset semantics. This shared
 path covers scene and raw receivers without changing numerical ownership or
 scene-owned overlap snapshots. Full solver, native/driver, network and hardware
 performance acceptance remains open.
+
+## Failed filter publication and effective Area sensing
+
+[Shared filter operations](../components/physics-filters.md#failed-updates-and-effective-sensing)
+now publish authored bits after numerical success, retaining pending effective
+metadata for query/step repair after errors. Scene/raw roles share committed
+borrowed reads; existing shape identity and monitor history remain intact.
+CPU Area scans now honor inactive PhysicalBone zero-layer followers. The new
+profile preserves zero warmed managed bytes; full numerical/custom, native/driver,
+foreign, network and hardware/window performance gates remain open.

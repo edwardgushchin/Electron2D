@@ -1,6 +1,6 @@
 # PhysicsBody
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 **Inherits:** [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [RigidBody](RigidBody.md), [StaticBody](StaticBody.md), [CharacterBody](CharacterBody.md)
 
@@ -147,3 +147,9 @@ receding/tangent and angular-only velocities do not enlarge recovery depth.
 PhysicsMovingOneWayTests checks raw/scene callers, roles, rotated slots, six finite
 source families and eight 128-warmup/128-measured complete-frame brackets at zero
 managed allocation. Native/platform/hardware/performance acceptance remains open.
+
+Filter forwarding consumes proposed bits explicitly and applies the existing
+HasServerMode/CollisionResponseEnabled gate before publication. Configured values
+remain committed during failed hooks and repair uses the current effective role.
+CPU Area sensing now uses EffectiveCollisionLayer too, matching inactive follower
+fixtures and motion queries. See [filter failures and sensing](../components/physics-filters.md#failed-updates-and-effective-sensing).

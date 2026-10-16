@@ -261,3 +261,9 @@ registration preserves prior external callbacks/history and queued deliveries.
 Successful registration still resets both external histories. [Shared transaction
 checks](../components/physics-queries.md#area-observer-registration-transactions)
 exercise scene/raw receivers and disabled logical index gaps.
+
+Both CPU scene snapshots and external Area callbacks now test effective body
+layers, keeping inactive PhysicalBone followers absent while their public filters
+remain configured. Area's own layer/mask forwarding publishes only after numerical
+success; [pending repair](../components/physics-filters.md#failed-updates-and-effective-sensing)
+preserves prior callback histories and logical slot identities.

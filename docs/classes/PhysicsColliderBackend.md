@@ -207,3 +207,12 @@ scene projection uses the scene slot's corresponding cache. Equal values reuse t
 immutable record, changed direction/margin publishes a fresh record, and unused
 raw suffixes clear. Borrowed shape spans still clear every Shape reference after
 the hook. See [shape-edit allocation boundaries](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse).
+
+## Pending filter repair
+
+One collider-local boolean records an unfinished UpdateFilter. A failure marks the
+world's corresponding fast-path bit; query/step preparation reapplies current
+effective owner values with wakeBody=false. Success, complete shape rebuilding or
+detach retires pending state. This retains no shape/resource or simulation-state
+copy. [Filter failure checks](../components/physics-filters.md#failed-updates-and-effective-sensing)
+verify retry errors, unchanged topology and exact sensor history.

@@ -292,7 +292,12 @@ public abstract partial class PhysicsBody : CollisionObject
         if (!float.IsFinite(margin) || margin < 0) throw new ArgumentOutOfRangeException(nameof(margin));
     }
 
-    internal override void OnCollisionFilterChanged() { if (Space is not null) Backend.UpdateFilter(EffectiveCollisionLayer, EffectiveCollisionMask, wakeBody: true); }
+    internal override void OnCollisionFilterChanged(uint layer, uint mask)
+    {
+        if (Space is null) return;
+        var response = HasServerMode || CollisionResponseEnabled;
+        Backend.UpdateFilter(response ? layer : 0, response ? mask : 0, wakeBody: true);
+    }
 
     /// <inheritdoc />
     protected override void OnEnterTree()

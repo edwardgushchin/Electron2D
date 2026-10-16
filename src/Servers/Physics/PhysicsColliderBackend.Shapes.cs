@@ -38,6 +38,7 @@ internal sealed partial class PhysicsColliderBackend
                 _shapeInputs[index] = new(slot.Shape, slot.Transform, index, enabled, sensor || !enabled ? null : slot.OneWay);
             }
             Attached.RebuildShapes(_shapeInputs.AsSpan(0, count), layer, mask, sensor, density, friction, bounce);
+            _filterDirty = false;
         }
         finally { EndShapeInputs(count); }
     }
@@ -64,6 +65,7 @@ internal sealed partial class PhysicsColliderBackend
                 _shapeInputs[index] = new(shape, slot.LocalTransform, index, !slot.Disabled, oneWay);
             }
             Attached.RebuildShapes(_shapeInputs.AsSpan(0, count), layer, mask, sensor, density, friction, bounce);
+            _filterDirty = false;
         }
         finally { EndShapeInputs(count); }
     }

@@ -1608,3 +1608,11 @@ clear/same-handler, rejected weak target and cross-receiver queued-event checks.
 Independent slots 0/2, exact entry/exit counts and complete warm frames execute;
 this does not certify arbitrary external numerical/compound algorithms or change
 the remaining extension/native/foreign/network/performance gates.
+
+[Filter publication failures](physics-filters.md#failed-updates-and-effective-sensing)
+now preserve authored scene/raw bits and retry pending effective metadata before
+query/step work. The shared eight-role profile checks 160 registered failures,
+ordinary direct/server/bit setters, exact sensing and warmed complete frames.
+CPU Area scans also exclude inactive PhysicalBone followers by effective layer.
+Existing open declaration states and complete numerical/native/foreign/network/
+hardware acceptance gates remain unchanged.

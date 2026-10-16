@@ -1,6 +1,6 @@
 # Directional physics filters
 
-Last updated: 2026-10-12
+Last updated: 2026-10-16
 
 ## Public behavior
 
@@ -115,3 +115,46 @@ uniqueness across 36 authored motion frames.
 
 
 Ordinary direct-body-state extension writes may forward BodySetCollisionLayer/Mask for scene and raw bodies. These operations use the common body parameter-write guard, retain raw release/borrowed-geometry validation, and reject numerical-hook writes before mutation. Filter metadata updates preserve their existing query, wake and next-step observation semantics; the public factory-view fixture exercises both siblings and body roles.
+
+## Failed updates and effective sensing
+
+Scene properties, their one-bit helpers and static server setters now publish
+configured layer/mask bits only after the selected numerical update succeeds.
+The internal scene forwarding hook receives proposed values explicitly, so
+borrowed authored getters retain the previous committed values for scene and raw
+objects alike. Unchanged body assignments still request body/neighbor wakeup.
+
+A failed UpdateFilter leaves a pending bit on its collider and its world. The
+next numerical query or active positive-duration step resubmits current effective
+bits, using wakeBody=false, before publishing query output or beginning the solver
+interval. Another failure propagates and remains pending. Filter repair changes
+existing metadata without recompiling shapes or advancing a failed interval.
+Successful shape rebuilding and detach clear collider pending state. A world bit
+skips repair traversal on ordinary frames; no filter/state array mirror, new GPU
+readback or ordinary per-frame population scan is introduced by this repair.
+
+Effective body filters also govern CPU scene-Area and external server-Area scans.
+An inactive PhysicalBone keeps configured public bits while its effective layer
+is zero, so neither sensing path reports it. Direct queries, motion and resident
+GPU sensing already use that effective policy.
+
+The public-only `--filter-transactions` profile covers StaticBody, AnimatableBody,
+CharacterBody, RigidBody, inactive PhysicalBone, scene Area, raw body and raw Area.
+Forty ordinary edits use direct properties, bit helpers and static facade setters.
+The registered provider injects 160 partial numerical failures across both fields,
+entry paths and query/step retry routes. Authored bits and associations remain
+committed, retries propagate the original failure, failed preparation does not
+advance the world tick, logical slots 0/2 retain a disabled gap, and sensor history
+does not replay. A separate scene Area also checks its empty follower snapshot
+and zero entry events alongside the raw observer. A shape hook counts rebuilds and requires zero throughout that provider.
+
+Real point/motion queries and exact departure/reentry counts verify successful
+edits on each selected implementation. Local history restores after registered
+failure repair; after accepted authoring changes the profile recaptures its local
+checkpoint under the existing fixed-configuration contract before silent replay.
+The warm bracket contains 128 full frames after 128 warm frames, with sixteen
+filter assignments and fourteen queries per frame, strict 0/0 owner/all-thread
+managed bytes, 128 force callbacks, stable RID and 12.8 units of actual movement
+within .01 units. Native/driver budgets, arbitrary private side effects of custom
+solvers, foreign platforms and target-device/window performance remain open.
+Evidence is retained under `bin/physics-filter-transactions/2026-10-16/`.

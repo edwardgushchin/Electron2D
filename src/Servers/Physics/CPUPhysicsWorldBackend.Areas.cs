@@ -31,7 +31,7 @@ internal sealed partial class CPUPhysicsWorldBackend
             if (area.Monitoring)
             {
                 foreach (var body in Space.Bodies)
-                    if ((area.CollisionMask & body.CollisionLayer) != 0)
+                    if ((area.CollisionMask & body.EffectiveCollisionLayer) != 0)
                         ScanOverlapPairs(area, body.GetRID(), body, false, NativeCollider(body.Backend).Shapes);
                 foreach (var other in Space.Areas)
                     if (!ReferenceEquals(area, other) && other.Monitorable &&
@@ -211,7 +211,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         receiver.Pairs.Begin();
         if (receiver.BodyCallback is not null)
             foreach (var body in Space.Bodies)
-                if ((receiver.Mask & body.CollisionLayer) != 0)
+                if ((receiver.Mask & body.EffectiveCollisionLayer) != 0)
                     ScanMonitorPairs(receiver, localShapes, body.PhysicsRID, body, false, NativeCollider(body.Backend).Shapes);
         if (receiver.AreaCallback is not null)
             foreach (var area in Space.Areas)

@@ -231,6 +231,7 @@ public sealed partial class PhysicsServer
     /// <summary>Sets the Area's directional body/Area detection mask.</summary>
     /// <param name="area">A live Area RID.</param>
     /// <param name="mask">All accepted category bits; default one.</param>
+    /// <remarks>A failed numerical update preserves authored bits. Query or nonzero-step preparation retries the current effective filter before numerical publication.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live Area.</exception>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook,
     /// or receiver configuration changes from its own callback; authoring is unchanged.</exception>
@@ -1212,7 +1213,8 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live scene or server body RID, including a generated tile body.</param>
     /// <param name="layer">All layer bits, including zero and bit 32.</param>
     /// <remarks>Assignments wake the body and its contact neighbors, even for unchanged bits. Queries observe changes immediately; contacts and overlap events update on the next step.
-    /// Ordinary direct-body-state extension writes may forward this operation; numerical implementation hooks and borrowed geometry/lifetime mutation remain guarded.</remarks>
+    /// Ordinary direct-body-state extension writes may forward this operation; numerical implementation hooks and borrowed geometry/lifetime mutation remain guarded.
+    /// A failed numerical update preserves authored bits. Query or nonzero-step preparation retries the current effective filter before numerical publication.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void BodySetCollisionLayer(RID body, uint layer) => Service.BodySetCollisionLayerCore(body, layer);
@@ -1228,7 +1230,8 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live scene or server body RID, including a generated tile body.</param>
     /// <param name="mask">All accepted category bits, including zero and bit 32.</param>
     /// <remarks>Assignments wake the body and its contact neighbors, even for unchanged bits. Motion queries observe changes immediately; contacts and overlap events update on the next step.
-    /// Ordinary direct-body-state extension writes may forward this operation; numerical implementation hooks and borrowed geometry/lifetime mutation remain guarded.</remarks>
+    /// Ordinary direct-body-state extension writes may forward this operation; numerical implementation hooks and borrowed geometry/lifetime mutation remain guarded.
+    /// A failed numerical update preserves authored bits. Query or nonzero-step preparation retries the current effective filter before numerical publication.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void BodySetCollisionMask(RID body, uint mask) => Service.BodySetCollisionMaskCore(body, mask);
@@ -1243,6 +1246,7 @@ public sealed partial class PhysicsServer
     /// <summary>Sets an Area's 32 collision-layer bits.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="layer">All accepted layer bits, including zero and bit 32.</param>
+    /// <remarks>A failed numerical update preserves authored bits. Query or nonzero-step preparation retries the current effective filter before numerical publication.</remarks>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook,
     /// or receiver configuration changes from its own callback; authoring is unchanged.</exception>
     public static void AreaSetCollisionLayer(RID area, uint layer) => Service.AreaSetCollisionLayerCore(area, layer);

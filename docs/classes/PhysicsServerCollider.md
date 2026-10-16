@@ -100,3 +100,9 @@ selected rebuild fails. Clear retains a capacity-bounded backup and clears saved
 resource references in finally. Restoration failures aggregate after the original
 error and leave geometry dirty for retry before the next query/step. Resource
 free still commits retirement. See [transaction and verification](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse).
+
+Raw filter authoring already commits after the selected update; failed partial
+numerical edits now mark shared filter preparation pending. The next query or
+active step repairs existing metadata from retained values without rebuilding
+logical slots. [Shared scene/raw checks](../components/physics-filters.md#failed-updates-and-effective-sensing)
+cover failed layers/masks and stable identity/history.
