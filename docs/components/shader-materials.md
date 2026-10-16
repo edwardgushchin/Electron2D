@@ -1,8 +1,8 @@
 # Shader materials
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
-[Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
+[Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Copied byte, normalized/float, block and unsigned-integer images execute; foreign/native-allocation acceptance remains separate.
 
 
 ## LCD and MSDF regions
@@ -141,7 +141,7 @@ Delivery checks passed: `dotnet publish tools/shaders/ShaderImport.csproj -c Rel
 - `ImageTexture.CreateFromImage` and SetImage copy pixels. SetImage resets logical size and replaces allocation identity; Update requires matching original dimensions/format/mips and retains logical overrides and allocation identity. GetImage returns an independent original image. Size overrides use zero to retain an axis, reject negative axes, and never resample pixels.
 - [Curve textures](curves.md) synchronously bake borrowed scalar curves to RF/RGBF storage. Texture.GetWidth/GetHeight/GetSize are queries; generated textures expose a writable Width. Source changes preserve compatible allocation identity. Both original formats currently upload as RGBA32Float, so red-only mode reduces CPU storage but does not reduce GPU allocation.
 - [Gradient textures](gradients.md) lazily generate RGBA8/RGBAF ramp or planar fills. Source notifications invalidate without forwarding texture Changed; capture before draw refreshes pixels while retaining geometry. Null source freezes prior pixels. Native GPU HDR and both shader languages are verified; tested compatibility drivers reject unavailable HDR precision explicitly.
-- GPU upload accepts BC1–BC7 plus uncompressed byte and normalized/float formats. Byte formats convert to RGBA8; other accepted formats convert to RGBA32Float, preserving HDR values. Original image data and metadata remain unchanged. BC sources retain exact blocks and native GPU storage when supported; prepared decode supplies Compatibility/opacity, with HDR driver checks for BC6. ETC/EAC/ASTC and integer-sampled formats remain explicit gaps. The backend checks sampling-format support before allocation.
+- GPU upload accepts BC1–BC7 plus uncompressed byte and normalized/float formats. Byte formats convert to RGBA8; other accepted formats convert to RGBA32Float, preserving HDR values. Original image data and metadata remain unchanged. BC sources retain exact blocks and native GPU storage when supported; prepared decode supplies Compatibility/opacity, with HDR driver checks for BC6. ETC/EAC/ASTC use prepared decoded upload. UInt16 image formats use raw unsigned RGBA16 storage and matching unsigned samplers, including ordinary and layered custom producers. The backend checks sampling-format support before allocation.
 - All mip levels upload before drawing. Updates reuse allocation with native cycling; upload completion is recorded only after successful submission. Per-renderer texture and binding caches are pruned when no longer used, and GPU resources are released during shutdown. Logical resources remain caller-owned.
 - Custom Texture subclasses provide GetWidth(), GetHeight() and a caller-owned GetImage copy. The renderer caches copied pixels until Changed. ImageTexture snapshots are immutable. Missing, uninitialized or disposed bindings fail before drawing.
 - Materials set borrowed overrides through `SetShaderParameter(string, Texture?)`; null resolves the borrowed Shader default. The nongeneric getter returns the explicit override. Shader defaults use Set/GetDefaultTextureParameter with index zero. Both paths participate in typed descriptors, graph-preserving resource duplication and name-based migration across shader reload.
@@ -235,7 +235,7 @@ The published `Electron2D.Shaders.targets` integrates `Electron2DShader` items i
 
 `python3 -B tools/shaders/check_build.py --tool <published-importer>` exercises this path in a temporary consumer using only public runtime API: HLSL/GLSL/external bytecode, matching source stems, spaces and shell metacharacters in paths, unchanged outputs, nested guarded includes changed without timestamp changes, corrupt generated output repair, missing includes, invalid external bytecode, duplicate/escaping targets and invalid stages. It also checks Clean without an available importer and a self-contained consumer publish from `/tmp` with `LD_LIBRARY_PATH` unset and empty `PATH`. These checks cover local Linux x64 import/build delivery; they do not add GPU/backend acceptance.
 
-Remaining work includes ETC/EAC/ASTC/integer formats and named material sampler configuration, further uniform mappings, a shader compilation cache, all unverified target backends. The [coverage register](../coverage/index.md) records current declaration accounting with no unexplained entries; partial behavior remains explicit in its generated tables.
+Remaining work includes named material sampler configuration, further uniform mappings, a shader compilation cache, all unverified target backends. The [coverage register](../coverage/index.md) records current declaration accounting with no unexplained entries; partial behavior remains explicit in its generated tables.
 
 The GLSL importer recognizes the pinned compiler's NonSemantic.Shader.DebugInfo 100/101/102 formats for scalar/vector/array boolean source metadata; unrelated debug extensions remain rejected.
 
@@ -332,3 +332,5 @@ Runtime source generation, includes, SPIR-V validation and embedded delivery are
 verified by tools/shaders/check_runtime.py. The 732 composed LCD/MSDF modules are
 validated by tools/shaders/check_canvas_glyphs.py. These checks require no hardware
 GPU and do not establish rendered or performance acceptance.
+
+[UInt16 image texture sources](integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.

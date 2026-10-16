@@ -29,7 +29,12 @@ internal sealed unsafe class GPUTexture : IDisposable
         var type = array ? SDL.GPUTextureType.TextureType2DArray : SDL.GPUTextureType.TextureType2D;
         var blockFormat = BCTextureFormat(pixels.Source.Format);
         _blockUpload = blockFormat != SDL.GPUTextureFormat.Invalid && SDL.GPUTextureSupportsFormat(_device, blockFormat, type, SDL.GPUTextureUsageFlags.Sampler);
-        var format = _blockUpload ? blockFormat : pixels.Upload.Format == Image.Format.Rgba8 ? SDL.GPUTextureFormat.R8G8B8A8Unorm : SDL.GPUTextureFormat.R32G32B32A32Float;
+        var format = _blockUpload ? blockFormat : pixels.Upload.Format switch
+        {
+            Image.Format.Rgba8 => SDL.GPUTextureFormat.R8G8B8A8Unorm,
+            Image.Format.Rgba16I => SDL.GPUTextureFormat.R16G16B16A16Uint,
+            _ => SDL.GPUTextureFormat.R32G32B32A32Float
+        };
         if (!SDL.GPUTextureSupportsFormat(_device, format, type, SDL.GPUTextureUsageFlags.Sampler))
             throw new NotSupportedException($"The active GPU backend cannot sample texture format {pixels.Source.Format}.");
         NativeTextureFormat = format;

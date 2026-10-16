@@ -1,6 +1,6 @@
 # Local compute
 
-Last updated: 2026-10-12
+Last updated: 2026-10-16
 
 The public [RenderingDevice](../classes/RenderingDevice.md) compute slice is created by `RenderingServer.CreateLocalRenderingDevice()` under [ADR 0028](../decisions/rendering.md#adr-0028). It supplies a portable compute path for application algorithms without exposing native handles or adding domain-specific fluid API. [RDShaderSPIRV](../classes/RDShaderSPIRV.md) owns copied bytecode and compiler diagnostics; [RDUniform](../classes/RDUniform.md) describes borrowed resource bindings. [ShaderStage](../classes/RenderingDevice.ShaderStage.md) and [UniformType](../classes/RenderingDevice.UniformType.md) retain their applicable numeric identities.
 
@@ -219,3 +219,5 @@ var format = device.TextureGetFormat(image); // Actual native dimensions and rol
 var bytes = device.TextureGetData(image, 0); // Explicit CPU copy; canvas sampling needs none.
 device.FreeRID(image); // Releases the wrapper, preserving the viewport target.
 ```
+
+[UInt16 image texture sources](integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.

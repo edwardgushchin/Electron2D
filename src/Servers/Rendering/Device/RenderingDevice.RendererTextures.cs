@@ -23,6 +23,7 @@ public sealed unsafe partial class RenderingDevice
             SDL.GPUTextureFormat.BC6HRGBFloat => DataFormat.BC6HSFLOATBLOCK,
             SDL.GPUTextureFormat.BC6HRGBUFloat => DataFormat.BC6HUFLOATBLOCK,
             SDL.GPUTextureFormat.R32G32B32A32Float => DataFormat.R32G32B32A32SFLOAT,
+            SDL.GPUTextureFormat.R16G16B16A16Uint => DataFormat.R16G16B16A16UINT,
             _ => DataFormat.R8G8B8A8UNORM
         };
         var usage = pixels?.DeviceUsage ?? TextureUsageBits.Sampling | TextureUsageBits.ColorAttachment | TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.CanUpdate;

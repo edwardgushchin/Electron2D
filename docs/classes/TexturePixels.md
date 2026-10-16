@@ -28,6 +28,7 @@ var snapshot = TexturePixels.FromImage(image);
 | `internal readonly int Levels` | [Levels](#levels) |
 | `internal object Allocation` | [Allocation identity](#allocation-identity) |
 | `internal int BytesPerPixel { get; }` | [Pixel stride](#pixel-stride) |
+| `internal int PixelType { get; }` | [Sampled scalar](#sampled-scalar) |
 | `internal static TexturePixels FromImage(Image image)` | [Capture](#capture) |
 | `internal Image CopyImage()` | [Image copy](#image-copy) |
 
@@ -43,7 +44,7 @@ Copied original dimensions, format, mip flag and bytes.
 
 `internal readonly Image.State Upload`
 
-Byte formats and BC1–BC5/BC7 decode to RGBA8; BC6 and other supported normalized/float formats convert to RGBA32Float, retaining HDR values. Source retains original blocks; CPU opacity uses the prepared decoded payload. No decode runs during retained drawing.
+Byte formats and BC1–BC5/BC7 decode to RGBA8; BC6 and other supported normalized/float formats convert to RGBA32Float, retaining HDR values. UInt16 formats expand to raw unsigned RGBA16. Source retains original blocks or integer lanes; CPU opacity uses source semantics or the prepared decoded payload. No decode runs during retained drawing.
 
 ### Levels
 
@@ -61,13 +62,19 @@ New by default. Compatible ImageTexture.Update and curve-source rebakes copy the
 
 `internal int BytesPerPixel { get; }`
 
-Four for RGBA8 uploads; sixteen for RGBA32Float uploads.
+Four for RGBA8 uploads, eight for unsigned RGBA16 uploads and sixteen for RGBA32Float uploads.
+
+### Sampled scalar
+
+`internal int PixelType { get; }`
+
+Two for raw unsigned integer upload and zero for float/normalized upload. This retained metadata feeds ordinary/layered shader validation, canvas pipeline selection and the Compatibility capability check without image copies during replay.
 
 ### Capture
 
 `internal static TexturePixels FromImage(Image image)`
 
-Copies a live Image under its snapshot contract and converts for upload. Rejects null, empty data, axes outside 1..16384 and compressed/integer-sampled formats. Image disposal propagates. Construction and conversion may allocate; this is not a frame replay operation.
+Copies a live Image under its snapshot contract and converts for upload. Rejects null, empty data, axes outside 1..16384 and formats without an integrated decoder. UInt16 sources expand into raw RGBA16 integer upload; block sources use prepared decoded upload or supported native BC storage. Image disposal propagates. Construction and conversion may allocate; this is not a frame replay operation.
 
 Server texture updates use the same compatible allocation token; TextureReplace transfers the replacement snapshot/token rather than mutating immutable arrays.
 
@@ -83,4 +90,6 @@ Returns a new caller-owned Image with copied original bytes and metadata; never 
 
 Prepared video RGBA snapshots additionally carry a Mutable role and UInt64 Revision. Publication copies into fixed source/upload buffers and advances the revision; CopySnapshot freezes independent pixels by default. Ordinary immutable roles keep existing sharing semantics.
 
-[ETC/EAC/ASTC decoding](../components/image-block-decoding.md) now supplies prepared pixels for these texture snapshots while retaining original block formats, bytes and all mips. Signed EAC and ASTC HDR use floating-point upload; the current Compatibility driver rejects that precision. Integer sampling remains a separate integration.
+[ETC/EAC/ASTC decoding](../components/image-block-decoding.md) now supplies prepared pixels for these texture snapshots while retaining original block formats, bytes and all mips. Signed EAC and ASTC HDR use floating-point upload; the current Compatibility driver rejects that precision. [Unsigned image sampling](../components/integer-textures.md) now preserves all four UInt16 source formats through native RGBA16 integer storage.
+
+[UInt16 image texture sources](../components/integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.

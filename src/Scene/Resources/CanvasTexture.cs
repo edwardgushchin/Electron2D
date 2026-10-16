@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>Combines borrowed diffuse, normal and specular textures for canvas lighting.</summary>
 /// <remarks>The diffuse channel defines image queries and logical dimensions. Missing channels use white diffuse,
 /// a perpendicular normal and white specular. Changes and disposal of channels propagate to consumers.
-/// This resource has its own stable rendering identity and never owns its channels. Device-image channels preserve raw signed/unsigned values in built-in lighting. Integer channels
+/// This resource has its own stable rendering identity and never owns its channels. Image and device-image channels preserve raw signed/unsigned values in built-in lighting. Integer channels
 /// require nearest filtering; normal and specular mapping use the ordinary channel equations.</remarks>
 public sealed class CanvasTexture : Texture
 {

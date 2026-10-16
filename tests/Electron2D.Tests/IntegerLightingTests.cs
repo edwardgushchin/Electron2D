@@ -8,11 +8,11 @@ internal static class IntegerLightingTests
         protected override void OnDraw() => DrawTextureRect(texture, new(0, 0, size, size), false, color == default ? Colors.White : color);
     }
     private static Color Bits(Color value) => new(BitConverter.Int32BitsToSingle((int)value.R), BitConverter.Int32BitsToSingle((int)value.G), BitConverter.Int32BitsToSingle((int)value.B), BitConverter.Int32BitsToSingle((int)value.A));
-    internal static void Run(bool programmable = false)
+    internal static void Run(bool programmable = false, bool ordinaryUnsigned = false)
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         var root = new Window { Size = new(256, 128), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
-        var resources = new List<Resource>(); var native = new TextureRD[3, 3]; var reference = new Texture[3, 3]; var ids = new RID[3, 3];
+        var resources = new List<Resource>(); var native = new Texture[3, 3]; var reference = new Texture[3, 3]; var ids = new RID[3, 3];
         var values = new Color[,] { { new(1, 1, 1), new(2, -1, 1), new(2, 1, 0) }, { new(.5f, .5f, 0), new(-1, 1, 0), new(0, 0, 0) }, { new(.3f, .5f, .6f, .4f), new(-1, 2, 1, 0), new(1, 2, 0, 0) } };
         var materials = new ShaderMaterial?[3];
         if (programmable)
@@ -42,7 +42,12 @@ internal static class IntegerLightingTests
             for (var channel = 0; channel < 3; channel++) for (var scalar = 0; scalar < 3; scalar++)
                 {
                     reference[channel, scalar] = CPU(values[channel, scalar]);
-                    if (scalar != 0) native[channel, scalar] = GPU(scalar == 1 ? RenderingDevice.DataFormat.R32G32B32A32SINT : RenderingDevice.DataFormat.R32G32B32A32UINT, values[channel, scalar], out ids[channel, scalar]);
+                    if (scalar == 2 && ordinaryUnsigned)
+                    {
+                        using var image = Image.CreateEmpty(4, 4, false, Image.Format.Rgba16I); image.Fill(values[channel, scalar]);
+                        native[channel, scalar] = ImageTexture.CreateFromImage(image); resources.Add(native[channel, scalar]);
+                    }
+                    else if (scalar != 0) native[channel, scalar] = GPU(scalar == 1 ? RenderingDevice.DataFormat.R32G32B32A32SINT : RenderingDevice.DataFormat.R32G32B32A32UINT, values[channel, scalar], out ids[channel, scalar]);
                 }
             for (var diffuse = 0; diffuse < 3; diffuse++) for (var normal = 0; normal < 3; normal++) for (var specular = 0; specular < 3; specular++)
                     {

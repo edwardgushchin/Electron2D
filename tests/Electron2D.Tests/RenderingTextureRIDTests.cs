@@ -109,8 +109,13 @@ internal static partial class RenderingRuntimeTests
                         Reject<ArgumentException>(() => RenderingServer.Texture2DCreate(emptyImage));
                         using var integerImage = Image.CreateEmpty(2, 2, false, Image.Format.R16I);
                         using var compressedImage = Image.CreateFromData(4, 4, false, Image.Format.Dxt1, new byte[8]);
-                        Reject<NotSupportedException>(() => RenderingServer.Texture2DCreate(integerImage));
-                        Reject<NotSupportedException>(() => RenderingServer.Texture2DCreate(compressedImage));
+                        foreach (var source in new[] { integerImage, compressedImage })
+                        {
+                            var accepted = RenderingServer.Texture2DCreate(source);
+                            using var copied = RenderingServer.Texture2DGet(accepted);
+                            Check(copied is not null && copied.PixelFormat == source.PixelFormat && copied.GetData().AsSpan().SequenceEqual(source.GetData()), "Owned texture creation preserves integrated source formats.");
+                            RenderingServer.FreeRID(accepted);
+                        }
                         using var disposedImage = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8); disposedImage.Dispose();
                         Reject<ObjectDisposedException>(() => RenderingServer.Texture2DCreate(disposedImage));
                         Reject<ArgumentException>(() => RenderingServer.Texture2DGet(default));

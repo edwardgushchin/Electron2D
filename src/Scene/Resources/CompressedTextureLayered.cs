@@ -3,7 +3,8 @@ namespace Electron2D;
 /// <summary>Loads copied homogeneous image layers from a compressed array asset.</summary>
 /// <remarks>Loading validates every layer before publication. Sources are bounded to sixty-four MiB;
 /// source and prepared sampling pixels share the existing layered storage budget. Rendering owns native
-/// allocations. Compatible file replacement retains this resource's RID, while borrowed device storage may expire.</remarks>
+/// allocations. Compatible file replacement retains this resource's RID, while borrowed device storage may expire.
+/// UInt16 layers retain exact source lanes and every mip; matching unsigned GPU samplers read raw values.</remarks>
 public abstract class CompressedTextureLayered : TextureLayered
 {
     private readonly object _gate = new();

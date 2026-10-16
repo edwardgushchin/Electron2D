@@ -168,15 +168,16 @@ internal static partial class CompressedTextureTests
             for (var y = 0; y < 10; y++) for (var x = 0; x < 14; x++) Check(texture.IsPixelOpaque(x, y) == (expected.GetPixel(x / 2, y / 2).A > .1f), "Decoded block opacity uses logical coordinates.");
         }
         using var integer = Image.CreateEmpty(1, 1, false, Image.Format.Rgba16I); var integerPath = Path.Combine(directory, "integer.ctex"); File.WriteAllBytes(integerPath, Container(integer));
-        using var unsupported = new CompressedTexture(); Reject<NotSupportedException>(() => unsupported.Load(integerPath)); Check(unsupported.GetWidth() == 0, "Integer sampler dependency fails before publication.");
-        using var prior = CompressedArrayTests.Source(0); File.WriteAllBytes(integerPath, Container(prior)); unsupported.Load(integerPath); var identity = unsupported.GetRID();
+        using var loaded = new CompressedTexture(); loaded.Load(integerPath);
+        using (var pixels = loaded.GetImage()!) Check(pixels.PixelFormat == Image.Format.Rgba16I && pixels.GetData().AsSpan().SequenceEqual(integer.GetData()), "Imported integer source retains original lanes.");
+        using var prior = CompressedArrayTests.Source(0); File.WriteAllBytes(integerPath, Container(prior)); loaded.Load(integerPath); var identity = loaded.GetRID();
         using var blocks = Image.CreateEmpty(7, 5, true, Image.Format.Etc); var invalidData = blocks.GetData(); invalidData[blocks.GetMIPMapOffset(1)] = 4; invalidData[blocks.GetMIPMapOffset(1) + 3] = 2;
-        using var invalid = Image.CreateFromData(7, 5, true, Image.Format.Etc, invalidData); File.WriteAllBytes(integerPath, Container(invalid)); Reject<InvalidDataException>(() => unsupported.Load(integerPath));
-        using var overBudget = Image.CreateEmpty(2049, 2049, false, Image.Format.Etc); File.WriteAllBytes(integerPath, Container(overBudget)); Reject<InvalidOperationException>(() => unsupported.Load(integerPath));
-        using var retainedPrior = unsupported.GetImage()!;
-        Check(unsupported.GetRID() == identity && retainedPrior.GetData().AsSpan().SequenceEqual(prior.GetData()), "Later mip decoder failure and codec budget preserve the previous complete texture.");
-        File.WriteAllBytes(integerPath, Container(prior, width: int.MaxValue, height: int.MaxValue)); unsupported.Load(integerPath);
-        Check(unsupported.GetWidth() == int.MaxValue && unsupported.IsPixelOpaque(int.MaxValue, int.MaxValue), "Large logical dimensions do not multiply pixel storage or overflow opacity mapping.");
+        using var invalid = Image.CreateFromData(7, 5, true, Image.Format.Etc, invalidData); File.WriteAllBytes(integerPath, Container(invalid)); Reject<InvalidDataException>(() => loaded.Load(integerPath));
+        using var overBudget = Image.CreateEmpty(2049, 2049, false, Image.Format.Etc); File.WriteAllBytes(integerPath, Container(overBudget)); Reject<InvalidOperationException>(() => loaded.Load(integerPath));
+        using var retainedPrior = loaded.GetImage()!;
+        Check(loaded.GetRID() == identity && retainedPrior.GetData().AsSpan().SequenceEqual(prior.GetData()), "Later mip decoder failure and codec budget preserve the previous complete texture.");
+        File.WriteAllBytes(integerPath, Container(prior, width: int.MaxValue, height: int.MaxValue)); loaded.Load(integerPath);
+        Check(loaded.GetWidth() == int.MaxValue && loaded.IsPixelOpaque(int.MaxValue, int.MaxValue), "Large logical dimensions do not multiply pixel storage or overflow opacity mapping.");
     }
 
     private static void CorruptArchives(string directory, CompressedTexture empty, CompressedTexture loaded)

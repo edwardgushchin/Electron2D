@@ -1,6 +1,6 @@
 # LayeredTexturePixels
 
-Last updated: 2026-10-10
+Last updated: 2026-10-16
 
 - Source: [TextureLayered.cs](../../src/Scene/Resources/TextureLayered.cs)
 - Visibility: internal; unavailable to engine consumers.
@@ -18,6 +18,6 @@ Connects copied resource snapshots and logical identity to the existing GPU rend
 
 [TextureArrayTests](../../tests/Electron2D.Tests/TextureArrayTests.cs) checks homogeneous copied layers, atomic update/failure/callback behavior, custom producers, typed descriptors/defaults/overrides, incompatible reload, duplication, archives/placeholders and 1000 prepared reads with zero owner-thread managed bytes. [TextureArrayRenderingTests](../../tests/Electron2D.Tests/TextureArrayRenderingTests.cs) checks HLSL/GLSL and owned-RID output, every mip of two physical GPU layers, compatible allocation reuse, HDR reallocation, proxy nesting/retarget/replacement, guards and cleanup. Linux Wayland GPU passes 24 warmup and 64 active frames with zero owner-thread managed bytes. Compatibility rejects shader use before drawing and releases the host.
 
-Compressed/integer-sampled source formats, descriptor binding arrays, configurable named samplers, native allocation totals, foreign platforms, new-family trimming/AOT and owner acceptance remain separate. Cube sampling is outside the product boundary. See [array resources](../components/texture-arrays.md), [ADR 0028](../decisions/rendering.md#adr-0028) and [ADR 0004](../decisions/product.md#adr-0004).
+Descriptor binding arrays, configurable named samplers, native allocation totals, foreign platforms, new-family trimming/AOT and owner acceptance remain separate. Cube sampling is outside the product boundary. See [array resources](../components/texture-arrays.md), [ADR 0028](../decisions/rendering.md#adr-0028) and [ADR 0004](../decisions/product.md#adr-0004).
 
-BC1–BC7 arrays preserve exact original blocks in source archives and layer reads. The GPU uploads homogeneous block formats across all layers/mips; decoded fallback uses the prepared snapshots. Borrowed RenderingDevice identities describe actual native BC storage and retain existing lifetime rules. ETC/EAC/ASTC and integer sampling remain separate.
+BC1–BC7 arrays preserve exact original blocks in source archives and layer reads. The GPU uploads homogeneous block formats across all layers/mips; decoded fallback uses the prepared snapshots. Borrowed RenderingDevice identities describe actual native BC storage and retain existing lifetime rules. ETC/EAC/ASTC use prepared decoded upload; UInt16 sources use raw unsigned RGBA16 upload.

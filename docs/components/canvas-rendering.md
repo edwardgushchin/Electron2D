@@ -1,11 +1,11 @@
 # Canvas rendering
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
-[Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
+[Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Copied byte, normalized/float, block and unsigned-integer images execute; foreign/native-allocation acceptance remains separate.
 
 
 ## LCD and MSDF texture regions
@@ -439,7 +439,7 @@ The [text component](text.md) provides six typed CanvasItem character/string/mul
 
 Server writes run on the owner thread outside geometry replay/native submission and shutdown; frame-event and drawing callbacks are valid preparation points. Free/replace removes consumed identities before disposal callbacks and skips their retained commands. Shutdown drains every owned texture and attempts backend cleanup despite callback failures; borrowed resources survive. Cold registration sweeps dead weak identities every 256 registrations; warmed draw lookup does no scanning.
 
-[RenderingTextureRIDTests](../../tests/Electron2D.Tests/RenderingTextureRIDTests.cs) verifies Linux Wayland GPU/compatibility and dummy/software pixel response, update/replace/free without rerecording, atlas/placeholder behavior, lifecycle/failure boundaries and zero managed allocation over 64 active plus 64 retained frames after 20 warmup frames on the owner thread. Resource copying/upload preparation, host event loop, native/backend allocation, other platforms and owner acceptance are outside this measurement. Compressed/integer textures, layered/drawable targets and public native/device texture interop remain exact coverage dependencies.
+[RenderingTextureRIDTests](../../tests/Electron2D.Tests/RenderingTextureRIDTests.cs) verifies Linux Wayland GPU/compatibility and dummy/software pixel response, update/replace/free without rerecording, atlas/placeholder behavior, lifecycle/failure boundaries and zero managed allocation over 64 active plus 64 retained frames after 20 warmup frames on the owner thread. Resource copying/upload preparation, host event loop, native/backend allocation, other platforms and owner acceptance are outside this measurement. Copied block and UInt16 textures, array resources and borrowed RenderingDevice texture interop execute through their documented backend contracts; drawable targets retain separate coverage dependencies.
 
 ## Texture proxies
 
@@ -614,3 +614,5 @@ The published saved-scene workflow also preserves an untouched Window.Position a
 ## Touch game consumers
 
 [Touch game controls](../components/touch-game-controls.md) connects TouchScreenButton scene-space masks/textures with VirtualJoystick themed analog gestures. Independent action contributions, queued button event delivery, lifecycle cancellation, typed fresh-process scenes and Linux rendered input checks are documented in the component. Physical mobile, foreign backend, inherited semantic accessibility and native allocation acceptance remain separate.
+
+[UInt16 image texture sources](integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.

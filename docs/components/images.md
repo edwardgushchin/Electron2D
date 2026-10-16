@@ -93,10 +93,12 @@ The managed checks are Linux/.NET 8 only. Native `ImageCodecTests` separately ve
 
 ## BC and DDS integration
 
-BC1–BC7 sources retain their original format, complete mip chain and exact block bytes. Prepared CPU sampling decodes BC1–BC5/BC7 to RGBA8 and signed/unsigned BC6 to RGB floating point. GPU allocates native BC storage when the device supports it; otherwise it uploads prepared decoded pixels. Compatibility uses the decoded snapshot. The RA-as-RG role uses decoded upload to preserve channel semantics. ETC/EAC/ASTC use the shared decoded upload path; signed EAC and ASTC HDR retain floating-point precision. Integer sampling remains separate.
+BC1–BC7 sources retain their original format, complete mip chain and exact block bytes. Prepared CPU sampling decodes BC1–BC5/BC7 to RGBA8 and signed/unsigned BC6 to RGB floating point. GPU allocates native BC storage when the device supports it; otherwise it uploads prepared decoded pixels. Compatibility uses the decoded snapshot. The RA-as-RG role uses decoded upload to preserve channel semantics. ETC/EAC/ASTC use the shared decoded upload path; signed EAC and ASTC HDR retain floating-point precision. [Unsigned image sampling](integer-textures.md) now executes through prepared RGBA16 integer storage.
 
 See [the complete block-codec slice](image-bcn.md) for bounded source/expansion rules, source provenance, independent fixtures and current platform evidence. The buffer-tool closure exists only to compile the selected codec APIs inside Electron2D.dll; consumers receive no backend types or managed dependency DLLs.
 
 WebP lossless/lossy saving, live codec settings, compressed-source conversion, atomic files and texture/capture consumers are described in [the executable codec contract](../components/image-webp.md). Foreign-target native execution and prebuilt bundle publication remain unverified.
 
 The [EXR I/O slice](../components/image-exr.md) supplies precision-preserving HDR file/buffer load and lossless save. Image and texture resource discovery includes DDS and EXR alongside PNG/JPEG/WebP/BMP/TGA/SVG; typed archives also expose their registered extensions. GPU float sampling, explicit Compatibility byte conversion and float-driver rejection are separate exercised profiles.
+
+[UInt16 image texture sources](integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.

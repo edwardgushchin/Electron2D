@@ -1,5 +1,7 @@
 # API coverage register
 
+[Unsigned image texture sources](../components/integer-textures.md) now execute all four UInt16 layouts across ordinary/layered resources, imports, public server identities and GLSL/HLSL consumers. Thirteen format-dependent Partial rows are Implemented; native integer filtering and Compatibility limits remain explicit.
+
 [Node membership and authoring ownership](../components/scene-hierarchy.md#membership-and-authoring-ownership)
 now close eight inherited membership/owner/reparent/child-order rows. Borrowed
 owner expiry and detached unique-name scope, callback-failed transfer, virtual

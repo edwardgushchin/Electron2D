@@ -88,6 +88,9 @@ if (args.Length == 2 && args[0] == "--image-exr-oracle") { ImageEXRTests.RunOrac
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_EXR") is { } exrProfile) { if (exrProfile == "managed") { VerifyImages(); ImageEXRTests.RunManaged(); } else ImageEXRTests.RunNative(exrProfile); return; }
 if (args.Length == 2 && args[0] == "--image-webp-archive") { ImageWebPTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_WEBP") is { } webpProfile) { if (webpProfile == "managed") { VerifyImages(); ImageWebPTests.RunManaged(); } else ImageWebPTests.RunNative(webpProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTEGER_SOURCE") == "managed") { IntegerSourceTextureTests.RunManaged(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTEGER_SOURCE") is "lighting" or "programmable-lighting" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTEGER_SOURCE") is { } integerLightingProfile) { IntegerLightingTests.Run(integerLightingProfile == "programmable-lighting", ordinaryUnsigned: true); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTEGER_SOURCE") is { } integerSourceProfile) { IntegerSourceTextureTests.RunNative(integerSourceProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPRESSED_TEXTURE") == "managed") { CompressedTextureTests.RunManaged(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPRESSED_TEXTURE") == "restore") { CompressedTextureTests.Restore(args[0], args[1], args[2]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPRESSED_TEXTURE") is { } compressedProfile) { CompressedTextureTests.RunNative(compressedProfile); return; }
@@ -1447,6 +1450,7 @@ RenderingPrimitiveTests.Run();
 RenderingCanvasTests.Run();
 NavigationTopologyTests.Run();
 TextureArrayTests.Run();
+IntegerSourceTextureTests.RunManaged();
 CompressedTextureTests.RunManaged();
 CompressedArrayTests.RunManaged();
 ImageBlockTests.RunManaged();

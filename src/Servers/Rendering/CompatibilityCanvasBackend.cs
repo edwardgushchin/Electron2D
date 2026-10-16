@@ -347,6 +347,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
     private unsafe void PrepareTexture(Texture texture)
     {
         var pixels = texture.CapturePixels() ?? RenderingTextureRegistry.PlaceholderPixels;
+        if (pixels.PixelType != 0) throw new NotSupportedException("Compatibility cannot sample integer texture values; use GPU rendering.");
         _textures.TryGetValue(texture, out var previous);
         if (ReferenceEquals(previous.Pixels, pixels) && previous.Revision == pixels.Revision) return;
         var replacement = previous.Handle is null || !ReferenceEquals(previous.Pixels.Allocation, pixels.Allocation);

@@ -49,4 +49,4 @@ Protected Resource duplication hook. Returns a newly constructed exact-type targ
 it does not copy data itself. The graph session owns cleanup on later copy failure,
 and the inherited CopyCustomStateTo publishes the source snapshot without I/O.
 
-[ETC/EAC/ASTC decoding](../components/image-block-decoding.md) now supplies prepared pixels for these texture snapshots while retaining original block formats, bytes and all mips. Signed EAC and ASTC HDR use floating-point upload; the current Compatibility driver rejects that precision. Integer sampling remains a separate integration.
+[ETC/EAC/ASTC decoding](../components/image-block-decoding.md) now supplies prepared pixels for these texture snapshots while retaining original block formats, bytes and all mips. Signed EAC and ASTC HDR use floating-point upload; the current Compatibility driver rejects that precision. [Unsigned image sampling](../components/integer-textures.md) now preserves all four UInt16 source formats through native RGBA16 integer storage.

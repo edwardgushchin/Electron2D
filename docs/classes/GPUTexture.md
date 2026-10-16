@@ -7,13 +7,13 @@ Last updated: 2026-10-16
 - Component: [shader-materials](../components/shader-materials.md)
 - Visibility: internal; unavailable to engine consumers.
 
-[Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. BC1–BC7 and decoded fallback are implemented; integer/ETC/EAC/ASTC and foreign/native-allocation acceptance retain exact dependencies.
+[Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. BC/ETC/EAC/ASTC sampling and UInt16 integer sources execute; foreign/native-allocation acceptance remains separate.
 
 ## Description
 
 Owns a sampled native 2D texture or image-array texture and upload transfer buffer under a retained GPU device. It holds managed TexturePixels snapshots but never owns the public Texture resource. GPUCanvasBackend replaces this allocation when the snapshot allocation identity changes; a compatible ImageTexture.Update or RenderingServer.Texture2DUpdate replaces Pixels instead. TextureReplace transfers a different allocation token when needed and triggers ordinary backend replacement.
 
-BC1–BC7 sources retain their original format, complete mip chain and exact block bytes. Prepared CPU sampling decodes BC1–BC5/BC7 to RGBA8 and signed/unsigned BC6 to RGB floating point. GPU allocates native BC storage when the device supports it; otherwise it uploads prepared decoded pixels. Compatibility uses the decoded snapshot; BC6 requires an HDR-capable driver and the current Linux driver rejects that role. The RA-as-RG role uses decoded upload to preserve channel semantics. Integer sampling and ETC/EAC/ASTC codecs remain separate dependencies.
+BC1–BC7 sources retain their original format, complete mip chain and exact block bytes. Prepared CPU sampling decodes BC1–BC5/BC7 to RGBA8 and signed/unsigned BC6 to RGB floating point. GPU allocates native BC storage when the device supports it; otherwise it uploads prepared decoded pixels. Compatibility uses the decoded snapshot; BC6 requires an HDR-capable driver and the current Linux driver rejects that role. The RA-as-RG role uses decoded upload to preserve channel semantics. UInt16 sources use raw unsigned RGBA16 upload; ETC/EAC/ASTC use prepared decoded upload.
 
 NativeTextureFormat reports the actual allocation to RenderingDevice exports. Compressed transfer offsets use each format’s block sizes across layers/mips. Update retains allocation identity and upload version commits after submission.
 
@@ -96,3 +96,5 @@ RID proxy batches resolve to their root Texture before cache preparation; each r
 Ordinary/array allocation leases retain the texture after backend retirement until pending device commands complete. Storage usage is added only when the complete native graphics/compute read/write flag combination is supported. Raw update/copy use native transfer roles. RecordUpload/CancelUpload distinguish encoded work from successful submission; CommitUpload commits that exact version. Device writes do not mutate authored snapshots and are preserved until a later authored upload. See [renderer export checks](../components/local-compute.md#renderer-texture-export-checkpoint).
 
 Prepared mutable pixels compare identity and revision. Upload records the revision actually copied; CommitUpload publishes that recorded value after submission, so a later in-place update remains pending. The same allocation and transfer capacity are reused for video frames.
+
+[UInt16 image texture sources](../components/integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.

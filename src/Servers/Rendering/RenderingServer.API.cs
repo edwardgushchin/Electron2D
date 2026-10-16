@@ -285,6 +285,8 @@ public sealed partial class RenderingServer
     /// <summary>Creates a caller-owned two-dimensional rendering texture from copied image pixels.</summary>
     /// <param name="image">A live nonempty image in a supported sampling format.</param>
     /// <returns>A stable texture RID valid until FreeRID or renderer shutdown.</returns>
+    /// <remarks>Creation preserves source bytes, including UInt16 lanes and all mips, independently of backend sampling support.
+    /// Integer drawing requires the GPU backend and nearest filtering; named samplers require unsigned scalar declarations.</remarks>
     /// <exception cref="ArgumentNullException">The image is null.</exception>
     /// <exception cref="ObjectDisposedException">The image or renderer is disposed.</exception>
     /// <exception cref="ArgumentException">The image is empty or exceeds supported texture dimensions.</exception>

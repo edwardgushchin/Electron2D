@@ -27,8 +27,9 @@ source format. Legacy Basis and KTX2 use the six imported RG/RGB/RGBA/RA-as-RG/R
 RGB channel roles and preserve encoded transfer values. BC, ETC1/ETC2/EAC and ASTC
 source blocks remain original while prepared snapshots supply sampling/opacity.
 Signed EAC retains normalized floating-point values; ASTC HDR retains half range.
-Integer R16I/Rg16I/Rgb16I/Rgba16I sampling remains an explicit preparation failure
-pending integer sampler reflection, binding and upload integration.
+R16I/Rg16I/Rgb16I/Rgba16I preserve original lanes and mips, using raw unsigned
+GPU sampling through prepared RGBA16 storage. See [integer sources](integer-textures.md)
+for sampler, missing-channel and Compatibility boundaries.
 
 Source files are capped at 64 MiB. Source plus prepared upload snapshots use the
 existing 256 MiB texture-storage budget; codec expansion retains its conservative

@@ -608,7 +608,10 @@ def main():
         assert rows and all(" | Implemented | " in row for row in rows), name
         button_rows += len(rows)
     assert button_rows == 136
-    assert "Partial" in class_rows["Texture2DArray"] and "integer R16I/Rg16I/Rgb16I/Rgba16I" in class_rows["Texture2DArray"]
+    for name in ("Texture2DArray", "ImageTextureLayered", "CompressedTexture2D", "CompressedTexture2DArray", "CompressedTextureLayered"):
+        row = next(line for line in pages[CLASS_PAGES / coverage_target(name)].splitlines()
+                   if line.startswith(f"| [`class {name}`]"))
+        assert " | Implemented | " in row and "raw unsigned RGBA16" in row, name
     assert "Implemented" in class_rows["TextureLayered"] and "separate typed layered resources" in class_rows["TextureLayered"]
     assert "Implemented" in class_rows["PlaceholderTexture2DArray"]
     assert " | Partial | " in class_rows["Line2D"] and "../../classes/Line.md" in class_rows["Line2D"]
@@ -654,10 +657,10 @@ def main():
     for name in ('canvas_light_create(', 'canvas_item_create(', 'mesh_create(', 'texture_2d_create('):
         row, = [line for line in rendering_rows if line.startswith(f'| [`method {name}')]
         assert ' | Excluded | ' not in row, f'Shared or 2D API was excluded: {row}'
-    for name in ('texture_2d_placeholder_create(', 'texture_set_size_override(', 'texture_get_path(', 'texture_set_path('):
+    for name in ('texture_2d_create(', 'texture_2d_placeholder_create(', 'texture_set_size_override(', 'texture_get_path(', 'texture_set_path('):
         row, = [line for line in rendering_rows if line.startswith(f'| [`method {name}')]
         assert ' | Implemented | ' in row and 'RenderingTextureRIDTests' in row, row
-    for name in ('texture_2d_create(', 'texture_2d_get(', 'texture_2d_update(', 'texture_get_format(', 'texture_replace(', 'free_rid('):
+    for name in ('texture_2d_get(', 'texture_2d_update(', 'texture_get_format(', 'texture_replace(', 'free_rid('):
         row, = [line for line in rendering_rows if line.startswith(f'| [`method {name}')]
         assert ' | Partial | ' in row and 'RenderingTextureRIDTests' in row, row
     device_factory = next(row for row in rendering_rows if "get_rendering_device(" in row)

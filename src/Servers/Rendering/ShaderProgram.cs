@@ -52,8 +52,10 @@ internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = fa
     }
     internal static int ResourcePixelType(Resource? texture) => Source(texture) switch
     {
-        TextureRD { DeviceInfo: { } info } => RenderingDevice.PixelType(info.Format),
-        TextureLayeredRD { DeviceInfo: { } info } => RenderingDevice.PixelType(info.Format),
+        TextureRD deviceTexture => deviceTexture.DeviceInfo is { } info ? RenderingDevice.PixelType(info.Format) : 0,
+        TextureLayeredRD deviceArray => deviceArray.DeviceInfo is { } info ? RenderingDevice.PixelType(info.Format) : 0,
+        Texture ordinary => ordinary.CapturePixels()?.PixelType ?? 0,
+        TextureLayered layered => layered.CaptureLayers()?.First.PixelType ?? 0,
         _ => 0
     };
     internal void Validate(Resource? texture)

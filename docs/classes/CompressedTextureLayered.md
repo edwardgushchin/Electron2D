@@ -121,4 +121,4 @@ Derived concrete resources must implement the inherited exact-type duplicate
 factory. Inherited GetRID, ResourcePath, notifications and deterministic disposal
 retain their Resource/TextureLayered contracts. No native backend type is exposed.
 
-[ETC/EAC/ASTC decoding](../components/image-block-decoding.md) now supplies prepared pixels for these texture snapshots while retaining original block formats, bytes and all mips. Signed EAC and ASTC HDR use floating-point upload; the current Compatibility driver rejects that precision. Integer sampling remains a separate integration.
+[ETC/EAC/ASTC decoding](../components/image-block-decoding.md) now supplies prepared pixels for these texture snapshots while retaining original block formats, bytes and all mips. Signed EAC and ASTC HDR use floating-point upload; the current Compatibility driver rejects that precision. [Unsigned image sampling](../components/integer-textures.md) now preserves all four UInt16 source formats through native RGBA16 integer storage.

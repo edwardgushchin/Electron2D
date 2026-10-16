@@ -4,7 +4,8 @@ namespace Electron2D;
 /// <remarks>Construction is independent of an active renderer. GPU data is uploaded when first used. Image inputs
 /// and outputs are copies; modifying the original Image never changes this texture. SetImage replaces allocation
 /// parameters; Update preserves them. Block sources preserve compressed snapshots. BC1–BC7 use supported native GPU storage or decoded fallback; ETC/EAC/ASTC use decoded upload. Floating-point sampling requires a driver retaining that precision.
-/// Integer-sampled and other block codec families retain their separate integration dependencies.</remarks>
+/// UInt16 image formats retain raw unsigned values in RGBA16 storage, with missing RGB zero and missing alpha one.
+/// GPU drawing requires nearest integer filtering and matching unsigned named samplers; Compatibility rejects integer drawing.</remarks>
 public sealed class ImageTexture : Texture
 {
     private readonly object _gate = new();

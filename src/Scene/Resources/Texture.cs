@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>Describes a two-dimensional texture with a logical size and image or native target storage.</summary>
 /// <remarks>Custom implementations provide GetWidth, GetHeight and GetImage, and emit Changed when their pixels change.
-/// The renderer caches a copied image until Changed. Consumers borrow textures; GPU resources belong to the renderer. ViewportTexture uses live native targets and explicit GetImage readback.</remarks>
+/// The renderer caches a copied image until Changed. Consumers borrow textures; GPU resources belong to the renderer.
+/// UInt16 image sources use raw unsigned GPU sampling with nearest filtering. ViewportTexture uses live native targets and explicit GetImage readback.</remarks>
 public abstract class Texture : Resource
 {
     internal void BindRenderingRID(RID rid)
@@ -202,19 +203,19 @@ internal sealed class TexturePixels
     internal object Allocation = new();
     internal ulong Revision;
     internal bool Mutable;
-    internal int BytesPerPixel => Upload.Format == Image.Format.Rgba8 ? 4 : 16;
+    internal int BytesPerPixel => Image.TexturePixelByteSize(Upload.Format);
+    internal int PixelType => Image.IsIntegerFormat(Upload.Format) ? 2 : 0;
 
     private TexturePixels(Image.State source)
     {
         if (source.Width is <= 0 or > 16384 || source.Height is <= 0 or > 16384 || source.Data.Length == 0)
             throw new ArgumentException("A texture requires a nonempty image no larger than 16384 pixels per axis.");
-        if (source.Format is Image.Format.R16I or Image.Format.Rg16I or Image.Format.Rgb16I or Image.Format.Rgba16I)
-            throw new NotSupportedException("Integer sampling requires a separate texture integration.");
         Source = source;
         var sampling = Image.IsCompressedFormat(source.Format) ? Image.DecompressPixels(source) : source;
         // Preserve high-precision/HDR values; 8-bit formats can use the portable RGBA8 sampling path.
-        var format = sampling.Format is Image.Format.L8 or Image.Format.La8 or Image.Format.R8 or Image.Format.Rg8 or Image.Format.Rgb8 or Image.Format.Rgba8
-            ? Image.Format.Rgba8 : Image.Format.Rgbaf;
+        var format = Image.IsIntegerFormat(sampling.Format) ? Image.Format.Rgba16I :
+            sampling.Format is Image.Format.L8 or Image.Format.La8 or Image.Format.R8 or Image.Format.Rg8 or Image.Format.Rgb8 or Image.Format.Rgba8
+                ? Image.Format.Rgba8 : Image.Format.Rgbaf;
         Upload = Image.ConvertPixels(sampling, format);
         Levels = 1;
         if (source.HasMIPMaps)

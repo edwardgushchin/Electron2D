@@ -189,10 +189,10 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CompositorEffect](classes/CompositorEffect.md) | Resource | Excluded | 15 |
 | [CompressedCubemap](classes/CompressedCubemap.md) | CompressedTextureLayered | Excluded | 0 |
 | [CompressedCubemapArray](classes/CompressedCubemapArray.md) | CompressedTextureLayered | Excluded | 0 |
-| [CompressedTexture2D](classes/CompressedTexture2D.md) | Texture2D | Partial | 3 |
-| [CompressedTexture2DArray](classes/CompressedTextureArray.md) | CompressedTextureLayered | Partial | 0 |
+| [CompressedTexture2D](classes/CompressedTexture2D.md) | Texture2D | Implemented | 3 |
+| [CompressedTexture2DArray](classes/CompressedTextureArray.md) | CompressedTextureLayered | Implemented | 0 |
 | [CompressedTexture3D](classes/CompressedTexture3D.md) | Texture3D | Excluded | 2 |
-| [CompressedTextureLayered](classes/CompressedTextureLayered.md) | TextureLayered | Partial | 2 |
+| [CompressedTextureLayered](classes/CompressedTextureLayered.md) | TextureLayered | Implemented | 2 |
 | [ConcavePolygonShape2D](classes/ConcavePolygonShape2D.md) | Shape2D | Implemented | 1 |
 | [ConcavePolygonShape3D](classes/ConcavePolygonShape3D.md) | Shape3D | Excluded | 3 |
 | [ConeTwistJoint3D](classes/ConeTwistJoint3D.md) | Joint3D | Excluded | 14 |
@@ -377,7 +377,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ImageFormatLoaderExtension](classes/ImageFormatLoaderExtension.md) | ImageFormatLoader | Implemented | 4 |
 | [ImageTexture](classes/ImageTexture.md) | Texture2D | Partial | 5 |
 | [ImageTexture3D](classes/ImageTexture3D.md) | Texture3D | Excluded | 2 |
-| [ImageTextureLayered](classes/ImageTextureLayered.md) | TextureLayered | Partial | 2 |
+| [ImageTextureLayered](classes/ImageTextureLayered.md) | TextureLayered | Implemented | 2 |
 | [ImmediateMesh](classes/ImmediateMesh.md) | Mesh | Implemented | 10 |
 | [ImporterMesh](classes/ImporterMesh.md) | Resource | Partial | 25 |
 | [ImporterMeshInstance3D](classes/ImporterMeshInstance3D.md) | Node3D | Excluded | 10 |
@@ -856,7 +856,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [TextServerManager](classes/TextServerManager.md) | Object | Blocked | 10 |
 | [Texture](classes/Texture.md#godot-texture) | Resource | Partial | 0 |
 | [Texture2D](classes/Texture.md#godot-texture2d) | Texture | Partial | 23 |
-| [Texture2DArray](classes/TextureArray.md) | ImageTextureLayered | Partial | 1 |
+| [Texture2DArray](classes/TextureArray.md) | ImageTextureLayered | Implemented | 1 |
 | [Texture2DArrayRD](classes/TextureArrayRD.md) | TextureLayeredRD | Implemented | 0 |
 | [Texture2DRD](classes/TextureRD.md) | Texture2D | Implemented | 2 |
 | [Texture3D](classes/Texture3D.md) | Texture | Excluded | 13 |

@@ -6,7 +6,7 @@ Last updated: 2026-10-16
 
 Private native runtime binaries come from versioned Linux/macOS packages in ordinary desktop builds; `Electron2DBuildNativeFromSource=true` rebuilds those libraries. Source builds separately prepare pinned host shader tools on first use and generate built-in shaders under `obj/`. [Shader delivery](../components/shader-materials.md#built-in-shader-delivery) keeps these tools out of game packages. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
-[Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
+[Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Copied byte, normalized/float, block and unsigned-integer images execute; foreign/native-allocation acceptance remains separate.
 
 
 
@@ -316,7 +316,7 @@ Retained canvas items can copy screen snapshots independently of scene node type
 
 Type 1 PFB/PFA outlines and paired PFM/AFM native metrics now execute through FontFile, FontVariation, Linux installed/automatic matching, existing text measurement and ordinary/LCD/MSDF canvas consumers. [Source rules and verification](../components/text.md#type-1-outline-and-auxiliary-metric-sources) distinguish byte storage, native images, actual hosts and foreign-platform limits.
 
-[BC/DDS images](../components/image-bcn.md) now execute S3TC/BPTC CPU authoring, exact DDS/raw/full-mip source archives, native BC1–BC7 GPU textures/arrays and decoded Compatibility sampling. Imported RenderingDevice texture descriptors use the actual native BC format, with exact block readback and existing ownership. Compatibility BC6 retains its driver-dependent HDR precision gate; the exercised driver rejects it. [ETC/EAC/ASTC decoding](../components/image-block-decoding.md) now supplies prepared ordinary/array sampling, preserving signed/HDR precision. Integer sampling and foreign-platform/native allocator acceptance remain separate.
+[BC/DDS images](../components/image-bcn.md) now execute S3TC/BPTC CPU authoring, exact DDS/raw/full-mip source archives, native BC1–BC7 GPU textures/arrays and decoded Compatibility sampling. Imported RenderingDevice texture descriptors use the actual native BC format, with exact block readback and existing ownership. Compatibility BC6 retains its driver-dependent HDR precision gate; the exercised driver rejects it. [ETC/EAC/ASTC decoding](../components/image-block-decoding.md) now supplies prepared ordinary/array sampling, preserving signed/HDR precision. UInt16 sources execute raw unsigned GPU sampling; foreign-platform/native allocator acceptance remains separate.
 
 ## Themed numeric progress
 
@@ -346,3 +346,5 @@ Theme resource archives and scenes now persist complete typed theme data, resour
 [Scalable SVG textures](../components/scalable-svg.md) integrate DPITexture paint maps, native image processing, shared viewport/font oversampling, retained scale identities, default theme icons and typed resource/scene storage. Native Linux warmed replay and foreign-host acceptance remain separately measured gates.
 
 [Video playback](../components/video-playback.md) publishes stable ImageTexture frames through both real canvas backends, including a second texture consumer. Revision-aware uploads retain prepared storage; duplicated/saved images remain independent snapshots.
+
+[UInt16 image texture sources](../components/integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.

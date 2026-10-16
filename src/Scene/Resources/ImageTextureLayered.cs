@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>Owns immutable copied image layers for an array texture.</summary>
 /// <remarks>Creation and updates validate before publication. Callbacks run after releasing the state lock;
-/// callback exceptions retain committed pixels. Image inputs and outputs remain caller-owned.</remarks>
+/// callback exceptions retain committed pixels. Image inputs and outputs remain caller-owned. UInt16 sources retain
+/// original lanes and mips; GPU unsigned samplers read prepared RGBA16 values with missing RGB zero and missing alpha one.</remarks>
 public abstract class ImageTextureLayered : TextureLayered
 {
     private readonly object _gate = new();

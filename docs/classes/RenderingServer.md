@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -1309,3 +1309,5 @@ Callbacks run on the renderer owner, may mutate/free retained items after submis
 Margins are finite nonnegative screen pixels. fitEmpty synthesizes a rectangle around child bounds when the item has no commands; fitMargin expands it, and clearMargin expands preparation bounds. Existing owner geometry remains authoritative. Mipmap generation requires GPU rendering; compatibility rejects the submitted effect before drawing. Nested same-Z groups and screen-reading children retain the shared-backbuffer restrictions. State follows logical reparenting and expires with the renderer. Matching authored setters republish scene policy. CanvasServerGroupTests and existing composition checks exercise native modes, margins, offscreen targets, shaders and warmed allocation-free execution on Linux x64.
 
 Retained screen snapshots can be configured through RenderingServer.CanvasItemSetCopyToBackBuffer on live item identities. BackBufferCopy source assignments republish the authored policy; renderer-only settings stay outside scene getters/storage. See [retained copy contract](../components/canvas-rendering.md#retained-backbuffer-copy-settings).
+
+[UInt16 image texture sources](../components/integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.

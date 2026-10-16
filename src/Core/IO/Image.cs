@@ -501,7 +501,7 @@ public sealed partial class Image : Resource
         {
             ThrowIfDisposed(); var state = CaptureState(copyData: false);
             long bytes = state.Data.Length;
-            var pixelBytes = state.Format <= Format.Rgba8 ? 4 : 16;
+            var pixelBytes = IsIntegerFormat(state.Format) ? 8 : state.Format <= Format.Rgba8 ? 4 : 16;
             for (int w = state.Width, h = state.Height; ; w = Math.Max(1, w / 2), h = Math.Max(1, h / 2))
             {
                 bytes += (long)w * h * pixelBytes;
@@ -517,6 +517,7 @@ public sealed partial class Image : Resource
     internal static Color ReadTexturePixel(State state, int x, int y) => ReadColor(state.Data,
         (y * state.Width + x) * GetBytesPerPixel(state.Format), state.Format);
     internal static bool TextureHasAlpha(Format format) => HasAlpha(format);
+    internal static bool IsIntegerFormat(Format format) => format is Format.R16I or Format.Rg16I or Format.Rgb16I or Format.Rgba16I;
 
     private State CaptureState(bool copyData) =>
         new(_width, _height, _format, _hasMipmaps, copyData ? (byte[])_data.Clone() : _data);

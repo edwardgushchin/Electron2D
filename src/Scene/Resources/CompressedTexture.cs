@@ -3,7 +3,9 @@ namespace Electron2D;
 /// <summary>Loads a copied image and logical drawing size from an imported texture asset.</summary>
 /// <remarks>Loading prepares every stored mip before publication. Image reads retain the original format
 /// and bytes. Rendering owns native storage; replacing the file retains this resource's RID while borrowed
-/// device storage may expire. Inputs and source/upload snapshots use the bounded image storage profile.</remarks>
+/// device storage may expire. Inputs and source/upload snapshots use the bounded image storage profile.
+/// UInt16 sources preserve original bytes and use raw unsigned GPU sampling; nearest filtering is required.
+/// Compatibility rejects integer drawing without changing the loaded resource.</remarks>
 public sealed class CompressedTexture : Texture
 {
     private readonly object _gate = new();

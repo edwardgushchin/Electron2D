@@ -25,8 +25,9 @@ the public Image KTX RGB8 sRGB conversion is a separate input contract.
 Every layer must agree in dimensions, source format and mip configuration.
 Unknown encodings, malformed or partial levels, trailing bytes and heterogeneous
 layers fail before publication. Cube/volume roles and sampling formats without
-an integrated decoder fail explicitly. The four coverage rows are now Partial rather than
-Blocked: shared ETC1/ETC2/EAC/ASTC decoding now executes. Their remaining pixel-format dependency is integer-sampled source formats. Streaming/size hints do not discard mips:
+an integrated decoder fail explicitly. Shared ETC1/ETC2/EAC/ASTC decoding and
+[raw unsigned UInt16 sampling](integer-textures.md) execute through the common
+prepared source storage. Streaming/size hints do not discard mips:
 this API has no requested-size argument. Files are bounded to 64 MiB; source and
 prepared upload pixels share the existing 256 MiB array budget. Device limits
 remain enforced by the renderer.
