@@ -1000,19 +1000,27 @@ public sealed partial class PhysicsServer
     public static RID ConcavePolygonShapeCreate() => Service.ConcavePolygonShapeCreateCore();
 
     /// <summary>Copies typed geometry into a server-owned shape RID.</summary>
-    /// <param name="shape">A live server shape of the same concrete type as the supplied resource.</param>
+    /// <param name="shape">A live server shape of the same represented geometry type as the supplied resource.</param>
     /// <param name="data">Caller-owned source geometry; later edits do not affect the server copy.</param>
     /// <remarks>On a rebuild failure, authoring is restored and every borrower is prepared for rollback or retry.
-    /// Rejected private geometry is retired even if rollback fails. A committed replacement remains committed if old-view retirement fails.</remarks>
-    /// <exception cref="ArgumentException">The RID is not a live shape or the resource has another concrete type.</exception>
+    /// Rejected private geometry is retired even if rollback fails. A committed replacement remains committed if old-view retirement fails.
+    /// Procedural resources supply immutable geometry and solver policy without a duplicate factory; the server copies these into a concrete engine resource.
+    /// Common resource name, local-to-scene and translation settings are retained; subclass-specific fields and resource path/scene identity are not server data.
+    /// Geometry suppliers run while all destination worlds and the source geometry are borrowed; they cannot mutate authoring or lifetime.</remarks>
+    /// <exception cref="ArgumentException">The RID is not a live shape or the resource represents another geometry type.</exception>
     /// <exception cref="ObjectDisposedException">The supplied resource is disposed.</exception>
     /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     /// <exception cref="AggregateException">Replacement, rollback or rejected-view retirement reports multiple errors.</exception>
     public static void ShapeSetData(RID shape, Shape data) => Service.ShapeSetDataCore(shape, data);
 
-    /// <summary>Returns a caller-owned duplicate of server shape geometry.</summary>
+    /// <summary>Returns a caller-owned concrete copy of shape geometry.</summary>
     /// <param name="shape">A live server shape RID.</param>
     /// <returns>An independent caller-owned Shape resource.</returns>
+    /// <remarks>Borrowed procedural resources export the same immutable geometry and common resource settings as ShapeSetData,
+    /// without requiring a subclass duplicate factory. Source-world authoring and lifetime remain borrowed while suppliers run.</remarks>
+    /// <exception cref="ArgumentException">The RID is stale or does not identify a shape.</exception>
+    /// <exception cref="ObjectDisposedException">The service or source resource is disposed.</exception>
+    /// <exception cref="InvalidOperationException">A using world is inaccessible or the procedural supplier violates its geometry contract.</exception>
     public static Shape ShapeGetData(RID shape) => Service.ShapeGetDataCore(shape);
 
     /// <summary>Adds a typed server shape to a body as one indexed owner slot.</summary>

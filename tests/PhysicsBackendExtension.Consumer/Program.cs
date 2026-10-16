@@ -1,4 +1,6 @@
-if (args.Contains("--filter-transactions")) BackendChecks.RunFilterTransactions(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+if (args.Contains("--procedural-data")) BackendChecks.RunProceduralData(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--filter-transactions")) BackendChecks.RunFilterTransactions(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--area-callback-transactions")) BackendChecks.RunAreaCallbackTransactions(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));

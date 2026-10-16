@@ -1616,3 +1616,9 @@ ordinary direct/server/bit setters, exact sensing and warmed complete frames.
 CPU Area scans also exclude inactive PhysicalBone followers by effective layer.
 Existing open declaration states and complete numerical/native/foreign/network/
 hardware acceptance gates remain unchanged.
+
+[Procedural server shape data](physics-shape-data.md) now covers both ShapeSetData
+and ShapeGetData for resources without duplicate factories. Canonical kind, common
+metadata, geometry independence and all using-world/source borrowing are exercised
+through nine kinds and scene/raw Body/Area queries. Existing declaration states and
+full numerical/custom/native/foreign/network/hardware gates remain open.

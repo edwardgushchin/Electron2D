@@ -1,6 +1,6 @@
 # Shape
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 **Inherits:** [Resource](Resource.md) · **Inherited By:** [CircleShape](CircleShape.md), [CapsuleShape](CapsuleShape.md), [SegmentShape](SegmentShape.md), [SeparationRayShape](SeparationRayShape.md), [ConvexPolygonShape](ConvexPolygonShape.md), [ConcavePolygonShape](ConcavePolygonShape.md), [RectangleShape](RectangleShape.md), [WorldBoundaryShape](WorldBoundaryShape.md)
 
@@ -200,3 +200,11 @@ contact/pin convergence use nineteen complete 128-warmup/128-measured brackets
 at zero managed allocation. Registered contact-cache, arbitrary coupled/custom,
 full inherited/extension/network and native/platform/performance acceptance remain
 open.
+
+## Server data projection
+
+A procedural subclass can import/export [server shape data](../components/physics-shape-data.md)
+through its immutable ShapeGeometry without implementing a duplicate factory.
+ShapeSetData checks represented ShapeType; ShapeGetData on a borrowed resource RID
+returns an independent concrete engine resource. This projection copies geometry,
+solver bias and common resource state, rather than arbitrary subclass fields.

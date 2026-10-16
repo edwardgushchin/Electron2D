@@ -90,7 +90,7 @@ Parameterless creation remains CPU. See [backend lifetime and verified scope](..
 <a id="colliders"></a>
 ### Collider creation, shapes and ownership
 
-`BodyCreate` defaults to rigid mode; `AreaCreate` defaults to a stationary nonresponding sensor. Neither has a space until `BodySetSpace` or `AreaSetSpace`. The eight built-in shape constructors cover circle, rectangle, capsule, segment, convex/concave polygon, directed separation ray and world boundary resources. `ShapeSetData` rejects a disposed or different-kind Shape, duplicates caller data and rebuilds attached users; `ShapeGetData` returns another independent duplicate. Each `BodyAddShape` or `AreaAddShape` appends an indexed slot with a finite unit-scale, zero-skew local transform, default identity, and optional disabled state. Slot-count, disabled-toggle and removal methods make those indices executable after attachment; invalid indices throw before mutation. Compound fixtures from one slot share its public static query ShapeIndex. An explicit collider may be moved into the SceneTree's `World.Space`; direct queries then see it beside scene nodes. Queries return its RID with a null scene Collider.
+`BodyCreate` defaults to rigid mode; `AreaCreate` defaults to a stationary nonresponding sensor. Neither has a space until `BodySetSpace` or `AreaSetSpace`. The eight built-in shape constructors cover circle, rectangle, capsule, segment, convex/concave polygon, directed separation ray and world boundary resources. `ShapeSetData` rejects a disposed or different-kind Shape, copies represented geometry and rebuilds attached users; `ShapeGetData` returns an independent concrete resource. Procedural imports and borrowed-RID exports consume canonical geometry without requiring a subclass duplicate factory. Each `BodyAddShape` or `AreaAddShape` appends an indexed slot with a finite unit-scale, zero-skew local transform, default identity, and optional disabled state. Slot-count, disabled-toggle and removal methods make those indices executable after attachment; invalid indices throw before mutation. Compound fixtures from one slot share its public static query ShapeIndex. An explicit collider may be moved into the SceneTree's `World.Space`; direct queries then see it beside scene nodes. Queries return its RID with a null scene Collider.
 
 <a id="body-state"></a>
 ### Body state and filters
@@ -132,7 +132,7 @@ with ArgumentException after space free. See [resource retirement evidence](../c
 
 ## Verification and limits
 
-[PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks scene/server shared world, explicit stepping, six shape families, filters, modes, cross-space moves and RID lifecycle. [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks direct shape operations; [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks body motion; [PhysicsCollisionExceptionTests](../../tests/Electron2D.Tests/PhysicsCollisionExceptionTests.cs) checks unilateral scene/server lists, live solver and motion filtering, owner/target lifetime and warmed allocation. Remaining server methods, world boundaries, dynamic separation-ray response, backend extensions, joint tuning/debug drawing and tile collider identity remain open; the [contract audit](../components/physics-contract-audit.md) tracks both backend obligations. Scene Area field/event delivery does not yet represent server-only colliders in typed object-level events. Query paths scan fixtures linearly; native allocator accounting, other platforms and large-world throughput remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
+[PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks scene/server shared world, explicit stepping, six shape families, filters, modes, cross-space moves and RID lifecycle. [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks direct shape operations; [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks body motion; [PhysicsCollisionExceptionTests](../../tests/Electron2D.Tests/PhysicsCollisionExceptionTests.cs) checks unilateral scene/server lists, live solver and motion filtering, owner/target lifetime and warmed allocation. Full inherited and registered numerical conformance remains open; the [contract audit](../components/physics-contract-audit.md) tracks both backend obligations. Scene Area field/event delivery does not yet represent server-only colliders in typed object-level events. Queries use their selected CPU/GPU geometry pipelines; native allocator accounting, other platforms and large-world throughput remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
 
 `SeparationRayShapeCreate()` returns caller-owned default directed geometry. ShapeSetData copies length and slope policy; ShapeGetData returns an independent copy. Direct shape/body motion, sensing and ordinary directed solver impulses execute on the [resource class](SeparationRayShape.md), including raw body material, sleep and contact views.
 
@@ -1144,3 +1144,12 @@ Body/Area layer and mask setters commit configured bits after numerical success.
 A failed update preserves authoring and queues current effective-filter repair
 before the next numerical query or active positive-duration step. A failed retry
 propagates without advancing the interval. See [the complete scene/raw family](../components/physics-filters.md#failed-updates-and-effective-sensing).
+
+## Procedural shape data
+
+[Typed server shape data](../components/physics-shape-data.md) now accepts a
+procedural Shape by represented ShapeType and exports borrowed procedural RIDs
+without a duplicate factory. Copies use concrete engine wrappers, retain common
+resource metadata and solver bias, and keep geometry independent from the source.
+Both operations borrow every using world while suppliers run; existing replacement
+rollback and view-retirement semantics remain intact.

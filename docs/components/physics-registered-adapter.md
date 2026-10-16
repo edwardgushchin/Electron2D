@@ -2494,3 +2494,12 @@ repair before query/step work, and a failed retry remains pending. The public-on
 160 failures, committed borrowed reads, no hidden shape rebuild, logical gaps,
 exact sensing and local replay. Full numerical/custom/native/platform/performance
 acceptance remains open.
+
+## Procedural server data
+
+[The common data boundary](physics-shape-data.md) now imports procedural geometry
+by represented kind and exports both owned and borrowed shape RIDs into independent
+concrete resources. A no-factory public provider exercises nine canonical kinds,
+two-world borrowing, supplier failures, exact logical indices and real selected
+queries; complete warmed frames retain strict zero managed bytes. Full arbitrary
+custom/numerical/native/foreign/network/hardware acceptance remains open.

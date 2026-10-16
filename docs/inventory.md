@@ -1770,3 +1770,8 @@ Engine.Movie.cs also owns configured RunMovie/RunMovieAsync startup over the exi
 | [Scene](domains/scene.md) | [Video playback](components/video-playback.md) | [VideoStreamPlayer](classes/VideoStreamPlayer.md) | [VideoStreamPlayer.cs](../src/Scene/GUI/VideoStreamPlayer.cs) | Current | Control, timing, queued audio and stored scene configuration. |
 | [Resources](domains/resources.md) | [Video playback](components/video-playback.md) | [NativeVideoDecoder](classes/NativeVideoDecoder.md) | [NativeVideoDecoder.cs](../src/Scene/Resources/NativeVideoDecoder.cs) | Internal | Private Metadata/DecoderHandle, bounded packet preparation and reusable decode ABI. |
 | [Audio](domains/audio.md) | [Video playback](components/video-playback.md) | [VideoAudioStream](classes/VideoAudioStream.md) | [VideoAudioStream.cs](../src/Scene/Resources/VideoAudioStream.cs) | Internal | One-owner QueuePlayback, bounded source PCM, downmix, shared resampling and gain. |
+
+[Procedural server shape data](components/physics-shape-data.md) adds no production
+type or public declaration. Existing PhysicsServer data operations copy canonical
+geometry and common resource state into concrete wrappers while borrowing all
+using worlds; both owned import and borrowed-RID export support no-factory Shapes.

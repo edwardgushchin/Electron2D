@@ -1410,3 +1410,11 @@ borrowed reads; existing shape identity and monitor history remain intact.
 CPU Area scans now honor inactive PhysicalBone zero-layer followers. The new
 profile preserves zero warmed managed bytes; full numerical/custom, native/driver,
 foreign, network and hardware/window performance gates remain open.
+
+## Procedural server shape data
+
+[Shape data import/export](../components/physics-shape-data.md) now uses represented
+geometry kind and concrete independent resource copies for procedural inputs and
+borrowed resource RIDs. Source evaluation borrows all using worlds; supplier errors
+preserve the old data. Selected CPU/GPU/registered geometry queries and complete
+warm intervals exercise the boundary; wider physics acceptance remains open.

@@ -77,8 +77,6 @@ public sealed partial class PhysicsServer
         var entry = GetShape(shape);
         if (!entry.OwnsGeometry)
             throw new InvalidOperationException("A Shape resource owns this RID and must be edited through the resource.");
-        if (entry.Geometry.GetType() != data.GetType())
-            throw new ArgumentException("Shape data must have the server shape's concrete type.", nameof(data));
         entry.Geometry.EnsureCollisionMutationAccess();
         var users = new List<PhysicsServerCollider>();
         foreach (var collider in SnapshotColliders())
@@ -89,7 +87,15 @@ public sealed partial class PhysicsServer
             }
         var sceneUsers = SceneShapeUsers(entry);
         foreach (var scene in sceneUsers) EnsureSceneShapeAccess(scene, writing: true);
-        var copy = (Shape)data.Duplicate();
+        var spaces = new List<PhysicsSpace>();
+        foreach (var collider in users)
+            if (collider.Space is { } space && !spaces.Contains(space)) spaces.Add(space);
+        foreach (var scene in sceneUsers)
+        {
+            var space = scene is PhysicsBody body ? body.Space : ((Area)scene).Space;
+            if (space is not null && !spaces.Contains(space)) spaces.Add(space);
+        }
+        var copy = CopyServerShapeData(entry.Geometry, data, spaces);
         var previous = entry.Geometry;
         copy.BindServerOwnedRID(shape);
         entry.Geometry = copy;
@@ -115,14 +121,70 @@ public sealed partial class PhysicsServer
         previous.ReleaseServerGeometry();
     }
 
+    private static Shape CopyServerShapeData(Shape previous, Shape data, List<PhysicsSpace> spaces)
+    {
+        var borrowed = 0;
+        try
+        {
+            foreach (var space in spaces) { space.BeginImplementationCallback(); borrowed++; }
+            previous.BeginCollisionUse();
+            try
+            {
+                data.BeginCollisionUse();
+                try
+                {
+                    var geometry = data.GetGeometryData();
+                    if (geometry.Type != previous.GetGeometryData().Type)
+                        throw new ArgumentException("Shape data must represent the server shape's geometry type.", nameof(data));
+                    if (data is CircleShape or CapsuleShape or RectangleShape or SegmentShape or WorldBoundaryShape or
+                        SeparationRayShape or ConvexPolygonShape or ConcavePolygonShape or CustomShape) return (Shape)data.Duplicate();
+                    Shape copy = geometry.Type switch
+                    {
+                        ShapeType.Circle => new CircleShape { Radius = geometry.GetCircleRadius() },
+                        ShapeType.Capsule => new CapsuleShape { Radius = geometry.GetCapsuleDimensions().Radius, Height = geometry.GetCapsuleDimensions().Height },
+                        ShapeType.Rectangle => new RectangleShape { Size = geometry.GetRectangleSize() },
+                        ShapeType.Segment => new SegmentShape { A = geometry.GetSegmentEndpoints().A, B = geometry.GetSegmentEndpoints().B },
+                        ShapeType.WorldBoundary => new WorldBoundaryShape { Normal = geometry.GetWorldBoundaryPlane().Normal, Distance = geometry.GetWorldBoundaryPlane().Distance },
+                        ShapeType.SeparationRay => new SeparationRayShape { Length = geometry.GetSeparationRayParameters().Length, SlideOnSlope = geometry.GetSeparationRayParameters().SlideOnSlope },
+                        ShapeType.ConvexPolygon => new ConvexPolygonShape { Points = geometry.GetConvexPolygonPoints().ToArray() },
+                        ShapeType.ConcavePolygon => new ConcavePolygonShape { Segments = geometry.GetConcavePolygonSegments().ToArray() },
+                        ShapeType.Custom => new CustomShape(geometry),
+                        _ => throw new ArgumentException("The geometry type has no server data representation.", nameof(data))
+                    };
+                    try
+                    {
+                        copy.CustomSolverBias = data.CustomSolverBias;
+                        copy.ResourceName = data.ResourceName; copy.ResourceLocalToScene = data.ResourceLocalToScene;
+                        copy.CanTranslateMessages = data.CanTranslateMessages; copy.TranslationDomain = data.TranslationDomain;
+                        return copy;
+                    }
+                    catch { copy.Dispose(); throw; }
+                }
+                finally { data.EndCollisionUse(); }
+            }
+            finally { previous.EndCollisionUse(); }
+        }
+        finally { for (var i = borrowed - 1; i >= 0; i--) spaces[i].EndImplementationCallback(); }
+    }
+
     internal Shape ShapeGetDataCore(RID shape)
     {
         ThrowIfDisposed();
         var entry = GetShape(shape);
+        var spaces = new List<PhysicsSpace>();
         foreach (var collider in SnapshotColliders())
-            if (collider.UsesShape(entry)) EnsureColliderSpaceAccessible(collider);
-        foreach (var scene in SceneShapeUsers(entry)) EnsureSceneShapeAccess(scene);
-        return (Shape)entry.Geometry.Duplicate();
+            if (collider.UsesShape(entry))
+            {
+                EnsureColliderSpaceAccessible(collider);
+                if (collider.Space is { } space && !spaces.Contains(space)) spaces.Add(space);
+            }
+        foreach (var scene in SceneShapeUsers(entry))
+        {
+            EnsureSceneShapeAccess(scene);
+            var space = scene is PhysicsBody body ? body.Space : ((Area)scene).Space;
+            if (space is not null && !spaces.Contains(space)) spaces.Add(space);
+        }
+        return CopyServerShapeData(entry.Geometry, entry.Geometry, spaces);
     }
 
     internal void BodyAddShapeCore(RID body, RID shape, Transform? transform = null, bool disabled = false) =>

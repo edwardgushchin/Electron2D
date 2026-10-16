@@ -1,6 +1,6 @@
 # ShapeGeometry
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 **Declaration:** `public sealed class ShapeGeometry` · **Component:** [Collision shapes](../components/physics-shapes.md)
 
@@ -69,3 +69,8 @@ now protects both resources through standalone and selected callbacks, including
 inherited copying/reset and owned RID replacement/retirement. Nested reads and
 error cleanup retain their existing contract; full numerical/foreign/hardware
 acceptance remains open.
+
+[Server data projection](../components/physics-shape-data.md) consumes this immutable
+payload for all nine represented kinds, including procedural resources without a
+duplicate factory. Ordinary concrete wrappers remain the public copied-data result;
+unsupported Custom activation still requires an appropriate selected implementation.

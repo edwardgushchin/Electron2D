@@ -1,6 +1,6 @@
 # CustomShape
 
-Last updated: 2026-10-13
+Last updated: 2026-10-16
 
 [Curved custom verification](../components/physics-registered-adapter.md#curved-custom-contacts)
 now exercises the independent annulus's inner/outer CCD arcs, motor/counterpart
@@ -26,3 +26,8 @@ Twelve exact cases, 512 seeded boundary cases and 128 warmed standalone/selected
 cycles retain the .0001 scene-unit boundary tolerance and 0/0 managed-byte gate.
 See [custom collision geometry](../components/physics-custom-geometry.md) for the
 analytic model and remaining numerical-extension limits.
+
+Procedural Custom ShapeGeometry also participates in [server data import/export](../components/physics-shape-data.md).
+Copies retain the immutable canonical payload in a concrete CustomShape; no
+procedural duplicate factory or backend handle is required. Built-in numerical
+activation continues to reject unsupported custom algorithms before mutation.

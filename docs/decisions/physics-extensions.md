@@ -1,6 +1,6 @@
 # Physics backend extension decisions
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 <a id="adr-0103"></a>
 ## ADR 0103: Registered world backends and typed extension dispatch
@@ -247,6 +247,20 @@ interception would leave scene behavior and direct queries outside the extension
   or transferring a body; it never substitutes a supported primitive. Custom
   geometry mutation retains RID identity, invalidates compilation and private
   checkpoints, and rejects incompatible portable correction before mutation.
+
+- ShapeSetData matches the represented ShapeType, not the caller's CLR subclass.
+  A procedural resource supplies its immutable ShapeGeometry and solver bias;
+  copy these into the corresponding concrete engine Shape, including CustomShape,
+  without requiring a resource duplication factory or retaining private subclass
+  state. Preserve common resource name, local-to-scene and translation settings;
+  resource path and scene identity remain independent. Existing concrete resource
+  inputs retain their ordinary duplication contract. ShapeGetData returns an
+  independent concrete resource, including reads of borrowed procedural shape RIDs.
+  A read borrows every source world and never requires the subclass factory.
+  Borrow all destination worlds and both geometry resources while evaluating
+  source data, before replacing the retained geometry;
+  numerical/lifetime reentry rejects and failures preserve the old data. Existing
+  rebuilding rollback and committed retirement semantics remain required.
 
 ### Current implementation boundary
 
