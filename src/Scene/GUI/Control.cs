@@ -675,16 +675,18 @@ public partial class Control : CanvasItem
         return _offsetTransformEnabled && _offsetTransformVisualOnly ? transform * GetOffsetTransform() : transform;
     }
 
+    /// <inheritdoc />
     /// <summary>Moves this control under another node, preserving its global position by default.</summary>
     /// <param name="newParent">The destination parent.</param>
     /// <param name="keepGlobalTransform">Preserve the transformed origin in global canvas coordinates.</param>
     /// <remarks>Validates the destination canvas inverse before changing the hierarchy. Size and anchors reflow
-    /// against the new parent; only the global origin is preserved.</remarks>
+    /// against the new parent; only the global origin is preserved. Same-parent calls retain the inherited lifecycle,
+    /// capture and owner-thread checks. Callback errors aggregate after possible insertion and position restoration.</remarks>
     public override void Reparent(Node newParent, bool keepGlobalTransform = true)
     {
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(newParent);
-        if (ReferenceEquals(Parent, newParent)) return;
+        if (ReferenceEquals(Parent, newParent)) { base.Reparent(newParent, keepGlobalTransform); return; }
         var global = keepGlobalTransform ? GlobalPosition : Vector2.Zero;
         if (keepGlobalTransform && !TopLevel && newParent is CanvasItem canvasParent)
             _ = canvasParent.GetGlobalTransform().AffineInverse() * global;

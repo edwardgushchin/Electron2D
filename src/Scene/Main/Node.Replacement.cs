@@ -40,10 +40,11 @@ public partial class Node
         node.EnsureChildOrderMutable();
         if (node is Viewport && parent is not null)
             throw new NotSupportedException("Child viewports require multiwindow or offscreen rendering support.");
-        var owner = _owner;
+        var owner = SceneOwner;
         var owned = EnumerateDepthFirst()
-            .Where(descendant => !ReferenceEquals(descendant, this) && descendant._owner is not null)
-            .Select(descendant => (Node: descendant, Owner: descendant._owner!))
+            .Select(descendant => (Node: descendant, Owner: descendant.SceneOwner))
+            .Where(item => !ReferenceEquals(item.Node, this) && item.Owner is not null)
+            .Select(item => (item.Node, Owner: item.Owner!))
             .ToArray();
         if (IsInternalChild) throw new InvalidOperationException("An internal node cannot be replaced through ordinary child indexing.");
         var index = GetIndex(includeInternal: true);

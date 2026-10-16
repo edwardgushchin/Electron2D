@@ -193,7 +193,9 @@ public partial class Node : ElectronObject
 
     private string _sceneFilePath = string.Empty;
 
-    private Node? _owner;
+    private ObjectIdentity _ownerIdentity;
+    private List<ObjectIdentity>? _ownedNodes;
+    private Node? SceneOwner => _ownerIdentity.Target as Node;
     private bool _uniqueNameInOwner;
 
     private List<Resource>? _ownedSceneResources;
@@ -329,8 +331,10 @@ public partial class Node : ElectronObject
         }
     }
 
-    /// <summary>Gets the direct parent.</summary>
-    /// <value>The owning parent, or <see langword="null"/> while detached.</value>
+    /// <summary>Gets the direct structural parent.</summary>
+    /// <value>The parent, or <see langword="null"/> for a parentless node. A descendant may retain a parent while outside every tree.</value>
+    /// <remarks>This stored observation remains available after disposal. Coordinate reads with topology mutation;
+    /// it is not an atomic hierarchy snapshot or permission to mutate another scene.</remarks>
     public Node? Parent { get; private set; }
 
     /// <summary>Gets or sets this node's translation domain, inherited from its parent until explicitly assigned.</summary>
@@ -486,11 +490,16 @@ public partial class Node : ElectronObject
         }
     }
 
-    /// <summary>Gets or sets the ancestor that owns this node for packed-scene storage.</summary>
-    /// <value>An ancestor node, or <see langword="null"/> when this node is not stored by an ancestor scene root.</value>
+    /// <summary>Gets or sets the borrowed authoring owner used for packed-scene storage.</summary>
+    /// <value>The live owner, or <see langword="null"/> when unassigned, disposed or collected. Assignment requires an ancestor.</value>
     /// <remarks>
-    /// A scene root does not own itself. Removing or reparenting a subtree automatically clears owner references that
-    /// no longer point to an ancestor. Assigning a new owner may revoke <see cref="UniqueNameInOwner"/> when the name is already claimed in that owner's scope.
+    /// Owner does not select a physical world or own node lifetime. Detached topology changes retain the previous
+    /// owner and its unique-name registration, even when it is no longer an ancestor. Active removal clears unreachable
+    /// owners after structural callbacks, before TreeExited. Owner disposal releases metadata without disposing
+    /// separately parented nodes. Reparent restores its reachable outside owner only on ordinary descendants sharing it.
+    /// Reads require a live receiver and coordination with topology/owner mutation. Attached writes require the scene
+    /// owner thread; capture rejects writes, including unchanged values. Invalid assignments preserve the prior owner.
+    /// Assigning a new owner may revoke UniqueNameInOwner when that owner already has a live claim.
     /// </remarks>
     /// <exception cref="ArgumentException">The assigned node is this node or is not an ancestor.</exception>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the tree owner thread or scene capture is active.</exception>
@@ -500,13 +509,13 @@ public partial class Node : ElectronObject
         get
         {
             ThrowIfDisposed();
-            return _owner;
+            return SceneOwner;
         }
         set
         {
             EnsureMutable();
 
-            if (ReferenceEquals(_owner, value))
+            if (ReferenceEquals(SceneOwner, value))
                 return;
 
             if (ReferenceEquals(this, value))
@@ -519,7 +528,7 @@ public partial class Node : ElectronObject
                     throw new ArgumentException("A node owner must be an ancestor.", nameof(value));
             }
 
-            _owner = value;
+            SetSceneOwner(value);
             ClaimUniqueName();
         }
     }
@@ -558,12 +567,17 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Gets the active scene tree containing this node.</summary>
-    /// <value>The owning tree, or <see langword="null"/> while detached.</value>
+    /// <value>The associated tree, or <see langword="null"/> outside a tree.</value>
+    /// <remarks>Entry assigns this association before callbacks. Departure retains it through NodeRemoved and
+    /// ChildExitingTree, then clears the whole departing subtree before TreeExited. Stored observation remains
+    /// available after disposal; coordinate it with topology mutation.</remarks>
     public SceneTree? Tree { get; private set; }
     internal ulong TreeAttachmentVersion { get; private set; }
 
     /// <summary>Gets whether this node currently belongs to a scene tree.</summary>
     /// <value><see langword="true"/> when <see cref="Tree"/> is non-null.</value>
+    /// <remarks>Structural parentage alone does not imply active membership. This stored observation remains
+    /// available after disposal; coordinate reads with tree transitions.</remarks>
     public bool IsInsideTree => Tree is not null;
 
     /// <summary>Gets whether SceneTree-managed ready delivery has occurred since construction or the last ready reset.</summary>
@@ -914,7 +928,9 @@ public partial class Node : ElectronObject
     public event Action<Node, Node>? ChildExitingTree;
 
     /// <summary>Occurs after the order or membership of direct children changes.</summary>
-    /// <remarks>The argument is this parent node. Delivery is synchronous after <see cref="NotificationChildOrderChanged"/>.</remarks>
+    /// <remarks>The argument is this parent node. Delivery follows complete NotificationChildOrderChanged dispatch.
+    /// Drawing-order publication, notification and signal are each attempted after earlier failures; errors aggregate
+    /// after the committed mutation. Unchanged moves and absent removals are silent. Normal C# subscriber ordering applies.</remarks>
     public event Action<Node>? ChildOrderChanged;
 
     /// <summary>Occurs after an active node accepts a name assignment and path notifications propagate.</summary>
@@ -1004,7 +1020,9 @@ public partial class Node : ElectronObject
     /// <summary>Removes a direct child without disposing it.</summary>
     /// <param name="child">The node to detach.</param>
     /// <returns><see langword="true"/> when the node was a direct child and was detached; otherwise <see langword="false"/>.</returns>
-    /// <remarks>An active subtree exits its tree child-first before the parent reference is cleared.</remarks>
+    /// <remarks>An active subtree exits in reverse sibling order, children before parents. Parent is cleared before
+    /// structural callbacks; unreachable owners clear afterward, before TreeExited. Detached removal retains borrowed
+    /// authoring owners. Neither form disposes the receiver or its children. An absent direct child returns false.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="child"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread, this parent is exiting or propagating a notification, or the child is in tree lifecycle delivery.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
@@ -1070,12 +1088,18 @@ public partial class Node : ElectronObject
     /// <summary>Moves this non-root node under a new parent.</summary>
     /// <param name="newParent">The live destination parent.</param>
     /// <param name="keepGlobalTransform">Whether a derived placement model preserves its global transform. The neutral base has no transform. The default is true.</param>
-    /// <remarks>The operation detaches first and then appends to <paramref name="newParent"/>; callback failures are not rolled back.</remarks>
+    /// <remarks>Validate the destination and its child-order barrier before removing the old parent. Append as an
+    /// ordinary child. After removal callback failures, still attempt insertion and restoration of the reachable outside
+    /// owner on ordinary descendants sharing it; aggregate original errors after all possible stages. Local subtree
+    /// owners remain valid. Same-parent calls are silent but retain lifetime, capture, thread and lifecycle guards.
+    /// A callback-retired destination is not resurrected and may leave a live detached receiver with an explicit error.
+    /// Full structural changes and snapshots are cold; derived placement restoration follows attachment.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="newParent"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The destination validation rejects this node as its own child.</exception>
     /// <exception cref="InvalidOperationException">
     /// This node has no parent, the move creates a cycle, either attached hierarchy
-    /// is accessed off its owner thread, this node or its current parent is in protected tree lifecycle delivery, or a derived placement model rejects its destination.
+    /// is accessed off its owner thread, this node or a parent is in protected lifecycle/notification delivery,
+    /// or a derived placement model rejects its destination.
     /// </exception>
     /// <exception cref="ObjectDisposedException">This node or <paramref name="newParent"/> is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="AggregateException">One or more structural, lifecycle, notification, or event callbacks fail after reparenting begins.</exception>
@@ -1094,31 +1118,36 @@ public partial class Node : ElectronObject
             return;
 
         newParent.ValidateChildForInsertion(this, allowExistingParent: true);
-        var retainedOwners = EnumerateDepthFirst()
-            .Where(node => node._owner is not null)
-            .Select(node => (Node: node, Owner: node._owner!))
-            .ToArray();
+        newParent.EnsureChildOrderMutable();
+        var owner = SceneOwner;
+        List<Node>? owned = null;
+        if (owner is not null && (ReferenceEquals(owner, newParent) || owner.IsAncestorOf(newParent)))
+        {
+            owned = [];
+            CollectOwned(this, owner, owned);
+        }
 
         var oldParent = Parent;
         oldParent.EnsureMutable();
-        oldParent.RemoveChildCore(this);
-        try
-        {
-            newParent.InsertChild(this, newParent.ChildInsertionIndex(InternalMode.Disabled));
-        }
-        finally
-        {
-            if (ReferenceEquals(Parent, newParent))
-            {
-                foreach (var (node, owner) in retainedOwners)
+        List<Exception>? errors = null;
+        try { oldParent.RemoveChildCore(this); }
+        catch (AggregateException error) { CollectException(ref errors, error); }
+        try { newParent.InsertChild(this, newParent.ChildInsertionIndex(InternalMode.Disabled)); }
+        catch (Exception error) { CollectException(ref errors, error); }
+        if (ReferenceEquals(Parent, newParent) && owned is not null)
+            foreach (var node in owned)
+                try
                 {
-                    if (owner.IsAncestorOf(node))
-                    {
-                        node._owner = owner;
-                        node.ClaimUniqueName();
-                    }
+                    if (!node.IsDisposed && !owner!.IsDisposed && owner.IsAncestorOf(node)) node.Owner = owner;
                 }
-            }
+                catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("One or more reparent callbacks failed.", errors);
+
+        static void CollectOwned(Node node, Node owner, List<Node> result)
+        {
+            if (ReferenceEquals(node.SceneOwner, owner)) result.Add(node);
+            foreach (var child in node._children)
+                if (child._internalMode == InternalMode.Disabled) CollectOwned(child, owner, result);
         }
     }
 
@@ -1172,7 +1201,9 @@ public partial class Node : ElectronObject
 
     /// <summary>Determines whether this node is a strict ancestor of another node.</summary>
     /// <param name="node">The node whose parent chain is inspected.</param>
-    /// <returns><see langword="true"/> when this node appears in the parent chain; otherwise <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/> when this node appears in the parent chain; otherwise <see langword="false"/>, including a self query.</returns>
+    /// <remarks>Uses structural parents independently of active tree membership. Coordinate reads with topology changes;
+    /// this query does not grant mutation access or require the current processing group.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public bool IsAncestorOf(Node node)
@@ -1219,7 +1250,7 @@ public partial class Node : ElectronObject
 
         foreach (var child in _children)
         {
-            if (owned && child._owner is null) continue;
+            if (owned && child.SceneOwner is null) continue;
             if (child is TNode typedChild && MatchesNodeName(pattern, child._name))
                 return typedChild;
 
@@ -1351,7 +1382,7 @@ public partial class Node : ElectronObject
             var detected = false;
             while (!ReferenceEquals(current, commonParent))
             {
-                if (current._uniqueNameInOwner && ReferenceEquals(current._owner, _owner))
+                if (current._uniqueNameInOwner && ReferenceEquals(current.SceneOwner, SceneOwner))
                 {
                     reversed.Add('%' + current.Name);
                     detected = true;
@@ -1367,7 +1398,7 @@ public partial class Node : ElectronObject
                 var upCount = 0;
                 while (!ReferenceEquals(current, commonParent))
                 {
-                    if (current._uniqueNameInOwner && ReferenceEquals(current._owner, _owner))
+                    if (current._uniqueNameInOwner && ReferenceEquals(current.SceneOwner, SceneOwner))
                     { detectedName = current.Name; upCount = 0; }
                     upCount++;
                     current = current.Parent!;
@@ -1450,7 +1481,7 @@ public partial class Node : ElectronObject
             else if (part.SequenceEqual("..")) current = current.Parent;
             else if (!part.SequenceEqual("."))
             {
-                if (part[0] == '%') current = current.FindUniqueOwned(part[1..]) ?? current._owner?.FindUniqueOwned(part[1..]);
+                if (part[0] == '%') current = current.FindUniqueOwned(part[1..]) ?? current.SceneOwner?.FindUniqueOwned(part[1..]);
                 else
                 {
                     Node? child = null;
@@ -1924,6 +1955,8 @@ public partial class Node : ElectronObject
         if (disposing)
         {
             try { DisposeSceneConnections(); } catch (Exception error) { (errors ??= []).Add(error); }
+            ReleaseOwnedNodes();
+            SetSceneOwner(null);
             Interlocked.Exchange(ref _queuedForDeletion, 0);
 
             try
@@ -1953,7 +1986,7 @@ public partial class Node : ElectronObject
             _children.Clear();
             _internalFrontCount = _internalBackCount = 0;
             _groups.Clear();
-            _owner = null;
+            SetSceneOwner(null);
 
             if (_ownedSceneResources is not null)
             {
@@ -2735,7 +2768,6 @@ public partial class Node : ElectronObject
                 ChangeInternalChildCount(child._internalMode, -1);
                 child.Parent = null;
                 child.InvalidatePathCache();
-                child.ClearInvalidOwnersRecursive();
 
                 try
                 {
@@ -2774,8 +2806,11 @@ public partial class Node : ElectronObject
                 }
 
                 if (tree is not null)
+                {
+                    child.ClearInvalidOwnersRecursive();
                     try { tree.CompleteSubtreeExit(child); }
                     catch (Exception error) { CollectException(ref errors, error); }
+                }
             }
             finally { child._isExitingTree = false; }
 
@@ -2787,36 +2822,65 @@ public partial class Node : ElectronObject
 
     private void NotifyChildOrderChanged()
     {
-        RenderingServer.Service?.PublishSceneDrawOrder(this);
-        DispatchNotification(NotificationChildOrderChanged);
-        ChildOrderChanged?.Invoke(this);
+        List<Exception>? errors = null;
+        try { RenderingServer.Service?.PublishSceneDrawOrder(this); }
+        catch (Exception error) { CollectException(ref errors, error); }
+        try { DispatchNotification(NotificationChildOrderChanged); }
+        catch (Exception error) { CollectException(ref errors, error); }
+        try { ChildOrderChanged?.Invoke(this); }
+        catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("One or more child-order callbacks failed.", errors);
     }
 
     private void ClearInvalidOwnersRecursive()
     {
         foreach (var node in EnumerateDepthFirst())
         {
-            if (node._owner is not null && !node._owner.IsAncestorOf(node))
-                node._owner = null;
+            if (node.SceneOwner is { } owner && !owner.IsAncestorOf(node))
+                node.SetSceneOwner(null);
         }
     }
 
     private void ClaimUniqueName()
     {
-        if (_uniqueNameInOwner && _owner?.FindUniqueOwned(_name, this) is not null)
+        if (_uniqueNameInOwner && SceneOwner?.FindUniqueOwned(_name, this) is not null)
             _uniqueNameInOwner = false;
     }
 
-    private Node? FindUniqueOwned(ReadOnlySpan<char> name, Node? except = null) => FindUniqueOwned(this, this, name, except);
-
-    private static Node? FindUniqueOwned(Node current, Node owner, ReadOnlySpan<char> name, Node? except)
+    private Node? FindUniqueOwned(ReadOnlySpan<char> name, Node? except = null)
     {
-        // shortcut: scan the owner subtree; add an index if path profiling makes traversal significant.
-        if (!ReferenceEquals(current, except) && ReferenceEquals(current._owner, owner) && current._uniqueNameInOwner &&
-            name.SequenceEqual(current._name)) return current;
-        foreach (var child in current._children)
-            if (FindUniqueOwned(child, owner, name, except) is { } found) return found;
+        if (_ownedNodes is not { } owned) return null;
+        foreach (var identity in owned)
+            if (identity.Target is Node node && !ReferenceEquals(node, except) && node._uniqueNameInOwner &&
+                ReferenceEquals(node.SceneOwner, this) && name.SequenceEqual(node._name)) return node;
         return null;
+    }
+
+    private void SetSceneOwner(Node? owner)
+    {
+        var ownerIdentity = owner?.BorrowIdentity() ?? default;
+        var identity = owner is null ? default : BorrowIdentity();
+        var next = owner is null ? null : (owner._ownedNodes ??= []);
+        if (next is not null)
+        {
+            for (var i = next.Count - 1; i >= 0; i--)
+                if (next[i].Target is null) next.RemoveAt(i);
+            next.EnsureCapacity(next.Count + 1);
+        }
+        if (_ownerIdentity.RawTarget is Node previous && previous._ownedNodes is { } previousOwned)
+            for (var i = previousOwned.Count - 1; i >= 0; i--)
+                if (previousOwned[i].ID == InstanceID || previousOwned[i].Target is null) previousOwned.RemoveAt(i);
+        _ownerIdentity = ownerIdentity;
+        next?.Add(identity);
+    }
+
+    private void ReleaseOwnedNodes()
+    {
+        if (_ownedNodes is not { } owned) return;
+        foreach (var identity in owned)
+            if (identity.RawTarget is Node node && node._ownerIdentity.ID == InstanceID) node._ownerIdentity = default;
+        owned.Clear();
+        _ownedNodes = null;
     }
 
     private void InvalidatePathCache()
@@ -2831,7 +2895,7 @@ public partial class Node : ElectronObject
         ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
         foreach (var child in _children)
         {
-            if (owned && child._owner is null) continue;
+            if (owned && child.SceneOwner is null) continue;
             if (child is TNode typedChild && (pattern.Length == 0 || MatchesNodeName(pattern, child._name)))
                 result.Add(typedChild);
 

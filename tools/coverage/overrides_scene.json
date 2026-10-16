@@ -1325,8 +1325,8 @@
     {
       "electron2d": "property:Electron2D.Node.IsInsideTree()",
       "godot": "Node::method:is_inside_tree()",
-      "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "state": "Implemented",
+      "reason": "ADRs0006/0008/0011: complete typed membership/reparent family; the membership status group records executable behavior and limits."
     },
     {
       "electron2d": "property:Electron2D.Node.IsNodeReady()",
@@ -1745,14 +1745,14 @@
     {
       "electron2d": "method:Electron2D.Entity.Reparent(Electron2D.Node,System.Boolean)",
       "godot": "Node::method:reparent(Node:,bool:)",
-      "state": "Partial",
-      "reason": "Spatial override of Node reparenting preserves the global transform through the new canvas parent. Invalid inverses reject before mutation; lifecycle guards and callback failure paths remain active."
+      "state": "Implemented",
+      "reason": "ADRs0006/0008/0011: complete typed membership/reparent family; the membership status group records executable behavior and limits."
     },
     {
       "electron2d": "method:Electron2D.Node.Reparent(Electron2D.Node,System.Boolean)",
       "godot": "Node::method:reparent(Node:,bool:)",
-      "state": "Partial",
-      "reason": "Neutral hierarchy operation accepts any Node; spatial preservation dispatches through the Entity override. Mixed-tree tests cover neutral parents, lifecycle rejection and callback cleanup. Broader hierarchy defaults remain under audit."
+      "state": "Implemented",
+      "reason": "ADRs0006/0008/0011: complete typed membership/reparent family; the membership status group records executable behavior and limits."
     },
     {
       "electron2d": "property:Electron2D.CanvasItem.TopLevel()",
@@ -5706,6 +5706,48 @@
       "electron2d": "event:Electron2D.SceneTree.NodeRemoved()",
       "state": "Implemented",
       "reason": "ADRs 0006/0008/0011: typed lifecycle projection; the lifecycle status group records ordering, readiness, failure cleanup, worker access and physical evidence."
+    },
+    {
+      "godot": "Node::method:get_parent()",
+      "electron2d": "property:Electron2D.Node.Parent()",
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed membership projection; see the audited membership status group."
+    },
+    {
+      "godot": "Node::method:get_tree()",
+      "electron2d": "property:Electron2D.Node.Tree()",
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed membership projection; see the audited membership status group."
+    },
+    {
+      "godot": "Node::method:is_ancestor_of(Node:)",
+      "electron2d": "method:Electron2D.Node.IsAncestorOf(Electron2D.Node)",
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed membership projection; see the audited membership status group."
+    },
+    {
+      "godot": "Node::method:remove_child(Node:)",
+      "electron2d": "method:Electron2D.Node.RemoveChild(Electron2D.Node)",
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed membership projection; see the audited membership status group."
+    },
+    {
+      "godot": "Node::property:owner",
+      "electron2d": "property:Electron2D.Node.Owner()",
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed membership projection; see the audited membership status group."
+    },
+    {
+      "godot": "Node::signal:child_order_changed()",
+      "electron2d": "event:Electron2D.Node.ChildOrderChanged()",
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: typed membership projection; see the audited membership status group."
+    },
+    {
+      "godot": "Node::method:reparent(Node:,bool:)",
+      "electron2d": "method:Electron2D.Control.Reparent(Electron2D.Node,System.Boolean)",
+      "state": "Implemented",
+      "reason": "Control is the inherited Node reparent placement projection: restore only global origin; the membership status group covers complete virtual-family guards and error handling."
     }
   ],
   "extras": [
@@ -5848,11 +5890,6 @@
       "electron2d": "method:Electron2D.Control.OnNotification(System.Int32)",
       "state": "Partial",
       "reason": "Typed lifecycle hook projects reference Control canvas entry, exit and resize notifications; GUI lifecycle remains incomplete."
-    },
-    {
-      "electron2d": "method:Electron2D.Control.Reparent(Electron2D.Node,System.Boolean)",
-      "state": "Partial",
-      "reason": "Control override of inherited Node.Reparent preserves the global transformed origin after layout reflow; full Control transform parity remains to audit."
     },
     {
       "electron2d": "constructor:Electron2D.InputEvent..ctor()",
@@ -8271,7 +8308,7 @@
         "Node::property:unique_name_in_owner"
       ],
       "state": "Implemented",
-      "reason": "Owner-scoped percent-name lookup follows the pinned node.cpp claimant rule: the first active claim wins, while a later conflicting setter, rename or owner assignment clears the later flag. NodeUniqueNameTests covers paths, owner boundaries, rename, detach/reparent, PackedScene and owner-thread guards. The lookup uses a subtree scan in the current typed runtime; indexing is a performance follow-up if measured."
+      "reason": "Owner-scoped percent-name lookup preserves the first live claim; later conflicting assignment/rename/owner changes revoke the later flag. Cached weak owned identities include detached registrations, expire on owner disposal/collection and do not retain targets. Active removal clears unreachable ownership after structural callbacks; detached authoring retains it. NodeUniqueNameTests and public CPU/software-GPU/registered serial/separate CoreCLR/NativeAOT membership consumers verify claimant, lifetime, paths, snapshots, fresh scene and warmed zero owner/all-thread bytes. Evidence: bin/physics-node-membership/2026-10-16/validation.json. Registry writes prepare/prune cold capacity; broader native/hardware/platform gates remain separate."
     },
     {
       "godot": [
@@ -11563,6 +11600,20 @@
         "SceneTree::signal:node_added(Node:)",
         "SceneTree::signal:node_removed(Node:)"
       ]
+    },
+    {
+      "godot": [
+        "Node::method:get_parent()",
+        "Node::method:get_tree()",
+        "Node::method:is_ancestor_of(Node:)",
+        "Node::method:is_inside_tree()",
+        "Node::method:remove_child(Node:)",
+        "Node::method:reparent(Node:,bool:)",
+        "Node::property:owner",
+        "Node::signal:child_order_changed()"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0003/0006/0008/0011: structural Parent/strict ancestry, active Tree/IsInsideTree and borrowed authoring Owner have coordinated public observations, independent of numerical world selection. Detached topology retains owner and unique registration; weak identity resolution expires at owner disposal/collection without retaining or disposing separately parented nodes. Active removal retains owners through structural callbacks, then clears unreachable owners before TreeExited. Reparent preflights destination child-order access; removal errors cannot suppress possible insertion, reachable shared-owner restoration through ordinary descendants or Entity/Control placement restoration. Same-parent calls retain lifecycle/capture/thread guards; callback-retired targets are not resurrected. Child-order publication/notification/signal continue after prior failures. Typed bool removal and validation exceptions retain their established projections. Public CPU/software-Vulkan/registered serial/separate CoreCLR/strict NativeAOT consumers cover failure identities, capture/foreign/worker guards, GC, unique scope, cross-world RID/pose/actual solving, fresh file and 128 warm/128 measured moving frames with two real owner edits per frame at 0/0 owner/all-thread managed bytes. Structural snapshots and initial weak/list capacity are cold; full inherited/native/device/hardware/foreign gates remain open. Evidence: bin/physics-node-membership/2026-10-16/validation.json."
     }
   ]
 }

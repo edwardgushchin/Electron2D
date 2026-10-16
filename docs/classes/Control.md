@@ -1,6 +1,6 @@
 # Control
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 **Inherits:** [CanvasItem](CanvasItem.md) → [Node](Node.md) → [ElectronObject](ElectronObject.md)
 
@@ -482,3 +482,5 @@ Null assignment throws `ArgumentNullException`; disposed access throws `ObjectDi
 `GUITranslationContextTests` exercises singular/plural lookup through base references, explicit overrides, policy disabling, descriptors, cached Label/RichTextLabel captions, Button/OptionButton consumers, owner/disposal checks, fresh file processes and zero warmed managed bytes. Its native profile compares actual initial/refreshed glyph pixels with independently authored expected labels on Linux Wayland GPU and compatibility. Other platforms and native allocations remain unverified.
 
 [VirtualJoystick](VirtualJoystick.md) consumes the inherited local GUI touch lane, ordinary themed StyleBoxes and owner/capture/lifetime rules for analog game controls.
+
+Reparent preserves the inherited [membership/owner and failure contract](../components/scene-hierarchy.md#membership-and-authoring-ownership), including same-parent lifecycle/capture/thread checks. It restores only global position after possible insertion, even when earlier callbacks failed.

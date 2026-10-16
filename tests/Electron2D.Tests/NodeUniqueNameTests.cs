@@ -64,8 +64,8 @@ internal static class NodeUniqueNameTests
         first.Name = "Renamed";
         first.UniqueNameInOwner = true;
         left.RemoveChild(first);
-        Check(first.Owner is null && first.UniqueNameInOwner && root.GetNodeOrNull("%Renamed") is null,
-            "Detaching releases owner lookup while retaining the node's configured flag.");
+        Check(first.Owner == root && first.UniqueNameInOwner && root.GetNode("%Renamed") == first,
+            "Detached authoring retains its borrowed owner and unique-name registration.");
         left.AddChild(first);
         first.Owner = root;
         Check(root.GetNode("%Renamed") == first, "A restored owner reacquires the unique name.");

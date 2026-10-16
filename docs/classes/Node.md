@@ -64,9 +64,9 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public bool IsNodeReady { get; }`](#p-electron2d-node-isnodeready) | Gets whether SceneTree-managed ready delivery has occurred since construction or the last ready reset. |
 | [`public bool IsQueuedForDeletion { get; }`](#p-electron2d-node-isqueuedfordeletion) | Gets whether deletion has been requested through `Node.QueueFree`. |
 | [`public string Name { get; set; }`](#p-electron2d-node-name) | Gets or sets the node name used in sibling lookup and paths. |
-| [`public Node? Owner { get; set; }`](#p-electron2d-node-owner) | Gets or sets the ancestor that owns this node for packed-scene storage. |
+| [`public Node? Owner { get; set; }`](#p-electron2d-node-owner) | Gets or sets the borrowed authoring owner used for packed-scene storage. |
 | [`public bool UniqueNameInOwner { get; set; }`](#p-electron2d-node-uniquenameinowner) | Enables owner-scoped `%Name` lookup when this name is unclaimed. |
-| [`public Node? Parent { get; }`](#p-electron2d-node-parent) | Gets the direct parent. |
+| [`public Node? Parent { get; }`](#p-electron2d-node-parent) | Gets the direct structural parent. |
 | [`public PhysicsInterpolationMode PhysicsInterpolationMode { get; set; }`](#p-electron2d-node-physicsinterpolationmode) | Inherits, enables or disables physics presentation interpolation. |
 | [`public double PhysicsProcessDeltaTime { get; }`](#p-electron2d-node-physicsprocessdeltatime) | Gets the current or most recent physics-frame duration of the attached scene tree. |
 | [`public bool PhysicsProcessEnabled { get; set; }`](#p-electron2d-node-physicsprocessenabled) | Gets or sets whether this node participates in host-driven physics-process frames. |
@@ -264,7 +264,9 @@ Gets or sets whether this node receives the first input-propagation stage.
 
 Gets whether this node currently belongs to a scene tree.
 
-**Value:** `true` when `Node.Tree` is non-null.
+**Value:** true when Node.Tree is non-null.
+
+**Remarks:** Structural parentage alone does not imply active membership. This stored observation remains available after disposal; coordinate reads with tree transitions.
 
 <a id="p-electron2d-node-isnodeready"></a>
 ### `public bool IsNodeReady { get; }`
@@ -304,11 +306,11 @@ Gets or sets the node name used in sibling lookup and paths.
 <a id="p-electron2d-node-owner"></a>
 ### `public Node? Owner { get; set; }`
 
-Gets or sets the ancestor that owns this node for packed-scene storage.
+Gets or sets the borrowed authoring owner used for packed-scene storage.
 
-**Value:** An ancestor node, or `null` when this node is not stored by an ancestor scene root.
+**Value:** The live owner, or null when unassigned, disposed or collected. Assignment requires an ancestor.
 
-**Remarks:** A scene root does not own itself. Removing or reparenting a subtree automatically clears owner references that no longer point to an ancestor. Assigning an owner can clear a conflicting unique-name claim.
+**Remarks:** Owner does not select a physical world or own node lifetime. Detached topology changes retain the previous owner and its unique-name registration, even when it is no longer an ancestor. Active removal clears unreachable owners after structural callbacks, before TreeExited. Owner disposal releases metadata without disposing separately parented nodes. Reparent restores its reachable outside owner only on ordinary descendants sharing it. Reads require a live receiver and coordination with topology/owner mutation. Attached writes require the scene owner thread; capture rejects writes, including unchanged values. Invalid assignments preserve the prior owner. Assigning a new owner may revoke UniqueNameInOwner when that owner already has a live claim.
 
 **System.ArgumentException:** The assigned node is this node or is not an ancestor.
 
@@ -328,9 +330,11 @@ Allows `%Name` lookup from this node's owner and nodes sharing that owner. False
 <a id="p-electron2d-node-parent"></a>
 ### `public Node? Parent { get; }`
 
-Gets the direct parent.
+Gets the direct structural parent.
 
-**Value:** The owning parent, or `null` while detached.
+**Value:** The parent, or null for a parentless node. A descendant may retain a parent while outside every tree.
+
+**Remarks:** This stored observation remains available after disposal. Coordinate reads with topology mutation; it is not an atomic hierarchy snapshot or permission to mutate another scene.
 
 <a id="p-electron2d-node-physicsinterpolationmode"></a>
 ### `public PhysicsInterpolationMode PhysicsInterpolationMode { get; set; }`
@@ -440,7 +444,9 @@ Gets the external resource path from which this scene root was instantiated.
 
 Gets the active scene tree containing this node.
 
-**Value:** The owning tree, or `null` while detached.
+**Value:** The associated tree, or null outside a tree.
+
+**Remarks:** Entry assigns this association before callbacks. Departure retains it through NodeRemoved and ChildExitingTree, then clears the whole departing subtree before TreeExited. Stored observation remains available after disposal; coordinate it with topology mutation.
 
 <a id="p-electron2d-node-unhandledinputenabled"></a>
 ### `public bool UnhandledInputEnabled { get; set; }`
@@ -1030,9 +1036,11 @@ Determines whether this node is a strict ancestor of another node.
 
 **Parameter `node`:** The node whose parent chain is inspected.
 
-**Returns:** `true` when this node appears in the parent chain; otherwise `false`.
+**Returns:** true when this node appears in the parent chain; otherwise false, including a self query.
 
-**System.ArgumentNullException:** `node` is `null`.
+**Remarks:** Uses structural parents independently of active tree membership. Coordinate reads with topology changes; this query does not grant mutation access or require the current processing group.
+
+**System.ArgumentNullException:** node is null.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
@@ -1163,13 +1171,13 @@ Removes a direct child without disposing it.
 
 **Parameter `child`:** The node to detach.
 
-**Returns:** `true` when the node was a direct child and was detached; otherwise `false`.
+**Returns:** true when the node was a direct child and was detached; otherwise false.
 
-**Remarks:** An active subtree exits its tree child-first before the parent reference is cleared.
+**Remarks:** An active subtree exits in reverse sibling order, children before parents. Parent is cleared before structural callbacks; unreachable owners clear afterward, before TreeExited. Detached removal retains borrowed authoring owners. Neither form disposes the receiver or its children. An absent direct child returns false.
 
-**System.ArgumentNullException:** `child` is `null`.
+**System.ArgumentNullException:** child is null.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread, this parent is exiting, or the child is in tree lifecycle delivery.
+**System.InvalidOperationException:** An attached node is mutated off the owner thread, this parent is exiting or propagating a notification, or the child is in tree lifecycle delivery.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
@@ -1199,15 +1207,15 @@ Moves this non-root node under a new parent.
 
 **Parameter `keepGlobalTransform`:** Whether a derived placement model preserves its global transform. The neutral base has no transform. The default is true.
 
-**Remarks:** The operation detaches first and then appends to `newParent`; callback failures are not rolled back.
+**Remarks:** Validate the destination and its child-order barrier before removing the old parent. Append as an ordinary child. After removal callback failures, still attempt insertion and restoration of the reachable outside owner on ordinary descendants sharing it; aggregate original errors after all possible stages. Local subtree owners remain valid. Same-parent calls are silent but retain lifetime, capture, thread and lifecycle guards. A callback-retired destination is not resurrected and may leave a live detached receiver with an explicit error. Full structural changes and snapshots are cold; derived placement restoration follows attachment.
 
-**System.ArgumentNullException:** `newParent` is `null`.
+**System.ArgumentNullException:** newParent is null.
 
 **System.ArgumentException:** The destination validation rejects this node as its own child.
 
-**System.InvalidOperationException:** This node has no parent, the move creates a cycle, either attached hierarchy is accessed off its owner thread, this node or its current parent is in protected tree lifecycle delivery, or a derived placement model rejects its destination.
+**System.InvalidOperationException:** This node has no parent, the move creates a cycle, either attached hierarchy is accessed off its owner thread, this node or a parent is in protected lifecycle/notification delivery, or a derived placement model rejects its destination.
 
-**System.ObjectDisposedException:** This node or `newParent` is disposing on another thread or has finished disposing.
+**System.ObjectDisposedException:** This node or newParent is disposing on another thread or has finished disposing.
 
 **System.AggregateException:** One or more structural, lifecycle, notification, or event callbacks fail after reparenting begins.
 
@@ -1290,7 +1298,7 @@ Occurs on the direct parent while a child is exiting the active tree.
 
 Occurs after the order or membership of direct children changes.
 
-**Remarks:** The argument is this parent node. Delivery is synchronous after `Node.NotificationChildOrderChanged`.
+**Remarks:** The argument is this parent node. Delivery follows complete NotificationChildOrderChanged dispatch. Drawing-order publication, notification and signal are each attempted after earlier failures; errors aggregate after the committed mutation. Unchanged moves and absent removals are silent. Normal C# subscriber ordering applies.
 
 <a id="e-electron2d-node-childremoved"></a>
 ### `public event Action<Node, Node>? ChildRemoved`
@@ -1828,3 +1836,5 @@ mutations retain their owner guard before virtual consumer hooks. Runtime
 Node duplication retains its separate ADR 0091 binding/identity prerequisite.
 
 The [entry/readiness/departure contract](../components/scene-hierarchy.md#entry-readiness-and-departure) specifies parent/tree signal order, entry-added and ready-added children, consumed readiness, stale attachment snapshots, failure cleanup, physical release and processing-group ready metadata. The public-only lifecycle consumer retains a real selected solver and fresh-process file activation.
+
+The [membership and authoring-owner contract](../components/scene-hierarchy.md#membership-and-authoring-ownership) separates structural parents, active tree membership, borrowed owner registrations and physical worlds. Detached ownership and owner expiry are exercised through public CPU/software-GPU/registered managed and NativeAOT consumers.

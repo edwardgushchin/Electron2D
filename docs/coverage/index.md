@@ -1,13 +1,22 @@
 # API coverage register
 
+[Node membership and authoring ownership](../components/scene-hierarchy.md#membership-and-authoring-ownership)
+now close eight inherited membership/owner/reparent/child-order rows. Borrowed
+owner expiry and detached unique-name scope, callback-failed transfer, virtual
+placement, cross-world RID/pose and fresh scene activation have public
+CPU/software-Vulkan/registered CoreCLR/NativeAOT serial/separate evidence.
+The unique physics census is 303 open declarations: 243 Partial, 43 Unimplemented,
+17 Blocked. Native/device, foreign, hardware/window/performance and full inherited
+or extension acceptance remain open.
+
 [Node tree transitions](../components/scene-hierarchy.md#entry-readiness-and-departure)
 now implement eleven inherited lifecycle/ready rows plus the two SceneTree
 node-added/removed events. Exact ordering, repeated attachment, ready requests,
 worker metadata, failure cleanup and physical binding lifetime have public
 CoreCLR/NativeAOT CPU/software-Vulkan/registered serial/separate evidence.
-The unique physics census is 311 open declarations (251 Partial, 43 Unimplemented,
-17 Blocked); full inheritance, extension, native/device and hardware/window gates
-remain open.
+That lifecycle slice left 311 open declarations; the membership slice above
+records the current census. Full inheritance, extension, native/device and
+hardware/window gates remain open.
 
 [CPU pool lifetime](../components/cpu-checkpoints.md#retired-pool-payloads) now clears
 borrowed record payloads and obsolete event references without discarding class
