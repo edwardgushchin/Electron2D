@@ -1,5 +1,7 @@
 # API coverage register
 
+[Prepared control handoff](../components/physics-network-example.md#prepared-future-input-at-control-handoff-2026-10-16) now makes the process check require actual queued old input and applied new-epoch replacements at the same future tick. This verification change leaves the 286-declaration physics census and remaining implementation gates unchanged.
+
 [Complete Node processing metadata and callbacks](../components/scene-tree.md#complete-processing-metadata-and-callbacks)
 now close seventeen inherited rows. All ten controls share coordinated reads and
 current-group writes; six stored callback switches, signed priorities, typed

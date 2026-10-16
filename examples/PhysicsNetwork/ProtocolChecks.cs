@@ -54,6 +54,7 @@ internal static class ProtocolChecks
         CheckWakeCorrections();
         CheckPacketOrder();
         NetworkSession.CheckInputCommands();
+        NetworkSession.CheckHandoffInputs();
     }
     private static void CheckJointContinuations()
     {
@@ -183,6 +184,39 @@ internal static class ProtocolChecks
 
 internal sealed partial class NetworkSession
 {
+    internal static void CheckHandoffInputs()
+    {
+        using var session = new NetworkSession(true, PhysicsServer.Backend.CPU, 0, Guid.NewGuid(), 360, false, true);
+        session._peers[0] = new(2, 0) { Ready = true, CheckPhases = 1 }; session._peers[1] = new(3, 0) { Ready = true, CheckPhases = 1 };
+        session._firstPeer = 2; session._secondPeer = 3;
+        session.SetOwner(10, 2); session.SetOwner(11, 3);
+        while (session.Simulation.Tick < 239) session.AuthorityStep();
+        Feed(2, 10, 240); Feed(3, 11, 240);
+        Check(!session.CheckProgressAllowsStep() && session.CheckHandoffWaitPolls == 1,
+            "Current handoff-tick input cannot substitute for the missing old future commands");
+        Feed(2, 10, 241);
+        Check(!session.CheckProgressAllowsStep() && session.CheckHandoffWaitPolls == 2,
+            "One player's future command cannot release the other player's handoff");
+        Feed(3, 11, 241);
+        Check(session.CheckProgressAllowsStep(), "Both exact old-controller future commands release the handoff");
+        session.AuthorityStep();
+        Check(session.Simulation.Tick == 240 && session.CheckHandoffPrepared == 2 && session.CheckHandoffApplied == 0 &&
+            !session.CheckProgressAllowsStep(), "Retired epochs cannot satisfy the next tick after the actual owner change");
+        Feed(3, 10, 241); Check(!session.CheckProgressAllowsStep(), "Both new-controller replacements are required independently");
+        Feed(2, 11, 241); Check(session.CheckProgressAllowsStep(), "Both new epochs release the actual input gate");
+        session.AuthorityStep();
+        Check(session.CheckHandoffApplied == 2 && session.RetiredCommandReplacements == 2 &&
+            session.Simulation.Find(10)!.LastInputTick == 241 && session.Simulation.Find(11)!.LastInputTick == 241,
+            "Both replacements actually reach the controlled bodies at the prepared tick");
+        void Feed(int peer, ulong id, ulong tick)
+        {
+            var actor = session.Simulation.Find(id)!;
+            var writer = new WireWriter(session._send); writer.U64(0); writer.U64(0); writer.I32(1);
+            writer.Input(new(tick, id, actor.Spec.Generation, actor.Spec.ControlEpoch, new(1, false)));
+            var reader = new WireReader(session._send.AsSpan(0, writer.Count)); session.ReceiveInputs(peer, ref reader);
+        }
+        static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
+    }
     internal static void CheckInputCommands()
     {
         using var session = new NetworkSession(true, PhysicsServer.Backend.CPU, 0, Guid.NewGuid(), 360, false);

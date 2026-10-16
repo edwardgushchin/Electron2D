@@ -1,6 +1,8 @@
 # Resident GPU continuous collision
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
+
+[Angular contact coupling](gpu-contact-solver.md#angular-normalfriction-coupling-2026-10-16) now computes friction from the normal impulse candidate in both resident iterative kernels. The rotating-ray regression preserves sixteen sweeps and the 128 CCD interval budget while checking real response, reports and warmed full frames.
 
 ## Executing boundary
 

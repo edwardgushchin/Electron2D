@@ -30,6 +30,8 @@ first interval. Complete retained-memory budgets remain open.
 
 Last updated: 2026-10-16
 
+[Angular normal/friction coupling](../components/gpu-contact-solver.md#angular-normalfriction-coupling-2026-10-16) now preserves oblique rotating-ray response through colored and high-degree resident contacts, without increasing solver sweeps or the CCD budget. The public reset/full-frame fixture checks actual motion and reported impulse balance.
+
 [Multi-impact CCD history](../components/physics-snapshots.md#multi-impact-ccd-contact-history)
 checks 64 logical pairs against both walls of one peer after three impacts in one
 frame, including complete per-wall impulse totals, transient scene events and

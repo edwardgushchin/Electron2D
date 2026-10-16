@@ -19,6 +19,8 @@ internal static class GPUPhysicsSolverStoreTests
         VerifyBatchedCapacityRetry();
         VerifyColoredContacts();
         for (var layout = 0; layout < 3; layout++) VerifyCoupledLayout(layout);
+        for (var layout = 0; layout < 3; layout++) VerifyObliqueFriction(layout, 1);
+        VerifyObliqueFriction(2, 33);
         VerifyStack();
         VerifyResidency(64);
         VerifyResidency(256);
@@ -317,6 +319,36 @@ internal static class GPUPhysicsSolverStoreTests
         Check(counts[0] == 1, "Only the collision contributes a contact report");
         Near(reports[0].Impulse.X, 6, .001f, "Unpacked reports contain contact impulses without the later joint impulse");
         Console.WriteLine($"Resident solver layout {layout}: coupled contact/joint velocity, momentum and report isolation passed.");
+    }
+
+    private static void VerifyObliqueFriction(int layout, int planes)
+    {
+        using var store = new GPUPhysicsBodyStore { CaptureContactReports = true, PackColoredContacts = layout > 0, PackSolverBodyState = layout > 1 };
+        using var plane = new WorldBoundaryShape { Normal = Vector2.Up };
+        using var ray = new SeparationRayShape { Length = 10, SlideOnSlope = true };
+        var floor = Add(store, new(1300, 100), mode: Mode.Static);
+        for (var i = 0; i < planes; i++) store.AddShape(floor, plane);
+        var velocity = new Vector2(84.51742f, 50.085964f); const float angular = 8.647725f;
+        var body = store.Add(new(Mode.Rigid, new(1702.198f, 91.44969f), .5388814f, velocity, angular, 1, 2,
+            CenterOfMass: Vector2.Zero, CanSleep: false, ContinuousMode: CCDMode.CastShape));
+        store.AddShape(body, ray);
+        store.SolveConstraints(1f / 240, iterations: 16);
+        var states = new GPUPhysicsBodyStore.Snapshot[1]; store.Read([body], states);
+        var after = new Vector2(states[0].Velocity.X, states[0].Velocity.Y); var spin = states[0].Velocity.Z;
+        var tip = new Vector2(0, 10).Rotated(states[0].Rotation);
+        Check(after.Y + spin * tip.X <= .001f && after.DistanceTo(velocity) > .05f,
+            "Coupled normal/friction rows stop closing at the actual rotating ray endpoint");
+        Check(.5f * after.LengthSquared() + spin * spin <= .5f * velocity.LengthSquared() + angular * angular + .01f,
+            "Static inelastic contact cannot add kinetic energy through its angular friction coupling");
+        var reports = new GPUPhysicsBodyStore.ContactReport[planes]; var counts = new int[1];
+        store.ReadContactReports([body], [planes], counts, reports); var impulse = Vector2.Zero;
+        for (var i = 0; i < counts[0]; i++) impulse += reports[i].Impulse;
+        Check(counts[0] == planes && impulse.LengthSquared() > .001f, "Every real contact retains its nonzero physical impulse");
+        Near(impulse.X, after.X - velocity.X, .002f, "Friction reports match the full tangential momentum change");
+        Near(impulse.Y, after.Y - velocity.Y, .002f, "Normal reports match the full normal momentum change");
+        if (planes > 32) Check(store.ContactColorFallbacks > 0 && store.ContactColorCount == 0, "The high-degree case exercises the complete Jacobi fallback");
+        else Check(store.ContactColorCount > 0 && store.ContactColorFallbacks == 0, "Every storage layout exercises actual colored contact solving");
+        Console.WriteLine($"Resident oblique friction: layout={layout}, planes={planes}, impulse={impulse}, tip speed={after.Y + spin * tip.X}.");
     }
 
     private static void VerifyStack()

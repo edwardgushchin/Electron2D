@@ -2,7 +2,9 @@
 
 [Unrounded polygon origin containment](../components/physics-point-containment.md) now uses the same exact CPU edge test for directed query/proxy regions. An exterior start cannot be discarded through distance-convergence slack; genuinely contained logical slots still hide their partition seams.
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
+
+[Angular normal/friction coupling](../components/gpu-contact-solver.md#angular-normalfriction-coupling-2026-10-16) now preserves oblique rotating-ray response through colored and high-degree resident contacts, without increasing solver sweeps or the CCD budget. The public reset/full-frame fixture checks actual motion and reported impulse balance.
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 

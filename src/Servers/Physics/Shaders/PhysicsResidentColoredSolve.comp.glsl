@@ -33,6 +33,9 @@ void main()
     float vn=dot2(bv.xy-av.xy,n)+bv.z*c.normal.w-av.z*c.normal.z;
     float vt=dot2(bv.xy-av.xy,t)+bv.z*c.tangent.w-av.z*c.tangent.z;
     float pn=max(0,p.physical.x+c.parameters.x*(c.parameters.z-vn));
+    // Friction uses the velocity after the normal impulse, including angular coupling.
+    vt+=(pn-p.physical.x)*(ma.y*c.normal.z*c.tangent.z+mb.y*c.normal.w*c.tangent.w);
+    if(!finite4(vec4(vn,vt,pn,0))){atomicOr(status.x,1u);return;}
     float pt=clamp(p.physical.y-c.parameters.y*vt,-c.tangent.x*pn,c.tangent.x*pn);
     vec2 delta=vec2(pn,pt)-p.physical.xy;
     float speed=dot2(cb.xy-ca.xy,n)+cb.z*c.normal.w-ca.z*c.normal.z;

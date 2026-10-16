@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-16
 
+The [prepared handoff check](physics-network-example.md#prepared-future-input-at-control-handoff-2026-10-16) adds one tick marker and three integer counters per session, plus three report counters. They add bounded metadata without changing packet/history capacities or application wire messages. Earlier measured cohort totals retain their recorded source revision; modified session/report object sizes have not been remeasured by those cohorts.
+
 The following original tables retain their 2026-10-15 source/candidate scope.
 [The current slow-client update](#current-slow-client-queue-and-history-budget-2026-10-16)
 remeasures the application after the ordering and sleep/wake verification changes.

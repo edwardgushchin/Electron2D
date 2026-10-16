@@ -1,6 +1,6 @@
 # Resident GPU contact response
 
-Last updated: 2026-10-10
+Last updated: 2026-10-16
 
 ## Executing boundary
 
@@ -18,6 +18,49 @@ contact reports execute on that path. Portable snapshots and the separate-proces
 [network example](physics-network-example.md) now exercise restore/replay. Full
 conformance and broad performance acceptance remain open; the historical stage timings below do
 not establish those requirements.
+
+## Angular normal/friction coupling (2026-10-16)
+
+Each contact first chooses its normal impulse candidate, then evaluates tangent
+speed including the angular velocity change caused by that candidate. The colored
+kernel applies this contact block directly. The fallback computes the same local
+block before degree relaxation across incident contacts. Fixed and sleeping
+endpoints contribute no inverse inertia; prescribed surface motion remains input.
+The friction cone, physical/correction separation, solver count and CCD interval
+budget are unchanged. No buffer, layout, readback, fence or CPU contact calculation
+is added.
+
+Previously both candidates used the same old velocity. A rotating separation ray
+with unit mass, inertia 2 and a ten-unit lever could alternate between an impulse
+and zero on every sweep, leaving its closing velocity unchanged after sixteen
+sweeps. CCD then exhausted 128 intervals. A separate-process authority correction
+exposed the failure; a systematic portable-state scan reduced it to one step at
+tick 22, then to a fresh ray and infinite boundary. The CPU control completed that
+step. The failed application run, snapshot, reduced fixtures and causal interval
+traces are retained under bin/physics-network-handoff/2026-10-16.
+
+GPUPhysicsSolverStoreTests verifies three colored storage layouts and an actual
+33-contact color overflow through Jacobi. It checks nonclosing endpoint motion,
+nonzero physical response, energy and summed reports versus linear momentum.
+The public-only --contact-coupling consumer repeats the two-body CCD frame, with
+stable world/RID, continued rotation and contact identity. It uses 128 warmup and
+128 measured reset/full frames and strict zero owner/all-thread managed bytes;
+reported impulses must match velocity changes within .002 scene units. The ray
+endpoint remains within .3 allowed penetration plus .01 numerical tolerance.
+This fixture does not establish target hardware speed or complete native totals.
+
+The Linux x64 public fixture passes all eight CoreCLR/strict NativeAOT, CPU/GPU
+and owner/separate numerical-thread combinations. Each measured bracket retains
+0/0 owner/all-thread managed bytes. The resident solver suite also completes
+its 4,096/65,536-body cohorts; those software-Vulkan samples overlapped other
+CPU work and retain their pre-HDR source generation. After HDR integration, all
+229 covered physics source documents and 32 embedded physics resources remain
+identical; current-main consumers are rebuilt separately. These measurements
+establish functional regression coverage, without a target-device speed claim.
+The subsequent viewport-presentation integration retains that same physics
+source/resource identity and passes the rebuilt public profiles plus focused
+network, separate CCD and scene checks; exhaustive/default cohorts retain their
+recorded source generation.
 
 ## Solve and history
 

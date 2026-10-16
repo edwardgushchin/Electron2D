@@ -49,7 +49,15 @@ same deterministic future-input replacement controls. `ElapsedMS` measures each 
 capture, including network/physics/replay and final acknowledgements, before JSON
 output. It is a wall-clock observation, separate from the physical-step samples.
 
-Reports include the completed `CheckPhases` mask, separate phase/input wait
+Before each checked control handoff, the authority also requires both old
+controllers' commands for the next tick to be queued. After publishing the new
+owners/epochs, the existing current-input gate waits for their replacements at
+that same tick. Reports require `CheckHandoffPrepared` and `CheckHandoffApplied`
+to agree, with two commands per handoff, and enough actual retired-command
+replacements. This exercises the queue collision independently of process speed.
+Ordinary sessions keep these counters and the handoff wait count at zero.
+
+Reports include the completed `CheckPhases` mask, separate phase/input/handoff wait
 counts, wait milliseconds and attempted progress-message bytes, including the
 deliberately invalid future-mask probes. Progress travels through the existing
 impaired link and duplicate/reordered masks merge idempotently. The coordinated

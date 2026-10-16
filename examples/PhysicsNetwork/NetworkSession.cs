@@ -19,6 +19,8 @@ internal sealed partial class NetworkSession : IDisposable
     private readonly bool _authority;
     private readonly bool _checkProgress;
     private bool _sentInvalidCheckProgress;
+    private ulong _checkHandoffInputTick;
+    internal int CheckHandoffPrepared, CheckHandoffApplied, CheckHandoffWaitPolls;
     private double _checkWaitStarted = -1;
     internal uint CheckPhases;
     internal int CheckWaitPolls, CheckPhaseWaitPolls, CheckInputWaitPolls, CheckProgressSent, CheckProgressReceived, RejectedCheckProgress;
@@ -186,6 +188,8 @@ internal sealed partial class NetworkSession : IDisposable
                     CheckPhaseWaitPolls++; waiting = true; break;
                 }
         }
+        if (!waiting && IsControlHandoffTick(tick) && !HasHandoffInputs(tick + 1))
+        { CheckHandoffWaitPolls++; waiting = true; }
         if (!waiting)
             foreach (var actor in Simulation.Actors)
             {
@@ -261,6 +265,17 @@ internal sealed partial class NetworkSession : IDisposable
         for (var i = 0; i < count; i++) if (_manifest[i].ID == id) _manifest[i] = _manifest[i] with { Owner = peer, ControlEpoch = _manifest[i].ControlEpoch + 1 };
         Simulation.Reconcile(_manifest.AsSpan(0, count));
     }
+    private bool IsControlHandoffTick(ulong tick) => _secondPeer != 0 &&
+        (tick == 240 || _lateSleepTick != 0 && tick == _lateSleepTick + 32);
+    private bool HasHandoffInputs(ulong tick)
+    {
+        for (ulong id = 10; id <= 11; id++)
+        {
+            var actor = Simulation.Find(id)!; var command = _commands[CommandSlot(tick, id)];
+            if (command.Tick != tick || command.ID != id || command.Generation != actor.Spec.Generation || command.Epoch != actor.Spec.ControlEpoch) return false;
+        }
+        return true;
+    }
     private void AuthorityStep()
     {
         var tick = Simulation.Tick + 1; Simulation.BeginTick(tick, SimulationPhase.Authority);
@@ -273,13 +288,20 @@ internal sealed partial class NetworkSession : IDisposable
             if (!sleeper.Sleeping) throw new InvalidOperationException("The scripted wake requires a previously sleeping crate.");
             sleeper.ApplyCentralImpulse(new(25, -120));
         }
-        if (_secondPeer != 0 && (tick == 240 || _lateSleepTick != 0 && tick == _lateSleepTick + 32))
-        { SetOwner(10, _secondPeer); SetOwner(11, _firstPeer); }
+        if (IsControlHandoffTick(tick))
+        {
+            if (_checkProgress) { _checkHandoffInputTick = tick + 1; CheckHandoffPrepared += 2; }
+            SetOwner(10, _secondPeer); SetOwner(11, _firstPeer);
+        }
         foreach (var actor in Simulation.Actors)
         {
             if (actor is null) continue;
             var slot = CommandSlot(tick, actor.Spec.ID); var command = _commands[slot];
-            if (command.Tick == tick && command.ID == actor.Spec.ID && command.Generation == actor.Spec.Generation && command.Epoch == actor.Spec.ControlEpoch) { Simulation.SetInput(command); AppliedCommands++; }
+            if (command.Tick == tick && command.ID == actor.Spec.ID && command.Generation == actor.Spec.Generation && command.Epoch == actor.Spec.ControlEpoch)
+            {
+                Simulation.SetInput(command); AppliedCommands++;
+                if (_checkProgress && tick == _checkHandoffInputTick && actor.Spec.ID is 10 or 11) CheckHandoffApplied++;
+            }
         }
         MeasureStep(SimulationPhase.Authority);
         if (Simulation.Tick >= (ulong)_ticks) { _finalState = true; _finishedAt = _now; }

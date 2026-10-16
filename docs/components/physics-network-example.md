@@ -34,6 +34,53 @@ All example code uses public Electron2D types; the test-only partial probe suppl
 private GPU transfer counters. No alternative physics solver or private engine API
 is embedded in the consumer.
 
+## Prepared future input at control handoff (2026-10-16)
+
+The expanded check exposed a separate GPU contact-solver cycle during portable correction/replay. [The angular coupling correction](gpu-contact-solver.md#angular-normalfriction-coupling-2026-10-16) retains the original CCD/iteration budgets; its reduced physical regression is distinct from the input preparation below.
+
+A successful handoff-replacement check must first establish the old queued input.
+Previously a paced CPU/separate cohort reached all 600 ticks but recorded zero
+retired-command replacements: scheduling had never created the queue collision.
+The receiver's replacement logic already handled that case in wire preflight;
+repeating successful sessions did not make the process coverage deterministic.
+
+Before each scripted checked handoff, the authority now waits for both current
+controllers' exact ID/generation/epoch commands at handoff tick plus one. It then
+changes owners at the original scripted tick and publishes ordinary snapshots.
+The existing current-input gate requires both new epochs at the prepared future
+tick. Those packets replace the actually queued old entries; the authority counts
+application only when each command reaches SetInput at that same future tick.
+No synthetic command injection, new wire message, lead/resend increase, changed
+physical dt or game solver is involved.
+
+CheckHandoffPrepared counts two old queued commands per checked handoff;
+CheckHandoffApplied must equal it, and RetiredCommandReplacements must cover at
+least that count. CheckHandoffWaitPolls joins the existing phase/input wait sum
+and duration accounting. Missing one player's command or a wrong tick/retired
+epoch keeps preparation blocked in startup protocol controls. Ordinary sessions
+bypass this preparation and keep all three counters at zero. The application wire
+and public runtime API remain unchanged; this is verification pacing only. A
+public-runtime-only mutation host with just this preparation branch removed
+fails the startup control at tick 239 before launching any network children;
+the same control passes with the branch present.
+
+The recorded Linux x64 cohort completes twelve three-process sessions: managed
+and strict NativeAOT CPU/GPU clients under both numerical-thread policies, two
+instrumented test-host sessions and two ordinary unpaced controls. Each process
+reaches tick 600; the checked authority prepares and applies both replacements,
+and ordinary counters remain zero. Warm physical steps and replay retain 0/0
+owner/all-thread managed bytes. The CPU authority is denied GPU startup, and GPU
+clients use private software Vulkan; this does not establish foreign-platform,
+target-device, complete memory or real-window acceptance.
+
+That exhaustive cohort is frozen at 3dd2b53b plus this physics change. After the
+later viewport-presentation integration, the rebuilt current-main consumers also
+pass all eight public contact-coupling profiles, the slow managed threaded GPU
+and NativeAOT GPU-owner sessions, CCD on the separate lane and scene GPU checks.
+All 229 covered physics source documents and 32 embedded physics resources remain
+identical. Exhaustive/default results retain that frozen source generation;
+the later rendering revision has a separate verification scope.
+
 ## Deterministic validation phases and control handoff
 
 The application check explicitly coordinates all impulse phases from tick 240
@@ -68,7 +115,7 @@ progress-payload attempt totals, including invalid probes; transport framing is
 outside these application-byte counters. Failed checks stop owned children, drain
 their logs, then dispose streams, retaining the diagnostic output.
 
-The final Linux x64 source passes nine coordinated three-process profiles:
+The earlier 2026-10-15 phase cohort passed nine coordinated three-process profiles:
 five instrumented test-host cases (CPU default, slow threaded CPU, serial GPU,
 threaded GPU during full Release compilation, slow threaded GPU), one standalone
 managed example build with slow serial GPU, and three strict NativeAOT cases

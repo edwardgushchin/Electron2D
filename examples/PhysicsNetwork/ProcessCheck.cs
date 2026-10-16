@@ -60,9 +60,11 @@ internal static partial class ProcessCheck
             {
                 Check(authority.CheckProgressReceived > 0 && authority.RejectedCheckProgress >= 2,
                     "The check receives real phase progress and rejects forged future phase masks");
-                Check(authority.CheckInputWaitPolls > 0 && authority.CheckWaitPolls == authority.CheckInputWaitPolls + authority.CheckPhaseWaitPolls && authority.CheckWaitMS > 0,
+                Check(authority.CheckInputWaitPolls > 0 && authority.CheckWaitPolls == authority.CheckInputWaitPolls + authority.CheckPhaseWaitPolls + authority.CheckHandoffWaitPolls && authority.CheckWaitMS > 0,
                     "Check-only pacing waits for actual numbered inputs and accounts separately for missing phases");
-                Check(authority.RetiredCommandReplacements > 0, "New control epochs replace retired future commands without losing the handoff input");
+                Check(authority.CheckHandoffPrepared >= 2 && authority.CheckHandoffPrepared % 2 == 0 &&
+                    authority.CheckHandoffApplied == authority.CheckHandoffPrepared && authority.RetiredCommandReplacements >= authority.CheckHandoffPrepared,
+                    "Both old controllers queue future input before every handoff, and both new controllers replace and apply it at that same tick");
             }
             else Check(authority.OwnershipChanges >= 4 && authority.EpochCommands >= 2,
                 "Ordinary authority changes control and rejects retired-epoch inputs without waiting for clients");
@@ -84,7 +86,8 @@ internal static partial class ProcessCheck
                         "Client phase progress uses the existing impaired transport with accounted control bytes");
                 }
                 else Check(!report.CheckProgressEnabled && report.CheckPhases == 0 && report.CheckWaitPolls == 0 &&
-                    report.CheckPhaseWaitPolls == 0 && report.CheckInputWaitPolls == 0 && report.CheckWaitMS == 0 &&
+                    report.CheckPhaseWaitPolls == 0 && report.CheckInputWaitPolls == 0 && report.CheckHandoffWaitPolls == 0 &&
+                    report.CheckHandoffPrepared == 0 && report.CheckHandoffApplied == 0 && report.CheckWaitMS == 0 &&
                     report.CheckProgressSent == 0 && report.CheckProgressReceived == 0 && report.RejectedCheckProgress == 0 && report.CheckProgressAttemptedBytes == 0,
                     "Ordinary processes use no phase barriers, input waits or check-progress messages");
                 Check(report.SeparateThread == threaded, "Every process uses the requested numerical thread policy");

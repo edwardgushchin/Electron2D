@@ -4,6 +4,8 @@
 
 Last updated: 2026-10-16
 
+[Angular normal/friction coupling](../components/gpu-contact-solver.md#angular-normalfriction-coupling-2026-10-16) now preserves oblique rotating-ray response through colored and high-degree resident contacts, without increasing solver sweeps or the CCD budget. The public reset/full-frame fixture checks actual motion and reported impulse balance.
+
 [Portable reconstruction](../components/physics-snapshots.md#temporary-reference-lifetime)
 prepares spatial/sleep inputs for a shapeless world before applying its first
 snapshot. Capture/apply at tick zero preserves subsequent physical motion.

@@ -30,6 +30,9 @@ internal sealed class SessionReport
     public int CheckWaitPolls { get; set; }
     public int CheckPhaseWaitPolls { get; set; }
     public int CheckInputWaitPolls { get; set; }
+    public int CheckHandoffWaitPolls { get; set; }
+    public int CheckHandoffPrepared { get; set; }
+    public int CheckHandoffApplied { get; set; }
     public double CheckWaitMS { get; set; }
     public int CheckProgressSent { get; set; }
     public int CheckProgressReceived { get; set; }
@@ -168,6 +171,9 @@ internal sealed partial class NetworkSession
             CheckWaitPolls = CheckWaitPolls,
             CheckPhaseWaitPolls = CheckPhaseWaitPolls,
             CheckInputWaitPolls = CheckInputWaitPolls,
+            CheckHandoffWaitPolls = CheckHandoffWaitPolls,
+            CheckHandoffPrepared = CheckHandoffPrepared,
+            CheckHandoffApplied = CheckHandoffApplied,
             CheckWaitMS = CheckWaitMS,
             CheckProgressSent = CheckProgressSent,
             CheckProgressReceived = CheckProgressReceived,

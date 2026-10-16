@@ -33,6 +33,12 @@ void main()
     float pn=p.physical.x+c.parameters.x*(c.parameters.z-vn-softness*p.physical.x);
     if(!finite4(vec4(vn,vt,pn,0))){fail();return;}
     pn=joint?clamp(pn,p.correction.z,p.correction.w):max(0,pn);
+    if(!joint)
+    {
+        vec2 ma=responds(c,false)?inverseMass(a):vec2(0),mb=responds(c,true)?inverseMass(b):vec2(0);
+        vt+=(pn-p.physical.x)*(ma.y*c.normal.z*c.tangent.z+mb.y*c.normal.w*c.tangent.w);
+        if(!finite4(vec4(vt,0,0,0))){fail();return;}
+    }
     float limit=joint?0:c.tangent.x*pn;
     float pt=clamp(p.physical.y-c.parameters.y*vt,-limit,limit);
     uint degree=max(responds(c,false)&&inverseMass(a).x>0?heads[c.bodies.x].y:0u,responds(c,true)&&inverseMass(b).x>0?heads[c.bodies.y].y:0u);
