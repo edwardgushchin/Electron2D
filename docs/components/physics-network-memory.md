@@ -339,3 +339,85 @@ and coverage states are unchanged. Per-phase native peaks, complete ownership
 and unhooked/direct-mapping totals, NativeAOT native allocation budgets, arbitrary
 workloads, foreign platforms, target-device advantage and real window FPS remain
 open. The unverified RTX power cable remains a prerequisite for its load tests.
+
+## Event-delimited native phases, 2026-10-16
+
+The current network/preload mode now adds seven small native allocation/free
+markers to each child trace. These delimit the event stream before the original
+full-GC pauses and at session-ready/first-warm-step boundaries. The new
+[`summarize_native.py`](../../tools/physics-memory/summarize_native.py) validates
+the pinned Heaptrack 1.5/v3 stream and marker order, excludes their 140 cumulative
+requested bytes, and preserves live storage across intervals. It reports gross
+and non-marker peaks, entry/exit balances, allocator traffic and the allocation-
+leaf module partition at each interval's peak. This counts event-visible native
+requests, not every allocator, managed objects, padding, RSS or physical VRAM.
+
+A separate C calibration creates/frees 4,096/8,192 B around the markers. Its
+gross/non-marker peaks are 86,034/86,016 B; the startup interval allocates 8,192 B,
+the initial-simulation interval frees 8,192 B, and the post-warm interval frees
+4,096 B. Cross-boundary live storage is retained, rather than resetting to zero
+at each marker. The remaining 4,096 B at trace shutdown are its standard-output
+buffer, not a required zero-allocation claim. Synthetic tests also check carried
+peaks and rejection of bad versions, missing/duplicate/unordered markers,
+unbalanced frees, negative indices and backward timestamps. Independent
+Heaptrack flamegraphs check every accepted gross peak/end total.
+
+The accepted matrix repeats all four ordinary CPU/GPU and owner/separate
+cohorts with the original 900 ticks, 28 objects, packet impairments, ownership,
+geometry/contact/joint/support, event, correction and .002 final-convergence
+conditions. Warm managed authority and client predicted/replayed intervals
+retain 0/0 owner/all-thread bytes. All 60 process observations and 84 markers
+complete. The non-preloaded control still passes all fifteen CLRMD graph phases.
+The observer/launcher remain unmarked and unprofiled. The public consumer has
+none of the three test hook definitions/references and passes strict NativeAOT
+publication and its ordinary mixed-backend process check.
+
+The first warm marker uses the existing step predicate, before that step's
+timer/allocation counters. Authorities mark upcoming tick 300 after 299 steps.
+CPU primaries mark tick 300 after 206/220 steps; GPU primaries mark 553/556 after
+128 steps. Late clients mark 427–439 after 128 steps. These are real local
+prediction/replay histories, not a substituted global tick-only warmup. The
+post-warm interval still includes network polling, correction/replay, feature
+changes and report preparation before the completion hook; it is not a
+physics-step-only bracket. Session construction also precedes client admission,
+so remaining lazy setup/compilation belongs to initial simulation.
+
+| Cohort / role | Construction peak B | Initial simulation peak B | After first warm gate peak B | Extra-checkpoint interval peak B |
+| --- | ---: | ---: | ---: | ---: |
+| CPU owner / authority | 14,872,395 | 15,083,210 | 15,022,084 | 14,956,340 |
+| CPU owner / CPU | 14,979,488 | 15,436,761 | 15,369,835 | 15,303,555 |
+| CPU owner / late | 14,970,648 | 15,371,243 | 15,322,091 | 15,276,651 |
+| CPU separate / authority | 14,724,023 | 15,121,882 | 15,063,260 | 14,997,580 |
+| CPU separate / CPU | 14,980,356 | 15,285,917 | 15,225,312 | 15,159,032 |
+| CPU separate / late | 14,975,164 | 15,414,163 | 15,364,419 | 15,318,979 |
+| GPU owner / authority | 14,730,251 | 14,963,890 | 14,902,684 | 14,836,940 |
+| GPU owner / GPU | 45,729,311 | 482,969,577 | 200,395,319 | 199,917,007 |
+| GPU owner / late | 14,970,480 | 15,371,699 | 15,321,915 | 15,276,387 |
+| GPU separate / authority | 14,873,295 | 15,091,690 | 15,033,068 | 14,967,388 |
+| GPU separate / GPU | 45,721,187 | 483,044,977 | 200,470,231 | 199,991,906 |
+| GPU separate / late | 14,979,876 | 15,264,307 | 15,214,595 | 15,169,067 |
+
+Thus the large software-GPU peak is in initial simulation, before its first
+actual warm gate; it is not caused by the four added checkpoint captures.
+Post-warm and checkpoint peaks include inherited live driver/runtime storage,
+not just requests born in those intervals. Their difference is not an exclusive
+checkpoint budget. CPU full-lifetime peaks of 24–25 MB occur later in the
+release/report interval, while its active-session peaks are about 15 MB.
+Disposal, release, bootstrap and shutdown values and peak-module partitions
+remain in the complete eight-interval reports, not omitted from accounting.
+
+Markers are actual bounded requests from the diagnostic module, not fabricated
+allocation records. They add no GPU idle/step fence. Native concurrency is
+partitioned in profiler event order; timestamps have the profiler's original
+granularity. Marker loading/managed receipts and existing observation overhead
+remain instrumentation. These are not uninstrumented gameplay totals, native
+allocations per physical step or a hardware performance comparison.
+
+Accepted artifacts are `bin/physics-network-phases/2026-10-16/accepted/`, with
+four marked matrices and the default control; the parent directory retains
+source/binary audits, calibration, hook-erasure, public AOT and validation
+receipts. The initial pre-format pilot stays separate. API/coverage and engine
+runtime behavior remain unchanged. Direct mappings/unhooked/foreign ownership,
+strict NativeAOT allocation budgets, arbitrary/massive scenes, target GPU gain,
+rendered output and real window FPS remain open. RTX loading is still deferred
+until its power cable is checked.

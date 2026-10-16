@@ -15,6 +15,12 @@ consumer metadata and NativeAOT execution verify its absence there. Traced
 native peaks include startup and the extra checkpoint choice, remain separate
 from the non-preloaded managed graphs and do not establish window/GPU speed.
 
+The [marked native intervals](physics-network-memory.md#event-delimited-native-phases-2026-10-16)
+now distinguish session construction, initial simulation, the first original
+warm gate and post-session checkpoints/disposal/reporting. All original scene
+and protocol conditions remain. The marker hooks/library live only in the
+measurement host and do not add a public consumer dependency or GPU fence.
+
 [PhysicsNetwork](../../examples/PhysicsNetwork/README.md) connects the existing
 `SceneMultiplayer`/`ENetMultiplayerPeer`, `PhysicsSnapshotMap`, `PhysicsSnapshot` and
 world-tick APIs. Its CPU authority and GPU/CPU clients are separate OS processes.

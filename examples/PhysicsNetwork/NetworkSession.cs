@@ -89,8 +89,11 @@ internal sealed partial class NetworkSession : IDisposable
             var initial = NetworkWorld.InitialObjects; _manifestCount = initial.Length; initial.CopyTo(_manifest);
             Simulation.Reconcile(_manifest.AsSpan(0, _manifestCount));
         }
+        SessionReadyForTesting();
     }
     partial void PrepareBackendProbe();
+    partial void SessionReadyForTesting();
+    partial void BeforeStepForTesting(bool warm, SimulationPhase phase);
     internal void Poll()
     {
         _now = _clock.Elapsed.TotalSeconds;
@@ -334,6 +337,7 @@ internal sealed partial class NetworkSession : IDisposable
     private void MeasureStep(SimulationPhase phase)
     {
         var warm = Simulation.Tick + 1 >= 300 && CompletedSteps >= WarmupSteps;
+        BeforeStepForTesting(warm, phase);
         var total = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread(); var started = Stopwatch.GetTimestamp(); Simulation.Step(phase);
         var elapsed = Stopwatch.GetElapsedTime(started).TotalMilliseconds; var allocated = GC.GetAllocatedBytesForCurrentThread() - before; var allAllocated = GC.GetTotalAllocatedBytes(true) - total;
         CompletedSteps++;

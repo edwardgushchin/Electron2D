@@ -211,3 +211,11 @@ skipping CLRMD, with explicit unmeasured graph fields. A separate non-preloaded
 control retains the original managed inspections. Traced process/ENet-module
 peaks and end values have their own scope; they do not replace the ordinary
 samples above or establish exact gameplay/checkpoint-only intervals.
+
+[Event-delimited native phases](physics-network-memory.md#event-delimited-native-phases-2026-10-16)
+now split the current marked cohort at session-ready, original first-warm-step
+and existing lifecycle boundaries. The calibrated event analyzer excludes the
+seven tiny marker requests while carrying earlier live allocations. It locates
+the large software-device peak in initial simulation and the CPU lifetime peak
+in later report/release work. These event-order scopes still include observer
+and host/runtime storage and do not establish exclusive API or RSS budgets.

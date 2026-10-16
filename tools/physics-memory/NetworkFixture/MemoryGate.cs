@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Electron2D.Examples.PhysicsNetwork;
 
-internal static class MemoryGate
+internal static partial class MemoryGate
 {
     internal static string Role = "";
     internal static PhysicsCheckpoint[] Points = [];
@@ -13,9 +13,11 @@ internal static class MemoryGate
     {
         var folder = Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_MEMORY");
         if (string.IsNullOrEmpty(folder)) return;
+        if (phase == "baseline") InitializeMarkers();
+        Mark(phase switch { "baseline" => 0, "completed" => 3, "checkpointed" => 4, "disposed-held" => 5, "released" => 6, _ => throw new ArgumentException("Unknown memory phase.", nameof(phase)) });
         GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
         var name = System.IO.Path.Combine(folder, $"{Environment.ProcessId}-{phase}");
-        File.WriteAllText(name + ".tmp", JsonSerializer.Serialize(new { PID = Environment.ProcessId, Role, Phase = phase, ProcessMemory = ProcessMemory.Capture() }));
+        File.WriteAllText(name + ".tmp", JsonSerializer.Serialize(new { PID = Environment.ProcessId, Role, Phase = phase, TraceMarkers, ProcessMemory = ProcessMemory.Capture() }));
         File.Move(name + ".tmp", name + ".ready.json");
         var started = Stopwatch.GetTimestamp();
         while (!File.Exists(name + ".go"))
@@ -29,6 +31,12 @@ internal static class MemoryGate
 
 internal sealed partial class NetworkSession
 {
+    partial void SessionReadyForTesting() => MemoryGate.Mark(1, Simulation.Tick, CompletedSteps);
+    partial void BeforeStepForTesting(bool warm, SimulationPhase phase)
+    {
+        if (warm && MemoryGate.MarkersEnabled && !MemoryGate.WarmMarked)
+            MemoryGate.Mark(2, Simulation.Tick + 1, CompletedSteps, (int)phase);
+    }
     partial void FillBackendReport(SessionReport report)
     {
         MemoryGate.Pause("completed");

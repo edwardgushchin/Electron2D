@@ -102,6 +102,21 @@ if any(calibration[key] != value for key, value in abi.items()):
 with (output / "process-memory-self-test.log").open("w") as log:
     run_probe(["dotnet", str(output / "Probe/Probe.dll"), "--process-memory-self-test"], cwd=repo, env=env,
               stdout=log, stderr=subprocess.STDOUT, timeout=30)
+phase_markers = None
+if args.network and heaptrack:
+    marker_library = output / "libElectron2DMemoryPhases.so"
+    marker_calibration = output / "phase-marker-calibration"
+    marker_source = repo / "tools/physics-memory/phase_markers.c"
+    common = ["cc", "-std=c11", "-g", "-O0", "-fno-builtin", "-Wall", "-Wextra", "-Werror", str(marker_source)]
+    with (output / "build-phase-markers.log").open("w") as log:
+        subprocess.run([*common, "-shared", "-fPIC", "-o", str(marker_library)], stdout=log, stderr=subprocess.STDOUT, check=True)
+        subprocess.run([*common, "-DMEMORY_PHASE_CALIBRATION", "-o", str(marker_calibration)], stdout=log, stderr=subprocess.STDOUT, check=True)
+    trace = output / "phase-marker-calibration.raw"
+    with (output / "phase-marker-calibration.json").open("w") as log, (output / "phase-marker-calibration.err").open("w") as error:
+        run_probe([str(marker_calibration)], cwd=repo, env=env | {"LD_PRELOAD": heaptrack["preload"], "DUMP_HEAPTRACK_OUTPUT": str(trace)},
+                  stdout=log, stderr=error, timeout=30)
+    phase_markers = {"library": str(marker_library), "sha256": hashlib.file_digest(marker_library.open("rb"), "sha256").hexdigest(),
+                     "calibrationTraceSHA256": hashlib.file_digest(trace.open("rb"), "sha256").hexdigest()}
 if args.native_phases:
     env.update(VK_DRIVER_FILES=str(args.icd), VK_ICD_FILENAMES=str(args.icd))
     command = ["dotnet", str(output / "Probe/Probe.dll"), "--native-phases", str(output / "Tests/Electron2D.Tests.dll"),
@@ -113,6 +128,7 @@ if args.native_phases:
 elif args.network:
     if heaptrack:
         env["ELECTRON2D_TEST_PHYSICS_HEAPTRACK_PRELOAD"] = heaptrack["preload"]
+        env["ELECTRON2D_TEST_PHYSICS_PHASE_MARKERS"] = phase_markers["library"]
     icd = args.icd if args.client_backend == "gpu" else output / "missing-icd.json"
     env.update(VK_DRIVER_FILES=str(icd), VK_ICD_FILENAMES=str(icd))
     command = ["dotnet", str(output / "Probe/Probe.dll"), "--network", str(output / fixture / (fixture + ".dll")), str(output / "network"),
@@ -136,10 +152,12 @@ for backend in [] if args.network or args.native_phases else ["cpu", *(["gpu"] i
     report = json.loads((output / f"{backend}.json").read_text())
     print(backend, [(p["Measurement"]["Metadata"]["Phase"], p["Measurement"]["ManagedObjectBytes"]) for p in report["Phases"]], flush=True)
 artifact_paths = [output / "Probe/Probe.dll", output / fixture / (fixture + ".dll"), output / fixture / "Electron2D.dll", abi_program]
+if phase_markers:
+    artifact_paths.extend([marker_library, marker_calibration])
 if args.native_phases:
     artifact_paths.extend([output / "Tests/Electron2D.Tests.dll", output / "Tests/Electron2D.dll"])
 artifacts = {str(p.relative_to(output)): hashlib.file_digest(p.open("rb"), "sha256").hexdigest() for p in artifact_paths}
-(output / "environment.json").write_text(json.dumps({"driver": driver, "heaptrack": heaptrack, "bodies": args.bodies, "history": args.history,
+(output / "environment.json").write_text(json.dumps({"driver": driver, "heaptrack": heaptrack, "phaseMarkers": phase_markers, "bodies": args.bodies, "history": args.history,
     "network": args.network, "unpaced": args.unpaced, "clientPollDelayMS": args.client_poll_delay_ms, "nativePhases": args.native_phases, "clientBackend": args.client_backend, "threaded": args.threaded, "cycles": args.cycles, "artifacts": artifacts,
     "host": {"kernel": platform.release(), "architecture": platform.machine(), "pageSize": os.sysconf("SC_PAGESIZE"),
              "libcVersion": abi["LibcVersion"], "mallocArenaMax": env.get("MALLOC_ARENA_MAX")}}, indent=2) + "\n")

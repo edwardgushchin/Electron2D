@@ -189,12 +189,51 @@ CPU-only and owner-lane variants use the same options described above.
 
 Traces cover complete process lifetimes, including cold startup, real ordinary
 network simulation and the extra four local checkpoint captures/restoration
-after the session report. Their peaks do not isolate ordinary gameplay, warmed
-steps or checkpoint-only intervals. Use the matching Heaptrack interpreter and
-unmerged reports as described below. Keep hooked requested-byte peaks/end values,
+after the session report. Native phase markers now separate recorded intervals
+as described below. Use the matching Heaptrack interpreter and
+unmerged reports. Keep hooked requested-byte peaks/end values,
 module allocation paths, wire payload, selected managed graphs and RSS distinct.
-The profiler changes timing and memory. [Recorded network native scope](../../docs/components/physics-network-memory.md#native-allocation-stack-cohort-2026-10-16)
-retains the remaining ownership, phase-attribution and hardware gates.
+The profiler changes timing and memory. [Recorded network native scope](../../docs/components/physics-network-memory.md#event-delimited-native-phases-2026-10-16)
+retains the remaining ownership, exclusive physical-step and hardware gates.
+
+#### Event-delimited network phases
+
+Network/preload mode builds `libElectron2DMemoryPhases.so` and a separate native
+calibration from `phase_markers.c`. Only session children load the marker library.
+It makes seven real malloc/free pairs, requesting 17 through 23 bytes; their
+sizes encode phase IDs. The native function returns its requested size, and the
+host rejects failed or unordered markers. Collection receipts include the
+marker-library SHA-256, mappings and each child's recorded phase/tick/step data.
+The library/delegate remain process-scoped instrumentation, outside engine owners.
+
+Interpret raw traces with the matching Heaptrack 1.5 tools, then run:
+
+```bash
+python3 -B tools/physics-memory/summarize_native.py \
+  NEW_OUTPUT/network/allocation-traces/gpu.heaptrack.interpreted.gz \
+  > NEW_OUTPUT/gpu-phases.json
+python3 -B tools/physics-memory/test_summarize_native.py
+```
+
+The analyzer requires interpreted gzip data in the pinned 1.5/v3 format. It
+checks the seven marker births/frees and allocation balances, carries live bytes
+across boundaries, and excludes the 140 cumulative marker-request bytes. It
+reports both the original gross peak and the non-marker requested-byte peak.
+Per-interval peaks partition the live allocation-leaf modules at that instant;
+their independent maxima must not be summed. Exact source/data/calibration and
+[phase results](../../docs/components/physics-network-memory.md#event-delimited-native-phases-2026-10-16)
+stay separate from RSS and physical-device ownership.
+
+Intervals cover process bootstrap, session construction, initial simulation,
+the session after its first original warm gate, added checkpoints, disposal,
+release/report preparation and shutdown. The warm marker executes before the
+original step's counters/timer and only once; public consumer hooks are erased.
+It requires tick 300 or later and at least 128 completed local steps, including
+real client replay. Later correction/replay and feature changes remain included.
+Post-session intervals also include the existing GC/metadata/gate observations;
+their peaks are not exclusive API costs or marginal checkpoint storage.
+Markers delimit recorded event order without adding GPU-idle fences. Logged
+timestamps retain Heaptrack's sampling granularity and are not step latencies.
 
 ## Repeated world retirement
 

@@ -12,6 +12,9 @@ internal static class NetworkProbe
         var preload = Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_HEAPTRACK_PRELOAD");
         if (preload is not null) preload = Path.GetFullPath(preload);
         if (preload is not null && (Path.GetFileName(preload) != "libheaptrack_preload.so" || !File.Exists(preload))) throw new ArgumentException("An existing heaptrack preload library is required.");
+        var markers = Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PHASE_MARKERS");
+        if (preload is not null && (markers is null || Path.GetFileName(markers) != "libElectron2DMemoryPhases.so" || !File.Exists(markers)) || preload is null && markers is not null)
+            throw new ArgumentException("Network native traces require the matching phase marker library; ordinary graph collection excludes it.");
         var folder = Path.GetFullPath(args[1]);
         if (Directory.Exists(folder)) throw new IOException("The network memory output directory must be new.");
         var gates = Path.Combine(folder, "gates"); Directory.CreateDirectory(gates);
@@ -41,9 +44,11 @@ internal static class NetworkProbe
                     if (!measured.Add(path)) continue;
                     if (measured.Count == 1)
                     {
-                        collectorProfiled = File.ReadAllText($"/proc/{Environment.ProcessId}/maps").Contains("libheaptrack_preload.so", StringComparison.Ordinal);
-                        launcherProfiled = File.ReadAllText($"/proc/{check.Id}/maps").Contains("libheaptrack_preload.so", StringComparison.Ordinal);
-                        if (collectorProfiled || launcherProfiled) throw new InvalidOperationException("Only the three session children may be allocation-profiled.");
+                        var collectorMaps = File.ReadAllText($"/proc/{Environment.ProcessId}/maps"); var launcherMaps = File.ReadAllText($"/proc/{check.Id}/maps");
+                        collectorProfiled = collectorMaps.Contains("libheaptrack_preload.so", StringComparison.Ordinal);
+                        launcherProfiled = launcherMaps.Contains("libheaptrack_preload.so", StringComparison.Ordinal);
+                        if (collectorProfiled || launcherProfiled || collectorMaps.Contains("libElectron2DMemoryPhases.so", StringComparison.Ordinal) || launcherMaps.Contains("libElectron2DMemoryPhases.so", StringComparison.Ordinal))
+                            throw new InvalidOperationException("Only the three session children may be allocation-profiled or phase-marked.");
                     }
                     var metadata = JsonSerializer.Deserialize<JsonElement>(File.ReadAllText(path));
                     var pid = metadata.GetProperty("PID").GetInt32();
@@ -56,7 +61,16 @@ internal static class NetworkProbe
                     if (hardware || phase is "completed" or "checkpointed" && software != (role == "gpu")) throw new InvalidOperationException("Unexpected network driver mapping.");
                     var heaptrackMapped = maps.Contains("libheaptrack_preload.so", StringComparison.Ordinal);
                     if (heaptrackMapped != (preload is not null)) throw new InvalidOperationException("Unexpected network allocation profiler mapping.");
-                    var report = new { Metadata = metadata, LavapipeMapped = software, NVIDIAMapped = hardware, HeaptrackMapped = heaptrackMapped, HeapAttached = preload is null, Process = ProcessObservation.Read(pid), Measurement = preload is null ? Inspect(pid, phase) : null };
+                    var markerMapped = maps.Contains("libElectron2DMemoryPhases.so", StringComparison.Ordinal);
+                    if (markerMapped != (preload is not null)) throw new InvalidOperationException("Unexpected phase marker mapping.");
+                    if (preload is not null)
+                    {
+                        var receipts = metadata.GetProperty("TraceMarkers").EnumerateArray().ToArray();
+                        var expected = phase switch { "baseline" => 1, "completed" => 4, "checkpointed" => 5, "disposed-held" => 6, "released" => 7, _ => throw new InvalidDataException("Unknown memory phase.") };
+                        if (receipts.Length != expected || receipts.Where((r, i) => r.GetProperty("Phase").GetInt32() != i).Any()) throw new InvalidDataException("Incomplete native phase receipts.");
+                        if (expected >= 4 && (receipts[2].GetProperty("Tick").GetUInt64() < 300 || receipts[2].GetProperty("CompletedSteps").GetInt32() < 128)) throw new InvalidDataException("The native warm boundary preceded the original warmup gate.");
+                    }
+                    var report = new { Metadata = metadata, LavapipeMapped = software, NVIDIAMapped = hardware, HeaptrackMapped = heaptrackMapped, PhaseMarkerMapped = markerMapped, HeapAttached = preload is null, Process = ProcessObservation.Read(pid), Measurement = preload is null ? Inspect(pid, phase) : null };
                     File.WriteAllText(Path.Combine(folder, role + "-" + phase + ".json"), JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true }));
                     File.WriteAllText(path[..^".ready.json".Length] + ".go", "next");
                     Console.WriteLine($"Measured {role} {phase}.");
@@ -76,7 +90,7 @@ internal static class NetworkProbe
                     allocations.Add(new { Role = role, PID = pid, Path = trace, Bytes = new FileInfo(trace).Length, SHA256 = Hash(trace) });
                 }
             }
-            File.WriteAllText(Path.Combine(folder, "collection.json"), JsonSerializer.Serialize(new { HeapAttached = preload is null, CollectorHeaptrackMappedAtFirstGate = collectorProfiled, LauncherHeaptrackMappedAtFirstGate = launcherProfiled, HeaptrackPreloadSHA256 = preload is null ? null : Hash(preload), AllocationTraces = allocations }, new JsonSerializerOptions { WriteIndented = true }));
+            File.WriteAllText(Path.Combine(folder, "collection.json"), JsonSerializer.Serialize(new { HeapAttached = preload is null, CollectorHeaptrackMappedAtFirstGate = collectorProfiled, LauncherHeaptrackMappedAtFirstGate = launcherProfiled, HeaptrackPreloadSHA256 = preload is null ? null : Hash(preload), PhaseMarkerLibrarySHA256 = markers is null ? null : Hash(markers), AllocationTraces = allocations }, new JsonSerializerOptions { WriteIndented = true }));
         }
         finally
         {

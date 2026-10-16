@@ -98,5 +98,13 @@ now add twelve instrumented child traces with 60 process observations. All four
 ordinary CPU/GPU and owner/separate cohorts retain their original physics,
 network and zero warm managed-allocation checks. Traced process and transport-
 module peaks remain separate from wire payload, managed graphs and RSS, and
-include the additional checkpoint choice. Phase-specific native budgets, complete
-ownership and target-device/window acceptance remain open.
+include the additional checkpoint choice, separated by the marked follow-up
+below. Exclusive physical-step budgets, complete ownership and target-device/
+window acceptance remain open.
+
+[Event-delimited native intervals](../components/physics-network-memory.md#event-delimited-native-phases-2026-10-16)
+now distinguish construction, initial and post-warm session work, added local
+checkpoints and release/reporting, while preserving full ordinary network checks.
+Calibration excludes only the seven explicit marker requests and retains earlier
+live storage. These instrumented event-order scopes remain separate from
+physical-step-only allocations, uninstrumented timing and target/window acceptance.
