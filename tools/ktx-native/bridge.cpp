@@ -6,6 +6,26 @@
 
 static constexpr uint64_t limit = 64u * 1024u * 1024u;
 
+extern "C" int e2d_basis_decode(const uint8_t *data, uint32_t size, ktxTexture2 **result);
+
+extern "C" int e2d_basis_create(const uint8_t *data, uint64_t size, e2d_ktx_info *info, void **result) {
+    if (info) *info = {};
+    if (result) *result = nullptr;
+    if (!info || !result || !data || size < 64 || size > limit) return -1;
+    ktxTexture2 *texture = nullptr;
+    try {
+        auto status = e2d_basis_decode(data, static_cast<uint32_t>(size), &texture);
+        if (status) return status;
+        info->width = texture->baseWidth; info->height = texture->baseHeight; info->levels = texture->numLevels;
+        info->flags = 8; info->version = static_cast<uint32_t>(ktxTexture2_c); info->format = texture->vkFormat; info->swizzle = 0x61626772u;
+        *result = texture;
+        return 0;
+    } catch (...) {
+        if (texture) ktxTexture2_Destroy(texture);
+        return -3;
+    }
+}
+
 static uint32_t word(const uint8_t *p, bool big = false) {
     uint32_t v = 0;
     for (unsigned i = 0; i < 4; ++i) v |= static_cast<uint32_t>(p[big ? 3 - i : i]) << (i * 8);
@@ -203,6 +223,7 @@ extern "C" int e2d_ktx_create(const uint8_t *data, uint64_t size, e2d_ktx_info *
             auto *second = reinterpret_cast<ktxTexture2 *>(texture);
             if (ktxTexture2_GetTransferFunction_e(second) == KHR_DF_TRANSFER_SRGB) info->flags |= 4;
             if (ktxTexture2_IsTranscodable(second)) {
+                info->flags |= 8;
                 auto target = ktxTexture2_IsHDR(second) ? KTX_TTF_RGB_HALF : KTX_TTF_RGBA32;
                 status = ktxTexture2_TranscodeBasis(second, target, 0);
                 if (status != KTX_SUCCESS) { destroy(texture); return static_cast<int>(status); }

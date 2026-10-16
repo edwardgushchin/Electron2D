@@ -1,6 +1,6 @@
 # Image-array resources and sampling
 
-Last updated: 2026-10-11
+Last updated: 2026-10-16
 
 ## Scope and types
 
@@ -49,3 +49,5 @@ Compressed/integer-sampled source formats, descriptor binding arrays, configurab
 Integer device image consumers now validate float/signed/unsigned sampled scalar types and array roles, migrate reload bindings and use nearest native integer sampling. Cold snapshots expose raw-valued float32 RGBA; byte device readback preserves all integer bits. See [the integer canvas checkpoint](../components/local-compute.md#integer-canvas-sampling-checkpoint) for executable evidence and the connected scalar-aware lighting and alpha-mask behavior.
 
 BC1–BC7 arrays preserve exact original blocks in source archives and layer reads. The GPU uploads homogeneous block formats across all layers/mips; decoded fallback uses the prepared snapshots. Borrowed RenderingDevice identities describe actual native BC storage and retain existing lifetime rules. ETC/EAC/ASTC and integer sampling remain separate.
+
+[File-backed arrays](compressed-arrays.md) extend this branch through CompressedTextureLayered/CompressedTextureArray, bounded GSTL loading, legacy/KTX2 Basis channel roles and ordinary source/cache/archive ownership.

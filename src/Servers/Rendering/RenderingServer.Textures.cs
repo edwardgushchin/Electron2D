@@ -156,7 +156,7 @@ public sealed partial class RenderingServer
     internal string TextureGetPathCore(RID texture)
     {
         EnsureOwner(); var target = RenderingTextureRegistry.ResolveResource(texture);
-        return target is TextureRD { ServerOwner: not null } deviceTexture ? deviceTexture.ServerPath : target is ServerTexture owned ? owned.Path : target is TextureLayered { ServerOwner: not null } array ? array.ServerPath : target.ResourcePath;
+        return target is TextureRD { ServerOwner: not null } deviceTexture ? deviceTexture.ServerPath : target is ServerTexture owned ? owned.Path : target is TextureLayered { ServerOwner: not null } array ? array.ServerPath : target is CompressedTextureLayered imported ? imported.RenderingPath : target.ResourcePath;
     }
 
     internal void FreeRIDCore(RID rid)

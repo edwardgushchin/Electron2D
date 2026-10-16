@@ -27,19 +27,24 @@ public sealed partial class Image
         Commit(ReadKTX(source));
     }
 
-    private static unsafe State ReadKTX(byte[] source)
+    private static State ReadKTX(byte[] source) => ReadNativeTexture(source, legacyBasis: false, requireBasis: false, linearize: true);
+
+    private static unsafe State ReadNativeTexture(byte[] source, bool legacyBasis, bool requireBasis, bool linearize)
     {
         KTXInfo info;
         nint pointer;
         fixed (byte* input = source)
         {
-            var status = KTXCreate(input, (ulong)source.Length, out info, out pointer);
+            var status = legacyBasis ? BasisCreate(input, (ulong)source.Length, out info, out pointer) :
+                KTXCreate(input, (ulong)source.Length, out info, out pointer);
             if (status == -2) throw new NotSupportedException("KTX arrays, cubes and volumes are not flat images.");
             if (status is -3 or 13) throw new IOException("KTX decoding could not allocate its working data.");
             if (status is 16 or 17) throw new NotSupportedException("The KTX codec does not support the declared storage feature.");
             if (status != 0) throw new InvalidDataException($"KTX decoding failed with codec status {status}.");
         }
         using var texture = new KTXHandle(pointer);
+        if (requireBasis && (info.Version != 2 || (info.Flags & 8) == 0))
+            throw new InvalidDataException("Imported Basis data requires a transcodable image.");
         var format = KTXFormat(info.Version, info.Format);
         var width = checked((int)info.Width); var height = checked((int)info.Height);
         ValidateDimensions(width, height);
@@ -66,7 +71,7 @@ public sealed partial class Image
             if ((info.Flags & 2) != 0) state = FlipState(state, horizontal: false);
             if (info.Swizzle != 0x61626772) state = SwizzleKTX(state, info.Swizzle);
         }
-        if ((info.Flags & 4) != 0 && state.Format is Format.Rgb8 or Format.Rgba8)
+        if (linearize && (info.Flags & 4) != 0 && state.Format is Format.Rgb8 or Format.Rgba8)
         {
             var stride = GetBytesPerPixel(state.Format);
             for (var offset = 0; offset < state.Data.Length; offset += stride)

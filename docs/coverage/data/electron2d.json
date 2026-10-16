@@ -3310,6 +3310,36 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CompressedTextureArray",
+    "kind": "type",
+    "declaringType": "Electron2D.CompressedTextureArray",
+    "name": "CompressedTextureArray",
+    "signature": "public sealed class Electron2D.CompressedTextureArray",
+    "visibility": "public",
+    "baseType": "Electron2D.CompressedTextureLayered",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CompressedTextureLayered",
+    "kind": "type",
+    "declaringType": "Electron2D.CompressedTextureLayered",
+    "name": "CompressedTextureLayered",
+    "signature": "public abstract class Electron2D.CompressedTextureLayered",
+    "visibility": "public",
+    "baseType": "Electron2D.TextureLayered",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ConcavePolygonShape",
     "kind": "type",
     "declaringType": "Electron2D.ConcavePolygonShape",
@@ -17523,6 +17553,32 @@
     "name": ".ctor",
     "signature": "public ColorRect()",
     "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.CompressedTextureArray..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CompressedTextureArray",
+    "name": ".ctor",
+    "signature": "public CompressedTextureArray()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.CompressedTextureLayered..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CompressedTextureLayered",
+    "name": ".ctor",
+    "signature": "protected CompressedTextureLayered()",
+    "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -82492,6 +82548,212 @@
       {
         "name": "what",
         "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CompressedTextureArray.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.CompressedTextureArray",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CompressedTextureLayered.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.CompressedTextureLayered",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CompressedTextureLayered.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CompressedTextureLayered",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CompressedTextureLayered.GetFormat()",
+    "kind": "method",
+    "declaringType": "Electron2D.CompressedTextureLayered",
+    "name": "GetFormat",
+    "signature": "public override Electron2D.Image.Format GetFormat()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image.Format",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CompressedTextureLayered.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.CompressedTextureLayered",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CompressedTextureLayered.GetLayerData(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CompressedTextureLayered",
+    "name": "GetLayerData",
+    "signature": "public override Electron2D.Image GetLayerData(System.Int32 layerIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CompressedTextureLayered.GetLayers()",
+    "kind": "method",
+    "declaringType": "Electron2D.CompressedTextureLayered",
+    "name": "GetLayers",
+    "signature": "public override System.Int32 GetLayers()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CompressedTextureLayered.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CompressedTextureLayered",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CompressedTextureLayered.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.CompressedTextureLayered",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CompressedTextureLayered.HasMIPMaps()",
+    "kind": "method",
+    "declaringType": "Electron2D.CompressedTextureLayered",
+    "name": "HasMIPMaps",
+    "signature": "public override System.Boolean HasMIPMaps()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CompressedTextureLayered.Load(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.CompressedTextureLayered",
+    "name": "Load",
+    "signature": "public System.Void Load(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CompressedTextureLayered.OnResourcePathChanged(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.CompressedTextureLayered",
+    "name": "OnResourcePathChanged",
+    "signature": "protected override System.Void OnResourcePathChanged(System.String path)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
         "default": null
       }
     ],
@@ -217137,6 +217399,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CompressedTextureLayered.LoadPath()",
+    "kind": "property",
+    "declaringType": "Electron2D.CompressedTextureLayered",
+    "name": "LoadPath",
+    "signature": "public System.String LoadPath { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

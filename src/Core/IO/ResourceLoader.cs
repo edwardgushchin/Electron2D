@@ -35,7 +35,7 @@ public sealed partial class ResourceLoader : ElectronObject
     public static void SetAbortOnMissingResources(bool abort) => Volatile.Write(ref Runtime._abortOnMissing, abort);
     internal readonly ResourceFileRegistry FileTypes = new();
     private readonly object _loadGate = new();
-    private readonly List<ResourceFormatLoader> _fileLoaders = [new ResourceArchiveLoader(), new ScriptSourceLoader(), new ShaderIncludeSourceLoader(), new TranslationCatalogLoader()];
+    private readonly List<ResourceFormatLoader> _fileLoaders = [new ResourceArchiveLoader(), new ScriptSourceLoader(), new ShaderIncludeSourceLoader(), new CompressedArraySourceLoader(), new TranslationCatalogLoader()];
     private ResourceLoader() { }
     private static object LoadGate => Runtime._loadGate;
     private static List<ResourceFormatLoader> FileLoaders => Runtime._fileLoaders;

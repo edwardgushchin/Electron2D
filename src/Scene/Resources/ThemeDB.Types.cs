@@ -131,6 +131,8 @@ public sealed partial class ThemeDB
         ["ColorPicker"] = ["ColorPicker", "VBoxContainer", "BoxContainer", "Container", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["ColorPickerButton"] = ["ColorPickerButton", "Button", "BaseButton", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["ColorRect"] = ["ColorRect", "Control", "CanvasItem", "Node", "ElectronObject"],
+        ["CompressedTextureArray"] = ["CompressedTextureArray", "CompressedTextureLayered", "TextureLayered", "Resource", "ElectronObject"],
+        ["CompressedTextureLayered"] = ["CompressedTextureLayered", "TextureLayered", "Resource", "ElectronObject"],
         ["ConcavePolygonShape"] = ["ConcavePolygonShape", "Shape", "Resource", "ElectronObject"],
         ["ConfigFile"] = ["ConfigFile", "ElectronObject"],
         ["ConfirmationDialog"] = ["ConfirmationDialog", "AcceptDialog", "Window", "Viewport", "Node", "ElectronObject"],

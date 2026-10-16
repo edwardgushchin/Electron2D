@@ -88,6 +88,9 @@ if (args.Length == 2 && args[0] == "--image-exr-oracle") { ImageEXRTests.RunOrac
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_EXR") is { } exrProfile) { if (exrProfile == "managed") { VerifyImages(); ImageEXRTests.RunManaged(); } else ImageEXRTests.RunNative(exrProfile); return; }
 if (args.Length == 2 && args[0] == "--image-webp-archive") { ImageWebPTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_WEBP") is { } webpProfile) { if (webpProfile == "managed") { VerifyImages(); ImageWebPTests.RunManaged(); } else ImageWebPTests.RunNative(webpProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPRESSED_ARRAY") == "managed") { CompressedArrayTests.RunManaged(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPRESSED_ARRAY") == "native") { CompressedArrayTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPRESSED_ARRAY") == "restore") { CompressedArrayTests.Restore(args[0], args[1], args[2]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_KTX") is { } ktxProfile) { if (ktxProfile == "managed") { VerifyImages(); ImageKTXTests.RunManaged(); } else ImageKTXTests.RunNative(ktxProfile); return; }
 if (args.Length == 2 && args[0] == "--image-bcn-archive") { ImageBCnTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_BCN") is { } bcnProfile) { if (bcnProfile == "managed") { VerifyImages(); ImageBCnTests.RunManaged(); } else ImageBCnTests.RunNative(bcnProfile); return; }
@@ -1437,6 +1440,7 @@ RenderingPrimitiveTests.Run();
 RenderingCanvasTests.Run();
 NavigationTopologyTests.Run();
 TextureArrayTests.Run();
+CompressedArrayTests.RunManaged();
 WorkerThreadPoolTests.Run();
 NoiseGenerationTests.Run();
 NavigationIterationTests.Run();

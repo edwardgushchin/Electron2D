@@ -293,6 +293,12 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
                 stream.Put32(texture.GetWidth());
                 stream.Put32(texture.GetHeight());
             }
+            else if (resource is CompressedTextureLayered imported)
+            {
+                var state = imported.CaptureFileState(); ResourceArchiveStrings.Write(stream, state.Path);
+                stream.Put32(state.Pixels?.Layers.Length ?? 0);
+                if (state.Pixels is not null) foreach (var layer in state.Pixels.Layers) { using var layerImage = layer.CopyImage(); WriteImage(stream, layerImage); }
+            }
             else if (resource is TextureArray array)
             {
                 var pixels = array.CaptureLayers(); stream.Put32(pixels?.Layers.Length ?? 0);
@@ -522,6 +528,23 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
                     texture.SetImage(pixels);
                 }
                 texture.SetSizeOverride(new Vector2i(value.Get32(), value.Get32()));
+            }
+            else if (resource is CompressedTextureLayered imported)
+            {
+                var sourcePath = ResourceArchiveStrings.Read(value); var layerCount = value.Get32();
+                if (layerCount < 0 || layerCount > value.GetAvailableBytes() / 17) throw new InvalidDataException("Invalid stored compressed array layer count.");
+                var layers = new TexturePixels[layerCount]; var remaining = LayeredTexturePixels.MaximumBytes;
+                try
+                {
+                    for (var layer = 0; layer < layers.Length; ++layer)
+                    {
+                        using var pixels = new Image(); ReadImage(value, pixels);
+                        layers[layer] = TexturePixels.FromImage(pixels, remaining);
+                        remaining -= layers[layer].Source.Data.Length + layers[layer].Upload.Data.Length;
+                    }
+                    imported.RestoreFileState(layerCount == 0 ? null : new LayeredTexturePixels(layers), sourcePath);
+                }
+                catch (ArgumentException error) { throw new InvalidDataException("Invalid stored compressed array layers.", error); }
             }
             else if (resource is TextureArray array)
             {

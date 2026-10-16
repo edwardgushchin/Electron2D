@@ -100,7 +100,7 @@ internal static class AnimatedSpriteTests
         sprite.Play(); tree.Paused = true; tree.ProcessFrame(.25); State(sprite, 0, 0, true);
         sprite.ProcessMode = ProcessMode.Always; tree.ProcessFrame(.25); State(sprite, 0, .25f, true);
         sprite.ProcessMode = ProcessMode.Disabled; tree.ProcessFrame(.25); State(sprite, 0, .25f, true);
-        sprite.ProcessMode = ProcessMode.Inherit; tree.Paused = false;
+        sprite.ProcessMode = ProcessMode.Pausable; tree.Paused = false;
         frames.SetAnimationSpeed("default", 0); tree.ProcessFrame(1); State(sprite, 0, .25f, true);
         frames.SetAnimationSpeed("default", 2); frames.SetFrame("default", 0, null, 2);
         sprite.Stop(); sprite.Play(); tree.ProcessFrame(1); State(sprite, 0, 1, true);

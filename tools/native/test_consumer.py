@@ -6,6 +6,8 @@ import json
 from zipfile import ZipFile
 from pathlib import Path
 import shutil
+import base64
+import struct
 import subprocess
 import sys
 import tempfile
@@ -86,6 +88,32 @@ for index, fixture in enumerate(json.loads((ROOT / "tests/Electron2D.Tests/TestD
 ktx{index}.LoadKTXFromBuffer(Convert.FromBase64String("{fixture['encoded']}"));
 if (ktx{index}.MIPMapCount != 2 || !ktx{index}.GetData().AsSpan().SequenceEqual(Convert.FromBase64String("{fixture['pixels']}"))) throw new Exception("KTX/Basis package consumer failed");
 """
+    PROGRAM = PROGRAM.replace("using Electron2D;\n", "using Electron2D;\n" + snippet, 1)
+
+for index, fixture in enumerate(json.loads((ROOT / "tests/Electron2D.Tests/TestData/CompressedArray/basis-oracle.json").read_text())["fixtures"]):
+    hdr = fixture["format"] == "Rgbh"
+    payload = struct.pack("<I", 5 if hdr else 2) + base64.b64decode(fixture["encoded"])
+    container = b"GSTL" + struct.pack("<8I", 1, 1, 0, 0, 0, 0, 0, 0)
+    container += struct.pack("<IHHIII", 3, 7, 5, 2, 0, len(payload)) + payload
+    snippet = f'''var arrayPath{index} = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "e2d-import-" + Guid.NewGuid().ToString("N") + ".ctexarray");
+try
+{{
+    System.IO.File.WriteAllBytes(arrayPath{index}, Convert.FromBase64String("{base64.b64encode(container).decode()}"));
+    using var imported = ResourceLoader.Load<CompressedTextureArray>(arrayPath{index}, ResourceLoader.CacheMode.Ignore);
+    using var pixels = imported.GetLayerData(0)!;
+    if (imported.GetLayers() != 1 || !imported.HasMIPMaps() || !pixels.GetData().AsSpan().SequenceEqual(Convert.FromBase64String("{fixture['pixels']}"))) throw new Exception("Imported Basis array package consumer failed");
+    var archive = arrayPath{index} + ".e2dres";
+    try
+    {{
+        ResourceSaver.Save(imported, archive); System.IO.File.Delete(arrayPath{index});
+        using var restored = ResourceLoader.Load<CompressedTextureArray>(archive, ResourceLoader.CacheMode.Ignore);
+        using var restoredPixels = restored.GetLayerData(0)!;
+        if (!restoredPixels.GetData().AsSpan().SequenceEqual(pixels.GetData())) throw new Exception("Imported array archive consumer failed");
+    }}
+    finally {{ System.IO.File.Delete(archive); }}
+}}
+finally {{ System.IO.File.Delete(arrayPath{index}); }}
+'''
     PROGRAM = PROGRAM.replace("using Electron2D;\n", "using Electron2D;\n" + snippet, 1)
 
 

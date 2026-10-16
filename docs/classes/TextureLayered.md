@@ -1,6 +1,6 @@
 # TextureLayered
 
-Last updated: 2026-10-12
+Last updated: 2026-10-16
 
 - Source: [TextureLayered.cs](../../src/Scene/Resources/TextureLayered.cs)
 - Component: [Array resources](../components/texture-arrays.md)
@@ -20,6 +20,11 @@ public abstract class Electron2D.TextureLayered
 Resources own copied pixels or supply them through typed getters. Custom producers emit Changed after mutation; prepared rendering reuses immutable snapshots. Native allocations belong to the active renderer.
 
 **Inherits:** [Resource](Resource.md)
+
+**Inherited by:** [ImageTextureLayered](ImageTextureLayered.md),
+[CompressedTextureLayered](CompressedTextureLayered.md),
+[PlaceholderTextureLayered](PlaceholderTextureLayered.md),
+[TextureLayeredRD](TextureLayeredRD.md).
 
 ## Example
 
@@ -229,3 +234,5 @@ Compressed/integer-sampled source formats, descriptor binding arrays, configurab
 ## Renderer allocation interop
 
 RenderingServer.TextureGetRDTexture exposes actual uploaded ordinary/array storage and completed viewport images to the retained device. Compatible updates keep identity; source allocation replacement/disposal or viewport target retirement expires it. Device writes affect GPU pixels while authored CPU snapshots remain unchanged. TextureRD/TextureArrayRD can sample an exported RID directly. Wrapper disposal does not own the source. See [ordering, lifetime and executed checks](../components/local-compute.md#renderer-texture-export-checkpoint).
+
+[CompressedTextureLayered and CompressedTextureArray](../components/compressed-arrays.md) extend the same independently sampled branch with atomic file loading, embedded source archives and shared raw/PNG/WebP/Basis mip snapshots. Named samplers retain their fixed base-level policy; explicit texel fetches verify stored imported mips in a GPU frame.

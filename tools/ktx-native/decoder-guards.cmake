@@ -21,6 +21,23 @@ if(position LESS 0)
   message(FATAL_ERROR "Pinned KTX codebook error guard no longer matches its source")
 endif()
 string(REPLACE "${before}" "${after}" text "${text}")
+# Both container paths share one initialization guard in the engine-owned adapter.
+set(init_before [=[    static std::atomic<bool> transcoderInitialized(false);
+    static std::mutex init_mutex;
+
+    if (!transcoderInitialized.load(std::memory_order_acquire)) {
+        std::lock_guard<std::mutex> lock(init_mutex);
+        if (!transcoderInitialized.load(std::memory_order_relaxed)) {
+            basisu_transcoder_init();
+            transcoderInitialized.store(true, std::memory_order_release);
+        }
+    }]=])
+string(FIND "${text}" "${init_before}" position)
+if(position LESS 0)
+  message(FATAL_ERROR "Pinned KTX initialization adapter no longer matches its source")
+endif()
+string(REPLACE "${init_before}" "    e2d_ktx_initialize_basis();" text "${text}")
+string(REPLACE "#include <atomic>" "#include <atomic>\nextern \"C\" void e2d_ktx_initialize_basis();" text "${text}")
 set(output "${CMAKE_CURRENT_BINARY_DIR}/basis-transcode.cpp")
 set(previous "")
 if(EXISTS "${output}")

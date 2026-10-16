@@ -1,0 +1,103 @@
+{
+  "mappings": [
+    {
+      "godot": "class:CompressedTextureLayered",
+      "electron2d": "T:Electron2D.CompressedTextureLayered",
+      "reason": "ADRs 0004/0013/0014/0028/0039: executable array-only GSTL resource with bounded raw/PNG/WebP and legacy/KTX2 Basis LDR/HDR channel-role decoding, complete homogeneous mips, atomic Load/LoadPath and stable resource RID, independent reads/copies, typed cache/Replace/worker loading and embedded source archives. Independent pixel oracles and Linux Wayland GPU layer/mip texel fetches, HDR/readback/replacement lifetime and warmed frames verify the consumer; Compatibility explicitly rejects custom shader use. Partial: the shared TexturePixels preparation still needs bounded ETC1/ETC2/EAC/ASTC source decoding and verified array upload/fallback sampling; raw imported assets using those applicable layouts currently reject at preparation. This affects Load and the LoadPath setter as well as both type contracts. Cube/volume roles remain excluded. Foreign execution, native allocation totals and refreshed public bundle publication are separate verification gates."
+    },
+    {
+      "godot": "class:CompressedTexture2DArray",
+      "electron2d": "T:Electron2D.CompressedTextureArray",
+      "reason": "ADRs 0004/0013/0014/0028/0039: executable array-only GSTL resource with bounded raw/PNG/WebP and legacy/KTX2 Basis LDR/HDR channel-role decoding, complete homogeneous mips, atomic Load/LoadPath and stable resource RID, independent reads/copies, typed cache/Replace/worker loading and embedded source archives. Independent pixel oracles and Linux Wayland GPU layer/mip texel fetches, HDR/readback/replacement lifetime and warmed frames verify the consumer; Compatibility explicitly rejects custom shader use. Partial: the shared TexturePixels preparation still needs bounded ETC1/ETC2/EAC/ASTC source decoding and verified array upload/fallback sampling; raw imported assets using those applicable layouts currently reject at preparation. This affects Load and the LoadPath setter as well as both type contracts. Cube/volume roles remain excluded. Foreign execution, native allocation totals and refreshed public bundle publication are separate verification gates."
+    },
+    {
+      "godot": "CompressedTextureLayered::method:load(String:)",
+      "electron2d": "method:Electron2D.CompressedTextureLayered.Load(System.String)",
+      "reason": "ADRs 0004/0013/0014/0028/0039: executable array-only GSTL resource with bounded raw/PNG/WebP and legacy/KTX2 Basis LDR/HDR channel-role decoding, complete homogeneous mips, atomic Load/LoadPath and stable resource RID, independent reads/copies, typed cache/Replace/worker loading and embedded source archives. Independent pixel oracles and Linux Wayland GPU layer/mip texel fetches, HDR/readback/replacement lifetime and warmed frames verify the consumer; Compatibility explicitly rejects custom shader use. Partial: the shared TexturePixels preparation still needs bounded ETC1/ETC2/EAC/ASTC source decoding and verified array upload/fallback sampling; raw imported assets using those applicable layouts currently reject at preparation. This affects Load and the LoadPath setter as well as both type contracts. Cube/volume roles remain excluded. Foreign execution, native allocation totals and refreshed public bundle publication are separate verification gates."
+    },
+    {
+      "godot": "CompressedTextureLayered::property:load_path",
+      "electron2d": "property:Electron2D.CompressedTextureLayered.LoadPath()",
+      "reason": "ADRs 0004/0013/0014/0028/0039: executable array-only GSTL resource with bounded raw/PNG/WebP and legacy/KTX2 Basis LDR/HDR channel-role decoding, complete homogeneous mips, atomic Load/LoadPath and stable resource RID, independent reads/copies, typed cache/Replace/worker loading and embedded source archives. Independent pixel oracles and Linux Wayland GPU layer/mip texel fetches, HDR/readback/replacement lifetime and warmed frames verify the consumer; Compatibility explicitly rejects custom shader use. Partial: the shared TexturePixels preparation still needs bounded ETC1/ETC2/EAC/ASTC source decoding and verified array upload/fallback sampling; raw imported assets using those applicable layouts currently reject at preparation. This affects Load and the LoadPath setter as well as both type contracts. Cube/volume roles remain excluded. Foreign execution, native allocation totals and refreshed public bundle publication are separate verification gates."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Partial",
+      "godot": [
+        "class:CompressedTextureLayered",
+        "class:CompressedTexture2DArray",
+        "CompressedTextureLayered::method:load(String:)",
+        "CompressedTextureLayered::property:load_path"
+      ],
+      "reason": "ADRs 0004/0013/0014/0028/0039: executable array-only GSTL resource with bounded raw/PNG/WebP and legacy/KTX2 Basis LDR/HDR channel-role decoding, complete homogeneous mips, atomic Load/LoadPath and stable resource RID, independent reads/copies, typed cache/Replace/worker loading and embedded source archives. Independent pixel oracles and Linux Wayland GPU layer/mip texel fetches, HDR/readback/replacement lifetime and warmed frames verify the consumer; Compatibility explicitly rejects custom shader use. Partial: the shared TexturePixels preparation still needs bounded ETC1/ETC2/EAC/ASTC source decoding and verified array upload/fallback sampling; raw imported assets using those applicable layouts currently reject at preparation. This affects Load and the LoadPath setter as well as both type contracts. Cube/volume roles remain excluded. Foreign execution, native allocation totals and refreshed public bundle publication are separate verification gates."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.CompressedTextureArray..ctor()",
+      "reason": "Typed C# construction and inherited resource metadata/path/copy/disposal overrides for the executable compressed array branch; immutable snapshots retain independent publication and renderer-owned native lifetime. No backend handles or mutable image-array authoring API are exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "constructor:Electron2D.CompressedTextureLayered..ctor()",
+      "reason": "Typed C# construction and inherited resource metadata/path/copy/disposal overrides for the executable compressed array branch; immutable snapshots retain independent publication and renderer-owned native lifetime. No backend handles or mutable image-array authoring API are exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTextureArray.CreateDuplicateInstance()",
+      "reason": "Typed C# construction and inherited resource metadata/path/copy/disposal overrides for the executable compressed array branch; immutable snapshots retain independent publication and renderer-owned native lifetime. No backend handles or mutable image-array authoring API are exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTextureLayered.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed C# construction and inherited resource metadata/path/copy/disposal overrides for the executable compressed array branch; immutable snapshots retain independent publication and renderer-owned native lifetime. No backend handles or mutable image-array authoring API are exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTextureLayered.Dispose(System.Boolean)",
+      "reason": "Typed C# construction and inherited resource metadata/path/copy/disposal overrides for the executable compressed array branch; immutable snapshots retain independent publication and renderer-owned native lifetime. No backend handles or mutable image-array authoring API are exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTextureLayered.GetFormat()",
+      "reason": "Typed C# construction and inherited resource metadata/path/copy/disposal overrides for the executable compressed array branch; immutable snapshots retain independent publication and renderer-owned native lifetime. No backend handles or mutable image-array authoring API are exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTextureLayered.GetHeight()",
+      "reason": "Typed C# construction and inherited resource metadata/path/copy/disposal overrides for the executable compressed array branch; immutable snapshots retain independent publication and renderer-owned native lifetime. No backend handles or mutable image-array authoring API are exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTextureLayered.GetLayerData(System.Int32)",
+      "reason": "Typed C# construction and inherited resource metadata/path/copy/disposal overrides for the executable compressed array branch; immutable snapshots retain independent publication and renderer-owned native lifetime. No backend handles or mutable image-array authoring API are exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTextureLayered.GetLayers()",
+      "reason": "Typed C# construction and inherited resource metadata/path/copy/disposal overrides for the executable compressed array branch; immutable snapshots retain independent publication and renderer-owned native lifetime. No backend handles or mutable image-array authoring API are exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTextureLayered.GetPropertyDescriptors()",
+      "reason": "Typed C# construction and inherited resource metadata/path/copy/disposal overrides for the executable compressed array branch; immutable snapshots retain independent publication and renderer-owned native lifetime. No backend handles or mutable image-array authoring API are exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTextureLayered.GetWidth()",
+      "reason": "Typed C# construction and inherited resource metadata/path/copy/disposal overrides for the executable compressed array branch; immutable snapshots retain independent publication and renderer-owned native lifetime. No backend handles or mutable image-array authoring API are exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTextureLayered.HasMIPMaps()",
+      "reason": "Typed C# construction and inherited resource metadata/path/copy/disposal overrides for the executable compressed array branch; immutable snapshots retain independent publication and renderer-owned native lifetime. No backend handles or mutable image-array authoring API are exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.CompressedTextureLayered.OnResourcePathChanged(System.String)",
+      "reason": "Typed C# construction and inherited resource metadata/path/copy/disposal overrides for the executable compressed array branch; immutable snapshots retain independent publication and renderer-owned native lifetime. No backend handles or mutable image-array authoring API are exposed.",
+      "adr": "ADRs 0004/0013/0014/0028/0039"
+    }
+  ]
+}
