@@ -213,3 +213,11 @@ Shared owned-RID replacement now holds all participating world borrows through
 rebuild and rollback, including rejected-copy retirement. Successful old-view
 retirement follows the end of borrowing. [Mixed-world verification](../components/physics-shape-data.md#shared-cpugpuregistered-replacement)
 preserves scene/raw geometry, logical slots and observer history after failures.
+
+Server data operations freeze the addressed RID's consumer membership before status
+or geometry hooks and keep it frozen through rebuild, rollback and rejected-copy
+retirement. Incoming enabled/disabled Body/Area slots in unrelated worlds, direct
+owner additions and CollisionShape assignments of borrowed views reject before
+changing storage. Detached existing consumers also reject edits and release.
+The guard is released on supplier/status failure and before committed old-view
+retirement, so later ordinary bindings remain available.

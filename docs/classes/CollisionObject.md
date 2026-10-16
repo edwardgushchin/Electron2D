@@ -280,3 +280,11 @@ field. Direct properties, bit helpers and server projections therefore retain
 previous authoring on numerical failure, including inside borrowed hooks. Pending
 numerical metadata repairs before the next query or active step. [Filter checks](../components/physics-filters.md#failed-updates-and-effective-sensing)
 cover all scene body siblings and Area without recompiling geometry.
+
+Server data operations freeze the addressed RID's consumer membership before status
+or geometry hooks and keep it frozen through rebuild, rollback and rejected-copy
+retirement. Incoming enabled/disabled Body/Area slots in unrelated worlds, direct
+owner additions and CollisionShape assignments of borrowed views reject before
+changing storage. Detached existing consumers also reject edits and release.
+The guard is released on supplier/status failure and before committed old-view
+retirement, so later ordinary bindings remain available.

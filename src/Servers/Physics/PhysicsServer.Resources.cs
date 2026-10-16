@@ -77,6 +77,7 @@ public sealed partial class PhysicsServer
         var entry = GetShape(shape);
         if (!entry.OwnsGeometry)
             throw new InvalidOperationException("A Shape resource owns this RID and must be edited through the resource.");
+        entry.EnsureBindingAccess();
         entry.Geometry.EnsureCollisionMutationAccess();
         // Establish owner/phase access before observing any selected status hook.
         var users = new List<PhysicsServerCollider>();
@@ -104,6 +105,7 @@ public sealed partial class PhysicsServer
         }
         var previous = entry.Geometry;
         var borrowed = 0;
+        entry.BeginDataUse();
         try
         {
             foreach (var space in spaces) { space.BeginImplementationCallback(); borrowed++; }
@@ -136,7 +138,11 @@ public sealed partial class PhysicsServer
                 throw;
             }
         }
-        finally { for (var i = borrowed - 1; i >= 0; i--) spaces[i].EndImplementationCallback(); }
+        finally
+        {
+            for (var i = borrowed - 1; i >= 0; i--) spaces[i].EndImplementationCallback();
+            entry.EndDataUse();
+        }
         previous.ReleaseServerGeometry();
     }
 
@@ -206,6 +212,7 @@ public sealed partial class PhysicsServer
             if (space is not null && !spaces.Contains(space)) spaces.Add(space);
         }
         var borrowed = 0;
+        entry.BeginDataUse();
         try
         {
             foreach (var space in spaces) { space.BeginImplementationCallback(); borrowed++; }
@@ -214,7 +221,11 @@ public sealed partial class PhysicsServer
             foreach (var scene in sceneUsers) EnsureSceneShapeAccess(scene);
             return CopyServerShapeData(entry.Geometry, entry.Geometry, spaces);
         }
-        finally { for (var i = borrowed - 1; i >= 0; i--) spaces[i].EndImplementationCallback(); }
+        finally
+        {
+            for (var i = borrowed - 1; i >= 0; i--) spaces[i].EndImplementationCallback();
+            entry.EndDataUse();
+        }
     }
 
     internal void BodyAddShapeCore(RID body, RID shape, Transform? transform = null, bool disabled = false) =>
@@ -424,6 +435,7 @@ public sealed partial class PhysicsServer
         {
             if (!shape.OwnsGeometry)
                 throw new InvalidOperationException("A Shape resource owns this RID and its lifetime.");
+            shape.EnsureBindingAccess();
             shape.Geometry.EnsureCollisionMutationAccess();
             var users = SnapshotColliders();
             foreach (var user in users)
@@ -468,6 +480,11 @@ public sealed partial class PhysicsServer
     }
 
     internal Shape GetShapeGeometry(RID rid) => GetShape(rid).Geometry;
+    internal void EnsureShapeBindingAccess(RID rid)
+    {
+        lock (_registryGate)
+            if (_serverShapes.TryGetValue(rid, out var shape)) shape.EnsureBindingAccess();
+    }
 
     internal RID RegisterBorrowedShape(Shape geometry)
     {
@@ -511,6 +528,7 @@ public sealed partial class PhysicsServer
     {
         var owners = ShapeOwners(owner, isArea, writing: true);
         var resource = GetShape(shape);
+        resource.EnsureBindingAccess();
         if (!disabled) PhysicsShapeBackend.RequireSupported(owners.Scene is PhysicsBody body ? body.Space : owners.Scene is Area area ? area.Space : owners.Server?.Space, resource.Geometry);
         if (owners.Scene is { } scene) scene.AddServerShape(resource, transform, disabled);
         else owners.Server!.AddShape(resource, transform, disabled);

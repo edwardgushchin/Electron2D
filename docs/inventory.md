@@ -1780,3 +1780,10 @@ using worlds; both owned import and borrowed-RID export support no-factory Shape
 adds no production type or public declaration. PhysicsServer retains world borrows
 through numerical rebuild/rollback/failed retirement and releases them before
 committed old-view retirement. Existing collider/world owners remain authoritative.
+
+[Shape data consumer guards](components/physics-shape-data.md#shared-cpugpuregistered-replacement)
+also reject incoming RID/resource bindings from unrelated worlds and edits or
+release of detached participants during data reads/replacements. Public-only
+checks retain exact slot/property identity, error propagation and successful
+retry/binding after the guard ends; full numerical/network/performance acceptance
+remains open.

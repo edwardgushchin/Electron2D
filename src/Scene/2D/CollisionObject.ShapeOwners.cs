@@ -171,6 +171,7 @@ public abstract partial class CollisionObject
     /// <param name="shape">A live resource; its owner retains disposal responsibility.</param>
     /// <exception cref="ArgumentNullException">The shape is null.</exception>
     /// <exception cref="ObjectDisposedException">The shape is disposed.</exception>
+    /// <exception cref="InvalidOperationException">The supplied resource's server data is borrowed; the owner remains unchanged.</exception>
     public void ShapeOwnerAddShape(uint ownerID, Shape shape)
     {
         EnsureMutable(); var owner = LookupShapeOwner(ownerID); ArgumentNullException.ThrowIfNull(shape);
@@ -287,6 +288,7 @@ public abstract partial class CollisionObject
     }
     private void AddOwnerShape(ShapeOwner owner, Shape shape)
     {
+        shape.EnsureServerBindingAccess();
         if (!owner.Disabled) PhysicsShapeBackend.RequireSupported(this is PhysicsBody body ? body.Space : this is Area area ? area.Space : null, shape);
         var slot = new ShapeSlot(owner, shape, _shapeSlots.Count);
         owner.Shapes.Add(slot); _shapeSlots.Add(slot); MarkShapesDirty();

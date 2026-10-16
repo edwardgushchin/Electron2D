@@ -10,7 +10,9 @@ public partial class Node
     internal void EnsurePhysicsObjectAccess()
     {
         Tree?.EnsureExtensionHierarchyChange();
-        if (!PhysicsColliderBackend.HasAnyAttachments && !CollisionObject.HasSpaceGeometryBorrows) return;
+        if (this is ICollisionGeometry geometry)
+            foreach (var shape in geometry.OwnerShapes) shape.EnsureServerBindingAccess();
+        if (!PhysicsColliderBackend.HasAnyAttachments && !CollisionObject.HasSpaceGeometryBorrows && !PhysicsServerShape.HasDataUses) return;
         if (this is CollisionObject collider)
         {
             collider.EnsureGeometryAuthoringAccess();
@@ -24,7 +26,7 @@ public partial class Node
 
     private void EnsurePhysicsAuthoringAccess()
     {
-        if (!PhysicsColliderBackend.HasAnyAttachments && !CollisionObject.HasSpaceGeometryBorrows) return;
+        if (!PhysicsColliderBackend.HasAnyAttachments && !CollisionObject.HasSpaceGeometryBorrows && !PhysicsServerShape.HasDataUses) return;
         for (var ancestor = Parent; ancestor is not null; ancestor = ancestor.Parent) Check(ancestor);
         Descendants(this);
         static void Check(Node node)

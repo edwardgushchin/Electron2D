@@ -44,6 +44,7 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
     /// <summary>Gets or sets the borrowed shape resource, or null to remove collision geometry.</summary>
     /// <value>Null by default. The caller owns any assigned resource.</value>
     /// <exception cref="ObjectDisposedException">The assigned shape or node has been disposed.</exception>
+    /// <exception cref="InvalidOperationException">The assigned resource's server data is borrowed; the property remains unchanged.</exception>
     public Shape? Shape
     {
         get { ThrowIfDisposed(); return _shape; }
@@ -51,6 +52,7 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
         {
             EnsureMutable();
             if (value?.IsDisposed == true) throw new ObjectDisposedException(nameof(value));
+            value?.EnsureServerBindingAccess();
             if (ReferenceEquals(value, _shape)) return;
             DetachShapeEvents(_shape);
             _shape = value; InvalidateCanvas();

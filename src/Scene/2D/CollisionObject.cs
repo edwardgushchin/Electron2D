@@ -161,6 +161,9 @@ public abstract partial class CollisionObject : Entity
     internal void EnsureGeometryAuthoringAccess()
     {
         if (_validatingSpaceGeometry) throw new InvalidOperationException("Scene collider authoring cannot change while its space-transfer geometry is borrowed.");
+        foreach (var slot in _shapeSlots)
+            if (slot.ServerShape is { } server) server.EnsureBindingAccess();
+            else slot.Shape.EnsureServerBindingAccess();
     }
     internal void ValidateSpaceGeometry(PhysicsSpace space)
     {

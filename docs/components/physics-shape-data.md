@@ -79,3 +79,19 @@ within .01, retains RID and delivers 128 force callbacks. Owner/all-thread manag
 bytes remain strictly zero. Explicit copy/failure paths remain cold. Evidence is
 retained under bin/physics-shared-data/2026-10-16/. Full custom/numerical/native/
 foreign/network and hardware/window performance acceptance remains open.
+
+The --shared-data fixture also exercises a fourth, unrelated CPU world containing
+scene/raw Body/Area destinations. Status, geometry, rebuild, rollback and rejected
+retirement hooks try enabled/disabled adds, replacement and borrowed-resource
+owner/child bindings, including hierarchy entry of a prepared borrowed child.
+Rejection preserves exact slot counts, old resource RIDs,
+empty owner contents and child property identity. Detached participants reject
+clear/enable/release and recursive shared data/free. Status/supplier errors retain
+their exact identity; borrowed procedural reads retry after supplier failure.
+Committed retirement can attach a new consumer. Existing 0/0 warmed full-interval
+gates remain unchanged. Evidence: bin/physics-shape-participants/2026-10-16/.
+
+A cold detached-only preflight runs before any world is attached. It rejects
+scene writes/disposal and raw release from the supplier, then permits ordinary
+mutation after the copy completes. Data borrowing keeps scene ownership checks
+active even while the usual global attachment fast path is empty.

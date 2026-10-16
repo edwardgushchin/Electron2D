@@ -3,7 +3,8 @@ namespace Electron2D;
 /// <summary>Defines reusable two-dimensional collision geometry.</summary>
 /// <remarks>A <see cref="CollisionShape"/> borrows caller-owned geometry. Geometry obtained from a server-backed
 /// scene owner slot is borrowed from that server RID and cannot be disposed separately; data replacement retires that view.
-/// During a resource or selected shape-pair query, both operands reject geometry/policy mutation, inherited reset/copy and disposal.</remarks>
+/// During a resource or selected shape-pair query, both operands reject geometry/policy mutation, inherited reset/copy and disposal.
+/// Server data reads and replacements also freeze the resource's collision consumers until their guarded operation ends.</remarks>
 public abstract partial class Shape : Resource
 {
     private float _customSolverBias;
@@ -131,6 +132,11 @@ public abstract partial class Shape : Resource
         lock (_queryRIDGate) { _queryRID = rid; _serverOwned = true; }
     }
 
+    internal void EnsureServerBindingAccess()
+    {
+        if (_queryRID.IsValid() && !IsDisposed) PhysicsServer.Service.EnsureShapeBindingAccess(_queryRID);
+    }
+
     internal void ReleaseServerGeometry()
     {
         lock (_queryRIDGate) _serverReleaseThread = Environment.CurrentManagedThreadId;
@@ -142,6 +148,7 @@ public abstract partial class Shape : Resource
     /// <exception cref="InvalidOperationException">The server RID owns this geometry, or its geometry, policy access hook or shape-pair use is borrowed.</exception>
     protected override void ValidateDisposal()
     {
+        if (_serverReleaseThread != Environment.CurrentManagedThreadId) EnsureServerBindingAccess();
         EnsureCollisionMutationAccess();
         lock (_geometryGate)
             if (_readingGeometry || _checkingAuthoringAccess) throw new InvalidOperationException("A shape cannot be disposed during its geometry or authoring access hook.");
@@ -161,6 +168,7 @@ public abstract partial class Shape : Resource
 
     private void EnsureAuthoringAccess(bool observeBackend, bool resourceGeometry)
     {
+        EnsureServerBindingAccess();
         EnsureCollisionMutationAccess();
         if (Volatile.Read(ref _readingGeometry)) throw new InvalidOperationException("Shape authoring cannot change during its geometry construction hook.");
         lock (_geometryGate)

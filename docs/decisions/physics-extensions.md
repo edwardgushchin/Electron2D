@@ -265,6 +265,10 @@ interception would leave scene behavior and direct queries outside the extension
   the old committed view, preserving ordinary committed-retirement callback
   mutation. Numerical/lifetime reentry rejects and failures preserve old data;
   existing rebuild rollback and committed retirement semantics remain required.
+  Freeze consumer membership for the same interval: incoming RID/resource bindings
+  in unrelated worlds and mutations/releases of detached consumers must reject
+  before storage changes. Cover borrowed procedural reads as well as owned views.
+  Release this resource guard on every failure and before committed retirement.
 
 ### Current implementation boundary
 

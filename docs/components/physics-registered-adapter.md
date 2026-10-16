@@ -2512,3 +2512,10 @@ rebuild, rollback and rejected-copy retirement; committed old-view retirement
 keeps ordinary mutation access. [Three-world checks](physics-shape-data.md#shared-cpugpuregistered-replacement)
 cover CPU/GPU/registered scene/raw roles, both input representations, partial
 failures and complete warm groups without changing solver ownership.
+
+[Shape data consumer guards](physics-shape-data.md#shared-cpugpuregistered-replacement)
+also reject incoming RID/resource bindings from unrelated worlds and edits or
+release of detached participants during data reads/replacements. Public-only
+checks retain exact slot/property identity, error propagation and successful
+retry/binding after the guard ends; full numerical/network/performance acceptance
+remains open.

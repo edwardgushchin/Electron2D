@@ -1424,3 +1424,10 @@ numerical rebuilding and rollback. The [mixed-world profile](../components/physi
 preserves scene/raw identity, exact geometry and observer histories under apply,
 rollback and rejected-retirement errors; committed callbacks keep normal access.
 Full numerical/custom/native/foreign/network/hardware acceptance remains open.
+
+[Shape data consumer guards](../components/physics-shape-data.md#shared-cpugpuregistered-replacement)
+also reject incoming RID/resource bindings from unrelated worlds and edits or
+release of detached participants during data reads/replacements. Public-only
+checks retain exact slot/property identity, error propagation and successful
+retry/binding after the guard ends; full numerical/network/performance acceptance
+remains open.

@@ -97,3 +97,11 @@ receding/tangent and angular-only velocities do not enlarge recovery depth.
 PhysicsMovingOneWayTests checks raw/scene callers, roles, rotated slots, six finite
 source families and eight 128-warmup/128-measured complete-frame brackets at zero
 managed allocation. Native/platform/hardware/performance acceptance remains open.
+
+Server data operations freeze the addressed RID's consumer membership before status
+or geometry hooks and keep it frozen through rebuild, rollback and rejected-copy
+retirement. Incoming enabled/disabled Body/Area slots in unrelated worlds, direct
+owner additions and CollisionShape assignments of borrowed views reject before
+changing storage. Detached existing consumers also reject edits and release.
+The guard is released on supplier/status failure and before committed old-view
+retirement, so later ordinary bindings remain available.

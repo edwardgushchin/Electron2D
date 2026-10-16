@@ -2,8 +2,35 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
+    private sealed class SharedDataHookShape(Action hook) : Shape
+    {
+        protected override ShapeGeometry GetGeometryCore() { hook(); return ShapeGeometry.Circle(8); }
+    }
+
+    private static void CheckDetachedDataConsumers()
+    {
+        var shape = PhysicsServer.CircleShapeCreate(); var body = PhysicsServer.BodyCreate();
+        using var scene = new StaticBody();
+        try
+        {
+            PhysicsServer.BodyAddShape(body, shape, disabled: true); PhysicsServer.BodyAddShape(scene.GetRID(), shape, disabled: true);
+            using var supplier = new SharedDataHookShape(() =>
+            {
+                Reject<InvalidOperationException>(() => scene.CollisionLayer = 2);
+                Reject<InvalidOperationException>(() => scene.Dispose());
+                Reject<InvalidOperationException>(() => PhysicsServer.FreeRID(body));
+            });
+            PhysicsServer.ShapeSetData(shape, supplier);
+            Check(!scene.IsDisposed && scene.CollisionLayer == 1 && PhysicsServer.BodyGetShapeCount(body) == 1,
+                "Data guards protect detached consumers even before any physics world is attached");
+            scene.CollisionLayer = 2;
+        }
+        finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(shape); }
+    }
+
     public static void RunSharedData(bool gpu = false, bool threaded = false, bool reverse = false)
     {
+        CheckDetachedDataConsumers();
         var old = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
         Solver? solver = null;
@@ -16,8 +43,25 @@ public static partial class BackendChecks
         using var procedural = new ProceduralDataShape(ShapeGeometry.Circle(8));
         using var point = new PhysicsPointQueryParameters { CollisionMask = 1, CollideWithAreas = true };
         var hits = new PhysicsPointResult[4]; var shape = PhysicsServer.CircleShapeCreate(); var faults = 0;
+        using var spareWorld = new World(PhysicsServer.Backend.CPU);
+        var spareBody = PhysicsServer.BodyCreate(); var spareArea = PhysicsServer.AreaCreate();
+        var spareRoot = new SubViewport { World = spareWorld };
+        var spareSceneBody = new StaticBody(); var spareSceneArea = new Area();
+        spareRoot.AddChild(spareSceneBody); spareRoot.AddChild(spareSceneArea);
+        using var spareTree = new SceneTree(spareRoot);
+        var spareChild = new CollisionShape { Shape = disk }; spareSceneBody.AddChild(spareChild);
+        var spareOwner = spareSceneArea.CreateShapeOwner(null);
+        var spareIDs = new[] { spareSceneBody.GetRID(), spareSceneArea.GetRID(), spareBody, spareArea };
+        var detachedBody = PhysicsServer.BodyCreate(); using var detachedScene = new StaticBody();
+        var bindingChecks = 0;
         try
         {
+            PhysicsServer.BodySetSpace(spareBody, spareWorld.Space);
+            PhysicsServer.AreaSetSpace(spareArea, spareWorld.Space);
+            foreach (var id in new[] { spareIDs[0], spareIDs[2] }) PhysicsServer.BodyAddShape(id, disk.GetRID());
+            foreach (var id in new[] { spareIDs[1], spareIDs[3] }) PhysicsServer.AreaAddShape(id, disk.GetRID());
+            PhysicsServer.BodyAddShape(detachedBody, shape, disabled: true);
+            PhysicsServer.BodyAddShape(detachedScene.GetRID(), shape, disabled: true);
             PhysicsServer.ShapeSetData(shape, original);
             for (var i = 0; i < 3; i++)
             {
@@ -79,12 +123,54 @@ public static partial class BackendChecks
                 trees[index].PhysicsFrame(1d / 60);
             }
             foreach (var count in events) Check(count == 1, "Every shared-resource receiver observed its exact initial entry");
+            using (var incoming = new CollisionShape { Shape = View(0) })
+            {
+                var ownerCount = spareSceneBody.GetShapeOwners().Length;
+                solver!.StatusHook = () =>
+                {
+                    Reject<InvalidOperationException>(() => spareSceneBody.AddChild(incoming));
+                    Check(incoming.Parent is null && spareSceneBody.GetShapeOwners().Length == ownerCount,
+                        "Prepared borrowed child rejects before hierarchy or owner-group mutation");
+                };
+                try { using var snapshot = PhysicsServer.ShapeGetData(shape); } finally { solver.StatusHook = null; }
+            }
             var statusCalls = 0;
             solver!.StatusHook = () => { GuardParticipants(); statusCalls++; };
             try { PhysicsServer.ShapeSetData(shape, original); } finally { solver.StatusHook = null; }
             Check(statusCalls > 0, "Shared replacement validates selected status while every participant is borrowed");
             solver.StatusHook = () => { GuardParticipants(); statusCalls++; };
             try { using var snapshot = PhysicsServer.ShapeGetData(shape); } finally { solver.StatusHook = null; }
+            var statusFailure = new ApplicationException("shared-status-before-copy");
+            solver.StatusHook = () => { GuardParticipants(); throw statusFailure; };
+            var statusErrors = ReleaseErrors(() => PhysicsServer.ShapeSetData(shape, replacement)); solver.StatusHook = null;
+            Check(statusErrors.Length == 1 && ReferenceEquals(statusErrors[0], statusFailure), "Status failure preserves its original error");
+            Query(false); Frame(false);
+            var supplierFailure = new ApplicationException("shared-supplier-before-copy");
+            using (var supplier = new SharedDataHookShape(() => { GuardParticipants(); throw supplierFailure; }))
+            {
+                var supplierErrors = ReleaseErrors(() => PhysicsServer.ShapeSetData(shape, supplier));
+                Check(supplierErrors.Length == 1 && ReferenceEquals(supplierErrors[0], supplierFailure), "Supplier failure releases all data and world borrows");
+            }
+            Query(false); Frame(false);
+            var readFailure = new ApplicationException("shared-borrowed-read"); var failRead = true; SharedDataHookShape? borrowedSource = null;
+            using (borrowedSource = new SharedDataHookShape(() =>
+            {
+                var borrowedRID = borrowedSource!.GetRID();
+                Reject<InvalidOperationException>(() => PhysicsServer.BodyAddShape(spareBody, borrowedRID, disabled: true));
+                Reject<InvalidOperationException>(() => PhysicsServer.AreaSetShape(spareArea, 0, borrowedRID));
+                Reject<InvalidOperationException>(() => spareSceneArea.ShapeOwnerAddShape(spareOwner, borrowedSource));
+                Reject<InvalidOperationException>(() => spareChild.Shape = borrowedSource);
+                if (failRead) throw readFailure;
+            }))
+            {
+                var readErrors = ReleaseErrors(() => { using var unused = PhysicsServer.ShapeGetData(borrowedSource.GetRID()); });
+                Check(readErrors.Length == 1 && ReferenceEquals(readErrors[0], readFailure), "Borrowed supplier failure keeps its exact error");
+                failRead = false;
+                using var readCopy = PhysicsServer.ShapeGetData(borrowedSource.GetRID());
+                Check(readCopy is CircleShape { Radius: 8 }, "Borrowed procedural read retries without requiring a factory");
+                PhysicsServer.BodyAddShape(spareBody, borrowedSource.GetRID(), disabled: true); PhysicsServer.BodyRemoveShape(spareBody, 1);
+                spareSceneArea.ShapeOwnerAddShape(spareOwner, borrowedSource); spareSceneArea.ShapeOwnerClearShapes(spareOwner);
+            }
             var rejectedViews = new List<Shape>();
             foreach (var data in new Shape[] { replacement, procedural })
                 for (var retries = 0; retries < 2; retries++)
@@ -124,11 +210,13 @@ public static partial class BackendChecks
                 var before = EventCount(); var previous = View(0); var retired = false;
                 previous.Disposed += _ =>
                 {
-                    nodes[0, 0]!.CollisionLayer = 1; PhysicsServer.AreaSetCollisionMask(colliders[1, 3], 1); retired = true;
+                    nodes[0, 0]!.CollisionLayer = 1; PhysicsServer.AreaSetCollisionMask(colliders[1, 3], 1);
+                    PhysicsServer.BodyAddShape(spareBody, shape, disabled: true); retired = true;
                 };
                 solver!.ShapeHook = _ => GuardParticipants();
                 PhysicsServer.ShapeSetData(shape, data); solver.ShapeHook = null;
-                Check(retired && previous.IsDisposed, "Committed retirement callbacks retain ordinary authored mutation access");
+                Check(retired && previous.IsDisposed, "Committed retirement callbacks retain ordinary authored mutation and binding access");
+                PhysicsServer.BodyRemoveShape(spareBody, 1);
                 Query(true); Frame(true); Check(EventCount() == before, "Accepted data reaches every selected implementation without replaying stable sensor effects");
                 PhysicsServer.ShapeSetData(shape, original); Frame(false);
             }
@@ -141,10 +229,32 @@ public static partial class BackendChecks
             Check(owner == 0 && all == 0, $"Shared worlds full steps: {owner}/{all} bytes");
             for (var i = 0; i < 3; i++) Check(moving[i].GetRID() == ids[i] && forces[i] == starts[i] + 128 &&
                 Math.Abs(moving[i].Position.X - positions[i] - 12.8f) < .01f, "All three worlds retain actual motion, callback counts and RID through warm steps");
-            Console.WriteLine($"Shared shape data gpu={gpu}, threaded={threaded}, reverse={reverse}: twelve roles, {faults} partial failures, both input forms, exact rollback/history; 128 groups of three real steps {owner}/{all} B.");
+            Console.WriteLine($"Shared shape data gpu={gpu}, threaded={threaded}, reverse={reverse}: twelve roles, {faults} partial failures, both input forms, exact rollback/history; {bindingChecks} membership checks; 128 groups of three real steps {owner}/{all} B.");
 
             void GuardParticipants()
             {
+                for (var role = 0; role < 4; role++)
+                {
+                    var id = spareIDs[role]; var area = IsArea(role);
+                    var count = area ? PhysicsServer.AreaGetShapeCount(id) : PhysicsServer.BodyGetShapeCount(id);
+                    foreach (var disabled in new[] { false, true })
+                        Reject<InvalidOperationException>(() => { if (area) PhysicsServer.AreaAddShape(id, shape, disabled: disabled); else PhysicsServer.BodyAddShape(id, shape, disabled: disabled); });
+                    Reject<InvalidOperationException>(() => { if (area) PhysicsServer.AreaSetShape(id, 0, shape); else PhysicsServer.BodySetShape(id, 0, shape); });
+                    Check((area ? PhysicsServer.AreaGetShapeCount(id) : PhysicsServer.BodyGetShapeCount(id)) == count &&
+                        (area ? PhysicsServer.AreaGetShape(id, 0) : PhysicsServer.BodyGetShape(id, 0)) == disk.GetRID(), "Rejected binding preserves exact preexisting slots in unrelated worlds");
+                }
+                var view = View(0);
+                Reject<InvalidOperationException>(() => spareSceneArea.ShapeOwnerAddShape(spareOwner, view));
+                Reject<InvalidOperationException>(() => spareChild.Shape = view);
+                Check(spareSceneArea.ShapeOwnerGetShapeCount(spareOwner) == 0 && ReferenceEquals(spareChild.Shape, disk), "Borrowed-view binding rejects before changing owner or child storage");
+                Reject<InvalidOperationException>(() => PhysicsServer.BodyClearShapes(detachedBody));
+                Reject<InvalidOperationException>(() => PhysicsServer.BodySetShapeDisabled(detachedScene.GetRID(), 0, false));
+                Reject<InvalidOperationException>(() => PhysicsServer.FreeRID(detachedBody));
+                Reject<InvalidOperationException>(() => detachedScene.Dispose());
+                Reject<InvalidOperationException>(() => PhysicsServer.FreeRID(shape));
+                Reject<InvalidOperationException>(() => PhysicsServer.ShapeSetData(shape, original));
+                Reject<InvalidOperationException>(() => view.CustomSolverBias = .25f);
+                bindingChecks++;
                 for (var i = 0; i < 3; i++)
                 {
                     var index = i;
@@ -185,6 +295,7 @@ public static partial class BackendChecks
                     if (observers[i, role] != default) PhysicsServer.FreeRID(observers[i, role]);
                     if (role >= 2 && colliders[i, role] != default) PhysicsServer.FreeRID(colliders[i, role]);
                 }
+            PhysicsServer.FreeRID(spareBody); PhysicsServer.FreeRID(spareArea); PhysicsServer.FreeRID(detachedBody);
             PhysicsServer.FreeRID(shape);
             foreach (var tree in trees) tree?.Dispose(); foreach (var world in worlds) world?.Dispose();
             ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, old);

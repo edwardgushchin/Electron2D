@@ -1020,3 +1020,10 @@ The [JSON-RPC document/typed-dispatch slice](../components/jsonrpc.md) closes al
 [Failed raw shape edits and warmed reuse](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse) now have public-only ordinary, injected-error, resource-lifetime and eight-family rotation evidence. Physical steps retain strict zero owner/all-thread allocation; changed immutable one-way authoring is separately calibrated. Existing coverage states and every open numerical/native/platform/network/performance gate remain unchanged.
 
 [Video playback](../components/video-playback.md) implements the complete four-type source/playback/control family and the project delay descriptor: 40 reference rows under ADR 0110. Prepared private decoding, queued audio, stable texture consumers, typed authoring and both local canvas backends execute; foreign-host, hardware/listening and total allocator acceptance remain separate gates.
+
+[Shape data consumer guards](../components/physics-shape-data.md#shared-cpugpuregistered-replacement)
+also reject incoming RID/resource bindings from unrelated worlds and edits or
+release of detached participants during data reads/replacements. Public-only
+checks retain exact slot/property identity, error propagation and successful
+retry/binding after the guard ends; full numerical/network/performance acceptance
+remains open.

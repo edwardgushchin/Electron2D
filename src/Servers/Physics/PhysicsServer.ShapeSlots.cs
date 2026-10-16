@@ -60,6 +60,7 @@ public sealed partial class PhysicsServer
     {
         var owners = ShapeOwners(rid, isArea, writing: true);
         var resource = GetShape(shape);
+        resource.EnsureBindingAccess();
         if (owners.Scene is { } scene)
         {
             var slot = scene.GlobalShapeSlot(index);

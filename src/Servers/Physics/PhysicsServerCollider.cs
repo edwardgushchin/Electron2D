@@ -5,6 +5,16 @@ internal sealed class PhysicsServerShape(RID rid, Shape geometry, bool ownsGeome
     internal RID RID { get; } = rid;
     internal Shape Geometry { get; set; } = geometry;
     internal bool OwnsGeometry { get; } = ownsGeometry;
+    private int _dataUses;
+    private static int _activeDataUses;
+    internal static bool HasDataUses => Volatile.Read(ref _activeDataUses) != 0;
+    internal void BeginDataUse() { Interlocked.Increment(ref _dataUses); Interlocked.Increment(ref _activeDataUses); }
+    internal void EndDataUse() { Interlocked.Decrement(ref _dataUses); Interlocked.Decrement(ref _activeDataUses); }
+    internal void EnsureBindingAccess()
+    {
+        if (Volatile.Read(ref _dataUses) != 0)
+            throw new InvalidOperationException("Shape consumers and lifetime cannot change while server shape data is borrowed.");
+    }
 }
 
 internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
@@ -256,6 +266,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     {
         if (Releasing) throw new InvalidOperationException("A collider being released cannot be rebound or released recursively.");
         if (_validatingGeometry) throw new InvalidOperationException("A collider cannot be released or transferred while its geometry is borrowed.");
+        foreach (var slot in _slots) slot.Shape.EnsureBindingAccess();
     }
     internal void ValidateGeometry(PhysicsSpace space)
     {
