@@ -554,6 +554,7 @@ public sealed partial class RenderingServer : ElectronObject
                 _nodes.Clear(); _vertices.Clear(); _instances.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
                 _contactCanvases.Clear();
                 _sceneCanvasItems.Clear(); _sceneViewports.Clear(); _capturedTree = null;
+                _globalParameters.Clear();
                 if (ReferenceEquals(Service, this)) Volatile.Write(ref _instance, null);
             }
             if (errors is not null) throw new AggregateException("Rendering cleanup failed.", errors);

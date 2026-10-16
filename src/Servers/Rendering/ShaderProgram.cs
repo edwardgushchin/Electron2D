@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace Electron2D;
 
-internal sealed partial class ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null, ShaderUniform? timeUniform = null, ShaderUniform? screenPixelSizeUniform = null, ShaderUniform? sdfCoordsUniform = null, Dictionary<string, ShaderUniform>? instanceUniforms = null)
+internal sealed partial class ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null, ShaderUniform? timeUniform = null, ShaderUniform? screenPixelSizeUniform = null, ShaderUniform? sdfCoordsUniform = null, Dictionary<string, ShaderUniform>? instanceUniforms = null, Dictionary<string, ShaderUniform>? globalUniforms = null)
 {
     internal static readonly ShaderProgram Default = new(BuiltInShaders.Fragment, [], new(StringComparer.Ordinal), [new("TEXTURE", 0)]);
     internal readonly byte[] Code = code;
@@ -10,6 +10,7 @@ internal sealed partial class ShaderProgram(byte[] code, int[] bufferSizes, Dict
     internal readonly Dictionary<string, ShaderUniform> Uniforms = uniforms;
     internal readonly ShaderTexture[] Textures = textures ?? [];
     internal readonly Dictionary<string, ShaderUniform> InstanceUniforms = instanceUniforms ?? new(StringComparer.Ordinal);
+    internal readonly Dictionary<string, ShaderUniform> GlobalUniforms = globalUniforms ?? new(StringComparer.Ordinal);
     internal readonly bool HasInstanceUniforms = instanceUniforms is { Count: > 0 };
     internal readonly IReadOnlyList<PropertyDescriptor> InstanceDescriptors = Array.AsReadOnly((instanceUniforms ?? []).Values.Select(u => u.DescribeInstance(u.Name)).ToArray());
     internal readonly IReadOnlyList<PropertyDescriptor> CanvasInstanceDescriptors = Array.AsReadOnly((instanceUniforms ?? []).Values.Select(u => u.DescribeInstance("instance_shader_parameters/" + u.Name)).ToArray());
@@ -19,20 +20,23 @@ internal sealed partial class ShaderProgram(byte[] code, int[] bufferSizes, Dict
     internal readonly bool UsesSDFTexture = (textures ?? []).Any(t => t.IsSDFTexture);
     internal readonly bool UsesScreenTexture = (textures ?? []).Any(t => t.IsScreenTexture);
     internal readonly IReadOnlyList<PropertyDescriptor> Descriptors = Array.AsReadOnly(uniforms.Values.Select(u => u.Describe(u.Name))
-        .Concat((textures ?? []).Where(t => !t.IsEngineTexture).Select(t => t.Describe(t.Name))).ToArray());
+        .Concat((textures ?? []).Where(t => t.IsMaterialTexture).Select(t => t.Describe(t.Name))).ToArray());
     internal readonly IReadOnlyList<PropertyDescriptor> MaterialDescriptors = Array.AsReadOnly(uniforms.Values.Select(u => u.Describe("shader_parameter/" + u.Name))
-        .Concat((textures ?? []).Where(t => !t.IsEngineTexture).Select(t => t.Describe("shader_parameter/" + t.Name))).ToArray());
+        .Concat((textures ?? []).Where(t => t.IsMaterialTexture).Select(t => t.Describe("shader_parameter/" + t.Name))).ToArray());
 
     internal int FindTexture(string name)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
-        for (var i = 0; i < Textures.Length; i++) if (!Textures[i].IsEngineTexture && Textures[i].Name == name) return i;
+        for (var i = 0; i < Textures.Length; i++) if (Textures[i].IsMaterialTexture && Textures[i].Name == name) return i;
         throw new ArgumentException($"Shader has no sampled texture named '{name}'.", nameof(name));
     }
 }
 
 internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = false, int PixelType = 0)
 {
+    internal bool IsGlobal { get; } = Name.StartsWith("GLOBAL_", StringComparison.Ordinal);
+    internal string GlobalName { get; } = Name.StartsWith("GLOBAL_", StringComparison.Ordinal) ? Name[7..] : string.Empty;
+    internal bool IsMaterialTexture => !IsEngineTexture && !IsGlobal;
     internal bool IsCanvasTexture => Name == "TEXTURE";
     internal bool IsScreenTexture => Name == "SCREEN_TEXTURE";
     internal bool IsSDFTexture => Name == "SDF_TEXTURE";
@@ -74,11 +78,11 @@ internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = fa
         m => m.GetShaderParameter(Name), (m, t) => m.SetShaderParameter(Name, t), _ => null, stored: true);
 }
 
-internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Offset, int ElementSize, int ArrayLength, int Stride, bool Unsigned, int MatrixStride, bool RowMajor, int BooleanWidth)
+internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Offset, int ElementSize, int ArrayLength, int Stride, bool Unsigned, int MatrixStride, bool RowMajor, int BooleanWidth, int MatrixWidth = 0)
 {
     internal int Count => Math.Max(1, ArrayLength);
     internal bool Accepts<T>() where T : unmanaged => typeof(T) == Type || Type == typeof(Vector3) && typeof(T) == typeof(Color) || Type == typeof(Vector4) && (typeof(T) == typeof(Color) || typeof(T) == typeof(Rect2));
-    internal bool SameType(ShaderUniform other) => Type == other.Type && Unsigned == other.Unsigned && ArrayLength == other.ArrayLength && BooleanWidth == other.BooleanWidth;
+    internal bool SameType(ShaderUniform other) => Type == other.Type && Unsigned == other.Unsigned && ArrayLength == other.ArrayLength && BooleanWidth == other.BooleanWidth && MatrixWidth == other.MatrixWidth;
 
     internal PropertyDescriptor Describe(string propertyName) => Type == typeof(float) ? Describe<float>(propertyName) :
         Type == typeof(bool) ? Describe<bool>(propertyName) : Type == typeof(int) ? Describe<int>(propertyName) : Type == typeof(uint) ? Describe<uint>(propertyName) :
@@ -104,6 +108,30 @@ internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Off
             stored[RowMajor ? 1 : MatrixStride / 4] = basis[2]; stored[MatrixStride / 4 + 1] = basis[3];
         }
         else bytes[..ElementSize].CopyTo(target);
+    }
+
+    internal void WriteMatrix(Span<byte> target, ReadOnlySpan<float> values)
+    {
+        var width = MatrixWidth;
+        var stored = MemoryMarshal.Cast<byte, float>(target);
+        for (var column = 0; column < width; column++)
+            for (var row = 0; row < width; row++)
+                stored[(RowMajor ? row : column) * MatrixStride / 4 + (RowMajor ? column : row)] = values[column * width + row];
+    }
+
+    internal void CopyValue(ReadOnlySpan<byte> source, ShaderUniform destination, Span<byte> target)
+    {
+        if (Type == typeof(Transform)) destination.Write(target, Read<Transform>(source));
+        else if (MatrixWidth > 2)
+        {
+            Span<float> values = stackalloc float[16];
+            var stored = MemoryMarshal.Cast<byte, float>(source);
+            for (var column = 0; column < MatrixWidth; column++)
+                for (var row = 0; row < MatrixWidth; row++)
+                    values[column * MatrixWidth + row] = stored[(RowMajor ? row : column) * MatrixStride / 4 + (RowMajor ? column : row)];
+            destination.WriteMatrix(target, values);
+        }
+        else source.CopyTo(target);
     }
 
     internal T Read<T>(ReadOnlySpan<byte> source) where T : unmanaged

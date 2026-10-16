@@ -1327,3 +1327,7 @@ See [screen attachment verification and dependencies](../components/canvas-rende
 ## Paired canvas program access
 
 `static void ShaderSetSPIRV(RID shader, ReadOnlySpan<byte> vertexBytecode, ReadOnlySpan<byte> fragmentBytecode)` validates and atomically replaces both stages of an owned shader under the existing session/owner-thread and submission-mutation rules. Path hints wrap failed stage diagnostics; failed replacement preserves the old pair. `static byte[] ShaderGetSPIRV(RID shader, RenderingDevice.ShaderStage stage)` reads copied Vertex/Fragment bytes from an owned or borrowed live shader. Fragment-only programs return an empty Vertex payload. Stage validation, resources, parameter migration and defaults match Shader; undefined/noncanvas stages and stale identities reject. Parameterless export remains fragment-only.
+
+## Global shader parameters
+
+The static GlobalShaderParameterAdd/Get/GetList/GetType/Remove/Set/SetOverride family controls shared typed values for every consuming canvas material. Matrices and both borrowed image roles have concrete overloads. See the [complete declarations and member contracts](../components/global-shader-parameters.md#public-api), [logical enum](RenderingServer.GlobalShaderParameterType.md) and [execution/ownership rules](../components/global-shader-parameters.md). Base values remain independent of temporary overrides; the registry belongs to the active renderer session.

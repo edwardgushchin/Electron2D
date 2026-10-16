@@ -74,7 +74,7 @@ internal static unsafe partial class ShaderSourceTypes
     internal static byte[] Annotate(byte[] code, bool fragment, IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)> types)
     {
         var program = ShaderCompiler.ValidateInterface(code, fragment, types);
-        var booleans = program.Uniforms.Values.Concat(program.InstanceUniforms.Values).Where(u => u.BooleanWidth != 0).OrderBy(u => u.Name, StringComparer.Ordinal).ToArray();
+        var booleans = program.Uniforms.Values.Concat(program.InstanceUniforms.Values).Concat(program.GlobalUniforms.Values).Where(u => u.BooleanWidth != 0).OrderBy(u => u.Name, StringComparer.Ordinal).ToArray();
         if (booleans.Length == 0) return code;
         var words = MemoryMarshal.Cast<byte, uint>(code).ToArray();
         var at = 5;

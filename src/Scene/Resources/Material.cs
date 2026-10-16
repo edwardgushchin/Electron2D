@@ -316,8 +316,7 @@ internal sealed class MaterialState
                 {
                     var source = previous.Buffers[old.Buffer].AsSpan(old.Offset + i * old.Stride, old.ElementSize);
                     var target = Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize);
-                    if (uniform.Type == typeof(Transform)) uniform.Write(target, old.Read<Transform>(source));
-                    else source.CopyTo(target);
+                    old.CopyValue(source, uniform, target);
                 }
         for (var i = 0; i < Textures.Length; i++)
             for (var j = 0; j < previous.Textures.Length; j++)
@@ -327,12 +326,15 @@ internal sealed class MaterialState
     internal void CopyTextures(Span<Resource?> target)
     {
         lock (_gate)
+        {
+            RenderingServer.ActiveGlobalParameters?.Validate(Program);
             for (var i = 0; i < Textures.Length; i++)
             {
-                target[i] = Program.Textures[i].IsEngineTexture ? null : Textures[i] ?? Shader?.DefaultTexture(Program.Textures[i].Name)
+                target[i] = Program.Textures[i].IsEngineTexture ? null : Program.Textures[i].IsGlobal ? (RenderingServer.ActiveGlobalParameters ?? throw new InvalidOperationException("Global images require an active renderer.")).Resolve(Program.Textures[i]) : Textures[i] ?? Shader?.DefaultTexture(Program.Textures[i].Name)
                     ?? throw new InvalidOperationException($"Texture parameter '{Program.Textures[i].Name}' has no texture or Shader default.");
                 Program.Textures[i].Validate(target[i]);
             }
+        }
     }
 
     internal void SynchronizeSharedUniforms(byte[]?[]? instanceBuffers = null)
@@ -345,8 +347,7 @@ internal sealed class MaterialState
             {
                 var from = source.AsSpan(copy.Source.Offset + i * copy.Source.Stride, copy.Source.ElementSize);
                 var to = target.AsSpan(copy.Target.Offset + i * copy.Target.Stride, copy.Target.ElementSize);
-                if (copy.Source.Type == typeof(Transform)) copy.Target.Write(to, copy.Source.Read<Transform>(from));
-                else from.CopyTo(to);
+                copy.Source.CopyValue(from, copy.Target, to);
             }
         }
     }
@@ -361,6 +362,7 @@ internal sealed class MaterialState
                 MemoryMarshal.Write(Buffers[pixels.Buffer].AsSpan(pixels.Offset, sizeof(float) * 2), in screenPixelSize);
             if (Program.SDFCoordsUniform is { } sdf)
                 MemoryMarshal.Write(Buffers[sdf.Buffer].AsSpan(sdf.Offset, sizeof(float) * 4), in sdfCoords);
+            RenderingServer.ActiveGlobalParameters?.Write(Program, Buffers);
             var instanceBuffer = Program.HasInstanceUniforms ? instance?.InstanceUniforms.Prepare(Program) : null;
             SynchronizeSharedUniforms(instanceBuffer);
             for (var i = 0; i < Buffers.Length; i++)

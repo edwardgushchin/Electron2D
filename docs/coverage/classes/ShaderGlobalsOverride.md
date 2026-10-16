@@ -10,4 +10,4 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class ShaderGlobalsOverride`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ShaderGlobalsOverride.xml) | — | Blocked | Trigger: first missing 2D material, canvas-modulation and shader-global renderer integration (ADR 0028). |
+| [`class ShaderGlobalsOverride`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ShaderGlobalsOverride.xml) | — | Blocked | Exact dependency: typed per-node global override entries, active-scene selection/priority, entry/exit/disposal restoration and portable scene storage/binding. The renderer-session global service now executes both stages, but does not produce that scene-owned override lifecycle (ADRs 0028/0023). No inert node is exposed. |

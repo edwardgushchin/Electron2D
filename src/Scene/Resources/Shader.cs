@@ -74,7 +74,7 @@ public sealed partial class Shader : Resource
         {
             ThrowIfDisposed(); _program = program;
             foreach (var entry in _defaultTextures)
-                if (!program.Textures.Any(t => !t.IsEngineTexture && t.Name == entry.Key && t.IsArray == (entry.Value is TextureLayered) && t.PixelType == ShaderTexture.ResourcePixelType(entry.Value))) _defaultTextures.Remove(entry.Key);
+                if (!program.Textures.Any(t => t.IsMaterialTexture && t.Name == entry.Key && t.IsArray == (entry.Value is TextureLayered) && t.PixelType == ShaderTexture.ResourcePixelType(entry.Value))) _defaultTextures.Remove(entry.Key);
         }
         EmitChanged();
     }
@@ -189,7 +189,7 @@ public sealed partial class Shader : Resource
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
         [new PropertyDescriptor<Shader, byte[]>("SPIRV", shader => shader.GetStoredSPIRV(), (shader, code) => shader.SetStoredSPIRV(code), stored: true)])
-        .Concat(GetProgram().Textures.Where(texture => !texture.IsEngineTexture).Select(texture => texture.DescribeDefault()));
+        .Concat(GetProgram().Textures.Where(texture => texture.IsMaterialTexture).Select(texture => texture.DescribeDefault()));
 
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new Shader();

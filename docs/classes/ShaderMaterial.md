@@ -159,3 +159,7 @@ Instance fields are excluded from shared material setters/descriptors. Its porta
 ## Paired stages
 
 An authored vertex stage uses the same Shader property and typed material/default/instance namespace as fragments. Names merge only with matching logical types and roles; physical bindings, offsets and matrix layouts may differ. Reload migrates values by logical name/type. Three vertex material blocks follow renderer-owned Frame; all four fragment slots remain available. Native textures are bound per stage from one logical resource list. See [the paired-stage contract](../components/shader-materials.md#authored-vertex-stages).
+
+## Shared renderer globals
+
+Reserved Globals numeric blocks and GLOBAL_ sampled-image names use the [typed renderer-session global service](../components/global-shader-parameters.md). They are excluded from material parameter descriptors, defaults and stored material values. Shaders retain declarations through reload/archives; renderer-session values remain independent.

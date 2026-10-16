@@ -5,7 +5,7 @@ Last updated: 2026-10-08
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
 1. Close 1493 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 720 missing declarations in already represented type families; split each type by its documented dependency trigger.
+2. Complete 689 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -14,7 +14,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 
 | Godot class | Unimplemented members | Partial members |
 | --- | ---: | ---: |
-| [RenderingServer](classes/RenderingServer.md) | 384 | 33 |
+| [RenderingServer](classes/RenderingServer.md) | 353 | 33 |
 | [RenderingDevice](classes/RenderingDevice.md) | 154 | 39 |
 | [OS](classes/OS.md) | 48 | 10 |
 | [Window](classes/Window.md) | 32 | 57 |
@@ -106,6 +106,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
 | ADR 0094: Typed MultiplayerPeer now executes. Requires executable WebRTCPeerConnection/DataChannel SDP/ICE/DTLS/SCTP host integration and an owned WebRTC multiplayer cohort. | 1 |
+| Exact dependency: typed per-node global override entries, active-scene selection/priority, entry/exit/disposal restoration and portable scene storage/binding. The renderer-session global service now executes both stages, but does not produce that scene-owned override lifecycle (ADRs 0028/0023). No inert node is exposed. | 1 |
 | Exact prerequisite: typed persistent scene signal/endpoint storage and binding, plus missing-node factory/reference projection. Version-2 resource field roles do not implement node signal recording or missing-node hierarchy restoration (ADRs 0013/0023). No inert recording switch. | 1 |
 | Navigation2D: trigger is the next operation-specific navigation link, agent/obstacle avoidance, source-geometry bake or typed query slice beyond the authored map/region backend (ADRs 0052/0097). | 1 |
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
@@ -118,7 +119,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 1 |
 | Trigger: first applicable typed 2D procedural geometry producer with concrete generation parameters and visible mesh output; static surface rendering already executes (ADR 0092). | 1 |
 | Trigger: first compressed-texture import, decoder and verified GPU sampling slice (ADRs 0028 and 0039). | 1 |
-| Trigger: first missing 2D material, canvas-modulation and shader-global renderer integration (ADR 0028). | 1 |
 | Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041). | 1 |
 | Trigger: first portable external-image ownership and native texture-import decision (ADRs 0021 and 0028). | 1 |
 | Trigger: first semantic accessibility-tree, focus and native screen-reader bridge slice (ADR 0041). | 1 |

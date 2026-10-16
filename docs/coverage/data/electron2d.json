@@ -10027,6 +10027,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RenderingServer.GlobalShaderParameterType",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "GlobalShaderParameterType",
+    "signature": "public enum Electron2D.RenderingServer.GlobalShaderParameterType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Repeat",
     "kind": "type",
     "declaringType": "Electron2D.Repeat",
@@ -45387,6 +45405,344 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingServer.CanvasGroupMode",
     "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.BVec2()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "BVec2",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType BVec2 = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.BVec3()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "BVec3",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType BVec3 = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.BVec4()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "BVec4",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType BVec4 = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Bool()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "Bool",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType Bool = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Color()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "Color",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType Color = 17",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "17"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Float()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "Float",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType Float = 13",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "13"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.IVec2()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "IVec2",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType IVec2 = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.IVec3()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "IVec3",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType IVec3 = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.IVec4()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "IVec4",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType IVec4 = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Int()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "Int",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType Int = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Mat2()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "Mat2",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType Mat2 = 19",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "19"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Mat3()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "Mat3",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType Mat3 = 20",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "20"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Mat4()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "Mat4",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType Mat4 = 21",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "21"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "Max",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType Max = 29",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "29"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Rect2()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "Rect2",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType Rect2 = 18",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "18"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Rect2i()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "Rect2i",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType Rect2i = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Sampler2D()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "Sampler2D",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType Sampler2D = 24",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "24"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Sampler2DArray()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "Sampler2DArray",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType Sampler2DArray = 25",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "25"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Transform2D()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "Transform2D",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType Transform2D = 22",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "22"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.UInt()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "UInt",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType UInt = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.UVec2()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "UVec2",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType UVec2 = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.UVec3()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "UVec3",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType UVec3 = 11",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "11"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.UVec4()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "UVec4",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType UVec4 = 12",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "12"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Vec2()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "Vec2",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType Vec2 = 14",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "14"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Vec3()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "Vec3",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType Vec3 = 15",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "15"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Vec4()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "name": "Vec4",
+    "signature": "public const Electron2D.RenderingServer.GlobalShaderParameterType Vec4 = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": "16"
   },
   {
     "id": "enumValue:Electron2D.Repeat.Mirror()",
@@ -154061,6 +154417,455 @@
       }
     ],
     "returnType": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterAdd(System.String,Electron2D.RenderingServer.GlobalShaderParameterType,System.ReadOnlySpan\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterAdd",
+    "signature": "public static System.Void GlobalShaderParameterAdd(System.String name, Electron2D.RenderingServer.GlobalShaderParameterType type, System.ReadOnlySpan\u003CSystem.Single\u003E value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "Electron2D.RenderingServer.GlobalShaderParameterType",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterAdd(System.String,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterAdd",
+    "signature": "public static System.Void GlobalShaderParameterAdd(System.String name, Electron2D.Texture value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterAdd(System.String,Electron2D.TextureLayered)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterAdd",
+    "signature": "public static System.Void GlobalShaderParameterAdd(System.String name, Electron2D.TextureLayered value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.TextureLayered",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterAdd\u00601(System.String,Electron2D.RenderingServer.GlobalShaderParameterType,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterAdd",
+    "signature": "public static System.Void GlobalShaderParameterAdd\u003CT\u003E(System.String name, Electron2D.RenderingServer.GlobalShaderParameterType type, T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "Electron2D.RenderingServer.GlobalShaderParameterType",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterGetLayeredTexture(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterGetLayeredTexture",
+    "signature": "public static Electron2D.TextureLayered GlobalShaderParameterGetLayeredTexture(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextureLayered",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterGetList()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterGetList",
+    "signature": "public static System.String[] GlobalShaderParameterGetList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterGetMatrix(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterGetMatrix",
+    "signature": "public static System.Single[] GlobalShaderParameterGetMatrix(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterGetMatrix(System.String,System.Span\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterGetMatrix",
+    "signature": "public static System.Void GlobalShaderParameterGetMatrix(System.String name, System.Span\u003CSystem.Single\u003E destination)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterGetTexture(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterGetTexture",
+    "signature": "public static Electron2D.Texture GlobalShaderParameterGetTexture(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterGetType(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterGetType",
+    "signature": "public static Electron2D.RenderingServer.GlobalShaderParameterType GlobalShaderParameterGetType(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterGet\u00601(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterGet",
+    "signature": "public static T GlobalShaderParameterGet\u003CT\u003E(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterRemove(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterRemove",
+    "signature": "public static System.Void GlobalShaderParameterRemove(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterSet(System.String,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterSet",
+    "signature": "public static System.Void GlobalShaderParameterSet(System.String name, Electron2D.Texture value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterSet(System.String,Electron2D.TextureLayered)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterSet",
+    "signature": "public static System.Void GlobalShaderParameterSet(System.String name, Electron2D.TextureLayered value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.TextureLayered",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterSet(System.String,System.ReadOnlySpan\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterSet",
+    "signature": "public static System.Void GlobalShaderParameterSet(System.String name, System.ReadOnlySpan\u003CSystem.Single\u003E value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterSetMatrixOverride(System.String,System.ReadOnlySpan\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterSetMatrixOverride",
+    "signature": "public static System.Void GlobalShaderParameterSetMatrixOverride(System.String name, System.ReadOnlySpan\u003CSystem.Single\u003E value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterSetOverride(System.String,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterSetOverride",
+    "signature": "public static System.Void GlobalShaderParameterSetOverride(System.String name, Electron2D.Texture value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterSetOverride(System.String,Electron2D.TextureLayered)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterSetOverride",
+    "signature": "public static System.Void GlobalShaderParameterSetOverride(System.String name, Electron2D.TextureLayered value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.TextureLayered",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterSetOverride\u00601(System.String,Nullable\u003CT\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterSetOverride",
+    "signature": "public static System.Void GlobalShaderParameterSetOverride\u003CT\u003E(System.String name, Nullable\u003CT\u003E value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Nullable\u003CT\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GlobalShaderParameterSet\u00601(System.String,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GlobalShaderParameterSet",
+    "signature": "public static System.Void GlobalShaderParameterSet\u003CT\u003E(System.String name, T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {

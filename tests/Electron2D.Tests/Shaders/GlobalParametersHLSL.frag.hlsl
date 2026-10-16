@@ -1,0 +1,31 @@
+cbuffer Globals:register(b0,space3) {
+    row_major float3x3 affine:packoffset(c0);
+    row_major float4x4 matrix4:packoffset(c3);
+    row_major float3x3 matrix3:packoffset(c7);
+    row_major float2x2 basis:packoffset(c10);
+    float4 rectangle:packoffset(c12);
+    float4 tint:packoffset(c13);
+    float4 wide:packoffset(c14);
+    float3 rgb:packoffset(c15);
+    float2 offset:packoffset(c16);
+    float gain:packoffset(c17);
+    uint4 unsigned4:packoffset(c18);
+    uint3 unsigned3:packoffset(c19);
+    uint2 unsigned2:packoffset(c20);
+    uint unsignedValue:packoffset(c21);
+    int4 rectangleI:packoffset(c22);
+    int4 signed4:packoffset(c23);
+    int3 signed3:packoffset(c24);
+    int2 signed2:packoffset(c25);
+    int signedValue:packoffset(c26);
+    bool4 mask4:packoffset(c27);
+    bool3 mask3:packoffset(c28);
+    bool2 mask2:packoffset(c29);
+    bool enabled:packoffset(c30);
+};
+Texture2D<float4> GLOBAL_map:register(t0,space2);
+SamplerState mapSampler:register(s0,space2);
+Texture2DArray<float4> GLOBAL_layers:register(t1,space2);
+SamplerState layerSampler:register(s1,space2);
+struct IO {float4 position:SV_Position; [[vk::location(0)]] float4 color:COLOR0; [[vk::location(1)]] float2 uv:TEXCOORD0;};
+float4 main(IO i):SV_Target0 {float4 result=i.color*gain*tint*GLOBAL_map.Sample(mapSampler,i.uv)*GLOBAL_layers.Sample(layerSampler,float3(i.uv,0))*(enabled && mask2.x && mask2.y && mask3.x && !mask3.y && mask3.z && mask4.w && signedValue == -7 && signed2.x == -2 && signed3.z == -6 && signed4.w == 4 && rectangleI.z == 7 && unsignedValue == 4294967294u && unsigned2.x == 4294967295u && unsigned3.z == 2147483648u && unsigned4.w == 123u && rgb.z == .125 && wide.w == 1 && rectangle.z == 7 && basis[0][0] == 1 && matrix3[1][1] == 1 && matrix4[3][3] == 1 && matrix3[2][0] == .25 && matrix4[0][3] == .125 ? 1.0 : 0.0);result.a=1;return result;}

@@ -73,10 +73,22 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
         invoke(source, output, stage)
         if stem == 'Canvas.frag':
             assert output.read_bytes() == (root / 'tests/Electron2D.Tests/Shaders/CanvasHLSL.spv').read_bytes()
-    for stem, language in [('CanvasUserVertexGLSL', 'glsl'), ('CanvasUserVertexHLSL', 'hlsl'), ('CanvasUserResources', 'glsl')]:
+    for stem, language in [('CanvasUserVertexGLSL', 'glsl'), ('CanvasUserVertexHLSL', 'hlsl'), ('CanvasUserResources', 'glsl'), ('GlobalParametersGLSL', 'glsl'), ('GlobalParametersHLSL', 'hlsl')]:
         for stage, suffix in [('vertex', 'vert'), ('fragment', 'frag')]:
             invoke(root / f'tests/Electron2D.Tests/Shaders/{stem}.{suffix}.{language}', output, stage)
             assert output.read_bytes() == (root / f'tests/Electron2D.Tests/Shaders/{stem}.{suffix}.spv').read_bytes(), f'{stem} {stage} differs from its fixed oracle'
+    bad_global = directory / 'invalid-global.frag.glsl'
+    for declaration, expression, expected in [
+        ('layout(set=3,binding=0,std140) uniform Globals { float value[2]; };', 'vec4(value[0]+value[1])', 'Global parameters do not declare arrays'),
+        ('layout(set=3,binding=0,std140) uniform Parameters { mat3 value; };', 'vec4(value[0],1)', 'supported 32-bit'),
+        ('layout(set=3,binding=0,std140) uniform Globals { float TIME; };', 'vec4(TIME)', 'Renderer-owned uniforms cannot'),
+        ('layout(set=2,binding=0) uniform sampler2D GLOBAL_;', 'texture(GLOBAL_,vec2(0))', 'whitespace'),
+        ('layout(set=2,binding=0) uniform sampler2D GLOBAL_TIME;', 'texture(GLOBAL_TIME,vec2(0))', 'reserved')]:
+        previous = output.read_bytes()
+        bad_global.write_text('#version 450\n'+declaration+'\nlayout(location=0) out vec4 result;\nvoid main(){result='+expression+';}\n')
+        diagnostic = invoke(bad_global, output, success=False)
+        assert expected in diagnostic, (expected, diagnostic)
+        assert output.read_bytes() == previous, 'An invalid global interface replaced the valid artifact'
     # Built-in glyph channels belong to the private renderer interface.
     for stage, stem in [('vertex', 'Canvas.vert'), ('vertex', 'CanvasInstanced.vert'), ('fragment', 'Canvas.frag'), ('fragment', 'Clip.frag')]:
         previous = output.read_bytes()

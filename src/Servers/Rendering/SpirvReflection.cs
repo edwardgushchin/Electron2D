@@ -57,6 +57,7 @@ internal static unsafe partial class SpirvReflection
         var sizes = new int[(int)bufferCount];
         var uniforms = new Dictionary<string, ShaderUniform>(StringComparer.Ordinal);
         var instanceBuffers = new HashSet<int>();
+        var globalBuffers = new HashSet<int>();
         foreach (var resource in new ReadOnlySpan<ReflectedResource>((void*)pointer, (int)bufferCount))
         {
             if (HasDecoration(compiler, resource.Id, DescriptorSet) == 0 || HasDecoration(compiler, resource.Id, Binding) == 0 ||
@@ -66,6 +67,7 @@ internal static unsafe partial class SpirvReflection
             if (binding >= bufferCount || sizes[binding] != 0)
                 throw new NotSupportedException("Uniform buffer bindings must be unique and contiguous, starting at zero.");
             var typeName = Marshal.PtrToStringUTF8(GetName(compiler, resource.BaseTypeId));
+            if (typeName is "Globals" or "type.Globals") globalBuffers.Add((int)binding);
             if (typeName is "Instance" or "type.Instance") instanceBuffers.Add((int)binding);
             var type = GetType(compiler, resource.BaseTypeId);
             if (GetArrayDimensions(GetType(compiler, resource.TypeId)) != 0)
@@ -82,7 +84,7 @@ internal static unsafe partial class SpirvReflection
                 var field = GetType(compiler, GetMemberType(type, member));
                 var width = GetVectorSize(field);
                 var dimensions = GetArrayDimensions(field);
-                var matrix = GetBaseType(field) == 13 && width == 2 && GetColumns(field) == 2;
+                var matrix = GetBaseType(field) == 13 && GetColumns(field) == width && width is >= 2 and <= 4 && (width == 2 || globalBuffers.Contains((int)binding));
                 if (name == "TIME" && (GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 1 || GetColumns(field) != 1 || dimensions != 0))
                     throw new NotSupportedException("The built-in TIME requires a non-array float32 scalar in a stage uniform buffer.");
                 if (name == "SCREEN_PIXEL_SIZE" && (GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 2 || GetColumns(field) != 1 || dimensions != 0))
@@ -97,7 +99,7 @@ internal static unsafe partial class SpirvReflection
                     throw new NotSupportedException($"Source reflection did not retain uniform '{name}'.");
                 if (logical.Width != 0 && (GetBaseType(field) != 8 || GetColumns(field) != 1 || width != logical.Width))
                     throw new ArgumentException($"Boolean metadata for '{name}' does not match its unsigned 32-bit storage.", nameof(code));
-                var valueType = logical.Width != 0 ? (logical.Width == 1 ? typeof(bool) : typeof(int)) : matrix ? typeof(Transform) : (GetBaseType(field), width) switch
+                var valueType = logical.Width != 0 ? (logical.Width == 1 ? typeof(bool) : typeof(int)) : matrix ? (width == 2 ? typeof(Transform) : typeof(float[])) : (GetBaseType(field), width) switch
                 {
                     (13, 1) => typeof(float),
                     (13, 2) => typeof(Vector2),
@@ -127,7 +129,7 @@ internal static unsafe partial class SpirvReflection
                         throw new NotSupportedException($"Matrix '{name}' must use std140 matrix stride within the buffer limit.");
                     matrixStride = (int)reflectedStride;
                 }
-                var elementSize = matrix ? matrixStride + 8 : (int)width * 4;
+                var elementSize = matrix ? ((int)width - 1) * matrixStride + (int)width * 4 : (int)width * 4;
                 var length = 0;
                 uint stride = (uint)elementSize;
                 if (dimensions == 1)
@@ -153,7 +155,7 @@ internal static unsafe partial class SpirvReflection
                     if (occupied[i]) throw new ArgumentException($"Uniform '{name}' overlaps another member.", nameof(code));
                     occupied[i] = true;
                 }
-                uniforms.Add(name, new(name, valueType, (int)binding, (int)offset, elementSize, length, (int)stride, GetBaseType(field) == 8, matrixStride, rowMajor, logical.Width));
+                uniforms.Add(name, new(name, valueType, (int)binding, (int)offset, elementSize, length, (int)stride, GetBaseType(field) == 8, matrixStride, rowMajor, logical.Width, matrix && width > 2 ? (int)width : 0));
             }
         }
         Check(GetResources(resources, 7, out var combinedPointer, out var combinedCount));
@@ -223,7 +225,22 @@ internal static unsafe partial class SpirvReflection
         if (instances.Count > 16) throw new NotSupportedException("A shader supports at most sixteen instance parameters.");
         if (instanceBuffers.Any(b => timeUniform?.Buffer == b || screenPixelSizeUniform?.Buffer == b || sdfCoordsUniform?.Buffer == b))
             throw new NotSupportedException("Renderer-owned uniforms cannot be declared in the Instance block.");
-        return new ShaderProgram(code, sizes, uniforms, textures, timeUniform, screenPixelSizeUniform, sdfCoordsUniform, instances);
+        var globals = new Dictionary<string, ShaderUniform>(StringComparer.Ordinal);
+        foreach (var pair in uniforms.ToArray()) if (globalBuffers.Contains(pair.Value.Buffer))
+            {
+                if (pair.Value.ArrayLength != 0) throw new NotSupportedException("Global parameters do not declare arrays.");
+                ShaderGlobalParameters.ValidateName(pair.Key);
+                globals.Add(pair.Key, pair.Value); uniforms.Remove(pair.Key);
+            }
+        if (globalBuffers.Any(b => timeUniform?.Buffer == b || screenPixelSizeUniform?.Buffer == b || sdfCoordsUniform?.Buffer == b))
+            throw new NotSupportedException("Renderer-owned uniforms cannot be declared in Globals.");
+        foreach (var texture in textures) if (texture.IsGlobal)
+            {
+                ShaderGlobalParameters.ValidateName(texture.GlobalName);
+                if (string.IsNullOrWhiteSpace(texture.GlobalName) || globals.ContainsKey(texture.GlobalName) || uniforms.ContainsKey(texture.GlobalName) || instances.ContainsKey(texture.GlobalName))
+                    throw new NotSupportedException("Global image names must be nonblank and cannot alias numeric or material fields.");
+            }
+        return new ShaderProgram(code, sizes, uniforms, textures, timeUniform, screenPixelSizeUniform, sdfCoordsUniform, instances, globals);
     }
 
     [StructLayout(LayoutKind.Sequential)]

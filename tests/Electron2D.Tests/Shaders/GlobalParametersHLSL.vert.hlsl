@@ -1,0 +1,32 @@
+cbuffer Frame:register(b0,space1) {float2 size;};
+cbuffer Globals:register(b1,space1) {
+    bool enabled:packoffset(c0);
+    bool2 mask2:packoffset(c1);
+    bool3 mask3:packoffset(c2);
+    bool4 mask4:packoffset(c3);
+    int signedValue:packoffset(c4);
+    int2 signed2:packoffset(c5);
+    int3 signed3:packoffset(c6);
+    int4 signed4:packoffset(c7);
+    int4 rectangleI:packoffset(c8);
+    uint unsignedValue:packoffset(c9);
+    uint2 unsigned2:packoffset(c10);
+    uint3 unsigned3:packoffset(c11);
+    uint4 unsigned4:packoffset(c12);
+    float gain:packoffset(c13);
+    float2 offset:packoffset(c14);
+    float3 rgb:packoffset(c15);
+    float4 wide:packoffset(c16);
+    float4 tint:packoffset(c17);
+    float4 rectangle:packoffset(c18);
+    column_major float2x2 basis:packoffset(c19);
+    column_major float3x3 matrix3:packoffset(c21);
+    column_major float4x4 matrix4:packoffset(c24);
+    column_major float3x3 affine:packoffset(c28);
+};
+Texture2D<float4> GLOBAL_map:register(t0,space0);
+SamplerState mapSampler:register(s0,space0);
+Texture2DArray<float4> GLOBAL_layers:register(t1,space0);
+SamplerState layerSampler:register(s1,space0);
+struct IO {float4 position:SV_Position; [[vk::location(0)]] float4 color:COLOR0; [[vk::location(1)]] float2 uv:TEXCOORD0;};
+IO main([[vk::location(0)]]float2 position:POSITION,[[vk::location(1)]]float4 color:COLOR0,[[vk::location(2)]]float2 uv:TEXCOORD0) {IO o;float2 p=mul(float3(position,1),affine).xy+offset*gain;o.position=float4(p.x/size.x*2-1,1-p.y/size.y*2,0,1);o.uv=uv;o.color=color*gain*GLOBAL_map.SampleLevel(mapSampler,uv,0)*GLOBAL_layers.SampleLevel(layerSampler,float3(uv,0),0)*(enabled && mask2.x && mask2.y && mask3.x && !mask3.y && mask3.z && mask4.w && signedValue == -7 && signed2.x == -2 && signed3.z == -6 && signed4.w == 4 && rectangleI.z == 7 && unsignedValue == 4294967294u && unsigned2.x == 4294967295u && unsigned3.z == 2147483648u && unsigned4.w == 123u && rgb.z == .125 && wide.w == 1 && rectangle.z == 7 && basis[0][0] == 1 && matrix3[1][1] == 1 && matrix4[3][3] == 1 && matrix3[2][0] == .25 && matrix4[0][3] == .125 ? 1.0 : 0.0);return o;}

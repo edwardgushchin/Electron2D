@@ -35,11 +35,12 @@ internal sealed partial class ShaderProgram
         ShaderUniform Shift(ShaderUniform value) => value with { Buffer = value.Buffer + bufferOffset };
         var uniforms = new Dictionary<string, ShaderUniform>(fragment.Uniforms, StringComparer.Ordinal);
         var instances = new Dictionary<string, ShaderUniform>(fragment.InstanceUniforms, StringComparer.Ordinal);
+        var globals = new Dictionary<string, ShaderUniform>(fragment.GlobalUniforms, StringComparer.Ordinal);
         var samplers = fragment.Textures.ToList();
         var copies = new List<(ShaderUniform, ShaderUniform)>();
         void AddUniform(Dictionary<string, ShaderUniform> target, ShaderUniform value)
         {
-            if (samplers.Any(t => t.Name == value.Name) || (ReferenceEquals(target, uniforms) ? instances : uniforms).ContainsKey(value.Name))
+            if (samplers.Any(t => t.Name == value.Name || t.IsGlobal && t.GlobalName == value.Name) || (!ReferenceEquals(target, uniforms) && uniforms.ContainsKey(value.Name) || !ReferenceEquals(target, instances) && instances.ContainsKey(value.Name) || !ReferenceEquals(target, globals) && globals.ContainsKey(value.Name)))
                 throw new ArgumentException($"Shader parameter '{value.Name}' has conflicting material, instance or sampled-image roles across stages.");
             var mapped = Shift(value);
             if (target.TryGetValue(value.Name, out var canonical))
@@ -51,12 +52,13 @@ internal sealed partial class ShaderProgram
         }
         foreach (var uniform in vertex.Uniforms.Values) if (uniform.Buffer != 0) AddUniform(uniforms, uniform);
         foreach (var uniform in vertex.InstanceUniforms.Values) AddUniform(instances, uniform);
+        foreach (var uniform in vertex.GlobalUniforms.Values) AddUniform(globals, uniform);
         if (instances.Count > 16) throw new NotSupportedException("A canvas program supports at most sixteen instance parameters across both stages.");
         var textureIndices = new int[vertex.Textures.Length];
         for (var i = 0; i < textureIndices.Length; i++)
         {
             var sampler = vertex.Textures[i];
-            if (uniforms.ContainsKey(sampler.Name) || instances.ContainsKey(sampler.Name))
+            if (uniforms.ContainsKey(sampler.Name) || instances.ContainsKey(sampler.Name) || globals.ContainsKey(sampler.Name) || sampler.IsGlobal && (uniforms.ContainsKey(sampler.GlobalName) || instances.ContainsKey(sampler.GlobalName) || globals.ContainsKey(sampler.GlobalName)))
                 throw new ArgumentException($"Shader parameter '{sampler.Name}' has conflicting uniform and sampled-image roles across stages.");
             var index = samplers.FindIndex(t => t.Name == sampler.Name);
             if (index < 0) { index = samplers.Count; samplers.Add(sampler); }
@@ -74,7 +76,7 @@ internal sealed partial class ShaderProgram
         var time = Builtin(fragment.TimeUniform, vertex.TimeUniform);
         var pixels = Builtin(fragment.ScreenPixelSizeUniform, vertex.ScreenPixelSizeUniform);
         var sdf = Builtin(fragment.SDFCoordsUniform, vertex.SDFCoordsUniform);
-        return new(fragment.Code, [.. fragment.BufferSizes, .. vertex.BufferSizes.Skip(1)], uniforms, samplers.ToArray(), time, pixels, sdf, instances)
+        return new(fragment.Code, [.. fragment.BufferSizes, .. vertex.BufferSizes.Skip(1)], uniforms, samplers.ToArray(), time, pixels, sdf, instances, globals)
         {
             Vertex = vertex,
             Fragment = fragment,

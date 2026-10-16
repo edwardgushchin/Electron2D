@@ -2695,12 +2695,12 @@
     {
       "godot": "RenderingServer::method:texture_proxy_create(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "FlowContainer::theme_item:h_separation",
@@ -4756,6 +4756,241 @@
       "godot": "RenderingServer::method:shader_get_code(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.ShaderGetSPIRV(Electron2D.RID,Electron2D.RenderingDevice.ShaderStage)",
       "reason": "Paired canvas vertex/fragment SPIR-V executes through Shader/ShaderMaterial and owned/borrowed RenderingServer identities under ADR 0028. Modules copy and publish atomically; stage export copies the selected payload, while parameterless export remains fragment-only. A merged typed material/instance/default-texture namespace maps independent stage layouts and resource slots. CanvasVertexProgramTests verifies GLSL/HLSL native displacement, instance transforms/colors, shared textures/parameters, lighting, glyphs, HDR/MSAA, resource duplication and fresh-process storage on Linux X11/Wayland, including 64 active/64 idle zero-managed-byte frames. Other shader domains, unsupported uniform shapes/defaults, sampler configuration and foreign backend acceptance remain their exact open dependencies."
+    },
+    {
+      "godot": "RenderingServer::enum:GlobalShaderParameterType",
+      "electron2d": "T:Electron2D.RenderingServer.GlobalShaderParameterType",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_BVEC2",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.BVec2()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_BVEC3",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.BVec3()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_BVEC4",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.BVec4()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_BOOL",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Bool()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_COLOR",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Color()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_FLOAT",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Float()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_IVEC2",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.IVec2()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_IVEC3",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.IVec3()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_IVEC4",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.IVec4()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_INT",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Int()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_MAT2",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Mat2()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_MAT3",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Mat3()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_MAT4",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Mat4()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Max()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_RECT2",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Rect2()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_RECT2I",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Rect2i()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_SAMPLER2D",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Sampler2D()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_SAMPLER2DARRAY",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Sampler2DArray()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_TRANSFORM_2D",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Transform2D()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_UINT",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.UInt()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_UVEC2",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.UVec2()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_UVEC3",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.UVec3()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_UVEC4",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.UVec4()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_VEC2",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Vec2()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_VEC3",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Vec3()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_VEC4",
+      "electron2d": "enumValue:Electron2D.RenderingServer.GlobalShaderParameterType.Vec4()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_add(StringName:,int:RenderingServer.GlobalShaderParameterType,Variant:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterAdd(System.String,Electron2D.RenderingServer.GlobalShaderParameterType,System.ReadOnlySpan<System.Single>)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_add(StringName:,int:RenderingServer.GlobalShaderParameterType,Variant:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterAdd(System.String,Electron2D.Texture)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_add(StringName:,int:RenderingServer.GlobalShaderParameterType,Variant:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterAdd(System.String,Electron2D.TextureLayered)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_add(StringName:,int:RenderingServer.GlobalShaderParameterType,Variant:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterAdd`1(System.String,Electron2D.RenderingServer.GlobalShaderParameterType,T)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_get(StringName:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterGetLayeredTexture(System.String)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_get_list()",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterGetList()",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_get(StringName:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterGetMatrix(System.String)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_get(StringName:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterGetMatrix(System.String,System.Span<System.Single>)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_get(StringName:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterGetTexture(System.String)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_get_type(StringName:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterGetType(System.String)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_get(StringName:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterGet`1(System.String)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_remove(StringName:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterRemove(System.String)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_set(StringName:,Variant:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterSet(System.String,Electron2D.Texture)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_set(StringName:,Variant:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterSet(System.String,Electron2D.TextureLayered)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_set(StringName:,Variant:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterSet(System.String,System.ReadOnlySpan<System.Single>)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_set_override(StringName:,Variant:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterSetMatrixOverride(System.String,System.ReadOnlySpan<System.Single>)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_set_override(StringName:,Variant:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterSetOverride(System.String,Electron2D.Texture)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_set_override(StringName:,Variant:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterSetOverride(System.String,Electron2D.TextureLayered)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_set_override(StringName:,Variant:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterSetOverride`1(System.String,Nullable<T>)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "RenderingServer::method:global_shader_parameter_set(StringName:,Variant:)",
+      "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterSet`1(System.String,T)",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
     }
   ],
   "statusGroups": [
@@ -5937,7 +6172,7 @@
         "RenderingServer::method:texture_proxy_update(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": [
@@ -6724,6 +6959,69 @@
       ],
       "state": "Partial",
       "reason": "ADRs 0028/0040/0095: executable main native-window attachment for scene and caller-owned viewport RIDs, fractional client rectangles, clipping with source UV preservation, replace copies, stable texture identity, empty-rect visibility versus forced full-size copy, detach, successful-update-only composition and stable child-before-parent ordering. Root default is WhenVisible. GPU SDR/HDR/MSAA and compatibility pixels, capture/owner/invalid/stale guards, suspended Once and zero-managed-allocation prepared presentation execute on Linux X11/Wayland. Partial: nonzero native window IDs require the Window/DisplayServer native multiwindow identity registry, per-window backend ownership/swapchains and close/resize routing under ADR 0040; implement that dependency before attaching there. Direct framebuffer drawing remains a separate blocked capability; foreign/native-allocation/human acceptance are unverified."
+    },
+    {
+      "godot": [
+        "RenderingServer::enum:GlobalShaderParameterType",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_BVEC2",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_BVEC3",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_BVEC4",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_BOOL",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_COLOR",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_FLOAT",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_IVEC2",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_IVEC3",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_IVEC4",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_INT",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_MAT2",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_MAT3",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_MAT4",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_MAX",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_RECT2",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_RECT2I",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_SAMPLER2D",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_SAMPLER2DARRAY",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_TRANSFORM_2D",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_UINT",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_UVEC2",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_UVEC3",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_UVEC4",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_VEC2",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_VEC3",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_VEC4",
+        "RenderingServer::method:global_shader_parameter_add(StringName:,int:RenderingServer.GlobalShaderParameterType,Variant:)",
+        "RenderingServer::method:global_shader_parameter_get(StringName:)",
+        "RenderingServer::method:global_shader_parameter_get_list()",
+        "RenderingServer::method:global_shader_parameter_get_type(StringName:)",
+        "RenderingServer::method:global_shader_parameter_remove(StringName:)",
+        "RenderingServer::method:global_shader_parameter_set(StringName:,Variant:)",
+        "RenderingServer::method:global_shader_parameter_set_override(StringName:,Variant:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": [
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_SAMPLEREXT"
+      ],
+      "state": "Blocked",
+      "reason": "Exact dependency: portable external-image acquisition, ownership/synchronization and native sampling/import bridge. Ordinary and array image globals now execute; no external-image role is exposed (ADR 0028)."
+    },
+    {
+      "godot": [
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_SAMPLER3D",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_SAMPLERCUBE",
+        "RenderingServer::enum_value:GlobalShaderParameterType.GLOBAL_VAR_TYPE_TRANSFORM"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: three-dimensional scene transforms, volume images and cube images are outside the strictly planar product. Numeric Mat3/Mat4 data remains a separate applicable role and now executes."
+    },
+    {
+      "godot": [
+        "class:ShaderGlobalsOverride"
+      ],
+      "state": "Blocked",
+      "reason": "Exact dependency: typed per-node global override entries, active-scene selection/priority, entry/exit/disposal restoration and portable scene storage/binding. The renderer-session global service now executes both stages, but does not produce that scene-owned override lifecycle (ADRs 0028/0023). No inert node is exposed."
     }
   ],
   "extras": [

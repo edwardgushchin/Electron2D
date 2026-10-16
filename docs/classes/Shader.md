@@ -205,3 +205,7 @@ Each stage may expose typed material and per-item parameters and sampled texture
 Resource duplication shares the immutable paired version. Resource archives retain both modules in a versioned envelope inside the existing SPIRV storage property; old fragment-only archives remain readable. No native GPU identity is serialized. Runtime loading retains the structural/reflection validation boundary; import tools provide instruction-level validation.
 
 The public-only source consumer also verifies paired creation/export, resource archives and actual GPU pixels in JIT and NativeAOT on Linux X11 and Wayland. Its source build imports the existing native-consumer delivery props; compilation without native delivery alone does not establish runtime acceptance.
+
+## Shared renderer globals
+
+Reserved Globals numeric blocks and GLOBAL_ sampled-image names use the [typed renderer-session global service](../components/global-shader-parameters.md). They are excluded from material parameter descriptors, defaults and stored material values. Shaders retain declarations through reload/archives; renderer-session values remain independent.

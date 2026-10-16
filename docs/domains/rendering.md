@@ -1,5 +1,7 @@
 # Rendering domain
 
+[Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. The registry has explicit owner/session lifetime and no material-property aliases.
+
 Last updated: 2026-10-16
 
 [Movie writing](../components/movie-writing.md) consumes completed root-viewport pixels through the actual renderer and fixes capture dimensions across later resizes. It does not create a headless renderer or claim readback/encoding is allocation-free.
