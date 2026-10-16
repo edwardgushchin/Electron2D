@@ -1,6 +1,6 @@
 # Electron2D NuGet delivery
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 A private prerelease consumer supplies its exact expected native version to the notice audit with --native-package-version; the ordinary release default still requires the product version. Native dependency versions, 71 ELF classification and all 81 notice byte comparisons remain strict.
 
@@ -132,4 +132,6 @@ The private ENet bridge now also carries `e2d_file_encode` and `e2d_file_decode`
 
 ## Private OGV encoder
 
-Electron2DOGV is included in every platform payload as a shared desktop/Android library or a self-contained static archive for Apple/Web. It links pinned libtheora 1.2.0, libvorbis 1.3.7 and libogg 1.3.6 privately, preserves original license texts and exports only e2d_ogv_create/frame/finish/destroy. Source receipts include tools/ogv-native, its guarded residue allocation adaptation and the build recipes. Desktop producers run native codec/lifecycle and residue initialization checks; cross producers build the same source closure. The publish audit rejects a global codec dependency. New OGV users require this updated native payload; older package evidence does not establish it. [Movie writing](components/movie-writing.md) records local proof and foreign execution limits.
+Electron2DOGV is included in every platform payload as a shared desktop/Android library or a self-contained static archive for Apple/Web. It links pinned libtheora 1.2.0, libvorbis 1.3.7 and libogg 1.3.6 privately, preserves original license texts and contains e2d_ogv_create/frame/finish/destroy and the five video decoder entry points described below. Source receipts include tools/ogv-native, its guarded residue allocation adaptation and the build recipes. Desktop producers run native codec/lifecycle and residue initialization checks; cross producers build the same source closure. The publish audit rejects a global codec dependency. New OGV users require this updated native payload; older package evidence does not establish it. [Movie writing](components/movie-writing.md) records local proof and foreign execution limits.
+
+Video playback extends Electron2DOGV to exactly nine bridge exports: the existing four encoder functions plus e2d_video_create, e2d_video_frame, e2d_video_audio, e2d_video_seek_audio and e2d_video_destroy. Every producer uses the same portable decoder source list and merged static closure. Fresh bundles are required; old four-export bundles cannot execute playback. Package/publish auditors reject missing or extra private exports. Foreign-host execution of this decoder remains unverified.

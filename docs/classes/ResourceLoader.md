@@ -1,6 +1,6 @@
 # ResourceLoader
 
-Last updated: 2026-10-12
+Last updated: 2026-10-16
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed partial class Electron2D.ResourceLoader`. **Source:** [ResourceLoader.cs](../../src/Core/IO/ResourceLoader.cs).
 
@@ -257,3 +257,5 @@ The [EXR I/O slice](../components/image-exr.md) supplies precision-preserving HD
 
 
 Mounted res:// resources now share [resource pack resolution](../components/resource-packs.md). PCK/ZIP overlays, synthetic directories, read-only packed metadata, relative scene dependencies and bitmap-font pages use the mounted bytes. Ordinary absolute paths and user:// retain physical access. Cached resources keep their normal cache-mode policy.
+
+The .ogv source path recognizes VideoStream and VideoStreamTheora, validates complete native decoder preparation before cache publication, and preserves cached VideoStreamTheora identity on Replace. Failed validation leaves existing cached state live.

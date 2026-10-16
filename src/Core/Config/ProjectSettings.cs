@@ -188,6 +188,12 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <remarks>Feature overrides are sampled when a collision is resolved; existing names are unchanged.</remarks>
     public static ProjectSetting<int> NodeNameNumberSeparator { get; } = new("editor/naming/node_name_num_separator", 0, value => value is >= 0 and <= 3);
 
+    /// <summary>Defines the fixed video presentation delay sampled when built-in playback starts.</summary>
+    /// <value>audio/video/video_delay_compensation_ms; zero milliseconds initially. Positive values delay video relative to queued audio.</value>
+    /// <remarks>Feature overrides apply. The compensated playback timestamp may be negative before the delay elapses;
+    /// explicit seeks still address the uncompensated source timeline.</remarks>
+    public static ProjectSetting<int> AudioVideoDelayCompensationMSEC { get; } = new("audio/video/video_delay_compensation_ms", 0);
+
     /// <summary>Recording cadence used by Engine.RunMovie and Engine.RunMovieAsync.</summary>
     /// <value>editor/movie_writer/fps; 60 initially, accepts positive frames per second.</value>
     public static ProjectSetting<int> MovieWriterFPS { get; } = new("editor/movie_writer/fps", 60, value => value > 0);

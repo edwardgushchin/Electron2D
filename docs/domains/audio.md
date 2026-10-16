@@ -1,6 +1,6 @@
 # Audio domain
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 [Movie writing](../components/movie-writing.md) reuses this domain's FAudio graph through an offline mastering voice without an SDL output stream. Prepared PCM is consumed on the recording owner; native sample/stream sources and bus effects retain their ordinary roles.
 
@@ -81,3 +81,5 @@ Scene players now preserve full attacks with 64-frame lookahead and execute prep
 [AudioBusLayout](../classes/AudioBusLayout.md) now persists and restores complete bus configuration and typed effects through resource archives. Engine startup applies an optional project default before initialization/autoplay; live replacement preserves streamed/sample transport and prepares new effect instances before commit. See [saved bus layouts](../components/audio-playback.md#saved-bus-layouts).
 
 AudioStreamWAV encoded payload and authored metadata now persist through the exact .e2dres factory. Animation audio cues retain stream aliases and offsets through the resource graph; see [cue persistence](../components/scene-animation.md#cue-persistence).
+
+[Video soundtracks](../components/video-playback.md) now use bounded owner-fed PCM queues over the existing resampler/FAudio transport, with embedded Vorbis decoding, track selection, scene-clock speed, gain and bus fallback. Ordinary audio imports retain their managed decoder policy.

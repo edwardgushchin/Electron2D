@@ -1,6 +1,6 @@
 # GPUTexture
 
-Last updated: 2026-10-12
+Last updated: 2026-10-16
 
 - Declaration: `internal sealed unsafe class GPUTexture : IDisposable`
 - Source: [GPUTexture.cs](../../src/Servers/Rendering/GPUTexture.cs)
@@ -94,3 +94,5 @@ RID proxy batches resolve to their root Texture before cache preparation; each r
 ## Shared renderer-device ownership
 
 Ordinary/array allocation leases retain the texture after backend retirement until pending device commands complete. Storage usage is added only when the complete native graphics/compute read/write flag combination is supported. Raw update/copy use native transfer roles. RecordUpload/CancelUpload distinguish encoded work from successful submission; CommitUpload commits that exact version. Device writes do not mutate authored snapshots and are preserved until a later authored upload. See [renderer export checks](../components/local-compute.md#renderer-texture-export-checkpoint).
+
+Prepared mutable pixels compare identity and revision. Upload records the revision actually copied; CommitUpload publishes that recorded value after submission, so a later in-place update remains pending. The same allocation and transfer capacity are reused for video frames.

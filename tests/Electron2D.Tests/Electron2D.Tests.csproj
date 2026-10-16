@@ -43,6 +43,7 @@
     <EmbeddedResource Include="Fixtures/StyleBoxFlatGeometry.json" LogicalName="TestFixtures.StyleBoxFlatGeometry.json" />
     <EmbeddedResource Include="Fixtures/UnicodeTextConformance.json" LogicalName="TestFixtures.UnicodeTextConformance.json" />
     <EmbeddedResource Include="Fixtures/Audio/*.mp3;Fixtures/Audio/*.ogg;Fixtures/Audio/*.f32" LogicalName="TestAudio.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Fixtures/Video/*.ogv;Fixtures/Video/*.rgba" LogicalName="TestVideo.%(Filename)%(Extension)" />
     <EmbeddedResource Include="Fixtures/Audio/Filters/reference.json" LogicalName="TestAudio.FilterReference.json" />
     <EmbeddedResource Include="Fixtures/Audio/EQ/reference.json" LogicalName="TestAudio.EQReference.json" />
     <EmbeddedResource Include="Fixtures/Audio/Reverb/reference.json" LogicalName="TestAudio.ReverbReference.json" />

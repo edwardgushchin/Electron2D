@@ -18,7 +18,8 @@ class NativePackageTests(unittest.TestCase):
     def test_ogv_bridge_is_required_in_every_profile(self):
         for profile, names in package.LIBRARIES.items():
             name = next(name for name in names if "Electron2DOGV" in name)
-            self.assertEqual(package.required_exports(name), {"e2d_ogv_create", "e2d_ogv_frame", "e2d_ogv_finish", "e2d_ogv_destroy"})
+            self.assertEqual(package.required_exports(name), {"e2d_ogv_create", "e2d_ogv_frame", "e2d_ogv_finish", "e2d_ogv_destroy",
+                                                            "e2d_video_create", "e2d_video_frame", "e2d_video_audio", "e2d_video_seek_audio", "e2d_video_destroy"})
 
     def test_file_codec_exports_are_part_of_every_enet_payload(self):
         for name in ['libElectron2DENet.so', 'Electron2DENet.dll', 'libElectron2DENet.a']:

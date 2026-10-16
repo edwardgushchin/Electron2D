@@ -1,6 +1,6 @@
 # Movie writing
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 Owns non-real-time rendered recording through [MovieWriter](../classes/MovieWriter.md), [MovieRecording](../classes/MovieRecording.md) and internal [PNGMovieWriter](../classes/PNGMovieWriter.md)/[AVIMovieWriter](../classes/AVIMovieWriter.md)/[OGVMovieWriter](../classes/OGVMovieWriter.md). [ADR 0109](../decisions/movie-writing.md#adr-0109) owns the typed protocol and host adaptations.
 
@@ -42,7 +42,7 @@ The AVI slice also passes public package NativeAOT portable/GPU/Compatibility pr
 
 ## OGV implementation and verification
 
-The private recipe pins libogg 1.3.6, libvorbis 1.3.7 and libtheora 1.2.0 by archive SHA-256 and preserves their original license texts. The Vorbis residue adaptation checks the original source hash and compiles a modified copy without editing the fetched archive. Source fingerprints, exactly four bridge exports, loader dispatch, desktop/cross producers, native packages and license audits include Electron2DOGV. Static profiles merge the full codec closure into one archive; a standalone link also executes from a build directory containing spaces.
+The private recipe pins libogg 1.3.6, libvorbis 1.3.7 and libtheora 1.2.0 by archive SHA-256 and preserves their original license texts. The Vorbis residue adaptation checks the original source hash and compiles a modified copy without editing the fetched archive. Source fingerprints, the four encoder exports (nine total after the video decoder extension), loader dispatch, desktop/cross producers, native packages and license audits include Electron2DOGV. Static profiles merge the full codec closure into one archive; a standalone link also executes from a build directory containing spaces.
 
 OGVMovieWriterTests exercises portable settings/validation and actual GPU/Compatibility capture: all speaker modes, quality/speed/keyframe controls, padded dimensions, short/empty/low-FPS and zero-PCM-block files, checksums/granules, settings snapshots and scene/disk failure cleanup. The native check covers ABI bounds, all layouts, callback failures and repeated initialization/finalization. Its separate residue check covers 24 channel/quality profiles. AddressSanitizer/LeakSanitizer distinguish the original leaking dependency from the adapted copy; all twelve encoded comparison files remain byte-identical after the allocation fix. Independent FFmpeg checks verify decoded pixels/samples, timeline order, keyframe limits and distinct native speaker tones, including silent 3.1 rear channels. Evidence is retained in ignored bin/ogv-movie-validation/2026-10-15.
 

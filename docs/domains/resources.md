@@ -272,3 +272,5 @@ Mounted res:// resources now share [resource pack resolution](../components/reso
 
 
 [DPITexture](../components/scalable-svg.md) stores SVG source and typed paint maps as resource data, with independent scene-local copies and transient viewport raster caches. Existing Image SVG codec limits remain separate from this retained texture/resource integration.
+
+[Video resources](../components/video-playback.md) now load bounded Ogg sources, instantiate independent prepared decoders and persist exact source/player configuration through resource and scene archives. Fresh-process authoring is exercised separately from rendered playback.

@@ -59,7 +59,7 @@ public sealed partial class ResourceLoader : ElectronObject
     /// <summary>Returns compiled types used by a recognized resource file.</summary><param name="path">Source file.</param><returns>Copied type census; empty when unrecognized.</returns>
     public static Type[] GetClassesUsed(string path) { path = ResourceUID.EnsurePath(path); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) return loader.GetClassesUsed(path); return []; }
     /// <summary>Loads a supported typed resource from an operating-system, res:// or user:// path.</summary>
-    /// <typeparam name="TResource">Registered archive/plugin resource, ImageTexture, FontFile, implemented AudioStream, ShaderInclude, X509Certificate, CryptoKey, or an assignable resource base type.</typeparam>
+    /// <typeparam name="TResource">Registered archive/plugin resource, ImageTexture, FontFile, implemented AudioStream, VideoStreamTheora, ShaderInclude, X509Certificate, CryptoKey, or an assignable resource base type.</typeparam>
     /// <param name="path">File path; the exact path string is the cache key.</param>
     /// <param name="cacheMode">Whether to reuse, ignore or refresh an existing live instance.</param>
     /// <returns>A caller-owned live resource. Reuse and Replace can return the same cached instance.</returns>
@@ -117,7 +117,7 @@ public sealed partial class ResourceLoader : ElectronObject
         lock (isolated ? ResourceLoadGraph.Current!.EntryGate : LoadGate)
         {
             var cached = isolated ? null : Resource.GetRegisteredPath(path);
-            if (cacheMode == CacheMode.Reuse && cached is ImageTexture or FontFile or AudioStream or X509Certificate or CryptoKey && requestedType.IsInstanceOfType(cached)) return cached;
+            if (cacheMode == CacheMode.Reuse && cached is ImageTexture or FontFile or AudioStream or VideoStream or X509Certificate or CryptoKey && requestedType.IsInstanceOfType(cached)) return cached;
             if (cacheMode == CacheMode.Reuse && cached is not null)
                 throw new InvalidOperationException("The cached resource has a different type.");
 
@@ -126,7 +126,16 @@ public sealed partial class ResourceLoader : ElectronObject
             Resource loaded;
             var audioType = AudioType(path, requestedType);
             var cryptoType = CryptoType(path, requestedType);
-            if (cryptoType is not null)
+            if (requestedType.IsAssignableFrom(typeof(VideoStreamTheora)) && System.IO.Path.GetExtension(path).Equals(".ogv", StringComparison.OrdinalIgnoreCase))
+            {
+                var video = new VideoStreamTheora { File = path };
+                try { using var validation = new NativeVideoDecoder(video.ReadFile(), 0); }
+                catch { video.Dispose(); throw; }
+                if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached is VideoStreamTheora existing)
+                { using (video) existing.ReloadFrom(video); return existing; }
+                loaded = video;
+            }
+            else if (cryptoType is not null)
             {
                 Resource created = cryptoType == typeof(CryptoKey) ? new CryptoKey() : new X509Certificate();
                 try { if (created is CryptoKey key) key.Load(path); else ((X509Certificate)created).Load(path); } catch { created.Dispose(); throw; }
@@ -219,7 +228,8 @@ public sealed partial class ResourceLoader : ElectronObject
         return Resource.GetRegisteredPath(path) is TResource ||
 
             (typeof(TResource).IsAssignableFrom(typeof(ImageTexture)) && Image.RecognizesFile(path) ||
-             typeof(TResource).IsAssignableFrom(typeof(FontFile)) && IsExtension(path, FontExtensions) || AudioType<TResource>(path) is not null || CryptoType<TResource>(path) is not null) && FileAccess.FileExists(path);
+             typeof(TResource).IsAssignableFrom(typeof(FontFile)) && IsExtension(path, FontExtensions) || AudioType<TResource>(path) is not null || CryptoType<TResource>(path) is not null ||
+             typeof(TResource).IsAssignableFrom(typeof(VideoStreamTheora)) && System.IO.Path.GetExtension(path).Equals(".ogv", StringComparison.OrdinalIgnoreCase)) && FileAccess.FileExists(path);
     }
 
     /// <summary>Reports whether any live registered resource occupies an exact cache path.</summary>
@@ -261,6 +271,7 @@ public sealed partial class ResourceLoader : ElectronObject
         if (typeof(TResource).IsAssignableFrom(typeof(AudioStreamWAV))) audio.Add("wav");
         if (typeof(TResource).IsAssignableFrom(typeof(AudioStreamMP3))) audio.Add("mp3");
         if (typeof(TResource).IsAssignableFrom(typeof(AudioStreamOggVorbis))) audio.Add("ogg");
+        if (typeof(TResource).IsAssignableFrom(typeof(VideoStreamTheora))) audio.Add("ogv");
         if (typeof(TResource).IsAssignableFrom(typeof(CryptoKey))) audio.Add("key");
         if (typeof(TResource).IsAssignableFrom(typeof(X509Certificate))) audio.Add("crt");
         if (images || fonts) return [.. images ? Image.RecognizedFileExtensions() : [], .. fonts ? FontExtensions : [], .. audio, .. archive];
@@ -283,7 +294,7 @@ public sealed partial class ResourceLoader : ElectronObject
     }
     private static void CheckType(Type requestedType)
     {
-        if (!requestedType.IsAssignableFrom(typeof(ImageTexture)) && !requestedType.IsAssignableFrom(typeof(FontFile)) && !requestedType.IsAssignableFrom(typeof(AudioStreamWAV)) && !requestedType.IsAssignableFrom(typeof(AudioStreamMP3)) && !requestedType.IsAssignableFrom(typeof(AudioStreamOggVorbis)) && !requestedType.IsAssignableFrom(typeof(CryptoKey)) && !requestedType.IsAssignableFrom(typeof(X509Certificate)))
+        if (!requestedType.IsAssignableFrom(typeof(ImageTexture)) && !requestedType.IsAssignableFrom(typeof(FontFile)) && !requestedType.IsAssignableFrom(typeof(AudioStreamWAV)) && !requestedType.IsAssignableFrom(typeof(AudioStreamMP3)) && !requestedType.IsAssignableFrom(typeof(AudioStreamOggVorbis)) && !requestedType.IsAssignableFrom(typeof(VideoStreamTheora)) && !requestedType.IsAssignableFrom(typeof(CryptoKey)) && !requestedType.IsAssignableFrom(typeof(X509Certificate)))
             throw new NotSupportedException($"Resource files for {requestedType.Name} are not integrated.");
     }
 

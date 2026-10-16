@@ -200,6 +200,8 @@ internal sealed class TexturePixels
     internal readonly Image.State Upload;
     internal readonly int Levels;
     internal object Allocation = new();
+    internal ulong Revision;
+    internal bool Mutable;
     internal int BytesPerPixel => Upload.Format == Image.Format.Rgba8 ? 4 : 16;
 
     private TexturePixels(Image.State source)
@@ -225,6 +227,11 @@ internal sealed class TexturePixels
         ArgumentNullException.ThrowIfNull(image);
         return new(image.CopyPixels());
     }
+
+    internal static TexturePixels PreparedRGBA(int width, int height) =>
+        new(new Image.State(width, height, Image.Format.Rgba8, false, new byte[checked(width * height * 4)])) { Mutable = true };
+
+    internal TexturePixels CopySnapshot(bool mutable = false) => new(Source with { Data = (byte[])Source.Data.Clone() }) { Mutable = mutable };
 
     internal static TexturePixels FromImage(Image image, int maximumBytes)
     {

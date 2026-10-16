@@ -1,6 +1,6 @@
 # Rendering domain
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 [Movie writing](../components/movie-writing.md) consumes completed root-viewport pixels through the actual renderer and fixes capture dimensions across later resizes. It does not create a headless renderer or claim readback/encoding is allocation-free.
 
@@ -340,3 +340,5 @@ Theme resource archives and scenes now persist complete typed theme data, resour
 
 
 [Scalable SVG textures](../components/scalable-svg.md) integrate DPITexture paint maps, native image processing, shared viewport/font oversampling, retained scale identities, default theme icons and typed resource/scene storage. Native Linux warmed replay and foreign-host acceptance remain separately measured gates.
+
+[Video playback](../components/video-playback.md) publishes stable ImageTexture frames through both real canvas backends, including a second texture consumer. Revision-aware uploads retain prepared storage; duplicated/saved images remain independent snapshots.

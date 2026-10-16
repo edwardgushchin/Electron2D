@@ -11,6 +11,7 @@ internal sealed unsafe class GPUTexture : IDisposable
     private readonly int _transferBytes;
     private object? _uploaded;
     private object? _recorded;
+    private ulong _uploadedRevision, _recordedRevision;
     internal bool IsDisposed => _texture.IsClosed;
     internal RenderHandle Allocation => _texture;
     internal RenderingDevice.TextureUsageBits DeviceUsage { get; private set; }
@@ -57,11 +58,12 @@ internal sealed unsafe class GPUTexture : IDisposable
     }
 
     private object Version => (object?)ArrayPixels ?? Pixels;
-    internal bool NeedsUpload => !ReferenceEquals(_uploaded, Version);
-    internal bool NeedsRecording => !ReferenceEquals(_recorded, Version) && NeedsUpload;
+    private ulong Revision => ArrayPixels is null ? Pixels.Revision : 0;
+    internal bool NeedsUpload => !ReferenceEquals(_uploaded, Version) || _uploadedRevision != Revision;
+    internal bool NeedsRecording => (!ReferenceEquals(_recorded, Version) || _recordedRevision != Revision) && NeedsUpload;
     internal void Upload(nint command)
     {
-        if (ReferenceEquals(_uploaded, Version)) return;
+        if (!NeedsUpload) return;
         var count = ArrayPixels?.Layers.Length ?? 1;
         var bytes = _transferBytes;
         var mapped = SDL.MapGPUTransferBuffer(_device, _transfer.DangerousGetHandle(), true);
@@ -111,8 +113,8 @@ internal sealed unsafe class GPUTexture : IDisposable
         Image.Format.BptcRgbfu => SDL.GPUTextureFormat.BC6HRGBUFloat,
         _ => SDL.GPUTextureFormat.Invalid
     };
-    internal void RecordUpload() => _recorded = Version;
+    internal void RecordUpload() { _recorded = Version; _recordedRevision = Revision; }
     internal void CancelUpload() => _recorded = null;
-    internal void CommitUpload() { _uploaded = _recorded ?? Version; _recorded = null; }
+    internal void CommitUpload() { _uploadedRevision = _recorded is null ? Revision : _recordedRevision; _uploaded = _recorded ?? Version; _recorded = null; }
     public void Dispose() { _texture.Dispose(); _transfer.Dispose(); }
 }

@@ -1,0 +1,386 @@
+{
+  "mappings": [
+    {
+      "godot": "class:VideoStream",
+      "electron2d": "T:Electron2D.VideoStream",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStream::method:_instantiate_playback()",
+      "electron2d": "method:Electron2D.VideoStream.OnInstantiatePlayback()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStream::property:file",
+      "electron2d": "property:Electron2D.VideoStream.File()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "class:VideoStreamPlayback",
+      "electron2d": "T:Electron2D.VideoStreamPlayback",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayback::method:_get_channels()",
+      "electron2d": "method:Electron2D.VideoStreamPlayback.OnGetChannels()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayback::method:_get_length()",
+      "electron2d": "method:Electron2D.VideoStreamPlayback.OnGetLength()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayback::method:_get_mix_rate()",
+      "electron2d": "method:Electron2D.VideoStreamPlayback.OnGetMixRate()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayback::method:_get_playback_position()",
+      "electron2d": "method:Electron2D.VideoStreamPlayback.OnGetPlaybackPosition()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayback::method:_get_texture()",
+      "electron2d": "method:Electron2D.VideoStreamPlayback.OnGetTexture()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayback::method:_is_paused()",
+      "electron2d": "method:Electron2D.VideoStreamPlayback.OnIsPaused()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayback::method:_is_playing()",
+      "electron2d": "method:Electron2D.VideoStreamPlayback.OnIsPlaying()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayback::method:_play()",
+      "electron2d": "method:Electron2D.VideoStreamPlayback.OnPlay()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayback::method:_seek(float:)",
+      "electron2d": "method:Electron2D.VideoStreamPlayback.OnSeek(System.Double)",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayback::method:_set_audio_track(int:)",
+      "electron2d": "method:Electron2D.VideoStreamPlayback.OnSetAudioTrack(System.Int32)",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayback::method:_set_paused(bool:)",
+      "electron2d": "method:Electron2D.VideoStreamPlayback.OnSetPaused(System.Boolean)",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayback::method:_stop()",
+      "electron2d": "method:Electron2D.VideoStreamPlayback.OnStop()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayback::method:_update(float:)",
+      "electron2d": "method:Electron2D.VideoStreamPlayback.OnUpdate(System.Double)",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayback::method:mix_audio(int:,PackedFloat32Array:,int:)",
+      "electron2d": "method:Electron2D.VideoStreamPlayback.MixAudio(System.Int32,System.ReadOnlySpan<System.Single>,System.Int32)",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "class:VideoStreamPlayer",
+      "electron2d": "T:Electron2D.VideoStreamPlayer",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::method:get_stream_length()",
+      "electron2d": "method:Electron2D.VideoStreamPlayer.GetStreamLength()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::method:get_stream_name()",
+      "electron2d": "method:Electron2D.VideoStreamPlayer.GetStreamName()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::method:get_video_texture()",
+      "electron2d": "method:Electron2D.VideoStreamPlayer.GetVideoTexture()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::method:is_playing()",
+      "electron2d": "method:Electron2D.VideoStreamPlayer.IsPlaying()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::method:play()",
+      "electron2d": "method:Electron2D.VideoStreamPlayer.Play()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::method:stop()",
+      "electron2d": "method:Electron2D.VideoStreamPlayer.Stop()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::property:audio_track",
+      "electron2d": "property:Electron2D.VideoStreamPlayer.AudioTrack()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::property:autoplay",
+      "electron2d": "property:Electron2D.VideoStreamPlayer.Autoplay()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::property:buffering_msec",
+      "electron2d": "property:Electron2D.VideoStreamPlayer.BufferingMSEC()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::property:bus",
+      "electron2d": "property:Electron2D.VideoStreamPlayer.Bus()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::property:expand",
+      "electron2d": "property:Electron2D.VideoStreamPlayer.Expand()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::property:loop",
+      "electron2d": "property:Electron2D.VideoStreamPlayer.Loop()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::property:paused",
+      "electron2d": "property:Electron2D.VideoStreamPlayer.Paused()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::property:speed_scale",
+      "electron2d": "property:Electron2D.VideoStreamPlayer.SpeedScale()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::property:stream",
+      "electron2d": "property:Electron2D.VideoStreamPlayer.Stream()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::property:stream_position",
+      "electron2d": "property:Electron2D.VideoStreamPlayer.StreamPosition()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::property:volume",
+      "electron2d": "property:Electron2D.VideoStreamPlayer.Volume()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::property:volume_db",
+      "electron2d": "property:Electron2D.VideoStreamPlayer.VolumeDB()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "VideoStreamPlayer::signal:finished()",
+      "electron2d": "event:Electron2D.VideoStreamPlayer.Finished()",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "class:VideoStreamTheora",
+      "electron2d": "T:Electron2D.VideoStreamTheora",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates."
+    },
+    {
+      "godot": "ProjectSettings::property:audio/video/video_delay_compensation_ms",
+      "electron2d": "property:Electron2D.ProjectSettings.AudioVideoDelayCompensationMSEC()",
+      "reason": "ADR 0110: advanced signed Int32 project descriptor, default zero, persistent feature overrides sampled on Play; source time and compensated presentation time remain distinct."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADR 0110: executable typed source/decoder/control family, prepared Theora frames and bounded Vorbis PCM over existing resampling/FAudio, both canvas backends, scene clocks/pause/seek/loop/completion, transactional ownership and exact archive factories. Independent pixel/PCM, malformed input, prepared allocation, fresh-process authoring and local Linux Wayland verification are recorded in docs/components/video-playback.md; foreign execution and physical listening remain separate gates.",
+      "godot": [
+        "class:VideoStream",
+        "VideoStream::method:_instantiate_playback()",
+        "VideoStream::property:file",
+        "class:VideoStreamPlayback",
+        "VideoStreamPlayback::method:_get_channels()",
+        "VideoStreamPlayback::method:_get_length()",
+        "VideoStreamPlayback::method:_get_mix_rate()",
+        "VideoStreamPlayback::method:_get_playback_position()",
+        "VideoStreamPlayback::method:_get_texture()",
+        "VideoStreamPlayback::method:_is_paused()",
+        "VideoStreamPlayback::method:_is_playing()",
+        "VideoStreamPlayback::method:_play()",
+        "VideoStreamPlayback::method:_seek(float:)",
+        "VideoStreamPlayback::method:_set_audio_track(int:)",
+        "VideoStreamPlayback::method:_set_paused(bool:)",
+        "VideoStreamPlayback::method:_stop()",
+        "VideoStreamPlayback::method:_update(float:)",
+        "VideoStreamPlayback::method:mix_audio(int:,PackedFloat32Array:,int:)",
+        "class:VideoStreamPlayer",
+        "VideoStreamPlayer::method:get_stream_length()",
+        "VideoStreamPlayer::method:get_stream_name()",
+        "VideoStreamPlayer::method:get_video_texture()",
+        "VideoStreamPlayer::method:is_playing()",
+        "VideoStreamPlayer::method:play()",
+        "VideoStreamPlayer::method:stop()",
+        "VideoStreamPlayer::property:audio_track",
+        "VideoStreamPlayer::property:autoplay",
+        "VideoStreamPlayer::property:buffering_msec",
+        "VideoStreamPlayer::property:bus",
+        "VideoStreamPlayer::property:expand",
+        "VideoStreamPlayer::property:loop",
+        "VideoStreamPlayer::property:paused",
+        "VideoStreamPlayer::property:speed_scale",
+        "VideoStreamPlayer::property:stream",
+        "VideoStreamPlayer::property:stream_position",
+        "VideoStreamPlayer::property:volume",
+        "VideoStreamPlayer::property:volume_db",
+        "VideoStreamPlayer::signal:finished()",
+        "class:VideoStreamTheora",
+        "ProjectSettings::property:audio/video/video_delay_compensation_ms"
+      ]
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.VideoStream..ctor()",
+      "reason": "ADR 0110: Explicit C# construction for typed source/playback/control lifetime."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VideoStreamPlayback..ctor()",
+      "reason": "ADR 0110: Explicit C# construction for typed source/playback/control lifetime."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VideoStreamPlayer..ctor()",
+      "reason": "ADR 0110: Explicit C# construction for typed source/playback/control lifetime."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VideoStreamTheora..ctor()",
+      "reason": "ADR 0110: Explicit C# construction for typed source/playback/control lifetime."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStream.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADR 0110: Typed Resource duplication preserves source configuration and immutable compressed snapshot."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStream.Dispose(System.Boolean)",
+      "reason": "ADR 0110: Typed lifetime/reentrancy and player-ownership guards; disposal attempts all owned cleanup."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStream.GetPropertyDescriptors()",
+      "reason": "ADR 0110: Exact stored C# resource/scene descriptors and named factories for fresh-process authoring."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStream.InstantiatePlayback()",
+      "reason": "ADR 0110: Validated public C# dispatch to the mapped required protected decoder hook, preserving thread affinity and callback guards."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStream.ValidateDisposal()",
+      "reason": "ADR 0110: Typed lifetime/reentrancy and player-ownership guards; disposal attempts all owned cleanup."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayback.Dispose(System.Boolean)",
+      "reason": "ADR 0110: Typed lifetime/reentrancy and player-ownership guards; disposal attempts all owned cleanup."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayback.GetChannels()",
+      "reason": "ADR 0110: Validated public C# dispatch to the mapped required protected decoder hook, preserving thread affinity and callback guards."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayback.GetLength()",
+      "reason": "ADR 0110: Validated public C# dispatch to the mapped required protected decoder hook, preserving thread affinity and callback guards."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayback.GetMixRate()",
+      "reason": "ADR 0110: Validated public C# dispatch to the mapped required protected decoder hook, preserving thread affinity and callback guards."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayback.GetPlaybackPosition()",
+      "reason": "ADR 0110: Validated public C# dispatch to the mapped required protected decoder hook, preserving thread affinity and callback guards."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayback.GetTexture()",
+      "reason": "ADR 0110: Validated public C# dispatch to the mapped required protected decoder hook, preserving thread affinity and callback guards."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayback.IsPaused()",
+      "reason": "ADR 0110: Validated public C# dispatch to the mapped required protected decoder hook, preserving thread affinity and callback guards."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayback.IsPlaying()",
+      "reason": "ADR 0110: Validated public C# dispatch to the mapped required protected decoder hook, preserving thread affinity and callback guards."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayback.Play()",
+      "reason": "ADR 0110: Validated public C# dispatch to the mapped required protected decoder hook, preserving thread affinity and callback guards."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayback.Seek(System.Double)",
+      "reason": "ADR 0110: Validated public C# dispatch to the mapped required protected decoder hook, preserving thread affinity and callback guards."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayback.SetAudioTrack(System.Int32)",
+      "reason": "ADR 0110: Validated public C# dispatch to the mapped required protected decoder hook, preserving thread affinity and callback guards."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayback.SetPaused(System.Boolean)",
+      "reason": "ADR 0110: Validated public C# dispatch to the mapped required protected decoder hook, preserving thread affinity and callback guards."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayback.Stop()",
+      "reason": "ADR 0110: Validated public C# dispatch to the mapped required protected decoder hook, preserving thread affinity and callback guards."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayback.Update(System.Double)",
+      "reason": "ADR 0110: Validated public C# dispatch to the mapped required protected decoder hook, preserving thread affinity and callback guards."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayback.ValidateDisposal()",
+      "reason": "ADR 0110: Typed lifetime/reentrancy and player-ownership guards; disposal attempts all owned cleanup."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayer.CreateSceneInstanceFactory()",
+      "reason": "ADR 0110: Exact stored C# resource/scene descriptors and named factories for fresh-process authoring."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayer.Dispose(System.Boolean)",
+      "reason": "ADR 0110: Typed lifetime/reentrancy and player-ownership guards; disposal attempts all owned cleanup."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayer.GetPropertyDescriptors()",
+      "reason": "ADR 0110: Exact stored C# resource/scene descriptors and named factories for fresh-process authoring."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayer.OnGetMinimumSize()",
+      "reason": "ADR 0110: Validated public C# dispatch to the mapped required protected decoder hook, preserving thread affinity and callback guards."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayer.OnNotification(System.Int32)",
+      "reason": "ADR 0110: Validated public C# dispatch to the mapped required protected decoder hook, preserving thread affinity and callback guards."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayer.ValidateDisposal()",
+      "reason": "ADR 0110: Typed lifetime/reentrancy and player-ownership guards; disposal attempts all owned cleanup."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamPlayer.ValidateMutation()",
+      "reason": "ADR 0110: Typed lifetime/reentrancy and player-ownership guards; disposal attempts all owned cleanup."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamTheora.CreateDuplicateInstance()",
+      "reason": "ADR 0110: Typed Resource duplication preserves source configuration and immutable compressed snapshot."
+    },
+    {
+      "electron2d": "method:Electron2D.VideoStreamTheora.OnInstantiatePlayback()",
+      "reason": "ADR 0110: Concrete implementation of inherited VideoStream factory contract, not a second independent source API."
+    }
+  ]
+}

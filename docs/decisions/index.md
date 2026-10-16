@@ -14,6 +14,7 @@ This file routes architecture work to bounded domain decision documents. Read th
 | Core object and runtime | [core-object-runtime.md](core-object-runtime.md) | 0003, 0005, 0009, 0010, 0015, 0016, 0050 |
 | Process-wide service API | [singleton-services.md](singleton-services.md) | 0095 |
 | Non-real-time movie writing | [movie-writing.md](movie-writing.md) | 0109 |
+| Timed video playback | [video-playback.md](video-playback.md) | 0110 |
 | Runtime diagnostics and C# stack snapshots | [diagnostics.md](diagnostics.md) | 0108 |
 | Runtime undo history | [undo-history.md](undo-history.md) | 0105 |
 | Worker execution | [jobs.md](jobs.md) | 0104 |

@@ -1,6 +1,6 @@
 # ProjectSettingsRegistry
 
-Last updated: 2026-10-10
+Last updated: 2026-10-16
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -873,3 +873,5 @@ Built-in worker definitions include ProjectSettings.WorkerPoolMaxThreads, Worker
 ## WebP codec settings
 
 The built-in `ProjectSettings.WebPCompressionMethod` and `WebPLosslessCompressionFactor` definitions default to 2 and 25, with ranges 0–6 and finite 0–100. Every independent registry registers them too. They control executable cold image saving and support ordinary typed persistence and feature overrides. See [WebP saving](../components/image-webp.md).
+
+The built-in registry includes the advanced AudioVideoDelayCompensationMSEC key and persists its signed value and feature overrides through the ordinary project settings path.

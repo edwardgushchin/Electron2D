@@ -94,7 +94,8 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
         ogv = native / "libElectron2DOGV.so"
         assert ogv.is_file(), "Missing private OGV encoder"
         ogv_symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(ogv)], text=True)
-        assert {line.split()[-1] for line in ogv_symbols.splitlines()} == {"e2d_ogv_create", "e2d_ogv_frame", "e2d_ogv_finish", "e2d_ogv_destroy"}, "OGV private ABI mismatch"
+        assert {line.split()[-1] for line in ogv_symbols.splitlines()} == {"e2d_ogv_create", "e2d_ogv_frame", "e2d_ogv_finish", "e2d_ogv_destroy",
+                                                                      "e2d_video_create", "e2d_video_frame", "e2d_video_audio", "e2d_video_seek_audio", "e2d_video_destroy"}, "OGV private ABI mismatch"
         ogv_dynamic = subprocess.check_output(["readelf", "--wide", "--dynamic", str(ogv)], text=True)
         assert not any(name in ogv_dynamic for name in ("libogg", "libvorbis", "libtheora", "RPATH", "RUNPATH")), "OGV codecs must remain private and relocatable"
         assert not (publish / "FAudio.dll").exists(), "Managed backend leaked outside the engine assembly"

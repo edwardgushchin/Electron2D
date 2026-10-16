@@ -1,8 +1,12 @@
 # Electron2D audio decisions
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 Synchronous movie output uses the same FAudio graph with a private no-device master and owned quantum buffer under [ADR 0109](movie-writing.md#adr-0109). This adds no second mixer or vendor modification; realtime output remains the default.
+
+Embedded video audio uses the existing private native Vorbis closure and feeds the
+same FAudio stream transport under [ADR 0110](video-playback.md#adr-0110). This
+bounded video decoder selection does not replace ordinary managed audio imports.
 
 
 Public process-wide service operations delegate statically to retained objects under [ADR 0095](singleton-services.md#adr-0095). Owning lifetime, threading and native resource contracts below continue to apply.
@@ -31,7 +35,7 @@ Electron2D needs audio playback, bus routing and effects through an engine-owned
 - Compile the upstream FAudio# managed binding source into `Electron2D.dll` and ship pinned native FAudio and SDL dependencies through the engine project, under [ADR 0012](product.md#adr-0012).
 - Accept WAV with PCM or IEEE-float samples, Ogg Vorbis, and MP3 as audio sources. Use the existing SDL3-CS audio bindings for WAV loading, with engine-owned validation and metadata/loop handling needed by the public contract. Use [NVorbis](https://github.com/NVorbis/NVorbis) for Ogg Vorbis and [NLayer](https://github.com/naudio/NLayer) for MP3 decoding. Do not require NAudio to use NLayer.
 - Support PCM, IMA ADPCM and QOA as the WAV stream's internal sample formats. Use the [qoa-fu](https://github.com/pfusik/qoa-fu) C# translation for QOA encoding and decoding; implement the small IMA ADPCM codec in engine-owned C#. FAudio's MS ADPCM support is a different codec and does not implement IMA ADPCM. QOA and IMA ADPCM are import/storage choices, not additional accepted source-file formats.
-- Compile the selected managed decoder sources into `Electron2D.dll` as internal types. Feed their decoded PCM to FAudio in bounded buffers; retain the source format, seek/loop behavior and resource ownership required by the applicable public audio API. No native decoder library or per-codec P/Invoke layer is selected. Pin source revisions, retain licenses and verify interoperability, corrupt-input handling, playback and target packaging when the executable audio/import slice is integrated. This decision does not select SDL_mixer as the mixer or decoder.
+- Compile the selected managed decoder sources into `Electron2D.dll` as internal types. Feed their decoded PCM to FAudio in bounded buffers; retain the source format, seek/loop behavior and resource ownership required by the applicable public audio API. Ordinary audio imports select no native decoder library or per-codec P/Invoke layer. Embedded video is the bounded exception in [ADR 0110](video-playback.md#adr-0110): it reuses the existing private Ogg/Theora/Vorbis closure and queues PCM through this same transport. Pin source revisions, retain licenses and verify interoperability, corrupt-input handling, playback and target packaging when the executable audio/import slice is integrated. This decision does not select SDL_mixer as the mixer or decoder.
 - Establish packaging and executable behavior for every claimed platform, especially Web, Android and iOS, under [ADR 0021](product.md#adr-0021). If FAudio cannot satisfy a target, resolve its backend integration through a new explicit decision before claiming audio support there; never silently substitute different semantics.
 
 ### Scene playback roles

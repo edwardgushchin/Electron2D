@@ -1,0 +1,20 @@
+{
+  "generator": "tools/ogv-native/test_video.py",
+  "ffmpeg": "ffmpeg version n9.0.2 Copyright (c) 2000-2026 the FFmpeg developers",
+  "dimensions": [
+    34,
+    26
+  ],
+  "fps": [
+    30000,
+    1001
+  ],
+  "frames": 9,
+  "source": "Generated testsrc2 and independent 300/500 Hz sine channels; no external media.",
+  "files": {
+    "theora-silent.ogv": "2fba10221420998779ae948eb673da832ee9bc0cd0f741abb95838e29aa2fb69",
+    "theora-silent.ogv.rgba": "1ce6aeb8a0c611d905b958f592e6c7542fe438ec6a8f6694f1c08e09135107ac",
+    "theora-vorbis.ogv": "e4daae8562abdbe27580a5753ec59cd0f8bde2d1cb7da0a88bccd49d835376a3",
+    "theora-vorbis.ogv.rgba": "786a35f003ffdd5d358bd71dafc644cc8a3649789eb2b6d527f1e0e6dd0bb4b8"
+  }
+}

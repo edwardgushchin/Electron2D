@@ -7,7 +7,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
 {
     private readonly RenderHandle _renderer;
     private SDL.Vertex[] _vertices = [];
-    private readonly Dictionary<Texture, (RenderHandle Handle, TexturePixels Pixels)> _textures = [];
+    private readonly Dictionary<Texture, (RenderHandle Handle, TexturePixels Pixels, ulong Revision)> _textures = [];
     private readonly HashSet<Texture> _usedTextures = [];
     private (nint Context, nint EGLDisplay, nint EGLConfig, nint GLXVisualID, nint GLXFBConfig) _graphics;
     private DisplayServer.VSyncMode _vSync;
@@ -348,7 +348,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
     {
         var pixels = texture.CapturePixels() ?? RenderingTextureRegistry.PlaceholderPixels;
         _textures.TryGetValue(texture, out var previous);
-        if (ReferenceEquals(previous.Pixels, pixels)) return;
+        if (ReferenceEquals(previous.Pixels, pixels) && previous.Revision == pixels.Revision) return;
         var replacement = previous.Handle is null || !ReferenceEquals(previous.Pixels.Allocation, pixels.Allocation);
         var handle = previous.Handle;
         if (replacement)
@@ -373,7 +373,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         }
         catch { if (replacement) handle!.Dispose(); throw; }
         if (replacement) previous.Handle?.Dispose();
-        _textures[texture] = (handle, pixels);
+        _textures[texture] = (handle, pixels, pixels.Revision);
     }
 
     internal override Image Readback(CanvasRenderTarget output, bool backBuffer = false)

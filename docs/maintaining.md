@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -136,3 +136,5 @@ CanvasModulate focused checks use `ELECTRON2D_TEST_CANVAS_MODULATE=managed`, `gp
 Foldable focused validation uses `ELECTRON2D_TEST_FOLDABLE=managed`, `gpu` or `compatibility` with the Release runner; the managed profile launches `--foldable-archive` in a fresh process. `ELECTRON2D_CAPTURE_DIR` retains native evidence. Include TabContainer validation when changing shared BarPosition.
 
 ZIP focused verification uses `ELECTRON2D_TEST_ZIP=managed`, `gpu` or `compatibility` with the Release runner. Managed tests exercise standard .NET interoperability and sparse ZIP64 offsets on Linux/macOS; native profiles round-trip a bundled scene/resource archive into actual texture pixels.
+
+For video changes, run ELECTRON2D_TEST_VIDEO=managed and the gpu/compatibility profiles in the executable test project. Set ELECTRON2D_VIDEO_OUTPUT to retain rendered/PCM evidence. tools/ogv-native/test_video.py LIBRARY OUTPUT compares 27 independent profiles and multiple tracks; Electron2DVideoAllocationCheck accepts those .ogv paths and measures prepared replay. Preserve encoder regressions, exact nine-export payload audits and current source/package checks when changing this shared closure.

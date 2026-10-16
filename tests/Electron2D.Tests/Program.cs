@@ -9,6 +9,10 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length == 2 && args[0] == "--video-archive") { VideoPlaybackTests.ReadArchive(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIDEO") == "managed") { VideoPlaybackTests.Managed(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIDEO") is "gpu" or "compatibility" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIDEO") is { } videoBackend) { VideoRenderingTests.Run(videoBackend, Environment.GetEnvironmentVariable("ELECTRON2D_VIDEO_OUTPUT") ?? IOPath.Combine(IOPath.GetTempPath(), "electron2d-video-" + videoBackend)); return; }
+
 if (args.Length > 0 && args[0] == "--physics-native-memory")
 {
     if (args.Length != 3) throw new ArgumentException("Expected a native-memory mode and cycle count.");

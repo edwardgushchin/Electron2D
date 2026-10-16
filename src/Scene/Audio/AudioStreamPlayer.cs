@@ -151,6 +151,11 @@ public partial class AudioStreamPlayer : Node
     /// <summary>Occurs when one or more voices complete naturally during an owner-thread frame.</summary>
     /// <remarks>Explicit Stop and stream replacement do not emit Finished.</remarks>
     public event Action? Finished;
+    internal bool DeferOutputPreparation;
+    internal void ResetVideoHistory()
+    {
+        Check(); foreach (var voice in _voices) voice.ResetPreparedStreamHistory();
+    }
     private AudioStreamPlayback PreparePlayback()
     {
         var playback = _stream!.InstantiatePlayback();
@@ -176,6 +181,7 @@ public partial class AudioStreamPlayer : Node
         _audioOperation = true;
         try
         {
+            if (!_registered) { AudioServer.Service.Attach(this); _registered = true; }
             if (_stream.IsMonophonic()) StopVoices();
             TrimVoices(); var index = -1;
             for (var i = 0; i < _voices.Count; i++) if (!_voices[i].Playing) { index = i; break; }
@@ -342,7 +348,7 @@ public partial class AudioStreamPlayer : Node
             {
                 if (what == NotificationEnterTree)
                 {
-                    if (!_registered) { AudioServer.Service.Attach(this); _registered = true; }
+                    if (!_registered && !DeferOutputPreparation) { AudioServer.Service.Attach(this); _registered = true; }
                     SetInternalProcessing(true, false);
                     PauseVoices(!CanProcess());
                     if (_autoplay) Play();

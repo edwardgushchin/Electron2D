@@ -10,9 +10,24 @@ public sealed class ImageTexture : Texture
     private readonly object _gate = new();
     private TexturePixels? _pixels;
     private Vector2i _size;
+    private bool _preparedFrames;
 
     /// <summary>Creates an uninitialized texture with zero size and no image.</summary>
     public ImageTexture() { }
+    internal static ImageTexture CreatePreparedRGBA(int width, int height) => new() { _pixels = TexturePixels.PreparedRGBA(width, height), _size = new(width, height), _preparedFrames = true };
+    internal void PublishPreparedRGBA(ReadOnlySpan<byte> rgba, int width, int height)
+    {
+        lock (_gate)
+        {
+            ThrowIfDisposed();
+            var pixels = _pixels;
+            if (pixels is null || !pixels.Mutable || pixels.Source.Width != width || pixels.Source.Height != height || pixels.Source.Format != Image.Format.Rgba8 || pixels.Source.HasMIPMaps || rgba.Length != pixels.Source.Data.Length)
+                throw new InvalidOperationException("Prepared video texture dimensions, format or mipmaps were replaced.");
+            rgba.CopyTo(pixels.Source.Data); rgba.CopyTo(pixels.Upload.Data);
+            unchecked { pixels.Revision++; }
+        }
+        EmitChanged();
+    }
 
     /// <inheritdoc />
     public override int GetWidth() { lock (_gate) { ThrowIfDisposed(); return _size.X; } }
@@ -46,7 +61,7 @@ public sealed class ImageTexture : Texture
     {
         ThrowIfDisposed();
         var pixels = TexturePixels.FromImage(image);
-        lock (_gate) { ThrowIfDisposed(); _pixels = pixels; _size = new(pixels.Source.Width, pixels.Source.Height); }
+        lock (_gate) { ThrowIfDisposed(); pixels.Mutable = _preparedFrames; _pixels = pixels; _size = new(pixels.Source.Width, pixels.Source.Height); }
         EmitChanged();
     }
 
@@ -71,6 +86,7 @@ public sealed class ImageTexture : Texture
             if (old.Width != current.Width || old.Height != current.Height || old.Format != current.Format || old.HasMIPMaps != current.HasMIPMaps)
                 throw new ArgumentException("Texture updates require matching pixel dimensions, format and mipmap configuration.", nameof(image));
             pixels.Allocation = _pixels.Allocation;
+            pixels.Mutable = _preparedFrames;
             _pixels = pixels;
         }
         EmitChanged();
@@ -107,8 +123,8 @@ public sealed class ImageTexture : Texture
     {
         TexturePixels? pixels;
         Vector2i size;
-        lock (_gate) { ThrowIfDisposed(); pixels = _pixels; size = _size; }
         var copy = (ImageTexture)target;
+        lock (_gate) { ThrowIfDisposed(); pixels = _pixels is { } value && (value.Mutable || copy._preparedFrames) ? value.CopySnapshot(copy._preparedFrames) : _pixels; size = _size; }
         lock (copy._gate) { copy._pixels = pixels; copy._size = size; }
     }
 

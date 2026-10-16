@@ -94,13 +94,12 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | --- | ---: |
 | Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028). | 92 |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
-| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 7 |
 | Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 7 |
+| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 6 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
 | ADR 0094: Requires a WebRTC backend with ICE/STUN/TURN, SDP, DTLS/SCTP and data-channel state/ownership, plus native/browser packaging. Managed extension hooks follow the executable typed owner. | 4 |
 | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 4 |
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
-| Trigger: first video decoding, timed texture playback and audio synchronization slice. | 3 |
 | Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 3 |
 | Trigger: actual GPU particle simulation, process-material shader/data integration, native storage and compute/collision/attractor ownership under ADR 0028. CPUParticles baseline does not provide GPU compute or process-material conversion. | 2 |
 | Trigger: compressed array-file parsing/decoding or direct compressed native upload, source format/mipmap ownership and reproducible sampling over the executable TextureArray pipeline (ADR 0028). | 2 |

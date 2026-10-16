@@ -66,6 +66,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(AudioBusesChannelDisableTime, isBasic: false);
         RegisterInternal(AudioBusesDefaultBusLayout, isBasic: true);
         RegisterInternal(NodeNameNumberSeparator, isBasic: false);
+        RegisterInternal(AudioVideoDelayCompensationMSEC, isBasic: false);
         RegisterInternal(MovieWriterFPS, isBasic: false);
         RegisterInternal(MovieWriterFile, isBasic: false);
         RegisterInternal(MovieWriterDisableVSync, isBasic: false);
@@ -1180,6 +1181,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
     private static bool IsBuiltIn<T>(ProjectSetting<T> setting)
         where T : notnull =>
         ReferenceEquals(setting, NodeNameNumberSeparator) ||
+        ReferenceEquals(setting, AudioVideoDelayCompensationMSEC) ||
         ReferenceEquals(setting, MovieWriterFPS) ||
         ReferenceEquals(setting, MovieWriterFile) ||
         ReferenceEquals(setting, MovieWriterDisableVSync) ||

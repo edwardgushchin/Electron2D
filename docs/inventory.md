@@ -1760,3 +1760,13 @@ Engine.Movie.cs also owns configured RunMovie/RunMovieAsync startup over the exi
 [Shape-edit recovery and warmed reuse](components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse) adds no production declarations. Raw transactions restore history/geometry after errors; CPU fixture/sensor scratch and GPU empty sensor-query wrappers retain only prepared capacity. One-way public records remain immutable with unchanged-value reuse and separately measured changed-policy publication. Complete numerical/native/driver/hardware acceptance remains open.
 
 [Failed filter publication](components/physics-filters.md#failed-updates-and-effective-sensing) uses existing CollisionObject/PhysicsColliderBackend/PhysicsSpace owners: commit authoring after numerical success, retain two boolean pending markers and repair effective metadata before queries or an active interval. CPU Area scans use effective body layers, including inactive PhysicalBone. No production type or public declaration is added.
+
+## Video playback
+
+| Domain | Component | Types | Source | State | Role |
+| --- | --- | --- | --- | --- | --- |
+| [Resources](domains/resources.md) | [Video playback](components/video-playback.md) | [VideoStream](classes/VideoStream.md), [VideoStreamTheora](classes/VideoStreamTheora.md) | [source](../src/Scene/Resources/VideoStream.cs), [decoder source](../src/Scene/Resources/VideoStreamTheora.cs) | Current | Reusable configured sources and private TheoraPlayback. |
+| [Resources](domains/resources.md) | [Video playback](components/video-playback.md) | [VideoStreamPlayback](classes/VideoStreamPlayback.md) | [VideoStreamPlayback.cs](../src/Scene/Resources/VideoStreamPlayback.cs) | Current | Typed owner-affine decoder hooks and borrowed frame/PCM submission; internal VideoAudioSink delegate. |
+| [Scene](domains/scene.md) | [Video playback](components/video-playback.md) | [VideoStreamPlayer](classes/VideoStreamPlayer.md) | [VideoStreamPlayer.cs](../src/Scene/GUI/VideoStreamPlayer.cs) | Current | Control, timing, queued audio and stored scene configuration. |
+| [Resources](domains/resources.md) | [Video playback](components/video-playback.md) | [NativeVideoDecoder](classes/NativeVideoDecoder.md) | [NativeVideoDecoder.cs](../src/Scene/Resources/NativeVideoDecoder.cs) | Internal | Private Metadata/DecoderHandle, bounded packet preparation and reusable decode ABI. |
+| [Audio](domains/audio.md) | [Video playback](components/video-playback.md) | [VideoAudioStream](classes/VideoAudioStream.md) | [VideoAudioStream.cs](../src/Scene/Resources/VideoAudioStream.cs) | Internal | One-owner QueuePlayback, bounded source PCM, downmix, shared resampling and gain. |

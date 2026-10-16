@@ -1,6 +1,6 @@
 # AudioStreamPlaybackResampled
 
-Last updated: 2026-10-02
+Last updated: 2026-10-16
 
 **Declaration:** `public abstract class Electron2D.AudioStreamPlaybackResampled` · **Source:** [AudioStreamPlaybackResampled.cs](../../src/Scene/Resources/AudioStreamPlaybackResampled.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -31,3 +31,5 @@ Abstract prepared cubic resampler with 128 source frames plus four history frame
 The procedural [AudioStreamGenerator](AudioStreamGenerator.md)/[AudioStreamGeneratorPlayback](AudioStreamGeneratorPlayback.md) supplies bounded producer queues and continuous underrun silence through this inherited contract; its class pages record exact rate/control/lifetime boundaries.
 
 The internal [microphone playback](AudioStreamPlaybackMicrophone.md) uses the same prepared history and complete silent source blocks to remain active across input underruns. Device replacement resets that history at the next mix.
+
+An internal MixPrepared entry reuses the same gated interpolation core with an explicit global speed. Video passes one to follow its scene clock without dividing by the ordinary-audio global speed; public ordinary audio retains its existing scaling.

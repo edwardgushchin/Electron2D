@@ -1,6 +1,6 @@
 # CompatibilityCanvasBackend
 
-Last updated: 2026-10-04
+Last updated: 2026-10-16
 
 - Declaration: `internal sealed class CompatibilityCanvasBackend : CanvasBackend`
 - Source: [CompatibilityCanvasBackend.cs](../../src/Servers/Rendering/CompatibilityCanvasBackend.cs)
@@ -97,3 +97,5 @@ Offscreen canvases now use independently owned completed/write target pairs. Nat
 Baseline copies and group composition use native SDL targets and preserve operation/clip boundaries. Arbitrary shaders and mipmapped groups reject before drawing; software also rejects unsupported premultiplied group blending. Internal screen readback verifies the actual copied pixels. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
 
 ClipChildren uses a lazy native alpha MaskBuffer: ordinary owner primitives accumulate alpha, screen RGB uses destination-alpha blending, then premultiplied composition restores the main target. Draw target/clip restoration is deterministic. Software rejects advanced mask blending before drawing. See [alpha masks](../components/canvas-rendering.md#canvas-alpha-masks).
+
+Texture cache entries retain both source snapshot identity and its uploaded revision. A prepared in-place video publication triggers another upload without changing the Texture or native allocation.

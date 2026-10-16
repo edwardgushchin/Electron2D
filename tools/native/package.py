@@ -35,7 +35,8 @@ LIBRARIES.update(iOS=ARCHIVES, tvOS=ARCHIVES, Web=(*ARCHIVES, "libSDL3.a", "libE
 
 def required_exports(name):
     if "Electron2DOGV" in name:
-        return {"e2d_ogv_create", "e2d_ogv_frame", "e2d_ogv_finish", "e2d_ogv_destroy"}
+        return {"e2d_ogv_create", "e2d_ogv_frame", "e2d_ogv_finish", "e2d_ogv_destroy",
+                "e2d_video_create", "e2d_video_frame", "e2d_video_audio", "e2d_video_seek_audio", "e2d_video_destroy"}
     if "Electron2DWebP" in name:
         return {"e2d_webp_encode"}
     if "FreeType" in name:

@@ -13206,6 +13206,66 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VideoStream",
+    "kind": "type",
+    "declaringType": "Electron2D.VideoStream",
+    "name": "VideoStream",
+    "signature": "public abstract class Electron2D.VideoStream",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VideoStreamPlayback",
+    "kind": "type",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "VideoStreamPlayback",
+    "signature": "public abstract class Electron2D.VideoStreamPlayback",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VideoStreamPlayer",
+    "kind": "type",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "VideoStreamPlayer",
+    "signature": "public sealed class Electron2D.VideoStreamPlayer",
+    "visibility": "public",
+    "baseType": "Electron2D.Control",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VideoStreamTheora",
+    "kind": "type",
+    "declaringType": "Electron2D.VideoStreamTheora",
+    "name": "VideoStreamTheora",
+    "signature": "public sealed class Electron2D.VideoStreamTheora",
+    "visibility": "public",
+    "baseType": "Electron2D.VideoStream",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Viewport",
     "kind": "type",
     "declaringType": "Electron2D.Viewport",
@@ -23841,6 +23901,58 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VideoStream..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VideoStream",
+    "name": ".ctor",
+    "signature": "protected VideoStream()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VideoStreamPlayback..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": ".ctor",
+    "signature": "protected VideoStreamPlayback()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VideoStreamPlayer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": ".ctor",
+    "signature": "public VideoStreamPlayer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VideoStreamTheora..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VideoStreamTheora",
+    "name": ".ctor",
+    "signature": "public VideoStreamTheora()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -54675,6 +54787,19 @@
     "declaringType": "Electron2D.UndoRedo",
     "name": "VersionChanged",
     "signature": "public event System.Action VersionChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.VideoStreamPlayer.Finished()",
+    "kind": "event",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "Finished",
+    "signature": "public event System.Action Finished",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -197634,6 +197759,770 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VideoStream.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStream",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStream.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStream",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStream.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStream",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStream.InstantiatePlayback()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStream",
+    "name": "InstantiatePlayback",
+    "signature": "public Electron2D.VideoStreamPlayback InstantiatePlayback()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VideoStreamPlayback",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStream.OnInstantiatePlayback()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStream",
+    "name": "OnInstantiatePlayback",
+    "signature": "protected abstract Electron2D.VideoStreamPlayback OnInstantiatePlayback()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VideoStreamPlayback",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStream.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStream",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.GetChannels()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "GetChannels",
+    "signature": "public System.Int32 GetChannels()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.GetLength()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "GetLength",
+    "signature": "public System.Double GetLength()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.GetMixRate()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "GetMixRate",
+    "signature": "public System.Int32 GetMixRate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.GetPlaybackPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "GetPlaybackPosition",
+    "signature": "public System.Double GetPlaybackPosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.GetTexture()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "GetTexture",
+    "signature": "public Electron2D.Texture GetTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.IsPaused()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "IsPaused",
+    "signature": "public System.Boolean IsPaused()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.IsPlaying()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "IsPlaying",
+    "signature": "public System.Boolean IsPlaying()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.MixAudio(System.Int32,System.ReadOnlySpan\u003CSystem.Single\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "MixAudio",
+    "signature": "public System.Int32 MixAudio(System.Int32 numFrames, System.ReadOnlySpan\u003CSystem.Single\u003E buffer = default, System.Int32 offset = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "numFrames",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "buffer",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": "default"
+      },
+      {
+        "name": "offset",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.OnGetChannels()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "OnGetChannels",
+    "signature": "protected abstract System.Int32 OnGetChannels()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.OnGetLength()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "OnGetLength",
+    "signature": "protected abstract System.Double OnGetLength()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.OnGetMixRate()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "OnGetMixRate",
+    "signature": "protected abstract System.Int32 OnGetMixRate()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.OnGetPlaybackPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "OnGetPlaybackPosition",
+    "signature": "protected abstract System.Double OnGetPlaybackPosition()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.OnGetTexture()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "OnGetTexture",
+    "signature": "protected abstract Electron2D.Texture OnGetTexture()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.OnIsPaused()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "OnIsPaused",
+    "signature": "protected abstract System.Boolean OnIsPaused()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.OnIsPlaying()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "OnIsPlaying",
+    "signature": "protected abstract System.Boolean OnIsPlaying()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.OnPlay()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "OnPlay",
+    "signature": "protected abstract System.Void OnPlay()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.OnSeek(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "OnSeek",
+    "signature": "protected abstract System.Void OnSeek(System.Double time)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.OnSetAudioTrack(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "OnSetAudioTrack",
+    "signature": "protected abstract System.Void OnSetAudioTrack(System.Int32 index)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.OnSetPaused(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "OnSetPaused",
+    "signature": "protected abstract System.Void OnSetPaused(System.Boolean paused)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "paused",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.OnStop()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "OnStop",
+    "signature": "protected abstract System.Void OnStop()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.OnUpdate(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "OnUpdate",
+    "signature": "protected abstract System.Void OnUpdate(System.Double delta)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "delta",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.Play()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "Play",
+    "signature": "public System.Void Play()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.Seek(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "Seek",
+    "signature": "public System.Void Seek(System.Double time)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.SetAudioTrack(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "SetAudioTrack",
+    "signature": "public System.Void SetAudioTrack(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.SetPaused(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "SetPaused",
+    "signature": "public System.Void SetPaused(System.Boolean paused)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "paused",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.Stop()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "Stop",
+    "signature": "public System.Void Stop()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.Update(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "Update",
+    "signature": "public System.Void Update(System.Double delta)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "delta",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayback.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayback",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayer.GetStreamLength()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "GetStreamLength",
+    "signature": "public System.Double GetStreamLength()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayer.GetStreamName()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "GetStreamName",
+    "signature": "public System.String GetStreamName()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayer.GetVideoTexture()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "GetVideoTexture",
+    "signature": "public Electron2D.Texture GetVideoTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayer.IsPlaying()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "IsPlaying",
+    "signature": "public System.Boolean IsPlaying()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayer.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayer.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayer.Play()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "Play",
+    "signature": "public System.Void Play()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayer.Stop()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "Stop",
+    "signature": "public System.Void Stop()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayer.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamPlayer.ValidateMutation()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "ValidateMutation",
+    "signature": "protected override System.Void ValidateMutation()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamTheora.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamTheora",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VideoStreamTheora.OnInstantiatePlayback()",
+    "kind": "method",
+    "declaringType": "Electron2D.VideoStreamTheora",
+    "name": "OnInstantiatePlayback",
+    "signature": "protected override Electron2D.VideoStreamPlayback OnInstantiatePlayback()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VideoStreamPlayback",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Viewport.CancelGUIDrag()",
     "kind": "method",
     "declaringType": "Electron2D.Viewport",
@@ -229986,6 +230875,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.AudioVideoDelayCompensationMSEC()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AudioVideoDelayCompensationMSEC",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E AudioVideoDelayCompensationMSEC { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.ButtonShortcutFeedbackHighlightTime()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -241020,6 +241922,175 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector4i",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VideoStream.File()",
+    "kind": "property",
+    "declaringType": "Electron2D.VideoStream",
+    "name": "File",
+    "signature": "public System.String File { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VideoStreamPlayer.AudioTrack()",
+    "kind": "property",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "AudioTrack",
+    "signature": "public System.Int32 AudioTrack { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VideoStreamPlayer.Autoplay()",
+    "kind": "property",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "Autoplay",
+    "signature": "public System.Boolean Autoplay { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VideoStreamPlayer.BufferingMSEC()",
+    "kind": "property",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "BufferingMSEC",
+    "signature": "public System.Int32 BufferingMSEC { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VideoStreamPlayer.Bus()",
+    "kind": "property",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "Bus",
+    "signature": "public System.String Bus { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VideoStreamPlayer.Expand()",
+    "kind": "property",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "Expand",
+    "signature": "public System.Boolean Expand { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VideoStreamPlayer.Loop()",
+    "kind": "property",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "Loop",
+    "signature": "public System.Boolean Loop { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VideoStreamPlayer.Paused()",
+    "kind": "property",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "Paused",
+    "signature": "public System.Boolean Paused { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VideoStreamPlayer.SpeedScale()",
+    "kind": "property",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "SpeedScale",
+    "signature": "public System.Single SpeedScale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VideoStreamPlayer.Stream()",
+    "kind": "property",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "Stream",
+    "signature": "public Electron2D.VideoStream Stream { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VideoStream",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VideoStreamPlayer.StreamPosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "StreamPosition",
+    "signature": "public System.Double StreamPosition { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VideoStreamPlayer.Volume()",
+    "kind": "property",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "Volume",
+    "signature": "public System.Single Volume { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VideoStreamPlayer.VolumeDB()",
+    "kind": "property",
+    "declaringType": "Electron2D.VideoStreamPlayer",
+    "name": "VolumeDB",
+    "signature": "public System.Single VolumeDB { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

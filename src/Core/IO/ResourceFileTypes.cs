@@ -19,6 +19,8 @@ public static partial class ResourceFileTypes
         RegisterNode("CanvasModulate", CreateCanvasModulate);
         RegisterNode("FoldableContainer", CreateFoldableContainer);
         RegisterNode("TouchScreenButton", CreateTouchScreenButton);
+        RegisterNode("VideoStreamPlayer", CreateVideoStreamPlayer);
+        RegisterResource("VideoStreamTheora", CreateVideoStreamTheora);
         RegisterNode("VirtualJoystick", CreateVirtualJoystick);
         RegisterResource("FoldableGroup", CreateFoldableGroup);
         RegisterNode("PointLight", CreatePointLight);
@@ -116,6 +118,8 @@ public static partial class ResourceFileTypes
     }
     private static Theme CreateThemeFileResource() => new();
     private static AudioStreamWAV CreateAudioStreamWAVResource() => new();
+    private static VideoStreamPlayer CreateVideoStreamPlayer() => new();
+    private static VideoStreamTheora CreateVideoStreamTheora() => new();
     private static Animation CreateAnimationResource() => new();
     private static AnimationLibrary CreateAnimationLibraryResource() => new();
     private static Shader CreateShaderFileResource() => new();

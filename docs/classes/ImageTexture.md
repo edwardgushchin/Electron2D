@@ -1,6 +1,6 @@
 # ImageTexture
 
-Last updated: 2026-10-12
+Last updated: 2026-10-16
 
 - Declaration: `public sealed class ImageTexture : Texture`
 - Source: [ImageTexture.cs](../../src/Scene/Resources/ImageTexture.cs)
@@ -91,3 +91,5 @@ CreateDuplicateInstance creates an empty ImageTexture. CopyCustomStateTo copies 
 Byte formats upload as RGBA8. Other accepted uncompressed normalized/float formats upload as RGBA32Float, retaining HDR values. Original image bytes remain available unchanged. BC1–BC7 sources retain their original format, complete mip chain and exact block bytes. Prepared CPU sampling decodes BC1–BC5/BC7 to RGBA8 and signed/unsigned BC6 to RGB floating point. GPU allocates native BC storage when the device supports it; otherwise it uploads prepared decoded pixels. Compatibility uses the decoded snapshot; BC6 requires an HDR-capable driver and the current Linux driver rejects that role. The RA-as-RG role uses decoded upload to preserve channel semantics. Integer sampling and ETC/EAC/ASTC codecs remain separate dependencies. Backend support is checked before native allocation. Canvas sampling is selected by CanvasItem and Viewport; the resource stores no sampler state. Named material textures use fixed linear filtering, clamp-to-edge coordinates and base-level LOD. Ordinary canvas drawing is implemented; other platforms remain unverified.
 
 [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) covers copy isolation, logical sizes, update constraints, duplication, default and override bindings, disposal, custom textures and native shader readback. This remains part of the unfinished rendering vertical, not a claim of complete texture API coverage.
+
+Prepared video frames use private mutable RGBA storage and increment a pixel revision without replacing the Texture identity. Duplicate/save capture independent current pixels; compatible public image updates preserve subsequent video publication. See [video playback](../components/video-playback.md).

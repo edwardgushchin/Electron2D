@@ -113,6 +113,14 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
         _previousMatrix.AsSpan().Clear();
     }
     internal bool SamplingPaused => _paused || !_active;
+    internal void ResetPreparedStreamHistory()
+    {
+        Check(); lock (_context.Gate)
+        {
+            _ring.AsSpan().Clear(); _frames.AsSpan().Clear(); _lookahead.AsSpan().Clear(); _tail.AsSpan().Clear();
+            _tailPending = false; _ending = false; _error = null; _matrix.CopyTo(_previousMatrix, 0);
+        }
+    }
     internal void ConfigureSampleChild(FAudioSampleVoice sample)
     {
         sample.SetPitch(_pitch); sample.SetVolume(_volume, AudioServer.Service.ResolveSourceGain(sample.RequestedBus, 1)); sample.SetTarget(_target);

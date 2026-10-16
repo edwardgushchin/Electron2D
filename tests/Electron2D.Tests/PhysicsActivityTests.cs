@@ -80,6 +80,15 @@ internal static class PhysicsActivityTests
         Reject<ArgumentException>(() => PhysicsServer.SpaceIsActive(space));
     }
 
+    private static void SuspensionInterval(RID first, RID second)
+    {
+        PhysicsServer.SetActive(false); PhysicsServer.SpaceStep(first, 1d / 120);
+        PhysicsServer.SpaceSetActive(second, false); PhysicsServer.SetActive(true);
+        PhysicsServer.SpaceStep(first, 1d / 120); PhysicsServer.SpaceStep(second, 1d / 120);
+        PhysicsServer.SpaceSetActive(second, true); PhysicsServer.SpaceStep(second, 1d / 120);
+        _ = PhysicsServer.SpaceIsActive(first);
+    }
+
     private static void VerifyGlobalAndLocalPolicy()
     {
         var server = PhysicsServer.Service;
@@ -117,15 +126,10 @@ internal static class PhysicsActivityTests
             PhysicsServer.BodySetForceIntegrationCallback(a, null);
             PhysicsServer.SpaceSetActive(first, true);
             for (var step = 0; step < 64; step++) { PhysicsServer.SpaceStep(first, 1d / 120); PhysicsServer.SpaceStep(second, 1d / 120); }
+            // Prepare the same suspension/resume paths that the allocation interval exercises.
+            for (var step = 0; step < 64; step++) SuspensionInterval(first, second);
             var before = GC.GetAllocatedBytesForCurrentThread();
-            for (var step = 0; step < 64; step++)
-            {
-                PhysicsServer.SetActive(false); PhysicsServer.SpaceStep(first, 1d / 120);
-                PhysicsServer.SpaceSetActive(second, false); PhysicsServer.SetActive(true);
-                PhysicsServer.SpaceStep(first, 1d / 120); PhysicsServer.SpaceStep(second, 1d / 120);
-                PhysicsServer.SpaceSetActive(second, true); PhysicsServer.SpaceStep(second, 1d / 120);
-                _ = PhysicsServer.SpaceIsActive(first);
-            }
+            for (var step = 0; step < 64; step++) SuspensionInterval(first, second);
             var bytes = GC.GetAllocatedBytesForCurrentThread() - before;
             Check(bytes == 0,
                 $"Warmed global/local switches, skipped intervals and active native frames allocated {bytes} managed bytes.");

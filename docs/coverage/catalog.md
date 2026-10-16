@@ -916,10 +916,10 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Vector4i](classes/Vector4i.md) | — | Implemented | 52 |
 | [VehicleBody3D](classes/VehicleBody3D.md) | RigidBody3D | Excluded | 4 |
 | [VehicleWheel3D](classes/VehicleWheel3D.md) | Node3D | Excluded | 21 |
-| [VideoStream](classes/VideoStream.md) | Resource | Blocked | 2 |
-| [VideoStreamPlayback](classes/VideoStreamPlayback.md) | Resource | Blocked | 14 |
-| [VideoStreamPlayer](classes/VideoStreamPlayer.md) | Control | Blocked | 19 |
-| [VideoStreamTheora](classes/VideoStreamTheora.md) | VideoStream | Blocked | 0 |
+| [VideoStream](classes/VideoStream.md) | Resource | Implemented | 2 |
+| [VideoStreamPlayback](classes/VideoStreamPlayback.md) | Resource | Implemented | 14 |
+| [VideoStreamPlayer](classes/VideoStreamPlayer.md) | Control | Implemented | 19 |
+| [VideoStreamTheora](classes/VideoStreamTheora.md) | VideoStream | Implemented | 0 |
 | [Viewport](classes/Viewport.md) | Node | Partial | 200 |
 | [ViewportTexture](classes/ViewportTexture.md) | Texture2D | Implemented | 1 |
 | [VirtualJoystick](classes/VirtualJoystick.md) | Control | Implemented | 27 |

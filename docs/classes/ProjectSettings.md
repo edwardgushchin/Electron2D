@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (48000 Hz, 1000..200000); MovieWriterSpeakerMode is ProjectSetting<AudioServer.SpeakerMode> for editor/movie_writer/speaker_mode (Stereo). MovieWriterVideoQuality is ProjectSetting<float> for editor/movie_writer/video_quality (0.75, finite 0..1); MovieWriterAudioBitDepth is ProjectSetting<int> for editor/movie_writer/audio_bit_depth (16, accepts 16 or 32). These are registered nonbasic settings, support feature overrides and are sampled by the built-in recording handler. See [movie writing](../components/movie-writing.md).
 
@@ -1577,3 +1577,5 @@ and collision renaming sample active feature overrides when resolving the next
 collision. Existing names stay unchanged. Every independent project registry
 registers the same built-in definition; invalid values reject before mutation.
 The setting participates in ordinary project persistence. See [child names](../components/scene-hierarchy.md#child-name-collisions).
+
+AudioVideoDelayCompensationMSEC registers audio/video/video_delay_compensation_ms as an advanced stored Int32 key, default zero. Video Play samples its active feature override; positive values delay picture presentation relative to embedded audio.

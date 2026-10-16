@@ -404,3 +404,5 @@ now backs Node.GetViewport/GetWindow across physical and ordinary nodes. Enter,
 exit, reparent and cross-tree transfer publish/clear the retained association;
 cached borrowed reads and own-group window lookup preserve their separate access
 rules. Packed scenes reconstruct active links at activation.
+
+[VideoStreamPlayer](../classes/VideoStreamPlayer.md) now provides authored video as a Control with first-frame timing, pause/speed/loop/completion, exact packed factories and initial detached owner transfer. Fresh-process scene load and real GPU/Compatibility rendering are separate verified paths.
