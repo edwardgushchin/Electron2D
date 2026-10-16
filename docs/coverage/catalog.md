@@ -766,7 +766,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [SeparationRayShape3D](classes/SeparationRayShape3D.md) | Shape3D | Excluded | 2 |
 | [Separator](classes/Separator.md) | Control | Implemented | 2 |
 | [Shader](classes/Shader.md) | Resource | Partial | 13 |
-| [ShaderGlobalsOverride](classes/ShaderGlobalsOverride.md) | Node | Blocked | 0 |
+| [ShaderGlobalsOverride](classes/ShaderGlobalsOverride.md) | Node | Implemented | 0 |
 | [ShaderInclude](classes/ShaderInclude.md) | Resource | Implemented | 1 |
 | [ShaderIncludeDB](classes/ShaderIncludeDB.md) | Object | Blocked | 3 |
 | [ShaderMaterial](classes/ShaderMaterial.md) | Material | Partial | 3 |

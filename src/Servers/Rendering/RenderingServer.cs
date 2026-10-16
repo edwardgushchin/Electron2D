@@ -181,6 +181,7 @@ public sealed partial class RenderingServer : ElectronObject
         {
             AnimatedTexture.AdvanceAll(this, Stopwatch.GetTimestamp(), _animatedChanges);
             BeginEventEmission(FramePreDrawCore)?.Invoke();
+            _globalParameters.BindScene(tree.SelectedShaderGlobals?.Parameters);
             UpdatePhysicsContacts(tree);
             CanvasTime = (CanvasTime + step) % ProjectSettings.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
             _interpolationFraction = tree.PhysicsInterpolation ? (float)Engine.PhysicsInterpolationFraction : 1f;

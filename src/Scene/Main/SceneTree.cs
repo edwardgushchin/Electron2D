@@ -1262,7 +1262,14 @@ public sealed partial class SceneTree : MainLoop
         ThrowCollected("One or more node-renamed tree events failed.", errors);
     }
 
-    internal void NotifyTreeChanged() { PathRevision++; InvalidateMultiplayerPaths(); BeginEventEmission(TreeChanged)?.Invoke(this); }
+    internal void NotifyTreeChanged()
+    {
+        PathRevision++; InvalidateMultiplayerPaths();
+        List<Exception>? errors = null;
+        try { ReconcileShaderGlobals(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { BeginEventEmission(TreeChanged)?.Invoke(this); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Tree change callbacks failed.", errors);
+    }
 
     private void RunFrame(double delta, double unscaledDelta, bool physics)
     {

@@ -354,3 +354,5 @@ Integration with inherited signal blocking has managed and native software-Vulka
 ## Global values
 
 The [global parameter service](global-shader-parameters.md) supplies reserved Globals blocks and GLOBAL_ image bindings in both stages. These declarations are excluded from material defaults, stored properties and per-item parameter access; their values and overrides belong to the renderer session. Larger numeric matrices are accepted only for that global role.
+
+Scene-authored global shader values now use [ShaderGlobalsOverride](../classes/ShaderGlobalsOverride.md). Its typed portable values, tree-order arbitration and renderer-session restoration are described in the [global parameter component](global-shader-parameters.md#scene-owned-overrides).

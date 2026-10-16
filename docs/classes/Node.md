@@ -4,9 +4,9 @@ Last updated: 2026-10-16
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
-**Inherited By:** [AudioStreamPlayer](AudioStreamPlayer.md), [CanvasItem](CanvasItem.md), [CanvasLayer](CanvasLayer.md), [Timer](Timer.md), [Viewport](Viewport.md)
+**Inherited By:** [AudioStreamPlayer](AudioStreamPlayer.md), [CanvasItem](CanvasItem.md), [CanvasLayer](CanvasLayer.md), [ShaderGlobalsOverride](ShaderGlobalsOverride.md), [Timer](Timer.md), [Viewport](Viewport.md)
 
-- **Source:** [Node.cs](../../src/Scene/Main/Node.cs), [Node.Replacement.cs](../../src/Scene/Main/Node.Replacement.cs), [Node.PhysicsInterpolation.cs](../../src/Scene/Main/Node.PhysicsInterpolation.cs), [Node.Diagnostics.cs](../../src/Scene/Main/Node.Diagnostics.cs), [Node.Names.cs](../../src/Scene/Main/Node.Names.cs)
+- **Source:** [Node.cs](../../src/Scene/Main/Node.cs), [Node.Replacement.cs](../../src/Scene/Main/Node.Replacement.cs), [Node.PhysicsInterpolation.cs](../../src/Scene/Main/Node.PhysicsInterpolation.cs), [Node.Diagnostics.cs](../../src/Scene/Main/Node.Diagnostics.cs), [Node.Names.cs](../../src/Scene/Main/Node.Names.cs), [Node.TreeMembership.cs](../../src/Scene/Main/Node.TreeMembership.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public partial class Node : ElectronObject`
 
@@ -1873,3 +1873,5 @@ Gets or sets whether this node receives internal fixed-frame notifications.
 **System.ObjectDisposedException:** The node is disposed.
 
 The complete [processing metadata and callback contract](../components/scene-tree.md#complete-processing-metadata-and-callbacks) covers coordinated reads, current-group configuration, all six stored callback switches, signed priorities, input delivery and allocation-free worker schedule rebuilding. Physical, hierarchy and renderer mutation retain their own guards.
+
+Scene-authored global shader values now use [ShaderGlobalsOverride](ShaderGlobalsOverride.md). Its typed portable values, tree-order arbitration and renderer-session restoration are described in the [global parameter component](../components/global-shader-parameters.md#scene-owned-overrides).

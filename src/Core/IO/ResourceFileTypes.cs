@@ -17,6 +17,7 @@ public static partial class ResourceFileTypes
         RegisterNode("Node", CreateNode);
         RegisterNode("Entity", CreateEntity);
         RegisterNode("CanvasModulate", CreateCanvasModulate);
+        RegisterNode("ShaderGlobalsOverride", CreateShaderGlobalsOverride);
         RegisterNode("FoldableContainer", CreateFoldableContainer);
         RegisterNode("TouchScreenButton", CreateTouchScreenButton);
         RegisterNode("VideoStreamPlayer", CreateVideoStreamPlayer);
@@ -133,6 +134,7 @@ public static partial class ResourceFileTypes
     private static PointLight CreatePointLight() => new();
     private static DirectionalLight CreateDirectionalLight() => new();
     private static LightOccluder CreateLightOccluder() => new();
+    private static ShaderGlobalsOverride CreateShaderGlobalsOverride() => new();
     private static CanvasModulate CreateCanvasModulate() => new();
     private static FoldableContainer CreateFoldableContainer() => new();
     private static TouchScreenButton CreateTouchScreenButton() => new();

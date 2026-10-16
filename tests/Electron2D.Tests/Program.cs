@@ -330,6 +330,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INDEXED_PROPERTIES") == 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SUBTREE_AUTHORING_NATIVE") == "1") { SubtreeResourceAuthoringTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SUBTREE_AUTHORING") == "1") { SubtreeResourceAuthoringTests.Run(); return; }
 if (args.Length == 2 && args[0] == "--canvas-vertex-archive") { CanvasVertexProgramTests.RunArchive(args[1]); return; }
+if (args.Length == 2 && args[0] == "--scene-globals-archive") { ShaderGlobalsOverrideTests.RunArchive(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_GLOBALS") is { } sceneGlobalsProfile) { if (sceneGlobalsProfile == "managed") ShaderGlobalsOverrideTests.RunManaged(); else ShaderGlobalsOverrideTests.RunNative(sceneGlobalsProfile); return; }
 if (args.Length == 2 && args[0] == "--global-shader-archive") { ShaderGlobalParametersTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_GLOBALS") is { } globalProfile) { if (globalProfile == "managed") ShaderGlobalParametersTests.RunManaged(); else ShaderGlobalParametersTests.RunNative(globalProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_VERTEX") is { } canvasVertexProfile) { if (canvasVertexProfile == "managed") CanvasVertexProgramTests.RunManaged(); else CanvasVertexProgramTests.RunNative(canvasVertexProfile); return; }

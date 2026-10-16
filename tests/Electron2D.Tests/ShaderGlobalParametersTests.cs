@@ -66,7 +66,7 @@ internal static class ShaderGlobalParametersTests
         g.Add("rectangle", Kind.Rect2, new Rect2(5, 6, 7, 8)); g.Add("basis", Kind.Mat2, Transform.Identity); g.Add("affine", Kind.Transform2D, new Transform(0, new Vector2(24, 0)));
         g.AddTexture("map", texture, false); g.AddTexture("layers", array, true);
     }
-    private static void PopulatePublic(Texture texture, TextureLayered array)
+    internal static void PopulatePublic(Texture texture, TextureLayered array)
     {
         var seed = new ShaderGlobalParameters(); seed.Add("gain", Kind.Float, .5f); seed.AddMatrix("matrix3", Kind.Mat3, Matrix3Value); seed.AddMatrix("matrix4", Kind.Mat4, Matrix4Value); Populate(seed, texture, array);
         RenderingServer.GlobalShaderParameterAdd("gain", Kind.Float, .5f);
@@ -162,7 +162,7 @@ internal static class ShaderGlobalParametersTests
         Check(!RenderingServer.IsAvailable && restored.GetProgram().GlobalUniforms.Count == 23 && restored.GetProgram().Vertex is not null && restored.GetShaderUniformList().Count == 0, "A fresh process restores paired global declarations independently of the renderer registry.");
     }
     private sealed class Box : Entity { protected override void OnDraw() => DrawRect(new(0, 0, 16, 16), Colors.White); }
-    private static byte[] Module(string language, string stage)
+    internal static byte[] Module(string language, string stage)
     { using var stream = typeof(ShaderGlobalParametersTests).Assembly.GetManifestResourceStream($"TestShaders.GlobalParameters{language}.{stage}.spv")!; using var output = new MemoryStream(); stream.CopyTo(output); return output.ToArray(); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new Exception("Expected " + typeof(T).Name); }
     private static void Check(bool condition, string message) { if (!condition) throw new Exception(message); }

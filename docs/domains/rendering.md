@@ -360,3 +360,5 @@ Theme resource archives and scenes now persist complete typed theme data, resour
 ## Authored canvas vertices
 
 Paired compiled Shader stages now execute vertex deformation through existing CanvasItem, Mesh/MultiMesh, glyph, lighting and viewport GPU consumers. Typed material/instance/default-texture state merges across stages while native bindings remain stage-specific. Engine-owned wrappers preserve hardware instancing, canvas modulation and private glyph/light data. The [shader ABI](../components/shader-materials.md#authored-vertex-stages) records framebuffer coordinates, exact capacities, retained-bounds limitations, storage and Linux native evidence. Compatibility continues its explicit shader rejection; foreign platforms remain unverified.
+
+Scene-authored global shader values now use [ShaderGlobalsOverride](../classes/ShaderGlobalsOverride.md). Its typed portable values, tree-order arbitration and renderer-session restoration are described in the [global parameter component](../components/global-shader-parameters.md#scene-owned-overrides).

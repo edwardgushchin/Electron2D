@@ -10805,6 +10805,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ShaderGlobalsOverride",
+    "kind": "type",
+    "declaringType": "Electron2D.ShaderGlobalsOverride",
+    "name": "ShaderGlobalsOverride",
+    "signature": "public class Electron2D.ShaderGlobalsOverride",
+    "visibility": "public",
+    "baseType": "Electron2D.Node",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ShaderInclude",
     "kind": "type",
     "declaringType": "Electron2D.ShaderInclude",
@@ -22412,6 +22427,19 @@
     "declaringType": "Electron2D.Shader",
     "name": ".ctor",
     "signature": "public Shader()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ShaderGlobalsOverride..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ShaderGlobalsOverride",
+    "name": ".ctor",
+    "signature": "public ShaderGlobalsOverride()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -165115,6 +165143,278 @@
       {
         "name": "fragmentBytecode",
         "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderGlobalsOverride.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderGlobalsOverride",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderGlobalsOverride.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderGlobalsOverride",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderGlobalsOverride.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderGlobalsOverride",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderGlobalsOverride.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderGlobalsOverride",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderGlobalsOverride.GetShaderParameterLayeredTexture(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderGlobalsOverride",
+    "name": "GetShaderParameterLayeredTexture",
+    "signature": "public Electron2D.TextureLayered GetShaderParameterLayeredTexture(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextureLayered",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderGlobalsOverride.GetShaderParameterList()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderGlobalsOverride",
+    "name": "GetShaderParameterList",
+    "signature": "public System.String[] GetShaderParameterList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderGlobalsOverride.GetShaderParameterMatrix(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderGlobalsOverride",
+    "name": "GetShaderParameterMatrix",
+    "signature": "public System.Single[] GetShaderParameterMatrix(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderGlobalsOverride.GetShaderParameterTexture(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderGlobalsOverride",
+    "name": "GetShaderParameterTexture",
+    "signature": "public Electron2D.Texture GetShaderParameterTexture(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderGlobalsOverride.GetShaderParameterType(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderGlobalsOverride",
+    "name": "GetShaderParameterType",
+    "signature": "public Electron2D.RenderingServer.GlobalShaderParameterType GetShaderParameterType(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderGlobalsOverride.GetShaderParameter\u00601(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderGlobalsOverride",
+    "name": "GetShaderParameter",
+    "signature": "public Nullable\u003CT\u003E GetShaderParameter\u003CT\u003E(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Nullable\u003CT\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderGlobalsOverride.SetShaderParameter(System.String,Electron2D.RenderingServer.GlobalShaderParameterType,System.ReadOnlySpan\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderGlobalsOverride",
+    "name": "SetShaderParameter",
+    "signature": "public System.Void SetShaderParameter(System.String name, Electron2D.RenderingServer.GlobalShaderParameterType type, System.ReadOnlySpan\u003CSystem.Single\u003E value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "Electron2D.RenderingServer.GlobalShaderParameterType",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderGlobalsOverride.SetShaderParameter(System.String,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderGlobalsOverride",
+    "name": "SetShaderParameter",
+    "signature": "public System.Void SetShaderParameter(System.String name, Electron2D.Texture value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderGlobalsOverride.SetShaderParameter(System.String,Electron2D.TextureLayered)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderGlobalsOverride",
+    "name": "SetShaderParameter",
+    "signature": "public System.Void SetShaderParameter(System.String name, Electron2D.TextureLayered value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.TextureLayered",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderGlobalsOverride.SetShaderParameter\u00601(System.String,Electron2D.RenderingServer.GlobalShaderParameterType,Nullable\u003CT\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderGlobalsOverride",
+    "name": "SetShaderParameter",
+    "signature": "public System.Void SetShaderParameter\u003CT\u003E(System.String name, Electron2D.RenderingServer.GlobalShaderParameterType type, Nullable\u003CT\u003E value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "Electron2D.RenderingServer.GlobalShaderParameterType",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Nullable\u003CT\u003E",
         "default": null
       }
     ],

@@ -1555,18 +1555,7 @@ public partial class Node : ElectronObject
         var tree = Tree ?? throw new InvalidOperationException("Tree order requires active nodes.");
         tree.EnsureOwnerThread();
         if (!ReferenceEquals(node.Tree, tree)) throw new InvalidOperationException("Nodes must belong to the same tree.");
-        if (ReferenceEquals(this, node)) return false;
-
-        var left = this; var right = node;
-        var leftDepth = 0; var rightDepth = 0;
-        for (var at = Parent; at is not null; at = at.Parent) leftDepth++;
-        for (var at = node.Parent; at is not null; at = at.Parent) rightDepth++;
-        var descendant = leftDepth > rightDepth;
-        while (leftDepth > rightDepth) { left = left.Parent!; leftDepth--; }
-        while (rightDepth > leftDepth) { right = right.Parent!; rightDepth--; }
-        if (ReferenceEquals(left, right)) return descendant;
-        while (!ReferenceEquals(left.Parent, right.Parent)) { left = left.Parent!; right = right.Parent!; }
-        return left.GetIndex(includeInternal: true) > right.GetIndex(includeInternal: true);
+        return IsGreaterThanCore(node);
     }
 
     /// <summary>Returns this node and its descendants as relative paths in depth-first order.</summary>

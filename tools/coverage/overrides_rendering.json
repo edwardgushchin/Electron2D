@@ -2695,12 +2695,12 @@
     {
       "godot": "RenderingServer::method:texture_proxy_create(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "FlowContainer::theme_item:h_separation",
@@ -4991,6 +4991,11 @@
       "godot": "RenderingServer::method:global_shader_parameter_set(StringName:,Variant:)",
       "electron2d": "method:Electron2D.RenderingServer.GlobalShaderParameterSet`1(System.String,T)",
       "reason": "ADRs 0001/0028/0095: executable typed renderer-session globals preserve base values independently of temporary overrides and feed both canvas stages, separate materials, all applicable numeric/rectangle/matrix/planar-transform roles and borrowed ordinary/array samplers. GLSL/HLSL, boolean metadata, row/column storage, owner/lifetime/rollback and zero-byte prepared updates execute; project loaders and scene override-node consumers retain their exact triggers."
+    },
+    {
+      "godot": "class:ShaderGlobalsOverride",
+      "electron2d": "T:Electron2D.ShaderGlobalsOverride",
+      "reason": "ADRs 0028/0023/0004/0090: executable typed ShaderGlobalsOverride scene authoring for all 25 supported global roles, first actual tree-order priority, observable groups, ancestor reorder/transfer and failed-exit/disposal restoration. Exact portable role/carrier descriptors restore fresh files and borrowed image aliases. ShaderGlobalsOverrideTests checks guards, failed activation/repair and zero-byte prepared updates; GLSL/HLSL run 160 software-Vulkan frames on Linux Wayland/X11, with 12 pixel phases and 64 active/64 idle owner intervals at 0 managed bytes. A public-only GLSL JIT/NativeAOT consumer verifies fresh schema, image/matrix data, pixels and base restoration. Other platforms/native allocator/hardware/owner acceptance remain separate."
     }
   ],
   "statusGroups": [
@@ -6172,7 +6177,7 @@
         "RenderingServer::method:texture_proxy_update(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": [
@@ -7020,8 +7025,8 @@
       "godot": [
         "class:ShaderGlobalsOverride"
       ],
-      "state": "Blocked",
-      "reason": "Exact dependency: typed per-node global override entries, active-scene selection/priority, entry/exit/disposal restoration and portable scene storage/binding. The renderer-session global service now executes both stages, but does not produce that scene-owned override lifecycle (ADRs 0028/0023). No inert node is exposed."
+      "state": "Implemented",
+      "reason": "ADRs 0028/0023/0004/0090: executable typed ShaderGlobalsOverride scene authoring for all 25 supported global roles, first actual tree-order priority, observable groups, ancestor reorder/transfer and failed-exit/disposal restoration. Exact portable role/carrier descriptors restore fresh files and borrowed image aliases. ShaderGlobalsOverrideTests checks guards, failed activation/repair and zero-byte prepared updates; GLSL/HLSL run 160 software-Vulkan frames on Linux Wayland/X11, with 12 pixel phases and 64 active/64 idle owner intervals at 0 managed bytes. A public-only GLSL JIT/NativeAOT consumer verifies fresh schema, image/matrix data, pixels and base restoration. Other platforms/native allocator/hardware/owner acceptance remain separate."
     }
   ],
   "extras": [
@@ -8089,6 +8094,66 @@
     {
       "electron2d": "method:Electron2D.CanvasModulate.OnNotification(System.Int32)",
       "reason": "ADR 0028 with 0003/0013/0023: concrete constructor, typed scene descriptors/factory, inherited configuration warnings and mandatory canvas/visibility/World lifecycle projection for executable modulation; no independent public capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.ShaderGlobalsOverride..ctor()",
+      "reason": "ADRs 0004/0003/0013/0023/0028: typed projection of the scene node dynamic global parameter properties and inherited construction/storage/warning/disposal extension points; preserves scalar/vector/rectangle/Transform logical roles, copied matrices and borrowed images without an untyped value container. This is the executable authored override contract, not an independent API capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderGlobalsOverride.CreateSceneInstanceFactory()",
+      "reason": "ADRs 0004/0003/0013/0023/0028: typed projection of the scene node dynamic global parameter properties and inherited construction/storage/warning/disposal extension points; preserves scalar/vector/rectangle/Transform logical roles, copied matrices and borrowed images without an untyped value container. This is the executable authored override contract, not an independent API capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderGlobalsOverride.Dispose(System.Boolean)",
+      "reason": "ADRs 0004/0003/0013/0023/0028: typed projection of the scene node dynamic global parameter properties and inherited construction/storage/warning/disposal extension points; preserves scalar/vector/rectangle/Transform logical roles, copied matrices and borrowed images without an untyped value container. This is the executable authored override contract, not an independent API capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderGlobalsOverride.GetConfigurationWarnings()",
+      "reason": "ADRs 0004/0003/0013/0023/0028: typed projection of the scene node dynamic global parameter properties and inherited construction/storage/warning/disposal extension points; preserves scalar/vector/rectangle/Transform logical roles, copied matrices and borrowed images without an untyped value container. This is the executable authored override contract, not an independent API capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderGlobalsOverride.GetPropertyDescriptors()",
+      "reason": "ADRs 0004/0003/0013/0023/0028: typed projection of the scene node dynamic global parameter properties and inherited construction/storage/warning/disposal extension points; preserves scalar/vector/rectangle/Transform logical roles, copied matrices and borrowed images without an untyped value container. This is the executable authored override contract, not an independent API capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderGlobalsOverride.GetShaderParameterLayeredTexture(System.String)",
+      "reason": "ADRs 0004/0003/0013/0023/0028: typed projection of the scene node dynamic global parameter properties and inherited construction/storage/warning/disposal extension points; preserves scalar/vector/rectangle/Transform logical roles, copied matrices and borrowed images without an untyped value container. This is the executable authored override contract, not an independent API capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderGlobalsOverride.GetShaderParameterList()",
+      "reason": "ADRs 0004/0003/0013/0023/0028: typed projection of the scene node dynamic global parameter properties and inherited construction/storage/warning/disposal extension points; preserves scalar/vector/rectangle/Transform logical roles, copied matrices and borrowed images without an untyped value container. This is the executable authored override contract, not an independent API capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderGlobalsOverride.GetShaderParameterMatrix(System.String)",
+      "reason": "ADRs 0004/0003/0013/0023/0028: typed projection of the scene node dynamic global parameter properties and inherited construction/storage/warning/disposal extension points; preserves scalar/vector/rectangle/Transform logical roles, copied matrices and borrowed images without an untyped value container. This is the executable authored override contract, not an independent API capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderGlobalsOverride.GetShaderParameterTexture(System.String)",
+      "reason": "ADRs 0004/0003/0013/0023/0028: typed projection of the scene node dynamic global parameter properties and inherited construction/storage/warning/disposal extension points; preserves scalar/vector/rectangle/Transform logical roles, copied matrices and borrowed images without an untyped value container. This is the executable authored override contract, not an independent API capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderGlobalsOverride.GetShaderParameterType(System.String)",
+      "reason": "ADRs 0004/0003/0013/0023/0028: typed projection of the scene node dynamic global parameter properties and inherited construction/storage/warning/disposal extension points; preserves scalar/vector/rectangle/Transform logical roles, copied matrices and borrowed images without an untyped value container. This is the executable authored override contract, not an independent API capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderGlobalsOverride.GetShaderParameter`1(System.String)",
+      "reason": "ADRs 0004/0003/0013/0023/0028: typed projection of the scene node dynamic global parameter properties and inherited construction/storage/warning/disposal extension points; preserves scalar/vector/rectangle/Transform logical roles, copied matrices and borrowed images without an untyped value container. This is the executable authored override contract, not an independent API capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderGlobalsOverride.SetShaderParameter(System.String,Electron2D.RenderingServer.GlobalShaderParameterType,System.ReadOnlySpan<System.Single>)",
+      "reason": "ADRs 0004/0003/0013/0023/0028: typed projection of the scene node dynamic global parameter properties and inherited construction/storage/warning/disposal extension points; preserves scalar/vector/rectangle/Transform logical roles, copied matrices and borrowed images without an untyped value container. This is the executable authored override contract, not an independent API capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderGlobalsOverride.SetShaderParameter(System.String,Electron2D.Texture)",
+      "reason": "ADRs 0004/0003/0013/0023/0028: typed projection of the scene node dynamic global parameter properties and inherited construction/storage/warning/disposal extension points; preserves scalar/vector/rectangle/Transform logical roles, copied matrices and borrowed images without an untyped value container. This is the executable authored override contract, not an independent API capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderGlobalsOverride.SetShaderParameter(System.String,Electron2D.TextureLayered)",
+      "reason": "ADRs 0004/0003/0013/0023/0028: typed projection of the scene node dynamic global parameter properties and inherited construction/storage/warning/disposal extension points; preserves scalar/vector/rectangle/Transform logical roles, copied matrices and borrowed images without an untyped value container. This is the executable authored override contract, not an independent API capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderGlobalsOverride.SetShaderParameter`1(System.String,Electron2D.RenderingServer.GlobalShaderParameterType,Nullable<T>)",
+      "reason": "ADRs 0004/0003/0013/0023/0028: typed projection of the scene node dynamic global parameter properties and inherited construction/storage/warning/disposal extension points; preserves scalar/vector/rectangle/Transform logical roles, copied matrices and borrowed images without an untyped value container. This is the executable authored override contract, not an independent API capability."
     }
   ]
 }

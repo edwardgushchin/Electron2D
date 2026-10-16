@@ -1331,3 +1331,5 @@ See [screen attachment verification and dependencies](../components/canvas-rende
 ## Global shader parameters
 
 The static GlobalShaderParameterAdd/Get/GetList/GetType/Remove/Set/SetOverride family controls shared typed values for every consuming canvas material. Matrices and both borrowed image roles have concrete overloads. See the [complete declarations and member contracts](../components/global-shader-parameters.md#public-api), [logical enum](RenderingServer.GlobalShaderParameterType.md) and [execution/ownership rules](../components/global-shader-parameters.md). Base values remain independent of temporary overrides; the registry belongs to the active renderer session.
+
+Scene-authored global shader values now use [ShaderGlobalsOverride](ShaderGlobalsOverride.md). Its typed portable values, tree-order arbitration and renderer-session restoration are described in the [global parameter component](../components/global-shader-parameters.md#scene-owned-overrides).

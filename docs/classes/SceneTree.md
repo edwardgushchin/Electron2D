@@ -6,7 +6,7 @@ Last updated: 2026-10-16
 
 **Inherited By:** —
 
-- **Source:** [SceneTree.cs](../../src/Scene/Main/SceneTree.cs), [SceneTree.TextInput.cs](../../src/Scene/Main/SceneTree.TextInput.cs), [SceneTree.GUIDrag.cs](../../src/Scene/Main/SceneTree.GUIDrag.cs), [SceneTree.GUIHover.cs](../../src/Scene/Main/SceneTree.GUIHover.cs), [SceneTree.SceneChange.cs](../../src/Scene/Main/SceneTree.SceneChange.cs), [SceneTree.Physics.cs](../../src/Scene/Main/SceneTree.Physics.cs), [SceneTree.PhysicsInterpolation.cs](../../src/Scene/Main/SceneTree.PhysicsInterpolation.cs)
+- **Source:** [SceneTree.cs](../../src/Scene/Main/SceneTree.cs), [SceneTree.TextInput.cs](../../src/Scene/Main/SceneTree.TextInput.cs), [SceneTree.GUIDrag.cs](../../src/Scene/Main/SceneTree.GUIDrag.cs), [SceneTree.GUIHover.cs](../../src/Scene/Main/SceneTree.GUIHover.cs), [SceneTree.SceneChange.cs](../../src/Scene/Main/SceneTree.SceneChange.cs), [SceneTree.Physics.cs](../../src/Scene/Main/SceneTree.Physics.cs), [SceneTree.PhysicsInterpolation.cs](../../src/Scene/Main/SceneTree.PhysicsInterpolation.cs), [SceneTree.ShaderGlobals.cs](../../src/Scene/Main/SceneTree.ShaderGlobals.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public sealed partial class SceneTree : MainLoop`
 
@@ -1098,3 +1098,5 @@ Node duplication retains its separate ADR 0091 binding/identity prerequisite.
 Every pool worker prepares its thread-local group context during synchronized pool startup. A late-selected worker therefore retains the warmed group allocation contract. Group callback ordering, current-group access and owner-thread physical mutation keep their existing rules. See [allocation attribution](../components/node-groups.md#worker-context-preparation-and-allocation-attribution).
 
 The [complete processing contract](../components/scene-tree.md#complete-processing-metadata-and-callbacks) uses retained member comparisons and prepares actual work-gate contention before the first worker stage. Cold preparation uses one temporary joined helper without game callbacks or execution-context flow; frames remain host-driven, with no retained pump thread. Worker-owned trees in a one-worker pool are included in the public verification.
+
+Scene-authored global shader values now use [ShaderGlobalsOverride](ShaderGlobalsOverride.md). Its typed portable values, tree-order arbitration and renderer-session restoration are described in the [global parameter component](../components/global-shader-parameters.md#scene-owned-overrides).

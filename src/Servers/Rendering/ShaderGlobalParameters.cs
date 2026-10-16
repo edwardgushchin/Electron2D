@@ -3,17 +3,24 @@ using Kind = Electron2D.RenderingServer.GlobalShaderParameterType;
 
 namespace Electron2D;
 
-internal sealed class ShaderGlobalParameters
+internal sealed partial class ShaderGlobalParameters
 {
     private abstract class Entry(Kind kind)
     {
         internal readonly Kind Kind = kind;
         internal abstract void Write(ShaderUniform uniform, Span<byte> target);
+        internal abstract void Apply(ShaderGlobalParameters target, string name);
+        internal abstract PropertyDescriptor SceneDescriptor(string name, bool stored);
+        internal abstract void Reset();
+        internal virtual void ValidateApply() { }
     }
     private sealed class Value<T>(Kind kind, T value) : Entry(kind) where T : unmanaged
     {
         internal T Base = value;
         internal T? Override;
+        internal override PropertyDescriptor SceneDescriptor(string name, bool stored) => NumericDescriptor<T>(name, Kind, stored);
+        internal override void Apply(ShaderGlobalParameters target, string name) => target.SetOverride<T>(name, Base);
+        internal override void Reset() => Override = null;
         internal override void Write(ShaderUniform uniform, Span<byte> target)
         {
             var data = Override ?? Base;
@@ -31,29 +38,39 @@ internal sealed class ShaderGlobalParameters
         internal readonly float[] Base = value.ToArray();
         internal readonly float[] Override = new float[value.Length];
         internal bool HasOverride;
+        internal override PropertyDescriptor SceneDescriptor(string name, bool stored) => MatrixDescriptor(name, Kind, stored);
+        internal override void Apply(ShaderGlobalParameters target, string name) => target.SetMatrix(name, Base, temporary: true);
+        internal override void Reset() => HasOverride = false;
         internal override void Write(ShaderUniform uniform, Span<byte> target) => uniform.WriteMatrix(target, HasOverride ? Override : Base);
     }
     private sealed class ImageValue(Kind kind, Resource? value) : Entry(kind)
     {
         internal Resource? Base = value, Override;
         internal Resource? Effective => Override ?? Base;
+        internal override PropertyDescriptor SceneDescriptor(string name, bool stored) => ImageDescriptor(name, Kind, stored);
+        internal override void ValidateApply() => CheckImage(Base, Kind == Kind.Sampler2DArray);
+        internal override void Apply(ShaderGlobalParameters target, string name) => target.SetTexture(name, Base, Kind == Kind.Sampler2DArray, temporary: true);
+        internal override void Reset() => Override = null;
         internal override void Write(ShaderUniform uniform, Span<byte> target) => throw new InvalidOperationException("A sampled global is not a numeric uniform.");
     }
     private readonly Dictionary<string, Entry> _entries = new(StringComparer.Ordinal);
     internal void Add<T>(string name, Kind kind, T value) where T : unmanaged
     {
-        ValidateName(name); Validate<T>(kind); ShaderMaterial.ValidateValue(in value);
+        ValidateName(name); Validate<T>(kind); ShaderMaterial.ValidateValue(in value); ValidateSceneRegistration(name, kind);
         if (!_entries.TryAdd(name, new Value<T>(kind, value))) throw new ArgumentException("The global name is already registered.", nameof(name));
+        if (_scene is not null) RefreshSceneValue(name);
     }
     internal void AddMatrix(string name, Kind kind, ReadOnlySpan<float> value)
     {
-        ValidateName(name); ValidateMatrix(kind, value);
+        ValidateName(name); ValidateMatrix(kind, value); ValidateSceneRegistration(name, kind);
         if (!_entries.TryAdd(name, new Matrix(kind, value))) throw new ArgumentException("The global name is already registered.", nameof(name));
+        if (_scene is not null) RefreshSceneValue(name);
     }
     internal void AddTexture(string name, Resource? value, bool layered)
     {
-        ValidateName(name); CheckImage(value, layered);
+        ValidateName(name); CheckImage(value, layered); ValidateSceneRegistration(name, layered ? Kind.Sampler2DArray : Kind.Sampler2D);
         if (!_entries.TryAdd(name, new ImageValue(layered ? Kind.Sampler2DArray : Kind.Sampler2D, value))) throw new ArgumentException("The global name is already registered.", nameof(name));
+        if (_scene is not null) RefreshSceneValue(name);
     }
     internal T Get<T>(string name) where T : unmanaged => Typed<T>(name).Base;
     internal void Set<T>(string name, T value) where T : unmanaged
@@ -83,7 +100,7 @@ internal sealed class ShaderGlobalParameters
     }
     internal string[] Names() => _entries.Keys.Order(StringComparer.Ordinal).ToArray();
     internal Kind GetType(string name) { ValidateName(name); return _entries.TryGetValue(name, out var entry) ? entry.Kind : Kind.Max; }
-    internal void Clear() => _entries.Clear();
+    internal void Clear() { _scene = null; _entries.Clear(); _sceneDescriptors.Clear(); }
     internal void Remove(string name) { ValidateName(name); _entries.Remove(name); }
     private Entry Find(string name)
     { ValidateName(name); return _entries.TryGetValue(name, out var entry) ? entry : throw new ArgumentException($"No global shader parameter named '{name}' exists.", nameof(name)); }

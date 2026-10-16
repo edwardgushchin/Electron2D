@@ -372,7 +372,7 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
         foreach (var property in properties)
         {
             var descriptor = descriptors.FirstOrDefault(p => p.Name == property.Name && p.IsStored && !p.IsReadOnly);
-            if (descriptor is null && owner is Node node) descriptor = ThemeOwner.StoredOverride(node, property.Name, property.Value.ValueType) ?? InstanceUniformState.StoredParameter(node, property.Name, property.Value.ValueType);
+            if (descriptor is null && owner is Node node) descriptor = ThemeOwner.StoredOverride(node, property.Name, property.Value.ValueType) ?? InstanceUniformState.StoredParameter(node, property.Name, property.Value.ValueType) ?? ShaderGlobalParameters.StoredSceneParameter(node, property.Name, property.Value.ValueType);
             if (descriptor?.ValueType != property.Value.ValueType && owner is CanvasItem canvas) descriptor = InstanceUniformState.StoredParameter(canvas, property.Name, property.Value.ValueType) ?? descriptor;
             if (descriptor is null && owner is Theme) descriptor = Theme.StoredProperty(property.Name, property.Value.ValueType);
             if (descriptor is null && owner is FoldableContainer) descriptor = FoldableContainer.StoredTitleControl(property.Name, property.Value.ValueType);
@@ -609,7 +609,7 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
             var descriptor = descriptors.FirstOrDefault(p => p.Name == name && p.IsStored && !p.IsReadOnly);
             if (descriptor is null && owner is Node node && ResourceFileTypes.FindValueType(schema) is
                 { }
-             valueType) descriptor = ThemeOwner.StoredOverride(node, name, valueType) ?? InstanceUniformState.StoredParameter(node, name, valueType);
+             valueType) descriptor = ThemeOwner.StoredOverride(node, name, valueType) ?? InstanceUniformState.StoredParameter(node, name, valueType) ?? ShaderGlobalParameters.StoredSceneParameter(node, name, valueType);
             if (owner is CanvasItem canvas && ResourceFileTypes.FindValueType(schema) is { } storedType && descriptor?.ValueType != storedType) descriptor = InstanceUniformState.StoredParameter(canvas, name, storedType) ?? descriptor;
             if (descriptor is null && owner is Theme && ResourceFileTypes.FindValueType(schema) is { } themeValueType) descriptor = Theme.StoredProperty(name, themeValueType);
             if (descriptor is null && owner is FoldableContainer && ResourceFileTypes.FindValueType(schema) is { } titleValueType) descriptor = FoldableContainer.StoredTitleControl(name, titleValueType);

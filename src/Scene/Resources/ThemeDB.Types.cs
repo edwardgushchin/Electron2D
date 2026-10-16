@@ -355,6 +355,7 @@ public sealed partial class ThemeDB
         ["SeparationRayShape"] = ["SeparationRayShape", "Shape", "Resource", "ElectronObject"],
         ["Separator"] = ["Separator", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["Shader"] = ["Shader", "Resource", "ElectronObject"],
+        ["ShaderGlobalsOverride"] = ["ShaderGlobalsOverride", "Node", "ElectronObject"],
         ["ShaderInclude"] = ["ShaderInclude", "Resource", "ElectronObject"],
         ["ShaderMaterial"] = ["ShaderMaterial", "Material", "Resource", "ElectronObject"],
         ["Shape"] = ["Shape", "Resource", "ElectronObject"],

@@ -61,6 +61,29 @@ public sealed partial class RenderingServer
 
     private readonly ShaderGlobalParameters _globalParameters = new();
     internal static ShaderGlobalParameters? ActiveGlobalParameters => Service?._globalParameters;
+    internal static IEnumerable<PropertyDescriptor> SceneGlobalDescriptors(ShaderGlobalParameters authored)
+    {
+        if (Service is not { } server) return [];
+        server.EnsureOwner(); return server._globalParameters.DeclaredSceneDescriptors(authored);
+    }
+    internal static void SyncSceneGlobals(SceneTree tree)
+    {
+        if (Service is not { } server || !ReferenceEquals(server._window.Tree, tree)) return;
+        server.EnsureTextureChange(); server._globalParameters.BindScene(tree.SelectedShaderGlobals?.Parameters);
+    }
+    internal static void ValidateSceneGlobal(ShaderGlobalsOverride node, string name, GlobalShaderParameterType kind)
+    {
+        if (Service is not { } server || node.RegisteredTree is not { } tree ||
+            !ReferenceEquals(server._window.Tree, tree) || !ReferenceEquals(tree.SelectedShaderGlobals, node)) return;
+        server.EnsureTextureChange(); if (kind != GlobalShaderParameterType.Max) server._globalParameters.ValidateSceneValue(name, kind);
+    }
+    internal static void RefreshSceneGlobal(ShaderGlobalsOverride node, string name)
+    {
+        if (Service is not { } server || node.RegisteredTree is not { } tree ||
+            !ReferenceEquals(server._window.Tree, tree) || !ReferenceEquals(tree.SelectedShaderGlobals, node)) return;
+        server.EnsureTextureChange();
+        server._globalParameters.BindScene(node.Parameters); server._globalParameters.RefreshSceneValue(name);
+    }
     private static ShaderGlobalParameters GlobalParameters(bool mutate = false)
     {
         var server = RequireService();
