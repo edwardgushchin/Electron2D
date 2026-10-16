@@ -11,6 +11,8 @@ after subtree path notifications and the node's own Renamed event. NodeRenamed
 precedes TreeChanged; both phases are attempted after earlier failures. Detached
 assignments only notify their subtree. See [child names](scene-hierarchy.md#child-name-collisions).
 
+All engine objects expose inherited ElectronObject.IsQueuedForDeletion. Each explicit QueueDelete entry retains one independent mark until execution or discard, including duplicate and multiple-tree requests. Node cancellation cannot release an explicit entry. Claimed QueueFree stays observable through exit/pre-delete/cleanup; a failed validation releases the consumed claim for a later request. Terminal objects always read false.
+
 ## Owned types
 
 | Type | Role |
@@ -258,9 +260,9 @@ The metadata-only worker family explicitly disables built-in internal work befor
 
 ## Generation-qualified queued deletion
 
-`Node.QueueFree` reserves a unique current request; `CancelFree` invalidates that request before an owner claims it. Reissue appends a new FIFO entry. A stale entry in the same or a previous tree cannot consume the replacement. A request created by a departure callback waits for the next captured deletion batch, while the body remains queryable and continues its next physical step before that new deletion. Once a request is claimed, cancellation cannot undo its disposal. Child flags remain independent; disposing the parent still retires its subtree.
+`Node.QueueFree` reserves a unique current request; `CancelFree` invalidates that request before an owner claims it. Reissue appends a new FIFO entry. A stale entry in the same or a previous tree cannot consume the replacement. A request created by a departure callback waits for the next captured deletion batch, while the body remains queryable and continues its next physical step before that new deletion. Once a request is claimed, cancellation cannot undo its disposal. Only the execution that acquired the claim may release it; a stale entry on another owner cannot clear an active destination claim. Child flags remain independent; disposing the parent still retires its subtree.
 
-Publication rollback changes only the reserved generation. Node teardown atomically closes further publication and leaves IsQueuedForDeletion false. Queue acceptance retains the existing tree lifetime gate. Explicit SceneTree.QueueDelete remains an independent uncancellable operation. This queue cancellation does not veto a Dispose already executing.
+Publication rollback changes only the reserved generation. Node teardown atomically closes further publication while preserving observation of the request through cleanup. Terminal disposal makes IsQueuedForDeletion false; a failed validation releases a consumed claim for a later generation. Queue acceptance retains the existing tree lifetime gate. Explicit SceneTree.QueueDelete remains an independent uncancellable operation. This queue cancellation does not veto a Dispose already executing.
 
 The tree swaps two prepared concurrent deletion queues under its work gate and returns a drained queue after all captured entries. New entries wait in the other queue; exceptions retain later work and prepared storage. Finalization discards pending references from both queues. No callback runs under the queue gate.
 

@@ -219957,6 +219957,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ElectronObject.IsQueuedForDeletion()",
+    "kind": "property",
+    "declaringType": "Electron2D.ElectronObject",
+    "name": "IsQueuedForDeletion",
+    "signature": "public System.Boolean IsQueuedForDeletion { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ElectronObject.TranslationDomain()",
     "kind": "property",
     "declaringType": "Electron2D.ElectronObject",
@@ -227866,19 +227879,6 @@
     "declaringType": "Electron2D.Node",
     "name": "IsNodeReady",
     "signature": "public System.Boolean IsNodeReady { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.IsQueuedForDeletion()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "IsQueuedForDeletion",
-    "signature": "public System.Boolean IsQueuedForDeletion { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
