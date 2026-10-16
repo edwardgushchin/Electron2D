@@ -219,8 +219,10 @@ public partial class Node : ElectronObject
 
     private int _physicsProcessPriority;
 
-    private readonly List<List<(Node Node, bool Disabled)>> _processModeSnapshots = [];
+    private readonly List<List<(Node Node, bool CanProcess, bool Disabled, ulong PauseRevision, ulong EnableRevision, ulong Attachment)>> _processModeSnapshots = [];
     private int _processModeDepth;
+    private ulong _processEnableRevision;
+    private ulong _processPauseRevision;
     private ProcessMode _processMode;
 
     private NodeAutoTranslateMode _autoTranslateMode;
@@ -612,53 +614,68 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Gets or sets the pause policy used by both process callback lanes.</summary>
-    /// <value><see cref="ProcessMode.Inherit"/> by default.</value>
-    /// <remarks>Crossing the effective disabled boundary synchronously notifies this node and affected inheriting descendants.
-    /// Callback failures are collected after all remaining descendants are notified. Preorder snapshots are cached
-    /// separately for nested callback edits; prepare used subtree capacity and reentrancy depth before a measured hot interval.</remarks>
+    /// <value><see cref="ProcessMode.Inherit"/> initially; an entering root becomes Pausable.</value>
+    /// <remarks>Detached changes are silent. An attached root cannot select Inherit. Attached changes notify this node
+    /// and inheriting descendants parent-first: Paused/Unpaused when callback eligibility changes, then Disabled/Enabled
+    /// when the effective disabled state changes. Explicit descendant modes stop propagation. Failures are collected
+    /// after remaining notifications. Nested changes supersede stale outer delivery; moved or retired attachments skip.
+    /// Prepare subtree capacity and reentrancy depth before a measured hot interval.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The assigned enum value is undefined.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">Access is outside the scene owner/current processing group,
+    /// mutation is off the owner thread, an attached root selects Inherit, or physical participation is borrowed.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="AggregateException">Enabled or disabled notification callbacks throw after all affected nodes are notified.</exception>
+    /// <exception cref="AggregateException">Transition callbacks throw after all remaining affected notifications are attempted.</exception>
     public ProcessMode ProcessMode
     {
         get
         {
-            ThrowIfDisposed();
+            ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
             return _processMode;
         }
         set
         {
             EnsureMutable();
-
-            if (!Enum.IsDefined(value))
+            if ((uint)value > (uint)ProcessMode.Disabled)
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown process mode.");
-
-            if (_processMode == value)
-                return;
-
+            var tree = Tree;
+            if (tree is not null && Parent is null && value == ProcessMode.Inherit)
+                throw new InvalidOperationException("An attached root cannot inherit its process mode.");
+            if (_processMode == value) return;
+            if (tree is null) { _processMode = value; return; }
             var depth = _processModeDepth++;
             if (depth == _processModeSnapshots.Count) _processModeSnapshots.Add([]);
-            var disabledStates = _processModeSnapshots[depth];
+            var states = _processModeSnapshots[depth];
             try
             {
-                CaptureDisabledStates(this, disabledStates);
-                foreach (var state in disabledStates)
+                CaptureProcessStates(this, states, tree.Paused);
+                foreach (var state in states)
                     if (state.Node is CollisionObject collider) collider.EnsurePhysicsParticipationChange();
                 _processMode = value;
-
                 List<Exception>? errors = null;
-                foreach (var (node, wasDisabled) in disabledStates)
+                foreach (var state in states)
                 {
-                    if (node.IsDisposed) continue;
+                    var node = state.Node;
+                    if (!Current()) continue;
+                    var canProcess = node.CanProcessWhenPaused(tree.Paused);
+                    if (node._processPauseRevision == state.PauseRevision && state.CanProcess != canProcess)
+                    {
+                        node._processPauseRevision++;
+                        try { node.DispatchNotification(canProcess ? NotificationUnpaused : NotificationPaused); }
+                        catch (Exception error) { CollectException(ref errors, error); }
+                    }
+                    if (!Current() || node._processEnableRevision != state.EnableRevision) continue;
                     var isDisabled = node.ResolveProcessMode() == ProcessMode.Disabled;
-                    if (wasDisabled != isDisabled)
+                    if (state.Disabled != isDisabled)
+                    {
+                        node._processEnableRevision++;
                         try { node.DispatchNotification(isDisabled ? NotificationDisabled : NotificationEnabled); }
                         catch (Exception error) { CollectException(ref errors, error); }
+                    }
+                    bool Current() => !node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.TreeAttachmentVersion == state.Attachment;
                 }
                 ThrowCollected("Process mode notification callbacks failed.", errors);
             }
-            finally { disabledStates.Clear(); _processModeDepth--; }
+            finally { states.Clear(); _processModeDepth--; }
         }
     }
 
@@ -1598,23 +1615,12 @@ public partial class Node : ElectronObject
 
     /// <summary>Determines whether the resolved process mode allows callbacks in the current tree pause state.</summary>
     /// <returns><see langword="false"/> while detached or disabled; otherwise the result of the resolved pause policy.</returns>
-    /// <exception cref="InvalidOperationException">An invalid inherited process mode cannot be resolved.</exception>
+    /// <exception cref="InvalidOperationException">Access is outside the scene owner or current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node or its tree is disposing on another thread, or has finished disposing.</exception>
     public bool CanProcess()
     {
-        ThrowIfDisposed();
-
-        if (Tree is null)
-            return false;
-
-        return ResolveProcessMode() switch
-        {
-            ProcessMode.Pausable => !Tree.Paused,
-            ProcessMode.WhenPaused => Tree.Paused,
-            ProcessMode.Always => true,
-            ProcessMode.Disabled => false,
-            _ => throw new InvalidOperationException("An inherited process mode was not resolved.")
-        };
+        ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
+        return Tree is { } tree && CanProcessWhenPaused(tree.Paused);
     }
 
     /// <summary>Requests ready delivery the next time SceneTree attachment reaches the ready phase.</summary>
@@ -2141,6 +2147,31 @@ public partial class Node : ElectronObject
         }
     }
 
+    internal void AppendChildrenReversed(List<Node> nodes)
+    {
+        for (var index = _children.Count - 1; index >= 0; index--) nodes.Add(_children[index]);
+    }
+
+    internal void NotifyTreePause(bool paused)
+    {
+        var previous = CanProcessWhenPaused(!paused);
+        var current = CanProcessWhenPaused(paused);
+        if (previous != current)
+        {
+            _processPauseRevision++;
+            DispatchNotification(current ? NotificationUnpaused : NotificationPaused);
+        }
+    }
+
+    private bool CanProcessWhenPaused(bool paused) => ResolveProcessMode() switch
+    {
+        ProcessMode.Pausable => !paused,
+        ProcessMode.WhenPaused => paused,
+        ProcessMode.Always => true,
+        ProcessMode.Disabled => false,
+        _ => throw new InvalidOperationException("Unknown process mode.")
+    };
+
     internal bool HasProcessCallback(bool physics) => physics
         ? _physicsProcessEnabled || _internalPhysicsProcessEnabled
         : _processEnabled || _internalProcessEnabled;
@@ -2238,6 +2269,7 @@ public partial class Node : ElectronObject
     {
 
         Tree = tree;
+        if (Parent is null && _processMode == ProcessMode.Inherit) _processMode = ProcessMode.Pausable;
         _activeViewport = this as Viewport ?? Parent?._activeViewport;
         _absolutePathCache = null;
         TreeAttachmentVersion++;
@@ -2543,10 +2575,12 @@ public partial class Node : ElectronObject
         return index;
     }
 
-    private static void CaptureDisabledStates(Node node, List<(Node Node, bool Disabled)> states)
+    private static void CaptureProcessStates(Node node, List<(Node Node, bool CanProcess, bool Disabled, ulong PauseRevision, ulong EnableRevision, ulong Attachment)> states, bool paused)
     {
-        states.Add((node, node.ResolveProcessMode() == ProcessMode.Disabled));
-        for (var index = 0; index < node._children.Count; index++) CaptureDisabledStates(node._children[index], states);
+        states.Add((node, node.CanProcessWhenPaused(paused), node.ResolveProcessMode() == ProcessMode.Disabled,
+            node._processPauseRevision, node._processEnableRevision, node.TreeAttachmentVersion));
+        for (var index = 0; index < node._children.Count; index++)
+            if (node._children[index]._processMode == ProcessMode.Inherit) CaptureProcessStates(node._children[index], states, paused);
     }
 
     /// <summary>Validates that this node may be mutated at the current lifecycle point.</summary>
@@ -2897,8 +2931,8 @@ public partial class Node : ElectronObject
 
     private ProcessMode ResolveProcessMode()
     {
-        if (ProcessMode != ProcessMode.Inherit)
-            return ProcessMode;
+        if (_processMode != ProcessMode.Inherit)
+            return _processMode;
 
         return Parent?.ResolveProcessMode() ?? ProcessMode.Pausable;
     }

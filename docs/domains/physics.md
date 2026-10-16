@@ -1,5 +1,7 @@
 # Physics domain
 
+[Process policy and physics pause](../components/scene-tree.md#process-policy-and-physics-pause) now preserve inherited eligibility notifications, root policy, nested failure handling and worker reads. Paused tree frames stop numerical integration while eligible callbacks continue; explicit owned spaces retain independent clocks. Public CPU/software-Vulkan/registered serial/separate managed and NativeAOT checks cover the slice. Full inherited physics, independent hardware GPU, networking and performance gates remain open.
+
 [Scene and network history memory](../components/physics-network-memory.md) now
 partitions the full three-process example's managed scene, replay and transport
 storage, plus four additional local scene checkpoints. Native/static-global/AOT

@@ -1,6 +1,6 @@
 # ProcessMode
 
-Last updated: 2026-09-26
+Last updated: 2026-10-16
 
 **Inherits:** —
 
@@ -19,7 +19,7 @@ Controls when a node receives process and physics-process callbacks.
 `ProcessMode` is the typed pause policy stored by each [`Node`](Node.md). It owns no resources and has no lifecycle. [`SceneTree`](SceneTree.md) resolves it before each process, physics-process, or scene-input callback.
 
 The values affect Electron2D's explicitly enabled host-driven process, physics-process, and scene-input callback
-lanes. Effective Disabled processing also applies each scene [CollisionObject.DisableMode](CollisionObject.md#disablemode); pausing alone does not. Rendering and audio remain independent.
+lanes. Effective Disabled processing also applies each scene [CollisionObject.DisableMode](CollisionObject.md#disablemode); pausing alone does not invoke a disable policy. Tree pause stops tree-driven numerical steps for every mode while Always/WhenPaused callbacks remain eligible. Explicit owned-space steps, rendering and audio remain independent. Detached changes emit no transition notifications; entering roots normalize Inherit to Pausable and cannot select Inherit while attached.
 
 ## Examples
 
@@ -33,7 +33,7 @@ var value = ProcessMode.Inherit;
 
 | Member | Description |
 | --- | --- |
-| [`Inherit = 0`](#f-electron2d-processmode-inherit) | Uses the nearest ancestor's resolved mode; hierarchy roots resolve to [`ProcessMode.Pausable`](ProcessMode.md#f-electron2d-processmode-pausable). |
+| [`Inherit = 0`](#f-electron2d-processmode-inherit) | Uses the nearest ancestor's resolved mode; entering roots replace this with [`ProcessMode.Pausable`](ProcessMode.md#f-electron2d-processmode-pausable). |
 | [`Pausable = 1`](#f-electron2d-processmode-pausable) | Runs only while the scene tree is not paused. |
 | [`WhenPaused = 2`](#f-electron2d-processmode-whenpaused) | Runs only while the scene tree is paused. |
 | [`Always = 3`](#f-electron2d-processmode-always) | Runs regardless of the scene tree pause state. |
@@ -44,7 +44,7 @@ var value = ProcessMode.Inherit;
 <a id="f-electron2d-processmode-inherit"></a>
 ### `Inherit = 0`
 
-Uses the nearest ancestor's resolved mode; hierarchy roots resolve to [`ProcessMode.Pausable`](ProcessMode.md#f-electron2d-processmode-pausable).
+Uses the nearest ancestor's resolved mode; entering roots replace this with [`ProcessMode.Pausable`](ProcessMode.md#f-electron2d-processmode-pausable).
 
 <a id="f-electron2d-processmode-pausable"></a>
 ### `Pausable = 1`

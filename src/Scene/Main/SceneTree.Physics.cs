@@ -69,6 +69,7 @@ public sealed partial class SceneTree
             }
             catch (Exception e) { CollectException(ref errors, e); }
         }
+        if (_paused) return;
         var count = _physicsWorlds.Count; for (var i = 0; i < count; i++) if (_physicsWorlds[i].ExistingSpace is { } space) try { space.SetDebugContacts(_debugCollisionsHint ? DebugContactLimit : 0); space.Step(delta); } catch (Exception e) { CollectException(ref errors, e); }
     }
     private void ReleasePhysicsWorlds(ref List<Exception>? errors)

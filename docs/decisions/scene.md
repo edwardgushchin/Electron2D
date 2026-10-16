@@ -1,6 +1,6 @@
 # Electron2D scene decisions
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 This bounded document owns the current architectural decisions for scene. Node is the neutral scene-tree base and Entity is the spatial canvas base under ADR 0008; current class pages describe the implemented API. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -194,7 +194,7 @@ Path/PathFollow preserve runtime sampling and policy timing through the existing
 <a id="adr-0011"></a>
 ## ADR 0011: Exception-safe SceneTree lifecycle, typed groups, and frame timers
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 - Status: Accepted; timer scheduling extended by [0036](scene.md#adr-0036), the original tween absence superseded by [0037](scene.md#adr-0037), and input execution barriers extended by [0038](input.md#adr-0038)
 - Scope: `SceneTree`, `SceneTreeTimer`, `GroupCallFlags`, and their `Node` lifecycle integration
@@ -214,7 +214,8 @@ Electron2D must keep typed C# calls, deterministic ownership, its managed runtim
 - Lifecycle snapshots revalidate membership; enter/ready/exit re-entry and child escape from an exiting or disposing parent's lifecycle, pre-delete, or cleanup callbacks are rejected.
 - Frame, flush, and typed input execution are non-reentrant and cannot begin during entry/exit delivery. Tree disposal from frame, flush, input, or lifecycle callbacks is rejected before the disposal transition.
 - Cancellable node deletion continues through disposal after detach failures or detachment, while a stale request in an old tree cannot consume deletion now owned by a new tree.
-- Pause traversal visits each still-attached node at most once; opposite re-entrant and teardown-time pause transitions are rejected.
+- Pause traversal visits each still-attached node at most once; opposite re-entrant and teardown-time pause transitions are rejected. Notify only changed callback eligibility: Pausable pauses on tree pause, WhenPaused unpauses, and Always/Disabled remain silent. Retain traversal/visited capacity after warmup while taking each child snapshot after its parent's callback. Paused trees skip numerical steps of their bound worlds; Always/WhenPaused callbacks still execute. Explicit caller-owned PhysicsServer.SpaceStep remains independent, and a separate unpaused tree retains its own clock. This follows the reference pause/physics effect through Electron2D's host-owned tree/space boundary rather than a global service toggle.
+- ProcessMode uses Inherit/Pausable/WhenPaused/Always/Disabled identities 0..4. Detached changes are silent; entering roots replace Inherit with Pausable and attached roots reject Inherit before mutation. Attached changes preflight affected collision objects, commit once, and deliver Paused/Unpaused before Disabled/Enabled parent-first through inheriting descendants, stopping at explicit modes. Cached snapshots track delivered eligibility/enabled revisions, so a nested explicit child mode cannot consume pending physical Enabled delivery; newer transitions or retired attachments suppress stale outer delivery without dropping an independent enabled transition. Attempt all remaining phases after callback failures and aggregate them. Reads/CanProcess allow the owner/current processing group; writes retain scene-owner and physical-borrow guards. Inheritance resolution uses internal policy state, so a worker need not read its parent's public metadata.
 - Reusable configuration diagnostics live on Node and SceneTree: a typed virtual warning query, explicit refresh request, selected live EditedSceneRoot and a synchronous event limited to that selected subtree. Selection clears on exit; errors and thread affinity follow the existing tree contract. Under ADRs 0012/0027 the single runtime assembly makes these capabilities available to a consuming editor in every build configuration. Selecting a subtree opts into diagnostic delivery; it does not create an editor or enable tool scripts. ProgressBar uses the same selected subtree for its executable indeterminate authoring preview under ADR 0080; selection does not activate a visual editor or change general scene processing policy.
 - DebugPathsHint controls executable Path canvas visualization using a typed project color sampled at tree construction. Live toggles invalidate retained geometry rather than retaining stale commands. This pre-release correction follows ADR 0034 and the existing canvas redraw contract. Sampling is bounded to 1,048,576 points with explicit recording failure; no native mesh dependency or private editor API is introduced.
 - Node/tree/frame signals are typed C# events. Group calls and setters accept delegates; group ordering, deferral, and uniqueness use `GroupCallFlags`.

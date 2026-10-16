@@ -43,6 +43,8 @@ public sealed partial class SceneTree : MainLoop
     private readonly int _ownerThreadId = Environment.CurrentManagedThreadId;
     private readonly HashSet<GroupOperationKey> _uniqueGroupOperations = [];
     private readonly List<Node> _scheduleTraversal = [];
+    private readonly List<Node> _pauseTraversal = [];
+    private readonly HashSet<Node> _pauseNotified = [];
     private ulong _scheduleRevision;
     internal void InvalidateProcessOrder() => Interlocked.Increment(ref _scheduleRevision);
     private readonly List<SceneTreeTimer> _timerSnapshot = [];
@@ -255,6 +257,9 @@ public sealed partial class SceneTree : MainLoop
     /// <value><see langword="false"/> by default.</value>
     /// <remarks>
     /// On an actual change, the new state is stored first and the hierarchy is synchronously traversed depth-first.
+    /// Only changes in callback eligibility notify: Pausable/Inherit pause while WhenPaused unpauses, and conversely
+    /// on resume. Always/Disabled remain silent. Tree-driven numerical integration stops while paused even for Always
+    /// callbacks; explicit steps of caller-owned physics spaces remain independent. Prepared traversal capacity is retained.
     /// Each node's child snapshot is taken only after that node's notification returns, so re-entrant hierarchy changes
     /// can affect the remainder of the same traversal. A live attached node is notified at most once even when it is
     /// reparented, and removed or disposed candidates are skipped. Notification failures do not roll the state back and
@@ -288,25 +293,28 @@ public sealed partial class SceneTree : MainLoop
             try
             {
                 _paused = value;
-                var notified = new HashSet<Node>();
-
-                foreach (var node in Root.EnumerateDepthFirst())
+                _pauseTraversal.Add(Root);
+                while (_pauseTraversal.Count != 0)
                 {
-                    if (!notified.Add(node) || node.IsDisposed || !ReferenceEquals(node.Tree, this))
+                    var index = _pauseTraversal.Count - 1;
+                    var node = _pauseTraversal[index]; _pauseTraversal.RemoveAt(index);
+                    if (!_pauseNotified.Add(node) || node.IsDisposed || !ReferenceEquals(node.Tree, this))
                         continue;
 
                     try
                     {
-                        node.DispatchNotification(value ? Node.NotificationPaused : Node.NotificationUnpaused);
+                        node.NotifyTreePause(value);
                     }
                     catch (Exception error)
                     {
                         CollectException(ref errors, error);
                     }
+                    if (!node.IsDisposed && ReferenceEquals(node.Tree, this)) node.AppendChildrenReversed(_pauseTraversal);
                 }
             }
             finally
             {
+                _pauseTraversal.Clear(); _pauseNotified.Clear();
                 _isChangingPause = false;
             }
 

@@ -1,5 +1,6 @@
 if (args.Contains("--node-groups-child")) BackendChecks.ReadNodeGroups(args[Array.IndexOf(args, "--node-groups-child") + 1], args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--node-groups")) BackendChecks.RunNodeGroups(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--process-modes")) BackendChecks.RunProcessModes(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--shared-free")) BackendChecks.RunSharedFree(args.Contains("--gpu"), args.Contains("--threaded"), args.Contains("--reverse"));
 else if (args.Contains("--shared-data")) BackendChecks.RunSharedData(args.Contains("--gpu"), args.Contains("--threaded"), args.Contains("--reverse"));
 else if (args.Contains("--procedural-data")) BackendChecks.RunProceduralData(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :

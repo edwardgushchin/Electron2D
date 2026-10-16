@@ -266,6 +266,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_COMPRESSION_NATIVE"
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_CODEC_ENET") == "1") { ENetTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_ACCESS") == "1") { VerifyFileAccess(); FileCompressionTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_NAMES") == "1") { VerifyNodeHierarchyAndTransforms(); SceneHierarchyTests.Run(); NodeUniqueNameTests.Run(); NodeReplacementTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_PAUSE") == "1") { VerifyNodeHierarchyAndTransforms(); VerifySceneTree(); VerifySceneTreeFailureSafety(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_SCHEDULING") == "1") { SceneHierarchyTests.Run(); NodeInternalProcessingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_INTERNAL") == "1") { NodeInternalProcessingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_INTERNAL_NATIVE") is { } internalBackend) { NodeInternalProcessingTests.RunNative(internalBackend); return; }
@@ -10109,7 +10110,7 @@ static void VerifyProcessing()
     root.ProcessMode = ProcessMode.Disabled;
     Require(inheritedMode.Notifications.Contains(Entity.NotificationDisabled) && !inheritedMode.CanProcess(),
         "Disabling an inherited process mode must notify and disable affected descendants.");
-    root.ProcessMode = ProcessMode.Inherit;
+    root.ProcessMode = ProcessMode.Pausable;
     Require(inheritedMode.Notifications.Contains(Entity.NotificationEnabled),
         "Restoring an inherited process mode must notify affected descendants.");
 }

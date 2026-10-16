@@ -401,17 +401,17 @@ Gets or sets whether this node participates in host-driven process frames.
 
 Gets or sets the pause policy used by both process callback lanes.
 
-**Value:** `ProcessMode.Inherit` by default.
+**Value:** `ProcessMode.Inherit` initially; an entering root becomes `Pausable`.
 
-**Remarks:** Crossing the effective disabled boundary synchronously notifies this node and affected inheriting descendants. Failures are collected after notifying all remaining descendants. Scene collision objects apply their [DisableMode](CollisionObject.md#disablemode); attached process-policy changes preflight solver ownership before changing the stored mode.
+**Remarks:** Detached changes are silent. An attached root rejects `Inherit`. Attached changes notify this node and inheriting descendants parent-first, including internal children and stopping at explicit modes. Changed callback eligibility delivers `Paused/Unpaused` before a changed disabled state delivers `Disabled/Enabled`. Scene collision objects apply [DisableMode](CollisionObject.md#disablemode); policy changes preflight solver ownership before committing. Callback failures preserve the committed mode and aggregate after remaining notifications. Nested policy/pause changes suppress stale delivery, and moved or retired attachments skip. Reads allow the owner/current processing group; writes require the scene owner. Prepared subtree capacity and callback depth are retained. See [pause contract](../components/scene-tree.md#process-policy-and-physics-pause).
 
 **System.ArgumentOutOfRangeException:** The assigned enum value is undefined.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** Access is outside the scene owner/current processing group, mutation is off the owner thread, an attached root selects Inherit, or physical participation is borrowed.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
-**System.AggregateException:** Enabled or disabled notification callbacks throw after all affected nodes are notified.
+**System.AggregateException:** Transition callbacks throw after remaining affected notifications are attempted.
 
 <a id="p-electron2d-node-processpriority"></a>
 ### `public int ProcessPriority { get; set; }`
@@ -662,7 +662,7 @@ Determines whether the resolved process mode allows callbacks in the current tre
 
 **Returns:** `false` while detached or disabled; otherwise the result of the resolved pause policy.
 
-**System.InvalidOperationException:** An invalid inherited process mode cannot be resolved.
+**System.InvalidOperationException:** Access is outside the scene owner or current processing group.
 
 **System.ObjectDisposedException:** This node or its tree is disposing on another thread, or has finished disposing.
 

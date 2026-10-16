@@ -5632,6 +5632,26 @@
       "electron2d": "method:Electron2D.Node.IsInGroup(System.String)",
       "state": "Implemented",
       "reason": "ADR 0006: complete runtime group membership preserves first-add persistence (duplicate add never changes it), remove/readd, literal nonempty add names including whitespace/Unicode/underscore, absent empty lookup/removal and null rejection. GetGroups is an independent ordinal read-only snapshot; the established typed bool removal result observes prior membership. Owner/current-processing-group access covers reads and writes on pure and physical nodes; unrelated callers reject and detached callers coordinate. Capture rejects writes; physical authoring/lifetime stay owner-guarded before virtual validation. Public-only --node-groups checks exact scene-tree order/internal membership, transfer/detach, call revalidation/reverse/deferred selection, real worker access, overridden validation, first-persistent fresh-file reconstruction and actual selected CPU/GPU/independent-provider motion/RID/sleep/callbacks. Warm membership/worker/two-world intervals require 0/0 owner/all-thread managed bytes. Snapshot/export paths allocate. Complete Node duplication, native/driver, foreign/network/hardware acceptance remains open."
+    },
+    {
+      "godot": "Node::enum:ProcessMode",
+      "electron2d": "T:Electron2D.ProcessMode",
+      "reason": "ADR 0011: complete inherited process policy preserves identities 0..4, silent detached edits, Pausable root normalization and attached-root rejection, current-group reads/owner writes, 50 mode transitions in both pause states, ordered eligibility then disabled notifications, explicit descendant boundaries and internal children, nested mode/tree-pause supersession, pending physical Enabled delivery under nested explicit child policy and failure continuation. Tree pause stops tree-driven numerical integration while Always/WhenPaused callbacks continue; explicit owned-space steps remain independent. Public CPU/software-Vulkan/registered serial/separate managed and strict NativeAOT consumers verify actual motion, force callbacks, storage, guards and 128 warmed mode/pause/full-frame cycles with zero owner/all-thread managed bytes. Evidence: bin/physics-process-modes/2026-10-16/validation.json. Hardware/native allocator/foreign/full physics acceptance remains separate."
+    },
+    {
+      "godot": "Node::method:can_process()",
+      "electron2d": "method:Electron2D.Node.CanProcess()",
+      "reason": "ADR 0011: complete inherited process policy preserves identities 0..4, silent detached edits, Pausable root normalization and attached-root rejection, current-group reads/owner writes, 50 mode transitions in both pause states, ordered eligibility then disabled notifications, explicit descendant boundaries and internal children, nested mode/tree-pause supersession, pending physical Enabled delivery under nested explicit child policy and failure continuation. Tree pause stops tree-driven numerical integration while Always/WhenPaused callbacks continue; explicit owned-space steps remain independent. Public CPU/software-Vulkan/registered serial/separate managed and strict NativeAOT consumers verify actual motion, force callbacks, storage, guards and 128 warmed mode/pause/full-frame cycles with zero owner/all-thread managed bytes. Evidence: bin/physics-process-modes/2026-10-16/validation.json. Hardware/native allocator/foreign/full physics acceptance remains separate."
+    },
+    {
+      "godot": "Node::property:process_mode",
+      "electron2d": "property:Electron2D.Node.ProcessMode()",
+      "reason": "ADR 0011: complete inherited process policy preserves identities 0..4, silent detached edits, Pausable root normalization and attached-root rejection, current-group reads/owner writes, 50 mode transitions in both pause states, ordered eligibility then disabled notifications, explicit descendant boundaries and internal children, nested mode/tree-pause supersession, pending physical Enabled delivery under nested explicit child policy and failure continuation. Tree pause stops tree-driven numerical integration while Always/WhenPaused callbacks continue; explicit owned-space steps remain independent. Public CPU/software-Vulkan/registered serial/separate managed and strict NativeAOT consumers verify actual motion, force callbacks, storage, guards and 128 warmed mode/pause/full-frame cycles with zero owner/all-thread managed bytes. Evidence: bin/physics-process-modes/2026-10-16/validation.json. Hardware/native allocator/foreign/full physics acceptance remains separate."
+    },
+    {
+      "godot": "SceneTree::property:paused",
+      "electron2d": "property:Electron2D.SceneTree.Paused()",
+      "reason": "ADR 0011: complete inherited process policy preserves identities 0..4, silent detached edits, Pausable root normalization and attached-root rejection, current-group reads/owner writes, 50 mode transitions in both pause states, ordered eligibility then disabled notifications, explicit descendant boundaries and internal children, nested mode/tree-pause supersession, pending physical Enabled delivery under nested explicit child policy and failure continuation. Tree pause stops tree-driven numerical integration while Always/WhenPaused callbacks continue; explicit owned-space steps remain independent. Public CPU/software-Vulkan/registered serial/separate managed and strict NativeAOT consumers verify actual motion, force callbacks, storage, guards and 128 warmed mode/pause/full-frame cycles with zero owner/all-thread managed bytes. Evidence: bin/physics-process-modes/2026-10-16/validation.json. Hardware/native allocator/foreign/full physics acceptance remains separate."
     }
   ],
   "extras": [
@@ -11460,6 +11480,16 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0006: complete runtime group membership preserves first-add persistence (duplicate add never changes it), remove/readd, literal nonempty add names including whitespace/Unicode/underscore, absent empty lookup/removal and null rejection. GetGroups is an independent ordinal read-only snapshot; the established typed bool removal result observes prior membership. Owner/current-processing-group access covers reads and writes on pure and physical nodes; unrelated callers reject and detached callers coordinate. Capture rejects writes; physical authoring/lifetime stay owner-guarded before virtual validation. Public-only --node-groups checks exact scene-tree order/internal membership, transfer/detach, call revalidation/reverse/deferred selection, real worker access, overridden validation, first-persistent fresh-file reconstruction and actual selected CPU/GPU/independent-provider motion/RID/sleep/callbacks. Warm membership/worker/two-world intervals require 0/0 owner/all-thread managed bytes. Snapshot/export paths allocate. Complete Node duplication, native/driver, foreign/network/hardware acceptance remains open."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0011: complete inherited process policy preserves identities 0..4, silent detached edits, Pausable root normalization and attached-root rejection, current-group reads/owner writes, 50 mode transitions in both pause states, ordered eligibility then disabled notifications, explicit descendant boundaries and internal children, nested mode/tree-pause supersession, pending physical Enabled delivery under nested explicit child policy and failure continuation. Tree pause stops tree-driven numerical integration while Always/WhenPaused callbacks continue; explicit owned-space steps remain independent. Public CPU/software-Vulkan/registered serial/separate managed and strict NativeAOT consumers verify actual motion, force callbacks, storage, guards and 128 warmed mode/pause/full-frame cycles with zero owner/all-thread managed bytes. Evidence: bin/physics-process-modes/2026-10-16/validation.json. Hardware/native allocator/foreign/full physics acceptance remains separate.",
+      "godot": [
+        "Node::enum:ProcessMode",
+        "Node::method:can_process()",
+        "Node::property:process_mode",
+        "SceneTree::property:paused"
+      ]
     }
   ]
 }

@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -22,13 +22,17 @@ Physics interpolation capture now includes owned and borrowed retained canvas-it
 
 An internal PathRevision increments before tree-change and rename callback delivery. Skeleton/Polygon/LookAt weak path bindings observe that revision, so membership or a failed public callback cannot preserve a stale path. Existing scene-owner mutation and notification behavior remains the binding authority.
 
+## Process policy and physics pause
+
+Tree pause stops tree-driven world integration while eligible Always/WhenPaused callbacks continue. Notifications describe changed eligibility and reverse for WhenPaused; Always/Disabled remain silent. Traversal retains capacity, skips retired members and visits a reparented live node at most once. Explicit owned-space steps and other trees retain their own clocks. See [full contract and verification](../components/scene-tree.md#process-policy-and-physics-pause).
+
 ## Description
 
 Owns one active node hierarchy and coordinates its lifecycle, input, frames, groups, timers, tweens, and deferred work.
 
 `SceneTree` is the concrete [`MainLoop`](MainLoop.md) that owns one active root [`Node`](Node.md) hierarchy. An optional `CurrentScene` selects one direct child; in-memory scene changes keep the root alive, remove the old scene immediately, and enter the new scene at a deferred safe point. It establishes lifecycle and owner-thread boundaries, accepts direct frame calls or scheduling through [`Engine`](Engine.md), propagates typed input and system notifications, manages pause state, reusable Node [`Timer`](Timer.md) scheduling, lightweight tree timers, [`Tween`](Tween.md) sequences, typed group operations, deferred actions, and queued deletion, and finalizes the complete hierarchy.
 
-The tree registers its existing physics world with [PhysicsServer](PhysicsServer.md) when the first body, Area or [Joint](Joint.md) enters, or a CanvasItem asks for [World](World.md). Its fixed physics lane steps that same space; `World.Space` and its direct query view have stable identities until tree teardown. The lane prepares scene bodies and pin/groove constraints and spring impulses before the solver. A query prepares pending shape/pose edits even before the first fixed step.
+The tree registers its existing physics world with [PhysicsServer](PhysicsServer.md) when the first body, Area or [Joint](Joint.md) enters, or a CanvasItem asks for [World](World.md). Its unpaused fixed physics lane steps that same space; `World.Space` and its direct query view have stable identities until tree teardown. The lane prepares scene bodies and pin/groove constraints and spring impulses before the solver. A query prepares pending shape/pose edits even before the first fixed step.
 
 An enabled [RayCast](RayCast.md) samples its cached result through Node's internal physics callback before the backend step. Scene pause/process eligibility and physics priority govern this callback; a forced update can query immediately from the owner thread, including while automatic sampling is disabled. A ray result is held between samples.
 
@@ -218,7 +222,7 @@ Gets or sets whether pause-aware processing and timers are paused.
 - `InvalidOperationException`: The setter is called from another thread or a pause callback requests the opposite state.
 - `AggregateException`: One or more node notification handlers fail.
 
-**Remarks:** On an actual change, the new state is stored first and the hierarchy is synchronously traversed depth-first.
+**Remarks:** On an actual change, the new state is stored first and the hierarchy is synchronously traversed depth-first. Only changed eligibility notifies: WhenPaused unpauses on pause, and Always/Disabled remain silent. Paused tree frames skip numerical world steps while eligible callbacks continue. Explicit caller-owned spaces retain their own clock. Prepared traversal capacity is retained.
 Each node's child snapshot is taken only after that node's notification returns, so re-entrant hierarchy changes
 can affect the remainder of the same traversal. A live attached node is notified at most once even when it is
 reparented, and removed or disposed candidates are skipped. Notification failures do not roll the state back and
