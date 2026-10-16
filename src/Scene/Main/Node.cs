@@ -1545,53 +1545,54 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Adds this node to a case-sensitive group.</summary>
-    /// <param name="group">The nonblank group name.</param>
+    /// <param name="group">The nonempty group identifier; whitespace and Unicode are preserved.</param>
     /// <param name="persistent">Whether packed scenes containing this node should retain the membership.</param>
-    /// <remarks>Adding an existing membership keeps it persistent once persistence has been requested.</remarks>
-    /// <exception cref="ArgumentException"><paramref name="group"/> is empty or whitespace.</exception>
+    /// <remarks>The first addition chooses persistence. Adding an existing group does not change that choice;
+    /// remove the membership before adding it with another persistence policy.</remarks>
+    /// <exception cref="ArgumentException"><paramref name="group"/> is empty.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="group"/> is <see langword="null"/>.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is outside the owner/current processing group or scene capture is active.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public void AddToGroup(string group, bool persistent = false)
     {
-        EnsureMutable();
-        ArgumentException.ThrowIfNullOrWhiteSpace(group);
-        _groups[group] = persistent || _groups.GetValueOrDefault(group);
+        EnsureProcessingAccess();
+        ArgumentException.ThrowIfNullOrEmpty(group);
+        _groups.TryAdd(group, persistent);
     }
 
     /// <summary>Removes this node from a case-sensitive group.</summary>
-    /// <param name="group">The nonblank group name.</param>
+    /// <param name="group">The literal group identifier; an empty identifier has no membership.</param>
     /// <returns><see langword="true"/> when membership existed and was removed; otherwise <see langword="false"/>.</returns>
-    /// <exception cref="ArgumentException"><paramref name="group"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="group"/> is <see langword="null"/>.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is outside the owner/current processing group or scene capture is active.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public bool RemoveFromGroup(string group)
     {
-        EnsureMutable();
-        ArgumentException.ThrowIfNullOrWhiteSpace(group);
+        EnsureProcessingAccess();
+        ArgumentNullException.ThrowIfNull(group);
         return _groups.Remove(group);
     }
 
     /// <summary>Determines whether this node belongs to a case-sensitive group.</summary>
-    /// <param name="group">The nonblank group name.</param>
+    /// <param name="group">The literal group identifier; an empty identifier has no membership.</param>
     /// <returns><see langword="true"/> when this node is a member; otherwise <see langword="false"/>.</returns>
-    /// <exception cref="ArgumentException"><paramref name="group"/> is empty or whitespace.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is outside the scene owner or current processing group.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="group"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public bool IsInGroup(string group)
     {
-        ThrowIfDisposed();
-        ArgumentException.ThrowIfNullOrWhiteSpace(group);
+        ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
+        ArgumentNullException.ThrowIfNull(group);
         return _groups.ContainsKey(group);
     }
 
     /// <summary>Returns this node's group memberships.</summary>
     /// <returns>A read-only snapshot sorted using ordinal string order.</returns>
+    /// <exception cref="InvalidOperationException">Attached access is outside the scene owner or current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public IReadOnlyList<string> GetGroups()
     {
-        ThrowIfDisposed();
+        ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
         return Array.AsReadOnly(_groups.Keys.Order(StringComparer.Ordinal).ToArray());
     }
 
@@ -1870,7 +1871,6 @@ public partial class Node : ElectronObject
     {
         base.ValidateMutation();
         EnsureNotSceneCapture();
-        EnsurePhysicsAuthoringAccess();
     }
 
     /// <inheritdoc />
@@ -2562,6 +2562,7 @@ public partial class Node : ElectronObject
         EnsureNotSceneCapture();
 
         Tree?.EnsureOwnerThread();
+        EnsurePhysicsAuthoringAccess();
         ValidateMutation();
     }
 

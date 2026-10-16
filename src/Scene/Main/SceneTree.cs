@@ -643,9 +643,8 @@ public sealed partial class SceneTree : MainLoop
     internal void RefreshGUIFocus() { EnsureOwnerThread(); RefreshAllGUI(hover: false); }
 
     /// <summary>Returns every current node in a group in depth-first pre-order.</summary>
-    /// <param name="group">The nonblank, case-sensitive group name.</param>
+    /// <param name="group">The literal, case-sensitive group identifier; an empty identifier matches no nodes.</param>
     /// <returns>A read-only snapshot of matching nodes.</returns>
-    /// <exception cref="ArgumentException"><paramref name="group"/> is empty or consists only of whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="group"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">The method is called from a thread other than the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
@@ -658,9 +657,8 @@ public sealed partial class SceneTree : MainLoop
     }
 
     /// <summary>Returns the first current node in a group using depth-first pre-order.</summary>
-    /// <param name="group">The nonblank, case-sensitive group name.</param>
+    /// <param name="group">The literal, case-sensitive group identifier; an empty identifier matches no nodes.</param>
     /// <returns>The first matching node, or <see langword="null"/> when the group has no current member.</returns>
-    /// <exception cref="ArgumentException"><paramref name="group"/> is empty or consists only of whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="group"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">The method is called from a thread other than the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
@@ -673,25 +671,23 @@ public sealed partial class SceneTree : MainLoop
     }
 
     /// <summary>Gets the number of current nodes in a group.</summary>
-    /// <param name="group">The nonblank, case-sensitive group name.</param>
+    /// <param name="group">The literal, case-sensitive group identifier; an empty identifier matches no nodes.</param>
     /// <returns>The current number of matching nodes.</returns>
-    /// <exception cref="ArgumentException"><paramref name="group"/> is empty or consists only of whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="group"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">The method is called from a thread other than the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
     public int GetNodeCountInGroup(string group) => GetNodesInGroup(group).Count;
 
     /// <summary>Determines whether this tree currently contains a node in a group.</summary>
-    /// <param name="group">The nonblank, case-sensitive group name.</param>
+    /// <param name="group">The literal, case-sensitive group identifier; an empty identifier matches no nodes.</param>
     /// <returns><see langword="true"/> when at least one current node belongs to the group.</returns>
-    /// <exception cref="ArgumentException"><paramref name="group"/> is empty or consists only of whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="group"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">The method is called from a thread other than the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
     public bool HasGroup(string group) => GetFirstNodeInGroup(group) is not null;
 
     /// <summary>Invokes a typed action for each current node in a group.</summary>
-    /// <param name="group">The nonblank, case-sensitive group name.</param>
+    /// <param name="group">The literal, case-sensitive group identifier; an empty identifier matches no nodes.</param>
     /// <param name="action">The action to invoke for every eligible node.</param>
     /// <param name="flags">Ordering and scheduling behavior.</param>
     /// <remarks>
@@ -700,7 +696,7 @@ public sealed partial class SceneTree : MainLoop
     /// invocation. All selected callbacks are attempted before failures are reported. Deferred callback failures are
     /// reported by the future flush or frame, not by this scheduling call.
     /// </remarks>
-    /// <exception cref="ArgumentException"><paramref name="group"/> is blank or <paramref name="flags"/> is invalid.</exception>
+    /// <exception cref="ArgumentException"><paramref name="flags"/> is invalid.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="group"/> or <paramref name="action"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">An immediate operation is called off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
@@ -718,7 +714,7 @@ public sealed partial class SceneTree : MainLoop
 
     /// <summary>Applies a typed value through a setter for each current node in a group.</summary>
     /// <typeparam name="T">The value type accepted by the setter.</typeparam>
-    /// <param name="group">The nonblank, case-sensitive group name.</param>
+    /// <param name="group">The literal, case-sensitive group identifier; an empty identifier matches no nodes.</param>
     /// <param name="setter">The typed setter to invoke for every eligible node.</param>
     /// <param name="value">The value captured for this operation.</param>
     /// <param name="flags">Ordering and scheduling behavior.</param>
@@ -728,7 +724,7 @@ public sealed partial class SceneTree : MainLoop
     /// thread. Deferred execution may be requested from another thread, resolves membership when it starts, revalidates
     /// each candidate, attempts every selected setter, and then aggregates failures through the future flush or frame.
     /// </remarks>
-    /// <exception cref="ArgumentException"><paramref name="group"/> is blank or <paramref name="flags"/> is invalid.</exception>
+    /// <exception cref="ArgumentException"><paramref name="flags"/> is invalid.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="group"/> or <paramref name="setter"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">An immediate operation is called off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
@@ -745,7 +741,7 @@ public sealed partial class SceneTree : MainLoop
     }
 
     /// <summary>Delivers a numeric notification to each current node in a group.</summary>
-    /// <param name="group">The nonblank, case-sensitive group name.</param>
+    /// <param name="group">The literal, case-sensitive group identifier; an empty identifier matches no nodes.</param>
     /// <param name="notification">The notification identifier.</param>
     /// <param name="flags">Ordering and scheduling behavior.</param>
     /// <remarks>
@@ -754,7 +750,7 @@ public sealed partial class SceneTree : MainLoop
     /// failures through the future flush or frame. Equal deferred unique operations are coalesced by group and
     /// notification identifier.
     /// </remarks>
-    /// <exception cref="ArgumentException"><paramref name="group"/> is blank or <paramref name="flags"/> is invalid.</exception>
+    /// <exception cref="ArgumentException"><paramref name="flags"/> is invalid.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="group"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">An immediate operation is called off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
@@ -1984,7 +1980,7 @@ public sealed partial class SceneTree : MainLoop
     private Node[] GetNodesInGroupCore(string group) =>
         Root.EnumerateDepthFirst().Where(node => node.IsInGroup(group)).ToArray();
 
-    private static void ValidateGroup(string group) => ArgumentException.ThrowIfNullOrWhiteSpace(group);
+    private static void ValidateGroup(string group) => ArgumentNullException.ThrowIfNull(group);
 
     private static void ValidateGroupCallFlags(GroupCallFlags flags)
     {

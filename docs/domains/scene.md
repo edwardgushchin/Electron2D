@@ -406,3 +406,8 @@ cached borrowed reads and own-group window lookup preserve their separate access
 rules. Packed scenes reconstruct active links at activation.
 
 [VideoStreamPlayer](../classes/VideoStreamPlayer.md) now provides authored video as a Control with first-frame timing, pause/speed/loop/completion, exact packed factories and initial detached owner transfer. Fresh-process scene load and real GPU/Compatibility rendering are separate verified paths.
+
+[Node group membership](../components/node-groups.md) preserves first-add persistence, literal identifiers,
+current processing-group access and exact physical/file consumers. Physical
+mutations retain their owner guard before virtual consumer hooks. Runtime
+Node duplication retains its separate ADR 0091 binding/identity prerequisite.

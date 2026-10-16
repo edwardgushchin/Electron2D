@@ -39,7 +39,9 @@ Godot's object surface includes deferred calls and queued deletion, but both req
 
 - Ordering and thread affinity are explicit and testable.
 - Deferred execution does not require `Callable`, reflection, `Variant`, or method names.
-- Queueing is thread-safe, while game-state mutation remains single-threaded.
+- Node group identifiers are literal, ordinal and case-sensitive. Add requires a nonempty string; whitespace, Unicode and underscore-prefixed names remain valid. Empty lookup/removal and tree selection have no members; null strings reject. The first addition chooses persistence; repeated addition never promotes/demotes it. Remove/readd selects another policy. Preserve the established typed bool RemoveFromGroup result as the membership observation at removal; GetGroups returns an independent read-only ordinal snapshot.
+- Group membership is local metadata: the scene owner or the node's current processing group may read and mutate it, including membership on physical nodes. Detached access follows caller coordination. Capture rejects mutation. Keep physical authoring/lifetime and hierarchy on their owning thread; validate physical authoring in the nonvirtual EnsureMutable path before user validation hooks. A derived validation override cannot bypass that guard. Group metadata edits do not alter numerical state or wake bodies.
+- Queueing is thread-safe. Outside the currently executing processing-group context, game-state mutation remains on the scene owner thread.
 - Historical implementation note: queueing was originally not atomic with disposal. ADR 0011 replaced that behavior with a shared queue-lifetime lock.
 - Cancelling deletion may leave a stale queue entry, which is ignored during flush.
 - Historical implementation note: teardown originally stopped after some callback failures. ADR 0011 requires all owned cleanup stages to be attempted and failures to be aggregated.

@@ -411,7 +411,7 @@ Returns every current node in a group in depth-first pre-order.
 
 **Parameters**
 
-- `group`: The nonblank, case-sensitive group name.
+- `group`: The literal, case-sensitive group identifier; empty identifiers match no nodes.
 
 **Returns:** A read-only snapshot of matching nodes.
 
@@ -429,7 +429,7 @@ Returns the first current node in a group using depth-first pre-order.
 
 **Parameters**
 
-- `group`: The nonblank, case-sensitive group name.
+- `group`: The literal, case-sensitive group identifier; empty identifiers match no nodes.
 
 **Returns:** The first matching node, or `null` when the group has no current member.
 
@@ -447,7 +447,7 @@ Gets the number of current nodes in a group.
 
 **Parameters**
 
-- `group`: The nonblank, case-sensitive group name.
+- `group`: The literal, case-sensitive group identifier; empty identifiers match no nodes.
 
 **Returns:** The current number of matching nodes.
 
@@ -465,7 +465,7 @@ Determines whether this tree currently contains a node in a group.
 
 **Parameters**
 
-- `group`: The nonblank, case-sensitive group name.
+- `group`: The literal, case-sensitive group identifier; empty identifiers match no nodes.
 
 **Returns:** `true` when at least one current node belongs to the group.
 
@@ -483,13 +483,13 @@ Invokes a typed action for each current node in a group.
 
 **Parameters**
 
-- `group`: The nonblank, case-sensitive group name.
+- `group`: The literal, case-sensitive group identifier; empty identifiers match no nodes.
 - `action`: The action to invoke for every eligible node.
 - `flags`: Ordering and scheduling behavior.
 
 **Exceptions**
 
-- `ArgumentException`: `group` is blank or `flags` is invalid.
+- `ArgumentException`: `flags` is invalid.
 - `ArgumentNullException`: `group` or `action` is `null`.
 - `InvalidOperationException`: An immediate operation is called off the owner thread.
 - `ObjectDisposedException`: The tree has been finalized, or disposal has started or finished.
@@ -511,14 +511,14 @@ Applies a typed value through a setter for each current node in a group.
 
 **Parameters**
 
-- `group`: The nonblank, case-sensitive group name.
+- `group`: The literal, case-sensitive group identifier; empty identifiers match no nodes.
 - `setter`: The typed setter to invoke for every eligible node.
 - `value`: The value captured for this operation.
 - `flags`: Ordering and scheduling behavior.
 
 **Exceptions**
 
-- `ArgumentException`: `group` is blank or `flags` is invalid.
+- `ArgumentException`: `flags` is invalid.
 - `ArgumentNullException`: `group` or `setter` is `null`.
 - `InvalidOperationException`: An immediate operation is called off the owner thread.
 - `ObjectDisposedException`: The tree has been finalized, or disposal has started or finished.
@@ -536,13 +536,13 @@ Delivers a numeric notification to each current node in a group.
 
 **Parameters**
 
-- `group`: The nonblank, case-sensitive group name.
+- `group`: The literal, case-sensitive group identifier; empty identifiers match no nodes.
 - `notification`: The notification identifier.
 - `flags`: Ordering and scheduling behavior.
 
 **Exceptions**
 
-- `ArgumentException`: `group` is blank or `flags` is invalid.
+- `ArgumentException`: `flags` is invalid.
 - `ArgumentNullException`: `group` is `null`.
 - `InvalidOperationException`: An immediate operation is called off the owner thread.
 - `ObjectDisposedException`: The tree has been finalized, or disposal has started or finished.
@@ -1083,3 +1083,8 @@ owner/all-thread managed bytes. A public-only standalone consumer supports the
 same compiled test in ordinary and NativeAOT hosts. Evidence and exact limits are
 retained under bin/physics-auto-callbacks/2026-10-14; full inherited, native/foreign
 and hardware/window/performance acceptance remains open.
+
+[Node group membership](../components/node-groups.md) preserves first-add persistence, literal identifiers,
+current processing-group access and exact physical/file consumers. Physical
+mutations retain their owner guard before virtual consumer hooks. Runtime
+Node duplication retains its separate ADR 0091 binding/identity prerequisite.

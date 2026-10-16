@@ -28,7 +28,7 @@ SubtreeResourceAuthoringTests verifies path/error/null/last-resource semantics, 
 
 ## Description
 
-The neutral base of every object in a scene tree. Owns ordered children, paths, groups, lifecycle, process/input participation, queued deletion, packed-scene ownership and inherited localization policy. It has no transform, visibility, material or drawing API. Parent/child relationships and callbacks accept Node, so timers and spatial objects share one tree. Attached mutation runs on the tree owner thread; ready notification enables overridden frame/input callbacks before OnReady, and callers can disable them explicitly. Tree entry is parent-first, readiness is child-first, and teardown continues through callback failures.
+The neutral base of every object in a scene tree. Owns ordered children, paths, groups, lifecycle, process/input participation, queued deletion, packed-scene ownership and inherited localization policy. It has no transform, visibility, material or drawing API. Parent/child relationships and callbacks accept Node, so timers and spatial objects share one tree. Physical/hierarchy mutation runs on the tree owner thread; local grouping and processing metadata also allow the current processing group; ready notification enables overridden frame/input callbacks before OnReady, and callers can disable them explicitly. Tree entry is parent-first, readiness is child-first, and teardown continues through callback failures.
 
 `UniqueNameInOwner` allows an owned node to be resolved through `%Name` from its owner or another node with that same owner. The first node to claim a name keeps it; a later conflicting claim is cleared. Owner and name changes update the claim, and packed scenes restore it after ownership is assigned. `GetPathTo(node, useUniquePath: true)` uses the eligible unique node on the destination side first, or a unique node on the source side when no destination shortcut exists.
 
@@ -641,17 +641,17 @@ callback failure and lifetime rules remain in force.
 
 Adds this node to a case-sensitive group.
 
-**Parameter `group`:** The nonblank group name.
+**Parameter `group`:** The nonempty group identifier; whitespace and Unicode are preserved.
 
 **Parameter `persistent`:** Whether packed scenes containing this node should retain the membership.
 
-**Remarks:** Adding an existing membership keeps it persistent once persistence has been requested.
+**Remarks:** The first addition chooses persistence. Repeated addition leaves it unchanged; remove/readd selects another policy.
 
-**System.ArgumentException:** `group` is empty or whitespace.
+**System.ArgumentException:** `group` is empty.
 
 **System.ArgumentNullException:** `group` is `null`.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** Attached access is outside the owner/current processing group or capture is active.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
@@ -848,6 +848,8 @@ Returns this node's group memberships.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
+**System.InvalidOperationException:** Attached access is outside the scene owner/current processing group.
+
 <a id="m-electron2d-node-getindex"></a>
 ### `public int GetIndex(bool includeInternal = false)`
 
@@ -1037,15 +1039,15 @@ Determines whether this node is a strict ancestor of another node.
 
 Determines whether this node belongs to a case-sensitive group.
 
-**Parameter `group`:** The nonblank group name.
+**Parameter `group`:** The literal group identifier; an empty identifier has no membership.
 
 **Returns:** `true` when this node is a member; otherwise `false`.
-
-**System.ArgumentException:** `group` is empty or whitespace.
 
 **System.ArgumentNullException:** `group` is `null`.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+**System.InvalidOperationException:** Attached access is outside the scene owner/current processing group.
 
 <a id="m-electron2d-node-movechild-electron2d-node-system-int32"></a>
 ### `public void MoveChild(Node child, int index)`
@@ -1176,15 +1178,13 @@ Removes a direct child without disposing it.
 
 Removes this node from a case-sensitive group.
 
-**Parameter `group`:** The nonblank group name.
+**Parameter `group`:** The literal group identifier; an empty identifier has no membership.
 
 **Returns:** `true` when membership existed and was removed; otherwise `false`.
 
-**System.ArgumentException:** `group` is empty or whitespace.
-
 **System.ArgumentNullException:** `group` is `null`.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** Attached access is outside the scene owner/current processing group or capture is active.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
@@ -1819,3 +1819,8 @@ Current-group worker callbacks may observe their deltas and change their own pro
 
 
 Runtime messages now use [diagnostic delivery](../components/diagnostics.md). Engine output flags affect its physical stream; typed logger callbacks retain delivery. Host Console writers retain ordinary C# semantics.
+
+[Node group membership](../components/node-groups.md) preserves first-add persistence, literal identifiers,
+current processing-group access and exact physical/file consumers. Physical
+mutations retain their owner guard before virtual consumer hooks. Runtime
+Node duplication retains its separate ADR 0091 binding/identity prerequisite.

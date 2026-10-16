@@ -1019,8 +1019,8 @@
     {
       "electron2d": "method:Electron2D.Node.GetGroups()",
       "godot": "Node::method:get_groups()",
-      "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "state": "Implemented",
+      "reason": "ADR 0006: complete runtime group membership preserves first-add persistence (duplicate add never changes it), remove/readd, literal nonempty add names including whitespace/Unicode/underscore, absent empty lookup/removal and null rejection. GetGroups is an independent ordinal read-only snapshot; the established typed bool removal result observes prior membership. Owner/current-processing-group access covers reads and writes on pure and physical nodes; unrelated callers reject and detached callers coordinate. Capture rejects writes; physical authoring/lifetime stay owner-guarded before virtual validation. Public-only --node-groups checks exact scene-tree order/internal membership, transfer/detach, call revalidation/reverse/deferred selection, real worker access, overridden validation, first-persistent fresh-file reconstruction and actual selected CPU/GPU/independent-provider motion/RID/sleep/callbacks. Warm membership/worker/two-world intervals require 0/0 owner/all-thread managed bytes. Snapshot/export paths allocate. Complete Node duplication, native/driver, foreign/network/hardware acceptance remains open."
     },
     {
       "electron2d": "method:Electron2D.Node.GetIndex(System.Boolean)",
@@ -5614,6 +5614,24 @@
       "electron2d": "property:Electron2D.ElectronObject.TranslationDomain()",
       "state": "Partial",
       "reason": "ADRs 0005/0007: the existing typed TranslationDomain property supplies both query and setter, with Node explicit/inherited domain selection. Public physical-role window checks verify assigned inheritance, explicit body assignment and reset; NodeLocalizationTests owns the wider translation/notification cases. This reconciles the previously omitted setter mapping; complete inherited/native/platform acceptance remains separate."
+    },
+    {
+      "godot": "Node::method:add_to_group(StringName:,bool:)",
+      "electron2d": "method:Electron2D.Node.AddToGroup(System.String,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0006: complete runtime group membership preserves first-add persistence (duplicate add never changes it), remove/readd, literal nonempty add names including whitespace/Unicode/underscore, absent empty lookup/removal and null rejection. GetGroups is an independent ordinal read-only snapshot; the established typed bool removal result observes prior membership. Owner/current-processing-group access covers reads and writes on pure and physical nodes; unrelated callers reject and detached callers coordinate. Capture rejects writes; physical authoring/lifetime stay owner-guarded before virtual validation. Public-only --node-groups checks exact scene-tree order/internal membership, transfer/detach, call revalidation/reverse/deferred selection, real worker access, overridden validation, first-persistent fresh-file reconstruction and actual selected CPU/GPU/independent-provider motion/RID/sleep/callbacks. Warm membership/worker/two-world intervals require 0/0 owner/all-thread managed bytes. Snapshot/export paths allocate. Complete Node duplication, native/driver, foreign/network/hardware acceptance remains open."
+    },
+    {
+      "godot": "Node::method:remove_from_group(StringName:)",
+      "electron2d": "method:Electron2D.Node.RemoveFromGroup(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0006: complete runtime group membership preserves first-add persistence (duplicate add never changes it), remove/readd, literal nonempty add names including whitespace/Unicode/underscore, absent empty lookup/removal and null rejection. GetGroups is an independent ordinal read-only snapshot; the established typed bool removal result observes prior membership. Owner/current-processing-group access covers reads and writes on pure and physical nodes; unrelated callers reject and detached callers coordinate. Capture rejects writes; physical authoring/lifetime stay owner-guarded before virtual validation. Public-only --node-groups checks exact scene-tree order/internal membership, transfer/detach, call revalidation/reverse/deferred selection, real worker access, overridden validation, first-persistent fresh-file reconstruction and actual selected CPU/GPU/independent-provider motion/RID/sleep/callbacks. Warm membership/worker/two-world intervals require 0/0 owner/all-thread managed bytes. Snapshot/export paths allocate. Complete Node duplication, native/driver, foreign/network/hardware acceptance remains open."
+    },
+    {
+      "godot": "Node::method:is_in_group(StringName:)",
+      "electron2d": "method:Electron2D.Node.IsInGroup(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0006: complete runtime group membership preserves first-add persistence (duplicate add never changes it), remove/readd, literal nonempty add names including whitespace/Unicode/underscore, absent empty lookup/removal and null rejection. GetGroups is an independent ordinal read-only snapshot; the established typed bool removal result observes prior membership. Owner/current-processing-group access covers reads and writes on pure and physical nodes; unrelated callers reject and detached callers coordinate. Capture rejects writes; physical authoring/lifetime stay owner-guarded before virtual validation. Public-only --node-groups checks exact scene-tree order/internal membership, transfer/detach, call revalidation/reverse/deferred selection, real worker access, overridden validation, first-persistent fresh-file reconstruction and actual selected CPU/GPU/independent-provider motion/RID/sleep/callbacks. Warm membership/worker/two-world intervals require 0/0 owner/all-thread managed bytes. Snapshot/export paths allocate. Complete Node duplication, native/driver, foreign/network/hardware acceptance remains open."
     }
   ],
   "extras": [
@@ -11432,6 +11450,16 @@
         "Node::method:get_viewport()",
         "Node::method:get_window()"
       ]
+    },
+    {
+      "godot": [
+        "Node::method:add_to_group(StringName:,bool:)",
+        "Node::method:remove_from_group(StringName:)",
+        "Node::method:is_in_group(StringName:)",
+        "Node::method:get_groups()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0006: complete runtime group membership preserves first-add persistence (duplicate add never changes it), remove/readd, literal nonempty add names including whitespace/Unicode/underscore, absent empty lookup/removal and null rejection. GetGroups is an independent ordinal read-only snapshot; the established typed bool removal result observes prior membership. Owner/current-processing-group access covers reads and writes on pure and physical nodes; unrelated callers reject and detached callers coordinate. Capture rejects writes; physical authoring/lifetime stay owner-guarded before virtual validation. Public-only --node-groups checks exact scene-tree order/internal membership, transfer/detach, call revalidation/reverse/deferred selection, real worker access, overridden validation, first-persistent fresh-file reconstruction and actual selected CPU/GPU/independent-provider motion/RID/sleep/callbacks. Warm membership/worker/two-world intervals require 0/0 owner/all-thread managed bytes. Snapshot/export paths allocate. Complete Node duplication, native/driver, foreign/network/hardware acceptance remains open."
     }
   ]
 }

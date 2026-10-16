@@ -319,3 +319,8 @@ Window.Position is omitted while native placement is automatic. Explicit request
 ## Foldable panel scenes
 
 Exact FoldableContainer and FoldableGroup registrations preserve typed configuration and per-instance local group aliases. Pack includes explicitly root-owned authored title controls and records their ordering as bounded typed relative Control references. Restoration validates canonical slots, resolves direct children after parenting and restores front-internal membership before hierarchy validation. Runtime implementation helpers and group member leases are excluded. Fresh-process scene tests execute the restored group and removable title controls.
+
+[Node group membership](../components/node-groups.md) preserves first-add persistence, literal identifiers,
+current processing-group access and exact physical/file consumers. Physical
+mutations retain their owner guard before virtual consumer hooks. Runtime
+Node duplication retains its separate ADR 0091 binding/identity prerequisite.

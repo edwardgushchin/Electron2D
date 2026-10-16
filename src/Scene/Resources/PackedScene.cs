@@ -6,8 +6,8 @@ namespace Electron2D;
 /// <remarks>
 /// Runtime packing is typed and uses storage-enabled <see cref="PropertyDescriptor"/> instances.
 /// <see cref="ResourceSaver"/> persists registered factories/properties as typed scene archives;
-/// loaded instances retain their owned file graphs. Editor metadata, inheritance authoring, placeholders
-/// and persistent event endpoints belong to later domains.
+/// loaded instances retain their owned file graphs. Authored typed event endpoints use their registered binding schemas.
+/// Editor metadata, inheritance authoring and placeholders belong to later domains.
 /// An inherited node translation domain is omitted from storage so it continues to track its parent after instantiation.
 /// </remarks>
 public sealed partial class PackedScene : Resource
