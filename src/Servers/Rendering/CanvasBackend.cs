@@ -14,30 +14,30 @@ internal readonly record struct CanvasBatch(int First, int Count, MaterialState?
     internal byte[]? ShaderCode => Material?.Program.Code;
 }
 
+internal readonly record struct CanvasPresentation(CanvasRenderTarget Target, Rect2 Rect);
+
 internal abstract class CanvasBackend : IDisposable
 {
-    internal Rect2i PresentationRect;
     private CanvasRenderTarget? _presentation;
-    private bool _usesPresentation;
-    protected CanvasRenderTarget? PreparePresentation(CanvasRenderTarget content)
+    protected CanvasRenderTarget PreparePresentation()
     {
-        // Native blit regions must fit their backing texture; crop the completed client region afterwards.
-        var client = GetPixelSize(); var size = client.Max(PresentationRect.End);
-        _usesPresentation = content.HDR || content.Size != client || PresentationRect != new Rect2i(Vector2i.Zero, client);
-        if (!_usesPresentation) return null;
-        if (size.X is < 1 or > 16384 || size.Y is < 1 or > 16384) throw new NotSupportedException("Fitted presentation targets require 1..16384 pixels per axis on this backend profile.");
+        var size = GetPixelSize();
+        if (size.X is < 1 or > 16384 || size.Y is < 1 or > 16384) throw new NotSupportedException("Presentation targets require 1..16384 pixels per axis on this backend profile.");
         if (_presentation?.Size == size) return _presentation;
         var current = CreateTarget(size, Colors.Black); RenderHandle next;
         try { next = CreateTarget(size, Colors.Black); } catch { current.Dispose(); throw; }
         var replacement = new CanvasRenderTarget(current, next, size);
         _presentation?.Dispose(); return _presentation = replacement;
     }
-    internal Image ReadbackScreen(CanvasRenderTarget content)
+    internal Image ReadbackScreen(CanvasRenderTarget? content) => Readback(_presentation is { HasFrame: true } ? _presentation : content ?? throw new InvalidOperationException("No canvas frame has completed."));
+    internal abstract void Present(ReadOnlySpan<CanvasPresentation> viewports);
+    // Clip before native submission, preserving the source mapping for partially off-window rectangles.
+    protected static bool PresentationRegion(Rect2 destination, Vector2i client, out Rect2 clipped, out Rect2 uv)
     {
-        var target = _usesPresentation && _presentation is { HasFrame: true } ? _presentation : content;
-        var image = Readback(target); var client = GetPixelSize();
-        if (image.Size == client) return image;
-        try { return image.GetRegion(new Rect2i(Vector2i.Zero, client)); } finally { image.Dispose(); }
+        clipped = destination.Intersection(new Rect2(Vector2.Zero, client)); uv = default;
+        if (!destination.HasArea() || !clipped.HasArea()) return false;
+        uv = new((clipped.Position - destination.Position) / destination.Size, clipped.Size / destination.Size);
+        return true;
     }
     internal abstract DisplayServer.VSyncMode VSync { get; }
     internal abstract void SetVSync(DisplayServer.VSyncMode mode);
@@ -74,7 +74,7 @@ internal abstract class CanvasBackend : IDisposable
     internal virtual void BeginFrame() { }
     internal virtual void EndFrame() { }
     internal abstract void Sync(CanvasRenderTarget? target);
-    internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting);
+    internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting);
     internal abstract Image Readback(CanvasRenderTarget target, bool backBuffer = false);
     internal virtual nint GetNativeHandle(DisplayServer.HandleType type) =>
         throw new NotSupportedException($"The {Driver} renderer has no {type} identity.");

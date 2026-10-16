@@ -156102,6 +156102,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.ViewportAttachToScreen(Electron2D.RID,Electron2D.Rect2,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportAttachToScreen",
+    "signature": "public static System.Void ViewportAttachToScreen(Electron2D.RID viewport, Electron2D.Rect2 rect = default, System.Int32 screen = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": "default"
+      },
+      {
+        "name": "screen",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.ViewportCreate()",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",

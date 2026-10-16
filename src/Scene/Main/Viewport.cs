@@ -6,6 +6,10 @@ namespace Electron2D;
 /// Canvas transforms, sampling and pixel-snapping policies apply to each target. Window input is localized through the inverse final transform.</remarks>
 public abstract partial class Viewport : Node
 {
+    private static long _renderActivationClock;
+    internal long RenderActivationOrder { get; private set; }
+    internal void MarkRenderingActive() => RenderActivationOrder = Interlocked.Increment(ref _renderActivationClock);
+
     private protected Viewport()
     {
         PhysicsInterpolationMode = PhysicsInterpolationMode.On;

@@ -1315,3 +1315,11 @@ Margins are finite nonnegative screen pixels. fitEmpty synthesizes a rectangle a
 Retained screen snapshots can be configured through RenderingServer.CanvasItemSetCopyToBackBuffer on live item identities. BackBufferCopy source assignments republish the authored policy; renderer-only settings stay outside scene getters/storage. See [retained copy contract](../components/canvas-rendering.md#retained-backbuffer-copy-settings).
 
 [UInt16 image texture sources](../components/integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.
+
+## Viewport screen attachment
+
+`ViewportAttachToScreen(RID viewport, Rect2 rect = default, int screen = 0)` copies completed viewport images into the main native window without an intermediate Sprite. Zero selects that window; minus one detaches. Scene and caller-owned viewports retain their texture dimensions and identities. Finite nonnegative-size rectangles use client pixels and clip with their source mapping preserved. Attachment is renderer-session state; authoring, GUI input and root-viewport movie capture remain independent.
+
+The root initially uses its content layout and WhenVisible updates. A nonzero screen rectangle schedules an active, non-disabled viewport, including WhenParentVisible without a rendering parent. A zero rectangle removes that visibility trigger; another policy or sampled texture may still update it, in which case its whole image copies from client origin. Only images successfully drawn this frame participate. Children copy before rendering parents, with sibling activation order retained; copies replace RGBA, leaving uncovered client pixels black. No selected copies preserves the last screen image. ForceDraw(false) updates textures without screen composition. A zero implicit root raster clears the presentation while exposing no viewport image.
+
+See [screen attachment verification and dependencies](../components/canvas-rendering.md#viewport-screen-attachment). Nonzero window identities require independent native window ownership and swapchain routing under ADR 0040 and reject explicitly today. Direct framebuffer rendering remains separate.

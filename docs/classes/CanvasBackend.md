@@ -16,7 +16,7 @@ The shared internal contract for [GPUCanvasBackend](GPUCanvasBackend.md) and [Co
 This fragment belongs inside the runtime and requires the surrounding owner state.
 
 ```csharp
-backend.Draw(target, vertices, batches, clearColor, clearEnabled: true, present: true, time: renderTime, instances: instances, lighting: lighting);
+backend.Draw(target, vertices, batches, clearColor, clearEnabled: true, time: renderTime, instances: instances, lighting: lighting);
 ```
 
 ## Member summary
@@ -26,7 +26,7 @@ backend.Draw(target, vertices, batches, clearColor, clearEnabled: true, present:
 | `internal abstract string Method { get; }` | [Method](#method) |
 | `internal abstract string Driver { get; }` | [Driver](#driver) |
 | `internal abstract Vector2i GetPixelSize()` | [Pixel size](#pixel-size) |
-| `internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)` | [Draw](#draw) |
+| `internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)` | [Draw](#draw) |
 | `internal abstract Image Readback(CanvasRenderTarget target, bool backBuffer = false)` | [Readback](#readback) |
 | `internal virtual nint GetNativeHandle(DisplayServer.HandleType type)` | [Native identity](#native-identity) |
 | `public abstract void Dispose()` | [Disposal](#disposal) |
@@ -55,9 +55,9 @@ Queries current framebuffer dimensions in physical pixels; native failure throws
 
 ### Draw
 
-`internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)`
+`internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)`
 
-Prepares resources, clears or preserves the selected owned byte/half-float target and submits ordered triangles/copy/group passes. present controls copying/presenting to the window. time is the current scaled, wrapped renderer clock in seconds; GPU forwards its float32 value to optional shader TIME, while compatibility has no programmable shader support. Unsupported features reject explicitly; exceptions propagate to Engine.Run cleanup.
+Prepares resources, clears or preserves the selected owned byte/half-float target and submits ordered triangles/copy/group passes. The separate Present operation composes completed viewport images and presents the window once. time is the current scaled, wrapped renderer clock in seconds; GPU forwards its float32 value to optional shader TIME, while compatibility has no programmable shader support. Unsupported features reject explicitly; exceptions propagate to Engine.Run cleanup.
 
 ### Readback
 
@@ -104,3 +104,5 @@ CreateTarget accepts optional native mip-level storage; BackBuffer lazily alloca
 ClipChildren uses the shared screen backbuffer. Hardware compatibility lazily creates a reusable MaskBuffer owned by CanvasRenderTarget; no new public low-level handles or CPU pixel bridge are exposed.
 
 Target identity includes HDR and MSAA as well as dimensions. Optional half-float storage flows through native pipeline selection, backbuffers, resolves and explicit readback. PreparePresentation retains SDR byte storage and creates a separate output for every HDR root. ValidateHDR rejects unsupported backends before target publication. [HDR canvas targets](../components/hdr-canvas.md) describes color views, linear readback and transfer boundaries.
+
+`internal abstract void Present(ReadOnlySpan<CanvasPresentation> viewports)` composes completed native images at clipped client rectangles after drawing, replacing destination RGBA and clearing uncovered pixels black. The shared contract declares this operation abstract. An empty list clears the implicit zero-raster root presentation. ReadbackScreen returns the latest completed composition independently of source texture updates. See [screen attachment](../components/canvas-rendering.md#viewport-screen-attachment).

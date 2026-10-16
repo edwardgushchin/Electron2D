@@ -329,6 +329,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INDEXED_PROPERTIES_NATIV
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INDEXED_PROPERTIES") == "1") { IndexedPropertyTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SUBTREE_AUTHORING_NATIVE") == "1") { SubtreeResourceAuthoringTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SUBTREE_AUTHORING") == "1") { SubtreeResourceAuthoringTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_PRESENTATION") is { } presentationProfile) { ViewportPresentationTests.Run(presentationProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_VIEWPORTS_NATIVE") == "1") { ServerViewportTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_VIEWPORTS") == "1") { ServerViewportTests.RunManaged(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MANUAL_FRAMES_NATIVE") == "1") { ManualRenderFrameTests.RunNative(); return; }

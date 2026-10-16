@@ -180,6 +180,7 @@ public abstract partial class Viewport
             try { base.OnTreeMembershipChanged(false); } catch (Exception error) { CollectException(ref errors, error); }
             ThrowCollected("Viewport detachment callbacks failed.", errors); return;
         }
+        MarkRenderingActive();
         Tree!.RegisterGUIViewport(this);
         base.OnTreeMembershipChanged(true);
         UpdateTextureSampling(filter: true); UpdateTextureSampling(filter: false);

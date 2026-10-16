@@ -162,7 +162,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         return new RenderHandle(SDL.CreateGPUGraphicsPipeline(Device, in info), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _device);
     }
 
-    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)
+    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)
     {
         _currentHDR = output.HDR; _linearSources.Clear();
         if (output.HDR) clear = LinearColor(clear);
@@ -209,19 +209,13 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         var maskFirst = checked(vertices.Length + (sdfUsed ? 6 : 0));
         var seedFirst = checked(maskFirst + (lightingUsed ? lighting.Masks.Count * 6 : 0));
         var colorFirst = checked(seedFirst + (samples != SDL.GPUSampleCount.SampleCount1 ? 6 : 0));
-        var colorQuad = _linearSources.Count != 0 || output.HDR && present;
-        if (output.HDR && present)
-        {
-            _presentationPipeline ??= CreatePipeline(BuiltInShaders.ColorFragment, BlendMode.Mix, overwrite: true);
-            _ = Sampler(TextureFilter.NearestWithMipmaps, TextureRepeat.Disabled);
-        }
+        var colorQuad = _linearSources.Count != 0;
         var vertexBytes = checked((colorFirst + (colorQuad ? 6 : 0)) * sizeof(CanvasVertex));
         var uploadBytes = checked(lightingBytes + vertexBytes + instances.Length * sizeof(CanvasInstance));
         EnsureBuffers(uploadBytes);
-        var presentation = present ? PreparePresentation(output) : null;
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw Failure("acquire a GPU command buffer");
-        var swapchainAcquired = false; nint pass = 0;
+        nint pass = 0;
         try
         {
             foreach (var texture in _textures.Values) texture.Upload(command);
@@ -352,40 +346,14 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 SDL.DrawGPUPrimitives(pass, (uint)batch.Count, (uint)Math.Max(1, batch.InstanceCount), (uint)batch.First, 0);
             }
             SDL.EndGPURenderPass(pass); pass = 0;
-            if (present)
-            {
-                var source = output.Next.DangerousGetHandle(); var sourceSize = size;
-                if (presentation is not null)
-                {
-                    if (output.HDR) PresentHDR(command, output, presentation, lightingBytes, colorFirst);
-                    else
-                    {
-                        var clearPass = BeginPass(command, presentation.Next.DangerousGetHandle(), SDL.GPULoadOp.Clear, Colors.Black);
-                        SDL.EndGPURenderPass(clearPass);
-                        if (PresentationRect.HasArea())
-                        {
-                            var fitted = new SDL.GPUBlitInfo { Source = new() { Texture = source, W = (uint)size.X, H = (uint)size.Y }, Destination = new() { Texture = presentation.Next.DangerousGetHandle(), X = (uint)PresentationRect.Position.X, Y = (uint)PresentationRect.Position.Y, W = (uint)PresentationRect.Size.X, H = (uint)PresentationRect.Size.Y }, LoadOp = SDL.GPULoadOp.Load, Filter = SDL.GPUFilter.Nearest };
-                            SDL.BlitGPUTexture(command, in fitted);
-                        }
-                    }
-                    source = presentation.Next.DangerousGetHandle(); sourceSize = GetPixelSize();
-                }
-                Check(SDL.WaitAndAcquireGPUSwapchainTexture(command, _window, out var swapchain, out var width, out var height), "acquire swapchain texture");
-                if (swapchain != 0)
-                {
-                    swapchainAcquired = _hasPresented = true;
-                    var blit = new SDL.GPUBlitInfo { Source = new() { Texture = source, W = (uint)sourceSize.X, H = (uint)sourceSize.Y }, Destination = new() { Texture = swapchain, W = width, H = height }, LoadOp = SDL.GPULoadOp.DontCare, Filter = SDL.GPUFilter.Nearest };
-                    SDL.BlitGPUTexture(command, in blit);
-                }
-            }
             var submitted = command; command = 0; Check(SDL.SubmitGPUCommandBuffer(submitted), "submit canvas frame");
             foreach (var texture in _textures.Values) texture.CommitUpload();
-            foreach (var texture in _layeredTextures.Values) texture.CommitUpload(); output.Commit(); presentation?.Commit();
+            foreach (var texture in _layeredTextures.Values) texture.CommitUpload(); output.Commit();
         }
         finally
         {
             if (pass != 0) SDL.EndGPURenderPass(pass);
-            if (command != 0) { if (swapchainAcquired) SDL.SubmitGPUCommandBuffer(command); else SDL.CancelGPUCommandBuffer(command); }
+            if (command != 0) SDL.CancelGPUCommandBuffer(command);
         }
     }
     private nint BeginPass(nint command, nint texture, SDL.GPULoadOp load, Color clear)

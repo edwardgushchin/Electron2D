@@ -192,8 +192,8 @@ public sealed partial class RenderingServer : ElectronObject
             _renderingDevice?.FlushRendererCommands();
             BeginCanvasVisibilityFrame();
             _backend.BeginFrame();
-            if (_window.Visible && _canvasFrames.TryGetValue(_window, out var root)) { root.Wanted = true; SubmitFrame(root, tree); }
-            for (var i = 0; i < _activeFrames.Count; i++) { var frame = _activeFrames[i]; if (UpdateMode(frame.Viewport) is ViewportUpdateMode.Always or ViewportUpdateMode.Once) { frame.Wanted = true; SubmitFrame(frame, tree); } }
+            for (var i = 0; i < _activeFrames.Count; i++) { var frame = _activeFrames[i]; if (ScreenVisible(frame.Viewport) || UpdateMode(frame.Viewport) is ViewportUpdateMode.Always or ViewportUpdateMode.Once) { frame.Wanted = true; SubmitFrame(frame, tree); } }
+            PresentViewports();
             _backend.EndFrame();
             _frameSubmitted = true;
             Engine.Service.RecordDrawnFrame();
@@ -211,7 +211,7 @@ public sealed partial class RenderingServer : ElectronObject
             finally
             {
                 foreach (var frame in _activeFrames) { frame.Nodes.Clear(); frame.Vertices.Clear(); frame.Instances.Clear(); frame.Batches.Clear(); Array.Clear(frame.TextureScratch); frame.Order.Clear(); frame.Repeats.Clear(); frame.Transforms.Clear(); frame.YSort.Clear(); }
-                _activeFrames.Clear(); _submittingTextures = false; _rendering = false; _frameSubmitted = false; _swapBuffers = true;
+                _activeFrames.Clear(); _presentations.Clear(); _presentationFrames.Clear(); _presentationQueue.Clear(); _submittingTextures = false; _rendering = false; _frameSubmitted = false; _swapBuffers = true;
             }
         }
         if (frameError is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(frameError).Throw();
@@ -225,7 +225,7 @@ public sealed partial class RenderingServer : ElectronObject
         }
         if (texture is not ViewportTexture view || view.Bound is not { } viewport || !_canvasFrames.TryGetValue(viewport, out var frame) || !ViewportLive(viewport, tree)) return;
         if (viewport is SubViewport { RenderTargetUpdateMode: ViewportUpdateMode.Disabled } || viewport is Window { Visible: false }) return;
-        if (UpdateMode(viewport) == ViewportUpdateMode.WhenParentVisible && (RenderParent(viewport) is not { } parent || !ViewportScheduled(parent))) return;
+        if (UpdateMode(viewport) == ViewportUpdateMode.WhenParentVisible && !ScreenVisible(viewport) && (RenderParent(viewport) is not { } parent || !ViewportScheduled(parent))) return;
         frame.Wanted = true; SubmitFrame(frame, tree);
     }
     private void SubmitFrame(CanvasFrame frame, SceneTree tree)
@@ -247,9 +247,7 @@ public sealed partial class RenderingServer : ElectronObject
         foreach (var child in _activeFrames) if (UpdateMode(child.Viewport) == ViewportUpdateMode.WhenParentVisible && ReferenceEquals(RenderParent(child.Viewport), frame.Viewport)) { child.Wanted = true; SubmitFrame(child, tree); }
         var target = _backend.FindTarget(frame.Viewport); if (target is null) return;
         _submittingTextures = true;
-        var content = _window.ContentLayout;
-        _backend.PresentationRect = content.TargetSize.X > 0 && content.TargetSize.Y > 0 ? content.ScreenRect : default;
-        try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), FrameClear(frame.Viewport), ClearMode(frame.Viewport) != ViewportClearMode.Never, ReferenceEquals(frame.Viewport, _window) && _window.Visible && _swapBuffers, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting); }
+        try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), FrameClear(frame.Viewport), ClearMode(frame.Viewport) != ViewportClearMode.Never, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting); }
         finally { _submittingTextures = false; }
         ViewportSubmitted(frame.Viewport);
         frame.State = 2; frame.Drawn = true;
@@ -520,7 +518,7 @@ public sealed partial class RenderingServer : ElectronObject
         if (child.RenderYSort && !IsCompositor(child)) CollectYSort(child, transform);
     }
 
-    internal Image Readback() { EnsureOwner(); return _backend.ReadbackScreen(_backend.FindTarget(_window) ?? throw new InvalidOperationException("No canvas frame has completed.")); }
+    internal Image Readback() { EnsureOwner(); return _backend.ReadbackScreen(_backend.FindTarget(_window)); }
     internal nint GetNativeHandle(DisplayServer.HandleType type) { EnsureOwner(); return _backend.GetNativeHandle(type); }
     internal void Close() { _closing = true; Dispose(); }
 

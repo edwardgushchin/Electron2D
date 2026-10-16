@@ -31,7 +31,7 @@ using CanvasBackend backend = new GPUCanvasBackend(nativeWindow);
 | `internal override string Method { get; }` | [Method](#method) |
 | `internal override string Driver { get; }` | [Driver](#driver) |
 | `internal override Vector2i GetPixelSize()` | [Pixel size](#pixel-size) |
-| `internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)` | [Draw](#draw) |
+| `internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)` | [Draw](#draw) |
 | `internal override Image Readback(CanvasRenderTarget target, bool backBuffer = false)` | [Readback](#readback) |
 | `public override void Dispose()` | [Disposal](#disposal) |
 
@@ -63,7 +63,7 @@ Uses the window physical pixel dimensions.
 
 ### Draw
 
-`internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)`
+`internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)`
 
 Prepares program/texture resources before encoding, prunes unused caches, resizes target/buffers, uploads changed pixels and vertices, and emits ordered render batches. Uniforms serialize with material updates. Before each upload, optional reserved TIME receives the current float32 render time at its reflected offset/binding. A shader requiring TIME rejects a clock outside finite float32 range during resource preflight, before encoding or drawing. Programs without TIME use their existing buffers unchanged. TEXTURE binds the command texture or owned white pixel. Submission commits texture upload versions only on success. An unsubmitted command is cancelled unless a swapchain was acquired, in which case it must be submitted for release. Runtime backend switching/device recovery are absent.
 
@@ -100,3 +100,5 @@ ClipChildren MaskBegin copies main background into BackBuffer, then captures chi
 GPUCanvasBackend.Glyphs composes and caches encoded coverage programs on cold source/mode identities, binds an extra backing-image sampler for materials without TEXTURE and evicts unused compositions with native pipelines. LCD adds a component-blend pipeline key and per-batch blend constant; masks use ordinary scalar-alpha blend and transparent groups use their rewritten premultiplied capture. Integer sampled values reject this coverage profile. Glyph stages share the existing device, target and MSAA resolution path.
 
 [HDR target/color helpers](../../src/Servers/Rendering/GPUCanvasBackend.HDR.cs) retain half-float derived source views, refresh native mip data before consumer filtering, and encode root presentation into a separate SDR target. Vertex frame constants retain per-batch canvas color independently of command/mesh colors; shared color/mask ranges always convert their original source. Readback and borrowed device identities report actual target precision. See [HDR canvas behavior and verification](../components/hdr-canvas.md).
+
+`internal override void Present(ReadOnlySpan<CanvasPresentation> viewports)` composes completed native images at clipped client rectangles after drawing, replacing destination RGBA and clearing uncovered pixels black. The shared contract declares this operation abstract. An empty list clears the implicit zero-raster root presentation. ReadbackScreen returns the latest completed composition independently of source texture updates. See [screen attachment](../components/canvas-rendering.md#viewport-screen-attachment).

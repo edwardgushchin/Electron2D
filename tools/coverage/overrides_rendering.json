@@ -4726,6 +4726,11 @@
       "godot": "ProjectSettings::property:rendering/viewport/hdr_2d",
       "electron2d": "property:Electron2D.ProjectSettings.HDR2D()",
       "reason": "ADRs 0028/0095: stored scene and root feature configuration plus renderer-session overrides execute linear RGBA half-float canvas targets with stable logical identities and expiring native aliases. Authored colors and byte color sampling convert before filtering/blending; float/integer/data inputs retain typed meaning. MSAA, screen/group/mask composition, readback/device formats, SDR presentation and RGB8 movie transfer before quantization execute. Native pixels, source mips/device writes, GLSL/HLSL color/data inputs, fresh scene/project files, movie PCM/lifetimes and bounded zero-managed-byte replay intervals are checked. Compatibility and unsupported native formats/sample counts reject explicitly. HDR monitors, tone mapping, browser/foreign platforms, native allocation totals and owner acceptance remain separate."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_attach_to_screen(RID:,Rect2:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportAttachToScreen(Electron2D.RID,Electron2D.Rect2,System.Int32)",
+      "reason": "ADRs 0028/0040/0095: executable main native-window attachment for scene and caller-owned viewport RIDs, fractional client rectangles, clipping with source UV preservation, replace copies, stable texture identity, empty-rect visibility versus forced full-size copy, detach, successful-update-only composition and stable child-before-parent ordering. Root default is WhenVisible. GPU SDR/HDR/MSAA and compatibility pixels, capture/owner/invalid/stale guards, suspended Once and zero-managed-allocation prepared presentation execute on Linux X11/Wayland. Partial: nonzero native window IDs require the Window/DisplayServer native multiwindow identity registry, per-window backend ownership/swapchains and close/resize routing under ADR 0040; implement that dependency before attaching there. Direct framebuffer drawing remains a separate blocked capability; foreign/native-allocation/human acceptance are unverified."
     }
   ],
   "statusGroups": [
@@ -6687,6 +6692,13 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0028/0095: stored scene and root feature configuration plus renderer-session overrides execute linear RGBA half-float canvas targets with stable logical identities and expiring native aliases. Authored colors and byte color sampling convert before filtering/blending; float/integer/data inputs retain typed meaning. MSAA, screen/group/mask composition, readback/device formats, SDR presentation and RGB8 movie transfer before quantization execute. Native pixels, source mips/device writes, GLSL/HLSL color/data inputs, fresh scene/project files, movie PCM/lifetimes and bounded zero-managed-byte replay intervals are checked. Compatibility and unsupported native formats/sample counts reject explicitly. HDR monitors, tone mapping, browser/foreign platforms, native allocation totals and owner acceptance remain separate."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:viewport_attach_to_screen(RID:,Rect2:,int:)"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0028/0040/0095: executable main native-window attachment for scene and caller-owned viewport RIDs, fractional client rectangles, clipping with source UV preservation, replace copies, stable texture identity, empty-rect visibility versus forced full-size copy, detach, successful-update-only composition and stable child-before-parent ordering. Root default is WhenVisible. GPU SDR/HDR/MSAA and compatibility pixels, capture/owner/invalid/stale guards, suspended Once and zero-managed-allocation prepared presentation execute on Linux X11/Wayland. Partial: nonzero native window IDs require the Window/DisplayServer native multiwindow identity registry, per-window backend ownership/swapchains and close/resize routing under ADR 0040; implement that dependency before attaching there. Direct framebuffer drawing remains a separate blocked capability; foreign/native-allocation/human acceptance are unverified."
     }
   ],
   "extras": [

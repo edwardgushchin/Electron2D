@@ -15,7 +15,9 @@ public sealed partial class RenderingServer
         internal TextureRepeat? CanvasRepeat;
         internal Viewport.MSAA? MSAA;
         internal bool? HDR;
-        internal ViewportUpdateMode Update = ViewportUpdateMode.Always;
+        internal int? Screen;
+        internal Rect2 ScreenRect;
+        internal ViewportUpdateMode? Update;
         internal ViewportClearMode Clear;
     }
     private readonly Dictionary<Viewport, ServerViewportState> _serverViewports = new(ReferenceEqualityComparer.Instance);
@@ -67,7 +69,7 @@ public sealed partial class RenderingServer
         EnsureServerViewportChange(); var view = new SubViewport(); view.SetServerSize(default); view.RenderingOwner = this;
         _serverViewports.Add(view, new(true)); return view.GetViewportRID();
     }
-    private ViewportUpdateMode UpdateMode(Viewport view) => view is SubViewport sub ? sub.RenderTargetUpdateMode : _serverViewports.TryGetValue(view, out var state) ? state.Update : ViewportUpdateMode.Always;
+    private ViewportUpdateMode UpdateMode(Viewport view) => view is SubViewport sub ? sub.RenderTargetUpdateMode : _serverViewports.TryGetValue(view, out var state) && state.Update is { } mode ? mode : ReferenceEquals(view, _window) ? ViewportUpdateMode.WhenVisible : ViewportUpdateMode.Always;
     private ViewportClearMode ClearMode(Viewport view) => view is SubViewport sub ? sub.RenderTargetClearMode : _serverViewports.TryGetValue(view, out var state) ? state.Clear : ViewportClearMode.Always;
     private bool ViewportLive(Viewport view, SceneTree tree) => !view.IsDisposed && (ReferenceEquals(view.Tree, tree) || _serverViewports.TryGetValue(view, out var state) && state.Owned);
     private bool ViewportActive(Viewport view) => !_serverViewports.TryGetValue(view, out var state) || state.Active && state.ViewCount != 0;
@@ -76,7 +78,7 @@ public sealed partial class RenderingServer
         var size = TargetSize(view);
         if (view.IsDisposed || !ViewportActive(view) || view is Window { Visible: false } || size.X < 2 || size.Y < 2 || !_canvasFrames.TryGetValue(view, out var frame)) return false;
         var mode = UpdateMode(view); if (mode == ViewportUpdateMode.Disabled) return false;
-        return frame.Wanted || mode is ViewportUpdateMode.Always or ViewportUpdateMode.Once || mode == ViewportUpdateMode.WhenParentVisible && depth < 1024 && RenderParent(view) is { } parent && ViewportScheduled(parent, depth + 1);
+        return frame.Wanted || ScreenVisible(view) || mode is ViewportUpdateMode.Always or ViewportUpdateMode.Once || mode == ViewportUpdateMode.WhenParentVisible && depth < 1024 && RenderParent(view) is { } parent && ViewportScheduled(parent, depth + 1);
     }
     private Viewport? RenderParent(Viewport view) => _serverViewports.TryGetValue(view, out var state) && state.ParentAssigned ? state.Parent : view.Parent?.GetViewport();
     private Vector2i TargetSize(Viewport view) => _serverViewports.TryGetValue(view, out var state) && state.Size is { } size ? size : view is SubViewport sub ? sub.Size : ((Window)view).ContentRenderSize;
@@ -178,9 +180,15 @@ public sealed partial class RenderingServer
     public static ViewportUpdateMode ViewportGetUpdateMode(RID viewport) { var service = RequireService(); return service.UpdateMode(service.ServerViewport(viewport)); }
     /// <summary>Activates or suspends viewport rendering while retaining its completed image.</summary>
     /// <param name="viewport">Live owned or attached scene viewport.</param><param name="active">Whether updates may submit.</param>
+    /// <remarks>Reactivating moves the viewport to the end of its sibling presentation order. Repeating the current value preserves that order.</remarks>
     /// <exception cref="ArgumentException">The identity is invalid.</exception>
     /// <exception cref="InvalidOperationException">The renderer is unavailable or mutation violates ownership/submission.</exception>
-    public static void ViewportSetActive(RID viewport, bool active) => RequireService().ChangeViewport(viewport, out _).Active = active;
+    public static void ViewportSetActive(RID viewport, bool active)
+    {
+        var state = RequireService().ChangeViewport(viewport, out var view);
+        if (state.Active == active) return;
+        state.Active = active; if (active) view.MarkRenderingActive();
+    }
     /// <summary>Sets pixel retention; Once becomes Never after a successful update.</summary>
     /// <param name="viewport">Live viewport.</param><param name="clearMode">Defined clear policy.</param>
     /// <exception cref="ArgumentException">The identity or enumeration is invalid.</exception>

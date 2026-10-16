@@ -119,7 +119,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         return new(width, height);
     }
 
-    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)
+    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)
     {
         foreach (var batch in batches)
             if (batch.Glyph.Mode != CanvasGlyphMode.None) throw new NotSupportedException("Glyph distance and component coverage require GPU rendering.");
@@ -261,33 +261,32 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
             try { Check(SDL.SetRenderClipRect(renderer, 0), "clear canvas clipping"); }
             finally { Check(SDL.SetRenderTarget(renderer, 0), "restore window render target"); }
         }
-        if (!present) return;
-        var presentation = PreparePresentation(output);
-        var source = output.Current.DangerousGetHandle();
-        if (presentation is not null)
+    }
+
+    internal override void Present(ReadOnlySpan<CanvasPresentation> viewports)
+    {
+        var renderer = _renderer.DangerousGetHandle(); var presentation = PreparePresentation();
+        Check(SDL.SetRenderTarget(renderer, presentation.Next.DangerousGetHandle()), "bind presentation target");
+        try
         {
-            Check(SDL.SetRenderTarget(renderer, presentation.Next.DangerousGetHandle()), "bind fitted presentation");
-            try
+            Check(SDL.SetRenderDrawColorFloat(renderer, 0, 0, 0, 1), "set presentation margins");
+            Check(SDL.RenderClear(renderer), "clear presentation margins");
+            foreach (var view in viewports)
             {
-                Check(SDL.SetRenderDrawColorFloat(renderer, 0, 0, 0, 1), "set presentation margins"); Check(SDL.RenderClear(renderer), "clear presentation margins");
-                Check(SDL.SetTextureBlendMode(source, SDL.BlendMode.None), "set fitted content blending");
+                if (!PresentationRegion(view.Rect, presentation.Size, out var clipped, out var uv)) continue;
+                var source = view.Target.Current.DangerousGetHandle();
+                Check(SDL.SetTextureBlendMode(source, SDL.BlendMode.None), "set presentation blending");
                 Check(SDL.SetTextureScaleMode(source, SDL.ScaleMode.Nearest), "set presentation filtering");
-                if (PresentationRect.HasArea())
-                {
-                    var rect = new SDL.FRect { X = PresentationRect.Position.X, Y = PresentationRect.Position.Y, W = PresentationRect.Size.X, H = PresentationRect.Size.Y };
-                    Check(SDL.RenderTexture(renderer, source, 0, in rect), "fit content to presentation");
-                }
-                presentation.Commit(); source = presentation.Current.DangerousGetHandle();
+                var src = new SDL.FRect { X = uv.Position.X * view.Target.Size.X, Y = uv.Position.Y * view.Target.Size.Y, W = uv.Size.X * view.Target.Size.X, H = uv.Size.Y * view.Target.Size.Y };
+                var dst = new SDL.FRect { X = clipped.Position.X, Y = clipped.Position.Y, W = clipped.Size.X, H = clipped.Size.Y };
+                Check(SDL.RenderTexture(renderer, source, in src, in dst), "copy viewport to presentation");
             }
-            finally { Check(SDL.SetRenderTarget(renderer, 0), "restore fitted window target"); }
+            presentation.Commit();
         }
-        Check(SDL.SetTextureBlendMode(source, SDL.BlendMode.None), "set presentation copy blending");
-        if (presentation is null) Check(SDL.RenderTexture(renderer, source, 0, 0), "copy canvas to window");
-        else
-        {
-            var client = GetPixelSize(); var rect = new SDL.FRect { W = client.X, H = client.Y };
-            Check(SDL.RenderTexture(renderer, source, in rect, in rect), "copy fitted client region to window");
-        }
+        finally { Check(SDL.SetRenderTarget(renderer, 0), "restore window target"); }
+        var texture = presentation.Current.DangerousGetHandle();
+        Check(SDL.SetTextureBlendMode(texture, SDL.BlendMode.None), "set presentation copy blending");
+        Check(SDL.RenderTexture(renderer, texture, 0, 0), "copy presentation to window");
         Check(SDL.RenderPresent(renderer), "present canvas");
     }
 

@@ -72,19 +72,6 @@ internal sealed unsafe partial class GPUCanvasBackend
         }
     }
 
-    private void PresentHDR(nint command, CanvasRenderTarget output, CanvasRenderTarget presentation, int vertexOffset, int first)
-    {
-        var pass = BeginPass(command, presentation.Next.DangerousGetHandle(), SDL.GPULoadOp.Clear, Colors.Black);
-        try
-        {
-            if (!PresentationRect.HasArea()) return;
-            var viewport = new SDL.GPUViewport { X = PresentationRect.Position.X, Y = PresentationRect.Position.Y, W = PresentationRect.Size.X, H = PresentationRect.Size.Y, MaxDepth = 1 };
-            SDL.SetGPUViewport(pass, in viewport);
-            BindColorCopy(command, pass, _presentationPipeline!, output.Next.DangerousGetHandle(), new(0, 0, 1, 0), vertexOffset, first);
-        }
-        finally { SDL.EndGPURenderPass(pass); }
-    }
-
     private void RetireColorViews()
     {
         foreach (var pair in _linearViews)

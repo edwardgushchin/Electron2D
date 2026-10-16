@@ -352,3 +352,5 @@ Theme resource archives and scenes now persist complete typed theme data, resour
 [Video playback](../components/video-playback.md) publishes stable ImageTexture frames through both real canvas backends, including a second texture consumer. Revision-aware uploads retain prepared storage; duplicated/saved images remain independent snapshots.
 
 [UInt16 image texture sources](../components/integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.
+
+[Viewport screen attachment](../components/canvas-rendering.md#viewport-screen-attachment) now presents scene or caller-owned targets directly in the main native window, with one final GPU/Compatibility composition, clipping, update scheduling and HDR/MSAA source handling. Additional native-window identities depend on the native multiwindow ownership/routing slice.

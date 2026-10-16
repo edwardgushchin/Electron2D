@@ -7,6 +7,7 @@ internal static class ServerViewportTests
     internal static void RunManaged()
     {
         Reject<InvalidOperationException>(() => RenderingServer.ViewportCreate());
+        Reject<InvalidOperationException>(() => RenderingServer.ViewportAttachToScreen(default));
         Reject<InvalidOperationException>(() => RenderingServer.ViewportGetUpdateMode(default));
         Reject<InvalidOperationException>(() => RenderingServer.ViewportSetActive(default, true));
         Console.WriteLine("Server viewport unavailable-host checks passed.");

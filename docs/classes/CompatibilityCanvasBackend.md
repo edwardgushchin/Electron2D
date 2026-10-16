@@ -29,7 +29,7 @@ using CanvasBackend backend = new CompatibilityCanvasBackend(nativeWindow);
 | `internal override string Method { get; }` | [Method](#method) |
 | `internal override string Driver { get; }` | [Driver](#driver) |
 | `internal override Vector2i GetPixelSize()` | [Pixel size](#pixel-size) |
-| `internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)` | [Draw](#draw) |
+| `internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)` | [Draw](#draw) |
 | `internal override Image Readback(CanvasRenderTarget target, bool backBuffer = false)` | [Readback](#readback) |
 | `internal override nint GetNativeHandle(DisplayServer.HandleType type)` | [Native identity](#native-identity) |
 | `public override void Dispose()` | [Disposal](#disposal) |
@@ -62,7 +62,7 @@ Queries physical render output dimensions.
 
 ### Draw
 
-`internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)`
+`internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)`
 
 Validates shader absence, prepares base-level texture copies and prunes unused resources. Converts vertices into reusable SDL storage, applies clamp/repeat and nearest filtering, and submits triangles. The software driver gets separate textured triangles to avoid its incorrect quad shortcut. Restores the window target in finally. present controls final window copy/presentation.
 
@@ -101,3 +101,5 @@ ClipChildren uses a lazy native alpha MaskBuffer: ordinary owner primitives accu
 Texture cache entries retain both source snapshot identity and its uploaded revision. A prepared in-place video publication triggers another upload without changing the Texture or native allocation.
 
 CreateTarget accepts the common HDR argument but rejects true explicitly. Normal byte rendering multiplies each batch's separate canvas color into its borrowed source vertices without retaining a preceding mask/color pass factor. Built-in group/Only-mask owners are unshaded, and AndDraw shares geometry while retaining separate pass factors. Native GPU/Compatibility modulation profiles verify RGB/alpha and warm allocation behavior.
+
+`internal override void Present(ReadOnlySpan<CanvasPresentation> viewports)` composes completed native images at clipped client rectangles after drawing, replacing destination RGBA and clearing uncovered pixels black. The shared contract declares this operation abstract. An empty list clears the implicit zero-raster root presentation. ReadbackScreen returns the latest completed composition independently of source texture updates. See [screen attachment](../components/canvas-rendering.md#viewport-screen-attachment).
