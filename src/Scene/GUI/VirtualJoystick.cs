@@ -77,7 +77,7 @@ public partial class VirtualJoystick : Control
         foreach (var binding in _bindings) binding.Release(); _basePosition = Size * _initial; _tipPosition = _basePosition;
         List<Exception>? errors = null;
         try { if (!IsDisposed) QueueRedraw(); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (notify && active && !IsDisposed) Released?.Invoke(vector); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (notify && active && !IsDisposed) BeginEventEmission(Released)?.Invoke(vector); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Joystick reset callbacks failed.", errors);
     }
     private void UpdateJoystick(Vector2 position)
@@ -95,7 +95,7 @@ public partial class VirtualJoystick : Control
         var canceled = !_flickCanceled && wasInput && !_hasInput;
         if (canceled) _flickCanceled = true; else if (_flickCanceled && !wasInput && _hasInput) _flickCanceled = false;
         PublishActions(); var revision = _revision; List<Exception>? errors = null;
-        try { if (canceled) FlickCanceled?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (canceled) BeginEventEmission(FlickCanceled)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         try { if (!IsDisposed && revision == _revision) QueueRedraw(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Joystick motion callbacks failed.", errors);
     }
@@ -111,14 +111,14 @@ public partial class VirtualJoystick : Control
                 if (_mode is VirtualJoystickMode.Dynamic or VirtualJoystickMode.Following) _basePosition = touch.Position;
                 _finger = touch.Index; SetInternalProcessing(true, false); _revision++; var revision = _revision; List<Exception>? errors = null;
                 try { UpdateJoystick(touch.Position); } catch (Exception error) { CollectException(ref errors, error); }
-                try { if (!IsDisposed && revision == _revision && _finger == touch.Index) Pressed?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+                try { if (!IsDisposed && revision == _revision && _finger == touch.Index) BeginEventEmission(Pressed)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
                 ThrowCollected("Joystick press callbacks failed.", errors);
             }
             else if ((!touch.Pressed || touch.Canceled) && _finger == touch.Index)
             {
                 var vector = _inputVector; var tap = !_flickCanceled && !_moved && !touch.Canceled; var flick = _hasInput && _moved && !touch.Canceled;
                 var revision = _revision + 1; List<Exception>? errors = null; try { Reset(notify: true); } catch (Exception error) { CollectException(ref errors, error); }
-                try { if (!IsDisposed && _finger is null && revision == _revision) { if (tap) Tapped?.Invoke(); else if (flick) Flicked?.Invoke(vector); } } catch (Exception error) { CollectException(ref errors, error); }
+                try { if (!IsDisposed && _finger is null && revision == _revision) { if (tap) BeginEventEmission(Tapped)?.Invoke(); else if (flick) BeginEventEmission(Flicked)?.Invoke(vector); } } catch (Exception error) { CollectException(ref errors, error); }
                 ThrowCollected("Joystick release callbacks failed.", errors);
             }
         }

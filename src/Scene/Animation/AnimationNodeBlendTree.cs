@@ -61,7 +61,7 @@ public sealed partial class AnimationNodeBlendTree : AnimationRootNode
     {
         if (IsDisposed || !_nodes.TryGetValue(name, out var entry)) return;
         var count = entry.Node.GetInputCount(); if (entry.Inputs.Length != count) Array.Resize(ref entry.Inputs, count);
-        EmitGraphChanged(); NodeChanged?.Invoke(name);
+        EmitGraphChanged(); BeginEventEmission(NodeChanged)?.Invoke(name);
     }
     /// <summary>Returns a borrowed named resource, including the owned output resource.</summary>
     /// <param name="name">The exact local name.</param>

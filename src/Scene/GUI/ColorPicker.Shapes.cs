@@ -184,6 +184,6 @@ public partial class ColorPicker
         }
         private void DrawColor(Rect2 rect, Color color) { Checker(this, rect, owner.GetThemeIcon("sample_bg")); DrawRect(rect, color); if ((color.R > 1 || color.G > 1 || color.B > 1) && owner.GetThemeIcon("overbright_indicator") is { } icon) DrawTexture(icon, rect.Position); }
         protected override void OnGUIInput(InputEvent input)
-        { if (DisplayOld && (input is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left } button && button.Position.X < Size.X / 2 || InputMap.HasAction("ui_accept") && input.IsActionPressed("ui_accept"))) { owner.SetColor(OldColor, true); owner.ColorChanged?.Invoke(owner._color); AcceptEvent(); } }
+        { if (DisplayOld && (input is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left } button && button.Position.X < Size.X / 2 || InputMap.HasAction("ui_accept") && input.IsActionPressed("ui_accept"))) { owner.SetColor(OldColor, true); owner.BeginEventEmission(owner.ColorChanged)?.Invoke(owner._color); AcceptEvent(); } }
     }
 }

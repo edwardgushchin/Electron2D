@@ -88,17 +88,17 @@ public abstract partial class CollisionObject
         if (IsDisposed || !IsInsideTree) return;
         if (kind == 0 && input is { IsDisposed: false })
         {
-            using var inputs = _eventInputEvent?.Acquire() ?? default;
+            using var inputs = BeginBufferedEvent(_eventInputEvent);
             for (var i = 0; i < inputs.Count; i++)
             {
                 if (IsDisposed || !IsInsideTree || input.IsDisposed) break;
                 try { inputs[i](viewport, input, shape); } catch (Exception error) { CollectException(ref errors, error); }
             }
         }
-        using var simple = (kind == 1 ? _eventMouseEntered : kind == 2 ? _eventMouseExited : null)?.Acquire() ?? default;
+        using var simple = BeginBufferedEvent((kind == 1 ? _eventMouseEntered : kind == 2 ? _eventMouseExited : null));
         for (var i = 0; i < simple.Count; i++)
         { if (IsDisposed || !IsInsideTree) break; try { simple[i](); } catch (Exception error) { CollectException(ref errors, error); } }
-        using var shapes = (kind == 3 ? _eventMouseShapeEntered : kind == 4 ? _eventMouseShapeExited : null)?.Acquire() ?? default;
+        using var shapes = BeginBufferedEvent((kind == 3 ? _eventMouseShapeEntered : kind == 4 ? _eventMouseShapeExited : null));
         for (var i = 0; i < shapes.Count; i++)
         { if (IsDisposed || !IsInsideTree) break; try { shapes[i](shape); } catch (Exception error) { CollectException(ref errors, error); } }
     }

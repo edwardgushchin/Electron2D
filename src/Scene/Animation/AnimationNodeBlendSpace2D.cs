@@ -135,7 +135,7 @@ public sealed partial class AnimationNodeBlendSpace2D : AnimationRootNode
     /// <param name="toIndex">An existing destination index.</param>
     /// <exception cref="ObjectDisposedException">This resource has been disposed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">An index or numeric value is outside its documented domain.</exception>
-    public void ReorderBlendPoint(int fromIndex, int toIndex) { ThrowIfDisposed(); var a = _points.Items[fromIndex]; var b = _points.Items[toIndex]; if (fromIndex == toIndex) return; (_points.Items[fromIndex], _points.Items[toIndex]) = (b, a); int Swap(int i) => i == fromIndex ? toIndex : i == toIndex ? fromIndex : i; for (var i = 0; i < _triangles.Count; i++) { var t = _triangles[i]; _triangles[i] = Canonical(Swap(t.A), Swap(t.B), Swap(t.C)); } _trianglesDirty = true; try { EmitGraphChanged(); } finally { TrianglesUpdated?.Invoke(); } }
+    public void ReorderBlendPoint(int fromIndex, int toIndex) { ThrowIfDisposed(); var a = _points.Items[fromIndex]; var b = _points.Items[toIndex]; if (fromIndex == toIndex) return; (_points.Items[fromIndex], _points.Items[toIndex]) = (b, a); int Swap(int i) => i == fromIndex ? toIndex : i == toIndex ? fromIndex : i; for (var i = 0; i < _triangles.Count; i++) { var t = _triangles[i]; _triangles[i] = Canonical(Swap(t.A), Swap(t.B), Swap(t.C)); } _trianglesDirty = true; try { EmitGraphChanged(); } finally { BeginEventEmission(TrianglesUpdated)?.Invoke(); } }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(SpaceProperties);
     /// <inheritdoc />
@@ -200,7 +200,7 @@ public sealed partial class AnimationNodeBlendSpace2D : AnimationRootNode
         }
         var indices = Geometry.TriangulateDelaunay(positions); var prepared = new List<(int A, int B, int C)>(indices.Length / 3);
         for (var i = 0; i < indices.Length; i += 3) { var t = Canonical(indices[i], indices[i + 1], indices[i + 2]); if (!prepared.Contains(t)) prepared.Add(t); }
-        _triangles.Clear(); _triangles.AddRange(prepared); _trianglesDirty = false; TrianglesUpdated?.Invoke();
+        _triangles.Clear(); _triangles.AddRange(prepared); _trianglesDirty = false; BeginEventEmission(TrianglesUpdated)?.Invoke();
     }
     /// <inheritdoc />
     internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly)

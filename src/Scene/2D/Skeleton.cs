@@ -45,7 +45,7 @@ public class Skeleton : Entity
             _dirty = false; _generation++;
         }
         finally { _settingUp = false; }
-        BoneSetupChanged?.Invoke();
+        BeginEventEmission(BoneSetupChanged)?.Invoke();
     }
     private void Collect(Node parent)
     {

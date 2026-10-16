@@ -236,7 +236,7 @@ public partial class Window
     private void ProcessThemeNotification()
     {
         List<Exception>? errors = null;
-        try { ThemeChanged?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { BeginEventEmission(ThemeChanged)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         ThemeOwner.Invalidate();
         try { UpdateEmbeddedContents(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Theme notification callbacks failed.", errors);
@@ -255,8 +255,8 @@ public partial class Window
     protected override void OnNotification(int what)
     {
         base.OnNotification(what);
-        if (what == NotificationVPMouseEnter && !_mouseInContent) { _mouseInContent = true; EmitWindowSignal(MouseEntered); }
-        else if (what == NotificationVPMouseExit && _mouseInContent) { _mouseInContent = false; EmitWindowSignal(MouseExited); }
+        if (what == NotificationVPMouseEnter && !_mouseInContent) { _mouseInContent = true; EmitWindowSignal(BeginEventEmission(MouseEntered)); }
+        else if (what == NotificationVPMouseExit && _mouseInContent) { _mouseInContent = false; EmitWindowSignal(BeginEventEmission(MouseExited)); }
         else if (what == NotificationEnterTree) ThemeOwner.NotifySelf();
         else if (what is NotificationParented or NotificationUnparented) ThemeOwner.ParentChanged();
         else if (what == NotificationThemeChanged) ProcessThemeNotification();

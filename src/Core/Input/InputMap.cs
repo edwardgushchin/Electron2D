@@ -64,7 +64,7 @@ public sealed partial class InputMap : ElectronObject
 
         foreach (var action in previousActions.Concat(candidates.Select(static item => item.Name)).Distinct(StringComparer.Ordinal))
             Input.Service.OnActionMapChanged(action, removed: false);
-        ProjectSettingsLoadedCore?.Invoke();
+        BeginEventEmission(ProjectSettingsLoadedCore)?.Invoke();
     }
 
     private static List<(string Name, ActionDefinition Definition)> BuildProjectActions(ProjectSettingsRegistry settings)

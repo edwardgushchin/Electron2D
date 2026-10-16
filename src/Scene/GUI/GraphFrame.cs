@@ -15,9 +15,9 @@ public class GraphFrame : GraphElement
     /// <summary>Gets or sets the displayed title.</summary>
     public string Title { get { CheckGraph(); return _titlebar.Label.Text; } set { MutableGraph(); ArgumentNullException.ThrowIfNull(value); _titlebar.Label.Text = value; UpdateMinimumSize(); QueueSort(); QueueRedraw(); } }
     /// <summary>Gets or sets automatic bounds around attached elements.</summary>
-    public bool AutoshrinkEnabled { get { CheckGraph(); return _autoshrink; } set { MutableGraph(); if (_autoshrink == value) return; _autoshrink = value; QueueRedraw(); AutoshrinkChanged?.Invoke(); } }
+    public bool AutoshrinkEnabled { get { CheckGraph(); return _autoshrink; } set { MutableGraph(); if (_autoshrink == value) return; _autoshrink = value; QueueRedraw(); BeginEventEmission(AutoshrinkChanged)?.Invoke(); } }
     /// <summary>Gets or sets nonnegative padding around automatic attachment bounds.</summary>
-    public int AutoshrinkMargin { get { CheckGraph(); return _margin; } set { MutableGraph(); if (value < 0) throw new ArgumentOutOfRangeException(nameof(value)); if (_margin == value) return; _margin = value; AutoshrinkChanged?.Invoke(); } }
+    public int AutoshrinkMargin { get { CheckGraph(); return _margin; } set { MutableGraph(); if (value < 0) throw new ArgumentOutOfRangeException(nameof(value)); if (_margin == value) return; _margin = value; BeginEventEmission(AutoshrinkChanged)?.Invoke(); } }
     /// <summary>Gets or sets the nonnegative draggable edge width.</summary>
     public int DragMargin { get { CheckGraph(); return _dragMargin; } set { MutableGraph(); if (value < 0) throw new ArgumentOutOfRangeException(nameof(value)); _dragMargin = value; } }
     /// <summary>Gets or sets optional panel tint.</summary>

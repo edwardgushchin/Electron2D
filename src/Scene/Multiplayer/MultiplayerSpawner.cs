@@ -78,8 +78,8 @@ public class MultiplayerSpawner : Node
     internal SpawnedNodeRecord TrackRemote(Node node, int source, uint id, int scene, uint factory, byte[] arguments)
     { var record = new SpawnedNodeRecord(this, node, scene, factory, arguments) { RemoteSource = source, ID = id }; _tracked.Add(node, record); record.Exit = _ => _tracked.Remove(node); node.TreeExiting += record.Exit; return record; }
     internal Node SpawnParent => _parent ?? throw new InvalidOperationException("SpawnPath does not select a valid parent.");
-    internal void EmitSpawned(Node node) => Emit(Spawned, node);
-    internal void EmitDespawned(Node node) => Emit(Despawned, node);
+    internal void EmitSpawned(Node node) => Emit(BeginEventEmission(Spawned), node);
+    internal void EmitDespawned(Node node) => Emit(BeginEventEmission(Despawned), node);
     private static void Emit(Action<Node>? handlers, Node node) { List<Exception>? errors = null; foreach (var callback in Delegate.EnumerateInvocationList(handlers)) try { callback(node); } catch (Exception e) { (errors ??= []).Add(e); } if (errors is not null) throw new AggregateException(errors); }
     internal void Rebind()
     {

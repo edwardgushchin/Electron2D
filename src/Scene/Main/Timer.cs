@@ -384,6 +384,6 @@ public class Timer : Node
         else
             _timeLeft += _waitTime;
 
-        Timeout?.Invoke(this);
+        BeginEventEmission(Timeout)?.Invoke(this);
     }
 }

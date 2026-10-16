@@ -31,7 +31,7 @@ public class MultiMeshInstance : Entity
     public Texture? Texture
     {
         get { ThrowIfDisposed(); return _texture; }
-        set { EnsureMutable(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (ReferenceEquals(_texture, value)) return; _texture = value; InvalidateCanvas(); TextureChanged?.Invoke(); }
+        set { EnsureMutable(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (ReferenceEquals(_texture, value)) return; _texture = value; InvalidateCanvas(); BeginEventEmission(TextureChanged)?.Invoke(); }
     }
     /// <summary>Occurs after replacing the borrowed texture and scheduling redraw.</summary>
     public event Action? TextureChanged;

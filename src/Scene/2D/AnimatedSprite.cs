@@ -65,7 +65,7 @@ public class AnimatedSprite : Entity
             Stop(); if (IsDisposed) return;
             NotifyPropertyListChanged(); if (IsDisposed) return;
             InvalidateCanvas(); UpdateConfigurationWarnings(); if (IsDisposed) return;
-            SpriteFramesChanged?.Invoke();
+            BeginEventEmission(SpriteFramesChanged)?.Invoke();
         }
     }
 
@@ -95,7 +95,7 @@ public class AnimatedSprite : Entity
         {
             EnsureMutable(); ArgumentNullException.ThrowIfNull(value);
             if (_animation == value) return;
-            _animation = value; AnimationChanged?.Invoke(); if (IsDisposed) return;
+            _animation = value; BeginEventEmission(AnimationChanged)?.Invoke(); if (IsDisposed) return;
             if (_frames is null) { _animation = ""; Stop(); throw new InvalidOperationException("No frame library is assigned."); }
             if (_animation == "") { Stop(); return; }
             if (!_frames.TryRead(_animation, _frame, out var count, out _, out _, out _, out _))
@@ -226,7 +226,7 @@ public class AnimatedSprite : Entity
             if (name != _animation)
             {
                 _animation = name; SetFrameAndProgress(fromEnd ? count - 1 : 0, fromEnd ? 1 : 0); if (IsDisposed) return;
-                AnimationChanged?.Invoke(); if (IsDisposed) return;
+                BeginEventEmission(AnimationChanged)?.Invoke(); if (IsDisposed) return;
             }
             else
             {
@@ -276,7 +276,7 @@ public class AnimatedSprite : Entity
         var changed = _frame != frame;
         _frame = Math.Max(0, has ? Math.Min(frame, Math.Max(0, count - 1)) : frame);
         CalculateFrameSpeed(); _frameProgress = progress;
-        if (changed) { InvalidateCanvas(); FrameChanged?.Invoke(); }
+        if (changed) { InvalidateCanvas(); BeginEventEmission(FrameChanged)?.Invoke(); }
     }
 
     private void StopInternal(bool reset)
@@ -336,14 +336,14 @@ public class AnimatedSprite : Entity
                 if (backwards ? _frame <= 0 : _frame >= count - 1)
                 {
                     _frame = backwards ? 0 : count - 1;
-                    if (loop == SpriteFrames.LoopMode.None) { Pause(); if (!IsDisposed) AnimationFinished?.Invoke(); return; }
+                    if (loop == SpriteFrames.LoopMode.None) { Pause(); if (!IsDisposed) BeginEventEmission(AnimationFinished)?.Invoke(); return; }
                     if (loop == SpriteFrames.LoopMode.PingPong) _customSpeed = -_customSpeed;
                     else _frame = backwards ? count - 1 : 0;
-                    AnimationLooped?.Invoke(); if (IsDisposed || _frames is null) return;
+                    BeginEventEmission(AnimationLooped)?.Invoke(); if (IsDisposed || _frames is null) return;
                 }
                 else _frame += backwards ? -1 : 1;
                 CalculateFrameSpeed(); _frameProgress = backwards ? 1 : 0;
-                InvalidateCanvas(); FrameChanged?.Invoke(); if (IsDisposed || _frames is null) return;
+                InvalidateCanvas(); BeginEventEmission(FrameChanged)?.Invoke(); if (IsDisposed || _frames is null) return;
             }
             var consumed = Math.Min((backwards ? _frameProgress : 1d - _frameProgress) / absoluteSpeed, remaining);
             _frameProgress = (float)(_frameProgress + consumed * absoluteSpeed * (backwards ? -1 : 1));

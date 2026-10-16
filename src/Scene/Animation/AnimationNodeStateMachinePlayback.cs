@@ -155,8 +155,8 @@ public sealed class AnimationNodeStateMachinePlayback : Resource
     {
         if (_test || state.Length == 0) return;
         if (_machine!.States.TryGetValue(state, out var entry) && entry.Node is AnimationNodeStateMachine { StateMachineType: AnimationStateMachineType.Grouped }) return;
-        if (state is not "Start" and not "End" && _signals.TryGetValue(state, out var signals)) foreach (var signal in signals) { if (signal.Owner.IsDisposed) continue; if (start) signal.Owner.StateStarted?.Invoke(signal.Name); else signal.Owner.StateFinished?.Invoke(signal.Name); }
-        if (!IsDisposed) { if (start) StateStarted?.Invoke(state); else StateFinished?.Invoke(state); }
+        if (state is not "Start" and not "End" && _signals.TryGetValue(state, out var signals)) foreach (var signal in signals) { if (signal.Owner.IsDisposed) continue; if (start) signal.Owner.BeginEventEmission(signal.Owner.StateStarted)?.Invoke(signal.Name); else signal.Owner.BeginEventEmission(signal.Owner.StateFinished)?.Invoke(signal.Name); }
+        if (!IsDisposed) { if (start) BeginEventEmission(StateStarted)?.Invoke(state); else BeginEventEmission(StateFinished)?.Invoke(state); }
     }
     private void SetCurrent(string name)
     { _current = name; _currentState = _machine!.States[name]; Signal(name, true); }

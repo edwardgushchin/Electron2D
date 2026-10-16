@@ -17,7 +17,7 @@ public partial class OptionButton : Button
     {
         ToggleMode = true; Alignment = HorizontalAlignment.Left; ActionMode = ButtonActionMode.ButtonPress; ShortcutInputEnabled = true;
         _popup = new PopupMenu { Name = "_option_popup", ShrinkWidth = false }; AddChild(_popup, InternalMode.Front);
-        _popup.IndexPressed += SelectedByUser; _popup.IDFocused += id => ItemFocused?.Invoke(_popup.GetItemIndex(id)); _popup.PopupHide += PopupHidden; _popup.MenuChanged += MenuChanged;
+        _popup.IndexPressed += SelectedByUser; _popup.IDFocused += id => BeginEventEmission(ItemFocused)?.Invoke(_popup.GetItemIndex(id)); _popup.PopupHide += PopupHidden; _popup.MenuChanged += MenuChanged;
     }
     /// <summary>Occurs after a user activation commits the selected index and caption.</summary>
     public event Action<int>? ItemSelected;
@@ -68,7 +68,7 @@ public partial class OptionButton : Button
         if (item == _selectedItem && index == _selected && !_allowReselect) return; _selected = index; _selectedItem = item; var revision = ++_selectionRevision; List<Exception>? errors = null; _changing++;
         try { for (var i = 0; i < _popup.ItemCount; i++) { try { _popup.SetItemChecked(i, _popup.BorrowMenuItem(i) == item); } catch (Exception e) { CollectException(ref errors, e); } if (revision != _selectionRevision || IsDisposed) break; } }
         finally { _changing--; }
-        if (!IsDisposed && revision == _selectionRevision) { try { Reconcile(); } catch (Exception e) { CollectException(ref errors, e); } if (emit && IsInsideTree && revision == _selectionRevision) try { ItemSelected?.Invoke(_selected); } catch (Exception e) { CollectException(ref errors, e); } }
+        if (!IsDisposed && revision == _selectionRevision) { try { Reconcile(); } catch (Exception e) { CollectException(ref errors, e); } if (emit && IsInsideTree && revision == _selectionRevision) try { BeginEventEmission(ItemSelected)?.Invoke(_selected); } catch (Exception e) { CollectException(ref errors, e); } }
         ThrowCollected("Option selection callbacks failed.", errors);
     }
     private void MutateItems(Action mutation, Action? complete = null)

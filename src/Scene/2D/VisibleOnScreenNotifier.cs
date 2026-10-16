@@ -59,7 +59,7 @@ public class VisibleOnScreenNotifier : Entity
     internal void RaiseScreenChange()
     {
         List<Exception>? errors = null;
-        try { if (_onScreen) ScreenEntered?.Invoke(); else ScreenExited?.Invoke(); }
+        try { if (_onScreen) BeginEventEmission(ScreenEntered)?.Invoke(); else BeginEventEmission(ScreenExited)?.Invoke(); }
         catch (Exception error) { CollectException(ref errors, error); }
         try { if (!IsDisposed && IsInsideTree) ApplyScreenState(); }
         catch (Exception error) { CollectException(ref errors, error); }

@@ -44,7 +44,7 @@ public sealed partial class NavigationRegion : Entity
     public NavigationPolygon? NavigationPolygon
     {
         get { ThrowIfDisposed(); return _polygon; }
-        set { EnsureMutable(); NavigationServer.RegionSetNavigationPolygon(_rid, value); _polygon = value; NavigationPolygonChanged?.Invoke(); }
+        set { EnsureMutable(); NavigationServer.RegionSetNavigationPolygon(_rid, value); _polygon = value; BeginEventEmission(NavigationPolygonChanged)?.Invoke(); }
     }
     /// <summary>Occurs after polygon replacement or an authored resource edit stages server geometry.</summary>
     /// <remarks>Attached resource edits from another thread deliver this signal through the scene owner queue.</remarks>
@@ -53,8 +53,8 @@ public sealed partial class NavigationRegion : Entity
     {
         if (IsDisposed) return;
         if (Tree is { } tree && !tree.IsOwnerThread)
-        { if (!tree.IsClosing) tree.Defer(() => { if (!IsDisposed && Tree == tree) NavigationPolygonChanged?.Invoke(); }); }
-        else NavigationPolygonChanged?.Invoke();
+        { if (!tree.IsClosing) tree.Defer(() => { if (!IsDisposed && Tree == tree) BeginEventEmission(NavigationPolygonChanged)?.Invoke(); }); }
+        else BeginEventEmission(NavigationPolygonChanged)?.Invoke();
     }
     /// <summary>Returns the explicit map override or the selected World's map while attached.</summary>
     /// <returns>Returns the explicit map override or the selected World's map while attached.</returns>

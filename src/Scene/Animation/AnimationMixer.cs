@@ -67,8 +67,8 @@ public partial class AnimationMixer : Node
     {
         EnsureAnimationMutable(); ArgumentNullException.ThrowIfNull(library); ObjectDisposedException.ThrowIf(library.IsDisposed, library); if (!AnimationLibrary.ValidName(name, true) || _libraries.ContainsKey(name)) throw new ArgumentException("Invalid or occupied library namespace.", nameof(name));
         foreach (var item in _libraries.Values) if (ReferenceEquals(item.Library, library)) throw new ArgumentException("The library is already registered.", nameof(library));
-        Action<Resource> changed = _ => { _animationIndexDirty = true; InvalidateBindings(); if (!IsDisposed) AnimationListChanged?.Invoke(); };
-        _libraries.Add(name, (library, changed)); library.Changed += changed; _animationIndexDirty = true; InvalidateBindings(); NotifyPropertyListChanged(); AnimationListChanged?.Invoke(); if (!IsDisposed) AnimationLibrariesUpdated?.Invoke();
+        Action<Resource> changed = _ => { _animationIndexDirty = true; InvalidateBindings(); if (!IsDisposed) BeginEventEmission(AnimationListChanged)?.Invoke(); };
+        _libraries.Add(name, (library, changed)); library.Changed += changed; _animationIndexDirty = true; InvalidateBindings(); NotifyPropertyListChanged(); BeginEventEmission(AnimationListChanged)?.Invoke(); if (!IsDisposed) BeginEventEmission(AnimationLibrariesUpdated)?.Invoke();
     }
     /// <summary>Returns a borrowed library by exact namespace.</summary>
     /// <param name="name">The exact ordinal name.</param>
@@ -80,12 +80,12 @@ public partial class AnimationMixer : Node
     public string[] GetAnimationLibraryList() { ThrowIfDisposed(); return _libraries.Keys.Order(StringComparer.Ordinal).ToArray(); }
     /// <summary>Removes a library without disposing it.</summary>
     /// <param name="name">The ordinal animation, library or marker name; empty names are accepted only where explicitly documented.</param>
-    public void RemoveAnimationLibrary(string name) { EnsureAnimationMutable(); var item = _libraries[name]; _libraries.Remove(name); item.Library.Changed -= item.Changed; _animationIndexDirty = true; InvalidateBindings(); NotifyPropertyListChanged(); AnimationListChanged?.Invoke(); if (!IsDisposed) AnimationLibrariesUpdated?.Invoke(); }
+    public void RemoveAnimationLibrary(string name) { EnsureAnimationMutable(); var item = _libraries[name]; _libraries.Remove(name); item.Library.Changed -= item.Changed; _animationIndexDirty = true; InvalidateBindings(); NotifyPropertyListChanged(); BeginEventEmission(AnimationListChanged)?.Invoke(); if (!IsDisposed) BeginEventEmission(AnimationLibrariesUpdated)?.Invoke(); }
     /// <summary>Renames a library namespace without changing its resources.</summary>
     /// <param name="newName">An unoccupied valid replacement name.</param>
     /// <param name="name">The exact ordinal name.</param>
     public void RenameAnimationLibrary(string name, string newName)
-    { EnsureAnimationMutable(); if (!AnimationLibrary.ValidName(newName, true) || _libraries.ContainsKey(newName)) throw new ArgumentException("Invalid or occupied library namespace.", nameof(newName)); var item = _libraries[name]; _libraries.Remove(name); _libraries.Add(newName, item); _animationIndexDirty = true; InvalidateBindings(); NotifyPropertyListChanged(); AnimationListChanged?.Invoke(); if (!IsDisposed) AnimationLibrariesUpdated?.Invoke(); }
+    { EnsureAnimationMutable(); if (!AnimationLibrary.ValidName(newName, true) || _libraries.ContainsKey(newName)) throw new ArgumentException("Invalid or occupied library namespace.", nameof(newName)); var item = _libraries[name]; _libraries.Remove(name); _libraries.Add(newName, item); _animationIndexDirty = true; InvalidateBindings(); NotifyPropertyListChanged(); BeginEventEmission(AnimationListChanged)?.Invoke(); if (!IsDisposed) BeginEventEmission(AnimationLibrariesUpdated)?.Invoke(); }
     /// <summary>Tests a qualified library/name or an unqualified default-library animation.</summary>
     /// <param name="name">The exact ordinal name.</param>
     public bool HasAnimation(string name) { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(name); EnsureAnimationIndex(); return _animationIndex.TryGetValue(name, out var item) && !item.Library.IsDisposed; }
@@ -111,7 +111,7 @@ public partial class AnimationMixer : Node
     /// <param name="delta">Finite signed elapsed seconds; automatic updates use the inherited scaled delta.</param>
     public void Advance(double delta) { EnsureAnimationMutable(); Animation.Finite(delta); if (_advancing) throw new InvalidOperationException("Animation advancement cannot reenter."); if (!_active) return; _advancing = true; try { AdvanceAnimation(delta); } finally { _advancing = false; } }
     /// <summary>Clears cached typed bindings and stops still-controlled child players while preserving their values.</summary>
-    public void ClearCaches() { EnsureAnimationMutable(); InvalidateBindings(); CachesCleared?.Invoke(); }
+    public void ClearCaches() { EnsureAnimationMutable(); InvalidateBindings(); BeginEventEmission(CachesCleared)?.Invoke(); }
     /// <summary>Evaluates a controller update. The base mixer has no playback source.</summary>
     internal virtual void AdvanceAnimation(double delta) { if (NeedsBlending) ApplyBlend([], delta); }
     private int _evaluationDepth;
@@ -149,8 +149,8 @@ public partial class AnimationMixer : Node
     internal bool IsBindingCurrent(Animation animation, long generation) => !IsDisposed && _active && _bindingGeneration == generation && (ReferenceEquals(_cachedAnimation, animation) || (!_blendDirty && _blendCaches.ContainsKey(animation)));
     internal void EnsureAnimationMutable() => EnsureMutable();
     internal void InvalidateBindings(bool rebuild = true) { InvalidateEvaluation(); if (rebuild) _blendDirty = true; ClearCapture(); StopNestedPlayback(); StopAudioPlayback(); if (rebuild) { _legacyCaches.Clear(); _nestedBindings.Clear(); ClearAudioBindings(); } }
-    internal void Started(string name) => AnimationStarted?.Invoke(name);
-    internal void Finished(string name) => AnimationFinished?.Invoke(name);
+    internal void Started(string name) => BeginEventEmission(AnimationStarted)?.Invoke(name);
+    internal void Finished(string name) => BeginEventEmission(AnimationFinished)?.Invoke(name);
     private void TreeMutated(SceneTree tree) => InvalidateBindings();
     private void UpdateScheduling() => SetInternalProcessing(_active && _callbackModeProcess == AnimationCallbackModeProcess.Idle, _active && _callbackModeProcess == AnimationCallbackModeProcess.Physics);
     /// <summary>Initializes internal idle animation scheduling.</summary>

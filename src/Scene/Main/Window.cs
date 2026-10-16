@@ -65,7 +65,7 @@ public partial class Window : Viewport
             UpdateEmbeddedContents();
             QueueEmbeddedRedraw();
             UpdateConfigurationWarnings();
-            TitleChanged?.Invoke();
+            BeginEventEmission(TitleChanged)?.Invoke();
         }
     }
 
@@ -169,7 +169,7 @@ public partial class Window : Viewport
             List<Exception>? errors = null;
             try { UpdateExclusiveSelection(); } catch (Exception error) { CollectException(ref errors, error); }
             try { EmbeddedVisibilityChanged(); } catch (Exception error) { CollectException(ref errors, error); }
-            try { VisibilityChanged?.Invoke(); }
+            try { BeginEventEmission(VisibilityChanged)?.Invoke(); }
             catch (Exception error) { CollectException(ref errors, error); }
             foreach (var node in EnumerateDepthFirst())
             {
@@ -418,7 +418,7 @@ public partial class Window : Viewport
             NotificationWmDpiChange => DpiChanged,
             _ => null
         };
-        try { EmitWindowSignal(handlers); } catch (Exception error) { CollectException(ref errors, error); }
+        try { EmitWindowSignal(BeginEventEmission(handlers)); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Window event callbacks failed.", errors);
     }
     private static void EmitWindowSignal(Action? handlers)
@@ -431,7 +431,7 @@ public partial class Window : Viewport
     }
     private void HandleTextInput(string text) => Tree?.DispatchCommittedText(Tree.GetEmbeddedTextWindow(this), text);
     private void HandleTextEditing(string text, Vector2i selection) => Tree?.DispatchIMEComposition(Tree.GetEmbeddedTextWindow(this), text, selection);
-    private void HandleFilesDropped(IReadOnlyList<string> paths) => FilesDropped?.Invoke(paths);
+    private void HandleFilesDropped(IReadOnlyList<string> paths) => BeginEventEmission(FilesDropped)?.Invoke(paths);
 
     private void CommitSize(Vector2i size)
     {

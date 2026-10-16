@@ -87,7 +87,7 @@ public abstract partial class CanvasItem : Node
     {
         EnsureMutable();
         if (sizeChanged) QueueRedraw();
-        ItemRectChanged?.Invoke(this);
+        BeginEventEmission(ItemRectChanged)?.Invoke(this);
     }
 
     /// <summary>Invalidates global transforms and delivers an enabled local-transform notification.</summary>
@@ -134,9 +134,9 @@ public abstract partial class CanvasItem : Node
         if (what is NotificationVisibilityChanged or NotificationLocalTransformChanged or NotificationTransformChanged)
         {
             base.OnNotification(what);
-            if (what == NotificationVisibilityChanged) VisibilityChanged?.Invoke(this);
-            else if (what == NotificationLocalTransformChanged) LocalTransformChanged?.Invoke(this);
-            else TransformChanged?.Invoke(this);
+            if (what == NotificationVisibilityChanged) BeginEventEmission(VisibilityChanged)?.Invoke(this);
+            else if (what == NotificationLocalTransformChanged) BeginEventEmission(LocalTransformChanged)?.Invoke(this);
+            else BeginEventEmission(TransformChanged)?.Invoke(this);
             return;
         }
         if (what is not (NotificationParented or NotificationUnparented))
@@ -621,7 +621,7 @@ public abstract partial class CanvasItem : Node
             if (IsVisibleInTree) InvalidateCanvas();
             else if (!visible)
             {
-                try { Hidden?.Invoke(this); }
+                try { BeginEventEmission(Hidden)?.Invoke(this); }
                 catch (Exception error) { CollectException(ref errors, error); }
             }
             foreach (var child in AllChildren.ToArray())

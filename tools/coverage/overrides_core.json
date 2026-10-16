@@ -1,5 +1,7 @@
 {
   "mappings": [
+    {"godot": "Object::method:set_block_signals(bool:)", "electron2d": "method:Electron2D.ElectronObject.SetBlockSignals(System.Boolean)", "reason": "Pinned Object.xml class and both declarations have no deprecated metadata. ADRs 0002/0010: atomic per-object publication policy applies to all ordinary typed engine events, including buffered physics signals and retained service facades. Selected snapshots complete once; blocked emissions preserve subscriptions/one-shot tokens, enqueue nothing and are not replayed. Accepted deferred callbacks, numeric notifications, virtual/direct callbacks, state/revisions and deterministic Disposed cleanup remain independent. ObjectSignalBlockingTests, all 18 physical accessors and public-only selected CPU/GPU owner/separate full-frame consumers verify lifecycle, errors, actual overlap/picking/revision updates and strict warm zero owner/all-thread bytes. Hardware/native/foreign/network/performance acceptance remains open."},
+    {"godot": "Object::method:is_blocking_signals()", "electron2d": "method:Electron2D.ElectronObject.IsBlockingSignals()", "reason": "Pinned Object.xml class and both declarations have no deprecated metadata. ADRs 0002/0010: atomic per-object publication policy applies to all ordinary typed engine events, including buffered physics signals and retained service facades. Selected snapshots complete once; blocked emissions preserve subscriptions/one-shot tokens, enqueue nothing and are not replayed. Accepted deferred callbacks, numeric notifications, virtual/direct callbacks, state/revisions and deterministic Disposed cleanup remain independent. ObjectSignalBlockingTests, all 18 physical accessors and public-only selected CPU/GPU owner/separate full-frame consumers verify lifecycle, errors, actual overlap/picking/revision updates and strict warm zero owner/all-thread bytes. Hardware/native/foreign/network/performance acceptance remains open."},
     {
       "godot": "Resource::property:resource_local_to_scene",
       "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
@@ -1010,6 +1012,7 @@
     }
   ],
   "extras": [
+    {"electron2d": "method:Electron2D.ElectronObject.BeginEventEmission`1(TDelegate)", "reason": "ADRs 0002/0010: protected typed publisher gateway for ordinary C# events. Returns the same concrete delegate or null once per emission without allocations, boxing, dynamic signal names or arity adapters; custom borrowed-span signatures and caller lifetime/thread validation remain intact. Direct CLR delegate calls remain ordinary language operations.", "adr": "adr-0010"},
     {"electron2d": "property:Electron2D.Translation.PluralSelector()", "reason": "Typed optional borrowed caller delegate overrides prepared catalog or locale rules under ADR 0007; cannot be stored in resource files."},
     {"electron2d": "T:Electron2D.JoypadInfo", "reason": "Typed projection of the platform-info dictionary returned by Input.GetJoyInfo; omits unavailable platform-specific fields.", "adr": "docs/decisions/input.md#adr-0038"},
     {"electron2d": "property:Electron2D.JoypadInfo.RawName()", "reason": "Typed raw_name field from the reference joypad-info dictionary.", "adr": "docs/decisions/input.md#adr-0038"},
@@ -1610,6 +1613,7 @@
     }
   ],
   "statusGroups": [
+    {"godot": ["Object::method:set_block_signals(bool:)", "Object::method:is_blocking_signals()"], "state": "Implemented", "reason": "Pinned Object.xml class and both declarations have no deprecated metadata. ADRs 0002/0010: atomic per-object publication policy applies to all ordinary typed engine events, including buffered physics signals and retained service facades. Selected snapshots complete once; blocked emissions preserve subscriptions/one-shot tokens, enqueue nothing and are not replayed. Accepted deferred callbacks, numeric notifications, virtual/direct callbacks, state/revisions and deterministic Disposed cleanup remain independent. ObjectSignalBlockingTests, all 18 physical accessors and public-only selected CPU/GPU owner/separate full-frame consumers verify lifecycle, errors, actual overlap/picking/revision updates and strict warm zero owner/all-thread bytes. Hardware/native/foreign/network/performance acceptance remains open."},
     {
       "godot": [
         "Resource::method:_reset_state()",

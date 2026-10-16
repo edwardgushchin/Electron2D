@@ -734,7 +734,7 @@ public partial class Control : CanvasItem
         else if (what == NotificationExitCanvas) DisconnectLayoutSource();
         else if (what == NotificationVisibilityChanged && IsVisibleInTree) { UpdateMinimumSize(); UpdateMaximumSize(); }
         else if (what is NotificationLayoutDirectionChanged or NotificationTranslationChanged) Reflow();
-        else if (what == NotificationResized) Resized?.Invoke();
+        else if (what == NotificationResized) BeginEventEmission(Resized)?.Invoke();
     }
 
     /// <inheritdoc />
@@ -768,7 +768,7 @@ public partial class Control : CanvasItem
         if (minimum == _lastMinimumSize) return;
         _lastMinimumSize = minimum;
         Reflow();
-        MinimumSizeChanged?.Invoke();
+        BeginEventEmission(MinimumSizeChanged)?.Invoke();
     }
 
     private void ApplyMaximumSizeUpdate()
@@ -779,7 +779,7 @@ public partial class Control : CanvasItem
         if (maximum == _lastMaximumSize) return;
         _lastMaximumSize = maximum;
         Reflow();
-        MaximumSizeChanged?.Invoke();
+        BeginEventEmission(MaximumSizeChanged)?.Invoke();
     }
 
     private void Reflow()

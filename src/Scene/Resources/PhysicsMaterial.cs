@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>Reusable friction and bounce settings for a two-dimensional physics body.</summary>
 /// <remarks>Bodies borrow this resource. Property edits and resource copies raise <see cref="Resource.Changed"/>.
-/// Revision polling updates attached fixtures before their next physics step even when an earlier observer throws.</remarks>
+/// Revision polling updates attached fixtures before their next physics step even when an earlier observer throws or ordinary signals are blocked.</remarks>
 public sealed class PhysicsMaterial : Resource
 {
     private float _friction = 1f;

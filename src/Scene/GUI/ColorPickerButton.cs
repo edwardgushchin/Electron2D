@@ -33,17 +33,17 @@ public partial class ColorPickerButton : Button
     private void CreatePicker()
     {
         if (_picker != null) return; if (_creating) throw new InvalidOperationException("Color editor creation cannot reenter."); _creating = true;
-        try { _popup = new OwnedPopup(this) { Name = "_color_popup" }; AddChild(_popup, InternalMode.Front); _picker = new OwnedPicker(this) { Name = "Picker", Color = _color, EditAlpha = _editAlpha, EditIntensity = _editIntensity }; _popup.AddChild(_picker); _picker.SetOpeningColor(_color); _picker.ColorChanged += PickerChanged; _popup.AboutToPopup += BeforePopup; _popup.PopupHide += Closed; PickerCreated?.Invoke(); }
+        try { _popup = new OwnedPopup(this) { Name = "_color_popup" }; AddChild(_popup, InternalMode.Front); _picker = new OwnedPicker(this) { Name = "Picker", Color = _color, EditAlpha = _editAlpha, EditIntensity = _editIntensity }; _popup.AddChild(_picker); _picker.SetOpeningColor(_color); _picker.ColorChanged += PickerChanged; _popup.AboutToPopup += BeforePopup; _popup.PopupHide += Closed; BeginEventEmission(PickerCreated)?.Invoke(); }
         finally { _creating = false; }
     }
-    private void PickerChanged(Color color) { _color = color; QueueRedraw(); ColorChanged?.Invoke(color); }
+    private void PickerChanged(Color color) { _color = color; QueueRedraw(); BeginEventEmission(ColorChanged)?.Invoke(color); }
     private void BeforePopup() { _openingColor = _color; _picker!.SetOpeningColor(_color); _opened = true; SetPressedNoSignal(true); }
     private void Closed()
     {
         if (!_opened || _disposing) return; _opened = false; List<Exception>? errors = null;
-        try { if (_popup!.Canceled) { Color = _openingColor; ColorChanged?.Invoke(_color); } } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (_popup!.Canceled) { Color = _openingColor; BeginEventEmission(ColorChanged)?.Invoke(_color); } } catch (Exception error) { CollectException(ref errors, error); }
         try { if (!IsDisposed) SetPressedNoSignal(false); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed) PopupClosed?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!IsDisposed) BeginEventEmission(PopupClosed)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Color popup closing callbacks failed.", errors);
     }
     /// <inheritdoc />

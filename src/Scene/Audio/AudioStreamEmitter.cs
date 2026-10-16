@@ -20,7 +20,7 @@ public sealed class AudioStreamEmitter : Entity
     {
         _globalPanningStrength = ProjectSettings.GetWithOverride(ProjectSettings.AudioGeneral2DPanningStrength);
         _player.Name = "SpatialPlayback";
-        _player.Finished += () => Finished?.Invoke();
+        _player.Finished += () => BeginEventEmission(Finished)?.Invoke();
         AddChild(_player, InternalMode.Back);
     }
 

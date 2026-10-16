@@ -227,3 +227,5 @@ participating world through removal and private-view retirement. Status failure
 preserves live data; committed cleanup attempts all users, retains exact errors
 and unregisters the RID. Public-only checks retain unrelated slots, exact Area
 entry/exit histories and zero warmed managed bytes. Wider acceptance stays open.
+
+Inherited [ordinary event blocking](../classes/ElectronObject.md#ordinary-event-delivery) suppresses new event emissions at the publisher, preserving subscriptions and already accepted deferred work. Notifications, virtual callbacks, committed physical state and resource revisions continue; Disposed cleanup remains independent.

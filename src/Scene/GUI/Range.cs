@@ -265,9 +265,9 @@ public abstract class Range : Control
         if (value)
         {
             try { OnValueChanged(_shared.Value); } catch (Exception error) { CollectException(ref errors, error); }
-            try { if (signal && _localSignalSuppressionDepth == 0) ValueChanged?.Invoke(_shared.Value); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (signal && _localSignalSuppressionDepth == 0) BeginEventEmission(ValueChanged)?.Invoke(_shared.Value); } catch (Exception error) { CollectException(ref errors, error); }
         }
-        else try { if (_localSignalSuppressionDepth == 0) Changed?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        else try { if (_localSignalSuppressionDepth == 0) BeginEventEmission(Changed)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         if (!IsDisposed) QueueRedraw();
         ThrowCollected("Range notifications failed.", errors);
     }

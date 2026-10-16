@@ -372,7 +372,7 @@ public abstract partial class ElectronObject : IDisposable
     protected void NotifyPropertyListChanged()
     {
         ThrowIfDisposed();
-        PropertyListChanged?.Invoke(this);
+        BeginEventEmission(PropertyListChanged)?.Invoke(this);
     }
 
     /// <summary>Synchronously raises <see cref="ScriptChanged"/>.</summary>
@@ -382,7 +382,7 @@ public abstract partial class ElectronObject : IDisposable
     protected void NotifyScriptChanged()
     {
         ThrowIfDisposed();
-        ScriptChanged?.Invoke(this);
+        BeginEventEmission(ScriptChanged)?.Invoke(this);
     }
 
     /// <summary>Releases resources owned by a derived class.</summary>

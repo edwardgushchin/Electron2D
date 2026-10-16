@@ -21,8 +21,9 @@ public sealed partial class Shader
     /// <summary>Atomically replaces both canvas stages after copying and validating their complete interface.</summary>
     /// <param name="vertexBytecode">The replacement vertex SPIR-V module.</param>
     /// <param name="fragmentBytecode">The replacement fragment SPIR-V module.</param>
-    /// <remarks>Failure preserves both old stages. Success publishes one immutable version and emits Changed once.
-    /// Matching material and per-item values migrate by name and logical type, independently of stage bindings.</remarks>
+    /// <remarks>Failure preserves both old stages. Success publishes one immutable version and emits Changed once
+    /// unless signals are blocked. Material and per-item values still migrate by name and logical type,
+    /// independently of stage bindings or event delivery.</remarks>
     /// <exception cref="ArgumentException">A module or shared parameter/interface is invalid.</exception>
     /// <exception cref="NotSupportedException">A module uses an unsupported canvas interface.</exception>
     /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>

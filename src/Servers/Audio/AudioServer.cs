@@ -76,20 +76,20 @@ public sealed partial class AudioServer : ElectronObject
         Check(); if (_buses.Count == 255) throw new ArgumentOutOfRangeException(nameof(atPosition)); if (atPosition < 0) atPosition = _buses.Count;
         if (atPosition == 0 || atPosition > _buses.Count) throw new ArgumentOutOfRangeException(nameof(atPosition));
         var name = "New Bus"; var number = 2; while (GetBusIndexCore(name) >= 0) name = "New Bus " + number++;
-        _buses.Insert(atPosition, new(name)); RebuildGraph(); BusLayoutChangedCore?.Invoke();
+        _buses.Insert(atPosition, new(name)); RebuildGraph(); BeginEventEmission(BusLayoutChangedCore)?.Invoke();
     }
     internal void RemoveBusCore(int index)
     {
         var bus = GetBus(index); if (index == 0) throw new ArgumentOutOfRangeException(nameof(index)); _buses.RemoveAt(index); List<Exception>? errors = null;
         try { RebuildGraph(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         try { ReleaseEffects(bus.RuntimeEffects); } catch (Exception error) { Node.CollectException(ref errors, error); }
-        try { BusLayoutChangedCore?.Invoke(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        try { BeginEventEmission(BusLayoutChangedCore)?.Invoke(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         Node.ThrowCollected("Audio bus removal failed.", errors);
     }
     internal void MoveBusCore(int index, int toIndex)
     {
         var bus = GetBus(index); if (index == 0) throw new ArgumentOutOfRangeException(nameof(index)); if (toIndex < 0) toIndex = _buses.Count;
-        if (toIndex == 0 || toIndex > _buses.Count) throw new ArgumentOutOfRangeException(nameof(toIndex)); _buses.RemoveAt(index); if (toIndex > index) toIndex--; _buses.Insert(toIndex, bus); RebuildGraph(); BusLayoutChangedCore?.Invoke();
+        if (toIndex == 0 || toIndex > _buses.Count) throw new ArgumentOutOfRangeException(nameof(toIndex)); _buses.RemoveAt(index); if (toIndex > index) toIndex--; _buses.Insert(toIndex, bus); RebuildGraph(); BeginEventEmission(BusLayoutChangedCore)?.Invoke();
     }
     internal int GetBusIndexCore(string busName) { Check(); ArgumentNullException.ThrowIfNull(busName); for (var i = 0; i < _buses.Count; i++) if (_buses[i].Name == busName) return i; return -1; }
     internal string GetBusNameCore(int index) => GetBus(index).Name;
@@ -103,10 +103,10 @@ public sealed partial class AudioServer : ElectronObject
             bus.Name = proposed; if (bus.Buffer is { } buffer) { _sidechainBuffers.Remove(old); _sidechainBuffers.Add(proposed, buffer); }
             foreach (var other in _buses) if (other.Send == old) other.Send = proposed; foreach (var player in _players) player.RefreshRouting(); _native?.RefreshStandaloneSampleRouting(); ApplyGains();
         }
-        BusRenamedCore?.Invoke(index, old, proposed);
+        BeginEventEmission(BusRenamedCore)?.Invoke(index, old, proposed);
     }
     internal string GetBusSendCore(int index) => GetBus(index).Send;
-    internal void SetBusSendCore(int index, string send) { var bus = GetBus(index); ArgumentNullException.ThrowIfNull(send); if (index == 0) throw new ArgumentOutOfRangeException(nameof(index)); if (bus.Send == send) return; bus.Send = send; RebuildGraph(); BusLayoutChangedCore?.Invoke(); }
+    internal void SetBusSendCore(int index, string send) { var bus = GetBus(index); ArgumentNullException.ThrowIfNull(send); if (index == 0) throw new ArgumentOutOfRangeException(nameof(index)); if (bus.Send == send) return; bus.Send = send; RebuildGraph(); BeginEventEmission(BusLayoutChangedCore)?.Invoke(); }
     internal float GetBusVolumeDBCore(int index) => GetBus(index).VolumeDB;
     internal float GetBusVolumeLinearCore(int index) => (float)Mathf.DBToLinear(GetBusVolumeDBCore(index));
     internal void SetBusVolumeDBCore(int index, float volumeDB) { var bus = GetBus(index); if (!float.IsFinite(volumeDB) || !float.IsFinite(Mathf.DBToLinear(volumeDB))) throw new ArgumentOutOfRangeException(nameof(volumeDB)); bus.VolumeDB = volumeDB; ApplyGains(); }

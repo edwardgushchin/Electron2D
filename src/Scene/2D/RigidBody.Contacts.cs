@@ -197,12 +197,12 @@ public partial class RigidBody
             if (!change.Pair.InTree || change.Node is not { } other) return;
             if (change.ObjectEvent)
             {
-                using var listeners = (change.Entered ? _eventBodyEntered : _eventBodyExited)?.Acquire() ?? default;
+                using var listeners = BeginBufferedEvent((change.Entered ? _eventBodyEntered : _eventBodyExited));
                 for (var i = 0; i < listeners.Count; i++) listeners[i](other);
             }
             else
             {
-                using var listeners = (change.Entered ? _eventBodyShapeEntered : _eventBodyShapeExited)?.Acquire() ?? default;
+                using var listeners = BeginBufferedEvent((change.Entered ? _eventBodyShapeEntered : _eventBodyShapeExited));
                 for (var i = 0; i < listeners.Count; i++) listeners[i](change.Pair.RID, other, change.Pair.OtherShape, change.Pair.LocalShape);
             }
         }
@@ -211,7 +211,7 @@ public partial class RigidBody
 
     internal void RaiseSleepingStateChanged()
     {
-        using var listeners = _eventSleepingStateChanged?.Acquire() ?? default;
+        using var listeners = BeginBufferedEvent(_eventSleepingStateChanged);
         for (var i = 0; i < listeners.Count; i++) listeners[i](this);
     }
 

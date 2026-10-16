@@ -85,7 +85,7 @@ public partial class SceneMultiplayer : MultiplayerAPI
     {
         if (id <= 0 || id == GetUniqueID() || _connected.Contains(id) || _pending.ContainsKey(id)) throw new InvalidDataException("Invalid or duplicate transport peer identity.");
         _sendPeers.EnsureCapacity(_connected.Count + _pending.Count + 1); _expired.EnsureCapacity(_connected.Count + _pending.Count + 1);
-        if (_auth is not null) { _pending.Add(id, new PendingMultiplayerPeer(Environment.TickCount64, _auth)); Emit(PeerAuthenticating, id); }
+        if (_auth is not null) { _pending.Add(id, new PendingMultiplayerPeer(Environment.TickCount64, _auth)); Emit(BeginEventEmission(PeerAuthenticating), id); }
         else Admit(id);
     }
     private void SnapshotSendPeers() { _sendPeers.Clear(); foreach (var id in _connected) _sendPeers.Add(id); }
@@ -110,7 +110,7 @@ public partial class SceneMultiplayer : MultiplayerAPI
     private void RemovePeer(int id) => RemovePeer(id, true);
     private void RemovePeer(int id, bool notify)
     {
-        if (_pending.Remove(id)) { if (notify) Emit(PeerAuthenticationFailed, id); return; }
+        if (_pending.Remove(id)) { if (notify) Emit(BeginEventEmission(PeerAuthenticationFailed), id); return; }
         if (!_connected.Remove(id)) return;
         InvalidatePaths(); List<Exception>? errors = null; try { ReplicationPeerRemoved(id); } catch (Exception error) { (errors ??= []).Add(error); }
         if (RelaySupported && IsServer())
@@ -193,7 +193,7 @@ public partial class SceneMultiplayer : MultiplayerAPI
             if (generation == _generation && _timeout > 0)
             {
                 _expired.Clear(); var now = Environment.TickCount64; foreach (var entry in _pending) if (now - entry.Value.Start >= _timeout * 1000) _expired.Add(entry.Key);
-                for (var i = 0; i < _expired.Count && generation == _generation; i++) { var id = _expired[i]; if (!_pending.Remove(id)) continue; try { peer.DisconnectPeer(id, true); } catch (Exception e) { (errors ??= []).Add(e); } try { Emit(PeerAuthenticationFailed, id); } catch (Exception e) { (errors ??= []).Add(e); } }
+                for (var i = 0; i < _expired.Count && generation == _generation; i++) { var id = _expired[i]; if (!_pending.Remove(id)) continue; try { peer.DisconnectPeer(id, true); } catch (Exception e) { (errors ??= []).Add(e); } try { Emit(BeginEventEmission(PeerAuthenticationFailed), id); } catch (Exception e) { (errors ??= []).Add(e); } }
             }
             if (generation == _generation) { ReplicationFrame(); UpdateStatus(); }
         }
@@ -206,7 +206,7 @@ public partial class SceneMultiplayer : MultiplayerAPI
         var previous = _sender; _sender = sender;
         try
         {
-            if (packet[0] == 3) { if (packet.Length < 2) throw new InvalidDataException("Empty custom packet."); List<Exception>? errors = null; foreach (var callback in Delegate.EnumerateInvocationList(PeerPacket)) try { callback(sender, packet[1..]); } catch (Exception e) { (errors ??= []).Add(e); } if (errors is not null) throw new AggregateException(errors); }
+            if (packet[0] == 3) { if (packet.Length < 2) throw new InvalidDataException("Empty custom packet."); List<Exception>? errors = null; foreach (var callback in Delegate.EnumerateInvocationList(BeginEventEmission(PeerPacket))) try { callback(sender, packet[1..]); } catch (Exception e) { (errors ??= []).Add(e); } if (errors is not null) throw new AggregateException(errors); }
             else if (packet[0] == 0) ReceiveRPC(sender, packet);
             else if (packet[0] is 4 or 5 or 6 or 22) ReceiveReplication(sender, packet);
             else throw new InvalidDataException("Unknown or unavailable scene command.");

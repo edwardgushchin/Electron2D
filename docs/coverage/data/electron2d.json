@@ -91459,6 +91459,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ElectronObject.BeginEventEmission\u00601(TDelegate)",
+    "kind": "method",
+    "declaringType": "Electron2D.ElectronObject",
+    "name": "BeginEventEmission",
+    "signature": "protected TDelegate BeginEventEmission\u003CTDelegate\u003E(TDelegate handlers)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "handlers",
+        "type": "TDelegate",
+        "default": null
+      }
+    ],
+    "returnType": "TDelegate",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ElectronObject.CanRevertProperty(Electron2D.PropertyDescriptor)",
     "kind": "method",
     "declaringType": "Electron2D.ElectronObject",
@@ -91552,6 +91571,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ElectronObject.IsBlockingSignals()",
+    "kind": "method",
+    "declaringType": "Electron2D.ElectronObject",
+    "name": "IsBlockingSignals",
+    "signature": "public System.Boolean IsBlockingSignals()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -91669,6 +91701,25 @@
       {
         "name": "property",
         "type": "Electron2D.PropertyDescriptor",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ElectronObject.SetBlockSignals(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ElectronObject",
+    "name": "SetBlockSignals",
+    "signature": "public System.Void SetBlockSignals(System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "enable",
+        "type": "System.Boolean",
         "default": null
       }
     ],

@@ -5,7 +5,7 @@ public partial class TileMapLayer
     private bool _occlusionEnabled = true;
     /// <summary>Gets or sets whether enabled atlas cells contribute shadow and distance-field contours.</summary>
     /// <value>True initially; placed scene occluders retain their ordinary child-node policy.</value>
-    public bool OcclusionEnabled { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _occlusionEnabled; } set { EnsureMutable(); if (_occlusionEnabled == value) return; _occlusionEnabled = value; Changed?.Invoke(); } }
+    public bool OcclusionEnabled { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _occlusionEnabled; } set { EnsureMutable(); if (_occlusionEnabled == value) return; _occlusionEnabled = value; BeginEventEmission(Changed)?.Invoke(); } }
 
     internal void AppendOcclusion(CanvasLightingFrame frame, Transform transform, int canvasLayer)
     {

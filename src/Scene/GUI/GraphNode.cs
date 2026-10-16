@@ -47,7 +47,7 @@ public partial class GraphNode : GraphElement
     public HBoxContainer GetTitlebarHBox() { CheckGraph(); return _titlebar; }
     private Slot? ReadSlot(int index) { CheckGraph(); if (index < 0 || index > 65535) throw new ArgumentOutOfRangeException(nameof(index)); return _slots.GetValueOrDefault(index); }
     private Slot WriteSlot(int index) { MutableGraph(); var slot = ReadSlot(index); if (slot != null) return slot; slot = new(); _slots.Add(index, slot); _storedSlots = Math.Max(_storedSlots, index + 1); NotifyPropertyListChanged(); return slot; }
-    private void ChangedSlot(int index) { PruneIcons(); UpdateMinimumSize(); QueueSort(); QueueRedraw(); SlotUpdated?.Invoke(index); }
+    private void ChangedSlot(int index) { PruneIcons(); UpdateMinimumSize(); QueueSort(); QueueRedraw(); BeginEventEmission(SlotUpdated)?.Invoke(index); }
     /// <summary>Replaces port configuration for one slot, retaining its metadata.</summary><param name="slotIndex">Zero through 65535.</param><param name="enableLeftPort">Input enabled.</param><param name="typeLeft">Input type identifier.</param><param name="colorLeft">Input tint.</param><param name="enableRightPort">Output enabled.</param><param name="typeRight">Output type identifier.</param><param name="colorRight">Output tint.</param><param name="customIconLeft">Borrowed input icon or theme fallback.</param><param name="customIconRight">Borrowed output icon or theme fallback.</param><param name="drawStylebox">Whether row decoration contributes margins.</param>
     public void SetSlot(int slotIndex, bool enableLeftPort, int typeLeft, Color colorLeft, bool enableRightPort, int typeRight, Color colorRight, Texture? customIconLeft = null, Texture? customIconRight = null, bool drawStylebox = true)
     {
@@ -187,7 +187,7 @@ public partial class GraphNode : GraphElement
                 FitChildInRect(row.Child, new(new(offset.X + rowOffset.X, y + rowOffset.Y), new(Math.Max(0, Size.X - margins.X - rowMargins.X), Math.Max(0, row.Height - rowMargins.Y))));
                 y += row.Height + GetThemeConstant("separation");
             }
-            SlotSizesChanged?.Invoke(); QueueRedraw();
+            BeginEventEmission(SlotSizesChanged)?.Invoke(); QueueRedraw();
         }
         finally { _rows.Clear(); _arranging = false; }
     }

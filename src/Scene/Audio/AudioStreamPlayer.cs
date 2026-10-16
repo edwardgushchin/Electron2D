@@ -364,7 +364,7 @@ public partial class AudioStreamPlayer : Node
                             try { if (voice.Finished) { StopVoice(voice); ended = true; } }
                             catch (Exception error) { try { StopVoice(voice); } catch (Exception cleanup) { CollectException(ref errors, cleanup); } CollectException(ref errors, error); }
                         }
-                    if (ended) Finished?.Invoke();
+                    if (ended) BeginEventEmission(Finished)?.Invoke();
                 }
             }
             catch (Exception error) { CollectException(ref errors, error); }

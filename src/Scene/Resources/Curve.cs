@@ -315,8 +315,8 @@ public sealed partial class Curve : Resource
             if (domain) { if (minimum) _minDomain = value; else _maxDomain = value; _dirty = true; }
             else if (minimum) _minValue = value; else _maxValue = value;
         }
-        if (domain) { EmitChanged(); if (!IsDisposed) DomainChanged?.Invoke(); }
-        else RangeChanged?.Invoke();
+        if (domain) { EmitChanged(); if (!IsDisposed) BeginEventEmission(DomainChanged)?.Invoke(); }
+        else BeginEventEmission(RangeChanged)?.Invoke();
     }
 
     private ref CurvePoint Point(int index) { ThrowIfDisposed(); if ((uint)index >= (uint)_points.Count) throw new ArgumentOutOfRangeException(nameof(index)); return ref CollectionsMarshal.AsSpan(_points)[index]; }

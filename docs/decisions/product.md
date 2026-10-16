@@ -45,7 +45,7 @@ This rule does not prohibit a dedicated JSON document model. JSON syntax trees a
 <a id="adr-0002"></a>
 ## ADR 0002: Represent game signals with typed C# events
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 - Status: Accepted; connection lifecycle extended by [0010](core-object-runtime.md#adr-0010)
 - Scope: Public event and callback APIs
@@ -57,6 +57,17 @@ Game objects need decoupled notifications such as death, health changes, collisi
 ### Decision
 
 Discrete game notifications use typed C# events, normally `event Action` or `event Action<T...>`. Subscription uses `+=` and removal uses `-=`. Concrete types declare their own events; `ElectronObject` is not a string-addressed signal registry.
+
+Per-object signal blocking applies to the start of ordinary typed event emissions.
+Publishers select their existing delegate through the protected
+`BeginEventEmission` gateway, then invoke it with the unchanged typed arguments.
+The gateway preserves custom delegate types, including borrowed-span signatures,
+without a name registry or untyped argument list. Consumer publishers use the
+same gateway; direct CLR delegate invocation remains a language operation.
+Blocking leaves notifications, direct processing/integration callbacks and the
+deterministic `Disposed` lifecycle event active. It preserves subscriptions and
+already accepted emissions, including their queued deferred callbacks. Changing
+the flag during one handler affects the next emission, not the current snapshot.
 
 Core contracts that are known to be required may be declared before their producer component when their semantics are stable. `ElectronObject.ScriptChanged` is such a contract: the protected notifier exists now because scripting is confirmed for a later phase, while script attachment and initialization remain explicitly unimplemented.
 

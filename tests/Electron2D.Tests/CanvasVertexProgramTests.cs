@@ -47,6 +47,9 @@ internal static class CanvasVertexProgramTests
         Reject<ArgumentException>(() => shader.SetSPIRV(vertexCode, new byte[20]));
         Check(changed == 0 && shader.GetSPIRV(RenderingDevice.ShaderStage.Vertex).SequenceEqual(vertexCode), "Failed replacement preserves both stages.");
         shader.SetSPIRV(vertexCode, fragmentCode); Check(changed == 1 && material.GetShaderParameter<float>("gain") == .5f, "Pair reload publishes once and retains material values.");
+        shader.SetBlockSignals(true); shader.SetSPIRV(vertexCode, fragmentCode);
+        Check(changed == 1 && material.GetShaderParameter<float>("gain") == .5f && material.GetShaderParameter<Vector2>("offset") == new Vector2(16, 0), "Suppressed reload still replaces both stages and migrates typed material values.");
+        shader.SetBlockSignals(false); Check(changed == 1, "Unblocking a paired shader does not replay its suppressed reload.");
         Reject<ArgumentOutOfRangeException>(() => shader.GetSPIRV((RenderingDevice.ShaderStage)int.MaxValue));
         Reject<NotSupportedException>(() => shader.GetSPIRV(RenderingDevice.ShaderStage.Compute));
         var exported = shader.GetSPIRV(RenderingDevice.ShaderStage.Vertex); exported[0] = 0;
@@ -101,6 +104,7 @@ internal static class CanvasVertexProgramTests
         window.AddChild(item);
         if (lit) { window.AddChild(new CanvasModulate { Color = new(.25f, .25f, .25f, 1) }); window.AddChild(new DirectionalLight { Color = Colors.White, Energy = .25f }); }
         var frame = 0; long before = 0, activeBytes = 0, idleBytes = 0;
+        var reloadEvents = 0; shader.Changed += _ => reloadEvents++;
         window.Ready += _ =>
         {
             Check(RenderingServer.GetCurrentRenderingMethod() == "gpu", "Native GPU without fallback."); RenderingServer.SetDefaultClearColor(Colors.Black);
@@ -123,7 +127,13 @@ internal static class CanvasVertexProgramTests
                 var expected = lit ? (hdr ? new Color(.25f, .25f, .25f, 1).SRGBToLinear().R : .25f) + .25f : 1;
                 Check(MathF.Abs(image.GetPixel(x, y).R - expected) < .03f && image.GetPixel(12, 12).R < .02f, $"Authored vertex pixels {profile}: {image.GetPixel(x, y)}, expected R={expected}.");
                 if (instanced) Check(MathF.Abs(image.GetPixel((shiftedX ? 68 : 52) + (resources ? 8 : 0), y).B - expected) < .03f, "Hardware instances preserve transforms and per-instance colors.");
-                if (frame == 1) material.SetShaderParameter("offset", new Vector2(0, 16));
+                if (frame == 1)
+                {
+                    shader.SetBlockSignals(true); material.SetBlockSignals(true);
+                    shader.SetSPIRV(shader.GetSPIRV(RenderingDevice.ShaderStage.Vertex), shader.GetSPIRV());
+                    material.SetShaderParameter("offset", new Vector2(0, 16));
+                    Check(reloadEvents == 0, "Suppressed shader reload retains executable native material migration.");
+                }
             };
         };
         try { Check(Engine.Run(window) == 0 && frame == 144, "Vertex shader native frames completed."); }

@@ -39,7 +39,7 @@ public partial class CanvasLayer : Node
         {
             EnsureMutable(); if (_visible == value) return; _visible = value;
             List<Exception>? errors = null;
-            try { VisibilityChanged?.Invoke(this); }
+            try { BeginEventEmission(VisibilityChanged)?.Invoke(this); }
             catch (Exception error) { CollectException(ref errors, error); }
             if (!IsDisposed)
                 foreach (var child in AllChildren.ToArray())

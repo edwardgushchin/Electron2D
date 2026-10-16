@@ -96,7 +96,7 @@ public partial class Window
     }
     private void PopupAt(Rect2i rect, bool centered)
     {
-        EnsureMutable(); if (TryNativePopup()) return; CheckPopup(); AboutToPopup?.Invoke(); if (IsDisposed || !IsInsideTree) return;
+        EnsureMutable(); if (TryNativePopup()) return; CheckPopup(); BeginEventEmission(AboutToPopup)?.Invoke(); if (IsDisposed || !IsInsideTree) return;
         if (rect != default) { Size = rect.Size; Position = rect.Position; }
         PreparePopup();
         UpdateEmbeddedContents(); if (centered) { var area = GetUsableParentRect(); Position = area.Position + (area.Size - Size) / 2; }

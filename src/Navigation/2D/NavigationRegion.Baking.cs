@@ -16,7 +16,7 @@ public sealed partial class NavigationRegion
         if (NavigationServer.IsBakingNavigationPolygon(polygon)) throw new InvalidOperationException("This region resource already has an active bake.");
         var map = GetNavigationMap(); if (map.IsValid()) polygon.CellSize = NavigationServer.MapGetCellSize(map);
         using var source = new NavigationMeshSourceGeometryData(); NavigationServer.ParseSourceGeometryData(polygon, source, this);
-        void Complete() { if (!IsDisposed) BakeFinished?.Invoke(); }
+        void Complete() { if (!IsDisposed) BeginEventEmission(BakeFinished)?.Invoke(); }
         if (onThread) NavigationServer.BakeFromSourceGeometryDataAsync(polygon, source, Complete, Tree); else NavigationServer.BakeFromSourceGeometryData(polygon, source, Complete);
     }
 }

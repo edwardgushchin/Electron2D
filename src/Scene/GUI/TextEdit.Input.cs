@@ -132,7 +132,7 @@ public partial class TextEdit
             if (mouse.ButtonIndex != MouseButton.Left) return;
             if (!mouse.Pressed) { _draggingCursor = _draggingMinimap = false; if (_dragAttempt && _dragPayload == null) { _dragAttempt = false; MoveCaretTo(0, GetLineColumnAtPos((Vector2i)mouse.Position), false); } if (HasSelection() && DisplayServer.Service is { } display && display.HasFeatureCore(DisplayServer.Feature.ClipboardPrimary)) display.ClipboardSetPrimaryCore(GetSelectedText()); AcceptEvent(); return; }
             EnsureTextLayout(); if (_minimapDraw && MinimapRect().HasPoint(mouse.Position)) { _draggingMinimap = true; SetLineAsCenterVisible(GetMinimapLineAtPos((Vector2i)mouse.Position)); AcceptEvent(); return; }
-            var point = GetLineColumnAtPos((Vector2i)mouse.Position); var gutter = HitGutter(mouse.Position); if (gutter >= 0) { if (IsLineGutterClickable(point.Y, gutter)) GutterClicked?.Invoke(point.Y, gutter); AcceptEvent(); return; }
+            var point = GetLineColumnAtPos((Vector2i)mouse.Position); var gutter = HitGutter(mouse.Position); if (gutter >= 0) { if (IsLineGutterClickable(point.Y, gutter)) BeginEventEmission(GutterClicked)?.Invoke(point.Y, gutter); AcceptEvent(); return; }
             if (mouse.AltPressed) { AddCaret(point.Y, point.X); AcceptEvent(); return; }
             RemoveSecondaryCarets();
             if (_selectingEnabled && point.Y == _doubleLine && Environment.TickCount64 - _lastDoubleClick < 500) { _lastDoubleClick = 0; _pointerOrigin = new(0, point.Y); Select(point.Y, 0, point.Y + 1 < _lines.Count ? point.Y + 1 : point.Y, point.Y + 1 < _lines.Count ? 0 : _lines[point.Y].Scalars); _selectionMode = SelectionMode.Line; _draggingCursor = true; }

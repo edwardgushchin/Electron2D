@@ -174,7 +174,7 @@ public sealed partial class SceneTree
 
         if (pending is not null && ReferenceEquals(_currentScene, pending) && ReferenceEquals(pending.Tree, this) && pending.IsNodeReady)
         {
-            try { SceneChanged?.Invoke(this); }
+            try { BeginEventEmission(SceneChanged)?.Invoke(this); }
             catch (Exception error) { CollectException(ref errors, error); }
         }
         ThrowCollected("One or more scene-change callbacks failed.", errors);

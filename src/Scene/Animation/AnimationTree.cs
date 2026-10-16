@@ -51,7 +51,7 @@ public partial class AnimationTree : AnimationMixer
     /// <summary>Gets or sets the relative scene path to an optional AnimationPlayer library provider.</summary>
     /// <value>The typed value described in the summary.</value>
     /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>
-    public string AnimPlayer { get { ThrowIfDisposed(); return _animPlayer; } set { EnsureAnimationMutable(); ArgumentNullException.ThrowIfNull(value); _animPlayer = value; _playerDirty = true; GraphChanged(); ReconcilePlayer(); AnimationPlayerChanged?.Invoke(); } }
+    public string AnimPlayer { get { ThrowIfDisposed(); return _animPlayer; } set { EnsureAnimationMutable(); ArgumentNullException.ThrowIfNull(value); _animPlayer = value; _playerDirty = true; GraphChanged(); ReconcilePlayer(); BeginEventEmission(AnimationPlayerChanged)?.Invoke(); } }
     /// <summary>Occurs after assigning the animation-player path.</summary>
     public event Action? AnimationPlayerChanged;
     /// <summary>Reads a declared typed parameter at a graph-node path.</summary>

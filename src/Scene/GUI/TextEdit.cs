@@ -174,10 +174,10 @@ public partial class TextEdit : Control
     {
         _changeQueued = false; if (IsDisposed || _disposing) return; var textSet = _pendingTextSet; var changed = _pendingTextChanged; var caret = _pendingCaret; var from = _pendingFrom; var to = _pendingTo;
         _pendingTextSet = _pendingTextChanged = _pendingCaret = false; _pendingFrom = int.MaxValue; _pendingTo = -1; List<Exception>? errors = null;
-        try { if (from != int.MaxValue) LinesEditedFrom?.Invoke(from, to); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed && textSet) TextSet?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed && changed) TextChanged?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed && caret) CaretChanged?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (from != int.MaxValue) BeginEventEmission(LinesEditedFrom)?.Invoke(from, to); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!IsDisposed && textSet) BeginEventEmission(TextSet)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!IsDisposed && changed) BeginEventEmission(TextChanged)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!IsDisposed && caret) BeginEventEmission(CaretChanged)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("TextEdit change callbacks failed.", errors);
     }
     private static string Normalize(string text) => text.Replace("\r", "");

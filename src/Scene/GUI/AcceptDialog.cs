@@ -155,7 +155,7 @@ public partial class AcceptDialog : Window
         if (_disposing || IsDisposed) return; List<Exception>? errors = null;
         try { if (_hideOnOK) Hide(); } catch (Exception e) { CollectException(ref errors, e); }
         try { if (!IsDisposed) OnOKPressed(); } catch (Exception e) { CollectException(ref errors, e); }
-        try { if (!IsDisposed) Confirmed?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
+        try { if (!IsDisposed) BeginEventEmission(Confirmed)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
         HandleInput(); ThrowCollected("Dialog confirmation callbacks failed.", errors);
     }
     private void Cancel()
@@ -163,7 +163,7 @@ public partial class AcceptDialog : Window
         if (_disposing || IsDisposed || _cancelPending) return; _cancelPending = true; UnwatchParent(); var version = _visibilityVersion; var tree = Tree;
         if (tree != null) tree.Defer(() => { if (!IsDisposed && _cancelPending && version == _visibilityVersion) { _cancelPending = false; Hide(); } });
         List<Exception>? errors = null;
-        try { Canceled?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
+        try { BeginEventEmission(Canceled)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
         try { if (!IsDisposed) OnCancelPressed(); } catch (Exception e) { CollectException(ref errors, e); }
         try { if (tree == null && !IsDisposed && version == _visibilityVersion) { _cancelPending = false; Hide(); } } catch (Exception e) { CollectException(ref errors, e); }
         HandleInput(); ThrowCollected("Dialog cancellation callbacks failed.", errors);
@@ -171,13 +171,13 @@ public partial class AcceptDialog : Window
     internal void RaiseNativeCanceled()
     {
         List<Exception>? errors = null;
-        try { Canceled?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
+        try { BeginEventEmission(Canceled)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
         try { if (!IsDisposed) OnCancelPressed(); } catch (Exception e) { CollectException(ref errors, e); }
         ThrowCollected("Native dialog cancellation callbacks failed.", errors);
     }
     private void InvokeCustom(string action)
     {
-        List<Exception>? errors = null; try { CustomAction?.Invoke(action); } catch (Exception e) { CollectException(ref errors, e); }
+        List<Exception>? errors = null; try { BeginEventEmission(CustomAction)?.Invoke(action); } catch (Exception e) { CollectException(ref errors, e); }
         try { if (!IsDisposed) OnCustomAction(action); } catch (Exception e) { CollectException(ref errors, e); }
         ThrowCollected("Dialog custom action callbacks failed.", errors);
     }

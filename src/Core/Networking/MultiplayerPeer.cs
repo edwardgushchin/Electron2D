@@ -77,10 +77,10 @@ public abstract class MultiplayerPeer : PacketPeer
     public abstract void DisconnectPeer(int peer, bool force = false);
     /// <summary>Delivers a committed connection event on the owner thread.</summary><param name="id">Remote peer identity.</param>
     /// <exception cref="AggregateException">Subscribers failed after every subscriber was attempted.</exception>
-    protected void EmitPeerConnected(int id) { CheckPacketPeer(); Emit(PeerConnected, id); }
+    protected void EmitPeerConnected(int id) { CheckPacketPeer(); Emit(BeginEventEmission(PeerConnected), id); }
     /// <summary>Delivers a committed disconnection event on the owner thread.</summary><param name="id">Detached peer identity.</param>
     /// <exception cref="AggregateException">Subscribers failed after every subscriber was attempted.</exception>
-    protected void EmitPeerDisconnected(int id) { CheckPacketPeer(); Emit(PeerDisconnected, id); }
+    protected void EmitPeerDisconnected(int id) { CheckPacketPeer(); Emit(BeginEventEmission(PeerDisconnected), id); }
     private static void Emit(Action<int>? subscribers, int id)
     {
         List<Exception>? errors = null; foreach (var subscriber in Delegate.EnumerateInvocationList(subscribers)) { try { subscriber(id); } catch (Exception error) { (errors ??= []).Add(error); } }

@@ -293,7 +293,7 @@ public abstract partial class CanvasItem
         {
             DispatchNotification(NotificationDraw);
             if (IsDisposed) return;
-            Draw?.Invoke(this);
+            BeginEventEmission(Draw)?.Invoke(this);
             if (!IsDisposed) OnDraw();
         }
         catch

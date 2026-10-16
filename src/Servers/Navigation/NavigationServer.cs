@@ -93,7 +93,7 @@ public sealed partial class NavigationServer : ElectronObject
             catch { _synchronizing = false; throw; }
         }
         List<Exception>? errors = null;
-        try { if (changed is not null && handlers is not null) foreach (var rid in changed) foreach (var handler in Delegate.EnumerateInvocationList(handlers)) try { handler(rid); } catch (Exception e) { (errors ??= []).Add(e); } }
+        try { if (changed is not null && handlers is not null) foreach (var rid in changed) foreach (var handler in Delegate.EnumerateInvocationList(BeginEventEmission(handlers))) try { handler(rid); } catch (Exception e) { (errors ??= []).Add(e); } }
         finally { lock (_gate) _synchronizing = false; }
         if (errors is not null) throw new AggregateException("Navigation iterations committed with callback failures.", errors);
     }

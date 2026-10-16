@@ -112,7 +112,7 @@ public sealed partial class NavigationAgent
     internal void DeliverVelocity(Vector2 velocity)
     {
         Read(); _deliveringVelocity = true; List<Exception>? errors = null;
-        try { if (VelocityComputed is { } handlers) foreach (var handler in Delegate.EnumerateInvocationList(handlers)) try { handler(velocity); } catch (Exception e) { (errors ??= []).Add(e); } }
+        try { if (BeginEventEmission(VelocityComputed) is { } handlers) foreach (var handler in Delegate.EnumerateInvocationList(handlers)) try { handler(velocity); } catch (Exception e) { (errors ??= []).Add(e); } }
         finally { _deliveringVelocity = false; }
         if (errors is not null) throw new AggregateException("Velocity delivery completed with observer failures.", errors);
     }

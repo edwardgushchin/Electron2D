@@ -61,7 +61,7 @@ public class MultiplayerSynchronizer : Node
     /// <summary>Changes explicit peer/public membership and reevaluates visibility.</summary><param name="peer">Zero means public.</param><param name="visible">New explicit membership.</param>
     public void SetVisibilityFor(int peer, bool visible) { Mutate(); if (peer < 0) throw new ArgumentOutOfRangeException(nameof(peer)); if (visible ? !_visible.Add(peer) : !_visible.Remove(peer)) return; UpdateVisibility(peer); }
     /// <summary>Reevaluates one or all peers and delivers the visibility event.</summary><param name="forPeer">Zero reevaluates all admitted peers.</param>
-    public void UpdateVisibility(int forPeer = 0) { Check(); if (forPeer < 0) throw new ArgumentOutOfRangeException(nameof(forPeer)); if (API is SceneMultiplayer api) api.UpdateReplicationVisibility(this, forPeer); MultiplayerAPI.Emit(VisibilityChanged, forPeer); }
+    public void UpdateVisibility(int forPeer = 0) { Check(); if (forPeer < 0) throw new ArgumentOutOfRangeException(nameof(forPeer)); if (API is SceneMultiplayer api) api.UpdateReplicationVisibility(this, forPeer); MultiplayerAPI.Emit(BeginEventEmission(VisibilityChanged), forPeer); }
     internal bool IsVisibleTo(int peer) { var snapshot = _filterSnapshot; foreach (var filter in snapshot) if (!filter(peer)) return false; return _visible.Contains(0) || _visible.Contains(peer); }
     private void UpdateProcessing() { SetInternalProcessing(RootNode is not null && _filters.Count > 0 && _visibilityMode == VisibilityUpdateMode.Idle, RootNode is not null && _filters.Count > 0 && _visibilityMode == VisibilityUpdateMode.Physics); }
     internal void Rebind()
@@ -84,7 +84,7 @@ public class MultiplayerSynchronizer : Node
     internal void CaptureFrame(long now) { Prepare(); AlwaysDue = now - _lastAlways >= _interval * System.Diagnostics.Stopwatch.Frequency; if (AlwaysDue) _lastAlways = now; foreach (var binding in Bindings) { if (binding.Mode == ReplicationMode.OnChange) binding.Watch(); else if (binding.Mode == ReplicationMode.Always && AlwaysDue) binding.Capture(); } }
     internal ReplicationPeerState PeerState(int peer) { if (!Peers.TryGetValue(peer, out var state)) { state = new ReplicationPeerState(Bindings.Length); Peers.Add(peer, state); } return state; }
     internal bool DeltaDue(ReplicationPeerState peer, long now) => now - peer.LastDelta >= _deltaInterval * System.Diagnostics.Stopwatch.Frequency;
-    internal void EmitState(bool delta) { List<Exception>? errors = null; foreach (var subscriber in Delegate.EnumerateInvocationList(delta ? DeltaSynchronized : Synchronized)) try { subscriber(); } catch (Exception e) { (errors ??= []).Add(e); } if (errors is not null) throw new AggregateException(errors); }
+    internal void EmitState(bool delta) { List<Exception>? errors = null; foreach (var subscriber in Delegate.EnumerateInvocationList(BeginEventEmission(delta ? DeltaSynchronized : Synchronized))) try { subscriber(); } catch (Exception e) { (errors ??= []).Add(e); } if (errors is not null) throw new AggregateException(errors); }
     /// <inheritdoc />
     public override void SetMultiplayerAuthority(int id, bool recursive = true) { Mutate(); Stop(); base.SetMultiplayerAuthority(id, recursive); Rebind(); }
     /// <inheritdoc />

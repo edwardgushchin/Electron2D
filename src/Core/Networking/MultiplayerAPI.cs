@@ -58,15 +58,15 @@ public abstract class MultiplayerAPI : ElectronObject
     /// <summary>Occurs when an established client loses its server.</summary>
     public event Action? ServerDisconnected;
     /// <summary>Delivers all client admission subscribers; failures aggregate.</summary>
-    protected void EmitConnectedToServer() { CheckMultiplayer(); Emit(ConnectedToServer); }
+    protected void EmitConnectedToServer() { CheckMultiplayer(); Emit(BeginEventEmission(ConnectedToServer)); }
     /// <summary>Delivers all establishment failure subscribers; failures aggregate.</summary>
-    protected void EmitConnectionFailed() { CheckMultiplayer(); Emit(ConnectionFailed); }
+    protected void EmitConnectionFailed() { CheckMultiplayer(); Emit(BeginEventEmission(ConnectionFailed)); }
     /// <summary>Delivers all admitted-peer subscribers.</summary><param name="id">Committed identity.</param>
-    protected void EmitPeerConnected(int id) { CheckMultiplayer(); Emit(PeerConnected, id); }
+    protected void EmitPeerConnected(int id) { CheckMultiplayer(); Emit(BeginEventEmission(PeerConnected), id); }
     /// <summary>Delivers all removed-peer subscribers.</summary><param name="id">Removed identity.</param>
-    protected void EmitPeerDisconnected(int id) { CheckMultiplayer(); Emit(PeerDisconnected, id); }
+    protected void EmitPeerDisconnected(int id) { CheckMultiplayer(); Emit(BeginEventEmission(PeerDisconnected), id); }
     /// <summary>Delivers all server loss subscribers.</summary>
-    protected void EmitServerDisconnected() { CheckMultiplayer(); Emit(ServerDisconnected); }
+    protected void EmitServerDisconnected() { CheckMultiplayer(); Emit(BeginEventEmission(ServerDisconnected)); }
     private static void Emit(Action? callbacks) { List<Exception>? errors = null; foreach (var call in Delegate.EnumerateInvocationList(callbacks)) try { call(); } catch (Exception e) { (errors ??= []).Add(e); } if (errors is not null) throw new AggregateException(errors); }
     internal static void Emit(Action<int>? callbacks, int id) { List<Exception>? errors = null; foreach (var call in Delegate.EnumerateInvocationList(callbacks)) try { call(id); } catch (Exception e) { (errors ??= []).Add(e); } if (errors is not null) throw new AggregateException(errors); }
     internal SceneTree? AttachedTree => _tree;

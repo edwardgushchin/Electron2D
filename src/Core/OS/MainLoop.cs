@@ -193,7 +193,7 @@ public abstract class MainLoop : ElectronObject
         if (_state is not (LoopState.Running or LoopState.Processing))
             throw new InvalidOperationException("Permission results can only be published while the MainLoop is running.");
 
-        OnRequestPermissionsResult?.Invoke(this, permission, granted);
+        BeginEventEmission(OnRequestPermissionsResult)?.Invoke(this, permission, granted);
     }
 
     /// <summary>Publishes terminal state for a derived instance whose construction cannot complete.</summary>

@@ -49,7 +49,7 @@ public abstract class Tweener : ElectronObject
         if (_finished)
             return;
         _finished = true;
-        Finished?.Invoke(this);
+        BeginEventEmission(Finished)?.Invoke(this);
     }
 
     internal abstract bool OnAdvance(ref double remaining);

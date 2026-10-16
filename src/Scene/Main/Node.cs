@@ -312,7 +312,7 @@ public partial class Node : ElectronObject
             {
                 try
                 {
-                    Renamed?.Invoke(this);
+                    BeginEventEmission(Renamed)?.Invoke(this);
                 }
                 catch (Exception error)
                 {
@@ -2370,7 +2370,7 @@ public partial class Node : ElectronObject
 
         try
         {
-            TreeEntered?.Invoke(this);
+            BeginEventEmission(TreeEntered)?.Invoke(this);
         }
         catch (Exception error)
         {
@@ -2384,7 +2384,7 @@ public partial class Node : ElectronObject
         catch (Exception error) { CollectException(ref errors, error); }
 
         var parent = Parent;
-        try { parent?.ChildEnteredTree?.Invoke(parent, this); }
+        try { parent?.BeginEventEmission(parent.ChildEnteredTree)?.Invoke(parent, this); }
         catch (Exception error) { CollectException(ref errors, error); }
 
         if (!ReferenceEquals(Tree, tree))
@@ -2492,7 +2492,7 @@ public partial class Node : ElectronObject
 
             try
             {
-                Ready?.Invoke(this);
+                BeginEventEmission(Ready)?.Invoke(this);
             }
             catch (Exception error)
             {
@@ -2522,7 +2522,7 @@ public partial class Node : ElectronObject
 
             try { OnExitTree(); }
             catch (Exception error) { CollectException(ref errors, error); }
-            try { TreeExiting?.Invoke(this); }
+            try { BeginEventEmission(TreeExiting)?.Invoke(this); }
             catch (Exception error) { CollectException(ref errors, error); }
             try { DispatchNotification(NotificationExitTree); }
             catch (Exception error) { CollectException(ref errors, error); }
@@ -2533,7 +2533,7 @@ public partial class Node : ElectronObject
             try { tree.NotifyNodeRemoved(this); }
             catch (Exception error) { CollectException(ref errors, error); }
             var parent = Parent;
-            try { parent?.ChildExitingTree?.Invoke(parent, this); }
+            try { parent?.BeginEventEmission(parent.ChildExitingTree)?.Invoke(parent, this); }
             catch (Exception error) { CollectException(ref errors, error); }
 
             tree.UnbindProcessingGroup(this);
@@ -2572,7 +2572,7 @@ public partial class Node : ElectronObject
             for (var i = children.Length - 1; i >= 0; i--)
                 try { children[i].CompleteExitTree(); }
                 catch (Exception error) { CollectException(ref errors, error); }
-            try { TreeExited?.Invoke(this); }
+            try { BeginEventEmission(TreeExited)?.Invoke(this); }
             catch (Exception error) { CollectException(ref errors, error); }
         }
         finally { _hasPendingTreeExit = false; _isExitingTree = wasExiting; }
@@ -2707,7 +2707,7 @@ public partial class Node : ElectronObject
 
         try
         {
-            ChildAdded?.Invoke(this, child);
+            BeginEventEmission(ChildAdded)?.Invoke(this, child);
         }
         catch (Exception error)
         {
@@ -2828,7 +2828,7 @@ public partial class Node : ElectronObject
 
                 try
                 {
-                    ChildRemoved?.Invoke(this, child);
+                    BeginEventEmission(ChildRemoved)?.Invoke(this, child);
                 }
                 catch (Exception error)
                 {
@@ -2866,7 +2866,7 @@ public partial class Node : ElectronObject
         catch (Exception error) { CollectException(ref errors, error); }
         try { DispatchNotification(NotificationChildOrderChanged); }
         catch (Exception error) { CollectException(ref errors, error); }
-        try { ChildOrderChanged?.Invoke(this); }
+        try { BeginEventEmission(ChildOrderChanged)?.Invoke(this); }
         catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("One or more child-order callbacks failed.", errors);
     }

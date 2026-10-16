@@ -257,7 +257,7 @@ public class UndoRedo : ElectronObject
     }
     private void NotifyVersion(ref List<Exception>? errors)
     {
-        using var handlers = _versionHandlers?.Acquire() ?? default;
+        using var handlers = BeginBufferedEvent(_versionHandlers);
         for (var i = 0; i < handlers.Count; i++)
             try { handlers[i](); } catch (Exception e) { (errors ??= []).Add(e); }
     }

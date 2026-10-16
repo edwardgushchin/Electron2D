@@ -40,7 +40,7 @@ public partial class FileDialog
     {
         if (_filenameFilterText == text) return; if (text.Length != 0 && !_filterVisible) { _filterVisible = true; ApplyFeatures(); }
         _filenameFilterText = text; _filenameFilter.Text = text; List<Exception>? errors = null;
-        try { FilenameFilterChanged?.Invoke(text); } catch (Exception e) { CollectException(ref errors, e); }
+        try { BeginEventEmission(FilenameFilterChanged)?.Invoke(text); } catch (Exception e) { CollectException(ref errors, e); }
         try { if (!IsDisposed) Invalidate(); } catch (Exception e) { CollectException(ref errors, e); }
         ThrowCollected("File filter callbacks failed.", errors);
     }
@@ -191,9 +191,9 @@ public partial class FileDialog
         if (_root.Length != 0 && !WithinRoot(path)) throw new UnauthorizedAccessException("Selection cannot leave RootSubfolder.");
     }
     private void FinishPendingSave() { var path = _pendingSave; _pendingSave = ""; if (path.Length != 0) TryOperation(() => { ValidateSelectionScope(path); FinishFile(path); }); }
-    private void FinishFile(string path) { SaveRecent(); HideAndNotify(() => FileSelected?.Invoke(path)); }
-    private void FinishFiles(string[] paths) { SaveRecent(); HideAndNotify(() => FilesSelected?.Invoke(Array.AsReadOnly(paths))); }
-    private void FinishDirectory(string path) { SaveRecent(); HideAndNotify(() => DirSelected?.Invoke(path)); }
+    private void FinishFile(string path) { SaveRecent(); HideAndNotify(() => BeginEventEmission(FileSelected)?.Invoke(path)); }
+    private void FinishFiles(string[] paths) { SaveRecent(); HideAndNotify(() => BeginEventEmission(FilesSelected)?.Invoke(Array.AsReadOnly(paths))); }
+    private void FinishDirectory(string path) { SaveRecent(); HideAndNotify(() => BeginEventEmission(DirSelected)?.Invoke(path)); }
     private void HideAndNotify(Action notify)
     { List<Exception>? errors = null; try { Hide(); } catch (Exception e) { CollectException(ref errors, e); } try { if (!IsDisposed) notify(); } catch (Exception e) { CollectException(ref errors, e); } ThrowCollected("File selection callbacks failed.", errors); }
     private void TryOperation(Action action) { try { action(); } catch (Exception e) when (e is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException) { if (!IsDisposed) ShowError(e.Message); } }

@@ -171,13 +171,13 @@ public partial class ColorPicker : VBoxContainer
         _intensity = intensity; var color = ApplyIntensity(normalized);
         if (!normalized.IsFinite() || !color.IsFinite()) { _intensity = previousIntensity; Refresh(); throw new ArgumentOutOfRangeException(nameof(channel), "Exposure exceeds the finite color range."); }
         _normalized = normalized;
-        if (channel == 4) { SetColor(color, false); if (!_deferred || !_dragging) ColorChanged?.Invoke(_color); return; }
+        if (channel == 4) { SetColor(color, false); if (!_deferred || !_dragging) BeginEventEmission(ColorChanged)?.Invoke(_color); return; }
         if (_mode == ColorModeType.HSV) { _h = x / 360; _s = y / 100; _v = z / 100; } else { _h = _normalized.H; _s = _normalized.S; _v = _normalized.V; }
         if (_mode == ColorModeType.OKHSL) { _oh = x / 360; _os = y / 100; _ol = z / 100; } else { _oh = _normalized.OKHSLH; _os = _normalized.OKHSLS; _ol = _normalized.OKHSLL; }
         SetColor(color, _editIntensity && (_normalized.R > 1 || _normalized.G > 1 || _normalized.B > 1));
-        if (!_deferred || !_dragging) ColorChanged?.Invoke(_color);
+        if (!_deferred || !_dragging) BeginEventEmission(ColorChanged)?.Invoke(_color);
     }
-    private void EndChannelDrag() { _dragging = false; if (_deferred && !IsDisposed) ColorChanged?.Invoke(_color); }
+    private void EndChannelDrag() { _dragging = false; if (_deferred && !IsDisposed) BeginEventEmission(ColorChanged)?.Invoke(_color); }
     private void RememberOnRelease(InputEvent input) { if (input is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: false }) AddRecentPreset(_color); }
     internal void SurfaceColor(bool perceptual, bool finished)
     {
@@ -185,7 +185,7 @@ public partial class ColorPicker : VBoxContainer
         if (perceptual) { _h = _normalized.H; _s = _normalized.S; _v = _normalized.V; } else { _oh = _normalized.OKHSLH; _os = _normalized.OKHSLS; _ol = _normalized.OKHSLL; }
         SetColor(ApplyIntensity(_normalized), false);
         List<Exception>? errors = null;
-        try { if (!_deferred || finished) ColorChanged?.Invoke(_color); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!_deferred || finished) BeginEventEmission(ColorChanged)?.Invoke(_color); } catch (Exception error) { CollectException(ref errors, error); }
         try { if (finished && !IsDisposed) AddRecentPreset(_color); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Color surface callbacks failed.", errors);
     }
@@ -197,7 +197,7 @@ public partial class ColorPicker : VBoxContainer
         if (Color.HTMLIsValid(text)) value = Color.FromHTML(text);
         else if (Colors.TryGetNamed(text, out value)) { }
         else if (!TryConstructor(text, out value)) { RefreshText(); return; }
-        if (!_editAlpha) value.A = _color.A; ValidateColor(value); SetColor(value, true); AddRecentPreset(_color); ColorChanged?.Invoke(_color);
+        if (!_editAlpha) value.A = _color.A; ValidateColor(value); SetColor(value, true); AddRecentPreset(_color); BeginEventEmission(ColorChanged)?.Invoke(_color);
     }
     private static bool TryConstructor(string text, out Color color)
     {

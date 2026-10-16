@@ -18,14 +18,14 @@ public partial class TileMapLayer
     /// <summary>Gets or sets the positive side length of rendering quadrants in cells, independently of physical quadrants.</summary>
     /// <value>16 by default. Y sorting groups cells by their sorting anchor instead of this size.</value>
     /// <exception cref="ArgumentOutOfRangeException">The value is less than one.</exception>
-    public int RenderingQuadrantSize { get { ThrowIfDisposed(); return _renderingQuadrantSize; } set { EnsureMutable(); if (value < 1) throw new ArgumentOutOfRangeException(nameof(value)); if (_renderingQuadrantSize == value) return; _renderingQuadrantSize = value; InvalidateTileDrawing(); Changed?.Invoke(); } }
+    public int RenderingQuadrantSize { get { ThrowIfDisposed(); return _renderingQuadrantSize; } set { EnsureMutable(); if (value < 1) throw new ArgumentOutOfRangeException(nameof(value)); if (_renderingQuadrantSize == value) return; _renderingQuadrantSize = value; InvalidateTileDrawing(); BeginEventEmission(Changed)?.Invoke(); } }
     /// <summary>Gets or sets the layer's additional Y sorting anchor offset in scene units.</summary>
     /// <value>Zero by default; only affects Y-sorted tile grouping.</value>
-    public int YSortOrigin { get { ThrowIfDisposed(); return _ySortOrigin; } set { EnsureMutable(); if (_ySortOrigin == value) return; _ySortOrigin = value; InvalidateTileDrawing(); Changed?.Invoke(); } }
+    public int YSortOrigin { get { ThrowIfDisposed(); return _ySortOrigin; } set { EnsureMutable(); if (_ySortOrigin == value) return; _ySortOrigin = value; InvalidateTileDrawing(); BeginEventEmission(Changed)?.Invoke(); } }
     /// <summary>Gets or sets whether X cell ordering is reversed within a Y-sorted group.</summary>
     /// <value>False by default; ordinary quadrant cell order is unaffected.</value>
-    public bool XDrawOrderReversed { get { ThrowIfDisposed(); return _xDrawOrderReversed; } set { EnsureMutable(); if (_xDrawOrderReversed == value) return; _xDrawOrderReversed = value; InvalidateTileDrawing(); Changed?.Invoke(); } }
-    internal void DrawingYSortChanged(bool changed) { InvalidateTileDrawing(); if (changed) Changed?.Invoke(); }
+    public bool XDrawOrderReversed { get { ThrowIfDisposed(); return _xDrawOrderReversed; } set { EnsureMutable(); if (_xDrawOrderReversed == value) return; _xDrawOrderReversed = value; InvalidateTileDrawing(); BeginEventEmission(Changed)?.Invoke(); } }
+    internal void DrawingYSortChanged(bool changed) { InvalidateTileDrawing(); if (changed) BeginEventEmission(Changed)?.Invoke(); }
     internal void InvalidateTileDrawing() { _drawingDirty = true; QueueRedraw(); }
     private void ReleaseDrawing()
     {

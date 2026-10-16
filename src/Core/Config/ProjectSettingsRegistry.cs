@@ -667,7 +667,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
             _changeNotificationPending = false;
             _deliveringChanges = new HashSet<string>(_changedSettings, StringComparer.Ordinal);
             _changedSettings.Clear();
-            handler = SettingsChangedCore;
+            handler = BeginEventEmission(SettingsChangedCore);
         }
 
         try
