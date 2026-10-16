@@ -29,6 +29,9 @@ public abstract class ImageTextureLayered : TextureLayered
     /// <remarks>Failure preserves the previous layers and RID. Native upload occurs before subsequent drawing.</remarks>
     /// <exception cref="ArgumentException">The array is empty, heterogeneous, too large, or contains an empty image.</exception>
     /// <exception cref="NotSupportedException">A pixel format is unsupported by the existing sampling conversion.</exception>
+    /// <exception cref="InvalidDataException">A compressed layer cannot be decoded.</exception>
+    /// <exception cref="IOException">A decoder cannot allocate working memory.</exception>
+    /// <exception cref="InvalidOperationException">A layer exceeds the conservative codec work budget.</exception>
     /// <exception cref="ObjectDisposedException">This resource or an input image is disposed.</exception>
     public void CreateFromImages(ReadOnlySpan<Image> images)
     {
@@ -48,9 +51,12 @@ public abstract class ImageTextureLayered : TextureLayered
     /// <param name="image">A copied image matching the array dimensions, source format and mipmap state.</param>
     /// <param name="layer">The zero-based layer to replace.</param>
     /// <remarks>Other layers remain unchanged. Validation failure preserves the array; compatible native allocation is reused.</remarks>
-    /// <exception cref="InvalidOperationException">The array is uninitialized.</exception>
+    /// <exception cref="InvalidOperationException">The array is uninitialized or a layer exceeds the codec work budget.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The layer does not exist.</exception>
     /// <exception cref="ArgumentException">Image configuration does not match.</exception>
+    /// <exception cref="NotSupportedException">The source sampling format is unavailable.</exception>
+    /// <exception cref="InvalidDataException">The compressed layer cannot be decoded.</exception>
+    /// <exception cref="IOException">The decoder cannot allocate working memory.</exception>
     /// <exception cref="ObjectDisposedException">This resource or the image is disposed.</exception>
     public void UpdateLayer(Image image, int layer)
     {

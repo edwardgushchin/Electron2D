@@ -25,8 +25,7 @@ Every layer must agree in dimensions, source format and mip configuration.
 Unknown encodings, malformed or partial levels, trailing bytes and heterogeneous
 layers fail before publication. Cube/volume roles and sampling formats without
 an integrated decoder fail explicitly. The four coverage rows are now Partial rather than
-Blocked: their exact remaining executable dependency is shared ETC1/ETC2/EAC/ASTC
-source decoding and array upload/fallback sampling. Streaming/size hints do not discard mips:
+Blocked: shared ETC1/ETC2/EAC/ASTC decoding now executes. Their remaining pixel-format dependency is integer-sampled source formats. Streaming/size hints do not discard mips:
 this API has no requested-size argument. Files are bounded to 64 MiB; source and
 prepared upload pixels share the existing 256 MiB array budget. Device limits
 remain enforced by the renderer.
@@ -86,14 +85,14 @@ clamping, replacement/borrowed lifetime, shader defaults/overrides and cleanup.
 Named canvas samplers keep the accepted linear/base-level/clamp policy; explicit
 texel fetches exercise stored mips without adding configurable named samplers.
 Compatibility rejects custom shader use. Foreign execution, native allocation
-totals, unavailable ETC/EAC/ASTC sampling, public refreshed bundles and human
+totals, integer sampling, public refreshed bundles and human
 acceptance require their own evidence.
 
 The Linux Wayland GPU run completes 24 warmup and 64 active frames with zero
 owner-thread managed bytes. Fresh source, ProjectReference and NuGet consumers
 execute legacy Basis LDR/HDR and archives with native compilers blocked. A separate
 NativeAOT package consumer executes the same public workflow. The self-contained
-JIT publish passes the four-export native ABI audit and 72-ELF/91-notice audit.
+JIT publish passes the four-export native ABI audit and 72-ELF/92-notice audit.
 Shared and single-archive native consumers pass the nine KTX and three legacy
 pixel oracles, all truncations and deterministic corruptions. Legacy mutations
 include repaired checksums and unaligned borrowed pointers. ASan/UBSan/LSan pass

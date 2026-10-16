@@ -39,11 +39,13 @@ public sealed partial class Image
         if (!Enum.IsDefined(channels)) throw new ArgumentOutOfRangeException(nameof(channels));
         Mutate(state => CompressBCPixels(state, mode, channels));
     }
-    /// <summary>Decompresses BC1–BC7 pixels while retaining dimensions and every stored mip level.</summary>
-    /// <remarks>An uncompressed image is unchanged and emits no notification. Unsupported block families
-    /// and decode failures preserve the previous image. Signed/unsigned BC6 becomes RGB floating-point pixels;
-    /// other BC formats become RGBA8. Codec work is bounded before expanded pixel allocation.</remarks>
-    /// <exception cref="NotSupportedException">The compressed format has no installed decoder.</exception>
+    /// <summary>Decompresses BC, ETC/EAC and ASTC pixels while retaining dimensions and every stored mip level.</summary>
+    /// <remarks>An uncompressed image is unchanged and emits no notification. Decode failures preserve
+    /// the previous image. Signed/unsigned BC6 becomes RGB floating-point pixels;
+    /// other BC and unsigned ETC/EAC formats become RGBA8. Signed EAC becomes normalized RGBA float;
+    /// ASTC HDR becomes RGBA half. Codec work is bounded before expanded pixel allocation.</remarks>
+    /// <exception cref="InvalidDataException">The compressed blocks are invalid.</exception>
+    /// <exception cref="IOException">The decoder cannot allocate working memory.</exception>
     /// <exception cref="InvalidOperationException">Expanded pixels exceed the codec work budget.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public void Decompress()
@@ -52,7 +54,7 @@ public sealed partial class Image
         lock (_mutationGate)
         {
             var state = Snapshot(); if (!IsCompressedFormat(state.Format)) return;
-            SetStateWithoutNotification(DecompressBCPixels(state));
+            SetStateWithoutNotification(DecompressPixels(state));
         }
         EmitChanged();
     }
@@ -69,7 +71,7 @@ public sealed partial class Image
     }
     private static State CompressBCPixels(State state, CompressMode mode, UsedChannels channels)
     {
-        RequireReadablePixels(state); CheckBCWork(state);
+        RequireReadablePixels(state); CheckCodecWork(state);
         var hdr = mode == CompressMode.Bptc && channels is not (UsedChannels.Rgba or UsedChannels.LuminanceAlpha) && state.Format is >= Format.Rf and <= Format.Rgbah;
         var format = mode == CompressMode.Bptc ? hdr ? HasNegativeBCPixels(state) ? Format.BptcRgbf : Format.BptcRgbfu : Format.BptcRgba
             : channels switch { UsedChannels.Red => Format.RgtcR, UsedChannels.RedGreen => Format.RgtcRg, UsedChannels.Rgba or UsedChannels.LuminanceAlpha => Format.Dxt5, _ => Format.Dxt1 };
@@ -104,10 +106,10 @@ public sealed partial class Image
         Format.BptcRgbfu => CompressionFormat.Bc6U,
         _ => throw new NotSupportedException("This block format requires another decoder.")
     };
-    internal static State DecompressBCPixels(State state)
+    private static State DecodeBCPixels(State state)
     {
         var codec = BCFormat(state.Format); var hdr = state.Format is Format.BptcRgbf or Format.BptcRgbfu; var format = hdr ? Format.Rgbf : Format.Rgba8;
-        CheckBCWork(state); var output = new byte[GetRequiredDataSize(state.Width, state.Height, format, state.HasMIPMaps)]; var offset = 0; var decoder = new BcDecoder(); decoder.Options.IsParallel = false;
+        CheckCodecWork(state); var output = new byte[GetRequiredDataSize(state.Width, state.Height, format, state.HasMIPMaps)]; var offset = 0; var decoder = new BcDecoder(); decoder.Options.IsParallel = false;
         for (var mip = 0; mip <= GetRequiredMIPMapCount(state.Width, state.Height, state.HasMIPMaps); mip++)
         {
             var level = GetLevel(state, mip); var input = state.Data.AsSpan(level.Offset, level.Length).ToArray();
@@ -122,7 +124,7 @@ public sealed partial class Image
         }
         return new(state.Width, state.Height, format, state.HasMIPMaps, output);
     }
-    private static void CheckBCWork(State state)
+    private static void CheckCodecWork(State state)
     {
         long pixels = 0; var width = state.Width; var height = state.Height;
         do { pixels += (long)width * height; if (!state.HasMIPMaps || width == 1 && height == 1) break; width = Math.Max(1, width / 2); height = Math.Max(1, height / 2); } while (true);

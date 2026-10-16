@@ -82,3 +82,5 @@ Returns a new caller-owned Image with copied original bytes and metadata; never 
 [RenderingRuntimeTests](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs), [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) and [shader import checks](../../tools/shaders/check.py) exercise the supported interface, bad inputs and resource lifecycle. GPU output is verified on Linux Wayland/Vulkan; broader shader features and other backends remain incomplete.
 
 Prepared video RGBA snapshots additionally carry a Mutable role and UInt64 Revision. Publication copies into fixed source/upload buffers and advances the revision; CopySnapshot freezes independent pixels by default. Ordinary immutable roles keep existing sharing semantics.
+
+[ETC/EAC/ASTC decoding](../components/image-block-decoding.md) now supplies prepared pixels for these texture snapshots while retaining original block formats, bytes and all mips. Signed EAC and ASTC HDR use floating-point upload; the current Compatibility driver rejects that precision. Integer sampling remains a separate integration.

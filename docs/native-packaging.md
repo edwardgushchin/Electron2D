@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-16
 
-A private prerelease consumer supplies its exact expected native version to the notice audit with --native-package-version; the ordinary release default still requires the product version. Native dependency versions, 72 ELF classification and all 91 notice byte comparisons remain strict.
+A private prerelease consumer supplies its exact expected native version to the notice audit with --native-package-version; the ordinary release default still requires the product version. Native dependency versions, 72 ELF classification and all 92 notice byte comparisons remain strict.
 
 The desktop publish checker accepts an optional third application-name argument (default CharacterMovement); the movie consumer uses Consumer. It checks a self-contained managed publish, since NativeAOT embeds the engine instead of shipping Electron2D.dll.
 
@@ -138,4 +138,6 @@ Video playback extends Electron2DOGV to exactly nine bridge exports: the existin
 
 ## KTX/Basis private assets
 
-Flat KTX/Basis decoding adds `Electron2DKTX` to all eighteen producer profiles, using the platform shared-library name or a single merged static archive. Source fingerprints include its codec pin, generated validation correction and Zstandard namespace. Validators require exactly four private exports (KTX create, legacy Basis create, shared level copy and destroy); older three-export assets require rebuilding. They forbid a global KTX/Basis/Zstandard dependency. The [KTX component](components/image-ktx.md) records codec, source and execution limits. Updated foreign bundles and public package publication remain separate gates.
+Flat KTX/Basis decoding adds `Electron2DKTX` to all eighteen producer profiles, using the platform shared-library name or a single merged static archive. Source fingerprints include its codec pin, generated validation correction and Zstandard namespace. Validators require exactly five private exports (KTX create, legacy Basis create, shared level copy/destroy and block decode); older assets require rebuilding. They forbid a global KTX/Basis/Zstandard dependency. The [KTX component](components/image-ktx.md) records codec, source and execution limits. Updated foreign bundles and public package publication remain separate gates.
+
+The ETC/EAC/ASTC slice verifies the five-export KTX asset with independent native/shared/static sanitizer checks, all thirteen public block roles in fresh source/project/NuGet consumers, and a separate NativeAOT consumer. The managed self-contained Linux publish passes 72 ELF and 92 exact notice comparisons. The AOT publish separately executes and retains all 92 exact notice bytes; the managed-host audit is not its format. Six unchanged private libraries are reused from the verified base cohort; the changed KTX asset is rebuilt. Foreign-host execution and public package publication remain separate.

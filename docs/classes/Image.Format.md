@@ -1,6 +1,6 @@
 # Image.Format
 
-Last updated: 2026-09-21
+Last updated: 2026-10-16
 
 **Inherits:** `System.Enum`
 
@@ -169,17 +169,17 @@ Positive HDR RGB stored as three 9-bit mantissas and one shared 5-bit exponent i
 <a id="dxt1"></a>
 ### `Dxt1 = 17`
 
-BC1/DXT1 RGB block storage. CPU decoding and encoding are not implemented.
+BC1/DXT1 RGB block storage. CPU decoding is available through Image.Decompress; applicable S3TC authoring uses Image.Compress.
 
 <a id="dxt3"></a>
 ### `Dxt3 = 18`
 
-BC2/DXT3 RGBA block storage. CPU decoding and encoding are not implemented.
+BC2/DXT3 RGBA block storage. CPU decoding is available through Image.Decompress; applicable S3TC authoring uses Image.Compress.
 
 <a id="dxt5"></a>
 ### `Dxt5 = 19`
 
-BC3/DXT5 RGBA block storage. CPU decoding and encoding are not implemented.
+BC3/DXT5 RGBA block storage. CPU decoding is available through Image.Decompress; applicable S3TC authoring uses Image.Compress.
 
 <a id="rgtcr"></a>
 ### `RgtcR = 20`
@@ -334,3 +334,5 @@ The enum is immutable and thread-safe. [`Image`](Image.md) rejects undefined val
 The executable checks cover numeric identities, byte counts and pixel round trips for all 25 uncompressed formats, structural size and access rejection for all 22 compressed formats, and mip sizing across compressed block boundaries. CPU block codecs remain deferred under [ADR 0039](../decisions/resources.md#adr-0039).
 
 BC1–BC7 and RA-as-RG have explicit Image.Decompress support; CPU pixel operations require that uncompressed result. S3TC/BPTC compression selects an applicable BC storage role. ImageTexture and TextureArray preserve original blocks and prepare decoded sampling with native BC GPU upload when supported. Other block families remain storage identities with separate codec dependencies.
+
+All block identities now have explicit [portable decoding](../components/image-block-decoding.md), retaining complete mips. ETC/EAC and ASTC encoding remains unavailable. Signed EAC decodes to normalized RGBA float; ASTC HDR decodes to RGBA half. Source texture storage retains the original block identity and bytes.

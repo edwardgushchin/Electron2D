@@ -608,7 +608,7 @@ def main():
         assert rows and all(" | Implemented | " in row for row in rows), name
         button_rows += len(rows)
     assert button_rows == 136
-    assert "Partial" in class_rows["Texture2DArray"] and "Compressed and integer-sampled" in class_rows["Texture2DArray"]
+    assert "Partial" in class_rows["Texture2DArray"] and "integer R16I/Rg16I/Rgb16I/Rgba16I" in class_rows["Texture2DArray"]
     assert "Implemented" in class_rows["TextureLayered"] and "separate typed layered resources" in class_rows["TextureLayered"]
     assert "Implemented" in class_rows["PlaceholderTexture2DArray"]
     assert " | Partial | " in class_rows["Line2D"] and "../../classes/Line.md" in class_rows["Line2D"]

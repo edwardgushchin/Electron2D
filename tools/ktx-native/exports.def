@@ -3,3 +3,4 @@ e2d_ktx_create
 e2d_ktx_level
 e2d_ktx_destroy
 e2d_basis_create
+e2d_block_decode

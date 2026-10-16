@@ -90,6 +90,17 @@ if (ktx{index}.MIPMapCount != 2 || !ktx{index}.GetData().AsSpan().SequenceEqual(
 """
     PROGRAM = PROGRAM.replace("using Electron2D;\n", "using Electron2D;\n" + snippet, 1)
 
+for index, fixture in enumerate(json.loads((ROOT / "tests/Electron2D.Tests/TestData/Blocks/oracle.json").read_text())["fixtures"]):
+    snippet = f'''using var block{index} = Image.CreateFromData(7, 5, true, Image.Format.{fixture['source_format']}, Convert.FromBase64String("{fixture['encoded']}"));
+using var blockTexture{index} = ImageTexture.CreateFromImage(block{index});
+using var blockArray{index} = new TextureArray(); blockArray{index}.CreateFromImages([block{index}, block{index}]);
+using var blockCopy{index} = blockTexture{index}.GetImage()!;
+if (blockCopy{index}.PixelFormat != block{index}.PixelFormat || !blockCopy{index}.GetData().AsSpan().SequenceEqual(block{index}.GetData())) throw new Exception("Block source preservation failed");
+block{index}.Decompress();
+if (block{index}.PixelFormat != Image.Format.{fixture['format']} || block{index}.MIPMapCount != 2 || !block{index}.GetData().AsSpan().SequenceEqual(Convert.FromBase64String("{fixture['pixels']}"))) throw new Exception("Block decoder package consumer failed");
+'''
+    PROGRAM = PROGRAM.replace("using Electron2D;\n", "using Electron2D;\n" + snippet, 1)
+
 for index, fixture in enumerate(json.loads((ROOT / "tests/Electron2D.Tests/TestData/CompressedArray/basis-oracle.json").read_text())["fixtures"]):
     hdr = fixture["format"] == "Rgbh"
     payload = struct.pack("<I", 5 if hdr else 2) + base64.b64decode(fixture["encoded"])

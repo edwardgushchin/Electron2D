@@ -483,17 +483,17 @@
     {
       "godot": "Image::method:compress(int:Image.CompressMode,int:Image.CompressSource,int:Image.ASTCFormat)",
       "electron2d": "method:Electron2D.Image.Compress(Electron2D.Image.CompressMode,Electron2D.Image.CompressSource,Electron2D.Image.ASTCFormat)",
-      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; remaining ETC/EAC/ASTC channel/HDR families require selected portable encoders/decoders and texture sampling integration. Foreign platforms and native allocation are separate gates."
+      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; ETC/EAC/ASTC decoding and texture sampling now execute; their remaining compression capability requires portable encoders with source/channel/HDR/mip semantics. Foreign platforms and native allocation are separate gates."
     },
     {
       "godot": "Image::method:compress_from_channels(int:Image.CompressMode,int:Image.UsedChannels,int:Image.ASTCFormat)",
       "electron2d": "method:Electron2D.Image.CompressFromChannels(Electron2D.Image.CompressMode,Electron2D.Image.UsedChannels,Electron2D.Image.ASTCFormat)",
-      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; remaining ETC/EAC/ASTC channel/HDR families require selected portable encoders/decoders and texture sampling integration. Foreign platforms and native allocation are separate gates."
+      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; ETC/EAC/ASTC decoding and texture sampling now execute; their remaining compression capability requires portable encoders with source/channel/HDR/mip semantics. Foreign platforms and native allocation are separate gates."
     },
     {
       "godot": "Image::method:decompress()",
       "electron2d": "method:Electron2D.Image.Decompress()",
-      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; remaining ETC/EAC/ASTC channel/HDR families require selected portable encoders/decoders and texture sampling integration. Foreign platforms and native allocation are separate gates."
+      "reason": "ADRs 0039/0012: all 22 stored BC/ETC/EAC/ASTC roles execute portable decoding with complete ragged mips, channel adaptations, signed EAC normalized RGBA float and ASTC HDR half precision. Independent ETC/ASTC mip oracles and explicit signed vectors verify bytes; invalid later mips, work budgets and observer failure preserve atomic publication. Shared ImageTexture/array/imported-array consumers retain original blocks and prepare sampling pixels. Native shared/static sanitizer checks and Linux Wayland GPU/Compatibility tests cover sampling, real upload readback and precision rejection; foreign execution and native allocation totals are separate gates."
     },
     {
       "godot": "Image::method:load_dds_from_buffer(PackedByteArray:)",
@@ -528,7 +528,7 @@
     {
       "godot": "Image::method:load_ktx_from_buffer(PackedByteArray:)",
       "electron2d": "method:Electron2D.Image.LoadKTXFromBuffer(System.ReadOnlySpan<System.Byte>)",
-      "reason": "ADR 0039: copied bounded flat KTX1/KTX2 input, complete mip/precision/raw-block layouts, portable Basis LDR/HDR decoding, row padding, endian/orientation/swizzle and sRGB handling; Image file/resource/texture consumers share atomic publication. Independent codec oracles and Linux GPU/Compatibility sampling are exercised; unsupported ETC/EAC/ASTC transformation and foreign/native package publication remain explicit gates."
+      "reason": "ADR 0039: copied bounded flat KTX1/KTX2 input, complete mip/precision/raw-block layouts, portable Basis LDR/HDR decoding, row padding, endian/orientation/swizzle and sRGB handling; Image file/resource/texture consumers share atomic publication. Independent codec oracles and Linux GPU/Compatibility sampling are exercised; ETC/EAC/ASTC transformations now execute through shared decoding, including signed EAC and punchthrough identities; complete color/metadata adaptation and foreign/native package publication remain separate gates."
     }
   ],
   "statusGroups": [
@@ -727,21 +727,21 @@
         "Image::method:compress(int:Image.CompressMode,int:Image.CompressSource,int:Image.ASTCFormat)"
       ],
       "state": "Partial",
-      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; remaining ETC/EAC/ASTC channel/HDR families require selected portable encoders/decoders and texture sampling integration. Foreign platforms and native allocation are separate gates."
+      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; ETC/EAC/ASTC decoding and texture sampling now execute; their remaining compression capability requires portable encoders with source/channel/HDR/mip semantics. Foreign platforms and native allocation are separate gates."
     },
     {
       "godot": [
         "Image::method:compress_from_channels(int:Image.CompressMode,int:Image.UsedChannels,int:Image.ASTCFormat)"
       ],
       "state": "Partial",
-      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; remaining ETC/EAC/ASTC channel/HDR families require selected portable encoders/decoders and texture sampling integration. Foreign platforms and native allocation are separate gates."
+      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; ETC/EAC/ASTC decoding and texture sampling now execute; their remaining compression capability requires portable encoders with source/channel/HDR/mip semantics. Foreign platforms and native allocation are separate gates."
     },
     {
       "godot": [
         "Image::method:decompress()"
       ],
-      "state": "Partial",
-      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; remaining ETC/EAC/ASTC channel/HDR families require selected portable encoders/decoders and texture sampling integration. Foreign platforms and native allocation are separate gates."
+      "state": "Implemented",
+      "reason": "ADRs 0039/0012: all 22 stored BC/ETC/EAC/ASTC roles execute portable decoding with complete ragged mips, channel adaptations, signed EAC normalized RGBA float and ASTC HDR half precision. Independent ETC/ASTC mip oracles and explicit signed vectors verify bytes; invalid later mips, work budgets and observer failure preserve atomic publication. Shared ImageTexture/array/imported-array consumers retain original blocks and prepare sampling pixels. Native shared/static sanitizer checks and Linux Wayland GPU/Compatibility tests cover sampling, real upload readback and precision rejection; foreign execution and native allocation totals are separate gates."
     },
     {
       "godot": [
@@ -778,7 +778,7 @@
         "Image::method:load_ktx_from_buffer(PackedByteArray:)"
       ],
       "state": "Implemented",
-      "reason": "ADR 0039: copied bounded flat KTX1/KTX2 input, complete mip/precision/raw-block layouts, portable Basis LDR/HDR decoding, row padding, endian/orientation/swizzle and sRGB handling; Image file/resource/texture consumers share atomic publication. Independent codec oracles and Linux GPU/Compatibility sampling are exercised; unsupported ETC/EAC/ASTC transformation and foreign/native package publication remain explicit gates."
+      "reason": "ADR 0039: copied bounded flat KTX1/KTX2 input, complete mip/precision/raw-block layouts, portable Basis LDR/HDR decoding, row padding, endian/orientation/swizzle and sRGB handling; Image file/resource/texture consumers share atomic publication. Independent codec oracles and Linux GPU/Compatibility sampling are exercised; ETC/EAC/ASTC transformations now execute through shared decoding, including signed EAC and punchthrough identities; complete color/metadata adaptation and foreign/native package publication remain separate gates."
     }
   ],
   "extras": [

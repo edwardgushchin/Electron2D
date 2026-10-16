@@ -1800,3 +1800,5 @@ entry/exit histories and zero warmed managed bytes. Wider acceptance stays open.
 current processing-group access and exact physical/file consumers. Physical
 mutations retain their owner guard before virtual consumer hooks. Runtime
 Node duplication retains its separate ADR 0091 binding/identity prerequisite.
+
+The [shared ETC/EAC/ASTC decoder](components/image-block-decoding.md) lives in Image.BlockDecoding.cs and the private tools/ktx-native/blocks.cpp bridge. It adds no public production type; Image and ordinary/layered texture snapshots share its complete-mip prepared pixel path. Original block source archives remain exact.
