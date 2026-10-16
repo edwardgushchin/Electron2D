@@ -398,3 +398,9 @@ now backs Node.GetLastExclusiveWindow and every PopupExclusive entry point.
 Transient ownership, flags, visibility and retirement determine selection;
 processing-scope reads and attachment/cleanup failures preserve scene invariants.
 Independent native child windows remain a separate capability.
+
+[Active viewport ownership](../components/scene-hierarchy.md#active-viewport-ownership)
+now backs Node.GetViewport/GetWindow across physical and ordinary nodes. Enter,
+exit, reparent and cross-tree transfer publish/clear the retained association;
+cached borrowed reads and own-group window lookup preserve their separate access
+rules. Packed scenes reconstruct active links at activation.

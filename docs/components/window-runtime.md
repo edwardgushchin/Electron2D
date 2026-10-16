@@ -90,3 +90,7 @@ Configured recording uses Engine.RunMovie/RunMovieAsync and the typed MovieWrite
 keeps popup parenting independent of display/focus order. Embedded focus routing
 skips disposing windows during cleanup; the shared Node query follows active
 links and preserves detached/null and processing-scope rules.
+
+Containing-window reads now follow [active viewport ownership](scene-hierarchy.md#active-viewport-ownership)
+through nested offscreen boundaries. Detached Window instances return null from
+the inherited Node getters; attached hidden windows retain their association.

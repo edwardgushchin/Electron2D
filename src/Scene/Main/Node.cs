@@ -189,6 +189,7 @@ public partial class Node : ElectronObject
 
     private string _name;
     private string? _absolutePathCache;
+    private volatile Viewport? _activeViewport;
 
     private string _sceneFilePath = string.Empty;
 
@@ -570,22 +571,30 @@ public partial class Node : ElectronObject
     /// <value>An atomic snapshot of the deletion-request flag.</value>
     public bool IsQueuedForDeletion => Volatile.Read(ref _queuedForDeletion) != 0;
 
-    /// <summary>Finds this node's nearest viewport, including itself.</summary>
-    /// <returns>The nearest viewport ancestor, or null in a hierarchy without a viewport.</returns>
+    /// <summary>Returns this node's cached active viewport, including itself when it is a viewport.</summary>
+    /// <returns>The nearest active viewport, or null while detached or in an active hierarchy without a viewport.</returns>
+    /// <remarks>The association is published before enter callbacks and cleared before TreeExited.
+    /// Reading this borrowed reference does not traverse the hierarchy or grant access to the returned viewport's operations.</remarks>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public Viewport? GetViewport()
     {
         ThrowIfDisposed();
-        for (Node? node = this; node is not null; node = node.Parent)
-            if (node is Viewport viewport)
-                return viewport;
-        return null;
+        return _activeViewport;
     }
 
-    /// <summary>Finds this node's containing window, including itself.</summary>
-    /// <returns>The nearest window ancestor, or null in a hierarchy without a window.</returns>
+    /// <summary>Finds this node's active containing window, including itself when it is a window.</summary>
+    /// <returns>The containing window reached through active viewport parents, or null while detached or without a window.</returns>
+    /// <remarks>Available during enter/exit callbacks, with detachment committed before TreeExited.
+    /// The scene owner or this node's current processing group may query its window.</remarks>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
-    public Window? GetWindow() { ThrowIfDisposed(); for (Node? node = this; node is not null; node = node.Parent) if (node is Window window) return window; return null; }
+    /// <exception cref="InvalidOperationException">The node is accessed outside its permitted scene processing scope.</exception>
+    public Window? GetWindow()
+    {
+        ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
+        for (var viewport = _activeViewport; viewport is not null; viewport = viewport.Parent?._activeViewport)
+            if (viewport is Window window) return window;
+        return null;
+    }
 
     /// <summary>Finds the last active exclusive window starting at this node's containing window.</summary>
     /// <returns>The containing window or its last exclusive transient descendant; null while detached or without a containing window.</returns>
@@ -2229,6 +2238,7 @@ public partial class Node : ElectronObject
     {
 
         Tree = tree;
+        _activeViewport = this as Viewport ?? Parent?._activeViewport;
         _absolutePathCache = null;
         TreeAttachmentVersion++;
         tree.BindProcessingGroup(this);
@@ -2466,6 +2476,7 @@ public partial class Node : ElectronObject
             }
 
             tree.UnbindProcessingGroup(this);
+            _activeViewport = null;
             Tree = null;
             _absolutePathCache = null;
 
@@ -2494,6 +2505,7 @@ public partial class Node : ElectronObject
             if (ReferenceEquals(Tree, tree))
             {
                 tree.UnbindProcessingGroup(this);
+                _activeViewport = null;
                 Tree = null;
                 _absolutePathCache = null;
             }

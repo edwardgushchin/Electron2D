@@ -1373,3 +1373,9 @@ peaks, arbitrary workloads, foreign platforms and target-device/window gates.
 now executes through physical Node roles without changing their selected world
 or body identity. Broader inherited, numerical-extension, native-memory and
 target-performance gates remain open.
+
+[Active viewport ownership](../components/scene-hierarchy.md#active-viewport-ownership)
+now gives physical Node roles the same detached/null, nested-window, callback,
+reparent and processing-group query rules. These hierarchy reads preserve the
+selected world and live body identity during measured physical frames; full
+inherited/extension and hardware/native-memory requirements remain open.

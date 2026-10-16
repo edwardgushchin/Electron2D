@@ -219,13 +219,13 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 82 | 27 | 6 | 0 | 0 |
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
-| [Node](classes/Node.md) | [Object](classes/Object.md) | 122 | 63 | 6 | 22 | 1 |
+| [Node](classes/Node.md) | [Object](classes/Object.md) | 124 | 61 | 6 | 22 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
 | [Object](classes/Object.md) | — | 19 | 17 | 2 | 21 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 22 | 5 | 0 | 0 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 289 | 119 | 17 | 43 | 23 |
+| **Total** | | 291 | 117 | 17 | 43 | 23 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -310,8 +310,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Node::method:get_parent()`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Node::method:get_scene_instance_load_placeholder()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:get_tree()`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
-| [`Node::method:get_viewport()`](classes/Node.md) | Partial | ADRs 0004/0008: current getters walk authored hierarchy ancestors, including detached nodes. Embedded/offscreen viewport and window ownership now exist; the former absence claim was stale. The pinned active-viewport cache and processing-access rules are not yet applied to these two getters; they remain Partial. GetLastExclusiveWindow independently validates active membership and permitted processing scope. |
-| [`Node::method:get_window()`](classes/Node.md) | Partial | ADRs 0004/0008: current getters walk authored hierarchy ancestors, including detached nodes. Embedded/offscreen viewport and window ownership now exist; the former absence claim was stale. The pinned active-viewport cache and processing-access rules are not yet applied to these two getters; they remain Partial. GetLastExclusiveWindow independently validates active membership and permitted processing scope. |
 | [`Node::method:is_ancestor_of(Node:)`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Node::method:is_displayed_folded()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:is_editable_instance(Node:)`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |

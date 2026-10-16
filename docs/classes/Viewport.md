@@ -1,6 +1,6 @@
 # Viewport
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 **Inherits:** [Node](Node.md)
 
@@ -27,7 +27,14 @@ Provides a window or offscreen canvas rectangle and scene input boundary.
 
 Root `Window` presentation and single-layer `SubViewport` targets now execute, including logical-size stretch. Embedded viewport containers and independent GUI contexts now execute through SubViewportContainer. Canvas transforms, sampling and pixel-snapping policies are connected to each selected viewport target. Incoming window input is converted to viewport coordinates.
 
-Native lifetime belongs to Engine.Run. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Current Camera updates notify attached [Parallax](Parallax.md) nodes of the adjusted screen origin. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a native Window as a child are rejected; SubViewport children execute. Rendering and multiwindow behavior remain incomplete; see the [coverage page](../coverage/classes/Viewport.md).
+Native lifetime belongs to Engine.Run. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Current Camera updates notify attached [Parallax](Parallax.md) nodes of the adjusted screen origin. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation is rejected; SubViewport and embedded Window children execute, while independent native child windows remain unavailable. Rendering and multiwindow behavior remain incomplete; see the [coverage page](../coverage/classes/Viewport.md).
+
+Inherited `Node.GetViewport()` returns this viewport only while active; detached
+viewports return null. `Node.GetWindow()` follows active viewport parents through
+nested offscreen boundaries to the containing Window, or returns null for an
+offscreen root without a window. These borrowed references follow enter/exit,
+reparent and cross-tree ownership. Their distinct read-access rules are documented
+in [Node](Node.md#m-electron2d-node-getviewport).
 
 A current physics-interpolated Camera retains previous and current `CanvasTransform` values for the renderer. Public `CanvasTransform`, input conversion and camera logical queries keep the latest value. Camera switching, reset and scene-wide policy changes discard the historical presentation pose.
 

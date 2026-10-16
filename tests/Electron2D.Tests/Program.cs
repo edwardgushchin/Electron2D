@@ -837,6 +837,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_SHADER") == "1"
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_HOST") == "1") { SubViewportTests.RunHost(); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_OWNERSHIP") == "1")
+{
+    SceneHierarchyTests.Run(); NodeReplacementTests.Run(); SubViewportTests.Run(); SubViewportContainerTests.Run();
+    ControlLayoutTests.Run(); GUIDragTests.Run(); PopupTests.Run(); return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT") == "1") { SubViewportTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_STATE_MACHINE_NATIVE") == "1") { AnimationStateMachineTests.RunNative(); return; }

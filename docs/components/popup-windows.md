@@ -24,7 +24,8 @@ detached/no-window nodes and enforces the scene owner or the caller's own
 processing group. These links follow transient parent ownership, independently
 of display/focus ordering. Enabling Transient/Exclusive on a visible attached
 window selects it; hidden, nontransient and nonexclusive children do not extend
-the chain. The latest conflicting activation wins with a diagnostic. Removing
+the chain. The containing Window comes from Node's active viewport association,
+which is null after detachment. The latest conflicting activation wins with a diagnostic. Removing
 that selection leaves the parent without an active exclusive child rather than
 silently selecting an older visible sibling.
 

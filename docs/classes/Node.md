@@ -121,8 +121,8 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public string GetPath()`](#m-electron2d-node-getpath) | Gets this node's cached absolute path in its active scene tree. |
 | [`public string GetPathTo(Node node, bool useUniquePath = false)`](#m-electron2d-node-getpathto-electron2d-node-system-boolean) | Builds a relative path, optionally using owner-scoped unique names. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-node-getpropertydescriptors) | Extends base typed descriptors with neutral name, process, input and automatic translation state for inspection and packed scenes. |
-| [`public Viewport? GetViewport()`](#m-electron2d-node-getviewport) | Finds this node's nearest viewport, including itself. |
-| [`public Window? GetWindow()`](#m-electron2d-node-getwindow) | Finds this node's containing window, including itself. |
+| [`public Viewport? GetViewport()`](#m-electron2d-node-getviewport) | Returns this node's cached active viewport, including itself when it is a viewport. |
+| [`public Window? GetWindow()`](#m-electron2d-node-getwindow) | Finds this node's active containing window through viewport parents. |
 | [`public Window? GetLastExclusiveWindow()`](#m-electron2d-node-getlastexclusivewindow) | Finds the last active exclusive transient child from the containing window. |
 | [`public bool HasNode(string path)`](#m-electron2d-node-hasnode-system-string) | Tests whether a node path resolves. |
 | [`public bool IsAncestorOf(Node node)`](#m-electron2d-node-isancestorof-electron2d-scenenode) | Determines whether this node is a strict ancestor of another node. |
@@ -964,28 +964,48 @@ Extends base typed descriptors with neutral name, unique-name, process and input
 <a id="m-electron2d-node-getviewport"></a>
 ### `public Viewport? GetViewport()`
 
-Finds this node's nearest viewport, including itself.
+Returns the cached nearest active viewport, including this node when it is a
+Viewport. Returns null while detached, even for Viewport/Window instances, or
+when an active hierarchy has no viewport. A nested SubViewport selects itself;
+its ordinary descendants share that association.
 
-**Returns:** The nearest viewport ancestor, or null in a hierarchy without a viewport.
+The reference is published before enter callbacks, remains available during exit
+callbacks and is cleared before TreeExited. Reparenting and cross-tree transfer
+recompute it on entry. Manual lifecycle notifications do not change association;
+PackedScene reconstructs it during activation rather than storing a live pointer.
+Reading the cached borrowed reference is allowed from another thread or processing
+group. It neither traverses the hierarchy nor grants permission to operate on the
+returned viewport. Coordinate reads, world/backend mutation and GUI access retain
+their own guards and lifetime rules.
 
 **System.ObjectDisposedException:** The node is disposed.
 
 <a id="m-electron2d-node-getwindow"></a>
 ### `public Window? GetWindow()`
 
-Finds this node's containing window, including itself.
+Returns the active containing Window, including this node when it is a Window.
+Walks the cached viewport-parent chain, crossing nested SubViewport boundaries
+until it reaches a Window. Returns null while detached or without a containing
+Window, including an offscreen root. Visibility does not remove an attached
+window's association. The result remains available during exit callbacks and
+clears before TreeExited.
 
-**Returns:** The nearest window ancestor, or null in a hierarchy without a window.
+The scene owner or this node's current processing group may query its window.
+Reading an own-group node does not require joining the containing window's group.
+Other processing scopes and unrelated threads throw InvalidOperationException.
+The returned window remains borrowed and retains its own operation guards.
 
 **System.ObjectDisposedException:** The node is disposed.
+
+**System.InvalidOperationException:** The node is outside the permitted scene processing scope.
 
 <a id="m-electron2d-node-getlastexclusivewindow"></a>
 ### `public Window? GetLastExclusiveWindow()`
 
 Returns the containing Window or the last child reached through its active
 exclusive transient chain. Returns null outside the active scene tree or when
-there is no containing Window. This differs from `GetWindow()`'s current authored
-hierarchy lookup, which also works while detached.
+there is no containing Window. It uses the same active containing window as
+`GetWindow()`.
 
 A visible attached Window joins this chain only when both Transient and Exclusive
 are enabled. Focus/display order does not select the chain. The latest conflicting

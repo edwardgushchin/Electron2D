@@ -1427,14 +1427,14 @@
     {
       "electron2d": "method:Electron2D.Node.GetViewport()",
       "godot": "Node::method:get_viewport()",
-      "state": "Partial",
-      "reason": "ADRs 0004/0008: current getters walk authored hierarchy ancestors, including detached nodes. Embedded/offscreen viewport and window ownership now exist; the former absence claim was stale. The pinned active-viewport cache and processing-access rules are not yet applied to these two getters; they remain Partial. GetLastExclusiveWindow independently validates active membership and permitted processing scope."
+      "state": "Implemented",
+      "reason": "ADRs 0004/0008/0040: Node retains the nearest active viewport, including self for Viewport/Window; detached/no-viewport nodes return null. Entry publishes before callbacks, exit clears before TreeExited even after callback failures, and reparent/cross-tree entry recomputes. GetViewport reads the cached borrowed reference without acquiring node/viewport operation rights; GetWindow validates owner/own-group scope and crosses active viewport parents to the containing Window. Public CPU/software-GPU/registered serial/separate CoreCLR/strict NativeAOT consumers cover physical Node roles, nested/hidden windows, worker/foreign reads, manual notifications, error/lifetime/weak retirement, fresh-process saved-scene reconstruction and zero owner/all-thread managed bytes over 128 warmed full physical frames. Independent native child windows, hardware/native allocator and foreign-platform acceptance retain their own prerequisites. Evidence: bin/physics-viewport-ownership/2026-10-16/validation.json."
     },
     {
       "electron2d": "method:Electron2D.Node.GetWindow()",
       "godot": "Node::method:get_window()",
-      "state": "Partial",
-      "reason": "ADRs 0004/0008: current getters walk authored hierarchy ancestors, including detached nodes. Embedded/offscreen viewport and window ownership now exist; the former absence claim was stale. The pinned active-viewport cache and processing-access rules are not yet applied to these two getters; they remain Partial. GetLastExclusiveWindow independently validates active membership and permitted processing scope."
+      "state": "Implemented",
+      "reason": "ADRs 0004/0008/0040: Node retains the nearest active viewport, including self for Viewport/Window; detached/no-viewport nodes return null. Entry publishes before callbacks, exit clears before TreeExited even after callback failures, and reparent/cross-tree entry recomputes. GetViewport reads the cached borrowed reference without acquiring node/viewport operation rights; GetWindow validates owner/own-group scope and crosses active viewport parents to the containing Window. Public CPU/software-GPU/registered serial/separate CoreCLR/strict NativeAOT consumers cover physical Node roles, nested/hidden windows, worker/foreign reads, manual notifications, error/lifetime/weak retirement, fresh-process saved-scene reconstruction and zero owner/all-thread managed bytes over 128 warmed full physical frames. Independent native child windows, hardware/native allocator and foreign-platform acceptance retain their own prerequisites. Evidence: bin/physics-viewport-ownership/2026-10-16/validation.json."
     },
     {
       "electron2d": "method:Electron2D.Viewport.GetVisibleRect()",
@@ -11423,6 +11423,14 @@
       "reason": "ADRs 0004/0008/0040: active-tree lookup follows retained visible exclusive transient-child links from the containing Window, independently of focus/display order; detached/no-window returns null and permitted processing scope is checked. Shared public CPU/GPU/registered serial/separate consumers exercise all physical Node branches, nested/nontransient/conflicting siblings, all five popup callers, flag/visibility/reparent/retirement/error paths and strict warmed full-frame allocation gates. Independent native-child-window capabilities retain their Window prerequisites. Twelve Linux x64 CoreCLR/strict NativeAOT profiles require 128 warmed full physical frames at 0/0 owner/all-thread managed bytes. Evidence: bin/physics-exclusive-windows/2026-10-16/validation.json. Hardware throughput, native/driver allocator totals and foreign platforms remain unverified.",
       "godot": [
         "Node::method:get_last_exclusive_window()"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0004/0008/0040: Node retains the nearest active viewport, including self for Viewport/Window; detached/no-viewport nodes return null. Entry publishes before callbacks, exit clears before TreeExited even after callback failures, and reparent/cross-tree entry recomputes. GetViewport reads the cached borrowed reference without acquiring node/viewport operation rights; GetWindow validates owner/own-group scope and crosses active viewport parents to the containing Window. Public CPU/software-GPU/registered serial/separate CoreCLR/strict NativeAOT consumers cover physical Node roles, nested/hidden windows, worker/foreign reads, manual notifications, error/lifetime/weak retirement, fresh-process saved-scene reconstruction and zero owner/all-thread managed bytes over 128 warmed full physical frames. Independent native child windows, hardware/native allocator and foreign-platform acceptance retain their own prerequisites. Evidence: bin/physics-viewport-ownership/2026-10-16/validation.json.",
+      "godot": [
+        "Node::method:get_viewport()",
+        "Node::method:get_window()"
       ]
     }
   ]

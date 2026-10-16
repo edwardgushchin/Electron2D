@@ -242,13 +242,13 @@ PackedScene captures any Node root. Each inheritance layer contributes only its 
 - Attached mutation uses the scene owner thread. Packed capture/instantiation and disposal retain the existing barriers; invalid lifecycle mutation is rejected before state changes.
 - Children have one parent and unique nonempty names. Parenting rejects cycles. Owner is null or a strict ancestor. Scene roots own descendant disposal; callback failures do not stop remaining cleanup stages.
 - Geometry/transform inputs are finite; inverse-dependent operations reject singular transforms. ZIndex is bounded by -4096..4096.
-- Window.Position is native desktop position; Window does not inherit canvas state. Child viewports remain unsupported until their native/offscreen ownership is integrated.
+- Window.Position is native desktop position; Window does not inherit canvas state. Nested SubViewport and embedded child Window ownership execute; independent native child windows retain their platform/backend prerequisite.
 
 ## Verification and limits
 
 [SceneHierarchyTests](../../tests/Electron2D.Tests/SceneHierarchyTests.cs) exercises inheritance, API boundaries, mixed-tree transforms/visibility/Z, custom canvas placement, reparenting, timer/tween lifecycle, neutral packing and callback failure continuation. [NodeReplacementTests](../../tests/Electron2D.Tests/NodeReplacementTests.cs) covers replacement order, groups, owner references, local-resource lifetime, invalid inputs and callback failure. [RemoteTransformTests](../../tests/Electron2D.Tests/RemoteTransformTests.cs) covers transfer policy, path-cache lifetime, invalid targets, cycles, packing, callback failure and owner-thread rejection in managed execution. The existing [runtime checks](../../tests/Electron2D.Tests/Program.cs) cover inherited behavior and run without native dependencies. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) verifies pixels on both GPU and compatibility backends under Linux Wayland and dummy/software. The full Wayland rendering runtime suite in this run passed, including later scene-hierarchy stages. [CanvasOrderingTests](../../tests/Electron2D.Tests/CanvasOrderingTests.cs) adds 31 cases for behind-parent, nested Y, canvas-root ordering and drawing-callback mutation on both native backends and dummy/software. Native tests use programmatic inputs/readback and do not establish physical-input, visual owner or other-platform acceptance.
 
-This hierarchy preserves separate responsibilities; it does not finish every reference member. Complete Control hover ordering, navigation, themes, container/minimum-size layout and nested GUI input, additional drawing primitives and canvas policies, independent viewports, collision physics, file scene loading, nested/inherited authoring and other exact prerequisites remain in [coverage](../coverage/index.md). No compatibility aliases or inert placeholders stand in for missing behavior.
+This hierarchy preserves separate responsibilities; it does not finish every reference member. Full per-member behavior across GUI layout/theme/input, drawing/canvas, collision physics and packed/inherited authoring remains tracked in [coverage](../coverage/index.md). Nested offscreen viewports and embedded windows execute; independent native child windows retain their distinct prerequisite. No compatibility aliases or inert placeholders stand in for missing behavior.
 
 ## Decisions
 
@@ -351,5 +351,43 @@ foreign/native-memory and hardware/window/performance acceptance remain open.
 
 [Active exclusive windows](popup-windows.md#active-exclusive-window-chains) add
 `Node.GetLastExclusiveWindow()` across physical and ordinary Node roles. The
-query is active-tree scoped; existing GetWindow/GetViewport authored-hierarchy
-lookup differences retain explicit Partial coverage.
+query is active-tree scoped and shares the active containing Window used by
+GetWindow.
+
+## Active viewport ownership
+
+Node retains one active viewport reference, published before membership and enter
+callbacks and cleared before TreeExited, including callback-error cleanup.
+Viewport nodes select themselves; ordinary descendants use their active parent's
+association. Detached nodes, including viewports/windows, return null. Reparenting
+and cross-tree transfer recompute the association; manual notifications and saved
+scene data do not write it.
+
+GetViewport reads this cached borrowed reference without walking the hierarchy or
+requiring the node's processing group. Access to the returned object still follows
+that object's guards. GetWindow checks the queried node's owner/current-group
+scope and follows active viewport parents to the nearest Window. A subgroup may
+read its own node's containing window even when that Window belongs to another
+group; unrelated thread/group calls reject. GetLastExclusiveWindow and popup
+parenting consume the same active association.
+
+The public [viewport ownership consumer](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.ViewportOwnership.cs)
+exercises physical and ordinary Node roles, nested offscreen/window boundaries,
+entry/exit/reparent, callback failure, manual notifications, cross-tree transfer,
+weak retirement, worker reads and fresh-process PackedScene reconstruction.
+Its warm contract measures actual complete physical frames and both owner/all-thread
+managed bytes. Hardware/native allocator, foreign-platform and broad inherited
+acceptance remain separate gates.
+
+Current Linux x64 evidence is `bin/physics-viewport-ownership/2026-10-16/validation.json`:
+twelve CoreCLR/strict NativeAOT CPU/software-GPU/registered profiles, each with
+serial or separate physics scheduling and its own fresh scene-load process.
+Each parent measures 128 full physical frames after 128 warmup frames, requiring
+zero owner/all-thread managed bytes, unchanged live RID/world, 128 integration
+callbacks and 12.8 units of motion within 0.01 for accumulated single-precision
+integration. CPU/registered processes run with an unavailable Vulkan ICD; GPU
+parents and fresh children pin lavapipe. Existing hierarchy/replacement, viewport,
+container, layout, drag and popup regressions also pass. Actual offscreen popup
+pixels and 64 warmed placement/render frames pass on GPU/lavapipe and SDL software;
+these renderer checks establish no compositor, physical-input or RTX performance
+acceptance.

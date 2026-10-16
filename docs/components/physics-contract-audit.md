@@ -1577,6 +1577,16 @@ Node query and share it across all five popup-parenting entry points. Retained
 transient links follow visibility/flags/membership and clear during retirement;
 focus/display order is independent. Attachment and cleanup failures preserve both
 errors. Wider inherited, native-child-window, memory and hardware/performance
-acceptance remain open. The separate GetWindow/GetViewport detached/read-access
-gaps retain explicit Partial coverage; the existing TranslationDomain setter is
+acceptance remain open. GetWindow/GetViewport use the active viewport ownership
+recorded below; the existing TranslationDomain setter is
 reconciled with its typed property rather than described as absent.
+
+[Active viewport ownership](scene-hierarchy.md#active-viewport-ownership) replaces
+authored-ancestor lookup with a retained active association. Physical and ordinary
+nodes now return null while detached, expose committed links during enter/exit,
+clear before TreeExited and recompute on reparent/cross-tree transfer. GetViewport
+reads the cached borrowed reference; GetWindow validates owner/own-group access and
+crosses nested viewport boundaries to its containing Window. Manual notifications,
+callback failures, fresh-process scene load and weak retirement have distinct
+checks. Broader inherited/extension, numerical, native-memory, foreign-platform
+and target-device/window/performance gates remain open.

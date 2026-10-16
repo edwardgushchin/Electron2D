@@ -1,4 +1,8 @@
-if (args.Contains("--exclusive-windows")) BackendChecks.RunExclusiveWindows(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+if (args.Contains("--viewport-ownership-child")) BackendChecks.ReadViewportOwnership(args[Array.IndexOf(args, "--viewport-ownership-child") + 1],
+    args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--viewport-ownership")) BackendChecks.RunViewportOwnership(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--exclusive-windows")) BackendChecks.RunExclusiveWindows(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--node-names-child")) BackendChecks.ReadNodeNames(args[Array.IndexOf(args, "--node-names-child") + 1]);
 else if (args.Contains("--node-names")) BackendChecks.RunNodeNames(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
