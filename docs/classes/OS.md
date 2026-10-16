@@ -1,6 +1,6 @@
 # OS
 
-Last updated: 2026-10-13
+Last updated: 2026-10-17
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.OS`. **Inherits:** `ElectronObject`. **Inherited By:** —. **Source:** [source](../../src/Core/OS/OS.cs). **Component:** [File dialogs](../components/file-dialogs.md).
 
@@ -176,3 +176,49 @@ CreateInstance resolves a framework-dependent entry DLL by assembly name in AppC
 Runtime messages now use [diagnostic delivery](../components/diagnostics.md). Engine output flags affect its physical stream; typed logger callbacks retain delivery. Host Console writers retain ordinary C# semantics.
 
 `AddLogger(Logger)`/`RemoveLogger(Logger)` retain registration identity. `LogMessage(string, bool)` and `LogError(string, LoggerErrorType, string, string, string, int)` provide typed message/error ingress with compiler caller metadata.
+
+
+## Keyboard names
+
+| Declaration | Contract |
+| --- | --- |
+| `public static string GetKeycodeString(Key code)` | Formats the embedded modifier flags and a named key or Unicode scalar. None produces an empty string; invalid unnamed scalars produce the replacement character. |
+| `public static Key FindKeycodeFromString(string text)` | Parses a case-insensitive named final key and recognized plus-separated modifier prefixes. Unknown final names contribute None; unknown prefixes are ignored. Null throws ArgumentNullException. |
+| `public static bool IsKeycodeUnicode(int code)` | Classifies the exact unmodified key identity as character-capable. Keypad characters pass; designated editing/navigation/function/system keys do not. |
+
+These operations require no display or renderer and permit independent caller threads.
+Their names are stable platform vocabulary, independent of translation and current culture.
+Control/Meta/Alt names follow the host platform. Logical CommandOrControl formatting
+resolves to the platform modifier; parsing that displayed name returns the concrete modifier.
+The parser does not trim input or infer unnamed Unicode characters. Unknown is a known
+sentinel name and returns Key.Unknown. The character classifier is not Unicode scalar
+validation, produced-text prediction or a keyboard-layout query; it does not remove modifiers.
+
+[The input component](../components/input-runtime.md#keyboard-name-conversion) describes
+splitting a parsed chord into a typed persisted action binding. KeyCodeNamesTests checks the
+191 named key identities and classifier data, modifier edge cases, thread/culture independence
+and 1024 warmed zero-caller-byte lookups. Fresh-process JIT/NativeAOT consumers verify saved
+project settings, exact action matching and press/release without native initialization.
+
+<a id="getkeycodestring"></a>
+`public static string GetKeycodeString(Key code)` masks the key identity and modifier
+fields, emits modifiers in canonical Control/Alt/Shift/Meta order, then the key name.
+CommandOrControl resolves at its platform-specific position. A modifier-only value
+formats only those modifiers. String construction is a cold UI operation.
+
+<a id="findkeycodefromstring"></a>
+`public static Key FindKeycodeFromString(string text)` combines known Shift/Control/Alt/Meta
+prefixes and the final named key. Repeated modifiers collapse; `Ctrl+missing` retains
+Control with no key, and a literal plus uses the named key `Plus`. Split the code and
+modifier masks before populating an InputEventKey or InputBindingSettings.
+
+<a id="iskeycodeunicode"></a>
+`public static bool IsKeycodeUnicode(int code)` tests the supplied identity directly.
+None, Unknown and otherwise unlisted integer identities return true; this permissive
+classification does not establish valid text. Use actual text-input events for produced characters.
+
+```csharp
+Key chord = OS.FindKeycodeFromString("Ctrl+Shift+K");
+string label = OS.GetKeycodeString(chord);
+bool characterKey = OS.IsKeycodeUnicode((int)Key.K);
+```

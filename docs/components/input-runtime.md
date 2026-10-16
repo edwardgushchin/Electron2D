@@ -1,6 +1,6 @@
 # Input runtime component
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 ## Scope
 
@@ -159,3 +159,24 @@ retained under bin/physics-auto-callbacks/2026-10-14; full inherited, native/for
 and hardware/window/performance acceptance remains open.
 
 The [complete processing metadata contract](scene-tree.md#complete-processing-metadata-and-callbacks) permits coordinated stored-value reads and current-group writes for all callback switches and priorities. All six public callback switches are stored; internal switches are runtime-only. Actual input remains owner-delivered, and this metadata grants no physical/render/hierarchy mutation.
+
+
+## Keyboard name conversion
+
+OS.GetKeycodeString and OS.FindKeycodeFromString connect stable key labels with typed
+key identities. InputEventKey uses the same internal formatter. To persist a parsed
+chord as InputBindingSettings, split its CodeMask into Keycode and ModifierMask into
+Modifiers. Store it in an InputActionSettings project definition, load the project in
+a fresh process and call InputMap.LoadFromProjectSettings. Ordinary Input.ParseInputEvent
+then drives the same exact action matching and press/release state.
+
+The named parser deliberately accepts the known table only: an unnamed character may
+format as a Unicode scalar while parsing that text still returns None. The literal
+Unknown is the named sentinel. Unknown prefixes are ignored and whitespace is not
+trimmed. IsKeycodeUnicode classifies unmodified key identities, including keypad
+characters; it is not a produced-text or scalar-validity predicate. Native per-key text
+still requires its documented producer and is not inferred from these names.
+
+The current Linux managed/JIT/NativeAOT checks require no display or renderer. The
+independent C++ table/classifier fixtures include Linux, Windows and macOS vocabularies;
+foreign runtime execution and actual keyboard layouts remain separate platform checks.

@@ -1,6 +1,6 @@
 # Input domain
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 ## Responsibility
 
@@ -122,3 +122,8 @@ retained under bin/physics-auto-callbacks/2026-10-14; full inherited, native/for
 and hardware/window/performance acceptance remains open.
 
 The [complete Node processing contract](../components/scene-tree.md#complete-processing-metadata-and-callbacks) joins local metadata, worker configuration, six stored callback switches, signed priorities, typed frame/input delivery and retained worker schedule sorting. Public managed/NativeAOT CPU/software-Vulkan/registered checks include actual selected motion and zero warmed owner/all-thread bytes; broader native/hardware/inherited acceptance remains open.
+
+
+[Keyboard name conversion](../components/input-runtime.md#keyboard-name-conversion) now
+connects the retained OS service, InputEventKey text and persisted InputMap bindings.
+Formatting, named parsing and character capability execute independently of native input.

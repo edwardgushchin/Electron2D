@@ -1,6 +1,6 @@
 # InputEventKey
 
-Last updated: 2026-10-04
+Last updated: 2026-10-17
 
 **Inherits:** [InputEventWithModifiers](InputEventWithModifiers.md)
 
@@ -322,3 +322,8 @@ Returns the typed properties exposed to tooling before validation.
 ## Inherited API
 
 Public and protected members inherited from [InputEventWithModifiers](InputEventWithModifiers.md). Their lifecycle and error contracts remain applicable unless this page states an override.
+
+
+Key-code text shares the internal formatter with [OS key naming](OS.md#keyboard-names).
+This preserves the existing named-key and embedded-modifier text while making reverse
+lookup available to callers through OS.FindKeycodeFromString.

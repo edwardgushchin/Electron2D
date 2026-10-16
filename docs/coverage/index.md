@@ -1,5 +1,7 @@
 # API coverage register
 
+[OS keyboard names](../components/input-runtime.md#keyboard-name-conversion) now connect three missing declarations to the shared key formatter, typed named parsing and character classification. Saved-project InputMap consumers execute with JIT/NativeAOT without a native host. Low-processor rendering retains its exact invalidation/scheduler prerequisite.
+
 [Window input reception](../classes/Window.md#window-input-reception-and-visibility-notification) now executes native and nested embedded stages, before content transforms and scene/GUI processing. Notification 30 completes the visibility delivery pair. Three reference rows are Implemented; decoration, nonclient and system-back producers retain their exact independent prerequisites.
 
 [Scene-owned shader globals](../components/global-shader-parameters.md#scene-owned-overrides) now provide typed portable values, actual tree-order selection and automatic base restoration. One class is implemented; its typed dynamic-property and inherited-lifecycle projections are explicitly accounted. Project registry startup and the compiler-consumed built-in include library remain separate prerequisites.

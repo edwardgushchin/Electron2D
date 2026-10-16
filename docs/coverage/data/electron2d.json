@@ -127456,6 +127456,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.FindKeycodeFromString(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "FindKeycodeFromString",
+    "signature": "public static Electron2D.Key FindKeycodeFromString(System.String text)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Key",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.GetCacheDir()",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -127549,6 +127568,25 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetKeycodeString(Electron2D.Key)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetKeycodeString",
+    "signature": "public static System.String GetKeycodeString(Electron2D.Key code)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "code",
+        "type": "Electron2D.Key",
+        "default": null
+      }
+    ],
     "returnType": "System.String",
     "value": null
   },
@@ -127795,6 +127833,25 @@
       {
         "name": "variable",
         "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.IsKeycodeUnicode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "IsKeycodeUnicode",
+    "signature": "public static System.Boolean IsKeycodeUnicode(System.Int32 code)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "code",
+        "type": "System.Int32",
         "default": null
       }
     ],

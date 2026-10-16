@@ -258,59 +258,8 @@ public sealed class InputEventKey : InputEventWithModifiers
     private string FormatKey(Key key)
     {
         ThrowIfDisposed();
-        var keyText = key == Key.None ? string.Concat("(", Tr("unset"), ")") : FormatKeyCode(key);
+        var keyText = key == Key.None ? string.Concat("(", Tr("unset"), ")") : KeyCodeNames.Format(key);
         var modifiers = base.AsText();
         return modifiers.Length == 0 ? keyText : string.Concat(modifiers, "+", keyText);
-    }
-
-    private static string FormatKeyCode(Key key)
-    {
-        var raw = (int)key;
-        var modifiers = (KeyModifierMask)(raw & (int)KeyModifierMask.ModifierMask);
-        var code = (Key)(raw & (int)KeyModifierMask.CodeMask);
-        var parts = new List<string>(6);
-        if ((modifiers & KeyModifierMask.CommandOrControl) != 0 && !OperatingSystem.IsMacOS()) parts.Add("Ctrl");
-        if ((modifiers & KeyModifierMask.Control) != 0) parts.Add("Ctrl");
-        if ((modifiers & KeyModifierMask.Alt) != 0) parts.Add(OperatingSystem.IsMacOS() ? "Option" : "Alt");
-        if ((modifiers & KeyModifierMask.Shift) != 0) parts.Add("Shift");
-        if ((modifiers & KeyModifierMask.CommandOrControl) != 0 && OperatingSystem.IsMacOS()) parts.Add("Command");
-        if ((modifiers & KeyModifierMask.Meta) != 0)
-            parts.Add(OperatingSystem.IsMacOS() ? "Command" : OperatingSystem.IsWindows() ? "Windows" : "Meta");
-
-        if (code == Key.None)
-            return string.Join("+", parts);
-        if (code is >= Key.Key0 and <= Key.Key9)
-            parts.Add(((char)(int)code).ToString());
-        else if (code is >= Key.Keypad0 and <= Key.Keypad9)
-            parts.Add($"Kp {(int)code - (int)Key.Keypad0}");
-        else
-            parts.Add(code switch
-            {
-                Key.Control => "Ctrl",
-                Key.Meta => OperatingSystem.IsMacOS() ? "Command" : OperatingSystem.IsWindows() ? "Windows" : "Meta",
-                Key.Alt => OperatingSystem.IsMacOS() ? "Option" : "Alt",
-                Key.KeypadEnter => "Kp Enter",
-                Key.SystemRequest => "SysReq",
-                Key.KeypadMultiply => "Kp Multiply",
-                Key.KeypadDivide => "Kp Divide",
-                Key.KeypadSubtract => "Kp Subtract",
-                Key.KeypadPeriod => "Kp Period",
-                Key.KeypadAdd => "Kp Add",
-                Key.Standby => "StandBy",
-                Key.OpenUrl => "OpenURL",
-                Key.Keyboard => "On-screen keyboard",
-                Key.JisEisu => "JIS Eisu",
-                Key.JisKana => "JIS Kana",
-                Key.Exclamation => "Exclam",
-                Key.QuoteDouble => "QuoteDbl",
-                Key.ParenthesisLeft => "ParenLeft",
-                Key.ParenthesisRight => "ParenRight",
-                Key.AsciiCircumflex => "AsciiCircum",
-                Key.Backslash => "BackSlash",
-                Key.Underscore => "UnderScore",
-                Key.Special => "\uFFFD",
-                _ => Enum.GetName(code) ?? (Rune.IsValid((int)code) ? new Rune((int)code).ToString() : "\uFFFD"),
-            });
-        return string.Join("+", parts);
     }
 }

@@ -9,6 +9,7 @@
     <TieredCompilation Condition="'$(Configuration)' == 'Release'">false</TieredCompilation>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Fixtures/KeyCodeNames.json" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Fixtures/StandardInputHost.py" CopyToOutputDirectory="PreserveNewest" />
     <EmbeddedResource Include="TestData/CompressedArray/basis-oracle.json" LogicalName="TestCompressedArray.basis-oracle.json" />
     <EmbeddedResource Include="TestData/KTX/oracle.json" LogicalName="TestKTX.oracle.json" />

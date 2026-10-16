@@ -1,0 +1,38 @@
+{
+  "mappings": [
+    {
+      "godot": "OS::method:get_keycode_string(int:Key)",
+      "electron2d": "method:Electron2D.OS.GetKeycodeString(Electron2D.Key)",
+      "reason": "ADRs 0004/0038/0095: retained static OS key naming, case-insensitive named-key/modifier parsing and exact character-capability classification share InputEventKey formatting. Compiled pinned keyboard.cpp table/classifier oracle checks 191 Linux identities, 37 classifier boundaries and modifiers. Named Unknown returns Key.Unknown despite the stale XML example; unsupported names contribute None. Public saved-project/input-action JIT and NativeAOT consumers establish the executable host-independent workflow; native keyboard-layout and per-key produced Unicode remain separate prerequisites."
+    },
+    {
+      "godot": "OS::method:find_keycode_from_string(String:)",
+      "electron2d": "method:Electron2D.OS.FindKeycodeFromString(System.String)",
+      "reason": "ADRs 0004/0038/0095: retained static OS key naming, case-insensitive named-key/modifier parsing and exact character-capability classification share InputEventKey formatting. Compiled pinned keyboard.cpp table/classifier oracle checks 191 Linux identities, 37 classifier boundaries and modifiers. Named Unknown returns Key.Unknown despite the stale XML example; unsupported names contribute None. Public saved-project/input-action JIT and NativeAOT consumers establish the executable host-independent workflow; native keyboard-layout and per-key produced Unicode remain separate prerequisites."
+    },
+    {
+      "godot": "OS::method:is_keycode_unicode(int:)",
+      "electron2d": "method:Electron2D.OS.IsKeycodeUnicode(System.Int32)",
+      "reason": "ADRs 0004/0038/0095: retained static OS key naming, case-insensitive named-key/modifier parsing and exact character-capability classification share InputEventKey formatting. Compiled pinned keyboard.cpp table/classifier oracle checks 191 Linux identities, 37 classifier boundaries and modifiers. Named Unknown returns Key.Unknown despite the stale XML example; unsupported names contribute None. Public saved-project/input-action JIT and NativeAOT consumers establish the executable host-independent workflow; native keyboard-layout and per-key produced Unicode remain separate prerequisites."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "OS::method:get_keycode_string(int:Key)",
+        "OS::method:find_keycode_from_string(String:)",
+        "OS::method:is_keycode_unicode(int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0004/0038/0095: retained static OS key naming, case-insensitive named-key/modifier parsing and exact character-capability classification share InputEventKey formatting. Compiled pinned keyboard.cpp table/classifier oracle checks 191 Linux identities, 37 classifier boundaries and modifiers. Named Unknown returns Key.Unknown despite the stale XML example; unsupported names contribute None. Public saved-project/input-action JIT and NativeAOT consumers establish the executable host-independent workflow; native keyboard-layout and per-key produced Unicode remain separate prerequisites."
+    },
+    {
+      "godot": [
+        "OS::property:low_processor_usage_mode",
+        "OS::property:low_processor_usage_mode_sleep_usec"
+      ],
+      "state": "Unimplemented",
+      "reason": "Exact executable prerequisite: complete renderer change/invalidation reporting (RenderingServer.HasChanged), including time-driven shader consumers and retained viewport/canvas updates, plus the Engine.Run sleep/presentation policy. A stored OS flag or cached-command revision alone cannot safely skip rendered frames (ADRs 0016/0028)."
+    }
+  ]
+}
