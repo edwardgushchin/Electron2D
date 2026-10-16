@@ -20,24 +20,26 @@ try
 {
     Dictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null;
     await RequireVersion("spirv-val", "SPIRV-Tools v2026.4");
-    switch (IOPath.GetExtension(input).ToLowerInvariant())
+    var extension = IOPath.GetExtension(input).ToLowerInvariant();
+    using var builtIns = extension is ".hlsl" or ".glsl" ? new BuiltInIncludeFiles() : null;
+    switch (extension)
     {
         case ".hlsl":
             var source = File.ReadAllText(input);
             // Keep original source locations in diagnostics reported by the native compiler.
             var escaped = input.Replace("\\", "/").Replace("\"", "\\\"");
             var code = CompileHLSL("#line 1 \"" + escaped + "\"\n" + source,
-                stage, includeRoot, deviceImport, out sourceTypes);
+                stage, includeRoot, builtIns!.DirectoryPath, deviceImport, out sourceTypes);
             File.WriteAllBytes(temporary, code);
             break;
         case ".glsl":
             await RequireVersion("glslangValidator", "Glslang Version: 11:16.6.0");
             Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
-                args[1] == "compute" ? "comp" : args[1] == "fragment" ? "frag" : "vert", "-I" + includeRoot, "-e", "main", "-o", temporary, input));
+                args[1] == "compute" ? "comp" : args[1] == "fragment" ? "frag" : "vert", "-I" + includeRoot, "-I" + builtIns!.DirectoryPath, "-e", "main", "-o", temporary, input));
             if (!deviceImport)
             {
                 Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
-                    args[1] == "fragment" ? "frag" : "vert", "-I" + includeRoot, "-e", "main", "-gV", "-o", debugTemporary, input));
+                    args[1] == "fragment" ? "frag" : "vert", "-I" + includeRoot, "-I" + builtIns!.DirectoryPath, "-e", "main", "-gV", "-o", debugTemporary, input));
                 sourceTypes = ShaderSourceTypes.GLSL(File.ReadAllBytes(debugTemporary), args[1] == "fragment");
             }
             break;
@@ -95,26 +97,33 @@ static async Task<string> Execute(string executable, params string[] arguments)
     return diagnostic;
 }
 
-static byte[] CompileHLSL(string source, RenderingDevice.ShaderStage stage, string? includeDirectory, bool deviceImport,
+static byte[] CompileHLSL(string source, RenderingDevice.ShaderStage stage, string? includeDirectory, string builtInDirectory, bool deviceImport,
     out Dictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? types)
 {
-    if (!ShaderCross.Init()) throw new InvalidOperationException("Cannot initialize shadercross: " + SDL.GetError());
+    var previousDirectory = Directory.GetCurrentDirectory();
     try
     {
-        var memory = ShaderCross.CompileSPIRVFromHLSL(source, "main",
-            stage == RenderingDevice.ShaderStage.Compute ? ShaderCross.ShaderStage.Compute : stage == RenderingDevice.ShaderStage.Fragment ? ShaderCross.ShaderStage.Fragment : ShaderCross.ShaderStage.Vertex, out var size, includeDirectory);
-        if (memory == 0) throw new ArgumentException("HLSL compilation failed: " + SDL.GetError(), nameof(source));
+        // The HLSL frontend exposes one include root; its working directory supplies the embedded library.
+        Directory.SetCurrentDirectory(builtInDirectory);
+        if (!ShaderCross.Init()) throw new InvalidOperationException("Cannot initialize shadercross: " + SDL.GetError());
         try
         {
-            if (size > 16 * 1024 * 1024) throw new ArgumentException("Shader bytecode exceeds 16 MiB.");
-            var code = new byte[checked((int)size)];
-            Marshal.Copy(memory, code, 0, code.Length);
-            types = deviceImport ? null : ShaderSourceTypes.HLSL(source, stage == RenderingDevice.ShaderStage.Fragment, includeDirectory, code);
-            return code;
+            var memory = ShaderCross.CompileSPIRVFromHLSL(source, "main",
+                stage == RenderingDevice.ShaderStage.Compute ? ShaderCross.ShaderStage.Compute : stage == RenderingDevice.ShaderStage.Fragment ? ShaderCross.ShaderStage.Fragment : ShaderCross.ShaderStage.Vertex, out var size, includeDirectory);
+            if (memory == 0) throw new ArgumentException("HLSL compilation failed: " + SDL.GetError(), nameof(source));
+            try
+            {
+                if (size > 16 * 1024 * 1024) throw new ArgumentException("Shader bytecode exceeds 16 MiB.");
+                var code = new byte[checked((int)size)];
+                Marshal.Copy(memory, code, 0, code.Length);
+                types = deviceImport ? null : ShaderSourceTypes.HLSL(source, stage == RenderingDevice.ShaderStage.Fragment, includeDirectory, code);
+                return code;
+            }
+            finally { SDL.Free(memory); }
         }
-        finally { SDL.Free(memory); }
+        finally { ShaderCross.Quit(); }
     }
-    finally { ShaderCross.Quit(); }
+    finally { Directory.SetCurrentDirectory(previousDirectory); }
 }
 
 static async Task RequireVersion(string executable, string expected)

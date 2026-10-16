@@ -320,6 +320,8 @@ Four optional mesh-local float4 inputs occupy fragment locations 7, 8, 9 and 10,
 
 ShaderInclude now supplies bounded source editing, `.hlslinc`/`.glslinc` ResourceLoader/ResourceSaver paths and typed archive persistence. Nested shader dependencies execute in the build compiler; save/rebuild publishes new SPIR-V and failed imports preserve the old module. [ShaderInclude](../classes/ShaderInclude.md) records source/runtime boundaries and validation.
 
+[ShaderIncludeDB](../classes/ShaderIncludeDB.md) exposes the embedded portable HLSL/GLSL color library before renderer startup. The project importer supplies its exact source to native include resolution; internal canvas color processing consumes the HLSL fragment. Scalar/RGB/RGBA transfer helpers preserve alpha and negative/HDR values. Source discovery, build preprocessing and runtime SPIR-V execution remain distinct operations.
+
 
 ## Import fixture and private renderer interfaces
 

@@ -294,6 +294,8 @@ The primary realized face supplies OpenType metadata through `GetSupportedFeatur
 
 [ShaderInclude](../classes/ShaderInclude.md) authors and persists reusable HLSL/GLSL source consumed by the existing build importer; runtime source edits require save/rebuild and explicit compiled Shader replacement.
 
+[ShaderIncludeDB](../classes/ShaderIncludeDB.md) provides static discovery of the embedded portable color fragments consumed by both the project importer and built-in canvas color processing. Its source is available before renderer startup; consuming shaders retain normal backend requirements.
+
 Retained canvas items now support local finite repetition through CanvasSetItemRepeat, sharing one state with direct-child CanvasSetItemMirroring. Arbitrary item subtrees repeat on both backends; nested sources override inherited repetitions, and viewport culling avoids expanding distant ordinary copies. See the [canvas component](../components/canvas-rendering.md#retained-item-repetition) for state lifetime and verification limits.
 
 Retained canvas-group configuration now executes through RenderingServer.CanvasItemSetCanvasGroupMode for arbitrary live items, with the shared masking/transparent composition path. See [retained configuration](../components/canvas-rendering.md#retained-canvas-group-configuration) for fitting, margins, mipmaps, source republishing, lifetime and shared-backbuffer limits.

@@ -4996,6 +4996,26 @@
       "godot": "class:ShaderGlobalsOverride",
       "electron2d": "T:Electron2D.ShaderGlobalsOverride",
       "reason": "ADRs 0028/0023/0004/0090: executable typed ShaderGlobalsOverride scene authoring for all 25 supported global roles, first actual tree-order priority, observable groups and pre-delete warning refreshes, ancestor reorder/transfer and failed-exit/disposal restoration. Exact portable role/carrier descriptors restore fresh files and borrowed image aliases. ShaderGlobalsOverrideTests checks guards, failed activation/repair and zero-byte prepared updates; GLSL/HLSL run 160 software-Vulkan frames on Linux Wayland/X11, with 12 pixel phases and 64 active/64 idle owner intervals at 0 managed bytes. A public-only GLSL JIT/NativeAOT consumer verifies fresh schema, image/matrix data, pixels and base restoration. Other platforms/native allocator/hardware/owner acceptance remain separate."
+    },
+    {
+      "godot": "class:ShaderIncludeDB",
+      "electron2d": "T:Electron2D.ShaderIncludeDB",
+      "reason": "ADRs 0028/0095: retained static discovery returns immutable embedded portable color source before renderer startup, literal case-sensitive existence and missing-name empty/false, and an independent ordinal name array. The same HLSL source executes in built-in canvas color processing; native project HLSL/GLSL preprocessing consumes the library with nested guards and inactive includes. ShaderIncludeDBTests checks workers, null/missing/isolation and 1024 prepared zero-byte lookups; both-language math/alpha pixels and HDR regressions pass on Linux software Vulkan Wayland/X11. Importer vertex/compute stages, unchanged output and failure preservation are verified. Driver-specific/3D internals are outside the portable adaptation; foreign platforms, native allocations, hardware and owner acceptance remain separate."
+    },
+    {
+      "godot": "ShaderIncludeDB::method:get_built_in_include_file(String:)",
+      "electron2d": "method:Electron2D.ShaderIncludeDB.GetBuiltInIncludeFile(System.String)",
+      "reason": "ADRs 0028/0095: retained static discovery returns immutable embedded portable color source before renderer startup, literal case-sensitive existence and missing-name empty/false, and an independent ordinal name array. The same HLSL source executes in built-in canvas color processing; native project HLSL/GLSL preprocessing consumes the library with nested guards and inactive includes. ShaderIncludeDBTests checks workers, null/missing/isolation and 1024 prepared zero-byte lookups; both-language math/alpha pixels and HDR regressions pass on Linux software Vulkan Wayland/X11. Importer vertex/compute stages, unchanged output and failure preservation are verified. Driver-specific/3D internals are outside the portable adaptation; foreign platforms, native allocations, hardware and owner acceptance remain separate."
+    },
+    {
+      "godot": "ShaderIncludeDB::method:has_built_in_include_file(String:)",
+      "electron2d": "method:Electron2D.ShaderIncludeDB.HasBuiltInIncludeFile(System.String)",
+      "reason": "ADRs 0028/0095: retained static discovery returns immutable embedded portable color source before renderer startup, literal case-sensitive existence and missing-name empty/false, and an independent ordinal name array. The same HLSL source executes in built-in canvas color processing; native project HLSL/GLSL preprocessing consumes the library with nested guards and inactive includes. ShaderIncludeDBTests checks workers, null/missing/isolation and 1024 prepared zero-byte lookups; both-language math/alpha pixels and HDR regressions pass on Linux software Vulkan Wayland/X11. Importer vertex/compute stages, unchanged output and failure preservation are verified. Driver-specific/3D internals are outside the portable adaptation; foreign platforms, native allocations, hardware and owner acceptance remain separate."
+    },
+    {
+      "godot": "ShaderIncludeDB::method:list_built_in_include_files()",
+      "electron2d": "method:Electron2D.ShaderIncludeDB.ListBuiltInIncludeFiles()",
+      "reason": "ADRs 0028/0095: retained static discovery returns immutable embedded portable color source before renderer startup, literal case-sensitive existence and missing-name empty/false, and an independent ordinal name array. The same HLSL source executes in built-in canvas color processing; native project HLSL/GLSL preprocessing consumes the library with nested guards and inactive includes. ShaderIncludeDBTests checks workers, null/missing/isolation and 1024 prepared zero-byte lookups; both-language math/alpha pixels and HDR regressions pass on Linux software Vulkan Wayland/X11. Importer vertex/compute stages, unchanged output and failure preservation are verified. Driver-specific/3D internals are outside the portable adaptation; foreign platforms, native allocations, hardware and owner acceptance remain separate."
     }
   ],
   "statusGroups": [
@@ -7027,6 +7047,16 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0028/0023/0004/0090: executable typed ShaderGlobalsOverride scene authoring for all 25 supported global roles, first actual tree-order priority, observable groups and pre-delete warning refreshes, ancestor reorder/transfer and failed-exit/disposal restoration. Exact portable role/carrier descriptors restore fresh files and borrowed image aliases. ShaderGlobalsOverrideTests checks guards, failed activation/repair and zero-byte prepared updates; GLSL/HLSL run 160 software-Vulkan frames on Linux Wayland/X11, with 12 pixel phases and 64 active/64 idle owner intervals at 0 managed bytes. A public-only GLSL JIT/NativeAOT consumer verifies fresh schema, image/matrix data, pixels and base restoration. Other platforms/native allocator/hardware/owner acceptance remain separate."
+    },
+    {
+      "godot": [
+        "class:ShaderIncludeDB",
+        "ShaderIncludeDB::method:get_built_in_include_file(String:)",
+        "ShaderIncludeDB::method:has_built_in_include_file(String:)",
+        "ShaderIncludeDB::method:list_built_in_include_files()"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0028/0095: retained static discovery returns immutable embedded portable color source before renderer startup, literal case-sensitive existence and missing-name empty/false, and an independent ordinal name array. The same HLSL source executes in built-in canvas color processing; native project HLSL/GLSL preprocessing consumes the library with nested guards and inactive includes. ShaderIncludeDBTests checks workers, null/missing/isolation and 1024 prepared zero-byte lookups; both-language math/alpha pixels and HDR regressions pass on Linux software Vulkan Wayland/X11. Importer vertex/compute stages, unchanged output and failure preservation are verified. Driver-specific/3D internals are outside the portable adaptation; foreign platforms, native allocations, hardware and owner acceptance remain separate."
     }
   ],
   "extras": [

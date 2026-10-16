@@ -10835,6 +10835,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ShaderIncludeDB",
+    "kind": "type",
+    "declaringType": "Electron2D.ShaderIncludeDB",
+    "name": "ShaderIncludeDB",
+    "signature": "public sealed class Electron2D.ShaderIncludeDB",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ShaderMaterial",
     "kind": "type",
     "declaringType": "Electron2D.ShaderMaterial",
@@ -165503,6 +165518,57 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderIncludeDB.GetBuiltInIncludeFile(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderIncludeDB",
+    "name": "GetBuiltInIncludeFile",
+    "signature": "public static System.String GetBuiltInIncludeFile(System.String filename)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "filename",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderIncludeDB.HasBuiltInIncludeFile(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderIncludeDB",
+    "name": "HasBuiltInIncludeFile",
+    "signature": "public static System.Boolean HasBuiltInIncludeFile(System.String filename)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "filename",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderIncludeDB.ListBuiltInIncludeFiles()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderIncludeDB",
+    "name": "ListBuiltInIncludeFiles",
+    "signature": "public static System.String[] ListBuiltInIncludeFiles()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
     "value": null
   },
   {

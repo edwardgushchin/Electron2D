@@ -357,6 +357,7 @@ public sealed partial class ThemeDB
         ["Shader"] = ["Shader", "Resource", "ElectronObject"],
         ["ShaderGlobalsOverride"] = ["ShaderGlobalsOverride", "Node", "ElectronObject"],
         ["ShaderInclude"] = ["ShaderInclude", "Resource", "ElectronObject"],
+        ["ShaderIncludeDB"] = ["ShaderIncludeDB", "ElectronObject"],
         ["ShaderMaterial"] = ["ShaderMaterial", "Material", "Resource", "ElectronObject"],
         ["Shape"] = ["Shape", "Resource", "ElectronObject"],
         ["ShapeCast"] = ["ShapeCast", "Entity", "CanvasItem", "Node", "ElectronObject"],

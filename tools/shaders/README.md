@@ -14,6 +14,26 @@ first download. Source revisions and archive SHA-256 hashes are pinned in
 `toolchain.lock.json`: glslang 16.6.0, SPIRV-Tools v2026.4 and their matching
 SPIRV-Headers. These are build tools, outside the runtime project.
 
+## Built-in include library
+
+The importer supplies `electron2d/color.hlslinc` and `electron2d/color.glslinc`
+from the embedded runtime library. HLSL and GLSL expose
+`Electron2D_SRGBToLinear` and `Electron2D_LinearToSRGB` for scalar, RGB and RGBA
+values; RGBA preserves alpha, and RGB supports negative and HDR values.
+GLSL sources require `#extension GL_GOOGLE_include_directive : require`.
+
+Native compilers handle nested includes, guards, macros and inactive branches.
+Project files retain normal native include precedence; avoid shadowing library
+names. The tool materializes library source in a private temporary directory and
+removes it after import, including failures. Original include roots and source
+locations remain available. The library also works with device vertex/fragment/
+compute import. Published games load compiled SPIR-V without the import tool.
+
+Public `ShaderIncludeDB` static operations list names, test existence and return
+that same source before renderer startup. Missing names return false/empty;
+lookup is literal and case-sensitive. The library is portable across graphics
+drivers. Internal canvas color processing consumes its HLSL fragment.
+
 ## Built-in runtime shaders
 
 `dotnet build Electron2D.csproj` automatically compiles the HLSL rendering sources

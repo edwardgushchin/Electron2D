@@ -1,6 +1,6 @@
 # ShaderInclude
 
-Last updated: 2026-10-13
+Last updated: 2026-10-16
 
 `ShaderInclude : Resource` owns reusable HLSL or GLSL source for the shader build importer. Save it as `.hlslinc` or `.glslinc`, include that file from a shader, and rebuild to produce SPIR-V. Existing loaded shaders keep their compiled program until the caller explicitly replaces it with `Shader.SetSPIRV` or loads a new shader.
 
@@ -12,6 +12,8 @@ ResourceSaver.Save(include, "res://Shaders/factor.hlslinc");
 ```
 
 Include the file with `#include "factor.hlslinc"` from HLSL or GLSL. GLSL uses `GL_GOOGLE_include_directive`; nested includes, guards, macros and inactive branches are handled by the compiler. The importer runs on every build, preserves unchanged output and reports errors without replacing the last valid SPIR-V.
+
+[ShaderIncludeDB](ShaderIncludeDB.md) supplies the embedded portable color library. Its source can be copied into this resource or included directly by its registered HLSL/GLSL filename during project import.
 
 ## Members
 

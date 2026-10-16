@@ -1,0 +1,17 @@
+#ifndef ELECTRON2D_COLOR_HLSL_INCLUDED
+#define ELECTRON2D_COLOR_HLSL_INCLUDED
+float Electron2D_SRGBToLinear(float value) {
+    return value <= 0.04045 ? value / 12.92 : pow((value + 0.055) / 1.055, 2.4);
+}
+float Electron2D_LinearToSRGB(float value) {
+    return value <= 0.0031308 ? value * 12.92 : 1.055 * pow(value, 1.0 / 2.4) - 0.055;
+}
+float3 Electron2D_SRGBToLinear(float3 value) {
+    return float3(Electron2D_SRGBToLinear(value.r), Electron2D_SRGBToLinear(value.g), Electron2D_SRGBToLinear(value.b));
+}
+float3 Electron2D_LinearToSRGB(float3 value) {
+    return float3(Electron2D_LinearToSRGB(value.r), Electron2D_LinearToSRGB(value.g), Electron2D_LinearToSRGB(value.b));
+}
+float4 Electron2D_SRGBToLinear(float4 value) { return float4(Electron2D_SRGBToLinear(value.rgb), value.a); }
+float4 Electron2D_LinearToSRGB(float4 value) { return float4(Electron2D_LinearToSRGB(value.rgb), value.a); }
+#endif

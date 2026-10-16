@@ -768,7 +768,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Shader](classes/Shader.md) | Resource | Partial | 13 |
 | [ShaderGlobalsOverride](classes/ShaderGlobalsOverride.md) | Node | Implemented | 0 |
 | [ShaderInclude](classes/ShaderInclude.md) | Resource | Implemented | 1 |
-| [ShaderIncludeDB](classes/ShaderIncludeDB.md) | Object | Blocked | 3 |
+| [ShaderIncludeDB](classes/ShaderIncludeDB.md) | Object | Implemented | 3 |
 | [ShaderMaterial](classes/ShaderMaterial.md) | Material | Partial | 3 |
 | [Shape2D](classes/Shape2D.md) | Resource | Implemented | 7 |
 | [Shape3D](classes/Shape3D.md) | Resource | Excluded | 3 |
