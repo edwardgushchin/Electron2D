@@ -480,3 +480,82 @@ Addresses are process-local, symbol availability is bounded by the captured
 binaries, and inline source frames are not expanded. Unhooked/direct-mapped
 storage, exact owner graphs, NativeAOT native budgets, hardware gain and window
 acceptance remain open. RTX load still requires the power-cable check.
+
+## NativeAOT native lifetime cohort, 2026-10-16
+
+The runner now supports `--network --network-aot`. Its host links all thirteen
+public example source files plus the same test-only child-launch hook used by
+the CoreCLR collector. Publication enables the source-native build path,
+NativeAOT and strict linker warnings. Session/world logic, report preparation
+and all original checks stay in the example sources. The host uses the public
+runtime API; it has no private backend probe or added checkpoint/GC phase gates.
+
+Four profiled cohorts cover CPU/GPU primary clients and owner/separate numerical
+policies. All retain 900 authority ticks, 28 objects, late-admission request 310,
+250 ms primary poll delay, ordinary unpaced prediction/replay and the complete
+original geometry/contact/joint/support, packet-impairment, lifecycle/ownership,
+confirmed-event and .002 final-convergence checks. Every warmed physical owner/
+all-thread allocation counter remains 0/0. CPU processes exercise denied GPU
+startup before their working worlds. Each native launcher and its three children
+use the same ELF SHA-256 across all five AOT cohorts:
+`e1ee3cd5df8d384fc0a21932bbed7fb0d751bb6ceb04ae2913397a352e0bd62c`.
+All 55 delivered native dependency files also match across those five AOT
+cohorts. The supplementary CoreCLR regression has separate ENet, FAudio and
+TextBreak binary identities, recorded independently. Its native code/readonly
+sections differ as well; these cohorts are not a normalized AOT/CoreCLR
+performance comparison.
+
+The collector and launcher stay unprofiled. Twelve actual session processes
+produce twelve lifetime traces; sampled mappings verify the native executable,
+absence of CoreCLR/phase-marker libraries, expected preload and only the GPU
+role's pinned software driver. No heap attachment is performed; selected object
+sizes are explicitly unmeasured. A fifth AOT GPU/separate cohort exercises the
+same host without preload, and the ordinary public NativeAOT consumer passes its
+full mixed-backend check separately. Its test hooks remain erased. A fresh
+marked CoreCLR GPU/separate regression retains all fifteen observations and
+twenty-one markers after extraction of the shared launch hook.
+
+The analyzer's explicit `--lifetime` mode accepts unmarked data and rejects phase
+markers; its default still requires all seven. Independent unsuppressed/unmerged
+Heaptrack peak/end flamegraphs agree exactly for all fifteen new native/CoreCLR
+traces. Generated flamegraphs are retained losslessly compressed. These are
+per-process hooked native requested bytes over the complete lifetime:
+
+| NativeAOT cohort / role | Simultaneous peak B | Process-end B |
+| --- | ---: | ---: |
+| CPU owner / authority | 1,316,782 | 1,207,996 |
+| CPU owner / CPU | 1,660,485 | 1,520,855 |
+| CPU owner / late | 1,616,389 | 1,520,855 |
+| CPU separate / authority | 1,317,422 | 1,208,636 |
+| CPU separate / CPU | 1,661,125 | 1,521,535 |
+| CPU separate / late | 1,606,152 | 1,521,535 |
+| GPU owner / authority | 1,316,738 | 1,207,996 |
+| GPU owner / GPU | 469,341,513 | 1,639,613 |
+| GPU owner / late | 1,616,389 | 1,520,855 |
+| GPU separate / authority | 1,317,632 | 1,208,522 |
+| GPU separate / GPU | 469,417,495 | 1,639,739 |
+| GPU separate / late | 1,606,174 | 1,521,421 |
+
+The GPU end inventories have 256 B with direct lavapipe allocation leaves,
+131,184 B with C++ allocation leaves, and zero direct ENet leaves. The executable
+itself accounts for 1,110,185/1,110,273 B of end allocation leaves. NativeAOT folds
+runtime and engine code into that executable; its leaf identity is not an exact
+owner classification. CoreCLR/JIT paths from the earlier cohort are absent;
+these results neither transfer its phase boundaries to AOT nor identify every
+remaining allocation. Complete unhooked/direct-mapped storage and managed heap
+reservations remain outside this requested-byte scope. No process peak is added
+to another process, RSS, selected managed graph or requested device-buffer total.
+
+Controller-failure testing also reproduced an owned stopped child surviving a
+nonzero collector exit. The shared runner now routes that failure through its
+existing process-group cleanup; the test changes from RED to GREEN alongside the
+existing timeout/interruption cleanup. No successful cohort depends on retrying
+an allocation threshold or weakening the physical checks.
+
+Artifacts are under `bin/physics-network-aot-native/2026-10-16/`; the completed
+CPU/separate pilot is retained as that accepted cohort. They include strict
+publication, process/trace identities, unprofiled controls, source/PDB and hook
+audits, independent analyzer totals and verification receipts. API/coverage and
+runtime behavior remain unchanged. NativeAOT phase attribution, exact native
+owners, arbitrary/massive workloads, target GPU advantage and real window FPS
+remain open. RTX loading still requires its power-cable check.

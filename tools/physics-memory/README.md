@@ -245,6 +245,38 @@ interval peaks above or object-owner identities. Reused allocation-info indices
 do not identify individual pointer lifetimes; inline source frames are not expanded.
 See the [recorded call paths](../../docs/components/physics-network-memory.md#live-native-call-path-inventory-2026-10-16).
 
+#### NativeAOT network lifetimes
+
+```bash
+python3 -B tools/physics-memory/run.py NEW_OUTPUT \
+  --network --network-aot --client-backend gpu --threaded --unpaced \
+  --client-poll-delay-ms 250 --icd /absolute/path/to/lavapipe.json \
+  --heaptrack-preload /absolute/path/to/libheaptrack_preload.so
+```
+
+This publishes `NativeNetworkFixture` for Linux x64 with strict NativeAOT/linker
+checks. It links every public example source plus the shared child-launch hook;
+the ordinary consumer keeps its erased hooks. The original 900-tick scene and
+all process checks execute. The collector and native launcher stay unprofiled;
+only the three session children receive preload and separate trace paths.
+The collector checks their executable identity, roles and runtime/driver/profiler
+mappings. It records explicit unmeasured object graphs. This host has no phase
+gates or added local checkpoint captures. Omitting preload runs an unprofiled
+control; CPU and owner-lane options work as in the ordinary network mode.
+
+Interpret each trace with the matching Heaptrack tools, then use
+`summarize_native.py TRACE.interpreted.gz --lifetime`. This explicit mode accepts
+unmarked whole-process data and rejects phase markers; the default still requires
+all seven. Keep lifetime requested-byte peaks/end values separate from the
+marked CoreCLR intervals, managed heap/RSS and GPU storage requests. Host ABI
+metadata and procfs self-tests remain available; managed mallinfo2 calibration
+belongs to the CoreCLR mode. [Recorded NativeAOT scope](../../docs/components/physics-network-memory.md#nativeaot-native-lifetime-cohort-2026-10-16)
+retains the remaining phase, ownership, direct-mapping and hardware gates.
+
+The owned process group is retired on timeout, interruption or nonzero collector
+exit, including children left behind by a failed controller. The cleanup tests
+exercise both timeout and controller failure with a stopped descendant.
+
 ## Repeated world retirement
 
 Use `--cycles 8` with the raw fixture to create and retire eight independent worlds

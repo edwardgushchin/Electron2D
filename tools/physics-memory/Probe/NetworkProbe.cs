@@ -106,7 +106,7 @@ internal static class NetworkProbe
         return Convert.ToHexStringLower(SHA256.HashData(stream));
     }
 
-    private static bool IsDescendant(int pid, int ancestor)
+    internal static bool IsDescendant(int pid, int ancestor)
     {
         while (pid > 1)
         {

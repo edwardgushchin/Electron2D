@@ -225,3 +225,9 @@ now partitions those existing boundary balances beyond allocation-leaf modules.
 It separates pipeline/loader paths released by disposal from later C++/JIT
 reporting paths. These are recorded native call paths, not exact object owners
 or additional process-memory measurements.
+
+[NativeAOT network lifetimes](physics-network-memory.md#nativeaot-native-lifetime-cohort-2026-10-16)
+now have their own twelve native allocation traces from the complete public-only
+example host. These whole-process requested-byte peaks/end values and unprofiled
+controls are separate from CoreCLR object graphs, procfs/RSS and marked phases;
+full native ownership and direct-mapping totals remain open.

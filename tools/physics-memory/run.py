@@ -15,6 +15,8 @@ def run_probe(command, *, cwd, env, stdout, stderr, timeout):
     with subprocess.Popen(command, cwd=cwd, env=env, stdout=stdout, stderr=stderr, start_new_session=True) as child:
         try:
             code = child.wait(timeout=timeout)
+            if code:
+                raise subprocess.CalledProcessError(code, command)
         except BaseException:
             try:
                 os.killpg(child.pid, signal.SIGKILL)
@@ -22,8 +24,6 @@ def run_probe(command, *, cwd, env, stdout, stderr, timeout):
                 pass
             child.wait()
             raise
-        if code:
-            raise subprocess.CalledProcessError(code, command)
 
 
 parser = argparse.ArgumentParser(description=__doc__)
@@ -32,6 +32,7 @@ parser.add_argument("--icd", type=Path, help="Optional lavapipe ICD; without it 
 parser.add_argument("--bodies", type=int, default=1024)
 parser.add_argument("--history", type=int, default=4)
 parser.add_argument("--network", action="store_true", help="Measure the full three-process network example instead of the raw world")
+parser.add_argument("--network-aot", action="store_true", help="Publish the full public-only network host as NativeAOT; no heap attachment or phase markers")
 parser.add_argument("--native-phases", action="store_true", help="Compare cold compiler/device controls and both public GPU retirement policies without heap attachment")
 parser.add_argument("--heaptrack-preload", type=Path, help="Explicit libheaptrack_preload.so for native-phase/network child allocation stacks; changes measurement overhead")
 parser.add_argument("--client-backend", choices=["cpu", "gpu"], default="gpu", help="Primary network client backend")
@@ -40,6 +41,8 @@ parser.add_argument("--unpaced", action="store_true", help="Use ordinary network
 parser.add_argument("--client-poll-delay-ms", type=int, default=0, help="Add 0 through 250 ms between primary network client polls")
 parser.add_argument("--cycles", type=int, default=0, help="Measure 1 through 32 retirement cycles; native phases default to 32")
 args = parser.parse_args()
+if args.network_aot and not args.network:
+    parser.error("NativeAOT network collection requires --network")
 if args.native_phases and (args.network or args.threaded or not args.icd):
     parser.error("Native phases require an explicit lavapipe ICD, include both policies, and cannot combine with --network or --threaded")
 if args.native_phases and not args.cycles:
@@ -80,30 +83,34 @@ if args.icd:
     if library.name != "libvulkan_lvp.so" or not library.is_file():
         raise ValueError("GPU memory profiling requires an explicit existing lavapipe library")
     driver = {"icd": str(args.icd), "library": str(library), "sha256": hashlib.file_digest(library.open("rb"), "sha256").hexdigest()}
-fixture = "NetworkFixture" if args.network else "Fixture"
+fixture = "NativeNetworkFixture" if args.network_aot else "NetworkFixture" if args.network else "Fixture"
 projects = [("Probe", repo / "tools/physics-memory/Probe/Probe.csproj", []),
             (fixture, repo / f"tools/physics-memory/{fixture}/{fixture}.csproj", ["-p:Electron2DBuildNativeFromSource=true"])]
 if args.native_phases:
     projects.append(("Tests", repo / "tests/Electron2D.Tests/Electron2D.Tests.csproj", ["-p:Electron2DBuildNativeFromSource=true"]))
 for name, project, extra in projects:
-    command = ["dotnet", "build", str(project), "-c", "Release", "-o", str(output / name), *extra]
+    native = args.network_aot and name == fixture
+    command = ["dotnet", "publish" if native else "build", str(project), "-c", "Release", "-o", str(output / name), *extra]
+    if native:
+        command += ["-r", "linux-x64", "-p:PublishAot=true", "-p:SelfContained=true", "-p:ILLinkTreatWarningsAsErrors=true", "-p:TrimmerSingleWarn=false"]
     with (output / f"build-{name}.log").open("w") as log:
         subprocess.run(command, cwd=repo, env=env, stdout=log, stderr=subprocess.STDOUT, check=True)
 abi_program = output / "process-memory-abi"
 subprocess.run(["cc", "-std=c11", "-Wall", "-Wextra", "-Werror", str(repo / "tools/physics-memory/test_process_memory.c"), "-o", str(abi_program)], check=True)
 abi = json.loads(subprocess.check_output([str(abi_program)], text=True))
-with (output / "process-memory-calibration.json").open("w") as log, (output / "process-memory-calibration.err").open("w") as error:
-    run_probe(["dotnet", str(output / fixture / (fixture + ".dll")), "--process-memory-calibration"], cwd=repo, env=env,
-              stdout=log, stderr=error, timeout=30)
-calibration = json.loads((output / "process-memory-calibration.json").read_text())
-if any(calibration[key] != value for key, value in abi.items()):
-    raise ValueError("Managed mallinfo2 declaration does not match the host C ABI")
+if not args.network_aot:
+    with (output / "process-memory-calibration.json").open("w") as log, (output / "process-memory-calibration.err").open("w") as error:
+        run_probe(["dotnet", str(output / fixture / (fixture + ".dll")), "--process-memory-calibration"], cwd=repo, env=env,
+                  stdout=log, stderr=error, timeout=30)
+    calibration = json.loads((output / "process-memory-calibration.json").read_text())
+    if any(calibration[key] != value for key, value in abi.items()):
+        raise ValueError("Managed mallinfo2 declaration does not match the host C ABI")
 (output / "process-memory-abi.json").write_text(json.dumps(abi, indent=2) + "\n")
 with (output / "process-memory-self-test.log").open("w") as log:
     run_probe(["dotnet", str(output / "Probe/Probe.dll"), "--process-memory-self-test"], cwd=repo, env=env,
               stdout=log, stderr=subprocess.STDOUT, timeout=30)
 phase_markers = None
-if args.network and heaptrack:
+if args.network and not args.network_aot and heaptrack:
     marker_library = output / "libElectron2DMemoryPhases.so"
     marker_calibration = output / "phase-marker-calibration"
     marker_source = repo / "tools/physics-memory/phase_markers.c"
@@ -128,10 +135,11 @@ if args.native_phases:
 elif args.network:
     if heaptrack:
         env["ELECTRON2D_TEST_PHYSICS_HEAPTRACK_PRELOAD"] = heaptrack["preload"]
-        env["ELECTRON2D_TEST_PHYSICS_PHASE_MARKERS"] = phase_markers["library"]
+        if phase_markers:
+            env["ELECTRON2D_TEST_PHYSICS_PHASE_MARKERS"] = phase_markers["library"]
     icd = args.icd if args.client_backend == "gpu" else output / "missing-icd.json"
     env.update(VK_DRIVER_FILES=str(icd), VK_ICD_FILENAMES=str(icd))
-    command = ["dotnet", str(output / "Probe/Probe.dll"), "--network", str(output / fixture / (fixture + ".dll")), str(output / "network"),
+    command = ["dotnet", str(output / "Probe/Probe.dll"), "--network-aot" if args.network_aot else "--network", str(output / fixture / (fixture if args.network_aot else fixture + ".dll")), str(output / "network"),
                "--client-backend", args.client_backend, "--ticks", "900", "--late-join-tick", "310"]
     if args.threaded:
         command.append("--threaded")
@@ -151,13 +159,15 @@ for backend in [] if args.network or args.native_phases else ["cpu", *(["gpu"] i
         run_probe(command, cwd=repo, env=env, stdout=log, stderr=error, timeout=300)
     report = json.loads((output / f"{backend}.json").read_text())
     print(backend, [(p["Measurement"]["Metadata"]["Phase"], p["Measurement"]["ManagedObjectBytes"]) for p in report["Phases"]], flush=True)
-artifact_paths = [output / "Probe/Probe.dll", output / fixture / (fixture + ".dll"), output / fixture / "Electron2D.dll", abi_program]
+artifact_paths = [output / "Probe/Probe.dll", output / fixture / (fixture if args.network_aot else fixture + ".dll"), abi_program]
+if not args.network_aot:
+    artifact_paths.append(output / fixture / "Electron2D.dll")
 if phase_markers:
     artifact_paths.extend([marker_library, marker_calibration])
 if args.native_phases:
     artifact_paths.extend([output / "Tests/Electron2D.Tests.dll", output / "Tests/Electron2D.dll"])
 artifacts = {str(p.relative_to(output)): hashlib.file_digest(p.open("rb"), "sha256").hexdigest() for p in artifact_paths}
 (output / "environment.json").write_text(json.dumps({"driver": driver, "heaptrack": heaptrack, "phaseMarkers": phase_markers, "bodies": args.bodies, "history": args.history,
-    "network": args.network, "unpaced": args.unpaced, "clientPollDelayMS": args.client_poll_delay_ms, "nativePhases": args.native_phases, "clientBackend": args.client_backend, "threaded": args.threaded, "cycles": args.cycles, "artifacts": artifacts,
+    "network": args.network, "networkAOT": args.network_aot, "unpaced": args.unpaced, "clientPollDelayMS": args.client_poll_delay_ms, "nativePhases": args.native_phases, "clientBackend": args.client_backend, "threaded": args.threaded, "cycles": args.cycles, "artifacts": artifacts,
     "host": {"kernel": platform.release(), "architecture": platform.machine(), "pageSize": os.sysconf("SC_PAGESIZE"),
              "libcVersion": abi["LibcVersion"], "mallocArenaMax": env.get("MALLOC_ARENA_MAX")}}, indent=2) + "\n")

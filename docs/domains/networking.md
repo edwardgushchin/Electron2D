@@ -111,3 +111,7 @@ physical-step-only allocations, uninstrumented timing and target/window acceptan
 The [boundary call paths](../components/physics-network-memory.md#live-native-call-path-inventory-2026-10-16)
 now distinguish software pipeline/loader retirement from later runtime JIT
 requests in those same traces; they do not establish exclusive network owners.
+The [NativeAOT native collector](../components/physics-network-memory.md#nativeaot-native-lifetime-cohort-2026-10-16)
+now records twelve complete native session lifetimes under the same original
+checks, with unprofiled controls and explicit unmeasured object graphs. It leaves
+exact ownership, phase and target/window gates open.

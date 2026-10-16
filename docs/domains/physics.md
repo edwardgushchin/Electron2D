@@ -357,6 +357,10 @@ across stages. Exclusive native/API budgets and hardware/window gates remain ope
 The [live call-path inventory](../components/physics-network-memory.md#live-native-call-path-inventory-2026-10-16)
 now separates retained software pipeline/loader paths from runtime JIT paths at
 those boundaries. Exact object ownership and full memory acceptance remain open.
+The [NativeAOT lifetime cohort](../components/physics-network-memory.md#nativeaot-native-lifetime-cohort-2026-10-16)
+now exercises those ordinary CPU/GPU process checks with separate native
+requested-byte peaks/end values and unprofiled controls. Full native ownership,
+phase and target/window acceptance remain open.
 
 Physics readiness requires both CPU/Box2D.NET behavior and a complete selectable
 independent GPU world. The [source audit](../components/physics-contract-audit.md)

@@ -15,7 +15,7 @@ def require(condition, message):
         raise ValueError(message)
 
 
-def summarize(lines):
+def summarize(lines, *, phase_markers=True):
     strings = ["[unknown]"]
     ips = [(0, "", "0")]
     traces = [(0, 0)]
@@ -26,7 +26,7 @@ def summarize(lines):
     version = False
 
     def interval(index):
-        return {"name": PHASES[index], "entryBytes": live, "peakBytes": live,
+        return {"name": PHASES[index] if phase_markers else "lifetime", "entryBytes": live, "peakBytes": live,
                 "peakLeafModules": {k: v for k, v in groups.items() if v},
                 "allocatedBytes": 0, "freedBytes": 0, "allocationCalls": 0, "freeCalls": 0}
 
@@ -93,6 +93,7 @@ def summarize(lines):
             module, function, _ = ips[traces[trace][0]]
             marker = size - 17 if function == "e2d_memory_phase" else None
             if marker is not None:
+                require(phase_markers, "Phase markers are forbidden in an unmarked lifetime trace")
                 require(0 <= marker <= 6, "Invalid phase-marker size")
             infos.append((size, strings[module], marker, trace))
             counts.append(0)
@@ -136,7 +137,7 @@ def summarize(lines):
             if live > phase["peakBytes"]:
                 phase["peakBytes"] = live
                 phase["peakLeafModules"] = {k: v for k, v in groups.items() if v}
-    require(version and len(markers) == marker_frees == 7 and marker_live == 0, "Incomplete phase-marker trace")
+    require(version and len(markers) == marker_frees == (7 if phase_markers else 0) and marker_live == 0, "Incomplete phase-marker trace")
     require(gross == live == sum(groups.values()), "Allocation balance mismatch")
     phase["exitBytes"] = live
     phases.append(phase)
@@ -152,9 +153,10 @@ def summarize(lines):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("trace", help="Interpreted .gz trace, produced with the matching Heaptrack tools")
+    parser.add_argument("--lifetime", action="store_true", help="Accept an unmarked whole-process trace; reject phase markers")
     args = parser.parse_args()
     with gzip.open(args.trace, "rt", encoding="utf-8") as stream:
-        result = summarize(stream)
+        result = summarize(stream, phase_markers=not args.lifetime)
     print(json.dumps(result, indent=2))
 
 

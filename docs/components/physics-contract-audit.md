@@ -53,6 +53,10 @@ storage; exclusive native owners and physical-device acceptance remain open.
 The [live call-path follow-up](physics-network-memory.md#live-native-call-path-inventory-2026-10-16)
 separates the software pipeline/loader requests released by disposal from later
 C++/JIT paths. It reuses the original traces and promotes no contract coverage.
+The [NativeAOT lifetime cohort](physics-network-memory.md#nativeaot-native-lifetime-cohort-2026-10-16)
+now measures twelve actual native session processes with the full public example
+and unprofiled controls. Its requested-byte scope keeps phase/owner and hardware
+acceptance open and changes no API/coverage status.
 
 [Registered rectangle numerics](physics-registered-adapter.md#registered-rectangle-numerics)
 now execute actual contours, six queries, mass, contacts and linear/angular CCD

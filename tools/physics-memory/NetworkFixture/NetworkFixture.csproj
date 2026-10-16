@@ -12,6 +12,7 @@
     <Compile Include="../../../examples/PhysicsNetwork/*.cs" Exclude="../../../examples/PhysicsNetwork/Program.cs" Link="Example/%(Filename)%(Extension)" />
     <Compile Include="../Calibration.cs" Link="Calibration.cs" />
     <Compile Include="../ProcessMemory.cs" Link="ProcessMemory.cs" />
+    <Compile Include="../NetworkAllocationProfile.cs" Link="NetworkAllocationProfile.cs" />
   </ItemGroup>
   <Import Project="../../native-consumer.props" />
 </Project>

@@ -21,6 +21,12 @@ warm gate and post-session checkpoints/disposal/reporting. All original scene
 and protocol conditions remain. The marker hooks/library live only in the
 measurement host and do not add a public consumer dependency or GPU fence.
 
+The [NativeAOT lifetime collector](physics-network-memory.md#nativeaot-native-lifetime-cohort-2026-10-16)
+now links the complete example with just the child-launch profiling hook. All
+four CPU/GPU and owner/separate cohorts retain the ordinary checks. A separate
+unprofiled host and the ordinary public NativeAOT consumer also pass; native
+phase, exact-owner and hardware/window acceptance remain open.
+
 [PhysicsNetwork](../../examples/PhysicsNetwork/README.md) connects the existing
 `SceneMultiplayer`/`ENetMultiplayerPeer`, `PhysicsSnapshotMap`, `PhysicsSnapshot` and
 world-tick APIs. Its CPU authority and GPU/CPU clients are separate OS processes.

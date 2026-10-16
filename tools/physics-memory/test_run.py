@@ -16,6 +16,10 @@ exec(compile(ast.Module(body=[helper], type_ignores=[]), "run.py", "exec"), name
 run_probe = namespace["run_probe"]
 
 with tempfile.TemporaryDirectory() as folder:
+    output = Path(folder) / "must-not-start"
+    result = subprocess.run([sys.executable, str(Path(__file__).with_name("run.py")), str(output), "--network-aot"], capture_output=True, text=True)
+    assert result.returncode == 2 and "requires --network" in result.stderr and not output.exists()
+with tempfile.TemporaryDirectory() as folder:
     pids = Path(folder) / "pids"
     program = ("import os,signal,subprocess,time; from pathlib import Path; "
                "child=subprocess.Popen(['sleep','60']); "
@@ -44,6 +48,31 @@ with tempfile.TemporaryDirectory() as folder:
         assert error.returncode == 7
     else:
         raise AssertionError("Nonzero exits must still reject the probe")
+    failed_pids = Path(folder) / "failed-pids"
+    program = ("import os,signal,subprocess; from pathlib import Path; "
+               "child=subprocess.Popen(['sleep','60']); os.kill(child.pid,signal.SIGSTOP); "
+               f"Path({str(failed_pids)!r}).write_text(str(os.getpid())+' '+str(child.pid)); raise SystemExit(7)")
+    try:
+        try:
+            run_probe([sys.executable, "-c", program], **options, timeout=5)
+        except subprocess.CalledProcessError as error:
+            assert error.returncode == 7
+        else:
+            raise AssertionError("The failed controller must reject the probe")
+        for pid in map(int, failed_pids.read_text().split()):
+            for _ in range(100):
+                status = Path(f"/proc/{pid}/stat")
+                if not status.exists() or status.read_text().split()[2] == "Z":
+                    break
+                time.sleep(.01)
+            else:
+                raise AssertionError(f"Owned process {pid} survived controller failure")
+    finally:
+        if failed_pids.exists():
+            try:
+                os.killpg(int(failed_pids.read_text().split()[0]), signal.SIGKILL)
+            except ProcessLookupError:
+                pass
 with tempfile.TemporaryDirectory() as folder:
     output = Path(folder) / "must-not-start"
     for extra in [[], ["--icd", "missing.json", "--network"], ["--icd", "missing.json", "--threaded"]]:

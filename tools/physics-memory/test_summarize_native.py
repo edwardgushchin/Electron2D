@@ -14,6 +14,17 @@ def trace():
 
 
 class PhaseTests(unittest.TestCase):
+    def test_unmarked_lifetime(self):
+        lines = [*trace()[:11], "- 0"]
+        report = summarize(lines, phase_markers=False)
+        self.assertEqual((report["grossPeakBytes"], report["workloadPeakBytes"], report["endBytes"]), (100, 100, 0))
+        self.assertEqual([r["name"] for r in report["phases"]], ["lifetime"])
+        self.assertEqual((report["markerAllocations"], report["markerFrees"], report["excludedMarkerBytes"]), (0, 0, 0))
+        with self.assertRaises(ValueError):
+            summarize(lines)
+        with self.assertRaises(ValueError):
+            summarize(trace(), phase_markers=False)
+
     def test_carry_and_exclusion(self):
         report = summarize(trace())
         self.assertEqual((report["grossPeakBytes"], report["workloadPeakBytes"], report["endBytes"]), (119, 100, 0))
