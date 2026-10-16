@@ -1,6 +1,6 @@
 # TextLine
 
-Last updated: 2026-10-15
+Last updated: 2026-10-17
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -70,3 +70,7 @@ line.Draw(canvas, new(12, 14));
 GetPropertyDescriptors exposes live nonstored policy descriptors. ValidateMutation/ValidateDisposal protect the owner and active native work; Dispose unregisters the identity and retires owned neutral-font/layout state. Runtime lines are reconstructed from authored source/font data by scene consumers. See [text objects](../components/text-objects.md) and [ADR 0107](../decisions/text-objects.md#adr-0107).
 
 Related paragraph preparation shares the typed span builder. All captured font read scopes must remain current before the shape/display pair is published; cross-font replacement retries preparation within the existing 64-attempt bound. [TextParagraph](TextParagraph.md) supplies wrapping and independent line/dropcap consumers.
+
+## Verification
+
+TextLineTests completes outstanding collections and drains finalizers after fixture preparation, before the unchanged 128 warmup and 128 measured metric/caret cycles. AllocationWarmupCheck exercises that same preparation helper with a controlled second finalization pass. The interval retains all eight queries and its strict zero-byte owner-thread assertion; failures report the observed delta. Collection setup stays outside the interval and production hosts retain their ordinary GC policy. See the [allocation measurement contract](../maintaining.md#native-enet-source-and-interoperability-checks).

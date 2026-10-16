@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -109,7 +109,7 @@ For strict allocation brackets on runtimes affected by [dotnet/runtime#134724](h
 
 When explicitly forcing collection during allocation-test setup, drain finalizers
 after the last collection before beginning the warm or measured interval. A preceding
-drain cannot account for objects queued by a later collection. Ownership, registered consumer and physics-filter
+drain cannot account for objects queued by a later collection. Ownership, registered consumer, physics-filter and TextLine
 helpers share AllocationWarmupCheck, whose controlled second finalizer
 pass detects premature return without changing allocation gates. This follows
 [GC.WaitForPendingFinalizers](https://learn.microsoft.com/en-us/dotnet/api/system.gc.waitforpendingfinalizers?view=net-10.0).

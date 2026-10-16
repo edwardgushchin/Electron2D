@@ -1,6 +1,6 @@
 # Retained standalone text objects
 
-Last updated: 2026-10-15
+Last updated: 2026-10-17
 
 TextLine exposes the complete single-line contract over the existing FreeType/HarfBuzz/TextLayout owner. Text spans borrow Font resources with their own size/language and exact typed metadata; a generic AddString overload and TryGetSpanMetadata make metadata observable. TextObjectKey supplies reference identity in every inline parameter/result position without universal value dispatch.
 
@@ -13,6 +13,8 @@ Line settings have live nonstored typed descriptors; a transient TextLine is not
 Paragraph preparation takes sorted read scopes over the union of source/dropcap fonts. Every borrowed font generation is checked before publication, with a bounded retry after cross-font replacement. The new regression observed an old inline advance of 20 rather than the replacement font's 27 pixels; whole-workspace retry prevents mixed generations. TextLine's shared builder uses the same all-read-current check. Failed font callbacks and owner query/mutation/disposal reentry leave the paragraph usable. The retired combined edge-space flag has been removed from the public enum and mappings under ADR 0004; consumers use the separate start/end flags, and rich/tree/paragraph authoring rejects retired bits.
 
 Managed verification exercises typed values, native shape equivalence, both axes, scalar coordinates, object length/baseline/resize/alignment, full versus trimmed geometry, BIDI/tabs/control/missing, duplicates, owner/lifetime and font-generation invalidation. The extreme-coordinate caret regression was observed before correction; prepared 128-cycle metrics/carets pass zero managed-byte checks. TextLineRenderingTests passes real mixed-font pixels, multi-scalar inline resize, ellipsis/alignment/direction, vertical text, outline/raster oversampling and advance clipping on current Linux GPU/compatibility hosts. Each backend passes 64 warmed full redraw/query frames with zero managed bytes from ProcessFrameStarted through FramePostDraw. Input setup, captures/readback and native allocations are outside that interval.
+
+The TextLine metric/caret allocation fixture finishes outstanding collections and drains both finalizer passes before its 128-cycle warmup. A controlled second-finalizer probe verifies the actual setup helper. The following 128 measured cycles retain all eight queries and the strict zero-byte owner-thread gate; diagnostics include the observed delta. This applies the runtime-accounting preparation rule in [maintaining](../maintaining.md#native-enet-source-and-interoperability-checks), without changing runtime GC policy or accepting an allocation allowance.
 
 The independent public-only NuGet/NativeAOT consumer passes with reflection-disabled JSON and zero IL warnings. Separate author/render processes save and freshly load source text/font resources in a compressed big-endian scene, reconstruct the runtime line and verify actual glyphs/metadata/inline/ellipsis drawing on both backends from /tmp with LD_LIBRARY_PATH unset. Transient buffers are deliberately reconstructed rather than serialized.
 

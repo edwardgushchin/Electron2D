@@ -4,6 +4,7 @@ internal static class TextLineTests
 {
     internal static void Run()
     {
+        AllocationWarmupCheck.Verify(Collect);
         using var font = new FontFile { Data = FontTestFixtures.Variable };
         using var arabic = new FontFile { Data = FontTestFixtures.Arabic };
         using var line = new TextLine(); var rid = line.GetRID();
@@ -47,15 +48,18 @@ internal static class TextLineTests
         using var variation = new FontVariation { BaseFont = font };
         line.Clear(); line.PreserveInvalid = true; line.PreserveControl = false; line.TextOverrunBehavior = TextOverrunBehavior.NoTrimming; line.AddString("abcd", variation, 18);
         var oldWidth = line.GetLineWidth(); variation.SpacingGlyph = 2; Check(line.GetLineWidth() > oldWidth, "Borrowed font generation invalidates buffers.");
+        Collect();
         for (var i = 0; i < 128; i++) Queries(line);
         var before = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 128; i++) Queries(line);
-        Check(GC.GetAllocatedBytesForCurrentThread() == before, "128 prepared TextLine metric/caret cycles allocate zero bytes.");
+        var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+        Check(allocated == 0, $"128 prepared TextLine metric/caret cycles allocate zero bytes; observed {allocated} bytes.");
         using var ellipsisLine = new TextLine(); var defaultFont = ThemeDB.FallbackFont!; ellipsisLine.AddString("A long line for trimming", defaultFont, 24); ellipsisLine.Width = 1; ellipsisLine.TextOverrunBehavior = TextOverrunBehavior.TrimEllipsisForce;
         Check(ellipsisLine.GetLineWidth() == defaultFont.GetStringSize("…", fontSize: 24).X, "Ellipsis uses the last authored span font/size, not the neutral owner.");
         var dead = new TextLine(); dead.AddString("x", font, 18); dead.Dispose(); Check(font.GetStringSize("x").X > 0, "Line cleanup never disposes borrowed fonts."); Reject<ObjectDisposedException>(() => dead.GetRID());
         var disposedFont = new FontFile { Data = FontTestFixtures.Variable }; using var dependent = new TextLine(); dependent.AddString("x", disposedFont, 18); dependent.GetSize(); disposedFont.Dispose(); Reject<ObjectDisposedException>(() => dependent.GetSize());
         Console.WriteLine("TextLine: typed spans/metadata/keys, native shaping, both axes, inline length/baseline, complete geometry versus trim, BIDI/tabs/control/missing, duplication/owner/lifetime/font invalidation and 128 warmed metric/caret cycles=0 managed bytes passed.");
     }
+    private static void Collect() { GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers(); }
     private static void Queries(TextLine line) { line.GetSize(); line.GetLineAscent(); line.GetLineDescent(); line.GetLineWidth(); line.GetLineUnderlinePosition(); line.GetLineUnderlineThickness(); line.GetInferredDirection(); line.HitTest(20); }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
