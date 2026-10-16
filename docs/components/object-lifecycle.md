@@ -28,22 +28,30 @@ Each instance receives a non-zero process-local `ulong InstanceID` from a static
 Lifetime follows this state transition:
 
 ```text
-Alive --Dispose()--> Disposing --Dispose(bool) succeeds--> Disposed --Disposed event--> complete
+Alive --Dispose()--> PreDelete --accepted--> Disposing --Dispose(bool) succeeds--> Disposed
+                         |                                      |
+                  CancelDisposal                                Disposed event
+                         |
+                       Alive
 ```
 
 Before attempting the atomic transition, each caller may run `ValidateDisposal()` so a derived type can reject that caller. `Node`, `MainLoop`, and `SceneTree` use it to enforce owner-thread or active-callback disposal rules. Concurrent callers can validate at the same time or race with another caller beginning disposal, so overrides must be side-effect-free and race-tolerant.
 
-The first valid caller atomically changes the state from `Alive` to `Disposing` and records its thread. Concurrent and later `Dispose()` calls return without repeating cleanup. `IsDisposed` becomes `true` when disposal starts. Guarded state remains readable through `ThrowIfDisposed()` only on the recorded thread while it runs pre-delete and derived cleanup callbacks; other threads are rejected. The base always reaches `Disposed`, clears exactly its own `Disposed`, `PropertyListChanged`, and `ScriptChanged` subscriber lists, and suppresses finalization. `Disposed` is raised once only when both pre-delete notification and `Dispose(bool)` succeed.
+The first valid caller atomically changes the state from `Alive` to automatic pre-delete and records its thread. Concurrent and reentrant `Dispose()` calls return during an active attempt. Terminal calls return without repeating cleanup; a vetoed attempt may be retried later. `IsDisposed` becomes `true` when disposal starts. Guarded state remains readable through `ThrowIfDisposed()` only on the recorded thread while it runs pre-delete and derived cleanup callbacks; other threads are rejected. Without a veto, the base reaches `Disposed`, clears exactly its own `Disposed`, `PropertyListChanged`, and `ScriptChanged` subscriber lists, and suppresses finalization. `Disposed` is raised once only when both pre-delete notification and `Dispose(bool)` succeed.
 
 `PropertyListChanged` and `ScriptChanged` are synchronous typed C# events raised through protected methods. The script-change hook is implemented for the confirmed future scripting component, but no current production type attaches scripts or raises it automatically.
 
 The separate [Typed event connections](event-connections.md) component can own, defer, or consume subscriptions to these events without changing their declarations.
 
-`WeakRef<T>` uses a managed weak reference and returns the original target only while it is reachable and has not begun disposal. Constructing it with null or a disposed target leaves it empty. Disposing the wrapper leaves the target untouched; disposing the target invalidates `GetRef()` immediately, even if the target is still strongly held elsewhere. The [typed weak-reference decision](../decisions/core-object-runtime.md#adr-0050) defines this lifetime boundary.
+`WeakRef<T>` uses a managed weak reference and returns the original target only while it is reachable and is neither in an active disposal attempt nor terminally disposed. Constructing it with null or a disposed target leaves it empty. Disposing the wrapper leaves the target untouched; disposing the target invalidates `GetRef()` immediately, even if the target is still strongly held elsewhere. The [typed weak-reference decision](../decisions/core-object-runtime.md#adr-0050) defines this lifetime boundary.
 
 A failure in notification or cleanup is rethrown after state publication; simultaneous failures become `AggregateException`. A derived type controls when its own event lists are cleared and may leave derived cleanup incomplete if its override throws.
 
 `ElectronObject.IsQueuedForDeletion` is a nonvirtual atomic observation inherited by every object role. SceneTree counts independent explicit requests until execution or discard; Node contributes its cancellable generation through claimed execution. Cancellation affects only Node work, and queued parents do not mark children. The observation stays true during pre-delete and cleanup, then reads false after terminal disposal. Direct disposal without a queue stays false. Readonly nonstored descriptor discovery adds no serialized state or revert value, scheduling API, numerical mirror or backend wait. The base lifetime state machine and its validation remain unchanged.
+
+`CancelDisposal()` is a nonvirtual helper for the exact automatic pre-delete thread. It marks that attempt canceled without publishing live state during notification. On return, a canceled attempt restores Alive and its weak identity, retains subscribers/resources and skips all derived cleanup. Notification errors still propagate after restoration. Manual/outside/foreign calls do not arm cancellation, and committed cleanup cannot be canceled. Ordinary non-vetoed attempts keep the prior disposal order and errors. The state fits the existing lifetime word and adds no object field, backend read, native fence or managed allocation.
+
+Weak identity stores distinguish temporary pre-delete closure from committed cleanup. Read-side unavailability never retires a veto-capable target. Sweep/registration cleanup retains physical/rendering RIDs, ResourcePath ownership, owner reverse records and unique namespaces, group membership and writer registrations until commit or collection. Name/path reservations stay occupied during notification; ordinary live lookup still hides the closed target. Registry probes cover in-notification lookups, 256-registration sweeps, restoration and terminal release.
 
 ## Threading
 

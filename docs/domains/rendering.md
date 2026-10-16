@@ -20,6 +20,8 @@ Private native runtime binaries come from versioned Linux/macOS packages in ordi
 
 FontFile/SystemFont now generate real Mono/Gray/LCD native glyphs and share a captured project subpixel layout. Scalable glyph regions consume the existing GPU LCD path, while compatibility retains ordinary coverage and explicitly rejects component glyphs. [The complete font contract](../components/text.md#native-font-antialiasing-and-lcd-layout) records variation/fallback/storage, native oracle and rendered/allocation evidence. MSDF generation remains separate.
 
+Weak logical rendering identities distinguish temporary pre-delete closure from committed cleanup. Canvas, skeleton, viewport, custom mesh and texture lookups/sweeps preserve RIDs through a veto while keeping closed targets unavailable until notification returns.
+
 ## LCD and MSDF regions
 
 The retained canvas now draws caller-supplied LCD and MSDF textures through scene and static server commands. GPU executes coverage decoding, component blend, custom materials, lights, masks/groups and MSAA; compatibility rejects the unsupported profile. [The glyph contract and verification](../components/canvas-rendering.md#lcd-and-msdf-texture-regions) distinguish texture consumption from the separate FontFile generation prerequisite.

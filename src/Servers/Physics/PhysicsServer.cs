@@ -55,7 +55,7 @@ public sealed partial class PhysicsServer : ElectronObject
                 _sceneRegistrationsSinceSweep = 0;
                 _staleSceneObjects.Clear();
                 foreach (var pair in _sceneObjects)
-                    if (!pair.Value.TryGetTarget(out var target) || target.IsDisposed)
+                    if (!pair.Value.TryGetTarget(out var target) || target.IsDisposalCommitted)
                         _staleSceneObjects.Add(pair.Key);
                 foreach (var stale in _staleSceneObjects) { _sceneObjects.Remove(stale); _bodyRuntimes.Remove(stale); _areaRuntimes.Remove(stale); }
             }
@@ -81,7 +81,11 @@ public sealed partial class PhysicsServer : ElectronObject
         lock (_registryGate)
         {
             if (!_sceneObjects.TryGetValue(rid, out var weak)) return null;
-            if (weak.TryGetTarget(out var node) && !node.IsDisposed) return node;
+            if (weak.TryGetTarget(out var node))
+            {
+                if (!node.IsDisposed) return node;
+                if (!node.IsDisposalCommitted) return null;
+            }
             _sceneObjects.Remove(rid);
             _bodyRuntimes.Remove(rid);
             _areaRuntimes.Remove(rid);

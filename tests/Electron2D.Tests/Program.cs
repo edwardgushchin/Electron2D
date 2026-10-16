@@ -441,6 +441,18 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BACKEND_OWNERSHIP") is {
     return;
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESULT_CONSTRUCTION") is { } resultBackend) { PhysicsResultConstructionTests.Run(resultBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPOSAL_REGISTRIES") == "1") { ObjectDisposalRegistryTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPOSAL_VETO") is { } vetoProfile)
+{
+    if (vetoProfile == "all")
+    {
+        BackendChecks.RunDisposalVeto(); BackendChecks.RunDisposalVeto(PhysicsServer.Backend.CPU); BackendChecks.RunDisposalVeto(PhysicsServer.Backend.GPU);
+        return;
+    }
+    BackendChecks.RunDisposalVeto(vetoProfile == "cpu" ? PhysicsServer.Backend.CPU : vetoProfile == "gpu" ? PhysicsServer.Backend.GPU : null,
+        Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1");
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_QUEUED_OBSERVATION") is { } observationProfile)
 {
     BackendChecks.RunQueuedObservation(observationProfile == "cpu" ? PhysicsServer.Backend.CPU : observationProfile == "gpu" ? PhysicsServer.Backend.GPU : null,
@@ -1612,6 +1624,8 @@ WeakRefTests.Run();
 VerifyNotificationsAndProperties();
 VerifyEventConnections();
 ObjectSignalBlockingTests.Run();
+ObjectDisposalRegistryTests.Run();
+BackendChecks.RunDisposalVeto(); BackendChecks.RunDisposalVeto(PhysicsServer.Backend.CPU); BackendChecks.RunDisposalVeto(PhysicsServer.Backend.GPU);
 BackendChecks.RunQueuedObservation(); BackendChecks.RunQueuedObservation(PhysicsServer.Backend.CPU); BackendChecks.RunQueuedObservation(PhysicsServer.Backend.GPU);
 SignalBlockingPhysicsTests.Run(PhysicsServer.Backend.CPU, false); SignalBlockingPhysicsTests.Run(PhysicsServer.Backend.GPU, false);
 EventConnectionPhysicsTests.Run(PhysicsServer.Backend.CPU); EventConnectionPhysicsTests.Run(PhysicsServer.Backend.GPU);

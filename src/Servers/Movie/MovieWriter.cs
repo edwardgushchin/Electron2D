@@ -22,7 +22,7 @@ public abstract class MovieWriter : ElectronObject
     /// <summary>Registers a borrowed writer, giving it precedence over older handlers.</summary>
     /// <param name="writer">A live writer created on this thread.</param>
     /// <remarks>At most eight live custom writers may be registered.
-    /// Disposed registrations are reclaimed on the next registration. Duplicate registration rejects.</remarks>
+    /// Committed disposal registrations are reclaimed on the next registration; a pre-delete veto retains registration. Duplicate registration rejects.</remarks>
     /// <exception cref="ArgumentNullException">The writer is null.</exception>
     /// <exception cref="ObjectDisposedException">The writer is disposed.</exception>
     /// <exception cref="InvalidOperationException">The runtime is active, the owner differs, registration is duplicate/full, or a hook reenters.</exception>
@@ -44,7 +44,7 @@ public abstract class MovieWriter : ElectronObject
         lock (RegistryGate)
         {
             if (!Engine.Service.IsRuntimeIdle) throw new InvalidOperationException("The runtime is starting.");
-            Writers.RemoveAll(w => w.IsDisposed);
+            Writers.RemoveAll(w => w.IsDisposalCommitted);
             if (Writers.Contains(writer) || Writers.Count == 8) throw new InvalidOperationException("Writer is already registered or the registry is full.");
             Writers.Add(writer); writer._registered = true;
         }

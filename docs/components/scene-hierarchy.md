@@ -79,6 +79,10 @@ network follow-up: `bin/physics-network-phases/2026-10-15/`.
 
 Queued-deletion observation belongs to ElectronObject and is inherited by Node. Both QueueFree and explicit QueueDelete stay visible through claimed cleanup, while descendants without their own request stay unmarked. Cancellation remains limited to an unclaimed node generation.
 
+Inherited ElectronObject.CancelDisposal vetoes automatic pre-delete without changing Node.CancelFree. Parent disposal attempts every child; rejected/vetoed children are unparented before the parent becomes terminal, with their surviving subtrees/resources intact. The unparent transition retains the lifecycle barrier even after tree detachment, so user callbacks cannot escape through reparenting or nested disposal. Callback failures aggregate while sibling cleanup continues.
+
+Owner reverse records and unique namespaces survive temporarily closed pre-delete attempts. Reservation checks use retained identity while ordinary live lookup hides the closed node/owner. Another authoring write cannot prune or steal the reservation before cleanup commits.
+
 ## Orphan node diagnostics
 
 `Node.GetOrphanNodeIDs()` and `PrintOrphanNodes()` share a Debug-only weak node

@@ -1,6 +1,6 @@
 # ButtonGroup
 
-Last updated: 2026-09-27
+Last updated: 2026-10-16
 
 **Declaration:** `public class ButtonGroup : Resource` · **Source:** [ButtonGroup.cs](../../src/Scene/Resources/ButtonGroup.cs)
 
@@ -28,6 +28,8 @@ BaseButton? selected = group.GetPressedButton();
 | `protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)` | Copies AllowUnpress without copying members. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Stores AllowUnpress and the true local-scene default. |
 | `protected override void Dispose(bool disposing)` | Clears weak membership and subscribers. |
+
+Snapshots hide members during an active pre-delete attempt without removing their weak membership. A veto restores their presence automatically; terminal disposal/collection or explicit group reassignment retires the record.
 
 ## Constructor and property descriptions
 

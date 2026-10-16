@@ -59,7 +59,8 @@ public class ButtonGroup : Resource
             ThrowIfDisposed(); var result = _snapshots.Count == 0 ? [] : _snapshots.Pop();
             for (var i = 0; i < _buttons.Count;)
             {
-                if (!_buttons[i].TryGetTarget(out var b) || b.IsDisposed || !ReferenceEquals(b.MembershipGroup, this)) { _buttons.RemoveAt(i); continue; }
+                if (!_buttons[i].TryGetTarget(out var b) || b.IsDisposalCommitted || !ReferenceEquals(b.MembershipGroup, this)) { _buttons.RemoveAt(i); continue; }
+                if (b.IsDisposed) { i++; continue; }
                 result.Add((b, b.MembershipGeneration)); i++;
             }
             return result;

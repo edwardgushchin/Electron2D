@@ -10,6 +10,8 @@ Encodes completed non-real-time frames and interleaved full-range signed 32-bit 
 
 Frame Images and audio spans live only through OnWriteFrame; copy any retained output. Hook exceptions fail the recording. End is attempted even after partial Begin failure, and does not prevent other cleanup. Readback/encoding may allocate and block. See [movie writing](../components/movie-writing.md) for clocks, native graph ownership and supported built-in output.
 
+A writer vetoing automatic pre-delete retains its borrowed registration. Registering another writer reclaims only committed/terminal entries, so duplicate registration of a vetoed writer still rejects. Existing owner/runtime-active guards run before notification and cannot be bypassed by cancellation.
+
 ## Example
 
 The built-in writer needs no custom subclass. In a normal main-thread application entry point:

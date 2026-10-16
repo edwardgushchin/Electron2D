@@ -17,7 +17,7 @@ internal static class RenderingMeshRegistry
             {
                 _registrationsSinceSweep = 0;
                 foreach (var pair in Meshes)
-                    if (!pair.Value.Reference.TryGetTarget(out var target) || target.IsDisposed) Stale.Add(pair.Key);
+                    if (!pair.Value.Reference.TryGetTarget(out var target) || target.IsDisposalCommitted) Stale.Add(pair.Key);
                 foreach (var stale in Stale) Meshes.Remove(stale);
                 Stale.Clear();
             }
@@ -31,8 +31,9 @@ internal static class RenderingMeshRegistry
     {
         lock (Gate)
         {
-            if (Meshes.TryGetValue(rid, out var reference) && reference.Reference.TryGetTarget(out var mesh) && !mesh.IsDisposed) return mesh;
-            Meshes.Remove(rid); throw new ArgumentException("The mesh identity is absent or disposed.", nameof(rid));
+            Mesh? mesh = null;
+            if (Meshes.TryGetValue(rid, out var reference) && reference.Reference.TryGetTarget(out mesh) && !mesh.IsDisposed) return mesh;
+            if (mesh is null || mesh.IsDisposalCommitted) Meshes.Remove(rid); throw new ArgumentException("The mesh identity is absent or disposed.", nameof(rid));
         }
     }
     internal static void Remove(RID rid) { lock (Gate) Meshes.Remove(rid); }

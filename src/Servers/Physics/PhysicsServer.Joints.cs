@@ -38,7 +38,7 @@ public sealed partial class PhysicsServer
             {
                 _jointRegistrationsSinceSweep = 0; _staleJoints.Clear();
                 foreach (var pair in _jointRuntimes)
-                    if (pair.Value.Scene is { } weak && (!weak.TryGetTarget(out var node) || node.IsDisposed) && pair.Value.Space is null)
+                    if (pair.Value.Scene is { } weak && (!weak.TryGetTarget(out var node) || node.IsDisposalCommitted) && pair.Value.Space is null)
                         _staleJoints.Add(pair.Key);
                 foreach (var stale in _staleJoints) _jointRuntimes.Remove(stale);
             }

@@ -18,6 +18,8 @@ The [standard-input component](../components/standard-input.md) executes actual 
 
 ElectronObject provides passive queued-deletion observation across nodes, resources and other engine objects, with one readonly nonstored typed descriptor. This local metadata does not query physics or own a scene scheduler; SceneTree releases independent explicit requests on execution/discard.
 
+ElectronObject.CancelDisposal vetoes only the current automatic pre-delete attempt on its exact thread. Live state, identity and subscriptions return after notification; no derived cleanup occurs. Ordinary disposal, validation, callback error aggregation and terminal cleanup remain unchanged when no veto is requested.
+
 ## Responsibility
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.

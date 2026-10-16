@@ -4,5 +4,6 @@ namespace Electron2D;
 internal readonly record struct ObjectIdentity(ulong ID, WeakReference<ElectronObject>? Reference)
 {
     internal ElectronObject? Target => RawTarget is { IsDisposed: false } value ? value : null;
+    internal bool IsRetired => RawTarget is not { } value || value.IsDisposalCommitted;
     internal ElectronObject? RawTarget => Reference is { } weak && weak.TryGetTarget(out var value) ? value : null;
 }

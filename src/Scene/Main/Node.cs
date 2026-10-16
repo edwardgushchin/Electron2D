@@ -1776,7 +1776,8 @@ public partial class Node : ElectronObject
     /// <returns><see langword="true"/> when a request was pending; otherwise <see langword="false"/>.</returns>
     /// <remarks>A stale entry may remain, but it cannot consume a later reissued request. Returns false once the
     /// current request has been claimed for destruction. This cancels queued node work, not an executing Dispose
-    /// or an independent SceneTree.QueueDelete request.</remarks>
+    /// or an independent SceneTree.QueueDelete request. Use inherited CancelDisposal only from automatic pre-delete
+    /// notification to veto that disposal attempt.</remarks>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public bool CancelFree()
     {
@@ -1993,8 +1994,9 @@ public partial class Node : ElectronObject
 
     /// <inheritdoc />
     /// <remarks>
-    /// Cancels queued deletion, detaches this node, recursively disposes every owned child, clears groups and event
-    /// subscribers, and then calls the base implementation. Every teardown stage is attempted before failures are
+    /// Closes queued deletion, detaches this node, attempts disposal of every owned child, clears groups and event
+    /// subscribers, and then calls the base implementation. A surviving or failed child is structurally detached with
+    /// a guarded unparent transition. Every teardown stage is attempted before failures are
     /// reported together.
     /// </remarks>
     protected override void Dispose(bool disposing)
@@ -2029,6 +2031,14 @@ public partial class Node : ElectronObject
                 catch (Exception error)
                 {
                     CollectException(ref errors, error);
+                }
+                finally
+                {
+                    if (ReferenceEquals(child.Parent, this))
+                    {
+                        try { RemoveChildCore(child, disposingParent: true); }
+                        catch (Exception error) { CollectException(ref errors, error); }
+                    }
                 }
             }
 
@@ -2785,7 +2795,7 @@ public partial class Node : ElectronObject
 
     }
 
-    private bool RemoveChildCore(Node child)
+    private bool RemoveChildCore(Node child, bool disposingParent = false)
     {
         EnsureChildOrderMutable();
         if (!ReferenceEquals(child.Parent, this))
@@ -2812,7 +2822,7 @@ public partial class Node : ElectronObject
                 CollectException(ref errors, error);
             }
 
-            child._isExitingTree = tree is not null;
+            child._isExitingTree = tree is not null || disposingParent;
             try
             {
                 _children.Remove(child);
@@ -2894,16 +2904,20 @@ public partial class Node : ElectronObject
 
     private void ClaimUniqueName()
     {
-        if (_uniqueNameInOwner && SceneOwner?.FindUniqueOwned(_name, this) is not null)
+        if (_uniqueNameInOwner && _ownerIdentity.RawTarget is Node owner && !owner.IsDisposalCommitted &&
+            owner.FindUniqueOwned(_name, this, reserveClosed: true) is not null)
             _uniqueNameInOwner = false;
     }
 
-    private Node? FindUniqueOwned(ReadOnlySpan<char> name, Node? except = null)
+    private Node? FindUniqueOwned(ReadOnlySpan<char> name, Node? except = null, bool reserveClosed = false)
     {
         if (_ownedNodes is not { } owned) return null;
         foreach (var identity in owned)
-            if (identity.Target is Node node && !ReferenceEquals(node, except) && node._uniqueNameInOwner &&
-                ReferenceEquals(node.SceneOwner, this) && name.SequenceEqual(node._name)) return node;
+        {
+            var target = reserveClosed ? identity.RawTarget : identity.Target;
+            if (target is Node node && !node.IsDisposalCommitted && !ReferenceEquals(node, except) && node._uniqueNameInOwner &&
+                ReferenceEquals(reserveClosed ? node._ownerIdentity.RawTarget : node.SceneOwner, this) && name.SequenceEqual(node._name)) return node;
+        }
         return null;
     }
 
@@ -2915,12 +2929,12 @@ public partial class Node : ElectronObject
         if (next is not null)
         {
             for (var i = next.Count - 1; i >= 0; i--)
-                if (next[i].Target is null) next.RemoveAt(i);
+                if (next[i].IsRetired) next.RemoveAt(i);
             next.EnsureCapacity(next.Count + 1);
         }
         if (_ownerIdentity.RawTarget is Node previous && previous._ownedNodes is { } previousOwned)
             for (var i = previousOwned.Count - 1; i >= 0; i--)
-                if (previousOwned[i].ID == InstanceID || previousOwned[i].Target is null) previousOwned.RemoveAt(i);
+                if (previousOwned[i].ID == InstanceID || previousOwned[i].IsRetired) previousOwned.RemoveAt(i);
         _ownerIdentity = ownerIdentity;
         next?.Add(identity);
     }

@@ -13,10 +13,10 @@ internal static class RenderingCanvasItemRegistry
     private static readonly List<RID> Stale = [];
     internal static RID Register(CanvasItem item)
     {
-        var rid = RID.Allocate(); lock (Gate) { if (++_registrations == 256) { _registrations = 0; foreach (var pair in Items) if (!pair.Value.TryGetTarget(out var target) || target.IsDisposed) Stale.Add(pair.Key); foreach (var old in Stale) Items.Remove(old); Stale.Clear(); } Items.Add(rid, new(item)); }
+        var rid = RID.Allocate(); lock (Gate) { if (++_registrations == 256) { _registrations = 0; foreach (var pair in Items) if (!pair.Value.TryGetTarget(out var target) || target.IsDisposalCommitted) Stale.Add(pair.Key); foreach (var old in Stale) Items.Remove(old); Stale.Clear(); } Items.Add(rid, new(item)); }
         return rid;
     }
     internal static bool Contains(RID rid) { lock (Gate) return Items.ContainsKey(rid); }
     internal static void Remove(RID rid) { lock (Gate) { Items.Remove(rid); Owned.Remove(rid); } }
-    internal static CanvasItem Resolve(RID rid) { lock (Gate) { if (Items.TryGetValue(rid, out var weak) && weak.TryGetTarget(out var item) && !item.IsDisposed) return item; Items.Remove(rid); throw new ArgumentException("The canvas item identity is absent or disposed.", nameof(rid)); } }
+    internal static CanvasItem Resolve(RID rid) { lock (Gate) { CanvasItem? item = null; if (Items.TryGetValue(rid, out var weak) && weak.TryGetTarget(out item) && !item.IsDisposed) return item; if (item is null || item.IsDisposalCommitted) Items.Remove(rid); throw new ArgumentException("The canvas item identity is absent or disposed.", nameof(rid)); } }
 }

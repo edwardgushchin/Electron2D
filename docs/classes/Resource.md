@@ -16,6 +16,8 @@ Last updated: 2026-10-16
 
 The existing internal SceneDuplicationScope now resolves forced subresource copies through its shared DuplicationSession, preserving aliases and tracking created resources for PackedScene-owned cleanup. Skeleton uses this only for its stack graph so each instance has independent mutable scene binding even under shallow copying.
 
+Automatic pre-delete cancellation retains ResourcePath registration and its namespace reservation. During the notification, ordinary cache lookup hides the closed resource without deleting its entry; competing ordinary assignment cannot steal the path. An explicit TakeOverPath remains an intentional ownership transfer.
+
 ## Description
 
 Provides reusable data, change notification, path identity, and typed duplication for engine assets.

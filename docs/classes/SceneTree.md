@@ -18,6 +18,8 @@ AnimatedSprite uses the existing internal idle lane and tree pause/process polic
 
 Physics interpolation capture now includes owned and borrowed retained canvas-item histories at the same boundaries as scene transforms, lights, occluders and MultiMesh data. Scene-wide changes reset all families; failures aggregate after later reset/capture recipients are attempted. See [contract and native verification](../components/canvas-rendering.md#retained-canvas-item-interpolation).
 
+An automatic pre-delete veto belongs to ElectronObject.CancelDisposal. Each queued entry consumes its own attempt and releases its mark even after a veto; it does not automatically retry. Node queue cancellation remains separate. Tree finalization closes tree ownership before disposing its root; a vetoed root remains a detached hierarchy that a later tree can activate.
+
 ## Prepared skeletal path bindings
 
 An internal PathRevision increments before tree-change and rename callback delivery. Skeleton/Polygon/LookAt weak path bindings observe that revision, so membership or a failed public callback cannot preserve a stale path. Existing scene-owner mutation and notification behavior remains the binding authority.

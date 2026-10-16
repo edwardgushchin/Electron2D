@@ -17,6 +17,8 @@ in a fresh process; embedded scene IDs and UIDs remain separate.
 
 [Tile resources and layers](../components/tiles.md) now connect square, isometric, half-offset and hexagonal atlas authoring and typed storage to actual merged static/kinematic bodies in CPU/GPU worlds, with tile-owner queries/events, runtime data callbacks and real retained-canvas output. All layouts, animated atlas storage/drawing and navigation now execute; terrain definitions, modes, weighted connect/path painting and fresh file graphs now execute; reusable pattern capture/storage/placement now execute; explicit typed proxy mapping now executes through placed cell consumers; typed custom data now controls executable runtime callbacks and persists actual values independently of configured schemas; occlusion retains its prerequisite under [ADR 0101](../decisions/tiles.md#adr-0101).
 
+Weak ResourcePath lookup preserves a temporarily closed resource entry and path reservation until disposal commits; a veto restores ordinary lookup of the same identity.
+
 ## Executable mesh skin integration
 
 ArrayMesh persists copied typed geometry/name/skin arrays and a separate Material graph through exact built-in file registration. Fresh scenes restore aliases and actual four/eight skin consumers; renderer identities and palette attachments are transient.
