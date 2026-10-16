@@ -50,6 +50,9 @@ now locate the large software-device peak before the first original warm gate,
 separately from the additional checkpoint interval. All scene/protocol checks
 remain. Event-order peaks still include inherited host/driver and observer
 storage; exclusive native owners and physical-device acceptance remain open.
+The [live call-path follow-up](physics-network-memory.md#live-native-call-path-inventory-2026-10-16)
+separates the software pipeline/loader requests released by disposal from later
+C++/JIT paths. It reuses the original traces and promotes no contract coverage.
 
 [Registered rectangle numerics](physics-registered-adapter.md#registered-rectangle-numerics)
 now execute actual contours, six queries, mass, contacts and linear/angular CCD

@@ -17,7 +17,7 @@ def require(condition, message):
 
 def summarize(lines):
     strings = ["[unknown]"]
-    ips = [(0, "")]
+    ips = [(0, "", "0")]
     traces = [(0, 0)]
     infos, counts, markers, phases = [], [], [], []
     groups = Counter()
@@ -31,6 +31,40 @@ def summarize(lines):
                 "allocatedBytes": 0, "freedBytes": 0, "allocationCalls": 0, "freeCalls": 0}
 
     phase = interval(0)
+
+    def stack(trace):
+        frames = []
+        while trace:
+            ip, trace = traces[trace]
+            module, function, address = ips[ip]
+            frames.append({"module": strings[module], "function": function, "address": address})
+        return frames
+
+    def inventory():
+        routes, sites = {}, []
+        for index, (size, module, marker, trace) in enumerate(infos):
+            if marker is not None or not counts[index]:
+                continue
+            frames = stack(trace)
+            caller = next((f for f in frames if f["module"] != module), None)
+            key = (module, caller["module"] if caller else "[no external frame]",
+                   caller["function"] if caller else "")
+            row = routes.setdefault(key, {"leafModule": key[0], "callerModule": key[1],
+                                          "callerFunction": key[2], "bytes": 0, "allocations": 0})
+            total = size * counts[index]
+            row["bytes"] += total
+            row["allocations"] += counts[index]
+            sites.append({"allocationInfo": index, "size": size, "allocations": counts[index],
+                          "bytes": total, "trace": trace})
+        sites.sort(key=lambda row: (-row["bytes"], row["allocationInfo"]))
+        for row in sites[:12]:
+            row["stack"] = stack(row.pop("trace"))
+        require(sum(row["bytes"] for row in sites) == live, "Live allocation inventory mismatch")
+        require(sum(row["bytes"] for row in routes.values()) == live, "Live call-path partition mismatch")
+        return {"bytes": live, "routes": sorted(routes.values(), key=lambda row: -row["bytes"]),
+                "topSites": sites[:12], "otherSiteBytes": sum(row["bytes"] for row in sites[12:]),
+                "otherSites": len(sites[12:])}
+
     for ordinal, line in enumerate(lines, 1):
         op, _, data = line.rstrip("\n").partition(" ")
         if op == "v":
@@ -46,7 +80,9 @@ def summarize(lines):
             module = int(fields[1], 16)
             function = int(fields[2], 16) if len(fields) > 2 else 0
             require(0 <= module < len(strings) and 0 <= function < len(strings), "Unknown instruction string")
-            ips.append((module, strings[function]))
+            address = int(fields[0], 16)
+            require(0 <= address <= 2**64 - 1, "Invalid instruction address")
+            ips.append((module, strings[function], hex(address)))
         elif op == "t":
             ip, parent = (int(s, 16) for s in data.split())
             require(0 <= ip < len(ips) and 0 <= parent < len(traces), "Unknown instruction or trace parent")
@@ -54,11 +90,11 @@ def summarize(lines):
         elif op == "a":
             size, trace = (int(s, 16) for s in data.split())
             require(0 <= size <= 2**64 - 1 and 0 <= trace < len(traces), "Invalid allocation size or trace")
-            module, function = ips[traces[trace][0]]
+            module, function, _ = ips[traces[trace][0]]
             marker = size - 17 if function == "e2d_memory_phase" else None
             if marker is not None:
                 require(0 <= marker <= 6, "Invalid phase-marker size")
-            infos.append((size, strings[module], marker))
+            infos.append((size, strings[module], marker, trace))
             counts.append(0)
         elif op == "c":
             stamp = int(data, 16)
@@ -68,7 +104,7 @@ def summarize(lines):
             require(version, "Allocation before trace version")
             index = int(data, 16)
             require(0 <= index < len(infos), "Unknown allocation; interpret the raw trace first")
-            size, module, marker = infos[index]
+            size, module, marker, _ = infos[index]
             sign = 1 if op == "+" else -1
             counts[index] += sign
             require(counts[index] >= 0, "Free exceeds recorded allocations")
@@ -81,7 +117,7 @@ def summarize(lines):
                     phase["exitBytes"] = live
                     phases.append(phase)
                     markers.append({"phase": marker, "eventLine": ordinal, "lastTimestampMS": time_ms,
-                                    "workloadBytes": live, "markerBytes": size})
+                                    "workloadBytes": live, "markerBytes": size, "liveAllocations": inventory()})
                     marker_bytes += size
                     phase = interval(len(markers))
                 else:
@@ -110,7 +146,7 @@ def summarize(lines):
     return {"format": "heaptrack-1.5-v3", "grossPeakBytes": gross_peak, "workloadPeakBytes": workload_peak,
             "endBytes": live, "endLeafModules": {k: v for k, v in groups.items() if v},
             "excludedMarkerBytes": marker_bytes, "markerAllocations": len(markers),
-            "markerFrees": marker_frees, "markers": markers, "phases": phases}
+            "markerFrees": marker_frees, "markers": markers, "phases": phases, "endAllocations": inventory()}
 
 
 def main():

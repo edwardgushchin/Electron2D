@@ -108,3 +108,6 @@ checkpoints and release/reporting, while preserving full ordinary network checks
 Calibration excludes only the seven explicit marker requests and retains earlier
 live storage. These instrumented event-order scopes remain separate from
 physical-step-only allocations, uninstrumented timing and target/window acceptance.
+The [boundary call paths](../components/physics-network-memory.md#live-native-call-path-inventory-2026-10-16)
+now distinguish software pipeline/loader retirement from later runtime JIT
+requests in those same traces; they do not establish exclusive network owners.

@@ -421,3 +421,62 @@ runtime behavior remain unchanged. Direct mappings/unhooked/foreign ownership,
 strict NativeAOT allocation budgets, arbitrary/massive scenes, target GPU gain,
 rendered output and real window FPS remain open. RTX loading is still deferred
 until its power cable is checked.
+
+## Live native call-path inventory, 2026-10-16
+
+The analyzer now inventories live requests at all seven markers and process end,
+using the same accepted traces above. It partitions every non-marker byte by
+allocation-leaf module and the first different module/function in the recorded
+parent stack. This keeps C++ allocation entry points separate from their JIT or
+driver callers. Unknown frames remain explicit; a call-path group is not an
+object-owner graph. The twelve largest size/trace sites include live allocation
+counts and complete recorded address/module/function stacks, with explicit
+omitted-site bytes/counts. Their totals and each full route partition equal the
+observed boundary balance.
+
+Offline replay of the original sixteen interpreted traces produces 128 balanced
+inventories: 96 for the twelve session processes and 32 for four calibrations.
+Every earlier numerical field, marker and interval is unchanged. No new network,
+GPU or performance run is substituted for those original checks. Synthetic tests
+cover shared allocator modules, nested same-module frames, multiple live requests
+per allocation-info, reuse, top-site truncation and malformed addresses.
+
+The GPU boundaries show where the previously observed approximately 200 MB live
+balance comes from. The pipeline group below is specifically a lavapipe leaf
+whose first external recorded frame is SDL `VULKAN_CreateComputePipeline`.
+The loader group has a lavapipe leaf and the Vulkan loader as its first external
+module. The JIT group has a C++ allocation leaf and `libclrjit.so` as that caller.
+These disjoint groups are subsets of the total, not an exhaustive owner census.
+
+| GPU policy / boundary | Total live B | Pipeline call path B | Loader call paths B | C++ via JIT B |
+| --- | ---: | ---: | ---: | ---: |
+| Owner / first warm | 199,908,226 | 154,232,740 | 28,297,327 | 13,044,328 |
+| Owner / completed | 199,915,391 | 154,232,740 | 28,297,327 | 13,044,328 |
+| Owner / checkpointed | 190,211,155 | 154,232,740 | 28,297,327 | 3,279,464 |
+| Owner / disposed-held | 6,416,385 | 0 | 0 | 3,934,824 |
+| Owner / released | 19,310,337 | 0 | 0 | 16,779,880 |
+| Owner / process end | 19,057,956 | 0 | 0 | 16,779,880 |
+| Separate / first warm | 199,981,802 | 154,232,740 | 28,303,679 | 13,044,328 |
+| Separate / completed | 199,990,290 | 154,232,740 | 28,303,679 | 13,044,328 |
+| Separate / checkpointed | 190,286,142 | 154,232,740 | 28,303,679 | 3,279,464 |
+| Separate / disposed-held | 6,424,257 | 0 | 0 | 3,934,824 |
+| Separate / released | 19,318,769 | 0 | 0 | 16,779,880 |
+| Separate / process end | 19,060,130 | 0 | 0 | 16,779,880 |
+
+The pipeline group has the same live-byte balance at warm/completed/checkpointed
+boundaries and no live requests after disposal; matching balances do not prove
+unchanged individual allocations. The later JIT-call-path increase lies in the
+report/release interval and is not residual pipeline memory. Direct lavapipe leaf
+end totals remain 256 B, separate from the two zeroed groups. This narrows the
+native ownership investigation without calling all driver-leaf or process-end
+bytes engine leaks. No global driver cleanup, runtime cache, allocator tuning or
+reduced scene is introduced.
+
+Reanalysis receipts and complete inventories are under
+`bin/physics-network-sites/2026-10-16/`, referencing the original accepted inputs
+by SHA-256. The interpretation aggregates allocation-info by size/trace, so it
+does not establish pointer identity or lifetime pairing across boundaries.
+Addresses are process-local, symbol availability is bounded by the captured
+binaries, and inline source frames are not expanded. Unhooked/direct-mapped
+storage, exact owner graphs, NativeAOT native budgets, hardware gain and window
+acceptance remain open. RTX load still requires the power-cable check.

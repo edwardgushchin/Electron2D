@@ -235,6 +235,16 @@ their peaks are not exclusive API costs or marginal checkpoint storage.
 Markers delimit recorded event order without adding GPU-idle fences. Logged
 timestamps retain Heaptrack's sampling granularity and are not step latencies.
 
+Each marker and trace end also report a live allocation inventory. `routes`
+partitions all non-marker bytes by the allocation-leaf module and the first
+different module/function in its recorded parent stack; unresolved frames remain
+explicit. `topSites` retains the twelve largest size/trace sites with live counts
+and complete recorded address/module/function stacks. `otherSiteBytes` and
+`otherSites` account for the rest. These are boundary inventories, not the
+interval peaks above or object-owner identities. Reused allocation-info indices
+do not identify individual pointer lifetimes; inline source frames are not expanded.
+See the [recorded call paths](../../docs/components/physics-network-memory.md#live-native-call-path-inventory-2026-10-16).
+
 ## Repeated world retirement
 
 Use `--cycles 8` with the raw fixture to create and retire eight independent worlds

@@ -219,3 +219,9 @@ seven tiny marker requests while carrying earlier live allocations. It locates
 the large software-device peak in initial simulation and the CPU lifetime peak
 in later report/release work. These event-order scopes still include observer
 and host/runtime storage and do not establish exclusive API or RSS budgets.
+
+The [live call-path inventory](physics-network-memory.md#live-native-call-path-inventory-2026-10-16)
+now partitions those existing boundary balances beyond allocation-leaf modules.
+It separates pipeline/loader paths released by disposal from later C++/JIT
+reporting paths. These are recorded native call paths, not exact object owners
+or additional process-memory measurements.

@@ -354,6 +354,9 @@ now separate the current native trace at session construction, the existing
 first-warm-step predicate and lifecycle stages, without a GPU fence or reduced
 scene. The large software peak precedes that warm gate; live storage carries
 across stages. Exclusive native/API budgets and hardware/window gates remain open.
+The [live call-path inventory](../components/physics-network-memory.md#live-native-call-path-inventory-2026-10-16)
+now separates retained software pipeline/loader paths from runtime JIT paths at
+those boundaries. Exact object ownership and full memory acceptance remain open.
 
 Physics readiness requires both CPU/Box2D.NET behavior and a complete selectable
 independent GPU world. The [source audit](../components/physics-contract-audit.md)
