@@ -1280,7 +1280,12 @@ public sealed partial class PhysicsServer
     /// attempted. Kind, ownership, thread and borrowing checks precede mutation. Once caller-owned retirement starts,
     /// the RID is unregistered even when dependent, motion, attachment, shape-user or observer cleanup reports errors.
     /// A collider being freed cannot rebind or recursively free itself from departure callbacks. Shared shape-user
-    /// preparation failures retain dirty authoring for the next query or step. A single error preserves its type;
+    /// preparation failures retain dirty authoring for the next query or step. Owned shape release checks all users before status hooks,
+    /// then borrows the shape's consumer membership and every participating world through slot removal and private-view retirement.
+    /// Hooks cannot attach incoming consumers, recursively release the shape or mutate other participating worlds.
+    /// A status-preflight failure preserves the live resource and its slots. Once removal starts, all users and geometry retirement
+    /// are attempted and the RID is unregistered even when cleanup reports errors. Unrelated slots retain their identities.
+    /// A single error preserves its type;
     /// multiple cleanup errors aggregate.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or has no server-owned resource.</exception>
     /// <exception cref="InvalidOperationException">The RID belongs to a scene owner or the space is being stepped or dispatching callbacks.</exception>

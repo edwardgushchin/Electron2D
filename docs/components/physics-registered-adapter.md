@@ -2519,3 +2519,9 @@ release of detached participants during data reads/replacements. Public-only
 checks retain exact slot/property identity, error propagation and successful
 retry/binding after the guard ends; full numerical/network/performance acceptance
 remains open.
+
+[Shared owned-shape release](physics-shape-data.md#shared-shape-release) now borrows resource membership and every
+participating world through removal and private-view retirement. Status failure
+preserves live data; committed cleanup attempts all users, retains exact errors
+and unregisters the RID. Public-only checks retain unrelated slots, exact Area
+entry/exit histories and zero warmed managed bytes. Wider acceptance stays open.

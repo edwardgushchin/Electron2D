@@ -1629,3 +1629,9 @@ retirement. The mixed CPU/GPU/registered fixture checks twelve scene/raw roles,
 eight partial failures, exact original errors and logical sensor histories. Warm
 groups retain strict zero managed bytes; global acceptance and declaration states
 remain open.
+
+[Shared owned-shape release](physics-shape-data.md#shared-shape-release) now borrows resource membership and every
+participating world through removal and private-view retirement. Status failure
+preserves live data; committed cleanup attempts all users, retains exact errors
+and unregisters the RID. Public-only checks retain unrelated slots, exact Area
+entry/exit histories and zero warmed managed bytes. Wider acceptance stays open.

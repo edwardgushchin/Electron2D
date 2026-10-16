@@ -69,16 +69,8 @@ public sealed partial class PhysicsServer
     internal RID ConvexPolygonShapeCreateCore() => CreateShape(new ConvexPolygonShape());
     internal RID ConcavePolygonShapeCreateCore() => CreateShape(new ConcavePolygonShape());
 
-    internal void ShapeSetDataCore(RID shape, Shape data)
+    private (List<PhysicsServerCollider> Users, List<CollisionObject> SceneUsers, List<PhysicsSpace> Spaces) ShapeWriteUsers(PhysicsServerShape entry)
     {
-        ThrowIfDisposed();
-        ArgumentNullException.ThrowIfNull(data);
-        if (data.IsDisposed) throw new ObjectDisposedException(nameof(data));
-        var entry = GetShape(shape);
-        if (!entry.OwnsGeometry)
-            throw new InvalidOperationException("A Shape resource owns this RID and must be edited through the resource.");
-        entry.EnsureBindingAccess();
-        entry.Geometry.EnsureCollisionMutationAccess();
         // Establish owner/phase access before observing any selected status hook.
         var users = new List<PhysicsServerCollider>();
         foreach (var collider in SnapshotColliders())
@@ -103,6 +95,20 @@ public sealed partial class PhysicsServer
             var space = scene is PhysicsBody body ? body.Space : ((Area)scene).Space;
             if (space is not null && !spaces.Contains(space)) spaces.Add(space);
         }
+        return (users, sceneUsers, spaces);
+    }
+
+    internal void ShapeSetDataCore(RID shape, Shape data)
+    {
+        ThrowIfDisposed();
+        ArgumentNullException.ThrowIfNull(data);
+        if (data.IsDisposed) throw new ObjectDisposedException(nameof(data));
+        var entry = GetShape(shape);
+        if (!entry.OwnsGeometry)
+            throw new InvalidOperationException("A Shape resource owns this RID and must be edited through the resource.");
+        entry.EnsureBindingAccess();
+        entry.Geometry.EnsureCollisionMutationAccess();
+        var (users, sceneUsers, spaces) = ShapeWriteUsers(entry);
         var previous = entry.Geometry;
         var borrowed = 0;
         entry.BeginDataUse();
@@ -437,20 +443,33 @@ public sealed partial class PhysicsServer
                 throw new InvalidOperationException("A Shape resource owns this RID and its lifetime.");
             shape.EnsureBindingAccess();
             shape.Geometry.EnsureCollisionMutationAccess();
-            var users = SnapshotColliders();
-            foreach (var user in users)
-                if (user.UsesShape(shape)) EnsureColliderSpaceAccessible(user, writing: true);
-            var sceneUsers = SceneShapeUsers(shape);
-            foreach (var scene in sceneUsers) EnsureSceneShapeAccess(scene, writing: true);
-            List<Exception>? errors = null;
+            var (users, sceneUsers, spaces) = ShapeWriteUsers(shape);
+            var borrowed = 0;
+            shape.BeginDataUse();
             try
             {
-                foreach (var user in users) PhysicsSpace.Cleanup(() => user.RemoveShape(shape), ref errors);
-                foreach (var scene in sceneUsers) PhysicsSpace.Cleanup(() => scene.RemoveServerShape(shape), ref errors);
-                PhysicsSpace.Cleanup(shape.Geometry.ReleaseServerGeometry, ref errors);
+                foreach (var owner in spaces) { owner.BeginImplementationCallback(); borrowed++; }
+                foreach (var user in users) user.Space?.EnsureQueryAccess();
+                foreach (var scene in sceneUsers)
+                {
+                    scene.Tree?.EnsurePhysicsParticipationChange();
+                    EnsureSceneShapeAccess(scene);
+                }
+                List<Exception>? errors = null;
+                try
+                {
+                    foreach (var user in users) PhysicsSpace.Cleanup(() => user.RemoveShape(shape), ref errors);
+                    foreach (var scene in sceneUsers) PhysicsSpace.Cleanup(() => scene.RemoveServerShape(shape), ref errors);
+                    PhysicsSpace.Cleanup(shape.Geometry.ReleaseServerGeometry, ref errors);
+                }
+                finally { lock (_registryGate) _serverShapes.Remove(rid); }
+                PhysicsSpace.FinishCleanup(errors);
             }
-            finally { lock (_registryGate) _serverShapes.Remove(rid); }
-            PhysicsSpace.FinishCleanup(errors);
+            finally
+            {
+                for (var i = borrowed - 1; i >= 0; i--) spaces[i].EndImplementationCallback();
+                shape.EndDataUse();
+            }
         }
     }
 

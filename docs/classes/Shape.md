@@ -221,3 +221,9 @@ owner additions and CollisionShape assignments of borrowed views reject before
 changing storage. Detached existing consumers also reject edits and release.
 The guard is released on supplier/status failure and before committed old-view
 retirement, so later ordinary bindings remain available.
+
+[Shared owned-shape release](../components/physics-shape-data.md#shared-shape-release) now borrows resource membership and every
+participating world through removal and private-view retirement. Status failure
+preserves live data; committed cleanup attempts all users, retains exact errors
+and unregisters the RID. Public-only checks retain unrelated slots, exact Area
+entry/exit histories and zero warmed managed bytes. Wider acceptance stays open.

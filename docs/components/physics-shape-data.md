@@ -95,3 +95,30 @@ A cold detached-only preflight runs before any world is attached. It rejects
 scene writes/disposal and raw release from the supplier, then permits ordinary
 mutation after the copy completes. Data borrowing keeps scene ownership checks
 active even while the usual global attachment fast path is empty.
+
+## Shared shape release
+
+FreeRID preflights every owned shape user without invoking selected status hooks,
+then borrows the resource's consumer membership and all participating worlds.
+Status failure leaves geometry and slots intact. Once removal starts, every raw
+and scene user and private geometry retirement is attempted; cleanup failures
+retain their original identity and the RID is unregistered. The borrow continues
+through retirement callbacks, preventing recursive release, incoming binding and
+writes/transfer/free/teardown in another participating world. Unrelated worlds
+retain ordinary authored access. Remaining numerical preparation failures keep
+removed authoring dirty and retry before subsequent query or step publication.
+
+The public-only --shared-free fixture shares one owned circle across CPU,
+CPU/GPU and an independent provider. Twelve scene/raw Body/Area roles each have
+one unrelated slot plus target slots 1/3 and a disabled gap. Both creation orders
+and solver-thread policies exercise status failure followed by each of four
+rebuild/retirement error combinations. Every original receiver observes exactly
+one addition/removal at its original logical slot, without duplicate effects.
+All matching slots disappear, the unrelated RID/index/geometry survives, held
+private views retire once and stale RIDs reject. Rebuild deliberately poisons the
+provider's partial geometry before failing; public queries verify repair.
+After 128 warm groups, 128 measured groups run 24 caller-buffer point queries and
+three full intervals at strict 0/0 owner/all-thread managed bytes. Awake motion,
+RID and force-callback counts remain checked. Evidence is retained under
+bin/physics-shared-free/2026-10-16/. Native/driver budgets, foreign execution,
+network integration and hardware/window performance acceptance remain open.

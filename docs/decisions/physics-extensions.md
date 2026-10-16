@@ -269,6 +269,13 @@ interception would leave scene behavior and direct queries outside the extension
   in unrelated worlds and mutations/releases of detached consumers must reject
   before storage changes. Cover borrowed procedural reads as well as owned views.
   Release this resource guard on every failure and before committed retirement.
+  For owned shape FreeRID, use the same pure preflight and borrow every user world
+  before selected status observation. A status failure leaves users unchanged.
+  Once removal starts, attempt every user and geometry retirement and unregister
+  the RID even on cleanup failure. Hold world/resource borrowing through the
+  private geometry's retirement callbacks, preventing cross-world mutation,
+  incoming consumers and recursive release. Preserve unrelated slots and retain
+  dirty retry for failed numerical preparation.
 
 ### Current implementation boundary
 

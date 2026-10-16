@@ -340,3 +340,9 @@ participating rebuilds, rollback and rejected-copy retirement, even while anothe
 world's provider hook runs. Committed old-view retirement follows borrow release.
 [Mixed-world checks](../components/physics-shape-data.md#shared-cpugpuregistered-replacement)
 exercise scene/raw authoring and lifetime guards without adding a frame-loop phase.
+
+[Shared owned-shape release](../components/physics-shape-data.md#shared-shape-release) now borrows resource membership and every
+participating world through removal and private-view retirement. Status failure
+preserves live data; committed cleanup attempts all users, retains exact errors
+and unregisters the RID. Public-only checks retain unrelated slots, exact Area
+entry/exit histories and zero warmed managed bytes. Wider acceptance stays open.

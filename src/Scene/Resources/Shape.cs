@@ -4,7 +4,7 @@ namespace Electron2D;
 /// <remarks>A <see cref="CollisionShape"/> borrows caller-owned geometry. Geometry obtained from a server-backed
 /// scene owner slot is borrowed from that server RID and cannot be disposed separately; data replacement retires that view.
 /// During a resource or selected shape-pair query, both operands reject geometry/policy mutation, inherited reset/copy and disposal.
-/// Server data reads and replacements also freeze the resource's collision consumers until their guarded operation ends.</remarks>
+/// Server data reads, replacements and owned RID release also freeze the resource's collision consumers until their guarded operation ends.</remarks>
 public abstract partial class Shape : Resource
 {
     private float _customSolverBias;

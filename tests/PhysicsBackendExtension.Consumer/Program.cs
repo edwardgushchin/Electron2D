@@ -1,4 +1,5 @@
-if (args.Contains("--shared-data")) BackendChecks.RunSharedData(args.Contains("--gpu"), args.Contains("--threaded"), args.Contains("--reverse"));
+if (args.Contains("--shared-free")) BackendChecks.RunSharedFree(args.Contains("--gpu"), args.Contains("--threaded"), args.Contains("--reverse"));
+else if (args.Contains("--shared-data")) BackendChecks.RunSharedData(args.Contains("--gpu"), args.Contains("--threaded"), args.Contains("--reverse"));
 else if (args.Contains("--procedural-data")) BackendChecks.RunProceduralData(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--filter-transactions")) BackendChecks.RunFilterTransactions(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
