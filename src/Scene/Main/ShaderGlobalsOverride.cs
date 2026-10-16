@@ -156,6 +156,7 @@ public class ShaderGlobalsOverride : Node
         ThrowCollected("Scene shader override lifecycle failed.", errors);
     }
     /// <inheritdoc />
+    /// <remarks>Selection changes notify the edited scene even during owner-thread pre-delete callbacks.</remarks>
     public override string[] GetConfigurationWarnings()
     {
         var warnings = base.GetConfigurationWarnings();

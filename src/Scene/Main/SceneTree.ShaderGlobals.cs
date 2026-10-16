@@ -20,8 +20,8 @@ public sealed partial class SceneTree
         List<Exception>? errors = null;
         try { RenderingServer.SyncSceneGlobals(this); } catch (Exception error) { CollectException(ref errors, error); }
         foreach (var node in _shaderGlobals.ToArray())
-            if (!node.IsDisposed && ReferenceEquals(node.RegisteredTree, this))
-                try { node.UpdateConfigurationWarnings(); } catch (Exception error) { CollectException(ref errors, error); }
+            if (ReferenceEquals(node.RegisteredTree, this))
+                try { NotifyConfigurationWarningsChanged(node); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Scene shader selection callbacks failed.", errors);
     }
 }

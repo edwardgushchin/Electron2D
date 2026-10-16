@@ -70,7 +70,7 @@ Return authored names and logical roles only. Mutating the returned list changes
 
 ### GetConfigurationWarnings
 
-An attached waiting node reports that another node precedes it. Detached and selected nodes add no selection warning. Selection and renderer publication are mandatory membership work, independent of overridable notifications. Callback failures are aggregated after attempting remaining cleanup/promotion and warning delivery.
+An attached waiting node reports that another node precedes it. Detached and selected nodes add no selection warning. Selection, renderer publication and edited-scene warning refreshes are mandatory membership work, independent of overridable notifications. Warning refreshes follow actual registration even during owner-thread pre-delete reordering; the temporary disposed flag does not suppress them. Callback failures are aggregated after attempting remaining cleanup/promotion and warning delivery.
 
 ### GetPropertyDescriptors and CreateSceneInstanceFactory
 

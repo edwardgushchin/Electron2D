@@ -86,10 +86,14 @@ internal static class ShaderGlobalsOverrideTests
         var lifecycleRoot = new Node(); var west = new Node(); var east = new Node(); lifecycleRoot.AddChild(west); lifecycleRoot.AddChild(east);
         var pending = new PreDeleteOverride(); var waiting = new ShaderGlobalsOverride(); west.AddChild(pending); east.AddChild(waiting);
         using var lifecycleTree = new SceneTree(lifecycleRoot);
+        lifecycleTree.EditedSceneRoot = lifecycleRoot;
+        var warningStates = new List<int>();
+        lifecycleTree.NodeConfigurationWarningChanged += (_, changed) => { if (ReferenceEquals(changed, pending)) warningStates.Add(pending.GetConfigurationWarnings().Length); };
         pending.BeforeDelete = () =>
         {
             lifecycleRoot.MoveChild(west, 1); Check(lifecycleTree.SelectedShaderGlobals == waiting, "Pre-delete reordering selects actual tree order.");
             lifecycleRoot.MoveChild(west, 0); Check(lifecycleTree.SelectedShaderGlobals == pending, "Pending deletion remains a real member until exit, including a cancellable pre-delete phase.");
+            Check(warningStates.SequenceEqual(new[] { 1, 0 }), $"Pre-delete selection warnings must deliver [1, 0], got [{string.Join(", ", warningStates)}].");
         };
         pending.Dispose(); Check(lifecycleTree.SelectedShaderGlobals == waiting, "Actual exit retires pending selection.");
         Console.WriteLine("Scene globals: 25 roles, fresh-file graph, lifecycle/order/ownership and 1024 updates=0 B passed.");
