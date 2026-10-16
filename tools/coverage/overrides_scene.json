@@ -985,12 +985,6 @@
       "reason": "ADR 0008: existing typed overloads retain false-default call positions; bool overloads implement readable/generated collision naming across ordinary/internal children. Constructor class-name defaults remain. Readable decimal suffixes honor live separator/feature policy, leading width and arbitrary-length carry; AddSibling preserves immediate order and partition. Name/reparent/replacement share resolution and stable physical identities; hierarchy, lifecycle, owner/capture/numerical guards precede mutation. Public NodeNames checks four separators, internal/physical siblings, rejected and failed callbacks, nested/removing path notifications, weak snapshot retirement, actual file/fresh-process persistence and 128 warm/measured edited full frames at 0/0 owner/all-thread bytes on CPU/software-GPU/registered policies. Remaining inherited, numerical, native-memory, hardware/window and full physics acceptance stay open."
     },
     {
-      "electron2d": "method:Electron2D.Node.CancelFree()",
-      "godot": "Object::method:cancel_free()",
-      "state": "Partial",
-      "reason": "Deletion cancellation under ADR 0006; verify atomicity."
-    },
-    {
       "electron2d": "method:Electron2D.Node.FindChild(System.String,System.Boolean,System.Boolean)",
       "godot": "Node::method:find_child(String:,bool:,bool:)",
       "state": "Implemented",
@@ -5761,6 +5755,7 @@
     }
   ],
   "extras": [
+    {"electron2d": "method:Electron2D.Node.CancelFree()", "adr": "adr-0006", "reason": "ADRs 0006/0011: atomically cancels the current queued Node deletion request and returns whether one was pending. This existing typed operation is independent of executing IDisposable teardown and uncancellable SceneTree.QueueDelete; it is not Object.cancel_free pre-delete veto. Generation-qualified stale entries cannot consume a replacement; exact publication rollback, owner transfer, closed lifetime and captured batches preserve current requests. Public-only queued-deletion profiles retain zero warm full-frame managed allocation."},
     {
       "electron2d": "property:Electron2D.Node.TranslationDomain()",
       "reason": "Derived C# override of the inherited Object translation-domain contract; Node resolves its parent's current domain until explicitly assigned, as required by ADR 0007.",
@@ -8203,6 +8198,9 @@
     }
   ],
   "statusGroups": [
+    {"godot": ["Node::method:queue_free()"], "state": "Implemented", "reason": "Pinned Node declaration/owner have no deprecated metadata. ADRs 0006/0011 retain host-driven typed frame safe points, one captured action/deletion batch and stable-root restriction. Requests are idempotent, thread-safe and generation-qualified; cancellation/reissue receives a new FIFO position and a stale captured entry cannot consume it. Children retire with the parent without acquiring its request flag. Detached requests survive attachment/removal and follow the receiving tree. Publication rollback cannot clear a newer request; disposal closes publication atomically. Public-only queued-deletion checks execute actual physical survival, query/RID identity and next-frame retirement on CPU/software-GPU/registered owner/separate profiles, inherited roles, concurrency, reference release, errors and 128 warm/measured full frames at strict 0/0 managed bytes. Full native/hardware/foreign and remaining inherited acceptance stay open."},
+    {"godot": ["Object::method:cancel_free()"], "state": "Unimplemented", "reason": "Pinned Object.xml defines veto of actual destruction during NOTIFICATION_PREDELETE; neither declaration nor owner is deprecated. Node.CancelFree cancels a queued scene request under ADR 0006 and is an independently reviewed extra, not this operation. Existing ValidateDisposal rejects before the disposal transition under ADR 0009; it does not implement a pre-delete notification veto. Trigger: accepted lifetime-veto/failure/concurrency semantics and their complete implementation under ADRs 0003/0009; preserve the existing Node cancellation meaning."},
+    {"godot": ["Object::method:is_queued_for_deletion()"], "state": "Partial", "reason": "Node.IsQueuedForDeletion now atomically observes its current cancellable generation, including publication, cancellation, reissue and terminal closure; child flags remain independent. Public CPU/GPU/registered owner/separate consumers cover those states with real physical lifetime and zero warm allocations. Pinned Object.xml also requires true after SceneTree.queue_delete, including non-Node objects. The existing property is only on Node and observes QueueFree, while typed QueueDelete is independently uncancellable under ADRs 0006/0011. That generic queued-state observation remains missing; do not infer complete Object behavior from the corrected Node request state."},
     {
       "godot": [
         "Node::method:call_deferred_thread_group(StringName:)",

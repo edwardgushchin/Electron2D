@@ -441,6 +441,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BACKEND_OWNERSHIP") is {
     return;
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESULT_CONSTRUCTION") is { } resultBackend) { PhysicsResultConstructionTests.Run(resultBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_QUEUED_DELETION") is { } deletionProfile)
+{
+    BackendChecks.RunQueuedDeletion(deletionProfile == "cpu" ? PhysicsServer.Backend.CPU : deletionProfile == "gpu" ? PhysicsServer.Backend.GPU : null,
+        Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1");
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SIGNAL_BLOCKING") == "1") { ObjectSignalBlockingTests.Run(); EventHandlerTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REPORT_ONLY") is { } reportOnlyBackend) { PhysicsReportOnlyTests.Run(reportOnlyBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILTERS") == "1") { PhysicsFilterTests.Run(); PhysicsFilterTests.Run(true); return; }
@@ -1600,6 +1606,7 @@ WeakRefTests.Run();
 VerifyNotificationsAndProperties();
 VerifyEventConnections();
 ObjectSignalBlockingTests.Run();
+BackendChecks.RunQueuedDeletion(); BackendChecks.RunQueuedDeletion(PhysicsServer.Backend.CPU); BackendChecks.RunQueuedDeletion(PhysicsServer.Backend.GPU);
 SignalBlockingPhysicsTests.Run(PhysicsServer.Backend.CPU, false); SignalBlockingPhysicsTests.Run(PhysicsServer.Backend.GPU, false);
 EventConnectionPhysicsTests.Run(PhysicsServer.Backend.CPU); EventConnectionPhysicsTests.Run(PhysicsServer.Backend.GPU);
 VerifyTranslations();

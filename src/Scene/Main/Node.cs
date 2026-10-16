@@ -201,7 +201,8 @@ public partial class Node : ElectronObject
 
     private List<Resource>? _ownedSceneResources;
 
-    private int _queuedForDeletion;
+    // The low bits hold idle/publishing/queued/closed; the generation rejects canceled queue entries.
+    private long _queuedForDeletion;
 
     private int _sceneCaptureDepth;
     private int _notificationPropagationDepth;
@@ -590,7 +591,7 @@ public partial class Node : ElectronObject
 
     /// <summary>Gets whether deletion has been requested through <see cref="QueueFree"/>.</summary>
     /// <value>An atomic snapshot of the deletion-request flag.</value>
-    public bool IsQueuedForDeletion => Volatile.Read(ref _queuedForDeletion) != 0;
+    public bool IsQueuedForDeletion => (Volatile.Read(ref _queuedForDeletion) & 3) is 1 or 2;
 
     /// <summary>Returns this node's cached active viewport, including itself when it is a viewport.</summary>
     /// <returns>The nearest active viewport, or null while detached or in an active hierarchy without a viewport.</returns>
@@ -1723,10 +1724,11 @@ public partial class Node : ElectronObject
     /// A request made while already detached is queued if the node later enters a tree. Removing the node before its
     /// current tree flushes does not cancel deletion: that tree disposes the detached node at its safe point. If the
     /// node has entered another tree first, the old entry leaves the request intact for the new tree. Repeated calls
-    /// are idempotent. The method may be called from a non-owner thread.
+    /// are idempotent. Cancellation invalidates that exact request: a later request receives a new FIFO position,
+    /// including when it is created during a captured deletion batch. The method may be called from a non-owner thread.
     /// </remarks>
     /// <exception cref="InvalidOperationException">This node is the active scene-tree root.</exception>
-    /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
+    /// <exception cref="ObjectDisposedException">Deletion publication has closed, or this node is disposing on another thread or has finished disposing.</exception>
     public void QueueFree()
     {
         EnsureNotSceneCapture();
@@ -1739,31 +1741,34 @@ public partial class Node : ElectronObject
         while (true)
         {
             var state = Volatile.Read(ref _queuedForDeletion);
-            if (state == 2)
+            var phase = state & 3;
+            ObjectDisposedException.ThrowIf(phase == 3, this);
+            if (phase == 2)
                 return;
 
-            if (state == 1)
+            if (phase == 1)
             {
                 spinner.SpinOnce();
                 continue;
             }
 
-            if (Interlocked.CompareExchange(ref _queuedForDeletion, 1, 0) != 0)
+            var publishing = unchecked((state & ~3L) + 5);
+            if (Interlocked.CompareExchange(ref _queuedForDeletion, publishing, state) != state)
                 continue;
 
             try
             {
                 var tree = Tree;
                 if (tree is null)
-                    Interlocked.CompareExchange(ref _queuedForDeletion, 2, 1);
+                    Interlocked.CompareExchange(ref _queuedForDeletion, publishing + 1, publishing);
                 else
-                    tree.QueueForDeletion(this);
+                    tree.QueueForDeletion(this, publishing + 1);
 
                 return;
             }
             catch
             {
-                Interlocked.CompareExchange(ref _queuedForDeletion, 0, 1);
+                Interlocked.CompareExchange(ref _queuedForDeletion, publishing & ~3L, publishing);
                 throw;
             }
         }
@@ -1771,12 +1776,19 @@ public partial class Node : ElectronObject
 
     /// <summary>Atomically cancels a pending deletion request.</summary>
     /// <returns><see langword="true"/> when a request was pending; otherwise <see langword="false"/>.</returns>
-    /// <remarks>A stale queue entry may remain, but the tree ignores it when flushing.</remarks>
+    /// <remarks>A stale entry may remain, but it cannot consume a later reissued request. Returns false once the
+    /// current request has been claimed for destruction. This cancels queued node work, not an executing Dispose
+    /// or an independent SceneTree.QueueDelete request.</remarks>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public bool CancelFree()
     {
         EnsureNotSceneCapture();
-        return Interlocked.Exchange(ref _queuedForDeletion, 0) != 0;
+        while (true)
+        {
+            var state = Volatile.Read(ref _queuedForDeletion);
+            if ((state & 3) is 0 or 3) return false;
+            if (Interlocked.CompareExchange(ref _queuedForDeletion, state & ~3L, state) == state) return true;
+        }
     }
 
     /// <summary>Creates a reusable factory for packed-scene instances of this exact runtime node type.</summary>
@@ -1996,7 +2008,7 @@ public partial class Node : ElectronObject
             try { DisposeSceneConnections(); } catch (Exception error) { (errors ??= []).Add(error); }
             ReleaseOwnedNodes();
             SetSceneOwner(null);
-            Interlocked.Exchange(ref _queuedForDeletion, 0);
+            Interlocked.Or(ref _queuedForDeletion, 3);
 
             try
             {
@@ -2071,7 +2083,8 @@ public partial class Node : ElectronObject
         ThrowCollected("One or more node teardown operations failed.", errors);
     }
 
-    internal bool TryConsumeQueuedDeletion() => Interlocked.CompareExchange(ref _queuedForDeletion, 0, 2) == 2;
+    internal bool TryConsumeQueuedDeletion(long ticket) =>
+        Interlocked.CompareExchange(ref _queuedForDeletion, ticket & ~3L, ticket) == ticket;
 
     internal Func<Node> CaptureSceneInstanceFactory()
     {
@@ -2195,18 +2208,15 @@ public partial class Node : ElectronObject
             throw new InvalidOperationException("A node factory cannot activate a SceneTree before returning its node.");
     }
 
-    internal bool TryPublishQueuedDeletion()
+    private long GetQueuedDeletionTicket()
     {
-        while (true)
-        {
-            var state = Volatile.Read(ref _queuedForDeletion);
-            if (state == 0)
-                return false;
-
-            if (state == 2 || Interlocked.CompareExchange(ref _queuedForDeletion, 2, 1) == 1)
-                return true;
-        }
+        var state = Volatile.Read(ref _queuedForDeletion);
+        return (state & 3) is 1 or 2 ? (state & ~3L) | 2 : 0;
     }
+
+    internal bool TryPublishQueuedDeletion(long ticket) =>
+        Volatile.Read(ref _queuedForDeletion) == ticket ||
+        Interlocked.CompareExchange(ref _queuedForDeletion, ticket, ticket - 1) == ticket - 1;
 
     internal IEnumerable<Node> EnumerateDepthFirst()
     {
@@ -2408,11 +2418,12 @@ public partial class Node : ElectronObject
             }
         }
 
-        if (IsQueuedForDeletion)
+        var deletionTicket = GetQueuedDeletionTicket();
+        if (deletionTicket != 0)
         {
             try
             {
-                tree.QueueForDeletion(this);
+                tree.QueueForDeletion(this, deletionTicket);
             }
             catch (Exception error)
             {
