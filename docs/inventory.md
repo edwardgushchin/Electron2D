@@ -1,6 +1,6 @@
 # Engine inventory
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 Private native libraries are owned by the Linux/macOS/Windows native packages in ordinary desktop builds; [native delivery](native-packaging.md) records source production and target verification limits. Windows resolution/full-suite checks are connected with execution pending. No public runtime type or managed backend assembly is added; internal floating-point atomics preserve Engine/audio snapshots on 32-bit hosts.
 
@@ -1817,3 +1817,5 @@ Node duplication retains its separate ADR 0091 binding/identity prerequisite.
 The [shared ETC/EAC/ASTC decoder](components/image-block-decoding.md) lives in Image.BlockDecoding.cs and the private tools/ktx-native/blocks.cpp bridge. It adds no public production type; Image and ordinary/layered texture snapshots share its complete-mip prepared pixel path. Original block source archives remain exact.
 
 [Unsigned image texture sampling](components/integer-textures.md) extends existing TexturePixels/GPUTexture, ordinary/layered resources, imports and rendering identities without adding a public type.
+
+Window's [placement family](classes/Window.md#initial-placement-and-minimum-size-reset) includes the nested WindowInitialPosition enum, its stored policy and constrained ResetSize, integrated with native root startup and embedded entry/show.

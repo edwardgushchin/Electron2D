@@ -13674,6 +13674,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Window.WindowInitialPosition",
+    "kind": "type",
+    "declaringType": "Electron2D.Window.WindowInitialPosition",
+    "name": "WindowInitialPosition",
+    "signature": "public enum Electron2D.Window.WindowInitialPosition",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.WindowFlag",
     "kind": "type",
     "declaringType": "Electron2D.WindowFlag",
@@ -51207,6 +51225,84 @@
     "parameters": [],
     "returnType": "Electron2D.WebSocketWriteMode",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.WindowInitialPosition.Absolute()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.WindowInitialPosition",
+    "name": "Absolute",
+    "signature": "public const Electron2D.Window.WindowInitialPosition Absolute = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.WindowInitialPosition",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.WindowInitialPosition.CenterMainWindowScreen()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.WindowInitialPosition",
+    "name": "CenterMainWindowScreen",
+    "signature": "public const Electron2D.Window.WindowInitialPosition CenterMainWindowScreen = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.WindowInitialPosition",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.WindowInitialPosition.CenterOtherScreen()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.WindowInitialPosition",
+    "name": "CenterOtherScreen",
+    "signature": "public const Electron2D.Window.WindowInitialPosition CenterOtherScreen = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.WindowInitialPosition",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.WindowInitialPosition.CenterPrimaryScreen()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.WindowInitialPosition",
+    "name": "CenterPrimaryScreen",
+    "signature": "public const Electron2D.Window.WindowInitialPosition CenterPrimaryScreen = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.WindowInitialPosition",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.WindowInitialPosition.CenterScreenWithKeyboardFocus()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.WindowInitialPosition",
+    "name": "CenterScreenWithKeyboardFocus",
+    "signature": "public const Electron2D.Window.WindowInitialPosition CenterScreenWithKeyboardFocus = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.WindowInitialPosition",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.WindowInitialPosition.CenterScreenWithMouseFocus()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.WindowInitialPosition",
+    "name": "CenterScreenWithMouseFocus",
+    "signature": "public const Electron2D.Window.WindowInitialPosition CenterScreenWithMouseFocus = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.WindowInitialPosition",
+    "value": "4"
   },
   {
     "id": "enumValue:Electron2D.WindowFlag.AlwaysOnTop()",
@@ -203158,6 +203254,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Window.ResetSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "ResetSize",
+    "signature": "public System.Void ResetSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Window.SetFlag(Electron2D.WindowFlag,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Window",
@@ -244838,6 +244947,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.InitialPosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "InitialPosition",
+    "signature": "public Electron2D.Window.WindowInitialPosition InitialPosition { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.WindowInitialPosition",
     "value": null
   },
   {

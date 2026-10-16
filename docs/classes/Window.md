@@ -1,12 +1,12 @@
 # Window
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 **Inherits:** [Viewport](Viewport.md)
 
 **Inherited By:** [Popup](Popup.md), [AcceptDialog](AcceptDialog.md)
 
-- **Source:** [`Window.cs`](../../src/Scene/Main/Window.cs), [`Window.Native.cs`](../../src/Scene/Main/Window.Native.cs)
+- **Source:** [`Window.cs`](../../src/Scene/Main/Window.cs), [`Window.Native.cs`](../../src/Scene/Main/Window.Native.cs), [`Window.Placement.cs`](../../src/Scene/Main/Window.Placement.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public partial class Window : Viewport`
 
@@ -768,3 +768,26 @@ older selection. Flag changes, visibility and tree membership update the link
 before callbacks. `Node.GetLastExclusiveWindow()` traverses these links and every
 `PopupExclusive*` method uses it. Attachment/popup failure attempts detachment;
 combined failures retain both errors. See [the current popup contract](../components/popup-windows.md#active-exclusive-window-chains).
+
+## Initial placement and minimum-size reset
+
+`Window.WindowInitialPosition` retains these six values:
+
+| Value | Native root selection |
+| --- | --- |
+| `Absolute = 0` | Use authored Position; an unset position keeps system placement. |
+| `CenterPrimaryScreen = 1` | Primary screen. |
+| `CenterMainWindowScreen = 2` | Main-window screen. |
+| `CenterOtherScreen = 3` | Configured CurrentScreen, or screen zero. |
+| `CenterScreenWithMouseFocus = 4` | DisplayServer pointer-focus selector. |
+| `CenterScreenWithKeyboardFocus = 5` | DisplayServer keyboard-focus selector. |
+
+`InitialPosition` defaults to Absolute and is stored by PackedScene and typed archives separately from Position. Undefined enum values fail before commitment. Every valid assignment emits PropertyListChanged after commitment, including equal values; observer failure leaves the new policy stored. Native roots request placement before scene entry, using full screen bounds. These are requests subject to native constraints and focus-selector capability limits. Wayland rejects explicit root positioning and releases the failed host; the default unset Absolute policy works normally. CurrentScreen retains its existing non-stored native configuration role.
+
+Embedded windows center in their actual containing viewport for every non-absolute policy. Entry/show applies the policy, including showing through Popup; changing it while visible or resizing its parent does not move the window, and hide/show applies it again. Absolute keeps the authored local position. Independent native child-window creation remains unavailable.
+
+`ResetSize()` requests the smallest constrained client extent. It combines MinSize, the title minimum when required, and `ceil(GetContentsMinimumSize() * ContentScaleFactor)` when WrapControls is enabled, then honors each nonzero MaxSize axis. The portable viewport retains at least one pixel per axis. Measurement failures and unrepresentable scaled dimensions leave the old size intact. Source content is sampled once by a reset. Actual native geometry and SizeChanged retain the normal asynchronous resize contract.
+
+The same minimum calculation is used by Size and wrapped-content growth, including native-root requests. Access follows existing disposal, owner-thread and capture rules. Rendering, other-host and compositor acceptance are distinct from detached authoring checks.
+
+Verification for this family: WindowPlacementTests covers all policies, invalid values, scaled fractional minima/maxima, overflow, failed/reentrant/disposal hooks, packed/archive storage and owner/capture/lifetime guards. Eleven native profiles pass on Linux x64: embedded pixels and actual native reset/readback on Wayland/X11, all six X11 root placements, and explicit Wayland root-position rejection with cleanup. A public-only consumer authors a scene in NativeAOT and reloads it in fresh JIT/NativeAOT processes, exercising five shown policy phases and green pixels on both drivers. AOT maps no CoreCLR. Popup and content-scale managed regressions also pass. Other operating systems, physical GPU and human acceptance remain separate.

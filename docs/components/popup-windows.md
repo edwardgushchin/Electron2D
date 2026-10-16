@@ -1,6 +1,6 @@
 # Embedded popup windows
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 Owns [Window](../classes/Window.md), [Viewport](../classes/Viewport.md) embedded ownership and the [Popup](../classes/Popup.md)/[PopupPanel](../classes/PopupPanel.md) consumers under ADRs 0008, 0038, 0040 and 0083.
 
@@ -89,3 +89,5 @@ Window and Control use one domain-aware resolver. An inherited node follows the 
 Layout-direction and translation notifications reflow geometry and invalidate text; global locale/catalog edits require an explicit translation notification under ADR 0007. Existing locale direction still requires a matching registered catalog or fallback language. [ProjectLayoutDirectionTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionTests.cs) covers resolution, lifetime and reflow; [ProjectLayoutDirectionNativeTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionNativeTests.cs) checks GUI/text pixels on Linux Wayland GPU/compatibility. Foreign targets and owner visual acceptance remain unverified.
 
 Window content scaling now separates logical visible coordinates, raster target dimensions and client presentation. Both native renderers fit the completed content into a client-sized presentation surface with black margins; the borrowed viewport texture keeps its own raster resolution. Window/embedded input removes the complete presentation transform, while rendering excludes that transform and uses raster scale/density. Automatic text raster scale follows the viewport; explicit oversampling remains authoritative. See [Window content scale](../classes/Window.md#content-scale) and the dedicated unit/native checks for the exact policies and platform limits.
+
+Embedded Window initial-placement policies now center non-absolute modes within the containing viewport when the window enters or becomes visible. Absolute preserves local authored position; live policy edits wait for the next show. [Window placement](../classes/Window.md#initial-placement-and-minimum-size-reset) also owns the shared scaled-content minimum used by ResetSize and wrapped window growth.

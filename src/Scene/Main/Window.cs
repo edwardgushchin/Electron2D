@@ -11,6 +11,7 @@ public partial class Window : Viewport
     [
         new PropertyDescriptor<Window, bool>(nameof(Visible), w => w.Visible, (w, v) => w.Visible = v, _ => true, stored: true),
         new PropertyDescriptor<Window, Vector2i>(nameof(Position), w => w.Position, (w, v) => w.Position = v, _ => Vector2i.Zero, stored: true),
+        new PropertyDescriptor<Window, WindowInitialPosition>(nameof(InitialPosition), w => w.InitialPosition, (w, v) => w.InitialPosition = v, _ => WindowInitialPosition.Absolute, stored: true),
         new PropertyDescriptor<Window, string>(nameof(Title), w => w.Title, (w, v) => w.Title = v, _ => "", stored: true),
         new PropertyDescriptor<Window, Vector2i>(nameof(Size), w => w.Size, (w, v) => w.Size = v, _ => new(100, 100), stored: true),
         new PropertyDescriptor<Window, Vector2i>(nameof(MinSize), w => w.MinSize, (w, v) => w.MinSize = v, _ => Vector2i.Zero, stored: true),
@@ -87,20 +88,11 @@ public partial class Window : Viewport
             if (value.X <= 0 || value.Y <= 0)
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Client dimensions must be positive.");
             RenderingOwner?.EnsureViewportMutation();
-            if (_display is null)
-            {
-                var minimum = _minSize.Max(TitleMinimum());
-                if (_wrapControls) { var content = GetContentsMinimumSize().Ceil(); minimum = minimum.Max(new Vector2i(checked((int)content.X), checked((int)content.Y))); }
-                value = value.Max(minimum);
-                if (_maxSize.X > 0) value.X = Math.Min(value.X, _maxSize.X);
-                if (_maxSize.Y > 0) value.Y = Math.Min(value.Y, _maxSize.Y);
-            }
-            if (_display is not null)
-            {
-                _display.WindowSetSizeCore(value);
-                return;
-            }
-            CommitSize(value);
+            value = value.Max(GetWindowMinimumSize());
+            EnsureMutable();
+            if (_maxSize.X > 0) value.X = Math.Min(value.X, _maxSize.X);
+            if (_maxSize.Y > 0) value.Y = Math.Min(value.Y, _maxSize.Y);
+            RequestMeasuredWindowSize(value);
         }
     }
 
@@ -292,8 +284,7 @@ public partial class Window : Viewport
                 _display.WindowSetFlagCore(flag, true);
         if (_currentScreen is { } screen)
             _display.WindowSetCurrentScreenCore(screen);
-        if (_screenPosition is { } position)
-            _display.WindowSetPositionCore(position);
+        ApplyInitialNativePosition();
         if (_mode != WindowMode.Windowed)
             _display.WindowSetModeCore(_mode);
         _size = _display.WindowGetSizeCore(); _contentLayoutValid = false;

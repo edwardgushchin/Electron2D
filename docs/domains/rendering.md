@@ -2,7 +2,7 @@
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 [Movie writing](../components/movie-writing.md) consumes completed root-viewport pixels through the actual renderer and fixes capture dimensions across later resizes. It does not create a headless renderer or claim readback/encoding is allocation-free.
 
@@ -364,3 +364,5 @@ Theme resource archives and scenes now persist complete typed theme data, resour
 Paired compiled Shader stages now execute vertex deformation through existing CanvasItem, Mesh/MultiMesh, glyph, lighting and viewport GPU consumers. Typed material/instance/default-texture state merges across stages while native bindings remain stage-specific. Engine-owned wrappers preserve hardware instancing, canvas modulation and private glyph/light data. The [shader ABI](../components/shader-materials.md#authored-vertex-stages) records framebuffer coordinates, exact capacities, retained-bounds limitations, storage and Linux native evidence. Compatibility continues its explicit shader rejection; foreign platforms remain unverified.
 
 Scene-authored global shader values now use [ShaderGlobalsOverride](../classes/ShaderGlobalsOverride.md). Its typed portable values, tree-order arbitration and renderer-session restoration are described in the [global parameter component](../components/global-shader-parameters.md#scene-owned-overrides).
+
+Window placement and ResetSize use the existing viewport/native resize lifecycle. Embedded centering remains independent of unavailable Wayland global positions; native root placement is subject to compositor constraints. See [the window runtime](../components/window-runtime.md#initial-placement-and-constrained-reset).

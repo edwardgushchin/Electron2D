@@ -1,6 +1,6 @@
 # Window runtime component
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -39,7 +39,7 @@ Viewport shares SceneTree's current handled-input flag. PushInput accepts client
 
 WindowRuntimeTests covers detached configuration/validation, packed reconstruction, native title/visibility, root discovery, input-before-frame ordering, viewport input borrowing/handling, frame limiting, quit/close policy, cross-thread quit, lifecycle interference, callback failure cleanup, startup ownership and repeated runs. Mode/flag startup and mutation, packed policy reconstruction, unsupported-flag rollback, screen validation, IME enable/disable, retained file-drop data and window-signal failure continuation are also covered. Dummy and native Wayland executions passed; dummy accepts native flag setters without applying them, so native policy assertions run on real backends. The preceding root-lifecycle slice also passed as a published self-contained linux-x64 test binary on Wayland with LD_LIBRARY_PATH unset; that packaging contains Electron2D.dll and native SDL through the runtime project. This controls extension was checked through dotnet run with LD_LIBRARY_PATH unset. Native Wayland tests use injected events, not physical user input or visual acceptance. Repeated SDL/GTK initialization emits a GTK locale warning. Canvas pixel and warmed render-allocation checks are recorded in [Canvas rendering](canvas-rendering.md). Root viewport Control pointer/focus routing has managed checks; native GUI acceptance, other platforms, full performance acceptance, content scaling, complete interactive GUI, offscreen targets and multiwindow behavior remain unverified or absent.
 
-Run: `env -u LD_LIBRARY_PATH ELECTRON2D_TEST_WINDOW=1 SDL_VIDEODRIVER=dummy dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release` (use `wayland` for the native integration check).
+The `ELECTRON2D_TEST_WINDOW=1` integration profile requires a real native window driver such as Wayland; dummy does not implement its startup flag operations. Its pointer-event phase shows the window after checking hidden geometry, before injecting events that require visible content. Detached placement and content-scale checks have their own managed profiles.
 
 Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.md#adr-0008), [0016](../decisions/core-object-runtime.md#adr-0016), [0021](../decisions/product.md#adr-0021), [0028](../decisions/rendering.md#adr-0028), [0040](../decisions/display.md#adr-0040). Per-member incomplete dependencies live in the [Window](../coverage/classes/Window.md) and [Viewport](../coverage/classes/Viewport.md) coverage pages.
 
@@ -94,3 +94,7 @@ links and preserves detached/null and processing-scope rules.
 Containing-window reads now follow [active viewport ownership](scene-hierarchy.md#active-viewport-ownership)
 through nested offscreen boundaries. Detached Window instances return null from
 the inherited Node getters; attached hidden windows retain their association.
+
+## Initial placement and constrained reset
+
+[Window initial placement](../classes/Window.md#initial-placement-and-minimum-size-reset) supplies six stored policies through the existing DisplayServer screen selectors. Native root requests run before scene entry; embedded non-absolute policies center on entry/show. Policy edits do not move a visible window. Wayland retains its explicit native-position limitation while embedded centering executes. Native managers may restrict placement. ResetSize and ordinary Size share scaled wrapped-content, title and authored bounds; resizing a native root uses the actual native request/event path.

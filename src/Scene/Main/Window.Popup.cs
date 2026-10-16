@@ -202,13 +202,14 @@ public partial class Window
     internal virtual void AdjustPopup() { }
     internal void UpdateEmbeddedContents()
     {
-        if (WrapControls || _keepTitleVisible) { var min = WrapControls ? GetContentsMinimumSize().Ceil() : Vector2.Zero; var size = new Vector2i(Math.Max(_size.X, checked((int)min.X)), Math.Max(_size.Y, checked((int)min.Y))); size = size.Max(MinSize).Max(TitleMinimum()); if (MaxSize.X > 0) size.X = Math.Min(size.X, MaxSize.X); if (MaxSize.Y > 0) size.Y = Math.Min(size.Y, MaxSize.Y); if (size != _size) CommitSize(size); }
+        if (WrapControls || _keepTitleVisible) { var size = _size.Max(GetWindowMinimumSize()); if (MaxSize.X > 0) size.X = Math.Min(size.X, MaxSize.X); if (MaxSize.Y > 0) size.Y = Math.Min(size.Y, MaxSize.Y); if (size != _size) RequestMeasuredWindowSize(size); }
         if (ClampToEmbedder && Embedder != null) Position = Position;
         _embeddedCanvas?.QueueRedraw();
     }
     internal void EmbeddedVisibilityChanged()
     {
         if (Embedder is null) { if (Visible && IsInsideTree && Parent is not null) throw new NotSupportedException("Native child windows are unavailable."); return; }
+        if (Visible) ApplyInitialEmbeddedPosition();
         if (_embeddedCanvas is not null) { _embeddedCanvas.Visible = Visible; _embeddedCanvas.QueueRedraw(); }
         if (Visible) { Embedder.EmbeddedWindows.Remove(this); Embedder.EmbeddedWindows.Add(this); if (_embeddedLayer?.Parent is { } p) p.MoveChild(_embeddedLayer, -1); Tree?.FocusEmbeddedWindow(this); }
         else Tree?.HideEmbeddedWindow(this);

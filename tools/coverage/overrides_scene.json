@@ -5752,10 +5752,59 @@
       "electron2d": "property:Electron2D.Node.ProcessPriority()",
       "state": "Implemented",
       "reason": "ADRs 0006/0008/0011/0038: typed callback or metadata projection; see the complete processing status group."
+    },
+    {
+      "godot": "Window::enum:WindowInitialPosition",
+      "electron2d": "T:Electron2D.Window.WindowInitialPosition",
+      "reason": "ADRs 0040/0004/0090: six stored typed Window placement policies execute through existing native screen selectors before root scene entry and through actual embedded viewport centering on entry/show. Absolute retains authored/unset placement; changing a visible policy does not move the window. Native managers may constrain placement, Wayland root global coordinates reject with host cleanup, and embedded modes execute there. ResetSize shares positive client extent, authored/title bounds and scaled wrapped-content minima with Size and native requests; invalid/overflow/reentrant measurement preserves state. WindowPlacementTests verifies packed/archive configuration, owner/capture/lifetime, actual software-Vulkan embedded and native geometry/pixels; other hosts and owner/hardware acceptance remain separate."
+    },
+    {
+      "godot": "Window::property:initial_position",
+      "electron2d": "property:Electron2D.Window.InitialPosition()",
+      "reason": "ADRs 0040/0004/0090: six stored typed Window placement policies execute through existing native screen selectors before root scene entry and through actual embedded viewport centering on entry/show. Absolute retains authored/unset placement; changing a visible policy does not move the window. Native managers may constrain placement, Wayland root global coordinates reject with host cleanup, and embedded modes execute there. ResetSize shares positive client extent, authored/title bounds and scaled wrapped-content minima with Size and native requests; invalid/overflow/reentrant measurement preserves state. WindowPlacementTests verifies packed/archive configuration, owner/capture/lifetime, actual software-Vulkan embedded and native geometry/pixels; other hosts and owner/hardware acceptance remain separate."
+    },
+    {
+      "godot": "Window::method:reset_size()",
+      "electron2d": "method:Electron2D.Window.ResetSize()",
+      "reason": "ADRs 0040/0004/0090: six stored typed Window placement policies execute through existing native screen selectors before root scene entry and through actual embedded viewport centering on entry/show. Absolute retains authored/unset placement; changing a visible policy does not move the window. Native managers may constrain placement, Wayland root global coordinates reject with host cleanup, and embedded modes execute there. ResetSize shares positive client extent, authored/title bounds and scaled wrapped-content minima with Size and native requests; invalid/overflow/reentrant measurement preserves state. WindowPlacementTests verifies packed/archive configuration, owner/capture/lifetime, actual software-Vulkan embedded and native geometry/pixels; other hosts and owner/hardware acceptance remain separate."
+    },
+    {
+      "godot": "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_ABSOLUTE",
+      "electron2d": "enumValue:Electron2D.Window.WindowInitialPosition.Absolute()",
+      "reason": "ADRs 0040/0004/0090: six stored typed Window placement policies execute through existing native screen selectors before root scene entry and through actual embedded viewport centering on entry/show. Absolute retains authored/unset placement; changing a visible policy does not move the window. Native managers may constrain placement, Wayland root global coordinates reject with host cleanup, and embedded modes execute there. ResetSize shares positive client extent, authored/title bounds and scaled wrapped-content minima with Size and native requests; invalid/overflow/reentrant measurement preserves state. WindowPlacementTests verifies packed/archive configuration, owner/capture/lifetime, actual software-Vulkan embedded and native geometry/pixels; other hosts and owner/hardware acceptance remain separate."
+    },
+    {
+      "godot": "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_PRIMARY_SCREEN",
+      "electron2d": "enumValue:Electron2D.Window.WindowInitialPosition.CenterPrimaryScreen()",
+      "reason": "ADRs 0040/0004/0090: six stored typed Window placement policies execute through existing native screen selectors before root scene entry and through actual embedded viewport centering on entry/show. Absolute retains authored/unset placement; changing a visible policy does not move the window. Native managers may constrain placement, Wayland root global coordinates reject with host cleanup, and embedded modes execute there. ResetSize shares positive client extent, authored/title bounds and scaled wrapped-content minima with Size and native requests; invalid/overflow/reentrant measurement preserves state. WindowPlacementTests verifies packed/archive configuration, owner/capture/lifetime, actual software-Vulkan embedded and native geometry/pixels; other hosts and owner/hardware acceptance remain separate."
+    },
+    {
+      "godot": "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN",
+      "electron2d": "enumValue:Electron2D.Window.WindowInitialPosition.CenterMainWindowScreen()",
+      "reason": "ADRs 0040/0004/0090: six stored typed Window placement policies execute through existing native screen selectors before root scene entry and through actual embedded viewport centering on entry/show. Absolute retains authored/unset placement; changing a visible policy does not move the window. Native managers may constrain placement, Wayland root global coordinates reject with host cleanup, and embedded modes execute there. ResetSize shares positive client extent, authored/title bounds and scaled wrapped-content minima with Size and native requests; invalid/overflow/reentrant measurement preserves state. WindowPlacementTests verifies packed/archive configuration, owner/capture/lifetime, actual software-Vulkan embedded and native geometry/pixels; other hosts and owner/hardware acceptance remain separate."
+    },
+    {
+      "godot": "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_OTHER_SCREEN",
+      "electron2d": "enumValue:Electron2D.Window.WindowInitialPosition.CenterOtherScreen()",
+      "reason": "ADRs 0040/0004/0090: six stored typed Window placement policies execute through existing native screen selectors before root scene entry and through actual embedded viewport centering on entry/show. Absolute retains authored/unset placement; changing a visible policy does not move the window. Native managers may constrain placement, Wayland root global coordinates reject with host cleanup, and embedded modes execute there. ResetSize shares positive client extent, authored/title bounds and scaled wrapped-content minima with Size and native requests; invalid/overflow/reentrant measurement preserves state. WindowPlacementTests verifies packed/archive configuration, owner/capture/lifetime, actual software-Vulkan embedded and native geometry/pixels; other hosts and owner/hardware acceptance remain separate."
+    },
+    {
+      "godot": "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS",
+      "electron2d": "enumValue:Electron2D.Window.WindowInitialPosition.CenterScreenWithMouseFocus()",
+      "reason": "ADRs 0040/0004/0090: six stored typed Window placement policies execute through existing native screen selectors before root scene entry and through actual embedded viewport centering on entry/show. Absolute retains authored/unset placement; changing a visible policy does not move the window. Native managers may constrain placement, Wayland root global coordinates reject with host cleanup, and embedded modes execute there. ResetSize shares positive client extent, authored/title bounds and scaled wrapped-content minima with Size and native requests; invalid/overflow/reentrant measurement preserves state. WindowPlacementTests verifies packed/archive configuration, owner/capture/lifetime, actual software-Vulkan embedded and native geometry/pixels; other hosts and owner/hardware acceptance remain separate."
+    },
+    {
+      "godot": "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_KEYBOARD_FOCUS",
+      "electron2d": "enumValue:Electron2D.Window.WindowInitialPosition.CenterScreenWithKeyboardFocus()",
+      "reason": "ADRs 0040/0004/0090: six stored typed Window placement policies execute through existing native screen selectors before root scene entry and through actual embedded viewport centering on entry/show. Absolute retains authored/unset placement; changing a visible policy does not move the window. Native managers may constrain placement, Wayland root global coordinates reject with host cleanup, and embedded modes execute there. ResetSize shares positive client extent, authored/title bounds and scaled wrapped-content minima with Size and native requests; invalid/overflow/reentrant measurement preserves state. WindowPlacementTests verifies packed/archive configuration, owner/capture/lifetime, actual software-Vulkan embedded and native geometry/pixels; other hosts and owner/hardware acceptance remain separate."
     }
   ],
   "extras": [
-    {"electron2d": "method:Electron2D.Node.CancelFree()", "adr": "adr-0006", "reason": "ADRs 0006/0011: atomically cancels the current queued Node deletion request and returns whether one was pending. This existing typed operation is independent of executing IDisposable teardown and uncancellable SceneTree.QueueDelete; it is not Object.cancel_free pre-delete veto. Generation-qualified stale entries cannot consume a replacement; exact publication rollback, owner transfer, closed lifetime and captured batches preserve current requests. Public-only queued-deletion profiles retain zero warm full-frame managed allocation."},
+    {
+      "electron2d": "method:Electron2D.Node.CancelFree()",
+      "adr": "adr-0006",
+      "reason": "ADRs 0006/0011: atomically cancels the current queued Node deletion request and returns whether one was pending. This existing typed operation is independent of executing IDisposable teardown and uncancellable SceneTree.QueueDelete; it is not Object.cancel_free pre-delete veto. Generation-qualified stale entries cannot consume a replacement; exact publication rollback, owner transfer, closed lifetime and captured batches preserve current requests. Public-only queued-deletion profiles retain zero warm full-frame managed allocation."
+    },
     {
       "electron2d": "property:Electron2D.Node.TranslationDomain()",
       "reason": "Derived C# override of the inherited Object translation-domain contract; Node resolves its parent's current domain until explicitly assigned, as required by ADR 0007.",
@@ -8198,9 +8247,27 @@
     }
   ],
   "statusGroups": [
-    {"godot": ["Node::method:queue_free()"], "state": "Implemented", "reason": "Pinned Node declaration/owner have no deprecated metadata. ADRs 0006/0011 retain host-driven typed frame safe points, one captured action/deletion batch and stable-root restriction. Requests are idempotent, thread-safe and generation-qualified; cancellation/reissue receives a new FIFO position and a stale captured entry cannot consume it. Children retire with the parent without acquiring its request flag. Detached requests survive attachment/removal and follow the receiving tree. Publication rollback cannot clear a newer request; disposal closes publication atomically. Public-only queued-deletion checks execute actual physical survival, query/RID identity and next-frame retirement on CPU/software-GPU/registered owner/separate profiles, inherited roles, concurrency, reference release, errors and 128 warm/measured full frames at strict 0/0 managed bytes. Full native/hardware/foreign and remaining inherited acceptance stay open."},
-    {"godot": ["Object::method:cancel_free()"], "state": "Unimplemented", "reason": "Pinned Object.xml defines veto of actual destruction during NOTIFICATION_PREDELETE; neither declaration nor owner is deprecated. Node.CancelFree cancels a queued scene request under ADR 0006 and is an independently reviewed extra, not this operation. Existing ValidateDisposal rejects before the disposal transition under ADR 0009; it does not implement a pre-delete notification veto. Trigger: accepted lifetime-veto/failure/concurrency semantics and their complete implementation under ADRs 0003/0009; preserve the existing Node cancellation meaning."},
-    {"godot": ["Object::method:is_queued_for_deletion()"], "state": "Implemented", "reason": "ADRs 0003/0006/0008/0011: readonly atomic ElectronObject.IsQueuedForDeletion is inherited by every object role. It observes independent SceneTree.QueueDelete entries and the current Node.QueueFree generation through claimed departure/pre-delete/cleanup, without marking owned children. Execution failure, duplicate/multiple-tree discard, direct disposal and concurrent publication release the exact entry; Node cancellation cannot consume explicit requests. Public-only CPU/software-GPU/registered owner/separate consumers verify readonly nonstored descriptors, lifecycle, queue ownership and zero owner/all-thread managed allocations in 128 prepared full simulation/query frames. Strict NativeAOT and frozen CLR consumers verify the inherited projection; pre-delete cancel_free remains separately Unimplemented."},
+    {
+      "godot": [
+        "Node::method:queue_free()"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned Node declaration/owner have no deprecated metadata. ADRs 0006/0011 retain host-driven typed frame safe points, one captured action/deletion batch and stable-root restriction. Requests are idempotent, thread-safe and generation-qualified; cancellation/reissue receives a new FIFO position and a stale captured entry cannot consume it. Children retire with the parent without acquiring its request flag. Detached requests survive attachment/removal and follow the receiving tree. Publication rollback cannot clear a newer request; disposal closes publication atomically. Public-only queued-deletion checks execute actual physical survival, query/RID identity and next-frame retirement on CPU/software-GPU/registered owner/separate profiles, inherited roles, concurrency, reference release, errors and 128 warm/measured full frames at strict 0/0 managed bytes. Full native/hardware/foreign and remaining inherited acceptance stay open."
+    },
+    {
+      "godot": [
+        "Object::method:cancel_free()"
+      ],
+      "state": "Unimplemented",
+      "reason": "Pinned Object.xml defines veto of actual destruction during NOTIFICATION_PREDELETE; neither declaration nor owner is deprecated. Node.CancelFree cancels a queued scene request under ADR 0006 and is an independently reviewed extra, not this operation. Existing ValidateDisposal rejects before the disposal transition under ADR 0009; it does not implement a pre-delete notification veto. Trigger: accepted lifetime-veto/failure/concurrency semantics and their complete implementation under ADRs 0003/0009; preserve the existing Node cancellation meaning."
+    },
+    {
+      "godot": [
+        "Object::method:is_queued_for_deletion()"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0003/0006/0008/0011: readonly atomic ElectronObject.IsQueuedForDeletion is inherited by every object role. It observes independent SceneTree.QueueDelete entries and the current Node.QueueFree generation through claimed departure/pre-delete/cleanup, without marking owned children. Execution failure, duplicate/multiple-tree discard, direct disposal and concurrent publication release the exact entry; Node cancellation cannot consume explicit requests. Public-only CPU/software-GPU/registered owner/separate consumers verify readonly nonstored descriptors, lifecycle, queue ownership and zero owner/all-thread managed allocations in 128 prepared full simulation/query frames. Strict NativeAOT and frozen CLR consumers verify the inherited projection; pre-delete cancel_free remains separately Unimplemented."
+    },
     {
       "godot": [
         "Node::method:call_deferred_thread_group(StringName:)",
@@ -10025,19 +10092,9 @@
       "reason": "Next Window native-control projection and platform capability audit over the existing DisplayServer, including modes, flags, IME, native notifications and geometry (ADR 0040).",
       "godot": [
         "Window::constant:NOTIFICATION_VISIBILITY_CHANGED",
-        "Window::enum:WindowInitialPosition",
-        "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_ABSOLUTE",
-        "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN",
-        "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_OTHER_SCREEN",
-        "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_PRIMARY_SCREEN",
-        "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_KEYBOARD_FOCUS",
-        "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS",
-        "Window::method:move_to_foreground()",
-        "Window::method:reset_size()",
         "Window::property:auto_translate",
         "Window::property:exclude_from_capture",
         "Window::property:extend_to_title",
-        "Window::property:initial_position",
         "Window::property:mouse_passthrough",
         "Window::property:mouse_passthrough_polygon",
         "Window::property:nonclient_area",
@@ -11618,6 +11675,28 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0006/0008/0011/0038: all eight switches and both priorities use live coordinated stored-value reads and owner/current-group writes, with capture/lifetime and derived validation. Input metadata does not grant worker input dispatch or physical/hierarchy/render mutation. All six public callback switches have stored descriptors; internal switches are runtime-only. Public neutral/spatial/RigidBody callbacks preserve lane deltas, selected group execution, full signed priority range/ties, independent lane switches, input reverse order/kinds/handling/borrowed identity and failure continuation through actual numerical work. The separate --node-processing consumer checks ten controls on ten neutral/canvas/physical roles, 64 stored configurations, fresh-process selected motion, capture/foreign/current-group guards and unchanged body sleep/RID. CPU/software-Vulkan/registered serial/separate CoreCLR/strict NativeAOT profiles measure 128 full idle/physics/input frames at 0/0 owner/all-thread bytes, motion 1.28 within .002, 128 force callbacks, 256 actual worker callbacks and 512 owner input callbacks configured by workers. A retained member comparator removes the NativeAOT rebuilt-worker schedule adapter. Existing scheduling/group/policy regressions retain their separate scope. Built-in numerical reconciliation stays owner-bound; general worker geometry/joint mutation, full inherited/extension, native/driver/hardware/window/platform acceptance remain open. Evidence: bin/physics-node-processing/2026-10-16/validation.json."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0040/0004/0090: six stored typed Window placement policies execute through existing native screen selectors before root scene entry and through actual embedded viewport centering on entry/show. Absolute retains authored/unset placement; changing a visible policy does not move the window. Native managers may constrain placement, Wayland root global coordinates reject with host cleanup, and embedded modes execute there. ResetSize shares positive client extent, authored/title bounds and scaled wrapped-content minima with Size and native requests; invalid/overflow/reentrant measurement preserves state. WindowPlacementTests verifies packed/archive configuration, owner/capture/lifetime, actual software-Vulkan embedded and native geometry/pixels; other hosts and owner/hardware acceptance remain separate.",
+      "godot": [
+        "Window::enum:WindowInitialPosition",
+        "Window::property:initial_position",
+        "Window::method:reset_size()",
+        "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_ABSOLUTE",
+        "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_PRIMARY_SCREEN",
+        "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN",
+        "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_OTHER_SCREEN",
+        "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS",
+        "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_KEYBOARD_FOCUS"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Pinned doc/classes/Window.xml at ed1daf0bf001b61586d9930840f2f1394092c079 marks move_to_foreground deprecated: Use [method Window.grab_focus] instead. ADR 0004 excludes the obsolete alias; existing Window.GrabFocus is the applicable replacement. No implementation trigger.",
+      "godot": [
+        "Window::method:move_to_foreground()"
+      ]
     }
   ]
 }

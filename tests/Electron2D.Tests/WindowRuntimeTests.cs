@@ -333,6 +333,7 @@ internal static class WindowRuntimeTests
                         window.Mode = WindowMode.Windowed;
                         Check(SDL.SyncWindow(native) && window.Mode == WindowMode.Windowed, "Leaving fullscreen restores the observed window mode.");
                     }
+                    window.Show();
                     PushWindowEvent(SDL.EventType.WindowMouseLeave);
                     PushWindowEvent(SDL.EventType.WindowMouseEnter);
                     PushWindowEvent(SDL.EventType.WindowMouseEnter);

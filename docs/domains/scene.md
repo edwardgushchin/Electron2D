@@ -2,7 +2,7 @@
 
 [Process policy and physics pause](../components/scene-tree.md#process-policy-and-physics-pause) now preserve inherited eligibility notifications, root policy, nested failure handling and worker reads. Paused tree frames stop numerical integration while eligible callbacks continue; explicit owned spaces retain independent clocks. Public CPU/software-Vulkan/registered serial/separate managed and NativeAOT checks cover the slice. Full inherited physics, independent hardware GPU, networking and performance gates remain open.
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 ## Runtime child names
 
@@ -431,3 +431,5 @@ Publication rollback changes only the reserved generation. Node teardown atomica
 The tree swaps two prepared concurrent deletion queues under its work gate and returns a drained queue after all captured entries. New entries wait in the other queue; exceptions retain later work and prepared storage. Finalization discards pending references from both queues. No callback runs under the queue gate.
 
 The public-only `--queued-deletion` consumer checks FIFO reissue, real body survival/query/RID identity across deletion boundaries, subtree flags/order, detached and transferred requests, inherited neutral/canvas/physical roles, concurrent cancel/publication/claims, error recovery and weak-reference release. CPU, software-Vulkan GPU and registered numerical profiles run with owner/separate solve policies. Each warm bracket cancels and reissues requests, executes ordinary deferred work and queries an integrating body for 128 complete frames at strict zero owner/all-thread managed bytes. Strict NativeAOT uses the same public consumer. Native memory totals, target-device advantage, real-window FPS and foreign acceptance remain open.
+
+Window initial placement and constrained ResetSize now use the existing native/embedded host paths. Stored placement is independent of authored Position; embedded centering runs on entry/show, while native root policies use DisplayServer screen selectors and retain compositor limits. See [the window runtime](../components/window-runtime.md#initial-placement-and-constrained-reset).
