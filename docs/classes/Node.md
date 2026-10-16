@@ -62,7 +62,6 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public bool InputEnabled { get; set; }`](#p-electron2d-node-inputenabled) | Gets or sets whether this node receives the first input-propagation stage. |
 | [`public bool IsInsideTree { get; }`](#p-electron2d-node-isinsidetree) | Gets whether this node currently belongs to a scene tree. |
 | [`public bool IsNodeReady { get; }`](#p-electron2d-node-isnodeready) | Gets whether SceneTree-managed ready delivery has occurred since construction or the last ready reset. |
-| [`public bool IsQueuedForDeletion { get; }`](#p-electron2d-node-isqueuedfordeletion) | Gets whether deletion has been requested through `Node.QueueFree`. |
 | [`public string Name { get; set; }`](#p-electron2d-node-name) | Gets or sets the node name used in sibling lookup and paths. |
 | [`public Node? Owner { get; set; }`](#p-electron2d-node-owner) | Gets or sets the borrowed authoring owner used for packed-scene storage. |
 | [`public bool UniqueNameInOwner { get; set; }`](#p-electron2d-node-uniquenameinowner) | Enables owner-scoped `%Name` lookup when this name is unclaimed. |
@@ -280,11 +279,7 @@ Gets whether SceneTree-managed ready delivery has occurred since construction or
 **System.InvalidOperationException:** Attached access is outside the owner or current processing group.
 
 <a id="p-electron2d-node-isqueuedfordeletion"></a>
-### `public bool IsQueuedForDeletion { get; }`
-
-Gets whether deletion has been requested through `Node.QueueFree`.
-
-**Value:** An atomic snapshot of the current cancellable request, including publication. A claimed, canceled or terminally closed request reads false. Children do not inherit a parent's pending flag. This property observes QueueFree; explicit SceneTree.QueueDelete remains independent.
+The inherited [ElectronObject.IsQueuedForDeletion](ElectronObject.md#p-electron2d-electronobject-isqueuedfordeletion) covers both QueueFree and explicit SceneTree.QueueDelete, including claimed execution until terminal cleanup. Cancellation only consumes the current unclaimed QueueFree generation; children are marked only by their own requests.
 
 <a id="p-electron2d-node-name"></a>
 ### `public string Name { get; set; }`

@@ -77,6 +77,8 @@ slow polling. Ordinary slow-client throughput remains a separate acceptance gate
 Naming evidence: `bin/physics-node-name-assignment/2026-10-15/`;
 network follow-up: `bin/physics-network-phases/2026-10-15/`.
 
+Queued-deletion observation belongs to ElectronObject and is inherited by Node. Both QueueFree and explicit QueueDelete stay visible through claimed cleanup, while descendants without their own request stay unmarked. Cancellation remains limited to an unclaimed node generation.
+
 ## Orphan node diagnostics
 
 `Node.GetOrphanNodeIDs()` and `PrintOrphanNodes()` share a Debug-only weak node

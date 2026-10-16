@@ -1,6 +1,6 @@
 # Electron2D core object and runtime decisions
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 Recording Run/RunAsync overloads and GetWriteMoviePath follow [ADR 0109](movie-writing.md#adr-0109): the existing scheduler accepts explicit fixed cadence without realtime jitter/catch-up dropping, and the same lifecycle owns real rendered capture plus synchronous audio. Ordinary and manual frame scheduling retain their contracts.
 
@@ -32,6 +32,8 @@ Godot objects use engine-managed validity and explicit `free()`. Electron2D runs
 - `ThrowIfDisposed()` for live-object preconditions.
 
 An internal ObjectIdentity pairs the immutable instance ID with a lazily cached BCL weak reference. A consumer copies this value when sampling identity; retargeting that consumer does not mutate previous samples. Resolution returns null immediately when deterministic disposal begins or after collection. The cache belongs to the target object, introduces no process-wide strong registry and adds no finalizer; physics object association under ADR 0063 is its first consumer.
+
+`IsQueuedForDeletion` is a nonvirtual readonly observation on ElectronObject, inherited by resources, nodes and services. It covers explicit SceneTree.QueueDelete requests and the current Node.QueueFree request without querying numerical or native state. Independently accepted explicit requests are counted until execution or discard; cancellation of Node work does not cancel them. The observation stays true through claimed deletion and pre-delete/cleanup, becomes false after terminal disposal, and is false for descendants merely owned by a queued parent. Direct disposal without a request never marks the object queued. Its readonly nonstored typed descriptor has no revert value. This observation does not add a scheduler, a public free alias, or a pre-delete veto to the base object.
 
 The base uses atomic state transitions so concurrent disposal runs cleanup at most once. It has no finalizer. Native handles must be owned by `SafeHandle`-derived wrappers, whose finalization protects against missed disposal without putting every engine object on the finalizer queue.
 

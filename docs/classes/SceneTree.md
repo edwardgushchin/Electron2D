@@ -566,6 +566,8 @@ Thread-safely queues an engine object for deterministic disposal at a future del
 
 - `instance`: The live object to dispose.
 
+The target reports inherited `ElectronObject.IsQueuedForDeletion` until execution completes or this tree discards its entry. Duplicate explicit requests are independent and cannot be canceled with Node.CancelFree. Cleanup and callback failures still release the consumed request; a different tree's entry remains pending.
+
 **Exceptions**
 
 - `ArgumentNullException`: `instance` is `null`.

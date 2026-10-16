@@ -201,7 +201,7 @@ public partial class Node : ElectronObject
 
     private List<Resource>? _ownedSceneResources;
 
-    // The low bits hold idle/publishing/queued/closed; the generation rejects canceled queue entries.
+    // Low bits hold publication/queued/claimed and closure; higher bits distinguish canceled generations.
     private long _queuedForDeletion;
 
     private int _sceneCaptureDepth;
@@ -589,9 +589,7 @@ public partial class Node : ElectronObject
     /// <exception cref="InvalidOperationException">Attached access is outside the owner or current processing group.</exception>
     public bool IsNodeReady { get { Tree?.EnsureProcessingAccess(this); return _readyCalled; } }
 
-    /// <summary>Gets whether deletion has been requested through <see cref="QueueFree"/>.</summary>
-    /// <value>An atomic snapshot of the deletion-request flag.</value>
-    public bool IsQueuedForDeletion => (Volatile.Read(ref _queuedForDeletion) & 3) is 1 or 2;
+    internal override bool HasQueuedNodeDeletion => (Volatile.Read(ref _queuedForDeletion) & 3) != 0;
 
     /// <summary>Returns this node's cached active viewport, including itself when it is a viewport.</summary>
     /// <returns>The nearest active viewport, or null while detached or in an active hierarchy without a viewport.</returns>
@@ -1742,8 +1740,8 @@ public partial class Node : ElectronObject
         {
             var state = Volatile.Read(ref _queuedForDeletion);
             var phase = state & 3;
-            ObjectDisposedException.ThrowIf(phase == 3, this);
-            if (phase == 2)
+            ObjectDisposedException.ThrowIf((state & 4) != 0, this);
+            if (phase is 2 or 3)
                 return;
 
             if (phase == 1)
@@ -1752,7 +1750,7 @@ public partial class Node : ElectronObject
                 continue;
             }
 
-            var publishing = unchecked((state & ~3L) + 5);
+            var publishing = unchecked((state & ~7L) + 9);
             if (Interlocked.CompareExchange(ref _queuedForDeletion, publishing, state) != state)
                 continue;
 
@@ -1768,7 +1766,7 @@ public partial class Node : ElectronObject
             }
             catch
             {
-                Interlocked.CompareExchange(ref _queuedForDeletion, publishing & ~3L, publishing);
+                Interlocked.CompareExchange(ref _queuedForDeletion, publishing & ~7L, publishing);
                 throw;
             }
         }
@@ -1786,8 +1784,8 @@ public partial class Node : ElectronObject
         while (true)
         {
             var state = Volatile.Read(ref _queuedForDeletion);
-            if ((state & 3) is 0 or 3) return false;
-            if (Interlocked.CompareExchange(ref _queuedForDeletion, state & ~3L, state) == state) return true;
+            if ((state & 4) != 0 || (state & 3) is 0 or 3) return false;
+            if (Interlocked.CompareExchange(ref _queuedForDeletion, state & ~7L, state) == state) return true;
         }
     }
 
@@ -2008,7 +2006,7 @@ public partial class Node : ElectronObject
             try { DisposeSceneConnections(); } catch (Exception error) { (errors ??= []).Add(error); }
             ReleaseOwnedNodes();
             SetSceneOwner(null);
-            Interlocked.Or(ref _queuedForDeletion, 3);
+            Interlocked.Or(ref _queuedForDeletion, 4);
 
             try
             {
@@ -2084,7 +2082,10 @@ public partial class Node : ElectronObject
     }
 
     internal bool TryConsumeQueuedDeletion(long ticket) =>
-        Interlocked.CompareExchange(ref _queuedForDeletion, ticket & ~3L, ticket) == ticket;
+        Interlocked.CompareExchange(ref _queuedForDeletion, ticket | 1, ticket) == ticket;
+
+    internal void ReleaseClaimedQueuedDeletion(long ticket) =>
+        Interlocked.CompareExchange(ref _queuedForDeletion, ticket & ~7L, ticket | 1);
 
     internal Func<Node> CaptureSceneInstanceFactory()
     {
@@ -2211,7 +2212,7 @@ public partial class Node : ElectronObject
     private long GetQueuedDeletionTicket()
     {
         var state = Volatile.Read(ref _queuedForDeletion);
-        return (state & 3) is 1 or 2 ? (state & ~3L) | 2 : 0;
+        return (state & 4) == 0 && (state & 3) is 1 or 2 ? (state & ~7L) | 2 : 0;
     }
 
     internal bool TryPublishQueuedDeletion(long ticket) =>

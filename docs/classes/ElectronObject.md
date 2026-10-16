@@ -36,7 +36,7 @@ IndexedPropertyTests verifies object rebinding, components, copied arrays/maps/c
 
 Provides the common identity, notification, property, localization, and lifetime contract for engine objects.
 
-`ElectronObject` is the common base for engine-owned objects. It provides process-local identity, runtime diagnostics, numeric notification dispatch, deterministic cleanup, disposed-state protection, typed property exposure, per-object translation settings, and lifecycle events. It does not emulate a universal-value dynamic API.
+`ElectronObject` is the common base for engine-owned objects. It provides process-local identity, runtime diagnostics, numeric notification dispatch, deterministic cleanup, disposed-state protection, typed property exposure, per-object translation settings, queued-deletion observation, and lifecycle events. It does not emulate a universal-value dynamic API.
 
 The contract uses typed properties and events and deliberately omits dynamic calls, untyped metadata, generic signal
 registration, and script storage. Instances have deterministic `IDisposable` lifetime.
@@ -67,6 +67,7 @@ Console.WriteLine(value.InstanceID);
 | [`public ulong InstanceID { get; }`](#p-electron2d-electronobject-instanceid) | Gets this object's process-local instance identifier. |
 | [`public string ClassName { get; }`](#p-electron2d-electronobject-classname) | Gets the unqualified runtime class name. |
 | [`public bool IsDisposed { get; }`](#p-electron2d-electronobject-isdisposed) | Gets whether deterministic disposal has started. |
+| [`public bool IsQueuedForDeletion { get; }`](#p-electron2d-electronobject-isqueuedfordeletion) | Atomically observes pending or executing scene-tree deletion. |
 | [`public bool CanTranslateMessages { get; set; }`](#p-electron2d-electronobject-cantranslatemessages) | Gets or sets whether this object resolves messages through [`TranslationServer`](TranslationServer.md). |
 | [`public virtual string TranslationDomain { get; set; }`](#p-electron2d-electronobject-translationdomain) | Gets or sets the translation domain used by this object; Node overrides it for inheritance. |
 
@@ -161,6 +162,13 @@ Gets the unqualified runtime class name.
 Gets whether deterministic disposal has started.
 
 **Value:** `true` from the moment a caller wins the disposal transition; otherwise `false`.
+
+<a id="p-electron2d-electronobject-isqueuedfordeletion"></a>
+### `public bool IsQueuedForDeletion { get; }`
+
+Returns true for this object's accepted `SceneTree.QueueDelete` requests or a node's current `QueueFree` request, including publication and claimed execution. Resources, nodes and other object subclasses inherit the same observation. A queued parent does not mark its children.
+
+Explicit requests are independent: `Node.CancelFree` releases only the cancellable node request, and discarding one tree releases only that tree's requests. A request rejected during execution is consumed. The flag stays true through pre-delete and cleanup, becomes false after terminal disposal, and stays false for direct disposal without a request. Readonly inspection remains available during and after disposal from any thread without backend access. The typed descriptor is readonly, nonstored and has no revert value; ordinary descriptor lifetime guards still apply.
 
 <a id="p-electron2d-electronobject-cantranslatemessages"></a>
 ### `public bool CanTranslateMessages { get; set; }`

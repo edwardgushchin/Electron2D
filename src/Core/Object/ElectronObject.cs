@@ -31,6 +31,7 @@ public abstract partial class ElectronObject : IDisposable
         new PropertyDescriptor<ElectronObject, ulong>(nameof(InstanceID), owner => owner.InstanceID),
         new PropertyDescriptor<ElectronObject, string>(nameof(ClassName), owner => owner.ClassName),
         new PropertyDescriptor<ElectronObject, bool>(nameof(IsDisposed), owner => owner.IsDisposed),
+        new PropertyDescriptor<ElectronObject, bool>(nameof(IsQueuedForDeletion), owner => owner.IsQueuedForDeletion),
         new PropertyDescriptor<ElectronObject, bool>(
             nameof(CanTranslateMessages),
             owner => owner.CanTranslateMessages,
@@ -47,6 +48,7 @@ public abstract partial class ElectronObject : IDisposable
 
     private int _disposeState;
     private int _disposingThreadId;
+    private int _queuedDeletions;
     private int _canTranslateMessages = 1;
     private string _translationDomain = string.Empty;
     private WeakReference<ElectronObject>? _identityReference;
@@ -96,6 +98,29 @@ public abstract partial class ElectronObject : IDisposable
     /// <summary>Gets whether deterministic disposal has started.</summary>
     /// <value><see langword="true"/> from the moment a caller wins the disposal transition; otherwise <see langword="false"/>.</value>
     public bool IsDisposed => Volatile.Read(ref _disposeState) != Alive;
+
+    /// <summary>Gets whether a scene-tree deletion request is pending or executing for this object.</summary>
+    /// <value>True for an accepted SceneTree.QueueDelete request or the current Node.QueueFree request until disposal finishes.</value>
+    /// <remarks>
+    /// Independent explicit requests survive node cancellation. A queued parent's children are not implicitly marked.
+    /// This atomic observation remains available during and after disposal, does not access a physics backend, and is
+    /// false after terminal cleanup. It does not authorize cancellation of an executing deletion.
+    /// </remarks>
+    public bool IsQueuedForDeletion => Volatile.Read(ref _disposeState) != DisposedState &&
+                                       (Volatile.Read(ref _queuedDeletions) != 0 || HasQueuedNodeDeletion);
+
+    internal virtual bool HasQueuedNodeDeletion => false;
+
+    internal void RetainQueuedDeletion()
+    {
+        ObjectDisposedException.ThrowIf(IsDisposed, this);
+        Interlocked.Increment(ref _queuedDeletions);
+        if (!IsDisposed) return;
+        ReleaseQueuedDeletion();
+        throw new ObjectDisposedException(GetType().FullName);
+    }
+
+    internal void ReleaseQueuedDeletion() => Interlocked.Decrement(ref _queuedDeletions);
 
     /// <summary>Gets or sets whether this object resolves messages through <see cref="TranslationServer"/>.</summary>
     /// <value><see langword="true"/> by default; <see langword="false"/> to return source messages unchanged.</value>

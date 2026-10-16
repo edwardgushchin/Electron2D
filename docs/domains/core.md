@@ -16,6 +16,8 @@ The [OS environment and directory component](../components/os-environment.md) no
 
 The [standard-input component](../components/standard-input.md) executes actual native standard-handle classification and serialized raw/UTF-8 input, including pipe-driven child applications.
 
+ElectronObject provides passive queued-deletion observation across nodes, resources and other engine objects, with one readonly nonstored typed descriptor. This local metadata does not query physics or own a scene scheduler; SceneTree releases independent explicit requests on execution/discard.
+
 ## Responsibility
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.

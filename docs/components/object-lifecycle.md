@@ -43,6 +43,8 @@ The separate [Typed event connections](event-connections.md) component can own, 
 
 A failure in notification or cleanup is rethrown after state publication; simultaneous failures become `AggregateException`. A derived type controls when its own event lists are cleared and may leave derived cleanup incomplete if its override throws.
 
+`ElectronObject.IsQueuedForDeletion` is a nonvirtual atomic observation inherited by every object role. SceneTree counts independent explicit requests until execution or discard; Node contributes its cancellable generation through claimed execution. Cancellation affects only Node work, and queued parents do not mark children. The observation stays true during pre-delete and cleanup, then reads false after terminal disposal. Direct disposal without a queue stays false. Readonly nonstored descriptor discovery adds no serialized state or revert value, scheduling API, numerical mirror or backend wait. The base lifetime state machine and its validation remain unchanged.
+
 ## Threading
 
 - Instance ID allocation is safe under concurrent construction.
