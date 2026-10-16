@@ -16,7 +16,7 @@ Last updated: 2026-10-16
 
 `Image` stores one positive-sized base level and, optionally, its complete mip chain in one managed byte buffer. A newly constructed instance is the canonical empty state: zero width, zero height, `L8`, no mipmaps, and no data. Static factories validate dimensions, format, pixel count, and exact byte length before publishing an image.
 
-All 47 raw [`Image.Format`](Image.Format.md) identities are accepted for storage. Twenty-five uncompressed formats support pixel access and processing. The 22 block-compressed formats support exact buffer ownership, sizing, copying, mip offsets, duplication, and metadata-only alpha inspection, and BC1–BC7 compression/decompression through explicit operations. Pixel access and ordinary processing still require an uncompressed image.
+All 47 raw [`Image.Format`](Image.Format.md) identities are accepted for storage. Twenty-five uncompressed formats support pixel access and processing. The 22 block-compressed formats support exact buffer ownership, sizing, copying, mip offsets, duplication, and metadata-only alpha inspection, and explicit decoding for all 22 roles. S3TC/BPTC also support compression. Pixel access and ordinary processing still require an uncompressed image.
 
 Pixel coordinates use a top-left origin: X increases rightward and Y increases downward. Rectangles are half-open. Stored multi-byte components use little-endian order. `GetData` and data-taking APIs copy their arrays, so callers never share mutable buffer ownership with an image.
 
@@ -26,9 +26,9 @@ Every state read and mutation is synchronized per instance. Bulk mutations prepa
 
 DDS loading validates the complete source before publication and returns the first image of an array/cube, or the first slice at every volume mip. Canonical complete mip chains and tightly packed raw layouts are required; truncated, partial-chain and inconsistent payloads fail atomically. Legacy masks, numeric float/unorm FourCC and applicable DX10 raw/HDR/BC formats are supported. Saving preserves exact supported raw/block bytes and uses atomic file replacement. Signed RGTC and formats with no DDS storage representation fail explicitly.
 
-`Compress` and `CompressFromChannels` consume S3TC (BC1/BC3/BC4/BC5) or BPTC (BC7; BC6 for HDR RGB). Explicit RGB drops alpha in BC1. Normal sources choose RG channels. Existing mips are compressed individually; none are synthesized. HDR BC6 requires finite colors and preserves sign/range. `Decompress` returns RGBA8 or RGB float while preserving every mip; an uncompressed image is a silent no-op. Source bytes and the conservative RGBA-float expansion must each fit 64 MiB, checked before codec allocation. ETC/EAC/ASTC remain unavailable and throw before mutation.
+`Compress` and `CompressFromChannels` consume S3TC (BC1/BC3/BC4/BC5) or BPTC (BC7; BC6 for HDR RGB). Explicit RGB drops alpha in BC1. Normal sources choose RG channels. Existing mips are compressed individually; none are synthesized. HDR BC6 requires finite colors and preserves sign/range. `Decompress` returns RGBA8, RGB/RGBA float or RGBA half while preserving every mip; an uncompressed image is a silent no-op. Source bytes and the conservative RGBA-float expansion must each fit 64 MiB, checked before codec allocation. ETC/EAC/ASTC decoding now supplies the remaining block roles; signed EAC becomes normalized RGBA float and ASTC HDR becomes RGBA half. Their encoding remains unavailable.
 
-BC1–BC7 sources retain their original format, complete mip chain and exact block bytes. Prepared CPU sampling decodes BC1–BC5/BC7 to RGBA8 and signed/unsigned BC6 to RGB floating point. GPU allocates native BC storage when the device supports it; otherwise it uploads prepared decoded pixels. Compatibility uses the decoded snapshot; BC6 requires an HDR-capable driver and the current Linux driver rejects that role. The RA-as-RG role uses decoded upload to preserve channel semantics. Integer sampling and ETC/EAC/ASTC codecs remain separate dependencies.
+BC1–BC7 sources retain their original format, complete mip chain and exact block bytes. Prepared CPU sampling decodes BC1–BC5/BC7 to RGBA8 and signed/unsigned BC6 to RGB floating point. GPU allocates native BC storage when the device supports it; otherwise it uploads prepared decoded pixels. Compatibility uses the decoded snapshot; BC6 requires an HDR-capable driver and the current Linux driver rejects that role. The RA-as-RG role uses decoded upload to preserve channel semantics. ETC/EAC/ASTC use shared decoded upload; integer sampling remains separate.
 
 ## Examples
 
@@ -71,7 +71,7 @@ byte[] ownedCopy = image.GetData();
 | [`public static Image CreateFromData(int width, int height, bool useMipmaps, Image.Format format, byte[] data)`](#createfromdata) | Creates an image from an exact copied raw buffer. |
 | [`public void Compress(Image.CompressMode mode, Image.CompressSource source = Image.CompressSource.Generic, Image.ASTCFormat astcFormat = Image.ASTCFormat.Format4X4)`](#compress) | Atomically compresses all stored mips with detected channels. |
 | [`public void CompressFromChannels(Image.CompressMode mode, Image.UsedChannels channels, Image.ASTCFormat astcFormat = Image.ASTCFormat.Format4X4)`](#compressfromchannels) | Compresses with an explicit channel role. |
-| [`public void Decompress()`](#decompress) | Decodes BC1–BC7, preserving mips. |
+| [`public void Decompress()`](#decompress) | Decodes BC/ETC/EAC/ASTC, preserving mips. |
 | [`public void LoadKTXFromBuffer(ReadOnlySpan<byte> buffer)`](#loadktxfrombuffer) | Loads flat KTX1/KTX2 and portable Basis LDR/HDR pixels with complete mip chains. |
 | [`public void LoadDDSFromBuffer(ReadOnlySpan<byte> buffer)`](#loadddsfrombuffer) | Validates and loads copied DDS pixels. |
 | [`public byte[] SaveDDSToBuffer()`](#saveddstobuffer) | Returns an independent DDS container without recompressing blocks. |
@@ -588,12 +588,12 @@ Public state reads and writes are safe for concurrent calls on the same image. M
 
 ## Known limitations and coverage boundary
 
-The implemented surface covers all backend-independent CPU operations in the audited reference API, adapted to typed C# properties, exceptions, arrays, and `ImageMetrics`. The following members are intentionally absent, not stubs:
+The implemented surface covers all backend-independent CPU operations in the audited reference API, adapted to typed C# properties, exceptions, arrays, and `ImageMetrics`. The following capability boundaries remain:
 
 - PNG/JPEG/WebP/BMP/TGA/SVG/DDS/EXR/KTX file and buffer loading and PNG/JPEG/WebP/EXR saving are executable under their documented codec profiles. WebP saving uses the private exact/lossy encoder; EXR retains HDR channels and precision. SVG raster dimensions use the documented XML preflight and may differ from SVG renderers with other CSS sizing rules. KTX1/KTX2 and Basis LDR/HDR loading execute under their [documented profile](../components/image-ktx.md); complete color/metadata semantics remain unfinished.
-- Compress/CompressFromChannels execute S3TC/BPTC; ETC/EAC/ASTC require selected portable encoders and complete texture consumers.
-- `Decompress` executes BC1–BC7 and RA-as-RG; ETC/EAC/ASTC require separate portable decoders.
-- ImageTexture converts copied pixels for GPU sampling in the first rendering slice; ordinary texture drawing and additional formats remain unfinished.
+- Compress/CompressFromChannels execute S3TC/BPTC; ETC/EAC/ASTC require portable encoders; decoding and shared texture consumers execute.
+- `Decompress` executes every stored BC/ETC/EAC/ASTC role, with complete mips and signed/HDR precision.
+- ImageTexture and layered resources sample the supported byte/float and all block families; integer sampling and target-driver precision limits remain explicit.
 - Loader/import cache leases start with the typed loader/import domain and first native-backed texture resource.
 - Dynamic dictionaries, universal values, integer error codes, and untyped format loaders are permanently replaced by typed return values, arrays, and exceptions.
 

@@ -314,7 +314,7 @@ Retained canvas items can copy screen snapshots independently of scene node type
 
 Type 1 PFB/PFA outlines and paired PFM/AFM native metrics now execute through FontFile, FontVariation, Linux installed/automatic matching, existing text measurement and ordinary/LCD/MSDF canvas consumers. [Source rules and verification](../components/text.md#type-1-outline-and-auxiliary-metric-sources) distinguish byte storage, native images, actual hosts and foreign-platform limits.
 
-[BC/DDS images](../components/image-bcn.md) now execute S3TC/BPTC CPU authoring, exact DDS/raw/full-mip source archives, native BC1–BC7 GPU textures/arrays and decoded Compatibility sampling. Imported RenderingDevice texture descriptors use the actual native BC format, with exact block readback and existing ownership. Compatibility BC6 retains its driver-dependent HDR precision gate; the exercised driver rejects it. ETC/EAC/ASTC, integer sampling and foreign-platform/native allocator acceptance remain separate.
+[BC/DDS images](../components/image-bcn.md) now execute S3TC/BPTC CPU authoring, exact DDS/raw/full-mip source archives, native BC1–BC7 GPU textures/arrays and decoded Compatibility sampling. Imported RenderingDevice texture descriptors use the actual native BC format, with exact block readback and existing ownership. Compatibility BC6 retains its driver-dependent HDR precision gate; the exercised driver rejects it. [ETC/EAC/ASTC decoding](../components/image-block-decoding.md) now supplies prepared ordinary/array sampling, preserving signed/HDR precision. Integer sampling and foreign-platform/native allocator acceptance remain separate.
 
 ## Themed numeric progress
 

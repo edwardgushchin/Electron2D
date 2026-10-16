@@ -1,6 +1,6 @@
 # BC and DDS image integration
 
-Last updated: 2026-10-14
+Last updated: 2026-10-16
 
 Image.Compress/CompressFromChannels, Decompress, LoadDDSFromBuffer, SaveDDS and SaveDDSToBuffer provide an executable CPU-to-texture slice. S3TC selects opaque BC1, alpha BC3, red BC4 or RG BC5; BPTC selects BC7 or signed/unsigned BC6 for finite HDR RGB. All stored mips retain their dimensions and order. Compression is lossy and runs during authoring, never inside retained drawing.
 
@@ -10,7 +10,7 @@ Source bytes and conservative expanded RGBA-float codec pixels are each limited 
 
 TexturePixels preserves original compressed source snapshots and prepares decoded pixels for CPU opacity and Compatibility. GPUTexture selects native BC storage through actual device capability queries, retaining compressed transfer/VRAM storage and full mip/layer offsets; unsupported native BC roles use decoded upload. RA-as-RG uses decoded upload to preserve its semantic channels. RenderingDevice exports report the actual native format and lease the existing allocation. ImageTexture/TextureArray Update and ordinary source lifetime rules are unchanged.
 
-Compatibility draws BC1–BC5/BC7 from prepared RGBA8. BC6 requires an HDR-capable Compatibility driver; the current Linux driver rejects it and releases the host. GPU supports both BC6 roles on the exercised device. Integer sampling and ETC/EAC/ASTC remain separate dependencies. Foreign platforms and native allocation acceptance are unverified.
+Compatibility draws BC1–BC5/BC7 from prepared RGBA8. BC6 requires an HDR-capable Compatibility driver; the current Linux driver rejects it and releases the host. GPU supports both BC6 roles on the exercised device. Integer sampling remains separate. [ETC/EAC/ASTC decoding](image-block-decoding.md) now supplies shared prepared texture pixels. Foreign platforms and native allocation acceptance are unverified.
 
 ## Private source dependency
 

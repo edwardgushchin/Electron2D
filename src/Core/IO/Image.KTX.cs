@@ -66,7 +66,7 @@ public sealed partial class Image
         }
         if (info.Swizzle != 0x61626772 || (info.Flags & 3) != 0)
         {
-            if (IsCompressedFormat(format)) state = DecompressBCPixels(state);
+            if (IsCompressedFormat(format)) state = DecompressPixels(state);
             if ((info.Flags & 1) != 0) state = FlipState(state, horizontal: true);
             if ((info.Flags & 2) != 0) state = FlipState(state, horizontal: false);
             if (info.Swizzle != 0x61626772) state = SwizzleKTX(state, info.Swizzle);

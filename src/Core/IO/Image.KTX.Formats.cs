@@ -50,8 +50,11 @@ public sealed partial class Image
         0x8E8E => Format.BptcRgbf, // GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT
         0x8E8F => Format.BptcRgbfu, // GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT
         0x9270 => Format.Etc2R11, // GL_COMPRESSED_R11_EAC
+        0x9271 => Format.Etc2R11S, // GL_COMPRESSED_SIGNED_R11_EAC
         0x9272 => Format.Etc2Rg11, // GL_COMPRESSED_RG11_EAC
+        0x9273 => Format.Etc2Rg11S, // GL_COMPRESSED_SIGNED_RG11_EAC
         0x9274 => Format.Etc2Rgb8, // GL_COMPRESSED_RGB8_ETC2
+        0x9276 => Format.Etc2Rgb8A1, // GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2
         0x9278 => Format.Etc2Rgba8, // GL_COMPRESSED_RGBA8_ETC2_EAC
         0x93B0 => Format.Astc4X4Hdr, // GL_COMPRESSED_RGBA_ASTC_4x4_KHR
         0x93B7 => Format.Astc8X8Hdr, // GL_COMPRESSED_RGBA_ASTC_8x8_KHR
@@ -101,9 +104,12 @@ public sealed partial class Image
         0x90 => Format.BptcRgbf, // VK_FORMAT_BC6H_SFLOAT_BLOCK
         0x91 => Format.BptcRgba, // VK_FORMAT_BC7_UNORM_BLOCK
         0x93 => Format.Etc2Rgb8, // VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK
+        0x95 => Format.Etc2Rgb8A1, // VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK
         0x97 => Format.Etc2Rgba8, // VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK
         0x99 => Format.Etc2R11, // VK_FORMAT_EAC_R11_UNORM_BLOCK
+        0x9A => Format.Etc2R11S, // VK_FORMAT_EAC_R11_SNORM_BLOCK
         0x9B => Format.Etc2Rg11, // VK_FORMAT_EAC_R11G11_UNORM_BLOCK
+        0x9C => Format.Etc2Rg11S, // VK_FORMAT_EAC_R11G11_SNORM_BLOCK
         0x9D => Format.Astc4X4Hdr, // VK_FORMAT_ASTC_4x4_UNORM_BLOCK
         0x9E => Format.Astc4X4, // VK_FORMAT_ASTC_4x4_SRGB_BLOCK
         0xAB => Format.Astc8X8Hdr, // VK_FORMAT_ASTC_8x8_UNORM_BLOCK

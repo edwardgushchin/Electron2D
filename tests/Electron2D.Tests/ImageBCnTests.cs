@@ -46,7 +46,7 @@ internal static partial class ImageBCnTests
         Check(image.GetData().AsSpan().SequenceEqual(raw) && changes == 0, "Corrupt metadata preserves source.");
         image.Changed += Fail; Reject<Marker>(() => image.CompressFromChannels(Image.CompressMode.S3tc, Image.UsedChannels.Rgba)); image.Changed -= Fail; Check(image.IsCompressed && changes == 1, "Observer failure preserves committed blocks.");
         Reject<InvalidOperationException>(() => image.Compress(Image.CompressMode.S3tc));
-        using var unsupported = Image.CreateFromData(4, 4, false, Image.Format.Etc, new byte[8]); Reject<NotSupportedException>(() => unsupported.Decompress());
+        using var etc = Image.CreateFromData(4, 4, false, Image.Format.Etc, new byte[8]); etc.Decompress(); Check(etc.PixelFormat == Image.Format.Rgba8, "ETC decoder is available independently of BC compression.");
         using var empty = new Image(); Reject<InvalidOperationException>(() => empty.SaveDDSToBuffer()); Reject<InvalidOperationException>(() => empty.Compress(Image.CompressMode.S3tc));
         using var nan = Source(Image.Format.Rgbf, false); nan.SetPixel(0, 0, new(float.NaN, 1, 1)); Reject<InvalidDataException>(() => nan.CompressFromChannels(Image.CompressMode.Bptc, Image.UsedChannels.Rgb));
     }

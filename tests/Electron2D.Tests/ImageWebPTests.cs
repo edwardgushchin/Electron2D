@@ -52,7 +52,7 @@ internal static class ImageWebPTests
         using var tooWide = Image.CreateEmpty(16384, 1, false, Image.Format.L8); Reject<IOException>(() => tooWide.SaveWebPToBuffer());
         using var tooLarge = Image.CreateEmpty(4097, 4096, false, Image.Format.L8); Reject<IOException>(() => tooLarge.SaveWebPToBuffer());
         using var maximumWidth = Image.CreateEmpty(16383, 1, false, Image.Format.Rgb8); decoded.LoadWebPFromBuffer(maximumWidth.SaveWebPToBuffer()); Check(decoded.Width == 16383, "Exact native maximum width is accepted.");
-        using var unsupported = Image.CreateEmpty(4, 4, false, Image.Format.Etc); Reject<NotSupportedException>(() => unsupported.SaveWebPToBuffer());
+        using var etc = Image.CreateEmpty(4, 4, false, Image.Format.Etc); using var decodedETC = new Image(); decodedETC.LoadWebPFromBuffer(etc.SaveWebPToBuffer()); Check(decodedETC.Width == 4 && etc.IsCompressed, "WebP saving decodes ETC without changing source storage.");
         var disposed = Image.CreateEmpty(1, 1, false, Image.Format.Rgba8); disposed.Dispose(); Reject<ObjectDisposedException>(() => disposed.SaveWebPToBuffer());
         Parallel.For(0, 12, _ => { using var result = new Image(); result.LoadWebPFromBuffer(source.SaveWebPToBuffer()); Check(result.GetData().AsSpan().SequenceEqual(data), "Concurrent encoders own independent native pictures and output."); });
         var settingsFile = Path.GetTempFileName();

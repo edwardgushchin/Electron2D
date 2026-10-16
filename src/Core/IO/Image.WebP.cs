@@ -10,12 +10,12 @@ public sealed partial class Image
     /// <param name="quality">Finite lossy quality from zero through one; ignored for lossless encoding.</param>
     /// <returns>An independent caller-owned encoded buffer.</returns>
     /// <remarks>Lossless encoding preserves RGB beneath transparent pixels. Uses a stable snapshot converted to RGBA8;
-    /// supported BC formats are decompressed first. Mipmaps are not encoded. Does not mutate this image or emit Changed.
+    /// block-compressed formats are decompressed first. Mipmaps are not encoded. Does not mutate this image or emit Changed.
     /// Encoding uses ProjectSettings.WebPCompressionMethod and, for lossless output, WebPLosslessCompressionFactor.
     /// Each dimension is at most 16383; expanded RGBA8 input and encoded output are each bounded to 64 MiB.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Quality is not finite or is outside zero through one.</exception>
-    /// <exception cref="InvalidOperationException">The image is empty.</exception>
-    /// <exception cref="NotSupportedException">The compressed format has no decoder.</exception>
+    /// <exception cref="InvalidOperationException">The image is empty or block expansion exceeds the codec work budget.</exception>
+    /// <exception cref="InvalidDataException">The source blocks or pixel values are invalid.</exception>
     /// <exception cref="IOException">The image exceeds encoding limits or encoding fails.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public unsafe byte[] SaveWebPToBuffer(bool lossy = false, float quality = 0.75f)
@@ -26,7 +26,7 @@ public sealed partial class Image
         if (state.Width == 0) throw new InvalidOperationException("An empty image cannot be encoded.");
         if (state.Width > 16383 || state.Height > 16383 || (long)state.Width * state.Height * 4 > MaximumEncodedBytes)
             throw new IOException("WebP dimensions or expanded RGBA8 pixels exceed encoding limits.");
-        if (IsCompressedFormat(state.Format)) state = DecompressBCPixels(state);
+        if (IsCompressedFormat(state.Format)) state = DecompressPixels(state);
         state = ConvertState(state, Format.Rgba8);
         var inputLength = checked(state.Width * state.Height * 4);
         var effort = lossy ? quality * 100 : ProjectSettings.Get(ProjectSettings.WebPLosslessCompressionFactor);
@@ -54,8 +54,8 @@ public sealed partial class Image
     /// <remarks>Uses SaveWebPToBuffer, then atomically replaces the destination. Parent directories must exist.
     /// Encoding failures preserve an existing destination and the complete source image.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Quality is not finite or is outside zero through one.</exception>
-    /// <exception cref="InvalidOperationException">The image is empty.</exception>
-    /// <exception cref="NotSupportedException">The compressed format has no decoder.</exception>
+    /// <exception cref="InvalidOperationException">The image is empty or block expansion exceeds the codec work budget.</exception>
+    /// <exception cref="InvalidDataException">The source blocks or pixel values are invalid.</exception>
     /// <exception cref="IOException">Encoding or saving fails.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public void SaveWebP(string path, bool lossy = false, float quality = 0.75f) => SaveEncodedFile(path, SaveWebPToBuffer(lossy, quality));

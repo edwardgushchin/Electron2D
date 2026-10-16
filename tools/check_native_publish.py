@@ -101,7 +101,7 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
         ktx = native / "libElectron2DKTX.so"
         assert ktx.is_file(), "Missing private KTX/Basis decoder"
         ktx_symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(ktx)], text=True)
-        assert {line.split()[-1] for line in ktx_symbols.splitlines()} == {"e2d_ktx_create", "e2d_ktx_level", "e2d_ktx_destroy", "e2d_basis_create"}, "KTX private ABI mismatch"
+        assert {line.split()[-1] for line in ktx_symbols.splitlines()} == {"e2d_ktx_create", "e2d_ktx_level", "e2d_ktx_destroy", "e2d_basis_create", "e2d_block_decode"}, "KTX private ABI mismatch"
         ktx_dynamic = subprocess.check_output(["readelf", "--wide", "--dynamic", str(ktx)], text=True)
         assert not any(name in ktx_dynamic for name in ("libktx", "libbasis", "libzstd", "RPATH", "RUNPATH")), "KTX codec closure must remain private and relocatable"
         assert not (publish / "FAudio.dll").exists(), "Managed backend leaked outside the engine assembly"

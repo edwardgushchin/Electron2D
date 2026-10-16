@@ -646,7 +646,7 @@ public sealed partial class Image : Resource
         _ => throw new ArgumentOutOfRangeException(nameof(format), format, "The format is not block-compressed."),
     };
 
-    private static bool IsCompressedFormat(Format format) => format is >= Format.Dxt1 and <= Format.Astc8X8Hdr;
+    internal static bool IsCompressedFormat(Format format) => format is >= Format.Dxt1 and <= Format.Astc8X8Hdr;
 
     private static void ValidateDimensions(int width, int height)
     {

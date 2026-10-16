@@ -12,6 +12,7 @@
     <Content Include="Fixtures/StandardInputHost.py" CopyToOutputDirectory="PreserveNewest" />
     <EmbeddedResource Include="TestData/CompressedArray/basis-oracle.json" LogicalName="TestCompressedArray.basis-oracle.json" />
     <EmbeddedResource Include="TestData/KTX/oracle.json" LogicalName="TestKTX.oracle.json" />
+    <EmbeddedResource Include="TestData/Blocks/oracle.json" LogicalName="TestBlocks.oracle.json" />
     <EmbeddedResource Include="Fixtures/ImporterMeshOracle.json" LogicalName="Electron2D.Mesh.ImporterOracle" />
     <EmbeddedResource Include="Fixtures/MeshCompressionOracle.json" LogicalName="Electron2D.Mesh.CompressionOracle" />
     <EmbeddedResource Include="TestData/Noise/image-reference.json" LogicalName="TestNoise.image-reference.json" />

@@ -105,7 +105,7 @@ Concrete Shader/ShaderMaterial resources use the internal rendering reflection a
 - Serialized resource state and ownership semantics must remain portable across all five runtime targets; platform-native payloads require explicit internal backends.
 - Image buffers own copied bytes, use canonical little-endian multi-byte fields, publish complete states atomically, and never expose mutable backing storage.
 - BitMap keeps packed bits private, snapshots before morphology, and publishes changes outside its state lock.
-- BC1–BC7 compression/decompression, DDS raw/HDR/mip storage and prepared texture sampling execute; raw ETC/EAC/ASTC storage does not imply codecs. See [BC/DDS integration](../components/image-bcn.md).
+- BC1–BC7 compression/decompression, DDS raw/HDR/mip storage and prepared texture sampling execute; [ETC/EAC/ASTC decoding](../components/image-block-decoding.md) now supplies complete channel/HDR/mip roles and shared texture consumers; their encoding remains separate. See [BC/DDS integration](../components/image-bcn.md).
 
 ## Current limitations
 

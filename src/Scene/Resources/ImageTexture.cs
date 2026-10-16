@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>A two-dimensional texture owning a snapshot of an Image's pixel data.</summary>
 /// <remarks>Construction is independent of an active renderer. GPU data is uploaded when first used. Image inputs
 /// and outputs are copies; modifying the original Image never changes this texture. SetImage replaces allocation
-/// parameters; Update preserves them. BC1–BC7 sources preserve compressed snapshots, use supported native GPU block sampling and decoded Compatibility pixels; BC6 requires a driver retaining HDR precision.
+/// parameters; Update preserves them. Block sources preserve compressed snapshots. BC1–BC7 use supported native GPU storage or decoded fallback; ETC/EAC/ASTC use decoded upload. Floating-point sampling requires a driver retaining that precision.
 /// Integer-sampled and other block codec families retain their separate integration dependencies.</remarks>
 public sealed class ImageTexture : Texture
 {
@@ -43,6 +43,9 @@ public sealed class ImageTexture : Texture
     /// <returns>An independent texture; the supplied image remains caller-owned.</returns>
     /// <exception cref="ArgumentException">The image is empty or its dimensions are unsupported.</exception>
     /// <exception cref="NotSupportedException">The image requires an unimplemented texture format.</exception>
+    /// <exception cref="InvalidDataException">Compressed pixels cannot be decoded.</exception>
+    /// <exception cref="IOException">The decoder cannot allocate working memory.</exception>
+    /// <exception cref="InvalidOperationException">The conservative codec work budget is exceeded.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public static ImageTexture CreateFromImage(Image image)
     {
@@ -56,6 +59,9 @@ public sealed class ImageTexture : Texture
     /// replacement emits Changed and is uploaded before a later draw.</remarks>
     /// <exception cref="ArgumentException">The image is empty or too large.</exception>
     /// <exception cref="NotSupportedException">The image format is not integrated.</exception>
+    /// <exception cref="InvalidDataException">Compressed pixels cannot be decoded.</exception>
+    /// <exception cref="IOException">The decoder cannot allocate working memory.</exception>
+    /// <exception cref="InvalidOperationException">The conservative codec work budget is exceeded.</exception>
     /// <exception cref="ObjectDisposedException">The texture or image is disposed.</exception>
     public void SetImage(Image image)
     {
@@ -70,8 +76,10 @@ public sealed class ImageTexture : Texture
     /// <remarks>Logical size overrides do not change the required pixel dimensions. Input is copied and failure
     /// preserves the previous pixels. Compatible GPU allocation is reused, with native cycling for queued frames.</remarks>
     /// <exception cref="ArgumentException">The image configuration differs from the original.</exception>
-    /// <exception cref="InvalidOperationException">The texture has not been initialized.</exception>
+    /// <exception cref="InvalidOperationException">The texture is uninitialized or the codec work budget is exceeded.</exception>
     /// <exception cref="NotSupportedException">The image format is not integrated.</exception>
+    /// <exception cref="InvalidDataException">Compressed pixels cannot be decoded.</exception>
+    /// <exception cref="IOException">The decoder cannot allocate working memory.</exception>
     /// <exception cref="ObjectDisposedException">The texture or image is disposed.</exception>
     public void Update(Image image)
     {
