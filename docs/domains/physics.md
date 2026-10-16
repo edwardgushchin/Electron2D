@@ -1368,3 +1368,8 @@ owners; held disposal has zero requested GPU buffers. A separate NativeAOT paced
 cohort verifies the report/counter path without establishing native object sizes.
 These bounded results preserve open full native/driver/global ownership, unseen
 peaks, arbitrary workloads, foreign platforms and target-device/window gates.
+
+[Inherited exclusive-window lookup](../components/popup-windows.md#active-exclusive-window-chains)
+now executes through physical Node roles without changing their selected world
+or body identity. Broader inherited, numerical-extension, native-memory and
+target-performance gates remain open.

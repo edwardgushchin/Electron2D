@@ -124718,6 +124718,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.GetLastExclusiveWindow()",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "GetLastExclusiveWindow",
+    "signature": "public Electron2D.Window GetLastExclusiveWindow()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.GetMultiplayerAuthority()",
     "kind": "method",
     "declaringType": "Electron2D.Node",

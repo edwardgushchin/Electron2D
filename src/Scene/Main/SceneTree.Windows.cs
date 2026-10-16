@@ -37,11 +37,11 @@ public sealed partial class SceneTree
     internal bool HasEmbeddedWindowFocus(Window window) { EnsureOwnerThread(); return window.Embedder is { } host && _embeddedFocus.GetValueOrDefault(host) == window; }
     internal void FocusEmbeddedWindow(Window window)
     {
-        EnsureOwnerThread(); if (window.Embedder is not { } host || !window.Visible || window.Unfocusable) return;
+        EnsureOwnerThread(); if (window.IsDisposed || window.Embedder is not { } host || !window.Visible || window.Unfocusable) return;
         var previous = _embeddedFocus.GetValueOrDefault(host); if (previous == window) return;
         _embeddedFocus[host] = window; host.EmbeddedWindows.Remove(window); host.EmbeddedWindows.Add(window); window.RaiseEmbeddedCanvas();
         List<Exception>? errors = null;
-        try { previous?.EmitEmbeddedFocus(false); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (previous is { IsDisposed: false }) previous.EmitEmbeddedFocus(false); } catch (Exception error) { CollectException(ref errors, error); }
         try { ExitGUIViewport(host); } catch (Exception error) { CollectException(ref errors, error); }
         try { window.EmitEmbeddedFocus(true); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Embedded window focus callbacks failed.", errors);
@@ -63,9 +63,9 @@ public sealed partial class SceneTree
         if (_embeddedFocus.GetValueOrDefault(host) == window)
         {
             _embeddedFocus.Remove(host);
-            try { window.EmitEmbeddedFocus(false); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (!window.IsDisposed) window.EmitEmbeddedFocus(false); } catch (Exception error) { CollectException(ref errors, error); }
             Window? next = null; for (var i = host.EmbeddedWindows.Count - 1; i >= 0; i--) { var candidate = host.EmbeddedWindows[i]; if (candidate != window && !candidate.IsDisposed && candidate.Visible && !candidate.Unfocusable) { next = candidate; break; } }
-            try { if (next is not null) FocusEmbeddedWindow(next); else if (host is Window parent) parent.EmitEmbeddedFocus(true); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (next is not null) FocusEmbeddedWindow(next); else if (host is Window { IsDisposed: false } parent) parent.EmitEmbeddedFocus(true); } catch (Exception error) { CollectException(ref errors, error); }
         }
         ThrowCollected("Embedded window hide callbacks failed.", errors);
     }

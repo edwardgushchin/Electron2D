@@ -1,4 +1,6 @@
-if (args.Contains("--node-names-child")) BackendChecks.ReadNodeNames(args[Array.IndexOf(args, "--node-names-child") + 1]);
+if (args.Contains("--exclusive-windows")) BackendChecks.RunExclusiveWindows(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--node-names-child")) BackendChecks.ReadNodeNames(args[Array.IndexOf(args, "--node-names-child") + 1]);
 else if (args.Contains("--node-names")) BackendChecks.RunNodeNames(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--node-orphans")) BackendChecks.RunNodeOrphans(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :

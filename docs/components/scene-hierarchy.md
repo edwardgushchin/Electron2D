@@ -348,3 +348,8 @@ API/wiki checks pass at 854 types, 14247 declarations and 872 wiki files.
 Exact commands, failed candidates, process proofs and source/binary manifests:
 bin/physics-node-search/2026-10-15/validation.json. Full inherited/extension,
 foreign/native-memory and hardware/window/performance acceptance remain open.
+
+[Active exclusive windows](popup-windows.md#active-exclusive-window-chains) add
+`Node.GetLastExclusiveWindow()` across physical and ordinary Node roles. The
+query is active-tree scoped; existing GetWindow/GetViewport authored-hierarchy
+lookup differences retain explicit Partial coverage.

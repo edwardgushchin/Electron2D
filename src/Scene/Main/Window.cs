@@ -167,6 +167,7 @@ public partial class Window : Viewport
             }
             _visible = value;
             List<Exception>? errors = null;
+            try { UpdateExclusiveSelection(); } catch (Exception error) { CollectException(ref errors, error); }
             try { EmbeddedVisibilityChanged(); } catch (Exception error) { CollectException(ref errors, error); }
             try { VisibilityChanged?.Invoke(); }
             catch (Exception error) { CollectException(ref errors, error); }

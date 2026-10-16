@@ -1,6 +1,6 @@
 # Embedded popup windows
 
-Last updated: 2026-10-12
+Last updated: 2026-10-16
 
 Owns [Window](../classes/Window.md), [Viewport](../classes/Viewport.md) embedded ownership and the [Popup](../classes/Popup.md)/[PopupPanel](../classes/PopupPanel.md) consumers under ADRs 0008, 0038, 0040 and 0083.
 
@@ -15,6 +15,50 @@ The host routes pointer, touch and gesture coordinates into the selected window 
 Popup geometry is expressed in its embedding viewport coordinates. Centered methods resolve control minimums after AboutToPopup, then center the resulting size. Popup fits into the usable host rectangle and applies maximum sizes. Ratio arguments reject nonfinite values and values outside (0,1]. Popup requests on a root or detached Window fail. Exclusive helper methods require a parentless dialog, choose the active exclusive descendant owner and undo parenting when showing fails.
 
 PopupHide follows committed hidden state. Close requests and exact non-echo ui_cancel defer hide on SceneTree; repeated pending requests collapse. PopupPanel adds a borrowed `panel` StyleBox, content margins and shadow insets. It fits direct non-top-level controls, inherits texture sampling, mirrors horizontal shadow offsets for RTL, restores the content rectangle after hiding, and preserves an explicit resize made while visible. Theme and direction notifications refresh layout after lookup invalidation. Control and Window share LayoutDirection under ADR 0051; same-domain controls inherit Window direction.
+
+### Active exclusive window chains
+
+`Node.GetLastExclusiveWindow()` starts at the caller's containing Window and
+follows retained active exclusive transient-child links. It returns null for
+detached/no-window nodes and enforces the scene owner or the caller's own
+processing group. These links follow transient parent ownership, independently
+of display/focus ordering. Enabling Transient/Exclusive on a visible attached
+window selects it; hidden, nontransient and nonexclusive children do not extend
+the chain. The latest conflicting activation wins with a diagnostic. Removing
+that selection leaves the parent without an active exclusive child rather than
+silently selecting an older visible sibling.
+
+Flag and visibility changes, enter/exit, reparent and disposal keep those links
+current before callbacks. Window membership cleanup attempts transient, embedded
+and theme work even after an observer fails. Embedded focus routing skips
+disposing/retired windows, avoiding activity through a cleared publisher.
+
+All five `PopupExclusive*` methods select the same final owner. Their common
+rollback covers both attachment and popup failures. If detachment also fails,
+an AggregateException retains the original and cleanup errors; committed
+detachment still removes transient selection. Window's independent-native child
+capability and broader GUI behavior remain separate from this hierarchy query.
+
+The public physics consumer runs this contract in twelve Linux x64 processes:
+CoreCLR and strict NativeAOT, CPU/software-GPU/registered backends, each with
+serial and separate physics scheduling. It covers nine physical/inherited roles,
+all five popup entry points, wrong processing groups, callback failures,
+detachment/reparent and weak retirement. Each profile measures 128 complete
+physical frames after 128 warmup frames and requires zero owner/all-thread managed
+bytes, 128 real integration callbacks, unchanged body RID and 12.8 units of motion
+within 0.01 to allow accumulated single-precision integration error. CPU and registered profiles use an unavailable Vulkan ICD; GPU profiles
+pin lavapipe. Native/driver allocation totals and hardware throughput are not
+established by these checks.
+
+The current Linux offscreen popup regression also passes managed behavior and
+fresh-process PackedScene loading. Actual GPU-renderer output on lavapipe and
+compatibility output on SDL software both verify the exclusive chain, themed
+blue/green nesting and hide pixels, followed by 64 warmed placement/render frames
+with zero owner-thread managed bytes. Both diagnostic images were inspected.
+This composition fixture uses Nearest filtering and disables PopupWindow's
+application-focus close policy so offscreen focus events do not close its subject;
+the managed popup suite retains the default input/close behavior. This does not
+establish compositor, physical input or hardware-window performance acceptance.
 
 ## Persistence and verification
 

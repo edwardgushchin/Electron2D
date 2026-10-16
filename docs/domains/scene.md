@@ -1,6 +1,6 @@
 # Scene domain
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 
 ## Runtime child names
 
@@ -392,3 +392,9 @@ patterns and typed inheritance filters for every Node descendant, including
 physics bodies and Areas. Repeated first-result/parent reads in actual physical
 frames have their own allocation and lifetime/thread checks; remaining scene
 API and platform acceptance remain separate.
+
+The [exclusive-window chain](../components/popup-windows.md#active-exclusive-window-chains)
+now backs Node.GetLastExclusiveWindow and every PopupExclusive entry point.
+Transient ownership, flags, visibility and retirement determine selection;
+processing-scope reads and attachment/cleanup failures preserve scene invariants.
+Independent native child windows remain a separate capability.

@@ -243,10 +243,13 @@ public partial class Window
     }
     internal override void OnTreeMembershipChanged(bool entering)
     {
-        if (!entering) UpdateEmbeddedMembership(false);
-        ThemeOwner.Membership(entering);
-        base.OnTreeMembershipChanged(entering);
-        if (entering) UpdateEmbeddedMembership(true);
+        List<Exception>? errors = null;
+        try { UpdateTransientMembership(entering); } catch (Exception error) { CollectException(ref errors, error); }
+        if (!entering) try { UpdateEmbeddedMembership(false); } catch (Exception error) { CollectException(ref errors, error); }
+        try { ThemeOwner.Membership(entering); } catch (Exception error) { CollectException(ref errors, error); }
+        try { base.OnTreeMembershipChanged(entering); } catch (Exception error) { CollectException(ref errors, error); }
+        if (entering) try { UpdateEmbeddedMembership(true); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Window membership callbacks failed.", errors);
     }
     /// <inheritdoc />
     protected override void OnNotification(int what)

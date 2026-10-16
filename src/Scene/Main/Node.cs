@@ -587,6 +587,21 @@ public partial class Node : ElectronObject
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public Window? GetWindow() { ThrowIfDisposed(); for (Node? node = this; node is not null; node = node.Parent) if (node is Window window) return window; return null; }
 
+    /// <summary>Finds the last active exclusive window starting at this node's containing window.</summary>
+    /// <returns>The containing window or its last exclusive transient descendant; null while detached or without a containing window.</returns>
+    /// <remarks>Follows active transient parent links rather than display order.
+    /// A window without an active exclusive child is returned itself.</remarks>
+    /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
+    /// <exception cref="InvalidOperationException">This node is accessed outside its permitted scene processing scope.</exception>
+    public Window? GetLastExclusiveWindow()
+    {
+        ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
+        if (!IsInsideTree) return null;
+        var window = GetWindow();
+        while (window?.ExclusiveChild is { } child) window = child;
+        return window;
+    }
+
     /// <summary>Gets or sets the pause policy used by both process callback lanes.</summary>
     /// <value><see cref="ProcessMode.Inherit"/> by default.</value>
     /// <remarks>Crossing the effective disabled boundary synchronously notifies this node and affected inheriting descendants.

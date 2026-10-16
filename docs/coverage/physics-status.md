@@ -219,13 +219,13 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 82 | 27 | 6 | 0 | 0 |
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
-| [Node](classes/Node.md) | [Object](classes/Object.md) | 121 | 63 | 6 | 23 | 1 |
+| [Node](classes/Node.md) | [Object](classes/Object.md) | 122 | 63 | 6 | 22 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
-| [Object](classes/Object.md) | — | 19 | 16 | 2 | 22 | 15 |
+| [Object](classes/Object.md) | — | 19 | 17 | 2 | 21 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 22 | 5 | 0 | 0 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 288 | 118 | 17 | 45 | 23 |
+| **Total** | | 289 | 119 | 17 | 43 | 23 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -307,12 +307,11 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Node::method:duplicate(int:)`](classes/Node.md) | Unimplemented | Authored typed connections now capture and rebind under ADRs 0010/0023. Remaining runtime duplication prerequisites: resolve ADR0091 live script binding/identity first so the Scripts bit is executable, then implement complete runtime groups and subtree factory/resource/node-reference remapping, including UseInstantiation and InternalState policies. Owner-selected stored-property Pack cannot substitute for full runtime duplication. |
 | [`Node::method:get_accessibility_element()`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
 | [`Node::method:get_groups()`](classes/Node.md) | Partial | The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit. |
-| [`Node::method:get_last_exclusive_window()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:get_parent()`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Node::method:get_scene_instance_load_placeholder()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:get_tree()`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
-| [`Node::method:get_viewport()`](classes/Node.md) | Partial | Root-window native/input projection under ADRs 0004 and 0008; tests cover the supported window lifecycle. Root rendering and canvas transforms are integrated; nested viewport, content scaling and multiwindow behavior remain absent. |
-| [`Node::method:get_window()`](classes/Node.md) | Partial | Root-window native/input projection under ADRs 0004 and 0008; tests cover the supported window lifecycle. Root rendering and canvas transforms are integrated; nested viewport, content scaling and multiwindow behavior remain absent. |
+| [`Node::method:get_viewport()`](classes/Node.md) | Partial | ADRs 0004/0008: current getters walk authored hierarchy ancestors, including detached nodes. Embedded/offscreen viewport and window ownership now exist; the former absence claim was stale. The pinned active-viewport cache and processing-access rules are not yet applied to these two getters; they remain Partial. GetLastExclusiveWindow independently validates active membership and permitted processing scope. |
+| [`Node::method:get_window()`](classes/Node.md) | Partial | ADRs 0004/0008: current getters walk authored hierarchy ancestors, including detached nodes. Embedded/offscreen viewport and window ownership now exist; the former absence claim was stale. The pinned active-viewport cache and processing-access rules are not yet applied to these two getters; they remain Partial. GetLastExclusiveWindow independently validates active membership and permitted processing scope. |
 | [`Node::method:is_ancestor_of(Node:)`](classes/Node.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Node::method:is_displayed_folded()`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
 | [`Node::method:is_editable_instance(Node:)`](classes/Node.md) | Unimplemented | No mapped C# declaration; trigger: next complete Node API slice. |
@@ -397,7 +396,7 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Object::method:set_deferred(StringName:,Variant:)`](classes/Object.md) | Partial | ADRs 0001/0006: existing typed SceneTree.SetDeferred retains individual values in reusable Scene-owned slots, mixed Action FIFO/captured-batch order, atomic lifetime acceptance and error continuation. Warm typed setter and CPU/GPU deferred-event frames retain zero owner/all-thread bytes; execution/failure/discard release reference values. Dynamic property/name resolution remains excluded by the typed projection, and this does not establish arbitrary custom scheduler or full inherited/native/network/platform acceptance. |
 | [`Object::method:set_message_translation(bool:)`](classes/Object.md) | Partial | C# property form of upstream Object operation (ADRs 0005 and 0007). Return type differs: void → System.Boolean; audit observable contract. |
 | [`Object::method:set_script(Variant:)`](classes/Object.md) | Blocked | Trigger: accepted typed live script-attachment contract for owner identity, instance ownership, replacement, callback ordering and failure rollback, followed by its first executable binding slice under ADR 0091. A factory-created CLR subtype does not change the type of an existing owner. Applicable behavior remains pending; no inert setter or implicit exclusion is accepted. |
-| [`Object::method:set_translation_domain(StringName:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
+| [`Object::method:set_translation_domain(StringName:)`](classes/Object.md) | Partial | ADRs 0005/0007: the existing typed TranslationDomain property supplies both query and setter, with Node explicit/inherited domain selection. Public physical-role window checks verify assigned inheritance, explicit body assignment and reset; NodeLocalizationTests owns the wider translation/notification cases. This reconciles the previously omitted setter mapping; complete inherited/native/platform acceptance remains separate. Return type differs: void → System.String; audit observable contract. |
 | [`Object::method:tr(StringName:,StringName:)`](classes/Object.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Object::method:tr_n(StringName:,StringName:,int:,StringName:)`](classes/Object.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Object::signal:property_list_changed()`](classes/Object.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |

@@ -4,6 +4,8 @@ public partial class Window
 {
     internal Viewport? Embedder;
     private bool _transient, _exclusive, _wrapControls;
+    private Window? _transientParent;
+    internal Window? ExclusiveChild { get; private set; }
     private LayoutDirection _layoutDirection;
     /// <summary>Gets or sets the direction inherited by this window's controls.</summary>
     /// <value>Inherited initially; roots use the project direction policy.</value>
@@ -22,12 +24,30 @@ public partial class Window
     private CanvasLayer? _embeddedLayer;
     private int _embeddedSerial;
     private EmbeddedWindowCanvas? _embeddedCanvas;
-    /// <summary>Gets or sets whether this window returns focus to its parent when hidden.</summary>
-    /// <value>False initially; Popup defaults to true.</value>
-    public bool Transient { get { ThrowIfDisposed(); return _transient; } set { EnsureMutable(); _transient = value; } }
+    /// <summary>Gets or sets whether this window belongs to its containing parent window's transient chain.</summary>
+    /// <value>False initially; Popup defaults to true. Popup methods enable it before showing.</value>
+    /// <remarks>While attached, the nearest parent window owns this link. Clearing it also removes this window's active
+    /// exclusive selection. Roots and hierarchies without a parent window have no transient owner.</remarks>
+    /// <exception cref="ObjectDisposedException">Disposal has started.</exception>
+    /// <exception cref="InvalidOperationException">Mutation violates the scene owner, capture or authoring scope.</exception>
+    /// <exception cref="System.IO.IOException">The diagnostic writer fails after a conflicting selection commits.</exception>
+    public bool Transient
+    {
+        get { ThrowIfDisposed(); return _transient; }
+        set { EnsureMutable(); if (_transient == value) return; _transient = value; UpdateTransientMembership(IsInsideTree); }
+    }
     /// <summary>Gets or sets whether input outside this window is blocked while visible.</summary>
     /// <value>False initially.</value>
-    public bool Exclusive { get { ThrowIfDisposed(); return _exclusive; } set { EnsureMutable(); _exclusive = value; } }
+    /// <remarks>A visible attached transient window becomes its parent's active exclusive child. The latest activation wins
+    /// when multiple siblings request exclusivity, with a diagnostic; clearing that selection does not reactivate older siblings.</remarks>
+    /// <exception cref="ObjectDisposedException">Disposal has started.</exception>
+    /// <exception cref="InvalidOperationException">Mutation violates the scene owner, capture or authoring scope.</exception>
+    /// <exception cref="System.IO.IOException">The diagnostic writer fails after a conflicting selection commits.</exception>
+    public bool Exclusive
+    {
+        get { ThrowIfDisposed(); return _exclusive; }
+        set { EnsureMutable(); if (_exclusive == value) return; _exclusive = value; UpdateExclusiveSelection(); }
+    }
     /// <summary>Gets or sets whether child control minimums constrain this window's size.</summary>
     /// <value>False initially; Popup defaults to true.</value>
     public bool WrapControls { get { ThrowIfDisposed(); return _wrapControls; } set { EnsureMutable(); _wrapControls = value; UpdateEmbeddedContents(); } }
@@ -98,35 +118,81 @@ public partial class Window
     /// <summary>Parents a detached dialog to the last exclusive window and shows it with an optional host-coordinate rectangle.</summary>
     /// <param name="fromNode">An attached node identifying the owning window.</param>
     /// <param name="rect">The popup geometry argument passed to Popup.</param>
+    /// <remarks>Uses <see cref="Node.GetLastExclusiveWindow"/> and attempts detachment after attachment or popup failure.</remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="fromNode"/> is null.</exception>
+    /// <exception cref="ObjectDisposedException">This dialog or its source node is disposed.</exception>
+    /// <exception cref="InvalidOperationException">This dialog is already attached, or the source has no active containing window.</exception>
+    /// <exception cref="Exception">A callback fails. If detachment also fails, both errors are retained in an <see cref="AggregateException"/>.</exception>
     public void PopupExclusive(Node fromNode, Rect2i rect = default) => ParentDialog(fromNode, () => Popup(rect));
     /// <summary>Parents a detached dialog to the last exclusive window and shows it with a parent-relative rectangle.</summary>
     /// <param name="fromNode">An attached node identifying the owning window.</param>
     /// <param name="parentRect">The popup geometry argument passed to PopupOnParent.</param>
+    /// <remarks>Uses <see cref="Node.GetLastExclusiveWindow"/> and attempts detachment after attachment or popup failure.</remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="fromNode"/> is null.</exception>
+    /// <exception cref="ObjectDisposedException">This dialog or its source node is disposed.</exception>
+    /// <exception cref="InvalidOperationException">This dialog is already attached, or the source has no active containing window.</exception>
+    /// <exception cref="Exception">A callback fails. If detachment also fails, both errors are retained in an <see cref="AggregateException"/>.</exception>
     public void PopupExclusiveOnParent(Node fromNode, Rect2i parentRect) => ParentDialog(fromNode, () => PopupOnParent(parentRect));
     /// <summary>Parents a detached dialog to the last exclusive window and shows it with centered dimensions.</summary>
     /// <param name="fromNode">An attached node identifying the owning window.</param>
     /// <param name="minSize">The popup geometry argument passed to PopupCentered.</param>
+    /// <remarks>Uses <see cref="Node.GetLastExclusiveWindow"/> and attempts detachment after attachment or popup failure.</remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="fromNode"/> is null.</exception>
+    /// <exception cref="ObjectDisposedException">This dialog or its source node is disposed.</exception>
+    /// <exception cref="InvalidOperationException">This dialog is already attached, or the source has no active containing window.</exception>
+    /// <exception cref="Exception">A callback fails. If detachment also fails, both errors are retained in an <see cref="AggregateException"/>.</exception>
     public void PopupExclusiveCentered(Node fromNode, Vector2i minSize = default) => ParentDialog(fromNode, () => PopupCentered(minSize));
     /// <summary>Parents a detached dialog to the last exclusive window and shows it with a proportional host size.</summary>
     /// <param name="fromNode">An attached node identifying the owning window.</param>
     /// <param name="ratio">The popup geometry argument passed to PopupCenteredRatio.</param>
+    /// <remarks>Uses <see cref="Node.GetLastExclusiveWindow"/> and attempts detachment after attachment or popup failure.</remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="fromNode"/> is null.</exception>
+    /// <exception cref="ObjectDisposedException">This dialog or its source node is disposed.</exception>
+    /// <exception cref="InvalidOperationException">This dialog is already attached, or the source has no active containing window.</exception>
+    /// <exception cref="Exception">A callback fails. If detachment also fails, both errors are retained in an <see cref="AggregateException"/>.</exception>
     public void PopupExclusiveCenteredRatio(Node fromNode, float ratio = .8f) => ParentDialog(fromNode, () => PopupCenteredRatio(ratio));
     /// <summary>Parents a detached dialog to the last exclusive window and shows it with clamped centered dimensions.</summary>
     /// <param name="fromNode">An attached node identifying the owning window.</param>
     /// <param name="minSize">The popup geometry argument passed to PopupCenteredClamped.</param>
     /// <param name="fallbackRatio">The popup geometry argument passed to PopupCenteredClamped.</param>
+    /// <remarks>Uses <see cref="Node.GetLastExclusiveWindow"/> and attempts detachment after attachment or popup failure.</remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="fromNode"/> is null.</exception>
+    /// <exception cref="ObjectDisposedException">This dialog or its source node is disposed.</exception>
+    /// <exception cref="InvalidOperationException">This dialog is already attached, or the source has no active containing window.</exception>
+    /// <exception cref="Exception">A callback fails. If detachment also fails, both errors are retained in an <see cref="AggregateException"/>.</exception>
     public void PopupExclusiveCenteredClamped(Node fromNode, Vector2i minSize = default, float fallbackRatio = .75f) => ParentDialog(fromNode, () => PopupCenteredClamped(minSize, fallbackRatio));
     private void ParentDialog(Node fromNode, Action show)
     {
         EnsureMutable(); ArgumentNullException.ThrowIfNull(fromNode); if (fromNode.IsDisposed) throw new ObjectDisposedException(nameof(fromNode));
         if (Parent is not null || IsInsideTree) throw new InvalidOperationException("Exclusive popup requires a detached dialog.");
-        var parent = fromNode.GetWindow() ?? throw new InvalidOperationException("Dialog owner has no containing window.");
+        var parent = fromNode.GetLastExclusiveWindow() ?? throw new InvalidOperationException("Dialog owner has no containing window.");
         if (parent.Tree is null) throw new InvalidOperationException("Dialog owner must be attached.");
-        if (parent.Embedder is { } host) for (var i = host.EmbeddedWindows.Count - 1; i >= 0; i--) { var candidate = host.EmbeddedWindows[i]; if (candidate.Visible && candidate.Exclusive && parent.IsAncestorOf(candidate)) { parent = candidate; break; } }
-        parent.AddChild(this);
-        try { show(); } catch { if (!IsDisposed && Parent == parent) parent.RemoveChild(this); throw; }
+        try { parent.AddChild(this); show(); }
+        catch (Exception error)
+        {
+            try { if (!IsDisposed && Parent == parent) parent.RemoveChild(this); }
+            catch (Exception cleanup) { throw new AggregateException("Dialog attachment and cleanup failed.", error, cleanup); }
+            throw;
+        }
     }
     private static void CheckRatio(float ratio) { if (!float.IsFinite(ratio) || ratio <= 0 || ratio > 1) throw new ArgumentOutOfRangeException(nameof(ratio)); }
+    private void UpdateTransientMembership(bool entering)
+    {
+        if (_transientParent?.ExclusiveChild == this) _transientParent.ExclusiveChild = null;
+        _transientParent = entering && _transient ? Parent?.GetWindow() : null;
+        UpdateExclusiveSelection();
+    }
+    private void UpdateExclusiveSelection()
+    {
+        if (_transientParent is not { } parent) return;
+        if (_exclusive && _visible && IsInsideTree)
+        {
+            var previous = parent.ExclusiveChild;
+            parent.ExclusiveChild = this;
+            if (previous is not null && previous != this) OS.LogError("A window already has another active exclusive child.");
+        }
+        else if (parent.ExclusiveChild == this) parent.ExclusiveChild = null;
+    }
     private void CheckPopup() { EnsureMutable(); if (!IsInsideTree || Parent is null) throw new InvalidOperationException("Popup requires an attached child window."); if (Embedder is null) throw new NotSupportedException("Enable GUIEmbedSubwindows on a containing viewport; independent native child windows are unavailable."); }
     internal virtual bool TryNativeVisibility(bool visible) => false;
     internal virtual bool TryNativePopup() => false;

@@ -1428,13 +1428,13 @@
       "electron2d": "method:Electron2D.Node.GetViewport()",
       "godot": "Node::method:get_viewport()",
       "state": "Partial",
-      "reason": "Root-window native/input projection under ADRs 0004 and 0008; tests cover the supported window lifecycle. Root rendering and canvas transforms are integrated; nested viewport, content scaling and multiwindow behavior remain absent."
+      "reason": "ADRs 0004/0008: current getters walk authored hierarchy ancestors, including detached nodes. Embedded/offscreen viewport and window ownership now exist; the former absence claim was stale. The pinned active-viewport cache and processing-access rules are not yet applied to these two getters; they remain Partial. GetLastExclusiveWindow independently validates active membership and permitted processing scope."
     },
     {
       "electron2d": "method:Electron2D.Node.GetWindow()",
       "godot": "Node::method:get_window()",
       "state": "Partial",
-      "reason": "Root-window native/input projection under ADRs 0004 and 0008; tests cover the supported window lifecycle. Root rendering and canvas transforms are integrated; nested viewport, content scaling and multiwindow behavior remain absent."
+      "reason": "ADRs 0004/0008: current getters walk authored hierarchy ancestors, including detached nodes. Embedded/offscreen viewport and window ownership now exist; the former absence claim was stale. The pinned active-viewport cache and processing-access rules are not yet applied to these two getters; they remain Partial. GetLastExclusiveWindow independently validates active membership and permitted processing scope."
     },
     {
       "electron2d": "method:Electron2D.Viewport.GetVisibleRect()",
@@ -5602,6 +5602,18 @@
       "godot": "Node::property:name",
       "electron2d": "property:Electron2D.Node.Name()",
       "reason": "ADR 0008: public names replace all six reserved characters with underscores before readable collision resolution; null/empty/whitespace-only input rejects under the typed nonblank contract. Every accepted assignment, including unchanged input, propagates subtree path notifications while detached or active; active node Renamed, tree NodeRenamed and TreeChanged follow in order. Name/path/unique-owner state commits first; remaining descendants and event phases continue after errors. Packed-scene reconstruction restores validated stored internal names directly. Public CPU/software-GPU/registered serial/separate Debug/Release/strict NativeAOT profiles verify descriptor/Unicode input, same-input owner/numerical rejection, committed paths, five simultaneous failures, nested/removing delivery, exact generated-name file/fresh-process identity and 128 warm/128 measured moving full frames with both clean changed and unchanged assignments at 0/0 owner/all-thread managed bytes. New normalized/collision strings and initial snapshot capacity growth remain cold. Evidence: bin/physics-node-name-assignment/2026-10-15/validation.json. Wider inherited, numerical, hardware/window, native-memory and platform gates remain open."
+    },
+    {
+      "godot": "Node::method:get_last_exclusive_window()",
+      "electron2d": "method:Electron2D.Node.GetLastExclusiveWindow()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0008/0040: active-tree lookup follows retained visible exclusive transient-child links from the containing Window, independently of focus/display order; detached/no-window returns null and permitted processing scope is checked. Shared public CPU/GPU/registered serial/separate consumers exercise all physical Node branches, nested/nontransient/conflicting siblings, all five popup callers, flag/visibility/reparent/retirement/error paths and strict warmed full-frame allocation gates. Independent native-child-window capabilities retain their Window prerequisites."
+    },
+    {
+      "godot": "Object::method:set_translation_domain(StringName:)",
+      "electron2d": "property:Electron2D.ElectronObject.TranslationDomain()",
+      "state": "Partial",
+      "reason": "ADRs 0005/0007: the existing typed TranslationDomain property supplies both query and setter, with Node explicit/inherited domain selection. Public physical-role window checks verify assigned inheritance, explicit body assignment and reset; NodeLocalizationTests owns the wider translation/notification cases. This reconciles the previously omitted setter mapping; complete inherited/native/platform acceptance remains separate."
     }
   ],
   "extras": [
@@ -11405,6 +11417,13 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0008: public names replace all six reserved characters with underscores before readable collision resolution; null/empty/whitespace-only input rejects under the typed nonblank contract. Every accepted assignment, including unchanged input, propagates subtree path notifications while detached or active; active node Renamed, tree NodeRenamed and TreeChanged follow in order. Name/path/unique-owner state commits first; remaining descendants and event phases continue after errors. Packed-scene reconstruction restores validated stored internal names directly. Public CPU/software-GPU/registered serial/separate Debug/Release/strict NativeAOT profiles verify descriptor/Unicode input, same-input owner/numerical rejection, committed paths, five simultaneous failures, nested/removing delivery, exact generated-name file/fresh-process identity and 128 warm/128 measured moving full frames with both clean changed and unchanged assignments at 0/0 owner/all-thread managed bytes. New normalized/collision strings and initial snapshot capacity growth remain cold. Evidence: bin/physics-node-name-assignment/2026-10-15/validation.json. Wider inherited, numerical, hardware/window, native-memory and platform gates remain open."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0004/0008/0040: active-tree lookup follows retained visible exclusive transient-child links from the containing Window, independently of focus/display order; detached/no-window returns null and permitted processing scope is checked. Shared public CPU/GPU/registered serial/separate consumers exercise all physical Node branches, nested/nontransient/conflicting siblings, all five popup callers, flag/visibility/reparent/retirement/error paths and strict warmed full-frame allocation gates. Independent native-child-window capabilities retain their Window prerequisites. Twelve Linux x64 CoreCLR/strict NativeAOT profiles require 128 warmed full physical frames at 0/0 owner/all-thread managed bytes. Evidence: bin/physics-exclusive-windows/2026-10-16/validation.json. Hardware throughput, native/driver allocator totals and foreign platforms remain unverified.",
+      "godot": [
+        "Node::method:get_last_exclusive_window()"
+      ]
     }
   ]
 }

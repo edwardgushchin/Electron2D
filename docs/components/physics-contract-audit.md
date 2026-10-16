@@ -1571,3 +1571,12 @@ owners; held disposal has zero requested GPU buffers. A separate NativeAOT paced
 cohort verifies the report/counter path without establishing native object sizes.
 These bounded results preserve open full native/driver/global ownership, unseen
 peaks, arbitrary workloads, foreign platforms and target-device/window gates.
+
+[Active exclusive window chains](popup-windows.md#active-exclusive-window-chains) now expose the inherited
+Node query and share it across all five popup-parenting entry points. Retained
+transient links follow visibility/flags/membership and clear during retirement;
+focus/display order is independent. Attachment and cleanup failures preserve both
+errors. Wider inherited, native-child-window, memory and hardware/performance
+acceptance remain open. The separate GetWindow/GetViewport detached/read-access
+gaps retain explicit Partial coverage; the existing TranslationDomain setter is
+reconciled with its typed property rather than described as absent.
