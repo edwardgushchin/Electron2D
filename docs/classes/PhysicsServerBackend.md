@@ -10,6 +10,10 @@ arbitrary geometry and full extension acceptance remain open.
 
 **Declaration:** `public abstract class PhysicsServerBackend : ElectronObject` · **Source:** [PhysicsServerBackend.cs](../../src/Servers/Physics/PhysicsServerBackend.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
 
+## Prepared collider inputs
+
+The eleven Body/Area world/filter/object/canvas/priority getters read prepared common authoring in selected numerical/status hooks, including the borrowed numerical thread. Weak target disposal preserves assigned numeric IDs; transfer reports the actual current world. See [the executable contract and limits](../components/physics-registered-adapter.md#prepared-collider-metadata-reads).
+
 ## Prepared slot inputs
 
 Body/Area GetShapeCount, GetShape and GetShapeTransform expose common prepared logical slots during numerical hooks, including the exact borrowed solver thread. These reads do not enter the solver or change resource ownership. Pending/disabled and disposed slots keep their logical meaning. See [the executable scope and guards](../components/physics-registered-adapter.md#prepared-logical-shape-reads).

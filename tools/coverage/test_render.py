@@ -327,6 +327,12 @@ def main():
                              if any(f"method _{kind}_get_shape{suffix}(" in row
                                     for kind in ("body", "area") for suffix in ("", "_count", "_transform"))]
     assert len(extension_shape_reads) == 6 and all(" | Implemented | " in row for row in extension_shape_reads)
+    metadata_names = [f"_{kind}_get_{member}" for kind in ("body", "area")
+                      for member in ("space", "collision_layer", "collision_mask", "object_instance_id", "canvas_instance_id")]
+    metadata_names.append("_body_get_collision_priority")
+    extension_metadata_reads = [row for row in pages[CLASS_PAGES / "PhysicsServer2DExtension.md"].splitlines()
+                               if any(f"method {name}(" in row for name in metadata_names)]
+    assert len(extension_metadata_reads) == 11 and all(" | Implemented | " in row for row in extension_metadata_reads)
     boundary_rows = [row for row in pages[CLASS_PAGES / "WorldBoundaryShape2D.md"].splitlines() if row.startswith("| [`")]
     assert len(boundary_rows) == 3 and all(" | Implemented | " in row for row in boundary_rows)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)

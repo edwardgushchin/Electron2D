@@ -14,9 +14,10 @@ public sealed partial class PhysicsServer
     /// <summary>Gets a body's retained canvas association for point queries.</summary>
     /// <param name="body">A live scene or server body RID.</param>
     /// <returns>The assigned ID; zero denotes the default canvas.</returns>
+    /// <remarks>Reads common prepared authoring without a solver query, including from the selected implementation's owner or borrowed numerical hook.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Access violates the scene/world owner or solver boundary.</exception>
-    public static ulong BodyGetCanvasInstanceID(RID body) => Service.ColliderBackend(body, false).CanvasInstanceID;
+    /// <exception cref="InvalidOperationException">The attached world has failed or access is outside its owner or borrowed numerical hook.</exception>
+    public static ulong BodyGetCanvasInstanceID(RID body) => Service.ColliderBackend(body, false, input: true).CanvasInstanceID;
 
     /// <summary>Assigns an Area's exact canvas association for point queries.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
@@ -30,19 +31,14 @@ public sealed partial class PhysicsServer
     /// <summary>Gets an Area's retained canvas association for point queries.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
     /// <returns>The assigned ID; zero denotes the default canvas.</returns>
+    /// <remarks>Reads common prepared authoring without a solver query, including from the selected implementation's owner or borrowed numerical hook.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live Area.</exception>
-    /// <exception cref="InvalidOperationException">Access violates the scene/world owner or solver boundary.</exception>
-    public static ulong AreaGetCanvasInstanceID(RID area) => Service.ColliderBackend(area, true).CanvasInstanceID;
+    /// <exception cref="InvalidOperationException">The attached world has failed or access is outside its owner or borrowed numerical hook.</exception>
+    public static ulong AreaGetCanvasInstanceID(RID area) => Service.ColliderBackend(area, true, input: true).CanvasInstanceID;
 
-    private PhysicsColliderBackend ColliderBackend(RID rid, bool area)
+    private PhysicsColliderBackend ColliderBackend(RID rid, bool area, bool input = false)
     {
-        ThrowIfDisposed();
-        CollisionObject? scene; PhysicsServerCollider? server;
-        if (area) (scene, server) = ResolveAreaOwners(rid);
-        else (scene, server) = ResolveBodyOwners(rid);
-        scene?.Tree?.EnsureOwnerThread();
-        var backend = scene?.Backend ?? server!.Backend;
-        backend.Space?.EnsureQueryAccess();
-        return backend;
+        var owners = ShapeOwners(rid, area, input: input);
+        return owners.Scene?.Backend ?? owners.Server!.Backend;
     }
 }

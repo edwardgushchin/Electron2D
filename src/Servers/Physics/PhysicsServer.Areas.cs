@@ -55,12 +55,14 @@ public sealed partial class PhysicsServer
 
     internal uint AreaGetCollisionLayerCore(RID area)
     {
-        ThrowIfDisposed(); var runtime = AreaRuntime(area); runtime.EnsureAccess(); return runtime.Layer;
+        var owners = ShapeOwners(area, isArea: true, input: true);
+        return owners.Scene?.CollisionLayer ?? owners.Server!.CollisionLayer;
     }
 
     internal uint AreaGetCollisionMaskCore(RID area)
     {
-        ThrowIfDisposed(); var runtime = AreaRuntime(area); runtime.EnsureAccess(); return runtime.Mask;
+        var owners = ShapeOwners(area, isArea: true, input: true);
+        return owners.Scene?.CollisionMask ?? owners.Server!.CollisionMask;
     }
 
     internal Transform AreaGetTransformCore(RID area)

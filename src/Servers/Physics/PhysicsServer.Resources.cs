@@ -296,12 +296,12 @@ public sealed partial class PhysicsServer
 
     internal RID BodyGetSpaceCore(RID body)
     {
-        var owners = ShapeOwners(body, isArea: false);
+        var owners = ShapeOwners(body, isArea: false, input: true);
         return (owners.Scene?.Backend.Space ?? owners.Server?.Space)?.RID ?? default;
     }
     internal RID AreaGetSpaceCore(RID area)
     {
-        var owners = ShapeOwners(area, isArea: true);
+        var owners = ShapeOwners(area, isArea: true, input: true);
         return (owners.Scene?.Backend.Space ?? owners.Server?.Space)?.RID ?? default;
     }
 
@@ -338,7 +338,7 @@ public sealed partial class PhysicsServer
 
     internal uint BodyGetCollisionLayerCore(RID body)
     {
-        var owners = ShapeOwners(body, isArea: false);
+        var owners = ShapeOwners(body, isArea: false, input: true);
         return owners.Scene?.CollisionLayer ?? owners.Server!.CollisionLayer;
     }
 
@@ -352,7 +352,7 @@ public sealed partial class PhysicsServer
 
     internal uint BodyGetCollisionMaskCore(RID body)
     {
-        var owners = ShapeOwners(body, isArea: false);
+        var owners = ShapeOwners(body, isArea: false, input: true);
         return owners.Scene?.CollisionMask ?? owners.Server!.CollisionMask;
     }
 

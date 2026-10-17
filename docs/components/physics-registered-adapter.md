@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-17
 
+## Prepared collider metadata reads
+
+Body/Area GetSpace, GetCollisionLayer, GetCollisionMask, GetObjectInstanceID and GetCanvasInstanceID, plus BodyGetCollisionPriority, read common prepared inputs in selected numerical and status hooks. Owner/separate numerical lanes use the same authored values. These getters do not enter live solver state or transfer GPU data. Other threads and failed worlds remain rejected; metadata writes, world transfers and live queries retain their existing guards.
+
+The public-only --collider-inputs fixture covers all six scene collider roles and raw Body/Area, detached defaults, all 32 filter bits and 64 canvas bits, fractional body priority, weak object disposal with retained numeric identity, and transfers with actual steps through two SceneTree-owned worlds. Repeated filter/canvas/priority edits, actual motion and point-query identity/filter checks warm 128 and measure 128 full frames at strict zero owner/all-thread managed bytes. CPU, private software Vulkan and registered implementations exercise both numerical policies; managed and NativeAOT evidence stays under bin/physics-collider-inputs/2026-10-17. Complete mutations, numerical/network, native/foreign and hardware/performance gates remain open.
+
 ## Prepared logical shape reads
 
 The Body/Area GetShapeCount, GetShape and GetShapeTransform family reads the engine-owned logical slots. Registered numerical hooks can inspect those prepared inputs on their owner or exact borrowed solver thread; no solver query, GPU transfer or second geometry store is involved. Pending/disabled slots retain count, RID and local pose; a disposed borrowed resource retains its slot and pose with an empty RID. Owned shape release removes and reindexes slots. Ordinary reads keep owner/failure guards, while queries, mutation and unrelated threads remain guarded.

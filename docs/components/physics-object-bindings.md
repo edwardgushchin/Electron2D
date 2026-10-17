@@ -1,6 +1,8 @@
 # Physics object associations
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
+
+The object/canvas ID getters also participate in [prepared numerical inputs](physics-registered-adapter.md#prepared-collider-metadata-reads). They read retained numeric associations in owner/separate implementation hooks without dereferencing the weak target or entering solver state; public-only checks include disposal, transfer, status/failure/thread guards and zero warmed full-frame managed bytes.
 
 ## Public contract
 

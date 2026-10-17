@@ -240,15 +240,17 @@ public sealed partial class PhysicsServer
     /// <summary>Gets the Area's 32 collision-layer bits.</summary>
     /// <param name="area">A live Area RID.</param>
     /// <returns>Current categories; default one.</returns>
+    /// <remarks>Reads common prepared authoring without a solver query, including from the selected implementation's owner or borrowed numerical hook.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live Area.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner, solver-owned, or receiver configuration is mutated from its own callback.</exception>
+    /// <exception cref="InvalidOperationException">The attached world has failed or access is outside its owner or borrowed numerical hook.</exception>
     public static uint AreaGetCollisionLayer(RID area) => Service.AreaGetCollisionLayerCore(area);
 
     /// <summary>Gets the Area's directional overlap mask.</summary>
     /// <param name="area">A live Area RID.</param>
     /// <returns>Current accepted category bits; default one.</returns>
+    /// <remarks>Reads common prepared authoring without a solver query, including from the selected implementation's owner or borrowed numerical hook.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live Area.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner, solver-owned, or receiver configuration is mutated from its own callback.</exception>
+    /// <exception cref="InvalidOperationException">The attached world has failed or access is outside its owner or borrowed numerical hook.</exception>
     public static uint AreaGetCollisionMask(RID area) => Service.AreaGetCollisionMaskCore(area);
 
     /// <summary>Gets the Area's current global scene-unit pose.</summary>
@@ -1137,17 +1139,17 @@ public sealed partial class PhysicsServer
     /// <summary>Gets the current body space, or an empty RID while detached.</summary>
     /// <param name="body">A live scene or server body RID.</param>
     /// <returns>The current space identity or default.</returns>
-    /// <remarks>Reports the actual attachment, independently of a scene node's World descriptor.</remarks>
+    /// <remarks>Reports the actual attachment, independently of a scene node's World descriptor. Reads common prepared authoring without a solver query, including from the selected implementation's owner or borrowed numerical hook.</remarks>
     /// <exception cref="ArgumentException">The RID has the wrong resource kind or is not live.</exception>
-    /// <exception cref="InvalidOperationException">Access violates the owning scene or physics thread, solver or failed-world guard.</exception>
+    /// <exception cref="InvalidOperationException">The attached world has failed or access is outside its owner or borrowed numerical hook.</exception>
     public static RID BodyGetSpace(RID body) => Service.BodyGetSpaceCore(body);
 
     /// <summary>Gets the current Area space, or an empty RID while detached.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
     /// <returns>The current space identity or default.</returns>
-    /// <remarks>Reports the actual attachment, independently of a scene node's World descriptor.</remarks>
+    /// <remarks>Reports the actual attachment, independently of a scene node's World descriptor. Reads common prepared authoring without a solver query, including from the selected implementation's owner or borrowed numerical hook.</remarks>
     /// <exception cref="ArgumentException">The RID has the wrong resource kind or is not live.</exception>
-    /// <exception cref="InvalidOperationException">Access violates the owning scene or physics thread, solver or failed-world guard.</exception>
+    /// <exception cref="InvalidOperationException">The attached world has failed or access is outside its owner or borrowed numerical hook.</exception>
     public static RID AreaGetSpace(RID area) => Service.AreaGetSpaceCore(area);
 
     /// <summary>Changes a body's translation and rotation in scene units.</summary>
@@ -1247,8 +1249,9 @@ public sealed partial class PhysicsServer
     /// <summary>Gets a body's complete 32-bit collision-layer mask.</summary>
     /// <param name="body">A live scene or server body RID, including a generated tile body.</param>
     /// <returns>The authored category bits, including while detached or without active shapes.</returns>
+    /// <remarks>Reads common prepared authoring without a solver query, including from the selected implementation's owner or borrowed numerical hook.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">An attached world is accessed off-thread, stepping or failed.</exception>
+    /// <exception cref="InvalidOperationException">The attached world has failed or access is outside its owner or borrowed numerical hook.</exception>
     public static uint BodyGetCollisionLayer(RID body) => Service.BodyGetCollisionLayerCore(body);
 
     /// <summary>Sets a body's 32 collision-mask bits without replacing its geometry.</summary>
@@ -1264,8 +1267,9 @@ public sealed partial class PhysicsServer
     /// <summary>Gets a body's complete 32-bit collision-mask value.</summary>
     /// <param name="body">A live scene or server body RID, including a generated tile body.</param>
     /// <returns>The authored accepted-category bits, including while detached or without active shapes.</returns>
+    /// <remarks>Reads common prepared authoring without a solver query, including from the selected implementation's owner or borrowed numerical hook.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">An attached world is accessed off-thread, stepping or failed.</exception>
+    /// <exception cref="InvalidOperationException">The attached world has failed or access is outside its owner or borrowed numerical hook.</exception>
     public static uint BodyGetCollisionMask(RID body) => Service.BodyGetCollisionMaskCore(body);
 
     /// <summary>Sets an Area's 32 collision-layer bits.</summary>

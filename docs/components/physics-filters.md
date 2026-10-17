@@ -1,5 +1,7 @@
 # Directional physics filters
 
+Body/Area filter getters now use [prepared collider metadata access](physics-registered-adapter.md#prepared-collider-metadata-reads) during selected numerical/status hooks. Reads preserve authored bits, including inactive PhysicalBone filters, while mutations keep their existing numerical-borrow guards.
+
 Last updated: 2026-10-16
 
 ## Public behavior
