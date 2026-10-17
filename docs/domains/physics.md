@@ -1,5 +1,7 @@
 # Physics domain
 
+[Prepared body view acquisition](../components/physics-registered-adapter.md#body-view-acquisition-after-mode-failure) now repairs incomplete modes before field publication or selected view construction. Cached and caller-created paths retain identity/error/tick guarantees. The body-view factory operation is accounted separately from complete numerical-extension acceptance.
+
 [Failed body-mode publication](../components/physics-registered-adapter.md#failed-body-mode-publication) now retains authored mode/motion and repairs complete numerical preparation before body access, space queries or nonzero steps. Detachment does not capture the failed owner's partial motion, and scene role takeover prepares the prior direct profile first.
 
 [Collider metadata publication failures](../components/physics-registered-adapter.md#failed-collider-metadata-publication) now preserve committed identity/priority, protect new borrowed nodes and repair numerical metadata before a live query or nonzero interval. Initial factory/attachment hooks also hold target-world and node ownership; failed creation retires partial state. Bounded CPU/software-Vulkan/registered failures and zero warmed edited frames execute without geometry rebuilding.

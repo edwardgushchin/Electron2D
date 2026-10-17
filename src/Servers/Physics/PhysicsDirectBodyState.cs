@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>A live owner-thread view of one attached physics body and its last solved contacts.</summary>
 /// <remarks>Writes reject before mutation while a selected numerical implementation hook is borrowed.
 /// Ordinary post-solver callbacks and caller-created body-state extension forwarding retain their guarded write access.
-/// Access retries incomplete direct body-mode preparation before reading or changing numerical state.
+/// Construction and access retry incomplete direct body-mode preparation before acquiring, reading or changing numerical state.
 /// The selected world owner creates cached views; caller-created consumer implementations derive from PhysicsDirectBodyStateExtension. It owns no body or world. Detachment, replacement or
 /// disposal invalidates access; a later attachment receives a new view. Access is permitted outside
 /// solver execution, including post-solver integration callbacks. Backend storage and contact traversal stay inside the attachment adapter;

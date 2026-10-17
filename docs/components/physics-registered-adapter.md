@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-17
 
+## Body view acquisition after mode failure
+
+Body view acquisition now finishes pending direct-mode preparation before reading resolved fields, selecting a cached view or invoking its selected factory. The same boundary serves caller-created body-state extensions. A repeated preparation error creates no view, publishes no fields and does not advance the tick. Successful recovery preserves cached identity or creates one generation-qualified view; stale attachments remain rejected.
+
+The public-only --mode-transactions fixture now includes cached acquisition and caller-created construction among six preparation routes: 1440 partial-failure/retry cases across six body roles, four modes and five failure stages. Twenty-four cold-cache cases require preparation to finish before a selected view factory runs; 220 retirement cases and six scene-role takeovers remain covered. All profiles retain actual logical-slot queries, inverse mass, velocity/wake policy and 128 warmed changed-mode frames at exact zero owner/all-thread managed bytes. The existing --factory-views consumer independently covers typed selected views, immutable contact publication, callbacks, all query families, null/foreign/disposed/recursive factories, retry and attachment retirement. All 20 focused/related profiles pass on managed/NativeAOT CPU/software-Vulkan/registered paths. Portable PDB audits match the exact 2264 runtime, 158 consumer and 747 root-test sources with no missing/mismatched inputs or DEBUG. Evidence: bin/physics-direct-state-preparation/2026-10-17/validation.json. Complete numerical/custom/network/native/foreign and hardware/performance acceptance remains open.
+
 ## Failed body-mode publication
 
 Direct BodySetMode commits common mode and its velocity policy before calling the selected owner. Incomplete mode, rotation, linear/angular or surface velocity, shape and mass publication stays pending. Numerical server/direct-view access, scene direct-mode velocity/sleep access, live space queries and nonzero steps retry the whole transition. Recursive preparation rejects. Original errors propagate, repeated preparation failure leaves the tick unchanged, and no failed numerical Solve is replayed. Detachment skips incomplete numerical motion capture and retires only that attachment's preparation debt. Reattachment uses retained mode/motion; old direct views remain invalid. Scene role takeover prepares the previous direct profile before changing configured descriptors.

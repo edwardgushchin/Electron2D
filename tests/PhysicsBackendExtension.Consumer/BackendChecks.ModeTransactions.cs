@@ -36,7 +36,7 @@ public static partial class BackendChecks
                     {
                         if (solver is null) continue;
                         for (var stage = 0; stage < 5; stage++)
-                            for (var path = 0; path < 4; path++)
+                            for (var path = 0; path < 6; path++)
                                 for (var failures = 1; failures <= 2; failures++)
                                 {
                                     Reset(i); if (mode == Mode.Rigid) PhysicsServer.BodySetMode(ids[i], Mode.RigidLinear);
@@ -77,8 +77,10 @@ public static partial class BackendChecks
                                         if (lane == 0) _ = world.DirectSpaceState.IntersectPoint(point, hits);
                                         else if (lane == 1) tree.PhysicsFrame(.01);
                                         else if (lane == 2) _ = views[i].InverseMass;
-                                        else if (i < nodes.Length && nodes[i] is RigidBody rigid) _ = rigid.LinearVelocity;
-                                        else _ = PhysicsServer.BodyGetLinearVelocity(ids[i]);
+                                        else if (lane == 3 && i < nodes.Length && nodes[i] is RigidBody rigid) _ = rigid.LinearVelocity;
+                                        else if (lane == 3) _ = PhysicsServer.BodyGetLinearVelocity(ids[i]);
+                                        else if (lane == 4) _ = PhysicsServer.BodyGetDirectState(ids[i]);
+                                        else { using var owned = new OwnedState(solver, ids[i]); }
                                     }
                                 }
                     }
@@ -108,6 +110,36 @@ public static partial class BackendChecks
                                         Math.Abs(PhysicsServer.BodyGetAngularVelocity(ids[i])) < .001f, "Reattachment preserves authored motion instead of sampling the failed owner");
                                     faults++;
                                 }
+                if (solver is not null)
+                    for (var i = 0; i < ids.Length; i++)
+                        foreach (var mode in new[] { Mode.Static, Mode.Kinematic, Mode.Rigid, Mode.RigidLinear })
+                        {
+                            ClearHooks(); PhysicsServer.BodySetSpace(ids[i], default); PhysicsServer.BodySetSpace(ids[i], world.Space);
+                            Reset(i); if (mode == Mode.Rigid) PhysicsServer.BodySetMode(ids[i], Mode.RigidLinear);
+                            var factories = solver.BodyViewCreations; var attempts = 0; var failure = new ApplicationException("cold-view-mode");
+                            solver.BodyViewFactory = id =>
+                            {
+                                Check(id == ids[i] && attempts == 3 && solver.Bodies[id].Mode == mode,
+                                    "Selected view construction begins only after complete mode preparation");
+                                return new OwnedState(solver, id);
+                            };
+                            solver.ModeHook = id =>
+                            {
+                                if (id != ids[i]) return;
+                                if (++attempts > 2) { solver.ModeHook = null; return; }
+                                solver.Bodies[id].Mode = mode == Mode.Static ? Mode.Rigid : Mode.Static; throw failure;
+                            };
+                            var tick = PhysicsServer.SpaceGetTick(world.Space);
+                            var errors = ReleaseErrors(() => PhysicsServer.BodySetMode(ids[i], mode));
+                            Check(errors.Length == 1 && ReferenceEquals(errors[0], failure), "Cold view acquisition starts with pending mode publication");
+                            errors = ReleaseErrors(() => _ = PhysicsServer.BodyGetDirectState(ids[i]));
+                            Check(errors.Length == 1 && ReferenceEquals(errors[0], failure) && solver.BodyViewCreations == factories &&
+                                PhysicsServer.SpaceGetTick(world.Space) == tick, "Failed preparation neither creates nor publishes a selected body view");
+                            views[i] = PhysicsServer.BodyGetDirectState(ids[i])!;
+                            Check(solver.BodyViewCreations == factories + 1 && PhysicsServer.SpaceGetTick(world.Space) == tick,
+                                "A successful retry creates one qualified view without stepping");
+                            solver.BodyViewFactory = null; Prepared(i, mode); faults++;
+                        }
                 for (var i = 0; i < ids.Length; i++)
                     foreach (var before in new[] { Mode.Static, Mode.Kinematic, Mode.Rigid, Mode.RigidLinear })
                         foreach (var after in new[] { Mode.Static, Mode.Kinematic, Mode.Rigid, Mode.RigidLinear })
@@ -139,7 +171,7 @@ public static partial class BackendChecks
                 Check(own == 0 && all == 0, $"128 complete changed-mode frames allocated {own}/{all} owner/all-thread bytes");
                 Console.WriteLine($"Mode transactions {backend?.ToString() ?? "registered"}/{(threaded ? "separate" : "owner")}: 96 transitions, {faults} partial failures, shape/view identity and 128 changed-mode frames {own}/{all} B passed.");
             }
-            finally { ClearHooks(); PhysicsServer.FreeRID(raw); }
+            finally { ClearHooks(); if (solver is not null) solver.BodyViewFactory = null; PhysicsServer.FreeRID(raw); }
             void ClearHooks() { if (solver is not null) solver.ModeHook = solver.RotationHook = solver.BodyHook = solver.SurfaceHook = solver.ShapeHook = null; }
             void Install(int stage, Action<RID> hook)
             {

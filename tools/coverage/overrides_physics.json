@@ -7694,7 +7694,6 @@
     },
     {
       "godot": [
-        "PhysicsServer2DExtension::method:_body_get_direct_state(RID:)",
         "PhysicsServer2DExtension::method:_space_get_direct_state(RID:)"
       ],
       "state": "Partial",
@@ -7817,6 +7816,13 @@
       ],
       "state": "Partial",
       "reason": "ADRs 0063/0073/0076/0103: complete common scene/raw mode authoring dispatches through the selected collider. Public-only --server-modes and --mass-roles cover all five scene siblings, detached/live roles, mass, motion, guards and replay. Failed direct mode/rotation/motion/surface/geometry publication now retains authored mode/motion and retries complete preparation before numerical body access, live queries or nonzero steps. Failure preserves its original error and tick; retirement skips incomplete motion capture, while scene role takeover prepares the previous direct profile first. The --mode-transactions fixture covers 96 ordinary transitions, 960 recovery cases, 220 retirement cases and six role takeovers, with strict 0/0 warmed changed-mode frames on managed/NativeAOT CPU/software-Vulkan/registered owner/separate profiles. Evidence and limits: docs/components/physics-registered-adapter.md#failed-body-mode-publication and bin/physics-mode-transactions/2026-10-17/validation.json. Complete third-party numerical/custom geometry, native/foreign allocation, network and hardware/window/performance acceptance remain required."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_body_get_direct_state(RID:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0063/0070/0103: the selected CreateDirectBodyState factory supplies cached generation-qualified scene/raw views, with default built-in and caller-created extension projections. Complete pending mode preparation precedes resolved-field publication and selected construction; repeated errors create no view and advance no tick. Public-only --mode-transactions covers all five scene siblings plus raw bodies, six repair routes, 1440 recovery cases, 24 cold-cache factory cases, 220 retirements and six scene role takeovers with strict zero warmed changed-mode frames. The --factory-views consumer verifies typed state/force/space dispatch, immutable contact/identity/impulse publication before callbacks, empty recreated contacts, null/foreign/disposed/recursive factory rejection, retry and attachment retirement. This closes the selected view-factory capability; complete numerical algorithms/custom geometry, native/foreign allocation, networking and target hardware/performance remain separate open gates. Evidence: docs/components/physics-registered-adapter.md#body-view-acquisition-after-mode-failure and bin/physics-direct-state-preparation/2026-10-17."
     }
   ]
 }
