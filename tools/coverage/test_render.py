@@ -141,6 +141,29 @@ def check_texture_pages(pages, upstream):
                 assert target in pages or target.exists(), f"Broken link in {page}: {link}"
 
 
+def check_object_registry_exclusions(pages, upstream):
+    owner = next(item for item in upstream["types"] if item["name"] == "Object")
+    names = {"get_method_argument_count", "has_method", "get_incoming_connections",
+             "get_signal_connection_list", "has_connections", "has_signal", "has_user_signal", "remove_user_signal"}
+    members = [member for member in owner["members"]
+               if (member["kind"] == "method" and member["name"] in names)
+               or (member["kind"] == "enum" and member["name"] == "ConnectFlags")
+               or (member["kind"] == "enum_value" and member["attributes"].get("enum") == "ConnectFlags")]
+    assert len(members) == 14, "A changed pinned registry family needs a fresh ADR audit"
+    rows = [line for line in pages[CLASS_PAGES / "Object.md"].splitlines() if line.startswith("| [`")]
+    by_id = dict(zip([owner["id"]] + [member["id"] for member in owner["members"]], rows))
+    for member in members:
+        row = by_id[member["id"]]
+        assert " | — | Excluded | " in row and "0001/0002/0010" in row, row
+        assert "trigger:" not in row.lower(), row
+    # Typed lifecycle, property, deferred and owned-connection capabilities remain applicable.
+    for member in owner["members"]:
+        if member["name"] in {"_init", "_iter_get", "_iter_init", "_iter_next", "get_script", "set_script",
+                              "set_block_signals", "is_blocking_signals", "is_connected", "call_deferred",
+                              "set_deferred", "_get_property_list", "get_property_list"}:
+            assert " | Excluded | " not in by_id[member["id"]], by_id[member["id"]]
+
+
 def main():
     check_public_type_names()
     check_alignment_enum_owners()
@@ -166,6 +189,7 @@ def main():
     ]
 
     pages, summary = render()
+    check_object_registry_exclusions(pages, upstream)
     check_physics_report(pages)
     check_texture_pages(pages, upstream)
     aliases = json.loads(ALIASES.read_text())

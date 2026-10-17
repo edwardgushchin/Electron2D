@@ -1,6 +1,6 @@
 # Typed event connections component
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 ## Scope
 
@@ -38,6 +38,8 @@ The component depends only on .NET delegates, `IDisposable`, locking, and except
 Implemented and covered by executable positive, negative, failure-injection, re-entrancy, and concurrency checks for the zero- through four-argument overloads.
 
 ## Exclusions
+
+The rejected dynamic registry includes method/event existence and arity lookup by name, dynamic user-event removal, incoming/outgoing Signal/Callable/flags dictionaries and the complete connection-flags enum. These exclusions follow the existing [ADRs 0001/0002/0010](../decisions/core-object-runtime.md#adr-0010). Deferred/one-shot options, sender-first payloads, native duplicate-delegate behavior, owned-token observation and compiled persistent bindings remain their applicable typed adaptations.
 
 There is no dynamic event lookup, generic event registry, untyped argument list, weak subscription, priority ordering or automatic subscriber-lifetime discovery for ordinary tokens. Persistent authored scene subscriptions use the separate [SceneConnectionBinding](../classes/SceneConnectionBinding.md) component under [ADR 0010](../decisions/core-object-runtime.md#adr-0010): compiled factories and typed endpoints retain cleanup and packed storage. Ordinary runtime subscriptions are still omitted from scene packing.
 

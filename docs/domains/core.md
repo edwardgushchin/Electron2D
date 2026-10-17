@@ -1,8 +1,10 @@
 # Core domain
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 Scene archives use the [stored node-name contract](../components/packed-scenes.md) during input validation: internal `@` names remain exact; other reserved path characters reject before reconstruction. Public Name authoring separately normalizes those characters.
+
+The [typed connection boundary](../components/event-connections.md#exclusions) excludes the complete dynamic method/event registry and connection-flags family under the existing ADRs 0001/0002/0010. This does not remove typed event, lifecycle, property, script-binding or deferred-operation obligations from their owning audits.
 
 [Typed node-name separator settings](../components/scene-hierarchy.md#child-name-collisions) now feed runtime authoring with live feature overrides and independently persisted defaults/validation.
 

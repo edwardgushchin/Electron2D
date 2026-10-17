@@ -1,6 +1,6 @@
 # ElectronObject
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 **Inherits:** —
 
@@ -40,6 +40,8 @@ Provides the common identity, notification, property, localization, and lifetime
 
 The contract uses typed properties and events and deliberately omits dynamic calls, untyped metadata, generic signal
 registration, and script storage. Instances have deterministic `IDisposable` lifetime.
+
+There is no engine-owned method/event name registry, connection-flags enum, or dictionary of incoming/outgoing callable connections. Consumer tooling can inspect ordinary CLR type metadata. Typed event accessors, owned `EventConnection` tokens and registered persistent scene bindings retain their separate contracts under [ADRs 0002/0010](../decisions/core-object-runtime.md#adr-0010).
 
 
 Typed property inspection uses the exact teardown-thread exception from ADR 0009: GetValue, TryGetRevertValue and CanRevert remain usable in pre-delete/cleanup on that thread; foreign-thread and terminal access fail. SetValue and Revert reject once disposal starts. TryGetRevertValue reports factory presence even for a null or unchanged default, while CanRevert and PropertyCanRevert retain the current value-difference policy. Factories run on each request; their results follow delegate ownership with no implicit copy. Validators reject before the setter, and an exception after a setter commits does not undo that write. Ordinary owner setters and getters retain thread, capture and numerical-phase rules.

@@ -1,6 +1,14 @@
 # Authoritative physics network example
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
+
+## Motion recovery network regression, 2026-10-18
+
+Runtime sources at 146736f1ecb8cf97b40a1b07f67b14fc6da6c77a pass sixteen fresh separate-process network profiles after partial motion publication and local rewind recovery. Eight instrumented profiles cover CPU/GPU early clients, owner/separate numerical execution and paced/ordinary sessions. Four ordinary managed public-example profiles and four strict NativeAOT profiles cover both client backends and numerical lanes without test instrumentation. Every scenario retains 900 authority ticks, late admission at tick 310, a 250-ms early-client poll delay and the existing impaired delivery, topology, constraint/contact, sleep/wake, ownership, divergence, interpolation and exactly-once confirmation assertions. Every CPU participant proves strict GPU-startup denial before their working worlds.
+
+All 48 simulation processes finish successfully. Their measured totals are 17543 ordinary warm steps and 57624 warm replay steps, with strict 0 owner/all-thread managed bytes in both brackets. All 64 observed processes, including check parents, have no hardware driver observed; each GPU scenario loads private lavapipe only in its early client. Native profiles load no CoreCLR. This is software functional regression for the bounded example, not rendered-window/FPS, full native/foreign allocation or target-device performance acceptance. Paced sessions deliberately wait for check progress and do not measure ordinary game throughput.
+
+Portable-PDB audits match 2266 runtime and 13 example source documents in managed and native build inputs, without missing/mismatched inputs or DEBUG. The public-example Release runtime differs from the precommit test payload only in its generated AssemblyInfo document, whose informational version now embeds 146736f1; authored runtime input hashes match. Evidence: bin/physics-network-motion/2026-10-18/validation.json, SHA-256 f0db26cf9787ed21693044e350b094fd98a68b1e5668adfcfc460faef9ea34c6. Source proof: public-source-proof.json, SHA-256 0296de46ccf8cf7755f7f5f128f7f287115e959a7c08cd1090f82cb34827af97. The separate full software suite is still pending in bin/physics-motion-transactions/2026-10-17; these network results do not claim its completion.
 
 [Retained scene/network memory](physics-network-memory.md) now measures the actual
 three-process example, its managed histories/queues and an additional four-point

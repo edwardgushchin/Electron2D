@@ -694,6 +694,8 @@ def render():
             updated = "2026-10-16"
         if name in {"RenderingServer", "ProjectSettings", "Viewport", "PhysicsServer2D", "PhysicsServer2DExtension", "Texture2D", "PlaceholderTexture2D", "InstancePlaceholder"}:
             updated = "2026-10-17"
+        if name == "Object":
+            updated = "2026-10-18"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:
