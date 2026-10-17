@@ -41,8 +41,8 @@ public abstract partial class PhysicsBody
         if (writing || _serverModeDirty)
         {
             Space?.EnsureImplementationWriteAccess();
-            Space?.BackendImplementation.EnsureAccess();
         }
+        Space?.EnsureBackendAccess();
         Backend.PreparePendingMotion();
         if (!_serverModeDirty || Space is null) return;
         if (_preparingServerMode) throw new InvalidOperationException("Body mode preparation cannot reenter its own transition.");

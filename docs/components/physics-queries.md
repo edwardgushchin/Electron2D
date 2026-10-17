@@ -1,8 +1,11 @@
 # Physics server and direct queries component
 
+[Terminal world authoring](physics-registered-adapter.md#terminal-world-authoring) now shares common simulation/restore failure validation with numerical body preparation. Motion/role writes reject before authoring; valid healthy callbacks and failed-world cleanup retain their phase/lifetime rules.
+
+
 [Polygon point containment and ray origins](physics-point-containment.md) now share strict unrounded CPU half-planes across direct queries, Area audio and directed query/proxy regions. Public scene/server CPU/GPU checks preserve filters, logical identities and warmed allocations.
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 The [typed result family](../classes/PhysicsRayResult.md#constructor) now has public construction for ray, point, shape and rest results, plus reusable [motion result filling](../classes/PhysicsTestMotionResult.md#setcollision). One shared engine path validates collider RID/kind, logical shape resource and owner/solver/failure access, then samples the current weak object association. Supplied finite geometry is preserved; construction performs no collision calculation. Motion collisions additionally require different bodies in the same live space and a valid fraction bracket. Invalid writes preserve previous output; SetMotion clears collision state. The separate [public API consumer](../../examples/PhysicsResultConstruction/README.md) exercises both built-ins with zero warmed managed allocation. The [runtime probe](../../tests/Electron2D.Tests/PhysicsResultConstructionTests.cs) additionally verifies rejection across the complete result family while the CPU solver owns the world. This implements a required result boundary under ADR 0103; named registration and typed dispatch now execute; complete numerical-extension and custom geometry acceptance remain open.
 

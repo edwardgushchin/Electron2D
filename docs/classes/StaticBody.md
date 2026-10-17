@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-18
 
+## Terminal world access
+
+Terminal simulation or local/portable restore failure rejects attached motion/role writes before changing authored values, including equal assignments. Numerical scene sleep and direct-profile motion reads use the same common failure gate; ordinary native authored velocity/policy and constant-surface reads remain non-preparing. The gate does not impose public-query phase rules on otherwise valid force/state callbacks. Detachment and cleanup remain available. See [terminal world authoring](../components/physics-registered-adapter.md#terminal-world-authoring) for the public regression scope and limits.
+
 ## Surface mutation preconditions
 
 Owner, numerical-borrow and native solver/failure guards reject constant-surface edits before changing authored values, including unchanged assignments. After these preconditions succeed, a partial selected publication error retains accepted authoring for retry. Authored getters remain non-preparing; retirement does not repair discarded work. Shape rebuilds preserve the active direct PhysicsServer surface profile instead of restoring native constant-surface descriptors over it. See [motion and role publication](../components/physics-registered-adapter.md#failed-scene-role-publication).

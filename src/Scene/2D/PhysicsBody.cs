@@ -4,7 +4,9 @@ namespace Electron2D;
 /// <remarks>Scene departure releases the physical binding after TreeExiting, before NodeRemoved and TreeExited,
 /// even when a user exit callback throws. The inherited OnExitTree hook does not own backend retirement.
 /// Incomplete authored pose publication retries before live queries, direct-body-view access and a nonzero step.
-/// Scene presentation reads retain authored state without forcing numerical preparation.</remarks>
+/// Scene presentation reads retain authored state without forcing numerical preparation.
+/// Failed numerical worlds reject attached motion/role writes and numerical access before changing authoring,
+/// including after a failed local or portable restore. Teardown remains available.</remarks>
 public abstract partial class PhysicsBody : CollisionObject
 {
     private readonly List<ulong> _appliedShapeRevisions = [];

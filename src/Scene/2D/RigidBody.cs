@@ -5,7 +5,9 @@ namespace Electron2D;
 /// step; caller code can change forces and velocity during a physics callback before that step.
 /// Failed selected velocity/sleep publication retains requested input for retry before numerical access, queries or a nonzero step.
 /// Retirement preserves requested channels and other selected motion without repairing the discarded attachment.
-/// Scene role changes retain committed configuration through selected publication errors and retry the complete role before numerical use.</remarks>
+/// Scene role changes retain committed configuration through selected publication errors and retry the complete role before numerical use.
+/// A terminal simulation/restore failure rejects attached motion/role writes, including equal assignments,
+/// before authoring changes. Native authored velocity/policy reads remain non-preparing; numerical sleep reads reject.</remarks>
 public partial class RigidBody : PhysicsBody
 {
     /// <summary>Determines whether the body's damping adds to or replaces resolved world and area damping.</summary>

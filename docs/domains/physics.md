@@ -1,5 +1,8 @@
 # Physics domain
 
+[Terminal world authoring](../components/physics-registered-adapter.md#terminal-world-authoring) now shares common simulation/restore failure validation with numerical body preparation. Motion/role writes reject before authoring; valid healthy callbacks and failed-world cleanup retain their phase/lifetime rules.
+
+
 [Failed motion publication](../components/physics-registered-adapter.md#failed-motion-publication) now retries complete requested velocity/sleep/policy writes after partial selected errors, preserves untouched impulse-derived motion and retains requested state through retirement without repairing the discarded attachment.
 
 [Failed pose publication](../components/physics-registered-adapter.md#failed-pose-publication) now retains authored Body/Area poses across partial selected errors, repairs numerical access and preserves authored pose during retirement. Scene/Area presentation reads and later kinematic targets retain their existing preparation timing.

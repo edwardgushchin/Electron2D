@@ -206,6 +206,7 @@ public static partial class BackendChecks
         protected override void PrepareCheckpoint() { }
         internal WeakReference<PhysicsBackendCheckpoint>? HistoryReference;
         internal bool FailHistoryRelease;
+        internal Action? RestoreExecutionHook;
         protected override PhysicsBackendCheckpoint CreateCheckpoint()
         {
             var history = new History(this); HistoryReference = new(history); return history;
@@ -221,7 +222,7 @@ public static partial class BackendChecks
         internal readonly List<PhysicsBackendOneWay> OneWays = [];
         internal int OneWayCapacity = -1, OneWayReturn = -1, OneWaySpanLength;
         protected override void CompletePortableRestore(ReadOnlySpan<PhysicsBackendOneWay> pairs, ulong tick)
-        { OneWays.Clear(); OneWays.EnsureCapacity(pairs.Length); foreach (var pair in pairs) OneWays.Add(pair); }
+        { OneWays.Clear(); OneWays.EnsureCapacity(pairs.Length); foreach (var pair in pairs) OneWays.Add(pair); RestoreExecutionHook?.Invoke(); }
 
         protected override int GetPortableOneWayCount() => OneWayCapacity < 0 ? OneWays.Count : OneWayCapacity;
         protected override int CapturePortableOneWays(Span<PhysicsBackendOneWay> destination)

@@ -1,5 +1,8 @@
 # Scene physics bodies component
 
+[Terminal world authoring](physics-registered-adapter.md#terminal-world-authoring) now shares common simulation/restore failure validation with numerical body preparation. Motion/role writes reject before authoring; valid healthy callbacks and failed-world cleanup retain their phase/lifetime rules.
+
+
 [Failed direct-mode publication](physics-registered-adapter.md#failed-body-mode-publication) retains authored mode/motion and retries complete numerical preparation before body access, space queries or steps. Detachment preserves that authored state, and scene role takeover prepares the prior direct profile before changing descriptors.
 
 Last updated: 2026-10-18

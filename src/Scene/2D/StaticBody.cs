@@ -4,6 +4,7 @@ namespace Electron2D;
 /// <remarks>Surface velocity authoring commits before selected publication. A partial failure retries current requested values
 /// before numerical access, live queries or a nonzero step, including an equal-property assignment after failure.
 /// Owner, numerical-borrow and solver/failure preconditions reject before authoring changes, including unchanged assignments.
+/// This includes the common terminal state after a local or portable restore failure.
 /// Authoring getters remain non-preparing; detachment retains the requested values without repairing the retired attachment.</remarks>
 public partial class StaticBody : PhysicsBody
 {

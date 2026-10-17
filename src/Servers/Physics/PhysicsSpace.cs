@@ -165,6 +165,11 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void EnsureQueryAccess()
     {
         EnsureReleaseAccess();
+        EnsureBackendAccess();
+    }
+    // Common terminal failures apply inside allowed callbacks without imposing the public query phase.
+    internal void EnsureBackendAccess()
+    {
         if (_checkpointFailure is not null) throw new InvalidOperationException("Physics checkpoint restore failed; dispose this world before creating a replacement.", _checkpointFailure);
         BackendImplementation.EnsureAccess();
         if (_gpuFailure is not null) throw new InvalidOperationException("The GPU physics world failed; dispose it before creating a replacement.", _gpuFailure);

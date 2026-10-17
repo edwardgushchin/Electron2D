@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-18
 
+## Terminal world access
+
+Terminal simulation or local/portable restore failure rejects attached motion/role writes before changing authored values, including equal assignments. Numerical scene sleep and direct-profile motion reads use the same common failure gate; ordinary native authored velocity/policy and constant-surface reads remain non-preparing. The gate does not impose public-query phase rules on otherwise valid force/state callbacks. Detachment and cleanup remain available. See [terminal world authoring](../components/physics-registered-adapter.md#terminal-world-authoring) for the public regression scope and limits.
+
 ## Failed scene role publication
 
 Freeze, FreezeMode and LockRotation retain committed descriptors if selected role publication partially fails. Numerical reads, queries, nonzero steps and repeated assignment to these properties retry the complete role, rotation, motion and shape/mass policy. A lock transition captures current selected motion, preserving linear impulse effects and zeroing locked angular motion; this limited role-transition readback does not affect ordinary velocity writes. A native frozen lock edit only stores future rotation policy, preserving its deferred kinematic target. See [scene role publication](../components/physics-registered-adapter.md#failed-scene-role-publication).

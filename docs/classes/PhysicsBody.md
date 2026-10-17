@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-18
 
+## Terminal world access
+
+Terminal simulation or local/portable restore failure rejects attached motion/role writes before changing authored values, including equal assignments. Numerical scene sleep and direct-profile motion reads use the same common failure gate; ordinary native authored velocity/policy and constant-surface reads remain non-preparing. The gate does not impose public-query phase rules on otherwise valid force/state callbacks. Detachment and cleanup remain available. See [terminal world authoring](../components/physics-registered-adapter.md#terminal-world-authoring) for the public regression scope and limits.
+
 ## Failed scene role publication
 
 Configured freeze, rotation lock, effective MakeStatic participation and physical-bone activation share complete recoverable role preparation with direct server modes. Numerical body/view/query access and nonzero steps repair incomplete selected publication without replaying Solve. Retirement retains committed configuration and invalidates old views. See [scene role publication](../components/physics-registered-adapter.md#failed-scene-role-publication) for the tested scope and limits.

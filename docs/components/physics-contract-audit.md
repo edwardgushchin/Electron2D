@@ -1,5 +1,8 @@
 # Physics contract and backend audit
 
+[Terminal world authoring](physics-registered-adapter.md#terminal-world-authoring) now applies the common simulation/local/portable failure gate before attached motion/role writes and numerical scene reads. A public registered history-restore RED reproduced a surface setter changing authoring after the world had already failed. The repair preserves healthy callback phases and cleanup. All 86 final managed/NativeAOT focused and related profiles pass with exact source/PDB proof and strict zero warmed managed-byte gates; a new full run remains required. It changes no coverage status; the separate deferred-scene commit 73b34c8d closed two inherited placeholder rows, so the current ledger is 221 open declarations (187 Partial, 17 Unimplemented, 17 Blocked). The preceding be4567bc full/network passes below retain their source-bound scope.
+
+
 The [scene-role recovery network regression](physics-network-example.md#scene-role-recovery-network-regression-2026-10-18) now records sixteen passing instrumented/public managed/NativeAOT profiles on runtime sources be4567bc, plus the completed ordinary software suite. The first concurrent paced-GPU deadline failure is retained together with its unchanged-payload post-suite control; the timing cause is not diagnosed and the small paced-check margin is explicit. This evidence changes no coverage status or full native/foreign/hardware/window/performance gate.
 
 

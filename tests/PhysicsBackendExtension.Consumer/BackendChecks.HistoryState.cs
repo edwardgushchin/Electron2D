@@ -83,6 +83,7 @@ public static partial class BackendChecks
             owner.DebugPointCount = Math.Min(_debugCount, owner.DebugLimit);
             _debug.AsSpan(0, owner.DebugPointCount).CopyTo(owner.DebugPoints);
             owner.Delta = _delta; owner.Pairs = _pairs; owner.Ready = _ready;
+            owner.RestoreExecutionHook?.Invoke();
         }
         public override void Dispose()
         {

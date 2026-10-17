@@ -1,6 +1,10 @@
 # PhysicsSpace
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
+
+## Terminal world access
+
+Terminal simulation or local/portable restore failure rejects attached motion/role writes before changing authored values, including equal assignments. Numerical scene sleep and direct-profile motion reads use the same common failure gate; ordinary native authored velocity/policy and constant-surface reads remain non-preparing. The gate does not impose public-query phase rules on otherwise valid force/state callbacks. Detachment and cleanup remain available. See [terminal world authoring](../components/physics-registered-adapter.md#terminal-world-authoring) for the public regression scope and limits.
 
 **Declaration:** `internal sealed partial class PhysicsSpace : IDisposable`
 
