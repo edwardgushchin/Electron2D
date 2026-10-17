@@ -20,7 +20,7 @@ Owner selection and complete stored-property capture remain the existing contrac
 
 GetNodeInstance returns the borrowed linked template only for a recorded subscene root. GetNodeIndex returns recorded placement or -1 for an ordinary local node. GetNodeType returns an empty string for a linked root/reused override and the diagnostic unqualified type name for a fresh local node. GetNodeCount counts stored records, including overrides; it does not expand unselected template contents.
 
-Template and stored-resource references retain ordinary Resource lifetime. Disposing a borrowed template makes instantiation fail. File-backed instances retain their decoded graphs through the existing leases. Deep copying remaps links through the same resource identity session; repeated references retain aliases.
+Template and stored-resource references retain ordinary Resource lifetime. Disposing a borrowed template makes capture/instantiation fail. Consumers that return instantiated hierarchies must keep their templates and borrowed source resources alive through later captures; portable snapshots of path-only fixture templates use BundleResources. File-backed instances retain their decoded graphs through the existing leases. Deep copying remaps links through the same resource identity session; repeated references retain aliases.
 
 ## Reconstruction and failure
 

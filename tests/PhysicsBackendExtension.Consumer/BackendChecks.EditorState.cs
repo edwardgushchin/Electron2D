@@ -121,12 +121,11 @@ public static partial class BackendChecks
         Check(changes == 9 && replacement.EditorDescription == "", "Canceling an accepted deferred one-shot does not report a manual disconnect or deliver its payload");
     }
 
-    private static Node EditorStateSource()
+    private static Node EditorStateSource(PackedScene template, CircleShape disk)
     {
-        using var disk = new CircleShape { Radius = 1, ResourceLocalToScene = true };
         using var inner = new Node { Name = "Inner" }; var body = new RigidBody { Name = "Body", GravityScale = 0, CanSleep = false, LinearVelocity = new(3, 0), LinearDampMode = RigidBody.DampMode.Replace, AngularDampMode = RigidBody.DampMode.Replace };
         body.AddChild(new CollisionShape { Name = "Shape", Shape = disk }); inner.AddChild(body); body.Owner = inner; body.GetChild(0).Owner = inner;
-        using var template = new PackedScene(); template.Pack(inner); template.ResourcePath = "res://editable-inner.e2dscene";
+        template.Pack(inner); template.ResourcePath = "res://editable-inner.e2dscene";
         var instance = template.Instantiate(); instance.Name = "Instance"; instance.EditorDescription = "instance description"; instance.DisplayFolded = true;
         var outer = new Node { Name = "Outer", EditorDescription = "outer description", DisplayFolded = true }; outer.AddChild(instance); instance.Owner = outer;
         using var excluded = new PackedScene(); excluded.Pack(outer); Check(excluded.GetState().GetNodeCount() == 2, "Disabled instance-owned branch remains excluded from flattened capture");
@@ -138,10 +137,11 @@ public static partial class BackendChecks
         var directory = IOPath.Combine(IOPath.GetTempPath(), "e2d-editor-state-" + Guid.NewGuid()); Directory.CreateDirectory(directory);
         try
         {
-            using var outer = EditorStateSource(); using var scene = new PackedScene(); scene.Pack(outer);
+            using var disk = new CircleShape { Radius = 1, ResourceLocalToScene = true }; using var template = new PackedScene();
+            using var outer = EditorStateSource(template, disk); using var scene = new PackedScene(); scene.Pack(outer);
             Check(scene.GetState().GetNodeCount() == 4 && scene.GetState().GetNodeOwnerPath(2) == "Instance", "Editable owner selection and stored ownership");
             using (var copy = (PackedScene)scene.Duplicate(true)) using (var restored = copy.Instantiate()) EditorStateRestored(restored);
-            var file = IOPath.Combine(directory, "editor.e2dscene"); ResourceSaver.Save(scene, file);
+            var file = IOPath.Combine(directory, "editor.e2dscene"); ResourceSaver.Save(scene, file, SaverFlags.BundleResources);
             var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true };
             if (IOPath.GetFileNameWithoutExtension(Environment.ProcessPath) == "dotnet") start.ArgumentList.Add(IOPath.Combine(AppContext.BaseDirectory, System.Reflection.Assembly.GetEntryAssembly()!.GetName().Name + ".dll"));
             start.ArgumentList.Add("--editor-state-child"); start.ArgumentList.Add(file); if (threaded) start.ArgumentList.Add("--threaded"); if (backend is { } value) start.ArgumentList.Add(value == PhysicsServer.Backend.GPU ? "--gpu" : "--cpu");

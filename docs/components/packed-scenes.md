@@ -66,7 +66,7 @@ The implemented runtime treats any valid owned hierarchy uniformly: callers can 
 
 - The first binary typed archive loader/saver and UID/dependency path layer execute. Exported-pack mounts, import remapping and tolerant missing-resource recovery remain absent.
 - No inherited/nested scene authoring, editable-instance metadata, placeholders, pinned properties, script preservation, or implemented editor edit state.
-- No persistent typed event endpoint schema. Runtime C# event subscriptions and `EventConnection` tokens are intentionally not copied.
+- Authored persistent connections use registered typed endpoint schemas. Ordinary runtime event subscriptions and tokens are not copied.
 - Typed node references use the implemented relative-path profile; no arbitrary reference-shaped stored property values are accepted. `byte[]`, `string[]`, `int[]`, `float[]`, `Vector2[]`, `Color[]`, `int[][]`, typed resource arrays and string/int dictionaries are explicit snapshot profiles; application codecs must be registered explicitly.
 - No hidden scene activation: `Instantiate()` returns detached; `SceneTree` lifecycle remains explicit.
 
