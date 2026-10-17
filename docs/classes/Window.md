@@ -804,7 +804,7 @@ in subsequent localization; callers needing retained data must copy the values.
 Internal cursor-refresh events are filtered. Process pause and GUIDisableInput do
 not suppress this reception signal, while a disabled embedder stops child forwarding.
 Direct `PushInput` bypasses the receiver's own WindowInput signal and can still
-forward to embedded children. Use Node/Control input callbacks for input consumption.
+forward to embedded children. Popup actions run after reception and localization, on the final receiving popup only. Direct popup injection retains these actions without emitting its own WindowInput. Use Node/Control input callbacks for input consumption.
 
 Handler failures are collected while scene input continues; recursive input and
 cross-thread delivery reject use. Retiring a window during its reception callback

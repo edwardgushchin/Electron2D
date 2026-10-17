@@ -14,6 +14,8 @@ The host routes pointer, touch and gesture coordinates into the selected window 
 
 Popup geometry is expressed in its embedding viewport coordinates. Centered methods resolve control minimums after AboutToPopup, then center the resulting size. Popup fits into the usable host rectangle and applies maximum sizes. Ratio arguments reject nonfinite values and values outside (0,1]. Popup requests on a root or detached Window fail. Exclusive helper methods require a parentless dialog, choose the active exclusive descendant owner and undo parenting when showing fails.
 
+Popup acceptance, cancellation and outside-click policy run on the final localized receiver after any WindowInput reception event. Direct PushInput retains this policy without emitting its own window reception event. A focused nested popup receives the action without closing its ancestor. WindowInputTests covers direct/forwarded cancellation, signal counts and reception edits; ColorPickerTests covers focused text acceptance and opening-color restoration.
+
 PopupHide follows committed hidden state. Close requests and exact non-echo ui_cancel defer hide on SceneTree; repeated pending requests collapse. PopupPanel adds a borrowed `panel` StyleBox, content margins and shadow insets. It fits direct non-top-level controls, inherits texture sampling, mirrors horizontal shadow offsets for RTL, restores the content rectangle after hiding, and preserves an explicit resize made while visible. Theme and direction notifications refresh layout after lookup invalidation. Control and Window share LayoutDirection under ADR 0051; same-domain controls inherit Window direction.
 
 ### Active exclusive window chains

@@ -1,6 +1,6 @@
 # Viewport
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 **Inherits:** [Node](Node.md)
 
@@ -288,7 +288,7 @@ Delivers a borrowed input event directly to this viewport's scene.
 
 **inLocalCoordinates:** False removes `GetFinalTransform()` from window-client coordinates; true borrows already-local viewport input unchanged. It does not remove `CanvasTransform`.
 
-Does not update global Input state or emulate pointer devices. Dispatch uses the existing scene input, unhandled-key, and unhandled-input stages. Nested dispatch is rejected before conversion. Positional conversion uses `InputEvent.XformedBy`; mouse GlobalPosition is then set to localized Position. Relative/Velocity use the inverse basis; screen vectors and pan delta are unchanged. The temporary event is disposed in finally, including callback failure; callbacks must duplicate it to retain it. Non-positional events are borrowed unchanged. Copies have distinct InstanceID values: by-event action transition queries still identify the original parsed event.
+Direct input bypasses the receiving window's WindowInput event while still executing popup actions on the final localized receiver. Ancestor popups do not consume an action addressed to a nested popup. Does not update global Input state or emulate pointer devices. Dispatch uses the existing scene input, unhandled-key, and unhandled-input stages. Nested dispatch is rejected before conversion. Positional conversion uses `InputEvent.XformedBy`; mouse GlobalPosition is then set to localized Position. Relative/Velocity use the inverse basis; screen vectors and pan delta are unchanged. The temporary event is disposed in finally, including callback failure; callbacks must duplicate it to retain it. Non-positional events are borrowed unchanged. Copies have distinct InstanceID values: by-event action transition queries still identify the original parsed event.
 
 **ArgumentNullException:** `inputEvent` is null.
 

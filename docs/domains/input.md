@@ -37,6 +37,7 @@ Input depends on Core object/resource lifecycle, math and typed ProjectSettings 
 ## Domain-wide invariants
 
 - Parsing is serialized and non-reentrant; mapping is resolved before state mutation.
+- Direct viewport injection bypasses its receiving window's WindowInput event, while popup actions still run on the final localized receiver. Native/forwarded reception precedes that policy; nested popup actions do not close ancestor popups.
 - Raw and action state is committed before scene callbacks and is not rolled back when callbacks fail.
 - Emulated events use device ID `-1`, precede their source events, and do not recursively generate input. Their active press is paired with a release when the setting changes during contact.
 - Action names are ordinal; strengths/deadzones are finite and bounded.

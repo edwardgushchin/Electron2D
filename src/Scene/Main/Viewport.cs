@@ -67,7 +67,8 @@ public abstract partial class Viewport : Node
     /// <remarks>Does not update global Input state or emulate pointer devices. For window coordinates, positional events
     /// are copied and disposed after synchronous dispatch; mouse GlobalPosition becomes its localized Position.
     /// Local input and non-positional events remain borrowed. Direct injection bypasses WindowInput on the receiving window;
-    /// forwarded embedded children still receive their window event. Nested dispatch is rejected. CanvasTransform is removed
+    /// popup actions still run on the final localized receiver, and forwarded embedded children receive their window event.
+    /// Nested dispatch is rejected. CanvasTransform is removed
     /// separately by CanvasItem.MakeInputLocal when translating to an item's local coordinates.</remarks>
     /// <exception cref="ArgumentNullException">The event is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Transformed event coordinates overflow finite values.</exception>

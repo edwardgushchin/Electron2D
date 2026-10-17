@@ -76,7 +76,29 @@ internal static class WindowInputTests
         Check(button.IsDisposed && hoverExits == 1, "Retirement also releases an actual hovered GUI child exactly once.");
         Check(window.IsDisposed && !host.IsDisposed && !motion.IsDisposed, "Retirement during signal delivery skips stale viewport dispatch and releases only owned copies.");
         var panel = new SubViewport { Size = new(160, 120), GUIEmbedSubwindows = true }; var first = new Window { Borderless = true }; var last = new Window { Borderless = true }; panel.AddChild(first); panel.AddChild(last); host.AddChild(panel); last.GrabFocus(); host.RemoveChild(panel); panel.Dispose(); Check(first.IsDisposed && last.IsDisposed, "Departing viewport clears focus without raising another departing child.");
+        VerifyPopupInput(host, tree);
         Console.WriteLine("Window reception, visibility notification, ordering, coordinates, mutation, pause, guards and cleanup checks passed.");
+    }
+    private static void VerifyPopupInput(Viewport host, SceneTree tree)
+    {
+        using var popup = new PopupPanel { Size = new(100, 80) }; host.AddChild(popup);
+        var calls = 0; popup.WindowInput += _ => calls++;
+        using var cancel = new InputEventAction { Action = "ui_cancel", Pressed = true };
+        popup.Popup(); popup.GUIDisableInput = true; popup.PushInput(cancel, true); tree.FlushDeferred();
+        Check(popup.Visible && calls == 0, "Disabled GUI suppresses directly injected popup actions without emitting a window signal.");
+        popup.GUIDisableInput = false; popup.PushInput(cancel, true); tree.FlushDeferred();
+        Check(!popup.Visible && calls == 0 && !cancel.IsDisposed, "Direct popup input executes cancellation without its own window signal or caller-event disposal.");
+        popup.Popup(); host.PushInput(cancel, true); tree.FlushDeferred();
+        Check(!popup.Visible && calls == 1, "Forwarded popup input executes cancellation and emits exactly one reception signal.");
+        popup.GUIEmbedSubwindows = true; popup.Popup();
+        using var child = new PopupPanel { Size = new(40, 30) }; popup.AddChild(child); child.Popup();
+        var childCalls = 0; child.WindowInput += _ => childCalls++;
+        host.PushInput(cancel, true); tree.FlushDeferred();
+        Check(popup.Visible && !child.Visible && calls == 2 && childCalls == 1, "Only the final nested popup consumes cancellation; ancestor reception does not close its popup.");
+        Action<InputEvent> change = input => ((InputEventAction)input).Action = "ignored_popup_action";
+        popup.WindowInput += change; host.PushInput(cancel, true); tree.FlushDeferred(); popup.WindowInput -= change;
+        Check(popup.Visible && cancel.Action == "ignored_popup_action", "Reception edits precede the selected popup's ordinary input policy.");
+        cancel.Action = "ui_cancel";
     }
     private sealed class NativeReceiver(List<string> log) : Node
     {

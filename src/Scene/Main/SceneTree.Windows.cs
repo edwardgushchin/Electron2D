@@ -74,7 +74,7 @@ public sealed partial class SceneTree
     private InputEvent? RouteEmbeddedInput(Viewport host, InputEvent input, out Viewport target, ref List<Exception>? errors)
     {
         if (input is InputEventMouse windowMouse) UpdateEmbeddedWindowHover(host, windowMouse.Position);
-        target = host; if (host.EmbeddedWindows.Count == 0) return input;
+        target = host; if (host.EmbeddedWindows.Count == 0) return RoutePopupInput(host, input, ref errors);
         Vector2? point = input switch { InputEventMouse mouse => mouse.Position, InputEventScreenTouch touch => touch.Position, InputEventScreenDrag drag => drag.Position, InputEventGesture gesture => gesture.Position, _ => null };
         if (_embeddedDecorDrag.TryGetValue(host, out var decor))
         {
@@ -132,7 +132,7 @@ public sealed partial class SceneTree
             if (input is InputEventScreenTouch touchEvent) { if (touchEvent.Pressed && chosen is not null) _embeddedTouchCapture[(host, touchEvent.Index)] = chosen; else if (!touchEvent.Pressed) _embeddedTouchCapture.Remove((host, touchEvent.Index)); }
         }
         else _embeddedFocus.TryGetValue(host, out chosen);
-        if (chosen is null || chosen.IsDisposed || !chosen.Visible) return input;
+        if (chosen is null || chosen.IsDisposed || !chosen.Visible) return RoutePopupInput(host, input, ref errors);
         if (point != null && input is InputEventMouseMotion && chosen is PopupMenu menu)
         {
             while (menu.Parent is PopupMenu parentMenu) menu = parentMenu;
@@ -146,7 +146,7 @@ public sealed partial class SceneTree
             ReceiveWindowInput(chosen, windowLocal, ref errors);
             if (chosen.IsDisposed || !ReferenceEquals(chosen.Tree, this) || chosen.GUIDisableInput) return null;
             localized = chosen.MakeViewportInputLocal(windowLocal);
-            result = chosen.EmbeddedWindows.Count > 0 ? RouteEmbeddedInput(chosen, localized, out target, ref errors) : localized;
+            result = RouteEmbeddedInput(chosen, localized, out target, ref errors);
             return result;
         }
         finally
@@ -155,9 +155,13 @@ public sealed partial class SceneTree
             if (windowLocal is not null && !ReferenceEquals(windowLocal, input) && !ReferenceEquals(windowLocal, localized) && !ReferenceEquals(windowLocal, result)) windowLocal.Dispose();
         }
     }
+    private InputEvent? RoutePopupInput(Viewport viewport, InputEvent input, ref List<Exception>? errors)
+    {
+        if (viewport is Popup popup) try { popup.HandlePopupInput(input); } catch (Exception error) { CollectException(ref errors, error); }
+        return !viewport.IsDisposed && ReferenceEquals(viewport.Tree, this) ? input : null;
+    }
     private void ReceiveWindowInput(Window window, InputEvent input, ref List<Exception>? errors)
     {
-        if (window is Popup popup) try { popup.HandlePopupInput(input); } catch (Exception error) { CollectException(ref errors, error); }
         if (window.IsDisposed || !ReferenceEquals(window.Tree, this)) return;
         try { window.EmitWindowInput(input); } catch (Exception error) { CollectException(ref errors, error); }
     }

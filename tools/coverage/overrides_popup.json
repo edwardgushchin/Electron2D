@@ -254,6 +254,12 @@
       "godot": "Viewport::property:gui_embed_subwindows",
       "electron2d": "property:Electron2D.Viewport.GUIEmbedSubwindows()",
       "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Viewport::method:push_input(InputEvent:,bool:)",
+      "electron2d": "method:Electron2D.Viewport.PushInput(Electron2D.InputEvent,System.Boolean)",
+      "state": "Partial",
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection. Direct popup injection retains acceptance/cancellation after localization while bypassing its own WindowInput event; only the final nested popup applies this policy. WindowInputTests covers direct/forwarded cancellation, disabled GUI, exact signal counts, nested ownership and reception edits; ColorPickerTests covers focused text commitment and cancellation restoration. This correction does not promote the remaining viewport gaps."
     }
   ],
   "extras": [

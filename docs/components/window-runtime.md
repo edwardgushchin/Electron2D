@@ -109,6 +109,11 @@ Node callbacks and GUI handling. Window observers retain the existing execution
 barrier and synchronous borrowed-event lifetime. NotificationVisibilityChanged (30)
 precedes VisibilityChanged after a committed show/hide operation. Managed and native
 checks cover failure continuation, pause/blocking, nested coordinates and retirement.
+Popup policy belongs to the final localized input receiver. Direct popup injection
+still applies acceptance/cancellation while bypassing its own WindowInput event;
+forwarded nested popups do not close their ancestor popup. WindowInputTests checks
+these paths and reception edits before popup policy; ColorPickerTests checks text
+commit before acceptance and restoration on cancellation.
 
 The native decoration producer for TitlebarChanged, custom nonclient input ownership
 for NonclientWindowInput, and host go-back request/policy integration are distinct
