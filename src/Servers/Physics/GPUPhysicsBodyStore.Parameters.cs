@@ -34,7 +34,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     internal void SetMode(BodyHandle body, PhysicsServer.BodyMode mode)
     {
         Validate(body);
-        if (!Enum.IsDefined(mode)) throw new ArgumentOutOfRangeException(nameof(mode));
+        if (mode is not (PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic or PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear))
+            throw new ArgumentOutOfRangeException(nameof(mode));
         if (mode != PhysicsServer.BodyMode.Static && _areaFields.ContainsKey(body.Index)) throw new InvalidOperationException("An Area field owner must remain static.");
         ref var slot = ref _slots[body.Index];
         if (slot.Mode == mode) return;
@@ -75,7 +76,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
 
     private static void ValidateIntegrationPolicy(in IntegrationPolicy policy)
     {
-        if (!float.IsFinite(policy.GravityScale) || !float.IsFinite(policy.LinearDamp) || !float.IsFinite(policy.AngularDamp) || !Enum.IsDefined(policy.LinearDampMode) || !Enum.IsDefined(policy.AngularDampMode))
+        if (!float.IsFinite(policy.GravityScale) || !float.IsFinite(policy.LinearDamp) || !float.IsFinite(policy.AngularDamp) ||
+            policy.LinearDampMode is not (RigidBody.DampMode.Combine or RigidBody.DampMode.Replace) ||
+            policy.AngularDampMode is not (RigidBody.DampMode.Combine or RigidBody.DampMode.Replace))
             throw new ArgumentOutOfRangeException(nameof(policy));
     }
     private static bool RotationLocked(in Slot slot) => slot.Mode >= PhysicsServer.BodyMode.Rigid &&

@@ -1226,7 +1226,10 @@ public sealed partial class PhysicsServer
     /// <exception cref="InvalidOperationException">Attached mutation is off-owner, during solver ownership or a numerical implementation hook.</exception>
     /// <remarks>A scene assignment retains a direct runtime mode without changing its concrete type, Freeze or LockRotation descriptors.
     /// Later scene role edits restore scene control; MakeStatic temporarily overrides the retained mode.
-    /// Direct assignments survive reentry and participate in checkpoints and portable state; scene packing uses its configured descriptors.</remarks>
+    /// Direct assignments survive reentry and participate in checkpoints and portable state; scene packing uses its configured descriptors.
+    /// A selected publication failure preserves the committed mode and queues full mode, motion and geometry preparation.
+    /// Numerical body access, live space queries and nonzero steps retry preparation; failure leaves the step tick unchanged.
+    /// Detachment discards retired attachment debt without sampling its incomplete motion.</remarks>
     public static void BodySetMode(RID body, BodyMode mode) => Service.BodySetModeCore(body, mode);
 
     /// <summary>Gets the body's current motion mode.</summary>

@@ -52,6 +52,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     internal PhysicsServer.BodyMode Mode => _mode;
     internal int ShapeCount => _slots.Count;
     private volatile bool _shapesDirty;
+    private bool _modeDirty, _preparingMode;
 
     internal void MarkShapesDirty() => _shapesDirty = true;
 
@@ -89,6 +90,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
         List<Exception>? errors = null;
         PhysicsSpace.Cleanup(() => { if (!space.HasBackendFailure) CaptureMotion(); }, ref errors);
         PhysicsSpace.Cleanup(_backend.Detach, ref errors);
+        _modeDirty = false;
         PhysicsSpace.FinishCleanup(errors);
     }
 
@@ -209,13 +211,29 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
         if (mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic or PhysicsServer.BodyMode.RigidLinear)
             _angularVelocity = 0;
         if (Space is null) return;
-        _backend.SetMotionMode(_mode);
-        _backend.SetRotationLocked(mode == PhysicsServer.BodyMode.RigidLinear);
-        _backend.SetLinearVelocity(_linearVelocity);
-        if (mode is PhysicsServer.BodyMode.Rigid) _backend.SetAngularVelocity(_angularVelocity);
-        if (mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic or PhysicsServer.BodyMode.RigidLinear)
-            _backend.SetAngularVelocity(0);
-        RebuildShapes();
+        _modeDirty = true;
+        PreparePendingMode();
+    }
+
+    internal void PreparePendingMode()
+    {
+        if (!_modeDirty || Space is null) return;
+        if (_preparingMode) throw new InvalidOperationException("Body mode preparation cannot reenter its own transition.");
+        _preparingMode = true;
+        try
+        {
+            _backend.SetMotionMode(_mode);
+            _backend.SetRotationLocked(_mode == PhysicsServer.BodyMode.RigidLinear);
+            _backend.SetLinearVelocity(_linearVelocity);
+            _backend.SetAngularVelocity(_mode == PhysicsServer.BodyMode.Rigid ? _angularVelocity : 0);
+            var dynamic = _mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear;
+            _backend.SetSurfaceVelocity(dynamic ? default : _linearVelocity, dynamic ? 0 : _angularVelocity);
+            if (dynamic) _backend.SetAwake(true);
+            RebuildShapes();
+            _modeDirty = false;
+        }
+        catch { Space.MarkColliderMetadataDirty(); throw; }
+        finally { _preparingMode = false; }
     }
 
     internal void SetTransform(Transform transform)
@@ -349,7 +367,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
 
     private void CaptureMotion()
     {
-        if (Space is null || IsArea || _mode == PhysicsServer.BodyMode.Static)
+        if (Space is null || IsArea || _modeDirty || _mode == PhysicsServer.BodyMode.Static)
             return;
         _transform = GetTransform();
         if (_mode == PhysicsServer.BodyMode.Kinematic) return;

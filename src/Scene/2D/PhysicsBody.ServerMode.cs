@@ -9,12 +9,13 @@ public abstract partial class PhysicsBody
     private Transform _serverTarget = Transform.Identity;
     private bool _hasServerTarget;
     private bool _firstServerTarget = true;
+    private bool _serverModeDirty, _preparingServerMode;
 
     internal bool HasServerMode => _serverMode is not null;
     internal PhysicsServer.BodyMode EffectiveBodyMode => PhysicsMadeStatic ? PhysicsServer.BodyMode.Static : _serverMode ?? RequestedBodyMode;
-    internal Vector2 ServerLinearVelocity => HasBackend && EffectiveBodyMode != PhysicsServer.BodyMode.Static ? Backend.LinearVelocity : _serverLinear;
-    internal float ServerAngularVelocity => HasBackend && EffectiveBodyMode != PhysicsServer.BodyMode.Static ? Backend.AngularVelocity : _serverAngular;
-    internal bool ServerSleeping => HasBackend ? !Backend.IsAwake : _serverSleeping;
+    internal Vector2 ServerLinearVelocity { get { PreparePendingServerMode(); return HasBackend && EffectiveBodyMode != PhysicsServer.BodyMode.Static ? Backend.LinearVelocity : _serverLinear; } }
+    internal float ServerAngularVelocity { get { PreparePendingServerMode(); return HasBackend && EffectiveBodyMode != PhysicsServer.BodyMode.Static ? Backend.AngularVelocity : _serverAngular; } }
+    internal bool ServerSleeping { get { PreparePendingServerMode(); return HasBackend ? !Backend.IsAwake : _serverSleeping; } }
 
     internal void SetServerMode(PhysicsServer.BodyMode mode)
     {
@@ -26,15 +27,32 @@ public abstract partial class PhysicsBody
         _serverAngular = mode == PhysicsServer.BodyMode.Rigid ? angular : 0;
         Runtime.GPUParametersDirty = true;
         if (!HasBackend) return;
-        Backend.SetMotionMode(EffectiveBodyMode);
-        Backend.SetRotationLocked(EffectiveBodyMode == PhysicsServer.BodyMode.RigidLinear);
-        ApplyServerMotion(); MarkShapesDirty(); PrepareBackend();
+        _serverModeDirty = true;
+        PreparePendingServerMode();
+    }
+
+    internal void PreparePendingServerMode()
+    {
+        if (!_serverModeDirty || Space is null) return;
+        if (_preparingServerMode) throw new InvalidOperationException("Body mode preparation cannot reenter its own transition.");
+        _preparingServerMode = true;
+        try
+        {
+            Backend.SetMotionMode(EffectiveBodyMode);
+            Backend.SetRotationLocked(EffectiveBodyMode == PhysicsServer.BodyMode.RigidLinear);
+            if (EffectiveBodyMode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear) Backend.SetAwake(true);
+            ApplyServerMotion(); MarkShapesDirty(); PrepareBackend();
+            _serverModeDirty = false;
+        }
+        catch { Space.MarkColliderMetadataDirty(); throw; }
+        finally { _preparingServerMode = false; }
     }
 
     internal void RestoreSceneMode()
     {
         if (!HasServerMode) return;
-        _serverMode = null; _hasServerTarget = false; Runtime.GPUParametersDirty = true; MarkShapesDirty();
+        PreparePendingServerMode();
+        _serverMode = null; _serverModeDirty = false; _hasServerTarget = false; Runtime.GPUParametersDirty = true; MarkShapesDirty();
     }
 
     internal PhysicsBodyConfiguration ServerConfiguration(PhysicsBodyConfiguration configuration) => !HasServerMode ? configuration :
@@ -49,16 +67,19 @@ public abstract partial class PhysicsBody
 
     internal void SetServerLinearVelocity(Vector2 value)
     {
+        PreparePendingServerMode();
         _serverLinear = value;
         if (HasBackend) ApplyServerMotion();
     }
     internal void SetServerAngularVelocity(float value)
     {
+        PreparePendingServerMode();
         _serverAngular = value;
         if (HasBackend) ApplyServerMotion();
     }
     internal void SetServerSleeping(bool value)
     {
+        PreparePendingServerMode();
         _serverSleeping = value;
         if (HasBackend) Backend.SetAwake(!value);
         if (value) { _serverLinear = default; _serverAngular = 0; }
@@ -102,7 +123,7 @@ public abstract partial class PhysicsBody
 
     internal void CaptureServerMotion()
     {
-        if (!HasServerMode || !HasBackend || EffectiveBodyMode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic) return;
+        if (!HasServerMode || !HasBackend || _serverModeDirty || EffectiveBodyMode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic) return;
         _serverLinear = ServerLinearVelocity; _serverAngular = ServerAngularVelocity; _serverSleeping = !Backend.IsAwake;
     }
 }
