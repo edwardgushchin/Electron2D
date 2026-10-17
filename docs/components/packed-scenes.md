@@ -108,7 +108,7 @@ Exported SceneState views also retain their file-backed graph snapshot through a
 
 SceneState exposes source/target paths, diagnostic signal/method labels, persistent/deferred/one-shot bits, omitted argument count, and `GetConnectionBinds<TBindings>` snapshots. Labels never dispatch members by name. The registered factory implements argument adaptation and delivery policy; the returned token policy is checked. Bound Resource values use the same duplication/local-scene/file ownership graph as node properties.
 
-Resource archives now write version 3, including the connection table and bounded typed payloads; versions 1 and 2 remain readable with no connections. Registration must exist in every loading process. Unknown binding IDs, incompatible endpoint types, malformed payloads and trailing bytes fail before publication.
+Resource archives write version 4, retaining the version-3 connection table and bounded typed payloads while adding ordinary texture roles and missing-payload provenance under ADR 0013. Version 3 remains readable; versions 1 and 2 remain readable with no connections. Registration must exist in every loading process. Unknown binding IDs, incompatible endpoint types, malformed payloads and trailing bytes fail before publication.
 
 `SceneConnectionTests` checks duplicate subscriptions, consumed one-shots, deferred cancellation, selected endpoints, metadata bounds/types, resource duplication, file binding identity failures, RESET preparation and owner-thread access. Its native profile loads an archived subscription and verifies moved Sprite pixels plus receiver cleanup on both GPU and compatibility rendering. Platform and owner acceptance remain separate.
 
