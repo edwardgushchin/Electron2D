@@ -125,9 +125,9 @@ public partial class Node
     internal IEnumerable<PropertyDescriptor> CapturedEditorProperties(Node root)
     {
         ValidateEditorPropertyNames(GetPropertyList());
-        if (ReferenceEquals(this, root) || _sceneFilePath.Length == 0) yield break;
-        yield return SceneOriginProperty;
-        if (_editableInstance) yield return EditableInstanceProperty;
+        if (ReferenceEquals(this, root)) yield break;
+        if (_sceneFilePath.Length != 0) yield return SceneOriginProperty;
+        if (_editableInstance && (_sceneFilePath.Length != 0 || SpawnSceneIdentity is not null)) yield return EditableInstanceProperty;
     }
 
     internal static void ValidateEditorPropertyNames(IEnumerable<PropertyDescriptor> descriptors)

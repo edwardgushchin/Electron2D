@@ -4,8 +4,8 @@ Last updated: 2026-10-17
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1455 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 664 missing declarations in already represented type families; split each type by its documented dependency trigger.
+1. Close 1452 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+2. Complete 662 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -19,13 +19,13 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [OS](classes/OS.md) | 45 | 10 |
 | [Window](classes/Window.md) | 19 | 57 |
 | [Object](classes/Object.md) | 19 | 14 |
-| [Node](classes/Node.md) | 14 | 16 |
 | [Input](classes/Input.md) | 12 | 30 |
+| [Node](classes/Node.md) | 12 | 16 |
 | [Performance](classes/Performance.md) | 12 | 2 |
 | [Engine](classes/Engine.md) | 11 | 11 |
 | [SceneTree](classes/SceneTree.md) | 6 | 15 |
 | [ProjectSettings](classes/ProjectSettings.md) | 5 | 44 |
-| [SceneState](classes/SceneState.md) | 5 | 15 |
+| [SceneState](classes/SceneState.md) | 5 | 12 |
 | [Control](classes/Control.md) | 3 | 60 |
 | [FileAccess](classes/FileAccess.md) | 2 | 65 |
 | [Image](classes/Image.md) | 1 | 72 |
@@ -105,7 +105,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
 | ADR 0094: Typed MultiplayerPeer now executes. Requires executable WebRTCPeerConnection/DataChannel SDP/ICE/DTLS/SCTP host integration and an owned WebRTC multiplayer cohort. | 1 |
 | Exact prerequisite: typed persistent scene signal/endpoint storage and binding, plus missing-node factory/reference projection. Version-2 resource field roles do not implement node signal recording or missing-node hierarchy restoration (ADRs 0013/0023). No inert recording switch. | 1 |
-| Loader exists under ADR 0013; prerequisite: ADR 0023 linked-subscene override records, typed pending properties and failure-safe instance replacement/ownership, followed by Node load-placeholder flag producers. A path flag alone cannot defer a concrete scene. Raw Dictionary values remain excluded by ADR 0017; typed property queries must preserve stored order. | 1 |
+| Loader and actual linked runtime templates/overrides exist under ADRs 0013/0023; prerequisite: deferred scene-record storage, typed pending-property queries and failure-safe instance replacement/ownership together with Node load-placeholder flag producers. A path flag alone cannot defer a concrete scene. Raw Dictionary values remain excluded by ADR 0017; typed property queries must preserve stored order. | 1 |
 | Navigation2D: trigger is the next operation-specific navigation link, agent/obstacle avoidance, source-geometry bake or typed query slice beyond the authored map/region backend (ADRs 0052/0097). | 1 |
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
 | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. | 1 |

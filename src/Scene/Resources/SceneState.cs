@@ -99,14 +99,14 @@ public sealed class SceneState : ElectronObject
 
     /// <summary>Gets the stored sibling index used by an instanced subscene override.</summary>
     /// <param name="nodeIndex">The zero-based node index.</param>
-    /// <returns><c>-1</c> for ordinary locally captured nodes.</returns>
+    /// <returns>The captured position for additions or overrides inside an instance; <c>-1</c> for ordinary local nodes.</returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="nodeIndex"/> is outside the state.</exception>
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>
     public int GetNodeIndex(int nodeIndex) => ReadNode(nodeIndex).SiblingIndex;
 
     /// <summary>Gets the nested packed scene associated with a node.</summary>
     /// <param name="nodeIndex">The zero-based node index.</param>
-    /// <returns>The nested scene, or <see langword="null"/> for a locally captured node.</returns>
+    /// <returns>The borrowed linked template, or <see langword="null"/> for a local node or reused child override.</returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="nodeIndex"/> is outside the state.</exception>
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>
     public PackedScene? GetNodeInstance(int nodeIndex) => ReadNode(nodeIndex).Instance;
@@ -190,10 +190,14 @@ public sealed class SceneState : ElectronObject
 
     /// <summary>Gets a stored node's runtime type name.</summary>
     /// <param name="nodeIndex">The zero-based node index.</param>
-    /// <returns>The unqualified runtime type name captured by the scene.</returns>
+    /// <returns>The unqualified runtime type name for a fresh local node; empty for a linked root or reused override.</returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="nodeIndex"/> is outside the state.</exception>
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>
-    public string GetNodeType(int nodeIndex) => ReadNode(nodeIndex).Factory.RuntimeType.Name;
+    public string GetNodeType(int nodeIndex)
+    {
+        var node = ReadNode(nodeIndex);
+        return node.Instance is not null || node.InstanceRootIndex >= 0 ? string.Empty : node.Factory.RuntimeType.Name;
+    }
 
     /// <summary>Gets the resource path associated with this state.</summary>
     /// <returns>The current path of its live packed scene, or the last path observed before that resource was disposed.</returns>
@@ -277,6 +281,7 @@ internal sealed record PackedSceneData(SceneNodeData[] Nodes, SceneConnectionDat
         return new PackedSceneData(
             Nodes.Select(node => node with
             {
+                Instance = node.Instance is { } instance ? transform(instance) as PackedScene ?? throw new InvalidOperationException("A linked scene reference must remain a PackedScene.") : null,
                 Properties = node.Properties
                     .Select(property => property with { Value = property.Value.TransformResources(transform) })
                     .ToArray()
@@ -296,7 +301,9 @@ internal sealed record SceneNodeData(
     IReadOnlyList<string> Groups,
     ScenePropertyData[] Properties,
     PackedScene? Instance,
-    string InstancePlaceholder);
+    string InstancePlaceholder,
+    int InstanceRootIndex = -1,
+    string InstancePath = "");
 
 internal sealed record ScenePropertyData(string Name, StoredPropertyValue Value);
 

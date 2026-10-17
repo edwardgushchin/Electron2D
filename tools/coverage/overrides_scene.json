@@ -11500,7 +11500,7 @@
         "Node::method:duplicate(int:)"
       ],
       "state": "Unimplemented",
-      "reason": "Authored typed connections now capture and rebind under ADRs 0010/0023. Remaining runtime duplication prerequisites: resolve ADR0091 live script binding/identity first so the Scripts bit is executable, then implement complete runtime groups and subtree factory/resource/node-reference remapping, including UseInstantiation and InternalState policies. Owner-selected stored-property Pack cannot substitute for full runtime duplication."
+      "reason": "Authored typed connections and linked runtime templates now execute under ADRs 0010/0023. Runtime duplication still first requires ADR0091 live script binding/identity so Scripts is executable, then full groups/subtree/resource/node-reference copying and its UseInstantiation/InternalState policies. Owner-selected stored-state Pack does not substitute for complete runtime duplication."
     },
     {
       "godot": [
@@ -11790,6 +11790,23 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Flattened capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; linked nested/inherited overrides and non-Disabled PackedSceneEditState remain separate gaps. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
+    },
+    {
+      "godot": [
+        "SceneState::method:get_node_index(int:)",
+        "SceneState::method:get_node_instance(int:)",
+        "SceneState::method:get_node_type(int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0023: actual linked PackedScene identity, inserted/overridden sibling placement and empty type names for linked/reused records execute through version-5 typed archives. LinkedSceneTests covers template updates, original paths/name swaps, local aliases/cycles and RID reuse, inherited/additional connections, deep copies, failure cleanup, fresh external/relative/bundled graphs, legacy layouts and both Wayland renderers. Each renderer measures 64 active redraw/event frames at zero owner-thread managed bytes. Root inheritance/editor/deferred/native-allocation and foreign acceptance remain separate."
+    },
+    {
+      "godot": [
+        "Node::method:get_scene_instance_load_placeholder()",
+        "Node::method:set_scene_instance_load_placeholder(bool:)"
+      ],
+      "state": "Blocked",
+      "reason": "Actual linked runtime templates and complete typed overrides execute under ADR 0023. Prerequisite: deferred scene-record storage, typed pending-property queries and failure-safe node replacement/ownership together with InstancePlaceholder; both Node flag producers enter that same executable slice. A standalone flag cannot defer a scene."
     }
   ]
 }

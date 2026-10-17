@@ -1,5 +1,7 @@
 # API coverage register
 
+[Linked runtime scenes](../components/linked-scenes.md) now reconstruct actual subscene templates, preserve nested local-resource and event identities and persist version-5 links/overlays. SceneState instance/index/type queries have executable fresh-file and GPU/Compatibility evidence; inherited roots, deferred replacement and non-Disabled editing retain their separate prerequisites.
+
 [Ordinary texture placeholders](../components/texture-placeholders.md) now execute dimension-only factory output, typed resource/scene archives, scene-local ownership and diagnostic object/RID drawing on GPU and Compatibility. The four reference declarations are implemented; version-4 missing-texture recovery additionally retains original graph fields and missing-payload provenance, with available-factory restoration and explicit strict/tolerant results.
 
 [Project shader globals](../components/global-shader-parameters.md#project-authored-globals) now connect all 25 applicable logical roles to typed saved settings, feature-aware startup before Ready, and session-owned image resources. Scene overrides compose over these bases. Public JIT/NativeAOT consumers exercise saved-project shader pixels; the separate global-buffer pool-size setting retains its exact arena/ABI prerequisite.
@@ -65,7 +67,7 @@ status changes; full retained/native/device history budgets remain open.
 
 [Resident GPU buffer accounting](../components/gpu-memory.md) now covers all storage/transfer allocations, growth peaks and replay retirement. This internal measurement changes no public declaration status and leaves complete retained/native/device budgets open.
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 [Per-referrer resource IDs](../components/resources.md#per-referrer-path-ids) now
 have executable public cache and custom-format consumers. The two inherited

@@ -14,7 +14,7 @@ Last updated: 2026-10-17
 
 ## Authoring fields
 
-Captured Node descriptions use their public stored property. Nonroot source instances can also expose reserved typed `__SceneInstanceOrigin` strings and `__EditableInstance` bools through the existing property queries. Folding is transient. These fields restore the flattened graph; linked nested/inherited overrides remain unsupported.
+Captured Node descriptions use their public stored property. Nonroot source instances can also expose reserved typed `__SceneInstanceOrigin` strings and `__EditableInstance` bools through the existing property queries. Folding is transient. Actual linked templates and reused-node identities now restore runtime subscenes; inherited-root authoring remains separate.
 
 ## Description
 
@@ -37,7 +37,7 @@ The following focused snippet uses the current public API. Names not declared in
 using var scene = new PackedScene();
 scene.Pack(root);
 SceneState state = scene.GetState();
-int nodeCount = state.NodeCount;
+int nodeCount = state.GetNodeCount();
 ```
 
 ## Methods
@@ -121,7 +121,7 @@ Gets the stored sibling index used by an instanced subscene override.
 
 - `nodeIndex`: The zero-based node index.
 
-**Returns:** `-1` for ordinary locally captured nodes.
+**Returns:** The captured sibling position for an addition or override inside an instance; `-1` for an ordinary local node.
 
 **Exceptions**
 
@@ -137,7 +137,7 @@ Gets the nested packed scene associated with a node.
 
 - `nodeIndex`: The zero-based node index.
 
-**Returns:** The nested scene, or `null` for a locally captured node.
+**Returns:** The borrowed linked template, or `null` for a local node or reused child override.
 
 **Exceptions**
 
@@ -273,7 +273,7 @@ Gets a stored node's runtime type name.
 
 - `nodeIndex`: The zero-based node index.
 
-**Returns:** The unqualified runtime type name captured by the scene.
+**Returns:** The unqualified type name for a fresh local node; an empty string for a linked root or reused override.
 
 **Exceptions**
 
@@ -333,7 +333,7 @@ Disposing the source packed scene does not dispose externally held states. Such 
 
 The executable harness verifies empty/live state identity, path propagation, node ordering and paths, owner/group metadata, registered connection and absent placeholder/inheritance metadata, typed property name/type/value access including Timer configuration, invalid indices/casts, successful repack observation, concurrent cached-state disposal and path updates, and survival after source disposal.
 
-Registered connection accessors and typed captured Node authoring fields execute. Linked instance/inherited base state, placeholder loading and general override-remapping metadata remain absent; file-format internals stay private. `GetNodeType()` is a diagnostic unqualified name, not a reflection-based factory key.
+Registered connection accessors and typed captured Node authoring fields execute. Linked template identity, inserted sibling positions and reused-node type omission execute; inherited base state and placeholder loading remain absent; file-format internals stay private. `GetNodeType()` is a diagnostic unqualified name, not a reflection-based factory key.
 
 ## Decision
 
@@ -349,3 +349,5 @@ Exported SceneState views also retain their file-backed graph snapshot through a
 
 
 Authored typed scene connections use registered compiled `SceneConnectionBinding` factories, copied payloads and dual endpoint cleanup. PackedScene captures/rebinds these subscriptions, including file archives v3. SceneState queries expose paths, diagnostic labels, flags, unbind count and typed payload snapshots. See [packed scenes](../components/packed-scenes.md) for ownership and persistence limits.
+
+For linked roots and reused overrides, `GetNodeType()` returns an empty string. `GetNodeInstance()` borrows the actual template; `GetNodeIndex()` describes placement within an instance. See [linked scenes](../components/linked-scenes.md).

@@ -345,7 +345,7 @@ def reason_for_type(item, lookup):
     if name in {"ImporterMesh", "MeshLibrary"}:
         return "Blocked", "Trigger: concrete applicable 2D mesh import/library entry model, owned resource graphs and loader/authoring format integration over the implemented mesh resources (ADRs 0013/0092); audit 3D-only entry fields separately."
     if name == "InstancePlaceholder":
-        return "Blocked", "Loader exists under ADR 0013; prerequisite: ADR 0023 linked-subscene override records, typed pending properties and failure-safe instance replacement/ownership, followed by Node load-placeholder flag producers. A path flag alone cannot defer a concrete scene. Raw Dictionary values remain excluded by ADR 0017; typed property queries must preserve stored order."
+        return "Blocked", "Loader and actual linked runtime templates/overrides exist under ADRs 0013/0023; prerequisite: deferred scene-record storage, typed pending-property queries and failure-safe instance replacement/ownership together with Node load-placeholder flag producers. A path flag alone cannot defer a concrete scene. Raw Dictionary values remain excluded by ADR 0017; typed property queries must preserve stored order."
     blocked_slices = (
         ({"ResourceFormatSaver", "ResourceImporter", "ResourcePreloader", "ResourceUID", "MissingResource", "MissingNode", "InstancePlaceholder", "PCKPacker", "ZIPReader", "ZIPPacker"},
          "first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023)"),

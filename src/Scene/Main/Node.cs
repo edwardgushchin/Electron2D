@@ -2065,6 +2065,7 @@ public partial class Node : ElectronObject
 
                 _ownedSceneResources = null;
             }
+            SceneInstancePaths = null; SceneInstanceConnections = null; SpawnSceneIdentity = null;
             try { AdoptSceneFileLease(null); } catch (Exception error) { CollectException(ref errors, error); }
 
             ChildAdded = null;
@@ -2157,7 +2158,13 @@ public partial class Node : ElectronObject
     }
     internal Resource[] ReleaseSceneResourcesForSave()
     {
-        EnsureMutable(); var resources = _ownedSceneResources?.ToArray() ?? []; _ownedSceneResources = null; return resources;
+        EnsureMutable(); var resources = new List<Resource>(); var pending = new Stack<Node>(); pending.Push(this);
+        while (pending.TryPop(out var node))
+        {
+            node.EnsureMutable(); if (node._ownedSceneResources is { } owned) resources.AddRange(owned); node._ownedSceneResources = null;
+            for (var i = 0; i < node.GetChildCount(includeInternal: true); i++) pending.Push(node.GetChild(i, includeInternal: true));
+        }
+        return resources.ToArray();
     }
     internal void AdoptSceneResources(IReadOnlyList<Resource> resources)
     {

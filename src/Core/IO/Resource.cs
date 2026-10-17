@@ -898,6 +898,20 @@ public class Resource : ElectronObject
 
         internal Resource ResolveForced(Resource source) { ArgumentNullException.ThrowIfNull(source); source.ThrowIfDisposed(); return _session.TryGetDuplicate(source, out var duplicate) ? duplicate : _session.DuplicateRoot(source); }
 
+        internal void PrepareFallbacks(StoredPropertyValue source, StoredPropertyValue current, Node root)
+        {
+            if (_isolateAllResources) return;
+            if (source.TryGetValue<Resource>(out var resource) && current.TryGetValue<Resource>(out var fallback))
+                Reuse(resource, fallback);
+            else if (source.TryGetValue<Resource?[]>(out var sources) && current.TryGetValue<Resource?[]>(out var fallbacks) && sources is not null && fallbacks is not null)
+                for (var i = 0; i < Math.Min(sources.Length, fallbacks.Length); i++) Reuse(sources[i], fallbacks[i]);
+            void Reuse(Resource? resource, Resource? fallback)
+            {
+                if (resource is not null && resource.ResourceLocalToScene && fallback is not null && fallback.ResourceLocalToScene &&
+                    fallback.GetLocalScene() == root && resource.GetType() == fallback.GetType()) _session.CopyIntoLocal(resource, fallback, root);
+            }
+        }
+
         internal void SetupLocalResources()
         {
             List<Exception>? errors = null;
@@ -1042,6 +1056,48 @@ public class Resource : ElectronObject
             target.AdoptFileOwnership(source._fileOwnership?.RetainOwner());
 
             return target;
+        }
+
+        internal void CopyIntoLocal(Resource source, Resource target, Node root)
+        {
+            var copies = new List<(Resource Source, Resource Target)>();
+            Reserve(source, target);
+            foreach (var (from, to) in copies)
+            {
+                from.ThrowIfDisposed(); to.ThrowIfDisposed(); to.ValidateStateCopy(from);
+                var (name, local, translate, domain) = from.GetCopyableBaseState();
+                to.ExecuteChangeBatch(() =>
+                {
+                    to.OnResetState(); to.ResourceName = name; to.ResourceLocalToScene = local;
+                    to.CanTranslateMessages = translate; to.TranslationDomain = domain;
+                    from.CopyCustomStateTo(to, deep: true, mode, r => r is null ? null : Duplicate(r), r => r is null ? null : Duplicate(r, force: true));
+                }, emitAtEnd: true);
+                to.AdoptFileOwnership(from._fileOwnership?.RetainOwner());
+            }
+            void Reserve(Resource from, Resource to)
+            {
+                if (_duplicates.ContainsKey(from) || _duplicates.Values.Contains(to)) return;
+                _duplicates.Add(from, to); copies.Add((from, to)); _sceneLocalDuplicates.Add(to);
+                var targets = to.GetPropertyList().Where(p => p.IsStored).ToDictionary(p => p.Name, StringComparer.Ordinal);
+                foreach (var property in from.GetPropertyList().Where(p => p.IsStored))
+                {
+                    if (!targets.TryGetValue(property.Name, out var other) || other.ValueType != property.ValueType) continue;
+                    var value = property.CaptureStoredValue(from); if (!value.HasResourceReferences) continue;
+                    var fallback = other.CaptureStoredValue(to);
+                    if (value.TryGetValue<Resource>(out var child) && fallback.TryGetValue<Resource>(out var targetChild)) Pair(child, targetChild);
+                    else if (value.TryGetValue<Resource?[]>(out var children) && fallback.TryGetValue<Resource?[]>(out var targetChildren) && children is not null && targetChildren is not null)
+                        for (var i = 0; i < Math.Min(children.Length, targetChildren.Length); i++) Pair(children[i], targetChildren[i]);
+                }
+                if (MissingResourceData.For(from) is { } sourceData && MissingResourceData.For(to) is { } targetData)
+                    foreach (var field in sourceData.Fields.Values)
+                        if (targetData.Fields.TryGetValue(field.Name, out var other) && field.Schema == other.Schema && field.Role == other.Role)
+                            for (var i = 0; i < Math.Min(field.References.Length, other.References.Length); i++) Pair(field.References[i], other.References[i]);
+            }
+            void Pair(Resource? from, Resource? to)
+            {
+                if (from is not null && from.ResourceLocalToScene && to is not null && to.ResourceLocalToScene &&
+                    to.GetLocalScene() == root && from.GetType() == to.GetType()) Reserve(from, to);
+            }
         }
 
         private bool ShouldDuplicate(Resource resource) =>

@@ -56,6 +56,16 @@ internal static partial class ResourceArchive
         else if (!bounds.IsFinite() || !bounds.End.IsFinite() || bounds.Size.X < 0 || bounds.Size.Y < 0) throw new InvalidDataException("Invalid stored mesh bounds.");
         return (role, bounds, missing == 1);
     }
+    internal static (int Reference, int Root, string Path) ReadSceneLink(StreamPeerBuffer stream, int version, int index, bool[] linkedRoots, int resources)
+    {
+        if (version < 5) return (-1, -1, string.Empty);
+        var reference = stream.Get32(); var root = stream.Get32(); var path = ResourceArchiveStrings.Read(stream);
+        if (reference < -1 || reference >= resources || reference >= 0 && (index == 0 || root >= 0) ||
+            root < -1 || root >= index || root >= 0 && (!linkedRoots[root] || path.Length == 0 || path.Split('/').Any(part => !Node.IsValidStoredNodeName(part))) ||
+            root < 0 && path.Length != 0) throw new InvalidDataException("Invalid linked scene record.");
+        linkedRoots[index] = reference >= 0;
+        return (reference, root, path);
+    }
     internal static void WriteRole(StreamPeerBuffer stream, ArchiveDefinition definition, int version = 4)
     {
         stream.PutU8((byte)definition.Role);

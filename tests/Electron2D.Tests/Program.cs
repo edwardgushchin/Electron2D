@@ -9,6 +9,15 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length == 3 && args[0] == "--linked-scene") { LinkedSceneTests.RunChild(args[1], args[2]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINKED_SCENES") is { } linkedMode)
+{
+    if (linkedMode == "managed") LinkedSceneTests.RunManaged();
+    else if (linkedMode is "gpu" or "compatibility") LinkedSceneTests.RunNative(linkedMode);
+    else throw new ArgumentException("Unknown linked-scene profile.");
+    return;
+}
+
 if (args.Length == 3 && args[0] == "--missing-texture") { MissingTextureTests.RunChild(args[1], args[2]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING_TEXTURE") == "managed") { MissingTextureTests.RunManaged(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING_TEXTURE") is "gpu" or "compatibility" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING_TEXTURE") is { } missingTextureBackend) { MissingTextureTests.RunNative(missingTextureBackend); return; }
@@ -1539,6 +1548,7 @@ NavigationTopologyTests.Run();
 TextureArrayTests.Run();
 TexturePlaceholderTests.RunManaged();
 MissingTextureTests.RunManaged();
+LinkedSceneTests.RunManaged();
 IntegerSourceTextureTests.RunManaged();
 CompressedTextureTests.RunManaged();
 CompressedArrayTests.RunManaged();

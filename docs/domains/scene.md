@@ -1,3 +1,5 @@
+[Linked runtime scenes](../components/linked-scenes.md) now reconstruct actual templates with selected typed overrides, local ownership, inserted positions and original node identities. Version-5 files preserve external/bundled links; root inheritance and editor instantiation modes remain separate.
+
 # Scene domain
 
 [Process policy and physics pause](../components/scene-tree.md#process-policy-and-physics-pause) now preserve inherited eligibility notifications, root policy, nested failure handling and worker reads. Paused tree frames stop numerical integration while eligible callbacks continue; explicit owned spaces retain independent clocks. Public CPU/software-Vulkan/registered serial/separate managed and NativeAOT checks cover the slice. Full inherited physics, independent hardware GPU, networking and performance gates remain open.
@@ -168,7 +170,7 @@ The [Physics domain](physics.md) supplies RigidBody, StaticBody, CollisionShape,
 - Canvas membership emits entry/exit notifications; local and inherited visibility delivery includes Hidden, and showing schedules redraw. Manual tree notifications do not mutate membership.
 - Visibility and canvas-root, behind-parent, nested local Y and effective Z ordering govern retained commands. Rendering order does not change process/input scheduling.
 - Root-window drawing and its input/client Viewport are integrated. Root viewport Control hit testing, mouse bubbling and focused keyboard delivery run; complete GUI routing remains absent. In-memory scene switching exists, but scene file loading/reloading does not. There is no independent offscreen viewport, wider physics server/area/joint API, RPC/multiplayer, accessibility backend, or scripting. Tweening is runtime-only and has no editor/serialization surface.
-- Packed scenes support in-memory capture and typed archive persistence. Programmatic Node metadata, flattened editable-owner capture and registered persistent event endpoints execute. Linked nested/inherited overrides, placeholders, general override-remapping/import integration and non-Disabled editor edit modes remain absent.
+- Packed scenes support in-memory capture and typed archive persistence. Programmatic Node metadata, flattened editable-owner capture and registered persistent event endpoints execute. Root inheritance, deferred placeholders and import integration and non-Disabled editor edit modes remain absent.
 - Paths are typed as `string`, not a separate `NodePath`; groups are strings; wildcard search covers names with `*` and `?`.
 - A detached node may remember `QueueFree`, but deletion occurs only after attachment to a tree and a flush/frame boundary.
 - There is no complete target host/package/test matrix; current executable verification is Linux-only.

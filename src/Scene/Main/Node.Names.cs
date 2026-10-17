@@ -20,6 +20,7 @@ public partial class Node
         // Stored internal names are identities, not fresh authoring inputs.
         _name = name;
         InvalidatePathCache();
+        if (Parent is not null) ClaimUniqueName();
     }
 
     private string ResolveChildName(Node child, string name, bool readable)

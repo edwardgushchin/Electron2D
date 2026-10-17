@@ -30,6 +30,7 @@ internal sealed class ResourceArchiveLoader : ResourceFormatLoader
             };
             var count = stream.Get32();
             if (count is < 0 or > 65536) throw new InvalidDataException("Scene count exceeds budget.");
+            var linkedRoots = new bool[count];
             for (var i = 0; i < count; i++)
             {
                 types.Add(ResourceFileTypes.Get(ResourceArchiveStrings.Read(stream)).Type);
@@ -37,6 +38,8 @@ internal sealed class ResourceArchiveLoader : ResourceFormatLoader
                 _ = stream.Get32();
                 _ = stream.Get32();
                 _ = stream.Get32();
+                var link = ResourceArchive.ReadSceneLink(stream, version, i, linkedRoots, definitions.Length);
+                if (link.Reference >= 0 && definitions[link.Reference].Type.Type != typeof(PackedScene)) throw new InvalidDataException("A linked resource is not a packed scene.");
                 var groups = stream.Get32();
                 if (groups is < 0 or > 65536) throw new InvalidDataException();
                 for (var g = 0; g < groups; g++) _ = ResourceArchiveStrings.Read(stream);

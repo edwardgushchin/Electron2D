@@ -1,6 +1,6 @@
 # Packed scenes component
 
-Last updated: 2026-10-15
+Last updated: 2026-10-17
 
 ## Scope
 
@@ -22,7 +22,7 @@ All three types ship in `Electron2D.dll`. Production sources live in `src/Scene/
 2. A live `SceneState` is updated whenever packed data or the source resource path changes. A disposed state is replaced; an external state survives source disposal as a final snapshot.
 3. `Instantiate()` captures immutable packed data, creates fresh exact-type nodes parent-first, restores validated stored names directly without public normalization or rename delivery, then restores typed properties and persistent groups, builds the hierarchy, and assigns owners. Internal generated `@Class@number` names remain exact across memory/file reconstruction; other reserved path characters reject instead of silently changing stored identity.
 4. One graph session duplicates scene-local resource graphs with aliases and cycles preserved, assigns the new root before setup, invokes setup once per local duplicate, and transfers ownership of every created resource to the root.
-5. Each new node remains under an instantiation barrier while unfinished. The root receives the external scene path when applicable. The complete topology is validated, only the root receives notification `20`, topology is validated again, the barriers are removed, and the detached root is returned.
+5. Each new node remains under an instantiation barrier while unfinished. The root receives the external scene path when applicable. The complete topology is validated, the template root receives notification `20` (linked child templates already received their own notifications), topology is validated again, the barriers are removed, and the detached root is returned.
 6. Any failure attempts to dispose every returned node and resource duplicate acquired by the operation and aggregates rollback failures. Source nodes and shared source resources are never disposed by this rollback; an allocation a factory never returns remains outside engine ownership.
 
 ## Dependencies
@@ -108,10 +108,14 @@ Exported SceneState views also retain their file-backed graph snapshot through a
 
 SceneState exposes source/target paths, diagnostic signal/method labels, persistent/deferred/one-shot bits, omitted argument count, and `GetConnectionBinds<TBindings>` snapshots. Labels never dispatch members by name. The registered factory implements argument adaptation and delivery policy; the returned token policy is checked. Bound Resource values use the same duplication/local-scene/file ownership graph as node properties.
 
-Resource archives write version 4, retaining the version-3 connection table and bounded typed payloads while adding ordinary texture roles and missing-payload provenance under ADR 0013. Version 3 remains readable; versions 1 and 2 remain readable with no connections. Registration must exist in every loading process. Unknown binding IDs, incompatible endpoint types, malformed payloads and trailing bytes fail before publication.
+Resource archives write version 5, retaining the version-3 connection table and version-4 ordinary texture roles/provenance, and adding linked template/override records. Versions 3 and 4 remain readable; versions 1 and 2 remain readable with no connections. Registration must exist in every loading process. Unknown binding IDs, incompatible endpoint types, malformed payloads and trailing bytes fail before publication.
 
 `SceneConnectionTests` checks duplicate subscriptions, consumed one-shots, deferred cancellation, selected endpoints, metadata bounds/types, resource duplication, file binding identity failures, RESET preparation and owner-thread access. Its native profile loads an archived subscription and verifies moved Sprite pixels plus receiver cleanup on both GPU and compatibility rendering. Platform and owner acceptance remain separate.
 
 Scene-local physical resource graphs now preserve borrowed non-local identities for both built-in and external paths. Local shapes/resources retain aliases and cycles within each instance and isolate geometry between instances. Setup sees the complete detached scene once per local duplicate. GetLocalScene borrows immutable weak object identity, returns null when the root starts disposal or is collected, and transfers with ownership on Node.ReplaceBy. Ordinary deep duplication and explicit force/isolated-authoring policies retain separate rules. Public-only --local-scenes exercises CPU/GPU/registered ordinary/separate worlds, actual query identities, GC retirement, setup rollback and strict 0/0 managed bytes for 128 warm/128 measured two-scene intervals; the connected base/packed/replacement/authoring suite also passes. Evidence is retained under bin/physics-local-scenes/2026-10-14. Full inherited, native allocation, foreign-platform and hardware/window/performance acceptance remain open.
 
 The final active-body cohort also passes strict current-source NativeAOT publication and six native CPU/GPU/registered ordinary/separate profiles. Seven managed profiles cover the same local scenes plus base/packed/replacement/isolated authoring; the existing complete CPU/GPU physical suites pass against the identical retained runtime. Each of twelve local brackets drives two worlds with active rigid integration at 3 units/s and dt 1/60, position-increment tolerance 0.00005 for float accumulation, live queries and borrowed root reads: 128 warm/128 measured intervals remain 0/0 owner/all-thread managed bytes. Four native full-callback/PackedScene profiles also pass at zero warm bytes. GPU uses lavapipe only; separate local profiles observe two real solver threads for the two worlds. Source/runtime/ELF manifests and exact limits are retained in bin/physics-local-scenes/2026-10-14/validation.json.
+
+## Linked runtime instances
+
+[Linked scenes](linked-scenes.md) retain actual borrowed templates, reconstruct implicit children and apply complete selected typed state to original relative identities. Nested local-resource ownership, stable fallback aliases/RIDs, inherited connection omission, sibling placement, fresh external/bundled files and construction rollback execute on current backends. Root inheritance, deferred placeholders and non-Disabled editor modes remain separate gaps.
