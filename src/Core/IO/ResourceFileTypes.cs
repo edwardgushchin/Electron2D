@@ -78,6 +78,7 @@ public static partial class ResourceFileTypes
         RegisterResource("BitMap", CreateBitMap);
         RegisterResource("Image", CreateImage);
         RegisterResource("ImageTexture", CreateImageTexture);
+        RegisterResource("PlaceholderTexture", CreatePlaceholderTexture);
         RegisterResource("CompressedTexture", CreateCompressedTexture);
         RegisterResource("TextureArray", CreateTextureArray);
         RegisterResource("CompressedTextureArray", CreateCompressedTextureArray);
@@ -192,6 +193,7 @@ public static partial class ResourceFileTypes
     private static Image CreateImage() => new();
     private static BitMap CreateBitMap() => new();
     private static ImageTexture CreateImageTexture() => new();
+    private static PlaceholderTexture CreatePlaceholderTexture() => new();
     private static CompressedTexture CreateCompressedTexture() => new();
     private static TextureArray CreateTextureArray() => new();
     private static CompressedTextureArray CreateCompressedTextureArray() => new();

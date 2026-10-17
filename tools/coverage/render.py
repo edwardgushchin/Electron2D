@@ -298,7 +298,7 @@ def reason_for_type(item, lookup):
         return "Blocked", "Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041)."
     if name in {"CameraFeed", "CameraServer", "CameraTexture"}:
         return "Blocked", "Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021)."
-    if name in {"PlaceholderMaterial", "PlaceholderTexture2D"}:
+    if name == "PlaceholderMaterial":
         return "Blocked", "Trigger: first typed missing-asset placeholder and loader slice (ADRs 0013 and 0023)."
     if name in {"BlitMaterial", "DrawableTexture2D"}:
         return "Blocked", "Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028)."
@@ -344,6 +344,8 @@ def reason_for_type(item, lookup):
         return "Blocked", "Trigger: typed mesh topology/adjacency and incremental geometry editing, attribute conversion and transactional commit to the now executable ArrayMesh; missing advanced channels enter their own shader/skeleton producer slices (ADR 0092)."
     if name in {"ImporterMesh", "MeshLibrary"}:
         return "Blocked", "Trigger: concrete applicable 2D mesh import/library entry model, owned resource graphs and loader/authoring format integration over the implemented mesh resources (ADRs 0013/0092); audit 3D-only entry fields separately."
+    if name == "InstancePlaceholder":
+        return "Blocked", "Loader exists under ADR 0013; prerequisite: ADR 0023 linked-subscene override records, typed pending properties and failure-safe instance replacement/ownership, followed by Node load-placeholder flag producers. A path flag alone cannot defer a concrete scene. Raw Dictionary values remain excluded by ADR 0017; typed property queries must preserve stored order."
     blocked_slices = (
         ({"ResourceFormatSaver", "ResourceImporter", "ResourcePreloader", "ResourceUID", "MissingResource", "MissingNode", "InstancePlaceholder", "PCKPacker", "ZIPReader", "ZIPPacker"},
          "first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023)"),
@@ -690,7 +692,7 @@ def render():
             updated = "2026-10-15"
         if name in {"Node", "SceneTree", "ImageTextureLayered", "Texture2DArray", "CompressedTexture2D", "CompressedTexture2DArray", "CompressedTextureLayered", "RenderingServer"}:
             updated = "2026-10-16"
-        if name in {"RenderingServer", "ProjectSettings", "Viewport", "PhysicsServer2D", "PhysicsServer2DExtension"}:
+        if name in {"RenderingServer", "ProjectSettings", "Viewport", "PhysicsServer2D", "PhysicsServer2DExtension", "Texture2D", "PlaceholderTexture2D", "InstancePlaceholder"}:
             updated = "2026-10-17"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":

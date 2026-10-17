@@ -9,6 +9,15 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length == 2 && args[0] == "--texture-placeholder-archive") { TexturePlaceholderTests.ReadArchive(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_PLACEHOLDER") is { } placeholderMode)
+{
+    if (placeholderMode == "managed") TexturePlaceholderTests.RunManaged();
+    else if (placeholderMode is "gpu" or "compatibility") TexturePlaceholderTests.RunNative(placeholderMode);
+    else throw new ArgumentException("Unknown texture-placeholder test profile.");
+    return;
+}
+
 if (args.Length >= 2 && args[0] == "--editor-state-child") { BackendChecks.ReadEditorState(args[1], args.Contains("--gpu") ? PhysicsServer.Backend.GPU : args.Contains("--cpu") ? PhysicsServer.Backend.CPU : null, args.Contains("--threaded")); return; }
 if (args.Length == 2 && args[0] == "--video-archive") { VideoPlaybackTests.ReadArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIDEO") == "managed") { VideoPlaybackTests.Managed(); return; }
@@ -1524,6 +1533,7 @@ RenderingPrimitiveTests.Run();
 RenderingCanvasTests.Run();
 NavigationTopologyTests.Run();
 TextureArrayTests.Run();
+TexturePlaceholderTests.RunManaged();
 IntegerSourceTextureTests.RunManaged();
 CompressedTextureTests.RunManaged();
 CompressedArrayTests.RunManaged();

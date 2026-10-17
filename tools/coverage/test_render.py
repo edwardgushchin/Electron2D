@@ -618,6 +618,11 @@ def main():
         assert " | Implemented | " in row and "raw unsigned RGBA16" in row, name
     assert "Implemented" in class_rows["TextureLayered"] and "separate typed layered resources" in class_rows["TextureLayered"]
     assert "Implemented" in class_rows["PlaceholderTexture2DArray"]
+    placeholder_rows = [row for row in pages[CLASS_PAGES / coverage_target("PlaceholderTexture2D")].splitlines() if row.startswith("| [`")]
+    assert len(placeholder_rows) == 3 and all(" | Implemented | " in row for row in placeholder_rows)
+    assert "../../classes/PlaceholderTexture.md" in placeholder_rows[0]
+    factory_row = next(row for row in pages[CLASS_PAGES / "Texture.md"].splitlines() if row.startswith("| [`method create_placeholder("))
+    assert " | Implemented | " in factory_row and "CreatePlaceholder" in factory_row
     assert " | Partial | " in class_rows["Line2D"] and "../../classes/Line.md" in class_rows["Line2D"]
     line_rows = [row for row in pages[CLASS_PAGES / "Line2D.md"].splitlines() if row.startswith("| [`")]
     assert len(line_rows) == 33 and all(" | Unimplemented | " not in row and " | Blocked | " not in row for row in line_rows)

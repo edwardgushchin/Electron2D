@@ -1,5 +1,7 @@
 # API coverage register
 
+[Ordinary texture placeholders](../components/texture-placeholders.md) now execute dimension-only factory output, typed resource/scene archives, scene-local ownership and diagnostic object/RID drawing on GPU and Compatibility. The four reference declarations are implemented; automatic missing-texture-class recovery retains its separate role/payload prerequisite.
+
 [Project shader globals](../components/global-shader-parameters.md#project-authored-globals) now connect all 25 applicable logical roles to typed saved settings, feature-aware startup before Ready, and session-owned image resources. Scene overrides compose over these bases. Public JIT/NativeAOT consumers exercise saved-project shader pixels; the separate global-buffer pool-size setting retains its exact arena/ABI prerequisite.
 
 [OS keyboard names](../components/input-runtime.md#keyboard-name-conversion) now connect three missing declarations to the shared key formatter, typed named parsing and character classification. Saved-project InputMap consumers execute with JIT/NativeAOT without a native host. Low-processor rendering retains its exact invalidation/scheduler prerequisite.

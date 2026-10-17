@@ -135,6 +135,8 @@ CanvasModulate focused checks use `ELECTRON2D_TEST_CANVAS_MODULATE=managed`, `gp
 
 Foldable focused validation uses `ELECTRON2D_TEST_FOLDABLE=managed`, `gpu` or `compatibility` with the Release runner; the managed profile launches `--foldable-archive` in a fresh process. `ELECTRON2D_CAPTURE_DIR` retains native evidence. Include TabContainer validation when changing shared BarPosition.
 
+For ordinary texture placeholders, run `ELECTRON2D_TEST_TEXTURE_PLACEHOLDER=managed`, `gpu` and `compatibility` with the Release test runner. The managed profile includes fresh-process resource/scene archives. Native profiles require real diagnostic pixels, zero-size redraw, borrowed RID lifetime and 64 prepared size-update/render frames. Set `ELECTRON2D_CAPTURE_DIR` to retain rendered evidence. Automatic unknown-texture recovery and foreign execution are separate gates.
+
 ZIP focused verification uses `ELECTRON2D_TEST_ZIP=managed`, `gpu` or `compatibility` with the Release runner. Managed tests exercise standard .NET interoperability and sparse ZIP64 offsets on Linux/macOS; native profiles round-trip a bundled scene/resource archive into actual texture pixels.
 
 For video changes, run ELECTRON2D_TEST_VIDEO=managed and the gpu/compatibility profiles in the executable test project. Set ELECTRON2D_VIDEO_OUTPUT to retain rendered/PCM evidence. tools/ogv-native/test_video.py LIBRARY OUTPUT compares 27 independent profiles and multiple tracks; Electron2DVideoAllocationCheck accepts those .ogv paths and measures prepared replay. Preserve encoder regressions, exact nine-export payload audits and current source/package checks when changing this shared closure.

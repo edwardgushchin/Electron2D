@@ -642,7 +642,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PlaceholderCubemapArray](classes/PlaceholderCubemapArray.md) | PlaceholderTextureLayered | Excluded | 0 |
 | [PlaceholderMaterial](classes/PlaceholderMaterial.md) | Material | Blocked | 0 |
 | [PlaceholderMesh](classes/PlaceholderMesh.md) | Mesh | Implemented | 1 |
-| [PlaceholderTexture2D](classes/PlaceholderTexture2D.md) | Texture2D | Blocked | 2 |
+| [PlaceholderTexture2D](classes/PlaceholderTexture2D.md) | Texture2D | Implemented | 2 |
 | [PlaceholderTexture2DArray](classes/PlaceholderTexture2DArray.md) | PlaceholderTextureLayered | Implemented | 0 |
 | [PlaceholderTexture3D](classes/PlaceholderTexture3D.md) | Texture3D | Excluded | 1 |
 | [PlaceholderTextureLayered](classes/PlaceholderTextureLayered.md) | TextureLayered | Implemented | 2 |

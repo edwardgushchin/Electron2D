@@ -67,6 +67,17 @@ public abstract class Texture : Resource
     /// <summary>Gets the logical drawing size.</summary>
     /// <returns>The width and height as a floating-point vector.</returns>
     public virtual Vector2 GetSize() => new(GetWidth(), GetHeight());
+
+    /// <summary>Creates an independent placeholder retaining this texture's logical dimensions without its image.</summary>
+    /// <returns>A caller-owned placeholder with default resource metadata and no reference to this texture.</returns>
+    /// <exception cref="ObjectDisposedException">This texture is disposed.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The logical size is not finite or cannot be represented by signed 32-bit pixel dimensions.</exception>
+    public PlaceholderTexture CreatePlaceholder()
+    {
+        ThrowIfDisposed();
+        var size = GetSize();
+        return new PlaceholderTexture { Size = size };
+    }
     /// <summary>Gets the original image's pixel format.</summary>
     /// <value>L8 for an uninitialized texture.</value>
     public virtual Image.Format PixelFormat => CapturePixels()?.Source.Format ?? Image.Format.L8;

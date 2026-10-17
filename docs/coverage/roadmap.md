@@ -5,7 +5,7 @@ Last updated: 2026-10-17
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
 1. Close 1471 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 665 missing declarations in already represented type families; split each type by its documented dependency trigger.
+2. Complete 664 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -30,11 +30,11 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [FileAccess](classes/FileAccess.md) | 2 | 65 |
 | [Image](classes/Image.md) | 1 | 72 |
 | [DirAccess](classes/DirAccess.md) | 1 | 39 |
-| [Texture2D](classes/Texture.md#godot-texture2d) | 1 | 22 |
 | [Polygon2D](classes/Polygon2D.md) | 1 | 13 |
 | [Material](classes/Material.md) | 1 | 0 |
 | [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | 0 | 119 |
 | [CanvasItem](classes/CanvasItem.md) | 0 | 26 |
+| [Texture2D](classes/Texture.md#godot-texture2d) | 0 | 22 |
 | [TranslationServer](classes/TranslationServer.md) | 0 | 20 |
 | [ItemList](classes/ItemList.md) | 0 | 19 |
 | [Line2D](classes/Line2D.md) | 0 | 14 |
@@ -101,12 +101,11 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
 | Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 3 |
 | Trigger: actual GPU particle simulation, process-material shader/data integration, native storage and compute/collision/attractor ownership under ADR 0028. CPUParticles baseline does not provide GPU compute or process-material conversion. | 2 |
-| Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 2 |
-| Trigger: first typed missing-asset placeholder and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
 | ADR 0094: Typed MultiplayerPeer now executes. Requires executable WebRTCPeerConnection/DataChannel SDP/ICE/DTLS/SCTP host integration and an owned WebRTC multiplayer cohort. | 1 |
 | Exact prerequisite: typed persistent scene signal/endpoint storage and binding, plus missing-node factory/reference projection. Version-2 resource field roles do not implement node signal recording or missing-node hierarchy restoration (ADRs 0013/0023). No inert recording switch. | 1 |
+| Loader exists under ADR 0013; prerequisite: ADR 0023 linked-subscene override records, typed pending properties and failure-safe instance replacement/ownership, followed by Node load-placeholder flag producers. A path flag alone cannot defer a concrete scene. Raw Dictionary values remain excluded by ADR 0017; typed property queries must preserve stored order. | 1 |
 | Navigation2D: trigger is the next operation-specific navigation link, agent/obstacle avoidance, source-geometry bake or typed query slice beyond the authored map/region backend (ADRs 0052/0097). | 1 |
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
 | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. | 1 |
@@ -121,6 +120,8 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first portable external-image ownership and native texture-import decision (ADRs 0021 and 0028). | 1 |
 | Trigger: first semantic accessibility-tree, focus and native screen-reader bridge slice (ADR 0041). | 1 |
 | Trigger: first typed 2D mesh-data and MeshInstance2D rendering slice; audit 3D-only members individually (ADR 0028). | 1 |
+| Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 1 |
+| Trigger: first typed missing-asset placeholder and loader slice (ADRs 0013 and 0023). | 1 |
 | Separate product-scope decision for each of 1 currently unassigned families; see their catalog pages for exact names. | 1 |
 
 Each [catalog entry](catalog.md) opens the complete member table. Excluded rows have an accepted product reason and no implementation task.

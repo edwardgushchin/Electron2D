@@ -529,6 +529,26 @@
       "godot": "Image::method:load_ktx_from_buffer(PackedByteArray:)",
       "electron2d": "method:Electron2D.Image.LoadKTXFromBuffer(System.ReadOnlySpan<System.Byte>)",
       "reason": "ADR 0039: copied bounded flat KTX1/KTX2 input, complete mip/precision/raw-block layouts, portable Basis LDR/HDR decoding, row padding, endian/orientation/swizzle and sRGB handling; Image file/resource/texture consumers share atomic publication. Independent codec oracles and Linux GPU/Compatibility sampling are exercised; ETC/EAC/ASTC transformations now execute through shared decoding, including signed EAC and punchthrough identities; complete color/metadata adaptation and foreign/native package publication remain separate gates."
+    },
+    {
+      "godot": "class:PlaceholderTexture2D",
+      "electron2d": "T:Electron2D.PlaceholderTexture",
+      "reason": "ADRs 0004/0013/0014/0028: ordinary dimension-only placeholders, virtual logical-size factory, equal-write notification, typed resource/scene archives, independent identities and scene-local ownership execute. GetImage stays null; existing diagnostic object/RID drawing executes on GPU and Compatibility. Nonfinite/unrepresentable dimensions reject before mutation. Automatic unknown-texture-class recovery needs a texture-role/payload envelope and remains outside this explicit producer; foreign/native-allocation/owner acceptance are separate."
+    },
+    {
+      "godot": "PlaceholderTexture2D::property:size",
+      "electron2d": "property:Electron2D.PlaceholderTexture.Size()",
+      "reason": "ADRs 0004/0013/0014/0028: ordinary dimension-only placeholders, virtual logical-size factory, equal-write notification, typed resource/scene archives, independent identities and scene-local ownership execute. GetImage stays null; existing diagnostic object/RID drawing executes on GPU and Compatibility. Nonfinite/unrepresentable dimensions reject before mutation. Automatic unknown-texture-class recovery needs a texture-role/payload envelope and remains outside this explicit producer; foreign/native-allocation/owner acceptance are separate."
+    },
+    {
+      "godot": "PlaceholderTexture2D::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "ADRs 0004/0013/0014/0028: ordinary dimension-only placeholders, virtual logical-size factory, equal-write notification, typed resource/scene archives, independent identities and scene-local ownership execute. GetImage stays null; existing diagnostic object/RID drawing executes on GPU and Compatibility. Nonfinite/unrepresentable dimensions reject before mutation. Automatic unknown-texture-class recovery needs a texture-role/payload envelope and remains outside this explicit producer; foreign/native-allocation/owner acceptance are separate."
+    },
+    {
+      "godot": "Texture2D::method:create_placeholder()",
+      "electron2d": "method:Electron2D.Texture.CreatePlaceholder()",
+      "reason": "ADRs 0004/0013/0014/0028: ordinary dimension-only placeholders, virtual logical-size factory, equal-write notification, typed resource/scene archives, independent identities and scene-local ownership execute. GetImage stays null; existing diagnostic object/RID drawing executes on GPU and Compatibility. Nonfinite/unrepresentable dimensions reject before mutation. Automatic unknown-texture-class recovery needs a texture-role/payload envelope and remains outside this explicit producer; foreign/native-allocation/owner acceptance are separate."
     }
   ],
   "statusGroups": [
@@ -779,6 +799,16 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0039: copied bounded flat KTX1/KTX2 input, complete mip/precision/raw-block layouts, portable Basis LDR/HDR decoding, row padding, endian/orientation/swizzle and sRGB handling; Image file/resource/texture consumers share atomic publication. Independent codec oracles and Linux GPU/Compatibility sampling are exercised; ETC/EAC/ASTC transformations now execute through shared decoding, including signed EAC and punchthrough identities; complete color/metadata adaptation and foreign/native package publication remain separate gates."
+    },
+    {
+      "godot": [
+        "class:PlaceholderTexture2D",
+        "PlaceholderTexture2D::property:size",
+        "PlaceholderTexture2D::property:resource_local_to_scene",
+        "Texture2D::method:create_placeholder()"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0004/0013/0014/0028: ordinary dimension-only placeholders, virtual logical-size factory, equal-write notification, typed resource/scene archives, independent identities and scene-local ownership execute. GetImage stays null; existing diagnostic object/RID drawing executes on GPU and Compatibility. Nonfinite/unrepresentable dimensions reject before mutation. Automatic unknown-texture-class recovery needs a texture-role/payload envelope and remains outside this explicit producer; foreign/native-allocation/owner acceptance are separate. Focused Linux managed/fresh-process and offscreen/Wayland software-Vulkan/Compatibility pixel checks pass; both native profiles measure 64 prepared active size-update/render frames at zero owner-thread managed bytes."
     }
   ],
   "extras": [
@@ -1023,6 +1053,46 @@
       "state": "Implemented",
       "adr": "adr-0093",
       "reason": "Immutable compiled parameter/predicate IDs reconstruct typed graph files without runtime member/delegate discovery; duplicate/unknown IDs, fresh-process execution and independent authored cells tested."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PlaceholderTexture..ctor()",
+      "reason": "Typed C# constructor, explicit Resource stored-state/duplication hook, or inherited Texture dimension/unspecified-format override for the ordinary placeholder resource. Reference roles: PlaceholderTexture2D construction/size, Texture2D getters and Resource duplicate/get_property_list. No additional game-facing capability or native ownership is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed C# constructor, explicit Resource stored-state/duplication hook, or inherited Texture dimension/unspecified-format override for the ordinary placeholder resource. Reference roles: PlaceholderTexture2D construction/size, Texture2D getters and Resource duplicate/get_property_list. No additional game-facing capability or native ownership is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderTexture.CreateDuplicateInstance()",
+      "reason": "Typed C# constructor, explicit Resource stored-state/duplication hook, or inherited Texture dimension/unspecified-format override for the ordinary placeholder resource. Reference roles: PlaceholderTexture2D construction/size, Texture2D getters and Resource duplicate/get_property_list. No additional game-facing capability or native ownership is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderTexture.GetHeight()",
+      "reason": "Typed C# constructor, explicit Resource stored-state/duplication hook, or inherited Texture dimension/unspecified-format override for the ordinary placeholder resource. Reference roles: PlaceholderTexture2D construction/size, Texture2D getters and Resource duplicate/get_property_list. No additional game-facing capability or native ownership is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderTexture.GetPropertyDescriptors()",
+      "reason": "Typed C# constructor, explicit Resource stored-state/duplication hook, or inherited Texture dimension/unspecified-format override for the ordinary placeholder resource. Reference roles: PlaceholderTexture2D construction/size, Texture2D getters and Resource duplicate/get_property_list. No additional game-facing capability or native ownership is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderTexture.GetSize()",
+      "reason": "Typed C# constructor, explicit Resource stored-state/duplication hook, or inherited Texture dimension/unspecified-format override for the ordinary placeholder resource. Reference roles: PlaceholderTexture2D construction/size, Texture2D getters and Resource duplicate/get_property_list. No additional game-facing capability or native ownership is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderTexture.GetWidth()",
+      "reason": "Typed C# constructor, explicit Resource stored-state/duplication hook, or inherited Texture dimension/unspecified-format override for the ordinary placeholder resource. Reference roles: PlaceholderTexture2D construction/size, Texture2D getters and Resource duplicate/get_property_list. No additional game-facing capability or native ownership is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "property:Electron2D.PlaceholderTexture.PixelFormat()",
+      "reason": "Typed C# constructor, explicit Resource stored-state/duplication hook, or inherited Texture dimension/unspecified-format override for the ordinary placeholder resource. Reference roles: PlaceholderTexture2D construction/size, Texture2D getters and Resource duplicate/get_property_list. No additional game-facing capability or native ownership is exposed.",
+      "adr": "ADRs 0004/0013/0014/0028"
     }
   ]
 }

@@ -1,6 +1,6 @@
 # Texture
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 - Declaration: `public abstract class Texture : Resource`
 - Source: [Texture.cs](../../src/Scene/Resources/Texture.cs)
@@ -33,6 +33,8 @@ using var copy = texture.GetImage();
 DisplayServer.CursorSetCustomImage also accepts this resource through its Resource parameter. It borrows the Texture, obtains and disposes a caller-owned GetImage copy, and installs an independent native cursor. Cursor dimensions and hotspots use actual image pixels rather than logical size overrides.
 
 ## API summary
+
+`CreatePlaceholder()` returns a caller-owned [PlaceholderTexture](PlaceholderTexture.md) with only the current virtual logical size. It retains no source image or resource metadata and can be saved for headless scene layout.
 
 | Declaration | Contract |
 | --- | --- |

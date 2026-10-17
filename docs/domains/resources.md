@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 [Per-referrer resource IDs](../components/resources.md#per-referrer-path-ids)
 now provide exact shared path-pair authoring metadata without editor UI. Public
@@ -40,6 +40,8 @@ Concrete TwoBoneIK/CCDIK/FABRIK resources retain copied bounded joint configurat
 [Modification stacks](../components/skeletal-animation.md) own copied slot storage and borrow modifications. Scene binding is exclusive and transient. PackedScene force-copies the complete stack graph per rig through existing alias-preserving sessions; typed built-in schemas persist concrete LookAt settings and copied Polygon bone records. Arbitrary custom extensions require explicit registration/copy contracts.
 
 ## Responsibility
+
+Ordinary [texture placeholders](../components/texture-placeholders.md) execute explicit pixel stripping through `Texture.CreatePlaceholder`, typed dimension archives and scene-local instances. They retain layout size and use diagnostic GPU/Compatibility pixels. Automatic unknown-texture substitution still requires a role-aware missing-payload recovery extension.
 
 Shader import retains logical bool and boolean vectors/arrays in validated SPIR-V metadata. Materials expose bool scalars and int vector masks; raw unsigned fields retain their numeric types. Both source languages and compatible external artifacts share reflection and backend checks. See [the boolean contract](../components/shader-materials.md#boolean-type-information).
 

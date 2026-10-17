@@ -296,6 +296,7 @@ public sealed partial class ThemeDB
         ["PhysicsTestMotionResult"] = ["PhysicsTestMotionResult", "ElectronObject"],
         ["PinJoint"] = ["PinJoint", "Joint", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["PlaceholderMesh"] = ["PlaceholderMesh", "Mesh", "Resource", "ElectronObject"],
+        ["PlaceholderTexture"] = ["PlaceholderTexture", "Texture", "Resource", "ElectronObject"],
         ["PlaceholderTextureArray"] = ["PlaceholderTextureArray", "PlaceholderTextureLayered", "TextureLayered", "Resource", "ElectronObject"],
         ["PlaceholderTextureLayered"] = ["PlaceholderTextureLayered", "TextureLayered", "Resource", "ElectronObject"],
         ["PointLight"] = ["PointLight", "Light", "Entity", "CanvasItem", "Node", "ElectronObject"],
