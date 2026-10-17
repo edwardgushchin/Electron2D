@@ -35,7 +35,8 @@ public abstract partial class CollisionObject : Entity
     /// <summary>Gets or sets this collider's relative weight when another body recovers from penetration.</summary>
     /// <value>A finite positive weight, one by default.</value>
     /// <remarks>A higher weight favors recovery out of this body. It does not alter rigid contact impulses.
-    /// Area retains this property but does not obstruct body motion. Edits preserve sleep and fixture identity.</remarks>
+    /// Area retains this property but does not obstruct body motion. Edits preserve sleep and fixture identity.
+    /// Failed selected publication retains the new value; live query or nonzero-step preparation retries it before numerical use.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or not positive.</exception>
     /// <exception cref="InvalidOperationException">Access violates the owner-thread or physics-step boundary.</exception>
     /// <exception cref="ObjectDisposedException">The object is disposed.</exception>

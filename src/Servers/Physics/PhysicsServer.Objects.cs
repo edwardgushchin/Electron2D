@@ -6,7 +6,7 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live scene or server body RID.</param>
     /// <param name="instance">A live engine object, or null to clear the association.</param>
     /// <remarks>Stores the instance ID and a weak reference. Does not move, wake or recreate the body.
-    /// Existing query/contact snapshots retain their sampled association.</remarks>
+    /// Existing query/contact snapshots retain their sampled association. A selected publication failure retains committed authoring and object lifetime guards; live query or nonzero-step preparation retries the complete current metadata.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
     /// <exception cref="ObjectDisposedException">The supplied instance is disposed.</exception>
     /// <exception cref="InvalidOperationException">Access violates an owner-thread or solver boundary.</exception>
@@ -23,7 +23,7 @@ public sealed partial class PhysicsServer
     /// <summary>Borrows the object instance reported for an Area in queries and overlap callbacks.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="instance">A live engine object, or null to clear the association.</param>
-    /// <remarks>Stores the instance ID and a weak reference without changing geometry or existing snapshots.</remarks>
+    /// <remarks>Stores the instance ID and a weak reference without changing geometry or existing snapshots. A selected publication failure retains committed authoring and object lifetime guards; live query or nonzero-step preparation retries the complete current metadata.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live Area.</exception>
     /// <exception cref="ObjectDisposedException">The supplied instance is disposed.</exception>
     /// <exception cref="InvalidOperationException">Access violates an owner-thread or solver boundary.</exception>

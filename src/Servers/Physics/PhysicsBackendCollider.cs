@@ -52,13 +52,17 @@ public abstract class PhysicsBackendCollider
     /// <summary>Publishes the owning collider's object and canvas associations.</summary>
     /// <remarks>Called after Attach and before shape preparation, including values authored while detached.
     /// Later association changes call this hook again. Zero clears either association; IDs retain all 64 bits.
-    /// The call borrows the world owner context. Failure during attachment retires that attachment.</remarks>
+    /// The call borrows the world owner context. Failure during attachment retires that attachment.
+    /// Live publication failures retain committed authoring and borrowed object protection. Before a later live query or nonzero step,
+    /// the owner retries its complete current metadata; repeated failure remains pending without advancing the solver tick.</remarks>
     /// <param name="objectID">The retained weak object association's instance ID, or zero.</param>
     /// <param name="canvasID">The exact point-query canvas association, or zero for the default canvas.</param>
     protected internal abstract void RefreshIdentity(ulong objectID, ulong canvasID);
     /// <summary>Publishes the owning collider's finite positive collision priority.</summary>
     /// <remarks>Called after initial identity publication, including detached authoring, and on later priority changes.
-    /// The call borrows the world owner context. Failure during attachment retires that attachment.</remarks>
+    /// The call borrows the world owner context. Failure during attachment retires that attachment.
+    /// Live publication failures retain committed authoring and borrowed object protection. Before a later live query or nonzero step,
+    /// the owner retries its complete current metadata; repeated failure remains pending without advancing the solver tick.</remarks>
     /// <param name="value">The retained finite positive priority, initially 1 unless authored otherwise.</param>
     protected internal abstract void SetCollisionPriority(float value);
     /// <summary>Supplies the selected implementation operation: update filter.</summary>

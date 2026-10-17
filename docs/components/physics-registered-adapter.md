@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-17
 
+## Failed collider metadata publication
+
+Object/canvas/priority setters retain committed common authoring when the selected hook fails. Reverse node membership commits before publication, so the new target remains protected during failing hooks and the former target loses that binding. Per-attachment dirty identity/priority flags share the existing filter-repair preflight. A live query or nonzero step retries complete current metadata before numerical use, without rebuilding shapes or replaying a failed Solve. Failed preparation preserves its original error and leaves the tick unchanged. Getters remain pure authored reads; detach clears retired attachment debt.
+
+Target-world ownership and the external-node reverse binding now precede selected collider creation as well as Attach/identity/priority callbacks. Failed factory/attachment cleanup removes reverse membership and releases partial implementation state, allowing target disposal and later attachment retry. The public-only --metadata-transactions fixture covers 28 ordinary scene/API operations, 112 injected live failure cases with both repair routes, six initial failure cases and 128 edited full frames with actual motion/queries at zero owner/all-thread managed bytes. CPU/software-Vulkan/registered owner/separate managed and NativeAOT evidence is retained under bin/physics-metadata-transactions/2026-10-17. Complete numerical/custom/native/foreign/network and hardware/performance acceptance remains open.
+
 ## Prepared collider metadata reads
 
 Body/Area GetSpace, GetCollisionLayer, GetCollisionMask, GetObjectInstanceID and GetCanvasInstanceID, plus BodyGetCollisionPriority, read common prepared inputs in selected numerical and status hooks. Owner/separate numerical lanes use the same authored values. These getters do not enter live solver state or transfer GPU data. Other threads and failed worlds remain rejected; metadata writes, world transfers and live queries retain their existing guards.

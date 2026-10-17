@@ -1,6 +1,6 @@
 # PhysicsColliderBackend
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 **Declaration:** `internal sealed partial class PhysicsColliderBackend`
 
@@ -12,6 +12,10 @@ Last updated: 2026-10-16
 **Component:** [Scene physics bodies](../components/physics-bodies.md)
 
 [GPU publication for current consumers](../components/gpu-demand-publication.md) now keeps unobserved raw bodies on device. Explicit getters select one current snapshot; scene consumers, live raw views, contact receivers and kinematic completion retain fresh data. Portable preparation batches its explicit state demand. Cached values are qualified by the completed interval epoch; callback ordering and failure/lifetime guards remain unchanged.
+
+## Metadata retry
+
+Object/canvas/priority authoring and reverse node membership commit before selected publication. Initial factory/attachment hooks already borrow the target world and node. Failed live publication queues complete metadata repair before live queries/nonzero steps; repeated preparation failure keeps the tick unchanged. Failed initial creation retires partial bindings. See [the contract and executable limits](../components/physics-registered-adapter.md#failed-collider-metadata-publication).
 
 ## Responsibility and ownership
 

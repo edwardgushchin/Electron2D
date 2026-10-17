@@ -4,6 +4,8 @@ Last updated: 2026-10-17
 
 The object/canvas ID getters also participate in [prepared numerical inputs](physics-registered-adapter.md#prepared-collider-metadata-reads). They read retained numeric associations in owner/separate implementation hooks without dereferencing the weak target or entering solver state; public-only checks include disposal, transfer, status/failure/thread guards and zero warmed full-frame managed bytes.
 
+Live publication failures preserve the committed association and [repair before numerical use](physics-registered-adapter.md#failed-collider-metadata-publication). The new node's reverse binding is protected before a selected hook runs; initial factory/attachment failure removes partial membership. Getters do not force repair or erase the retained ID.
+
 ## Public contract
 
 `PhysicsServer.BodyAttachObject(body, instance)` and `AreaAttachObject` accept a live

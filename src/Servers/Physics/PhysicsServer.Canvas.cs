@@ -6,7 +6,7 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live scene or server body RID.</param>
     /// <param name="id">CanvasLayer instance ID, or zero for the default canvas.</param>
     /// <remarks>The numeric association borrows no object and does not change pose or collisions.
-    /// Scene canvas entry and exit replace it with the scene's current association.</remarks>
+    /// Scene canvas entry and exit replace it with the scene's current association. A selected publication failure retains committed authoring and object lifetime guards; live query or nonzero-step preparation retries the complete current metadata.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
     /// <exception cref="InvalidOperationException">Access violates the scene/world owner or solver boundary.</exception>
     public static void BodyAttachCanvasInstanceID(RID body, ulong id) => Service.ColliderBackend(body, false).CanvasInstanceID = id;
@@ -23,7 +23,7 @@ public sealed partial class PhysicsServer
     /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="id">CanvasLayer instance ID, or zero for the default canvas.</param>
     /// <remarks>The numeric association borrows no object and does not change pose or overlaps.
-    /// Scene canvas entry and exit replace it with the scene's current association.</remarks>
+    /// Scene canvas entry and exit replace it with the scene's current association. A selected publication failure retains committed authoring and object lifetime guards; live query or nonzero-step preparation retries the complete current metadata.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live Area.</exception>
     /// <exception cref="InvalidOperationException">Access violates the scene/world owner or solver boundary.</exception>
     public static void AreaAttachCanvasInstanceID(RID area, ulong id) => Service.ColliderBackend(area, true).CanvasInstanceID = id;

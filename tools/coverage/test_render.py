@@ -333,6 +333,11 @@ def main():
     extension_metadata_reads = [row for row in pages[CLASS_PAGES / "PhysicsServer2DExtension.md"].splitlines()
                                if any(f"method {name}(" in row for name in metadata_names)]
     assert len(extension_metadata_reads) == 11 and all(" | Implemented | " in row for row in extension_metadata_reads)
+    publication_names = [f"_{kind}_attach_{association}_instance_id" for kind in ("body", "area") for association in ("object", "canvas")]
+    publication_names.append("_body_set_collision_priority")
+    extension_publications = [row for row in pages[CLASS_PAGES / "PhysicsServer2DExtension.md"].splitlines()
+                              if any(f"method {name}(" in row for name in publication_names)]
+    assert len(extension_publications) == 5 and all(" | Implemented | " in row for row in extension_publications)
     boundary_rows = [row for row in pages[CLASS_PAGES / "WorldBoundaryShape2D.md"].splitlines() if row.startswith("| [`")]
     assert len(boundary_rows) == 3 and all(" | Implemented | " in row for row in boundary_rows)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)

@@ -1,5 +1,7 @@
 # Physics domain
 
+[Collider metadata publication failures](../components/physics-registered-adapter.md#failed-collider-metadata-publication) now preserve committed identity/priority, protect new borrowed nodes and repair numerical metadata before a live query or nonzero interval. Initial factory/attachment hooks also hold target-world and node ownership; failed creation retires partial state. Bounded CPU/software-Vulkan/registered failures and zero warmed edited frames execute without geometry rebuilding.
+
 [Prepared collider metadata](../components/physics-registered-adapter.md#prepared-collider-metadata-reads) now supplies actual Body/Area membership, filters, object/canvas IDs and body priority during numerical/status hooks. Detached and transferred scene/raw lifetimes, weak target disposal, high-bit values, guards, real queries and zero warmed edited-frame managed bytes execute on CPU/software-Vulkan/registered implementations.
 
 [Prepared logical shape reads](../components/physics-registered-adapter.md#prepared-logical-shape-reads) now expose Body/Area slot counts, effective RIDs and local poses to the selected implementation during owner/separate numerical hooks. Common scene/raw lifetime, failure and thread guards remain enforced. Public CPU/software-Vulkan/registered consumers verify the six-getter family with actual motion/queries and zero warmed managed bytes.

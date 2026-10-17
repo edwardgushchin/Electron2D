@@ -29,7 +29,7 @@ public static partial class BackendChecks
             if (DebugPointCount < DebugLimit) DebugPoints[DebugPointCount++] = point;
         }
         internal RID ContactFailure;
-        internal Action<RID>? IdentityHook;
+        internal Action<RID>? IdentityHook, ColliderFactoryHook;
         internal Action<RID>? ShapeHook, FilterHook;
         internal Action<RID>? BodyHook;
         internal Action<RID>? JointHook;
@@ -133,7 +133,7 @@ public static partial class BackendChecks
             return new(active, checked(Pairs + sensorPairs), islands);
         }
         protected override PhysicsBackendCollider CreateCollider(RID collider, bool area)
-        { var b = new Body(this, collider, area); Bodies.Add(collider, b); return b; }
+        { ColliderFactoryHook?.Invoke(collider); var b = new Body(this, collider, area); Bodies.Add(collider, b); return b; }
         protected override PhysicsBackendJoint CreateJoint(RID joint)
         {
             if (FailJointFactory) throw new InvalidOperationException("Joint factory failure");
